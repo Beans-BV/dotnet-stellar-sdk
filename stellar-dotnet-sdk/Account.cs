@@ -5,6 +5,7 @@ namespace stellar_dotnet_sdk
     /// <summary>
     /// Returns information and links relating to a single account.
     /// </summary>
+    /// Completed
     public class Account : ITransactionBuilderAccount
     {
         ///<summary>
