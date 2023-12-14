@@ -80,7 +80,7 @@ You can use that version of xdrgen to regenerate the XDR files from the .x files
 
 1. Install custom XDR generator:
    ```
-   git clone https://github.com/fracek/xdrgen
+   git clone https://github.com/stellar/xdrgen
    cd xdrgen
    git checkout csharp
    rake install
