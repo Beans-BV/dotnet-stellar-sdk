@@ -167,12 +167,12 @@ namespace stellar_dotnet_sdk
                             new UploadContractOperation.Builder(body.InvokeHostFunctionOp).Build(),
                     };
                     break;
-                // case OperationType.OperationTypeEnum.EXTEND_FOOTPRINT_TTL:
-                //     operation = new 
-                //     break;
-                // case OperationType.OperationTypeEnum.RESTORE_FOOTPRINT:
-                //     operation = new 
-                //     break;
+                case OperationType.OperationTypeEnum.EXTEND_FOOTPRINT_TTL:
+                    operation = new ExtendFootprintOperation.Builder(body.ExtendFootprintTTLOp).Build();
+                    break;
+                case OperationType.OperationTypeEnum.RESTORE_FOOTPRINT:
+                    operation = new RestoreFootprintOperation.Builder(body.RestoreFootprintOp).Build();
+                    break;
                 default:
                     throw new Exception("Unknown operation body " + body.Discriminant.InnerValue);
             }
