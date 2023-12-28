@@ -8,7 +8,7 @@ namespace stellar_dotnet_sdk;
 /// </summary>
 public class RestoreFootprintOperation : Operation
 {
-    public ExtensionPoint Ext { get; set; }
+    public ExtensionPoint ExtensionPoint { get; set; }
 
     /// <summary>
     /// Creates a new RestoreFootprintOperation object from the given base64-encoded XDR Operation.
@@ -31,7 +31,7 @@ public class RestoreFootprintOperation : Operation
     {
         return new RestoreFootprintOperation
         {
-            Ext = ExtensionPoint.FromXdr(xdrRestoreFootprintOp.Ext),
+            ExtensionPoint = ExtensionPoint.FromXdr(xdrRestoreFootprintOp.Ext),
         };
     }
 
@@ -39,7 +39,7 @@ public class RestoreFootprintOperation : Operation
     {
         return new RestoreFootprintOp
         {
-            Ext = Ext.ToXdr()
+            Ext = ExtensionPoint.ToXdr()
         };
     }
     
@@ -58,7 +58,7 @@ public class RestoreFootprintOperation : Operation
 
     public class Builder
     {
-        private ExtensionPoint _ext;
+        private ExtensionPoint _extensionPoint;
       
         private KeyPair? _sourceAccount;
 
@@ -68,7 +68,7 @@ public class RestoreFootprintOperation : Operation
 
         public Builder(RestoreFootprintOp operationXdr)
         {
-            _ext = ExtensionPoint.FromXdr(operationXdr.Ext);
+            _extensionPoint = ExtensionPoint.FromXdr(operationXdr.Ext);
         }
 
         public Builder SetSourceAccount(KeyPair sourceAccount)
@@ -77,19 +77,19 @@ public class RestoreFootprintOperation : Operation
             return this;
         }
     
-        public Builder SetExt(ExtensionPoint ext)
+        public Builder SetExtensionPoint(ExtensionPoint ext)
         {
-            _ext = ext;
+            _extensionPoint = ext;
             return this;
         }
      
         public RestoreFootprintOperation Build()
         {
-            if (_ext == null)
-                throw new InvalidOperationException("Ext cannot be null");
+            if (_extensionPoint == null)
+                throw new InvalidOperationException("Extension point cannot be null");
             var operation = new RestoreFootprintOperation()
             {
-                Ext = _ext
+                ExtensionPoint = _extensionPoint
             };
             if (_sourceAccount != null)
             {

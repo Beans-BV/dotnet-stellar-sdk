@@ -2,130 +2,130 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using stellar_dotnet_sdk;
 
-namespace stellar_dotnet_sdk_test.operations
+namespace stellar_dotnet_sdk_test.operations;
+
+[TestClass]
+public class FootprintOperationTest
 {
-    [TestClass]
-    public class FootprintOperationTest
+    private readonly KeyPair _sourceAccount =
+        KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
+
+    [TestMethod]
+    public void TestExtendFootprintOperationWithMissingExtensionPoint()
     {
-        private readonly KeyPair _sourceAccount =
-            KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
+        var extendTo = 10000U;
+        var builder = new ExtendFootprintOperation.Builder();
+        builder.SetSourceAccount(_sourceAccount);
+        builder.SetExtendTo(extendTo);
 
-        [TestMethod]
-        public void TestEmptyExtExtendFootprintOperation()
-        {
-            var extendTo = new SCUint32(10000);
-            var builder = new ExtendFootprintOperation.Builder();
-            builder.SetSourceAccount(_sourceAccount);
-            builder.SetExtendTo(extendTo);
-            
-            var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
-            Assert.AreEqual("Ext cannot be null", ex.Message);
-        }
-        
-        [TestMethod]
-        public void TestEmptyExtendToExtendFootprintOperation()
-        {
-            var zeroExt = new ExtensionPointZero();
-            var builder = new ExtendFootprintOperation.Builder();
-            builder.SetSourceAccount(_sourceAccount);
-            builder.SetExt(zeroExt);
-            
-            var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
-            Assert.AreEqual("Extend to cannot be null", ex.Message);
-        }
-        
-        [TestMethod]
-        public void TestEmptySourceExtendFootprintOperation()
-        {
-            var zeroExt = new ExtensionPointZero();
-            var extendTo = new SCUint32(10000);
-            var builder = new ExtendFootprintOperation.Builder();
-            builder.SetExtendTo(extendTo);
-            builder.SetExt(zeroExt);
+        var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
+        Assert.AreEqual("Extension point cannot be null", ex.Message);
+    }
 
-            var operation = builder.Build();
-            
-            // Act
-            var operationXdrBase64 = operation.ToXdrBase64();
+    [TestMethod]
+    public void TestExtendFootprintOperationWithMissingExtendTo()
+    {
+        var zeroExt = new ExtensionPointZero();
+        var builder = new ExtendFootprintOperation.Builder();
+        builder.SetSourceAccount(_sourceAccount);
+        builder.SetExtensionPoint(zeroExt);
 
-            var decodedOperation = ExtendFootprintOperation.FromOperationXdrBase64(operationXdrBase64);
-            
-            // Assert
-            Assert.AreEqual(operation.ExtendTo.InnerValue, decodedOperation.ExtendTo.InnerValue);
-            Assert.AreEqual(operation.Ext.ToXdrBase64(), decodedOperation.Ext.ToXdrBase64());
-            Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
-        }
+        var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
+        Assert.AreEqual("Extend to cannot be null", ex.Message);
+    }
 
-        [TestMethod]
-        public void TestExtendFootprintOperation()
-        {
-            var zeroExt = new ExtensionPointZero();
-            var extendTo = new SCUint32(10000);
-            var builder = new ExtendFootprintOperation.Builder();
-            builder.SetExtendTo(extendTo);
-            builder.SetExt(zeroExt);
-            builder.SetSourceAccount(_sourceAccount);
+    [TestMethod]
+    public void TestExtendFootprintOperationWithMissingSourceAccount()
+    {
+        var zeroExt = new ExtensionPointZero();
+        var extendTo = 10000U;
+        var builder = new ExtendFootprintOperation.Builder();
+        builder.SetExtendTo(extendTo);
+        builder.SetExtensionPoint(zeroExt);
 
-            var operation = builder.Build();
-            
-            // Act
-            var operationXdrBase64 = operation.ToXdrBase64();
+        var operation = builder.Build();
 
-            var decodedOperation = ExtendFootprintOperation.FromOperationXdrBase64(operationXdrBase64);
-            
-            // Assert
-            Assert.AreEqual(operation.ExtendTo.InnerValue, decodedOperation.ExtendTo.InnerValue);
-            Assert.AreEqual(operation.Ext.ToXdrBase64(), decodedOperation.Ext.ToXdrBase64());
-            Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
-        }
-        
-        [TestMethod]
-        public void TestEmptyExtRestoreFootprintOperation()
-        {
-            var builder = new RestoreFootprintOperation.Builder();
-            builder.SetSourceAccount(_sourceAccount);
-            
-            var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
-            Assert.AreEqual("Ext cannot be null", ex.Message);
-        }
-        
-        [TestMethod]
-        public void TestEmptySourceRestoreFootprintOperation()
-        {
-            var zeroExt = new ExtensionPointZero();
-            var builder = new RestoreFootprintOperation.Builder();
-            builder.SetExt(zeroExt);
+        // Act
+        var operationXdrBase64 = operation.ToXdrBase64();
 
-            var operation = builder.Build();
-            
-            // Act
-            var operationXdrBase64 = operation.ToXdrBase64();
+        var decodedOperation = ExtendFootprintOperation.FromOperationXdrBase64(operationXdrBase64);
 
-            var decodedOperation = RestoreFootprintOperation.FromOperationXdrBase64(operationXdrBase64);
-            
-            // Assert
-            Assert.AreEqual(operation.Ext.ToXdrBase64(), decodedOperation.Ext.ToXdrBase64());
-            Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
-        }
+        // Assert
+        Assert.AreEqual(operation.ExtendTo, decodedOperation.ExtendTo);
+        Assert.AreEqual(operation.ExtensionPoint.ToXdrBase64(), decodedOperation.ExtensionPoint.ToXdrBase64());
+        Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
+    }
 
-        [TestMethod]
-        public void TestRestoreFootprintOperation()
-        {
-            var zeroExt = new ExtensionPointZero();
-            var builder = new RestoreFootprintOperation.Builder();
-            builder.SetExt(zeroExt);
-            builder.SetSourceAccount(_sourceAccount);
+    [TestMethod]
+    public void TestExtendFootprintOperationWithValidConfiguration()
+    {
+        var zeroExt = new ExtensionPointZero();
+        var extendTo = 10000U;
+        var builder = new ExtendFootprintOperation.Builder();
+        builder.SetExtendTo(extendTo);
+        builder.SetExtensionPoint(zeroExt);
+        builder.SetSourceAccount(_sourceAccount);
 
-            var operation = builder.Build();
-            
-            // Act
-            var operationXdrBase64 = operation.ToXdrBase64();
+        var operation = builder.Build();
 
-            var decodedOperation = RestoreFootprintOperation.FromOperationXdrBase64(operationXdrBase64);
-            
-            // Assert
-            Assert.AreEqual(operation.Ext.ToXdrBase64(), decodedOperation.Ext.ToXdrBase64());
-            Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
-        }
+        // Act
+        var operationXdrBase64 = operation.ToXdrBase64();
+
+        var decodedOperation = ExtendFootprintOperation.FromOperationXdrBase64(operationXdrBase64);
+
+        // Assert
+        Assert.AreEqual(operation.ExtendTo, decodedOperation.ExtendTo);
+        Assert.AreEqual(operation.ExtensionPoint.ToXdrBase64(), decodedOperation.ExtensionPoint.ToXdrBase64());
+        Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
+    }
+
+    [TestMethod]
+    public void TestRestoreFootprintOperationWithMissingExtensionPoint()
+    {
+        var builder = new RestoreFootprintOperation.Builder();
+        builder.SetSourceAccount(_sourceAccount);
+
+        var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
+        Assert.AreEqual("Extension point cannot be null", ex.Message);
+    }
+
+    [TestMethod]
+    public void TestRestoreFootprintOperationWithMissingSourceAccount()
+    {
+        var zeroExt = new ExtensionPointZero();
+        var builder = new RestoreFootprintOperation.Builder();
+        builder.SetExtensionPoint(zeroExt);
+
+        var operation = builder.Build();
+
+        // Act
+        var operationXdrBase64 = operation.ToXdrBase64();
+
+        var decodedOperation = RestoreFootprintOperation.FromOperationXdrBase64(operationXdrBase64);
+
+        // Assert
+        Assert.AreEqual(operation.ExtensionPoint.ToXdrBase64(), decodedOperation.ExtensionPoint.ToXdrBase64());
+        Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
+    }
+
+    [TestMethod]
+    public void TestRestoreFootprintOperationWithValidConfiguration()
+    {
+        var zeroExt = new ExtensionPointZero();
+        var builder = new RestoreFootprintOperation.Builder();
+        builder.SetExtensionPoint(zeroExt);
+        builder.SetSourceAccount(_sourceAccount);
+
+        var operation = builder.Build();
+
+        // Act
+        var operationXdrBase64 = operation.ToXdrBase64();
+
+        var decodedOperation = RestoreFootprintOperation.FromOperationXdrBase64(operationXdrBase64);
+
+        // Assert
+        // ExtensionPoint has no properties
+        Assert.AreEqual(operation.ExtensionPoint.ToXdrBase64(), decodedOperation.ExtensionPoint.ToXdrBase64());
+        Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
     }
 }

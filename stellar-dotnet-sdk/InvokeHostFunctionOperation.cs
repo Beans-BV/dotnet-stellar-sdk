@@ -580,12 +580,8 @@ public class InvokeContractHostFunction : HostFunction
     {
         if (xdrHostFunction.Discriminant.InnerValue != xdr.HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_INVOKE_CONTRACT)
             throw new InvalidOperationException("Invalid HostFunction type");
-
-        return new InvokeContractHostFunction(
-            contractAddress: SCAddress.FromXdr(xdrHostFunction.InvokeContract.ContractAddress),
-            functionName: SCSymbol.FromXdr(xdrHostFunction.InvokeContract.FunctionName),
-            args: xdrHostFunction.InvokeContract.Args.Select(SCVal.FromXdr).ToArray()
-        );
+        
+        return FromXdr(xdrHostFunction.InvokeContract);
     }
     
     public xdr.InvokeContractArgs ToXdr()

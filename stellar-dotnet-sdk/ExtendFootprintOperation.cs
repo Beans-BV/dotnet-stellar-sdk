@@ -8,9 +8,9 @@ namespace stellar_dotnet_sdk;
 /// </summary>
 public class ExtendFootprintOperation : Operation
 {
-    public SCUint32 ExtendTo { get; set; }
+    public uint ExtendTo { get; set; }
     
-    public ExtensionPoint Ext { get; set; }
+    public ExtensionPoint ExtensionPoint { get; set; }
 
     /// <summary>
     /// Creates a new ExtendFootprintOperation object from the given base64-encoded XDR Operation.
@@ -33,8 +33,8 @@ public class ExtendFootprintOperation : Operation
     {
         return new ExtendFootprintOperation
         {
-            ExtendTo = SCUint32.FromXdr(xdrExtendFootprintTTLOp.ExtendTo),
-            Ext = ExtensionPoint.FromXdr(xdrExtendFootprintTTLOp.Ext)
+            ExtendTo = xdrExtendFootprintTTLOp.ExtendTo.InnerValue,
+            ExtensionPoint = ExtensionPoint.FromXdr(xdrExtendFootprintTTLOp.Ext)
         };
     }
 
@@ -42,8 +42,8 @@ public class ExtendFootprintOperation : Operation
     {
         return new ExtendFootprintTTLOp
         {
-            Ext = Ext.ToXdr(),
-            ExtendTo = ExtendTo.ToXdr()
+            Ext = ExtensionPoint.ToXdr(),
+            ExtendTo = new Uint32(ExtendTo)
         };
     }
     
@@ -62,8 +62,8 @@ public class ExtendFootprintOperation : Operation
 
     public class Builder
     {
-        private SCUint32 _extendTo;
-        private ExtensionPoint _ext;
+        private uint? _extendTo;
+        private ExtensionPoint _extensionPoint;
       
         private KeyPair? _sourceAccount;
 
@@ -73,8 +73,8 @@ public class ExtendFootprintOperation : Operation
 
         public Builder(ExtendFootprintTTLOp operationXdr)
         {
-            _extendTo = SCUint32.FromXdr(operationXdr.ExtendTo);
-            _ext = ExtensionPoint.FromXdr(operationXdr.Ext);
+            _extendTo = operationXdr.ExtendTo.InnerValue;
+            _extensionPoint = ExtensionPoint.FromXdr(operationXdr.Ext);
         }
 
         public Builder SetSourceAccount(KeyPair sourceAccount)
@@ -83,13 +83,13 @@ public class ExtendFootprintOperation : Operation
             return this;
         }
     
-        public Builder SetExt(ExtensionPoint ext)
+        public Builder SetExtensionPoint(ExtensionPoint ext)
         {
-            _ext = ext;
+            _extensionPoint = ext;
             return this;
         }
         
-        public Builder SetExtendTo(SCUint32 extendTo)
+        public Builder SetExtendTo(uint extendTo)
         {
             _extendTo = extendTo;
             return this;
@@ -97,14 +97,14 @@ public class ExtendFootprintOperation : Operation
         
         public ExtendFootprintOperation Build()
         {
-            if (_ext == null)
-                throw new InvalidOperationException("Ext cannot be null");
+            if (_extensionPoint == null)
+                throw new InvalidOperationException("Extension point cannot be null");
             if (_extendTo == null)
                 throw new InvalidOperationException("Extend to cannot be null");
             var operation = new ExtendFootprintOperation()
             {
-                Ext = _ext,
-                ExtendTo = _extendTo
+                ExtensionPoint = _extensionPoint,
+                ExtendTo = _extendTo.Value
             };
             if (_sourceAccount != null)
             {
