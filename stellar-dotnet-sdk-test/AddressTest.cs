@@ -12,7 +12,7 @@ public class AddressTest
     {
         const string invalidAccountId = "Invalidid";
         var ex = Assert.ThrowsException<ArgumentException>(() => new SCAccountId(invalidAccountId));
-        Assert.AreEqual("Invalid account id", ex.Message);
+        Assert.AreEqual("Invalid account id (Parameter 'value')", ex.Message);
     }
 
     [TestMethod]
@@ -20,7 +20,7 @@ public class AddressTest
     {
         const string invalidContractId = "Invalidid";
         var ex = Assert.ThrowsException<ArgumentException>(() => new SCContractId(invalidContractId));
-        Assert.AreEqual("Invalid contract id", ex.Message);
+        Assert.AreEqual("Invalid contract id (Parameter 'value')", ex.Message);
     }
 
     [TestMethod]

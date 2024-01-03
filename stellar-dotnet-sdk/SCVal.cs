@@ -1150,7 +1150,7 @@ public class SCAccountId : SCAddress
     public SCAccountId(string value)
     {
         if (!StrKey.IsValidEd25519PublicKey(value))
-            throw new ArgumentException("Invalid account id");
+            throw new ArgumentException("Invalid account id", nameof(value));
 
         InnerValue = value;
     }
@@ -1181,7 +1181,7 @@ public class SCContractId : SCAddress
     public SCContractId(string value)
     {
         if (!StrKey.IsValidContractId(value))
-            throw new ArgumentException("Invalid contract id");
+            throw new ArgumentException("Invalid contract id", nameof(value));
 
         InnerValue = value;
     }
