@@ -19,7 +19,7 @@ namespace stellar_dotnet_sdk_test.operations
             // GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR
             var inflationDestination = KeyPair.FromSecretSeed("SDHZGHURAYXKU2KMVHPOXI6JG2Q4BSQUQCEOY72O3QQTCLR2T455PMII");
             // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
-            var signer = Signer.Ed25519PublicKey(KeyPair.FromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ"));
+            var signer = SignerUtil.Ed25519PublicKey(KeyPair.FromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ"));
 
             var clearFlags = 1;
             var setFlags = 1;
@@ -108,7 +108,7 @@ namespace stellar_dotnet_sdk_test.operations
             var hash = Util.Hash(preimage);
 
             var operation = new SetOptionsOperation.Builder()
-                .SetSigner(Signer.Sha256Hash(hash), 10)
+                .SetSigner(SignerUtil.Sha256Hash(hash), 10)
                 .SetSourceAccount(source)
                 .Build();
 
@@ -152,7 +152,7 @@ namespace stellar_dotnet_sdk_test.operations
             var opSource = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
             var operation = new SetOptionsOperation.Builder()
-                .SetSigner(Signer.PreAuthTx(transaction), 10)
+                .SetSigner(SignerUtil.PreAuthTx(transaction), 10)
                 .SetSourceAccount(opSource)
                 .Build();
 
@@ -182,7 +182,7 @@ namespace stellar_dotnet_sdk_test.operations
 
             var payload = Util.HexToBytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20");
             var signedPayloadSigner = new SignedPayloadSigner(StrKey.DecodeStellarAccountId(payloadSignerStrKey), payload);
-            var signerKey = Signer.SignedPayload(signedPayloadSigner);
+            var signerKey = SignerUtil.SignedPayload(signedPayloadSigner);
 
             builder.SetSigner(signerKey, 1);
             builder.SetSourceAccount(source);

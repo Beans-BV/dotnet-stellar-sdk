@@ -67,7 +67,8 @@ namespace stellar_dotnet_sdk
                     return Create(new AssetTypeCreditAlphaNum12(assetCode, accountID));
 
                 case xdr.AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE:
-                    return new LiquidityPoolShareTrustlineAsset(LiquidityPoolID.FromXdr(trustLineAssetXdr.LiquidityPoolID));
+                    return new LiquidityPoolShareTrustlineAsset(
+                        LiquidityPoolID.FromXdr(trustLineAssetXdr.LiquidityPoolID));
 
                 default:
                     throw new ArgumentException($"Unknown asset type {trustLineAssetXdr.Discriminant.InnerValue}");
@@ -122,7 +123,7 @@ namespace stellar_dotnet_sdk
                 trustlineAssetXdr.Discriminant = assetXdr.Discriminant;
                 trustlineAssetXdr.AlphaNum4 = assetXdr.AlphaNum4;
                 trustlineAssetXdr.AlphaNum12 = assetXdr.AlphaNum12;
-
+                // TODO PoolID implementation
                 return trustlineAssetXdr;
             }
         }

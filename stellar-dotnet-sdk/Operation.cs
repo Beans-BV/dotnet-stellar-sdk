@@ -36,7 +36,7 @@ namespace stellar_dotnet_sdk
         }
         
         /// <summary>
-        /// Creates a new Operation object from the given Operation XDR base64 string.
+        /// Creates a new Operation object from the given Operation XDR base64-encoded string.
         /// </summary>
         /// <param name="xdrBase64"></param>
         /// <returns>Operation object</returns>
@@ -64,7 +64,7 @@ namespace stellar_dotnet_sdk
         }
 
         ///<summary>
-        /// Returns base64-encoded Operation XDR object.
+        /// Returns base64-encoded <see cref="stellar_dotnet_sdk.xdr.Operation"/> XDR string.
         ///</summary>
         public string ToXdrBase64()
         {

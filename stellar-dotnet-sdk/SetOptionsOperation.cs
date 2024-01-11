@@ -335,7 +335,7 @@ namespace stellar_dotnet_sdk
             /// <summary>
             ///     Add, update, or remove a signer from the account. Signer is deleted if the weight = 0;
             /// </summary>
-            /// <param name="signer">The signer key. Use <see cref="stellar_dotnet_sdk.Signer" /> helper to create this object.</param>
+            /// <param name="signer">The signer key. Use <see cref="SignerUtil" /> helper to create this object.</param>
             /// <param name="weight">The weight to attach to the signer (0-255).</param>
             /// <returns>Builder object so you can chain methods.</returns>
             public Builder SetSigner(SignerKey signer, uint weight)

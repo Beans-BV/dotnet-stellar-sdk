@@ -18,6 +18,11 @@ namespace stellar_dotnet_sdk
             TimePoint = timePoint;
         }
 
+        public ClaimPredicateBeforeAbsoluteTime(ulong timePoint)
+        {
+            TimePoint = new xdr.TimePoint(new xdr.Uint64(timePoint));
+        }
+        
         public override xdr.ClaimPredicate ToXdr()
         {
             return new xdr.ClaimPredicate

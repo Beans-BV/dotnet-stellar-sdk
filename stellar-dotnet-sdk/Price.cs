@@ -90,7 +90,7 @@ namespace stellar_dotnet_sdk
             return new Price(price.N.InnerValue, price.D.InnerValue);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == null)
                 return false;

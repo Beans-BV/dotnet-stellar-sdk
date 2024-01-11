@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace stellar_dotnet_sdk
 {
     [Serializable]
-    internal class NotEnoughSignaturesException : Exception
+    public class NotEnoughSignaturesException : Exception
     {
         public NotEnoughSignaturesException()
         {
