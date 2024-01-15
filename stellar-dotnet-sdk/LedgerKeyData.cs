@@ -2,8 +2,8 @@ namespace stellar_dotnet_sdk
 {
     public class LedgerKeyData : LedgerKey
     {
-        public new KeyPair Account { get; }
-        public string DataName { get; }
+        public KeyPair Account { get; }
+        public String64 DataName { get; }
 
         public LedgerKeyData(KeyPair account, string dataName)
         {

@@ -105,5 +105,14 @@ namespace stellar_dotnet_sdk_test
             var trustlineAsset = (TrustlineAsset.Wrapper)TrustlineAsset.FromXdr(trustlineAssetNativeXdr);
             Assert.AreEqual(trustlineAsset.Asset.CanonicalName(), "native");
         }
+
+        [TestMethod]
+        public void TestLiquidityPoolShareTrustlineAsset()
+        {
+            var asset = (LiquidityPoolShareTrustlineAsset)TrustlineAsset.Create(new LiquidityPoolConstantProductParameters(new AssetTypeNative(), Asset.CreateNonNativeAsset("VNDT", "GCFRHRU5YRI3IN3IMRMYGWWEG2PX2B6MYH2RJW7NEDE2PTYPISPT3RU7"), 1000));
+            var xdrAsset = asset.ToXdr();
+            var decodedAsset = (LiquidityPoolShareTrustlineAsset)TrustlineAsset.FromXdr(xdrAsset);
+            CollectionAssert.AreEqual(asset.ID.Hash, decodedAsset.ID.Hash);
+        }
     }
 }

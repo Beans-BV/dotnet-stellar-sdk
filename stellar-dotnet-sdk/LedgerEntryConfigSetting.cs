@@ -14,22 +14,22 @@ public class LedgerEntryConfigSetting : LedgerEntry
         
         LedgerEntryConfigSetting ledgerEntryConfigSetting = xdrConfigSetting.Discriminant.InnerValue switch
         {
-            CONFIG_SETTING_CONTRACT_BANDWIDTH_V0 => ConfigSettingContractBandwidthV0
+            CONFIG_SETTING_CONTRACT_BANDWIDTH_V0 => ConfigSettingContractBandwidth
                 .FromXdr(xdrConfigSetting.ContractBandwidth),
             CONFIG_SETTING_CONTRACT_COST_PARAMS_MEMORY_BYTES =>
                 ConfigSettingContractCostParamsMemoryBytes.FromXdr(xdrConfigSetting.ContractCostParamsMemBytes),
             CONFIG_SETTING_CONTRACT_COST_PARAMS_CPU_INSTRUCTIONS =>
                 ConfigSettingContractCostParamsCpuInstructions.FromXdr(xdrConfigSetting.ContractCostParamsCpuInsns),
-            CONFIG_SETTING_CONTRACT_COMPUTE_V0 => ConfigSettingContractComputeV0
+            CONFIG_SETTING_CONTRACT_COMPUTE_V0 => ConfigSettingContractCompute
                 .FromXdr(xdrConfigSetting.ContractCompute),
-            CONFIG_SETTING_CONTRACT_EVENTS_V0 => ConfigSettingContractEventsV0
+            CONFIG_SETTING_CONTRACT_EVENTS_V0 => ConfigSettingContractEvents
                 .FromXdr(xdrConfigSetting.ContractEvents),
             CONFIG_SETTING_CONTRACT_EXECUTION_LANES =>
-                ConfigSettingContractExecutionLanesV0.FromXdr(xdrConfigSetting.ContractExecutionLanes),
+                ConfigSettingContractExecutionLanes.FromXdr(xdrConfigSetting.ContractExecutionLanes),
             CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0 =>
-                ConfigSettingContractHistoricalDataV0.FromXdr(xdrConfigSetting.ContractHistoricalData),
+                ConfigSettingContractHistoricalData.FromXdr(xdrConfigSetting.ContractHistoricalData),
             CONFIG_SETTING_CONTRACT_LEDGER_COST_V0 =>
-                ConfigSettingContractLedgerCostV0.FromXdr(xdrConfigSetting.ContractLedgerCost),
+                ConfigSettingContractLedgerCost.FromXdr(xdrConfigSetting.ContractLedgerCost),
             CONFIG_SETTING_STATE_ARCHIVAL => StateArchivalSettings.FromXdr(
                 xdrConfigSetting.StateArchivalSettings),
             CONFIG_SETTING_EVICTION_ITERATOR => EvictionIterator.FromXdr(
@@ -55,14 +55,14 @@ public class LedgerEntryConfigSetting : LedgerEntry
         return this switch
         {
             ConfigSettingBucketListSizeWindow bucketListSizeWindow => bucketListSizeWindow.ToXdrConfigSettingEntry(),
-            ConfigSettingContractBandwidthV0 bandwidthV0 => bandwidthV0.ToXdrConfigSettingEntry(),
-            ConfigSettingContractComputeV0 computeV0 => computeV0.ToXdrConfigSettingEntry(),
+            ConfigSettingContractBandwidth bandwidth => bandwidth.ToXdrConfigSettingEntry(),
+            ConfigSettingContractCompute compute => compute.ToXdrConfigSettingEntry(),
             ConfigSettingContractDataEntrySizeBytes dataEntrySizeBytes => dataEntrySizeBytes.ToXdrConfigSettingEntry(),
             ConfigSettingContractDataKeySizeBytes dataKeySizeBytes => dataKeySizeBytes.ToXdrConfigSettingEntry(),
-            ConfigSettingContractEventsV0 eventsV0 => eventsV0.ToXdrConfigSettingEntry(),
-            ConfigSettingContractExecutionLanesV0 executionLanesV0 => executionLanesV0.ToXdrConfigSettingEntry(),
-            ConfigSettingContractHistoricalDataV0 historicalDataV0 => historicalDataV0.ToXdrConfigSettingEntry(),
-            ConfigSettingContractLedgerCostV0 ledgerCostV0 => ledgerCostV0.ToXdrConfigSettingEntry(),
+            ConfigSettingContractEvents events => events.ToXdrConfigSettingEntry(),
+            ConfigSettingContractExecutionLanes executionLanes => executionLanes.ToXdrConfigSettingEntry(),
+            ConfigSettingContractHistoricalData historicalData => historicalData.ToXdrConfigSettingEntry(),
+            ConfigSettingContractLedgerCost ledgerCost => ledgerCost.ToXdrConfigSettingEntry(),
             ConfigSettingContractMaxSizeBytes maxSizeBytes => maxSizeBytes.ToXdrConfigSettingEntry(),
             ConfigSettingContractCostParamsMemoryBytes paramsMemoryBytes => paramsMemoryBytes.ToXdrConfigSettingEntry(),
             ConfigSettingContractCostParamsCpuInstructions paramsCpuInstructions => paramsCpuInstructions.ToXdrConfigSettingEntry(),

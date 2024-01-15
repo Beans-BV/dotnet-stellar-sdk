@@ -32,7 +32,7 @@ public class LedgerKeyContractData : LedgerKey
 
     public static LedgerKeyContractData FromXdr(xdr.LedgerKey.LedgerKeyContractData xdr)
     {
-        return new LedgerKeyContractData(SCAddress.FromXdr(xdr.Contract), SCAddress.FromSCValXdr(xdr.Key),
+        return new LedgerKeyContractData(SCAddress.FromXdr(xdr.Contract), SCVal.FromXdr(xdr.Key),
             xdr.Durability);
     }
 }

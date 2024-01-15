@@ -2,7 +2,7 @@
 
 namespace stellar_dotnet_sdk;
 
-public class ConfigSettingContractLedgerCostV0 : LedgerEntryConfigSetting
+public class ConfigSettingContractLedgerCost : LedgerEntryConfigSetting
 {
     public uint LedgerMaxReadLedgerEntries { get; set; }
     public uint LedgerMaxReadBytes { get; set; }
@@ -20,9 +20,9 @@ public class ConfigSettingContractLedgerCostV0 : LedgerEntryConfigSetting
     public long WriteFee1KBBucketListHigh { get; set; }
     public uint BucketListWriteFeeGrowthFactor { get; set; }
 
-    public static ConfigSettingContractLedgerCostV0 FromXdr(xdr.ConfigSettingContractLedgerCostV0 xdrConfig)
+    public static ConfigSettingContractLedgerCost FromXdr(xdr.ConfigSettingContractLedgerCostV0 xdrConfig)
     {
-        return new ConfigSettingContractLedgerCostV0
+        return new ConfigSettingContractLedgerCost
         {
             LedgerMaxReadLedgerEntries = xdrConfig.LedgerMaxReadLedgerEntries.InnerValue,
             LedgerMaxReadBytes = xdrConfig.LedgerMaxReadBytes.InnerValue,

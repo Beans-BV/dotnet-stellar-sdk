@@ -9,12 +9,6 @@ using Asset = stellar_dotnet_sdk.Asset;
 using ClaimableBalanceEntryExtensionV1 = stellar_dotnet_sdk.ClaimableBalanceEntryExtensionV1;
 using Claimant = stellar_dotnet_sdk.Claimant;
 using ClaimPredicate = stellar_dotnet_sdk.ClaimPredicate;
-using ConfigSettingContractBandwidthV0 = stellar_dotnet_sdk.ConfigSettingContractBandwidthV0;
-using ConfigSettingContractComputeV0 = stellar_dotnet_sdk.ConfigSettingContractComputeV0;
-using ConfigSettingContractEventsV0 = stellar_dotnet_sdk.ConfigSettingContractEventsV0;
-using ConfigSettingContractExecutionLanesV0 = stellar_dotnet_sdk.ConfigSettingContractExecutionLanesV0;
-using ConfigSettingContractHistoricalDataV0 = stellar_dotnet_sdk.ConfigSettingContractHistoricalDataV0;
-using ConfigSettingContractLedgerCostV0 = stellar_dotnet_sdk.ConfigSettingContractLedgerCostV0;
 using EvictionIterator = stellar_dotnet_sdk.EvictionIterator;
 using Hash = stellar_dotnet_sdk.Hash;
 using LedgerEntry = stellar_dotnet_sdk.LedgerEntry;
@@ -55,8 +49,7 @@ public class LedgerEntryTest
     private readonly Asset _alphaNum4Asset =
         Asset.CreateNonNativeAsset("VNDC", "GCFRHRU5YRI3IN3IMRMYGWWEG2PX2B6MYH2RJW7NEDE2PTYPISPT3RU7");
 
-    private KeyPair _issuer = KeyPair.Random();
-    private readonly Asset _nativeAsset = Asset.Create("native", null, null);
+    private readonly Asset _nativeAsset = new AssetTypeNative();
 
     private LedgerEntryAccount InitBasicLedgerEntryAccount()
     {
@@ -337,7 +330,7 @@ public class LedgerEntryTest
 
         Assert.AreEqual(ledgerEntry.InflationDest.AccountId, decodedLedgerEntry.InflationDest.AccountId);
         Assert.AreEqual(ledgerEntry.LedgerExtensionV1.SponsoringID.AccountId,
-            decodedLedgerEntry.LedgerExtensionV1.SponsoringID.AccountId);
+            decodedLedgerEntry.LedgerExtensionV1!.SponsoringID.AccountId);
 
         // Account extensions
         // V1
@@ -351,7 +344,7 @@ public class LedgerEntryTest
         var decodedExtensionV2 = decodedLedgerEntry.AccountExtensionV1.ExtensionV2;
 
         Assert.AreEqual(extensionV2.NumberSponsored, decodedExtensionV2!.NumberSponsored);
-        Assert.AreEqual(extensionV2.NumberSponsoring, decodedExtensionV2!.NumberSponsoring);
+        Assert.AreEqual(extensionV2.NumberSponsoring, decodedExtensionV2.NumberSponsoring);
         Assert.AreEqual(extensionV2.SignerSponsoringIDs.Length, decodedExtensionV2.SignerSponsoringIDs.Length);
         for (var i = 0; i < extensionV2.SignerSponsoringIDs.Length; i++)
             Assert.AreEqual(extensionV2.SignerSponsoringIDs[i].AccountId,
@@ -712,7 +705,7 @@ public class LedgerEntryTest
     [TestMethod]
     public void TestLedgerEntryConfigSettingContractBandwidthV0()
     {
-        var configSetting = new ConfigSettingContractBandwidthV0
+        var configSetting = new ConfigSettingContractBandwidth
         {
             LastModifiedLedgerSeq = 10,
             LedgerExtensionV1 = null,
@@ -723,7 +716,7 @@ public class LedgerEntryTest
 
         // Act
         var ledgerEntryXdrBase64 = configSetting.ToXdrBase64();
-        var decodedConfigSetting = (ConfigSettingContractBandwidthV0)LedgerEntry.FromXdrBase64(ledgerEntryXdrBase64);
+        var decodedConfigSetting = (ConfigSettingContractBandwidth)LedgerEntry.FromXdrBase64(ledgerEntryXdrBase64);
 
         // Assert
         Assert.AreEqual(configSetting.TxMaxSizeBytes, decodedConfigSetting.TxMaxSizeBytes);
@@ -819,7 +812,7 @@ public class LedgerEntryTest
     public void TestConfigSettingContractComputeV0()
     {
         var configSetting =
-            new ConfigSettingContractComputeV0
+            new ConfigSettingContractCompute
             {
                 LastModifiedLedgerSeq = 500,
                 LedgerExtensionV1 = null,
@@ -831,7 +824,7 @@ public class LedgerEntryTest
 
         // Act
         var configSettingXdrBase64 = configSetting.ToXdrBase64();
-        var decodedConfigSetting = (ConfigSettingContractComputeV0)LedgerEntry.FromXdrBase64(configSettingXdrBase64);
+        var decodedConfigSetting = (ConfigSettingContractCompute)LedgerEntry.FromXdrBase64(configSettingXdrBase64);
 
         // Assert
         Assert.AreEqual(configSetting.LastModifiedLedgerSeq, decodedConfigSetting.LastModifiedLedgerSeq);
@@ -847,7 +840,7 @@ public class LedgerEntryTest
     public void TestConfigSettingContractEventsV0()
     {
         var configSetting =
-            new ConfigSettingContractEventsV0
+            new ConfigSettingContractEvents
             {
                 LastModifiedLedgerSeq = 500,
                 LedgerExtensionV1 = null,
@@ -857,7 +850,7 @@ public class LedgerEntryTest
 
         // Act
         var configSettingXdrBase64 = configSetting.ToXdrBase64();
-        var decodedConfigSetting = (ConfigSettingContractEventsV0)LedgerEntry.FromXdrBase64(configSettingXdrBase64);
+        var decodedConfigSetting = (ConfigSettingContractEvents)LedgerEntry.FromXdrBase64(configSettingXdrBase64);
 
         // Assert
         Assert.AreEqual(configSetting.LastModifiedLedgerSeq, decodedConfigSetting.LastModifiedLedgerSeq);
@@ -870,7 +863,7 @@ public class LedgerEntryTest
     public void TestConfigSettingContractExecutionLanesV0()
     {
         var configSetting =
-            new ConfigSettingContractExecutionLanesV0
+            new ConfigSettingContractExecutionLanes
             {
                 LastModifiedLedgerSeq = 500,
                 LedgerExtensionV1 = null,
@@ -880,7 +873,7 @@ public class LedgerEntryTest
         // Act
         var configSettingXdrBase64 = configSetting.ToXdrBase64();
         var decodedConfigSetting =
-            (ConfigSettingContractExecutionLanesV0)LedgerEntry.FromXdrBase64(configSettingXdrBase64);
+            (ConfigSettingContractExecutionLanes)LedgerEntry.FromXdrBase64(configSettingXdrBase64);
 
         // Assert
         Assert.AreEqual(configSetting.LastModifiedLedgerSeq, decodedConfigSetting.LastModifiedLedgerSeq);
@@ -892,7 +885,7 @@ public class LedgerEntryTest
     public void TestConfigSettingContractHistoricalDataV0()
     {
         var configSetting =
-            new ConfigSettingContractHistoricalDataV0
+            new ConfigSettingContractHistoricalData
             {
                 LastModifiedLedgerSeq = 500,
                 LedgerExtensionV1 = null,
@@ -902,7 +895,7 @@ public class LedgerEntryTest
         // Act
         var configSettingXdrBase64 = configSetting.ToXdrBase64();
         var decodedConfigSetting =
-            (ConfigSettingContractHistoricalDataV0)LedgerEntry.FromXdrBase64(configSettingXdrBase64);
+            (ConfigSettingContractHistoricalData)LedgerEntry.FromXdrBase64(configSettingXdrBase64);
 
         // Assert
         Assert.AreEqual(configSetting.LastModifiedLedgerSeq, decodedConfigSetting.LastModifiedLedgerSeq);
@@ -914,7 +907,7 @@ public class LedgerEntryTest
     public void TestConfigSettingContractLedgerCostV0()
     {
         var configSetting =
-            new ConfigSettingContractLedgerCostV0
+            new ConfigSettingContractLedgerCost
             {
                 LastModifiedLedgerSeq = 500,
                 LedgerExtensionV1 = null,
@@ -937,7 +930,7 @@ public class LedgerEntryTest
 
         // Act
         var configSettingXdrBase64 = configSetting.ToXdrBase64();
-        var decodedConfigSetting = (ConfigSettingContractLedgerCostV0)LedgerEntry.FromXdrBase64(configSettingXdrBase64);
+        var decodedConfigSetting = (ConfigSettingContractLedgerCost)LedgerEntry.FromXdrBase64(configSettingXdrBase64);
 
         // Assert
         Assert.AreEqual(configSetting.LastModifiedLedgerSeq, decodedConfigSetting.LastModifiedLedgerSeq);
@@ -1126,7 +1119,7 @@ public class LedgerEntryTest
         // Assert
         Assert.AreEqual(entryTtl.LiveUntilLedgerSequence, decodedTtl.LiveUntilLedgerSequence);
         CollectionAssert.AreEqual(entryTtl.KeyHash.InnerValue, decodedTtl.KeyHash.InnerValue);
-        Assert.AreEqual(entryTtl.LedgerExtensionV1!.SponsoringID.AccountId,
+        Assert.AreEqual(entryTtl.LedgerExtensionV1.SponsoringID.AccountId,
             decodedTtl.LedgerExtensionV1!.SponsoringID.AccountId);
         Assert.AreEqual(entryTtl.LastModifiedLedgerSeq, decodedTtl.LastModifiedLedgerSeq);
     }

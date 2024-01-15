@@ -4,7 +4,7 @@ namespace stellar_dotnet_sdk;
 
 public class Hash
 {
-    public Hash(string hexString) : this(Convert.FromHexString(hexString))
+    public Hash(string base64String) : this(Convert.FromBase64String(base64String))
     {
     }
     public Hash(byte[] hash)

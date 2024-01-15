@@ -2,13 +2,13 @@
 
 namespace stellar_dotnet_sdk;
 
-public class ConfigSettingContractExecutionLanesV0 : LedgerEntryConfigSetting
+public class ConfigSettingContractExecutionLanes : LedgerEntryConfigSetting
 {
     public uint LedgerMaxTxCount { get; set; }
 
-    public static ConfigSettingContractExecutionLanesV0 FromXdr(xdr.ConfigSettingContractExecutionLanesV0 xdrConfig)
+    public static ConfigSettingContractExecutionLanes FromXdr(xdr.ConfigSettingContractExecutionLanesV0 xdrConfig)
     {
-        return new ConfigSettingContractExecutionLanesV0
+        return new ConfigSettingContractExecutionLanes
         {
             LedgerMaxTxCount = xdrConfig.LedgerMaxTxCount.InnerValue
         };

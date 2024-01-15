@@ -2,13 +2,13 @@
 
 namespace stellar_dotnet_sdk;
 
-public class ConfigSettingContractHistoricalDataV0 : LedgerEntryConfigSetting
+public class ConfigSettingContractHistoricalData : LedgerEntryConfigSetting
 {
     public long FeeHistorical1KB { get; set; }
 
-    public static ConfigSettingContractHistoricalDataV0 FromXdr(xdr.ConfigSettingContractHistoricalDataV0 xdrConfig)
+    public static ConfigSettingContractHistoricalData FromXdr(xdr.ConfigSettingContractHistoricalDataV0 xdrConfig)
     {
-        return new ConfigSettingContractHistoricalDataV0
+        return new ConfigSettingContractHistoricalData
         {
             FeeHistorical1KB = xdrConfig.FeeHistorical1KB.InnerValue
         };

@@ -47,6 +47,19 @@ namespace stellar_dotnet_sdk
             }
         }
         
+        /// <summary>
+        ///     Creates a new <see cref="LedgerKey"/> object from the given LedgerEntry XDR base64 string.
+        /// </summary>
+        /// <param name="xdrBase64"></param>
+        /// <returns><see cref="LedgerKey"/> object</returns>
+        public static LedgerKey FromXdrBase64(string xdrBase64)
+        {
+            var bytes = Convert.FromBase64String(xdrBase64);
+            var reader = new XdrDataInputStream(bytes);
+            var thisXdr = xdr.LedgerKey.Decode(reader);
+            return FromXdr(thisXdr);
+        }
+        
         ///<summary>
         /// Returns base64-encoded LedgerKey XDR object.
         ///</summary>

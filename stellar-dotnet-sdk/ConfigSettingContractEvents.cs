@@ -2,14 +2,14 @@
 
 namespace stellar_dotnet_sdk;
 
-public class ConfigSettingContractEventsV0 : LedgerEntryConfigSetting
+public class ConfigSettingContractEvents : LedgerEntryConfigSetting
 {
     public uint TxMaxContractEventsSizeBytes { get; set; }
     public long FeeContractEvents1KB { get; set; }
 
-    public static ConfigSettingContractEventsV0 FromXdr(xdr.ConfigSettingContractEventsV0 xdrConfig)
+    public static ConfigSettingContractEvents FromXdr(xdr.ConfigSettingContractEventsV0 xdrConfig)
     {
-        return new ConfigSettingContractEventsV0
+        return new ConfigSettingContractEvents
         {
             TxMaxContractEventsSizeBytes = xdrConfig.TxMaxContractEventsSizeBytes.InnerValue,
             FeeContractEvents1KB = xdrConfig.FeeContractEvents1KB.InnerValue

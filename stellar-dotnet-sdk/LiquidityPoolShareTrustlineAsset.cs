@@ -54,7 +54,7 @@ namespace stellar_dotnet_sdk
             return ToString().CompareTo(((LiquidityPoolShareTrustlineAsset)asset).ToString());
         }
 
-        public override xdr.TrustLineAsset ToXdr()
+        public xdr.TrustLineAsset ToXdrTrustLineAsset()
         {
             xdr.TrustLineAsset trustlineAssetXdr = new xdr.TrustLineAsset();
             trustlineAssetXdr.Discriminant.InnerValue = xdr.AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE;

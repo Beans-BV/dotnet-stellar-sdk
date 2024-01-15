@@ -2,15 +2,15 @@
 
 namespace stellar_dotnet_sdk;
 
-public class ConfigSettingContractBandwidthV0 : LedgerEntryConfigSetting
+public class ConfigSettingContractBandwidth : LedgerEntryConfigSetting
 {
     public uint LedgerMaxTxsSizeBytes { get; set; }
     public uint TxMaxSizeBytes { get; set; }
     public long FeeTxSize1KB { get; set; }
 
-    public static ConfigSettingContractBandwidthV0 FromXdr(xdr.ConfigSettingContractBandwidthV0 xdrConfig)
+    public static ConfigSettingContractBandwidth FromXdr(xdr.ConfigSettingContractBandwidthV0 xdrConfig)
     {
-        return new ConfigSettingContractBandwidthV0
+        return new ConfigSettingContractBandwidth
         {
             LedgerMaxTxsSizeBytes = xdrConfig.LedgerMaxTxsSizeBytes.InnerValue,
             TxMaxSizeBytes = xdrConfig.TxMaxSizeBytes.InnerValue,

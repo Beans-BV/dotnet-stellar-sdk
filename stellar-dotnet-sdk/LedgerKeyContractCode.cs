@@ -5,7 +5,7 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerKeyContractCode : LedgerKey
 {
-    public LedgerKeyContractCode(string hexString) : this(new Hash(hexString))
+    public LedgerKeyContractCode(string base64String) : this(new Hash(base64String))
     {
     }
     

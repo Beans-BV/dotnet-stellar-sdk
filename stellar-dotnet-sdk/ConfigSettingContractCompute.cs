@@ -2,16 +2,16 @@
 
 namespace stellar_dotnet_sdk;
 
-public class ConfigSettingContractComputeV0 : LedgerEntryConfigSetting
+public class ConfigSettingContractCompute : LedgerEntryConfigSetting
 {
     public long LedgerMaxInstructions { get; set; }
     public long TxMaxInstructions { get; set; }
     public long FeeRatePerInstructionsIncrement { get; set; }
     public uint TxMemoryLimit { get; set; }
 
-    public static ConfigSettingContractComputeV0 FromXdr(xdr.ConfigSettingContractComputeV0 xdrConfig)
+    public static ConfigSettingContractCompute FromXdr(xdr.ConfigSettingContractComputeV0 xdrConfig)
     {
-        return new ConfigSettingContractComputeV0
+        return new ConfigSettingContractCompute
         {
             LedgerMaxInstructions = xdrConfig.LedgerMaxInstructions.InnerValue,
             TxMaxInstructions = xdrConfig.TxMaxInstructions.InnerValue,
