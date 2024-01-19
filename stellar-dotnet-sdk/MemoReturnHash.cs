@@ -17,7 +17,7 @@ namespace stellar_dotnet_sdk
             var memo = new xdr.Memo();
             memo.Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_RETURN);
 
-            var hash = new Hash();
+            var hash = new xdr.Hash();
             hash.InnerValue = MemoBytes;
 
             memo.RetHash = hash;

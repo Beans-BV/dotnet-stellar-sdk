@@ -16,10 +16,14 @@ namespace stellar_dotnet_sdk
         public static ClaimPredicate Unconditional() => new ClaimPredicateUnconditional();
 
         public static ClaimPredicate BeforeAbsoluteTime(TimePoint timePoint) => new ClaimPredicateBeforeAbsoluteTime(timePoint);
+        
+        public static ClaimPredicate BeforeAbsoluteTime(ulong timePoint) => new ClaimPredicateBeforeAbsoluteTime(timePoint);
 
         public static ClaimPredicate BeforeAbsoluteTime(DateTimeOffset dateTime) => new ClaimPredicateBeforeAbsoluteTime(dateTime);
 
         public static ClaimPredicate BeforeRelativeTime(Duration duration) => new ClaimPredicateBeforeRelativeTime(duration);
+        
+        public static ClaimPredicate BeforeRelativeTime(ulong duration) => new ClaimPredicateBeforeRelativeTime(duration);
 
         public static ClaimPredicate FromXdr(xdr.ClaimPredicate xdr)
         {

@@ -12,6 +12,11 @@ namespace stellar_dotnet_sdk
             Duration = duration;
         }
 
+        public ClaimPredicateBeforeRelativeTime(ulong duration)
+        {
+            Duration = new xdr.Duration(new xdr.Uint64(duration));
+        }
+        
         public override xdr.ClaimPredicate ToXdr()
         {
             return new xdr.ClaimPredicate

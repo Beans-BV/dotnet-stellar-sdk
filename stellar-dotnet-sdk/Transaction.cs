@@ -5,9 +5,11 @@ namespace stellar_dotnet_sdk
 {
     public class Transaction : TransactionBase
     {
-        internal Transaction(IAccountId sourceAccount, uint fee, long sequenceNumber, Operation[] operations, Memo memo, TransactionPreconditions preconditions)
+        internal Transaction(IAccountId sourceAccount, uint fee, long sequenceNumber, Operation[] operations, Memo memo,
+            TransactionPreconditions preconditions)
         {
-            SourceAccount = sourceAccount ?? throw new ArgumentNullException(nameof(sourceAccount), "sourceAccount cannot be null");
+            SourceAccount = sourceAccount ??
+                            throw new ArgumentNullException(nameof(sourceAccount), "sourceAccount cannot be null");
             Fee = fee;
             SequenceNumber = sequenceNumber;
             Operations = operations ?? throw new ArgumentNullException(nameof(operations), "operations cannot be null");
@@ -17,6 +19,13 @@ namespace stellar_dotnet_sdk
 
             Memo = memo ?? Memo.None();
             Preconditions = preconditions;
+        }
+
+        internal Transaction(IAccountId sourceAccount, uint fee, long sequenceNumber, Operation[] operations, Memo memo,
+            TransactionPreconditions preconditions, SorobanTransactionData sorobanData) : this(sourceAccount, fee,
+            sequenceNumber, operations, memo, preconditions)
+        {
+            SorobanData = sorobanData;
         }
 
         public uint Fee { get; }
@@ -33,6 +42,8 @@ namespace stellar_dotnet_sdk
 
         public TimeBounds TimeBounds => Preconditions.TimeBounds;
 
+        public SorobanTransactionData? SorobanData { get; }
+
         /// <summary>
         ///     Returns signature base for the given network.
         /// </summary>
@@ -44,7 +55,7 @@ namespace stellar_dotnet_sdk
                 throw new NoNetworkSelectedException();
 
             // Hashed NetworkID
-            var networkHash = new Hash { InnerValue = network.NetworkId };
+            var networkHash = new xdr.Hash { InnerValue = network.NetworkId };
             var taggedTransaction = new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction
             {
                 Discriminant = EnvelopeType.Create(EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX),
@@ -136,7 +147,12 @@ namespace stellar_dotnet_sdk
                 operations[i] = Operations[i].ToXdr();
 
             // ext
-            var ext = new xdr.Transaction.TransactionExt { Discriminant = 0 };
+            var ext = new xdr.Transaction.TransactionExt() { Discriminant = 0 };
+            if (SorobanData != null)
+            {
+                ext.Discriminant = 1;
+                ext.SorobanData = SorobanData.ToXdr();
+            }
 
             var transaction = new xdr.Transaction
             {
@@ -158,7 +174,8 @@ namespace stellar_dotnet_sdk
         public override TransactionEnvelope ToEnvelopeXdr(TransactionXdrVersion version = TransactionXdrVersion.V1)
         {
             if (Signatures.Count == 0)
-                throw new NotEnoughSignaturesException("Transaction must be signed by at least one signer. Use transaction.sign().");
+                throw new NotEnoughSignaturesException(
+                    "Transaction must be signed by at least one signer. Use transaction.sign().");
 
             return ToEnvelopeXdr(version, Signatures.ToArray());
         }
@@ -167,7 +184,8 @@ namespace stellar_dotnet_sdk
         ///     Generates TransactionEnvelope XDR object. This transaction MUST be signed before being useful
         /// </summary>
         /// <returns></returns>
-        public override TransactionEnvelope ToUnsignedEnvelopeXdr(TransactionXdrVersion version = TransactionXdrVersion.V1)
+        public override TransactionEnvelope ToUnsignedEnvelopeXdr(
+            TransactionXdrVersion version = TransactionXdrVersion.V1)
         {
             if (Signatures.Count > 0)
                 throw new TooManySignaturesException("Transaction must not be signed. Use ToEnvelopeXDR.");
@@ -180,7 +198,8 @@ namespace stellar_dotnet_sdk
             var thisXdr = new TransactionEnvelope();
             if (version == TransactionXdrVersion.V0)
             {
-                thisXdr.Discriminant = new EnvelopeType { InnerValue = EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_V0 };
+                thisXdr.Discriminant = new EnvelopeType
+                    { InnerValue = EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_V0 };
                 thisXdr.V0 = new TransactionV0Envelope();
 
                 var transaction = ToXdrV0();
@@ -199,6 +218,7 @@ namespace stellar_dotnet_sdk
             {
                 throw new Exception($"Invalid TransactionXdrVersion {version}");
             }
+
             return thisXdr;
         }
 
@@ -220,7 +240,8 @@ namespace stellar_dotnet_sdk
                     case EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX:
                         return FromEnvelopeXdrV1(envelope.V1);
                     default:
-                        throw new ArgumentException($"Invalid TransactionEnvelope: expected an ENVELOPE_TYPE_TX or ENVELOPE_TYPE_TX_V0 but received {envelope.Discriminant.InnerValue}");
+                        throw new ArgumentException(
+                            $"Invalid TransactionEnvelope: expected an ENVELOPE_TYPE_TX or ENVELOPE_TYPE_TX_V0 but received {envelope.Discriminant.InnerValue}");
                 }
             }
         }
@@ -241,7 +262,8 @@ namespace stellar_dotnet_sdk
                 operations[i] = Operation.FromXdr(transactionXdr.Operations[i]);
             }
 
-            Transaction transaction = new Transaction(sourceAccount, fee, sequenceNumber, operations, memo, preconditions);
+            Transaction transaction =
+                new Transaction(sourceAccount, fee, sequenceNumber, operations, memo, preconditions);
 
             foreach (var signature in envelope.Signatures)
             {
@@ -266,7 +288,10 @@ namespace stellar_dotnet_sdk
                 operations[i] = Operation.FromXdr(transactionXdr.Operations[i]);
             }
 
-            Transaction transaction = new Transaction(sourceAccount, fee, sequenceNumber, operations, memo, preconditions);
+            var sorobanData = SorobanTransactionData.FromXdr(transactionXdr.Ext.SorobanData);
+
+            var transaction =
+                new Transaction(sourceAccount, fee, sequenceNumber, operations, memo, preconditions, sorobanData);
 
             foreach (var signature in envelope.Signatures)
             {

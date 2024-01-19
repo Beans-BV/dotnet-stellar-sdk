@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace stellar_dotnet_sdk
 {
     [Serializable]
-    internal class NoNetworkSelectedException : Exception
+    public class NoNetworkSelectedException : Exception
     {
         public NoNetworkSelectedException()
         {

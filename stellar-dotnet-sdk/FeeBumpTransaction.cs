@@ -25,7 +25,7 @@ namespace stellar_dotnet_sdk
                 throw new NoNetworkSelectedException();
 
             // Hashed NetworkID
-            var networkHash = new Hash { InnerValue = network.NetworkId };
+            var networkHash = new xdr.Hash { InnerValue = network.NetworkId };
             var taggedTransaction = new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction
             {
                 Discriminant = EnvelopeType.Create(EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_FEE_BUMP),

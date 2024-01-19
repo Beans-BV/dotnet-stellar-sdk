@@ -5,7 +5,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using stellar_dotnet_sdk;
 using stellar_dotnet_sdk.responses;
 using stellar_dotnet_sdk.xdr;
+using LedgerFootprint = stellar_dotnet_sdk.LedgerFootprint;
+using LedgerKey = stellar_dotnet_sdk.LedgerKey;
 using Memo = stellar_dotnet_sdk.Memo;
+using SorobanResources = stellar_dotnet_sdk.SorobanResources;
+using SorobanTransactionData = stellar_dotnet_sdk.SorobanTransactionData;
 using TimeBounds = stellar_dotnet_sdk.TimeBounds;
 using Transaction = stellar_dotnet_sdk.Transaction;
 using XdrTransaction = stellar_dotnet_sdk.xdr.Transaction;
@@ -317,15 +321,8 @@ namespace stellar_dotnet_sdk_test
                 .AddOperation(new CreateAccountOperation.Builder(destination, "2000").Build())
                 .Build();
 
-            try
-            {
-                transaction.ToEnvelopeXdrBase64();
-                Assert.Fail();
-            }
-            catch (Exception exception)
-            {
-                Assert.IsTrue(exception.Message.Contains("Transaction must be signed by at least one signer."));
-            }
+            var ex = Assert.ThrowsException<NotEnoughSignaturesException>(() => transaction.ToEnvelopeXdrBase64());
+            Assert.IsTrue(ex.Message.Contains("Transaction must be signed by at least one signer."));
         }
 
         [TestMethod]
@@ -498,14 +495,7 @@ namespace stellar_dotnet_sdk_test
                 .AddMemo(new MemoText("Happy birthday!"))
                 .Build();
 
-            try
-            {
-                tx.SignatureBase(null);
-            }
-            catch (Exception e)
-            {
-                Assert.IsNotNull(e);
-            }
+            var ex = Assert.ThrowsException<NoNetworkSelectedException>(() => tx.SignatureBase(null));
         }
 
         [TestMethod]
@@ -526,14 +516,8 @@ namespace stellar_dotnet_sdk_test
                 .AddMemo(new MemoText("Happy birthday!"))
                 .Build();
 
-            try
-            {
-                tx.ToXdr();
-            }
-            catch (Exception e)
-            {
-                Assert.AreEqual(e.Message, "TransactionEnvelope V0 expects a KeyPair source account");
-            }
+            var ex = Assert.ThrowsException<Exception>(() => tx.ToXdr());
+            Assert.AreEqual("TransactionEnvelope V0 expects a KeyPair source account", ex.Message);
         }
 
         [TestMethod]
@@ -556,14 +540,8 @@ namespace stellar_dotnet_sdk_test
 
             tx.Sign(KeyPair.Random());
 
-            try
-            {
-                tx.ToUnsignedEnvelopeXdr();
-            }
-            catch (Exception e)
-            {
-                Assert.AreEqual(e.Message, "Transaction must not be signed. Use ToEnvelopeXDR.");
-            }
+            var ex = Assert.ThrowsException<TooManySignaturesException>(() => tx.ToUnsignedEnvelopeXdr());
+            Assert.AreEqual("Transaction must not be signed. Use ToEnvelopeXDR.", ex.Message);
         }
 
         [TestMethod]
@@ -587,6 +565,62 @@ namespace stellar_dotnet_sdk_test
                     .Build();
 
             });
+        }
+        
+        [TestMethod]
+        public void TestTransactionWithSorobanData()
+        {
+            var network = new Network("Standalone Network ; February 2017");
+            var source = KeyPair.FromSecretSeed(network.NetworkId);
+            var txSource = new MuxedAccountMed25519(source, 0);
+            var account = new Account(txSource, 7);
+            var destination = KeyPair.FromAccountId("GDQERENWDDSQZS7R7WKHZI3BSOYMV3FSWR7TFUYFTKQ447PIX6NREOJM");
+            var amount = "2000";
+            var asset = new AssetTypeNative();
+            var keyAccount = new LedgerKeyAccount(KeyPair.Random());
+            var keyData = new LedgerKeyData(KeyPair.Random(), "firstKey");
+            var footprint = new LedgerFootprint()
+            {
+                ReadOnly = new LedgerKey[] { keyAccount },
+                ReadWrite = new LedgerKey[] { keyData }
+            };
+            var sorobanData = new SorobanTransactionData()
+            {
+                ExtensionPoint = new ExtensionPointZero(),
+                ResourceFee = 100,
+                Resources = new SorobanResources()
+                {
+                    Footprint = footprint,
+                    Instructions = 10,
+                    ReadBytes = 20,
+                    WriteBytes = 30
+                }
+            };
+            var tx = new TransactionBuilder(account)
+                .SetFee(100)
+                .AddTimeBounds(new TimeBounds(0, 0))
+                .AddOperation(
+                    new PaymentOperation.Builder(destination, asset, amount).Build())
+                .AddMemo(new MemoText("Happy birthday!"))
+                .SetSorobanTransactionData(sorobanData)
+                .Build();
+            var xdr = tx.ToUnsignedEnvelopeXdrBase64();
+            var decodedTx = (Transaction)TransactionBuilder.FromEnvelopeXdr(xdr);
+            Assert.IsNotNull(decodedTx);
+            Assert.AreEqual(txSource.Address, decodedTx.SourceAccount.Address);
+
+            var decodedSorobanData = decodedTx.SorobanData;
+            Assert.AreEqual(sorobanData.ResourceFee, decodedSorobanData.ResourceFee);
+            Assert.AreEqual(sorobanData.Resources.Instructions, decodedSorobanData.Resources.Instructions);
+            Assert.AreEqual(sorobanData.Resources.ReadBytes, decodedSorobanData.Resources.ReadBytes);
+            Assert.AreEqual(sorobanData.Resources.WriteBytes, decodedSorobanData.Resources.WriteBytes);
+
+            var decodedFootprint = decodedSorobanData.Resources.Footprint; 
+            Assert.AreEqual(footprint.ReadOnly.Length, decodedFootprint.ReadOnly.Length);
+            Assert.AreEqual(keyAccount.Account.AccountId, ((LedgerKeyAccount)decodedFootprint.ReadOnly[0]).Account.AccountId);
+            Assert.AreEqual(keyData.Account.AccountId, ((LedgerKeyData)decodedFootprint.ReadWrite[0]).Account.AccountId);
+            Assert.AreEqual(keyData.DataName, ((LedgerKeyData)decodedFootprint.ReadWrite[0]).DataName);
+            
         }
     }
 }

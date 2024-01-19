@@ -13,6 +13,7 @@ namespace stellar_dotnet_sdk
         private Memo _memo;
         private TransactionPreconditions _preconditions;
         private uint _fee;
+        private SorobanTransactionData _sorobanData;
 
         /// <summary>
         ///     Construct a new transaction builder.
@@ -145,6 +146,18 @@ namespace stellar_dotnet_sdk
         }
 
         /// <summary>
+        ///     Sets the transaction's internal <see cref="SorobanTransactionData"/> (resources, footprint, etc.).
+        /// </summary>
+        /// <param name="sorobanData">an <see cref="SorobanTransactionData"/> object containing the data.</param>
+        /// <returns>Builder object so you can chain methods.</returns>
+        /// <seealso href="https://soroban.stellar.org/docs/fundamentals-and-concepts/invoking-contracts-with-transactions#transaction-resources"/>
+        public TransactionBuilder SetSorobanTransactionData(SorobanTransactionData sorobanData)
+        {
+            _sorobanData = sorobanData;
+            return this;
+        }
+        
+        /// <summary>
         ///     Builds a transaction. It will increment sequence number of the source account.
         /// </summary>
         /// <returns></returns>
@@ -155,7 +168,7 @@ namespace stellar_dotnet_sdk
             //var totalFee = operations.Length * _fee;
             var opsCount = Convert.ToUInt32(operations.Length);
             uint totalFee = checked(opsCount * _fee);
-            var transaction = new Transaction(_sourceAccount.MuxedAccount, totalFee, _sourceAccount.IncrementedSequenceNumber, operations, _memo, _preconditions);
+            var transaction = new Transaction(_sourceAccount.MuxedAccount, totalFee, _sourceAccount.IncrementedSequenceNumber, operations, _memo, _preconditions, _sorobanData);
             // Increment sequence number when there were no exceptions when creating a transaction
             _sourceAccount.IncrementSequenceNumber();
             return transaction;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using stellar_dotnet_sdk;
 using xdrSDK = stellar_dotnet_sdk.xdr;
@@ -277,10 +278,7 @@ public class ScValTest
     [TestMethod]
     public void TestScUint64()
     {
-        var scUint64 = new SCUint64
-        {
-            InnerValue = 18446744073709551615
-        };
+        var scUint64 = new SCUint64(18446744073709551615);
 
         // Act
         var scUint64XdrBase64 = scUint64.ToXdrBase64();
@@ -332,11 +330,7 @@ public class ScValTest
     [TestMethod]
     public void TestScUint128()
     {
-        var scUint128 = new SCUint128
-        {
-            Hi = 18446744073709551615,
-            Lo = 1
-        };
+        var scUint128 = new SCUint128(1, 18446744073709551615);
 
         // Act
         var scUint128XdrBase64 = scUint128.ToXdrBase64();
@@ -350,11 +344,7 @@ public class ScValTest
     [TestMethod]
     public void TestScInt128()
     {
-        var scInt128 = new SCInt128
-        {
-            Lo = 18446744073709551615,
-            Hi = -9223372036854775807
-        };
+        var scInt128 = new SCInt128(18446744073709551615, -9223372036854775807);
 
         // Act
         var scInt128XdrBase64 = scInt128.ToXdrBase64();
