@@ -11,6 +11,34 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "stellar-dotnet-sdk-console"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stellar-dotnet-sdk-xdr", "stellar-dotnet-sdk-xdr\stellar-dotnet-sdk-xdr.csproj", "{DB19EF41-BF22-41D0-B856-858C6FC17068}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFiles", "{AF4AA978-5DCC-4343-9134-EA1CE2CF3FB7}"
+	ProjectSection(SolutionItems) = preProject
+		SECURITY.md = SECURITY.md
+		PULL_REQUEST_TEMPLATE.md = PULL_REQUEST_TEMPLATE.md
+		LICENSE.txt = LICENSE.txt
+		CONTRIBUTING.md = CONTRIBUTING.md
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{88F76D91-FE64-4BF1-9072-7FA732A1EAC0}"
+	ProjectSection(SolutionItems) = preProject
+		.github\release-drafter.yml = .github\release-drafter.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{176D6131-034E-4662-AF0E-326CBCCABAF0}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\release_mgmt.yml = .github\workflows\release_mgmt.yml
+		.github\workflows\publish_nuget.yml = .github\workflows\publish_nuget.yml
+		.github\workflows\update-documentation.yml = .github\workflows\update-documentation.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IssueTemplate", "IssueTemplate", "{83F7A5C8-A220-42AA-A2E4-DAD5FDB014D3}"
+	ProjectSection(SolutionItems) = preProject
+		.github\ISSUE_TEMPLATE\Feature_request.md = .github\ISSUE_TEMPLATE\Feature_request.md
+		.github\ISSUE_TEMPLATE\Bug_report.md = .github\ISSUE_TEMPLATE\Bug_report.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,5 +67,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E63EA592-2696-4E6A-BA56-97D6016449FB}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{88F76D91-FE64-4BF1-9072-7FA732A1EAC0} = {AF4AA978-5DCC-4343-9134-EA1CE2CF3FB7}
+		{176D6131-034E-4662-AF0E-326CBCCABAF0} = {88F76D91-FE64-4BF1-9072-7FA732A1EAC0}
+		{83F7A5C8-A220-42AA-A2E4-DAD5FDB014D3} = {88F76D91-FE64-4BF1-9072-7FA732A1EAC0}
 	EndGlobalSection
 EndGlobal
