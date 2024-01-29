@@ -1,0 +1,443 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class SCUint128
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class SCUint128
+   ">
+    <meta name="generator" content="docfx 2.59.2.0">
+    
+    <link rel="shortcut icon" href="../favicon">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="stellar_dotnet_sdk.SCUint128">
+  <h1 id="stellar_dotnet_sdk_SCUint128" data-uid="stellar_dotnet_sdk.SCUint128">Class SCUint128
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="stellar_dotnet_sdk.SCVal.html">SCVal</a></div>
+    <div class="level2"><span class="xref">SCUint128</span></div>
+  </div>
+  
+  
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.SCVal.html#stellar_dotnet_sdk_SCVal_FromXdr_stellar_dotnet_sdk_xdr_SCVal_">SCVal.FromXdr(SCVal)</a>
+    </div>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.SCVal.html#stellar_dotnet_sdk_SCVal_FromXdrBase64_System_String_">SCVal.FromXdrBase64(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.SCVal.html#stellar_dotnet_sdk_SCVal_ToXdrBase64">SCVal.ToXdrBase64()</a>
+    </div>
+  </div>
+  
+  <h6><strong>Namespace</strong>: System.Dynamic.ExpandoObject</h6>
+  <h6><strong>Assembly</strong>: stellar-dotnet-sdk.dll</h6>
+  
+  <h5 id="stellar_dotnet_sdk_SCUint128_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class SCUint128 : SCVal</code></pre>
+  </div>
+
+  
+  
+  
+  
+  <h3 id="constructors">Constructors
+  </h3>
+  
+  
+  <a id="stellar_dotnet_sdk_SCUint128__ctor_" data-uid="stellar_dotnet_sdk.SCUint128.#ctor*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_SCUint128__ctor_System_UInt64_System_UInt64_" data-uid="stellar_dotnet_sdk.SCUint128.#ctor(System.UInt64,System.UInt64)"><a href="#collapsible-stellar_dotnet_sdk_SCUint128__ctor_System_UInt64_System_UInt64_" class="expander" data-toggle="collapse">SCUint128(UInt64, UInt64)</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_SCUint128__ctor_System_UInt64_System_UInt64_" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SCUint128(ulong lo, ulong hi)</code></pre>
+  </div>
+
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">lo</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">hi</span></td>
+        <td></td>
+      </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="stellar_dotnet_sdk_SCUint128_Hi_" data-uid="stellar_dotnet_sdk.SCUint128.Hi*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_SCUint128_Hi" data-uid="stellar_dotnet_sdk.SCUint128.Hi"><a href="#collapsible-stellar_dotnet_sdk_SCUint128_Hi" class="expander" data-toggle="collapse">Hi</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_SCUint128_Hi" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ulong Hi { get; set; }</code></pre>
+  </div>
+
+  
+  
+  
+  
+  <h5 class="propertyValue">Property Value</h5>
+  <table>
+    <tr>
+      <td>
+        <span class="xref">System.UInt64</span>
+        <p>
+      </td>
+    </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  <a id="stellar_dotnet_sdk_SCUint128_Lo_" data-uid="stellar_dotnet_sdk.SCUint128.Lo*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_SCUint128_Lo" data-uid="stellar_dotnet_sdk.SCUint128.Lo"><a href="#collapsible-stellar_dotnet_sdk_SCUint128_Lo" class="expander" data-toggle="collapse">Lo</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_SCUint128_Lo" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ulong Lo { get; set; }</code></pre>
+  </div>
+
+  
+  
+  
+  
+  <h5 class="propertyValue">Property Value</h5>
+  <table>
+    <tr>
+      <td>
+        <span class="xref">System.UInt64</span>
+        <p>
+      </td>
+    </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  
+  
+  <a id="stellar_dotnet_sdk_SCUint128_FromSCValXdr_" data-uid="stellar_dotnet_sdk.SCUint128.FromSCValXdr*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_SCUint128_FromSCValXdr_stellar_dotnet_sdk_xdr_SCVal_" data-uid="stellar_dotnet_sdk.SCUint128.FromSCValXdr(stellar_dotnet_sdk.xdr.SCVal)"><a href="#collapsible-stellar_dotnet_sdk_SCUint128_FromSCValXdr_stellar_dotnet_sdk_xdr_SCVal_" class="expander" data-toggle="collapse">FromSCValXdr(SCVal)</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_SCUint128_FromSCValXdr_stellar_dotnet_sdk_xdr_SCVal_" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static SCUint128 FromSCValXdr(SCVal xdrVal)</code></pre>
+  </div>
+
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+      <tr>
+        <td><span class="xref">stellar_dotnet_sdk.xdr.SCVal</span></td>
+        <td><span class="parametername">xdrVal</span></td>
+        <td></td>
+      </tr>
+  </table>
+  
+  <h5 class="returns">Returns</h5>
+  <table>
+    <tr>
+      <td>
+        <a class="xref" href="stellar_dotnet_sdk.SCUint128.html">SCUint128</a>
+        <p>
+      </td>
+    </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  <a id="stellar_dotnet_sdk_SCUint128_FromXdr_" data-uid="stellar_dotnet_sdk.SCUint128.FromXdr*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_SCUint128_FromXdr_stellar_dotnet_sdk_xdr_UInt128Parts_" data-uid="stellar_dotnet_sdk.SCUint128.FromXdr(stellar_dotnet_sdk.xdr.UInt128Parts)"><a href="#collapsible-stellar_dotnet_sdk_SCUint128_FromXdr_stellar_dotnet_sdk_xdr_UInt128Parts_" class="expander" data-toggle="collapse">FromXdr(UInt128Parts)</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_SCUint128_FromXdr_stellar_dotnet_sdk_xdr_UInt128Parts_" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static SCUint128 FromXdr(UInt128Parts xdrUInt128Parts)</code></pre>
+  </div>
+
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+      <tr>
+        <td><span class="xref">stellar_dotnet_sdk.xdr.UInt128Parts</span></td>
+        <td><span class="parametername">xdrUInt128Parts</span></td>
+        <td></td>
+      </tr>
+  </table>
+  
+  <h5 class="returns">Returns</h5>
+  <table>
+    <tr>
+      <td>
+        <a class="xref" href="stellar_dotnet_sdk.SCUint128.html">SCUint128</a>
+        <p>
+      </td>
+    </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  <a id="stellar_dotnet_sdk_SCUint128_ToSCValXdr_" data-uid="stellar_dotnet_sdk.SCUint128.ToSCValXdr*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_SCUint128_ToSCValXdr" data-uid="stellar_dotnet_sdk.SCUint128.ToSCValXdr"><a href="#collapsible-stellar_dotnet_sdk_SCUint128_ToSCValXdr" class="expander" data-toggle="collapse">ToSCValXdr()</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_SCUint128_ToSCValXdr" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SCVal ToSCValXdr()</code></pre>
+  </div>
+
+  
+  <h5 class="returns">Returns</h5>
+  <table>
+    <tr>
+      <td>
+        <span class="xref">stellar_dotnet_sdk.xdr.SCVal</span>
+        <p>
+      </td>
+    </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  <a id="stellar_dotnet_sdk_SCUint128_ToXdr_" data-uid="stellar_dotnet_sdk.SCUint128.ToXdr*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_SCUint128_ToXdr" data-uid="stellar_dotnet_sdk.SCUint128.ToXdr"><a href="#collapsible-stellar_dotnet_sdk_SCUint128_ToXdr" class="expander" data-toggle="collapse">ToXdr()</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_SCUint128_ToXdr" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public UInt128Parts ToXdr()</code></pre>
+  </div>
+
+  
+  <h5 class="returns">Returns</h5>
+  <table>
+    <tr>
+      <td>
+        <span class="xref">stellar_dotnet_sdk.xdr.UInt128Parts</span>
+        <p>
+      </td>
+    </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+</article>
+          </div>
+          <div class="contribution-panel mobile-hide">
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

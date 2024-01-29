@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>dotnet-stellar-sdk </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="dotnet-stellar-sdk ">
+    <meta name="generator" content="docfx 2.59.2.0">
+    
+    <link rel="shortcut icon" href="favicon">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="images/logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+
+<!-- PROJECT LOGO -->
+<p><br><p align="center"> <img width="460" height="300" src="https://raw.githubusercontent.com/elucidsoft/dotnet-stellar-sdk/master/docfx/images/logo.svg">  <!-- TITLE AND BADGES --> <h3 align="center">dotnet-stellar-sdk</h3> <p align="center"> Stellar API SDK for .NET Core 2.x and .NET Standard 2.0 <br> <a href="https://ci.appveyor.com/project/elucidsoft/dotnet-stellar-sdk/branch/master"> <img src="https://ci.appveyor.com/api/projects/status/n34q6l3wyar2rq5l/branch/master?svg=true"></a> <a href="https://coveralls.io/github/elucidsoft/dotnet-stellar-sdk?branch=master"> <img src="https://coveralls.io/repos/github/elucidsoft/dotnet-stellar-sdk/badge.svg?branch=master"></a><a href="https://www.codefactor.io/repository/github/elucidsoft/dotnet-stellar-sdk"> <img src="https://www.codefactor.io/repository/github/elucidsoft/dotnet-stellar-sdk/badge"></a> <a href="https://www.nuget.org/packages/stellar-dotnet-sdk"> <img src="https://buildstats.info/nuget/stellar-dotnet-sdk"> </a><br><br><!-- USEFUL LINKS--><a href="https://github.com/elucidsoft/dotnet-stellar-sdk/issues/new?template=Bug_report.md">Report Bug</a> · <a href="https://github.com/elucidsoft/dotnet-stellar-sdk/issues/new?template=Feature_request.md">Request Feature</a> · <a href="https://github.com/elucidsoft/dotnet-stellar-sdk/security/policy">Report Security Vulnerability</a> </p></p></p>
+<!-- TABLE OF CONTENTS -->
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#about-the-project">About the Project</a></li>
+<li><a href="#installation">Installation</a>
+<ul>
+<li><a href="#visual-studio">Visual Studio</a></li>
+<li><a href="#jetbrains-rider">JetBrains Rider</a></li>
+<li><a href="#other">Other</a></li>
+</ul>
+</li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#xdr">XDR</a></li>
+<li><a href="#xdr-generation">XDR Generation</a></li>
+<li><a href="#contributors">Contributors</a></li>
+<li><a href="#license">License</a></li>
+<li><a href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+<!-- ABOUT THE PROJECT -->
+<h2 id="about-the-project">About The Project</h2>
+<p><code>dotnet-stellar-sdk</code> is a <strong>Net Core/Standard</strong> library for communicating with a <a href="https://github.com/stellar/go/tree/master/services/horizon">Stellar Horizon server</a>. It is used for building Stellar apps.</p>
+<p><em>This project originated as a full port of the official <a href="https://github.com/stellar/java-stellar-sdk">Java SDK API</a></em></p>
+<h2 id="installation">Installation</h2>
+<p>The <code>stellar-dotnet-sdk</code> library is bundled in a NuGet Package.</p>
+<ul>
+<li><a href="https://www.nuget.org/packages/stellar-dotnet-sdk">NuGet Package</a></li>
+</ul>
+<h3 id="visual-studio">Visual Studio</h3>
+<ul>
+<li><p>Using the <a href="https://docs.microsoft.com/en-us/nuget/consume-packages/install-use-packages-powershell">console</a></p>
+<ul>
+<li>Run <code>Install-Package stellar-dotnet-sdk</code> in the console.</li>
+</ul>
+</li>
+<li><p>Using the <a href="https://docs.microsoft.com/en-us/nuget/consume-packages/install-use-packages-visual-studio">NuGet Package Manager</a></p>
+<ul>
+<li>Search this package <a href="https://www.nuget.org/packages/stellar-dotnet-sdk">NuGet Package</a> and install it.</li>
+</ul>
+</li>
+</ul>
+<h3 id="jetbrains-rider">JetBrains Rider</h3>
+<ul>
+<li><a href="https://www.jetbrains.com/help/rider/Using_NuGet.html#">https://www.jetbrains.com/help/rider/Using_NuGet.html#</a></li>
+</ul>
+<h3 id="other">Other</h3>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/nuget/consume-packages/overview-and-workflow#ways-to-install-a-nuget-package">https://docs.microsoft.com/en-us/nuget/consume-packages/overview-and-workflow#ways-to-install-a-nuget-package</a></li>
+</ul>
+<!-- USAGE EXAMPLES -->
+<h2 id="usage">Usage</h2>
+<p>Check the <a href="https://elucidsoft.github.io/dotnet-stellar-sdk/tutorials/index.html">Tutorials</a> page to get started.</p>
+<p><strong>In case of doubts or issues, you can ask for help here:</strong></p>
+<ul>
+<li><p><a href="https://stellar.stackexchange.com/">Stellar Stack Exchange</a></p>
+</li>
+<li><p><a href="https://keybase.io/team/stellar_dotnet">Keybase Team</a></p>
+</li>
+</ul>
+<h2 id="xdr">XDR</h2>
+<p><a href="https://www.nuget.org/packages/stellar-dotnet-sdk-xdr/"><img src="https://buildstats.info/nuget/stellar-dotnet-sdk-xdr" alt="NuGet Badge"></a></p>
+<p>If you only need the XDR objects in a .NET Standard NuGet package, then you can get those here: <a href="https://www.nuget.org/packages/stellar-dotnet-sdk-xdr/">https://www.nuget.org/packages/stellar-dotnet-sdk-xdr/</a></p>
+<h2 id="xdr-generation">XDR Generation</h2>
+<p>In order to generate the XDR Files automatically in C# a custom XDR Generator must be used.</p>
+<p>You can find the latest working generator here: <a href="https://github.com/fracek/xdrgen/tree/csharp">https://github.com/fracek/xdrgen/tree/csharp</a></p>
+<p>You can use that version of xdrgen to regenerate the XDR files from the .x files located from the <a href="https://github.com/stellar/stellar-core/tree/master/src/xdr">source</a> of the original API SDK for Horizon.</p>
+<h3 id="example">Example</h3>
+<ol>
+<li>Install custom XDR generator:
+<pre><code>git clone https://github.com/fracek/xdrgen
+cd xdrgen
+git checkout csharp
+rake install
+</code></pre>
+</li>
+<li>Regenerate .cs files from .x files:
+<pre><code>cd dotnet-stellar-sdk/
+xdrgen -o=./stellar-dotnet-sdk-xdr/generated -l=csharp -n=stellar_dotnet_sdk.xdr ./stellar-dotnet-sdk-xdr/*.x
+</code></pre>
+</li>
+<li>Reformat .cs files using dotnet-format:
+<pre><code>dotnet format
+</code></pre>
+</li>
+</ol>
+<!-- CONTRIBUTORS-->
+<h2 id="contributors">Contributors</h2>
+<ul>
+<li>Eric Malamisura (Twitter: <a href="https://twitter.com/EricDaCoder">@EricDaCoder</a>, Keybase: <a href="https://keybase.io/elucidsoft">elucidsoft</a>)</li>
+<li>Kirbyrawr (Keybase: <a href="https://keybase.io/Kirbyrawr">Kirbyrawr</a>)</li>
+<li>Michael Monte</li>
+<li>Francesco Ceccon</li>
+</ul>
+<!-- LICENSE -->
+<h2 id="license">License</h2>
+<p><code>dotnet-stellar-sdk</code> is licensed under an Apache-2.0 license. See the <a href="https://github.com/elucidsoft/dotnet-stellar-sdk/blob/master/LICENSE.txt">LICENSE</a> file for details.</p>
+<!-- ACKNOWLEDGEMENTS -->
+<h2 id="acknowledgements">Acknowledgements</h2>
+<ul>
+<li>Stellar Development Foundation</li>
+</ul>
+<!-- Disclaimer -->
+<!-- This readme is a modification of https://github.com/othneildrew/Best-README-Template that is licensed under MIT -->
+</article>
+          </div>
+          <div class="contribution-panel mobile-hide">
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>
