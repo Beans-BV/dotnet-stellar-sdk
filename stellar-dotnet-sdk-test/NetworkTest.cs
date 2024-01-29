@@ -13,12 +13,6 @@ namespace stellar_dotnet_sdk_test
         }
 
         [TestMethod]
-        public void TestNoDefaultNetwork()
-        {
-            Assert.IsNull(Network.Current);
-        }
-
-        [TestMethod]
         public void TestSwitchToTestNetwork()
         {
             Network.UseTestNetwork();

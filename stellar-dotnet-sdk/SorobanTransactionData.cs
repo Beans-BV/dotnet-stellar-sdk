@@ -18,8 +18,9 @@ public class SorobanTransactionData
         };
     }
 
-    public static SorobanTransactionData FromXdr(xdr.SorobanTransactionData xdr)
+    public static SorobanTransactionData? FromXdr(xdr.SorobanTransactionData xdr)
     {
+        if (xdr == null) return null;
         return new SorobanTransactionData
         {
             ExtensionPoint = ExtensionPoint.FromXdr(xdr.Ext),
