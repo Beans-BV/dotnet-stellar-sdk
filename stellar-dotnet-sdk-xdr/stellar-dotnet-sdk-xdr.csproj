@@ -7,7 +7,6 @@
     <OutputType>Library</OutputType>
     <StartupObject />
     <RootNamespace>stellar_dotnet_sdk_xdr</RootNamespace>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>The .NET Standard XDR Objects for the Stellar Network Protocol</Description>
     <PackageId>stellar-dotnet-sdk-xdr</PackageId>
     <PackageLicense></PackageLicense>
@@ -19,6 +18,7 @@
     <PackageTags>'.NET Core' 'Stellar' 'Horizon' 'Blockchain' 'Crypto' 'Distributed Ledger'</PackageTags>
     <ReleaseNotes>https://github.com/elucidsoft/dotnet-stellar-sdk/releases</ReleaseNotes>
       <WarningLevel>0</WarningLevel>
+      <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
