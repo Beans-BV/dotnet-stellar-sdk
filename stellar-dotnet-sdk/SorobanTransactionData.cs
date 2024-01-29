@@ -18,7 +18,12 @@ public class SorobanTransactionData
         };
     }
 
-    public static SorobanTransactionData? FromXdr(xdr.SorobanTransactionData xdr)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="xdr">The <see cref="xdr.SorobanTransactionData"/> can still be null when its containing <see cref="xdr.Transaction.TransactionExt"/>'s Discriminant is 0.</param>
+    /// <returns></returns>
+    public static SorobanTransactionData? FromXdr(xdr.SorobanTransactionData? xdr)
     {
         if (xdr == null) return null;
         return new SorobanTransactionData
