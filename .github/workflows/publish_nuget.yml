@@ -5,10 +5,12 @@ on:
     branches:
     - 'master'
   pull_request_target:
-    types: [opened, synchronize]
+    types:
+    - opened
+    - synchronize
   release:
     types:
-      - published
+    - published
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
@@ -33,7 +35,7 @@ jobs:
 
   validate_nuget:
     runs-on: ubuntu-latest
-    needs: [create_nuget]
+    needs: create_nuget
     steps:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -60,7 +62,9 @@ jobs:
     # https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
-    needs: [validate_nuget, run_test]
+    needs: 
+    - validate_nuget
+    - run_test
     steps:
       # Download the NuGet package created in the previous job
       - uses: actions/download-artifact@v3
