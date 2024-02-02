@@ -144,7 +144,7 @@ namespace stellar_dotnet_sdk.responses
             }
         }
 
-        public TransactionResult Result => TransactionResult.FromXdr(ResultXdr);
+        public TransactionResult Result => TransactionResult.FromXdrBase64(ResultXdr);
 
         public TransactionResponse()
         {

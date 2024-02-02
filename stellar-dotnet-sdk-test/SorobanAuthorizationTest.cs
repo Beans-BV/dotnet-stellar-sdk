@@ -2,13 +2,11 @@
 using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using stellar_dotnet_sdk;
-using SCAddress = stellar_dotnet_sdk.SCAddress;
 using SCString = stellar_dotnet_sdk.SCString;
 using InitSorobanAddressCredentials = stellar_dotnet_sdk.SorobanAddressCredentials;
 using SorobanAuthorizationEntry = stellar_dotnet_sdk.SorobanAuthorizationEntry;
 using SorobanAuthorizedInvocation = stellar_dotnet_sdk.SorobanAuthorizedInvocation;
 using SorobanCredentials = stellar_dotnet_sdk.SorobanCredentials;
-using xdrSDK = stellar_dotnet_sdk.xdr;
 using ContractExecutable = stellar_dotnet_sdk.ContractExecutable;
 
 namespace stellar_dotnet_sdk_test;
@@ -19,8 +17,7 @@ public class SorobanAuthorizationTest
     private const long Nonce = -9223372036854775807;
     private const uint SignatureExpirationLedger = 1319013123;
 
-    private readonly SCAddress _accountAddress =
-        new SCAccountId("GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP");
+    private readonly SCAccountId _accountAddress = new("GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP");
 
     private readonly ContractExecutable _contractExecutableWasm =
         new ContractExecutableWasm("ZBYoEJT3IaPMMk3FoRmnEQHoDxewPZL+Uor+xWI4uII=");
@@ -40,14 +37,10 @@ public class SorobanAuthorizationTest
 
     private ContractIDAddressPreimage InitContractIDAddressPreimage()
     {
-        var random32Bytes = new byte[32];
-        RandomNumberGenerator.Create().GetBytes(random32Bytes);
+        var salt = new byte[32];
+        RandomNumberGenerator.Create().GetBytes(salt);
 
-        return new ContractIDAddressPreimage
-        {
-            Address = _accountAddress,
-            Salt = new xdrSDK.Uint256(random32Bytes)
-        };
+        return new ContractIDAddressPreimage(_accountAddress.InnerValue, salt);
     }
 
     [TestMethod]

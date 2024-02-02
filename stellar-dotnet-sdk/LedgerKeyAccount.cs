@@ -4,6 +4,10 @@ namespace stellar_dotnet_sdk
     {
         public new KeyPair Account { get; }
 
+        public LedgerKeyAccount(string accountId) : this(KeyPair.FromAccountId(accountId))
+        {
+        }
+        
         public LedgerKeyAccount(KeyPair account)
         {
             Account = account;

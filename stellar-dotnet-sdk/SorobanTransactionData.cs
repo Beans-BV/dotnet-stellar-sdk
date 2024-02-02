@@ -1,10 +1,12 @@
-﻿using stellar_dotnet_sdk.xdr;
+﻿using System;
+using stellar_dotnet_sdk.xdr;
+using Int64 = stellar_dotnet_sdk.xdr.Int64;
 
 namespace stellar_dotnet_sdk;
 
 public class SorobanTransactionData
 {
-    public ExtensionPoint ExtensionPoint { get; set; }
+    public ExtensionPoint ExtensionPoint { get; set; } = new ExtensionPointZero();
     public SorobanResources Resources { get; set; }
     public long ResourceFee { get; set; }
 
@@ -32,5 +34,18 @@ public class SorobanTransactionData
             Resources = SorobanResources.FromXdr(xdr.Resources),
             ResourceFee = xdr.ResourceFee.InnerValue
         };
+    }
+
+    /// <summary>
+    ///     Creates a new SorobanTransactionData object from the given SorobanTransactionData XDR base64 string.
+    /// </summary>
+    /// <param name="xdrBase64"></param>
+    /// <returns>SorobanTransactionData object</returns>
+    public static SorobanTransactionData FromXdrBase64(string xdrBase64)
+    {
+        var bytes = Convert.FromBase64String(xdrBase64);
+        var reader = new XdrDataInputStream(bytes);
+        var thisXdr = xdr.SorobanTransactionData.Decode(reader);
+        return FromXdr(thisXdr);
     }
 }

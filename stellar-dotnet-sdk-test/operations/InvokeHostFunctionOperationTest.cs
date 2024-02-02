@@ -13,7 +13,7 @@ public class InvokeHostFunctionOperationTest
     private const long Nonce = -9223372036854775807;
     private const uint SignatureExpirationLedger = 1319013123;
 
-    private readonly SCAddress _accountAddress =
+    private readonly SCAccountId _accountAddress =
         new SCAccountId("GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP");
 
     private readonly SCVal[] _args = { new SCString("world"), new SCBytes(new byte[] { 0x00, 0x01, 0x02 }) };
@@ -69,13 +69,9 @@ public class InvokeHostFunctionOperationTest
     public void TestCreateContractOperationWithMissingSourceAccount()
     {
         var contractExecutableWasm = new ContractExecutableWasm(WasmHash);
-        var random32Bytes = new byte[32];
-        RandomNumberGenerator.Create().GetBytes(random32Bytes);
-        var contractIdAddressPreimage = new ContractIDAddressPreimage
-        {
-            Address = _accountAddress,
-            Salt = new xdrSDK.Uint256(random32Bytes)
-        };
+        var salt = new byte[32];
+        RandomNumberGenerator.Create().GetBytes(salt);
+        var contractIdAddressPreimage = new ContractIDAddressPreimage(_accountAddress.InnerValue, salt);
         var builder = new CreateContractOperation.Builder();
         builder.SetContractIDPreimage(contractIdAddressPreimage);
         builder.SetExecutable(contractExecutableWasm);
@@ -96,7 +92,7 @@ public class InvokeHostFunctionOperationTest
 
         // Assert
         Assert.AreEqual(address.InnerValue, decodedAddress.InnerValue);
-        CollectionAssert.AreEqual(contractIdPreimage.Salt.InnerValue, decodedContractIdPreimage.Salt.InnerValue);
+        CollectionAssert.AreEqual(contractIdPreimage.Salt, decodedContractIdPreimage.Salt);
         Assert.AreEqual(contractExecutable.WasmHash, decodedContractExecutable.WasmHash);
         Assert.IsTrue(operation.Auth.Length == 0);
         Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
@@ -116,13 +112,9 @@ public class InvokeHostFunctionOperationTest
     [TestMethod]
     public void TestCreateContractOperationWithMissingExecutable()
     {
-        var random32Bytes = new byte[32];
-        RandomNumberGenerator.Create().GetBytes(random32Bytes);
-        var contractIdAddressPreimage = new ContractIDAddressPreimage
-        {
-            Address = _accountAddress,
-            Salt = new xdrSDK.Uint256(random32Bytes)
-        };
+        var salt = new byte[32];
+        RandomNumberGenerator.Create().GetBytes(salt);
+        var contractIdAddressPreimage = new ContractIDAddressPreimage(_accountAddress.InnerValue, salt);
         var builder = new CreateContractOperation.Builder();
         builder.SetSourceAccount(_sourceAccount);
         builder.SetContractIDPreimage(contractIdAddressPreimage);
@@ -134,13 +126,9 @@ public class InvokeHostFunctionOperationTest
     public void TestCreateContractOperationFromAddressWithMissingAuthorizationEntry()
     {
         var contractExecutableWasm = new ContractExecutableWasm(WasmHash);
-        var random32Bytes = new byte[32];
-        RandomNumberGenerator.Create().GetBytes(random32Bytes);
-        var contractIdAddressPreimage = new ContractIDAddressPreimage
-        {
-            Address = _accountAddress,
-            Salt = new xdrSDK.Uint256(random32Bytes)
-        };
+        var salt = new byte[32];
+        RandomNumberGenerator.Create().GetBytes(salt);
+        var contractIdAddressPreimage = new ContractIDAddressPreimage(_accountAddress.InnerValue, salt);
         var builder = new CreateContractOperation.Builder();
         builder.SetSourceAccount(_sourceAccount);
         builder.SetExecutable(contractExecutableWasm);
@@ -163,7 +151,7 @@ public class InvokeHostFunctionOperationTest
 
         // Assert
         Assert.AreEqual(address.InnerValue, decodedAddress.InnerValue);
-        CollectionAssert.AreEqual(contractIdPreimage.Salt.InnerValue, decodedContractIdPreimage.Salt.InnerValue);
+        CollectionAssert.AreEqual(contractIdPreimage.Salt, decodedContractIdPreimage.Salt);
         Assert.AreEqual(contractExecutable.WasmHash, decodedContractExecutable.WasmHash);
         Assert.AreEqual(operation.Auth.Length, decodedOperation.Auth.Length);
         Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
@@ -179,13 +167,9 @@ public class InvokeHostFunctionOperationTest
     public void TestCreateContractOperationFromAddressWithValidArguments()
     {
         var contractExecutableWasm = new ContractExecutableWasm(WasmHash);
-        var random32Bytes = new byte[32];
-        RandomNumberGenerator.Create().GetBytes(random32Bytes);
-        var contractIdAddressPreimage = new ContractIDAddressPreimage
-        {
-            Address = _accountAddress,
-            Salt = new xdrSDK.Uint256(random32Bytes)
-        };
+        var salt = new byte[32];
+        RandomNumberGenerator.Create().GetBytes(salt);
+        var contractIdAddressPreimage = new ContractIDAddressPreimage(_accountAddress.InnerValue, salt);
         var builder = new CreateContractOperation.Builder();
         builder.SetSourceAccount(_sourceAccount);
         builder.SetExecutable(contractExecutableWasm);
@@ -209,7 +193,7 @@ public class InvokeHostFunctionOperationTest
 
         // Assert
         Assert.AreEqual(address.InnerValue, decodedAddress.InnerValue);
-        CollectionAssert.AreEqual(contractIdPreimage.Salt.InnerValue, decodedContractIdPreimage.Salt.InnerValue);
+        CollectionAssert.AreEqual(contractIdPreimage.Salt, decodedContractIdPreimage.Salt);
         Assert.AreEqual(contractExecutable.WasmHash, decodedContractExecutable.WasmHash);
         Assert.AreEqual(operation.Auth.Length, decodedOperation.Auth.Length);
         for (var i = 0; i < operation.Auth.Length; i++)

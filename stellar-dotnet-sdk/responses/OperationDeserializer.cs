@@ -77,6 +77,10 @@ namespace stellar_dotnet_sdk.responses
                     return new LiquidityPoolDepositOperationResponse();
                 case 23:
                     return new LiquidityPoolWithdrawOperationResponse();
+                case 24:
+                    return new InvokeHostFunctionOperationResponse();
+                case 25:
+                    return new ExtendFootprintOperationResponse();
                 default:
                     throw new JsonSerializationException($"Invalid operation 'type_i'='{type}'");
             }

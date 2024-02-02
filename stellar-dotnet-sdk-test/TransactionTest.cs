@@ -588,13 +588,7 @@ namespace stellar_dotnet_sdk_test
             {
                 ExtensionPoint = new ExtensionPointZero(),
                 ResourceFee = 100,
-                Resources = new SorobanResources()
-                {
-                    Footprint = footprint,
-                    Instructions = 10,
-                    ReadBytes = 20,
-                    WriteBytes = 30
-                }
+                Resources = new SorobanResources(footprint, 10, 20, 30)
             };
             var tx = new TransactionBuilder(account)
                 .SetFee(100)
@@ -609,7 +603,7 @@ namespace stellar_dotnet_sdk_test
             Assert.IsNotNull(decodedTx);
             Assert.AreEqual(txSource.Address, decodedTx.SourceAccount.Address);
 
-            var decodedSorobanData = decodedTx.SorobanData;
+            var decodedSorobanData = decodedTx.SorobanTransactionData;
             Assert.AreEqual(sorobanData.ResourceFee, decodedSorobanData.ResourceFee);
             Assert.AreEqual(sorobanData.Resources.Instructions, decodedSorobanData.Resources.Instructions);
             Assert.AreEqual(sorobanData.Resources.ReadBytes, decodedSorobanData.Resources.ReadBytes);

@@ -26,7 +26,13 @@ public class LedgerEntryData : LedgerEntry
     {
         if (xdrLedgerEntry.Data.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.DATA)
             throw new ArgumentException("Not a DataEntry", nameof(xdrLedgerEntry));
-        var xdrDataEntry = xdrLedgerEntry.Data.Data;
+        var ledgerEntryData = FromXdr(xdrLedgerEntry.Data.Data);
+        ExtraFieldsFromXdr(xdrLedgerEntry, ledgerEntryData);
+        return ledgerEntryData;
+    }
+
+    private static LedgerEntryData FromXdr(xdr.DataEntry xdrDataEntry)
+    {
         var ledgerEntryData = new LedgerEntryData
         {
             AccountID = KeyPair.FromXdrPublicKey(xdrDataEntry.AccountID.InnerValue),
@@ -35,10 +41,9 @@ public class LedgerEntryData : LedgerEntry
         };
         if (xdrDataEntry.Ext.Discriminant != 0)
             ledgerEntryData.DataExtension = DataEntryExtension.FromXdr(xdrDataEntry.Ext);
-        ExtraFieldsFromXdr(xdrLedgerEntry, ledgerEntryData);
         return ledgerEntryData;
     }
-
+    
     public DataEntry ToXdr()
     {
         return new DataEntry
@@ -48,5 +53,18 @@ public class LedgerEntryData : LedgerEntry
             DataValue = new DataValue(DataValue),
             Ext = DataExtension?.ToXdr() ?? new DataEntry.DataEntryExt()
         };
+    }
+    
+    /// <summary>
+    ///     Creates a new <see cref="LedgerEntryData"/> object from the given LedgerEntryData XDR base64 string.
+    /// </summary>
+    /// <param name="xdrBase64"></param>
+    /// <returns><see cref="LedgerEntryData"/> object</returns>
+    public static LedgerEntryData FromXdrBase64(string xdrBase64)
+    {
+        var bytes = Convert.FromBase64String(xdrBase64);
+        var reader = new XdrDataInputStream(bytes);
+        var xdrLedgerEntryData = xdr.LedgerEntry.LedgerEntryData.Decode(reader);
+        return FromXdr(xdrLedgerEntryData.Data);
     }
 }

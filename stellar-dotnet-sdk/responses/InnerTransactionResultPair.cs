@@ -25,7 +25,7 @@ public class InnerTransactionResultPair
         return new InnerTransactionResultPair
         {
             TransactionHash = Convert.ToBase64String(result.TransactionHash.InnerValue),
-            Result = TransactionResult.FromXdr(xdrTransaction),
+            Result = TransactionResult.FromXdrBase64(xdrTransaction),
         };
     }
 }

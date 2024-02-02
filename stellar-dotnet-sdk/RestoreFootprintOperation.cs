@@ -58,7 +58,7 @@ public class RestoreFootprintOperation : Operation
 
     public class Builder
     {
-        private ExtensionPoint _extensionPoint;
+        private ExtensionPoint _extensionPoint = new ExtensionPointZero(); 
       
         private KeyPair? _sourceAccount;
 

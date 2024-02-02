@@ -446,5 +446,11 @@
     <None Update="testdata\operations\createClaimableBalance\createClaimableBalanceAbsBeforeMaxInt.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="wasm\soroban_events_contract.wasm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="wasm\soroban_hello_world_contract.wasm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

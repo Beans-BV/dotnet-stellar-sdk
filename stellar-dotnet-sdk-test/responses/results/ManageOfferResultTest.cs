@@ -148,7 +148,7 @@ namespace stellar_dotnet_sdk_test.responses.results
         [TestMethod]
         public void TestOfferEntryFlagsIsSet()
         {
-            var result = TransactionResult.FromXdr(
+            var result = TransactionResult.FromXdrBase64(
                 "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAM/Ee4SnT3/gopz3ng3SEYJcq/D+9k6K6UsSPJLpqpV3AAAAAAGV4XUAAAABTEtLMQAAAACqysdXjcCwA0NHMgy+BYFMm3s5N8yUziZS4Dge3zQ05QAAAAAAAAAAAcnDgAAAAAEAAAABAAAAAAAAAAAAAAAA");
             Assert.IsTrue(result.IsSuccess);
             var success = (TransactionResultSuccess)result;

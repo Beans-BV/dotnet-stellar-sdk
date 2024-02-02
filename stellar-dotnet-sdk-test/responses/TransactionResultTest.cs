@@ -9,7 +9,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestTooEarly()
         {
-            var result = TransactionResult.FromXdr("AAAAAAAPQkD////+AAAAAA==");
+            var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////+AAAAAA==");
             Assert.AreEqual("0.1", result.FeeCharged);
             Assert.IsInstanceOfType(result, typeof(TransactionResultTooEarly));
         }
@@ -17,7 +17,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestTooLate()
         {
-            var result = TransactionResult.FromXdr("AAAAAAAPQkD////9AAAAAA==");
+            var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////9AAAAAA==");
             Assert.AreEqual("0.1", result.FeeCharged);
             Assert.IsInstanceOfType(result, typeof(TransactionResultTooLate));
         }
@@ -25,7 +25,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestMissingOperation()
         {
-            var result = TransactionResult.FromXdr(" AAAAAAAPQkD////8AAAAAA==");
+            var result = TransactionResult.FromXdrBase64(" AAAAAAAPQkD////8AAAAAA==");
             Assert.AreEqual("0.1", result.FeeCharged);
             Assert.IsInstanceOfType(result, typeof(TransactionResultMissingOperation));
         }
@@ -33,7 +33,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestBadSeq()
         {
-            var result = TransactionResult.FromXdr("AAAAAAAPQkD////7AAAAAA==");
+            var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////7AAAAAA==");
             Assert.AreEqual("0.1", result.FeeCharged);
             Assert.IsInstanceOfType(result, typeof(TransactionResultBadSeq));
         }
@@ -41,7 +41,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestBadAuth()
         {
-            var result = TransactionResult.FromXdr("AAAAAAAPQkD////6AAAAAA==");
+            var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////6AAAAAA==");
             Assert.AreEqual("0.1", result.FeeCharged);
             Assert.IsInstanceOfType(result, typeof(TransactionResultBadAuth));
         }
@@ -49,7 +49,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestInsufficientBalance()
         {
-            var result = TransactionResult.FromXdr("AAAAAAAPQkD////5AAAAAA==");
+            var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////5AAAAAA==");
             Assert.AreEqual("0.1", result.FeeCharged);
             Assert.IsInstanceOfType(result, typeof(TransactionResultInsufficientBalance));
         }
@@ -57,7 +57,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestNoAccount()
         {
-            var result = TransactionResult.FromXdr("AAAAAAAPQkD////4AAAAAA==");
+            var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////4AAAAAA==");
             Assert.AreEqual("0.1", result.FeeCharged);
             Assert.IsInstanceOfType(result, typeof(TransactionResultNoAccount));
         }
@@ -65,7 +65,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestInsufficientFee()
         {
-            var result = TransactionResult.FromXdr("AAAAAAAPQkD////3AAAAAA==");
+            var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////3AAAAAA==");
             Assert.AreEqual("0.1", result.FeeCharged);
             Assert.IsInstanceOfType(result, typeof(TransactionResultInsufficientFee));
         }
@@ -73,7 +73,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestBadAuthExtra()
         {
-            var result = TransactionResult.FromXdr("AAAAAAAPQkD////2AAAAAA==");
+            var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////2AAAAAA==");
             Assert.AreEqual("0.1", result.FeeCharged);
             Assert.IsInstanceOfType(result, typeof(TransactionResultBadAuthExtra));
         }
@@ -81,7 +81,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestInternalError()
         {
-            var result = TransactionResult.FromXdr("AAAAAAAPQkD////1AAAAAA==");
+            var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////1AAAAAA==");
             Assert.AreEqual("0.1", result.FeeCharged);
             Assert.IsInstanceOfType(result, typeof(TransactionResultInternalError));
         }

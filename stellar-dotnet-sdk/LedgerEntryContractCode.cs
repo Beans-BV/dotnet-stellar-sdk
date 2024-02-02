@@ -25,6 +25,16 @@ public class LedgerEntryContractCode : LedgerEntry
         return ledgerEntryContractCode;
     }
 
+    private static LedgerEntryContractCode FromXdr(xdr.ContractCodeEntry xdrContractDataEntry)
+    {
+        return new LedgerEntryContractCode
+        {
+            Hash = Hash.FromXdr(xdrContractDataEntry.Hash),
+            Code = xdrContractDataEntry.Code,
+            ExtensionPoint = ExtensionPoint.FromXdr(xdrContractDataEntry.Ext),
+        };
+    }
+    
     public ContractCodeEntry ToXdr()
     {
         return new ContractCodeEntry
@@ -33,5 +43,18 @@ public class LedgerEntryContractCode : LedgerEntry
             Hash = Hash.ToXdr(),
             Code = Code
         };
+    }
+    
+    /// <summary>
+    ///     Creates a new <see cref="LedgerEntryContractCode"/> object from the given LedgerEntryData XDR base64 string.
+    /// </summary>
+    /// <param name="xdrBase64"></param>
+    /// <returns><see cref="LedgerEntryContractCode"/> object</returns>
+    public static LedgerEntryContractCode FromXdrBase64(string xdrBase64)
+    {
+        var bytes = Convert.FromBase64String(xdrBase64);
+        var reader = new XdrDataInputStream(bytes);
+        var xdrLedgerEntryData = xdr.LedgerEntry.LedgerEntryData.Decode(reader);
+        return FromXdr(xdrLedgerEntryData.ContractCode);
     }
 }

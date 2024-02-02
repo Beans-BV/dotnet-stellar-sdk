@@ -9,7 +9,7 @@ namespace stellar_dotnet_sdk_test.responses.results
     {
         public static TransactionResult AssertResultOfType(string xdr, Type resultType, bool isSuccess)
         {
-            var result = TransactionResult.FromXdr(xdr);
+            var result = TransactionResult.FromXdrBase64(xdr);
             Assert.IsInstanceOfType(result, typeof(TransactionResultFailed));
             var failed = (TransactionResultFailed)result;
             Assert.IsFalse(failed.IsSuccess);

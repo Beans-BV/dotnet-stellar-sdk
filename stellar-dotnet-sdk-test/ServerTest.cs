@@ -329,5 +329,21 @@ namespace stellar_dotnet_sdk_test
                 return await Task.FromResult(Send(request));
             }
         }
+
+        [TestMethod]
+        public async Task TestSubmitInvokeContractTransaction()
+        {
+            var xdrBase64 =
+                "AAAAAgAAAACPMSyy9mKtfCdjSZ5M9UAOGywn8EzskQZ/LFn+t7f31QAAdLYAK1faAAAABwAAAAAAAAAAAAAAAQAAAAAAAAAYAAAAAAAAAAH+ApqHuMOZcvSEr0QsaWWqzWWy/O/iCwZB9QY7+KjlwQAAAAZzdWJtaXQAAAAAAAEAAAAPAAAACmRhbmNpblJhcGgAAAAAAAAAAAABAAAAAAAAAAIAAAAGAAAAAf4Cmoe4w5ly9ISvRCxpZarNZbL87+ILBkH1Bjv4qOXBAAAAFAAAAAEAAAAHvyeT3bL2fs8RgEztJaliJzxp5kxwYfGR7ftoXA7sMUIAAAAAABumWQAABGwAAAAAAAAAAAAAAAMAAAABt7f31QAAAECV4sHbkhrlj5k0y3Peu+WnWUyhv2voubC/LxGkbP/HvVRdWifEYuoWw/MXg7p7kDmo3IBvEffR85YULwKy284D";
+            var tx = Transaction.FromEnvelopeXdr(xdrBase64);
+            var invokeContractOperation = (InvokeContractOperation)tx.Operations[0];
+            var hostFunction = invokeContractOperation.HostFunction;
+            var sourceAccount = tx.SourceAccount;
+            Assert.AreEqual(sourceAccount.AccountId, "GCHTCLFS6ZRK27BHMNEZ4THVIAHBWLBH6BGOZEIGP4WFT7VXW735KJW2");
+            Assert.AreEqual(((SCContractId)hostFunction.ContractAddress).InnerValue, StrKey.EncodeContractId(Convert.FromHexString("FE029A87B8C39972F484AF442C6965AACD65B2FCEFE20B0641F5063BF8A8E5C1")));
+            Assert.AreEqual(hostFunction.FunctionName.InnerValue, "submit");
+            Assert.AreEqual(((SCSymbol)hostFunction.Args[0]).InnerValue, "dancinRaph");
+            Assert.AreEqual(invokeContractOperation.Auth.Length, 0);
+        }
     }
 }

@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFi
 		CONTRIBUTING.md = CONTRIBUTING.md
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		README.md = README.md
+		nugetreadme.md = nugetreadme.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{88F76D91-FE64-4BF1-9072-7FA732A1EAC0}"

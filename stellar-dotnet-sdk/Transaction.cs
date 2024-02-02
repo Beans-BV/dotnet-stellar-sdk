@@ -25,10 +25,10 @@ namespace stellar_dotnet_sdk
             TransactionPreconditions preconditions, SorobanTransactionData sorobanData) : this(sourceAccount, fee,
             sequenceNumber, operations, memo, preconditions)
         {
-            SorobanData = sorobanData;
+            SorobanTransactionData = sorobanData;
         }
 
-        public uint Fee { get; }
+        public uint Fee { get; private set; }
 
         public IAccountId SourceAccount { get; }
 
@@ -42,8 +42,23 @@ namespace stellar_dotnet_sdk
 
         public TimeBounds TimeBounds => Preconditions.TimeBounds;
 
-        public SorobanTransactionData? SorobanData { get; }
+        public SorobanTransactionData? SorobanTransactionData { get; set; }
 
+        public void AddResourceFee(uint resourceFee)
+        {
+            Fee += resourceFee;
+        }
+
+        public void SetSorobanAuthorization(SorobanAuthorizationEntry[] auth)
+        {
+            foreach (var operation in Operations)
+            {
+                if (operation is InvokeHostFunctionOperation invokeHostFunctionOperation)
+                {
+                    invokeHostFunctionOperation.Auth = auth;
+                }
+            }
+        }
         /// <summary>
         ///     Returns signature base for the given network.
         /// </summary>
@@ -148,10 +163,10 @@ namespace stellar_dotnet_sdk
 
             // ext
             var ext = new xdr.Transaction.TransactionExt() { Discriminant = 0 };
-            if (SorobanData != null)
+            if (SorobanTransactionData != null)
             {
                 ext.Discriminant = 1;
-                ext.SorobanData = SorobanData.ToXdr();
+                ext.SorobanData = SorobanTransactionData.ToXdr();
             }
 
             var transaction = new xdr.Transaction

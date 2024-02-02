@@ -20,31 +20,21 @@ namespace stellar_dotnet_sdk
 
         public static LedgerKey FromXdr(xdr.LedgerKey xdr)
         {
-            switch (xdr.Discriminant.InnerValue)
+            return xdr.Discriminant.InnerValue switch
             {
-                case LedgerEntryType.LedgerEntryTypeEnum.ACCOUNT:
-                    return LedgerKeyAccount.FromXdr(xdr.Account);
-                case LedgerEntryType.LedgerEntryTypeEnum.DATA:
-                    return LedgerKeyData.FromXdr(xdr.Data);
-                case LedgerEntryType.LedgerEntryTypeEnum.OFFER:
-                    return LedgerKeyOffer.FromXdr(xdr.Offer);
-                case LedgerEntryType.LedgerEntryTypeEnum.TRUSTLINE:
-                    return LedgerKeyTrustline.FromXdr(xdr.TrustLine);
-                case LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE:
-                    return LedgerKeyClaimableBalance.FromXdr(xdr.ClaimableBalance);
-                case LedgerEntryType.LedgerEntryTypeEnum.LIQUIDITY_POOL:
-                    return LedgerKeyLiquidityPool.FromXdr(xdr.LiquidityPool);
-                case LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_DATA:
-                    return LedgerKeyContractData.FromXdr(xdr.ContractData);
-                case LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE:
-                    return LedgerKeyContractCode.FromXdr(xdr.ContractCode);
-                case LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING:
-                    return LedgerKeyConfigSetting.FromXdr(xdr.ConfigSetting);
-                case LedgerEntryType.LedgerEntryTypeEnum.TTL:
-                    return LedgerKeyTTL.FromXdr(xdr.Ttl);
-                default:
-                    throw new Exception("Unknown ledger key " + xdr.Discriminant.InnerValue);
-            }
+                LedgerEntryType.LedgerEntryTypeEnum.ACCOUNT => LedgerKeyAccount.FromXdr(xdr.Account),
+                LedgerEntryType.LedgerEntryTypeEnum.DATA => LedgerKeyData.FromXdr(xdr.Data),
+                LedgerEntryType.LedgerEntryTypeEnum.OFFER => LedgerKeyOffer.FromXdr(xdr.Offer),
+                LedgerEntryType.LedgerEntryTypeEnum.TRUSTLINE => LedgerKeyTrustline.FromXdr(xdr.TrustLine),
+                LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE => LedgerKeyClaimableBalance.FromXdr(
+                    xdr.ClaimableBalance),
+                LedgerEntryType.LedgerEntryTypeEnum.LIQUIDITY_POOL => LedgerKeyLiquidityPool.FromXdr(xdr.LiquidityPool),
+                LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_DATA => LedgerKeyContractData.FromXdr(xdr.ContractData),
+                LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE => LedgerKeyContractCode.FromXdr(xdr.ContractCode),
+                LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING => LedgerKeyConfigSetting.FromXdr(xdr.ConfigSetting),
+                LedgerEntryType.LedgerEntryTypeEnum.TTL => LedgerKeyTTL.FromXdr(xdr.Ttl),
+                _ => throw new Exception("Unknown ledger key " + xdr.Discriminant.InnerValue)
+            };
         }
         
         /// <summary>

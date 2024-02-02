@@ -54,9 +54,9 @@ namespace stellar_dotnet_sdk.responses
             {
                 if (IsSuccess())
                 {
-                    return TransactionResult.FromXdr(_resultXdr);
+                    return TransactionResult.FromXdrBase64(_resultXdr);
                 }
-                return TransactionResult.FromXdr(SubmitTransactionResponseExtras.ResultXdr);
+                return TransactionResult.FromXdrBase64(SubmitTransactionResponseExtras.ResultXdr);
             }
         }
 

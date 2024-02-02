@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using stellar_dotnet_sdk;
 using stellar_dotnet_sdk.xdr;
 using Transaction = stellar_dotnet_sdk.xdr.Transaction;
+using TransactionMeta = stellar_dotnet_sdk.xdr.TransactionMeta;
 
 namespace stellar_dotnet_sdk_test.xdr
 {

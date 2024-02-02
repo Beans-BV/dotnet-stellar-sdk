@@ -4,16 +4,16 @@ using stellar_dotnet_sdk.xdr;
 namespace stellar_dotnet_sdk;
 
 /// <summary>
-/// Operation that extends footprint TTL
+///     Operation that extends footprint TTL
 /// </summary>
 public class ExtendFootprintOperation : Operation
 {
     public uint ExtendTo { get; set; }
-    
+
     public ExtensionPoint ExtensionPoint { get; set; }
 
     /// <summary>
-    /// Creates a new ExtendFootprintOperation object from the given base64-encoded XDR Operation.
+    ///     Creates a new ExtendFootprintOperation object from the given base64-encoded XDR Operation.
     /// </summary>
     /// <param name="xdrBase64"></param>
     /// <returns>ExtendFootprintOperation object</returns>
@@ -23,13 +23,14 @@ public class ExtendFootprintOperation : Operation
         var operation = FromXdrBase64(xdrBase64);
         if (operation == null)
             throw new InvalidOperationException("Operation XDR is invalid");
-        
+
         if (operation is not ExtendFootprintOperation extendFootprintOperation)
             throw new InvalidOperationException("Operation is not ExtendFootprintOperation");
         return extendFootprintOperation;
     }
 
-    public static ExtendFootprintOperation FromExtendFootprintTTLOperationXdr(ExtendFootprintTTLOp xdrExtendFootprintTTLOp)
+    public static ExtendFootprintOperation FromExtendFootprintTTLOperationXdr(
+        ExtendFootprintTTLOp xdrExtendFootprintTTLOp)
     {
         return new ExtendFootprintOperation
         {
@@ -46,14 +47,14 @@ public class ExtendFootprintOperation : Operation
             ExtendTo = new Uint32(ExtendTo)
         };
     }
-    
+
     public override xdr.Operation.OperationBody ToOperationBody()
     {
         var body = new xdr.Operation.OperationBody
         {
-            Discriminant = new xdr.OperationType
+            Discriminant = new OperationType
             {
-                InnerValue = xdr.OperationType.OperationTypeEnum.EXTEND_FOOTPRINT_TTL
+                InnerValue = OperationType.OperationTypeEnum.EXTEND_FOOTPRINT_TTL
             },
             ExtendFootprintTTLOp = ToExtendFootprintTTLOperationXdr()
         };
@@ -63,12 +64,17 @@ public class ExtendFootprintOperation : Operation
     public class Builder
     {
         private uint? _extendTo;
-        private ExtensionPoint _extensionPoint;
-      
+        private ExtensionPoint _extensionPoint = new ExtensionPointZero();
+
         private KeyPair? _sourceAccount;
 
         public Builder()
         {
+        }
+
+        public Builder(uint extendTo)
+        {
+            _extendTo = extendTo;
         }
 
         public Builder(ExtendFootprintTTLOp operationXdr)
@@ -82,34 +88,31 @@ public class ExtendFootprintOperation : Operation
             _sourceAccount = sourceAccount;
             return this;
         }
-    
+
         public Builder SetExtensionPoint(ExtensionPoint ext)
         {
             _extensionPoint = ext;
             return this;
         }
-        
+
         public Builder SetExtendTo(uint extendTo)
         {
             _extendTo = extendTo;
             return this;
         }
-        
+
         public ExtendFootprintOperation Build()
         {
             if (_extensionPoint == null)
                 throw new InvalidOperationException("Extension point cannot be null");
             if (_extendTo == null)
                 throw new InvalidOperationException("Extend to cannot be null");
-            var operation = new ExtendFootprintOperation()
+            var operation = new ExtendFootprintOperation
             {
                 ExtensionPoint = _extensionPoint,
                 ExtendTo = _extendTo.Value
             };
-            if (_sourceAccount != null)
-            {
-                operation.SourceAccount = _sourceAccount;
-            }
+            if (_sourceAccount != null) operation.SourceAccount = _sourceAccount;
             return operation;
         }
     }

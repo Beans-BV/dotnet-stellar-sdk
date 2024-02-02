@@ -10,7 +10,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestBadAuth()
         {
-            var result = TransactionResult.FromXdr("AAAAAACYloD/////AAAAAf////8AAAAA");
+            var result = TransactionResult.FromXdrBase64("AAAAAACYloD/////AAAAAf////8AAAAA");
             Assert.IsInstanceOfType(result, typeof(TransactionResultFailed));
             var failed = (TransactionResultFailed)result;
             Assert.IsFalse(failed.IsSuccess);
@@ -22,7 +22,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestNoAccount()
         {
-            var result = TransactionResult.FromXdr("AAAAAACYloD/////AAAAAf////4AAAAA");
+            var result = TransactionResult.FromXdrBase64("AAAAAACYloD/////AAAAAf////4AAAAA");
             Assert.IsInstanceOfType(result, typeof(TransactionResultFailed));
             var failed = (TransactionResultFailed)result;
             Assert.IsFalse(failed.IsSuccess);
@@ -34,7 +34,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestNotSupported()
         {
-            var result = TransactionResult.FromXdr("AAAAAACYloD/////AAAAAf////0AAAAA");
+            var result = TransactionResult.FromXdrBase64("AAAAAACYloD/////AAAAAf////0AAAAA");
             Assert.IsInstanceOfType(result, typeof(TransactionResultFailed));
             var failed = (TransactionResultFailed)result;
             Assert.IsFalse(failed.IsSuccess);
@@ -46,7 +46,7 @@ namespace stellar_dotnet_sdk_test.responses
         [TestMethod]
         public void TestMultipleFailures()
         {
-            var result = TransactionResult.FromXdr("AAAAAACYloD/////AAAAA/////3//////////gAAAAA=");
+            var result = TransactionResult.FromXdrBase64("AAAAAACYloD/////AAAAA/////3//////////gAAAAA=");
             Assert.IsInstanceOfType(result, typeof(TransactionResultFailed));
             var failed = (TransactionResultFailed)result;
             Assert.IsFalse(failed.IsSuccess);
