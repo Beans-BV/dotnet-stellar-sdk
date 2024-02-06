@@ -32,6 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{
 		.github\workflows\release_mgmt.yml = .github\workflows\release_mgmt.yml
 		.github\workflows\publish_nuget.yml = .github\workflows\publish_nuget.yml
 		.github\workflows\update-documentation.yml = .github\workflows\update-documentation.yml
+		.github\workflows\pack_and_test.yml = .github\workflows\pack_and_test.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IssueTemplate", "IssueTemplate", "{83F7A5C8-A220-42AA-A2E4-DAD5FDB014D3}"
