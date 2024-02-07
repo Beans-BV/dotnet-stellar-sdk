@@ -14,7 +14,7 @@ public class TransactionMetaV3
 
     public SorobanTransactionMeta? SorobanMeta { get; set; }
 
-    public xdr.TransactionMetaV3 ToXdrMetaV3()
+    public xdr.TransactionMetaV3 ToXdr()
     {
         return new xdr.TransactionMetaV3
         {
@@ -29,6 +29,15 @@ public class TransactionMetaV3
         };
     }
 
+    public TransactionMeta ToMetaXdr()
+    {
+        return new TransactionMeta
+        {
+            Discriminant = 3,
+            V3 = ToXdr()
+        };
+    }
+    
     public static TransactionMetaV3 FromXdr(xdr.TransactionMetaV3 xdr)
     {
         return new TransactionMetaV3
@@ -51,7 +60,15 @@ public class TransactionMetaV3
     {
         var bytes = Convert.FromBase64String(xdrBase64);
         var reader = new XdrDataInputStream(bytes);
-        var thisXdr = TransactionMeta.Decode(reader);
+        var thisXdr = xdr.TransactionMeta.Decode(reader);
         return FromXdr(thisXdr.V3);
+    }
+    
+    public string ToXdrBase64()
+    {
+        var xdrValue = ToMetaXdr();
+        var writer = new XdrDataOutputStream();
+        xdr.TransactionMeta.Encode(writer, xdrValue);
+        return Convert.ToBase64String(writer.ToArray());
     }
 }

@@ -281,6 +281,12 @@ public class CreateContractOperation : InvokeHostFunctionOperation
         {
         }
 
+        public Builder(Asset asset)
+        {
+            _contractIDPreimage = new ContractIDAssetPreimage(asset);
+            _executable = new ContractExecutableStellarAsset();
+        }
+        
         public Builder(string accountId, string wasmId, byte[]? salt)
         {
             _contractIDPreimage = new ContractIDAddressPreimage(accountId, salt);
@@ -569,11 +575,6 @@ public class InvokeContractHostFunction : HostFunction
         ContractAddress = contractAddress;
         FunctionName = functionName;
         Args = args;
-    }
-
-    public InvokeContractHostFunction(string contractAddress, string functionName, SCVal[] args)
-    {
-        throw new NotImplementedException();
     }
 
     public SCAddress ContractAddress { get; }
@@ -1107,16 +1108,17 @@ public class ContractIDAssetPreimage : ContractIDPreimage
 {
     public Asset Asset { get; set; }
 
+    public ContractIDAssetPreimage(Asset asset)
+    {
+        Asset = asset;
+    }
     public static ContractIDPreimage FromContractIDPreimageXdr(xdr.ContractIDPreimage xdrContractIDPreimage)
     {
         if (xdrContractIDPreimage.Discriminant.InnerValue !=
             ContractIDPreimageType.ContractIDPreimageTypeEnum.CONTRACT_ID_PREIMAGE_FROM_ASSET)
             throw new InvalidOperationException("Invalid ContractIDPreimage type");
 
-        return new ContractIDAssetPreimage
-        {
-            Asset = Asset.FromXdr(xdrContractIDPreimage.FromAsset)
-        };
+        return new ContractIDAssetPreimage(Asset.FromXdr(xdrContractIDPreimage.FromAsset));
     }
 
     public xdr.ContractIDPreimage ToContractIDPreimageXdr()

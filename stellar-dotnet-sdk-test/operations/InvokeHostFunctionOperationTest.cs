@@ -207,12 +207,8 @@ public class InvokeHostFunctionOperationTest
         var builder = new CreateContractOperation.Builder();
         builder.SetSourceAccount(_sourceAccount);
         builder.SetExecutable(new ContractExecutableStellarAsset());
-        builder.SetContractIDPreimage(new ContractIDAssetPreimage
-        {
-            Asset =
-                new AssetTypeCreditAlphaNum4("VNDC",
-                    "GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP")
-        });
+        builder.SetContractIDPreimage(new ContractIDAssetPreimage(new AssetTypeCreditAlphaNum4("VNDC",
+                    "GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP")));
         var operation = builder.Build();
 
         // Act

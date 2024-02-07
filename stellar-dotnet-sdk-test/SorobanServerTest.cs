@@ -11,6 +11,8 @@ using stellar_dotnet_sdk.responses.operations;
 using stellar_dotnet_sdk.responses.sorobanrpc;
 using stellar_dotnet_sdk.xdr;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using Asset = stellar_dotnet_sdk.Asset;
+using ChangeTrustAsset = stellar_dotnet_sdk.ChangeTrustAsset;
 using LedgerFootprint = stellar_dotnet_sdk.LedgerFootprint;
 using LedgerKey = stellar_dotnet_sdk.LedgerKey;
 using SCSymbol = stellar_dotnet_sdk.SCSymbol;
@@ -286,7 +288,7 @@ public class SorobanServerTest
         return sendResponse;
     }
 
-    private async Task<SimulateTransactionResponse> SimulateAndUpdateTransaction(Transaction tx)
+    private async Task<SimulateTransactionResponse> SimulateAndUpdateTransaction(Transaction tx, KeyPair? signer = null)
     {
         var simulateResponse = await _sorobanServer.SimulateTransaction(tx);
 
@@ -297,7 +299,7 @@ public class SorobanServerTest
         if (simulateResponse.SorobanAuthorization != null)
             tx.SetSorobanAuthorization(simulateResponse.SorobanAuthorization);
         tx.AddResourceFee(simulateResponse.MinResourceFee + 100000);
-        tx.Sign(_sourceAccount);
+        tx.Sign(signer ?? _sourceAccount);
 
         return simulateResponse;
     }
@@ -355,6 +357,58 @@ public class SorobanServerTest
         var (ledger, createdContractId) = await CreateContract(contractWasmId);
         await InvokeContract(createdContractId);
         await GetEvents(ledger, createdContractId);
+    }
+
+    [TestMethod]
+    public async Task TestDeploySACWithAsset()
+    {
+        // Load the account with the updated sequence number from Soroban server
+        var randomKeyPair = KeyPair.Random();
+        var randomAccountId = randomKeyPair.AccountId;
+        await _server.TestNetFriendBot.FundAccount(randomAccountId).Execute();
+        await Task.Delay(3000);
+        
+        var randomAccount = await _sorobanServer.GetAccount(randomAccountId);
+
+        var asset = Asset.CreateNonNativeAsset("VNDT", randomAccountId);
+        var changeTrustAsset = ChangeTrustAsset.Create(asset);
+        
+        var changeTrustOperation = new ChangeTrustOperation.Builder(changeTrustAsset, ChangeTrustOperation.MaxLimit)
+            .SetSourceAccount(_sourceAccount).Build();
+
+        var paymentOperation = new PaymentOperation.Builder(_sourceAccount, asset, "200").Build();
+        
+        var tx = new TransactionBuilder(randomAccount).AddOperation(changeTrustOperation).AddOperation(paymentOperation).Build();
+        tx.Sign(randomKeyPair);
+        tx.Sign(_sourceAccount);
+        var submitResponse = await _server.SubmitTransaction(tx);
+        
+        Assert.IsTrue(submitResponse.IsSuccess());
+        
+        randomAccount = await _sorobanServer.GetAccount(randomAccountId);
+        
+        var createContractOperation = new CreateContractOperation.Builder(asset).Build();
+        
+        tx = new TransactionBuilder(randomAccount).AddOperation(createContractOperation).Build();
+        
+        var simulateResponse = await SimulateAndUpdateTransaction(tx, randomKeyPair);
+        AssertSimulateResponse(simulateResponse);
+
+        var transactionEnvelopeXdrBase64 = tx.ToEnvelopeXdrBase64();
+        
+        var sendResponse = await SendTransaction(tx);
+
+        var txHash = sendResponse.Hash;
+
+        await PollTransaction(txHash);
+        
+        await Task.Delay(3000);
+        
+        var operationResponse = await GetHorizonOperation(txHash, transactionEnvelopeXdrBase64);
+        
+        Assert.IsInstanceOfType(operationResponse, typeof(InvokeHostFunctionOperationResponse));
+        var hostFunctionOperationResponse = (InvokeHostFunctionOperationResponse)operationResponse;
+        Assert.AreEqual("HostFunctionTypeHostFunctionTypeCreateContract", hostFunctionOperationResponse.Function);
     }
 
     private async Task InvokeContract(string contractId)

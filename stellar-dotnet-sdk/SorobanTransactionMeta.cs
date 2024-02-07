@@ -23,8 +23,9 @@ public class SorobanTransactionMeta
         };
     }
 
-    public static SorobanTransactionMeta FromXdr(xdr.SorobanTransactionMeta xdr)
+    public static SorobanTransactionMeta? FromXdr(xdr.SorobanTransactionMeta? xdr)
     {
+        if (xdr == null) return null;
         return new SorobanTransactionMeta
         {
             ExtensionPoint = ExtensionPoint.FromXdr(xdr.Ext),
