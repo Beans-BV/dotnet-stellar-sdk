@@ -27,7 +27,7 @@ namespace stellar_dotnet_sdk_test;
 public class SorobanServerTest
 {
     private const string HelloContractWasmId = "waZQUG98IMj00Wquc/iU8wLNAR1+8zre9XLyCzT3ZT4=";
-    private const string HelloContractId = "CCTFPPFLH2TOWOHHBW6RYCTK5DE5XNJDBCCOKW2EUJFW4W34IIBL32CW";
+    private const string HelloContractId = "CDMTUCYPBMWUFESK2EZA6ZZMSEX3NNOMZEXZD2VVJGZ332DYTKCEBFI5";
     private readonly string _helloWasmPath = Path.GetFullPath("wasm/soroban_hello_world_contract.wasm");
     private readonly Server _server = new("https://horizon-testnet.stellar.org");
     private readonly SorobanServer _sorobanServer = new("https://soroban-testnet.stellar.org");
@@ -422,10 +422,9 @@ public class SorobanServerTest
 
         var getTransactionResponse = await PollTransaction(txHash);
 
-        // TODO
-        // var operationResponse = await GetHorizonOperation(txHash, transactionEnvelopeXdrBase64);
-        // Assert.IsInstanceOfType(operationResponse, typeof(ExtendFootprintOperationResponse));
-        // Assert.AreEqual("extend_footprint_ttl", operationResponse.Type);
+        var operationResponse = await GetHorizonOperation(txHash, transactionEnvelopeXdrBase64);
+        Assert.IsInstanceOfType(operationResponse, typeof(RestoreFootprintOperationResponse));
+        Assert.AreEqual("restore_footprint", operationResponse.Type);
     }
 
     private async Task ExtendFootprintTTL(string wasmId, uint extentTo)

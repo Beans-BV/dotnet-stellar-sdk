@@ -26,7 +26,7 @@ namespace stellar_dotnet_sdk.responses
         [JsonProperty(PropertyName = "balances")]
         public AssetBalances Balances { get; set; }
 
-        [JsonProperty(PropertyName = "ammount")]
+        [JsonProperty(PropertyName = "amount")]
         public string Amount { get; set; }
 
         [JsonProperty(PropertyName = "claimable_balances_amount")]
@@ -52,7 +52,19 @@ namespace stellar_dotnet_sdk.responses
         /// </summary>
         [JsonProperty(PropertyName = "liquidity_pools_amount")]
         public string LiquidityPoolsAmount { get; set; }
-
+                
+        /// <summary>
+        /// The quantity of contracts that hold this asset
+        /// </summary>
+        [JsonProperty(PropertyName = "num_contracts")]
+        public uint ContractsQuantity { get; set; }
+        
+        /// <summary>
+        /// The total units of this asset held by contracts
+        /// </summary>
+        [JsonProperty(PropertyName = "contracts_amount")]
+        public double ContractsTotalAmount { get; set; }
+        
         /// <summary>
         /// Describe asset accounts
         /// </summary>

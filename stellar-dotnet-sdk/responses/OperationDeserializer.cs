@@ -81,6 +81,8 @@ namespace stellar_dotnet_sdk.responses
                     return new InvokeHostFunctionOperationResponse();
                 case 25:
                     return new ExtendFootprintOperationResponse();
+                case 26:
+                    return new RestoreFootprintOperationResponse(); 
                 default:
                     throw new JsonSerializationException($"Invalid operation 'type_i'='{type}'");
             }
