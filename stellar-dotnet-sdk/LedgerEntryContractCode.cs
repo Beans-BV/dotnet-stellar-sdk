@@ -5,56 +5,45 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerEntryContractCode : LedgerEntry
 {
-    public Hash Hash { get; set; }
-    public byte[] Code { get; set; }
-    public ExtensionPoint ExtensionPoint { get; set; }
-
-    public static LedgerEntryContractCode FromXdrLedgerEntry(xdr.LedgerEntry xdrLedgerEntry)
+    private LedgerEntryContractCode(byte[] hash, byte[] code, ExtensionPoint extensionPoint)
     {
-        if (xdrLedgerEntry.Data.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE)
-            throw new ArgumentException("Not a ContractCodeEntry", nameof(xdrLedgerEntry));
-        var xdrContractCodeEntry = xdrLedgerEntry.Data.ContractCode;
-        var ledgerEntryContractCode = new LedgerEntryContractCode
-        {
-            Hash = Hash.FromXdr(xdrContractCodeEntry.Hash),
-            Code = xdrContractCodeEntry.Code,
-            ExtensionPoint = ExtensionPoint.FromXdr(xdrContractCodeEntry.Ext)
-        };
-        ExtraFieldsFromXdr(xdrLedgerEntry, ledgerEntryContractCode);
-
-        return ledgerEntryContractCode;
+        Hash = hash;
+        Code = code;
+        ExtensionPoint = extensionPoint;
     }
 
-    private static LedgerEntryContractCode FromXdr(xdr.ContractCodeEntry xdrContractDataEntry)
-    {
-        return new LedgerEntryContractCode
-        {
-            Hash = Hash.FromXdr(xdrContractDataEntry.Hash),
-            Code = xdrContractDataEntry.Code,
-            ExtensionPoint = ExtensionPoint.FromXdr(xdrContractDataEntry.Ext),
-        };
-    }
-    
-    public ContractCodeEntry ToXdr()
-    {
-        return new ContractCodeEntry
-        {
-            Ext = ExtensionPoint.ToXdr(),
-            Hash = Hash.ToXdr(),
-            Code = Code
-        };
-    }
-    
+    public ExtensionPoint ExtensionPoint { get; }
+
     /// <summary>
-    ///     Creates a new <see cref="LedgerEntryContractCode"/> object from the given LedgerEntryData XDR base64 string.
+    ///     Unique identifier of the executable file.
     /// </summary>
-    /// <param name="xdrBase64"></param>
-    /// <returns><see cref="LedgerEntryContractCode"/> object</returns>
-    public static LedgerEntryContractCode FromXdrBase64(string xdrBase64)
+    public byte[] Hash { get; }
+
+    /// <summary>
+    ///     Wasm bytecode of the WebAssembly (Wasm) executable file.
+    /// </summary>
+    public byte[] Code { get; }
+
+    /// <summary>
+    ///     Creates the corresponding LedgerEntryContractCode object from a <see cref="xdr.LedgerEntry.LedgerEntryData" />
+    ///     object.
+    /// </summary>
+    /// <param name="xdrLedgerEntryData">A <see cref="xdr.LedgerEntry.LedgerEntryData" /> object.</param>
+    /// <returns>A LedgerEntryContractCode object.</returns>
+    /// <exception cref="ArgumentException">Throws when the parameter is not a valid ContractCodeEntry.</exception>
+    public static LedgerEntryContractCode FromXdrLedgerEntryData(xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
-        var bytes = Convert.FromBase64String(xdrBase64);
-        var reader = new XdrDataInputStream(bytes);
-        var xdrLedgerEntryData = xdr.LedgerEntry.LedgerEntryData.Decode(reader);
+        if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE)
+            throw new ArgumentException("Not a ContractCodeEntry", nameof(xdrLedgerEntryData));
+
         return FromXdr(xdrLedgerEntryData.ContractCode);
+    }
+
+    private static LedgerEntryContractCode FromXdr(ContractCodeEntry xdrContractDataEntry)
+    {
+        return new LedgerEntryContractCode(
+            xdrContractDataEntry.Hash.InnerValue,
+            xdrContractDataEntry.Code,
+            ExtensionPoint.FromXdr(xdrContractDataEntry.Ext));
     }
 }

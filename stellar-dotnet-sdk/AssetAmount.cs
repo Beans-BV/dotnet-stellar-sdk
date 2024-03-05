@@ -1,42 +1,33 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using stellar_dotnet_sdk.converters;
-using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+/// <summary>
+///     Class to have Asset and Amount in the same place.
+/// </summary>
+[JsonConverter(typeof(AssetAmountJsonConverter))]
+public class AssetAmount
 {
-    /// <summary>
-    /// Class to have Asset and Amount in the same place.
-    /// </summary>
-    [JsonConverter(typeof(AssetAmountJsonConverter))]
-    public class AssetAmount
+    public AssetAmount(Asset asset, string amount)
     {
-        public Asset Asset { get; set; }
+        Asset = asset;
+        Amount = amount;
+    }
 
-        public string Amount { get; set; }
+    public Asset Asset { get; }
 
-        public AssetAmount() { }
+    public string Amount { get; }
 
-        public AssetAmount(Asset asset, string amount)
-        {
-            Asset = asset;
-            Amount = amount;
-        }
+    public override int GetHashCode()
+    {
+        return Asset.GetHashCode().Hash(Amount);
+    }
 
-        public override int GetHashCode()
-        {
-            return HashCode.Hash(Asset.GetHashCode(), Amount);
-        }
+    public override bool Equals(object? obj)
+    {
+        if (obj is not AssetAmount other) return false;
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is AssetAmount))
-            {
-                return false;
-            }
-
-            AssetAmount other = (AssetAmount)obj;
-            return Equals(Asset, other.Asset) && Equals(Amount, other.Amount);
-        }
+        return Equals(Asset, other.Asset) && Equals(Amount, other.Amount);
     }
 }

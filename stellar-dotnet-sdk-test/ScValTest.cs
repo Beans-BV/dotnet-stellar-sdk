@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using stellar_dotnet_sdk;
 using xdrSDK = stellar_dotnet_sdk.xdr;
@@ -499,33 +498,14 @@ public class ScValTest
     [TestMethod]
     public void TestScMapWithValidEntries()
     {
-        var entry1 = new SCMapEntry
-        {
-            Key = new SCString("key 1"),
-            Value = new SCBool(false)
-        };
-        var entry2 = new SCMapEntry
-        {
-            Key = new SCUint32(1),
-            Value = new SCString("this is value 2")
-        };
-        var entry3 = new SCMapEntry
-        {
-            Key = new SCUint32(1),
-            Value = new SCSymbol("$$$")
-        };
-        var nestedScMap = new SCMap
-        {
-            Entries = new[] { entry1, entry2 }
-        };
-        var entry4 = new SCMapEntry
-        {
-            Key = new SCUint32(1),
-            Value = nestedScMap
-        };
+        var entry1 = new SCMapEntry(new SCString("key 1"), new SCBool(false));
+        var entry2 = new SCMapEntry(new SCUint32(1), new SCString("this is value 2"));
+        var entry3 = new SCMapEntry(new SCUint32(1), new SCSymbol("$$$"));
+        var nestedScMap = new SCMap(new[] { entry1, entry2 });
+        var entry4 = new SCMapEntry(new SCUint32(1), nestedScMap);
 
         var mapEntries = new[] { entry1, entry2, entry3, entry3, entry4 };
-        var scMap = new SCMap { Entries = mapEntries };
+        var scMap = new SCMap(mapEntries);
 
         // Act
         var scMapXdrBase64 = scMap.ToXdrBase64();
@@ -558,10 +538,7 @@ public class ScValTest
     {
         var contractExecutable = new ContractExecutableWasm(WasmHash);
 
-        var contractInstance = new SCContractInstance
-        {
-            Executable = contractExecutable
-        };
+        var contractInstance = new SCContractInstance(contractExecutable, null);
 
         // Act
         var contractInstanceXdrBase64 = contractInstance.ToXdrBase64();
@@ -569,9 +546,11 @@ public class ScValTest
 
         var decodedContractExecutable = (ContractExecutableWasm)fromXdrBase64ContractInstance.Executable;
 
+        Assert.IsNull(contractInstance.Storage);
+        Assert.IsNull(fromXdrBase64ContractInstance.Storage);
+
         // Assert
         Assert.AreEqual(contractExecutable.WasmHash, decodedContractExecutable.WasmHash);
-        Assert.AreEqual(contractInstance.Storage.Entries.Length, fromXdrBase64ContractInstance.Storage.Entries.Length);
     }
 
     /// <summary></summary>
@@ -585,30 +564,14 @@ public class ScValTest
     {
         var contractExecutable = new ContractExecutableWasm(WasmHash);
 
-        var entry1 = new SCMapEntry
-        {
-            Key = new SCString("key 1"),
-            Value = new SCBool(false)
-        };
-        var entry2 = new SCMapEntry
-        {
-            Key = new SCUint32(111),
-            Value = new SCString("2nd value")
-        };
-        var entry3 = new SCMapEntry
-        {
-            Key = new SCUint32(1),
-            Value = new SCSymbol("&")
-        };
+        var entry1 = new SCMapEntry(new SCString("key 1"), new SCBool(false));
+        var entry2 = new SCMapEntry(new SCUint32(111), new SCString("2nd value"));
+        var entry3 = new SCMapEntry(new SCUint32(1), new SCSymbol("&"));
 
         SCMapEntry[] mapEntries = { entry1, entry2, entry3 };
-        var scMap = new SCMap { Entries = mapEntries };
+        var scMap = new SCMap(mapEntries);
 
-        var contractInstance = new SCContractInstance
-        {
-            Executable = contractExecutable,
-            Storage = scMap
-        };
+        var contractInstance = new SCContractInstance(contractExecutable, scMap);
 
         // Act
         var contractInstanceXdrBase64 = contractInstance.ToXdrBase64();
@@ -616,7 +579,9 @@ public class ScValTest
 
         var decodedContractExecutable = (ContractExecutableWasm)fromXdrBase64ContractInstance.Executable;
 
+        Assert.IsNotNull(contractInstance.Storage);
         var entries = contractInstance.Storage.Entries;
+        Assert.IsNotNull(fromXdrBase64ContractInstance.Storage);
         var decodedEntries = fromXdrBase64ContractInstance.Storage.Entries;
 
         // Assert
@@ -629,21 +594,6 @@ public class ScValTest
         }
     }
 
-    [TestMethod]
-    public void TestSCContractExecutableStellarAssetWithMissingStorage()
-    {
-        var contractInstance = new SCContractInstance
-        {
-            Executable = new ContractExecutableStellarAsset()
-        };
-
-        var contractInstanceXdrBase64 = contractInstance.ToXdrBase64();
-        var fromXdrBase64ContractInstance = (SCContractInstance)SCVal.FromXdrBase64(contractInstanceXdrBase64);
-
-        Assert.AreEqual(0, fromXdrBase64ContractInstance.Storage.Entries.Length);
-        // Nothing else to compare, as the XDR ContractExecutable of type CONTRACT_EXECUTABLE_STELLAR_ASSET doesn't have any property
-    }
-
     /// <summary></summary>
     /// <remarks>
     ///     It's not necessary to check each of the entries element Key and Value for type and properties,
@@ -653,34 +603,20 @@ public class ScValTest
     [TestMethod]
     public void TestSCContractExecutableStellarAsset()
     {
-        var entry1 = new SCMapEntry
-        {
-            Key = new SCString("key 1"),
-            Value = new SCBool(false)
-        };
-        var entry2 = new SCMapEntry
-        {
-            Key = new SCUint32(111),
-            Value = new SCString("2nd value")
-        };
-        var entry3 = new SCMapEntry
-        {
-            Key = new SCUint32(1),
-            Value = new SCSymbol("&")
-        };
+        var entry1 = new SCMapEntry(new SCString("key 1"), new SCBool(false));
+        var entry2 = new SCMapEntry(new SCUint32(111), new SCString("2nd value"));
+        var entry3 = new SCMapEntry(new SCUint32(1), new SCSymbol("&"));
 
         SCMapEntry[] mapEntries = { entry1, entry2, entry3 };
-        var scMap = new SCMap { Entries = mapEntries };
+        var scMap = new SCMap(mapEntries);
 
-        var contractInstance = new SCContractInstance
-        {
-            Executable = new ContractExecutableStellarAsset(),
-            Storage = scMap
-        };
+        var contractInstance = new SCContractInstance(new ContractExecutableStellarAsset(), scMap);
 
         var contractInstanceXdrBase64 = contractInstance.ToXdrBase64();
         var fromXdrBase64ContractInstance = (SCContractInstance)SCVal.FromXdrBase64(contractInstanceXdrBase64);
 
+        Assert.IsNotNull(contractInstance.Storage);
+        Assert.IsNotNull(fromXdrBase64ContractInstance.Storage);
         var entries = contractInstance.Storage.Entries;
         var decodedEntries = fromXdrBase64ContractInstance.Storage.Entries;
 

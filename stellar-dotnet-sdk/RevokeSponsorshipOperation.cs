@@ -1,49 +1,48 @@
 using System;
+using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public abstract class RevokeSponsorshipOperation : Operation
 {
-    public abstract class RevokeSponsorshipOperation : Operation
+    /// <summary>
+    ///     Builds RevokeSponsorshipOperation operation.
+    /// </summary>
+    /// <see cref="RevokeSponsorshipOperation" />
+    public class Builder
     {
-        /// <summary>
-        ///     Builds RevokeSponsorshipOperation operation.
-        /// </summary>
-        /// <see cref="RevokeSponsorshipOperation" />
-        public class Builder
+        private readonly RevokeLedgerEntrySponsorshipOperation.Builder? _ledgerEntryBuilder;
+        private readonly RevokeSignerSponsorshipOperation.Builder? _signerBuilder;
+
+        public Builder(RevokeSponsorshipOp op)
         {
-            private readonly RevokeLedgerEntrySponsorshipOperation.Builder _ledgerEntryBuilder;
-            private readonly RevokeSignerSponsorshipOperation.Builder _signerBuilder;
-
-            public Builder(xdr.RevokeSponsorshipOp op)
+            switch (op.Discriminant.InnerValue)
             {
-                switch (op.Discriminant.InnerValue)
-                {
-                    case xdr.RevokeSponsorshipType.RevokeSponsorshipTypeEnum.REVOKE_SPONSORSHIP_LEDGER_ENTRY:
-                        _ledgerEntryBuilder = new RevokeLedgerEntrySponsorshipOperation.Builder(op.LedgerKey);
-                        _signerBuilder = null;
-                        break;
-                    case xdr.RevokeSponsorshipType.RevokeSponsorshipTypeEnum.REVOKE_SPONSORSHIP_SIGNER:
-                        _signerBuilder = new RevokeSignerSponsorshipOperation.Builder(op.Signer);
-                        _ledgerEntryBuilder = null;
-                        break;
-                    default:
-                        throw new Exception("Unknown RevokeSponsorshipOp " + op.Discriminant.InnerValue);
-                }
+                case RevokeSponsorshipType.RevokeSponsorshipTypeEnum.REVOKE_SPONSORSHIP_LEDGER_ENTRY:
+                    _ledgerEntryBuilder = new RevokeLedgerEntrySponsorshipOperation.Builder(op.LedgerKey);
+                    _signerBuilder = null;
+                    break;
+                case RevokeSponsorshipType.RevokeSponsorshipTypeEnum.REVOKE_SPONSORSHIP_SIGNER:
+                    _signerBuilder = new RevokeSignerSponsorshipOperation.Builder(op.Signer);
+                    _ledgerEntryBuilder = null;
+                    break;
+                default:
+                    throw new Exception("Unknown RevokeSponsorshipOp " + op.Discriminant.InnerValue);
             }
+        }
 
-            /// <summary>
-            ///     Builds an operation
-            /// </summary>
-            public RevokeSponsorshipOperation Build()
-            {
-                if (_ledgerEntryBuilder != null)
-                    return _ledgerEntryBuilder.Build();
-                if (_signerBuilder != null)
-                    return _signerBuilder.Build();
+        /// <summary>
+        ///     Builds an operation
+        /// </summary>
+        public RevokeSponsorshipOperation Build()
+        {
+            if (_ledgerEntryBuilder != null)
+                return _ledgerEntryBuilder.Build();
+            if (_signerBuilder != null)
+                return _signerBuilder.Build();
 
-                // unreachable
-                throw new Exception("Builder not constructed");
-            }
-
+            // unreachable
+            throw new Exception("Builder not constructed");
         }
     }
 }

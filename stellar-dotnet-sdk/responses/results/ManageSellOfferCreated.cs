@@ -1,13 +1,12 @@
-namespace stellar_dotnet_sdk.responses.results
+namespace stellar_dotnet_sdk.responses.results;
+
+/// <summary>
+///     Offer created.
+/// </summary>
+public class ManageSellOfferCreated : ManageSellOfferSuccess
 {
     /// <summary>
-    /// Offer created.
+    ///     The offer that was created.
     /// </summary>
-    public class ManageSellOfferCreated : ManageSellOfferSuccess
-    {
-        /// <summary>
-        /// The offer that was created.
-        /// </summary>
-        public OfferEntry Offer { get; set; }
-    }
+    public OfferEntry Offer { get; set; }
 }

@@ -5,30 +5,37 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerEntryLiquidityPool : LedgerEntry
 {
-    public LiquidityPoolID LiquidityPoolID { get; set; }
-    public LiquidityPoolEntryBody LiquidityPoolBody { get; set; }
-
-    public static LedgerEntryLiquidityPool FromXdrLedgerEntry(xdr.LedgerEntry xdrLedgerEntry)
+    private LedgerEntryLiquidityPool(LiquidityPoolID liquidityPoolID, LiquidityPoolEntryBody liquidityPoolBody)
     {
-        if (xdrLedgerEntry.Data.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.LIQUIDITY_POOL)
-            throw new ArgumentException("Not a LiquidityPoolEntry", nameof(xdrLedgerEntry));
-        var xdrLiquidityPoolEntry = xdrLedgerEntry.Data.LiquidityPool;
-
-        var ledgerEntryLiquidityPool = new LedgerEntryLiquidityPool
-        {
-            LiquidityPoolID = LiquidityPoolID.FromXdr(xdrLiquidityPoolEntry.LiquidityPoolID),
-            LiquidityPoolBody = LiquidityPoolEntryBody.FromXdr(xdrLiquidityPoolEntry.Body)
-        };
-        ExtraFieldsFromXdr(xdrLedgerEntry, ledgerEntryLiquidityPool);
-        return ledgerEntryLiquidityPool;
+        LiquidityPoolID = liquidityPoolID;
+        LiquidityPoolBody = liquidityPoolBody;
     }
 
-    public LiquidityPoolEntry ToXdr()
+    public LiquidityPoolID LiquidityPoolID { get; init; }
+    public LiquidityPoolEntryBody LiquidityPoolBody { get; init; }
+
+    /// <summary>
+    ///     Creates the corresponding LedgerEntryLiquidityPool object from a <see cref="xdr.LedgerEntry.LedgerEntryData" />
+    ///     object.
+    /// </summary>
+    /// <param name="xdrLedgerEntryData">A <see cref="xdr.LedgerEntry.LedgerEntryData" /> object.</param>
+    /// <returns>A LedgerEntryLiquidityPool object.</returns>
+    /// <exception cref="ArgumentException">Throws when the parameter is not a valid LiquidityPoolEntry.</exception>
+    public static LedgerEntryLiquidityPool FromXdrLedgerEntryData(xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
-        return new LiquidityPoolEntry
-        {
-            Body = LiquidityPoolBody.ToXdr(),
-            LiquidityPoolID = LiquidityPoolID.ToXdr()
-        };
+        if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.LIQUIDITY_POOL)
+            throw new ArgumentException("Not a LiquidityPoolEntry", nameof(xdrLedgerEntryData));
+
+        return FromXdr(xdrLedgerEntryData);
+    }
+
+    private static LedgerEntryLiquidityPool FromXdr(xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
+    {
+        var xdrLiquidityPoolEntry = xdrLedgerEntryData.LiquidityPool;
+
+        var ledgerEntryLiquidityPool = new LedgerEntryLiquidityPool(
+            LiquidityPoolID.FromXdr(xdrLiquidityPoolEntry.LiquidityPoolID),
+            LiquidityPoolEntryBody.FromXdr(xdrLiquidityPoolEntry.Body));
+        return ledgerEntryLiquidityPool;
     }
 }

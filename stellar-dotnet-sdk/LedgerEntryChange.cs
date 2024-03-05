@@ -3,35 +3,29 @@ using stellar_dotnet_sdk.xdr;
 
 namespace stellar_dotnet_sdk;
 
+/// <summary>
+///     Base class for ledger entry changes.
+/// </summary>
 public abstract class LedgerEntryChange
 {
-    public LedgerEntry ChangedEntry { get; set; }
-
-    public xdr.LedgerEntryChange ToXdr()
+    /// <summary>
+    ///     Creates a <c>LedgerEntryChange</c> object from an <c>xdr.LedgerEntryChange</c> object.
+    /// </summary>
+    /// <param name="xdrLedgerEntryChange">An <c>xdr.LedgerEntryChange</c> object to be converted.</param>
+    /// <returns>A <c>LedgerEntryChange</c> object.</returns>
+    public static LedgerEntryChange FromXdr(xdr.LedgerEntryChange xdrLedgerEntryChange)
     {
-        return this switch
+        return xdrLedgerEntryChange.Discriminant.InnerValue switch
         {
-            LedgerEntryChangeCreated created => created.ToXdrLedgerEntryChange(),
-            LedgerEntryChangeUpdated updated => updated.ToXdrLedgerEntryChange(),
-            LedgerEntryChangeState state => state.ToXdrLedgerEntryChange(),
-            LedgerEntryChangeRemoved removed => removed.ToXdrLedgerEntryChange(),
-            _ => throw new InvalidOperationException("Unknown LedgerEntryChange type")
-        };
-    }
-
-    public static LedgerEntryChange FromXdr(xdr.LedgerEntryChange xdrChange)
-    {
-        return xdrChange.Discriminant.InnerValue switch
-        {
-            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_CREATED => LedgerEntryChangeCreated
-                .FromXdrLedgerEntryChange(xdrChange),
-            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_UPDATED => LedgerEntryChangeUpdated
-                .FromXdrLedgerEntryChange(xdrChange),
-            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_REMOVED => LedgerEntryChangeRemoved
-                .FromXdrLedgerEntryChange(xdrChange),
-            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_STATE => LedgerEntryChangeState
-                .FromXdrLedgerEntryChange(xdrChange),
-            _ => throw new InvalidOperationException("Unknown LedgerEntryChange type")
+            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_CREATED => new LedgerEntryCreated
+                (xdrLedgerEntryChange.Created),
+            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_UPDATED => new LedgerEntryUpdated
+                (xdrLedgerEntryChange.Updated),
+            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_REMOVED => new LedgerEntryRemoved(
+                xdrLedgerEntryChange.Removed),
+            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_STATE => new LedgerEntryState
+                (xdrLedgerEntryChange.State),
+            _ => throw new InvalidOperationException("Unknown LedgerEntryChange type.")
         };
     }
 }

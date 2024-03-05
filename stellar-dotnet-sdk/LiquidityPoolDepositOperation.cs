@@ -1,117 +1,121 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using stellar_dotnet_sdk.xdr;
+using Int64 = stellar_dotnet_sdk.xdr.Int64;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public class LiquidityPoolDepositOperation : Operation
 {
-    public class LiquidityPoolDepositOperation : Operation
+    private LiquidityPoolDepositOperation(LiquidityPoolID liquidityPoolID, string maxAmountA, string maxAmountB,
+        Price minPrice, Price maxPrice)
     {
-        public LiquidityPoolID LiquidityPoolID { get; set; }
-        public string MaxAmountA { get; }
-        public string MaxAmountB { get; }
-        public Price MinPrice { get; }
-        public Price MaxPrice { get; }
+        LiquidityPoolID = liquidityPoolID ??
+                          throw new ArgumentNullException(nameof(liquidityPoolID), "liquidityPoolID cannot be null");
+        MaxAmountA = maxAmountA ?? throw new ArgumentNullException(nameof(maxAmountA), "maxAmountA cannot be null");
+        MaxAmountB = maxAmountB ?? throw new ArgumentNullException(nameof(maxAmountB), "maxAmountB cannot be null");
+        MinPrice = minPrice ?? throw new ArgumentNullException(nameof(minPrice), "minPrice cannot be null");
+        MaxPrice = maxPrice ?? throw new ArgumentNullException(nameof(maxPrice), "maxPrice cannot be null");
+    }
 
-        private LiquidityPoolDepositOperation(LiquidityPoolID liquidityPoolID, string maxAmountA, string maxAmountB, Price minPrice, Price maxPrice)
+    public LiquidityPoolID LiquidityPoolID { get; set; }
+    public string MaxAmountA { get; }
+    public string MaxAmountB { get; }
+    public Price MinPrice { get; }
+    public Price MaxPrice { get; }
+
+    public override xdr.Operation.OperationBody ToOperationBody()
+    {
+        var operationXdr = new LiquidityPoolDepositOp
         {
-            LiquidityPoolID = liquidityPoolID ?? throw new ArgumentNullException(nameof(liquidityPoolID), "liquidityPoolID cannot be null");
-            MaxAmountA = maxAmountA ?? throw new ArgumentNullException(nameof(maxAmountA), "maxAmountA cannot be null");
-            MaxAmountB = maxAmountB ?? throw new ArgumentNullException(nameof(maxAmountB), "maxAmountB cannot be null");
-            MinPrice = minPrice ?? throw new ArgumentNullException(nameof(minPrice), "minPrice cannot be null");
-            MaxPrice = maxPrice ?? throw new ArgumentNullException(nameof(maxPrice), "maxPrice cannot be null");
+            LiquidityPoolID = LiquidityPoolID.ToXdr(),
+            MaxAmountA = new Int64(ToXdrAmount(MaxAmountA)),
+            MaxAmountB = new Int64(ToXdrAmount(MaxAmountB)),
+            MinPrice = MinPrice.ToXdr(),
+            MaxPrice = MaxPrice.ToXdr()
+        };
+
+        var body = new xdr.Operation.OperationBody
+        {
+            Discriminant =
+            {
+                InnerValue = OperationType.OperationTypeEnum.LIQUIDITY_POOL_DEPOSIT
+            },
+            LiquidityPoolDepositOp = operationXdr
+        };
+
+        return body;
+    }
+
+    public class Builder
+    {
+        private readonly Asset? _assetA;
+        private readonly Asset? _assetB;
+        private readonly string _maxAmountA;
+        private readonly string _maxAmountB;
+        private readonly Price _maxPrice;
+        private readonly Price _minPrice;
+        private LiquidityPoolID? _liquidityPoolID;
+
+        private KeyPair? _sourceAccount;
+
+        public Builder(LiquidityPoolDepositOp operationXdr)
+        {
+            _liquidityPoolID = LiquidityPoolID.FromXdr(operationXdr.LiquidityPoolID);
+            _maxAmountA = FromXdrAmount(operationXdr.MaxAmountA.InnerValue);
+            _maxAmountB = FromXdrAmount(operationXdr.MaxAmountB.InnerValue);
+            _minPrice = Price.FromXdr(operationXdr.MinPrice);
+            _maxPrice = Price.FromXdr(operationXdr.MaxPrice);
         }
 
-        public override xdr.Operation.OperationBody ToOperationBody()
+        public Builder(AssetAmount assetAmountA, AssetAmount assetAmountB, Price minPrice, Price maxPrice)
         {
-            xdr.LiquidityPoolDepositOp operationXdr = new xdr.LiquidityPoolDepositOp();
-            operationXdr.LiquidityPoolID = LiquidityPoolID.ToXdr();
-            operationXdr.MaxAmountA = new xdr.Int64(ToXdrAmount(MaxAmountA));
-            operationXdr.MaxAmountB = new xdr.Int64(ToXdrAmount(MaxAmountB));
-            operationXdr.MinPrice = MinPrice.ToXdr();
-            operationXdr.MaxPrice = MaxPrice.ToXdr();
-
-            xdr.Operation.OperationBody body = new xdr.Operation.OperationBody();
-            body.Discriminant.InnerValue = xdr.OperationType.OperationTypeEnum.LIQUIDITY_POOL_DEPOSIT;
-            body.LiquidityPoolDepositOp = operationXdr;
-
-            return body;
+            _assetA = assetAmountA.Asset;
+            _assetB = assetAmountB.Asset;
+            _maxAmountA = assetAmountA.Amount;
+            _maxAmountB = assetAmountB.Amount;
+            _minPrice = minPrice;
+            _maxPrice = maxPrice;
         }
 
-        public class Builder
+        public Builder(LiquidityPoolID liquidityPoolID, string maxAmountA, string maxAmountB, Price minPrice,
+            Price maxPrice)
         {
-            private LiquidityPoolID _liquidityPoolID;
-            private Asset _assetA;
-            private Asset _assetB;
-            private string _maxAmountA;
-            private string _maxAmountB;
-            private Price _minPrice;
-            private Price _maxPrice;
+            _liquidityPoolID = liquidityPoolID;
+            _maxAmountA = maxAmountA;
+            _maxAmountB = maxAmountB;
+            _minPrice = minPrice;
+            _maxPrice = maxPrice;
+        }
 
-            private KeyPair _sourceAccount;
+        /// <summary>
+        ///     Sets source account of this operation.
+        /// </summary>
+        /// <param name="sourceAccount">Source account</param>
+        /// <returns>Builder object so you can chain methods.</returns>
+        public Builder SetSourceAccount(KeyPair sourceAccount)
+        {
+            _sourceAccount = sourceAccount;
+            return this;
+        }
 
-            public Builder(xdr.LiquidityPoolDepositOp operationXdr)
-            {
-                _liquidityPoolID = LiquidityPoolID.FromXdr(operationXdr.LiquidityPoolID);
-                _maxAmountA = FromXdrAmount(operationXdr.MaxAmountA.InnerValue);
-                _maxAmountB = FromXdrAmount(operationXdr.MaxAmountB.InnerValue);
-                _minPrice = Price.FromXdr(operationXdr.MinPrice);
-                _maxPrice = Price.FromXdr(operationXdr.MaxPrice);
-            }
-
-            public Builder(AssetAmount assetAmountA, AssetAmount assetAmountB, Price minPrice, Price maxPrice)
-            {
-                _assetA = assetAmountA.Asset;
-                _assetB = assetAmountB.Asset;
-                _maxAmountA = assetAmountA.Amount;
-                _maxAmountB = assetAmountB.Amount;
-                _minPrice = minPrice;
-                _maxPrice = maxPrice;
-            }
-
-            public Builder(LiquidityPoolID liquidityPoolID, string maxAmountA, string maxAmountB, Price minPrice, Price maxPrice)
-            {
-                _liquidityPoolID = liquidityPoolID;
-                _maxAmountA = maxAmountA;
-                _maxAmountB = maxAmountB;
-                _minPrice = minPrice;
-                _maxPrice = maxPrice;
-            }
-
-            /// <summary>
-            ///     Set source account of this operation
-            /// </summary>
-            /// <param name="sourceAccount">Source account</param>
-            /// <returns>Builder object so you can chain methods.</returns>
-            public Builder SetSourceAccount(KeyPair sourceAccount)
-            {
-                _sourceAccount = sourceAccount;
-                return this;
-            }
-
-            public LiquidityPoolDepositOperation Build()
+        public LiquidityPoolDepositOperation Build()
+        {
+            if (_liquidityPoolID == null)
             {
                 if (_assetA != null && _assetB != null)
-                {
-                    if (_assetA.CompareTo(_assetB) >= 0)
-                    {
-                        throw new ArgumentException("Asset A must be < Asset B (Lexicographic Order)");
-                    }
-
-                    if (_liquidityPoolID == null)
-                    {
-                        _liquidityPoolID = new LiquidityPoolID(xdr.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT, _assetA, _assetB, LiquidityPoolParameters.Fee);
-                    }
-                }
-
-                LiquidityPoolDepositOperation operation = new LiquidityPoolDepositOperation(_liquidityPoolID, _maxAmountA, _maxAmountB, _minPrice, _maxPrice);
-
-                if (_sourceAccount != null)
-                {
-                    operation.SourceAccount = _sourceAccount;
-                }
-
-                return operation;
+                    _liquidityPoolID =
+                        new LiquidityPoolID(LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+                            _assetA, _assetB, LiquidityPoolParameters.Fee);
+                else
+                    throw new InvalidOperationException("Asset A and/or Asset B cannot be null");
             }
+
+            var operation =
+                new LiquidityPoolDepositOperation(_liquidityPoolID, _maxAmountA, _maxAmountB, _minPrice, _maxPrice);
+
+            if (_sourceAccount != null) operation.SourceAccount = _sourceAccount;
+
+            return operation;
         }
     }
 }

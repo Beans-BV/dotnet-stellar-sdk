@@ -2,13 +2,21 @@
 
 namespace stellar_dotnet_sdk.responses.sorobanrpc;
 
+[JsonObject]
 public class SorobanRpcResponse<T> : Response
 {
-    [JsonProperty(PropertyName = "jsonrpc")]
-    public string JsonRpc { get; private set; }
+    [JsonProperty(PropertyName = "id")] public readonly string Id;
 
-    [JsonProperty(PropertyName = "id")] public string Id { get; private set; }
+    [JsonProperty(PropertyName = "jsonrpc")]
+    public readonly string JsonRpc;
 
     [JsonProperty(PropertyName = "result")]
-    public T Result { get; private set; }
+    public readonly T Result;
+
+    public SorobanRpcResponse(string jsonRpc, string id, T result)
+    {
+        JsonRpc = jsonRpc;
+        Id = id;
+        Result = result;
+    }
 }

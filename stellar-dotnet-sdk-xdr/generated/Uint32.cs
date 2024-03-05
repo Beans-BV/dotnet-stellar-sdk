@@ -20,7 +20,7 @@ public class Uint32
     }
 
     public uint InnerValue { get; set; } = default;
-
+    
     public static void Encode(XdrDataOutputStream stream, Uint32 encodedUint32)
     {
         stream.WriteUInt(encodedUint32.InnerValue);

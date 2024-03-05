@@ -1,26 +1,25 @@
 ﻿using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public class MemoNone : Memo
 {
-    public class MemoNone : Memo
+    public override xdr.Memo ToXdr()
     {
-        public override xdr.Memo ToXdr()
+        var memo = new xdr.Memo
         {
-            var memo = new xdr.Memo();
-            memo.Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_NONE);
-            return memo;
-        }
+            Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_NONE)
+        };
+        return memo;
+    }
 
-        public override bool Equals(System.Object o)
-        {
-            if (this == o) return true;
-            if (o == null || GetType() != o.GetType()) return false;
-            return true;
-        }
+    public override bool Equals(object? obj)
+    {
+        return obj is MemoNone;
+    }
 
-        public override int GetHashCode()
-        {
-            return GetType().GetHashCode();
-        }
+    public override int GetHashCode()
+    {
+        return GetType().GetHashCode();
     }
 }

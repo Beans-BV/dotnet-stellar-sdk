@@ -1,7 +1,7 @@
 namespace stellar_dotnet_sdk.responses;
 
 /// <summary>
-/// All operations in the inner transaction succeeded.
+///     All operations in the inner transaction succeeded.
 /// </summary>
 public class FeeBumpTransactionResultSuccess : TransactionResult
 {

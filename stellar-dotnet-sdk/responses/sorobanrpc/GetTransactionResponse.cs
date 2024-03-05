@@ -44,7 +44,7 @@ public class GetTransactionResponse
             var bytes = Convert.FromBase64String(ResultMetaXdr);
             var reader = new XdrDataInputStream(bytes);
             var meta = TransactionMeta.Decode(reader);
-            return meta?.V3?.SorobanMeta?.ReturnValue == null ? null : SCVal.FromXdr(meta.V3.SorobanMeta.ReturnValue);
+            return meta.V3?.SorobanMeta?.ReturnValue == null ? null : SCVal.FromXdr(meta.V3.SorobanMeta.ReturnValue);
         }
     }
 

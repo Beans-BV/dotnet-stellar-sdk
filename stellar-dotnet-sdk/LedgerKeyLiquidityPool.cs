@@ -9,7 +9,7 @@ public class LedgerKeyLiquidityPool : LedgerKey
         LiquidityPoolID = poolId;
     }
 
-    public LiquidityPoolID LiquidityPoolID { get; set; }
+    public LiquidityPoolID LiquidityPoolID { get; }
 
     public override xdr.LedgerKey ToXdr()
     {

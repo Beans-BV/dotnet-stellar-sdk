@@ -1,75 +1,62 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using stellar_dotnet_sdk;
 using stellar_dotnet_sdk.responses;
 using stellar_dotnet_sdk.responses.operations;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
-namespace stellar_dotnet_sdk_test.responses.operations
+namespace stellar_dotnet_sdk_test.responses.operations;
+
+[TestClass]
+public class LiquidityPoolDepositOperationResponseTest
 {
-    [TestClass]
-    public class LiquidityPoolDepositOperationResponseTest
+    //Allow Trust
+    [TestMethod]
+    public void TestDeserialize()
     {
-        [JsonProperty("liquidity_pool_id")]
-        public LiquidityPoolID LiquidityPoolID { get; set; }
+        var json = File.ReadAllText(Path.Combine("responses/operations/LiquidityPoolDepositOperationResponse",
+            "Data.json"));
+        var instance =
+            (LiquidityPoolDepositOperationResponse)JsonSingleton
+                .GetInstance<OperationResponse>(json);
 
-        [JsonProperty("reserves_max")]
-        public List<Reserve> ReservesMax { get; set; }
+        AssertData(instance);
+    }
 
-        [JsonProperty("min_price")]
-        public string MinPrice { get; set; }
+    [TestMethod]
+    public void TestSerializeDeserialize()
+    {
+        var json = File.ReadAllText(Path.Combine("responses/operations/LiquidityPoolDepositOperationResponse",
+            "Data.json"));
+        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var serialized = JsonConvert.SerializeObject(instance);
+        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        Assert.IsNotNull(back);
+        AssertData((LiquidityPoolDepositOperationResponse)back);
+    }
 
-        [JsonProperty("max_price")]
-        public string MaxPrice { get; set; }
+    public void AssertData(LiquidityPoolDepositOperationResponse instance)
+    {
+        Assert.AreEqual(new LiquidityPoolID("b26c0d6545349ad7f44ba758b7c705459537201583f2e524635be04aff84bc69"),
+            instance.LiquidityPoolID);
+        Assert.AreEqual("1508315204960257", instance.PagingToken);
 
-        [JsonProperty("reserves_deposited")]
-        public List<Reserve> ReservesDeposited { get; set; }
+        Assert.AreEqual("1.0000000", instance.MinPrice);
+        Assert.AreEqual("100000000.0000000", instance.MaxPrice);
 
-        [JsonProperty("shares_received")]
-        public string SharesReceived { get; set; }
+        Assert.AreEqual("1000.0000000", instance.ReservesMax[0].Amount);
+        Assert.AreEqual("native", instance.ReservesMax[0].Asset.CanonicalName());
 
-        //Allow Trust
-        [TestMethod]
-        public void TestDeserialize()
-        {
-            var json = File.ReadAllText(Path.Combine("responses/operations/LiquidityPoolDepositOperationResponse", "Data.json"));
-            var instance = (LiquidityPoolDepositOperationResponse)JsonSingleton.GetInstance<OperationResponse>(json);
+        Assert.AreEqual("1.0000000", instance.ReservesMax[1].Amount);
+        Assert.AreEqual("NOODLE:GC2J4TNJKAKMJLTVAKVMA62CKRNC3YZDEK4WZUI4XZUM4DGPRX7ZMW7S",
+            instance.ReservesMax[1].Asset.CanonicalName());
 
-            AssertData(instance);
-        }
+        Assert.AreEqual("0.0000000", instance.ReservesDeposited[0].Amount);
+        Assert.AreEqual("native", instance.ReservesDeposited[0].Asset.CanonicalName());
+        Assert.AreEqual("0.0000000", instance.ReservesDeposited[1].Amount);
+        Assert.AreEqual("NOODLE:GC2J4TNJKAKMJLTVAKVMA62CKRNC3YZDEK4WZUI4XZUM4DGPRX7ZMW7S",
+            instance.ReservesDeposited[1].Asset.CanonicalName());
 
-        [TestMethod]
-        public void TestSerializeDeserialize()
-        {
-            var json = File.ReadAllText(Path.Combine("responses/operations/LiquidityPoolDepositOperationResponse", "Data.json"));
-            var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-            var serialized = JsonConvert.SerializeObject(instance);
-            var back = (LiquidityPoolDepositOperationResponse)JsonConvert.DeserializeObject<OperationResponse>(serialized);
-
-            AssertData(back);
-        }
-
-        public void AssertData(LiquidityPoolDepositOperationResponse instance)
-        {
-            Assert.AreEqual(new LiquidityPoolID("b26c0d6545349ad7f44ba758b7c705459537201583f2e524635be04aff84bc69"), instance.LiquidityPoolID);
-            Assert.AreEqual("1508315204960257", instance.PagingToken);
-
-            Assert.AreEqual("1.0000000", instance.MinPrice);
-            Assert.AreEqual("100000000.0000000", instance.MaxPrice);
-
-            Assert.AreEqual("1000.0000000", instance.ReservesMax[0].Amount);
-            Assert.AreEqual(null, instance.ReservesMax[0].Asset);
-
-            Assert.AreEqual("1.0000000", instance.ReservesMax[1].Amount);
-            Assert.AreEqual(null, instance.ReservesMax[1].Asset);
-
-            Assert.AreEqual("0.0000000", instance.ReservesDeposited[0].Amount);
-            Assert.AreEqual("0.0000000", instance.ReservesDeposited[1].Amount);
-
-            Assert.AreEqual("0.0000000", instance.SharesReceived);
-        }
+        Assert.AreEqual("0.0000000", instance.SharesReceived);
     }
 }

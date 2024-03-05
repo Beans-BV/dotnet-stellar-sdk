@@ -1,29 +1,27 @@
 ﻿using Newtonsoft.Json;
 
-namespace stellar_dotnet_sdk.responses.effects
+namespace stellar_dotnet_sdk.responses.effects;
+
+/// <summary>
+///     Represents account_home_domain_updated effect response.
+///     See: https://www.stellar.org/developers/horizon/reference/resources/effect.html
+///     <seealso cref="requests.EffectsRequestBuilder" />
+///     <seealso cref="Server" />
+/// </summary>
+public class AccountHomeDomainUpdatedEffectResponse : EffectResponse
 {
-    /// <summary>
-    ///     Represents account_home_domain_updated effect response.
-    ///     See: https://www.stellar.org/developers/horizon/reference/resources/effect.html
-    ///     <seealso cref="requests.EffectsRequestBuilder" />
-    ///     <seealso cref="Server" />
-    /// </summary>
-    public class AccountHomeDomainUpdatedEffectResponse : EffectResponse
+    public AccountHomeDomainUpdatedEffectResponse()
     {
-        [JsonProperty(PropertyName = "home_domain")]
-        public string HomeDomain { get; private set; }
-
-        public override int TypeId => 5;
-
-        public AccountHomeDomainUpdatedEffectResponse()
-        {
-
-        }
-
-        /// <inheritdoc />
-        public AccountHomeDomainUpdatedEffectResponse(string homeDomain)
-        {
-            HomeDomain = homeDomain;
-        }
     }
+
+    /// <inheritdoc />
+    public AccountHomeDomainUpdatedEffectResponse(string homeDomain)
+    {
+        HomeDomain = homeDomain;
+    }
+
+    [JsonProperty(PropertyName = "home_domain")]
+    public string HomeDomain { get; private set; }
+
+    public override int TypeId => 5;
 }

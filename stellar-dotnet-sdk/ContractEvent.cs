@@ -1,48 +1,39 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using stellar_dotnet_sdk.xdr;
 
 namespace stellar_dotnet_sdk;
 
 public class ContractEvent
 {
-    public ExtensionPoint ExtensionPoint { get; set; }
-    public string? ContractID { get; set; }
-    public SCVal[] Topics { get; set; } = Array.Empty<SCVal>();
-    public SCVal Data { get; set; }
-    public ContractEventType Type { get; set; }
-
-    public xdr.ContractEvent ToXdr()
+    private ContractEvent(ExtensionPoint extensionPoint, string? contractID, SCVal[] topics, SCVal data,
+        ContractEventType type)
     {
-        return new xdr.ContractEvent
-        {
-            Ext = ExtensionPoint.ToXdr(),
-            ContractID = ContractID != null ? new xdr.Hash(StrKey.DecodeContractId(ContractID)) : null,
-            Type = Type,
-            Body = new xdr.ContractEvent.ContractEventBody
-            {
-                Discriminant = 0,
-                V0 = new xdr.ContractEvent.ContractEventBody.ContractEventV0
-                {
-                    Topics = Topics.Select(x => x.ToXdr()).ToArray(),
-                    Data = Data.ToXdr()
-                }
-            }
-        };
+        ExtensionPoint = extensionPoint;
+        ContractID = contractID;
+        Topics = topics;
+        Data = data;
+        Type = type;
     }
+
+    public ExtensionPoint ExtensionPoint { get; }
+    public string? ContractID { get; }
+    public SCVal[] Topics { get; }
+    public SCVal? Data { get; }
+    public ContractEventType Type { get; }
 
     public static ContractEvent FromXdr(xdr.ContractEvent xdrEvent)
     {
-        return new ContractEvent
-        {
-            ExtensionPoint = ExtensionPoint.FromXdr(xdrEvent.Ext),
-            ContractID = xdrEvent.ContractID != null ? StrKey.EncodeContractId(xdrEvent.ContractID.InnerValue) : null,
-            Type = xdrEvent.Type,
-            Topics = xdrEvent.Body.V0.Topics.Select(SCVal.FromXdr).ToArray(),
-            Data = SCVal.FromXdr(xdrEvent.Body.V0.Data)
-        };
+        return new ContractEvent(ExtensionPoint.FromXdr(xdrEvent.Ext),
+            xdrEvent.ContractID != null ? StrKey.EncodeContractId(xdrEvent.ContractID.InnerValue) : null,
+            type: xdrEvent.Type, topics: xdrEvent.Body.V0.Topics.Select(SCVal.FromXdr).ToArray(),
+            data: SCVal.FromXdr(xdrEvent.Body.V0.Data));
     }
 
+    /// <summary>
+    ///     Used for debugging purpose.
+    ///     Returns a string that represents the contract event.
+    /// </summary>
+    /// <returns>A string that contains the details of the contract event.</returns>
     public string ToString()
     {
         var value = "";

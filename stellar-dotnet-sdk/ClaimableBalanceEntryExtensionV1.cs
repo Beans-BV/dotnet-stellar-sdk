@@ -4,7 +4,7 @@ namespace stellar_dotnet_sdk;
 
 public class ClaimableBalanceEntryExtensionV1
 {
-    public uint Flags { get; set; }
+    public uint Flags { get; init; }
 
     public static ClaimableBalanceEntryExtensionV1 FromXdr(xdr.ClaimableBalanceEntryExtensionV1 xdrExtensionV1)
     {

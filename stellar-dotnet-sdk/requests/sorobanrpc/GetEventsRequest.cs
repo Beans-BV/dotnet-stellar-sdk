@@ -21,7 +21,6 @@ public class GetEventsRequest
         public string[]? ContractIds { get; set; }
 
         [JsonProperty(PropertyName = "topics")]
-
         public string[][]? Topics { get; set; }
     }
 

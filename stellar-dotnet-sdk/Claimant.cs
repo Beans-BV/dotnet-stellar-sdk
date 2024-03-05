@@ -1,32 +1,35 @@
-namespace stellar_dotnet_sdk
+using stellar_dotnet_sdk.xdr;
+
+namespace stellar_dotnet_sdk;
+
+public class Claimant
 {
-    public class Claimant
+    public Claimant(KeyPair destination, ClaimPredicate predicate)
     {
-        public KeyPair Destination { get; set; }
-        public ClaimPredicate Predicate { get; set; }
+        Destination = destination;
+        Predicate = predicate;
+    }
 
-        public xdr.Claimant ToXdr()
-        {
-            return new xdr.Claimant
-            {
-                Discriminant = new xdr.ClaimantType { InnerValue = xdr.ClaimantType.ClaimantTypeEnum.CLAIMANT_TYPE_V0 },
-                V0 = new xdr.Claimant.ClaimantV0
-                {
-                    Destination = new xdr.AccountID(Destination.XdrPublicKey),
-                    Predicate = Predicate.ToXdr(),
-                }
-            };
-        }
+    public KeyPair Destination { get; init; }
+    public ClaimPredicate Predicate { get; init; }
 
-        public static Claimant FromXdr(xdr.Claimant xdr)
+    public xdr.Claimant ToXdr()
+    {
+        return new xdr.Claimant
         {
-            var destination = KeyPair.FromXdrPublicKey(xdr.V0.Destination.InnerValue);
-            var predicate = ClaimPredicate.FromXdr(xdr.V0.Predicate);
-            return new Claimant
+            Discriminant = new ClaimantType { InnerValue = ClaimantType.ClaimantTypeEnum.CLAIMANT_TYPE_V0 },
+            V0 = new xdr.Claimant.ClaimantV0
             {
-                Destination = destination,
-                Predicate = predicate
-            };
-        }
+                Destination = new AccountID(Destination.XdrPublicKey),
+                Predicate = Predicate.ToXdr()
+            }
+        };
+    }
+
+    public static Claimant FromXdr(xdr.Claimant xdr)
+    {
+        var destination = KeyPair.FromXdrPublicKey(xdr.V0.Destination.InnerValue);
+        var predicate = ClaimPredicate.FromXdr(xdr.V0.Predicate);
+        return new Claimant(destination, predicate);
     }
 }

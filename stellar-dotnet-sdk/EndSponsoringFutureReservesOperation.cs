@@ -1,57 +1,60 @@
-namespace stellar_dotnet_sdk
+using stellar_dotnet_sdk.xdr;
+
+namespace stellar_dotnet_sdk;
+
+/// <summary>
+///     Represents a <c>xdr.EndSponsoringFutureReservesOp</c>.
+///     Use <see cref="Builder" /> to create a new <c>EndSponsoringFutureReservesOperation</c>.
+///     See:
+///     <see href="https://developers.stellar.org/docs/encyclopedia/sponsored-reserves#begin-and-end-sponsorships">
+///         Begin
+///         and end sponsorships
+///     </see>
+/// </summary>
+public class EndSponsoringFutureReservesOperation : Operation
 {
-    /// <summary>
-    /// Represents a <see cref="EndSponsoringFutureReservesOp"/>.
-    /// Use <see cref="Builder"/> to create a new EndSponsoringFutureReservesOperation.
-    ///
-    /// See also: <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html">End Sponsoring Futures Reserves</see>
-    /// </summary>
-    public class EndSponsoringFutureReservesOperation : Operation
+    private EndSponsoringFutureReservesOperation()
     {
-        private EndSponsoringFutureReservesOperation()
-        {
-        }
+    }
 
-        public override xdr.Operation.OperationBody ToOperationBody()
+    public override xdr.Operation.OperationBody ToOperationBody()
+    {
+        var body = new xdr.Operation.OperationBody
         {
-            var body = new xdr.Operation.OperationBody
-            {
-                Discriminant = xdr.OperationType.Create(xdr.OperationType.OperationTypeEnum.END_SPONSORING_FUTURE_RESERVES)
-            };
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.END_SPONSORING_FUTURE_RESERVES)
+        };
 
-            return body;
+        return body;
+    }
+
+    /// <summary>
+    ///     Builds EndSponsoringFutureReserves operation.
+    /// </summary>
+    /// <see cref="EndSponsoringFutureReservesOperation" />
+    public class Builder
+    {
+        private KeyPair? _sourceAccount;
+
+        /// <summary>
+        ///     Sets the source account for this operation.
+        /// </summary>
+        /// <param name="account">The operation's source account.</param>
+        /// <returns>Builder object so you can chain methods.</returns>
+        public Builder SetSourceAccount(KeyPair account)
+        {
+            _sourceAccount = account;
+            return this;
         }
 
         /// <summary>
-        ///     Builds EndSponsoringFutureReserves operation.
+        ///     Builds an operation
         /// </summary>
-        /// <see cref="EndSponsoringFutureReservesOperation" />
-        public class Builder
+        public EndSponsoringFutureReservesOperation Build()
         {
-            private KeyPair _sourceAccount;
-
-            /// <summary>
-            ///     Sets the source account for this operation.
-            /// </summary>
-            /// <param name="account">The operation's source account.</param>
-            /// <returns>Builder object so you can chain methods.</returns>
-            public Builder SetSourceAccount(KeyPair account)
-            {
-                _sourceAccount = account;
-                return this;
-            }
-
-            /// <summary>
-            ///     Builds an operation
-            /// </summary>
-            public EndSponsoringFutureReservesOperation Build()
-            {
-                var operation = new EndSponsoringFutureReservesOperation();
-                if (_sourceAccount != null)
-                    operation.SourceAccount = _sourceAccount;
-                return operation;
-            }
+            var operation = new EndSponsoringFutureReservesOperation();
+            if (_sourceAccount != null)
+                operation.SourceAccount = _sourceAccount;
+            return operation;
         }
-
     }
 }

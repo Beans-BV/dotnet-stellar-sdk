@@ -6,14 +6,14 @@ namespace stellar_dotnet_sdk;
 /// <summary>
 ///     Signer is a helper class that creates <see cref="xdr.SignerKey" /> objects.
 /// </summary>
-public class SignerUtil
+public static class SignerUtil
 {
     /// <summary>
-    ///     Create <code>ed25519PublicKey</code> <see cref="xdr.SignerKey" /> from
-    ///     a <see cref="xdr.KeyPair" />
+    ///     Creates an <c>ed25519PublicKey</c> <c>xdr.SignerKey</c> from
+    ///     a <c>KeyPair</c>.
     /// </summary>
     /// <param name="keyPair"></param>
-    /// <returns>sdkxdr.SignerKey</returns>
+    /// <returns>An <c>ed25519PublicKey</c> <c>xdr.SignerKey</c> object.</returns>
     public static SignerKey Ed25519PublicKey(KeyPair keyPair)
     {
         if (keyPair == null)
@@ -23,11 +23,11 @@ public class SignerUtil
     }
 
     /// <summary>
-    ///     Create <code>sha256Hash</code> <see cref="xdr.SignerKey" /> from
-    ///     a sha256 hash of a preimage.
+    ///     Creates an <c>SHA256</c> <c>xdr.SignerKey</c> from
+    ///     the SHA256 hash of a preimage.
     /// </summary>
     /// <param name="hash"></param>
-    /// <returns>sdkxdr.SignerKey</returns>
+    /// <returns>An <c>SHA256</c> <c>xdr.SignerKey</c> object.</returns>
     public static SignerKey Sha256Hash(byte[] hash)
     {
         if (hash == null)
@@ -43,23 +43,23 @@ public class SignerUtil
     }
 
     /// <summary>
-    ///     Create <code>preAuthTx</code> <see cref="xdr.SignerKey" /> from
-    ///     a <see cref="xdr.Transaction" /> hash.
+    ///     Creates a <c>preAuthTx</c> <c>xdr.SignerKey</c> from
+    ///     an <c>xdr.Transaction</c> object.
     /// </summary>
     /// <param name="tx"></param>
-    /// <returns>sdkxdr.SignerKey</returns>
+    /// <returns>A <c>preAuthTx</c> <c>xdr.SignerKey</c> object.</returns>
     public static SignerKey PreAuthTx(Transaction tx)
     {
         return PreAuthTx(tx, Network.Current);
     }
 
     /// <summary>
-    ///     Create <code>preAuthTx</code> <see cref="xdr.SignerKey" /> from
-    ///     a <see cref="xdr.Transaction" /> hash.
+    ///     Creates a <c>preAuthTx</c> <c>xdr.SignerKey</c> from
+    ///     an <c>xdr.Transaction</c> object for the specified network.
     /// </summary>
     /// <param name="tx"></param>
     /// <param name="network"></param>
-    /// <returns>sdkxdr.SignerKey</returns>
+    /// <returns>A <c>preAuthTx</c> <c>xdr.SignerKey</c> object.</returns>
     public static SignerKey PreAuthTx(Transaction tx, Network network)
     {
         if (tx == null)
@@ -69,11 +69,11 @@ public class SignerUtil
     }
 
     /// <summary>
-    ///     Create <code>preAuthTx</code> <see cref="xdr.SignerKey" /> from
+    ///     Creates a <c>preAuthTx</c> <c>xdr.SignerKey</c> from
     ///     a transaction hash.
     /// </summary>
     /// <param name="hash"></param>
-    /// <returns>sdkxdr.SignerKey</returns>
+    /// <returns>A <c>preAuthTx</c> <c>xdr.SignerKey</c> object.</returns>
     public static SignerKey PreAuthTx(byte[] hash)
     {
         if (hash == null)
@@ -89,16 +89,18 @@ public class SignerUtil
     }
 
     /// <summary>
-    ///     Create SignerKey from SignedPayloadSigner
+    ///     Creates a <c>preAuthTx</c> <c>xdr.SignerKey</c> from a <c>SignedPayloadSigner</c> object.
     /// </summary>
     /// <param name="signedPayloadSigner"></param>
-    /// <returns></returns>
+    /// <returns>A <c>xdr.SignerKey</c> object.</returns>
     public static SignerKey SignedPayload(SignedPayloadSigner signedPayloadSigner)
     {
         var signerKey = new SignerKey();
-        var payloadSigner = new SignerKey.SignerKeyEd25519SignedPayload();
-        payloadSigner.Payload = signedPayloadSigner.Payload;
-        payloadSigner.Ed25519 = signedPayloadSigner.SignerAccountID.InnerValue.Ed25519;
+        var payloadSigner = new SignerKey.SignerKeyEd25519SignedPayload
+        {
+            Payload = signedPayloadSigner.Payload,
+            Ed25519 = signedPayloadSigner.SignerAccountID.InnerValue.Ed25519
+        };
 
         signerKey.Discriminant.InnerValue = SignerKeyType.SignerKeyTypeEnum.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD;
         signerKey.Ed25519SignedPayload = payloadSigner;
@@ -116,8 +118,6 @@ public class SignerUtil
         if (hash.Length != 32)
             throw new ArgumentException("hash must be 32 bytes long");
 
-        var value = new Uint256();
-        value.InnerValue = hash;
-        return value;
+        return new Uint256(hash);
     }
 }

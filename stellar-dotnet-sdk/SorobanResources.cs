@@ -12,10 +12,10 @@ public class SorobanResources
         WriteBytes = writeBytes;
     }
 
-    public LedgerFootprint Footprint { get; set; } = new();
-    public uint Instructions { get; set; }
-    public uint ReadBytes { get; set; }
-    public uint WriteBytes { get; set; }
+    public LedgerFootprint Footprint { get; }
+    public uint Instructions { get; }
+    public uint ReadBytes { get; }
+    public uint WriteBytes { get; }
 
     public xdr.SorobanResources ToXdr()
     {

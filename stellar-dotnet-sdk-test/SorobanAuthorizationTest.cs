@@ -17,10 +17,12 @@ public class SorobanAuthorizationTest
     private const long Nonce = -9223372036854775807;
     private const uint SignatureExpirationLedger = 1319013123;
 
+    private const string WasmId = "ZBYoEJT3IaPMMk3FoRmnEQHoDxewPZL+Uor+xWI4uII=";
+
     private readonly SCAccountId _accountAddress = new("GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP");
 
     private readonly ContractExecutable _contractExecutableWasm =
-        new ContractExecutableWasm("ZBYoEJT3IaPMMk3FoRmnEQHoDxewPZL+Uor+xWI4uII=");
+        new ContractExecutableWasm(WasmId);
 
     private readonly SCString _signature = new("Signature");
 
@@ -68,7 +70,7 @@ public class SorobanAuthorizationTest
         sorobanCredentials.Address = null;
 
         var ex = Assert.ThrowsException<InvalidOperationException>(() => sorobanCredentials.ToXdrBase64());
-        Assert.AreEqual("Address cannot be null", ex.Message);
+        Assert.AreEqual("Address cannot be null.", ex.Message);
     }
 
     [TestMethod]
@@ -97,7 +99,7 @@ public class SorobanAuthorizationTest
         sorobanCredentials.Signature = null;
 
         var ex = Assert.ThrowsException<InvalidOperationException>(() => sorobanCredentials.ToXdrBase64());
-        Assert.AreEqual("Signature cannot be null", ex.Message);
+        Assert.AreEqual("Signature cannot be null.", ex.Message);
     }
 
     [TestMethod]
@@ -149,19 +151,12 @@ public class SorobanAuthorizationTest
     {
         var rootInvocation = new SorobanAuthorizedInvocation
         {
-            Function = new SorobanAuthorizedCreateContractFunction
-            {
-                HostFunction =
-                    new CreateContractHostFunction(InitContractIDAddressPreimage(), _contractExecutableWasm)
-            },
+            Function = new SorobanAuthorizedCreateContractFunction(
+                new CreateContractHostFunction(InitContractIDAddressPreimage(), _contractExecutableWasm)),
             SubInvocations = Array.Empty<SorobanAuthorizedInvocation>()
         };
 
-        var authEntry = new SorobanAuthorizationEntry
-        {
-            RootInvocation = rootInvocation,
-            Credentials = InitSorobanAddressCredentials()
-        };
+        var authEntry = new SorobanAuthorizationEntry(InitSorobanAddressCredentials(), rootInvocation);
 
         var authEntryXdrBase64 = authEntry.ToXdrBase64();
         var decodedAuthEntry = SorobanAuthorizationEntry.FromXdrBase64(authEntryXdrBase64);
@@ -181,10 +176,9 @@ public class SorobanAuthorizationTest
     [TestMethod]
     public void TestSorobanAuthorizationEntryContainingAuthorizedCreateContractFunction()
     {
-        var authorizedCreateContractFn = new SorobanAuthorizedCreateContractFunction
-        {
-            HostFunction = new CreateContractHostFunction(InitContractIDAddressPreimage(), _contractExecutableWasm)
-        };
+        var authorizedCreateContractFn =
+            new SorobanAuthorizedCreateContractFunction(
+                new CreateContractHostFunction(WasmId, _accountAddress.InnerValue));
 
         var rootInvocation = new SorobanAuthorizedInvocation
         {
@@ -199,11 +193,7 @@ public class SorobanAuthorizationTest
             }
         };
 
-        var authEntry = new SorobanAuthorizationEntry
-        {
-            RootInvocation = rootInvocation,
-            Credentials = InitSorobanAddressCredentials()
-        };
+        var authEntry = new SorobanAuthorizationEntry(InitSorobanAddressCredentials(), rootInvocation);
 
         var authEntryXdrBase64 = authEntry.ToXdrBase64();
         var decodedAuthEntry = SorobanAuthorizationEntry.FromXdrBase64(authEntryXdrBase64);
@@ -224,11 +214,10 @@ public class SorobanAuthorizationTest
     public void TestSorobanAuthorizationEntryContainingAuthorizedContractFunction()
     {
         var contractAddress = new SCContractId("CDJ4RICANSXXZ275W2OY2U7RO73HYURBGBRHVW2UUXZNGEBIVBNRKEF7");
-        var authorizedContractFn = new SorobanAuthorizedContractFunction
-        {
-            HostFunction = new InvokeContractHostFunction(contractAddress, new SCSymbol("hello"),
-                new SCVal[] { new SCBool(false), new SCString("world") })
-        };
+        var authorizedContractFn = new SorobanAuthorizedContractFunction(
+            new InvokeContractHostFunction(contractAddress,
+                new SCSymbol("hello"),
+                new SCVal[] { new SCBool(false), new SCString("world") }));
 
         var rootInvocation = new SorobanAuthorizedInvocation
         {
@@ -243,11 +232,7 @@ public class SorobanAuthorizationTest
             }
         };
 
-        var authEntry = new SorobanAuthorizationEntry
-        {
-            RootInvocation = rootInvocation,
-            Credentials = InitSorobanAddressCredentials()
-        };
+        var authEntry = new SorobanAuthorizationEntry(InitSorobanAddressCredentials(), rootInvocation);
 
         var authEntryXdrBase64 = authEntry.ToXdrBase64();
         var decodedAuthEntry = SorobanAuthorizationEntry.FromXdrBase64(authEntryXdrBase64);

@@ -1,60 +1,67 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using stellar_dotnet_sdk.xdr;
+using Int32 = stellar_dotnet_sdk.xdr.Int32;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
 {
-    public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
+    public LiquidityPoolConstantProductParameters(Asset assetA, Asset assetB, int feeBP)
     {
-        public Asset AssetA { get; set; }
-        public Asset AssetB { get; set; }
-        public new int Fee { get; set; }
+        AssetA = assetA ?? throw new ArgumentNullException(nameof(assetA), "assetA cannot be null");
+        AssetB = assetB ?? throw new ArgumentNullException(nameof(assetB), "assetB cannot be null");
+        Fee = feeBP;
+    }
 
-        public LiquidityPoolConstantProductParameters(Asset assetA, Asset assetB, int feeBP)
-        {
-            AssetA = assetA ?? throw new ArgumentNullException(nameof(assetA), "assetA cannot be null");
-            AssetB = assetB ?? throw new ArgumentNullException(nameof(assetB), "assetB cannot be null");
-            Fee = feeBP;
-        }
+    public Asset AssetA { get; }
+    public Asset AssetB { get; }
+    public new int Fee { get; }
 
-        public override bool Equals(object obj)
+    public override bool Equals(object? obj)
+    {
+        if (obj is not LiquidityPoolConstantProductParameters other) return false;
+        return Equals(AssetA, other.AssetA) && Equals(AssetB, other.AssetB) && Equals(Fee, other.Fee);
+    }
+
+    public override int GetHashCode()
+    {
+        return AssetA.GetHashCode() ^ AssetB.GetHashCode() ^ Fee;
+    }
+
+    public override xdr.LiquidityPoolParameters ToXdr()
+    {
+        var liquidityPoolParametersXdr = new xdr.LiquidityPoolParameters
         {
-            if (obj == null || typeof(LiquidityPoolConstantProductParameters) == obj.GetType())
+            Discriminant =
             {
-                return false;
+                InnerValue = LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT
             }
+        };
 
-            LiquidityPoolConstantProductParameters other = (LiquidityPoolConstantProductParameters)obj;
-            return Equals(AssetA, other.AssetA) && Equals(AssetB, other.AssetB) && Equals(Fee, other.Fee);
-        }
-
-        public override int GetHashCode() => this.AssetA.GetHashCode() ^ this.AssetB.GetHashCode() ^ this.Fee;
-
-        public override xdr.LiquidityPoolParameters ToXdr()
+        var parameters = new xdr.LiquidityPoolConstantProductParameters
         {
-            xdr.LiquidityPoolParameters liquidityPoolParametersXdr = new xdr.LiquidityPoolParameters();
-            liquidityPoolParametersXdr.Discriminant.InnerValue = xdr.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT;
+            AssetA = AssetA.ToXdr(),
+            AssetB = AssetB.ToXdr(),
+            Fee = new Int32(Fee)
+        };
 
-            xdr.LiquidityPoolConstantProductParameters parameters = new xdr.LiquidityPoolConstantProductParameters();
-            parameters.AssetA = AssetA.ToXdr();
-            parameters.AssetB = AssetB.ToXdr();
-            parameters.Fee = new xdr.Int32(Fee);
+        liquidityPoolParametersXdr.ConstantProduct = parameters;
 
-            liquidityPoolParametersXdr.ConstantProduct = parameters;
+        return liquidityPoolParametersXdr;
+    }
 
-            return liquidityPoolParametersXdr;
-        }
+    public static LiquidityPoolConstantProductParameters FromXdr(
+        xdr.LiquidityPoolConstantProductParameters liquidityPoolConstantProductParametersXdr)
+    {
+        return new LiquidityPoolConstantProductParameters(
+            Asset.FromXdr(liquidityPoolConstantProductParametersXdr.AssetA),
+            Asset.FromXdr(liquidityPoolConstantProductParametersXdr.AssetB),
+            liquidityPoolConstantProductParametersXdr.Fee.InnerValue);
+    }
 
-        public static LiquidityPoolConstantProductParameters FromXdr(xdr.LiquidityPoolConstantProductParameters liquidityPoolConstantProductParametersXdr)
-        {
-            return new LiquidityPoolConstantProductParameters(Asset.FromXdr(liquidityPoolConstantProductParametersXdr.AssetA),
-                                                              Asset.FromXdr(liquidityPoolConstantProductParametersXdr.AssetB),
-                                                              liquidityPoolConstantProductParametersXdr.Fee.InnerValue);
-        }
-
-        public override LiquidityPoolID GetID()
-        {
-            return new LiquidityPoolID(xdr.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT, AssetA, AssetB, Fee);
-        }
+    public override LiquidityPoolID GetID()
+    {
+        return new LiquidityPoolID(LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT, AssetA,
+            AssetB, Fee);
     }
 }

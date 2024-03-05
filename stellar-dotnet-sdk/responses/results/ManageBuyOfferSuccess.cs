@@ -2,48 +2,47 @@ using System;
 using System.Linq;
 using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk.responses.results
+namespace stellar_dotnet_sdk.responses.results;
+
+/// <summary>
+///     Operation successful.
+/// </summary>
+public class ManageBuyOfferSuccess : ManageBuyOfferResult
 {
+    public override bool IsSuccess => true;
+
     /// <summary>
-    /// Operation successful.
+    ///     Offers that got claimed while creating this offer.
     /// </summary>
-    public class ManageBuyOfferSuccess : ManageBuyOfferResult
+    public ClaimAtom[] OffersClaimed { get; set; }
+
+    public static ManageBuyOfferSuccess FromXdr(ManageOfferSuccessResult result)
     {
-        public override bool IsSuccess => true;
+        var offersClaimed = result.OffersClaimed.Select(ClaimAtom.FromXdr).ToArray();
 
-        /// <summary>
-        /// Offers that got claimed while creating this offer.
-        /// </summary>
-        public ClaimAtom[] OffersClaimed { get; set; }
-
-        public static ManageBuyOfferSuccess FromXdr(xdr.ManageOfferSuccessResult result)
+        switch (result.Offer.Discriminant.InnerValue)
         {
-            var offersClaimed = result.OffersClaimed.Select(ClaimAtom.FromXdr).ToArray();
-
-            switch (result.Offer.Discriminant.InnerValue)
-            {
-                case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_CREATED:
-                    var createdOffer = OfferEntry.FromXdr(result.Offer.Offer);
-                    return new ManageBuyOfferCreated
-                    {
-                        OffersClaimed = offersClaimed,
-                        Offer = createdOffer,
-                    };
-                case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_UPDATED:
-                    var updatedOffer = OfferEntry.FromXdr(result.Offer.Offer);
-                    return new ManageBuyOfferUpdated
-                    {
-                        OffersClaimed = offersClaimed,
-                        Offer = updatedOffer,
-                    };
-                case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_DELETED:
-                    return new ManageBuyOfferDeleted
-                    {
-                        OffersClaimed = offersClaimed
-                    };
-                default:
-                    throw new SystemException("Unknown ManageBuyOfferSuccess type");
-            }
+            case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_CREATED:
+                var createdOffer = OfferEntry.FromXdr(result.Offer.Offer);
+                return new ManageBuyOfferCreated
+                {
+                    OffersClaimed = offersClaimed,
+                    Offer = createdOffer
+                };
+            case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_UPDATED:
+                var updatedOffer = OfferEntry.FromXdr(result.Offer.Offer);
+                return new ManageBuyOfferUpdated
+                {
+                    OffersClaimed = offersClaimed,
+                    Offer = updatedOffer
+                };
+            case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_DELETED:
+                return new ManageBuyOfferDeleted
+                {
+                    OffersClaimed = offersClaimed
+                };
+            default:
+                throw new SystemException("Unknown ManageBuyOfferSuccess type");
         }
     }
 }

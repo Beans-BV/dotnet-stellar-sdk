@@ -109,16 +109,6 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
         }
 
         public Builder(
-            InvokeContractHostFunction hostFunction,
-            SorobanAuthorizationEntry[]? auth = null)
-        {
-            _contractAddress = hostFunction.ContractAddress;
-            _functionName = hostFunction.FunctionName;
-            _args = hostFunction.Args;
-            _auth = auth;
-        }
-
-        public Builder(
             SCAddress contractAddress,
             SCSymbol functionName,
             SCVal[] args,
@@ -200,7 +190,7 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
 
 public class CreateContractOperation : InvokeHostFunctionOperation
 {
-    public CreateContractOperation(CreateContractHostFunction hostFunction)
+    private CreateContractOperation(CreateContractHostFunction hostFunction)
     {
         HostFunction = hostFunction;
     }
@@ -225,22 +215,7 @@ public class CreateContractOperation : InvokeHostFunctionOperation
         return invokeHostFunctionOperation;
     }
 
-    public static CreateContractOperation FromInvokeHostFunctionOperationXdr(
-        InvokeHostFunctionOp xdrInvokeHostFunctionOp)
-    {
-        if (xdrInvokeHostFunctionOp.HostFunction.Discriminant.InnerValue !=
-            HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
-            throw new InvalidOperationException("Invalid HostFunction type");
-
-        return new CreateContractOperation(
-            CreateContractHostFunction.FromHostFunctionXdr(xdrInvokeHostFunctionOp.HostFunction)
-        )
-        {
-            Auth = xdrInvokeHostFunctionOp.Auth.Select(SorobanAuthorizationEntry.FromXdr).ToArray()
-        };
-    }
-
-    public InvokeHostFunctionOp ToInvokeHostFunctionOperationXdr()
+    private InvokeHostFunctionOp ToInvokeHostFunctionOperationXdr()
     {
         return new InvokeHostFunctionOp
         {
@@ -286,7 +261,7 @@ public class CreateContractOperation : InvokeHostFunctionOperation
             _contractIDPreimage = new ContractIDAssetPreimage(asset);
             _executable = new ContractExecutableStellarAsset();
         }
-        
+
         public Builder(string accountId, string wasmId, byte[]? salt)
         {
             _contractIDPreimage = new ContractIDAddressPreimage(accountId, salt);
@@ -633,6 +608,9 @@ public class InvokeContractHostFunction : HostFunction
     }
 }
 
+/// <summary>
+///     Represents a create contract host function.
+/// </summary>
 public class CreateContractHostFunction : HostFunction
 {
     public CreateContractHostFunction(
@@ -641,6 +619,18 @@ public class CreateContractHostFunction : HostFunction
     {
         ContractIDPreimage = contractIDPreimage;
         Executable = executable;
+    }
+
+    /// <summary>
+    ///     Constructs a create contract host function.
+    /// </summary>
+    /// <param name="hash">SHA-256 hash of the previously uploaded Wasm.</param>
+    /// <param name="address">An account address.</param>
+    /// <param name="salt">(Optional) A salt. Will be randomly generated if not provided.</param>
+    public CreateContractHostFunction(string hash, string address, byte[]? salt = null)
+    {
+        ContractIDPreimage = new ContractIDAddressPreimage(address, salt);
+        Executable = new ContractExecutableWasm(hash);
     }
 
     public ContractIDPreimage ContractIDPreimage { get; }
@@ -739,8 +729,14 @@ public class UploadContractHostFunction : HostFunction
 
 public class SorobanAuthorizationEntry
 {
-    public SorobanCredentials Credentials { get; set; }
-    public SorobanAuthorizedInvocation RootInvocation { get; set; }
+    public SorobanAuthorizationEntry(SorobanCredentials credentials, SorobanAuthorizedInvocation rootInvocation)
+    {
+        Credentials = credentials;
+        RootInvocation = rootInvocation;
+    }
+
+    public SorobanCredentials Credentials { get; }
+    public SorobanAuthorizedInvocation RootInvocation { get; }
 
     public xdr.SorobanAuthorizationEntry ToXdr()
     {
@@ -753,11 +749,8 @@ public class SorobanAuthorizationEntry
 
     public static SorobanAuthorizationEntry FromXdr(xdr.SorobanAuthorizationEntry xdr)
     {
-        return new SorobanAuthorizationEntry
-        {
-            Credentials = SorobanCredentials.FromXdr(xdr.Credentials),
-            RootInvocation = SorobanAuthorizedInvocation.FromXdr(xdr.RootInvocation)
-        };
+        return new SorobanAuthorizationEntry(SorobanCredentials.FromXdr(xdr.Credentials),
+            SorobanAuthorizedInvocation.FromXdr(xdr.RootInvocation));
     }
 
     /// <summary>
@@ -841,7 +834,7 @@ public class SorobanSourceAccountCredentials : SorobanCredentials
     {
         if (xdrSorobanCredentials.Discriminant.InnerValue != SorobanCredentialsType.SorobanCredentialsTypeEnum
                 .SOROBAN_CREDENTIALS_SOURCE_ACCOUNT)
-            throw new InvalidOperationException("Invalid SorobanCredentials type");
+            throw new InvalidOperationException("Invalid SorobanCredentials type.");
 
         return new SorobanSourceAccountCredentials();
     }
@@ -882,14 +875,14 @@ public class SorobanAddressCredentials : SorobanCredentials
 
     public xdr.SorobanCredentials ToSorobanCredentialsXdr()
     {
-        if (Address == null) throw new InvalidOperationException("Address cannot be null");
+        if (Address == null) throw new InvalidOperationException("Address cannot be null.");
 
-        if (Nonce == null) throw new InvalidOperationException("Nonce cannot be null");
+        if (Nonce == null) throw new InvalidOperationException("Nonce cannot be null.");
 
         if (SignatureExpirationLedger == null)
-            throw new InvalidOperationException("SignatureExpirationLedger cannot be null");
+            throw new InvalidOperationException("SignatureExpirationLedger cannot be null.");
 
-        if (Signature == null) throw new InvalidOperationException("Signature cannot be null");
+        if (Signature == null) throw new InvalidOperationException("Signature cannot be null.");
 
         return new xdr.SorobanCredentials
         {
@@ -968,7 +961,12 @@ public abstract class SorobanAuthorizedFunction
 
 public class SorobanAuthorizedContractFunction : SorobanAuthorizedFunction
 {
-    public InvokeContractHostFunction HostFunction { get; set; }
+    public SorobanAuthorizedContractFunction(InvokeContractHostFunction hostFunction)
+    {
+        HostFunction = hostFunction;
+    }
+
+    public InvokeContractHostFunction HostFunction { get; }
 
     public static SorobanAuthorizedFunction FromSorobanAuthorizedFunctionXdr(
         xdr.SorobanAuthorizedFunction xdrSorobanAuthorizedFunction)
@@ -977,10 +975,8 @@ public class SorobanAuthorizedContractFunction : SorobanAuthorizedFunction
                 .SorobanAuthorizedFunctionTypeEnum.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
             throw new InvalidOperationException("Invalid SorobanAuthorizedFunction type");
 
-        return new SorobanAuthorizedContractFunction
-        {
-            HostFunction = InvokeContractHostFunction.FromXdr(xdrSorobanAuthorizedFunction.ContractFn)
-        };
+        return new SorobanAuthorizedContractFunction(
+            InvokeContractHostFunction.FromXdr(xdrSorobanAuthorizedFunction.ContractFn));
     }
 
     public xdr.SorobanAuthorizedFunction ToSorobanAuthorizedFunctionXdr()
@@ -999,7 +995,12 @@ public class SorobanAuthorizedContractFunction : SorobanAuthorizedFunction
 
 public class SorobanAuthorizedCreateContractFunction : SorobanAuthorizedFunction
 {
-    public CreateContractHostFunction HostFunction { get; set; }
+    public SorobanAuthorizedCreateContractFunction(CreateContractHostFunction hostFunction)
+    {
+        HostFunction = hostFunction;
+    }
+
+    public CreateContractHostFunction HostFunction { get; }
 
     public static SorobanAuthorizedFunction FromSorobanAuthorizedFunctionXdr(
         xdr.SorobanAuthorizedFunction xdrSorobanAuthorizedFunction)
@@ -1008,10 +1009,8 @@ public class SorobanAuthorizedCreateContractFunction : SorobanAuthorizedFunction
                 .SorobanAuthorizedFunctionTypeEnum.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN)
             throw new InvalidOperationException("Invalid SorobanAuthorizedFunction type");
 
-        return new SorobanAuthorizedCreateContractFunction
-        {
-            HostFunction = CreateContractHostFunction.FromXdr(xdrSorobanAuthorizedFunction.CreateContractHostFn)
-        };
+        return new SorobanAuthorizedCreateContractFunction(
+            CreateContractHostFunction.FromXdr(xdrSorobanAuthorizedFunction.CreateContractHostFn));
     }
 
     public xdr.SorobanAuthorizedFunction ToSorobanAuthorizedFunctionXdr()
@@ -1073,8 +1072,8 @@ public class ContractIDAddressPreimage : ContractIDPreimage
         Salt = salt;
     }
 
-    public SCAddress Address { get; set; }
-    public byte[] Salt { get; set; }
+    public SCAddress Address { get; }
+    public byte[] Salt { get; }
 
     public static ContractIDPreimage FromContractIDPreimageXdr(xdr.ContractIDPreimage xdrContractIDPreimage)
     {
@@ -1106,12 +1105,13 @@ public class ContractIDAddressPreimage : ContractIDPreimage
 
 public class ContractIDAssetPreimage : ContractIDPreimage
 {
-    public Asset Asset { get; set; }
-
     public ContractIDAssetPreimage(Asset asset)
     {
         Asset = asset;
     }
+
+    public Asset Asset { get; }
+
     public static ContractIDPreimage FromContractIDPreimageXdr(xdr.ContractIDPreimage xdrContractIDPreimage)
     {
         if (xdrContractIDPreimage.Discriminant.InnerValue !=

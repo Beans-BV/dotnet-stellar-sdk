@@ -1,9 +1,8 @@
-﻿namespace stellar_dotnet_sdk
+﻿namespace stellar_dotnet_sdk;
+
+public class SubmitTransactionOptions
 {
-    public class SubmitTransactionOptions
-    {
-        public bool SkipMemoRequiredCheck { get; set; }
-        public bool FeeBumpTransaction { get; set; }
-        public bool EnsureSuccess { get; set; }
-    }
+    public bool SkipMemoRequiredCheck { get; set; }
+    public bool FeeBumpTransaction { get; set; }
+    public bool EnsureSuccess { get; set; }
 }

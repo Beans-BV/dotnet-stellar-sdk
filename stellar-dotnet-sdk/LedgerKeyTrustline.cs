@@ -1,35 +1,36 @@
-namespace stellar_dotnet_sdk
+using stellar_dotnet_sdk.xdr;
+
+namespace stellar_dotnet_sdk;
+
+public class LedgerKeyTrustline : LedgerKey
 {
-    public class LedgerKeyTrustline : LedgerKey
+    public LedgerKeyTrustline(KeyPair account, TrustlineAsset asset)
     {
-        public new KeyPair Account { get; }
-        public TrustlineAsset Asset { get; }
+        Account = account;
+        Asset = asset;
+    }
 
-        public LedgerKeyTrustline(KeyPair account, TrustlineAsset asset)
-        {
-            Account = account;
-            Asset = asset;
-        }
+    public new KeyPair Account { get; }
+    public TrustlineAsset Asset { get; }
 
-        public override xdr.LedgerKey ToXdr()
+    public override xdr.LedgerKey ToXdr()
+    {
+        return new xdr.LedgerKey
         {
-            return new xdr.LedgerKey
+            Discriminant =
+                new LedgerEntryType { InnerValue = LedgerEntryType.LedgerEntryTypeEnum.TRUSTLINE },
+            TrustLine = new xdr.LedgerKey.LedgerKeyTrustLine
             {
-                Discriminant =
-                    new xdr.LedgerEntryType { InnerValue = xdr.LedgerEntryType.LedgerEntryTypeEnum.TRUSTLINE },
-                TrustLine = new xdr.LedgerKey.LedgerKeyTrustLine
-                {
-                    AccountID = new xdr.AccountID(Account.XdrPublicKey),
-                    Asset = Asset.ToXdr(),
-                }
-            };
-        }
+                AccountID = new AccountID(Account.XdrPublicKey),
+                Asset = Asset.ToXdr()
+            }
+        };
+    }
 
-        public static LedgerKeyTrustline FromXdr(xdr.LedgerKey.LedgerKeyTrustLine xdr)
-        {
-            var account = KeyPair.FromXdrPublicKey(xdr.AccountID.InnerValue);
-            var asset = TrustlineAsset.FromXdr(xdr.Asset);
-            return new LedgerKeyTrustline(account, asset);
-        }
+    public static LedgerKeyTrustline FromXdr(xdr.LedgerKey.LedgerKeyTrustLine xdr)
+    {
+        var account = KeyPair.FromXdrPublicKey(xdr.AccountID.InnerValue);
+        var asset = TrustlineAsset.FromXdr(xdr.Asset);
+        return new LedgerKeyTrustline(account, asset);
     }
 }

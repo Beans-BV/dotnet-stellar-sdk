@@ -1,67 +1,62 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public class LiquidityPoolShareChangeTrustAsset : ChangeTrustAsset
 {
-    public class LiquidityPoolShareChangeTrustAsset : ChangeTrustAsset
+    public const string RestApiType = "pool_share";
+
+    public LiquidityPoolShareChangeTrustAsset(LiquidityPoolParameters parameters)
     {
-        public const string RestApiType = "pool_share";
+        Parameters = parameters ?? throw new ArgumentNullException(nameof(parameters), "parameters cannot be null");
+    }
 
-        public LiquidityPoolParameters Parameters { get; set; }
+    public LiquidityPoolParameters Parameters { get; set; }
 
-        public LiquidityPoolShareChangeTrustAsset(LiquidityPoolParameters parameters)
+    public override string Type => RestApiType;
+
+    public LiquidityPoolID GetLiquidityPoolID()
+    {
+        return Parameters.GetID();
+    }
+
+    public override string ToString()
+    {
+        return GetLiquidityPoolID().ToString();
+    }
+
+    public override int GetHashCode()
+    {
+        return Parameters.GetHashCode();
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is LiquidityPoolShareChangeTrustAsset other && Parameters.Equals(other.Parameters);
+    }
+
+    public override int CompareTo(ChangeTrustAsset asset)
+    {
+        return asset.Type != RestApiType
+            ? 1
+            : string.Compare(ToString(), ((LiquidityPoolShareChangeTrustAsset)asset).ToString(),
+                StringComparison.Ordinal);
+    }
+
+    public override xdr.ChangeTrustAsset ToXdr()
+    {
+        var changeTrustXdr = new xdr.ChangeTrustAsset
         {
-            Parameters = parameters ?? throw new ArgumentNullException(nameof(parameters), "parameters cannot be null");
-        }
-
-        public LiquidityPoolID GetLiquidityPoolID()
-        {
-            return Parameters.GetID();
-        }
-
-        public override string Type => RestApiType;
-
-        public override string ToString()
-        {
-            return GetLiquidityPoolID().ToString();
-        }
-
-        public override int GetHashCode()
-        {
-            return Parameters.GetHashCode();
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || typeof(LiquidityPoolShareChangeTrustAsset).Equals(obj.GetType()))
+            Discriminant =
             {
-                return false;
+                InnerValue = AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE
             }
+        };
 
-            LiquidityPoolShareChangeTrustAsset other = (LiquidityPoolShareChangeTrustAsset)obj;
-            return Parameters.Equals(other.Parameters);
-        }
+        var parameters = Parameters.ToXdr();
+        changeTrustXdr.LiquidityPool = parameters;
 
-        public override int CompareTo(ChangeTrustAsset asset)
-        {
-            if (asset.Type != RestApiType)
-            {
-                return 1;
-            }
-
-            return ToString().CompareTo(((LiquidityPoolShareChangeTrustAsset)asset).ToString());
-        }
-
-        public override xdr.ChangeTrustAsset ToXdr()
-        {
-            xdr.ChangeTrustAsset changeTrustXdr = new xdr.ChangeTrustAsset();
-            changeTrustXdr.Discriminant.InnerValue = xdr.AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE;
-
-            xdr.LiquidityPoolParameters parameters = Parameters.ToXdr();
-            changeTrustXdr.LiquidityPool = parameters;
-
-            return changeTrustXdr;
-        }
+        return changeTrustXdr;
     }
 }

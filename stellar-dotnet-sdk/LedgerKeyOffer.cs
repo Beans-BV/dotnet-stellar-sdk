@@ -1,35 +1,36 @@
-namespace stellar_dotnet_sdk
+using stellar_dotnet_sdk.xdr;
+
+namespace stellar_dotnet_sdk;
+
+public class LedgerKeyOffer : LedgerKey
 {
-    public class LedgerKeyOffer : LedgerKey
+    public LedgerKeyOffer(KeyPair seller, long offerId)
     {
-        public KeyPair Seller { get; }
-        public long OfferId { get; }
+        Seller = seller;
+        OfferId = offerId;
+    }
 
-        public LedgerKeyOffer(KeyPair seller, long offerId)
-        {
-            Seller = seller;
-            OfferId = offerId;
-        }
+    public KeyPair Seller { get; }
+    public long OfferId { get; }
 
-        public override xdr.LedgerKey ToXdr()
+    public override xdr.LedgerKey ToXdr()
+    {
+        return new xdr.LedgerKey
         {
-            return new xdr.LedgerKey
+            Discriminant =
+                new LedgerEntryType { InnerValue = LedgerEntryType.LedgerEntryTypeEnum.OFFER },
+            Offer = new xdr.LedgerKey.LedgerKeyOffer
             {
-                Discriminant =
-                    new xdr.LedgerEntryType { InnerValue = xdr.LedgerEntryType.LedgerEntryTypeEnum.OFFER },
-                Offer = new xdr.LedgerKey.LedgerKeyOffer
-                {
-                    SellerID = new xdr.AccountID(Seller.XdrPublicKey),
-                    OfferID = new xdr.Int64(OfferId),
-                }
-            };
-        }
+                SellerID = new AccountID(Seller.XdrPublicKey),
+                OfferID = new Int64(OfferId)
+            }
+        };
+    }
 
-        public static LedgerKeyOffer FromXdr(xdr.LedgerKey.LedgerKeyOffer xdr)
-        {
-            var seller = KeyPair.FromXdrPublicKey(xdr.SellerID.InnerValue);
-            var offerId = xdr.OfferID.InnerValue;
-            return new LedgerKeyOffer(seller, offerId);
-        }
+    public static LedgerKeyOffer FromXdr(xdr.LedgerKey.LedgerKeyOffer xdr)
+    {
+        var seller = KeyPair.FromXdrPublicKey(xdr.SellerID.InnerValue);
+        var offerId = xdr.OfferID.InnerValue;
+        return new LedgerKeyOffer(seller, offerId);
     }
 }

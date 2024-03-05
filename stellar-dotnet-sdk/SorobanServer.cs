@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using stellar_dotnet_sdk.requests;
 using stellar_dotnet_sdk.requests.sorobanrpc;
 using stellar_dotnet_sdk.responses.sorobanrpc;
-using stellar_dotnet_sdk.xdr;
 
 namespace stellar_dotnet_sdk;
 
@@ -34,7 +33,7 @@ public class SorobanServer : IDisposable
 
     public void Dispose()
     {
-        if (_ownHttpClient) _httpClient?.Dispose();
+        if (_ownHttpClient) _httpClient.Dispose();
     }
 
     public static HttpClient CreateHttpClient()
@@ -53,17 +52,20 @@ public class SorobanServer : IDisposable
 
     /// <summary>
     ///     General node health check.
+    ///     See: https://soroban.stellar.org/api/methods/getHealth
     /// </summary>
-    /// <returns>A GetHealthResponse object containing the health check result.</returns>
+    /// <returns>The <see cref="GetHealthResponse" /> object containing the health check result.</returns>
     public Task<GetHealthResponse> GetHealth()
     {
         return SendRequest<object, GetHealthResponse>("getHealth", null);
     }
 
     /// <summary>
-    ///     Fetches metadata about the network which Soroban-RPC is connected to.
+    ///     General information about the currently configured network. This response will contain all the information needed
+    ///     to successfully submit transactions to the network this node serves.
+    ///     See: https://soroban.stellar.org/api/methods/getNetwork
     /// </summary>
-    /// <returns>A GetNetworkResponse object containing the network metadata.</returns>
+    /// <returns>The <see cref="GetNetworkResponse" /> object containing the network metadata.</returns>
     public Task<GetNetworkResponse> GetNetwork()
     {
         return SendRequest<object, GetNetworkResponse>("getNetwork", null);
@@ -100,9 +102,9 @@ public class SorobanServer : IDisposable
     {
         var ledgerKeyAccount = new LedgerKeyAccount(accountId);
         var response = await GetLedgerEntry(ledgerKeyAccount);
-        if (response.Entries == null || response.Entries.Length == 0)
+        if (response.LedgerEntries?.Length == 0 ||
+            response.LedgerEntries?[0] is not LedgerEntryAccount ledgerEntryAccount)
             throw new AccountNotFoundException(accountId);
-        var ledgerEntryAccount = LedgerEntryAccount.FromXdrBase64(response.Entries[0]!.Xdr);
         return new Account(ledgerEntryAccount.Account.AccountId, ledgerEntryAccount.SequenceNumber);
     }
 
@@ -121,15 +123,22 @@ public class SorobanServer : IDisposable
     ///     PERSISTENT.
     /// </param>
     /// <returns>A LedgerEntryResult object containing the ledger entry result.</returns>
-    public async Task<GetLedgerEntriesResponse.LedgerEntryResult?> GetContractData(string contractId, SCVal key,
-        ContractDataDurability durability)
-    {
-        SCAddress address = new SCContractId(contractId);
-        var ledgerKeyContractData = new LedgerKeyContractData(address, key, durability);
-        var response = await GetLedgerEntry(ledgerKeyContractData);
-        return response.Entries.Length == 0 ? null : response.Entries[0];
-    }
+    // public async Task<GetLedgerEntriesResponse.LedgerEntryResult?> GetContractData(string contractId, SCVal key,
+    //     ContractDataDurability durability)
+    // {
+    //     SCAddress address = new SCContractId(contractId);
+    //     var ledgerKeyContractData = new LedgerKeyContractData(address, key, durability);
+    //     var response = await GetLedgerEntry(ledgerKeyContractData);
+    //     return response.EntryResults.Length == 0 ? null : response.EntryResults[0];
+    // }
 
+    /// <summary>
+    ///     <para>
+    ///         For finding out the current latest known ledger of this node. This is a subset of the ledger info from Horizon.
+    ///     </para>
+    ///     See: https://soroban.stellar.org/api/methods/getLatestLedger
+    /// </summary>
+    /// <returns></returns>
     public Task<GetLatestLedgerResponse> GetLatestLedger()
     {
         return SendRequest<object, GetLatestLedgerResponse>("getLatestLedger", null);
@@ -138,9 +147,18 @@ public class SorobanServer : IDisposable
     /// <summary>
     ///     Reads the current value of ledger entries directly.
     ///     Allows you to directly inspect the current state of contracts, contract's code, or any other ledger entries.
+    ///     <para>
+    ///         This is a backup way to access your contract data which may
+    ///         not be available via events or simulateTransaction.
+    ///         To fetch contract wasm byte-code, use the ContractCode ledger entry key.
+    ///     </para>
+    ///     See: https://soroban.stellar.org/api/methods/getLedgerEntries
     /// </summary>
-    /// <param name="keys">The key of the contract data to load, at least one key must be provided.</param>
-    /// <returns>A GetLedgerEntriesResponse object containing the current values.</returns>
+    /// <param name="keys">
+    ///     Array of <see cref="LedgerKey" /> containing the keys of the ledger entries you wish to retrieve, at
+    ///     least one key must be provided.
+    /// </param>
+    /// <returns>A <see cref="GetLedgerEntriesResponse" /> object containing the current values.</returns>
     public Task<GetLedgerEntriesResponse> GetLedgerEntries(LedgerKey[] keys)
     {
         var xdrBase64Keys = new string[keys.Length];
@@ -161,27 +179,50 @@ public class SorobanServer : IDisposable
         return SendRequest<object, GetLedgerEntriesResponse>("getLedgerEntries", new { keys = xdrBase64Keys });
     }
 
-    public Task<SimulateTransactionResponse> SimulateTransaction(Transaction tx, uint? resourceConfig = null)
+    /// <summary>
+    ///     Submit a trial contract invocation to simulate how it would be executed by the network. This endpoint calculates
+    ///     the effective transaction data, required authorizations, and minimal resource fee. It provides a way to test and
+    ///     analyze the potential outcomes of a transaction without actually submitting it to the network.
+    /// </summary>
+    /// <param name="transaction">
+    ///     The transaction object to be simulated.
+    ///     <remarks>
+    ///         In order for the RPC server to successfully simulate a Stellar transaction, the provided transaction must
+    ///         contain only a single operation of the type <c>invokeHostFunction</c>.
+    ///     </remarks>
+    /// </param>
+    /// <param name="resourceConfig">Contains configuration for how resources will be calculated when simulating transactions.</param>
+    /// <returns>A <see cref="SimulateTransactionResponse" /> object.</returns>
+    public Task<SimulateTransactionResponse> SimulateTransaction(Transaction transaction, uint? resourceConfig = null)
     {
         if (resourceConfig != null)
             return SendRequest<object, SimulateTransactionResponse>("simulateTransaction",
                 new
                 {
-                    transaction = tx.ToUnsignedEnvelopeXdrBase64(),
+                    transaction = transaction.ToUnsignedEnvelopeXdrBase64(),
                     resourceConfig = new { instructionLeeway = resourceConfig }
                 });
 
         return SendRequest<object, SimulateTransactionResponse>("simulateTransaction",
             new
             {
-                transaction = tx.ToUnsignedEnvelopeXdrBase64()
+                transaction = transaction.ToUnsignedEnvelopeXdrBase64()
             });
     }
 
-    public Task<SendTransactionResponse> SendTransaction(Transaction tx)
+    /// <summary>
+    ///     Submit a real transaction to the stellar network. This is the only way to make changes “on-chain”. Unlike Horizon,
+    ///     this does not wait for transaction completion. It simply validates and enqueues the transaction. Clients should
+    ///     call getTransactionStatus to learn about transaction success/failure. This supports all transactions, not only
+    ///     smart contract-related transactions.
+    ///     See https://soroban.stellar.org/api/methods/sendTransaction.
+    /// </summary>
+    /// <param name="transaction">The transaction object to be submitted.</param>
+    /// <returns>A <see cref="SendTransactionResponse" /> response.</returns>
+    public Task<SendTransactionResponse> SendTransaction(Transaction transaction)
     {
         return SendRequest<object, SendTransactionResponse>("sendTransaction",
-            new { transaction = tx.ToEnvelopeXdrBase64() });
+            new { transaction = transaction.ToEnvelopeXdrBase64() });
     }
 
     private async Task<TR> SendRequest<T, TR>(string method, T? parameters)

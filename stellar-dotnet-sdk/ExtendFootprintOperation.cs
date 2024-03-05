@@ -4,13 +4,19 @@ using stellar_dotnet_sdk.xdr;
 namespace stellar_dotnet_sdk;
 
 /// <summary>
-///     Operation that extends footprint TTL
+///     Operation that extends footprint TTL.
 /// </summary>
 public class ExtendFootprintOperation : Operation
 {
-    public uint ExtendTo { get; set; }
+    private ExtendFootprintOperation(uint extendTo, ExtensionPoint? extensionPoint = null)
+    {
+        ExtendTo = extendTo;
+        if (extensionPoint != null) ExtensionPoint = extensionPoint;
+    }
 
-    public ExtensionPoint ExtensionPoint { get; set; }
+    public uint ExtendTo { get; }
+
+    public ExtensionPoint ExtensionPoint { get; } = new ExtensionPointZero();
 
     /// <summary>
     ///     Creates a new ExtendFootprintOperation object from the given base64-encoded XDR Operation.
@@ -29,17 +35,7 @@ public class ExtendFootprintOperation : Operation
         return extendFootprintOperation;
     }
 
-    public static ExtendFootprintOperation FromExtendFootprintTTLOperationXdr(
-        ExtendFootprintTTLOp xdrExtendFootprintTTLOp)
-    {
-        return new ExtendFootprintOperation
-        {
-            ExtendTo = xdrExtendFootprintTTLOp.ExtendTo.InnerValue,
-            ExtensionPoint = ExtensionPoint.FromXdr(xdrExtendFootprintTTLOp.Ext)
-        };
-    }
-
-    public ExtendFootprintTTLOp ToExtendFootprintTTLOperationXdr()
+    private ExtendFootprintTTLOp ToExtendFootprintTTLOperationXdr()
     {
         return new ExtendFootprintTTLOp
         {
@@ -63,14 +59,9 @@ public class ExtendFootprintOperation : Operation
 
     public class Builder
     {
-        private uint? _extendTo;
+        private readonly uint _extendTo;
         private ExtensionPoint _extensionPoint = new ExtensionPointZero();
-
         private KeyPair? _sourceAccount;
-
-        public Builder()
-        {
-        }
 
         public Builder(uint extendTo)
         {
@@ -95,23 +86,11 @@ public class ExtendFootprintOperation : Operation
             return this;
         }
 
-        public Builder SetExtendTo(uint extendTo)
-        {
-            _extendTo = extendTo;
-            return this;
-        }
-
         public ExtendFootprintOperation Build()
         {
             if (_extensionPoint == null)
-                throw new InvalidOperationException("Extension point cannot be null");
-            if (_extendTo == null)
-                throw new InvalidOperationException("Extend to cannot be null");
-            var operation = new ExtendFootprintOperation
-            {
-                ExtensionPoint = _extensionPoint,
-                ExtendTo = _extendTo.Value
-            };
+                throw new InvalidOperationException("Extension point cannot be null.");
+            var operation = new ExtendFootprintOperation(_extendTo, _extensionPoint);
             if (_sourceAccount != null) operation.SourceAccount = _sourceAccount;
             return operation;
         }

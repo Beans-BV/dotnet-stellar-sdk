@@ -5,30 +5,32 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerEntryTTL : LedgerEntry
 {
-    public Hash KeyHash { get; set; }
-    public uint LiveUntilLedgerSequence { get; set; }
-
-    public static LedgerEntryTTL FromXdrLedgerEntry(xdr.LedgerEntry xdrLedgerEntry)
+    private LedgerEntryTTL(Hash keyHash, uint liveUntilLedgerSequence)
     {
-        if (xdrLedgerEntry.Data.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.TTL)
-            throw new ArgumentException("Not a ContractCodeEntry", nameof(xdrLedgerEntry));
-        var xdrTtlEntry = xdrLedgerEntry.Data.Ttl;
-        var ledgerEntryTtl = new LedgerEntryTTL
-        {
-            KeyHash = Hash.FromXdr(xdrTtlEntry.KeyHash),
-            LiveUntilLedgerSequence = xdrTtlEntry.LiveUntilLedgerSeq.InnerValue
-        };
-        ExtraFieldsFromXdr(xdrLedgerEntry, ledgerEntryTtl);
-
-        return ledgerEntryTtl;
+        KeyHash = keyHash;
+        LiveUntilLedgerSequence = liveUntilLedgerSequence;
     }
 
-    public TTLEntry ToXdr()
+    public Hash KeyHash { get; }
+    public uint LiveUntilLedgerSequence { get; }
+
+    /// <summary>
+    ///     Creates the corresponding LedgerEntryTTL object from a <see cref="xdr.LedgerEntry.LedgerEntryData" /> object.
+    /// </summary>
+    /// <param name="xdrLedgerEntryData">A <see cref="xdr.LedgerEntry.LedgerEntryData" /> object.</param>
+    /// <returns>A LedgerEntryTTL object.</returns>
+    /// <exception cref="ArgumentException">Throws when the parameter is not a valid TTLEntry.</exception>
+    public static LedgerEntryTTL FromXdrLedgerEntryData(xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
-        return new TTLEntry
-        {
-            KeyHash = KeyHash.ToXdr(),
-            LiveUntilLedgerSeq = new Uint32(LiveUntilLedgerSequence)
-        };
+        if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.TTL)
+            throw new ArgumentException("Not a TTLEntry.", nameof(xdrLedgerEntryData));
+
+        return FromXdr(xdrLedgerEntryData.Ttl);
+    }
+
+    private static LedgerEntryTTL FromXdr(TTLEntry xdrTtlEntry)
+    {
+        return new LedgerEntryTTL(Hash.FromXdr(xdrTtlEntry.KeyHash),
+            xdrTtlEntry.LiveUntilLedgerSeq.InnerValue);
     }
 }

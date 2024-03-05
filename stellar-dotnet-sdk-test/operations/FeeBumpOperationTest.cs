@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using stellar_dotnet_sdk;
-using xdrSDK = stellar_dotnet_sdk.xdr;
-using System.Threading.Tasks;
 using stellar_dotnet_sdk.responses;
 using stellar_dotnet_sdk.responses.results;
 
@@ -56,7 +55,7 @@ public class FeeBumpOperationTest
         Assert.IsFalse(string.IsNullOrEmpty(response.Hash));
         Assert.IsInstanceOfType(response.Result, typeof(FeeBumpTransactionResultSuccess));
     }
-        
+
     [TestMethod]
     public async Task TransactionResultFailed()
     {
@@ -78,7 +77,7 @@ public class FeeBumpOperationTest
         var sourceAccount = await server.Accounts.Account(sourceKeyPair.AccountId);
 
         var transactionBuilder = new TransactionBuilder(sourceAccount);
-            
+
         var paymentOperationBuilder = new PaymentOperation.Builder(
             sponsorKeyPair,
             new AssetTypeNative(),
@@ -97,17 +96,17 @@ public class FeeBumpOperationTest
         feeBumpTransaction.Sign(sponsorKeyPair);
 
         var response = await server.SubmitTransaction(feeBumpTransaction);
-            
+
         Assert.IsFalse(response.IsSuccess());
-            
+
         var result = response.Result as FeeBumpTransactionResultFailed;
         Assert.IsNotNull(result);
-            
+
         var innerResult = result.InnerResultPair.Result as TransactionResultFailed;
         Assert.IsNotNull(innerResult);
         Assert.IsInstanceOfType(innerResult.Results[0], typeof(PaymentUnderfunded));
     }
-    
+
     [TestMethod]
     public async Task InsufficientFee()
     {
@@ -132,7 +131,7 @@ public class FeeBumpOperationTest
 
         var transactionBuilder = new TransactionBuilder(sourceAccount);
         transactionBuilder.SetFee(maxFee);
-            
+
         var paymentOperationBuilder = new PaymentOperation.Builder(
             sponsorKeyPair,
             new AssetTypeNative(),
@@ -147,7 +146,8 @@ public class FeeBumpOperationTest
         var transaction = transactionBuilder.Build();
         transaction.Sign(sourceKeyPair);
 
-        var exception = Assert.ThrowsException<Exception>(() => {
+        var exception = Assert.ThrowsException<Exception>(() =>
+        {
             TransactionBuilder.BuildFeeBumpTransaction(
                 sponsorKeyPair,
                 transaction,
@@ -182,7 +182,7 @@ public class FeeBumpOperationTest
 
         var transactionBuilder = new TransactionBuilder(sourceAccount);
         transactionBuilder.SetFee(maxFee);
-            
+
         var paymentOperationBuilder = new PaymentOperation.Builder(
             sponsorKeyPair,
             new AssetTypeNative(),
@@ -206,6 +206,7 @@ public class FeeBumpOperationTest
 
         var response = await server.SubmitTransaction(feeBumpTransaction);
 
+        Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess());
         Assert.IsFalse(string.IsNullOrEmpty(response.Hash));
         Assert.IsInstanceOfType(response.Result, typeof(FeeBumpTransactionResultSuccess));

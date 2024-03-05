@@ -13,34 +13,18 @@ public class FootprintOperationTest
     [TestMethod]
     public void TestExtendFootprintOperationWithMissingExtensionPoint()
     {
-        var extendTo = 10000U;
-        var builder = new ExtendFootprintOperation.Builder();
-        builder.SetSourceAccount(_sourceAccount);
-        builder.SetExtendTo(extendTo);
+        var builder = new ExtendFootprintOperation.Builder(10000U);
+        builder.SetSourceAccount(_sourceAccount).SetExtensionPoint(null);
 
         var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
-        Assert.AreEqual("Extension point cannot be null", ex.Message);
-    }
-
-    [TestMethod]
-    public void TestExtendFootprintOperationWithMissingExtendTo()
-    {
-        var zeroExt = new ExtensionPointZero();
-        var builder = new ExtendFootprintOperation.Builder();
-        builder.SetSourceAccount(_sourceAccount);
-        builder.SetExtensionPoint(zeroExt);
-
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
-        Assert.AreEqual("Extend to cannot be null", ex.Message);
+        Assert.AreEqual("Extension point cannot be null.", ex.Message);
     }
 
     [TestMethod]
     public void TestExtendFootprintOperationWithMissingSourceAccount()
     {
         var zeroExt = new ExtensionPointZero();
-        var extendTo = 10000U;
-        var builder = new ExtendFootprintOperation.Builder();
-        builder.SetExtendTo(extendTo);
+        var builder = new ExtendFootprintOperation.Builder(10000U);
         builder.SetExtensionPoint(zeroExt);
 
         var operation = builder.Build();
@@ -60,9 +44,7 @@ public class FootprintOperationTest
     public void TestExtendFootprintOperationWithValidConfiguration()
     {
         var zeroExt = new ExtensionPointZero();
-        var extendTo = 10000U;
-        var builder = new ExtendFootprintOperation.Builder();
-        builder.SetExtendTo(extendTo);
+        var builder = new ExtendFootprintOperation.Builder(10000U);
         builder.SetExtensionPoint(zeroExt);
         builder.SetSourceAccount(_sourceAccount);
 
@@ -83,7 +65,7 @@ public class FootprintOperationTest
     public void TestRestoreFootprintOperationWithMissingExtensionPoint()
     {
         var builder = new RestoreFootprintOperation.Builder();
-        builder.SetSourceAccount(_sourceAccount);
+        builder.SetSourceAccount(_sourceAccount).SetExtensionPoint(null);
 
         var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
         Assert.AreEqual("Extension point cannot be null", ex.Message);
