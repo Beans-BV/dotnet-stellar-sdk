@@ -22,7 +22,7 @@ public class StellarValueType
         STELLAR_VALUE_SIGNED = 1
     }
 
-    public StellarValueTypeEnum InnerValue { get; set; } = default;
+    public StellarValueTypeEnum InnerValue { get; set; }
 
     public static StellarValueType Create(StellarValueTypeEnum v)
     {

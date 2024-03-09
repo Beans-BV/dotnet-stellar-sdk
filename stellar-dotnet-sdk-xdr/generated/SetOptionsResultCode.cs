@@ -43,7 +43,7 @@ public class SetOptionsResultCode
         SET_OPTIONS_AUTH_REVOCABLE_REQUIRED = -10
     }
 
-    public SetOptionsResultCodeEnum InnerValue { get; set; } = default;
+    public SetOptionsResultCodeEnum InnerValue { get; set; }
 
     public static SetOptionsResultCode Create(SetOptionsResultCodeEnum v)
     {

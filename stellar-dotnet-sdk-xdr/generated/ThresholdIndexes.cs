@@ -26,7 +26,7 @@ public class ThresholdIndexes
         THRESHOLD_HIGH = 3
     }
 
-    public ThresholdIndexesEnum InnerValue { get; set; } = default;
+    public ThresholdIndexesEnum InnerValue { get; set; }
 
     public static ThresholdIndexes Create(ThresholdIndexesEnum v)
     {

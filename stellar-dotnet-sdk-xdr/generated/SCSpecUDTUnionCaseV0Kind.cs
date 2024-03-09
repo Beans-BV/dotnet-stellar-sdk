@@ -22,7 +22,7 @@ public class SCSpecUDTUnionCaseV0Kind
         SC_SPEC_UDT_UNION_CASE_TUPLE_V0 = 1
     }
 
-    public SCSpecUDTUnionCaseV0KindEnum InnerValue { get; set; } = default;
+    public SCSpecUDTUnionCaseV0KindEnum InnerValue { get; set; }
 
     public static SCSpecUDTUnionCaseV0Kind Create(SCSpecUDTUnionCaseV0KindEnum v)
     {

@@ -41,11 +41,12 @@ public class AccountEntry
     public Int64 Balance { get; set; }
     public SequenceNumber SeqNum { get; set; }
     public Uint32 NumSubEntries { get; set; }
-    
+
     /// <summary>
-    /// This field is in fact nullable. Make it nullable after re-generation.
+    ///     This field is in fact nullable. Make it nullable after re-generation.
     /// </summary>
     public AccountID? InflationDest { get; set; }
+
     public Uint32 Flags { get; set; }
     public String32 HomeDomain { get; set; }
     public Thresholds Thresholds { get; set; }

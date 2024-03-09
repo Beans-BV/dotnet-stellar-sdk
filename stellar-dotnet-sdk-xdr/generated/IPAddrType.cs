@@ -22,7 +22,7 @@ public class IPAddrType
         IPv6 = 1
     }
 
-    public IPAddrTypeEnum InnerValue { get; set; } = default;
+    public IPAddrTypeEnum InnerValue { get; set; }
 
     public static IPAddrType Create(IPAddrTypeEnum v)
     {

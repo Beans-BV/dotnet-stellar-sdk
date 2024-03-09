@@ -1,12 +1,12 @@
 name: Pack and Test
-on: 
+on:
   push:
     branches:
-    - master
+      - master
   pull_request_target:
     types:
-    - opened
-    - synchronize
+      - opened
+      - synchronize
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
@@ -18,10 +18,10 @@ jobs:
   pack_and_test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-    - name: Pack
-      run: dotnet pack --configuration Release --output ${{env.NuGetDirectory}}
-    - name: Run tests
-      run: dotnet test --configuration Release
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+      - name: Pack
+        run: dotnet pack --configuration Release --output ${{env.NuGetDirectory}}
+      - name: Run tests
+        run: dotnet test --configuration Release

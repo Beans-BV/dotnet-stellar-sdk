@@ -29,7 +29,7 @@ public class BeginSponsoringFutureReservesResultCode
         BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE = -3
     }
 
-    public BeginSponsoringFutureReservesResultCodeEnum InnerValue { get; set; } = default;
+    public BeginSponsoringFutureReservesResultCodeEnum InnerValue { get; set; }
 
     public static BeginSponsoringFutureReservesResultCode Create(BeginSponsoringFutureReservesResultCodeEnum v)
     {

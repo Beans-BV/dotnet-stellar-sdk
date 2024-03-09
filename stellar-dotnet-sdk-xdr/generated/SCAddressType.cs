@@ -22,7 +22,7 @@ public class SCAddressType
         SC_ADDRESS_TYPE_CONTRACT = 1
     }
 
-    public SCAddressTypeEnum InnerValue { get; set; } = default;
+    public SCAddressTypeEnum InnerValue { get; set; }
 
     public static SCAddressType Create(SCAddressTypeEnum v)
     {

@@ -28,7 +28,7 @@ public class SCSpecEntryKind
         SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0 = 4
     }
 
-    public SCSpecEntryKindEnum InnerValue { get; set; } = default;
+    public SCSpecEntryKindEnum InnerValue { get; set; }
 
     public static SCSpecEntryKind Create(SCSpecEntryKindEnum v)
     {

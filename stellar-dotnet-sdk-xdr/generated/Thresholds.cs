@@ -19,10 +19,10 @@ public class Thresholds
         InnerValue = value;
     }
 
-    public byte[] InnerValue { get; set; } = default;
+    public byte[] InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, Thresholds encodedThresholds)
-    {   
+    {
         var Thresholdssize = encodedThresholds.InnerValue.Length;
         stream.Write(encodedThresholds.InnerValue, 0, Thresholdssize);
     }

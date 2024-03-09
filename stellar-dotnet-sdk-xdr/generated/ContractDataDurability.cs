@@ -21,7 +21,7 @@ public class ContractDataDurability
         PERSISTENT = 1
     }
 
-    public ContractDataDurabilityEnum InnerValue { get; set; } = default;
+    public ContractDataDurabilityEnum InnerValue { get; set; }
 
     public static ContractDataDurability Create(ContractDataDurabilityEnum v)
     {

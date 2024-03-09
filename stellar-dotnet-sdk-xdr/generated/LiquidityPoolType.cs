@@ -20,7 +20,7 @@ public class LiquidityPoolType
         LIQUIDITY_POOL_CONSTANT_PRODUCT = 0
     }
 
-    public LiquidityPoolTypeEnum InnerValue { get; set; } = default;
+    public LiquidityPoolTypeEnum InnerValue { get; set; }
 
     public static LiquidityPoolType Create(LiquidityPoolTypeEnum v)
     {
