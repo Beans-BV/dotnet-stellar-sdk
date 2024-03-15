@@ -36,9 +36,11 @@ public class Price
         var number = Convert.ToDecimal(price, CultureInfo.InvariantCulture);
         decimal a;
         decimal f;
-        var fractions = new List<decimal[]>();
-        fractions.Add(new[] { new decimal(0), new decimal(1) });
-        fractions.Add(new[] { new decimal(1), new decimal(0) });
+        var fractions = new List<decimal[]>
+        {
+            new[] { new decimal(0), new decimal(1) },
+            new[] { new decimal(1), new decimal(0) }
+        };
         var i = 2;
         while (true)
         {
@@ -68,14 +70,11 @@ public class Price
     /// </summary>
     public sdkxdr.Price ToXdr()
     {
-        var xdr = new sdkxdr.Price();
-        var n = new sdkxdr.Int32();
-        var d = new sdkxdr.Int32();
-        n.InnerValue = Numerator;
-        d.InnerValue = Denominator;
-        xdr.N = n;
-        xdr.D = d;
-        return xdr;
+        return new sdkxdr.Price
+        {
+            D = new sdkxdr.Int32(Denominator),
+            N = new sdkxdr.Int32(Numerator)
+        };
     }
 
     /// <summary>

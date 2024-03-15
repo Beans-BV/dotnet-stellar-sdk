@@ -1,22 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NUnit.Framework;
 using stellar_dotnet_sdk;
 using stellar_dotnet_sdk.requests.sorobanrpc;
 using stellar_dotnet_sdk.responses;
 using stellar_dotnet_sdk.responses.operations;
+using stellar_dotnet_sdk.responses.results;
 using stellar_dotnet_sdk.responses.sorobanrpc;
 using stellar_dotnet_sdk.xdr;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using Asset = stellar_dotnet_sdk.Asset;
 using ChangeTrustAsset = stellar_dotnet_sdk.ChangeTrustAsset;
+using Claimant = stellar_dotnet_sdk.Claimant;
 using CollectionAssert = NUnit.Framework.CollectionAssert;
 using DiagnosticEvent = stellar_dotnet_sdk.DiagnosticEvent;
 using LedgerFootprint = stellar_dotnet_sdk.LedgerFootprint;
 using LedgerKey = stellar_dotnet_sdk.LedgerKey;
+using OperationResult = stellar_dotnet_sdk.responses.results.OperationResult;
+using Price = stellar_dotnet_sdk.Price;
 using SCBytes = stellar_dotnet_sdk.SCBytes;
 using SCContractInstance = stellar_dotnet_sdk.SCContractInstance;
 using SCSymbol = stellar_dotnet_sdk.SCSymbol;
@@ -37,8 +43,14 @@ public class SorobanServerTest
     private readonly string _helloWasmPath = Path.GetFullPath("wasm/soroban_hello_world_contract.wasm");
     private readonly Server _server = new("https://horizon-testnet.stellar.org");
     private readonly SorobanServer _sorobanServer = new("https://soroban-testnet.stellar.org");
+    private string _accountBId = "GC3TDMFTMYZY2G4C77AKAVC3BR4KL6WMQ6K2MHISKDH2OHRFS7CVVEAF";
     private string _accountId = "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA";
+
+    private Asset _asset =
+        new AssetTypeCreditAlphaNum4("BBB", "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA");
+
     private KeyPair _sourceAccount = KeyPair.FromSecretSeed("SDR4PTKMR5TAQQCL3RI2MLXXSXQDIR7DCAONQNQP6UCDZCD4OVRWXUHI");
+    private KeyPair _targetAccount = KeyPair.FromSecretSeed("SDBNUIC2JMIYKGLJUFI743AQDWPBOWKG42GADHEY3FQDTQLJADYPQZTP");
 
     [TestInitialize]
     public async Task Setup()
@@ -54,7 +66,18 @@ public class SorobanServerTest
             _sourceAccount = await CreateNewRandomAccountOnTestnet();
         }
 
+        try
+        {
+            await _sorobanServer.GetAccount(_accountBId);
+        }
+        catch (AccountNotFoundException)
+        {
+            _targetAccount = await CreateNewRandomAccountOnTestnet();
+        }
+
         _accountId = _sourceAccount.AccountId;
+        _asset = new AssetTypeCreditAlphaNum4("AAA", _accountId);
+        _accountBId = _targetAccount.AccountId;
     }
 
     [TestCleanup]
@@ -66,7 +89,6 @@ public class SorobanServerTest
     }
 
     [TestMethod]
-    [Order(0)]
     public async Task TestGetHealth()
     {
         var response = await _sorobanServer.GetHealth();
@@ -74,7 +96,6 @@ public class SorobanServerTest
     }
 
     [TestMethod]
-    [Order(1)]
     public async Task TestGetNetwork()
     {
         var response = await _sorobanServer.GetNetwork();
@@ -84,7 +105,6 @@ public class SorobanServerTest
     }
 
     [TestMethod]
-    [Order(2)]
     public async Task TestGetLatestLedger()
     {
         var response = await _sorobanServer.GetLatestLedger();
@@ -94,38 +114,33 @@ public class SorobanServerTest
     }
 
     [TestMethod]
-    [Order(3)]
     public async Task TestUploadContract()
     {
         await UploadContract(_helloWasmPath);
     }
 
     [TestMethod]
-    [Order(4)]
     public async Task TestExtendFootprint()
     {
         await ExtendFootprintTTL(HelloContractWasmId, 1000);
     }
 
     [TestMethod]
-    [Order(5)]
     public async Task TestRestoreFootprint()
     {
         await RestoreFootprint(HelloContractWasmId);
     }
 
     [TestMethod]
-    [Order(6)]
     public async Task TestCreateContract()
     {
         await CreateContract(HelloContractWasmId);
     }
 
     [TestMethod]
-    [Order(7)]
     public async Task TestInvokeContract()
     {
-        // await RestoreFootprint(HelloContractId);
+        await RestoreFootprint(HelloContractId);
         await InvokeContract(HelloContractId);
     }
 
@@ -212,7 +227,6 @@ public class SorobanServerTest
     }
 
     [TestMethod]
-    [Order(7)]
     public async Task TestGetLedgerEntriesOfTypeContractData()
     {
         Assert.IsNotNull(HelloContractId);
@@ -700,4 +714,291 @@ public class SorobanServerTest
 
         return account;
     }
+
+    private async Task<string> CreateClaimableBalance()
+    {
+        var account = await _sorobanServer.GetAccount(_accountId);
+        var operation = new CreateClaimableBalanceOperation.Builder(new AssetTypeNative(), "100", new Claimant[]
+        {
+            new(_sourceAccount, new ClaimPredicateUnconditional())
+        }).Build();
+        var tx = new TransactionBuilder(account).AddOperation(operation).Build();
+        tx.Sign(_sourceAccount);
+        var txResponse = await _server.SubmitTransaction(tx);
+        Assert.IsNotNull(txResponse);
+        Assert.IsTrue(txResponse.IsSuccess());
+        Assert.IsNotNull(txResponse.ResultXdr);
+        var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
+        Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.IsInstanceOfType(transactionResult, typeof(TransactionResultSuccess));
+        var results = ((TransactionResultSuccess)transactionResult).Results;
+        Assert.AreEqual(1, results.Count);
+        var operationResult = results.First();
+        Assert.IsInstanceOfType(operationResult, typeof(CreateClaimableBalanceSuccess));
+        var balanceId = ((CreateClaimableBalanceSuccess)operationResult).BalanceId;
+        Assert.IsNotNull(balanceId);
+        return balanceId;
+    }
+
+    private async Task CreateLiquidityPoolShare(Asset assetA, Asset assetB)
+    {
+        var account = await _sorobanServer.GetAccount(_accountId);
+
+        var operation = new ChangeTrustOperation.Builder(assetA, assetB).Build();
+
+        var tx = new TransactionBuilder(account).AddOperation(operation).Build();
+        tx.Sign(_sourceAccount);
+
+        var txResponse = await _server.SubmitTransaction(tx);
+        Assert.IsNotNull(txResponse);
+        Assert.IsTrue(txResponse.IsSuccess());
+        Assert.IsNotNull(txResponse.ResultXdr);
+        var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
+        Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.IsInstanceOfType(transactionResult, typeof(TransactionResultSuccess));
+        Assert.AreEqual("0.00001", transactionResult.FeeCharged);
+        var results = ((TransactionResultSuccess)transactionResult).Results;
+        Assert.AreEqual(1, results.Count);
+        var operationResult = results.First();
+        Assert.IsInstanceOfType(operationResult, typeof(ChangeTrustSuccess));
+    }
+
+    private async Task CreateTrustline(Asset asset)
+    {
+        var account = await _server.Accounts.Account(_accountBId);
+
+        var trustOperation = new ChangeTrustOperation.Builder(asset).Build();
+
+        var tx = new TransactionBuilder(account)
+            .AddOperation(trustOperation)
+            .Build();
+        tx.Sign(_targetAccount);
+
+        var txResponse = await _server.SubmitTransaction(tx);
+        Assert.IsNotNull(txResponse);
+        Assert.IsTrue(txResponse.IsSuccess());
+        Assert.IsNotNull(txResponse.ResultXdr);
+        var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
+        Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.IsInstanceOfType(transactionResult, typeof(TransactionResultSuccess));
+        Assert.AreEqual("0.00001", transactionResult.FeeCharged);
+        var results = (List<OperationResult>)((TransactionResultSuccess)transactionResult).Results;
+        Assert.AreEqual(1, results.Count);
+        Assert.IsInstanceOfType(results[0], typeof(ChangeTrustSuccess));
+    }
+
+    [TestMethod]
+    public async Task TestGetLedgerEntriesOfTypeData()
+    {
+        var account = await _sorobanServer.GetAccount(_accountBId);
+
+        var manageDataOperation = new ManageDataOperation.Builder("passkey", "it's a secret").Build();
+
+        var tx = new TransactionBuilder(account)
+            .AddOperation(manageDataOperation)
+            .Build();
+        tx.Sign(_targetAccount);
+
+        var txResponse = await _server.SubmitTransaction(tx);
+        Assert.IsNotNull(txResponse);
+        Assert.IsTrue(txResponse.IsSuccess());
+
+        var ledgerKeyData = new LedgerKey[]
+        {
+            new LedgerKeyData(_accountId, "passkey")
+        };
+        var dataResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyData);
+
+        Assert.IsNotNull(dataResponse.LatestLedger);
+        Assert.IsNotNull(dataResponse.LedgerEntries);
+        Assert.IsNotNull(dataResponse.LedgerKeys);
+        Assert.AreEqual(1, dataResponse.LedgerEntries.Length);
+        Assert.AreEqual(1, dataResponse.LedgerKeys.Length);
+        var ledgerEntry = dataResponse.LedgerEntries[0] as LedgerEntryData;
+        var ledgerKey = dataResponse.LedgerKeys[0] as LedgerKeyData;
+        Assert.IsNotNull(ledgerEntry);
+        Assert.IsNotNull(ledgerKey);
+
+        Assert.AreEqual(0U, ledgerEntry.LiveUntilLedger);
+        Assert.IsTrue(ledgerEntry.LastModifiedLedgerSeq > 0);
+        Assert.AreEqual("it's a secret", Encoding.UTF8.GetString(ledgerEntry.DataValue));
+        Assert.AreEqual(_accountId, ledgerKey.Account.AccountId);
+        Assert.IsNull(ledgerEntry.LedgerExtensionV1);
+        Assert.IsNull(ledgerEntry.DataExtension);
+    }
+
+    [TestMethod]
+    public async Task TestGetLedgerEntriesOfTypeOffer()
+    {
+        var account = await _sorobanServer.GetAccount(_accountId);
+
+        var nativeAsset = new AssetTypeNative();
+        const string price = "1.5";
+        var manageSellOfferOperation = new ManageSellOfferOperation.Builder(nativeAsset, _asset, "1", "1.5").Build();
+
+        var tx = new TransactionBuilder(account)
+            .AddOperation(manageSellOfferOperation)
+            .Build();
+        tx.Sign(_sourceAccount);
+
+        var txResponse = await _server.SubmitTransaction(tx);
+        Assert.IsNotNull(txResponse);
+        Assert.IsTrue(txResponse.IsSuccess());
+
+        Assert.IsNotNull(txResponse.ResultXdr);
+        var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
+        Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.IsInstanceOfType(transactionResult, typeof(TransactionResultSuccess));
+        var results = ((TransactionResultSuccess)transactionResult).Results;
+        Assert.AreEqual(1, results.Count);
+        var operationResult = results.First();
+        Assert.IsInstanceOfType(operationResult, typeof(ManageSellOfferCreated));
+        var createdOffer = (ManageSellOfferCreated)operationResult;
+        Assert.AreEqual(0, createdOffer.OffersClaimed.Length);
+        var offerId = createdOffer.Offer.OfferId;
+        Assert.IsNotNull(offerId);
+
+        var ledgerKeyData = new LedgerKey[]
+        {
+            new LedgerKeyOffer(_accountId, offerId)
+        };
+        var dataResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyData);
+
+        Assert.IsNotNull(dataResponse.LatestLedger);
+        Assert.IsNotNull(dataResponse.LedgerEntries);
+        Assert.IsNotNull(dataResponse.LedgerKeys);
+        Assert.AreEqual(1, dataResponse.LedgerEntries.Length);
+        Assert.AreEqual(1, dataResponse.LedgerKeys.Length);
+        var ledgerEntry = dataResponse.LedgerEntries[0] as LedgerEntryOffer;
+        var ledgerKey = dataResponse.LedgerKeys[0] as LedgerKeyOffer;
+        Assert.IsNotNull(ledgerEntry);
+        Assert.IsNotNull(ledgerKey);
+
+        Assert.AreEqual(0U, ledgerEntry.LiveUntilLedger);
+        Assert.IsTrue(ledgerEntry.LastModifiedLedgerSeq > 0);
+        Assert.AreEqual(10000000L, ledgerEntry.Amount);
+        Assert.IsInstanceOfType(ledgerEntry.Buying, typeof(AssetTypeCreditAlphaNum4));
+        Assert.IsInstanceOfType(ledgerEntry.Selling, typeof(AssetTypeNative));
+        var buyingAsset = (AssetTypeCreditAlphaNum4)ledgerEntry.Buying;
+        Assert.AreEqual(((AssetTypeCreditAlphaNum4)_asset).Code, buyingAsset.Code);
+        Assert.AreEqual(((AssetTypeCreditAlphaNum4)_asset).Issuer, buyingAsset.Issuer);
+        Assert.AreEqual(offerId, ledgerEntry.OfferID);
+        Assert.AreEqual(_accountId, ledgerEntry.SellerID.AccountId);
+        Assert.AreEqual(Price.FromString(price), ledgerEntry.Price);
+        Assert.AreEqual(0U, ledgerEntry.Flags);
+        Assert.IsNull(ledgerEntry.LedgerExtensionV1);
+        Assert.IsNull(ledgerEntry.OfferExtension);
+    }
+
+    [TestMethod]
+    public async Task TestGetLedgerEntriesOfTypeClaimableBalance()
+    {
+        var claimableBalanceId = await CreateClaimableBalance();
+
+        var ledgerKeys = new LedgerKey[]
+        {
+            new LedgerKeyClaimableBalance(claimableBalanceId)
+        };
+        var response = await _sorobanServer.GetLedgerEntries(ledgerKeys);
+
+        Assert.IsNotNull(response.LatestLedger);
+        Assert.IsNotNull(response.LedgerEntries);
+        Assert.IsNotNull(response.LedgerKeys);
+        Assert.AreEqual(1, response.LedgerEntries.Length);
+        Assert.AreEqual(1, response.LedgerKeys.Length);
+        var ledgerEntry = response.LedgerEntries[0] as LedgerEntryClaimableBalance;
+        var ledgerKey = response.LedgerKeys[0] as LedgerKeyClaimableBalance;
+        Assert.IsNotNull(ledgerEntry);
+        Assert.IsNotNull(ledgerKey);
+
+        Assert.AreEqual(0U, ledgerEntry.LiveUntilLedger);
+        Assert.IsTrue(ledgerEntry.LastModifiedLedgerSeq > 0);
+        Assert.AreEqual(1000000000L, ledgerEntry.Amount);
+        Assert.AreEqual("native", ledgerEntry.Asset.Type);
+        Assert.IsNull(ledgerEntry.ClaimableBalanceEntryExtensionV1);
+        Assert.AreEqual(1, ledgerEntry.Claimants.Length);
+        var claimant = ledgerEntry.Claimants[0];
+        Assert.AreEqual(_accountId, claimant.Destination.AccountId);
+        Assert.IsInstanceOfType(claimant.Predicate, typeof(ClaimPredicateUnconditional));
+        CollectionAssert.AreEqual(Convert.FromBase64String(claimableBalanceId), ledgerKey.BalanceId);
+    }
+
+    // TODO Test liquidity pool with some deposits/withdrawals
+    [TestMethod]
+    public async Task TestGetLedgerEntriesOfTypeLiquidityPool()
+    {
+        var nativeAsset = new AssetTypeNative();
+
+        await CreateLiquidityPoolShare(nativeAsset, _asset);
+
+        var ledgerKeys = new LedgerKey[]
+        {
+            new LedgerKeyLiquidityPool(nativeAsset, _asset, 30)
+        };
+        var response = await _sorobanServer.GetLedgerEntries(ledgerKeys);
+
+        Assert.IsNotNull(response.LatestLedger);
+        Assert.IsNotNull(response.LedgerEntries);
+        Assert.IsNotNull(response.LedgerKeys);
+        Assert.AreEqual(1, response.LedgerEntries.Length);
+        Assert.AreEqual(1, response.LedgerKeys.Length);
+        var ledgerEntry = response.LedgerEntries[0] as LedgerEntryLiquidityPool;
+        var ledgerKey = response.LedgerKeys[0] as LedgerKeyLiquidityPool;
+        Assert.IsNotNull(ledgerEntry);
+        Assert.IsNotNull(ledgerKey);
+
+        Assert.AreEqual(0U, ledgerEntry.LiveUntilLedger);
+        Assert.IsInstanceOfType(ledgerEntry.LiquidityPoolBody, typeof(LiquidityPoolConstantProduct));
+        var constantProduct = (LiquidityPoolConstantProduct)ledgerEntry.LiquidityPoolBody;
+        Assert.AreEqual(1, constantProduct.PoolSharesTrustLineCount);
+        Assert.AreEqual(0L, constantProduct.ReserveA);
+        Assert.AreEqual(0L, constantProduct.ReserveB);
+        Assert.AreEqual(0L, constantProduct.TotalPoolShares);
+        var parameters = constantProduct.Parameters;
+        Assert.IsInstanceOfType(parameters.AssetA, typeof(AssetTypeNative));
+        Assert.IsInstanceOfType(parameters.AssetB, typeof(AssetTypeCreditAlphaNum4));
+        Assert.AreEqual("AAA", ((AssetTypeCreditAlphaNum4)parameters.AssetB).Code);
+        Assert.AreEqual(_accountId, ((AssetTypeCreditAlphaNum4)parameters.AssetB).Issuer);
+    }
+
+    [TestMethod]
+    public async Task TestGetLedgerEntriesOfTypeTrustline()
+    {
+        await CreateTrustline(_asset);
+
+        var ledgerKeys = new LedgerKey[]
+        {
+            new LedgerKeyTrustline(_accountBId, _asset)
+        };
+        var response = await _sorobanServer.GetLedgerEntries(ledgerKeys);
+
+        Assert.IsNotNull(response.LatestLedger);
+        Assert.IsNotNull(response.LedgerEntries);
+        Assert.IsNotNull(response.LedgerKeys);
+        Assert.AreEqual(1, response.LedgerEntries.Length);
+        Assert.AreEqual(1, response.LedgerKeys.Length);
+        var ledgerEntry = response.LedgerEntries[0] as LedgerEntryTrustline;
+        var ledgerKey = response.LedgerKeys[0] as LedgerKeyTrustline;
+        Assert.IsNotNull(ledgerEntry);
+        Assert.IsNotNull(ledgerKey);
+
+        Assert.AreEqual(0U, ledgerEntry.LiveUntilLedger);
+        Assert.IsTrue(ledgerEntry.LastModifiedLedgerSeq > 0);
+        Assert.AreEqual(0L, ledgerEntry.Balance);
+        Assert.AreEqual(_accountBId, ledgerEntry.Account.AccountId);
+        Assert.AreEqual(1U, ledgerEntry.Flags);
+        Assert.AreEqual(long.MaxValue, ledgerEntry.Limit);
+        Assert.IsNull(ledgerEntry.TrustlineExtensionV1);
+    }
+
+    [TestMethod]
+    public async Task TestGetTransactionFails()
+    {
+        const string randomInvalidHash = "b9d0b229fc4e09e8eb22d036171491e87b8d2086bf8b265874c8d182cb9c9020";
+        var getTransactionResponse = await _sorobanServer.GetTransaction(randomInvalidHash);
+        Assert.AreEqual(GetTransactionResponse.GetTransactionStatus.NOT_FOUND, getTransactionResponse.Status);
+    }
+
+    // TODO TestGetLedgerEntriesOfTypeTTL()
+    // TODO TestGetLedgerEntriesOfTypeConfigSetting()
 }

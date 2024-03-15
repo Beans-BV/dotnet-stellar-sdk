@@ -5,13 +5,13 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerEntryTTL : LedgerEntry
 {
-    private LedgerEntryTTL(Hash keyHash, uint liveUntilLedgerSequence)
+    private LedgerEntryTTL(byte[] keyHash, uint liveUntilLedgerSequence)
     {
         KeyHash = keyHash;
         LiveUntilLedgerSequence = liveUntilLedgerSequence;
     }
 
-    public Hash KeyHash { get; }
+    public byte[] KeyHash { get; }
     public uint LiveUntilLedgerSequence { get; }
 
     /// <summary>
@@ -30,7 +30,6 @@ public class LedgerEntryTTL : LedgerEntry
 
     private static LedgerEntryTTL FromXdr(TTLEntry xdrTtlEntry)
     {
-        return new LedgerEntryTTL(Hash.FromXdr(xdrTtlEntry.KeyHash),
-            xdrTtlEntry.LiveUntilLedgerSeq.InnerValue);
+        return new LedgerEntryTTL(xdrTtlEntry.KeyHash.InnerValue, xdrTtlEntry.LiveUntilLedgerSeq.InnerValue);
     }
 }

@@ -4,6 +4,10 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerKeyTrustline : LedgerKey
 {
+    public LedgerKeyTrustline(string accountId, Asset asset) : this(KeyPair.FromAccountId(accountId), TrustlineAsset.Create(asset))
+    {
+    }
+    
     public LedgerKeyTrustline(KeyPair account, TrustlineAsset asset)
     {
         Account = account;

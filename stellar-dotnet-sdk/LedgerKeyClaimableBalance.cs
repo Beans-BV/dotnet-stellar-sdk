@@ -1,14 +1,30 @@
+using System;
+using System.Text;
 using stellar_dotnet_sdk.xdr;
 
 namespace stellar_dotnet_sdk;
 
 public class LedgerKeyClaimableBalance : LedgerKey
 {
+    /// <summary>
+    /// Constructs a <c>LedgerKeyClaimableBalance</c> object from a byte array. 
+    /// </summary>
+    /// <param name="balanceId"></param>
     public LedgerKeyClaimableBalance(byte[] balanceId)
     {
         BalanceId = balanceId;
     }
 
+    /// <summary>
+    /// Constructs a <c>LedgerKeyClaimableBalance</c> object from a base64-encoded string. 
+    /// </summary>
+    /// <param name="balanceId"></param>
+    public LedgerKeyClaimableBalance(string balanceId)
+    {
+        BalanceId = Convert.FromBase64String(balanceId);
+    }
+    
+    // TODO: Considering changing this to string
     public byte[] BalanceId { get; }
 
     public override xdr.LedgerKey ToXdr()
@@ -25,7 +41,7 @@ public class LedgerKeyClaimableBalance : LedgerKey
                     {
                         InnerValue = ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum.CLAIMABLE_BALANCE_ID_TYPE_V0
                     },
-                    V0 = new xdr.Hash(BalanceId)
+                    V0 = new Hash(BalanceId)
                 }
             }
         };

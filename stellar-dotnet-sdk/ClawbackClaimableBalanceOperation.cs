@@ -48,7 +48,7 @@ public class ClawbackClaimableBalanceOperation : Operation
     {
         private readonly byte[] _balanceId;
 
-        private KeyPair _sourceAccount;
+        private KeyPair? _sourceAccount;
 
         public Builder(ClawbackClaimableBalanceOp op)
         {

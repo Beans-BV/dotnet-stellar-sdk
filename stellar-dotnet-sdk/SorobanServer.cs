@@ -108,30 +108,6 @@ public class SorobanServer : IDisposable
         return new Account(ledgerEntryAccount.Account.AccountId, ledgerEntryAccount.SequenceNumber);
     }
 
-
-    /// <summary>
-    ///     Reads the current value of contract data ledger entries directly.
-    ///     Allows you to directly inspect the current state of contracts, contract's code, or any other ledger entries.
-    /// </summary>
-    /// <param name="contractId">
-    ///     contractId The contract ID containing the data to load. Encoded as Stellar Contract
-    ///     Address. e.g. "CCJZ5DGASBWQXR5MPFCJXMBI333XE5U3FSJTNQU7RIKE3P5GN2K2WYD5"
-    /// </param>
-    /// <param name="key">The key of the contract data to load.</param>
-    /// <param name="durability">
-    ///     The "durability keyspace" that this ledger key belongs to, which is either TEMPORARY or
-    ///     PERSISTENT.
-    /// </param>
-    /// <returns>A LedgerEntryResult object containing the ledger entry result.</returns>
-    // public async Task<GetLedgerEntriesResponse.LedgerEntryResult?> GetContractData(string contractId, SCVal key,
-    //     ContractDataDurability durability)
-    // {
-    //     SCAddress address = new SCContractId(contractId);
-    //     var ledgerKeyContractData = new LedgerKeyContractData(address, key, durability);
-    //     var response = await GetLedgerEntry(ledgerKeyContractData);
-    //     return response.EntryResults.Length == 0 ? null : response.EntryResults[0];
-    // }
-
     /// <summary>
     ///     <para>
     ///         For finding out the current latest known ledger of this node. This is a subset of the ledger info from Horizon.

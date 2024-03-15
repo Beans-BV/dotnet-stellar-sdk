@@ -11,7 +11,6 @@ using Claimant = stellar_dotnet_sdk.xdr.Claimant;
 using ClaimPredicate = stellar_dotnet_sdk.xdr.ClaimPredicate;
 using EvictionIterator = stellar_dotnet_sdk.EvictionIterator;
 using ExtensionPoint = stellar_dotnet_sdk.xdr.ExtensionPoint;
-using Hash = stellar_dotnet_sdk.Hash;
 using Int32 = stellar_dotnet_sdk.xdr.Int32;
 using Int64 = stellar_dotnet_sdk.xdr.Int64;
 using LedgerEntry = stellar_dotnet_sdk.LedgerEntry;
@@ -31,8 +30,6 @@ namespace stellar_dotnet_sdk_test;
 [TestClass]
 public class LedgerEntryTest
 {
-    private const string HomeDomain = "https://example.com";
-
     private const string ContractId = "CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB";
 
     private readonly Asset _alphaNum12Asset =
@@ -41,37 +38,15 @@ public class LedgerEntryTest
     private readonly Asset _alphaNum4Asset =
         Asset.CreateNonNativeAsset("VNDC", "GCFRHRU5YRI3IN3IMRMYGWWEG2PX2B6MYH2RJW7NEDE2PTYPISPT3RU7");
 
-    private readonly Hash _hash = new(new byte[]
-        { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2 });
-
-    private readonly KeyPair _inflationDest = KeyPair.Random();
-
     private readonly KeyPair _keyPair =
         KeyPair.FromAccountId("GCFRHRU5YRI3IN3IMRMYGWWEG2PX2B6MYH2RJW7NEDE2PTYPISPT3RU7");
 
     private readonly Asset _nativeAsset = new AssetTypeNative();
 
     private readonly KeyPair _signerSponsoringId = KeyPair.Random();
-    private readonly byte[] _thresholds = { 1, 2, 3, 4 };
 
     private readonly TrustlineAsset _trustlineAlphaNum4Asset =
         TrustlineAsset.CreateNonNativeAsset("VNDT", "GCFRHRU5YRI3IN3IMRMYGWWEG2PX2B6MYH2RJW7NEDE2PTYPISPT3RU7");
-
-    private TrustLineEntry InitBasicLedgerEntryTrustline()
-    {
-        return new TrustLineEntry
-        {
-            AccountID = new AccountID(_keyPair.XdrPublicKey),
-            Asset = _trustlineAlphaNum4Asset.ToXdr(),
-            Balance = new Int64(1000),
-            Limit = new Int64(10000),
-            Flags = new Uint32(1000),
-            Ext = new TrustLineEntry.TrustLineEntryExt
-            {
-                Discriminant = 0
-            }
-        };
-    }
 
     private ClaimableBalanceEntry InitBasicXdrClaimableBalanceEntry()
     {
@@ -81,7 +56,7 @@ public class LedgerEntryTest
             {
                 Discriminant = ClaimableBalanceIDType.Create(ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum
                     .CLAIMABLE_BALANCE_ID_TYPE_V0),
-                V0 = new stellar_dotnet_sdk.xdr.Hash(new byte[]
+                V0 = new Hash(new byte[]
                     { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2 })
             },
             Claimants = new[]
@@ -651,7 +626,7 @@ public class LedgerEntryTest
             Discriminant =
                 ClaimableBalanceIDType.Create(ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum
                     .CLAIMABLE_BALANCE_ID_TYPE_V0),
-            V0 = new stellar_dotnet_sdk.xdr.Hash(new byte[]
+            V0 = new Hash(new byte[]
                 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3 })
         };
         var xdrLedgerEntryData = new stellar_dotnet_sdk.xdr.LedgerEntry.LedgerEntryData
@@ -674,7 +649,7 @@ public class LedgerEntryTest
             Discriminant =
                 ClaimableBalanceIDType.Create(ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum
                     .CLAIMABLE_BALANCE_ID_TYPE_V0),
-            V0 = new stellar_dotnet_sdk.xdr.Hash(new byte[]
+            V0 = new Hash(new byte[]
                 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1 })
         };
         var xdrLedgerEntryData = new stellar_dotnet_sdk.xdr.LedgerEntry.LedgerEntryData
@@ -688,9 +663,9 @@ public class LedgerEntryTest
         var decodedLedgerEntry = (LedgerEntryClaimableBalance)LedgerEntry.FromXdrBase64(entryXdrBase64);
         Assert.AreEqual(31, xdrClaimableBalanceEntry.BalanceID.V0.InnerValue.Length);
         // Decoded BalanceId always has 32 bytes
-        Assert.AreEqual(32, decodedLedgerEntry.BalanceId.InnerValue.Length);
+        Assert.AreEqual(32, decodedLedgerEntry.BalanceId.Length);
         CollectionAssert.AreEqual(Util.PaddedByteArray(xdrClaimableBalanceEntry.BalanceID.V0.InnerValue, 32),
-            decodedLedgerEntry.BalanceId.InnerValue);
+            decodedLedgerEntry.BalanceId);
     }
 
     [TestMethod]
@@ -722,7 +697,7 @@ public class LedgerEntryTest
         }
 
         CollectionAssert.AreEqual(xdrClaimableBalanceEntry.BalanceID.V0.InnerValue,
-            decodedLedgerEntry.BalanceId.InnerValue);
+            decodedLedgerEntry.BalanceId);
 
         Assert.AreEqual(xdrClaimableBalanceEntry.Amount.InnerValue, decodedLedgerEntry.Amount);
 
@@ -775,7 +750,7 @@ public class LedgerEntryTest
         }
 
         CollectionAssert.AreEqual(xdrClaimableBalanceEntry.BalanceID.V0.InnerValue,
-            decodedLedgerEntry.BalanceId.InnerValue);
+            decodedLedgerEntry.BalanceId);
 
         Assert.AreEqual(xdrClaimableBalanceEntry.Amount.InnerValue, decodedLedgerEntry.Amount);
 
@@ -796,7 +771,7 @@ public class LedgerEntryTest
         {
             LiquidityPoolID = new PoolID
             {
-                InnerValue = new stellar_dotnet_sdk.xdr.Hash(new byte[]
+                InnerValue = new Hash(new byte[]
                     { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2 })
             },
             Body = new LiquidityPoolEntry.LiquidityPoolEntryBody
@@ -912,7 +887,7 @@ public class LedgerEntryTest
         var xdrContractCodeEntry = new ContractCodeEntry
         {
             Ext = new ExtensionPoint(),
-            Hash = new stellar_dotnet_sdk.xdr.Hash(new byte[]
+            Hash = new Hash(new byte[]
                 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2 }),
             Code = new byte[]
             {
@@ -1435,7 +1410,7 @@ public class LedgerEntryTest
     {
         var xdrTtlEntry = new TTLEntry
         {
-            KeyHash = new stellar_dotnet_sdk.xdr.Hash(new byte[]
+            KeyHash = new Hash(new byte[]
                 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2 }),
             LiveUntilLedgerSeq = new Uint32(100000)
         };
@@ -1451,7 +1426,7 @@ public class LedgerEntryTest
         var decodedLedgerEntry = (LedgerEntryTTL)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        CollectionAssert.AreEqual(xdrTtlEntry.KeyHash.InnerValue, decodedLedgerEntry.KeyHash.InnerValue);
+        CollectionAssert.AreEqual(xdrTtlEntry.KeyHash.InnerValue, decodedLedgerEntry.KeyHash);
         Assert.AreEqual(xdrTtlEntry.LiveUntilLedgerSeq.InnerValue, decodedLedgerEntry.LiveUntilLedgerSequence);
     }
 }

@@ -57,6 +57,14 @@ public class BeginSponsoringFutureReservesOperation : Operation
         ///     Create a new BeginSponsoringFutureReserves builder with the given sponsoredId.
         /// </summary>
         /// <param name="sponsoredId"></param>
+        public Builder(string sponsoredId) : this(KeyPair.FromAccountId(sponsoredId))
+        {
+        }
+
+        /// <summary>
+        ///     Create a new BeginSponsoringFutureReserves builder with the given key pair.
+        /// </summary>
+        /// <param name="sponsoredId"></param>
         public Builder(KeyPair sponsoredId)
         {
             _sponsoredId = sponsoredId ?? throw new ArgumentNullException(nameof(sponsoredId));

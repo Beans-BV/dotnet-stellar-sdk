@@ -14,9 +14,14 @@ public sealed partial class EventSource
     /// </summary>
     public sealed class ServerSentEventArgs : EventArgs
     {
+        public ServerSentEventArgs(string data)
+        {
+            Data = data;
+        }
+
         /// <summary>
         ///     Gets the data.
         /// </summary>
-        public string Data { get; set; }
+        public string Data { get; }
     }
 }

@@ -11,17 +11,17 @@ public static class Program
     //For testing use the following account info, this only exists on test network and may be wiped at any time...
     //Public: GAZHWW2NBPDVJ6PEEOZ2X43QV5JUDYS3XN4OWOTBR6WUACTUML2CCJLI
     //Secret: SCD74D46TJYXOUXFC5YOA72UTPCCVHK2GRSLKSPRB66VK6UJHQX2Y3R3
-
+    
     public static async Task Main(string[] args)
     {
         using (var server = new Server("https://horizon.stellar.org"))
-        {
+                        {
             Console.WriteLine("-- Streaming All New Ledgers On The Network --");
             await server.Ledgers
                 .Cursor("now")
                 .Stream((sender, response) => { ShowOperationResponse(server, sender, response); })
                 .Connect();
-        }
+                        }
 
         Console.ReadLine();
     }

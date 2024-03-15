@@ -33,10 +33,11 @@ public class MemoText : Memo
 
     public override xdr.Memo ToXdr()
     {
-        var memo = new xdr.Memo();
-        memo.Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_TEXT);
-        memo.Text = MemoTextValue ?? "none";
-        return memo;
+        return new xdr.Memo
+        {
+            Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_TEXT),
+            Text = MemoTextValue
+        };
     }
 
     public override bool Equals(object? obj)

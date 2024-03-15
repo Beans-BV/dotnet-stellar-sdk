@@ -4,14 +4,14 @@ using stellar_dotnet_sdk.xdr;
 namespace stellar_dotnet_sdk;
 
 /// <summary>
-///     Represents a <see cref="RevokeSponsorshipOperation" />.
+///     Represents a <c>RevokeSponsorshipOperation</c>.
 ///     Use <see cref="Builder" /> to create a new RevokeLedgerEntrySponsorshipOperation.
-///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html">Revoke Sponsorship</see>
+///     See:
+///     <a href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html">Revoke Sponsorship</a>
 /// </summary>
-public class RevokeLedgerEntrySponsorshipOperation : RevokeSponsorshipOperation
+public class RevokeLedgerEntrySponsorshipOperation : Operation
 {
-    public RevokeLedgerEntrySponsorshipOperation(LedgerKey ledgerKey)
+    private RevokeLedgerEntrySponsorshipOperation(LedgerKey ledgerKey)
     {
         LedgerKey = ledgerKey;
     }
@@ -42,7 +42,7 @@ public class RevokeLedgerEntrySponsorshipOperation : RevokeSponsorshipOperation
         private KeyPair? _sourceAccount;
 
         /// <summary>
-        ///     Construct a new RevokeLedgerEntrySponsorshipOperation builder from a LedgerKey XDR.
+        ///     Constructs a new RevokeLedgerEntrySponsorshipOperation builder from a LedgerKey XDR.
         /// </summary>
         /// <param name="ledgerKey"></param>
         public Builder(xdr.LedgerKey ledgerKey)
@@ -51,9 +51,53 @@ public class RevokeLedgerEntrySponsorshipOperation : RevokeSponsorshipOperation
         }
 
         /// <summary>
-        ///     Create a new RevokeLedgerEntrySponsorshipOperation builder with the given sponsoredId.
+        ///     Constructs a new revoke account entry sponsorship operation.
         /// </summary>
-        /// <param name="ledgerKey"></param>
+        /// <param name="account">Key pair of an account to be revoked.</param>
+        public Builder(KeyPair account) : this(new LedgerKeyAccount(account))
+        {
+        }
+
+        /// <summary>
+        ///     Constructs a new revoke balance entry sponsorship operation.
+        /// </summary>
+        /// <param name="account">Id of the balance entry to be revoked.</param>
+        public Builder(string balanceId) : this(new LedgerKeyClaimableBalance(balanceId))
+        {
+        }
+
+        /// <summary>
+        ///     Constructs a new revoke data entry sponsorship operation.
+        /// </summary>
+        /// <param name="accountId">Id of the account holding the data entry that being sponsored.</param>
+        /// <param name="dataName">Name of the data entry.</param>
+        public Builder(string accountId, string dataName) : this(new LedgerKeyData(KeyPair.FromAccountId(accountId), dataName))
+        {
+        }
+
+        /// <summary>
+        ///     Constructs a new revoke offer entry sponsorship operation.
+        /// </summary>
+        /// <param name="sellerId">Id of the account that owns the offer that being sponsored.</param>
+        /// <param name="offerId">Id of the offer.</param>
+        public Builder(string sellerId, long offerId) : this(new LedgerKeyOffer(KeyPair.FromAccountId(sellerId), offerId))
+        {
+        }
+
+        /// <summary>
+        ///     Constructs a new revoke ledger entry trustline asset sponsorship operation.
+        /// </summary>
+        /// <param name="accountId">Id of the trustline owner that being sponsored.</param>
+        /// <param name="asset">The asset of the trustline.</param>
+        public Builder(string accountId, Asset asset) : this(new LedgerKeyTrustline(KeyPair.FromAccountId(accountId),
+            TrustlineAsset.Create(asset)))
+        {
+        }
+
+        /// <summary>
+        ///     Creates a new <c>RevokeLedgerEntrySponsorshipOperation</c> builder from the provided <c>LedgerKey</c>.
+        /// </summary>
+        /// <param name="ledgerKey">key of the ledger entry to be revoked.</param>
         public Builder(LedgerKey ledgerKey)
         {
             _ledgerKey = ledgerKey ?? throw new ArgumentNullException(nameof(ledgerKey));

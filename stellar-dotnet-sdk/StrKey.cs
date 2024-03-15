@@ -27,9 +27,11 @@ public class StrKey
     {
         try
         {
-            var xdrPayloadSigner = new xdrSDK.SignerKey.SignerKeyEd25519SignedPayload();
-            xdrPayloadSigner.Payload = signedPayloadSigner.Payload;
-            xdrPayloadSigner.Ed25519 = signedPayloadSigner.SignerAccountID.InnerValue.Ed25519;
+            var xdrPayloadSigner = new xdrSDK.SignerKey.SignerKeyEd25519SignedPayload
+            {
+                Payload = signedPayloadSigner.Payload,
+                Ed25519 = signedPayloadSigner.SignerAccountID.InnerValue.Ed25519
+            };
 
             var stream = new xdrSDK.XdrDataOutputStream();
             xdrSDK.SignerKey.SignerKeyEd25519SignedPayload.Encode(stream, xdrPayloadSigner);

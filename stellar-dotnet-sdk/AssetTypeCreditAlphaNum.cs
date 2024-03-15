@@ -19,10 +19,7 @@ public abstract class AssetTypeCreditAlphaNum : Asset
     {
         Code = code ?? throw new ArgumentNullException(nameof(code), "code cannot be null");
 
-        if (issuer == null)
-            throw new ArgumentNullException(nameof(issuer), "issuer cannot be null");
-
-        Issuer = issuer;
+        Issuer = issuer ?? throw new ArgumentNullException(nameof(issuer), "issuer cannot be null");
     }
 
     /// <summary>

@@ -4,14 +4,18 @@ namespace stellar_dotnet_sdk;
 
 public class Claimant
 {
+    public Claimant(string recipientId, ClaimPredicate predicate) : this(KeyPair.FromAccountId(recipientId), predicate)
+    {
+    }
+
     public Claimant(KeyPair destination, ClaimPredicate predicate)
     {
         Destination = destination;
         Predicate = predicate;
     }
 
-    public KeyPair Destination { get; init; }
-    public ClaimPredicate Predicate { get; init; }
+    public KeyPair Destination { get; }
+    public ClaimPredicate Predicate { get; }
 
     public xdr.Claimant ToXdr()
     {

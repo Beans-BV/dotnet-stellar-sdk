@@ -4,14 +4,14 @@ using stellar_dotnet_sdk.xdr;
 namespace stellar_dotnet_sdk;
 
 /// <summary>
-///     Represents a <see cref="RevokeSponsorshipOperation" />.
+///     Represents a <c>RevokeSponsorshipOperation</c>.
 ///     Use <see cref="Builder" /> to create a new RevokeSignerSponsorshipOperation.
 ///     See also:
 ///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html">Revoke Sponsorship</see>
 /// </summary>
-public class RevokeSignerSponsorshipOperation : RevokeSponsorshipOperation
+public class RevokeSignerSponsorshipOperation : Operation
 {
-    public RevokeSignerSponsorshipOperation(KeyPair accountId, SignerKey signerKey)
+    private RevokeSignerSponsorshipOperation(KeyPair accountId, SignerKey signerKey)
     {
         AccountId = accountId;
         SignerKey = signerKey;

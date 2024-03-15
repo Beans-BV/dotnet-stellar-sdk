@@ -12,6 +12,17 @@ public class LiquidityPoolShareChangeTrustAsset : ChangeTrustAsset
         Parameters = parameters ?? throw new ArgumentNullException(nameof(parameters), "parameters cannot be null");
     }
 
+    /// <summary>
+    /// Constructs a new <c>LiquidityPoolShareChangeTrustAsset</c> object.
+    /// </summary>
+    /// <param name="assetA"></param>
+    /// <param name="assetB"></param>
+    /// <param name="feeBP"></param>
+    public LiquidityPoolShareChangeTrustAsset(Asset assetA, Asset assetB, int feeBP)
+    {
+        Parameters = new LiquidityPoolConstantProductParameters(assetA, assetB, feeBP);
+    }
+    
     public LiquidityPoolParameters Parameters { get; set; }
 
     public override string Type => RestApiType;

@@ -8,39 +8,25 @@ namespace stellar_dotnet_sdk_test;
 [TestClass]
 public class FeeBumpTransactionTest
 {
-    private FeeBumpTransactionTest(long baseFee, string networkPassphrase, Network network, KeyPair innerSource,
-        Account innerAccount, KeyPair destination, string amount, Asset asset, Transaction innerTransaction,
-        KeyPair feeSource, FeeBumpTransaction transaction)
-    {
-        BaseFee = baseFee;
-        NetworkPassphrase = networkPassphrase;
-        Network = network;
-        InnerSource = innerSource;
-        InnerAccount = innerAccount;
-        Destination = destination;
-        Amount = amount;
-        Asset = asset;
-        InnerTransaction = innerTransaction;
-        FeeSource = feeSource;
-        Transaction = transaction;
-    }
+#nullable disable
+    private long BaseFee { get; set; }
+    private string NetworkPassphrase { get; set; }
+    private Network Network { get; set; }
+    private KeyPair InnerSource { get; set; }
+    private Account InnerAccount { get; set; }
+    private KeyPair Destination { get; set; }
+    private string Amount { get; set; }
+    private Asset Asset { get; set; }
+    private Transaction InnerTransaction { get; set; }
+    private KeyPair FeeSource { get; set; }
+    private FeeBumpTransaction Transaction { get; set; }
 
-    public long BaseFee { get; set; }
-    public string NetworkPassphrase { get; set; }
-    public Network Network { get; set; }
-    public KeyPair InnerSource { get; set; }
-    public Account InnerAccount { get; set; }
-    public KeyPair Destination { get; set; }
-    public string Amount { get; set; }
-    public Asset Asset { get; set; }
-    public Transaction InnerTransaction { get; set; }
-    public KeyPair FeeSource { get; set; }
-    public FeeBumpTransaction Transaction { get; set; }
+#nullable restore
 
     [TestInitialize]
     public void Initialize()
     {
-        BaseFee = 100;
+        BaseFee = 200;
         NetworkPassphrase = "Standalone Network ; February 2017";
         Network = new Network(NetworkPassphrase);
         InnerSource = KeyPair.FromSecretSeed(Network.NetworkId);
@@ -64,30 +50,11 @@ public class FeeBumpTransactionTest
     [TestMethod]
     public void TestLessThanInnerBaseFeeRate()
     {
-        try
-        {
-            TransactionBuilder.BuildFeeBumpTransaction(FeeSource, InnerTransaction, 50);
-        }
-        catch (Exception e)
-        {
-            var innerOps = InnerTransaction.Operations.Length;
-            var innerBaseFeeRate = InnerTransaction.Fee / innerOps;
-
-            Assert.AreEqual(e.Message, $"Invalid fee, it should be at least {innerBaseFeeRate} stroops");
-        }
-    }
-
-    [TestMethod]
-    public void TestLessThanBaseFee()
-    {
-        try
-        {
-            TransactionBuilder.BuildFeeBumpTransaction(FeeSource, InnerTransaction, 50);
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(e.Message, $"Invalid fee, it should be at least {BaseFee} stroops");
-        }
+        var ex = Assert.ThrowsException<Exception>(() =>
+            TransactionBuilder.BuildFeeBumpTransaction(FeeSource, InnerTransaction, 50));
+        var innerOps = InnerTransaction.Operations.Length;
+        var innerBaseFeeRate = InnerTransaction.Fee / innerOps;
+        Assert.AreEqual(ex.Message, $"Invalid fee, it should be at least {innerBaseFeeRate} stroops");
     }
 
     [TestMethod]

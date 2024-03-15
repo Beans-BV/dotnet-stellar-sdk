@@ -6,7 +6,7 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerEntryClaimableBalance : LedgerEntry
 {
-    private LedgerEntryClaimableBalance(Hash balanceId, Claimant[] claimants, Asset asset, long amount)
+    private LedgerEntryClaimableBalance(byte[] balanceId, Claimant[] claimants, Asset asset, long amount)
     {
         BalanceId = balanceId;
         Claimants = claimants;
@@ -14,7 +14,7 @@ public class LedgerEntryClaimableBalance : LedgerEntry
         Amount = amount;
     }
 
-    public Hash BalanceId { get; }
+    public byte[] BalanceId { get; }
     public Claimant[] Claimants { get; }
     public Asset Asset { get; }
     public long Amount { get; }
@@ -38,7 +38,7 @@ public class LedgerEntryClaimableBalance : LedgerEntry
     private static LedgerEntryClaimableBalance FromXdr(ClaimableBalanceEntry xdrClaimableBalanceEntry)
     {
         var ledgerEntryClaimableBalance = new LedgerEntryClaimableBalance(
-            Hash.FromXdr(xdrClaimableBalanceEntry.BalanceID.V0),
+            xdrClaimableBalanceEntry.BalanceID.V0.InnerValue,
             xdrClaimableBalanceEntry.Claimants.Select(Claimant.FromXdr).ToArray(),
             Asset.FromXdr(xdrClaimableBalanceEntry.Asset),
             xdrClaimableBalanceEntry.Amount.InnerValue);

@@ -35,6 +35,19 @@ public class EndSponsoringFutureReservesOperation : Operation
     {
         private KeyPair? _sourceAccount;
 
+        public Builder()
+        {
+        }
+        
+        public Builder(KeyPair account)
+        {
+            _sourceAccount = account;
+        }
+        
+        public Builder(string accountId) : this(KeyPair.FromAccountId(accountId))
+        {
+        }
+        
         /// <summary>
         ///     Sets the source account for this operation.
         /// </summary>

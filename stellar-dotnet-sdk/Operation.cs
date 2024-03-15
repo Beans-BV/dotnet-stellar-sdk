@@ -116,8 +116,14 @@ public abstract class Operation
                 new BeginSponsoringFutureReservesOperation.Builder(body.BeginSponsoringFutureReservesOp).Build(),
             OperationType.OperationTypeEnum.END_SPONSORING_FUTURE_RESERVES =>
                 new EndSponsoringFutureReservesOperation.Builder().Build(),
-            OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP => new RevokeSponsorshipOperation.Builder(
-                body.RevokeSponsorshipOp).Build(),
+            OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP =>  
+                body.RevokeSponsorshipOp.Discriminant.InnerValue switch
+                {
+                    RevokeSponsorshipType.RevokeSponsorshipTypeEnum.REVOKE_SPONSORSHIP_LEDGER_ENTRY => new RevokeLedgerEntrySponsorshipOperation.Builder(body.RevokeSponsorshipOp.LedgerKey).Build(),
+                    RevokeSponsorshipType.RevokeSponsorshipTypeEnum.REVOKE_SPONSORSHIP_SIGNER =>  new RevokeSignerSponsorshipOperation.Builder(body.RevokeSponsorshipOp.Signer).Build(),
+                    _ => throw new ArgumentOutOfRangeException(nameof(body.RevokeSponsorshipOp.Discriminant),"Invalid RevokeSponsorshipTypeEnum.")
+                }
+        ,
             OperationType.OperationTypeEnum.CLAWBACK => new ClawbackOperation.Builder(body.ClawbackOp).Build(),
             OperationType.OperationTypeEnum.CLAWBACK_CLAIMABLE_BALANCE =>
                 new ClawbackClaimableBalanceOperation.Builder(body.ClawbackClaimableBalanceOp).Build(),

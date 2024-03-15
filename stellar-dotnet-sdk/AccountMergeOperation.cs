@@ -29,9 +29,11 @@ public class AccountMergeOperation : Operation
     /// <returns></returns>
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        var body = new xdr.Operation.OperationBody();
-        body.Destination = Destination.MuxedAccount;
-        body.Discriminant = OperationType.Create(OperationType.OperationTypeEnum.ACCOUNT_MERGE);
+        var body = new xdr.Operation.OperationBody
+        {
+            Destination = Destination.MuxedAccount,
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.ACCOUNT_MERGE)
+        };
         return body;
     }
 
@@ -42,6 +44,7 @@ public class AccountMergeOperation : Operation
     public class Builder
     {
         private readonly IAccountId _destination;
+        private KeyPair? _mSourceAccount;
 
         /// <summary>
         ///     Builder to build the AccountMerge Operation given an XDR OperationBody
@@ -60,11 +63,6 @@ public class AccountMergeOperation : Operation
         {
             _destination = destination;
         }
-
-        /// <summary>
-        ///     Set source account of this operation
-        /// </summary>
-        private KeyPair? _mSourceAccount { get; set; }
 
         /// <summary>
         ///     Sets the source account for this operation.

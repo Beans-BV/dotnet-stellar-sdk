@@ -5,8 +5,13 @@ namespace stellar_dotnet_sdk.responses.results;
 /// </summary>
 public class ManageSellOfferCreated : ManageSellOfferSuccess
 {
+    public ManageSellOfferCreated(OfferEntry offer, ClaimAtom[] offersClaimed) : base(offersClaimed)
+    {
+        Offer = offer;
+    }
+
     /// <summary>
     ///     The offer that was created.
     /// </summary>
-    public OfferEntry Offer { get; set; }
+    public OfferEntry Offer { get; }
 }

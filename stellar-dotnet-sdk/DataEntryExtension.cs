@@ -8,12 +8,4 @@ public class DataEntryExtension
     {
         return new DataEntryExtension();
     }
-
-    public DataEntry.DataEntryExt ToXdr()
-    {
-        return new DataEntry.DataEntryExt
-        {
-            Discriminant = 0
-        };
-    }
 }

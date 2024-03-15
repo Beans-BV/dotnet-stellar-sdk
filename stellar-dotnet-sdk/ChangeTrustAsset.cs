@@ -26,6 +26,11 @@ public abstract class ChangeTrustAsset
     {
         return new LiquidityPoolShareChangeTrustAsset(parameters);
     }
+    
+    public static ChangeTrustAsset Create(Asset assetA, Asset assetB, int feeBP)
+    {
+        return new LiquidityPoolShareChangeTrustAsset(assetA, assetB, feeBP);
+    }
 
     public static ChangeTrustAsset Create(TrustlineAsset.Wrapper wrapper)
     {
@@ -62,7 +67,7 @@ public abstract class ChangeTrustAsset
                     LiquidityPoolParameters.FromXdr(changeTrustXdr.LiquidityPool));
 
             default:
-                throw new ArgumentException($"Unkown asset type {changeTrustXdr.Discriminant.InnerValue}");
+                throw new ArgumentException($"Unknown asset type {changeTrustXdr.Discriminant.InnerValue}");
         }
     }
 

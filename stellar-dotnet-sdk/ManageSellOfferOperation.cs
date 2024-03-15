@@ -18,7 +18,7 @@ public class ManageSellOfferOperation : Operation
         Buying = buying ?? throw new ArgumentNullException(nameof(buying), "buying cannot be null");
         Amount = amount ?? throw new ArgumentNullException(nameof(amount), "amount cannot be null");
         Price = price ?? throw new ArgumentNullException(nameof(price), "price cannot be null");
-        // offerId can be null
+        // offerId can be null TODO Check if this is true. It may work with a null argument because then it defaults to 0, but it can be misleading.   
         OfferId = offerId;
     }
 
@@ -34,17 +34,20 @@ public class ManageSellOfferOperation : Operation
 
     public override sdkxdr.Operation.OperationBody ToOperationBody()
     {
-        var op = new ManageSellOfferOp { Selling = Selling.ToXdr(), Buying = Buying.ToXdr() };
-        var amount = new sdkxdr.Int64 { InnerValue = ToXdrAmount(Amount) };
-        op.Amount = amount;
-        var price = stellar_dotnet_sdk.Price.FromString(Price);
-        op.Price = price.ToXdr();
-        var offerId = new sdkxdr.Int64 { InnerValue = OfferId };
-        op.OfferID = offerId;
+        var op = new ManageSellOfferOp
+        {
+            Selling = Selling.ToXdr(),
+            Buying = Buying.ToXdr(),
+            Amount = new sdkxdr.Int64(ToXdrAmount(Amount)),
+            Price = stellar_dotnet_sdk.Price.FromString(Price).ToXdr(),
+            OfferID = new sdkxdr.Int64(OfferId)
+        };
 
-        var body = new sdkxdr.Operation.OperationBody();
-        body.Discriminant = OperationType.Create(OperationType.OperationTypeEnum.MANAGE_SELL_OFFER);
-        body.ManageSellOfferOp = op;
+        var body = new sdkxdr.Operation.OperationBody
+        {
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.MANAGE_SELL_OFFER),
+            ManageSellOfferOp = op
+        };
 
         return body;
     }
@@ -87,15 +90,17 @@ public class ManageSellOfferOperation : Operation
         /// </summary>
         /// <param name="selling">The asset being sold in this operation</param>
         /// <param name="buying"> The asset being bought in this operation</param>
-        /// <param name="amount"> Amount of selling being sold.</param>
+        /// <param name="amount"> Amount of selling being sold. An amount of zero will delete the offer.</param>
         /// <param name="price"> Price of 1 unit of selling in terms of buying.</param>
+        /// <param name="offerId"> If 0, will create a new offer. Existing offer id numbers can be found using the Offers for Account endpoint.</param>
         /// <exception cref="ArithmeticException">when amount has more than 7 decimal places.</exception>
-        public Builder(Asset selling, Asset buying, string amount, string price)
+        public Builder(Asset selling, Asset buying, string amount, string price, long? offerId = null)
         {
             _selling = selling ?? throw new ArgumentNullException(nameof(selling), "selling cannot be null");
             _buying = buying ?? throw new ArgumentNullException(nameof(buying), "buying cannot be null");
             _amount = amount ?? throw new ArgumentNullException(nameof(amount), "amount cannot be null");
             _price = price ?? throw new ArgumentNullException(nameof(price), "price cannot be null");
+            _offerId = offerId ?? 0;
         }
 
         /// <summary>

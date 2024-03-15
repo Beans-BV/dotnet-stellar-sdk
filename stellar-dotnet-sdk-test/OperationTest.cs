@@ -626,7 +626,7 @@ public class OperationTest
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
-        var operation = new ManageDataOperation.Builder("test", null)
+        var operation = new ManageDataOperation.Builder("test", (string?)null)
             .SetSourceAccount(source)
             .Build();
 
@@ -903,9 +903,7 @@ public class OperationTest
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
 
-        var operation = new EndSponsoringFutureReservesOperation.Builder()
-            .SetSourceAccount(source)
-            .Build();
+        var operation = new EndSponsoringFutureReservesOperation.Builder(source).Build();
 
         var xdr = operation.ToXdr();
 
@@ -944,6 +942,20 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    [TestMethod]
+    public void TestRevokeClaimableBalanceSponsorshipOperation()
+    {
+        var operation =
+            new RevokeLedgerEntrySponsorshipOperation.Builder("5eUFm5X7itqkrfyAmIjHK7f07NNremw4HpBAJPDQiD0=").Build();
+        
+        var operationXdrBase64 = operation.ToXdrBase64();
+        var decodedOperation = (RevokeLedgerEntrySponsorshipOperation)Operation.FromXdrBase64(operationXdrBase64);
+        
+        Assert.IsNull(decodedOperation.SourceAccount);
+        CollectionAssert.AreEqual(((LedgerKeyClaimableBalance)operation.LedgerKey).BalanceId, ((LedgerKeyClaimableBalance)decodedOperation.LedgerKey).BalanceId);
+        
+    }
+    
     [TestMethod]
     [Obsolete]
     public void TestRevokeSignerSponsorshipOperation()

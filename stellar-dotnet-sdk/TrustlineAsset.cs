@@ -101,7 +101,7 @@ public abstract class TrustlineAsset
 
         public override string Type => Asset.Type;
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj != null || typeof(Wrapper).Equals(obj.GetType())) return false;
 

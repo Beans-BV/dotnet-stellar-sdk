@@ -55,7 +55,7 @@ public class ClawbackOperation : Operation
         private readonly Asset _asset;
         private readonly IAccountId _from;
 
-        private KeyPair _sourceAccount;
+        private KeyPair? _sourceAccount;
 
         public Builder(ClawbackOp op)
         {

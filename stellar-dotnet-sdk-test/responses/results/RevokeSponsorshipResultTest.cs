@@ -10,12 +10,22 @@ public class RevokeSponsorshipResultTest
     [TestMethod]
     public void TestDoesNotExist()
     {
-        var operationResultTr = new XDR.OperationResult.OperationResultTr();
-        operationResultTr.Discriminant.InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP;
+        var operationResultTr = new XDR.OperationResult.OperationResultTr
+        {
+            Discriminant =
+            {
+                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP
+            }
+        };
 
-        var result = new XDR.RevokeSponsorshipResult();
-        result.Discriminant.InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum
-            .REVOKE_SPONSORSHIP_DOES_NOT_EXIST;
+        var result = new XDR.RevokeSponsorshipResult
+        {
+            Discriminant =
+            {
+                InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum
+                    .REVOKE_SPONSORSHIP_DOES_NOT_EXIST
+            }
+        };
         operationResultTr.RevokeSponsorshipResult = result;
 
         Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
@@ -25,12 +35,22 @@ public class RevokeSponsorshipResultTest
     [TestMethod]
     public void TestLowReserve()
     {
-        var operationResultTr = new XDR.OperationResult.OperationResultTr();
-        operationResultTr.Discriminant.InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP;
+        var operationResultTr = new XDR.OperationResult.OperationResultTr
+        {
+            Discriminant =
+            {
+                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP
+            }
+        };
 
-        var result = new XDR.RevokeSponsorshipResult();
-        result.Discriminant.InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum
-            .REVOKE_SPONSORSHIP_LOW_RESERVE;
+        var result = new XDR.RevokeSponsorshipResult
+        {
+            Discriminant =
+            {
+                InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum
+                    .REVOKE_SPONSORSHIP_LOW_RESERVE
+            }
+        };
         operationResultTr.RevokeSponsorshipResult = result;
 
         Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr), typeof(RevokeSponsorshipLowReserve),
@@ -40,12 +60,22 @@ public class RevokeSponsorshipResultTest
     [TestMethod]
     public void TestNotSponsor()
     {
-        var operationResultTr = new XDR.OperationResult.OperationResultTr();
-        operationResultTr.Discriminant.InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP;
+        var operationResultTr = new XDR.OperationResult.OperationResultTr
+        {
+            Discriminant =
+            {
+                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP
+            }
+        };
 
-        var result = new XDR.RevokeSponsorshipResult();
-        result.Discriminant.InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum
-            .REVOKE_SPONSORSHIP_NOT_SPONSOR;
+        var result = new XDR.RevokeSponsorshipResult
+        {
+            Discriminant =
+            {
+                InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum
+                    .REVOKE_SPONSORSHIP_NOT_SPONSOR
+            }
+        };
         operationResultTr.RevokeSponsorshipResult = result;
 
         Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr), typeof(RevokeSponsorshipNotSponsor),
@@ -55,12 +85,22 @@ public class RevokeSponsorshipResultTest
     [TestMethod]
     public void TestOnlyTransferable()
     {
-        var operationResultTr = new XDR.OperationResult.OperationResultTr();
-        operationResultTr.Discriminant.InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP;
+        var operationResultTr = new XDR.OperationResult.OperationResultTr
+        {
+            Discriminant =
+            {
+                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP
+            }
+        };
 
-        var result = new XDR.RevokeSponsorshipResult();
-        result.Discriminant.InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum
-            .REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE;
+        var result = new XDR.RevokeSponsorshipResult
+        {
+            Discriminant =
+            {
+                InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum
+                    .REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE
+            }
+        };
         operationResultTr.RevokeSponsorshipResult = result;
 
         Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
@@ -68,14 +108,23 @@ public class RevokeSponsorshipResultTest
     }
 
     [TestMethod]
-    public void TestSuccesss()
+    public void TestSuccess()
     {
-        var operationResultTr = new XDR.OperationResult.OperationResultTr();
-        operationResultTr.Discriminant.InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP;
+        var operationResultTr = new XDR.OperationResult.OperationResultTr
+        {
+            Discriminant =
+            {
+                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP
+            }
+        };
 
-        var result = new XDR.RevokeSponsorshipResult();
-        result.Discriminant.InnerValue =
-            XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum.REVOKE_SPONSORSHIP_SUCCESS;
+        var result = new XDR.RevokeSponsorshipResult
+        {
+            Discriminant =
+            {
+                InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum.REVOKE_SPONSORSHIP_SUCCESS
+            }
+        };
         operationResultTr.RevokeSponsorshipResult = result;
 
         Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr), typeof(RevokeSponsorshipSuccess),

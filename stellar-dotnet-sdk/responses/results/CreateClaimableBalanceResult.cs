@@ -22,7 +22,7 @@ public class CreateClaimableBalanceResult : OperationResult
                 .CREATE_CLAIMABLE_BALANCE_NO_TRUST:
                 return new CreateClaimableBalanceNoTrust();
             case CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum.CREATE_CLAIMABLE_BALANCE_SUCCESS:
-                return new CreateClaimableBalanceSuccess();
+                return new CreateClaimableBalanceSuccess(result.BalanceID.V0.InnerValue);
             case CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum
                 .CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
                 return new CreateClaimableBalanceUnderfunded();

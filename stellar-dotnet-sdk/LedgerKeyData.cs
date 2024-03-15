@@ -5,6 +5,10 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerKeyData : LedgerKey
 {
+    public LedgerKeyData(string accountId, string dataName) : this(KeyPair.FromAccountId(accountId), dataName)
+    {
+    }
+    
     public LedgerKeyData(KeyPair account, string dataName)
     {
         if (dataName.Length > 64)

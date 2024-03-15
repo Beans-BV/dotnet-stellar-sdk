@@ -11,8 +11,8 @@ public class LedgerEntryLiquidityPool : LedgerEntry
         LiquidityPoolBody = liquidityPoolBody;
     }
 
-    public LiquidityPoolID LiquidityPoolID { get; init; }
-    public LiquidityPoolEntryBody LiquidityPoolBody { get; init; }
+    public LiquidityPoolID LiquidityPoolID { get; }
+    public LiquidityPoolEntryBody LiquidityPoolBody { get; }
 
     /// <summary>
     ///     Creates the corresponding LedgerEntryLiquidityPool object from a <see cref="xdr.LedgerEntry.LedgerEntryData" />

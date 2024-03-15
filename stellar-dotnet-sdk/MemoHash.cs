@@ -19,7 +19,7 @@ public class MemoHash : MemoHashAbstract
             Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_HASH)
         };
 
-        var hash = new xdr.Hash
+        var hash = new Hash
         {
             InnerValue = MemoBytes
         };

@@ -69,7 +69,7 @@ public class SSEEventSource : IEventSource, IDisposable
 
         LastEventId = args.Message.LastEventId;
 
-        Message?.Invoke(this, new EventSource.ServerSentEventArgs { Data = args.Message.Data });
+        Message?.Invoke(this, new EventSource.ServerSentEventArgs(args.Message.Data));
     }
 
     private static EventSource.StateChangeEventArgs ConvertStateChangeEventArgs(StateChangedEventArgs args)

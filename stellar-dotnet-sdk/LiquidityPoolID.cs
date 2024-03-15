@@ -10,9 +10,6 @@ public class LiquidityPoolID
 {
     public LiquidityPoolID(LiquidityPoolType.LiquidityPoolTypeEnum type, Asset assetA, Asset assetB, int fee)
     {
-        if (assetA.CompareTo(assetB) >= 0)
-            throw new ArgumentException("Asset A must be < Asset B (Lexicographic Order)");
-
         var xdrDataOutputStream = new XdrDataOutputStream();
 
         try

@@ -50,7 +50,7 @@ public class FeeBumpOperationTest
         feeBumpTransaction.Sign(sponsorKeyPair);
 
         var response = await server.SubmitTransaction(feeBumpTransaction);
-
+        Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess());
         Assert.IsFalse(string.IsNullOrEmpty(response.Hash));
         Assert.IsInstanceOfType(response.Result, typeof(FeeBumpTransactionResultSuccess));
@@ -97,6 +97,7 @@ public class FeeBumpOperationTest
 
         var response = await server.SubmitTransaction(feeBumpTransaction);
 
+        Assert.IsNotNull(response);
         Assert.IsFalse(response.IsSuccess());
 
         var result = response.Result as FeeBumpTransactionResultFailed;

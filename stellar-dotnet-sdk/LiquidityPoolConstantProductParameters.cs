@@ -10,6 +10,10 @@ public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
     {
         AssetA = assetA ?? throw new ArgumentNullException(nameof(assetA), "assetA cannot be null");
         AssetB = assetB ?? throw new ArgumentNullException(nameof(assetB), "assetB cannot be null");
+        
+        if (assetA.CompareTo(assetB) >= 0)
+            throw new ArgumentException("Asset A must be < Asset B (Lexicographic Order).");
+        
         Fee = feeBP;
     }
 

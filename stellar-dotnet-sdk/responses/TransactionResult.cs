@@ -6,14 +6,14 @@ using OperationResult = stellar_dotnet_sdk.responses.results.OperationResult;
 
 namespace stellar_dotnet_sdk.responses;
 
-public class TransactionResult
+public abstract class TransactionResult
 {
     /// <summary>
     ///     Actual fee charged for the transaction.
     /// </summary>
-    public string FeeCharged { get; set; }
+    public string? FeeCharged { get; protected init; }
 
-    public virtual bool IsSuccess { get; }
+    public abstract bool IsSuccess { get; } 
 
     /// <summary>
     ///     Creates a new TransactionResult object from the given TransactionResult XDR base64 string.
@@ -34,17 +34,11 @@ public class TransactionResult
         switch (result.Result.Discriminant.InnerValue)
         {
             case TransactionResultCode.TransactionResultCodeEnum.txSUCCESS:
-                return new TransactionResultSuccess
-                {
-                    FeeCharged = feeCharged,
-                    Results = ResultsFromXdr(result.Result.Results)
-                };
+                return new TransactionResultSuccess(feeCharged,
+                    ResultsFromXdr(result.Result.Results));
             case TransactionResultCode.TransactionResultCodeEnum.txFAILED:
-                return new TransactionResultFailed
-                {
-                    FeeCharged = feeCharged,
-                    Results = ResultsFromXdr(result.Result.Results)
-                };
+                return new TransactionResultFailed(feeCharged,
+                    ResultsFromXdr(result.Result.Results));
             case TransactionResultCode.TransactionResultCodeEnum.txTOO_EARLY:
                 return new TransactionResultTooEarly
                 {
@@ -96,17 +90,11 @@ public class TransactionResult
                     FeeCharged = feeCharged
                 };
             case TransactionResultCode.TransactionResultCodeEnum.txFEE_BUMP_INNER_SUCCESS:
-                return new FeeBumpTransactionResultSuccess
-                {
-                    FeeCharged = feeCharged,
-                    InnerResultPair = InnerTransactionResultPair.FromXdr(result.Result.InnerResultPair)
-                };
+                return new FeeBumpTransactionResultSuccess(feeCharged,
+                    InnerTransactionResultPair.FromXdr(result.Result.InnerResultPair));
             case TransactionResultCode.TransactionResultCodeEnum.txFEE_BUMP_INNER_FAILED:
-                return new FeeBumpTransactionResultFailed
-                {
-                    FeeCharged = feeCharged,
-                    InnerResultPair = InnerTransactionResultPair.FromXdr(result.Result.InnerResultPair)
-                };
+                return new FeeBumpTransactionResultFailed(feeCharged,
+                    InnerTransactionResultPair.FromXdr(result.Result.InnerResultPair));
             case TransactionResultCode.TransactionResultCodeEnum.txNOT_SUPPORTED:
                 return new TransactionResultNotSupported
                 {

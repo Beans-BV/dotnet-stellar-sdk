@@ -5,7 +5,7 @@ namespace stellar_dotnet_sdk;
 
 public abstract class LiquidityPoolParameters
 {
-    public static int Fee = 30;
+    public const int Fee = 30;
 
     public static LiquidityPoolParameters Create(LiquidityPoolType.LiquidityPoolTypeEnum type, Asset assetA,
         Asset assetB, int feeBP)

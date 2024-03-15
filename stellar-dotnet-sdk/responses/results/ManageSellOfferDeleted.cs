@@ -5,4 +5,7 @@ namespace stellar_dotnet_sdk.responses.results;
 /// </summary>
 public class ManageSellOfferDeleted : ManageSellOfferSuccess
 {
+    public ManageSellOfferDeleted(ClaimAtom[] offersClaimed) : base(offersClaimed)
+    {
+    }
 }

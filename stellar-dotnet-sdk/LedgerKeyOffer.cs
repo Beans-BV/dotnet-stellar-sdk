@@ -4,6 +4,10 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerKeyOffer : LedgerKey
 {
+    public LedgerKeyOffer(string sellId, long offerId) : this(KeyPair.FromAccountId(sellId), offerId)
+    {
+    }
+    
     public LedgerKeyOffer(KeyPair seller, long offerId)
     {
         Seller = seller;

@@ -5,7 +5,14 @@ namespace stellar_dotnet_sdk.responses;
 /// </summary>
 public class FeeBumpTransactionResultSuccess : TransactionResult
 {
+    public FeeBumpTransactionResultSuccess(string feeCharged, InnerTransactionResultPair innerResultPair)
+    {
+        FeeCharged = feeCharged;
+        InnerResultPair = innerResultPair;
+    }
+
     public override bool IsSuccess => true;
 
-    public InnerTransactionResultPair InnerResultPair { get; set; }
+    // TODO: Unit test
+    public InnerTransactionResultPair InnerResultPair { get; }
 }

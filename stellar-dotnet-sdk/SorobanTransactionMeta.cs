@@ -11,21 +11,21 @@ public class SorobanTransactionMeta
     /// <summary>
     ///     We can use this to add more fields.
     /// </summary>
-    public ExtensionPoint ExtensionPoint { get; private set; } = new ExtensionPointZero();
+    public ExtensionPoint ExtensionPoint { get; private init; } = new ExtensionPointZero();
 
 
-    public SCVal ReturnValue { get; private set; } = new SCVoid();
+    public SCVal ReturnValue { get; private init; } = new SCVoid();
 
     /// <summary>
     ///     Custom events populated by the contracts themselves. One list per operation.
     /// </summary>
-    public ContractEvent[] Events { get; private set; } = Array.Empty<ContractEvent>(); // TODO Unit test
+    public ContractEvent[] Events { get; private init; } = Array.Empty<ContractEvent>(); // TODO Unit test
 
     /// <summary>
     ///     Diagnostics events that are not hashed. One list per operation.
     ///     This will contain all contract and diagnostic events. Even ones that were emitted in a failed contract call.
     /// </summary>
-    public DiagnosticEvent[] DiagnosticEvents { get; private set; } = Array.Empty<DiagnosticEvent>();
+    public DiagnosticEvent[] DiagnosticEvents { get; private init; } = Array.Empty<DiagnosticEvent>();
 
     /// <summary>
     ///     Creates the corresponding <c>SorobanTransactionMeta</c> object from an <c>xdr.SorobanTransactionMeta</c> object.

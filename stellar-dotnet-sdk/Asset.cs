@@ -33,11 +33,11 @@ public abstract class Asset
     /// <summary>
     ///     Create an asset base on the parameters.
     /// </summary>
-    /// <param name="type"></param>
+    /// <param name="type">Accepted value: <c>native</c>, otherwise it will be ignored.</param>
     /// <param name="code"></param>
     /// <param name="issuer"></param>
     /// <returns>Asset</returns>
-    public static Asset Create(string type, string? code, string? issuer)
+    public static Asset Create(string? type, string? code, string? issuer)
     {
         if (type == "native")
             return new AssetTypeNative();

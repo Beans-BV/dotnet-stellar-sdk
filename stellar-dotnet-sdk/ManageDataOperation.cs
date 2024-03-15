@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using stellar_dotnet_sdk.xdr;
 using sdkxdr = stellar_dotnet_sdk.xdr;
 
@@ -14,7 +15,9 @@ public class ManageDataOperation : Operation
 {
     private ManageDataOperation(string name, byte[]? value)
     {
-        Name = name ?? throw new ArgumentNullException(nameof(name), "name cannot be null");
+        if (name == null) throw new ArgumentNullException(nameof(name), "name cannot be null");
+        if (name.Length > 64) throw new ArgumentException("Data name cannot exceed 64 characters.", nameof(name));
+        Name = name;
         Value = value;
     }
 
@@ -24,21 +27,11 @@ public class ManageDataOperation : Operation
 
     public override sdkxdr.Operation.OperationBody ToOperationBody()
     {
-        var op = new ManageDataOp();
-        var name = new String64
+        var op = new ManageDataOp
         {
-            InnerValue = Name
+            DataName = new String64(Name),
+            DataValue = Value != null ? new DataValue(Value) : null
         };
-        op.DataName = name;
-
-        if (Value != null)
-        {
-            var dataValue = new DataValue
-            {
-                InnerValue = Value
-            };
-            op.DataValue = dataValue;
-        }
 
         var body = new sdkxdr.Operation.OperationBody
         {
@@ -68,6 +61,12 @@ public class ManageDataOperation : Operation
             _value = op.DataValue?.InnerValue;
         }
 
+        public Builder(string name, string? value)
+        {
+            _name = name ?? throw new ArgumentNullException(nameof(name), "name cannot be null");
+            _value = value != null ? Encoding.UTF8.GetBytes(value) : null;
+        }
+
         /// <summary>
         ///     Creates a new ManageData builder. If you want to delete data entry pass null as a <code>value</code> param.
         /// </summary>
@@ -84,7 +83,7 @@ public class ManageDataOperation : Operation
         /// </summary>
         /// <param name="sourceAccount">The operation's source account.</param>
         /// <returns>Builder object so you can chain methods.</returns>
-        public Builder SetSourceAccount(IAccountId? sourceAccount)
+        public Builder SetSourceAccount(IAccountId sourceAccount)
         {
             _mSourceAccount = sourceAccount ??
                               throw new ArgumentNullException(nameof(sourceAccount), "sourceAccount cannot be null");
