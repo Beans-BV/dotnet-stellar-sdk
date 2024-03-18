@@ -12,6 +12,6 @@ public class LedgerEntryExtensionV1
     public static LedgerEntryExtensionV1 FromXdr(xdr.LedgerEntryExtensionV1 xdrEntryExtensionV1)
     {
         return new LedgerEntryExtensionV1(
-            KeyPair.FromXdrPublicKey(xdrEntryExtensionV1.SponsoringID.InnerValue.InnerValue));
+            sponsoringID: KeyPair.FromXdrPublicKey(xdrEntryExtensionV1.SponsoringID.InnerValue.InnerValue));
     }
 }

@@ -6,8 +6,12 @@ namespace stellar_dotnet_sdk;
 
 public class LiquidityPoolDepositOperation : Operation
 {
-    private LiquidityPoolDepositOperation(LiquidityPoolID liquidityPoolID, string maxAmountA, string maxAmountB,
-        Price minPrice, Price maxPrice)
+    private LiquidityPoolDepositOperation(
+        LiquidityPoolID liquidityPoolID,
+        string maxAmountA,
+        string maxAmountB,
+        Price minPrice,
+        Price maxPrice)
     {
         LiquidityPoolID = liquidityPoolID ??
                           throw new ArgumentNullException(nameof(liquidityPoolID), "liquidityPoolID cannot be null");
@@ -25,24 +29,18 @@ public class LiquidityPoolDepositOperation : Operation
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        var operationXdr = new LiquidityPoolDepositOp
-        {
-            LiquidityPoolID = LiquidityPoolID.ToXdr(),
-            MaxAmountA = new Int64(ToXdrAmount(MaxAmountA)),
-            MaxAmountB = new Int64(ToXdrAmount(MaxAmountB)),
-            MinPrice = MinPrice.ToXdr(),
-            MaxPrice = MaxPrice.ToXdr()
-        };
-
         var body = new xdr.Operation.OperationBody
         {
-            Discriminant =
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.LIQUIDITY_POOL_DEPOSIT),
+            LiquidityPoolDepositOp = new LiquidityPoolDepositOp
             {
-                InnerValue = OperationType.OperationTypeEnum.LIQUIDITY_POOL_DEPOSIT
-            },
-            LiquidityPoolDepositOp = operationXdr
+                LiquidityPoolID = LiquidityPoolID.ToXdr(),
+                MaxAmountA = new Int64(ToXdrAmount(MaxAmountA)),
+                MaxAmountB = new Int64(ToXdrAmount(MaxAmountB)),
+                MinPrice = MinPrice.ToXdr(),
+                MaxPrice = MaxPrice.ToXdr()
+            }
         };
-
         return body;
     }
 
@@ -67,7 +65,11 @@ public class LiquidityPoolDepositOperation : Operation
             _maxPrice = Price.FromXdr(operationXdr.MaxPrice);
         }
 
-        public Builder(AssetAmount assetAmountA, AssetAmount assetAmountB, Price minPrice, Price maxPrice)
+        public Builder(
+            AssetAmount assetAmountA,
+            AssetAmount assetAmountB,
+            Price minPrice,
+            Price maxPrice)
         {
             _assetA = assetAmountA.Asset;
             _assetB = assetAmountB.Asset;
@@ -77,7 +79,11 @@ public class LiquidityPoolDepositOperation : Operation
             _maxPrice = maxPrice;
         }
 
-        public Builder(LiquidityPoolID liquidityPoolID, string maxAmountA, string maxAmountB, Price minPrice,
+        public Builder(
+            LiquidityPoolID liquidityPoolID,
+            string maxAmountA,
+            string maxAmountB,
+            Price minPrice,
             Price maxPrice)
         {
             _liquidityPoolID = liquidityPoolID;
@@ -103,15 +109,25 @@ public class LiquidityPoolDepositOperation : Operation
             if (_liquidityPoolID == null)
             {
                 if (_assetA != null && _assetB != null)
-                    _liquidityPoolID =
-                        new LiquidityPoolID(LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
-                            _assetA, _assetB, LiquidityPoolParameters.Fee);
+                {
+                    _liquidityPoolID = new LiquidityPoolID(
+                        LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+                        _assetA,
+                        _assetB,
+                        LiquidityPoolParameters.Fee);
+                }
                 else
+                {
                     throw new InvalidOperationException("Asset A and/or Asset B cannot be null");
+                }
             }
 
-            var operation =
-                new LiquidityPoolDepositOperation(_liquidityPoolID, _maxAmountA, _maxAmountB, _minPrice, _maxPrice);
+            var operation = new LiquidityPoolDepositOperation(
+                _liquidityPoolID,
+                _maxAmountA,
+                _maxAmountB,
+                _minPrice,
+                _maxPrice);
 
             if (_sourceAccount != null) operation.SourceAccount = _sourceAccount;
 

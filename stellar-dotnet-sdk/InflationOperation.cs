@@ -16,7 +16,6 @@ public class InflationOperation : Operation
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.INFLATION)
         };
-
         return body;
     }
 

@@ -30,7 +30,7 @@ public class ClawbackClaimableBalanceOperation : Operation
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        return new xdr.Operation.OperationBody
+        var body = new xdr.Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CLAWBACK_CLAIMABLE_BALANCE),
             ClawbackClaimableBalanceOp = new ClawbackClaimableBalanceOp
@@ -38,6 +38,7 @@ public class ClawbackClaimableBalanceOperation : Operation
                 BalanceID = ClaimableBalanceID.Decode(new XdrDataInputStream(BalanceId))
             }
         };
+        return body;
     }
 
     /// <summary>

@@ -4,11 +4,10 @@ namespace stellar_dotnet_sdk;
 
 /// <summary>
 ///     Represents a <see cref="SetTrustlineFlagsOperation" />.
-///     Use <see cref="Builder" /> to create a new SetTrustlineFlagsOperation.
+///     Use the <see cref="Builder" /> to create a new SetTrustlineFlagsOperation.
 ///     <seealso
 ///         href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#set-trustline-flags">
-///         Set
-///         Trustline Flags
+///         Set Trustline Flags
 ///     </seealso>
 /// </summary>
 public class SetTrustlineFlagsOperation : Operation
@@ -48,7 +47,7 @@ public class SetTrustlineFlagsOperation : Operation
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        return new xdr.Operation.OperationBody
+        var body = new xdr.Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS),
             SetTrustLineFlagsOp = new SetTrustLineFlagsOp
@@ -59,6 +58,7 @@ public class SetTrustlineFlagsOperation : Operation
                 ClearFlags = new Uint32 { InnerValue = ClearFlags }
             }
         };
+        return body;
     }
 
     /// <summary>

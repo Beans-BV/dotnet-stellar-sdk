@@ -6,14 +6,26 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerEntryAccount : LedgerEntry
 {
-    private LedgerEntryAccount(KeyPair account, long balance, long sequenceNumber, uint numberSubEntries,
-        KeyPair? inflationDest, uint flags, Signer[] signers, string homeDomain, byte[] thresholds)
+    private LedgerEntryAccount(
+        KeyPair account,
+        long balance,
+        long sequenceNumber,
+        uint numberSubEntries,
+        KeyPair? inflationDest,
+        uint flags,
+        Signer[] signers,
+        string homeDomain,
+        byte[] thresholds)
     {
-        if (homeDomain == null) throw new ArgumentNullException(nameof(homeDomain), "Home domain cannot be null.");
+        if (homeDomain == null)
+            throw new ArgumentNullException(nameof(homeDomain), "Home domain cannot be null.");
         if (homeDomain.Length > 32)
             throw new ArgumentException("Home domain cannot exceed 32 characters.", nameof(homeDomain));
-        if (thresholds == null) throw new ArgumentNullException(nameof(thresholds), "Thresholds cannot be null.");
-        if (thresholds.Length > 4) throw new ArgumentException("Thresholds cannot exceed 4 bytes.", nameof(thresholds));
+        if (thresholds == null)
+            throw new ArgumentNullException(nameof(thresholds), "Thresholds cannot be null.");
+        if (thresholds.Length > 4)
+            throw new ArgumentException("Thresholds cannot exceed 4 bytes.", nameof(thresholds));
+
         Account = account;
         Balance = balance;
         SequenceNumber = sequenceNumber;
@@ -61,7 +73,7 @@ public class LedgerEntryAccount : LedgerEntry
     private static LedgerEntryAccount FromXdr(AccountEntry xdrAccountEntry)
     {
         var ledgerEntryAccount = new LedgerEntryAccount(
-            KeyPair.FromXdrPublicKey(xdrAccountEntry.AccountID.InnerValue),
+            account: KeyPair.FromXdrPublicKey(xdrAccountEntry.AccountID.InnerValue),
             homeDomain: xdrAccountEntry.HomeDomain.InnerValue,
             sequenceNumber: xdrAccountEntry.SeqNum.InnerValue.InnerValue,
             numberSubEntries: xdrAccountEntry.NumSubEntries.InnerValue,

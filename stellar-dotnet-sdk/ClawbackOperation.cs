@@ -33,16 +33,20 @@ public class ClawbackOperation : Operation
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        return new xdr.Operation.OperationBody
+        var body = new xdr.Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CLAWBACK),
             ClawbackOp = new ClawbackOp
             {
-                Amount = new Int64 { InnerValue = ToXdrAmount(Amount) },
+                Amount = new Int64
+                {
+                    InnerValue = ToXdrAmount(Amount)
+                },
                 Asset = Asset.ToXdr(),
                 From = From.MuxedAccount
             }
         };
+        return body;
     }
 
     /// <summary>

@@ -24,18 +24,20 @@ public class BumpSequenceOperation : Operation
 
     public override OperationBody ToOperationBody()
     {
-        var op = new BumpSequenceOp();
-        var bumpTo = new Int64 { InnerValue = BumpTo };
-        var sequenceNumber = new SequenceNumber { InnerValue = bumpTo };
-
-        op.BumpTo = sequenceNumber;
-
         var body = new OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.BUMP_SEQUENCE),
-            BumpSequenceOp = op
+            BumpSequenceOp = new BumpSequenceOp
+            {
+                BumpTo = new SequenceNumber
+                {
+                    InnerValue = new Int64
+                    {
+                        InnerValue = BumpTo,
+                    },
+                },
+            }
         };
-
         return body;
     }
 

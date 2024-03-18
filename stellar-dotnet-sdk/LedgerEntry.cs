@@ -36,21 +36,24 @@ public abstract class LedgerEntry
         {
             LedgerEntryType.LedgerEntryTypeEnum.ACCOUNT =>
                 LedgerEntryAccount.FromXdrLedgerEntryData(xdrLedgerEntryData),
-            LedgerEntryType.LedgerEntryTypeEnum.TRUSTLINE => LedgerEntryTrustline.FromXdrLedgerEntryData(
-                xdrLedgerEntryData),
-            LedgerEntryType.LedgerEntryTypeEnum.OFFER => LedgerEntryOffer.FromXdrLedgerEntryData(xdrLedgerEntryData),
-            LedgerEntryType.LedgerEntryTypeEnum.DATA => LedgerEntryData.FromXdrLedgerEntryData(xdrLedgerEntryData),
-            LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE => LedgerEntryClaimableBalance.FromXdrLedgerEntryData(
-                xdrLedgerEntryData),
-            LedgerEntryType.LedgerEntryTypeEnum.LIQUIDITY_POOL => LedgerEntryLiquidityPool.FromXdrLedgerEntryData(
-                xdrLedgerEntryData),
-            LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_DATA => LedgerEntryContractData.FromXdrLedgerEntryData(
-                xdrLedgerEntryData),
-            LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE => LedgerEntryContractCode.FromXdrLedgerEntryData(
-                xdrLedgerEntryData),
-            LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING => LedgerEntryConfigSetting.FromXdrLedgerEntryData(
-                xdrLedgerEntryData),
-            LedgerEntryType.LedgerEntryTypeEnum.TTL => LedgerEntryTTL.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.TRUSTLINE => 
+                LedgerEntryTrustline.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.OFFER => 
+                LedgerEntryOffer.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.DATA => 
+                LedgerEntryData.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE => 
+                LedgerEntryClaimableBalance.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.LIQUIDITY_POOL => 
+                LedgerEntryLiquidityPool.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_DATA => 
+                LedgerEntryContractData.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE => 
+                LedgerEntryContractCode.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING => 
+                LedgerEntryConfigSetting.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.TTL => 
+                LedgerEntryTTL.FromXdrLedgerEntryData(xdrLedgerEntryData),
             _ => throw new InvalidOperationException("Unknown LedgerEntry type")
         };
     }

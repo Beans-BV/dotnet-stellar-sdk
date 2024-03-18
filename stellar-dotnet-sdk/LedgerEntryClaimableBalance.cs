@@ -38,13 +38,15 @@ public class LedgerEntryClaimableBalance : LedgerEntry
     private static LedgerEntryClaimableBalance FromXdr(ClaimableBalanceEntry xdrClaimableBalanceEntry)
     {
         var ledgerEntryClaimableBalance = new LedgerEntryClaimableBalance(
-            xdrClaimableBalanceEntry.BalanceID.V0.InnerValue,
-            xdrClaimableBalanceEntry.Claimants.Select(Claimant.FromXdr).ToArray(),
-            Asset.FromXdr(xdrClaimableBalanceEntry.Asset),
-            xdrClaimableBalanceEntry.Amount.InnerValue);
+            balanceId: xdrClaimableBalanceEntry.BalanceID.V0.InnerValue,
+            claimants: xdrClaimableBalanceEntry.Claimants.Select(Claimant.FromXdr).ToArray(),
+            asset: Asset.FromXdr(xdrClaimableBalanceEntry.Asset),
+            amount: xdrClaimableBalanceEntry.Amount.InnerValue);
+        
         if (xdrClaimableBalanceEntry.Ext.Discriminant == 1)
             ledgerEntryClaimableBalance.ClaimableBalanceEntryExtensionV1 =
                 ClaimableBalanceEntryExtensionV1.FromXdr(xdrClaimableBalanceEntry.Ext.V1);
+        
         return ledgerEntryClaimableBalance;
     }
 }

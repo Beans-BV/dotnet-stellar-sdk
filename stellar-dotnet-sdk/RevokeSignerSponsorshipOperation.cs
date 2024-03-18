@@ -22,7 +22,7 @@ public class RevokeSignerSponsorshipOperation : Operation
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        return new xdr.Operation.OperationBody
+        var body = new xdr.Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP),
             RevokeSponsorshipOp = new RevokeSponsorshipOp
@@ -36,6 +36,7 @@ public class RevokeSignerSponsorshipOperation : Operation
                 }
             }
         };
+        return body;
     }
 
     /// <summary>

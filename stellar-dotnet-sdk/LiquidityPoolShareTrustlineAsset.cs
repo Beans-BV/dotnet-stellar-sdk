@@ -48,14 +48,11 @@ public class LiquidityPoolShareTrustlineAsset : TrustlineAsset
 
     public TrustLineAsset ToXdrTrustLineAsset()
     {
-        var trustlineAssetXdr = new TrustLineAsset
+        var xdr = new TrustLineAsset
         {
-            Discriminant =
-            {
-                InnerValue = AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE
-            },
+            Discriminant = AssetType.Create(AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE),
             LiquidityPoolID = ID.ToXdr()
         };
-        return trustlineAssetXdr;
+        return xdr;
     }
 }

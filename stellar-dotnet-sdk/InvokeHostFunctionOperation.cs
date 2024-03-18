@@ -60,7 +60,7 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
 
     public InvokeHostFunctionOp ToInvokeHostFunctionOperationXdr()
     {
-        return new InvokeHostFunctionOp
+        var xdr = new InvokeHostFunctionOp
         {
             HostFunction = new xdr.HostFunction
             {
@@ -72,16 +72,14 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
             },
             Auth = Auth.Select(a => a.ToXdr()).ToArray()
         };
+        return xdr;
     }
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
         var body = new xdr.Operation.OperationBody
         {
-            Discriminant = new OperationType
-            {
-                InnerValue = OperationType.OperationTypeEnum.INVOKE_HOST_FUNCTION
-            },
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.INVOKE_HOST_FUNCTION),
             InvokeHostFunctionOp = ToInvokeHostFunctionOperationXdr()
         };
         return body;
@@ -217,7 +215,7 @@ public class CreateContractOperation : InvokeHostFunctionOperation
 
     private InvokeHostFunctionOp ToInvokeHostFunctionOperationXdr()
     {
-        return new InvokeHostFunctionOp
+        var xdr = new InvokeHostFunctionOp
         {
             HostFunction = new xdr.HostFunction
             {
@@ -229,16 +227,14 @@ public class CreateContractOperation : InvokeHostFunctionOperation
             },
             Auth = Auth.Select(a => a.ToXdr()).ToArray()
         };
+        return xdr;
     }
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
         var body = new xdr.Operation.OperationBody
         {
-            Discriminant = new OperationType
-            {
-                InnerValue = OperationType.OperationTypeEnum.INVOKE_HOST_FUNCTION
-            },
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.INVOKE_HOST_FUNCTION),
             InvokeHostFunctionOp = ToInvokeHostFunctionOperationXdr()
         };
         return body;
@@ -400,7 +396,7 @@ public class UploadContractOperation : InvokeHostFunctionOperation
 
     public InvokeHostFunctionOp ToInvokeHostFunctionOperationXdr()
     {
-        return new InvokeHostFunctionOp
+        var xdr = new InvokeHostFunctionOp
         {
             HostFunction = new xdr.HostFunction
             {
@@ -412,16 +408,14 @@ public class UploadContractOperation : InvokeHostFunctionOperation
             },
             Auth = Auth.Select(a => a.ToXdr()).ToArray()
         };
+        return xdr;
     }
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
         var body = new xdr.Operation.OperationBody
         {
-            Discriminant = new OperationType
-            {
-                InnerValue = OperationType.OperationTypeEnum.INVOKE_HOST_FUNCTION
-            },
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.INVOKE_HOST_FUNCTION),
             InvokeHostFunctionOp = ToInvokeHostFunctionOperationXdr()
         };
         return body;
@@ -500,8 +494,7 @@ public class UploadContractOperation : InvokeHostFunctionOperation
                 throw new InvalidOperationException("Wasm cannot be null");
 
             var operation = new UploadContractOperation(
-                new UploadContractHostFunction(
-                    _wasm))
+                hostFunction: new UploadContractHostFunction(_wasm))
             {
                 Auth = _auth ?? Array.Empty<SorobanAuthorizationEntry>()
             };

@@ -12,9 +12,17 @@ namespace stellar_dotnet_sdk;
 /// </summary>
 public class SetOptionsOperation : Operation
 {
-    private SetOptionsOperation(KeyPair inflationDestination, uint? clearFlags, uint? setFlags,
-        uint? masterKeyWeight, uint? lowThreshold, uint? mediumThreshold,
-        uint? highThreshold, string homeDomain, SignerKey signer, uint? signerWeight)
+    private SetOptionsOperation(
+        KeyPair inflationDestination,
+        uint? clearFlags,
+        uint? setFlags,
+        uint? masterKeyWeight,
+        uint? lowThreshold,
+        uint? mediumThreshold,
+        uint? highThreshold,
+        string homeDomain,
+        SignerKey signer,
+        uint? signerWeight)
     {
         InflationDestination = inflationDestination;
         ClearFlags = clearFlags;
@@ -59,9 +67,9 @@ public class SetOptionsOperation : Operation
     public static SetOptionsOperation FromOperationXdrBase64(string xdrBase64)
     {
         var operation = FromXdrBase64(xdrBase64);
+
         if (operation == null)
             throw new InvalidOperationException("Operation XDR is invalid");
-
         if (operation is not SetOptionsOperation setOptionsOperation)
             throw new InvalidOperationException("Operation is not SetOptionsOperation");
 
@@ -73,8 +81,10 @@ public class SetOptionsOperation : Operation
         var op = new SetOptionsOp();
         if (InflationDestination != null)
         {
-            var inflationDestination = new AccountID();
-            inflationDestination.InnerValue = InflationDestination.XdrPublicKey;
+            var inflationDestination = new AccountID
+            {
+                InnerValue = InflationDestination.XdrPublicKey
+            };
             op.InflationDest = inflationDestination;
         }
 

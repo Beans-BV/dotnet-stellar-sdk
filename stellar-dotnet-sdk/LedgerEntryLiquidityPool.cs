@@ -36,6 +36,7 @@ public class LedgerEntryLiquidityPool : LedgerEntry
         var ledgerEntryLiquidityPool = new LedgerEntryLiquidityPool(
             LiquidityPoolID.FromXdr(xdrLiquidityPoolEntry.LiquidityPoolID),
             LiquidityPoolEntryBody.FromXdr(xdrLiquidityPoolEntry.Body));
+        
         return ledgerEntryLiquidityPool;
     }
 }

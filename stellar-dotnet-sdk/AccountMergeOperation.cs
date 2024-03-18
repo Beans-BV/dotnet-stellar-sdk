@@ -31,8 +31,8 @@ public class AccountMergeOperation : Operation
     {
         var body = new xdr.Operation.OperationBody
         {
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.ACCOUNT_MERGE),
             Destination = Destination.MuxedAccount,
-            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.ACCOUNT_MERGE)
         };
         return body;
     }

@@ -49,7 +49,7 @@ public class SorobanTransactionMeta
     ///     Returns a string that represents the events emitted in a human-readable format.
     /// </summary>
     /// <returns>A string that contains the details of the emitted events.</returns>
-    public string ToString()
+    public string ToDebugString()
     {
         var value = "";
         for (var i = 0; i < Events.Length; i++) value += $"Event {i + 1}\n:{Events[i].ToString()}\n";

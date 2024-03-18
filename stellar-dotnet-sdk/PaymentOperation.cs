@@ -36,20 +36,16 @@ public class PaymentOperation : Operation
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        var op = new PaymentOp();
-
-        // destination
-        op.Destination = Destination.MuxedAccount;
-        // asset
-        op.Asset = Asset.ToXdr();
-        // amount
-        var amount = new Int64();
-        amount.InnerValue = ToXdrAmount(Amount);
-        op.Amount = amount;
-
-        var body = new xdr.Operation.OperationBody();
-        body.Discriminant = OperationType.Create(OperationType.OperationTypeEnum.PAYMENT);
-        body.PaymentOp = op;
+        var body = new xdr.Operation.OperationBody
+        {
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.PAYMENT),
+            PaymentOp = new PaymentOp
+            {
+                Destination = Destination.MuxedAccount,
+                Asset = Asset.ToXdr(),
+                Amount = new Int64 { InnerValue = ToXdrAmount(Amount) },
+            },
+        };
         return body;
     }
 

@@ -5,7 +5,13 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerEntryOffer : LedgerEntry
 {
-    private LedgerEntryOffer(KeyPair sellerID, long offerID, long amount, Asset buying, Asset selling, Price price,
+    private LedgerEntryOffer(
+        KeyPair sellerID,
+        long offerID,
+        long amount,
+        Asset buying,
+        Asset selling,
+        Price price,
         uint flags)
     {
         SellerID = sellerID;
@@ -50,16 +56,17 @@ public class LedgerEntryOffer : LedgerEntry
     private static LedgerEntryOffer FromXdr(OfferEntry xdrOfferEntry)
     {
         var ledgerEntryOffer = new LedgerEntryOffer(
-            KeyPair.FromXdrPublicKey(xdrOfferEntry.SellerID.InnerValue),
-            xdrOfferEntry.OfferID.InnerValue,
-            xdrOfferEntry.Amount.InnerValue,
-            Asset.FromXdr(xdrOfferEntry.Buying),
-            Asset.FromXdr(xdrOfferEntry.Selling),
-            new Price(xdrOfferEntry.Price.N.InnerValue, xdrOfferEntry.Price.D.InnerValue),
-            xdrOfferEntry.Flags.InnerValue);
+            sellerID: KeyPair.FromXdrPublicKey(xdrOfferEntry.SellerID.InnerValue),
+            offerID: xdrOfferEntry.OfferID.InnerValue,
+            amount: xdrOfferEntry.Amount.InnerValue,
+            buying: Asset.FromXdr(xdrOfferEntry.Buying),
+            selling: Asset.FromXdr(xdrOfferEntry.Selling),
+            price: new Price(xdrOfferEntry.Price.N.InnerValue, xdrOfferEntry.Price.D.InnerValue),
+            flags: xdrOfferEntry.Flags.InnerValue);
 
         if (xdrOfferEntry.Ext.Discriminant != 0)
             ledgerEntryOffer.OfferExtension = OfferEntryExtension.FromXdr(xdrOfferEntry.Ext);
+
         return ledgerEntryOffer;
     }
 }

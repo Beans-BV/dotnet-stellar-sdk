@@ -8,6 +8,10 @@ public class LedgerKeyTrustline : LedgerKey
     {
     }
     
+    public LedgerKeyTrustline(KeyPair account, Asset asset) : this(account, TrustlineAsset.Create(asset))
+    {
+    }
+    
     public LedgerKeyTrustline(KeyPair account, TrustlineAsset asset)
     {
         Account = account;

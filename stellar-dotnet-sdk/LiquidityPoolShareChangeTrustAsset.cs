@@ -57,17 +57,11 @@ public class LiquidityPoolShareChangeTrustAsset : ChangeTrustAsset
 
     public override xdr.ChangeTrustAsset ToXdr()
     {
-        var changeTrustXdr = new xdr.ChangeTrustAsset
+        var xdr = new xdr.ChangeTrustAsset
         {
-            Discriminant =
-            {
-                InnerValue = AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE
-            }
+            Discriminant = AssetType.Create(AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE),
+            LiquidityPool = Parameters.ToXdr(),
         };
-
-        var parameters = Parameters.ToXdr();
-        changeTrustXdr.LiquidityPool = parameters;
-
-        return changeTrustXdr;
+        return xdr;
     }
 }

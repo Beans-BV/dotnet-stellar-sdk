@@ -8,8 +8,7 @@ namespace stellar_dotnet_sdk;
 ///     Use <see cref="Builder" /> to create a new BeginSponsoringFutureReservesOperation.
 ///     See also:
 ///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html">
-///         Begin Sponsoring Futures
-///         Reserves
+///         Begin Sponsoring Futures Reserves
 ///     </see>
 /// </summary>
 public class BeginSponsoringFutureReservesOperation : Operation
@@ -23,15 +22,15 @@ public class BeginSponsoringFutureReservesOperation : Operation
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        var op = new BeginSponsoringFutureReservesOp { SponsoredID = new AccountID(SponsoredId.XdrPublicKey) };
-
         var body = new xdr.Operation.OperationBody
         {
             Discriminant =
                 OperationType.Create(OperationType.OperationTypeEnum.BEGIN_SPONSORING_FUTURE_RESERVES),
-            BeginSponsoringFutureReservesOp = op
+            BeginSponsoringFutureReservesOp = new BeginSponsoringFutureReservesOp
+            {
+                SponsoredID = new AccountID(SponsoredId.XdrPublicKey),
+            }
         };
-
         return body;
     }
 

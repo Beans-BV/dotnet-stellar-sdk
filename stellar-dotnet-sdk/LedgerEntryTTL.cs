@@ -30,6 +30,8 @@ public class LedgerEntryTTL : LedgerEntry
 
     private static LedgerEntryTTL FromXdr(TTLEntry xdrTtlEntry)
     {
-        return new LedgerEntryTTL(xdrTtlEntry.KeyHash.InnerValue, xdrTtlEntry.LiveUntilLedgerSeq.InnerValue);
+        return new LedgerEntryTTL(
+            keyHash: xdrTtlEntry.KeyHash.InnerValue,
+            liveUntilLedgerSequence: xdrTtlEntry.LiveUntilLedgerSeq.InnerValue);
     }
 }

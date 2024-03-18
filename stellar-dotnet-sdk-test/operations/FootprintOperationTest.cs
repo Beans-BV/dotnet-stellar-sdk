@@ -14,10 +14,10 @@ public class FootprintOperationTest
     public void TestExtendFootprintOperationWithMissingExtensionPoint()
     {
         var builder = new ExtendFootprintOperation.Builder(10000U);
-        builder.SetSourceAccount(_sourceAccount).SetExtensionPoint(null);
+        builder.SetSourceAccount(_sourceAccount);
 
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
-        Assert.AreEqual("Extension point cannot be null.", ex.Message);
+        var operation = builder.Build();
+        Assert.IsInstanceOfType(operation.ExtensionPoint, typeof(ExtensionPointZero));
     }
 
     [TestMethod]
@@ -59,16 +59,6 @@ public class FootprintOperationTest
         Assert.AreEqual(operation.ExtendTo, decodedOperation.ExtendTo);
         Assert.AreEqual(operation.ExtensionPoint.ToXdrBase64(), decodedOperation.ExtensionPoint.ToXdrBase64());
         Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
-    }
-
-    [TestMethod]
-    public void TestRestoreFootprintOperationWithMissingExtensionPoint()
-    {
-        var builder = new RestoreFootprintOperation.Builder();
-        builder.SetSourceAccount(_sourceAccount).SetExtensionPoint(null);
-
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
-        Assert.AreEqual("Extension point cannot be null", ex.Message);
     }
 
     [TestMethod]

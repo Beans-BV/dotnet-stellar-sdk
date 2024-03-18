@@ -35,18 +35,18 @@ public class ManageOfferOperation : Operation
 
     public override sdkxdr.Operation.OperationBody ToOperationBody()
     {
-        var op = new ManageSellOfferOp { Selling = Selling.ToXdr(), Buying = Buying.ToXdr() };
-        var amount = new sdkxdr.Int64 { InnerValue = ToXdrAmount(Amount) };
-        op.Amount = amount;
-        var price = stellar_dotnet_sdk.Price.FromString(Price);
-        op.Price = price.ToXdr();
-        var offerId = new sdkxdr.Int64 { InnerValue = OfferId };
-        op.OfferID = offerId;
-
-        var body = new sdkxdr.Operation.OperationBody();
-        body.Discriminant = OperationType.Create(OperationType.OperationTypeEnum.MANAGE_SELL_OFFER);
-        body.ManageSellOfferOp = op;
-
+        var body = new sdkxdr.Operation.OperationBody
+        {
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.MANAGE_SELL_OFFER),
+            ManageSellOfferOp = new ManageSellOfferOp
+            {
+                Selling = Selling.ToXdr(),
+                Buying = Buying.ToXdr(),
+                Amount = new sdkxdr.Int64(ToXdrAmount(Amount)),
+                Price = stellar_dotnet_sdk.Price.FromString(Price).ToXdr(),
+                OfferID = new sdkxdr.Int64(OfferId)
+            }
+        };
         return body;
     }
 

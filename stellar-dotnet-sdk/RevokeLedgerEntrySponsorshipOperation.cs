@@ -20,7 +20,7 @@ public class RevokeLedgerEntrySponsorshipOperation : Operation
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        return new xdr.Operation.OperationBody
+        var body = new xdr.Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP),
             RevokeSponsorshipOp = new RevokeSponsorshipOp
@@ -30,6 +30,7 @@ public class RevokeLedgerEntrySponsorshipOperation : Operation
                 LedgerKey = LedgerKey.ToXdr()
             }
         };
+        return body;
     }
 
     /// <summary>
@@ -90,7 +91,7 @@ public class RevokeLedgerEntrySponsorshipOperation : Operation
         /// <param name="accountId">Id of the trustline owner that being sponsored.</param>
         /// <param name="asset">The asset of the trustline.</param>
         public Builder(string accountId, Asset asset) : this(new LedgerKeyTrustline(KeyPair.FromAccountId(accountId),
-            TrustlineAsset.Create(asset)))
+            asset))
         {
         }
 

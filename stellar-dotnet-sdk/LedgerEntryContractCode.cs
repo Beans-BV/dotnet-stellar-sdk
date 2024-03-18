@@ -42,8 +42,8 @@ public class LedgerEntryContractCode : LedgerEntry
     private static LedgerEntryContractCode FromXdr(ContractCodeEntry xdrContractDataEntry)
     {
         return new LedgerEntryContractCode(
-            xdrContractDataEntry.Hash.InnerValue,
-            xdrContractDataEntry.Code,
-            ExtensionPoint.FromXdr(xdrContractDataEntry.Ext));
+            hash: xdrContractDataEntry.Hash.InnerValue,
+            code: xdrContractDataEntry.Code,
+            extensionPoint: ExtensionPoint.FromXdr(xdrContractDataEntry.Ext));
     }
 }

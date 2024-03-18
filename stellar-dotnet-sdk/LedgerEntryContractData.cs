@@ -5,7 +5,11 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerEntryContractData : LedgerEntry
 {
-    private LedgerEntryContractData(SCVal key, SCVal value, SCAddress contract, ContractDataDurability durability,
+    private LedgerEntryContractData(
+        SCVal key,
+        SCVal value,
+        SCAddress contract,
+        ContractDataDurability durability,
         ExtensionPoint extensionPoint)
     {
         Key = key;
@@ -42,10 +46,11 @@ public class LedgerEntryContractData : LedgerEntry
 
     private static LedgerEntryContractData FromXdr(ContractDataEntry xdrContractDataEntry)
     {
-        return new LedgerEntryContractData(SCVal.FromXdr(xdrContractDataEntry.Key),
-            SCVal.FromXdr(xdrContractDataEntry.Val),
-            SCAddress.FromXdr(xdrContractDataEntry.Contract),
-            xdrContractDataEntry.Durability,
-            ExtensionPoint.FromXdr(xdrContractDataEntry.Ext));
+        return new LedgerEntryContractData(
+            key: SCVal.FromXdr(xdrContractDataEntry.Key),
+            value: SCVal.FromXdr(xdrContractDataEntry.Val),
+            contract: SCAddress.FromXdr(xdrContractDataEntry.Contract),
+            durability: xdrContractDataEntry.Durability,
+            extensionPoint: ExtensionPoint.FromXdr(xdrContractDataEntry.Ext));
     }
 }

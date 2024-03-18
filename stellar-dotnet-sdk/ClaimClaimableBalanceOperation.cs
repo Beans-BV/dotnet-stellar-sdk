@@ -33,7 +33,7 @@ public class ClaimClaimableBalanceOperation : Operation
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        return new xdr.Operation.OperationBody
+        var body = new xdr.Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CLAIM_CLAIMABLE_BALANCE),
             ClaimClaimableBalanceOp = new ClaimClaimableBalanceOp
@@ -41,6 +41,7 @@ public class ClaimClaimableBalanceOperation : Operation
                 BalanceID = ClaimableBalanceID.Decode(new XdrDataInputStream(BalanceId))
             }
         };
+        return body;
     }
 
     /// <summary>

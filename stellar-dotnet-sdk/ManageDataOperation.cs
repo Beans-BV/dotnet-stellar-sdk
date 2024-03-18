@@ -27,18 +27,15 @@ public class ManageDataOperation : Operation
 
     public override sdkxdr.Operation.OperationBody ToOperationBody()
     {
-        var op = new ManageDataOp
-        {
-            DataName = new String64(Name),
-            DataValue = Value != null ? new DataValue(Value) : null
-        };
-
         var body = new sdkxdr.Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.MANAGE_DATA),
-            ManageDataOp = op
+            ManageDataOp = new ManageDataOp
+            {
+                DataName = new String64(Name),
+                DataValue = Value != null ? new DataValue(Value) : null
+            }
         };
-
         return body;
     }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using sdkxdr = stellar_dotnet_sdk.xdr;
 
 namespace stellar_dotnet_sdk;
@@ -11,8 +12,13 @@ namespace stellar_dotnet_sdk;
 /// </summary>
 public class PathPaymentStrictReceiveOperation : Operation
 {
-    private PathPaymentStrictReceiveOperation(Asset sendAsset, string sendMax, IAccountId destination,
-        Asset destAsset, string destAmount, Asset[]? path)
+    private PathPaymentStrictReceiveOperation(
+        Asset sendAsset,
+        string sendMax,
+        IAccountId destination,
+        Asset destAsset,
+        string destAmount,
+        Asset[]? path)
     {
         SendAsset = sendAsset ?? throw new ArgumentNullException(nameof(sendAsset), "sendAsset cannot be null");
         SendMax = sendMax ?? throw new ArgumentNullException(nameof(sendMax), "sendMax cannot be null");
@@ -20,16 +26,10 @@ public class PathPaymentStrictReceiveOperation : Operation
         DestAsset = destAsset ?? throw new ArgumentNullException(nameof(destAsset), "destAsset cannot be null");
         DestAmount = destAmount ?? throw new ArgumentNullException(nameof(destAmount), "destAmount cannot be null");
 
-        if (path == null)
-        {
-            Path = Array.Empty<Asset>();
-        }
-        else
-        {
-            if (path.Length > 5)
-                throw new ArgumentException("The maximum number of assets in the path is 5", nameof(path));
-            Path = path;
-        }
+        path ??= Array.Empty<Asset>();
+        if (path.Length > 5)
+            throw new ArgumentException("The maximum number of assets in the path is 5", nameof(path));
+        Path = path;
     }
 
     public Asset SendAsset { get; }
@@ -46,39 +46,19 @@ public class PathPaymentStrictReceiveOperation : Operation
 
     public override sdkxdr.Operation.OperationBody ToOperationBody()
     {
-        var op = new sdkxdr.PathPaymentStrictReceiveOp
-        {
-            // sendAsset
-            SendAsset = SendAsset.ToXdr()
-        };
-
-        // sendMax
-        var sendMax = new sdkxdr.Int64
-        {
-            InnerValue = ToXdrAmount(SendMax)
-        };
-        op.SendMax = sendMax;
-        // destination
-        op.Destination = Destination.MuxedAccount;
-        // destAsset
-        op.DestAsset = DestAsset.ToXdr();
-        // destAmount
-        var destAmount = new sdkxdr.Int64
-        {
-            InnerValue = ToXdrAmount(DestAmount)
-        };
-        op.DestAmount = destAmount;
-        // path
-        var path = new sdkxdr.Asset[Path.Length];
-        for (var i = 0; i < Path.Length; i++)
-            path[i] = Path[i].ToXdr();
-        op.Path = path;
-
         var body = new sdkxdr.Operation.OperationBody
         {
             Discriminant =
                 sdkxdr.OperationType.Create(sdkxdr.OperationType.OperationTypeEnum.PATH_PAYMENT_STRICT_RECEIVE),
-            PathPaymentStrictReceiveOp = op
+            PathPaymentStrictReceiveOp = new sdkxdr.PathPaymentStrictReceiveOp
+            {
+                SendAsset = SendAsset.ToXdr(),
+                SendMax = new sdkxdr.Int64 { InnerValue = ToXdrAmount(SendMax) },
+                Destination = Destination.MuxedAccount,
+                DestAsset = DestAsset.ToXdr(),
+                DestAmount = new sdkxdr.Int64 { InnerValue = ToXdrAmount(DestAmount) },
+                Path = Path.Select(a => a.ToXdr()).ToArray(),
+            }
         };
         return body;
     }
@@ -104,9 +84,7 @@ public class PathPaymentStrictReceiveOperation : Operation
             _destination = MuxedAccount.FromXdrMuxedAccount(op.Destination);
             _destAsset = Asset.FromXdr(op.DestAsset);
             _destAmount = FromXdrAmount(op.DestAmount.InnerValue);
-            _path = new Asset[op.Path.Length];
-            for (var i = 0; i < op.Path.Length; i++)
-                _path[i] = Asset.FromXdr(op.Path[i]);
+            _path = op.Path.Select(Asset.FromXdr).ToArray();
         }
 
         /// <summary>
@@ -142,9 +120,9 @@ public class PathPaymentStrictReceiveOperation : Operation
         {
             if (path == null)
                 throw new ArgumentNullException(nameof(path), "path cannot be null");
-
             if (path.Length > 5)
                 throw new ArgumentException("The maximum number of assets in the path is 5", nameof(path));
+
             _path = path;
             return this;
         }
@@ -167,9 +145,13 @@ public class PathPaymentStrictReceiveOperation : Operation
         /// <returns></returns>
         public PathPaymentStrictReceiveOperation Build()
         {
-            var operation =
-                new PathPaymentStrictReceiveOperation(_sendAsset, _sendMax, _destination, _destAsset, _destAmount,
-                    _path);
+            var operation = new PathPaymentStrictReceiveOperation(
+                _sendAsset,
+                _sendMax,
+                _destination,
+                _destAsset,
+                _destAmount,
+                _path);
             if (_mSourceAccount != null)
                 operation.SourceAccount = _mSourceAccount;
             return operation;

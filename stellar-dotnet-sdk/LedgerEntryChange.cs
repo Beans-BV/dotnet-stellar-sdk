@@ -17,14 +17,14 @@ public abstract class LedgerEntryChange
     {
         return xdrLedgerEntryChange.Discriminant.InnerValue switch
         {
-            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_CREATED => new LedgerEntryCreated
-                (xdrLedgerEntryChange.Created),
-            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_UPDATED => new LedgerEntryUpdated
-                (xdrLedgerEntryChange.Updated),
-            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_REMOVED => new LedgerEntryRemoved(
-                xdrLedgerEntryChange.Removed),
-            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_STATE => new LedgerEntryState
-                (xdrLedgerEntryChange.State),
+            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_CREATED => 
+                new LedgerEntryCreated(xdrLedgerEntryChange.Created),
+            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_UPDATED =>
+                new LedgerEntryUpdated(xdrLedgerEntryChange.Updated),
+            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_REMOVED =>
+                new LedgerEntryRemoved(xdrLedgerEntryChange.Removed),
+            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_STATE =>
+                new LedgerEntryState(xdrLedgerEntryChange.State),
             _ => throw new InvalidOperationException("Unknown LedgerEntryChange type.")
         };
     }

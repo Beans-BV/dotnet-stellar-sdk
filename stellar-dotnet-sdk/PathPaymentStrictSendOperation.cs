@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using sdkxdr = stellar_dotnet_sdk.xdr;
 
 namespace stellar_dotnet_sdk;
@@ -11,8 +12,13 @@ namespace stellar_dotnet_sdk;
 /// </summary>
 public class PathPaymentStrictSendOperation : Operation
 {
-    private PathPaymentStrictSendOperation(Asset sendAsset, string sendAmount, IAccountId destination,
-        Asset destAsset, string destMin, Asset[]? path)
+    private PathPaymentStrictSendOperation(
+        Asset sendAsset,
+        string sendAmount,
+        IAccountId destination,
+        Asset destAsset,
+        string destMin,
+        Asset[]? path)
     {
         SendAsset = sendAsset ?? throw new ArgumentNullException(nameof(sendAsset), "sendAsset cannot be null");
         SendAmount = sendAmount ?? throw new ArgumentNullException(nameof(sendAmount), "sendAmount cannot be null");
@@ -46,38 +52,18 @@ public class PathPaymentStrictSendOperation : Operation
 
     public override sdkxdr.Operation.OperationBody ToOperationBody()
     {
-        var op = new sdkxdr.PathPaymentStrictSendOp
-        {
-            // sendAsset
-            SendAsset = SendAsset.ToXdr()
-        };
-
-        // sendAmount
-        var sendAmount = new sdkxdr.Int64
-        {
-            InnerValue = ToXdrAmount(SendAmount)
-        };
-        op.SendAmount = sendAmount;
-        // destination
-        op.Destination = Destination.MuxedAccount;
-        // destAsset
-        op.DestAsset = DestAsset.ToXdr();
-        // destMin
-        var destMin = new sdkxdr.Int64
-        {
-            InnerValue = ToXdrAmount(DestMin)
-        };
-        op.DestMin = destMin;
-        // path
-        var path = new sdkxdr.Asset[Path.Length];
-        for (var i = 0; i < Path.Length; i++)
-            path[i] = Path[i].ToXdr();
-        op.Path = path;
-
         var body = new sdkxdr.Operation.OperationBody
         {
             Discriminant = sdkxdr.OperationType.Create(sdkxdr.OperationType.OperationTypeEnum.PATH_PAYMENT_STRICT_SEND),
-            PathPaymentStrictSendOp = op
+            PathPaymentStrictSendOp = new sdkxdr.PathPaymentStrictSendOp
+            {
+                SendAsset = SendAsset.ToXdr(),
+                SendAmount = new sdkxdr.Int64 { InnerValue = ToXdrAmount(SendAmount) },
+                Destination = Destination.MuxedAccount,
+                DestAsset = DestAsset.ToXdr(),
+                DestMin = new sdkxdr.Int64 { InnerValue = ToXdrAmount(DestMin) },
+                Path = Path.Select(a => a.ToXdr()).ToArray(),
+            }
         };
         return body;
     }
@@ -103,9 +89,7 @@ public class PathPaymentStrictSendOperation : Operation
             _destination = MuxedAccount.FromXdrMuxedAccount(op.Destination);
             _destAsset = Asset.FromXdr(op.DestAsset);
             _destMin = FromXdrAmount(op.DestMin.InnerValue);
-            _path = new Asset[op.Path.Length];
-            for (var i = 0; i < op.Path.Length; i++)
-                _path[i] = Asset.FromXdr(op.Path[i]);
+            _path = op.Path.Select(Asset.FromXdr).ToArray();
         }
 
         /// <summary>
@@ -141,9 +125,9 @@ public class PathPaymentStrictSendOperation : Operation
         {
             if (path == null)
                 throw new ArgumentNullException(nameof(path), "path cannot be null");
-
             if (path.Length > 5)
                 throw new ArgumentException("The maximum number of assets in the path is 5", nameof(path));
+
             _path = path;
             return this;
         }
@@ -166,8 +150,13 @@ public class PathPaymentStrictSendOperation : Operation
         /// <returns></returns>
         public PathPaymentStrictSendOperation Build()
         {
-            var operation =
-                new PathPaymentStrictSendOperation(_sendAsset, _sendAmount, _destination, _destAsset, _destMin, _path);
+            var operation = new PathPaymentStrictSendOperation(
+                _sendAsset,
+                _sendAmount,
+                _destination,
+                _destAsset,
+                _destMin,
+                _path);
             if (_mSourceAccount != null)
                 operation.SourceAccount = _mSourceAccount;
             return operation;

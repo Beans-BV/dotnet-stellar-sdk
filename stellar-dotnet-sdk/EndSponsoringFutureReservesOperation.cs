@@ -23,7 +23,6 @@ public class EndSponsoringFutureReservesOperation : Operation
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.END_SPONSORING_FUTURE_RESERVES)
         };
-
         return body;
     }
 

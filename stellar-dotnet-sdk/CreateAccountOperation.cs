@@ -40,17 +40,21 @@ public class CreateAccountOperation : Operation
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        var op = new CreateAccountOp();
-        var destination = new AccountID();
-        destination.InnerValue = Destination.XdrPublicKey;
-        op.Destination = destination;
-        var startingBalance = new Int64();
-        startingBalance.InnerValue = ToXdrAmount(StartingBalance);
-        op.StartingBalance = startingBalance;
-
-        var body = new xdr.Operation.OperationBody();
-        body.Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CREATE_ACCOUNT);
-        body.CreateAccountOp = op;
+        var body = new xdr.Operation.OperationBody
+        {
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CREATE_ACCOUNT),
+            CreateAccountOp = new CreateAccountOp
+            {
+                Destination = new AccountID
+                {
+                    InnerValue = Destination.XdrPublicKey
+                },
+                StartingBalance = new Int64
+                {
+                    InnerValue = ToXdrAmount(StartingBalance)
+                },
+            }
+        };
         return body;
     }
 

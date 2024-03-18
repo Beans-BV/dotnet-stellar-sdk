@@ -6,7 +6,10 @@ namespace stellar_dotnet_sdk;
 
 public class LiquidityPoolWithdrawOperation : Operation
 {
-    private LiquidityPoolWithdrawOperation(LiquidityPoolID liquidityPoolID, string amount, string minAmountA,
+    private LiquidityPoolWithdrawOperation(
+        LiquidityPoolID liquidityPoolID,
+        string amount,
+        string minAmountA,
         string minAmountB)
     {
         LiquidityPoolID = liquidityPoolID ??
@@ -23,21 +26,16 @@ public class LiquidityPoolWithdrawOperation : Operation
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        var liquidityPoolWithdrawOperationXdr = new LiquidityPoolWithdrawOp
-        {
-            LiquidityPoolID = LiquidityPoolID.ToXdr(),
-            Amount = new Int64(ToXdrAmount(Amount)),
-            MinAmountA = new Int64(ToXdrAmount(MinAmountA)),
-            MinAmountB = new Int64(ToXdrAmount(MinAmountB))
-        };
-
         var body = new xdr.Operation.OperationBody
         {
-            Discriminant =
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.LIQUIDITY_POOL_WITHDRAW),
+            LiquidityPoolWithdrawOp = new LiquidityPoolWithdrawOp
             {
-                InnerValue = OperationType.OperationTypeEnum.LIQUIDITY_POOL_WITHDRAW
-            },
-            LiquidityPoolWithdrawOp = liquidityPoolWithdrawOperationXdr
+                LiquidityPoolID = LiquidityPoolID.ToXdr(),
+                Amount = new Int64(ToXdrAmount(Amount)),
+                MinAmountA = new Int64(ToXdrAmount(MinAmountA)),
+                MinAmountB = new Int64(ToXdrAmount(MinAmountB))
+            }
         };
         return body;
     }
@@ -69,9 +67,11 @@ public class LiquidityPoolWithdrawOperation : Operation
 
         public Builder(AssetAmount assetA, AssetAmount assetB, string amount)
         {
-            _liquidityPoolID =
-                new LiquidityPoolID(LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
-                    assetA.Asset, assetB.Asset, LiquidityPoolParameters.Fee);
+            _liquidityPoolID = new LiquidityPoolID(
+                LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+                assetA.Asset,
+                assetB.Asset,
+                LiquidityPoolParameters.Fee);
             _amount = amount;
             _minAmountA = assetA.Amount;
             _minAmountB = assetB.Amount;

@@ -24,16 +24,20 @@ public class CreateClaimableBalanceOperation : Operation
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        return new xdr.Operation.OperationBody
+        var body = new xdr.Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE),
             CreateClaimableBalanceOp = new CreateClaimableBalanceOp
             {
-                Amount = new Int64 { InnerValue = ToXdrAmount(Amount) },
+                Amount = new Int64
+                {
+                    InnerValue = ToXdrAmount(Amount)
+                },
                 Asset = Asset.ToXdr(),
                 Claimants = Claimants.Select(claimant => claimant.ToXdr()).ToArray()
             }
         };
+        return body;
     }
 
     /// <summary>

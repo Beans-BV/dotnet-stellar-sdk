@@ -25,20 +25,17 @@ public class ChangeTrustOperation : Operation
 
     public override sdkxdr.Operation.OperationBody ToOperationBody()
     {
-        var op = new ChangeTrustOp
-        {
-            Line = Asset.ToXdr()
-        };
-        var limit = new sdkxdr.Int64
-        {
-            InnerValue = ToXdrAmount(Limit)
-        };
-        op.Limit = limit;
-
         var body = new sdkxdr.Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CHANGE_TRUST),
-            ChangeTrustOp = op
+            ChangeTrustOp = new ChangeTrustOp
+            {
+                Line = Asset.ToXdr(),
+                Limit = new sdkxdr.Int64
+                {
+                    InnerValue = ToXdrAmount(Limit)
+                },
+            },
         };
         return body;
     }

@@ -11,12 +11,12 @@ public class ExtendFootprintOperation : Operation
     private ExtendFootprintOperation(uint extendTo, ExtensionPoint? extensionPoint = null)
     {
         ExtendTo = extendTo;
-        if (extensionPoint != null) ExtensionPoint = extensionPoint;
+        ExtensionPoint = extensionPoint ?? new ExtensionPointZero();
     }
 
     public uint ExtendTo { get; }
 
-    public ExtensionPoint ExtensionPoint { get; } = new ExtensionPointZero();
+    public ExtensionPoint ExtensionPoint { get; }
 
     /// <summary>
     ///     Creates a new ExtendFootprintOperation object from the given base64-encoded XDR Operation.
@@ -29,7 +29,6 @@ public class ExtendFootprintOperation : Operation
         var operation = FromXdrBase64(xdrBase64);
         if (operation == null)
             throw new InvalidOperationException("Operation XDR is invalid");
-
         if (operation is not ExtendFootprintOperation extendFootprintOperation)
             throw new InvalidOperationException("Operation is not ExtendFootprintOperation");
         return extendFootprintOperation;
@@ -48,10 +47,7 @@ public class ExtendFootprintOperation : Operation
     {
         var body = new xdr.Operation.OperationBody
         {
-            Discriminant = new OperationType
-            {
-                InnerValue = OperationType.OperationTypeEnum.EXTEND_FOOTPRINT_TTL
-            },
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.EXTEND_FOOTPRINT_TTL),
             ExtendFootprintTTLOp = ToExtendFootprintTTLOperationXdr()
         };
         return body;
@@ -60,12 +56,18 @@ public class ExtendFootprintOperation : Operation
     public class Builder
     {
         private readonly uint _extendTo;
-        private ExtensionPoint _extensionPoint = new ExtensionPointZero();
+        private ExtensionPoint? _extensionPoint;
         private KeyPair? _sourceAccount;
 
-        public Builder(uint extendTo)
+        /// <summary>
+        ///   Construct a new <see cref="ExtendFootprintOperation"/> builder.
+        /// </summary>
+        /// <param name="extendTo"></param>
+        /// <param name="extensionPoint">Defaults to <see cref="ExtensionPointZero"/>.</param>
+        public Builder(uint extendTo, ExtensionPoint? extensionPoint = null)
         {
             _extendTo = extendTo;
+            _extensionPoint = extensionPoint;
         }
 
         public Builder(ExtendFootprintTTLOp operationXdr)
@@ -88,8 +90,6 @@ public class ExtendFootprintOperation : Operation
 
         public ExtendFootprintOperation Build()
         {
-            if (_extensionPoint == null)
-                throw new InvalidOperationException("Extension point cannot be null.");
             var operation = new ExtendFootprintOperation(_extendTo, _extensionPoint);
             if (_sourceAccount != null) operation.SourceAccount = _sourceAccount;
             return operation;

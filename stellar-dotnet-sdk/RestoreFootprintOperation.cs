@@ -11,7 +11,12 @@ namespace stellar_dotnet_sdk;
 /// </summary>
 public class RestoreFootprintOperation : Operation
 {
-    public ExtensionPoint ExtensionPoint { get; private init; } = new ExtensionPointZero();
+    public ExtensionPoint ExtensionPoint { get; }
+
+    public RestoreFootprintOperation(ExtensionPoint extensionPoint)
+    {
+        ExtensionPoint = extensionPoint;
+    }
 
     /// <summary>
     ///     Creates a new RestoreFootprintOperation object from the given base64-encoded XDR Operation.
@@ -22,11 +27,12 @@ public class RestoreFootprintOperation : Operation
     public static RestoreFootprintOperation FromOperationXdrBase64(string xdrBase64)
     {
         var operation = FromXdrBase64(xdrBase64);
+        
         if (operation == null)
             throw new InvalidOperationException("Operation XDR is invalid");
-
         if (operation is not RestoreFootprintOperation restoreFootprintOperation)
             throw new InvalidOperationException("Operation is not RestoreFootprintOperation");
+        
         return restoreFootprintOperation;
     }
 
@@ -42,10 +48,7 @@ public class RestoreFootprintOperation : Operation
     {
         var body = new xdr.Operation.OperationBody
         {
-            Discriminant = new OperationType
-            {
-                InnerValue = OperationType.OperationTypeEnum.RESTORE_FOOTPRINT
-            },
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.RESTORE_FOOTPRINT),
             RestoreFootprintOp = ToRestoreFootprintOperationXdr()
         };
         return body;
@@ -53,12 +56,13 @@ public class RestoreFootprintOperation : Operation
 
     public class Builder
     {
-        private ExtensionPoint _extensionPoint = new ExtensionPointZero();
+        private ExtensionPoint? _extensionPoint;
 
         private KeyPair? _sourceAccount;
 
-        public Builder()
+        public Builder(ExtensionPoint? extensionPoint = null)
         {
+            _extensionPoint = extensionPoint;
         }
 
         public Builder(RestoreFootprintOp operationXdr)
@@ -80,12 +84,7 @@ public class RestoreFootprintOperation : Operation
 
         public RestoreFootprintOperation Build()
         {
-            if (_extensionPoint == null)
-                throw new InvalidOperationException("Extension point cannot be null");
-            var operation = new RestoreFootprintOperation
-            {
-                ExtensionPoint = _extensionPoint
-            };
+            var operation = new RestoreFootprintOperation(_extensionPoint ?? new ExtensionPointZero());
             if (_sourceAccount != null) operation.SourceAccount = _sourceAccount;
             return operation;
         }

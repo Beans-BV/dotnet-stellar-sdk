@@ -32,20 +32,20 @@ public class CreatePassiveSellOfferOperation : Operation
 
     public override sdkxdr.Operation.OperationBody ToOperationBody()
     {
-        var op = new sdkxdr.CreatePassiveSellOfferOp();
-        op.Selling = Selling.ToXdr();
-        op.Buying = Buying.ToXdr();
-        var amount = new sdkxdr.Int64();
-        amount.InnerValue = ToXdrAmount(Amount);
-        op.Amount = amount;
-        var price = stellar_dotnet_sdk.Price.FromString(Price);
-        op.Price = price.ToXdr();
-
-        var body = new sdkxdr.Operation.OperationBody();
-        body.Discriminant =
-            sdkxdr.OperationType.Create(sdkxdr.OperationType.OperationTypeEnum.CREATE_PASSIVE_SELL_OFFER);
-        body.CreatePassiveSellOfferOp = op;
-
+        var body = new sdkxdr.Operation.OperationBody
+        {
+            Discriminant = sdkxdr.OperationType.Create(sdkxdr.OperationType.OperationTypeEnum.CREATE_PASSIVE_SELL_OFFER),
+            CreatePassiveSellOfferOp = new sdkxdr.CreatePassiveSellOfferOp
+            {
+                Selling = Selling.ToXdr(),
+                Buying = Buying.ToXdr(),
+                Amount = new sdkxdr.Int64
+                {
+                    InnerValue = ToXdrAmount(Amount)
+                },
+                Price = stellar_dotnet_sdk.Price.FromString(Price).ToXdr(),
+            },
+        };
         return body;
     }
 
@@ -58,7 +58,6 @@ public class CreatePassiveSellOfferOperation : Operation
         private readonly string _amount;
         private readonly Asset _buying;
         private readonly string _price;
-
         private readonly Asset _selling;
 
         private KeyPair? _mSourceAccount;

@@ -43,13 +43,15 @@ public class LedgerEntryTrustline : LedgerEntry
     private static LedgerEntryTrustline FromXdr(TrustLineEntry xdrTrustLineEntry)
     {
         var ledgerEntryTrustLine = new LedgerEntryTrustline(
-            KeyPair.FromXdrPublicKey(xdrTrustLineEntry.AccountID.InnerValue),
-            TrustlineAsset.FromXdr(xdrTrustLineEntry.Asset),
-            xdrTrustLineEntry.Balance.InnerValue,
-            xdrTrustLineEntry.Limit.InnerValue,
-            xdrTrustLineEntry.Flags.InnerValue);
+            account: KeyPair.FromXdrPublicKey(xdrTrustLineEntry.AccountID.InnerValue),
+            asset: TrustlineAsset.FromXdr(xdrTrustLineEntry.Asset),
+            balance: xdrTrustLineEntry.Balance.InnerValue,
+            limit: xdrTrustLineEntry.Limit.InnerValue,
+            flags: xdrTrustLineEntry.Flags.InnerValue);
+
         if (xdrTrustLineEntry.Ext.Discriminant == 1)
             ledgerEntryTrustLine.TrustlineExtensionV1 = TrustlineEntryExtensionV1.FromXdr(xdrTrustLineEntry.Ext.V1);
+
         return ledgerEntryTrustLine;
     }
 }

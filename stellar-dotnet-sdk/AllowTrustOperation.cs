@@ -122,21 +122,20 @@ public class AllowTrustOperation : Operation
             }
 
             var trustlineFlag = op.Authorize.InnerValue;
-
-            if (trustlineFlag == (uint)TrustLineFlags.TrustLineFlagsEnum.AUTHORIZED_FLAG)
+            switch (trustlineFlag)
             {
-                _authorize = true;
-                _authorizeToMaintainLiabilities = false;
-            }
-            else if (trustlineFlag == (uint)TrustLineFlags.TrustLineFlagsEnum.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG)
-            {
-                _authorize = false;
-                _authorizeToMaintainLiabilities = true;
-            }
-            else
-            {
-                _authorize = false;
-                _authorizeToMaintainLiabilities = false;
+                case (uint)TrustLineFlags.TrustLineFlagsEnum.AUTHORIZED_FLAG:
+                    _authorize = true;
+                    _authorizeToMaintainLiabilities = false;
+                    break;
+                case (uint)TrustLineFlags.TrustLineFlagsEnum.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG:
+                    _authorize = false;
+                    _authorizeToMaintainLiabilities = true;
+                    break;
+                default:
+                    _authorize = false;
+                    _authorizeToMaintainLiabilities = false;
+                    break;
             }
         }
 
