@@ -125,7 +125,7 @@ public abstract class TransactionResult
         }
     }
 
-    private static IList<OperationResult> ResultsFromXdr(xdr.OperationResult[] xdrResults)
+    private static List<OperationResult> ResultsFromXdr(xdr.OperationResult[] xdrResults)
     {
         return xdrResults.Select(OperationResult.FromXdr).ToList();
     }

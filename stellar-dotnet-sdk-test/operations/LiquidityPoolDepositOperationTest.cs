@@ -101,8 +101,6 @@ public class LiquidityPoolDepositOperationTest
         var minPrice = Price.FromString("0.01");
         var maxPrice = Price.FromString("0.02");
 
-        var op = new LiquidityPoolDepositOperation.Builder(assetAmountA, assetAmountB, minPrice, maxPrice);
-
-        Assert.ThrowsException<ArgumentException>(() => op.Build(), "Asset A must be < Asset B (Lexicographic Order)");
+        Assert.ThrowsException<ArgumentException>(() => new LiquidityPoolDepositOperation.Builder(assetAmountA, assetAmountB, minPrice, maxPrice), "Asset A must be < Asset B (Lexicographic Order)");
     }
 }

@@ -10,7 +10,6 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
     /// <summary>
     ///     Builds requests connected to operations.
     /// </summary>
-    /// <param name="serverUri"></param>
     public OperationsRequestBuilder(Uri serverUri, HttpClient httpClient)
         : base(serverUri, "operations", httpClient)
     {

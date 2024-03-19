@@ -21,7 +21,7 @@ public class LiquidityPoolDepositOperation : Operation
         MaxPrice = maxPrice ?? throw new ArgumentNullException(nameof(maxPrice), "maxPrice cannot be null");
     }
 
-    public LiquidityPoolID LiquidityPoolID { get; set; }
+    public LiquidityPoolID LiquidityPoolID { get; }
     public string MaxAmountA { get; }
     public string MaxAmountB { get; }
     public Price MinPrice { get; }
@@ -71,8 +71,9 @@ public class LiquidityPoolDepositOperation : Operation
             Price minPrice,
             Price maxPrice)
         {
-            _assetA = assetAmountA.Asset;
-            _assetB = assetAmountB.Asset;
+            _liquidityPoolID =
+                new LiquidityPoolID(LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+                    assetAmountA.Asset, assetAmountB.Asset, LiquidityPoolParameters.Fee);
             _maxAmountA = assetAmountA.Amount;
             _maxAmountB = assetAmountB.Amount;
             _minPrice = minPrice;
@@ -106,28 +107,8 @@ public class LiquidityPoolDepositOperation : Operation
 
         public LiquidityPoolDepositOperation Build()
         {
-            if (_liquidityPoolID == null)
-            {
-                if (_assetA != null && _assetB != null)
-                {
-                    _liquidityPoolID = new LiquidityPoolID(
-                        LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
-                        _assetA,
-                        _assetB,
-                        LiquidityPoolParameters.Fee);
-                }
-                else
-                {
-                    throw new InvalidOperationException("Asset A and/or Asset B cannot be null");
-                }
-            }
-
-            var operation = new LiquidityPoolDepositOperation(
-                _liquidityPoolID,
-                _maxAmountA,
-                _maxAmountB,
-                _minPrice,
-                _maxPrice);
+            var operation =
+                new LiquidityPoolDepositOperation(_liquidityPoolID, _maxAmountA, _maxAmountB, _minPrice, _maxPrice);
 
             if (_sourceAccount != null) operation.SourceAccount = _sourceAccount;
 

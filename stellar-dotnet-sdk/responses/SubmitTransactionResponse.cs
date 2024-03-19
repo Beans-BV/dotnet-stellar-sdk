@@ -92,8 +92,6 @@ public class SubmitTransactionResponse : Response
             return null;
         }
 
-        if (result.Result.Results[position] == null) return null;
-
         if (result.Result.Results[position].Tr.Discriminant.InnerValue !=
             OperationType.OperationTypeEnum.MANAGE_SELL_OFFER) return null;
 
@@ -105,6 +103,7 @@ public class SubmitTransactionResponse : Response
     /// <summary>
     ///     Additional information returned by a server.
     /// </summary>
+    [JsonObject]
     public class Extras
     {
         public Extras(string envelopeXdr, string resultXdr, ResultCodes resultCodes)
@@ -115,10 +114,10 @@ public class SubmitTransactionResponse : Response
         }
 
         [JsonProperty(PropertyName = "envelope_xdr")]
-        public string EnvelopeXdr { get; private set; }
+        public string EnvelopeXdr { get; }
 
         [JsonProperty(PropertyName = "result_xdr")]
-        public string ResultXdr { get; private set; }
+        public string ResultXdr { get; }
 
         [JsonProperty(PropertyName = "result_codes")]
         public ResultCodes ExtrasResultCodes { get; private set; }
@@ -140,10 +139,10 @@ public class SubmitTransactionResponse : Response
             }
 
             [JsonProperty(PropertyName = "transaction")]
-            public string TransactionResultCode { get; private set; }
+            public string TransactionResultCode { get; }
 
             [JsonProperty(PropertyName = "operations")]
-            public List<string> OperationsResultCodes { get; private set; }
+            public List<string> OperationsResultCodes { get; }
         }
     }
 }

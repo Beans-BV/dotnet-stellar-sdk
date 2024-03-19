@@ -419,8 +419,7 @@ public class OperationTest
         Price.FromString(price);
         long offerId = 1;
 
-        var operation = new ManageSellOfferOperation.Builder(selling, buying, amount, price)
-            .SetOfferId(offerId)
+        var operation = new ManageSellOfferOperation.Builder(selling, buying, amount, price, offerId)
             .SetSourceAccount(source)
             .Build();
 
@@ -445,8 +444,7 @@ public class OperationTest
         var priceObj = Price.FromString(price);
         long offerId = 1;
 
-        var operation = new ManageSellOfferOperation.Builder(selling, buying, amount, price)
-            .SetOfferId(offerId)
+        var operation = new ManageSellOfferOperation.Builder(selling, buying, amount, price, offerId)
             .SetSourceAccount(source)
             .Build();
 
@@ -485,8 +483,7 @@ public class OperationTest
         var priceObj = Price.FromString(price);
         long offerId = 1;
 
-        var operation = new ManageBuyOfferOperation.Builder(selling, buying, amount, price)
-            .SetOfferId(offerId)
+        var operation = new ManageBuyOfferOperation.Builder(selling, buying, amount, price, offerId)
             .SetSourceAccount(source)
             .Build();
 
@@ -754,64 +751,6 @@ public class OperationTest
     }
 
     /// <summary>
-    ///     The API didn't previously did not support the balance id type within the balance id (expected 32 bytes rather than
-    ///     the full 36).
-    ///     This tests that we can still pass in the 32 bytes for compatability and use the default type (0).
-    /// </summary>
-    [TestMethod]
-    [Obsolete]
-    public void TestClaimClaimableBalanceWithLegacyByteIdOperation()
-    {
-        // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
-        var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
-
-        var balanceId = Enumerable.Repeat((byte)0x07, 32).ToArray();
-        var operation = new ClaimClaimableBalanceOperation.Builder(balanceId)
-            .SetSourceAccount(source)
-            .Build();
-
-        var xdr = operation.ToXdr();
-
-        var parsedOperation = (ClaimClaimableBalanceOperation)Operation.FromXdr(xdr);
-        Assert.IsNotNull(operation.SourceAccount);
-        Assert.IsNotNull(parsedOperation.SourceAccount);
-        Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
-
-        Assert.AreEqual(
-            "AAAAAQAAAADg3G3hclysZlFitS+s5zWyiiJD5B0STWy5LXCj6i5yxQAAAA8AAAAABwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc=",
-            operation.ToXdrBase64());
-    }
-
-    /// <summary>
-    ///     Claim a claimable balance using the byte representation of the balance id.
-    /// </summary>
-    [TestMethod]
-    [Obsolete]
-    public void TestClaimClaimableBalanceWithByteIdOperation()
-    {
-        // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
-        var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
-
-        // Prepend type bytes (first four bytes are the balance id type)
-        var balanceId = Enumerable.Repeat((byte)0x07, 32).Prepend((byte)0).Prepend((byte)0).Prepend((byte)0)
-            .Prepend((byte)0).ToArray();
-        var operation = new ClaimClaimableBalanceOperation.Builder(balanceId)
-            .SetSourceAccount(source)
-            .Build();
-
-        var xdr = operation.ToXdr();
-
-        var parsedOperation = (ClaimClaimableBalanceOperation)Operation.FromXdr(xdr);
-        Assert.IsNotNull(operation.SourceAccount);
-        Assert.IsNotNull(parsedOperation.SourceAccount);
-        Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
-
-        Assert.AreEqual(
-            "AAAAAQAAAADg3G3hclysZlFitS+s5zWyiiJD5B0STWy5LXCj6i5yxQAAAA8AAAAABwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc=",
-            operation.ToXdrBase64());
-    }
-
-    /// <summary>
     ///     Claim a claimable balance using the string representation of the balance id.
     /// </summary>
     [TestMethod]
@@ -838,19 +777,6 @@ public class OperationTest
     public void TestClaimClaimableBalanceOperationInvalidEmptyBalanceId()
     {
         var balanceId = "";
-        var accountId = KeyPair.FromAccountId("GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN");
-
-        Assert.ThrowsException<ArgumentException>(() =>
-            new ClaimClaimableBalanceOperation.Builder(balanceId).SetSourceAccount(accountId).Build());
-    }
-
-    /// <summary>
-    ///     The first 4 bytes of the balance id are the balance id type, these are required. The default is 0x00000000.
-    /// </summary>
-    [TestMethod]
-    public void TestClaimClaimableBalanceOperationInvalidClaimableBalanceIDTypeMissing()
-    {
-        var balanceId = "6d6a0c142516a9cc7885a85c5aba3a1f4af5181cf9e7a809ac7ae5e4a58c825f";
         var accountId = KeyPair.FromAccountId("GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN");
 
         Assert.ThrowsException<ArgumentException>(() =>
@@ -946,7 +872,7 @@ public class OperationTest
     public void TestRevokeClaimableBalanceSponsorshipOperation()
     {
         var operation =
-            new RevokeLedgerEntrySponsorshipOperation.Builder("5eUFm5X7itqkrfyAmIjHK7f07NNremw4HpBAJPDQiD0=").Build();
+            new RevokeLedgerEntrySponsorshipOperation.Builder("c8789370cda62cdb5be83642f5af61829c0c77afde7d0fb7577a8f320467563f").Build();
         
         var operationXdrBase64 = operation.ToXdrBase64();
         var decodedOperation = (RevokeLedgerEntrySponsorshipOperation)Operation.FromXdrBase64(operationXdrBase64);
@@ -1042,19 +968,6 @@ public class OperationTest
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(operation.BalanceId.Length, parsedOperation.BalanceId.Length);
-    }
-
-    [TestMethod]
-    public void TestClawbackClaimableBalanceOperationLengthNotCorrect()
-    {
-        // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
-        var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
-
-        var ex = Assert.ThrowsException<ArgumentException>(() =>
-            new ClawbackClaimableBalanceOperation.Builder(new byte[34])
-                .SetSourceAccount(source)
-                .Build());
-        Assert.AreEqual("Must be 36 bytes long (Parameter 'balanceId')", ex.Message);
     }
 
     [TestMethod]

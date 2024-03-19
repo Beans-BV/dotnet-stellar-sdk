@@ -8,7 +8,7 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="ManageSellOfferOp" />.
 ///     Use <see cref="Builder" /> to create a new ManageSellOfferOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#manage-offer">Manage Offer</see>
+///     <see href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-sell-offer">Manage Offer</see>
 /// </summary>
 [Obsolete("This class has been renamed to ManageSellOfferOperation.")]
 public class ManageOfferOperation : Operation
@@ -51,8 +51,7 @@ public class ManageOfferOperation : Operation
     }
 
     /// <summary>
-    ///     Builds ManageOffer operation. If you want to update existing offer use
-    ///     <see cref="ManageSellOfferOperation.Builder.SetOfferId(long)" />.
+    ///     Builds ManageOffer operation.
     /// </summary>
     public class Builder
     {
@@ -83,8 +82,7 @@ public class ManageOfferOperation : Operation
         }
 
         /// <summary>
-        ///     Creates a new ManageSellOffer builder. If you want to update existing offer use
-        ///     <see cref="ManageSellOfferOperation.Builder.SetOfferId(long)" />.
+        ///     Creates a new ManageSellOffer builder.
         /// </summary>
         /// <param name="selling">The asset being sold in this operation</param>
         /// <param name="buying"> The asset being bought in this operation</param>

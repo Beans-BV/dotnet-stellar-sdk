@@ -8,20 +8,20 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="SetOptionsOp" />.
 ///     Use <see cref="Builder" /> to create a new SetOptionsOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#set-options">Set Options</see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#set-options">Set Options</a>
 /// </summary>
 public class SetOptionsOperation : Operation
 {
     private SetOptionsOperation(
-        KeyPair inflationDestination,
+        KeyPair? inflationDestination,
         uint? clearFlags,
         uint? setFlags,
         uint? masterKeyWeight,
         uint? lowThreshold,
         uint? mediumThreshold,
         uint? highThreshold,
-        string homeDomain,
-        SignerKey signer,
+        string? homeDomain,
+        SignerKey? signer,
         uint? signerWeight)
     {
         InflationDestination = inflationDestination;
@@ -36,7 +36,7 @@ public class SetOptionsOperation : Operation
         SignerWeight = signerWeight;
     }
 
-    public KeyPair InflationDestination { get; }
+    public KeyPair? InflationDestination { get; }
 
     public uint? ClearFlags { get; }
 
@@ -50,9 +50,9 @@ public class SetOptionsOperation : Operation
 
     public uint? HighThreshold { get; }
 
-    public string HomeDomain { get; }
+    public string? HomeDomain { get; }
 
-    public SignerKey Signer { get; }
+    public SignerKey? Signer { get; }
 
     public uint? SignerWeight { get; }
 
@@ -79,77 +79,37 @@ public class SetOptionsOperation : Operation
     public override sdkxdr.Operation.OperationBody ToOperationBody()
     {
         var op = new SetOptionsOp();
-        if (InflationDestination != null)
+        if (InflationDestination != null) op.InflationDest = new AccountID(InflationDestination.XdrPublicKey);
+
+        if (ClearFlags != null) op.ClearFlags = new Uint32(ClearFlags.Value);
+
+        if (SetFlags != null) op.SetFlags = new Uint32(SetFlags.Value);
+
+        if (MasterKeyWeight != null) op.MasterWeight = new Uint32(MasterKeyWeight.Value);
+
+        if (LowThreshold != null) op.LowThreshold = new Uint32(LowThreshold.Value);
+
+        if (MediumThreshold != null) op.MedThreshold = new Uint32(MediumThreshold.Value);
+
+        if (HighThreshold != null) op.HighThreshold = new Uint32(HighThreshold.Value);
+
+        if (HomeDomain != null) op.HomeDomain = new String32(HomeDomain);
+
+        if (Signer != null && SignerWeight != null)
         {
-            var inflationDestination = new AccountID
+            var signer = new sdkxdr.Signer
             {
-                InnerValue = InflationDestination.XdrPublicKey
+                Key = Signer,
+                Weight = new Uint32(SignerWeight.Value & 0xFF)
             };
-            op.InflationDest = inflationDestination;
-        }
-
-        if (ClearFlags != null)
-        {
-            var clearFlags = new Uint32();
-            clearFlags.InnerValue = ClearFlags.Value;
-            op.ClearFlags = clearFlags;
-        }
-
-        if (SetFlags != null)
-        {
-            var setFlags = new Uint32();
-            setFlags.InnerValue = SetFlags.Value;
-            op.SetFlags = setFlags;
-        }
-
-        if (MasterKeyWeight != null)
-        {
-            var uint32 = new Uint32();
-            uint32.InnerValue = MasterKeyWeight.Value;
-            op.MasterWeight = uint32;
-        }
-
-        if (LowThreshold != null)
-        {
-            var uint32 = new Uint32();
-            uint32.InnerValue = LowThreshold.Value;
-            op.LowThreshold = uint32;
-        }
-
-        if (MediumThreshold != null)
-        {
-            var uint32 = new Uint32();
-            uint32.InnerValue = MediumThreshold.Value;
-            op.MedThreshold = uint32;
-        }
-
-        if (HighThreshold != null)
-        {
-            var uint32 = new Uint32();
-            uint32.InnerValue = HighThreshold.Value;
-            op.HighThreshold = uint32;
-        }
-
-        if (HomeDomain != null)
-        {
-            var homeDomain = new String32();
-            homeDomain.InnerValue = HomeDomain;
-            op.HomeDomain = homeDomain;
-        }
-
-        if (Signer != null)
-        {
-            var signer = new sdkxdr.Signer();
-            var weight = new Uint32();
-            weight.InnerValue = SignerWeight.Value & 0xFF;
-            signer.Key = Signer;
-            signer.Weight = weight;
             op.Signer = signer;
         }
 
-        var body = new sdkxdr.Operation.OperationBody();
-        body.Discriminant = OperationType.Create(OperationType.OperationTypeEnum.SET_OPTIONS);
-        body.SetOptionsOp = op;
+        var body = new sdkxdr.Operation.OperationBody
+        {
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.SET_OPTIONS),
+            SetOptionsOp = op
+        };
         return body;
     }
 
@@ -161,15 +121,15 @@ public class SetOptionsOperation : Operation
     {
         private uint? _clearFlags;
         private uint? _highThreshold;
-        private string _homeDomain;
-        private KeyPair _inflationDestination;
+        private string? _homeDomain;
+        private KeyPair? _inflationDestination;
         private uint? _lowThreshold;
         private uint? _masterKeyWeight;
         private uint? _mediumThreshold;
         private uint? _setFlags;
-        private SignerKey _signer;
+        private SignerKey? _signer;
         private uint? _signerWeight;
-        private KeyPair _sourceAccount;
+        private KeyPair? _sourceAccount;
 
         public Builder(SetOptionsOp op)
         {

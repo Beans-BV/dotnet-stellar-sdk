@@ -7,7 +7,7 @@ namespace stellar_dotnet_sdk;
 ///     Represents an <see cref="AccountID" /> Encode operation.
 ///     Use <see cref="Builder" /> to create a new AccountMergeOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#account-merge">Account Merge</see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#account-merge">Account Merge</a>
 /// </summary>
 public class AccountMergeOperation : Operation
 {
@@ -49,7 +49,6 @@ public class AccountMergeOperation : Operation
         /// <summary>
         ///     Builder to build the AccountMerge Operation given an XDR OperationBody
         /// </summary>
-        /// <param name="op"></param>
         public Builder(xdr.Operation.OperationBody op)
         {
             _destination = MuxedAccount.FromXdrMuxedAccount(op.Destination);

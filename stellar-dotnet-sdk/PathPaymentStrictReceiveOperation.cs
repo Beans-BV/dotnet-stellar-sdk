@@ -8,7 +8,7 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="PathPaymentStrictReceiveOperation" />.
 ///     Use <see cref="Builder" /> to create a new PathPaymentStrictReceiveOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#path-payment">Path Payment</see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#path-payment-strict-receive">Path payment strict receive</a>
 /// </summary>
 public class PathPaymentStrictReceiveOperation : Operation
 {

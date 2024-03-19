@@ -8,7 +8,7 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="ChangeTrustOp" />.
 ///     Use <see cref="Builder" /> to create a new ChangeTrustOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#change-trust">Change Trust</see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#change-trust">Change Trust</a>
 /// </summary>
 public class ChangeTrustOperation : Operation
 {
@@ -80,37 +80,20 @@ public class ChangeTrustOperation : Operation
         public Builder(Asset asset, string? limit = null) : this(ChangeTrustAsset.Create(asset), limit)
         {
         }
-        
-        /// <summary>
-        /// Creates a new ChangeTrust builder for Liquidity pool shares type.
-        /// </summary>
-        /// <param name="assetA"></param>
-        /// <param name="assetB"></param>
-        /// <param name="feeBP">For now the only fee supported is 30.</param>
-        /// <param name="limit">
-        ///     <p>(Optional) Leave empty to default to the max int64.</p>
-        ///     <p>Set to 0 to remove the trust line.</p>
-        /// </param>
-        public Builder(Asset assetA, Asset assetB, int feeBP, string? limit = null)
-        {
-            if (feeBP != 30)
-                throw new ArgumentException("Invalid fee.", nameof(feeBP));
-            _asset = ChangeTrustAsset.Create(assetA, assetB, feeBP);
-            _limit = limit ?? MaxLimit;
-        }
-
+       
         /// <summary>
         /// Creates a new ChangeTrust builder for Liquidity pool shares type with the default fee.
         /// </summary>
         /// <param name="assetA"></param>
         /// <param name="assetB"></param>
-        /// <param name="feeBP">For now the only fee supported is 30.</param>
         /// <param name="limit">
         ///     <p>(Optional) Leave empty to default to the max int64.</p>
         ///     <p>Set to 0 to remove the trust line.</p>
         /// </param>
-        public Builder(Asset assetA, Asset assetB, string? limit = null) : this(assetA, assetB, 30, limit)
+        public Builder(Asset assetA, Asset assetB, string? limit = null)
         {
+            _asset = ChangeTrustAsset.Create(assetA, assetB, LiquidityPoolParameters.Fee);
+            _limit = limit ?? MaxLimit;
         }
         
         /// <summary>

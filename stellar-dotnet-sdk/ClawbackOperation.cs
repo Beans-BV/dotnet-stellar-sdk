@@ -5,7 +5,7 @@ namespace stellar_dotnet_sdk;
 /// <summary>
 ///     Represents a <see cref="CreateClaimableBalanceOperation" />.
 ///     Use <see cref="Builder" /> to create a new ClawbackOperation.
-///     See also: <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html">Clawback</see>
+///     See also: <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#clawback">Clawback</a>
 /// </summary>
 public class ClawbackOperation : Operation
 {

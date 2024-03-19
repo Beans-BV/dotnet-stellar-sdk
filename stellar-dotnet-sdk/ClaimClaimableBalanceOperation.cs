@@ -7,11 +7,11 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="ClaimClaimableBalanceOperation" />.
 ///     Use <see cref="Builder" /> to create a new ClaimClaimableBalanceOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html">Claim Claimable Balance</see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#claim-claimable-balance">Claim claimable balance</a>
 /// </summary>
 public class ClaimClaimableBalanceOperation : Operation
 {
-    public ClaimClaimableBalanceOperation(byte[] balanceId)
+    private ClaimClaimableBalanceOperation(byte[] balanceId)
     {
         // Backwards compat - was previously expecting no type to be set, set CLAIMABLE_BALANCE_ID_TYPE_V0 to match previous behaviour.
         if (balanceId.Length == 32)
@@ -59,27 +59,11 @@ public class ClaimClaimableBalanceOperation : Operation
         }
 
         /// <summary>
-        ///     Creates a new ClaimClaimableBalanceOperation builder.
+        ///     Constructs a new ClaimClaimableBalanceOperation builder.
         /// </summary>
-        /// <param name="balanceId">The ID of the ClaimableBalanceEntry being claimed.</param>
-        /// <exception cref="ArgumentException">when balance id is not 36 bytes.</exception>
-        public Builder(byte[] balanceId)
-        {
-            if (balanceId.Length != 36 && balanceId.Length != 32)
-                // Don't mention the 32 bytes, it's for backwards compat and shouldn't direct towards using it.
-                throw new ArgumentException("Must be 36 bytes long", nameof(balanceId));
-            _balanceId = balanceId;
-        }
-
-        /// <summary>
-        ///     Creates a new ClaimClaimableBalanceOperation builder.
-        /// </summary>
-        /// <param name="balanceId">The ID of the ClaimableBalanceEntry being claimed.</param>
-        /// <exception cref="ArgumentException">when balance id is not a hex string representing 36 bytes.</exception>
+        /// <param name="balanceId">The hex-encoded ID of the ClaimableBalanceEntry being claimed.</param>
         public Builder(string balanceId)
         {
-            if (balanceId.Length != 72)
-                throw new ArgumentException("Must be a hex string of 72 characters", nameof(balanceId));
             _balanceId = Util.HexToBytes(balanceId);
         }
 

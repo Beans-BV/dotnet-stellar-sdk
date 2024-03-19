@@ -16,20 +16,20 @@ public class Server : IDisposable
     private const string AccountRequiresMemo = "MQ=="; // "1" in base64. See SEP0029
     private const string AccountRequiresMemoKey = "config.memo_required";
     private readonly HttpClient _httpClient;
-    private readonly bool _ownHttpClient;
+    private readonly bool _internalHttpClient;
     private readonly Uri _serverUri;
 
     public Server(string uri, HttpClient httpClient)
     {
         _httpClient = httpClient;
         _serverUri = new Uri(uri);
-        _ownHttpClient = false;
+        _internalHttpClient = false;
     }
 
     public Server(string uri)
         : this(uri, CreateHttpClient())
     {
-        _ownHttpClient = true;
+        _internalHttpClient = true;
     }
 
     public AccountsRequestBuilder Accounts => new(_serverUri, _httpClient);
@@ -69,7 +69,7 @@ public class Server : IDisposable
 
     public void Dispose()
     {
-        if (_ownHttpClient) _httpClient?.Dispose();
+        if (_internalHttpClient) _httpClient?.Dispose();
     }
 
     public RootResponse Root()

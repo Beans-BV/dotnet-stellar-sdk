@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
@@ -15,25 +16,25 @@ public class SorobanServer : IDisposable
     private const string ClientNameHeader = "X-Client-Name";
     private const string ClientVersionHeader = "X-Client-Version";
     private readonly HttpClient _httpClient;
-    private readonly bool _ownHttpClient;
+    private readonly bool _internalHttpClient;
     private readonly Uri _serverUri;
 
     public SorobanServer(string uri, HttpClient httpClient)
     {
         _httpClient = httpClient;
         _serverUri = new Uri(uri);
-        _ownHttpClient = false;
+        _internalHttpClient = false;
     }
 
     public SorobanServer(string uri)
         : this(uri, CreateHttpClient())
     {
-        _ownHttpClient = true;
+        _internalHttpClient = true;
     }
 
     public void Dispose()
     {
-        if (_ownHttpClient) _httpClient.Dispose();
+        if (_internalHttpClient) _httpClient.Dispose();
     }
 
     public static HttpClient CreateHttpClient()
@@ -137,10 +138,7 @@ public class SorobanServer : IDisposable
     /// <returns>A <see cref="GetLedgerEntriesResponse" /> object containing the current values.</returns>
     public Task<GetLedgerEntriesResponse> GetLedgerEntries(LedgerKey[] keys)
     {
-        var xdrBase64Keys = new string[keys.Length];
-        for (var i = 0; i < keys.Length; i++) xdrBase64Keys[i] = keys[i].ToXdrBase64();
-
-        return SendRequest<object, GetLedgerEntriesResponse>("getLedgerEntries", new { keys = xdrBase64Keys });
+        return SendRequest<object, GetLedgerEntriesResponse>("getLedgerEntries", new { keys = keys.Select(x => x.ToXdrBase64()).ToArray() });
     }
 
     public Task<GetEventsResponse> GetEvents(GetEventsRequest request)
@@ -172,12 +170,14 @@ public class SorobanServer : IDisposable
     public Task<SimulateTransactionResponse> SimulateTransaction(Transaction transaction, uint? resourceConfig = null)
     {
         if (resourceConfig != null)
+        {
             return SendRequest<object, SimulateTransactionResponse>("simulateTransaction",
                 new
                 {
                     transaction = transaction.ToUnsignedEnvelopeXdrBase64(),
                     resourceConfig = new { instructionLeeway = resourceConfig }
                 });
+        }
 
         return SendRequest<object, SimulateTransactionResponse>("simulateTransaction",
             new

@@ -8,7 +8,7 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="AllowTrustOp" />.
 ///     Use <see cref="Builder" /> to create a new AllowTrustOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#allow-trust">Allow Trust</see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#allow-trust">Allow Trust</a>
 /// </summary>
 [Obsolete("Deprecated in favor of 'SetTrustlineFlagsOperation'")]
 public class AllowTrustOperation : Operation
@@ -32,7 +32,7 @@ public class AllowTrustOperation : Operation
     public KeyPair Trustor { get; }
 
     /// <summary>
-    ///     True to authorize the line, false to deauthorize.
+    ///     True to authorize the line, false to de-authorize.
     /// </summary>
     public bool Authorize { get; }
 
@@ -46,12 +46,11 @@ public class AllowTrustOperation : Operation
     /// <returns></returns>
     public override xdr.Operation.OperationBody ToOperationBody()
     {
-        var op = new AllowTrustOp();
-
-        // trustor
-        var trustor = new AccountID();
-        trustor.InnerValue = Trustor.XdrPublicKey;
-        op.Trustor = trustor;
+        var op = new AllowTrustOp
+        {
+            // trustor
+            Trustor = new AccountID(Trustor.XdrPublicKey)
+        };
 
         // asset
         var asset = new AssetCode();
@@ -80,9 +79,11 @@ public class AllowTrustOperation : Operation
 
         op.Authorize = trustlineFlag;
 
-        var body = new xdr.Operation.OperationBody();
-        body.Discriminant = OperationType.Create(OperationType.OperationTypeEnum.ALLOW_TRUST);
-        body.AllowTrustOp = op;
+        var body = new xdr.Operation.OperationBody
+        {
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.ALLOW_TRUST),
+            AllowTrustOp = op
+        };
         return body;
     }
 
@@ -102,7 +103,6 @@ public class AllowTrustOperation : Operation
         /// <summary>
         ///     Builder to build the AllowTrust Operation given an XDR AllowTrustOp
         /// </summary>
-        /// <param name="op"></param>
         /// <exception cref="Exception"></exception>
         public Builder(AllowTrustOp op)
         {

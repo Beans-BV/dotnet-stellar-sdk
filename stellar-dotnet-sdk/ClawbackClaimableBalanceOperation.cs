@@ -7,7 +7,7 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="ClawbackClaimableBalanceOperation" />.
 ///     Use <see cref="Builder" /> to create a new ClawbackClaimableBalanceOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html">Clawback Claimable Balance</see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#clawback-claimable-balance">Clawback Claimable Balance</a>
 /// </summary>
 public class ClawbackClaimableBalanceOperation : Operation
 {
@@ -56,11 +56,10 @@ public class ClawbackClaimableBalanceOperation : Operation
             _balanceId = op.BalanceID.V0.InnerValue;
         }
 
-        public Builder(byte[] balanceId)
-        {
-            _balanceId = balanceId;
-        }
-
+        /// <summary>
+        ///     Constructs a new ClawbackClaimableBalanceOperation builder.
+        /// </summary>
+        /// <param name="balanceId">The hex-encoded ID of the ClaimableBalanceEntry being claimed.</param>
         public Builder(string balanceId)
         {
             _balanceId = Util.HexToBytes(balanceId);

@@ -8,7 +8,9 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="ManageSellOfferOp" />.
 ///     Use <see cref="Builder" /> to create a new ManageSellOfferOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#manage-offer">Manage Offer</see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-sell-offer">
+///         Manage sell offer
+///     </a>
 /// </summary>
 public class ManageSellOfferOperation : Operation
 {
@@ -18,7 +20,6 @@ public class ManageSellOfferOperation : Operation
         Buying = buying ?? throw new ArgumentNullException(nameof(buying), "buying cannot be null");
         Amount = amount ?? throw new ArgumentNullException(nameof(amount), "amount cannot be null");
         Price = price ?? throw new ArgumentNullException(nameof(price), "price cannot be null");
-        // offerId can be null TODO Check if this is true. It may work with a null argument because then it defaults to 0, but it can be misleading.   
         OfferId = offerId;
     }
 
@@ -50,8 +51,7 @@ public class ManageSellOfferOperation : Operation
     }
 
     /// <summary>
-    ///     Builds ManageOffer operation. If you want to update existing offer use
-    ///     <see cref="ManageSellOfferOperation.Builder.SetOfferId(long)" />.
+    ///     Builds ManageOffer operation.
     /// </summary>
     public class Builder
     {
@@ -62,7 +62,7 @@ public class ManageSellOfferOperation : Operation
         private readonly Asset _selling;
 
         private KeyPair? _mSourceAccount;
-        private long _offerId;
+        private readonly long _offerId;
 
         /// <summary>
         ///     Construct a new <c>ManageOfferOperation</c> builder from a <c>ManageSellOfferOp</c> object.
@@ -82,14 +82,16 @@ public class ManageSellOfferOperation : Operation
         }
 
         /// <summary>
-        ///     Creates a new ManageSellOffer builder. If you want to update existing offer use
-        ///     <see cref="ManageSellOfferOperation.Builder.SetOfferId(long)" />.
+        ///     Creates a new ManageSellOffer builder.
         /// </summary>
         /// <param name="selling">The asset being sold in this operation</param>
         /// <param name="buying"> The asset being bought in this operation</param>
         /// <param name="amount"> Amount of selling being sold. An amount of zero will delete the offer.</param>
         /// <param name="price"> Price of 1 unit of selling in terms of buying.</param>
-        /// <param name="offerId"> If 0, will create a new offer. Existing offer id numbers can be found using the Offers for Account endpoint.</param>
+        /// <param name="offerId">
+        ///     Optional, if not provided, will create a new offer. Existing offer id numbers can be found using
+        ///     the Offers for Account endpoint.
+        /// </param>
         /// <exception cref="ArithmeticException">when amount has more than 7 decimal places.</exception>
         public Builder(Asset selling, Asset buying, string amount, string price, long? offerId = null)
         {
@@ -97,18 +99,7 @@ public class ManageSellOfferOperation : Operation
             _buying = buying ?? throw new ArgumentNullException(nameof(buying), "buying cannot be null");
             _amount = amount ?? throw new ArgumentNullException(nameof(amount), "amount cannot be null");
             _price = price ?? throw new ArgumentNullException(nameof(price), "price cannot be null");
-            _offerId = offerId ?? 0;
-        }
-
-        /// <summary>
-        ///     Sets offer ID. <code>0</code> creates a new offer. Set to existing offer ID to change it.
-        /// </summary>
-        /// <param name="offerId">
-        /// </param>
-        public Builder SetOfferId(long offerId)
-        {
-            _offerId = offerId;
-            return this;
+            _offerId = offerId ?? 0L;
         }
 
         /// <summary>

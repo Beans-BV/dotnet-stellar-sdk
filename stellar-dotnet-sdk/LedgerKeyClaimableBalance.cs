@@ -16,12 +16,12 @@ public class LedgerKeyClaimableBalance : LedgerKey
     }
 
     /// <summary>
-    /// Constructs a <c>LedgerKeyClaimableBalance</c> object from a base64-encoded string. 
+    /// Constructs a <c>LedgerKeyClaimableBalance</c> object from a hex-encoded string. 
     /// </summary>
-    /// <param name="balanceId"></param>
+    /// <param name="balanceId">Hex-encoded string of a claimable balance ID.</param>
     public LedgerKeyClaimableBalance(string balanceId)
     {
-        BalanceId = Convert.FromBase64String(balanceId);
+        BalanceId = Convert.FromHexString(balanceId);
     }
     
     // TODO: Considering changing this to string

@@ -8,10 +8,9 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="CreateAccountOp" />.
 ///     Use <see cref="Builder" /> to create a new CreateAccountOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#create-account">
-///         Create
-///         Account
-///     </see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#create-account">
+///         Create Account
+///     </a>
 /// </summary>
 public class CreateAccountOperation : Operation
 {

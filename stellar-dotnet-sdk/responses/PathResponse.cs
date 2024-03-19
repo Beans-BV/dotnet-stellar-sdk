@@ -10,23 +10,6 @@ public class PathResponse : Response
         // Used by deserializer
     }
 
-    public PathResponse(string destinationAmount, string destinationAssetType, string destinationAssetCode,
-        string destinationAssetIssuer, string sourceAmount,
-        string sourceAssetType, string sourceAssetCode, string sourceAssetIssuer, List<Asset> path,
-        PathResponseLinks links)
-    {
-        DestinationAmount = destinationAmount;
-        DestinationAssetType = destinationAssetType;
-        DestinationAssetCode = destinationAssetCode;
-        DestinationAssetIssuer = destinationAssetIssuer;
-        SourceAmount = sourceAmount;
-        SourceAssetType = sourceAssetType;
-        SourceAssetCode = sourceAssetCode;
-        SourceAssetIssuer = sourceAssetIssuer;
-        Path = path;
-        Links = links;
-    }
-
     [JsonProperty(PropertyName = "destination_amount")]
     public string DestinationAmount { get; private set; }
 

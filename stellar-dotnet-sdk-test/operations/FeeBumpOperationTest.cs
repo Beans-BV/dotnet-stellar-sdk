@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using stellar_dotnet_sdk;
@@ -54,6 +55,14 @@ public class FeeBumpOperationTest
         Assert.IsTrue(response.IsSuccess());
         Assert.IsFalse(string.IsNullOrEmpty(response.Hash));
         Assert.IsInstanceOfType(response.Result, typeof(FeeBumpTransactionResultSuccess));
+        var result = (FeeBumpTransactionResultSuccess)response.Result;
+        Assert.AreEqual("0.00002", result.FeeCharged);
+        Assert.IsInstanceOfType(result.InnerResultPair.Result, typeof(TransactionResultSuccess));
+        var innerResult = (TransactionResultSuccess)result.InnerResultPair.Result;
+        Assert.AreEqual("0.00001", innerResult.FeeCharged);
+        Assert.IsTrue(innerResult.IsSuccess);
+        Assert.AreEqual(1, innerResult.Results.Count);
+        Assert.IsInstanceOfType(innerResult.Results.First(), typeof(PaymentSuccess));
     }
 
     [TestMethod]

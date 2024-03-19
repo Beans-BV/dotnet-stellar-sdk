@@ -7,10 +7,9 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <c>CreatePassiveSellOfferOp</c>.
 ///     Use <see cref="Builder" /> to create a new CreatePassiveSellOfferOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#create-passive-offer">
-///         Manage
-///         Offer
-///     </see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#create-passive-sell-offer">
+///         Create passive sell offer
+///     </a>
 /// </summary>
 public class CreatePassiveSellOfferOperation : Operation
 {
@@ -65,7 +64,6 @@ public class CreatePassiveSellOfferOperation : Operation
         /// <summary>
         ///     Construct a new CreatePassiveOffer builder from a CreatePassiveOfferOp XDR.
         /// </summary>
-        /// <param name="op"></param>
         public Builder(sdkxdr.CreatePassiveSellOfferOp op)
         {
             _selling = Asset.FromXdr(op.Selling);

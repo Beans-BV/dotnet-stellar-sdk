@@ -9,7 +9,7 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="BumpSequenceOp" />.
 ///     Use <see cref="Builder" /> to create a new BumpSequenceOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#bump-sequence">Bump Sequence</see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#bump-sequence">Bump Sequence</a>
 /// </summary>
 public class BumpSequenceOperation : Operation
 {

@@ -13,13 +13,9 @@ public class InnerTransactionResultPair
         Result = result;
     }
 
-    private InnerTransactionResultPair()
-    {
-    }
+    public string TransactionHash { get; }
 
-    public string TransactionHash { get; set; }
-
-    public TransactionResult Result { get; set; }
+    public TransactionResult Result { get; }
 
     public static InnerTransactionResultPair FromXdr(string encoded)
     {
@@ -34,10 +30,8 @@ public class InnerTransactionResultPair
         InnerTransactionResult.Encode(writer, result.Result);
         var xdrTransaction = Convert.ToBase64String(writer.ToArray());
 
-        return new InnerTransactionResultPair
-        {
-            TransactionHash = Convert.ToBase64String(result.TransactionHash.InnerValue),
-            Result = TransactionResult.FromXdrBase64(xdrTransaction)
-        };
+        return new InnerTransactionResultPair(
+            Convert.ToBase64String(result.TransactionHash.InnerValue),
+            TransactionResult.FromXdrBase64(xdrTransaction));
     }
 }

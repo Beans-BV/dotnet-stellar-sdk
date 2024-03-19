@@ -611,7 +611,7 @@ public class LedgerEntryTest
 
         // Assert
         CollectionAssert.AreEqual(xdrDataEntry.AccountID.InnerValue.Ed25519.InnerValue,
-            decodedLedgerEntry.AccountID.XdrPublicKey.Ed25519.InnerValue);
+            decodedLedgerEntry.Account.XdrPublicKey.Ed25519.InnerValue);
         CollectionAssert.AreEqual(xdrDataEntry.DataValue.InnerValue, decodedLedgerEntry.DataValue);
         Assert.AreEqual(xdrDataEntry.DataName.InnerValue, decodedLedgerEntry.DataName);
         Assert.IsNull(decodedLedgerEntry.DataExtension); // Currently, no data entry extension is available

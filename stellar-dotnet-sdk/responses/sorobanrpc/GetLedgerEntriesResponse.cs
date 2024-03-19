@@ -5,23 +5,23 @@ namespace stellar_dotnet_sdk.responses.sorobanrpc;
 
 public class GetLedgerEntriesResponse
 {
-    [JsonProperty(PropertyName = "entries")]
-    private readonly LedgerEntryResult[]? _entryResults;
-
-    [JsonProperty(PropertyName = "latestLedger")]
-    public readonly uint? LatestLedger;
-
     public GetLedgerEntriesResponse(LedgerEntryResult[]? entryResults, uint? latestLedger)
     {
-        _entryResults = entryResults;
+        EntryResults = entryResults;
         LatestLedger = latestLedger;
     }
 
+    [JsonProperty(PropertyName = "entries")]
+    private LedgerEntryResult[]? EntryResults { get; }
+
+    [JsonProperty(PropertyName = "latestLedger")]
+    public uint? LatestLedger { get; }
+
     public LedgerEntry[]? LedgerEntries =>
-        _entryResults?.Select(x => x.LedgerEntry).ToArray();
+        EntryResults?.Select(x => x.LedgerEntry).ToArray();
 
     public LedgerKey[]? LedgerKeys =>
-        _entryResults?.Select(x => x.LedgerKey).ToArray();
+        EntryResults?.Select(x => x.LedgerKey).ToArray();
 
     /// <summary>
     ///     Represents a single entry fetched from Soroban server by method getLedgerEntries().

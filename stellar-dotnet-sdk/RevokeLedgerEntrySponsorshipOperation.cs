@@ -7,7 +7,7 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <c>RevokeSponsorshipOperation</c>.
 ///     Use <see cref="Builder" /> to create a new RevokeLedgerEntrySponsorshipOperation.
 ///     See:
-///     <a href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html">Revoke Sponsorship</a>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#revoke-sponsorship">Revoke sponsorship</a>
 /// </summary>
 public class RevokeLedgerEntrySponsorshipOperation : Operation
 {

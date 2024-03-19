@@ -4,7 +4,7 @@ namespace stellar_dotnet_sdk;
 
 public class AccountEntryExtensionV2
 {
-    private AccountEntryExtensionV2(uint numberSponsored, uint numberSponsoring, KeyPair[] signerSponsoringIDs)
+    private AccountEntryExtensionV2(uint numberSponsored, uint numberSponsoring, KeyPair?[] signerSponsoringIDs)
     {
         NumberSponsored = numberSponsored;
         NumberSponsoring = numberSponsoring;
@@ -15,7 +15,7 @@ public class AccountEntryExtensionV2
 
     public uint NumberSponsoring { get; }
 
-    public KeyPair[] SignerSponsoringIDs { get; }
+    public KeyPair?[] SignerSponsoringIDs { get; }
     public AccountEntryExtensionV3? ExtensionV3 { get; private set; }
 
     public static AccountEntryExtensionV2 FromXdr(xdr.AccountEntryExtensionV2 xdrExtensionV2)
@@ -25,7 +25,7 @@ public class AccountEntryExtensionV2
             xdrExtensionV2.NumSponsoring.InnerValue,
             xdrExtensionV2
                 .SignerSponsoringIDs
-                .Select(x => KeyPair.FromXdrPublicKey(x.InnerValue.InnerValue))
+                .Select(x => x.InnerValue != null ? KeyPair.FromXdrPublicKey(x.InnerValue.InnerValue) : null)
                 .ToArray());
         if (xdrExtensionV2.Ext.Discriminant == 3)
             entryExtensionV2.ExtensionV3 = AccountEntryExtensionV3.FromXdr(xdrExtensionV2.Ext.V3);

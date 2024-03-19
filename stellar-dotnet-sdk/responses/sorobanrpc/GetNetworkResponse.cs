@@ -9,19 +9,28 @@ namespace stellar_dotnet_sdk.responses.sorobanrpc;
 /// </summary>
 public class GetNetworkResponse
 {
-#nullable disable
+    public GetNetworkResponse(string friendbotUrl, string passphrase, int protocolVersion)
+    {
+        FriendbotUrl = friendbotUrl;
+        Passphrase = passphrase;
+        ProtocolVersion = protocolVersion;
+    }
+
     /// <summary>
     ///     (optional) The URL of this network's "friendbot" faucet.
     /// </summary>
-    [JsonProperty] public readonly string FriendbotUrl;
+    [JsonProperty]
+    public string FriendbotUrl { get; }
 
     /// <summary>
     ///     Network passphrase configured for this Soroban RPC node.
     /// </summary>
-    [JsonProperty] public readonly string Passphrase;
+    [JsonProperty]
+    public string Passphrase { get; }
 
     /// <summary>
     ///     Stellar Core protocol version associated with the latest ledger.
     /// </summary>
-    [JsonProperty] public readonly int ProtocolVersion;
+    [JsonProperty]
+    public int ProtocolVersion { get; }
 }

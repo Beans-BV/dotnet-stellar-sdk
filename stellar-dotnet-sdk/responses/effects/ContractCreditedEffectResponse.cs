@@ -4,6 +4,15 @@ namespace stellar_dotnet_sdk.responses.effects;
 
 public class ContractCreditedEffectResponse : EffectResponse
 {
+    public ContractCreditedEffectResponse(string amount, string assetCode, string assetIssuer, string assetType, string contract)
+    {
+        Amount = amount;
+        AssetCode = assetCode;
+        AssetIssuer = assetIssuer;
+        AssetType = assetType;
+        Contract = contract;
+    }
+
     [JsonProperty(PropertyName = "amount")]
     public string Amount;
 

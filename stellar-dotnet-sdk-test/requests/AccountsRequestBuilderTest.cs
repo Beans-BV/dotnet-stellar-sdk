@@ -48,12 +48,10 @@ public class AccountsRequestBuilderTest
         var jsonResponse = File.ReadAllText(Path.Combine("testdata", "account.json"));
         var fakeHttpClient = FakeHttpClient.CreateFakeHttpClient(jsonResponse);
 
-        using (var server = new Server("https://horizon-testnet.stellar.org", fakeHttpClient))
-        {
-            var account = await server.Accounts.Account("GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
+        using var server = new Server("https://horizon-testnet.stellar.org", fakeHttpClient);
+        var account = await server.Accounts.Account("GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
 
-            AccountDeserializerTest.AssertTestData(account);
-        }
+        AccountDeserializerTest.AssertTestData(account);
     }
 
     [TestMethod]

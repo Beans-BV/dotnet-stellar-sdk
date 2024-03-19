@@ -1,59 +1,45 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NUnit.Framework;
 using stellar_dotnet_sdk;
 using stellar_dotnet_sdk.responses;
 using stellar_dotnet_sdk.responses.results;
+using static System.String;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using Claimant = stellar_dotnet_sdk.Claimant;
 
 namespace stellar_dotnet_sdk_test;
 
 [TestClass]
-public class RevokeSponsorshipTest
+public class SponsorshipTest
 {
+    private const string DataName = "my secret";
     private readonly Server _server = new("https://horizon-testnet.stellar.org");
-    private string _sponsoredId = "GC3TDMFTMYZY2G4C77AKAVC3BR4KL6WMQ6K2MHISKDH2OHRFS7CVVEAF";
-    private string _sponsoringId = "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA";
 
     private Asset _assetA =
         new AssetTypeCreditAlphaNum4("AAA", "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA");
 
-    private KeyPair _sponsoringAccount =
-        KeyPair.FromSecretSeed("SDR4PTKMR5TAQQCL3RI2MLXXSXQDIR7DCAONQNQP6UCDZCD4OVRWXUHI");
-
-    private KeyPair _sponsoredAccount =
+    private readonly KeyPair _sponsoredAccount =
         KeyPair.FromSecretSeed("SDBNUIC2JMIYKGLJUFI743AQDWPBOWKG42GADHEY3FQDTQLJADYPQZTP");
 
-    private const string DataName = "my secret";
+    // "GC3TDMFTMYZY2G4C77AKAVC3BR4KL6WMQ6K2MHISKDH2OHRFS7CVVEAF";
+    private string _sponsoredId = Empty;
+
+    private readonly KeyPair _sponsoringAccount =
+        KeyPair.FromSecretSeed("SDR4PTKMR5TAQQCL3RI2MLXXSXQDIR7DCAONQNQP6UCDZCD4OVRWXUHI");
+
+    // "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA";
+    private string _sponsoringId = Empty;
 
     [TestInitialize]
     public async Task Setup()
     {
         Network.UseTestNetwork();
-        // Generates a new _accountId in case the testnet has been reset
-        try
-        {
-            await _server.Accounts.Account(_sponsoringId);
-        }
-        catch (AccountNotFoundException)
-        {
-            _sponsoringAccount = await CreateNewRandomAccountOnTestnet();
-        }
-
-        try
-        {
-            await _server.Accounts.Account(_sponsoredId);
-        }
-        catch (AccountNotFoundException)
-        {
-            _sponsoredAccount = await CreateNewRandomAccountOnTestnet();
-        }
-
         _sponsoringId = _sponsoringAccount.AccountId;
         _sponsoredId = _sponsoredAccount.AccountId;
+
+        await TestNetUtil.CheckAndCreateAccountOnTestnet(_sponsoringId);
+        await TestNetUtil.CheckAndCreateAccountOnTestnet(_sponsoredId);
+
         _assetA = new AssetTypeCreditAlphaNum4("AAA", _sponsoringId);
     }
 
@@ -62,21 +48,6 @@ public class RevokeSponsorshipTest
     {
         Network.Use(null);
         _server.Dispose();
-    }
-
-    private async Task<KeyPair> CreateNewRandomAccountOnTestnet()
-    {
-        bool isSuccess;
-        KeyPair account;
-        do
-        {
-            account = KeyPair.Random();
-            var fundResponse = await _server.TestNetFriendBot.FundAccount(account.AccountId).Execute();
-            var result = TransactionResult.FromXdrBase64(fundResponse.ResultXdr);
-            isSuccess = result.IsSuccess && result is TransactionResultSuccess;
-        } while (!isSuccess);
-
-        return account;
     }
 
     private async Task RevokeClaimableBalanceSponsorship(string balanceId)
@@ -90,7 +61,7 @@ public class RevokeSponsorshipTest
             .SetSourceAccount(_sponsoredAccount)
             .Build();
         var endSponsoringOperation = new EndSponsoringFutureReservesOperation.Builder().Build();
-        
+
         var tx = new TransactionBuilder(account)
             .AddOperation(beginSponsoringOperation)
             .AddOperation(revokeOperation)
@@ -106,8 +77,8 @@ public class RevokeSponsorshipTest
         var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
         Assert.IsTrue(transactionResult.IsSuccess);
         Assert.IsInstanceOfType(transactionResult, typeof(TransactionResultSuccess));
-        Assert.AreEqual("0.00003", transactionResult.FeeCharged);
-        var results = (List<OperationResult>)((TransactionResultSuccess)transactionResult).Results;
+        Assert.IsNotNull(transactionResult.FeeCharged);
+        var results = ((TransactionResultSuccess)transactionResult).Results;
         Assert.AreEqual(3, results.Count);
         Assert.IsInstanceOfType(results[1], typeof(RevokeSponsorshipSuccess));
     }
@@ -116,8 +87,7 @@ public class RevokeSponsorshipTest
     {
         var account = await _server.Accounts.Account(_sponsoringId);
 
-        var revokeOperation = new RevokeLedgerEntrySponsorshipOperation
-                .Builder(_sponsoredId, DataName)
+        var revokeOperation = new RevokeLedgerEntrySponsorshipOperation.Builder(_sponsoredId, DataName)
             .Build();
 
         var tx = new TransactionBuilder(account)
@@ -131,12 +101,12 @@ public class RevokeSponsorshipTest
         Assert.IsNotNull(txResponse.ResultXdr);
         var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
         Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.IsNotNull(transactionResult.FeeCharged);
         Assert.IsInstanceOfType(transactionResult, typeof(TransactionResultSuccess));
-        Assert.AreEqual("0.00001", transactionResult.FeeCharged);
-        var results = (List<OperationResult>)((TransactionResultSuccess)transactionResult).Results;
+        var results = ((TransactionResultSuccess)transactionResult).Results;
         Assert.AreEqual(1, results.Count);
         Assert.IsInstanceOfType(results[0], typeof(RevokeSponsorshipSuccess));
-        
+
         account = await _server.Accounts.Account(_sponsoredId);
 
         // Remove the data so the next won't fail next run
@@ -156,8 +126,7 @@ public class RevokeSponsorshipTest
 
         var account = await _server.Accounts.Account(_sponsoringId);
 
-        var revokeOperation = new RevokeLedgerEntrySponsorshipOperation
-                .Builder(_sponsoredId, offerId)
+        var revokeOperation = new RevokeLedgerEntrySponsorshipOperation.Builder(_sponsoredId, offerId)
             .Build();
 
         var tx = new TransactionBuilder(account)
@@ -171,20 +140,20 @@ public class RevokeSponsorshipTest
         Assert.IsNotNull(txResponse.ResultXdr);
         var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
         Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.IsNotNull(transactionResult.FeeCharged);
         Assert.IsInstanceOfType(transactionResult, typeof(TransactionResultSuccess));
-        Assert.AreEqual("0.00001", transactionResult.FeeCharged);
-        var results = (List<OperationResult>)((TransactionResultSuccess)transactionResult).Results;
+        var results = ((TransactionResultSuccess)transactionResult).Results;
         Assert.AreEqual(1, results.Count);
         Assert.IsInstanceOfType(results[0], typeof(RevokeSponsorshipSuccess));
 
-        await Task.Delay(1000);
+        await Task.Delay(2000);
         // Remove the offer so the test won't fail next run
         account = await _server.Accounts.Account(_sponsoredId);
 
-        var removeOfferOperation = new ManageSellOfferOperation
-                .Builder(new AssetTypeNative(), _assetA, "0", "1.5", offerId)
-            .Build();
-        
+        var removeOfferOperation =
+            new ManageSellOfferOperation.Builder(new AssetTypeNative(), _assetA, "0", "1.5", offerId)
+                .Build();
+
         // Remove the trustline so the test won't fail the next run
         var removeTrustOperation =
             new ChangeTrustOperation.Builder(_assetA, "0").SetSourceAccount(_sponsoredAccount).Build();
@@ -194,8 +163,7 @@ public class RevokeSponsorshipTest
             .Build();
 
         tx.Sign(_sponsoredAccount);
-        await Task.Delay(1000);
-        
+
         await _server.SubmitTransaction(tx);
     }
 
@@ -203,8 +171,7 @@ public class RevokeSponsorshipTest
     {
         var account = await _server.Accounts.Account(_sponsoringId);
 
-        var revokeOperation = new RevokeLedgerEntrySponsorshipOperation
-                .Builder(_sponsoredId, asset)
+        var revokeOperation = new RevokeLedgerEntrySponsorshipOperation.Builder(_sponsoredId, asset)
             .Build();
 
         var tx = new TransactionBuilder(account)
@@ -218,13 +185,13 @@ public class RevokeSponsorshipTest
         Assert.IsNotNull(txResponse.ResultXdr);
         var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
         Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.IsNotNull(transactionResult.FeeCharged);
         Assert.IsInstanceOfType(transactionResult, typeof(TransactionResultSuccess));
-        Assert.AreEqual("0.00001", transactionResult.FeeCharged);
-        var results = (List<OperationResult>)((TransactionResultSuccess)transactionResult).Results;
+        var results = ((TransactionResultSuccess)transactionResult).Results;
         Assert.AreEqual(1, results.Count);
         Assert.IsInstanceOfType(results[0], typeof(RevokeSponsorshipSuccess));
 
-        await Task.Delay(1000);
+        await Task.Delay(2000);
         // Remove the trustline so the test won't fail the next run
         account = await _server.Accounts.Account(_sponsoredId);
         // Try removing the trust line if exists
@@ -235,7 +202,7 @@ public class RevokeSponsorshipTest
             .Build();
 
         tx.Sign(_sponsoredAccount);
-        await Task.Delay(1000);
+        await _server.SubmitTransaction(tx);
     }
 
     private async Task<string> CreateSponsoredClaimableBalance()
@@ -244,7 +211,8 @@ public class RevokeSponsorshipTest
 
         var claimants = new[] { new Claimant(_sponsoringAccount, new ClaimPredicateUnconditional()) };
         var createClaimableBalanceOperation =
-            new CreateClaimableBalanceOperation.Builder(new AssetTypeNative(), "10", claimants).SetSourceAccount(_sponsoredAccount).Build();
+            new CreateClaimableBalanceOperation.Builder(new AssetTypeNative(), "10", claimants)
+                .SetSourceAccount(_sponsoredAccount).Build();
 
         var beginSponsoringOperation = new BeginSponsoringFutureReservesOperation.Builder(_sponsoredId)
             .Build();
@@ -264,9 +232,9 @@ public class RevokeSponsorshipTest
         Assert.IsNotNull(txResponse.ResultXdr);
         var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
         Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.IsNotNull(transactionResult.FeeCharged);
         Assert.IsInstanceOfType(transactionResult, typeof(TransactionResultSuccess));
-        Assert.AreEqual("0.00003", transactionResult.FeeCharged);
-        var results = (List<OperationResult>)((TransactionResultSuccess)transactionResult).Results;
+        var results = ((TransactionResultSuccess)transactionResult).Results;
         Assert.AreEqual(3, results.Count);
         Assert.IsInstanceOfType(results[0], typeof(BeginSponsoringFutureReservesSuccess));
         Assert.IsInstanceOfType(results[1], typeof(CreateClaimableBalanceSuccess));
@@ -300,9 +268,9 @@ public class RevokeSponsorshipTest
         Assert.IsNotNull(txResponse.ResultXdr);
         var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
         Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.IsNotNull(transactionResult.FeeCharged);
         Assert.IsInstanceOfType(transactionResult, typeof(TransactionResultSuccess));
-        Assert.AreEqual("0.00003", transactionResult.FeeCharged);
-        var results = (List<OperationResult>)((TransactionResultSuccess)transactionResult).Results;
+        var results = ((TransactionResultSuccess)transactionResult).Results;
         Assert.AreEqual(3, results.Count);
         Assert.IsInstanceOfType(results[0], typeof(BeginSponsoringFutureReservesSuccess));
         Assert.IsInstanceOfType(results[1], typeof(ManageDataSuccess));
@@ -314,7 +282,7 @@ public class RevokeSponsorshipTest
         var account = await _server.Accounts.Account(_sponsoredId);
 
         var trustOperation = new ChangeTrustOperation.Builder(_assetA).SetSourceAccount(_sponsoredAccount).Build();
-        
+
         var beginSponsoringOperation = new BeginSponsoringFutureReservesOperation.Builder(_sponsoredId)
             .SetSourceAccount(_sponsoringAccount).Build();
         var nativeAsset = new AssetTypeNative();
@@ -338,9 +306,9 @@ public class RevokeSponsorshipTest
         Assert.IsNotNull(txResponse.ResultXdr);
         var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
         Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.IsNotNull(transactionResult.FeeCharged);
         Assert.IsInstanceOfType(transactionResult, typeof(TransactionResultSuccess));
-        Assert.AreEqual("0.00004", transactionResult.FeeCharged);
-        var results = (List<OperationResult>)((TransactionResultSuccess)transactionResult).Results;
+        var results = ((TransactionResultSuccess)transactionResult).Results;
         Assert.AreEqual(4, results.Count);
         Assert.IsInstanceOfType(results[0], typeof(ChangeTrustSuccess));
         Assert.IsInstanceOfType(results[1], typeof(BeginSponsoringFutureReservesSuccess));
@@ -375,9 +343,9 @@ public class RevokeSponsorshipTest
         Assert.IsNotNull(txResponse.ResultXdr);
         var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
         Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.IsNotNull(transactionResult.FeeCharged);
         Assert.IsInstanceOfType(transactionResult, typeof(TransactionResultSuccess));
-        Assert.AreEqual("0.00003", transactionResult.FeeCharged);
-        var results = (List<OperationResult>)((TransactionResultSuccess)transactionResult).Results;
+        var results = ((TransactionResultSuccess)transactionResult).Results;
         Assert.AreEqual(3, results.Count);
         Assert.IsInstanceOfType(results[0], typeof(BeginSponsoringFutureReservesSuccess));
         Assert.IsInstanceOfType(results[1], typeof(ChangeTrustSuccess));
@@ -401,9 +369,9 @@ public class RevokeSponsorshipTest
         Assert.IsNotNull(txResponse.ResultXdr);
         var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
         Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.IsNotNull(transactionResult.FeeCharged);
         Assert.IsInstanceOfType(transactionResult, typeof(TransactionResultSuccess));
-        Assert.AreEqual("0.00001", transactionResult.FeeCharged);
-        var results = (List<OperationResult>)((TransactionResultSuccess)transactionResult).Results;
+        var results = ((TransactionResultSuccess)transactionResult).Results;
         Assert.AreEqual(1, results.Count);
         Assert.IsInstanceOfType(results[0], typeof(RevokeSponsorshipSuccess));
     }

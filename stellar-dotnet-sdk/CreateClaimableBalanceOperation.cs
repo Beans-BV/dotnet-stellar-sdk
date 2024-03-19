@@ -7,7 +7,7 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="CreateClaimableBalanceOperation" />.
 ///     Use <see cref="Builder" /> to create a new CreateClaimableBalanceOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html">Create Claimable Balance</see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#create-claimable-balance">Create Claimable Balance</a>
 /// </summary>
 public class CreateClaimableBalanceOperation : Operation
 {
@@ -41,7 +41,7 @@ public class CreateClaimableBalanceOperation : Operation
     }
 
     /// <summary>
-    ///     Builds CreatePassiveSellOfferOperation operation.
+    ///     Builder for <c>CreateClaimableBalanceOperation</c> operation.
     /// </summary>
     /// <see cref="CreateClaimableBalanceOperation" />
     public class Builder

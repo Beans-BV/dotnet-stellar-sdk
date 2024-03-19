@@ -12,28 +12,44 @@ public class GetTransactionResponse
         FAILED
     }
 
-    public int ApplicationOrder;
+    public GetTransactionResponse(int applicationOrder, long createdAt, string? envelopeXdr, bool feeBump, long latestLedger, long latestLedgerCloseTime, long ledger, long oldestLedger, long oldestLedgerCloseTime, string? resultMetaXdr, string? resultXdr, GetTransactionStatus status)
+    {
+        ApplicationOrder = applicationOrder;
+        CreatedAt = createdAt;
+        EnvelopeXdr = envelopeXdr;
+        FeeBump = feeBump;
+        LatestLedger = latestLedger;
+        LatestLedgerCloseTime = latestLedgerCloseTime;
+        Ledger = ledger;
+        OldestLedger = oldestLedger;
+        OldestLedgerCloseTime = oldestLedgerCloseTime;
+        ResultMetaXdr = resultMetaXdr;
+        ResultXdr = resultXdr;
+        Status = status;
+    }
 
-    public long CreatedAt;
+    public int ApplicationOrder { get; }
 
-    public string? EnvelopeXdr;
+    public long CreatedAt { get; }
 
-    public bool FeeBump;
+    public string? EnvelopeXdr { get; }
 
-    public long LatestLedger;
+    public bool FeeBump { get; }
 
-    public long LatestLedgerCloseTime;
+    public long LatestLedger { get; }
 
-    public long Ledger;
+    public long LatestLedgerCloseTime { get; }
 
-    public long OldestLedger;
+    public long Ledger { get; }
 
-    public long OldestLedgerCloseTime;
+    public long OldestLedger { get; }
 
-    public string? ResultMetaXdr;
+    public long OldestLedgerCloseTime { get; }
 
-    public string? ResultXdr;
-    public GetTransactionStatus Status;
+    public string? ResultMetaXdr { get; }
+
+    public string? ResultXdr { get; }
+    public GetTransactionStatus Status { get; }
 
     public SCVal? ResultValue
     {
@@ -43,11 +59,29 @@ public class GetTransactionResponse
 
             var bytes = Convert.FromBase64String(ResultMetaXdr);
             var reader = new XdrDataInputStream(bytes);
-            var meta = TransactionMeta.Decode(reader);
+            var meta = xdr.TransactionMeta.Decode(reader);
             return meta.V3?.SorobanMeta?.ReturnValue == null ? null : SCVal.FromXdr(meta.V3.SorobanMeta.ReturnValue);
         }
     }
 
+    /// <summary>
+    /// Holds the diagnostic information, useful for debugging purpose when the transaction fails.
+    /// </summary>
+    public TransactionMetaV3? TransactionMeta
+    {
+        get
+        {
+            if (ResultMetaXdr == null) return null;
+            try
+            {
+                return TransactionMetaV3.FromXdrBase64(ResultMetaXdr);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+    }
     public string? WasmId
     {
         get

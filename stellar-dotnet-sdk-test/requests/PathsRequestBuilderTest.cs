@@ -47,17 +47,15 @@ public class PathsRequestBuilderTest
         var jsonResponse = await File.ReadAllTextAsync(Path.Combine("testdata", "pathsPage.json"));
         var fakeHttpClient = FakeHttpClient.CreateFakeHttpClient(jsonResponse);
 
-        using (var server = new Server("https://horizon-testnet.stellar.org", fakeHttpClient))
-        {
+        using var server = new Server("https://horizon-testnet.stellar.org", fakeHttpClient);
 #pragma warning disable 0618
-            var account = await server.Paths
+        var account = await server.Paths
 #pragma warning restore 0618
-                .SourceAccount("GD4KO3IOYYWIYVI236Y35K2DU6VNYRH3BPNFJSH57J5BLLCQHBIOK3IN")
-                .DestinationAccount("GB24QI3BJNKBY4YNJZ2I37HFIYK56BL2OURFML76X46RQQKDLVT7WKJF")
-                .DestinationAmount("20")
-                .Execute();
+            .SourceAccount("GD4KO3IOYYWIYVI236Y35K2DU6VNYRH3BPNFJSH57J5BLLCQHBIOK3IN")
+            .DestinationAccount("GB24QI3BJNKBY4YNJZ2I37HFIYK56BL2OURFML76X46RQQKDLVT7WKJF")
+            .DestinationAmount("20")
+            .Execute();
 
-            PathsPageDeserializerTest.AssertTestData(account);
-        }
+        PathsPageDeserializerTest.AssertTestData(account);
     }
 }

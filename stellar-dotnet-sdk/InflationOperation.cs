@@ -6,8 +6,9 @@ namespace stellar_dotnet_sdk;
 /// <summary>
 ///     Use <see cref="Builder" /> to create a new InflationOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#inflation">Inflation</see>
+///     <see href="https://developers.stellar.org/docs/learn/encyclopedia/inflation">Inflation</see>
 /// </summary>
+[Obsolete("This operation is deprecated as of Protocol 17- prefer SetTrustlineFlags instead.")]
 public class InflationOperation : Operation
 {
     public override xdr.Operation.OperationBody ToOperationBody()

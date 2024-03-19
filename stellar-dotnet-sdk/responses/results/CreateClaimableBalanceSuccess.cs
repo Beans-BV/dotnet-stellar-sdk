@@ -9,7 +9,7 @@ public class CreateClaimableBalanceSuccess : CreateClaimableBalanceResult
 {
     public CreateClaimableBalanceSuccess(byte[] balanceId)
     {
-        BalanceId = Convert.ToBase64String(balanceId);
+        BalanceId = Convert.ToHexString(balanceId);
     } 
     
     public override bool IsSuccess => true;

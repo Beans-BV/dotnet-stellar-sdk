@@ -8,7 +8,7 @@ namespace stellar_dotnet_sdk.responses;
 /// </summary>
 public class TransactionResultSuccess : TransactionResult
 {
-    public TransactionResultSuccess(string feeCharged, ICollection<OperationResult> results)
+    public TransactionResultSuccess(string feeCharged, List<OperationResult> results)
     {
         FeeCharged = feeCharged;
         Results = results;
@@ -16,5 +16,5 @@ public class TransactionResultSuccess : TransactionResult
 
     public override bool IsSuccess => true;
 
-    public ICollection<OperationResult> Results { get; }
+    public List<OperationResult> Results { get; }
 }

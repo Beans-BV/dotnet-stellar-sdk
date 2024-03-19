@@ -9,7 +9,7 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="ManageDataOp" />.
 ///     Use <see cref="Builder" /> to create a new ManageDataOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#manage-data">Manage Data</see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-data">Manage Data</a>
 /// </summary>
 public class ManageDataOperation : Operation
 {

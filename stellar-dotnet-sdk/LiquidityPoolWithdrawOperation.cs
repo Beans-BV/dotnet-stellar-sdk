@@ -19,10 +19,10 @@ public class LiquidityPoolWithdrawOperation : Operation
         MinAmountB = minAmountB ?? throw new ArgumentNullException(nameof(minAmountB), "minAmountB cannot be null");
     }
 
-    public LiquidityPoolID LiquidityPoolID { get; set; }
-    public string Amount { get; set; }
-    public string MinAmountA { get; set; }
-    public string MinAmountB { get; set; }
+    public LiquidityPoolID LiquidityPoolID { get; }
+    public string Amount { get; }
+    public string MinAmountA { get; }
+    public string MinAmountB { get; }
 
     public override xdr.Operation.OperationBody ToOperationBody()
     {

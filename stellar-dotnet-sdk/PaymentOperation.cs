@@ -8,7 +8,7 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="PaymentOp" /> operation.
 ///     Use <see cref="Builder" /> to create a new PaymentOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#payment">Payment</see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#payment">Payment</a>
 /// </summary>
 public class PaymentOperation : Operation
 {

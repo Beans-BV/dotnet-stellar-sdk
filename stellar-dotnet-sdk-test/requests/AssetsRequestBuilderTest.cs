@@ -46,16 +46,14 @@ public class AssetsRequestBuilderTest
     [TestMethod]
     public async Task TestAssetExecute()
     {
-        var jsonResponse = File.ReadAllText(Path.Combine("testdata", "assetPage.json"));
+        var jsonResponse = await File.ReadAllTextAsync(Path.Combine("testdata", "assetPage.json"));
         var fakeHttpClient = FakeHttpClient.CreateFakeHttpClient(jsonResponse);
 
-        using (var server = new Server("https://horizon-testnet.stellar.org", fakeHttpClient))
-        {
-            //the assetcode string really doesn't matter for testing, as the response is static for testing purposes...
-            var assetsPage = await server.Assets.AssetCode("")
-                .Execute();
+        using var server = new Server("https://horizon-testnet.stellar.org", fakeHttpClient);
+        // the asset code string really doesn't matter for testing, as the response is static for testing purposes...
+        var assetsPage = await server.Assets.AssetCode("")
+            .Execute();
 
-            AssetPageDeserializerTest.AssertTestData(assetsPage);
-        }
+        AssetPageDeserializerTest.AssertTestData(assetsPage);
     }
 }

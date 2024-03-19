@@ -97,6 +97,6 @@ public class LiquidityPoolWithdrawOperationTest
             new LiquidityPoolWithdrawOperation.Builder(assetAmountB, assetAmountA, "100")
                 .SetSourceAccount(source)
                 .Build());
-        Assert.AreEqual("Asset A must be < Asset B (Lexicographic Order)", ex.Message);
+        Assert.AreEqual("Invalid Liquidity Pool ID", ex.Message);
     }
 }

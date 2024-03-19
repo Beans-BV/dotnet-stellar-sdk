@@ -24,13 +24,13 @@ public class Predicate
     [JsonProperty(PropertyName = "not")] public Predicate? Not { get; set; }
 
     [JsonProperty(PropertyName = "unconditional")]
-    public bool Unconditional { get; set; }
+    public bool Unconditional { get; }
 
     [JsonProperty(PropertyName = "abs_before")]
-    public string? AbsBefore { get; set; }
+    public string? AbsBefore { get; }
 
     [JsonProperty(PropertyName = "rel_before")]
-    public long? RelBefore { get; set; }
+    public long? RelBefore { get; }
 
     public ClaimPredicate ToClaimPredicate()
     {

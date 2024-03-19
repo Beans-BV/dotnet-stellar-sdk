@@ -5,21 +5,21 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerEntryData : LedgerEntry
 {
-    private LedgerEntryData(KeyPair accountID, string dataName, byte[] dataValue)
+    private LedgerEntryData(KeyPair account, string dataName, byte[] dataValue)
     {
         if (dataValue.Length > 64)
             throw new ArgumentException("Data value cannot exceed 64 bytes.", nameof(dataValue));
         if (dataName.Length > 64)
             throw new ArgumentException("Data name cannot exceed 64 characters.", nameof(dataName));
 
-        AccountID = accountID;
+        Account = account;
         DataName = dataName;
         DataValue = dataValue;
     }
 
     public byte[] DataValue { get; }
 
-    public new KeyPair AccountID { get; }
+    public new KeyPair Account { get; }
 
     public string DataName { get; }
 
@@ -41,9 +41,9 @@ public class LedgerEntryData : LedgerEntry
     private static LedgerEntryData FromXdr(DataEntry xdrDataEntry)
     {
         var ledgerEntryData = new LedgerEntryData(
-            accountID: KeyPair.FromXdrPublicKey(xdrDataEntry.AccountID.InnerValue),
-            dataName: xdrDataEntry.DataName.InnerValue,
-            dataValue: xdrDataEntry.DataValue.InnerValue);
+            KeyPair.FromXdrPublicKey(xdrDataEntry.AccountID.InnerValue),
+            xdrDataEntry.DataName.InnerValue,
+            xdrDataEntry.DataValue.InnerValue);
 
         if (xdrDataEntry.Ext.Discriminant != 0)
             ledgerEntryData.DataExtension = DataEntryExtension.FromXdr(xdrDataEntry.Ext);

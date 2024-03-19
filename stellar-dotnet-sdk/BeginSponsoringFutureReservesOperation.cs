@@ -7,9 +7,9 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="BeginSponsoringFutureReservesOp" />.
 ///     Use <see cref="Builder" /> to create a new BeginSponsoringFutureReservesOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html">
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations">
 ///         Begin Sponsoring Futures Reserves
-///     </see>
+///     </a>
 /// </summary>
 public class BeginSponsoringFutureReservesOperation : Operation
 {

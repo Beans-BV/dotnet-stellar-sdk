@@ -59,9 +59,9 @@ public class TransactionBuilder
 
     /// <summary>
     ///     Adds a new operation to this transaction.
-    ///     See: https://www.stellar.org/developers/learn/concepts/list-of-operations.html
+    ///     See: <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations">List of Operations</a>
     /// </summary>
-    /// <param name="operation">operation</param>
+    /// <param name="operation">The operation to be added.</param>
     /// <returns>Builder object so you can chain methods.</returns>
     public TransactionBuilder AddOperation(Operation operation)
     {

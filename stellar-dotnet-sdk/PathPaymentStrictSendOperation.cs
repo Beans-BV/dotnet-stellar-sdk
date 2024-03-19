@@ -8,7 +8,7 @@ namespace stellar_dotnet_sdk;
 ///     Represents a <see cref="PathPaymentStrictSendOperation" />.
 ///     Use <see cref="Builder" /> to create a new PathPaymentStrictSendOperation.
 ///     See also:
-///     <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#path-payment">Path Payment</see>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#path-payment-strict-send">Path payment strict send</a>
 /// </summary>
 public class PathPaymentStrictSendOperation : Operation
 {

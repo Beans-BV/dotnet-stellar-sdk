@@ -14,7 +14,7 @@ public class Link
         Href = href;
     }
 
-    [JsonProperty(PropertyName = "href")] public string Href { get; set; }
+    [JsonProperty(PropertyName = "href")] public string Href { get; }
 
     [JsonIgnore] public virtual Uri Uri => new(Href);
 

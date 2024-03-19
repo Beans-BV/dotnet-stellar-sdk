@@ -19,8 +19,9 @@ public class OperationDeserializer : JsonConverter<OperationResponse>
         JsonSerializer serializer)
     {
         var jsonObject = JObject.Load(reader);
-        var type = jsonObject.GetValue("type_i").ToObject<int>();
-        var response = CreateResponse(type);
+        var type = jsonObject.GetValue("type_i");
+        if (type == null) throw new ArgumentException("JSON value for type_i is missing.", nameof(type)); 
+        var response = CreateResponse(type.ToObject<int>());
         serializer.Populate(jsonObject.CreateReader(), response);
         return response;
     }

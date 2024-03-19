@@ -13,6 +13,5 @@ public class FeeBumpTransactionResultSuccess : TransactionResult
 
     public override bool IsSuccess => true;
 
-    // TODO: Unit test
     public InnerTransactionResultPair InnerResultPair { get; }
 }

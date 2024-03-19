@@ -6,7 +6,7 @@ namespace stellar_dotnet_sdk;
 
 /// <summary>
 ///     Transaction metadata V3.
-///     See: https://soroban.stellar.org/docs/soroban-internals/events#transactionmetav3
+///     See: <a href="https://soroban.stellar.org/docs/soroban-internals/events#transactionmetav3">TransactionMetaV3</a>
 /// </summary>
 public class TransactionMetaV3
 {
