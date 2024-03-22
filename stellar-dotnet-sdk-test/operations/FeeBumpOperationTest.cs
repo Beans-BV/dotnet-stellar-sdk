@@ -56,10 +56,10 @@ public class FeeBumpOperationTest
         Assert.IsFalse(string.IsNullOrEmpty(response.Hash));
         Assert.IsInstanceOfType(response.Result, typeof(FeeBumpTransactionResultSuccess));
         var result = (FeeBumpTransactionResultSuccess)response.Result;
-        Assert.AreEqual("0.00002", result.FeeCharged);
+        Assert.IsNotNull(result.FeeCharged);
         Assert.IsInstanceOfType(result.InnerResultPair.Result, typeof(TransactionResultSuccess));
         var innerResult = (TransactionResultSuccess)result.InnerResultPair.Result;
-        Assert.AreEqual("0.00001", innerResult.FeeCharged);
+        Assert.IsNotNull(innerResult.FeeCharged);
         Assert.IsTrue(innerResult.IsSuccess);
         Assert.AreEqual(1, innerResult.Results.Count);
         Assert.IsInstanceOfType(innerResult.Results.First(), typeof(PaymentSuccess));

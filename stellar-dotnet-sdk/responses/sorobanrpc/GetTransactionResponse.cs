@@ -82,6 +82,7 @@ public class GetTransactionResponse
             }
         }
     }
+    
     public string? WasmId
     {
         get

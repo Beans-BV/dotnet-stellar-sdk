@@ -43,32 +43,30 @@ public class SorobanServerTest
 
     private readonly SorobanServer _sorobanServer = new("https://soroban-testnet.stellar.org");
 
-    // "GC3TDMFTMYZY2G4C77AKAVC3BR4KL6WMQ6K2MHISKDH2OHRFS7CVVEAF"
-    private string _accountBId = string.Empty;
-
-    // "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA";
-    private string _accountId = string.Empty;
-
-    private Asset _asset =
-        new AssetTypeCreditAlphaNum4("BBB", "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA");
-
     private readonly KeyPair _sourceAccount =
         KeyPair.FromSecretSeed("SDR4PTKMR5TAQQCL3RI2MLXXSXQDIR7DCAONQNQP6UCDZCD4OVRWXUHI");
 
     private readonly KeyPair _targetAccount =
         KeyPair.FromSecretSeed("SDBNUIC2JMIYKGLJUFI743AQDWPBOWKG42GADHEY3FQDTQLJADYPQZTP");
 
+    private Asset _asset =
+        new AssetTypeCreditAlphaNum4("BBB", "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA");
+
+    // "GC3TDMFTMYZY2G4C77AKAVC3BR4KL6WMQ6K2MHISKDH2OHRFS7CVVEAF"
+    private string TargetAccountId => _targetAccount.AccountId;
+
+    // "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA";
+    private string SourceAccountId => _sourceAccount.AccountId;
+
     [TestInitialize]
     public async Task Setup()
     {
         Network.UseTestNetwork();
-        _accountId = _sourceAccount.AccountId;
-        _accountBId = _targetAccount.AccountId;
 
-        await TestNetUtil.CheckAndCreateAccountOnTestnet(_accountId);
-        await TestNetUtil.CheckAndCreateAccountOnTestnet(_accountBId);
+        await TestNetUtil.CheckAndCreateAccountOnTestnet(SourceAccountId);
+        await TestNetUtil.CheckAndCreateAccountOnTestnet(TargetAccountId);
 
-        _asset = new AssetTypeCreditAlphaNum4("AAA", _accountId);
+        _asset = new AssetTypeCreditAlphaNum4("AAA", SourceAccountId);
     }
 
     [TestCleanup]
@@ -138,7 +136,7 @@ public class SorobanServerTest
     [TestMethod]
     public async Task TestSimulateTransactionFails()
     {
-        var account = await _server.Accounts.Account(_accountId);
+        var account = await _server.Accounts.Account(SourceAccountId);
         var address = new SCContractId(HelloContractId);
         var arg = new SCSymbol("gents");
         var functionName = new SCSymbol("hello1");
@@ -213,8 +211,8 @@ public class SorobanServerTest
     [TestMethod]
     public async Task TestGetAccount()
     {
-        var testnetAccount = await _sorobanServer.GetAccount(_accountId);
-        Assert.AreEqual(_accountId, testnetAccount.AccountId);
+        var testnetAccount = await _sorobanServer.GetAccount(SourceAccountId);
+        Assert.AreEqual(SourceAccountId, testnetAccount.AccountId);
     }
 
     [TestMethod]
@@ -372,7 +370,7 @@ public class SorobanServerTest
         var wasm = await File.ReadAllBytesAsync(wasmPath);
 
         // Load the account with the updated sequence number from Soroban server
-        var account = await _sorobanServer.GetAccount(_accountId);
+        var account = await _sorobanServer.GetAccount(SourceAccountId);
         var uploadOperation = new UploadContractOperation.Builder(wasm).SetSourceAccount(_sourceAccount).Build();
         var tx = new TransactionBuilder(account)
             .AddOperation(uploadOperation).Build();
@@ -463,7 +461,7 @@ public class SorobanServerTest
     private async Task<Tuple<long, string>> CreateContract(string contractWasmId)
     {
         await Task.Delay(2000);
-        var account = await _server.Accounts.Account(_accountId);
+        var account = await _server.Accounts.Account(SourceAccountId);
         var createContractOperation =
             new CreateContractOperation.Builder(account.AccountId, contractWasmId, null).Build();
         var tx = new TransactionBuilder(account).AddOperation(createContractOperation).Build();
@@ -560,7 +558,7 @@ public class SorobanServerTest
     private async Task InvokeContract(string contractId)
     {
         Assert.IsNotNull(contractId);
-        var account = await _server.Accounts.Account(_accountId);
+        var account = await _server.Accounts.Account(SourceAccountId);
         var address = new SCContractId(contractId);
         var arg = new SCSymbol("gents");
         var functionName = new SCSymbol("hello");
@@ -604,7 +602,7 @@ public class SorobanServerTest
     private async Task RestoreFootprint(string id)
     {
         await Task.Delay(2000);
-        var account = await _server.Accounts.Account(_accountId);
+        var account = await _server.Accounts.Account(SourceAccountId);
         var restoreOperation = new RestoreFootprintOperation.Builder().Build();
         var tx = new TransactionBuilder(account).AddOperation(restoreOperation).Build();
         LedgerKey key;
@@ -645,7 +643,7 @@ public class SorobanServerTest
     private async Task ExtendFootprintTTL(string wasmId, uint extentTo)
     {
         await Task.Delay(2000);
-        var account = await _server.Accounts.Account(_accountId);
+        var account = await _server.Accounts.Account(SourceAccountId);
 
         var extendOperation = new ExtendFootprintOperation.Builder(extentTo).Build();
         var tx = new TransactionBuilder(account).AddOperation(extendOperation).Build();
@@ -704,7 +702,7 @@ public class SorobanServerTest
 
     private async Task<string> CreateClaimableBalance()
     {
-        var account = await _sorobanServer.GetAccount(_accountId);
+        var account = await _sorobanServer.GetAccount(SourceAccountId);
         var operation = new CreateClaimableBalanceOperation.Builder(new AssetTypeNative(), "100", new Claimant[]
         {
             new(_sourceAccount, new ClaimPredicateUnconditional())
@@ -729,7 +727,7 @@ public class SorobanServerTest
 
     private async Task CreateLiquidityPoolShare(Asset assetA, Asset assetB)
     {
-        var account = await _sorobanServer.GetAccount(_accountId);
+        var account = await _sorobanServer.GetAccount(SourceAccountId);
 
         var operation = new ChangeTrustOperation.Builder(assetA, assetB).Build();
 
@@ -752,7 +750,7 @@ public class SorobanServerTest
 
     private async Task CreateTrustline(Asset asset)
     {
-        var account = await _server.Accounts.Account(_accountBId);
+        var account = await _server.Accounts.Account(TargetAccountId);
 
         var trustOperation = new ChangeTrustOperation.Builder(asset).Build();
 
@@ -777,7 +775,7 @@ public class SorobanServerTest
     [TestMethod]
     public async Task TestGetLedgerEntriesOfTypeData()
     {
-        var account = await _sorobanServer.GetAccount(_accountBId);
+        var account = await _sorobanServer.GetAccount(TargetAccountId);
 
         var manageDataOperation = new ManageDataOperation.Builder("passkey", "it's a secret").Build();
 
@@ -792,7 +790,7 @@ public class SorobanServerTest
 
         var ledgerKeyData = new LedgerKey[]
         {
-            new LedgerKeyData(_accountId, "passkey")
+            new LedgerKeyData(SourceAccountId, "passkey")
         };
         var dataResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyData);
 
@@ -809,7 +807,7 @@ public class SorobanServerTest
         Assert.AreEqual(0U, ledgerEntry.LiveUntilLedger);
         Assert.IsTrue(ledgerEntry.LastModifiedLedgerSeq > 0);
         Assert.AreEqual("it's a secret", Encoding.UTF8.GetString(ledgerEntry.DataValue));
-        Assert.AreEqual(_accountId, ledgerKey.Account.AccountId);
+        Assert.AreEqual(SourceAccountId, ledgerKey.Account.AccountId);
         Assert.IsNull(ledgerEntry.LedgerExtensionV1);
         Assert.IsNull(ledgerEntry.DataExtension);
     }
@@ -817,7 +815,7 @@ public class SorobanServerTest
     [TestMethod]
     public async Task TestGetLedgerEntriesOfTypeOffer()
     {
-        var account = await _sorobanServer.GetAccount(_accountId);
+        var account = await _sorobanServer.GetAccount(SourceAccountId);
 
         var nativeAsset = new AssetTypeNative();
         const string price = "1.5";
@@ -847,7 +845,7 @@ public class SorobanServerTest
 
         var ledgerKeyData = new LedgerKey[]
         {
-            new LedgerKeyOffer(_accountId, offerId)
+            new LedgerKeyOffer(SourceAccountId, offerId)
         };
         var dataResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyData);
 
@@ -870,7 +868,7 @@ public class SorobanServerTest
         Assert.AreEqual(((AssetTypeCreditAlphaNum4)_asset).Code, buyingAsset.Code);
         Assert.AreEqual(((AssetTypeCreditAlphaNum4)_asset).Issuer, buyingAsset.Issuer);
         Assert.AreEqual(offerId, ledgerEntry.OfferID);
-        Assert.AreEqual(_accountId, ledgerEntry.SellerID.AccountId);
+        Assert.AreEqual(SourceAccountId, ledgerEntry.SellerID.AccountId);
         Assert.AreEqual(Price.FromString(price), ledgerEntry.Price);
         Assert.AreEqual(0U, ledgerEntry.Flags);
         Assert.IsNull(ledgerEntry.LedgerExtensionV1);
@@ -905,12 +903,12 @@ public class SorobanServerTest
         Assert.IsNull(ledgerEntry.ClaimableBalanceEntryExtensionV1);
         Assert.AreEqual(1, ledgerEntry.Claimants.Length);
         var claimant = ledgerEntry.Claimants[0];
-        Assert.AreEqual(_accountId, claimant.Destination.AccountId);
+        Assert.AreEqual(SourceAccountId, claimant.Destination.AccountId);
         Assert.IsInstanceOfType(claimant.Predicate, typeof(ClaimPredicateUnconditional));
         CollectionAssert.AreEqual(Convert.FromHexString(claimableBalanceId), ledgerKey.BalanceId);
 
         var claimClaimableBalanceOperation = new ClaimClaimableBalanceOperation.Builder(claimableBalanceId).Build();
-        var account = await _sorobanServer.GetAccount(_accountId);
+        var account = await _sorobanServer.GetAccount(SourceAccountId);
         var tx = new TransactionBuilder(account).AddOperation(claimClaimableBalanceOperation).Build();
         tx.Sign(_sourceAccount);
         var txResponse = await _server.SubmitTransaction(tx);
@@ -953,7 +951,7 @@ public class SorobanServerTest
         Assert.IsInstanceOfType(parameters.AssetA, typeof(AssetTypeNative));
         Assert.IsInstanceOfType(parameters.AssetB, typeof(AssetTypeCreditAlphaNum4));
         Assert.AreEqual("AAA", ((AssetTypeCreditAlphaNum4)parameters.AssetB).Code);
-        Assert.AreEqual(_accountId, ((AssetTypeCreditAlphaNum4)parameters.AssetB).Issuer);
+        Assert.AreEqual(SourceAccountId, ((AssetTypeCreditAlphaNum4)parameters.AssetB).Issuer);
     }
 
     [TestMethod]
@@ -963,7 +961,7 @@ public class SorobanServerTest
 
         var ledgerKeys = new LedgerKey[]
         {
-            new LedgerKeyTrustline(_accountBId, _asset)
+            new LedgerKeyTrustline(TargetAccountId, _asset)
         };
         var response = await _sorobanServer.GetLedgerEntries(ledgerKeys);
 
@@ -980,7 +978,7 @@ public class SorobanServerTest
         Assert.AreEqual(0U, ledgerEntry.LiveUntilLedger);
         Assert.IsTrue(ledgerEntry.LastModifiedLedgerSeq > 0);
         Assert.AreEqual(0L, ledgerEntry.Balance);
-        Assert.AreEqual(_accountBId, ledgerEntry.Account.AccountId);
+        Assert.AreEqual(TargetAccountId, ledgerEntry.Account.AccountId);
         Assert.AreEqual(1U, ledgerEntry.Flags);
         Assert.AreEqual(long.MaxValue, ledgerEntry.Limit);
         Assert.IsNull(ledgerEntry.TrustlineExtensionV1);
