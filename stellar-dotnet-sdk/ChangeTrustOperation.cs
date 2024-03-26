@@ -2,109 +2,120 @@
 using stellar_dotnet_sdk.xdr;
 using sdkxdr = stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+/// <summary>
+///     Represents a <see cref="ChangeTrustOp" />.
+///     Use <see cref="Builder" /> to create a new ChangeTrustOperation.
+///     See also:
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#change-trust">Change Trust</a>
+/// </summary>
+public class ChangeTrustOperation : Operation
 {
-    /// <summary>
-    /// Represents a <see cref="ChangeTrustOp"/>.
-    /// Use <see cref="Builder"/> to create a new ChangeTrustOperation.
-    /// 
-    /// See also: <see href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html#change-trust">Change Trust</see>
-    /// </summary>
-    public class ChangeTrustOperation : Operation
+    public const string MaxLimit = "922337203685.4775807";
+
+    private ChangeTrustOperation(ChangeTrustAsset asset, string limit)
     {
-        public ChangeTrustAsset Asset { get; }
-        public string Limit { get; }
+        Asset = asset ?? throw new ArgumentNullException(nameof(asset), "asset cannot be null");
+        Limit = limit ?? throw new ArgumentNullException(nameof(limit), "limit cannot be null");
+    }
 
-        public const string MaxLimit = "922337203685.4775807";
+    public ChangeTrustAsset Asset { get; }
+    public string Limit { get; }
 
-        private ChangeTrustOperation(ChangeTrustAsset asset, string limit)
+    public override sdkxdr.Operation.OperationBody ToOperationBody()
+    {
+        var body = new sdkxdr.Operation.OperationBody
         {
-            Asset = asset ?? throw new ArgumentNullException(nameof(asset), "asset cannot be null");
-            Limit = limit ?? throw new ArgumentNullException(nameof(limit), "limit cannot be null");
-        }
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CHANGE_TRUST),
+            ChangeTrustOp = new ChangeTrustOp
+            {
+                Line = Asset.ToXdr(),
+                Limit = new sdkxdr.Int64
+                {
+                    InnerValue = ToXdrAmount(Limit)
+                }
+            }
+        };
+        return body;
+    }
 
-        public override sdkxdr.Operation.OperationBody ToOperationBody()
+    /// <summary>
+    ///     Builds ChangeTrust operation.
+    /// </summary>
+    /// <see cref="ChangeTrustOperation" />
+    public class Builder
+    {
+        private readonly ChangeTrustAsset _asset;
+        private readonly string _limit;
+
+        private KeyPair? _mSourceAccount;
+
+        public Builder(ChangeTrustOp op)
         {
-            var op = new sdkxdr.ChangeTrustOp();
-            op.Line = Asset.ToXdr();
-            var limit = new sdkxdr.Int64();
-            limit.InnerValue = ToXdrAmount(Limit);
-            op.Limit = limit;
-
-            var body = new sdkxdr.Operation.OperationBody();
-            body.Discriminant = sdkxdr.OperationType.Create(sdkxdr.OperationType.OperationTypeEnum.CHANGE_TRUST);
-            body.ChangeTrustOp = op;
-            return body;
+            _asset = ChangeTrustAsset.FromXdr(op.Line);
+            _limit = FromXdrAmount(op.Limit.InnerValue);
         }
 
         /// <summary>
-        ///     Builds ChangeTrust operation.
+        ///     Creates a new ChangeTrust builder.
         /// </summary>
-        /// <see cref="ChangeTrustOperation" />
-        public class Builder
+        /// <param name="asset">
+        ///     The asset of the trustline. For example, if a gateway extends a trustline of up to 200 USD to a
+        ///     user, the line is USD.
+        /// </param>
+        /// <param name="limit">
+        ///     The limit of the trustline. For example, if a gateway extends a trustline of up to 200 USD to a
+        ///     user, the limit is 200.
+        ///     <p>Leave empty to default to the max int64.</p>
+        ///     <p>Set to 0 to remove the trust line.</p>
+        /// </param>
+        /// <exception cref="ArithmeticException">When limit has more than 7 decimal places.</exception>
+        public Builder(ChangeTrustAsset asset, string? limit = null)
         {
-            private readonly ChangeTrustAsset _Asset;
-            private readonly string _Limit;
+            _asset = asset ?? throw new ArgumentNullException(nameof(asset), "asset cannot be null");
+            _limit = limit ?? MaxLimit;
+        }
 
-            private KeyPair _SourceAccount;
+        public Builder(Asset asset, string? limit = null) : this(ChangeTrustAsset.Create(asset), limit)
+        {
+        }
 
-            public Builder(sdkxdr.ChangeTrustOp op)
-            {
-                _Asset = ChangeTrustAsset.FromXdr(op.Line);
-                _Limit = FromXdrAmount(op.Limit.InnerValue);
-            }
+        /// <summary>
+        ///     Creates a new ChangeTrust builder for Liquidity pool shares type with the default fee.
+        /// </summary>
+        /// <param name="assetA"></param>
+        /// <param name="assetB"></param>
+        /// <param name="limit">
+        ///     <p>(Optional) Leave empty to default to the max int64.</p>
+        ///     <p>Set to 0 to remove the trust line.</p>
+        /// </param>
+        public Builder(Asset assetA, Asset assetB, string? limit = null)
+        {
+            _asset = ChangeTrustAsset.Create(assetA, assetB, LiquidityPoolParameters.Fee);
+            _limit = limit ?? MaxLimit;
+        }
 
-            /// <summary>
-            ///     Creates a new ChangeTrust builder.
-            /// </summary>
-            /// <param name="asset">
-            ///     The asset of the trustline. For example, if a gateway extends a trustline of up to 200 USD to a
-            ///     user, the line is USD.
-            /// </param>
-            /// <param name="limit">
-            ///     The limit of the trustline. For example, if a gateway extends a trustline of up to 200 USD to a
-            ///     user, the limit is 200.
-            /// </param>
-            /// <exception cref="ArithmeticException">When limit has more than 7 decimal places.</exception>
-            public Builder(ChangeTrustAsset asset, string limit)
-            {
-                _Asset = asset ?? throw new ArgumentNullException(nameof(asset), "asset cannot be null");
-                _Limit = limit ?? throw new ArgumentNullException(nameof(limit), "limit cannot be null");
-            }
+        /// <summary>
+        ///     Set source account of this operation
+        /// </summary>
+        /// <returns>Builder object so you can chain methods.</returns>
+        public Builder SetSourceAccount(KeyPair sourceAccount)
+        {
+            _mSourceAccount = sourceAccount ??
+                              throw new ArgumentNullException(nameof(sourceAccount), "sourceAccount cannot be null");
+            return this;
+        }
 
-            /// <summary>
-            ///     Creates a new ChangeTrust builder.
-            /// </summary>
-            /// <param name="asset">
-            ///     The asset of the trustline. For example, if a gateway extends a trustline of up to 200 USD to a
-            ///     user, the line is USD.
-            /// </param>
-            public Builder(ChangeTrustAsset asset)
-            {
-                _Asset = asset ?? throw new ArgumentNullException(nameof(asset), "asset cannot be null");
-                _Limit = MaxLimit;
-            }
-
-            /// <summary>
-            ///     Set source account of this operation
-            /// </summary>
-            /// <returns>Builder object so you can chain methods.</returns>
-            public Builder SetSourceAccount(KeyPair sourceAccount)
-            {
-                _SourceAccount = sourceAccount ?? throw new ArgumentNullException(nameof(sourceAccount), "sourceAccount cannot be null");
-                return this;
-            }
-
-            /// <summary>
-            ///     Builds an operation
-            /// </summary>
-            public ChangeTrustOperation Build()
-            {
-                var operation = new ChangeTrustOperation(_Asset, _Limit);
-                if (_SourceAccount != null)
-                    operation.SourceAccount = _SourceAccount;
-                return operation;
-            }
+        /// <summary>
+        ///     Builds an operation
+        /// </summary>
+        public ChangeTrustOperation Build()
+        {
+            var operation = new ChangeTrustOperation(_asset, _limit);
+            if (_mSourceAccount != null)
+                operation.SourceAccount = _mSourceAccount;
+            return operation;
         }
     }
 }

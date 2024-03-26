@@ -31,7 +31,7 @@ public class ClawbackResultCode
         CLAWBACK_UNDERFUNDED = -4
     }
 
-    public ClawbackResultCodeEnum InnerValue { get; set; } = default;
+    public ClawbackResultCodeEnum InnerValue { get; set; }
 
     public static ClawbackResultCode Create(ClawbackResultCodeEnum v)
     {

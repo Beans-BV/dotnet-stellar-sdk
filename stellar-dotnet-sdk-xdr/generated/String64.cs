@@ -19,7 +19,7 @@ public class String64
         InnerValue = value;
     }
 
-    public string InnerValue { get; set; } = default;
+    public string InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, String64 encodedString64)
     {

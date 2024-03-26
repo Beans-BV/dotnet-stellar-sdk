@@ -22,7 +22,7 @@ public class TxSetComponentType
         TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE = 0
     }
 
-    public TxSetComponentTypeEnum InnerValue { get; set; } = default;
+    public TxSetComponentTypeEnum InnerValue { get; set; }
 
     public static TxSetComponentType Create(TxSetComponentTypeEnum v)
     {

@@ -28,7 +28,7 @@ public class MemoType
         MEMO_RETURN = 4
     }
 
-    public MemoTypeEnum InnerValue { get; set; } = default;
+    public MemoTypeEnum InnerValue { get; set; }
 
     public static MemoType Create(MemoTypeEnum v)
     {

@@ -4,20 +4,15 @@ namespace stellar_dotnet_sdk;
 
 public class ConfigSettingContractDataKeySizeBytes : LedgerEntryConfigSetting
 {
-    public ConfigSettingContractDataKeySizeBytes(uint value)
+    private ConfigSettingContractDataKeySizeBytes(uint value)
     {
         InnerValue = value;
     }
 
     public uint InnerValue { get; }
 
-    public ConfigSettingEntry ToXdrConfigSettingEntry()
+    public static ConfigSettingContractDataKeySizeBytes FromXdr(Uint32 xdrConfig)
     {
-        return new ConfigSettingEntry
-        {
-            Discriminant =
-                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES),
-            ContractDataKeySizeBytes = new Uint32(InnerValue)
-        };
+        return new ConfigSettingContractDataKeySizeBytes(xdrConfig.InnerValue);
     }
 }

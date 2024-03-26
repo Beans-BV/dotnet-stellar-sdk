@@ -33,7 +33,7 @@ public class InvokeHostFunctionResultCode
         INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE = -5
     }
 
-    public InvokeHostFunctionResultCodeEnum InnerValue { get; set; } = default;
+    public InvokeHostFunctionResultCodeEnum InnerValue { get; set; }
 
     public static InvokeHostFunctionResultCode Create(InvokeHostFunctionResultCodeEnum v)
     {

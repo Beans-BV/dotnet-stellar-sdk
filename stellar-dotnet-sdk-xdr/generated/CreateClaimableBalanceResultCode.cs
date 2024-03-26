@@ -30,7 +30,7 @@ public class CreateClaimableBalanceResultCode
         CREATE_CLAIMABLE_BALANCE_UNDERFUNDED = -5
     }
 
-    public CreateClaimableBalanceResultCodeEnum InnerValue { get; set; } = default;
+    public CreateClaimableBalanceResultCodeEnum InnerValue { get; set; }
 
     public static CreateClaimableBalanceResultCode Create(CreateClaimableBalanceResultCodeEnum v)
     {

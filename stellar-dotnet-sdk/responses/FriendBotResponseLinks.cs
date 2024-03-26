@@ -1,10 +1,14 @@
 ﻿using Newtonsoft.Json;
 
-namespace stellar_dotnet_sdk.responses
+namespace stellar_dotnet_sdk.responses;
+
+public class FriendBotResponseLinks
 {
-    public class FriendBotResponseLinks
+    public FriendBotResponseLinks(Link<TransactionResponse> transaction)
     {
-        [JsonProperty(PropertyName = "transaction")]
-        public Link<TransactionResponse> Transaction { get; private set; }
+        Transaction = transaction;
     }
+
+    [JsonProperty(PropertyName = "transaction")]
+    public Link<TransactionResponse> Transaction { get; private set; }
 }

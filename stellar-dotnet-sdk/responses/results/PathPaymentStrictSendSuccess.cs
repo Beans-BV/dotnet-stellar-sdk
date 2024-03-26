@@ -1,37 +1,36 @@
-namespace stellar_dotnet_sdk.responses.results
+namespace stellar_dotnet_sdk.responses.results;
+
+/// <summary>
+///     Operation successful.
+/// </summary>
+public class PathPaymentStrictSendSuccess : PathPaymentStrictSendResult
 {
+    public override bool IsSuccess => true;
+
     /// <summary>
-    /// Operation successful.
+    ///     Offers claimed in this payment.
     /// </summary>
-    public class PathPaymentStrictSendSuccess : PathPaymentStrictSendResult
+    public ClaimAtom[] Offers { get; set; }
+
+    /// <summary>
+    ///     Payment result.
+    /// </summary>
+    public SimplePaymentResult Last { get; set; }
+
+    public class SimplePaymentResult
     {
-        public override bool IsSuccess => true;
+        public KeyPair Destination { get; set; }
+        public Asset Asset { get; set; }
+        public string Amount { get; set; }
 
-        /// <summary>
-        /// Offers claimed in this payment.
-        /// </summary>
-        public ClaimAtom[] Offers { get; set; }
-
-        /// <summary>
-        /// Payment result.
-        /// </summary>
-        public SimplePaymentResult Last { get; set; }
-
-        public class SimplePaymentResult
+        public static SimplePaymentResult FromXdr(xdr.SimplePaymentResult result)
         {
-            public KeyPair Destination { get; set; }
-            public Asset Asset { get; set; }
-            public string Amount { get; set; }
-
-            public static SimplePaymentResult FromXdr(xdr.SimplePaymentResult result)
+            return new SimplePaymentResult
             {
-                return new SimplePaymentResult
-                {
-                    Destination = KeyPair.FromXdrPublicKey(result.Destination.InnerValue),
-                    Asset = Asset.FromXdr(result.Asset),
-                    Amount = stellar_dotnet_sdk.Amount.FromXdr(result.Amount.InnerValue)
-                };
-            }
+                Destination = KeyPair.FromXdrPublicKey(result.Destination.InnerValue),
+                Asset = Asset.FromXdr(result.Asset),
+                Amount = stellar_dotnet_sdk.Amount.FromXdr(result.Amount.InnerValue)
+            };
         }
     }
 }

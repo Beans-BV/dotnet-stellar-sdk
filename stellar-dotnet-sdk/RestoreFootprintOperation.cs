@@ -4,14 +4,22 @@ using stellar_dotnet_sdk.xdr;
 namespace stellar_dotnet_sdk;
 
 /// <summary>
-/// Operation that restores a footprint
+///     Make archived Soroban smart contract entries accessible again by restoring them with this restore footprint
+///     operation.
+///     This operation restores the archived entries specified in the readWrite footprint.
+///     <p>Note that Soroban transactions can only contain one operation per transaction.</p>
 /// </summary>
 public class RestoreFootprintOperation : Operation
 {
-    public ExtensionPoint ExtensionPoint { get; set; }
+    public RestoreFootprintOperation(ExtensionPoint extensionPoint)
+    {
+        ExtensionPoint = extensionPoint;
+    }
+
+    public ExtensionPoint ExtensionPoint { get; }
 
     /// <summary>
-    /// Creates a new RestoreFootprintOperation object from the given base64-encoded XDR Operation.
+    ///     Creates a new RestoreFootprintOperation object from the given base64-encoded XDR Operation.
     /// </summary>
     /// <param name="xdrBase64"></param>
     /// <returns>RestoreFootprintOperation object</returns>
@@ -19,38 +27,28 @@ public class RestoreFootprintOperation : Operation
     public static RestoreFootprintOperation FromOperationXdrBase64(string xdrBase64)
     {
         var operation = FromXdrBase64(xdrBase64);
+
         if (operation == null)
             throw new InvalidOperationException("Operation XDR is invalid");
-        
         if (operation is not RestoreFootprintOperation restoreFootprintOperation)
             throw new InvalidOperationException("Operation is not RestoreFootprintOperation");
+
         return restoreFootprintOperation;
     }
 
-    public static RestoreFootprintOperation FromRestoreFootprintOperationXdr(RestoreFootprintOp xdrRestoreFootprintOp)
-    {
-        return new RestoreFootprintOperation
-        {
-            ExtensionPoint = ExtensionPoint.FromXdr(xdrRestoreFootprintOp.Ext),
-        };
-    }
-
-    public RestoreFootprintOp ToRestoreFootprintOperationXdr()
+    private RestoreFootprintOp ToRestoreFootprintOperationXdr()
     {
         return new RestoreFootprintOp
         {
             Ext = ExtensionPoint.ToXdr()
         };
     }
-    
+
     public override xdr.Operation.OperationBody ToOperationBody()
     {
         var body = new xdr.Operation.OperationBody
         {
-            Discriminant = new xdr.OperationType
-            {
-                InnerValue = xdr.OperationType.OperationTypeEnum.RESTORE_FOOTPRINT
-            },
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.RESTORE_FOOTPRINT),
             RestoreFootprintOp = ToRestoreFootprintOperationXdr()
         };
         return body;
@@ -58,12 +56,13 @@ public class RestoreFootprintOperation : Operation
 
     public class Builder
     {
-        private ExtensionPoint _extensionPoint;
-      
+        private ExtensionPoint? _extensionPoint;
+
         private KeyPair? _sourceAccount;
 
-        public Builder()
+        public Builder(ExtensionPoint? extensionPoint = null)
         {
+            _extensionPoint = extensionPoint;
         }
 
         public Builder(RestoreFootprintOp operationXdr)
@@ -76,25 +75,17 @@ public class RestoreFootprintOperation : Operation
             _sourceAccount = sourceAccount;
             return this;
         }
-    
+
         public Builder SetExtensionPoint(ExtensionPoint ext)
         {
             _extensionPoint = ext;
             return this;
         }
-     
+
         public RestoreFootprintOperation Build()
         {
-            if (_extensionPoint == null)
-                throw new InvalidOperationException("Extension point cannot be null");
-            var operation = new RestoreFootprintOperation()
-            {
-                ExtensionPoint = _extensionPoint
-            };
-            if (_sourceAccount != null)
-            {
-                operation.SourceAccount = _sourceAccount;
-            }
+            var operation = new RestoreFootprintOperation(_extensionPoint ?? new ExtensionPointZero());
+            if (_sourceAccount != null) operation.SourceAccount = _sourceAccount;
             return operation;
         }
     }

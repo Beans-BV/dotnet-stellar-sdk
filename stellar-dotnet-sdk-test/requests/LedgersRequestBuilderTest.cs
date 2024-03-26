@@ -1,52 +1,50 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using stellar_dotnet_sdk;
+using stellar_dotnet_sdk_test.responses;
 using stellar_dotnet_sdk.requests;
 using stellar_dotnet_sdk.responses;
-using stellar_dotnet_sdk_test.responses;
 
-namespace stellar_dotnet_sdk_test.requests
+namespace stellar_dotnet_sdk_test.requests;
+
+[TestClass]
+public class LedgersRequestBuilderTest
 {
-    [TestClass]
-    public class LedgersRequestBuilderTest
+    [TestMethod]
+    public void TestAccounts()
     {
-        [TestMethod]
-        public void TestAccounts()
+        using (var server = new Server("https://horizon-testnet.stellar.org"))
         {
-            using (var server = new Server("https://horizon-testnet.stellar.org"))
-            {
-                var uri = server.Ledgers
-                    .Limit(200)
-                    .Order(OrderDirection.ASC)
-                    .BuildUri();
-                Assert.AreEqual("https://horizon-testnet.stellar.org/ledgers?limit=200&order=asc", uri.ToString());
-            }
+            var uri = server.Ledgers
+                .Limit(200)
+                .Order(OrderDirection.ASC)
+                .BuildUri();
+            Assert.AreEqual("https://horizon-testnet.stellar.org/ledgers?limit=200&order=asc", uri.ToString());
         }
+    }
 
-        [TestMethod]
-        public async Task TestLedgersExecute()
+    [TestMethod]
+    public async Task TestLedgersExecute()
+    {
+        var jsonResponse = File.ReadAllText(Path.Combine("testdata", "ledgerPage.json"));
+        var fakeHttpClient = FakeHttpClient.CreateFakeHttpClient(jsonResponse);
+
+        using (var server = new Server("https://horizon-testnet.stellar.org", fakeHttpClient))
         {
-            var jsonResponse = File.ReadAllText(Path.Combine("testdata", "ledgerPage.json"));
-            var fakeHttpClient = FakeHttpClient.CreateFakeHttpClient(jsonResponse);
+            var ledgersPage = await server.Ledgers
+                .Execute();
 
-            using (var server = new Server("https://horizon-testnet.stellar.org", fakeHttpClient))
-            {
-                var ledgersPage = await server.Ledgers
-                    .Execute();
-
-                LedgerPageDeserializerTest.AssertTestData(ledgersPage);
-            }
+            LedgerPageDeserializerTest.AssertTestData(ledgersPage);
         }
+    }
 
-        [TestMethod]
-        public async Task TestStream()
-        {
-            var json = File.ReadAllText(Path.Combine("testdata", "ledger.json"));
+    [TestMethod]
+    public async Task TestStream()
+    {
+        var json = File.ReadAllText(Path.Combine("testdata", "ledger.json"));
 
-            var streamableTest = new StreamableTest<LedgerResponse>(json, LedgerDeserializeTest.AssertTestData);
-            await streamableTest.Run();
-        }
+        var streamableTest = new StreamableTest<LedgerResponse>(json, LedgerDeserializeTest.AssertTestData);
+        await streamableTest.Run();
     }
 }

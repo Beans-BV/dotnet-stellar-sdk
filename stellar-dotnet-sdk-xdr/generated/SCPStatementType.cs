@@ -26,7 +26,7 @@ public class SCPStatementType
         SCP_ST_NOMINATE = 3
     }
 
-    public SCPStatementTypeEnum InnerValue { get; set; } = default;
+    public SCPStatementTypeEnum InnerValue { get; set; }
 
     public static SCPStatementType Create(SCPStatementTypeEnum v)
     {

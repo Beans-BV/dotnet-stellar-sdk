@@ -19,7 +19,7 @@ public class SequenceNumber
         InnerValue = value;
     }
 
-    public Int64 InnerValue { get; set; } = default;
+    public Int64 InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SequenceNumber encodedSequenceNumber)
     {

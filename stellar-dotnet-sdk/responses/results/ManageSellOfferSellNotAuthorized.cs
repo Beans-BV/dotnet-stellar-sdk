@@ -1,10 +1,8 @@
-namespace stellar_dotnet_sdk.responses.results
-{
-    /// <summary>
-    /// Not authorized to sell.
-    /// </summary>
-    public class ManageSellOfferSellNotAuthorized : ManageSellOfferResult
-    {
+namespace stellar_dotnet_sdk.responses.results;
 
-    }
+/// <summary>
+///     Not authorized to sell.
+/// </summary>
+public class ManageSellOfferSellNotAuthorized : ManageSellOfferResult
+{
 }

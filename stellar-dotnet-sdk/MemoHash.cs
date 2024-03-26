@@ -1,28 +1,31 @@
 ﻿using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public class MemoHash : MemoHashAbstract
 {
-    public class MemoHash : MemoHashAbstract
+    public MemoHash(byte[] bytes) : base(bytes)
     {
-        public MemoHash(byte[] bytes) : base(bytes)
+    }
+
+    public MemoHash(string hexString) : base(hexString)
+    {
+    }
+
+    public override xdr.Memo ToXdr()
+    {
+        var memo = new xdr.Memo
         {
-        }
+            Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_HASH)
+        };
 
-        public MemoHash(string hexString) : base(hexString)
+        var hash = new Hash
         {
-        }
+            InnerValue = MemoBytes
+        };
 
-        public override xdr.Memo ToXdr()
-        {
-            var memo = new xdr.Memo();
-            memo.Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_HASH);
+        memo.Hash = hash;
 
-            var hash = new xdr.Hash();
-            hash.InnerValue = MemoBytes;
-
-            memo.Hash = hash;
-
-            return memo;
-        }
+        return memo;
     }
 }

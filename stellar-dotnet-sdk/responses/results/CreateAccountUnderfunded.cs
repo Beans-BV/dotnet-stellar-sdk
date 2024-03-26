@@ -1,10 +1,8 @@
-namespace stellar_dotnet_sdk.responses.results
-{
-    /// <summary>
-    /// Not enough funds in source account.
-    /// </summary>
-    public class CreateAccountUnderfunded : CreateAccountResult
-    {
+namespace stellar_dotnet_sdk.responses.results;
 
-    }
+/// <summary>
+///     Not enough funds in source account.
+/// </summary>
+public class CreateAccountUnderfunded : CreateAccountResult
+{
 }

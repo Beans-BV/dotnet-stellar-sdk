@@ -24,7 +24,7 @@ public class LedgerHeaderFlags
         DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG = 4
     }
 
-    public LedgerHeaderFlagsEnum InnerValue { get; set; } = default;
+    public LedgerHeaderFlagsEnum InnerValue { get; set; }
 
     public static LedgerHeaderFlags Create(LedgerHeaderFlagsEnum v)
     {

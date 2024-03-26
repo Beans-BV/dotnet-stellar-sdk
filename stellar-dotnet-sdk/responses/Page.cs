@@ -1,43 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using stellar_dotnet_sdk.requests;
 
-namespace stellar_dotnet_sdk.responses.page
+namespace stellar_dotnet_sdk.responses;
+
+/// <summary>
+///     Represents page of objects.
+///     https://www.stellar.org/developers/horizon/reference/resources/page.html
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public class Page<T> : Response
 {
-    /// <summary>
-    ///     Represents page of objects.
-    ///     https://www.stellar.org/developers/horizon/reference/resources/page.html
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class Page<T> : Response
+    public Page(EmbeddedRecords embedded, PageLinks<T> links)
     {
-        public class EmbeddedRecords
-        {
-            [JsonProperty(PropertyName = "records")]
-            public List<T> Records { get; private set; }
-        }
+        Embedded = embedded;
+        Links = links;
+    }
 
-        [JsonProperty(PropertyName = "_embedded")]
-        public EmbeddedRecords Embedded { get; set; }
+    [JsonProperty(PropertyName = "_embedded")]
+    public EmbeddedRecords Embedded { get; set; }
 
-        public List<T> Records => Embedded.Records;
+    public List<T> Records => Embedded.Records;
 
-        [JsonProperty(PropertyName = "_links")]
-        public PageLinks<T> Links { get; private set; }
+    [JsonProperty(PropertyName = "_links")]
+    public PageLinks<T> Links { get; private set; }
 
-        /// <summary>
-        ///     The previous page of results or null when there is no more results
-        /// </summary>
-        /// <returns></returns>
-        public Task<Page<T>> PreviousPage() => Links.Prev?.Follow();
+    /// <summary>
+    ///     The previous page of results or null when there is no more results
+    /// </summary>
+    /// <returns></returns>
+    public Task<Page<T>> PreviousPage()
+    {
+        return Links.Prev?.Follow();
+    }
 
-        /// <summary>
-        ///     The next page of results or null when there is no more results
-        /// </summary>
-        /// <returns></returns>
-        public Task<Page<T>> NextPage() => Links.Next?.Follow();
+    /// <summary>
+    ///     The next page of results or null when there is no more results
+    /// </summary>
+    /// <returns></returns>
+    public Task<Page<T>> NextPage()
+    {
+        return Links.Next?.Follow();
+    }
+
+    public class EmbeddedRecords
+    {
+        [JsonProperty(PropertyName = "records")]
+        public List<T> Records { get; private set; }
     }
 }

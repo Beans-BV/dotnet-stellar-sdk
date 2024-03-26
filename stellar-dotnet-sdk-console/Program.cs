@@ -17,10 +17,10 @@ public class Program
         var paymentsWithTransactions = await server.Payments.IncludeTransaction().Execute().ConfigureAwait(false);
 
         // await CreateAccount(server).ConfigureAwait(false);
-        
+
         Console.ReadLine();
     }
-    
+
     private static async Task CreateAccount(Server server)
     {
         var source = KeyPair.FromSecretSeed("{TO_BE_CONFIGURED}");
@@ -45,8 +45,10 @@ public class Program
         else
         {
             Console.WriteLine("Create account failed.");
-            Console.WriteLine("TransactionResultCode: " + response.SubmitTransactionResponseExtras.ExtrasResultCodes.TransactionResultCode ?? "null");
-            Console.WriteLine("TransactionResultCodeOperations: " + string.Join(", ", response.SubmitTransactionResponseExtras.ExtrasResultCodes.OperationsResultCodes));
+            Console.WriteLine("TransactionResultCode: " +
+                response.SubmitTransactionResponseExtras.ExtrasResultCodes.TransactionResultCode ?? "null");
+            Console.WriteLine("TransactionResultCodeOperations: " + string.Join(", ",
+                response.SubmitTransactionResponseExtras.ExtrasResultCodes.OperationsResultCodes));
         }
     }
 
@@ -57,23 +59,25 @@ public class Program
             .SetFee(DefaultFee)
             .AddOperation(new AccountMergeOperation.Builder(destination).Build())
             .Build();
-        
+
         transaction.Sign(source);
-        
+
         var feeBumpTransaction = TransactionBuilder.BuildFeeBumpTransaction(destination, transaction, DefaultFee);
-        
+
         feeBumpTransaction.Sign(destination);
-        
+
         var response = await server.SubmitTransaction(feeBumpTransaction).ConfigureAwait(false);
         if (response.IsSuccess())
         {
-            Console.WriteLine("Delete account response: " + response.Hash);    
+            Console.WriteLine("Delete account response: " + response.Hash);
         }
         else
         {
             Console.WriteLine("Delete account failed.");
-            Console.WriteLine("TransactionResultCode: " + response.SubmitTransactionResponseExtras.ExtrasResultCodes.TransactionResultCode);
-            Console.WriteLine("TransactionResultCodeOperations: " + string.Join(", ", response.SubmitTransactionResponseExtras.ExtrasResultCodes.OperationsResultCodes));
+            Console.WriteLine("TransactionResultCode: " +
+                              response.SubmitTransactionResponseExtras.ExtrasResultCodes.TransactionResultCode);
+            Console.WriteLine("TransactionResultCodeOperations: " + string.Join(", ",
+                response.SubmitTransactionResponseExtras.ExtrasResultCodes.OperationsResultCodes));
         }
     }
 }

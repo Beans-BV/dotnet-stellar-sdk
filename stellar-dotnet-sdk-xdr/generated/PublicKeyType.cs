@@ -20,7 +20,7 @@ public class PublicKeyType
         PUBLIC_KEY_TYPE_ED25519 = 0
     }
 
-    public PublicKeyTypeEnum InnerValue { get; set; } = default;
+    public PublicKeyTypeEnum InnerValue { get; set; }
 
     public static PublicKeyType Create(PublicKeyTypeEnum v)
     {
