@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <AssemblyName>StellarDotnetSdk.Console</AssemblyName>
+        <RootNamespace>StellarDotnetSdk.Console</RootNamespace>
+        <LangVersion>12</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\StellarDotnetSdk\StellarDotnetSdk.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="NSec.Cryptography" Version="22.4.0"/>
+    </ItemGroup>
+
+</Project>
