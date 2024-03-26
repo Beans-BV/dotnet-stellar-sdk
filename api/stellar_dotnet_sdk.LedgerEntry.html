@@ -71,9 +71,7 @@
             <article class="content wrap" id="_content" data-uid="stellar_dotnet_sdk.LedgerEntry">
   <h1 id="stellar_dotnet_sdk_LedgerEntry" data-uid="stellar_dotnet_sdk.LedgerEntry">Class LedgerEntry
   </h1>
-  <div class="markdown level0 summary"><p>Abstract class for ledger entries.
-See <a href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/ledgers">https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/ledgers</a></p>
-</div>
+  <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
 
   <div class="inheritance">
@@ -115,8 +113,7 @@ See <a href="https://developers.stellar.org/docs/fundamentals-and-concepts/stell
   <h4 id="stellar_dotnet_sdk_LedgerEntry_LastModifiedLedgerSeq" data-uid="stellar_dotnet_sdk.LedgerEntry.LastModifiedLedgerSeq"><a href="#collapsible-stellar_dotnet_sdk_LedgerEntry_LastModifiedLedgerSeq" class="expander" data-toggle="collapse">LastModifiedLedgerSeq</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_LedgerEntry_LastModifiedLedgerSeq" class="collapse in">
-  <div class="markdown level1 summary"><p>The ledger number of the last time this entry was updated.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
@@ -152,13 +149,12 @@ See <a href="https://developers.stellar.org/docs/fundamentals-and-concepts/stell
   <h4 id="stellar_dotnet_sdk_LedgerEntry_LedgerExtensionV1" data-uid="stellar_dotnet_sdk.LedgerEntry.LedgerExtensionV1"><a href="#collapsible-stellar_dotnet_sdk_LedgerEntry_LedgerExtensionV1" class="expander" data-toggle="collapse">LedgerExtensionV1</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_LedgerEntry_LedgerExtensionV1" class="collapse in">
-  <div class="markdown level1 summary"><p>Extension.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LedgerEntryExtensionV1 LedgerExtensionV1 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public LedgerEntryExtensionV1 LedgerExtensionV1 { get; set; }</code></pre>
   </div>
 
   
@@ -182,35 +178,42 @@ See <a href="https://developers.stellar.org/docs/fundamentals-and-concepts/stell
   
   
   </div>
+  <h3 id="methods">Methods
+  </h3>
   
   
-  <a id="stellar_dotnet_sdk_LedgerEntry_LiveUntilLedger_" data-uid="stellar_dotnet_sdk.LedgerEntry.LiveUntilLedger*"></a>
+  <a id="stellar_dotnet_sdk_LedgerEntry_ExtraFieldsFromXdr_" data-uid="stellar_dotnet_sdk.LedgerEntry.ExtraFieldsFromXdr*"></a>
   
-  <h4 id="stellar_dotnet_sdk_LedgerEntry_LiveUntilLedger" data-uid="stellar_dotnet_sdk.LedgerEntry.LiveUntilLedger"><a href="#collapsible-stellar_dotnet_sdk_LedgerEntry_LiveUntilLedger" class="expander" data-toggle="collapse">LiveUntilLedger</a></h4>
+  <h4 id="stellar_dotnet_sdk_LedgerEntry_ExtraFieldsFromXdr_stellar_dotnet_sdk_xdr_LedgerEntry_stellar_dotnet_sdk_LedgerEntry_" data-uid="stellar_dotnet_sdk.LedgerEntry.ExtraFieldsFromXdr(stellar_dotnet_sdk.xdr.LedgerEntry,stellar_dotnet_sdk.LedgerEntry)"><a href="#collapsible-stellar_dotnet_sdk_LedgerEntry_ExtraFieldsFromXdr_stellar_dotnet_sdk_xdr_LedgerEntry_stellar_dotnet_sdk_LedgerEntry_" class="expander" data-toggle="collapse">ExtraFieldsFromXdr(LedgerEntry, LedgerEntry)</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_LedgerEntry_LiveUntilLedger" class="collapse in">
-  <div class="markdown level1 summary"><p>The ledger sequence number after which the ledger entry would expire.
-This field exists only for ContractCodeEntry and ContractDataEntry ledger entries (optional).</p>
-</div>
+  <div id="collapsible-stellar_dotnet_sdk_LedgerEntry_ExtraFieldsFromXdr_stellar_dotnet_sdk_xdr_LedgerEntry_stellar_dotnet_sdk_LedgerEntry_" class="collapse in">
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint? LiveUntilLedger { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">protected static void ExtraFieldsFromXdr(LedgerEntry xdrLedgerEntry, LedgerEntry ledgerEntry)</code></pre>
   </div>
 
-  
-  
-  
-  
-  <h5 class="propertyValue">Property Value</h5>
-  <table>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
     <tr>
-      <td>
-        <span class="xref">System.Nullable</span>&lt;<span class="xref">System.UInt32</span>&gt;
-        <p>
-      </td>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
     </tr>
+  </thead>
+      <tr>
+        <td><span class="xref">stellar_dotnet_sdk.xdr.LedgerEntry</span></td>
+        <td><span class="parametername">xdrLedgerEntry</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html">LedgerEntry</a></td>
+        <td><span class="parametername">ledgerEntry</span></td>
+        <td></td>
+      </tr>
   </table>
   
   
@@ -219,9 +222,11 @@ This field exists only for ContractCodeEntry and ContractDataEntry ledger entrie
   
   
   
+  
+  
+  
+  
   </div>
-  <h3 id="methods">Methods
-  </h3>
   
   
   <a id="stellar_dotnet_sdk_LedgerEntry_FromXdr_" data-uid="stellar_dotnet_sdk.LedgerEntry.FromXdr*"></a>
@@ -229,8 +234,7 @@ This field exists only for ContractCodeEntry and ContractDataEntry ledger entrie
   <h4 id="stellar_dotnet_sdk_LedgerEntry_FromXdr_stellar_dotnet_sdk_xdr_LedgerEntry_" data-uid="stellar_dotnet_sdk.LedgerEntry.FromXdr(stellar_dotnet_sdk.xdr.LedgerEntry)"><a href="#collapsible-stellar_dotnet_sdk_LedgerEntry_FromXdr_stellar_dotnet_sdk_xdr_LedgerEntry_" class="expander" data-toggle="collapse">FromXdr(LedgerEntry)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_LedgerEntry_FromXdr_stellar_dotnet_sdk_xdr_LedgerEntry_" class="collapse in">
-  <div class="markdown level1 summary"><p>Creates the corresponding LedgerEntry object from an <span class="xref">stellar_dotnet_sdk.xdr.LedgerEntry</span> object.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
@@ -250,8 +254,7 @@ This field exists only for ContractCodeEntry and ContractDataEntry ledger entrie
       <tr>
         <td><span class="xref">stellar_dotnet_sdk.xdr.LedgerEntry</span></td>
         <td><span class="parametername">xdrLedgerEntry</span></td>
-        <td><p>An <span class="xref">stellar_dotnet_sdk.xdr.LedgerEntry</span> object to be converted.</p>
-</td>
+        <td></td>
       </tr>
   </table>
   
@@ -260,8 +263,7 @@ This field exists only for ContractCodeEntry and ContractDataEntry ledger entrie
     <tr>
       <td>
         <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html">LedgerEntry</a>
-        <p><p>A <code>LedgerEntry</code> object.</p>
-</p>
+        <p>
       </td>
     </tr>
   </table>
@@ -283,8 +285,7 @@ This field exists only for ContractCodeEntry and ContractDataEntry ledger entrie
   <h4 id="stellar_dotnet_sdk_LedgerEntry_FromXdrBase64_System_String_" data-uid="stellar_dotnet_sdk.LedgerEntry.FromXdrBase64(System.String)"><a href="#collapsible-stellar_dotnet_sdk_LedgerEntry_FromXdrBase64_System_String_" class="expander" data-toggle="collapse">FromXdrBase64(String)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_LedgerEntry_FromXdrBase64_System_String_" class="collapse in">
-  <div class="markdown level1 summary"><p>Creates a <code>LedgerEntry</code> object from a base-64 encoded XDR string of an
-<span class="xref">stellar_dotnet_sdk.xdr.LedgerEntry.LedgerEntryData</span>.</p>
+  <div class="markdown level1 summary"><p>Creates a new LedgerEntry object from the given LedgerEntry XDR base64 string.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -305,9 +306,7 @@ This field exists only for ContractCodeEntry and ContractDataEntry ledger entrie
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">xdrBase64</span></td>
-        <td><p>A base-64 encoded XDR string of an
-<span class="xref">stellar_dotnet_sdk.xdr.LedgerEntry.LedgerEntryData</span> object.</p>
-</td>
+        <td></td>
       </tr>
   </table>
   
@@ -316,7 +315,83 @@ This field exists only for ContractCodeEntry and ContractDataEntry ledger entrie
     <tr>
       <td>
         <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html">LedgerEntry</a>
-        <p><p>A <code>LedgerEntry</code> object decoded and deserialized from the provided string.</p>
+        <p><p>LedgerEntry object</p>
+</p>
+      </td>
+    </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  <a id="stellar_dotnet_sdk_LedgerEntry_ToXdr_" data-uid="stellar_dotnet_sdk.LedgerEntry.ToXdr*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_LedgerEntry_ToXdr" data-uid="stellar_dotnet_sdk.LedgerEntry.ToXdr"><a href="#collapsible-stellar_dotnet_sdk_LedgerEntry_ToXdr" class="expander" data-toggle="collapse">ToXdr()</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_LedgerEntry_ToXdr" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public LedgerEntry ToXdr()</code></pre>
+  </div>
+
+  
+  <h5 class="returns">Returns</h5>
+  <table>
+    <tr>
+      <td>
+        <span class="xref">stellar_dotnet_sdk.xdr.LedgerEntry</span>
+        <p>
+      </td>
+    </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  <a id="stellar_dotnet_sdk_LedgerEntry_ToXdrBase64_" data-uid="stellar_dotnet_sdk.LedgerEntry.ToXdrBase64*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_LedgerEntry_ToXdrBase64" data-uid="stellar_dotnet_sdk.LedgerEntry.ToXdrBase64"><a href="#collapsible-stellar_dotnet_sdk_LedgerEntry_ToXdrBase64" class="expander" data-toggle="collapse">ToXdrBase64()</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_LedgerEntry_ToXdrBase64" class="collapse in">
+  <div class="markdown level1 summary"><p>Returns a base64-encoded string that represents the XDR (External Data Representation) format of a
+<a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html">LedgerEntry</a> object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ToXdrBase64()</code></pre>
+  </div>
+
+  
+  <h5 class="returns">Returns</h5>
+  <table>
+    <tr>
+      <td>
+        <span class="xref">System.String</span>
+        <p><p>A base64-encoded string that contains the XDR representation of the
+<span class="xref">stellar_dotnet_sdk.xdr.LedgerEntry</span> object.</p>
 </p>
       </td>
     </tr>

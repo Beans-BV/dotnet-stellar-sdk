@@ -72,8 +72,7 @@
   <h1 id="stellar_dotnet_sdk_KeyPair" data-uid="stellar_dotnet_sdk.KeyPair">Class KeyPair
   </h1>
   <div class="markdown level0 summary"><p><a class="xref" href="stellar_dotnet_sdk.KeyPair.html">KeyPair</a> represents public (and secret) keys of the account.
-Currently <a class="xref" href="stellar_dotnet_sdk.KeyPair.html">KeyPair</a> only supports ed25519 but in a future this class can be abstraction layer for
-other public-key signature systems.</p>
+Currently <a class="xref" href="stellar_dotnet_sdk.KeyPair.html">KeyPair</a> only supports ed25519 but in a future this class can be abstraction layer for other public-key signature systems.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
 
@@ -149,8 +148,7 @@ other public-key signature systems.</p>
   <h4 id="stellar_dotnet_sdk_KeyPair__ctor_System_Byte___System_Byte___System_Byte___" data-uid="stellar_dotnet_sdk.KeyPair.#ctor(System.Byte[],System.Byte[],System.Byte[])"><a href="#collapsible-stellar_dotnet_sdk_KeyPair__ctor_System_Byte___System_Byte___System_Byte___" class="expander" data-toggle="collapse">KeyPair(Byte[], Byte[], Byte[])</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_KeyPair__ctor_System_Byte___System_Byte___System_Byte___" class="collapse in">
-  <div class="markdown level1 summary"><p>Creates a new Keypair instance from secret. This can either be secret key or secret seed depending on underlying
-public-key signature system. Currently Keypair only supports ed25519.</p>
+  <div class="markdown level1 summary"><p>Creates a new Keypair instance from secret. This can either be secret key or secret seed depending on underlying public-key signature system. Currently Keypair only supports ed25519.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -442,7 +440,7 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string? SecretSeed { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string SecretSeed { get; }</code></pre>
   </div>
 
   
@@ -453,7 +451,7 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <table>
     <tr>
       <td>
-        <span class="xref">System.Nullable</span>&lt;<span class="xref">System.String</span>&gt;
+        <span class="xref">System.String</span>
         <p>
       </td>
     </tr>
@@ -750,7 +748,7 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <h4 id="stellar_dotnet_sdk_KeyPair_FromAccountId_System_String_" data-uid="stellar_dotnet_sdk.KeyPair.FromAccountId(System.String)"><a href="#collapsible-stellar_dotnet_sdk_KeyPair_FromAccountId_System_String_" class="expander" data-toggle="collapse">FromAccountId(String)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_KeyPair_FromAccountId_System_String_" class="collapse in">
-  <div class="markdown level1 summary"><p>Creates a new Stellar KeyPair from a StrKey encoded Stellar account ID.</p>
+  <div class="markdown level1 summary"><p>Creates a new Stellar KeyPair from a strkey encoded Stellar account ID.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -771,7 +769,7 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">accountId</span></td>
-        <td><p>accountId The StrKey encoded Stellar account ID.</p>
+        <td><p>accountId The strkey encoded Stellar account ID.</p>
 </td>
       </tr>
   </table>
@@ -1024,7 +1022,7 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <h4 id="stellar_dotnet_sdk_KeyPair_FromSecretSeed_System_String_" data-uid="stellar_dotnet_sdk.KeyPair.FromSecretSeed(System.String)"><a href="#collapsible-stellar_dotnet_sdk_KeyPair_FromSecretSeed_System_String_" class="expander" data-toggle="collapse">FromSecretSeed(String)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_KeyPair_FromSecretSeed_System_String_" class="collapse in">
-  <div class="markdown level1 summary"><p>Creates a new Stellar KeyPair from a StrKey encoded Stellar secret seed.</p>
+  <div class="markdown level1 summary"><p>Creates a new Stellar KeyPair from a strkey encoded Stellar secret seed.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1045,7 +1043,7 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">seed</span></td>
-        <td><p>eed Char array containing StrKey encoded Stellar secret seed.</p>
+        <td><p>eed Char array containing strkey encoded Stellar secret seed.</p>
 </td>
       </tr>
   </table>
@@ -1222,7 +1220,7 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <h4 id="stellar_dotnet_sdk_KeyPair_Sign_System_Byte___" data-uid="stellar_dotnet_sdk.KeyPair.Sign(System.Byte[])"><a href="#collapsible-stellar_dotnet_sdk_KeyPair_Sign_System_Byte___" class="expander" data-toggle="collapse">Sign(Byte[])</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_KeyPair_Sign_System_Byte___" class="collapse in">
-  <div class="markdown level1 summary"><p>Sign the provided data with the key pair's private key.</p>
+  <div class="markdown level1 summary"><p>Sign the provided data with the keypair's private key.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1382,7 +1380,7 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <h4 id="stellar_dotnet_sdk_KeyPair_Verify_System_Byte___stellar_dotnet_sdk_xdr_Signature_" data-uid="stellar_dotnet_sdk.KeyPair.Verify(System.Byte[],stellar_dotnet_sdk.xdr.Signature)"><a href="#collapsible-stellar_dotnet_sdk_KeyPair_Verify_System_Byte___stellar_dotnet_sdk_xdr_Signature_" class="expander" data-toggle="collapse">Verify(Byte[], Signature)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_KeyPair_Verify_System_Byte___stellar_dotnet_sdk_xdr_Signature_" class="collapse in">
-  <div class="markdown level1 summary"><p>Verify the provided data and signature match this key pair's public key.</p>
+  <div class="markdown level1 summary"><p>Verify the provided data and signature match this keypair's public key.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1442,7 +1440,7 @@ public-key signature system. Currently Keypair only supports ed25519.</p>
   <h4 id="stellar_dotnet_sdk_KeyPair_Verify_System_Byte___System_Byte___" data-uid="stellar_dotnet_sdk.KeyPair.Verify(System.Byte[],System.Byte[])"><a href="#collapsible-stellar_dotnet_sdk_KeyPair_Verify_System_Byte___System_Byte___" class="expander" data-toggle="collapse">Verify(Byte[], Byte[])</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_KeyPair_Verify_System_Byte___System_Byte___" class="collapse in">
-  <div class="markdown level1 summary"><p>Verify the provided data and signature match this key pair's public key.</p>
+  <div class="markdown level1 summary"><p>Verify the provided data and signature match this keypair's public key.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

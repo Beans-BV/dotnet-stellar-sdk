@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class GetLatestLedgerResponse
+    <title>Class Hash
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class GetLatestLedgerResponse
+    <meta name="title" content="Class Hash
    ">
     <meta name="generator" content="docfx 2.59.2.0">
     
@@ -68,8 +68,8 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="stellar_dotnet_sdk.responses.sorobanrpc.GetLatestLedgerResponse">
-  <h1 id="stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse" data-uid="stellar_dotnet_sdk.responses.sorobanrpc.GetLatestLedgerResponse">Class GetLatestLedgerResponse
+            <article class="content wrap" id="_content" data-uid="stellar_dotnet_sdk.Hash">
+  <h1 id="stellar_dotnet_sdk_Hash" data-uid="stellar_dotnet_sdk.Hash">Class Hash
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
@@ -77,7 +77,7 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">GetLatestLedgerResponse</span></div>
+    <div class="level1"><span class="xref">Hash</span></div>
   </div>
   
   
@@ -85,9 +85,9 @@
   <h6><strong>Namespace</strong>: System.Dynamic.ExpandoObject</h6>
   <h6><strong>Assembly</strong>: stellar-dotnet-sdk.dll</h6>
   
-  <h5 id="stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse_syntax">Syntax</h5>
+  <h5 id="stellar_dotnet_sdk_Hash_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class GetLatestLedgerResponse : object</code></pre>
+    <pre><code class="lang-csharp hljs">public class Hash : object</code></pre>
   </div>
 
   
@@ -98,17 +98,59 @@
   </h3>
   
   
-  <a id="stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse__ctor_" data-uid="stellar_dotnet_sdk.responses.sorobanrpc.GetLatestLedgerResponse.#ctor*"></a>
+  <a id="stellar_dotnet_sdk_Hash__ctor_" data-uid="stellar_dotnet_sdk.Hash.#ctor*"></a>
   
-  <h4 id="stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse__ctor_System_String_System_Int32_System_Int32_" data-uid="stellar_dotnet_sdk.responses.sorobanrpc.GetLatestLedgerResponse.#ctor(System.String,System.Int32,System.Int32)"><a href="#collapsible-stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse__ctor_System_String_System_Int32_System_Int32_" class="expander" data-toggle="collapse">GetLatestLedgerResponse(String, Int32, Int32)</a></h4>
+  <h4 id="stellar_dotnet_sdk_Hash__ctor_System_Byte___" data-uid="stellar_dotnet_sdk.Hash.#ctor(System.Byte[])"><a href="#collapsible-stellar_dotnet_sdk_Hash__ctor_System_Byte___" class="expander" data-toggle="collapse">Hash(Byte[])</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse__ctor_System_String_System_Int32_System_Int32_" class="collapse in">
+  <div id="collapsible-stellar_dotnet_sdk_Hash__ctor_System_Byte___" class="collapse in">
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GetLatestLedgerResponse(string id, int protocolVersion, int sequence)</code></pre>
+    <pre><code class="lang-csharp hljs">public Hash(byte[] hash)</code></pre>
+  </div>
+
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+      <tr>
+        <td><span class="xref">System.Byte</span>[]</td>
+        <td><span class="parametername">hash</span></td>
+        <td></td>
+      </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  <a id="stellar_dotnet_sdk_Hash__ctor_" data-uid="stellar_dotnet_sdk.Hash.#ctor*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_Hash__ctor_System_String_" data-uid="stellar_dotnet_sdk.Hash.#ctor(System.String)"><a href="#collapsible-stellar_dotnet_sdk_Hash__ctor_System_String_" class="expander" data-toggle="collapse">Hash(String)</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_Hash__ctor_System_String_" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Hash(string base64String)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -122,17 +164,7 @@
   </thead>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">id</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">protocolVersion</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">sequence</span></td>
+        <td><span class="parametername">base64String</span></td>
         <td></td>
       </tr>
   </table>
@@ -152,19 +184,17 @@
   </h3>
   
   
-  <a id="stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse_Id_" data-uid="stellar_dotnet_sdk.responses.sorobanrpc.GetLatestLedgerResponse.Id*"></a>
+  <a id="stellar_dotnet_sdk_Hash_InnerValue_" data-uid="stellar_dotnet_sdk.Hash.InnerValue*"></a>
   
-  <h4 id="stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse_Id" data-uid="stellar_dotnet_sdk.responses.sorobanrpc.GetLatestLedgerResponse.Id"><a href="#collapsible-stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse_Id" class="expander" data-toggle="collapse">Id</a></h4>
+  <h4 id="stellar_dotnet_sdk_Hash_InnerValue" data-uid="stellar_dotnet_sdk.Hash.InnerValue"><a href="#collapsible-stellar_dotnet_sdk_Hash_InnerValue" class="expander" data-toggle="collapse">InnerValue</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse_Id" class="collapse in">
-  <div class="markdown level1 summary"><p>Hash identifier of the latest ledger (as a hex-encoded string) known to Soroban RPC at the time it handled the
-request.</p>
-</div>
+  <div id="collapsible-stellar_dotnet_sdk_Hash_InnerValue" class="collapse in">
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Id { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public byte[] InnerValue { get; }</code></pre>
   </div>
 
   
@@ -175,7 +205,7 @@ request.</p>
   <table>
     <tr>
       <td>
-        <span class="xref">System.String</span>
+        <span class="xref">System.Byte</span>[]
         <p>
       </td>
     </tr>
@@ -188,31 +218,44 @@ request.</p>
   
   
   </div>
+  <h3 id="methods">Methods
+  </h3>
   
   
-  <a id="stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse_ProtocolVersion_" data-uid="stellar_dotnet_sdk.responses.sorobanrpc.GetLatestLedgerResponse.ProtocolVersion*"></a>
+  <a id="stellar_dotnet_sdk_Hash_FromXdr_" data-uid="stellar_dotnet_sdk.Hash.FromXdr*"></a>
   
-  <h4 id="stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse_ProtocolVersion" data-uid="stellar_dotnet_sdk.responses.sorobanrpc.GetLatestLedgerResponse.ProtocolVersion"><a href="#collapsible-stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse_ProtocolVersion" class="expander" data-toggle="collapse">ProtocolVersion</a></h4>
+  <h4 id="stellar_dotnet_sdk_Hash_FromXdr_stellar_dotnet_sdk_xdr_Hash_" data-uid="stellar_dotnet_sdk.Hash.FromXdr(stellar_dotnet_sdk.xdr.Hash)"><a href="#collapsible-stellar_dotnet_sdk_Hash_FromXdr_stellar_dotnet_sdk_xdr_Hash_" class="expander" data-toggle="collapse">FromXdr(Hash)</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse_ProtocolVersion" class="collapse in">
-  <div class="markdown level1 summary"><p>Stellar Core protocol version associated with the latest ledger.</p>
-</div>
+  <div id="collapsible-stellar_dotnet_sdk_Hash_FromXdr_stellar_dotnet_sdk_xdr_Hash_" class="collapse in">
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int ProtocolVersion { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public static Hash FromXdr(Hash xdrHash)</code></pre>
   </div>
 
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+      <tr>
+        <td><span class="xref">stellar_dotnet_sdk.xdr.Hash</span></td>
+        <td><span class="parametername">xdrHash</span></td>
+        <td></td>
+      </tr>
+  </table>
   
-  
-  
-  
-  <h5 class="propertyValue">Property Value</h5>
+  <h5 class="returns">Returns</h5>
   <table>
     <tr>
       <td>
-        <span class="xref">System.Int32</span>
+        <a class="xref" href="stellar_dotnet_sdk.Hash.html">Hash</a>
         <p>
       </td>
     </tr>
@@ -224,36 +267,38 @@ request.</p>
   
   
   
+  
+  
+  
   </div>
   
   
-  <a id="stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse_Sequence_" data-uid="stellar_dotnet_sdk.responses.sorobanrpc.GetLatestLedgerResponse.Sequence*"></a>
+  <a id="stellar_dotnet_sdk_Hash_ToXdr_" data-uid="stellar_dotnet_sdk.Hash.ToXdr*"></a>
   
-  <h4 id="stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse_Sequence" data-uid="stellar_dotnet_sdk.responses.sorobanrpc.GetLatestLedgerResponse.Sequence"><a href="#collapsible-stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse_Sequence" class="expander" data-toggle="collapse">Sequence</a></h4>
+  <h4 id="stellar_dotnet_sdk_Hash_ToXdr" data-uid="stellar_dotnet_sdk.Hash.ToXdr"><a href="#collapsible-stellar_dotnet_sdk_Hash_ToXdr" class="expander" data-toggle="collapse">ToXdr()</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_responses_sorobanrpc_GetLatestLedgerResponse_Sequence" class="collapse in">
-  <div class="markdown level1 summary"><p>The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.</p>
-</div>
+  <div id="collapsible-stellar_dotnet_sdk_Hash_ToXdr" class="collapse in">
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int Sequence { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Hash ToXdr()</code></pre>
   </div>
 
   
-  
-  
-  
-  <h5 class="propertyValue">Property Value</h5>
+  <h5 class="returns">Returns</h5>
   <table>
     <tr>
       <td>
-        <span class="xref">System.Int32</span>
+        <span class="xref">stellar_dotnet_sdk.xdr.Hash</span>
         <p>
       </td>
     </tr>
   </table>
+  
+  
+  
   
   
   

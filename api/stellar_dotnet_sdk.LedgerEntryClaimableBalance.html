@@ -88,9 +88,6 @@
       <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html#stellar_dotnet_sdk_LedgerEntry_LastModifiedLedgerSeq">LedgerEntry.LastModifiedLedgerSeq</a>
     </div>
     <div>
-      <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html#stellar_dotnet_sdk_LedgerEntry_LiveUntilLedger">LedgerEntry.LiveUntilLedger</a>
-    </div>
-    <div>
       <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html#stellar_dotnet_sdk_LedgerEntry_LedgerExtensionV1">LedgerEntry.LedgerExtensionV1</a>
     </div>
     <div>
@@ -98,6 +95,12 @@
     </div>
     <div>
       <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html#stellar_dotnet_sdk_LedgerEntry_FromXdrBase64_System_String_">LedgerEntry.FromXdrBase64(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html#stellar_dotnet_sdk_LedgerEntry_ToXdrBase64">LedgerEntry.ToXdrBase64()</a>
+    </div>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html#stellar_dotnet_sdk_LedgerEntry_ExtraFieldsFromXdr_stellar_dotnet_sdk_xdr_LedgerEntry_stellar_dotnet_sdk_LedgerEntry_">LedgerEntry.ExtraFieldsFromXdr(LedgerEntry, LedgerEntry)</a>
     </div>
   </div>
   
@@ -127,7 +130,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long Amount { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long Amount { get; set; }</code></pre>
   </div>
 
   
@@ -163,7 +166,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Asset Asset { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Asset Asset { get; set; }</code></pre>
   </div>
 
   
@@ -199,7 +202,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public byte[] BalanceId { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Hash BalanceId { get; set; }</code></pre>
   </div>
 
   
@@ -210,7 +213,7 @@
   <table>
     <tr>
       <td>
-        <span class="xref">System.Byte</span>[]
+        <a class="xref" href="stellar_dotnet_sdk.Hash.html">Hash</a>
         <p>
       </td>
     </tr>
@@ -235,7 +238,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ClaimableBalanceEntryExtensionV1 ClaimableBalanceEntryExtensionV1 { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public ClaimableBalanceEntryExtensionV1 ClaimableBalanceEntryExtensionV1 { get; set; }</code></pre>
   </div>
 
   
@@ -271,7 +274,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Claimant[] Claimants { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Claimant[] Claimants { get; set; }</code></pre>
   </div>
 
   
@@ -299,19 +302,17 @@
   </h3>
   
   
-  <a id="stellar_dotnet_sdk_LedgerEntryClaimableBalance_FromXdrLedgerEntryData_" data-uid="stellar_dotnet_sdk.LedgerEntryClaimableBalance.FromXdrLedgerEntryData*"></a>
+  <a id="stellar_dotnet_sdk_LedgerEntryClaimableBalance_FromXdrLedgerEntry_" data-uid="stellar_dotnet_sdk.LedgerEntryClaimableBalance.FromXdrLedgerEntry*"></a>
   
-  <h4 id="stellar_dotnet_sdk_LedgerEntryClaimableBalance_FromXdrLedgerEntryData_stellar_dotnet_sdk_xdr_LedgerEntry_LedgerEntryData_" data-uid="stellar_dotnet_sdk.LedgerEntryClaimableBalance.FromXdrLedgerEntryData(stellar_dotnet_sdk.xdr.LedgerEntry.LedgerEntryData)"><a href="#collapsible-stellar_dotnet_sdk_LedgerEntryClaimableBalance_FromXdrLedgerEntryData_stellar_dotnet_sdk_xdr_LedgerEntry_LedgerEntryData_" class="expander" data-toggle="collapse">FromXdrLedgerEntryData(LedgerEntry.LedgerEntryData)</a></h4>
+  <h4 id="stellar_dotnet_sdk_LedgerEntryClaimableBalance_FromXdrLedgerEntry_stellar_dotnet_sdk_xdr_LedgerEntry_" data-uid="stellar_dotnet_sdk.LedgerEntryClaimableBalance.FromXdrLedgerEntry(stellar_dotnet_sdk.xdr.LedgerEntry)"><a href="#collapsible-stellar_dotnet_sdk_LedgerEntryClaimableBalance_FromXdrLedgerEntry_stellar_dotnet_sdk_xdr_LedgerEntry_" class="expander" data-toggle="collapse">FromXdrLedgerEntry(LedgerEntry)</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_LedgerEntryClaimableBalance_FromXdrLedgerEntryData_stellar_dotnet_sdk_xdr_LedgerEntry_LedgerEntryData_" class="collapse in">
-  <div class="markdown level1 summary"><p>Creates the corresponding LedgerEntryClaimableBalance object from a <span class="xref">stellar_dotnet_sdk.xdr.LedgerEntry.LedgerEntryData</span>
-object.</p>
-</div>
+  <div id="collapsible-stellar_dotnet_sdk_LedgerEntryClaimableBalance_FromXdrLedgerEntry_stellar_dotnet_sdk_xdr_LedgerEntry_" class="collapse in">
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static LedgerEntryClaimableBalance FromXdrLedgerEntryData(LedgerEntry.LedgerEntryData xdrLedgerEntryData)</code></pre>
+    <pre><code class="lang-csharp hljs">public static LedgerEntryClaimableBalance FromXdrLedgerEntry(LedgerEntry xdrLedgerEntry)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -324,10 +325,9 @@ object.</p>
     </tr>
   </thead>
       <tr>
-        <td><span class="xref">stellar_dotnet_sdk.xdr.LedgerEntry.LedgerEntryData</span></td>
-        <td><span class="parametername">xdrLedgerEntryData</span></td>
-        <td><p>A <span class="xref">stellar_dotnet_sdk.xdr.LedgerEntry.LedgerEntryData</span> object.</p>
-</td>
+        <td><span class="xref">stellar_dotnet_sdk.xdr.LedgerEntry</span></td>
+        <td><span class="parametername">xdrLedgerEntry</span></td>
+        <td></td>
       </tr>
   </table>
   
@@ -336,8 +336,43 @@ object.</p>
     <tr>
       <td>
         <a class="xref" href="stellar_dotnet_sdk.LedgerEntryClaimableBalance.html">LedgerEntryClaimableBalance</a>
-        <p><p>A LedgerEntryClaimableBalance object.</p>
-</p>
+        <p>
+      </td>
+    </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  <a id="stellar_dotnet_sdk_LedgerEntryClaimableBalance_ToXdr_" data-uid="stellar_dotnet_sdk.LedgerEntryClaimableBalance.ToXdr*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_LedgerEntryClaimableBalance_ToXdr" data-uid="stellar_dotnet_sdk.LedgerEntryClaimableBalance.ToXdr"><a href="#collapsible-stellar_dotnet_sdk_LedgerEntryClaimableBalance_ToXdr" class="expander" data-toggle="collapse">ToXdr()</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_LedgerEntryClaimableBalance_ToXdr" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ClaimableBalanceEntry ToXdr()</code></pre>
+  </div>
+
+  
+  <h5 class="returns">Returns</h5>
+  <table>
+    <tr>
+      <td>
+        <span class="xref">stellar_dotnet_sdk.xdr.ClaimableBalanceEntry</span>
+        <p>
       </td>
     </tr>
   </table>

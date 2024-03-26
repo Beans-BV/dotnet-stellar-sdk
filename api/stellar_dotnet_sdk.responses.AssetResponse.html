@@ -116,15 +116,15 @@
   
   <a id="stellar_dotnet_sdk_responses_AssetResponse__ctor_" data-uid="stellar_dotnet_sdk.responses.AssetResponse.#ctor*"></a>
   
-  <h4 id="stellar_dotnet_sdk_responses_AssetResponse__ctor_System_String_System_String_System_String_System_String_System_String_System_Int32_stellar_dotnet_sdk_responses_AssetResponseFlags_stellar_dotnet_sdk_responses_AssetResponseLinks_stellar_dotnet_sdk_responses_AssetResponse_AssetAccounts_stellar_dotnet_sdk_responses_AssetResponse_AssetBalances_System_String_System_String_" data-uid="stellar_dotnet_sdk.responses.AssetResponse.#ctor(System.String,System.String,System.String,System.String,System.String,System.Int32,stellar_dotnet_sdk.responses.AssetResponseFlags,stellar_dotnet_sdk.responses.AssetResponseLinks,stellar_dotnet_sdk.responses.AssetResponse.AssetAccounts,stellar_dotnet_sdk.responses.AssetResponse.AssetBalances,System.String,System.String)"><a href="#collapsible-stellar_dotnet_sdk_responses_AssetResponse__ctor_System_String_System_String_System_String_System_String_System_String_System_Int32_stellar_dotnet_sdk_responses_AssetResponseFlags_stellar_dotnet_sdk_responses_AssetResponseLinks_stellar_dotnet_sdk_responses_AssetResponse_AssetAccounts_stellar_dotnet_sdk_responses_AssetResponse_AssetBalances_System_String_System_String_" class="expander" data-toggle="collapse">AssetResponse(String, String, String, String, String, Int32, AssetResponseFlags, AssetResponseLinks, AssetResponse.AssetAccounts, AssetResponse.AssetBalances, String, String)</a></h4>
+  <h4 id="stellar_dotnet_sdk_responses_AssetResponse__ctor_System_String_System_String_System_String_System_String_System_String_System_Int32_stellar_dotnet_sdk_responses_AssetResponseFlags_stellar_dotnet_sdk_responses_AssetResponseLinks_" data-uid="stellar_dotnet_sdk.responses.AssetResponse.#ctor(System.String,System.String,System.String,System.String,System.String,System.Int32,stellar_dotnet_sdk.responses.AssetResponseFlags,stellar_dotnet_sdk.responses.AssetResponseLinks)"><a href="#collapsible-stellar_dotnet_sdk_responses_AssetResponse__ctor_System_String_System_String_System_String_System_String_System_String_System_Int32_stellar_dotnet_sdk_responses_AssetResponseFlags_stellar_dotnet_sdk_responses_AssetResponseLinks_" class="expander" data-toggle="collapse">AssetResponse(String, String, String, String, String, Int32, AssetResponseFlags, AssetResponseLinks)</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_responses_AssetResponse__ctor_System_String_System_String_System_String_System_String_System_String_System_Int32_stellar_dotnet_sdk_responses_AssetResponseFlags_stellar_dotnet_sdk_responses_AssetResponseLinks_stellar_dotnet_sdk_responses_AssetResponse_AssetAccounts_stellar_dotnet_sdk_responses_AssetResponse_AssetBalances_System_String_System_String_" class="collapse in">
+  <div id="collapsible-stellar_dotnet_sdk_responses_AssetResponse__ctor_System_String_System_String_System_String_System_String_System_String_System_Int32_stellar_dotnet_sdk_responses_AssetResponseFlags_stellar_dotnet_sdk_responses_AssetResponseLinks_" class="collapse in">
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AssetResponse(string assetType, string assetCode, string assetIssuer, string pagingToken, string amount, int numAccounts, AssetResponseFlags flags, AssetResponseLinks links, AssetResponse.AssetAccounts accounts, AssetResponse.AssetBalances balances, string claimableBalancesAmount, string liquidityPoolsAmount)</code></pre>
+    <pre><code class="lang-csharp hljs">public AssetResponse(string assetType, string assetCode, string assetIssuer, string pagingToken, string amount, int numAccounts, AssetResponseFlags flags, AssetResponseLinks links)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -174,26 +174,6 @@
       <tr>
         <td><a class="xref" href="stellar_dotnet_sdk.responses.AssetResponseLinks.html">AssetResponseLinks</a></td>
         <td><span class="parametername">links</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="stellar_dotnet_sdk.responses.AssetResponse.AssetAccounts.html">AssetResponse.AssetAccounts</a></td>
-        <td><span class="parametername">accounts</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="stellar_dotnet_sdk.responses.AssetResponse.AssetBalances.html">AssetResponse.AssetBalances</a></td>
-        <td><span class="parametername">balances</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">claimableBalancesAmount</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">liquidityPoolsAmount</span></td>
         <td></td>
       </tr>
   </table>
@@ -487,80 +467,6 @@
     <tr>
       <td>
         <span class="xref">System.String</span>
-        <p>
-      </td>
-    </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  </div>
-  
-  
-  <a id="stellar_dotnet_sdk_responses_AssetResponse_ContractsQuantity_" data-uid="stellar_dotnet_sdk.responses.AssetResponse.ContractsQuantity*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_responses_AssetResponse_ContractsQuantity" data-uid="stellar_dotnet_sdk.responses.AssetResponse.ContractsQuantity"><a href="#collapsible-stellar_dotnet_sdk_responses_AssetResponse_ContractsQuantity" class="expander" data-toggle="collapse">ContractsQuantity</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_responses_AssetResponse_ContractsQuantity" class="collapse in">
-  <div class="markdown level1 summary"><p>The quantity of contracts that hold this asset</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint ContractsQuantity { get; set; }</code></pre>
-  </div>
-
-  
-  
-  
-  
-  <h5 class="propertyValue">Property Value</h5>
-  <table>
-    <tr>
-      <td>
-        <span class="xref">System.UInt32</span>
-        <p>
-      </td>
-    </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  </div>
-  
-  
-  <a id="stellar_dotnet_sdk_responses_AssetResponse_ContractsTotalAmount_" data-uid="stellar_dotnet_sdk.responses.AssetResponse.ContractsTotalAmount*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_responses_AssetResponse_ContractsTotalAmount" data-uid="stellar_dotnet_sdk.responses.AssetResponse.ContractsTotalAmount"><a href="#collapsible-stellar_dotnet_sdk_responses_AssetResponse_ContractsTotalAmount" class="expander" data-toggle="collapse">ContractsTotalAmount</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_responses_AssetResponse_ContractsTotalAmount" class="collapse in">
-  <div class="markdown level1 summary"><p>The total units of this asset held by contracts</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double ContractsTotalAmount { get; set; }</code></pre>
-  </div>
-
-  
-  
-  
-  
-  <h5 class="propertyValue">Property Value</h5>
-  <table>
-    <tr>
-      <td>
-        <span class="xref">System.Double</span>
         <p>
       </td>
     </tr>

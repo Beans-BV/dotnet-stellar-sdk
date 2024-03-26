@@ -71,10 +71,9 @@
             <article class="content wrap" id="_content" data-uid="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation">
   <h1 id="stellar_dotnet_sdk_RevokeSignerSponsorshipOperation" data-uid="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation">Class RevokeSignerSponsorshipOperation
   </h1>
-  <div class="markdown level0 summary"><p>Represents a <code>RevokeSponsorshipOperation</code>.
-Use <a class="xref" href="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation.Builder.html">RevokeSignerSponsorshipOperation.Builder</a> to create a new RevokeSignerSponsorshipOperation.
-See also:
-<a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#revoke-sponsorship">Revoke Sponsorship</a></p>
+  <div class="markdown level0 summary"><p>Represents a <a class="xref" href="stellar_dotnet_sdk.RevokeSponsorshipOperation.html">RevokeSponsorshipOperation</a>.
+Use <a class="xref" href="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation.Builder.html">RevokeSignerSponsorshipOperation.Builder</a> to create a new RevokeSignerSponsorshipOperation.</p>
+<p>See also: <a href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html">Revoke Sponsorship</a></p>
 </div>
   <div class="markdown level0 conceptual"></div>
 
@@ -82,7 +81,8 @@ See also:
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="stellar_dotnet_sdk.Operation.html">Operation</a></div>
-    <div class="level2"><span class="xref">RevokeSignerSponsorshipOperation</span></div>
+    <div class="level2"><a class="xref" href="stellar_dotnet_sdk.RevokeSponsorshipOperation.html">RevokeSponsorshipOperation</a></div>
+    <div class="level3"><span class="xref">RevokeSignerSponsorshipOperation</span></div>
   </div>
   
   
@@ -119,28 +119,77 @@ See also:
   
   <h5 id="stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class RevokeSignerSponsorshipOperation : Operation</code></pre>
+    <pre><code class="lang-csharp hljs">public class RevokeSignerSponsorshipOperation : RevokeSponsorshipOperation</code></pre>
   </div>
 
   
   
   
   
-  <h3 id="properties">Properties
+  <h3 id="constructors">Constructors
   </h3>
   
   
-  <a id="stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_Account_" data-uid="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation.Account*"></a>
+  <a id="stellar_dotnet_sdk_RevokeSignerSponsorshipOperation__ctor_" data-uid="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation.#ctor*"></a>
   
-  <h4 id="stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_Account" data-uid="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation.Account"><a href="#collapsible-stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_Account" class="expander" data-toggle="collapse">Account</a></h4>
+  <h4 id="stellar_dotnet_sdk_RevokeSignerSponsorshipOperation__ctor_stellar_dotnet_sdk_KeyPair_stellar_dotnet_sdk_xdr_SignerKey_" data-uid="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation.#ctor(stellar_dotnet_sdk.KeyPair,stellar_dotnet_sdk.xdr.SignerKey)"><a href="#collapsible-stellar_dotnet_sdk_RevokeSignerSponsorshipOperation__ctor_stellar_dotnet_sdk_KeyPair_stellar_dotnet_sdk_xdr_SignerKey_" class="expander" data-toggle="collapse">RevokeSignerSponsorshipOperation(KeyPair, SignerKey)</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_Account" class="collapse in">
+  <div id="collapsible-stellar_dotnet_sdk_RevokeSignerSponsorshipOperation__ctor_stellar_dotnet_sdk_KeyPair_stellar_dotnet_sdk_xdr_SignerKey_" class="collapse in">
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public KeyPair Account { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public RevokeSignerSponsorshipOperation(KeyPair accountId, SignerKey signerKey)</code></pre>
+  </div>
+
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+      <tr>
+        <td><a class="xref" href="stellar_dotnet_sdk.KeyPair.html">KeyPair</a></td>
+        <td><span class="parametername">accountId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">stellar_dotnet_sdk.xdr.SignerKey</span></td>
+        <td><span class="parametername">signerKey</span></td>
+        <td></td>
+      </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_AccountId_" data-uid="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation.AccountId*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_AccountId" data-uid="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation.AccountId"><a href="#collapsible-stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_AccountId" class="expander" data-toggle="collapse">AccountId</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_AccountId" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public KeyPair AccountId { get; }</code></pre>
   </div>
 
   

@@ -71,7 +71,7 @@
             <article class="content wrap" id="_content" data-uid="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation.Builder">
   <h1 id="stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_Builder" data-uid="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation.Builder">Class RevokeSignerSponsorshipOperation.Builder
   </h1>
-  <div class="markdown level0 summary"><p>Builder for <code>RevokeSignerSponsorshipOperation</code> operation.</p>
+  <div class="markdown level0 summary"><p>Builds BeginSponsoringFutureReserves operation.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
 
@@ -104,13 +104,13 @@
   <h4 id="stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_Builder__ctor_stellar_dotnet_sdk_KeyPair_stellar_dotnet_sdk_xdr_SignerKey_" data-uid="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation.Builder.#ctor(stellar_dotnet_sdk.KeyPair,stellar_dotnet_sdk.xdr.SignerKey)"><a href="#collapsible-stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_Builder__ctor_stellar_dotnet_sdk_KeyPair_stellar_dotnet_sdk_xdr_SignerKey_" class="expander" data-toggle="collapse">Builder(KeyPair, SignerKey)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_Builder__ctor_stellar_dotnet_sdk_KeyPair_stellar_dotnet_sdk_xdr_SignerKey_" class="collapse in">
-  <div class="markdown level1 summary"><p>Constructs a new <code>RevokeSignerSponsorshipOperation</code> builder with the given account and signer key.</p>
+  <div class="markdown level1 summary"><p>Create a new  builder with the given sponsoredId.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Builder(KeyPair account, SignerKey signerKey)</code></pre>
+    <pre><code class="lang-csharp hljs">public Builder(KeyPair accountId, SignerKey signerKey)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -124,7 +124,7 @@
   </thead>
       <tr>
         <td><a class="xref" href="stellar_dotnet_sdk.KeyPair.html">KeyPair</a></td>
-        <td><span class="parametername">account</span></td>
+        <td><span class="parametername">accountId</span></td>
         <td></td>
       </tr>
       <tr>
@@ -152,7 +152,7 @@
   <h4 id="stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_Builder__ctor_stellar_dotnet_sdk_xdr_RevokeSponsorshipOp_RevokeSponsorshipOpSigner_" data-uid="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation.Builder.#ctor(stellar_dotnet_sdk.xdr.RevokeSponsorshipOp.RevokeSponsorshipOpSigner)"><a href="#collapsible-stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_Builder__ctor_stellar_dotnet_sdk_xdr_RevokeSponsorshipOp_RevokeSponsorshipOpSigner_" class="expander" data-toggle="collapse">Builder(RevokeSponsorshipOp.RevokeSponsorshipOpSigner)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_RevokeSignerSponsorshipOperation_Builder__ctor_stellar_dotnet_sdk_xdr_RevokeSponsorshipOp_RevokeSponsorshipOpSigner_" class="collapse in">
-  <div class="markdown level1 summary"><p>Constructs a new <code>RevokeSignerSponsorshipOperation</code> builder from a RevokeSponsorshipOpSigner XDR.</p>
+  <div class="markdown level1 summary"><p>Construct a new BeginSponsoringFutureReserves builder from a BeginSponsoringFutureReservesOp XDR.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

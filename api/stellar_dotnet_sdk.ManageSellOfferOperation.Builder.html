@@ -71,8 +71,7 @@
             <article class="content wrap" id="_content" data-uid="stellar_dotnet_sdk.ManageSellOfferOperation.Builder">
   <h1 id="stellar_dotnet_sdk_ManageSellOfferOperation_Builder" data-uid="stellar_dotnet_sdk.ManageSellOfferOperation.Builder">Class ManageSellOfferOperation.Builder
   </h1>
-  <div class="markdown level0 summary"><p>Builds ManageOffer operation.</p>
-</div>
+  <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
 
   <div class="inheritance">
@@ -101,16 +100,17 @@
   
   <a id="stellar_dotnet_sdk_ManageSellOfferOperation_Builder__ctor_" data-uid="stellar_dotnet_sdk.ManageSellOfferOperation.Builder.#ctor*"></a>
   
-  <h4 id="stellar_dotnet_sdk_ManageSellOfferOperation_Builder__ctor_stellar_dotnet_sdk_Asset_stellar_dotnet_sdk_Asset_System_String_System_String_System_Nullable_System_Int64__" data-uid="stellar_dotnet_sdk.ManageSellOfferOperation.Builder.#ctor(stellar_dotnet_sdk.Asset,stellar_dotnet_sdk.Asset,System.String,System.String,System.Nullable{System.Int64})"><a href="#collapsible-stellar_dotnet_sdk_ManageSellOfferOperation_Builder__ctor_stellar_dotnet_sdk_Asset_stellar_dotnet_sdk_Asset_System_String_System_String_System_Nullable_System_Int64__" class="expander" data-toggle="collapse">Builder(Asset, Asset, String, String, Nullable&lt;Int64&gt;)</a></h4>
+  <h4 id="stellar_dotnet_sdk_ManageSellOfferOperation_Builder__ctor_stellar_dotnet_sdk_Asset_stellar_dotnet_sdk_Asset_System_String_System_String_" data-uid="stellar_dotnet_sdk.ManageSellOfferOperation.Builder.#ctor(stellar_dotnet_sdk.Asset,stellar_dotnet_sdk.Asset,System.String,System.String)"><a href="#collapsible-stellar_dotnet_sdk_ManageSellOfferOperation_Builder__ctor_stellar_dotnet_sdk_Asset_stellar_dotnet_sdk_Asset_System_String_System_String_" class="expander" data-toggle="collapse">Builder(Asset, Asset, String, String)</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_ManageSellOfferOperation_Builder__ctor_stellar_dotnet_sdk_Asset_stellar_dotnet_sdk_Asset_System_String_System_String_System_Nullable_System_Int64__" class="collapse in">
-  <div class="markdown level1 summary"><p>Creates a new ManageSellOffer builder.</p>
+  <div id="collapsible-stellar_dotnet_sdk_ManageSellOfferOperation_Builder__ctor_stellar_dotnet_sdk_Asset_stellar_dotnet_sdk_Asset_System_String_System_String_" class="collapse in">
+  <div class="markdown level1 summary"><p>Creates a new ManageSellOffer builder. If you want to update existing offer use
+<a class="xref" href="stellar_dotnet_sdk.ManageSellOfferOperation.Builder.html#stellar_dotnet_sdk_ManageSellOfferOperation_Builder_SetOfferId_System_Int64_">SetOfferId(Int64)</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Builder(Asset selling, Asset buying, string amount, string price, long? offerId = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Builder(Asset selling, Asset buying, string amount, string price)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -137,20 +137,13 @@
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">amount</span></td>
-        <td><p>Amount of selling being sold. An amount of zero will delete the offer.</p>
+        <td><p>Amount of selling being sold.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">price</span></td>
         <td><p>Price of 1 unit of selling in terms of buying.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
-        <td><span class="parametername">offerId</span></td>
-        <td><p>Optional, if not provided, will create a new offer. Existing offer id numbers can be found using
-the Offers for Account endpoint.</p>
 </td>
       </tr>
   </table>
@@ -173,7 +166,7 @@ the Offers for Account endpoint.</p>
   <h4 id="stellar_dotnet_sdk_ManageSellOfferOperation_Builder__ctor_stellar_dotnet_sdk_xdr_ManageSellOfferOp_" data-uid="stellar_dotnet_sdk.ManageSellOfferOperation.Builder.#ctor(stellar_dotnet_sdk.xdr.ManageSellOfferOp)"><a href="#collapsible-stellar_dotnet_sdk_ManageSellOfferOperation_Builder__ctor_stellar_dotnet_sdk_xdr_ManageSellOfferOp_" class="expander" data-toggle="collapse">Builder(ManageSellOfferOp)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_ManageSellOfferOperation_Builder__ctor_stellar_dotnet_sdk_xdr_ManageSellOfferOp_" class="collapse in">
-  <div class="markdown level1 summary"><p>Construct a new <code>ManageOfferOperation</code> builder from a <code>ManageSellOfferOp</code> object.</p>
+  <div class="markdown level1 summary"><p>Construct a new CreateAccount builder from a CreateAccountOp XDR.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -194,7 +187,7 @@ the Offers for Account endpoint.</p>
       <tr>
         <td><span class="xref">stellar_dotnet_sdk.xdr.ManageSellOfferOp</span></td>
         <td><span class="parametername">op</span></td>
-        <td><p><span class="xref">stellar_dotnet_sdk.xdr.ManageSellOfferOp</span></p>
+        <td><p><see cref="!:sdkxdr.ManageOfferOp"></see></p>
 </td>
       </tr>
   </table>
@@ -234,6 +227,57 @@ the Offers for Account endpoint.</p>
     <tr>
       <td>
         <a class="xref" href="stellar_dotnet_sdk.ManageSellOfferOperation.html">ManageSellOfferOperation</a>
+        <p>
+      </td>
+    </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  <a id="stellar_dotnet_sdk_ManageSellOfferOperation_Builder_SetOfferId_" data-uid="stellar_dotnet_sdk.ManageSellOfferOperation.Builder.SetOfferId*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_ManageSellOfferOperation_Builder_SetOfferId_System_Int64_" data-uid="stellar_dotnet_sdk.ManageSellOfferOperation.Builder.SetOfferId(System.Int64)"><a href="#collapsible-stellar_dotnet_sdk_ManageSellOfferOperation_Builder_SetOfferId_System_Int64_" class="expander" data-toggle="collapse">SetOfferId(Int64)</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_ManageSellOfferOperation_Builder_SetOfferId_System_Int64_" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ManageSellOfferOperation.Builder SetOfferId(long offerId)</code></pre>
+  </div>
+
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">offerId</span></td>
+        <td></td>
+      </tr>
+  </table>
+  
+  <h5 class="returns">Returns</h5>
+  <table>
+    <tr>
+      <td>
+        <a class="xref" href="stellar_dotnet_sdk.ManageSellOfferOperation.Builder.html">ManageSellOfferOperation.Builder</a>
         <p>
       </td>
     </tr>
