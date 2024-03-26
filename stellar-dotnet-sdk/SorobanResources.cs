@@ -4,10 +4,18 @@ namespace stellar_dotnet_sdk;
 
 public class SorobanResources
 {
-    public LedgerFootprint Footprint { get; set; } = new();
-    public uint Instructions { get; set; }
-    public uint ReadBytes { get; set; }
-    public uint WriteBytes { get; set; }
+    public SorobanResources(LedgerFootprint footprint, uint instructions, uint readBytes, uint writeBytes)
+    {
+        Footprint = footprint;
+        Instructions = instructions;
+        ReadBytes = readBytes;
+        WriteBytes = writeBytes;
+    }
+
+    public LedgerFootprint Footprint { get; }
+    public uint Instructions { get; }
+    public uint ReadBytes { get; }
+    public uint WriteBytes { get; }
 
     public xdr.SorobanResources ToXdr()
     {
@@ -22,12 +30,7 @@ public class SorobanResources
 
     public static SorobanResources FromXdr(xdr.SorobanResources xdr)
     {
-        return new SorobanResources
-        {
-            Footprint = LedgerFootprint.FromXdr(xdr.Footprint),
-            Instructions = xdr.Instructions.InnerValue,
-            ReadBytes = xdr.ReadBytes.InnerValue,
-            WriteBytes = xdr.WriteBytes.InnerValue
-        };
+        return new SorobanResources(LedgerFootprint.FromXdr(xdr.Footprint), xdr.Instructions.InnerValue,
+            xdr.ReadBytes.InnerValue, xdr.WriteBytes.InnerValue);
     }
 }

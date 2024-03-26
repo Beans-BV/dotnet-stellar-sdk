@@ -34,7 +34,7 @@ public class SetTrustLineFlagsResultCode
         SET_TRUST_LINE_FLAGS_LOW_RESERVE = -5
     }
 
-    public SetTrustLineFlagsResultCodeEnum InnerValue { get; set; } = default;
+    public SetTrustLineFlagsResultCodeEnum InnerValue { get; set; }
 
     public static SetTrustLineFlagsResultCode Create(SetTrustLineFlagsResultCodeEnum v)
     {

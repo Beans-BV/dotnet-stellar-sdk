@@ -1,15 +1,13 @@
 ﻿using Newtonsoft.Json;
 
-namespace stellar_dotnet_sdk.responses
-{
-    public class PathResponseLinks
-    {
-        [JsonProperty(PropertyName = "self")]
-        public Link<PathResponse> Self { get; }
+namespace stellar_dotnet_sdk.responses;
 
-        public PathResponseLinks(Link<PathResponse> self)
-        {
-            Self = self;
-        }
+public class PathResponseLinks
+{
+    public PathResponseLinks(Link<PathResponse> self)
+    {
+        Self = self;
     }
+
+    [JsonProperty(PropertyName = "self")] public Link<PathResponse> Self { get; }
 }

@@ -19,7 +19,7 @@ public class PeerStatList
         InnerValue = value;
     }
 
-    public PeerStats[] InnerValue { get; set; } = default;
+    public PeerStats[] InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, PeerStatList encodedPeerStatList)
     {

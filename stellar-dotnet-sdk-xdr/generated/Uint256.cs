@@ -19,7 +19,7 @@ public class Uint256
         InnerValue = value;
     }
 
-    public byte[] InnerValue { get; set; } = default;
+    public byte[] InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, Uint256 encodedUint256)
     {

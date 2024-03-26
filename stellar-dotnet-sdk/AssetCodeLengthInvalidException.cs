@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+[Serializable]
+internal class AssetCodeLengthInvalidException : Exception
 {
-    [Serializable]
-    internal class AssetCodeLengthInvalidException : Exception
+    public AssetCodeLengthInvalidException()
     {
-        public AssetCodeLengthInvalidException()
-        {
-        }
+    }
 
-        public AssetCodeLengthInvalidException(string message) : base(message)
-        {
-        }
+    public AssetCodeLengthInvalidException(string message) : base(message)
+    {
+    }
 
-        public AssetCodeLengthInvalidException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    public AssetCodeLengthInvalidException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 
-        protected AssetCodeLengthInvalidException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+    protected AssetCodeLengthInvalidException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
     }
 }

@@ -1,63 +1,52 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using stellar_dotnet_sdk;
 
-namespace stellar_dotnet_sdk_test.requests
+namespace stellar_dotnet_sdk_test.requests;
+
+[TestClass]
+public class RequestBuilderStreamableTest
 {
-    [TestClass]
-    public class RequestBuilderStreamableTest
+    private readonly Uri _uri = new("http://test.com");
+
+    [TestMethod]
+    public async Task TestHelloStream()
     {
-        private readonly Uri _uri = new Uri("http://test.com");
+        // Check we skip the first message with "hello" data
+        var fakeHandler = new FakeHttpMessageHandler();
+        var stream = "event: open\ndata: hello\n\ndata: foobar\n\n";
+        fakeHandler.QueueResponse(FakeResponse.StartsStream(StreamAction.Write(stream)));
 
-        [TestMethod]
-        public async Task TestHelloStream()
+        using var eventSource = new SSEEventSource(_uri, builder => builder.MessageHandler(fakeHandler));
+        string dataReceived = null;
+        eventSource.Message += (sender, args) =>
         {
-            // Check we skip the first message with "hello" data
-            var fakeHandler = new FakeHttpMessageHandler();
-            var stream = "event: open\ndata: hello\n\ndata: foobar\n\n";
-            fakeHandler.QueueResponse(FakeResponse.StartsStream(StreamAction.Write(stream)));
+            dataReceived = args.Data;
+            eventSource.Shutdown();
+        };
 
-            using (var eventSource = new SSEEventSource(_uri, builder => builder.MessageHandler(fakeHandler)))
-            {
+        await eventSource.Connect();
 
-                string dataReceived = null;
-                eventSource.Message += (sender, args) =>
-                {
-                    dataReceived = args.Data;
-                    eventSource.Shutdown();
-                };
+        Assert.AreEqual("foobar", dataReceived);
+    }
 
-                await eventSource.Connect();
+    [TestMethod]
+    public async Task TestStreamErrorEvent()
+    {
+        var fakeHandler = new FakeHttpMessageHandler();
+        fakeHandler.QueueResponse(FakeResponse.WithIOError());
+        fakeHandler.QueueResponse(FakeResponse.WithIOError());
+        fakeHandler.QueueResponse(FakeResponse.StartsStream());
 
-                Assert.AreEqual("foobar", dataReceived);
-            }
-        }
-
-        [TestMethod]
-        public async Task TestStreamErrorEvent()
+        using var eventSource = new SSEEventSource(_uri, builder => builder.MessageHandler(fakeHandler));
+        var errorCount = 0;
+        eventSource.Error += (sender, args) =>
         {
-            var fakeHandler = new FakeHttpMessageHandler();
-            fakeHandler.QueueResponse(FakeResponse.WithIOError());
-            fakeHandler.QueueResponse(FakeResponse.WithIOError());
-            fakeHandler.QueueResponse(FakeResponse.StartsStream());
-
-            using (var eventSource = new SSEEventSource(_uri, builder => builder.MessageHandler(fakeHandler)))
-            {
-                var errorCount = 0;
-                eventSource.Error += (sender, args) =>
-                {
-                    errorCount += 1;
-                    if (errorCount >= 2)
-                    {
-                        eventSource.Shutdown();
-                    }
-                };
-                await eventSource.Connect();
-                Assert.AreEqual(2, errorCount);
-            }
-        }
+            errorCount += 1;
+            if (errorCount >= 2) eventSource.Shutdown();
+        };
+        await eventSource.Connect();
+        Assert.AreEqual(2, errorCount);
     }
 }

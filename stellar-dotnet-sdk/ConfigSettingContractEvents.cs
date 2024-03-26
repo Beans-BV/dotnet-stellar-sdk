@@ -4,34 +4,19 @@ namespace stellar_dotnet_sdk;
 
 public class ConfigSettingContractEvents : LedgerEntryConfigSetting
 {
-    public uint TxMaxContractEventsSizeBytes { get; set; }
-    public long FeeContractEvents1KB { get; set; }
-
-    public static ConfigSettingContractEvents FromXdr(xdr.ConfigSettingContractEventsV0 xdrConfig)
+    private ConfigSettingContractEvents(uint txMaxContractEventsSizeBytes, long feeContractEvents1KB)
     {
-        return new ConfigSettingContractEvents
-        {
-            TxMaxContractEventsSizeBytes = xdrConfig.TxMaxContractEventsSizeBytes.InnerValue,
-            FeeContractEvents1KB = xdrConfig.FeeContractEvents1KB.InnerValue
-        };
+        TxMaxContractEventsSizeBytes = txMaxContractEventsSizeBytes;
+        FeeContractEvents1KB = feeContractEvents1KB;
     }
 
-    public xdr.ConfigSettingContractEventsV0 ToXdr()
-    {
-        return new xdr.ConfigSettingContractEventsV0
-        {
-            TxMaxContractEventsSizeBytes = new Uint32(TxMaxContractEventsSizeBytes),
-            FeeContractEvents1KB = new Int64(FeeContractEvents1KB)
-        };
-    }
+    public uint TxMaxContractEventsSizeBytes { get; }
+    public long FeeContractEvents1KB { get; }
 
-    public ConfigSettingEntry ToXdrConfigSettingEntry()
+    public static ConfigSettingContractEvents FromXdr(ConfigSettingContractEventsV0 xdrConfig)
     {
-        return new ConfigSettingEntry
-        {
-            Discriminant =
-                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_EVENTS_V0),
-            ContractEvents = ToXdr()
-        };
+        return new ConfigSettingContractEvents(
+            xdrConfig.TxMaxContractEventsSizeBytes.InnerValue,
+            xdrConfig.FeeContractEvents1KB.InnerValue);
     }
 }

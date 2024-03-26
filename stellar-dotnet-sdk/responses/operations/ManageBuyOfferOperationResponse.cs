@@ -1,7 +1,6 @@
-namespace stellar_dotnet_sdk.responses.operations
+namespace stellar_dotnet_sdk.responses.operations;
+
+public class ManageBuyOfferOperationResponse : ManageOfferOperationResponse
 {
-    public class ManageBuyOfferOperationResponse : ManageOfferOperationResponse
-    {
-        public override int TypeId => 12;
-    }
+    public override int TypeId => 12;
 }

@@ -4,31 +4,15 @@ namespace stellar_dotnet_sdk;
 
 public class ConfigSettingContractExecutionLanes : LedgerEntryConfigSetting
 {
-    public uint LedgerMaxTxCount { get; set; }
-
-    public static ConfigSettingContractExecutionLanes FromXdr(xdr.ConfigSettingContractExecutionLanesV0 xdrConfig)
+    private ConfigSettingContractExecutionLanes(uint ledgerMaxTxCount)
     {
-        return new ConfigSettingContractExecutionLanes
-        {
-            LedgerMaxTxCount = xdrConfig.LedgerMaxTxCount.InnerValue
-        };
+        LedgerMaxTxCount = ledgerMaxTxCount;
     }
 
-    public xdr.ConfigSettingContractExecutionLanesV0 ToXdr()
-    {
-        return new xdr.ConfigSettingContractExecutionLanesV0
-        {
-            LedgerMaxTxCount = new Uint32(LedgerMaxTxCount)
-        };
-    }
+    public uint LedgerMaxTxCount { get; }
 
-    public ConfigSettingEntry ToXdrConfigSettingEntry()
+    public static ConfigSettingContractExecutionLanes FromXdr(ConfigSettingContractExecutionLanesV0 xdrConfig)
     {
-        return new ConfigSettingEntry
-        {
-            Discriminant =
-                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_EXECUTION_LANES),
-            ContractExecutionLanes = ToXdr()
-        };
+        return new ConfigSettingContractExecutionLanes(xdrConfig.LedgerMaxTxCount.InnerValue);
     }
 }

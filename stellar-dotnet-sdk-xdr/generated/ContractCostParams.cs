@@ -19,7 +19,7 @@ public class ContractCostParams
         InnerValue = value;
     }
 
-    public ContractCostParamEntry[] InnerValue { get; set; } = default;
+    public ContractCostParamEntry[] InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, ContractCostParams encodedContractCostParams)
     {

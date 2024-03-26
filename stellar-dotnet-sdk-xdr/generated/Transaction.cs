@@ -41,7 +41,7 @@ public class Transaction
     public Uint32 Fee { get; set; }
     public SequenceNumber SeqNum { get; set; }
     public Preconditions Cond { get; set; }
-    public Memo Memo { get; set; }
+    public Memo? Memo { get; set; }
     public Operation[] Operations { get; set; }
     public TransactionExt Ext { get; set; }
 

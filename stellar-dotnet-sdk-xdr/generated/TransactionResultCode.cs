@@ -60,7 +60,7 @@ public class TransactionResultCode
         txSOROBAN_INVALID = -17
     }
 
-    public TransactionResultCodeEnum InnerValue { get; set; } = default;
+    public TransactionResultCodeEnum InnerValue { get; set; }
 
     public static TransactionResultCode Create(TransactionResultCodeEnum v)
     {

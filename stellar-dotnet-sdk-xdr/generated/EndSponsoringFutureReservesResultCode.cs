@@ -25,7 +25,7 @@ public class EndSponsoringFutureReservesResultCode
         END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED = -1
     }
 
-    public EndSponsoringFutureReservesResultCodeEnum InnerValue { get; set; } = default;
+    public EndSponsoringFutureReservesResultCodeEnum InnerValue { get; set; }
 
     public static EndSponsoringFutureReservesResultCode Create(EndSponsoringFutureReservesResultCodeEnum v)
     {

@@ -19,7 +19,7 @@ public class Int64
         InnerValue = value;
     }
 
-    public long InnerValue { get; set; } = default;
+    public long InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, Int64 encodedInt64)
     {

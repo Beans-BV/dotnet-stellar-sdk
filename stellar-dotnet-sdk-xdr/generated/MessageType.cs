@@ -68,7 +68,7 @@ public class MessageType
         FLOOD_DEMAND = 19
     }
 
-    public MessageTypeEnum InnerValue { get; set; } = default;
+    public MessageTypeEnum InnerValue { get; set; }
 
     public static MessageType Create(MessageTypeEnum v)
     {

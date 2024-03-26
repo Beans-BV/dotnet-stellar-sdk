@@ -1,37 +1,32 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System;
+using Newtonsoft.Json;
 using stellar_dotnet_sdk.xdr;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace stellar_dotnet_sdk.converters
+namespace stellar_dotnet_sdk.converters;
+
+public class LiquidityPoolTypeEnumJsonConverter : JsonConverter<LiquidityPoolType.LiquidityPoolTypeEnum>
 {
-    public class LiquidityPoolTypeEnumJsonConverter : JsonConverter<xdr.LiquidityPoolType.LiquidityPoolTypeEnum>
+    public override LiquidityPoolType.LiquidityPoolTypeEnum ReadJson(JsonReader reader, Type objectType,
+        LiquidityPoolType.LiquidityPoolTypeEnum existingValue, bool hasExistingValue, JsonSerializer serializer)
     {
-        public override LiquidityPoolType.LiquidityPoolTypeEnum ReadJson(JsonReader reader, Type objectType, LiquidityPoolType.LiquidityPoolTypeEnum existingValue, bool hasExistingValue, JsonSerializer serializer)
+        return reader.Value switch
         {
-            switch (reader.Value)
-            {
-                case "constant_product":
-                    return LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT;
+            "constant_product" => LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+            _ => throw new Exception("type is not readable")
+        };
+    }
 
-                default:
-                    throw new Exception("type is not readable");
-            }
-        }
-
-        public override void WriteJson(JsonWriter writer, LiquidityPoolType.LiquidityPoolTypeEnum value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, LiquidityPoolType.LiquidityPoolTypeEnum value,
+        JsonSerializer serializer)
+    {
+        switch (value)
         {
-            switch (value)
-            {
-                case LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT:
-                    writer.WriteValue("constant_product");
-                    break;
+            case LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT:
+                writer.WriteValue("constant_product");
+                break;
 
-                default:
-                    throw new Exception("type is not readable");
-            }
+            default:
+                throw new Exception("type is not readable");
         }
     }
 }

@@ -24,7 +24,7 @@ public class HostFunctionType
         HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM = 2
     }
 
-    public HostFunctionTypeEnum InnerValue { get; set; } = default;
+    public HostFunctionTypeEnum InnerValue { get; set; }
 
     public static HostFunctionType Create(HostFunctionTypeEnum v)
     {

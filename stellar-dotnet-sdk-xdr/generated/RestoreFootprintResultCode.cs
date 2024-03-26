@@ -29,7 +29,7 @@ public class RestoreFootprintResultCode
         RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE = -3
     }
 
-    public RestoreFootprintResultCodeEnum InnerValue { get; set; } = default;
+    public RestoreFootprintResultCodeEnum InnerValue { get; set; }
 
     public static RestoreFootprintResultCode Create(RestoreFootprintResultCodeEnum v)
     {

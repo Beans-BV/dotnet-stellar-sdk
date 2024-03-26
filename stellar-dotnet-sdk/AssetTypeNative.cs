@@ -1,43 +1,42 @@
 ﻿using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public class AssetTypeNative : Asset
 {
-    public class AssetTypeNative : Asset
+    public const string RestApiType = "native";
+
+    public override string Type => RestApiType;
+
+    public override int GetHashCode()
     {
-        public const string RestApiType = "native";
+        return 0;
+    }
 
-        public override int GetHashCode()
+    public override bool Equals(object? obj)
+    {
+        if (obj is not AssetTypeNative) return false;
+        return GetHashCode() == obj.GetHashCode();
+    }
+
+    public override xdr.Asset ToXdr()
+    {
+        var thisXdr = new xdr.Asset
         {
-            return 0;
-        }
+            Discriminant = AssetType.Create(AssetType.AssetTypeEnum.ASSET_TYPE_NATIVE)
+        };
+        return thisXdr;
+    }
 
-        public override string Type => RestApiType;
+    /// <inheritdoc />
+    public override string CanonicalName()
+    {
+        return "native";
+    }
 
-        public override bool Equals(object obj)
-        {
-            return GetHashCode() == obj.GetHashCode();
-        }
-
-        public override xdr.Asset ToXdr()
-        {
-            var thisXdr = new xdr.Asset();
-            thisXdr.Discriminant = AssetType.Create(AssetType.AssetTypeEnum.ASSET_TYPE_NATIVE);
-            return thisXdr;
-        }
-
-        /// <inheritdoc />        
-        public override string CanonicalName()
-        {
-            return "native";
-        }
-
-        public override int CompareTo(Asset asset)
-        {
-            if (asset.Type == RestApiType)
-            {
-                return 0;
-            }
-            return -1;
-        }
+    public override int CompareTo(Asset asset)
+    {
+        if (asset.Type == RestApiType) return 0;
+        return -1;
     }
 }

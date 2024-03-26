@@ -1,58 +1,46 @@
-﻿using stellar_dotnet_sdk.xdr;
-
-namespace stellar_dotnet_sdk;
+﻿namespace stellar_dotnet_sdk;
 
 public class StateArchivalSettings : LedgerEntryConfigSetting
 {
-    public uint MaxEntryTTL { get; set; }
-    public uint MinTemporaryTTL { get; set; }
-    public uint MinPersistentTTL { get; set; }
-    public long PersistentRentRateDenominator { get; set; }
-    public long TempRentRateDenominator { get; set; }
-    public uint MaxEntriesToArchive { get; set; }
-    public uint BucketListSizeWindowSampleSize { get; set; }
-    public ulong EvictionScanSize { get; set; }
-    public uint StartingEvictionScanLevel { get; set; }
+    private StateArchivalSettings(uint maxEntryTTL, uint minTemporaryTTL, uint minPersistentTTL,
+        long persistentRentRateDenominator, long tempRentRateDenominator, uint maxEntriesToArchive,
+        uint bucketListSizeWindowSampleSize, uint bucketListWindowSamplePeriod, uint evictionScanSize,
+        uint startingEvictionScanLevel)
+    {
+        MaxEntryTTL = maxEntryTTL;
+        MinTemporaryTTL = minTemporaryTTL;
+        MinPersistentTTL = minPersistentTTL;
+        PersistentRentRateDenominator = persistentRentRateDenominator;
+        TempRentRateDenominator = tempRentRateDenominator;
+        MaxEntriesToArchive = maxEntriesToArchive;
+        BucketListSizeWindowSampleSize = bucketListSizeWindowSampleSize;
+        BucketListWindowSamplePeriod = bucketListWindowSamplePeriod;
+        EvictionScanSize = evictionScanSize;
+        StartingEvictionScanLevel = startingEvictionScanLevel;
+    }
+
+    public uint MaxEntryTTL { get; }
+    public uint MinTemporaryTTL { get; }
+    public uint MinPersistentTTL { get; }
+    public long PersistentRentRateDenominator { get; }
+    public long TempRentRateDenominator { get; }
+    public uint MaxEntriesToArchive { get; }
+    public uint BucketListSizeWindowSampleSize { get; }
+    public uint BucketListWindowSamplePeriod { get; }
+    public uint EvictionScanSize { get; }
+    public uint StartingEvictionScanLevel { get; }
 
     public static StateArchivalSettings FromXdr(xdr.StateArchivalSettings xdrConfig)
     {
-        return new StateArchivalSettings
-        {
-            MaxEntryTTL = xdrConfig.MaxEntryTTL.InnerValue,
-            MinTemporaryTTL = xdrConfig.MinTemporaryTTL.InnerValue,
-            MinPersistentTTL = xdrConfig.MinPersistentTTL.InnerValue,
-            PersistentRentRateDenominator = xdrConfig.PersistentRentRateDenominator.InnerValue,
-            TempRentRateDenominator = xdrConfig.TempRentRateDenominator.InnerValue,
-            MaxEntriesToArchive = xdrConfig.MaxEntriesToArchive.InnerValue,
-            BucketListSizeWindowSampleSize = xdrConfig.BucketListSizeWindowSampleSize.InnerValue,
-            EvictionScanSize = xdrConfig.EvictionScanSize.InnerValue,
-            StartingEvictionScanLevel = xdrConfig.StartingEvictionScanLevel.InnerValue
-        };
-    }
-
-    public xdr.StateArchivalSettings ToXdr()
-    {
-        return new xdr.StateArchivalSettings
-        {
-            MaxEntryTTL = new Uint32(MaxEntryTTL),
-            MinTemporaryTTL = new Uint32(MinTemporaryTTL),
-            MinPersistentTTL = new Uint32(MinPersistentTTL),
-            PersistentRentRateDenominator = new Int64(PersistentRentRateDenominator),
-            TempRentRateDenominator = new Int64(TempRentRateDenominator),
-            MaxEntriesToArchive = new Uint32(MaxEntriesToArchive),
-            BucketListSizeWindowSampleSize = new Uint32(BucketListSizeWindowSampleSize),
-            EvictionScanSize = new Uint64(EvictionScanSize),
-            StartingEvictionScanLevel = new Uint32(StartingEvictionScanLevel)
-        };
-    }
-
-    public ConfigSettingEntry ToXdrConfigSettingEntry()
-    {
-        return new ConfigSettingEntry
-        {
-            Discriminant =
-                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_STATE_ARCHIVAL),
-            StateArchivalSettings = ToXdr()
-        };
+        return new StateArchivalSettings(xdrConfig.MaxEntryTTL.InnerValue,
+            xdrConfig.MinTemporaryTTL.InnerValue,
+            xdrConfig.MinPersistentTTL.InnerValue,
+            xdrConfig.PersistentRentRateDenominator.InnerValue,
+            xdrConfig.TempRentRateDenominator.InnerValue,
+            xdrConfig.MaxEntriesToArchive.InnerValue,
+            xdrConfig.BucketListSizeWindowSampleSize.InnerValue,
+            xdrConfig.BucketListWindowSamplePeriod.InnerValue,
+            xdrConfig.EvictionScanSize.InnerValue,
+            xdrConfig.StartingEvictionScanLevel.InnerValue);
     }
 }

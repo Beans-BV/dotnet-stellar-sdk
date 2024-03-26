@@ -1,39 +1,33 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using stellar_dotnet_sdk.responses;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace stellar_dotnet_sdk.converters
+namespace stellar_dotnet_sdk.converters;
+
+public class ReserveJsonConverter : JsonConverter<Reserve>
 {
-    public class ReserveJsonConverter : JsonConverter<Reserve>
+    public override Reserve ReadJson(JsonReader reader, Type objectType, Reserve? existingValue, bool hasExistingValue,
+        JsonSerializer serializer)
     {
-        public override Reserve ReadJson(JsonReader reader, Type objectType, Reserve existingValue, bool hasExistingValue, JsonSerializer serializer)
-        {
-            var reserve = new Reserve();
+        var jt = JToken.ReadFrom(reader);
 
-            var jt = JToken.ReadFrom(reader);
+        var assetName = jt.Value<string>("asset");
+        var asset = string.IsNullOrEmpty(assetName) ? null : Asset.Create(assetName);
 
-            var assetName = jt.Value<string>("asset");
-            reserve.Asset = assetName == null ? null : Asset.Create(jt.Value<string>("asset"));
+        var amount = jt.Value<string>("amount");
 
-            var amount = jt.Value<string>("amount");
-            reserve.Amount = amount;
+        if (asset == null) throw new ArgumentException("JSON value for asset is missing.", nameof(asset));
 
-            return reserve;
-        }
+        if (amount == null) throw new ArgumentException("JSON value for amount is missing.", nameof(amount));
 
-        public override void WriteJson(JsonWriter writer, Reserve value, JsonSerializer serializer)
-        {
-            JObject jo = new JObject();
-            if (value.Asset != null)
-            {
-                jo.Add("asset", value.Asset.CanonicalName());
-            }
+        return new Reserve(amount, asset);
+    }
 
-            jo.Add("amount", value.Amount);
-            jo.WriteTo(writer);
-        }
+    public override void WriteJson(JsonWriter writer, Reserve? value, JsonSerializer serializer)
+    {
+        var jo = new JObject();
+        if (value?.Asset != null) jo.Add("asset", value.Asset.CanonicalName());
+        if (value?.Amount != null) jo.Add("amount", value.Amount);
+        jo.WriteTo(writer);
     }
 }

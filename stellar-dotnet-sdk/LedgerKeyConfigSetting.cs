@@ -9,7 +9,7 @@ public class LedgerKeyConfigSetting : LedgerKey
         ConfigSettingID = settingId;
     }
 
-    public ConfigSettingID ConfigSettingID { get; set; }
+    public ConfigSettingID ConfigSettingID { get; }
 
     public override xdr.LedgerKey ToXdr()
     {

@@ -19,7 +19,7 @@ public class AssetCode12
         InnerValue = value;
     }
 
-    public byte[] InnerValue { get; set; } = default;
+    public byte[] InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, AssetCode12 encodedAssetCode12)
     {

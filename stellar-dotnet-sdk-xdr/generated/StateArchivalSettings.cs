@@ -20,8 +20,11 @@ namespace stellar_dotnet_sdk.xdr;
 //      // Number of snapshots to use when calculating average BucketList size
 //      uint32 bucketListSizeWindowSampleSize;
 //  
+//      // How often to sample the BucketList size for the average, in ledgers
+//      uint32 bucketListWindowSamplePeriod;
+//  
 //      // Maximum number of bytes that we scan for eviction per ledger
-//      uint64 evictionScanSize;
+//      uint32 evictionScanSize;
 //  
 //      // Lowest BucketList level to be scanned to evict entries
 //      uint32 startingEvictionScanLevel;
@@ -37,7 +40,8 @@ public class StateArchivalSettings
     public Int64 TempRentRateDenominator { get; set; }
     public Uint32 MaxEntriesToArchive { get; set; }
     public Uint32 BucketListSizeWindowSampleSize { get; set; }
-    public Uint64 EvictionScanSize { get; set; }
+    public Uint32 BucketListWindowSamplePeriod { get; set; }
+    public Uint32 EvictionScanSize { get; set; }
     public Uint32 StartingEvictionScanLevel { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, StateArchivalSettings encodedStateArchivalSettings)
@@ -49,7 +53,8 @@ public class StateArchivalSettings
         Int64.Encode(stream, encodedStateArchivalSettings.TempRentRateDenominator);
         Uint32.Encode(stream, encodedStateArchivalSettings.MaxEntriesToArchive);
         Uint32.Encode(stream, encodedStateArchivalSettings.BucketListSizeWindowSampleSize);
-        Uint64.Encode(stream, encodedStateArchivalSettings.EvictionScanSize);
+        Uint32.Encode(stream, encodedStateArchivalSettings.BucketListWindowSamplePeriod);
+        Uint32.Encode(stream, encodedStateArchivalSettings.EvictionScanSize);
         Uint32.Encode(stream, encodedStateArchivalSettings.StartingEvictionScanLevel);
     }
 
@@ -63,7 +68,8 @@ public class StateArchivalSettings
         decodedStateArchivalSettings.TempRentRateDenominator = Int64.Decode(stream);
         decodedStateArchivalSettings.MaxEntriesToArchive = Uint32.Decode(stream);
         decodedStateArchivalSettings.BucketListSizeWindowSampleSize = Uint32.Decode(stream);
-        decodedStateArchivalSettings.EvictionScanSize = Uint64.Decode(stream);
+        decodedStateArchivalSettings.BucketListWindowSamplePeriod = Uint32.Decode(stream);
+        decodedStateArchivalSettings.EvictionScanSize = Uint32.Decode(stream);
         decodedStateArchivalSettings.StartingEvictionScanLevel = Uint32.Decode(stream);
         return decodedStateArchivalSettings;
     }

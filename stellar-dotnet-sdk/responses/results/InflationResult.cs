@@ -1,29 +1,29 @@
 using System;
 using System.Linq;
+using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk.responses.results
+namespace stellar_dotnet_sdk.responses.results;
+
+public class InflationResult : OperationResult
 {
-    public class InflationResult : OperationResult
+    public static InflationResult FromXdr(xdr.InflationResult result)
     {
-        public static InflationResult FromXdr(xdr.InflationResult result)
+        switch (result.Discriminant.InnerValue)
         {
-            switch (result.Discriminant.InnerValue)
-            {
-                case xdr.InflationResultCode.InflationResultCodeEnum.INFLATION_SUCCESS:
-                    return new InflationSuccess
-                    {
-                        Payouts = PayoutsFromXdr(result.Payouts)
-                    };
-                case xdr.InflationResultCode.InflationResultCodeEnum.INFLATION_NOT_TIME:
-                    return new InflationNotTime();
-                default:
-                    throw new SystemException("Unknown Inflation type");
-            }
+            case InflationResultCode.InflationResultCodeEnum.INFLATION_SUCCESS:
+                return new InflationSuccess
+                {
+                    Payouts = PayoutsFromXdr(result.Payouts)
+                };
+            case InflationResultCode.InflationResultCodeEnum.INFLATION_NOT_TIME:
+                return new InflationNotTime();
+            default:
+                throw new SystemException("Unknown Inflation type");
         }
+    }
 
-        private static InflationSuccess.InflationPayout[] PayoutsFromXdr(xdr.InflationPayout[] payouts)
-        {
-            return payouts.Select(InflationSuccess.InflationPayout.FromXdr).ToArray();
-        }
+    private static InflationSuccess.InflationPayout[] PayoutsFromXdr(InflationPayout[] payouts)
+    {
+        return payouts.Select(InflationSuccess.InflationPayout.FromXdr).ToArray();
     }
 }

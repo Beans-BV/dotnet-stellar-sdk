@@ -1,45 +1,36 @@
-﻿using Newtonsoft.Json;
-using stellar_dotnet_sdk.converters;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Newtonsoft.Json;
+using stellar_dotnet_sdk.converters;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+[JsonConverter(typeof(ReserveJsonConverter))]
+public class Reserve
 {
-    [JsonConverter(typeof(ReserveJsonConverter))]
-    public class Reserve
+    public Reserve(string amount, Asset asset)
     {
-        [JsonProperty(PropertyName = "amount")]
-        public string Amount { get; set; }
+        Amount = amount ?? throw new ArgumentNullException(nameof(amount), "amount cannot be null");
+        Asset = asset ?? throw new ArgumentNullException(nameof(asset), "asset cannot be null");
+    }
 
-        [JsonProperty(PropertyName = "asset")]
-        public Asset Asset { get; set; }
+    [JsonProperty(PropertyName = "amount")]
+    public string Amount { get; }
 
-        public Reserve() { }
+    [JsonProperty(PropertyName = "asset")] public Asset Asset { get; }
 
-        public Reserve(string amount, Asset asset)
-        {
-            Amount = amount ?? throw new ArgumentNullException(nameof(amount), "amount cannot be null");
-            Asset = asset ?? throw new ArgumentNullException(nameof(amount), "asset cannot be null");
-        }
+    public override bool Equals(object? obj)
+    {
+        if (obj is not Reserve other) return false;
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Reserve))
-            {
-                return false;
-            }
+        return Equals(Asset, other.Asset) && Equals(Amount, other.Amount);
+    }
 
-            Reserve other = (Reserve)obj;
-            return Equals(Asset, other.Asset) && Equals(Amount, other.Amount);
-        }
-
-        public override int GetHashCode()
-        {
-            int hashCode = 1588693772;
-            hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Amount);
-            hashCode = (hashCode * -1521134295) + EqualityComparer<Asset>.Default.GetHashCode(Asset);
-            return hashCode;
-        }
+    public override int GetHashCode()
+    {
+        var hashCode = 1588693772;
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Amount);
+        hashCode = hashCode * -1521134295 + EqualityComparer<Asset>.Default.GetHashCode(Asset);
+        return hashCode;
     }
 }

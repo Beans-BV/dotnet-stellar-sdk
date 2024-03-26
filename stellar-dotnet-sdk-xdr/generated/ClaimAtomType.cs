@@ -24,7 +24,7 @@ public class ClaimAtomType
         CLAIM_ATOM_TYPE_LIQUIDITY_POOL = 2
     }
 
-    public ClaimAtomTypeEnum InnerValue { get; set; } = default;
+    public ClaimAtomTypeEnum InnerValue { get; set; }
 
     public static ClaimAtomType Create(ClaimAtomTypeEnum v)
     {

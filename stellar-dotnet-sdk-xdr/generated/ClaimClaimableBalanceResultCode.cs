@@ -30,7 +30,7 @@ public class ClaimClaimableBalanceResultCode
         CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED = -5
     }
 
-    public ClaimClaimableBalanceResultCodeEnum InnerValue { get; set; } = default;
+    public ClaimClaimableBalanceResultCodeEnum InnerValue { get; set; }
 
     public static ClaimClaimableBalanceResultCode Create(ClaimClaimableBalanceResultCodeEnum v)
     {

@@ -1,24 +1,25 @@
-namespace stellar_dotnet_sdk
+using stellar_dotnet_sdk.xdr;
+
+namespace stellar_dotnet_sdk;
+
+public class ClaimPredicateNot : ClaimPredicate
 {
-    public class ClaimPredicateNot : ClaimPredicate
+    public ClaimPredicateNot(ClaimPredicate predicate)
     {
-        public ClaimPredicate Predicate { get; }
+        Predicate = predicate;
+    }
 
-        public ClaimPredicateNot(ClaimPredicate predicate)
-        {
-            Predicate = predicate;
-        }
+    public ClaimPredicate Predicate { get; }
 
-        public override xdr.ClaimPredicate ToXdr()
+    public override xdr.ClaimPredicate ToXdr()
+    {
+        return new xdr.ClaimPredicate
         {
-            return new xdr.ClaimPredicate
+            Discriminant = new ClaimPredicateType
             {
-                Discriminant = new xdr.ClaimPredicateType
-                {
-                    InnerValue = xdr.ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_NOT
-                },
-                NotPredicate = Predicate.ToXdr(),
-            };
-        }
+                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_NOT
+            },
+            NotPredicate = Predicate.ToXdr()
+        };
     }
 }

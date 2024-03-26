@@ -33,7 +33,7 @@ public class RevokeSponsorshipResultCode
         REVOKE_SPONSORSHIP_MALFORMED = -5
     }
 
-    public RevokeSponsorshipResultCodeEnum InnerValue { get; set; } = default;
+    public RevokeSponsorshipResultCodeEnum InnerValue { get; set; }
 
     public static RevokeSponsorshipResultCode Create(RevokeSponsorshipResultCodeEnum v)
     {

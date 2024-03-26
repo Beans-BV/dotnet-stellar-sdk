@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
+using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using stellar_dotnet_sdk;
 using stellar_dotnet_sdk.responses;
 using stellar_dotnet_sdk.responses.operations;
-using System.IO;
-using FluentAssertions;
 
 namespace stellar_dotnet_sdk_test.responses.operations;
 
@@ -27,7 +27,7 @@ public class ManageBuyOfferOperationResponseTest
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
-
+        Assert.IsNotNull(back);
         AssertManageBuyOfferData(back);
     }
 
@@ -48,7 +48,7 @@ public class ManageBuyOfferOperationResponseTest
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
-
+        Assert.IsNotNull(back);
         AssertManageBuyOfferData(back);
     }
 
@@ -69,7 +69,8 @@ public class ManageBuyOfferOperationResponseTest
         operation.PriceRatio.Denominator
             .Should().Be(10000);
 
-        Assert.AreEqual(operation.BuyingAsset, Asset.CreateNonNativeAsset("RMT", "GDEGOXPCHXWFYY234D2YZSPEJ24BX42ESJNVHY5H7TWWQSYRN5ZKZE3N"));
+        Assert.AreEqual(operation.BuyingAsset,
+            Asset.CreateNonNativeAsset("RMT", "GDEGOXPCHXWFYY234D2YZSPEJ24BX42ESJNVHY5H7TWWQSYRN5ZKZE3N"));
         Assert.AreEqual(operation.SellingAsset, new AssetTypeNative());
     }
 }

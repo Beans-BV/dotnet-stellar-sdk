@@ -41,7 +41,7 @@ public class LiquidityPoolDepositResultCode
         LIQUIDITY_POOL_DEPOSIT_POOL_FULL = -7
     }
 
-    public LiquidityPoolDepositResultCodeEnum InnerValue { get; set; } = default;
+    public LiquidityPoolDepositResultCodeEnum InnerValue { get; set; }
 
     public static LiquidityPoolDepositResultCode Create(LiquidityPoolDepositResultCodeEnum v)
     {

@@ -55,7 +55,7 @@ public class PathPaymentStrictSendResultCode
         PATH_PAYMENT_STRICT_SEND_UNDER_DESTMIN = -12
     }
 
-    public PathPaymentStrictSendResultCodeEnum InnerValue { get; set; } = default;
+    public PathPaymentStrictSendResultCodeEnum InnerValue { get; set; }
 
     public static PathPaymentStrictSendResultCode Create(PathPaymentStrictSendResultCodeEnum v)
     {

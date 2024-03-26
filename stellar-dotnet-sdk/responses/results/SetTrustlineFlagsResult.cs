@@ -1,26 +1,26 @@
 ﻿using System;
+using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk.responses.results
+namespace stellar_dotnet_sdk.responses.results;
+
+public class SetTrustlineFlagsResult : OperationResult
 {
-    public class SetTrustlineFlagsResult : OperationResult
+    public static SetTrustlineFlagsResult FromXdr(SetTrustLineFlagsResult result)
     {
-        public static SetTrustlineFlagsResult FromXdr(xdr.SetTrustLineFlagsResult result)
+        switch (result.Discriminant.InnerValue)
         {
-            switch (result.Discriminant.InnerValue)
-            {
-                case xdr.SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_CANT_REVOKE:
-                    return new SetTrustlineFlagsCantRevoke();
-                case xdr.SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_INVALID_STATE:
-                    return new SetTrustlineFlagsInvalidState();
-                case xdr.SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_MALFORMED:
-                    return new SetTrustlineFlagsMalformed();
-                case xdr.SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_NO_TRUST_LINE:
-                    return new SetTrustlineFlagsNoTrustline();
-                case xdr.SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_SUCCESS:
-                    return new SetTrustlineFlagsSuccess();
-                default:
-                    throw new SystemException("Unknown SetTrustlineFlagsResult type");
-            }
+            case SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_CANT_REVOKE:
+                return new SetTrustlineFlagsCantRevoke();
+            case SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_INVALID_STATE:
+                return new SetTrustlineFlagsInvalidState();
+            case SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_MALFORMED:
+                return new SetTrustlineFlagsMalformed();
+            case SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_NO_TRUST_LINE:
+                return new SetTrustlineFlagsNoTrustline();
+            case SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_SUCCESS:
+                return new SetTrustlineFlagsSuccess();
+            default:
+                throw new SystemException("Unknown SetTrustlineFlagsResult type");
         }
     }
 }

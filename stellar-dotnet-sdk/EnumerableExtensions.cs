@@ -2,42 +2,41 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public static class EnumerableExtensions
 {
-    public static class EnumerableExtensions
+    /// <summary>
+    ///     Creates a string from the sequence by concatenating the result
+    ///     of the specified string selector function for each element.
+    /// </summary>
+    public static string ToConcatenatedString<T>(this IEnumerable<T> source,
+        Func<T, string> stringSelector)
     {
-        /// <summary>
-        ///     Creates a string from the sequence by concatenating the result
-        ///     of the specified string selector function for each element.
-        /// </summary>
-        public static string ToConcatenatedString<T>(this IEnumerable<T> source,
-            Func<T, string> stringSelector)
+        return source.ToConcatenatedString(stringSelector, string.Empty);
+    }
+
+    /// <summary>
+    ///     Creates a string from the sequence by concatenating the result
+    ///     of the specified string selector function for each element.
+    /// </summary>
+    /// <param name="separator">The string which separates each concatenated item.</param>
+    public static string ToConcatenatedString<T>(this IEnumerable<T> source,
+        Func<T, string> stringSelector,
+        string separator)
+    {
+        var b = new StringBuilder();
+        var needsSeparator = false; // don't use for first item
+
+        foreach (var item in source)
         {
-            return source.ToConcatenatedString(stringSelector, string.Empty);
+            if (needsSeparator)
+                b.Append(separator);
+
+            b.Append(stringSelector(item));
+            needsSeparator = true;
         }
 
-        /// <summary>
-        ///     Creates a string from the sequence by concatenating the result
-        ///     of the specified string selector function for each element.
-        /// </summary>
-        /// <param name="separator">The string which separates each concatenated item.</param>
-        public static string ToConcatenatedString<T>(this IEnumerable<T> source,
-            Func<T, string> stringSelector,
-            string separator)
-        {
-            var b = new StringBuilder();
-            var needsSeparator = false; // don't use for first item
-
-            foreach (var item in source)
-            {
-                if (needsSeparator)
-                    b.Append(separator);
-
-                b.Append(stringSelector(item));
-                needsSeparator = true;
-            }
-
-            return b.ToString();
-        }
+        return b.ToString();
     }
 }

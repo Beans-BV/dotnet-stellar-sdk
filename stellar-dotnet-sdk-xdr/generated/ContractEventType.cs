@@ -24,7 +24,7 @@ public class ContractEventType
         DIAGNOSTIC = 2
     }
 
-    public ContractEventTypeEnum InnerValue { get; set; } = default;
+    public ContractEventTypeEnum InnerValue { get; set; }
 
     public static ContractEventType Create(ContractEventTypeEnum v)
     {

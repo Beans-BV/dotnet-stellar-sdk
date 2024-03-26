@@ -1,10 +1,9 @@
-namespace stellar_dotnet_sdk.responses
+namespace stellar_dotnet_sdk.responses;
+
+/// <summary>
+///     Fee is too small.
+/// </summary>
+public class TransactionResultInsufficientFee : TransactionResult
 {
-    /// <summary>
-    /// Fee is too small.
-    /// </summary>
-    public class TransactionResultInsufficientFee : TransactionResult
-    {
-        public override bool IsSuccess => false;
-    }
+    public override bool IsSuccess => false;
 }

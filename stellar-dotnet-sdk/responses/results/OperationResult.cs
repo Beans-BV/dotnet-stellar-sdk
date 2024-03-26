@@ -1,82 +1,82 @@
 ﻿using System;
+using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk.responses.results
+namespace stellar_dotnet_sdk.responses.results;
+
+public class OperationResult
 {
-    public class OperationResult
+    /// <summary>
+    ///     Whether the operation was successful.
+    /// </summary>
+    public virtual bool IsSuccess => false;
+
+    public static OperationResult FromXdr(xdr.OperationResult result)
     {
-        /// <summary>
-        /// Whether the operation was successful.
-        /// </summary>
-        public virtual bool IsSuccess => false;
-
-        public static OperationResult FromXdr(xdr.OperationResult result)
+        switch (result.Discriminant.InnerValue)
         {
-            switch (result.Discriminant.InnerValue)
-            {
-                case xdr.OperationResultCode.OperationResultCodeEnum.opBAD_AUTH:
-                    return new OperationResultBadAuth();
-                case xdr.OperationResultCode.OperationResultCodeEnum.opNO_ACCOUNT:
-                    return new OperationResultNoAccount();
-                case xdr.OperationResultCode.OperationResultCodeEnum.opNOT_SUPPORTED:
-                    return new OperationResultNotSupported();
-                case xdr.OperationResultCode.OperationResultCodeEnum.opINNER:
-                    return InnerOperationResultFromXdr(result.Tr);
-                default:
-                    throw new SystemException("Unknown OperationResult type");
-            }
+            case OperationResultCode.OperationResultCodeEnum.opBAD_AUTH:
+                return new OperationResultBadAuth();
+            case OperationResultCode.OperationResultCodeEnum.opNO_ACCOUNT:
+                return new OperationResultNoAccount();
+            case OperationResultCode.OperationResultCodeEnum.opNOT_SUPPORTED:
+                return new OperationResultNotSupported();
+            case OperationResultCode.OperationResultCodeEnum.opINNER:
+                return InnerOperationResultFromXdr(result.Tr);
+            default:
+                throw new SystemException("Unknown OperationResult type");
         }
+    }
 
-        private static OperationResult InnerOperationResultFromXdr(xdr.OperationResult.OperationResultTr result)
+    private static OperationResult InnerOperationResultFromXdr(xdr.OperationResult.OperationResultTr result)
+    {
+        switch (result.Discriminant.InnerValue)
         {
-            switch (result.Discriminant.InnerValue)
-            {
-                case xdr.OperationType.OperationTypeEnum.CREATE_ACCOUNT:
-                    return CreateAccountResult.FromXdr(result.CreateAccountResult);
-                case xdr.OperationType.OperationTypeEnum.PAYMENT:
-                    return PaymentResult.FromXdr(result.PaymentResult);
-                case xdr.OperationType.OperationTypeEnum.PATH_PAYMENT_STRICT_RECEIVE:
-                    return PathPaymentStrictReceiveResult.FromXdr(result.PathPaymentStrictReceiveResult);
-                case xdr.OperationType.OperationTypeEnum.MANAGE_BUY_OFFER:
-                    return ManageBuyOfferResult.FromXdr(result.ManageBuyOfferResult);
-                case xdr.OperationType.OperationTypeEnum.MANAGE_SELL_OFFER:
-                    return ManageSellOfferResult.FromXdr(result.ManageSellOfferResult);
-                case xdr.OperationType.OperationTypeEnum.CREATE_PASSIVE_SELL_OFFER:
-                    return ManageSellOfferResult.FromXdr(result.CreatePassiveSellOfferResult);
-                case xdr.OperationType.OperationTypeEnum.SET_OPTIONS:
-                    return SetOptionsResult.FromXdr(result.SetOptionsResult);
-                case xdr.OperationType.OperationTypeEnum.CHANGE_TRUST:
-                    return ChangeTrustResult.FromXdr(result.ChangeTrustResult);
-                case xdr.OperationType.OperationTypeEnum.ALLOW_TRUST:
-                    return AllowTrustResult.FromXdr(result.AllowTrustResult);
-                case xdr.OperationType.OperationTypeEnum.ACCOUNT_MERGE:
-                    return AccountMergeResult.FromXdr(result.AccountMergeResult);
-                case xdr.OperationType.OperationTypeEnum.INFLATION:
-                    return InflationResult.FromXdr(result.InflationResult);
-                case xdr.OperationType.OperationTypeEnum.MANAGE_DATA:
-                    return ManageDataResult.FromXdr(result.ManageDataResult);
-                case xdr.OperationType.OperationTypeEnum.BUMP_SEQUENCE:
-                    return BumpSequenceResult.FromXdr(result.BumpSeqResult);
-                case xdr.OperationType.OperationTypeEnum.PATH_PAYMENT_STRICT_SEND:
-                    return PathPaymentStrictSendResult.FromXdr(result.PathPaymentStrictSendResult);
-                case xdr.OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE:
-                    return CreateClaimableBalanceResult.FromXdr(result.CreateClaimableBalanceResult);
-                case xdr.OperationType.OperationTypeEnum.CLAIM_CLAIMABLE_BALANCE:
-                    return ClaimClaimableBalanceResult.FromXdr(result.ClaimClaimableBalanceResult);
-                case xdr.OperationType.OperationTypeEnum.BEGIN_SPONSORING_FUTURE_RESERVES:
-                    return BeginSponsoringFutureReservesResult.FromXdr(result.BeginSponsoringFutureReservesResult);
-                case xdr.OperationType.OperationTypeEnum.END_SPONSORING_FUTURE_RESERVES:
-                    return EndSponsoringFutureReservesResult.FromXdr(result.EndSponsoringFutureReservesResult);
-                case xdr.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP:
-                    return RevokeSponsorshipResult.FromXdr(result.RevokeSponsorshipResult);
-                case xdr.OperationType.OperationTypeEnum.CLAWBACK:
-                    return ClawbackResult.FromXdr(result.ClawbackResult);
-                case xdr.OperationType.OperationTypeEnum.CLAWBACK_CLAIMABLE_BALANCE:
-                    return ClawbackClaimableBalanceResult.FromXdr(result.ClawbackClaimableBalanceResult);
-                case xdr.OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS:
-                    return SetTrustlineFlagsResult.FromXdr(result.SetTrustLineFlagsResult);
-                default:
-                    throw new SystemException("Unknown OperationType");
-            }
+            case OperationType.OperationTypeEnum.CREATE_ACCOUNT:
+                return CreateAccountResult.FromXdr(result.CreateAccountResult);
+            case OperationType.OperationTypeEnum.PAYMENT:
+                return PaymentResult.FromXdr(result.PaymentResult);
+            case OperationType.OperationTypeEnum.PATH_PAYMENT_STRICT_RECEIVE:
+                return PathPaymentStrictReceiveResult.FromXdr(result.PathPaymentStrictReceiveResult);
+            case OperationType.OperationTypeEnum.MANAGE_BUY_OFFER:
+                return ManageBuyOfferResult.FromXdr(result.ManageBuyOfferResult);
+            case OperationType.OperationTypeEnum.MANAGE_SELL_OFFER:
+                return ManageSellOfferResult.FromXdr(result.ManageSellOfferResult);
+            case OperationType.OperationTypeEnum.CREATE_PASSIVE_SELL_OFFER:
+                return ManageSellOfferResult.FromXdr(result.CreatePassiveSellOfferResult);
+            case OperationType.OperationTypeEnum.SET_OPTIONS:
+                return SetOptionsResult.FromXdr(result.SetOptionsResult);
+            case OperationType.OperationTypeEnum.CHANGE_TRUST:
+                return ChangeTrustResult.FromXdr(result.ChangeTrustResult);
+            case OperationType.OperationTypeEnum.ALLOW_TRUST:
+                return AllowTrustResult.FromXdr(result.AllowTrustResult);
+            case OperationType.OperationTypeEnum.ACCOUNT_MERGE:
+                return AccountMergeResult.FromXdr(result.AccountMergeResult);
+            case OperationType.OperationTypeEnum.INFLATION:
+                return InflationResult.FromXdr(result.InflationResult);
+            case OperationType.OperationTypeEnum.MANAGE_DATA:
+                return ManageDataResult.FromXdr(result.ManageDataResult);
+            case OperationType.OperationTypeEnum.BUMP_SEQUENCE:
+                return BumpSequenceResult.FromXdr(result.BumpSeqResult);
+            case OperationType.OperationTypeEnum.PATH_PAYMENT_STRICT_SEND:
+                return PathPaymentStrictSendResult.FromXdr(result.PathPaymentStrictSendResult);
+            case OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE:
+                return CreateClaimableBalanceResult.FromXdr(result.CreateClaimableBalanceResult);
+            case OperationType.OperationTypeEnum.CLAIM_CLAIMABLE_BALANCE:
+                return ClaimClaimableBalanceResult.FromXdr(result.ClaimClaimableBalanceResult);
+            case OperationType.OperationTypeEnum.BEGIN_SPONSORING_FUTURE_RESERVES:
+                return BeginSponsoringFutureReservesResult.FromXdr(result.BeginSponsoringFutureReservesResult);
+            case OperationType.OperationTypeEnum.END_SPONSORING_FUTURE_RESERVES:
+                return EndSponsoringFutureReservesResult.FromXdr(result.EndSponsoringFutureReservesResult);
+            case OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP:
+                return RevokeSponsorshipResult.FromXdr(result.RevokeSponsorshipResult);
+            case OperationType.OperationTypeEnum.CLAWBACK:
+                return ClawbackResult.FromXdr(result.ClawbackResult);
+            case OperationType.OperationTypeEnum.CLAWBACK_CLAIMABLE_BALANCE:
+                return ClawbackClaimableBalanceResult.FromXdr(result.ClawbackClaimableBalanceResult);
+            case OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS:
+                return SetTrustlineFlagsResult.FromXdr(result.SetTrustLineFlagsResult);
+            default:
+                throw new SystemException("Unknown OperationType");
         }
     }
 }

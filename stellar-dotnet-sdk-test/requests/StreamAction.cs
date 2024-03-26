@@ -1,36 +1,35 @@
 using System;
 
-namespace stellar_dotnet_sdk_test.requests
+namespace stellar_dotnet_sdk_test.requests;
+
+public class StreamAction
 {
-    public class StreamAction
+    internal readonly string? Content;
+    internal readonly TimeSpan Delay;
+
+    private StreamAction(TimeSpan delay, string? content)
     {
-        internal readonly TimeSpan Delay;
-        internal readonly string Content;
+        Delay = delay;
+        Content = content;
+    }
 
-        private StreamAction(TimeSpan delay, string content)
-        {
-            Delay = delay;
-            Content = content;
-        }
+    public bool ShouldQuit()
+    {
+        return Content == null;
+    }
 
-        public bool ShouldQuit()
-        {
-            return Content == null;
-        }
+    public static StreamAction Write(string content)
+    {
+        return new StreamAction(TimeSpan.Zero, content);
+    }
 
-        public static StreamAction Write(string content)
-        {
-            return new StreamAction(TimeSpan.Zero, content);
-        }
+    public static StreamAction CloseStream()
+    {
+        return new StreamAction(TimeSpan.Zero, null);
+    }
 
-        public static StreamAction CloseStream()
-        {
-            return new StreamAction(TimeSpan.Zero, null);
-        }
-
-        public StreamAction AfterDelay(TimeSpan delay)
-        {
-            return new StreamAction(delay, Content);
-        }
+    public StreamAction AfterDelay(TimeSpan delay)
+    {
+        return new StreamAction(delay, Content);
     }
 }

@@ -22,7 +22,7 @@ public class SorobanAuthorizedFunctionType
         SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN = 1
     }
 
-    public SorobanAuthorizedFunctionTypeEnum InnerValue { get; set; } = default;
+    public SorobanAuthorizedFunctionTypeEnum InnerValue { get; set; }
 
     public static SorobanAuthorizedFunctionType Create(SorobanAuthorizedFunctionTypeEnum v)
     {

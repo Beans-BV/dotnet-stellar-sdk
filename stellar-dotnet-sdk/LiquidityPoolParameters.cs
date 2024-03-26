@@ -1,37 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public abstract class LiquidityPoolParameters
 {
-    public abstract class LiquidityPoolParameters
+    public const int Fee = 30;
+
+    public static LiquidityPoolParameters Create(LiquidityPoolType.LiquidityPoolTypeEnum type, Asset assetA,
+        Asset assetB, int feeBP)
     {
-        public static int Fee = 30;
+        if (type != LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT)
+            throw new ArgumentException($"Unknown liquidity pool type {type}");
 
-        public static LiquidityPoolParameters Create(xdr.LiquidityPoolType.LiquidityPoolTypeEnum type, Asset assetA, Asset assetB, int feeBP)
-        {
-            if (type != xdr.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT)
-            {
-                throw new ArgumentException($"Unknown liquidity pool type {type}");
-            }
-
-            return new LiquidityPoolConstantProductParameters(assetA, assetB, feeBP);
-        }
-
-        public static LiquidityPoolParameters FromXdr(xdr.LiquidityPoolParameters liquidityPoolParametersXdr)
-        {
-            switch (liquidityPoolParametersXdr.Discriminant.InnerValue)
-            {
-                case xdr.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT:
-                    return LiquidityPoolConstantProductParameters.FromXdr(liquidityPoolParametersXdr.ConstantProduct);
-
-                default:
-                    throw new ArgumentException($"Unknown liquidity pool type {liquidityPoolParametersXdr.Discriminant.InnerValue}");
-            }
-        }
-
-        public abstract xdr.LiquidityPoolParameters ToXdr();
-
-        public abstract LiquidityPoolID GetID();
+        return new LiquidityPoolConstantProductParameters(assetA, assetB, feeBP);
     }
+
+    public static LiquidityPoolParameters FromXdr(xdr.LiquidityPoolParameters liquidityPoolParametersXdr)
+    {
+        switch (liquidityPoolParametersXdr.Discriminant.InnerValue)
+        {
+            case LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT:
+                return LiquidityPoolConstantProductParameters.FromXdr(liquidityPoolParametersXdr.ConstantProduct);
+
+            default:
+                throw new ArgumentException(
+                    $"Unknown liquidity pool type {liquidityPoolParametersXdr.Discriminant.InnerValue}");
+        }
+    }
+
+    public abstract xdr.LiquidityPoolParameters ToXdr();
+
+    public abstract LiquidityPoolID GetID();
 }

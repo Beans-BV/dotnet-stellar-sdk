@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+[Serializable]
+public class TooManySignaturesException : Exception
 {
-    [Serializable]
-    public class TooManySignaturesException : Exception
+    public TooManySignaturesException()
     {
-        public TooManySignaturesException()
-        {
-        }
+    }
 
-        public TooManySignaturesException(string message) : base(message)
-        {
-        }
+    public TooManySignaturesException(string message) : base(message)
+    {
+    }
 
-        public TooManySignaturesException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    public TooManySignaturesException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 
-        protected TooManySignaturesException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+    protected TooManySignaturesException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
     }
 }

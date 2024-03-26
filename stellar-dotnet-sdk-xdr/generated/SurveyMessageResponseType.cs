@@ -22,7 +22,7 @@ public class SurveyMessageResponseType
         SURVEY_TOPOLOGY_RESPONSE_V1 = 1
     }
 
-    public SurveyMessageResponseTypeEnum InnerValue { get; set; } = default;
+    public SurveyMessageResponseTypeEnum InnerValue { get; set; }
 
     public static SurveyMessageResponseType Create(SurveyMessageResponseTypeEnum v)
     {

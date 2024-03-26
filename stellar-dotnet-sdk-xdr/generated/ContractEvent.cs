@@ -30,7 +30,7 @@ namespace stellar_dotnet_sdk.xdr;
 public class ContractEvent
 {
     public ExtensionPoint Ext { get; set; }
-    public Hash ContractID { get; set; }
+    public Hash? ContractID { get; set; }
     public ContractEventType Type { get; set; }
     public ContractEventBody Body { get; set; }
 

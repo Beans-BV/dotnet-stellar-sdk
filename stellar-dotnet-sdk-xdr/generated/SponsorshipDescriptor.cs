@@ -19,7 +19,7 @@ public class SponsorshipDescriptor
         InnerValue = value;
     }
 
-    public AccountID InnerValue { get; set; } = default;
+    public AccountID InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SponsorshipDescriptor encodedSponsorshipDescriptor)
     {

@@ -22,7 +22,7 @@ public class ClaimableBalanceFlags
         CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG = 1
     }
 
-    public ClaimableBalanceFlagsEnum InnerValue { get; set; } = default;
+    public ClaimableBalanceFlagsEnum InnerValue { get; set; }
 
     public static ClaimableBalanceFlags Create(ClaimableBalanceFlagsEnum v)
     {

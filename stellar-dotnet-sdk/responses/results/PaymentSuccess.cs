@@ -1,10 +1,9 @@
-namespace stellar_dotnet_sdk.responses.results
+namespace stellar_dotnet_sdk.responses.results;
+
+/// <summary>
+///     Operation successful.
+/// </summary>
+public class PaymentSuccess : PaymentResult
 {
-    /// <summary>
-    /// Operation successful.
-    /// </summary>
-    public class PaymentSuccess : PaymentResult
-    {
-        public override bool IsSuccess => true;
-    }
+    public override bool IsSuccess => true;
 }

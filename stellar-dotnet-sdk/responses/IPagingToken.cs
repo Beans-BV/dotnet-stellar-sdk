@@ -1,7 +1,6 @@
-﻿namespace stellar_dotnet_sdk.responses
+﻿namespace stellar_dotnet_sdk.responses;
+
+public interface IPagingToken
 {
-    public interface IPagingToken
-    {
-        string PagingToken { get; }
-    }
+    string PagingToken { get; }
 }

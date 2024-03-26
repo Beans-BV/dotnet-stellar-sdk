@@ -30,7 +30,7 @@ public class ClaimPredicateType
         CLAIM_PREDICATE_BEFORE_RELATIVE_TIME = 5
     }
 
-    public ClaimPredicateTypeEnum InnerValue { get; set; } = default;
+    public ClaimPredicateTypeEnum InnerValue { get; set; }
 
     public static ClaimPredicateType Create(ClaimPredicateTypeEnum v)
     {

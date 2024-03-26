@@ -29,7 +29,7 @@ public class TrustLineFlags
         TRUSTLINE_CLAWBACK_ENABLED_FLAG = 4
     }
 
-    public TrustLineFlagsEnum InnerValue { get; set; } = default;
+    public TrustLineFlagsEnum InnerValue { get; set; }
 
     public static TrustLineFlags Create(TrustLineFlagsEnum v)
     {

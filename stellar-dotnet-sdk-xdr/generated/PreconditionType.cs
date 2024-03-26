@@ -24,7 +24,7 @@ public class PreconditionType
         PRECOND_V2 = 2
     }
 
-    public PreconditionTypeEnum InnerValue { get; set; } = default;
+    public PreconditionTypeEnum InnerValue { get; set; }
 
     public static PreconditionType Create(PreconditionTypeEnum v)
     {

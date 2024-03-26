@@ -22,7 +22,7 @@ public class SorobanCredentialsType
         SOROBAN_CREDENTIALS_ADDRESS = 1
     }
 
-    public SorobanCredentialsTypeEnum InnerValue { get; set; } = default;
+    public SorobanCredentialsTypeEnum InnerValue { get; set; }
 
     public static SorobanCredentialsType Create(SorobanCredentialsTypeEnum v)
     {

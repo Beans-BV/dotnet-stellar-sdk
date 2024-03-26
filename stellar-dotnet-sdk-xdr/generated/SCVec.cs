@@ -19,7 +19,7 @@ public class SCVec
         InnerValue = value;
     }
 
-    public SCVal[] InnerValue { get; set; } = default;
+    public SCVal[] InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SCVec encodedSCVec)
     {

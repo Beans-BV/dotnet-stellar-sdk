@@ -10,15 +10,15 @@ public class AddressTest
     [TestMethod]
     public void TestAccountIdWithInvalidArgument()
     {
-        const string invalidAccountId = "Invalidid";
+        const string invalidAccountId = "Invalid id";
         var ex = Assert.ThrowsException<ArgumentException>(() => new SCAccountId(invalidAccountId));
-        Assert.AreEqual("Invalid account id (Parameter 'value')", ex.Message);
+        Assert.IsTrue(ex.Message.Contains("Invalid account ID"));
     }
 
     [TestMethod]
     public void TestContractIdWithInvalidArgument()
     {
-        const string invalidContractId = "Invalidid";
+        const string invalidContractId = "Invalid id";
         var ex = Assert.ThrowsException<ArgumentException>(() => new SCContractId(invalidContractId));
         Assert.AreEqual("Invalid contract id (Parameter 'value')", ex.Message);
     }

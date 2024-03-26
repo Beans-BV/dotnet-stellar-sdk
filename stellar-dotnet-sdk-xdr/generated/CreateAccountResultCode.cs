@@ -32,7 +32,7 @@ public class CreateAccountResultCode
         CREATE_ACCOUNT_ALREADY_EXIST = -4
     }
 
-    public CreateAccountResultCodeEnum InnerValue { get; set; } = default;
+    public CreateAccountResultCodeEnum InnerValue { get; set; }
 
     public static CreateAccountResultCode Create(CreateAccountResultCodeEnum v)
     {

@@ -20,7 +20,7 @@ public class SurveyMessageCommandType
         SURVEY_TOPOLOGY = 0
     }
 
-    public SurveyMessageCommandTypeEnum InnerValue { get; set; } = default;
+    public SurveyMessageCommandTypeEnum InnerValue { get; set; }
 
     public static SurveyMessageCommandType Create(SurveyMessageCommandTypeEnum v)
     {

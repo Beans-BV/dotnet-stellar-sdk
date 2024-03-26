@@ -1,32 +1,39 @@
 using System;
-using xdr = stellar_dotnet_sdk.xdr;
+using stellar_dotnet_sdk.xdr;
+using Int64 = stellar_dotnet_sdk.xdr.Int64;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public class ClaimPredicateBeforeRelativeTime : ClaimPredicate
 {
-    public class ClaimPredicateBeforeRelativeTime : ClaimPredicate
+    [Obsolete("Use the ClaimPredicateBeforeRelativeTime(long duration) constructor instead.")]
+    public ClaimPredicateBeforeRelativeTime(Duration duration)
     {
-        public xdr.Duration Duration { get; }
+        Duration = (long)duration.InnerValue.InnerValue;
+    }
 
-        public ClaimPredicateBeforeRelativeTime(xdr.Duration duration)
-        {
-            Duration = duration;
-        }
+    [Obsolete("Use the ClaimPredicateBeforeRelativeTime(long duration) constructor instead.")]
+    public ClaimPredicateBeforeRelativeTime(ulong duration)
+    {
+        Duration = (long)duration;
+    }
 
-        public ClaimPredicateBeforeRelativeTime(ulong duration)
+    public ClaimPredicateBeforeRelativeTime(long duration)
+    {
+        Duration = duration;
+    }
+
+    public long Duration { get; }
+
+    public override xdr.ClaimPredicate ToXdr()
+    {
+        return new xdr.ClaimPredicate
         {
-            Duration = new xdr.Duration(new xdr.Uint64(duration));
-        }
-        
-        public override xdr.ClaimPredicate ToXdr()
-        {
-            return new xdr.ClaimPredicate
+            Discriminant = new ClaimPredicateType
             {
-                Discriminant = new xdr.ClaimPredicateType
-                {
-                    InnerValue = xdr.ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_RELATIVE_TIME
-                },
-                RelBefore = new xdr.Int64((long)Duration.InnerValue.InnerValue)
-            };
-        }
+                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_RELATIVE_TIME
+            },
+            RelBefore = new Int64(Duration)
+        };
     }
 }

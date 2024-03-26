@@ -38,7 +38,7 @@ public class SCErrorCode
         SCEC_UNEXPECTED_SIZE = 9
     }
 
-    public SCErrorCodeEnum InnerValue { get; set; } = default;
+    public SCErrorCodeEnum InnerValue { get; set; }
 
     public static SCErrorCode Create(SCErrorCodeEnum v)
     {

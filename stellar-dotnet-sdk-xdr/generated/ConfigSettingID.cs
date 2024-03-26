@@ -46,7 +46,7 @@ public class ConfigSettingID
         CONFIG_SETTING_EVICTION_ITERATOR = 13
     }
 
-    public ConfigSettingIDEnum InnerValue { get; set; } = default;
+    public ConfigSettingIDEnum InnerValue { get; set; }
 
     public static ConfigSettingID Create(ConfigSettingIDEnum v)
     {

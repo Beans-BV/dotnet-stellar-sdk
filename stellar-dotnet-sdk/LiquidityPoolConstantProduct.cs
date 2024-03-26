@@ -6,11 +6,21 @@ namespace stellar_dotnet_sdk;
 
 public class LiquidityPoolConstantProduct : LiquidityPoolEntryBody
 {
-    public LiquidityPoolConstantProductParameters Parameters { get; set; }
-    public long ReserveA { get; set; }
-    public long ReserveB { get; set; }
-    public long TotalPoolShares { get; set; }
-    public long PoolSharesTrustLineCount { get; set; }
+    public LiquidityPoolConstantProduct(LiquidityPoolConstantProductParameters parameters, long reserveA, long reserveB,
+        long totalPoolShares, long poolSharesTrustLineCount)
+    {
+        Parameters = parameters;
+        ReserveA = reserveA;
+        ReserveB = reserveB;
+        TotalPoolShares = totalPoolShares;
+        PoolSharesTrustLineCount = poolSharesTrustLineCount;
+    }
+
+    public LiquidityPoolConstantProductParameters Parameters { get; init; }
+    public long ReserveA { get; init; }
+    public long ReserveB { get; init; }
+    public long TotalPoolShares { get; init; }
+    public long PoolSharesTrustLineCount { get; init; }
 
     public LiquidityPoolEntry.LiquidityPoolEntryBody.LiquidityPoolEntryConstantProduct ToXdr()
     {
@@ -36,17 +46,18 @@ public class LiquidityPoolConstantProduct : LiquidityPoolEntryBody
         };
     }
 
-    public static LiquidityPoolConstantProduct FromXdr(LiquidityPoolEntry.LiquidityPoolEntryBody.LiquidityPoolEntryConstantProduct xdrConstantProduct)
+    public static LiquidityPoolConstantProduct FromXdr(
+        LiquidityPoolEntry.LiquidityPoolEntryBody.LiquidityPoolEntryConstantProduct xdrConstantProduct)
     {
-        return new LiquidityPoolConstantProduct
-        {
-            Parameters = LiquidityPoolConstantProductParameters.FromXdr(xdrConstantProduct.Params),
-            ReserveA = xdrConstantProduct.ReserveA.InnerValue,
-            ReserveB = xdrConstantProduct.ReserveB.InnerValue,
-            TotalPoolShares = xdrConstantProduct.TotalPoolShares.InnerValue,
-            PoolSharesTrustLineCount = xdrConstantProduct.PoolSharesTrustLineCount.InnerValue,
-        };
+        var parameters = LiquidityPoolConstantProductParameters.FromXdr(xdrConstantProduct.Params);
+        var reserveA = xdrConstantProduct.ReserveA.InnerValue;
+        var reserveB = xdrConstantProduct.ReserveB.InnerValue;
+        var totalPoolShares = xdrConstantProduct.TotalPoolShares.InnerValue;
+        var poolSharesTrustLineCount = xdrConstantProduct.PoolSharesTrustLineCount.InnerValue;
+        return new LiquidityPoolConstantProduct(parameters, reserveA, reserveB, totalPoolShares,
+            poolSharesTrustLineCount);
     }
+
     public static LiquidityPoolConstantProduct FromXdrLiquidityPoolEntryBody(
         LiquidityPoolEntry.LiquidityPoolEntryBody xdrBody)
     {

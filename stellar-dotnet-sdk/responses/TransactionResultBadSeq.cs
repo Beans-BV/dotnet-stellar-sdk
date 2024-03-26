@@ -1,10 +1,9 @@
-namespace stellar_dotnet_sdk.responses
+namespace stellar_dotnet_sdk.responses;
+
+/// <summary>
+///     Sequence number does not match source account.
+/// </summary>
+public class TransactionResultBadSeq : TransactionResult
 {
-    /// <summary>
-    /// Sequence number does not match source account.
-    /// </summary>
-    public class TransactionResultBadSeq : TransactionResult
-    {
-        public override bool IsSuccess => false;
-    }
+    public override bool IsSuccess => false;
 }

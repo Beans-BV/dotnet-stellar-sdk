@@ -22,7 +22,7 @@ public class RevokeSponsorshipType
         REVOKE_SPONSORSHIP_SIGNER = 1
     }
 
-    public RevokeSponsorshipTypeEnum InnerValue { get; set; } = default;
+    public RevokeSponsorshipTypeEnum InnerValue { get; set; }
 
     public static RevokeSponsorshipType Create(RevokeSponsorshipTypeEnum v)
     {

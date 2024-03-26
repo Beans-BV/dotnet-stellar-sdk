@@ -1,10 +1,8 @@
-namespace stellar_dotnet_sdk.responses.results
-{
-    /// <summary>
-    /// Trusting self is not allowed.
-    /// </summary>
-    public class ChangeTrustSelfNotAllowed : ChangeTrustResult
-    {
+namespace stellar_dotnet_sdk.responses.results;
 
-    }
+/// <summary>
+///     Trusting self is not allowed.
+/// </summary>
+public class ChangeTrustSelfNotAllowed : ChangeTrustResult
+{
 }

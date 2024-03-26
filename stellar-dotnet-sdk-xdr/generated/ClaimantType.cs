@@ -20,7 +20,7 @@ public class ClaimantType
         CLAIMANT_TYPE_V0 = 0
     }
 
-    public ClaimantTypeEnum InnerValue { get; set; } = default;
+    public ClaimantTypeEnum InnerValue { get; set; }
 
     public static ClaimantType Create(ClaimantTypeEnum v)
     {

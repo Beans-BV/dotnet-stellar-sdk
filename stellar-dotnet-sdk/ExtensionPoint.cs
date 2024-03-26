@@ -3,6 +3,9 @@ using stellar_dotnet_sdk.xdr;
 
 namespace stellar_dotnet_sdk;
 
+/// <summary>
+///     Base class for extension points.
+/// </summary>
 public abstract class ExtensionPoint
 {
     public xdr.ExtensionPoint ToXdr()
@@ -10,24 +13,30 @@ public abstract class ExtensionPoint
         return this switch
         {
             ExtensionPointZero extensionPointZero => extensionPointZero.ToExtensionPointXdr(),
-            _ => throw new InvalidOperationException("Unknown ExtensionPoint type")
+            _ => throw new InvalidOperationException("Unknown ExtensionPoint type.")
         };
     }
 
-    public static ExtensionPoint FromXdr(xdr.ExtensionPoint xdr)
+    /// <summary>
+    ///     Creates the corresponding <c>ExtensionPoint</c> object from an <c>xdr.ExtensionPoint</c> object.
+    /// </summary>
+    /// <param name="xdrExtensionPoint">An <c>xdr.ExtensionPoint</c> object to be converted.</param>
+    /// <returns>A <c>ExtensionPoint</c> object. Returns null if the provided object is null.</returns>
+    public static ExtensionPoint FromXdr(xdr.ExtensionPoint xdrExtensionPoint)
     {
-        return xdr.Discriminant switch
+        return xdrExtensionPoint.Discriminant switch
         {
-            0 => ExtensionPointZero.FromExtensionPointXdr(xdr),
-            _ => throw new InvalidOperationException("Unknown ExtensionPoint type")
+            0 => ExtensionPointZero.FromExtensionPointXdr(xdrExtensionPoint),
+            _ => throw new InvalidOperationException("Unknown ExtensionPoint type.")
         };
     }
-    
+
     /// <summary>
-    /// Creates a new ExtensionPoint object from the given ExtensionPoint XDR base64 string.
+    ///     Creates a new <c>ExtensionPoint</c> object from the given <see cref="xdr.ExtensionPoint" /> base-64 encoded XDR
+    ///     string.
     /// </summary>
     /// <param name="xdrBase64"></param>
-    /// <returns>ExtensionPoint object</returns>
+    /// <returns>An <c>ExtensionPoint</c> object decoded and deserialized from the provided string.</returns>
     public static ExtensionPoint FromXdrBase64(string xdrBase64)
     {
         var bytes = Convert.FromBase64String(xdrBase64);
@@ -35,10 +44,10 @@ public abstract class ExtensionPoint
         var thisXdr = xdr.ExtensionPoint.Decode(reader);
         return FromXdr(thisXdr);
     }
-    
-    ///<summary>
-    /// Returns base64-encoded ExtensionPoint XDR object.
-    ///</summary>
+
+    /// <summary>
+    ///     Returns base64-encoded ExtensionPoint XDR object.
+    /// </summary>
     public string ToXdrBase64()
     {
         var xdrValue = ToXdr();
@@ -50,8 +59,6 @@ public abstract class ExtensionPoint
 
 public class ExtensionPointZero : ExtensionPoint
 {
-    public new void ToXdr() {}
-    
     public xdr.ExtensionPoint ToExtensionPointXdr()
     {
         return new xdr.ExtensionPoint
@@ -66,8 +73,8 @@ public class ExtensionPointZero : ExtensionPoint
             throw new ArgumentException("Not an ExtensionPointZero", nameof(xdrExtensionPoint));
 
         return FromXdr();
-    } 
-    
+    }
+
     public static ExtensionPointZero FromXdr()
     {
         return new ExtensionPointZero();

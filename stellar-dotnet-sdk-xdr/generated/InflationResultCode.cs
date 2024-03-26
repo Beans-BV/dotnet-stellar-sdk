@@ -24,7 +24,7 @@ public class InflationResultCode
         INFLATION_NOT_TIME = -1
     }
 
-    public InflationResultCodeEnum InnerValue { get; set; } = default;
+    public InflationResultCodeEnum InnerValue { get; set; }
 
     public static InflationResultCode Create(InflationResultCodeEnum v)
     {

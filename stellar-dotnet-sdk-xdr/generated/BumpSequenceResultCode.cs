@@ -24,7 +24,7 @@ public class BumpSequenceResultCode
         BUMP_SEQUENCE_BAD_SEQ = -1
     }
 
-    public BumpSequenceResultCodeEnum InnerValue { get; set; } = default;
+    public BumpSequenceResultCodeEnum InnerValue { get; set; }
 
     public static BumpSequenceResultCode Create(BumpSequenceResultCodeEnum v)
     {

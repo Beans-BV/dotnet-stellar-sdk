@@ -3,19 +3,20 @@
 namespace stellar_dotnet_sdk.responses.operations;
 
 /// <summary>
-/// Represents CreatePassiveOffer operation response.
-/// See: https://www.stellar.org/developers/horizon/reference/resources/operation.html
-/// <seealso cref="requests.OperationsRequestBuilder"/>
-/// <seealso cref="Server"/>
+///     Represents CreatePassiveOffer operation response.
+///     See: https://www.stellar.org/developers/horizon/reference/resources/operation.html
+///     <seealso cref="requests.OperationsRequestBuilder" />
+///     <seealso cref="Server" />
 /// </summary>
 public class CreatePassiveOfferOperationResponse : OperationResponse
 {
     public CreatePassiveOfferOperationResponse()
     {
-
     }
 
-    public CreatePassiveOfferOperationResponse(int offerId, string amount, string price, string buyingAssetType, string buyingAssetCode, string buyingAssetIssuer, string sellingAssetType, string sellingAssetCode, string sellingAssetIssuer)
+    public CreatePassiveOfferOperationResponse(int offerId, string amount, string price, string buyingAssetType,
+        string buyingAssetCode, string buyingAssetIssuer, string sellingAssetType, string sellingAssetCode,
+        string sellingAssetIssuer)
     {
         OfferId = offerId;
         Amount = amount;

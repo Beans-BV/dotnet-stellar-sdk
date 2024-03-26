@@ -1,10 +1,9 @@
-namespace stellar_dotnet_sdk.responses
+namespace stellar_dotnet_sdk.responses;
+
+/// <summary>
+///     An unknown error occured.
+/// </summary>
+public class TransactionResultInternalError : TransactionResult
 {
-    /// <summary>
-    /// An unknown error occured.
-    /// </summary>
-    public class TransactionResultInternalError : TransactionResult
-    {
-        public override bool IsSuccess => false;
-    }
+    public override bool IsSuccess => false;
 }

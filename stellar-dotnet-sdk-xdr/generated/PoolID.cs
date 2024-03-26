@@ -19,7 +19,7 @@ public class PoolID
         InnerValue = value;
     }
 
-    public Hash InnerValue { get; set; } = default;
+    public Hash InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, PoolID encodedPoolID)
     {

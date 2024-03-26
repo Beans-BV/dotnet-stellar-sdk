@@ -19,7 +19,7 @@ public class Duration
         InnerValue = value;
     }
 
-    public Uint64 InnerValue { get; set; } = default;
+    public Uint64 InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, Duration encodedDuration)
     {

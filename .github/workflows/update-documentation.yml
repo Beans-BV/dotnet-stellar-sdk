@@ -17,24 +17,24 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-
-    # Build metadata documentation using DocFX
-    - name: Build Documentation Metadata
-      uses: Kirbyrawr/docfx-action@master
-      with:
-        args: metadata ./docfx/docfx.json
-
-    # Build documentation using DocFX
-    - name: Build Documentation
-      uses: Kirbyrawr/docfx-action@master
-      with:
-        args: build ./docfx/docfx.json
-
-    # Publish generated site using GitHub Pages
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docfx/_site
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      # Build metadata documentation using DocFX
+      - name: Build Documentation Metadata
+        uses: Kirbyrawr/docfx-action@master
+        with:
+          args: metadata ./docfx/docfx.json
+      
+      # Build documentation using DocFX
+      - name: Build Documentation
+        uses: Kirbyrawr/docfx-action@master
+        with:
+          args: build ./docfx/docfx.json
+      
+      # Publish generated site using GitHub Pages
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docfx/_site

@@ -22,7 +22,7 @@ public class OfferEntryFlags
         PASSIVE_FLAG = 1
     }
 
-    public OfferEntryFlagsEnum InnerValue { get; set; } = default;
+    public OfferEntryFlagsEnum InnerValue { get; set; }
 
     public static OfferEntryFlags Create(OfferEntryFlagsEnum v)
     {

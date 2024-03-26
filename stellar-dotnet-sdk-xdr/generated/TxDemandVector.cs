@@ -19,7 +19,7 @@ public class TxDemandVector
         InnerValue = value;
     }
 
-    public Hash[] InnerValue { get; set; } = default;
+    public Hash[] InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, TxDemandVector encodedTxDemandVector)
     {

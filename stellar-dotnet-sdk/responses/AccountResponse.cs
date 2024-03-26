@@ -1,82 +1,76 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace stellar_dotnet_sdk.responses
+namespace stellar_dotnet_sdk.responses;
+
+public class AccountResponse : Response, ITransactionBuilderAccount
 {
-    public class AccountResponse : Response, ITransactionBuilderAccount
+    public AccountResponse(string accountId, long sequenceNumber, Balance[] balances, Dictionary<string, string> data,
+        Flags flags, string homeDomain, string inflationDestination, Signer[] signers, Thresholds thresholds,
+        AccountResponseLinks links)
     {
-        private AccountResponse()
-        {
-        }
+        AccountId = accountId;
+        SequenceNumber = sequenceNumber;
+        Balances = balances;
+        Data = data;
+        Flags = flags;
+        HomeDomain = homeDomain;
+        InflationDestination = inflationDestination;
+        Signers = signers;
+        Thresholds = thresholds;
+        Links = links;
+    }
 
-        public AccountResponse(string accountId)
-        {
-            AccountId = accountId;
-        }
+    [JsonProperty(PropertyName = "subentry_count")]
+    public int SubentryCount { get; init; }
 
-        public AccountResponse(string accountId, long sequenceNumber)
-            : this(accountId)
-        {
-            SequenceNumber = sequenceNumber;
-        }
+    [JsonProperty(PropertyName = "sequence_ledger")]
+    public long? SequenceUpdatedAtLedger { get; init; }
 
-        [JsonProperty(PropertyName = "account_id")]
-        public string AccountId { get; set; }
+    [JsonProperty(PropertyName = "sequence_time")]
+    public long? SequenceUpdatedAtTime { get; init; }
 
-        [JsonProperty(PropertyName = "sequence")]
-        public long SequenceNumber { get; set; }
+    [JsonProperty(PropertyName = "inflation_destination")]
+    public string InflationDestination { get; init; }
 
-        [JsonProperty(PropertyName = "subentry_count")]
-        public int SubentryCount { get; set; }
+    [JsonProperty(PropertyName = "home_domain")]
+    public string HomeDomain { get; init; }
 
-        [JsonProperty(PropertyName = "sequence_ledger")]
-        public long? SequenceUpdatedAtLedger { get; set; }
+    [JsonProperty(PropertyName = "thresholds")]
+    public Thresholds Thresholds { get; init; }
 
-        [JsonProperty(PropertyName = "sequence_time")]
-        public long? SequenceUpdatedAtTime { get; set; }
+    [JsonProperty(PropertyName = "flags")] public Flags Flags { get; init; }
 
-        [JsonProperty(PropertyName = "inflation_destination")]
-        public string InflationDestination { get; set; }
+    [JsonProperty(PropertyName = "balances")]
+    public Balance[] Balances { get; init; }
 
-        [JsonProperty(PropertyName = "home_domain")]
-        public string HomeDomain { get; set; }
+    [JsonProperty(PropertyName = "signers")]
+    public Signer[] Signers { get; init; }
 
-        [JsonProperty(PropertyName = "thresholds")]
-        public Thresholds Thresholds { get; set; }
+    [JsonProperty(PropertyName = "_links")]
+    public AccountResponseLinks Links { get; init; }
 
-        [JsonProperty(PropertyName = "flags")]
-        public Flags Flags { get; set; }
+    [JsonProperty("Data")] public Dictionary<string, string> Data { get; init; }
 
-        [JsonProperty(PropertyName = "balances")]
-        public Balance[] Balances { get; set; }
+    [JsonProperty(PropertyName = "account_id")]
+    public string AccountId { get; init; }
 
-        [JsonProperty(PropertyName = "signers")]
-        public Signer[] Signers { get; set; }
+    [JsonProperty(PropertyName = "sequence")]
+    public long SequenceNumber { get; set; }
 
-        [JsonProperty(PropertyName = "_links")]
-        public AccountResponseLinks Links { get; set; }
+    public long IncrementedSequenceNumber => SequenceNumber + 1;
 
-        [JsonProperty("Data")] public Dictionary<string, string> Data { get; set; }
+    public KeyPair KeyPair => KeyPair.FromAccountId(AccountId);
 
-        public long IncrementedSequenceNumber => SequenceNumber + 1;
+    public IAccountId MuxedAccount => KeyPair;
 
-        public KeyPair KeyPair => KeyPair.FromAccountId(AccountId);
+    public void IncrementSequenceNumber()
+    {
+        SequenceNumber++;
+    }
 
-        public IAccountId MuxedAccount => KeyPair;
-
-        public void IncrementSequenceNumber()
-        {
-            SequenceNumber++;
-        }
-
-        public KeyPair GetKeyPair(string accountId)
-        {
-            return KeyPair.FromAccountId(accountId);
-        }
-
-        public void SetSequenceNumber(long sequenceNumber)
-        {
-            SequenceNumber = sequenceNumber;
-        }
+    public void SetSequenceNumber(long sequenceNumber)
+    {
+        SequenceNumber = sequenceNumber;
     }
 }

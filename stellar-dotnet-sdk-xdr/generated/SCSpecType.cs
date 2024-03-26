@@ -74,7 +74,7 @@ public class SCSpecType
         SC_SPEC_TYPE_UDT = 2000
     }
 
-    public SCSpecTypeEnum InnerValue { get; set; } = default;
+    public SCSpecTypeEnum InnerValue { get; set; }
 
     public static SCSpecType Create(SCSpecTypeEnum v)
     {

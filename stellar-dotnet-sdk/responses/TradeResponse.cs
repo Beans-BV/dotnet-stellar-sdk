@@ -4,18 +4,43 @@ using stellar_dotnet_sdk.requests;
 namespace stellar_dotnet_sdk.responses;
 
 /// <summary>
-/// Represents trades response.
-/// See: https://www.stellar.org/developers/horizon/reference/endpoints/trades.html
-/// <seealso cref="TradesRequestBuilder"/>
-/// <seealso cref="Server"/>
+///     Represents trades response.
+///     See: https://www.stellar.org/developers/horizon/reference/endpoints/trades.html
+///     <seealso cref="TradesRequestBuilder" />
+///     <seealso cref="Server" />
 /// </summary>
 public class TradeResponse : Response, IPagingToken
 {
-    [JsonProperty(PropertyName = "id")]
-    public string Id { get; }
+    public TradeResponse(string id, string pagingToken, string ledgerCloseTime, string offerId, bool baseIsSeller,
+        string baseAccount, LiquidityPoolID baseLiquidityPoolID, string baseOfferId, string baseAmount,
+        string baseAssetType, string baseAssetCode, string baseAssetIssuer, string counterAccount,
+        LiquidityPoolID counterLiquidityPoolID, string counterOfferId, string counterAmount, string counterAssetType,
+        string counterAssetCode, string counterAssetIssuer, Price price, TradeResponseLinks links)
+    {
+        Id = id;
+        PagingToken = pagingToken;
+        LedgerCloseTime = ledgerCloseTime;
+        OfferId = offerId;
+        BaseIsSeller = baseIsSeller;
+        BaseAccount = baseAccount;
+        BaseLiquidityPoolID = baseLiquidityPoolID;
+        BaseOfferId = baseOfferId;
+        BaseAmount = baseAmount;
+        BaseAssetType = baseAssetType;
+        BaseAssetCode = baseAssetCode;
+        BaseAssetIssuer = baseAssetIssuer;
+        CounterAccount = counterAccount;
+        CounterLiquidityPoolID = counterLiquidityPoolID;
+        CounterOfferId = counterOfferId;
+        CounterAmount = counterAmount;
+        CounterAssetType = counterAssetType;
+        CounterAssetCode = counterAssetCode;
+        CounterAssetIssuer = counterAssetIssuer;
+        Price = price;
+        Links = links;
+    }
 
-    [JsonProperty(PropertyName = "paging_token")]
-    public string PagingToken { get; }
+    [JsonProperty(PropertyName = "id")] public string Id { get; }
 
     [JsonProperty(PropertyName = "ledger_close_time")]
     public string LedgerCloseTime { get; }
@@ -68,43 +93,21 @@ public class TradeResponse : Response, IPagingToken
     [JsonProperty(PropertyName = "counter_asset_issuer")]
     public string CounterAssetIssuer { get; }
 
-    [JsonProperty(PropertyName = "price")]
-    public Price Price { get; }
+    [JsonProperty(PropertyName = "price")] public Price Price { get; }
 
     [JsonProperty(PropertyName = "_links")]
     public TradeResponseLinks Links { get; }
 
     /// <summary>
-    /// Creates and returns a base asset.
+    ///     Creates and returns a base asset.
     /// </summary>
     public Asset BaseAsset => Asset.Create(BaseAssetType, BaseAssetCode, BaseAssetIssuer);
 
     /// <summary>
-    /// Creates and returns a counter asset.
+    ///     Creates and returns a counter asset.
     /// </summary>
     public Asset CountAsset => Asset.Create(CounterAssetType, CounterAssetCode, CounterAssetIssuer);
 
-    public TradeResponse(string id, string pagingToken, string ledgerCloseTime, string offerId, bool baseIsSeller, string baseAccount, LiquidityPoolID baseLiquidityPoolID, string baseOfferId, string baseAmount, string baseAssetType, string baseAssetCode, string baseAssetIssuer, string counterAccount, LiquidityPoolID counterLiquidityPoolID, string counterOfferId, string counterAmount, string counterAssetType, string counterAssetCode, string counterAssetIssuer, Price price)
-    {
-        Id = id;
-        PagingToken = pagingToken;
-        LedgerCloseTime = ledgerCloseTime;
-        OfferId = offerId;
-        BaseIsSeller = baseIsSeller;
-        BaseAccount = baseAccount;
-        BaseLiquidityPoolID = baseLiquidityPoolID;
-        BaseOfferId = baseOfferId;
-        BaseAmount = baseAmount;
-        BaseAssetType = baseAssetType;
-        BaseAssetCode = baseAssetCode;
-        BaseAssetIssuer = baseAssetIssuer;
-        CounterAccount = counterAccount;
-        CounterLiquidityPoolID = counterLiquidityPoolID;
-        CounterOfferId = counterOfferId;
-        CounterAmount = counterAmount;
-        CounterAssetType = counterAssetType;
-        CounterAssetCode = counterAssetCode;
-        CounterAssetIssuer = counterAssetIssuer;
-        Price = price;
-    }
+    [JsonProperty(PropertyName = "paging_token")]
+    public string PagingToken { get; }
 }

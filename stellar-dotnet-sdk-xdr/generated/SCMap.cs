@@ -19,7 +19,7 @@ public class SCMap
         InnerValue = value;
     }
 
-    public SCMapEntry[] InnerValue { get; set; } = default;
+    public SCMapEntry[] InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SCMap encodedSCMap)
     {

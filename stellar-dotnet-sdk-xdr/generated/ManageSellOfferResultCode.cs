@@ -54,7 +54,7 @@ public class ManageSellOfferResultCode
         MANAGE_SELL_OFFER_LOW_RESERVE = -12
     }
 
-    public ManageSellOfferResultCodeEnum InnerValue { get; set; } = default;
+    public ManageSellOfferResultCodeEnum InnerValue { get; set; }
 
     public static ManageSellOfferResultCode Create(ManageSellOfferResultCodeEnum v)
     {

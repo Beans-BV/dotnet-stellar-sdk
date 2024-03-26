@@ -3,20 +3,19 @@
  *  Redistribution and use in source and binary forms, with or without modification, is permitted.
  */
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public sealed partial class EventSource
 {
-    public sealed partial class EventSource
+    /// <summary>
+    ///     The possible values of the readyState property.
+    /// </summary>
+    public enum EventSourceState
     {
-        /// <summary>
-        ///     The possible values of the readyState property.
-        /// </summary>
-        public enum EventSourceState
-        {
-            Connecting = 0,
-            Open = 1,
-            Closed = 2,
-            Shutdown = 3,
-            Raw = 4
-        }
+        CONNECTING = 0,
+        OPEN = 1,
+        CLOSED = 2,
+        SHUTDOWN = 3,
+        RAW = 4
     }
 }

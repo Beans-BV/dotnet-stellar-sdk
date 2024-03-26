@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using stellar_dotnet_sdk;
 using stellar_dotnet_sdk.responses;
-using stellar_dotnet_sdk.responses.page;
 
 namespace stellar_dotnet_sdk_test.responses;
 
@@ -27,7 +26,7 @@ public class OfferPageDeserializerTest
         var offerResponsePage = JsonSingleton.GetInstance<Page<OfferResponse>>(json);
         var serialized = JsonConvert.SerializeObject(offerResponsePage);
         var back = JsonConvert.DeserializeObject<Page<OfferResponse>>(serialized);
-
+        Assert.IsNotNull(back);
         AssertTestData(back);
     }
 
@@ -49,17 +48,20 @@ public class OfferPageDeserializerTest
         var offerResponsePage = JsonSingleton.GetInstance<Page<OfferResponse>>(json);
         var serialized = JsonConvert.SerializeObject(offerResponsePage);
         var back = JsonConvert.DeserializeObject<Page<OfferResponse>>(serialized);
-
+        Assert.IsNotNull(back);
         AssertTestData(back);
     }
 
     public static void AssertTestData(Page<OfferResponse> offerResponsePage)
     {
         Assert.AreEqual(offerResponsePage.Records[0].Id, "241");
-        Assert.AreEqual(offerResponsePage.Records[0].Seller, "GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD");
+        Assert.AreEqual(offerResponsePage.Records[0].Seller,
+            "GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD");
         Assert.AreEqual(offerResponsePage.Records[0].PagingToken, "241");
-        Assert.AreEqual(offerResponsePage.Records[0].Selling, Asset.CreateNonNativeAsset("INR", "GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD"));
-        Assert.AreEqual(offerResponsePage.Records[0].Buying, Asset.CreateNonNativeAsset("USD", "GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD"));
+        Assert.AreEqual(offerResponsePage.Records[0].Selling,
+            Asset.CreateNonNativeAsset("INR", "GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD"));
+        Assert.AreEqual(offerResponsePage.Records[0].Buying,
+            Asset.CreateNonNativeAsset("USD", "GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD"));
         Assert.AreEqual(offerResponsePage.Records[0].Amount, "10.0000000");
 
         offerResponsePage.Records[0].Price

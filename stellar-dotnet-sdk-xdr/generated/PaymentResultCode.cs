@@ -41,7 +41,7 @@ public class PaymentResultCode
         PAYMENT_NO_ISSUER = -9
     }
 
-    public PaymentResultCodeEnum InnerValue { get; set; } = default;
+    public PaymentResultCodeEnum InnerValue { get; set; }
 
     public static PaymentResultCode Create(PaymentResultCodeEnum v)
     {

@@ -1,26 +1,27 @@
-namespace stellar_dotnet_sdk
+using stellar_dotnet_sdk.xdr;
+
+namespace stellar_dotnet_sdk;
+
+public class ClaimPredicateOr : ClaimPredicate
 {
-    public class ClaimPredicateOr : ClaimPredicate
+    public ClaimPredicateOr(ClaimPredicate leftPredicate, ClaimPredicate rightPredicate)
     {
-        public ClaimPredicate LeftPredicate { get; }
-        public ClaimPredicate RightPredicate { get; }
+        LeftPredicate = leftPredicate;
+        RightPredicate = rightPredicate;
+    }
 
-        public ClaimPredicateOr(ClaimPredicate leftPredicate, ClaimPredicate rightPredicate)
-        {
-            LeftPredicate = leftPredicate;
-            RightPredicate = rightPredicate;
-        }
+    public ClaimPredicate LeftPredicate { get; }
+    public ClaimPredicate RightPredicate { get; }
 
-        public override xdr.ClaimPredicate ToXdr()
+    public override xdr.ClaimPredicate ToXdr()
+    {
+        return new xdr.ClaimPredicate
         {
-            return new xdr.ClaimPredicate
+            Discriminant = new ClaimPredicateType
             {
-                Discriminant = new xdr.ClaimPredicateType
-                {
-                    InnerValue = xdr.ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_OR,
-                },
-                OrPredicates = new[] { LeftPredicate.ToXdr(), RightPredicate.ToXdr() }
-            };
-        }
+                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_OR
+            },
+            OrPredicates = new[] { LeftPredicate.ToXdr(), RightPredicate.ToXdr() }
+        };
     }
 }

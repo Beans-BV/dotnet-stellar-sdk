@@ -1,16 +1,17 @@
-namespace stellar_dotnet_sdk
+using stellar_dotnet_sdk.xdr;
+
+namespace stellar_dotnet_sdk;
+
+public class ClaimPredicateUnconditional : ClaimPredicate
 {
-    public class ClaimPredicateUnconditional : ClaimPredicate
+    public override xdr.ClaimPredicate ToXdr()
     {
-        public override xdr.ClaimPredicate ToXdr()
+        return new xdr.ClaimPredicate
         {
-            return new xdr.ClaimPredicate
+            Discriminant = new ClaimPredicateType
             {
-                Discriminant = new xdr.ClaimPredicateType
-                {
-                    InnerValue = xdr.ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_UNCONDITIONAL
-                },
-            };
-        }
+                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_UNCONDITIONAL
+            }
+        };
     }
 }

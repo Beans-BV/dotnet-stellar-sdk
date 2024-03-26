@@ -1,38 +1,38 @@
 using System;
-using xdr = stellar_dotnet_sdk.xdr;
+using stellar_dotnet_sdk.xdr;
+using Int64 = stellar_dotnet_sdk.xdr.Int64;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public class ClaimPredicateBeforeAbsoluteTime : ClaimPredicate
 {
-    public class ClaimPredicateBeforeAbsoluteTime : ClaimPredicate
+    public ClaimPredicateBeforeAbsoluteTime(DateTimeOffset dateTime)
     {
-        public DateTimeOffset DateTime { get => DateTimeOffset.FromUnixTimeSeconds((long)TimePoint.InnerValue.InnerValue); }
-        public xdr.TimePoint TimePoint { get; } = new xdr.TimePoint();
+        TimePoint.InnerValue = new Uint64((ulong)dateTime.ToUnixTimeSeconds());
+    }
 
-        public ClaimPredicateBeforeAbsoluteTime(DateTimeOffset dateTime)
-        {
-            TimePoint.InnerValue = new xdr.Uint64((ulong)dateTime.ToUnixTimeSeconds());
-        }
+    public ClaimPredicateBeforeAbsoluteTime(TimePoint timePoint)
+    {
+        TimePoint = timePoint;
+    }
 
-        public ClaimPredicateBeforeAbsoluteTime(xdr.TimePoint timePoint)
-        {
-            TimePoint = timePoint;
-        }
+    public ClaimPredicateBeforeAbsoluteTime(ulong timePoint)
+    {
+        TimePoint = new TimePoint(new Uint64(timePoint));
+    }
 
-        public ClaimPredicateBeforeAbsoluteTime(ulong timePoint)
+    public DateTimeOffset DateTime => DateTimeOffset.FromUnixTimeSeconds((long)TimePoint.InnerValue.InnerValue);
+    public TimePoint TimePoint { get; } = new();
+
+    public override xdr.ClaimPredicate ToXdr()
+    {
+        return new xdr.ClaimPredicate
         {
-            TimePoint = new xdr.TimePoint(new xdr.Uint64(timePoint));
-        }
-        
-        public override xdr.ClaimPredicate ToXdr()
-        {
-            return new xdr.ClaimPredicate
+            Discriminant = new ClaimPredicateType
             {
-                Discriminant = new xdr.ClaimPredicateType
-                {
-                    InnerValue = xdr.ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME
-                },
-                AbsBefore = new xdr.Int64((long)TimePoint.InnerValue.InnerValue),
-            };
-        }
+                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME
+            },
+            AbsBefore = new Int64((long)TimePoint.InnerValue.InnerValue)
+        };
     }
 }

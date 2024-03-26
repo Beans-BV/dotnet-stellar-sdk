@@ -1,26 +1,18 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using Newtonsoft.Json;
 
-namespace stellar_dotnet_sdk.converters
+namespace stellar_dotnet_sdk.converters;
+
+public class LiquidityPoolIDJsonConverter : JsonConverter<LiquidityPoolID>
 {
-    public class LiquidityPoolIDJsonConverter : JsonConverter<LiquidityPoolID>
+    public override LiquidityPoolID? ReadJson(JsonReader reader, Type objectType, LiquidityPoolID existingValue,
+        bool hasExistingValue, JsonSerializer serializer)
     {
-        public override LiquidityPoolID ReadJson(JsonReader reader, Type objectType, LiquidityPoolID existingValue, bool hasExistingValue, JsonSerializer serializer)
-        {
-            if (reader.Value != null)
-            {
-                return new LiquidityPoolID((string)reader.Value);
-            }
-            return null;
-        }
-
-        public override void WriteJson(JsonWriter writer, LiquidityPoolID value, JsonSerializer serializer)
-        {
-            writer.WriteValue(value.ToString());
-        }
+        return reader.Value != null ? new LiquidityPoolID((string)reader.Value) : null;
     }
 
+    public override void WriteJson(JsonWriter writer, LiquidityPoolID? value, JsonSerializer serializer)
+    {
+        writer.WriteValue(value.ToString());
+    }
 }

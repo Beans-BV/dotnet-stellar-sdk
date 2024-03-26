@@ -5,19 +5,23 @@
 
 using System;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public sealed partial class EventSource
 {
-    public sealed partial class EventSource
+    /// <summary>
+    ///     Server Sent Event Message Object
+    /// </summary>
+    public sealed class ServerSentEventArgs : EventArgs
     {
-        /// <summary>
-        ///     Server Sent Event Message Object
-        /// </summary>
-        public sealed class ServerSentEventArgs : EventArgs
+        public ServerSentEventArgs(string data)
         {
-            /// <summary>
-            ///     Gets the data.
-            /// </summary>
-            public string Data { get; set; }
+            Data = data;
         }
+
+        /// <summary>
+        ///     Gets the data.
+        /// </summary>
+        public string Data { get; }
     }
 }

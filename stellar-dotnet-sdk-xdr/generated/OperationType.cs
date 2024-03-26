@@ -72,7 +72,7 @@ public class OperationType
         RESTORE_FOOTPRINT = 26
     }
 
-    public OperationTypeEnum InnerValue { get; set; } = default;
+    public OperationTypeEnum InnerValue { get; set; }
 
     public static OperationType Create(OperationTypeEnum v)
     {

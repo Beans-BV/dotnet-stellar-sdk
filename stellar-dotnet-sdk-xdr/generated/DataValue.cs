@@ -19,7 +19,7 @@ public class DataValue
         InnerValue = value;
     }
 
-    public byte[] InnerValue { get; set; } = default;
+    public byte[] InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, DataValue encodedDataValue)
     {

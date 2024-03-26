@@ -1,233 +1,224 @@
-﻿using FakeItEasy;
+﻿using System;
+using FakeItEasy;
 using FluentAssertions;
 using FsCheck;
-using FsCheck.NUnit;
+using NUnit.Framework;
 using stellar_dotnet_sdk;
-using stellar_dotnet_sdk.responses;
-using System;
 using stellar_dotnet_sdk_test.Generators;
+using stellar_dotnet_sdk.responses;
 
-namespace stellar_dotnet_sdk_test
+namespace stellar_dotnet_sdk_test;
+
+[TestFixture]
+public class BalanceTests
 {
-    [NUnit.Framework.TestFixture]
-    public class BalanceTests
+    private Balance SUT { get; set; }
+
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    public void Constructor_LiquidityPool(bool expectedIsAuthorized, bool expectedIsAuthorizedToMaintainLiabilities)
     {
-        private Balance SUT { get; set; }
+        const string expectedLiquidityPoolId = "1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469";
+        const string expectedAssetType = "liquidity_pool_shares";
+        const string expectedLimit = "1.0";
+        const string expectedBalance = "2.0";
 
-        #region Constructor Tests
+        // setup
+        SUT = new Balance(
+            expectedAssetType,
+            null,
+            null,
+            expectedBalance,
+            expectedLimit,
+            null,
+            null,
+            expectedIsAuthorized,
+            expectedIsAuthorizedToMaintainLiabilities,
+            expectedLiquidityPoolId);
 
-        [NUnit.Framework.TestCase(true, false)]
-        [NUnit.Framework.TestCase(false, true)]
-        public void Constructor_LiquidityPool(bool expectedIsAuthorized, bool expectedIsAuthorizedToMaintainLiabilities)
-        {
-            const string ExpectedLiquidityPoolId = "1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469";
-            const string ExpectedAssetType = "liquidity_pool_shares";
-            const string ExpectedLimit = "1.0";
-            const string ExpectedBalance = "2.0";
+        // expected
+        SUT.Asset
+            .Should().BeNull();
 
-            // setup
-            this.SUT = new Balance(
-                ExpectedAssetType,
-                null,
-                null,
-                ExpectedBalance,
-                ExpectedLimit,
-                null,
-                null,
-                expectedIsAuthorized,
-                expectedIsAuthorizedToMaintainLiabilities,
-                ExpectedLiquidityPoolId);
+        SUT.AssetType
+            .Should().Be(expectedAssetType);
 
-            // expected
-            ((object)this.SUT.Asset)
-                .Should().BeNull();
+        SUT.Limit
+            .Should().Be(expectedLimit);
 
-            this.SUT.AssetType
-                .Should().Be(ExpectedAssetType);
+        SUT.BalanceString
+            .Should().Be(expectedBalance);
 
-            this.SUT.Limit
-                .Should().Be(ExpectedLimit);
+        SUT.LiquidityPoolId
+            .Should().Be(expectedLiquidityPoolId);
 
-            this.SUT.BalanceString
-                .Should().Be(ExpectedBalance);
+        SUT.AssetCode
+            .Should().BeNull();
 
-            this.SUT.LiquidityPoolId
-                .Should().Be(ExpectedLiquidityPoolId);
+        SUT.AssetIssuer
+            .Should().BeNull();
 
-            this.SUT.AssetCode
-                .Should().BeNull();
+        SUT.BuyingLiabilities
+            .Should().BeNull();
 
-            this.SUT.AssetIssuer
-                .Should().BeNull();
+        SUT.SellingLiabilities
+            .Should().BeNull();
 
-            this.SUT.BuyingLiabilities
-                .Should().BeNull();
+        SUT.IsAuthorized
+            .Should().Be(expectedIsAuthorized);
 
-            this.SUT.SellingLiabilities
-                .Should().BeNull();
+        SUT.IsAuthorizedToMaintainLiabilities
+            .Should().Be(expectedIsAuthorizedToMaintainLiabilities);
+    }
 
-            this.SUT.IsAuthorized
-                .Should().Be(expectedIsAuthorized);
+    [TestCase("ABC4", true, false, AssetTypeCreditAlphaNum4.RestApiType, typeof(AssetTypeCreditAlphaNum4))]
+    [TestCase("ABC12", false, true, AssetTypeCreditAlphaNum12.RestApiType, typeof(AssetTypeCreditAlphaNum12))]
+    public void Constructor_CreditAlphaNum(
+        string expectedAssetCode,
+        bool expectedIsAuthorized,
+        bool expectedIsAuthorizedToMaintainLiabilities,
+        string expectedAssetType,
+        Type expectedAssetDataType)
+    {
+        const string expectedLimit = "1.0";
+        const string expectedBalance = "2.0";
+        const string expectedAssetIssuer = "Expected Asset Issuer";
+        const string expectedBuyingLiabilities = "3.0";
+        const string expectedSellingLiabilities = "4.0";
 
-            this.SUT.IsAuthorizedToMaintainLiabilities
-                .Should().Be(expectedIsAuthorizedToMaintainLiabilities);
-        }
+        // setup
+        SUT = new Balance(
+            expectedAssetType,
+            expectedAssetCode,
+            expectedAssetIssuer,
+            expectedBalance,
+            expectedLimit,
+            expectedBuyingLiabilities,
+            expectedSellingLiabilities,
+            expectedIsAuthorized,
+            expectedIsAuthorizedToMaintainLiabilities,
+            null);
 
-        [NUnit.Framework.TestCase("ABC4", true, false, AssetTypeCreditAlphaNum4.RestApiType, typeof(AssetTypeCreditAlphaNum4))]
-        [NUnit.Framework.TestCase("ABC12", false, true, AssetTypeCreditAlphaNum12.RestApiType, typeof(AssetTypeCreditAlphaNum12))]
-        public void Constructor_CreditAlphaNum(
-            string expectedAssetCode,
-            bool expectedIsAuthorized,
-            bool expectedIsAuthorizedToMaintainLiabilities,
-            string expectedAssetType,
-            Type expectedAssetDataType)
-        {
-            const string ExpectedLimit = "1.0";
-            const string ExpectedBalance = "2.0";
-            const string ExpectedAssetIssuer = "Expected Asset Issuer";
-            const string ExpectedBuyingLiabilities = "3.0";
-            const string ExpectedSellingLiabilities = "4.0";
+        // expected
+        SUT.Asset
+            .Should().BeOfType(expectedAssetDataType);
 
-            // setup
-            this.SUT = new Balance(
-                expectedAssetType,
-                expectedAssetCode,
-                ExpectedAssetIssuer,
-                ExpectedBalance,
-                ExpectedLimit,
-                ExpectedBuyingLiabilities,
-                ExpectedSellingLiabilities,
-                expectedIsAuthorized,
-                expectedIsAuthorizedToMaintainLiabilities,
-                null);
+        SUT.AssetCode
+            .Should().Be(expectedAssetCode);
 
-            // expected
-            ((object)this.SUT.Asset)
-                .Should().BeOfType(expectedAssetDataType);
+        SUT.AssetIssuer
+            .Should().Be(expectedAssetIssuer);
 
-            this.SUT.AssetCode
-                .Should().Be(expectedAssetCode);
+        SUT.AssetType
+            .Should().Be(expectedAssetType);
 
-            this.SUT.AssetIssuer
-                .Should().Be(ExpectedAssetIssuer);
+        SUT.Limit
+            .Should().Be(expectedLimit);
 
-            this.SUT.AssetType
-                .Should().Be(expectedAssetType);
+        SUT.BalanceString
+            .Should().Be(expectedBalance);
 
-            this.SUT.Limit
-                .Should().Be(ExpectedLimit);
+        SUT.LiquidityPoolId
+            .Should().BeNull();
 
-            this.SUT.BalanceString
-                .Should().Be(ExpectedBalance);
+        SUT.BuyingLiabilities
+            .Should().Be(expectedBuyingLiabilities);
 
-            this.SUT.LiquidityPoolId
-                .Should().BeNull();
+        SUT.SellingLiabilities
+            .Should().Be(expectedSellingLiabilities);
 
-            this.SUT.BuyingLiabilities
-                .Should().Be(ExpectedBuyingLiabilities);
+        SUT.IsAuthorized
+            .Should().Be(expectedIsAuthorized);
 
-            this.SUT.SellingLiabilities
-                .Should().Be(ExpectedSellingLiabilities);
+        SUT.IsAuthorizedToMaintainLiabilities
+            .Should().Be(expectedIsAuthorizedToMaintainLiabilities);
+    }
 
-            this.SUT.IsAuthorized
-                .Should().Be(expectedIsAuthorized);
+    [FsCheck.NUnit.Property(Arbitrary = new[] { typeof(AlphaNum4Generator) })]
+    public Property Asset_AlphaNum4(string assetCode)
+    {
+        // setup
+        SUT = new Balance(
+            AssetTypeCreditAlphaNum4.RestApiType,
+            assetCode,
+            A.Dummy<string>(),
+            "0.0",
+            A.Dummy<string>(),
+            A.Dummy<string>(),
+            A.Dummy<string>(),
+            A.Dummy<bool>(),
+            A.Dummy<bool>(),
+            null);
 
-            this.SUT.IsAuthorizedToMaintainLiabilities
-                .Should().Be(expectedIsAuthorizedToMaintainLiabilities);
-        }
+        return (SUT.Asset is AssetTypeCreditAlphaNum4).ToProperty();
+    }
 
-        #endregion Constructor Tests
+    [FsCheck.NUnit.Property(Arbitrary = new[] { typeof(AlphaNum12Generator) })]
+    public Property Asset_AlphaNum12(string assetCode)
+    {
+        // setup
+        SUT = new Balance(
+            AssetTypeCreditAlphaNum12.RestApiType,
+            assetCode,
+            A.Dummy<string>(),
+            "0.0",
+            A.Dummy<string>(),
+            A.Dummy<string>(),
+            A.Dummy<string>(),
+            A.Dummy<bool>(),
+            A.Dummy<bool>(),
+            null);
 
-        #region Asset Tests
+        return (SUT.Asset is AssetTypeCreditAlphaNum12).ToProperty();
+    }
 
-        [Property(Arbitrary = new[] { typeof(AlphaNum4Generator) })]
-        public Property Asset_AlphaNum4(string assetCode)
-        {
-            // setup
-            this.SUT = new Balance(
-                AssetTypeCreditAlphaNum4.RestApiType,
-                assetCode,
-                A.Dummy<string>(),
-                "0.0",
-                A.Dummy<string>(),
-                A.Dummy<string>(),
-                A.Dummy<string>(),
-                A.Dummy<bool>(),
-                A.Dummy<bool>(),
-                null);
+    [Test]
+    public void Asset_Native()
+    {
+        // setup
+        SUT = new Balance(
+            AssetTypeNative.RestApiType,
+            null,
+            A.Dummy<string>(),
+            "0.0",
+            A.Dummy<string>(),
+            A.Dummy<string>(),
+            A.Dummy<string>(),
+            A.Dummy<bool>(),
+            A.Dummy<bool>(),
+            null);
 
-            return (this.SUT.Asset is AssetTypeCreditAlphaNum4).ToProperty();
-        }
+        // actual 
+        var actual = SUT.Asset;
 
-        [Property(Arbitrary = new[] { typeof(AlphaNum12Generator) })]
-        public Property Asset_AlphaNum12(string assetCode)
-        {
-            // setup
-            this.SUT = new Balance(
-                AssetTypeCreditAlphaNum12.RestApiType,
-                assetCode,
-                A.Dummy<string>(),
-                "0.0",
-                A.Dummy<string>(),
-                A.Dummy<string>(),
-                A.Dummy<string>(),
-                A.Dummy<bool>(),
-                A.Dummy<bool>(),
-                null);
+        // expected
+        actual
+            .Should().BeOfType<AssetTypeNative>();
+    }
 
-            return (this.SUT.Asset is AssetTypeCreditAlphaNum12).ToProperty();
-        }
+    [Test]
+    public void Asset_LiquidityPool()
+    {
+        const string expectedLiquidityPoolId = "1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469";
 
-        [NUnit.Framework.Test]
-        public void Asset_Native()
-        {
-            // setup
-            this.SUT = new Balance(
-                AssetTypeNative.RestApiType,
-                null,
-                A.Dummy<string>(),
-                "0.0",
-                A.Dummy<string>(),
-                A.Dummy<string>(),
-                A.Dummy<string>(),
-                A.Dummy<bool>(),
-                A.Dummy<bool>(),
-                null);
+        // setup
+        SUT = new Balance(
+            "liquidity_pool_shares",
+            A.Dummy<string>(),
+            A.Dummy<string>(),
+            "0.0",
+            A.Dummy<string>(),
+            A.Dummy<string>(),
+            A.Dummy<string>(),
+            A.Dummy<bool>(),
+            A.Dummy<bool>(),
+            expectedLiquidityPoolId);
 
-            // actual 
-            var actual = this.SUT.Asset;
+        // actual 
+        var actual = SUT.Asset;
 
-            // expected
-            ((object)actual)
-                .Should().BeOfType<AssetTypeNative>();
-        }
-
-        [NUnit.Framework.Test]
-        public void Asset_LiquidityPool()
-        {
-            const string ExpectedLiquidityPoolId = "1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469";
-
-            // setup
-            this.SUT = new Balance(
-                "liquidity_pool_shares",
-                A.Dummy<string>(),
-                A.Dummy<string>(),
-                "0.0",
-                A.Dummy<string>(),
-                A.Dummy<string>(),
-                A.Dummy<string>(),
-                A.Dummy<bool>(),
-                A.Dummy<bool>(),
-                ExpectedLiquidityPoolId);
-
-            // actual 
-            var actual = this.SUT.Asset;
-
-            // expected
-            ((object)actual)
-                .Should().BeNull();
-        }
-
-        #endregion Asset Tests
+        // expected
+        actual
+            .Should().BeNull();
     }
 }

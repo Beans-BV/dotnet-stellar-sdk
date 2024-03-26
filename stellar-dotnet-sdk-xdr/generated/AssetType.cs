@@ -26,7 +26,7 @@ public class AssetType
         ASSET_TYPE_POOL_SHARE = 3
     }
 
-    public AssetTypeEnum InnerValue { get; set; } = default;
+    public AssetTypeEnum InnerValue { get; set; }
 
     public static AssetType Create(AssetTypeEnum v)
     {

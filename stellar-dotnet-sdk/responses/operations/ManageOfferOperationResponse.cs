@@ -3,19 +3,20 @@
 namespace stellar_dotnet_sdk.responses.operations;
 
 /// <summary>
-/// Represents ManageOffer operation response.
-/// See: https://www.stellar.org/developers/horizon/reference/resources/operation.html
-/// <seealso cref="requests.OperationsRequestBuilder"/>
-/// <seealso cref="Server"/>
+///     Represents ManageOffer operation response.
+///     See: https://www.stellar.org/developers/horizon/reference/resources/operation.html
+///     <seealso cref="requests.OperationsRequestBuilder" />
+///     <seealso cref="Server" />
 /// </summary>
 public class ManageOfferOperationResponse : OperationResponse
 {
     public ManageOfferOperationResponse()
     {
-
     }
 
-    public ManageOfferOperationResponse(string offerId, string amount, string price, string buyingAssetType, string buyingAssetCode, string buyingAssetIssuer, string sellingAssetType, string sellingAssetCode, string sellingAssetIssuer)
+    public ManageOfferOperationResponse(string offerId, string amount, string price, string buyingAssetType,
+        string buyingAssetCode, string buyingAssetIssuer, string sellingAssetType, string sellingAssetCode,
+        string sellingAssetIssuer)
     {
         OfferId = offerId;
         Amount = amount;

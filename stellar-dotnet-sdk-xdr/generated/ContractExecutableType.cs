@@ -22,7 +22,7 @@ public class ContractExecutableType
         CONTRACT_EXECUTABLE_STELLAR_ASSET = 1
     }
 
-    public ContractExecutableTypeEnum InnerValue { get; set; } = default;
+    public ContractExecutableTypeEnum InnerValue { get; set; }
 
     public static ContractExecutableType Create(ContractExecutableTypeEnum v)
     {

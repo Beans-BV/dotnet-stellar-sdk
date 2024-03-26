@@ -56,7 +56,7 @@ public class PathPaymentStrictReceiveResultCode
         PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX = -12
     }
 
-    public PathPaymentStrictReceiveResultCodeEnum InnerValue { get; set; } = default;
+    public PathPaymentStrictReceiveResultCodeEnum InnerValue { get; set; }
 
     public static PathPaymentStrictReceiveResultCode Create(PathPaymentStrictReceiveResultCodeEnum v)
     {

@@ -36,7 +36,7 @@ public class AccountFlags
         AUTH_CLAWBACK_ENABLED_FLAG = 8
     }
 
-    public AccountFlagsEnum InnerValue { get; set; } = default;
+    public AccountFlagsEnum InnerValue { get; set; }
 
     public static AccountFlags Create(AccountFlagsEnum v)
     {

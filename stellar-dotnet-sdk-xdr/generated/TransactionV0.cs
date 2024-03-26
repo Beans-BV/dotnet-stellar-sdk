@@ -27,8 +27,8 @@ public class TransactionV0
     public Uint256 SourceAccountEd25519 { get; set; }
     public Uint32 Fee { get; set; }
     public SequenceNumber SeqNum { get; set; }
-    public TimeBounds TimeBounds { get; set; }
-    public Memo Memo { get; set; }
+    public TimeBounds? TimeBounds { get; set; }
+    public Memo? Memo { get; set; }
     public Operation[] Operations { get; set; }
     public TransactionV0Ext Ext { get; set; }
 

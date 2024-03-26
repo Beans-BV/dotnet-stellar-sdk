@@ -20,7 +20,7 @@ public class SCMetaKind
         SC_META_V0 = 0
     }
 
-    public SCMetaKindEnum InnerValue { get; set; } = default;
+    public SCMetaKindEnum InnerValue { get; set; }
 
     public static SCMetaKind Create(SCMetaKindEnum v)
     {

@@ -32,7 +32,7 @@ public class LedgerUpgradeType
         LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE = 7
     }
 
-    public LedgerUpgradeTypeEnum InnerValue { get; set; } = default;
+    public LedgerUpgradeTypeEnum InnerValue { get; set; }
 
     public static LedgerUpgradeType Create(LedgerUpgradeTypeEnum v)
     {

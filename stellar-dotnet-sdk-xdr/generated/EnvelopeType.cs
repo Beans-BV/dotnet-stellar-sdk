@@ -38,7 +38,7 @@ public class EnvelopeType
         ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9
     }
 
-    public EnvelopeTypeEnum InnerValue { get; set; } = default;
+    public EnvelopeTypeEnum InnerValue { get; set; }
 
     public static EnvelopeType Create(EnvelopeTypeEnum v)
     {

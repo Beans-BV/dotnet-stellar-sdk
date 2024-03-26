@@ -19,7 +19,7 @@ public class Int32
         InnerValue = value;
     }
 
-    public int InnerValue { get; set; } = default;
+    public int InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, Int32 encodedInt32)
     {

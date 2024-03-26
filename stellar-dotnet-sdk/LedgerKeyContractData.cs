@@ -11,9 +11,9 @@ public class LedgerKeyContractData : LedgerKey
         Durability = durability;
     }
 
-    public SCAddress Contract { get; set; }
-    public SCVal Key { get; set; }
-    public ContractDataDurability Durability { get; set; }
+    public SCAddress Contract { get; }
+    public SCVal Key { get; }
+    public ContractDataDurability Durability { get; }
 
     public override xdr.LedgerKey ToXdr()
     {
