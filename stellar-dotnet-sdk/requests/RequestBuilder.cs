@@ -18,8 +18,8 @@ namespace stellar_dotnet_sdk.requests
     {
         private readonly List<string> _segments;
         private bool _segmentsAdded;
-        protected UriBuilder UriBuilder;
-        private readonly string _serverPathPrefix;
+        protected readonly UriBuilder UriBuilder;
+        private readonly Uri _serverUri;
 
         public static HttpClient HttpClient { get; set; }
 
@@ -31,18 +31,14 @@ namespace stellar_dotnet_sdk.requests
             return await responseHandler.HandleResponse(response);
         }
 
-        public string Uri
-        {
-            get => BuildUri().ToString();
-        }
+        public string Uri => BuildUri().ToString();
 
         public RequestBuilder(Uri serverUri, string defaultSegment, HttpClient httpClient)
         {
+            _serverUri = serverUri;
+
             UriBuilder = new UriBuilder(serverUri);
             _segments = new List<string>();
-
-            // Store the required path part of the serverUri
-            _serverPathPrefix = UriBuilder.Path;
 
             if (!string.IsNullOrEmpty(defaultSegment))
                 SetSegments(defaultSegment);
@@ -121,26 +117,23 @@ namespace stellar_dotnet_sdk.requests
         ///     <returns>EventSource object, so you can close() connection when not needed anymore</returns>
         public Uri BuildUri()
         {
-            if (_segments.Count > 0)
+            if (_segments.Count <= 0)
+                throw new NotSupportedException("No segments defined.");
+            
+            var path = _serverUri.AbsolutePath.TrimEnd('/');
+
+            foreach (var segment in _segments)
             {
-                var path = _serverPathPrefix;
-
-                foreach (var segment in _segments)
-                    path += (path.EndsWith("/") ? string.Empty : "/") + segment;
-
-                UriBuilder.Path = path;
-
-                try
+                if (!path.EndsWith("/"))
                 {
-                    return UriBuilder.Uri;
+                    path += "/";   
                 }
-                catch (UriFormatException)
-                {
-                    throw;
-                }
+                path += segment;
             }
 
-            throw new NotSupportedException("No segments defined.");
+            UriBuilder.Path = path;
+
+            return UriBuilder.Uri;
         }
     }
 }

@@ -168,18 +168,21 @@ namespace stellar_dotnet_sdk
                 await CheckMemoRequired(tx);
             }
 
-            var transactionUri = new UriBuilder(_serverUri).SetPath("/transactions").Uri;
+            var transactionUriBuilder = new UriBuilder(_serverUri);
+            
+            var path = _serverUri.AbsolutePath.TrimEnd('/');
+            transactionUriBuilder.SetPath($"{path}/transactions");
 
             var paramsPairs = new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("tx", transactionEnvelopeBase64)
+                new("tx", transactionEnvelopeBase64)
             };
 
-            var response = await _httpClient.PostAsync(transactionUri, new FormUrlEncodedContent(paramsPairs.ToArray()));
+            var response = await _httpClient.PostAsync(transactionUriBuilder.Uri, new FormUrlEncodedContent(paramsPairs.ToArray()));
 
             if (options.EnsureSuccess && !response.IsSuccessStatusCode)
             {
-                string responseString = string.Empty;
+                var responseString = string.Empty;
                 if (response.Content != null)
                 {
                     responseString = await response.Content.ReadAsStringAsync();
