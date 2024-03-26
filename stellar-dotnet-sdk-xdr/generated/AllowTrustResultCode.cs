@@ -36,7 +36,7 @@ public class AllowTrustResultCode
         ALLOW_TRUST_LOW_RESERVE = -6
     }
 
-    public AllowTrustResultCodeEnum InnerValue { get; set; } = default;
+    public AllowTrustResultCodeEnum InnerValue { get; set; }
 
     public static AllowTrustResultCode Create(AllowTrustResultCodeEnum v)
     {

@@ -22,7 +22,7 @@ public class ContractIDPreimageType
         CONTRACT_ID_PREIMAGE_FROM_ASSET = 1
     }
 
-    public ContractIDPreimageTypeEnum InnerValue { get; set; } = default;
+    public ContractIDPreimageTypeEnum InnerValue { get; set; }
 
     public static ContractIDPreimageType Create(ContractIDPreimageTypeEnum v)
     {

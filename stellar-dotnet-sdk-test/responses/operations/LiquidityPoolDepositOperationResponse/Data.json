@@ -27,9 +27,11 @@
   "liquidity_pool_id": "b26c0d6545349ad7f44ba758b7c705459537201583f2e524635be04aff84bc69",
   "reserves_max": [
     {
+      "asset": "native",
       "amount": "1000.0000000"
     },
     {
+      "asset": "NOODLE:GC2J4TNJKAKMJLTVAKVMA62CKRNC3YZDEK4WZUI4XZUM4DGPRX7ZMW7S",
       "amount": "1.0000000"
     }
   ],
@@ -45,9 +47,11 @@
   },
   "reserves_deposited": [
     {
+      "asset": "native",
       "amount": "0.0000000"
     },
     {
+      "asset": "NOODLE:GC2J4TNJKAKMJLTVAKVMA62CKRNC3YZDEK4WZUI4XZUM4DGPRX7ZMW7S",
       "amount": "0.0000000"
     }
   ],

@@ -33,7 +33,7 @@ public class OperationResultCode
         opTOO_MANY_SPONSORING = -6
     }
 
-    public OperationResultCodeEnum InnerValue { get; set; } = default;
+    public OperationResultCodeEnum InnerValue { get; set; }
 
     public static OperationResultCode Create(OperationResultCodeEnum v)
     {

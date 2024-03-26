@@ -29,7 +29,7 @@ public class ClawbackClaimableBalanceResultCode
         CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED = -3
     }
 
-    public ClawbackClaimableBalanceResultCodeEnum InnerValue { get; set; } = default;
+    public ClawbackClaimableBalanceResultCodeEnum InnerValue { get; set; }
 
     public static ClawbackClaimableBalanceResultCode Create(ClawbackClaimableBalanceResultCodeEnum v)
     {

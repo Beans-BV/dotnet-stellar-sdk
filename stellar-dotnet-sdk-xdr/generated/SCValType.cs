@@ -91,7 +91,7 @@ public class SCValType
         SCV_LEDGER_KEY_NONCE = 21
     }
 
-    public SCValTypeEnum InnerValue { get; set; } = default;
+    public SCValTypeEnum InnerValue { get; set; }
 
     public static SCValType Create(SCValTypeEnum v)
     {

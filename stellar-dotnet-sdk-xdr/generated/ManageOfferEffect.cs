@@ -24,7 +24,7 @@ public class ManageOfferEffect
         MANAGE_OFFER_DELETED = 2
     }
 
-    public ManageOfferEffectEnum InnerValue { get; set; } = default;
+    public ManageOfferEffectEnum InnerValue { get; set; }
 
     public static ManageOfferEffect Create(ManageOfferEffectEnum v)
     {

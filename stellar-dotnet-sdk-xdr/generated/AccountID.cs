@@ -19,7 +19,7 @@ public class AccountID
         InnerValue = value;
     }
 
-    public PublicKey InnerValue { get; set; } = default;
+    public PublicKey InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, AccountID encodedAccountID)
     {

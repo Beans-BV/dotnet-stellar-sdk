@@ -5,16 +5,21 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerKeyTTL : LedgerKey
 {
-    public LedgerKeyTTL(string hexString) : this(new Hash(hexString))
+    /// <summary>
+    ///     Constructs a <c>LedgerKeyTTL</c> object from a base-64 encoded string of the hash of the ledger entry.
+    /// </summary>
+    /// <param name="base64String">A base-64 encoded string.</param>
+    public LedgerKeyTTL(string base64String) : this(Convert.FromBase64String(base64String))
     {
     }
 
-    private LedgerKeyTTL(Hash hash)
+    private LedgerKeyTTL(byte[] key)
     {
-        Key = hash;
+        if (key.Length != 32) throw new ArgumentOutOfRangeException(nameof(key), "Key must have exactly 32 bytes.");
+        Key = key;
     }
-    
-    public Hash Key { get; }
+
+    public byte[] Key { get; }
 
     public override xdr.LedgerKey ToXdr()
     {
@@ -24,7 +29,7 @@ public class LedgerKeyTTL : LedgerKey
                 new LedgerEntryType { InnerValue = LedgerEntryType.LedgerEntryTypeEnum.TTL },
             Ttl = new xdr.LedgerKey.LedgerKeyTtl
             {
-                KeyHash = Key.ToXdr()
+                KeyHash = new Hash(Key)
             }
         };
     }

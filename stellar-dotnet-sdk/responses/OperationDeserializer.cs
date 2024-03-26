@@ -1,85 +1,63 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using stellar_dotnet_sdk.responses.operations;
-using System;
 
-namespace stellar_dotnet_sdk.responses
+namespace stellar_dotnet_sdk.responses;
+
+public class OperationDeserializer : JsonConverter<OperationResponse>
 {
-    public class OperationDeserializer : JsonConverter<OperationResponse>
+    public override bool CanWrite => false;
+
+    public override void WriteJson(JsonWriter writer, OperationResponse? value, JsonSerializer serializer)
     {
-        public override bool CanWrite => false;
+        throw new NotImplementedException();
+    }
 
-        public override void WriteJson(JsonWriter writer, OperationResponse value, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
+    public override OperationResponse ReadJson(JsonReader reader, Type objectType, OperationResponse? existingValue,
+        bool hasExistingValue,
+        JsonSerializer serializer)
+    {
+        var jsonObject = JObject.Load(reader);
+        var type = jsonObject.GetValue("type_i");
+        if (type == null) throw new ArgumentException("JSON value for type_i is missing.", nameof(type));
+        var response = CreateResponse(type.ToObject<int>());
+        serializer.Populate(jsonObject.CreateReader(), response);
+        return response;
+    }
 
-        public override OperationResponse ReadJson(JsonReader reader, Type objectType, OperationResponse existingValue,
-            bool hasExistingValue,
-            JsonSerializer serializer)
+    private static OperationResponse CreateResponse(int type)
+    {
+        return type switch
         {
-            var jsonObject = JObject.Load(reader);
-            var type = jsonObject.GetValue("type_i").ToObject<int>();
-            var response = CreateResponse(type);
-            serializer.Populate(jsonObject.CreateReader(), response);
-            return response;
-        }
-
-        private static OperationResponse CreateResponse(int type)
-        {
-            switch (type)
-            {
-                case 0:
-                    return new CreateAccountOperationResponse();
-                case 1:
-                    return new PaymentOperationResponse();
-                case 2:
-                    return new PathPaymentStrictReceiveOperationResponse();
-                case 3:
-                    return new ManageSellOfferOperationResponse();
-                case 4:
-                    return new CreatePassiveOfferOperationResponse();
-                case 5:
-                    return new SetOptionsOperationResponse();
-                case 6:
-                    return new ChangeTrustOperationResponse();
-                case 7:
-                    return new AllowTrustOperationResponse();
-                case 8:
-                    return new AccountMergeOperationResponse();
-                case 9:
-                    return new InflationOperationResponse();
-                case 10:
-                    return new ManageDataOperationResponse();
-                case 11:
-                    return new BumpSequenceOperationResponse();
-                case 12:
-                    return new ManageBuyOfferOperationResponse();
-                case 13:
-                    return new PathPaymentStrictSendOperationResponse();
-                case 14:
-                    return new CreateClaimableBalanceOperationResponse();
-                case 15:
-                    return new ClaimClaimableBalanceOperationResponse();
-                case 16:
-                    return new BeginSponsoringFutureReservesOperationResponse();
-                case 17:
-                    return new EndSponsoringFutureReservesOperationResponse();
-                case 18:
-                    return new RevokeSponsorshipOperationResponse();
-                case 19:
-                    return new ClawbackOperationResponse();
-                case 20:
-                    return new ClawbackClaimableBalanceOperationResponse();
-                case 21:
-                    return new SetTrustlineFlagsOperationResponse();
-                case 22:
-                    return new LiquidityPoolDepositOperationResponse();
-                case 23:
-                    return new LiquidityPoolWithdrawOperationResponse();
-                default:
-                    throw new JsonSerializationException($"Invalid operation 'type_i'='{type}'");
-            }
-        }
+            0 => new CreateAccountOperationResponse(),
+            1 => new PaymentOperationResponse(),
+            2 => new PathPaymentStrictReceiveOperationResponse(),
+            3 => new ManageSellOfferOperationResponse(),
+            4 => new CreatePassiveOfferOperationResponse(),
+            5 => new SetOptionsOperationResponse(),
+            6 => new ChangeTrustOperationResponse(),
+            7 => new AllowTrustOperationResponse(),
+            8 => new AccountMergeOperationResponse(),
+            9 => new InflationOperationResponse(),
+            10 => new ManageDataOperationResponse(),
+            11 => new BumpSequenceOperationResponse(),
+            12 => new ManageBuyOfferOperationResponse(),
+            13 => new PathPaymentStrictSendOperationResponse(),
+            14 => new CreateClaimableBalanceOperationResponse(),
+            15 => new ClaimClaimableBalanceOperationResponse(),
+            16 => new BeginSponsoringFutureReservesOperationResponse(),
+            17 => new EndSponsoringFutureReservesOperationResponse(),
+            18 => new RevokeSponsorshipOperationResponse(),
+            19 => new ClawbackOperationResponse(),
+            20 => new ClawbackClaimableBalanceOperationResponse(),
+            21 => new SetTrustlineFlagsOperationResponse(),
+            22 => new LiquidityPoolDepositOperationResponse(),
+            23 => new LiquidityPoolWithdrawOperationResponse(),
+            24 => new InvokeHostFunctionOperationResponse(),
+            25 => new ExtendFootprintOperationResponse(),
+            26 => new RestoreFootprintOperationResponse(),
+            _ => throw new JsonSerializationException($"Invalid operation 'type_i'='{type}'")
+        };
     }
 }

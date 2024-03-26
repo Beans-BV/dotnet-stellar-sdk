@@ -36,7 +36,7 @@ public class LiquidityPoolWithdrawResultCode
         LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM = -5
     }
 
-    public LiquidityPoolWithdrawResultCodeEnum InnerValue { get; set; } = default;
+    public LiquidityPoolWithdrawResultCodeEnum InnerValue { get; set; }
 
     public static LiquidityPoolWithdrawResultCode Create(LiquidityPoolWithdrawResultCodeEnum v)
     {

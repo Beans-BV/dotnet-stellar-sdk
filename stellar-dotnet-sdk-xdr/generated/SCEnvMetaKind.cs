@@ -20,7 +20,7 @@ public class SCEnvMetaKind
         SC_ENV_META_KIND_INTERFACE_VERSION = 0
     }
 
-    public SCEnvMetaKindEnum InnerValue { get; set; } = default;
+    public SCEnvMetaKindEnum InnerValue { get; set; }
 
     public static SCEnvMetaKind Create(SCEnvMetaKindEnum v)
     {

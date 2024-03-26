@@ -1,40 +1,38 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Pipes;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace stellar_dotnet_sdk_test.requests
+namespace stellar_dotnet_sdk_test.requests;
+
+public class FakeHttpMessageHandler : HttpMessageHandler
 {
-    public class FakeHttpMessageHandler : HttpMessageHandler
+    // Requests that were sent via the handler
+    private readonly List<HttpRequestMessage> _requests = new();
+    private readonly Queue<FakeResponse> _responses = new();
+
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+        CancellationToken cancellationToken)
     {
-        private readonly Queue<FakeResponse> _responses = new Queue<FakeResponse>();
+        if (_responses.Count == 0)
+            throw new InvalidOperationException("No response configured");
 
-        // Requests that were sent via the handler
-        private readonly List<HttpRequestMessage> _requests = new List<HttpRequestMessage>();
+        // RequestReceived?.Invoke(this, request);
 
-        public event EventHandler<HttpRequestMessage> RequestReceived;
+        _requests.Add(request);
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-            CancellationToken cancellationToken)
-        {
-            if (_responses.Count == 0)
-                throw new InvalidOperationException("No response configured");
+        var response = _responses.Dequeue();
+        return Task.FromResult(response.MakeResponse(cancellationToken));
+    }
 
-            RequestReceived?.Invoke(this, request);
+    public void QueueResponse(FakeResponse response)
+    {
+        _responses.Enqueue(response);
+    }
 
-            _requests.Add(request);
-
-            var response = _responses.Dequeue();
-            return Task.FromResult(response.MakeResponse(cancellationToken));
-        }
-
-        public void QueueResponse(FakeResponse response) => _responses.Enqueue(response);
-        public IEnumerable<HttpRequestMessage> GetRequests() => _requests;
+    public IEnumerable<HttpRequestMessage> GetRequests()
+    {
+        return _requests;
     }
 }

@@ -26,7 +26,7 @@ public class LedgerEntryChangeType
         LEDGER_ENTRY_STATE = 3
     }
 
-    public LedgerEntryChangeTypeEnum InnerValue { get; set; } = default;
+    public LedgerEntryChangeTypeEnum InnerValue { get; set; }
 
     public static LedgerEntryChangeType Create(LedgerEntryChangeTypeEnum v)
     {

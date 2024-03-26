@@ -1,24 +1,19 @@
 using System.Net.Http;
 using System.Threading;
 
-namespace stellar_dotnet_sdk_test.requests
+namespace stellar_dotnet_sdk_test.requests;
+
+public abstract class FakeResponse
 {
-    public abstract class FakeResponse
+    public abstract HttpResponseMessage MakeResponse(CancellationToken cancellationToken);
+
+    public static FakeResponse StartsStream(params StreamAction[] actions)
     {
-        public abstract HttpResponseMessage MakeResponse(CancellationToken cancellationToken);
+        return new FakeResponseWithStream(actions);
+    }
 
-        protected FakeResponse()
-        {
-        }
-
-        public static FakeResponse StartsStream(params StreamAction[] actions)
-        {
-            return new FakeResponseWithStream(actions);
-        }
-
-        public static FakeResponse WithIOError()
-        {
-            return new FakeResponseWithIOError();
-        }
+    public static FakeResponse WithIOError()
+    {
+        return new FakeResponseWithIOError();
     }
 }

@@ -29,7 +29,7 @@ public class ExtendFootprintTTLResultCode
         EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE = -3
     }
 
-    public ExtendFootprintTTLResultCodeEnum InnerValue { get; set; } = default;
+    public ExtendFootprintTTLResultCodeEnum InnerValue { get; set; }
 
     public static ExtendFootprintTTLResultCode Create(ExtendFootprintTTLResultCodeEnum v)
     {

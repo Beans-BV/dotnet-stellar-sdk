@@ -37,7 +37,7 @@ public class AccountMergeResultCode
         ACCOUNT_MERGE_IS_SPONSOR = -7
     }
 
-    public AccountMergeResultCodeEnum InnerValue { get; set; } = default;
+    public AccountMergeResultCodeEnum InnerValue { get; set; }
 
     public static AccountMergeResultCode Create(AccountMergeResultCodeEnum v)
     {

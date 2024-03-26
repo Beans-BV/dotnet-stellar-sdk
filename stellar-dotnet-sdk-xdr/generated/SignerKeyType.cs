@@ -26,7 +26,7 @@ public class SignerKeyType
         SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD = 3
     }
 
-    public SignerKeyTypeEnum InnerValue { get; set; } = default;
+    public SignerKeyTypeEnum InnerValue { get; set; }
 
     public static SignerKeyType Create(SignerKeyTypeEnum v)
     {

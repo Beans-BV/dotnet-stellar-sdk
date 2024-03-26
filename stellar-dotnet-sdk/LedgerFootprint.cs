@@ -5,8 +5,8 @@ namespace stellar_dotnet_sdk;
 
 public class LedgerFootprint
 {
-    public LedgerKey[] ReadOnly { get; set; } = Array.Empty<LedgerKey>();
-    public LedgerKey[] ReadWrite { get; set; } = Array.Empty<LedgerKey>();
+    public LedgerKey[] ReadOnly { get; init; } = Array.Empty<LedgerKey>();
+    public LedgerKey[] ReadWrite { get; init; } = Array.Empty<LedgerKey>();
 
     public xdr.LedgerFootprint ToXdr()
     {

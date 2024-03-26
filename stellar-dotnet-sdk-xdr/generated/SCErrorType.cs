@@ -38,7 +38,7 @@ public class SCErrorType
         SCE_AUTH = 9
     }
 
-    public SCErrorTypeEnum InnerValue { get; set; } = default;
+    public SCErrorTypeEnum InnerValue { get; set; }
 
     public static SCErrorType Create(SCErrorTypeEnum v)
     {

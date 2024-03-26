@@ -28,7 +28,7 @@ public class BucketEntryType
         INITENTRY = 2
     }
 
-    public BucketEntryTypeEnum InnerValue { get; set; } = default;
+    public BucketEntryTypeEnum InnerValue { get; set; }
 
     public static BucketEntryType Create(BucketEntryTypeEnum v)
     {

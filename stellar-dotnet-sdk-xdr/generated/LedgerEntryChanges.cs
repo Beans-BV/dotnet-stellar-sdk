@@ -19,7 +19,7 @@ public class LedgerEntryChanges
         InnerValue = value;
     }
 
-    public LedgerEntryChange[] InnerValue { get; set; } = default;
+    public LedgerEntryChange[] InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, LedgerEntryChanges encodedLedgerEntryChanges)
     {

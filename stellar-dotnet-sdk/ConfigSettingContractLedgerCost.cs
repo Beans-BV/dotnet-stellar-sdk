@@ -4,73 +4,62 @@ namespace stellar_dotnet_sdk;
 
 public class ConfigSettingContractLedgerCost : LedgerEntryConfigSetting
 {
-    public uint LedgerMaxReadLedgerEntries { get; set; }
-    public uint LedgerMaxReadBytes { get; set; }
-    public uint LedgerMaxWriteLedgerEntries { get; set; }
-    public uint LedgerMaxWriteBytes { get; set; }
-    public uint TxMaxReadLedgerEntries { get; set; }
-    public uint TxMaxReadBytes { get; set; }
-    public uint TxMaxWriteLedgerEntries { get; set; }
-    public uint TxMaxWriteBytes { get; set; }
-    public long FeeReadLedgerEntry { get; set; }
-    public long FeeWriteLedgerEntry { get; set; }
-    public long FeeRead1KB { get; set; }
-    public long BucketListTargetSizeBytes { get; set; }
-    public long WriteFee1KBBucketListLow { get; set; }
-    public long WriteFee1KBBucketListHigh { get; set; }
-    public uint BucketListWriteFeeGrowthFactor { get; set; }
-
-    public static ConfigSettingContractLedgerCost FromXdr(xdr.ConfigSettingContractLedgerCostV0 xdrConfig)
+    private ConfigSettingContractLedgerCost(uint ledgerMaxReadLedgerEntries, uint ledgerMaxReadBytes,
+        uint ledgerMaxWriteLedgerEntries, uint ledgerMaxWriteBytes, uint txMaxReadLedgerEntries, uint txMaxReadBytes,
+        uint txMaxWriteLedgerEntries, uint txMaxWriteBytes, long feeReadLedgerEntry, long feeWriteLedgerEntry,
+        long feeRead1KB, long bucketListTargetSizeBytes, long writeFee1KBBucketListLow, long writeFee1KBBucketListHigh,
+        uint bucketListWriteFeeGrowthFactor)
     {
-        return new ConfigSettingContractLedgerCost
-        {
-            LedgerMaxReadLedgerEntries = xdrConfig.LedgerMaxReadLedgerEntries.InnerValue,
-            LedgerMaxReadBytes = xdrConfig.LedgerMaxReadBytes.InnerValue,
-            LedgerMaxWriteLedgerEntries = xdrConfig.LedgerMaxWriteLedgerEntries.InnerValue,
-            LedgerMaxWriteBytes = xdrConfig.LedgerMaxWriteBytes.InnerValue,
-            TxMaxReadLedgerEntries = xdrConfig.TxMaxReadLedgerEntries.InnerValue,
-            TxMaxReadBytes = xdrConfig.TxMaxReadBytes.InnerValue,
-            TxMaxWriteLedgerEntries = xdrConfig.TxMaxWriteLedgerEntries.InnerValue,
-            TxMaxWriteBytes = xdrConfig.TxMaxWriteBytes.InnerValue,
-            FeeReadLedgerEntry = xdrConfig.FeeReadLedgerEntry.InnerValue,
-            FeeWriteLedgerEntry = xdrConfig.FeeWriteLedgerEntry.InnerValue,
-            FeeRead1KB = xdrConfig.FeeRead1KB.InnerValue,
-            BucketListTargetSizeBytes = xdrConfig.BucketListTargetSizeBytes.InnerValue,
-            WriteFee1KBBucketListLow = xdrConfig.WriteFee1KBBucketListLow.InnerValue,
-            WriteFee1KBBucketListHigh = xdrConfig.WriteFee1KBBucketListHigh.InnerValue,
-            BucketListWriteFeeGrowthFactor = xdrConfig.BucketListWriteFeeGrowthFactor.InnerValue
-        };
+        LedgerMaxReadLedgerEntries = ledgerMaxReadLedgerEntries;
+        LedgerMaxReadBytes = ledgerMaxReadBytes;
+        LedgerMaxWriteLedgerEntries = ledgerMaxWriteLedgerEntries;
+        LedgerMaxWriteBytes = ledgerMaxWriteBytes;
+        TxMaxReadLedgerEntries = txMaxReadLedgerEntries;
+        TxMaxReadBytes = txMaxReadBytes;
+        TxMaxWriteLedgerEntries = txMaxWriteLedgerEntries;
+        TxMaxWriteBytes = txMaxWriteBytes;
+        FeeReadLedgerEntry = feeReadLedgerEntry;
+        FeeWriteLedgerEntry = feeWriteLedgerEntry;
+        FeeRead1KB = feeRead1KB;
+        BucketListTargetSizeBytes = bucketListTargetSizeBytes;
+        WriteFee1KBBucketListLow = writeFee1KBBucketListLow;
+        WriteFee1KBBucketListHigh = writeFee1KBBucketListHigh;
+        BucketListWriteFeeGrowthFactor = bucketListWriteFeeGrowthFactor;
     }
 
-    public xdr.ConfigSettingContractLedgerCostV0 ToXdr()
-    {
-        return new xdr.ConfigSettingContractLedgerCostV0
-        {
-            LedgerMaxReadLedgerEntries = new Uint32(LedgerMaxReadLedgerEntries),
-            LedgerMaxReadBytes = new Uint32(LedgerMaxReadBytes),
-            LedgerMaxWriteLedgerEntries = new Uint32(LedgerMaxWriteLedgerEntries),
-            LedgerMaxWriteBytes = new Uint32(LedgerMaxWriteBytes),
-            TxMaxReadLedgerEntries = new Uint32(TxMaxReadLedgerEntries),
-            TxMaxReadBytes = new Uint32(TxMaxReadBytes),
-            TxMaxWriteLedgerEntries = new Uint32(TxMaxWriteLedgerEntries),
-            TxMaxWriteBytes = new Uint32(TxMaxWriteBytes),
-            FeeReadLedgerEntry = new Int64(FeeReadLedgerEntry),
-            FeeWriteLedgerEntry = new Int64(FeeWriteLedgerEntry),
-            FeeRead1KB = new Int64(FeeRead1KB),
-            BucketListTargetSizeBytes = new Int64(BucketListTargetSizeBytes),
-            WriteFee1KBBucketListLow = new Int64(WriteFee1KBBucketListLow),
-            WriteFee1KBBucketListHigh = new Int64(WriteFee1KBBucketListHigh),
-            BucketListWriteFeeGrowthFactor = new Uint32(BucketListWriteFeeGrowthFactor)
-        };
-    }
+    public uint LedgerMaxReadLedgerEntries { get; }
+    public uint LedgerMaxReadBytes { get; }
+    public uint LedgerMaxWriteLedgerEntries { get; }
+    public uint LedgerMaxWriteBytes { get; }
+    public uint TxMaxReadLedgerEntries { get; }
+    public uint TxMaxReadBytes { get; }
+    public uint TxMaxWriteLedgerEntries { get; }
+    public uint TxMaxWriteBytes { get; }
+    public long FeeReadLedgerEntry { get; }
+    public long FeeWriteLedgerEntry { get; }
+    public long FeeRead1KB { get; }
+    public long BucketListTargetSizeBytes { get; }
+    public long WriteFee1KBBucketListLow { get; }
+    public long WriteFee1KBBucketListHigh { get; }
+    public uint BucketListWriteFeeGrowthFactor { get; }
 
-    public ConfigSettingEntry ToXdrConfigSettingEntry()
+    public static ConfigSettingContractLedgerCost FromXdr(ConfigSettingContractLedgerCostV0 xdrConfig)
     {
-        return new ConfigSettingEntry
-        {
-            Discriminant =
-                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_V0),
-            ContractLedgerCost = ToXdr()
-        };
+        return new ConfigSettingContractLedgerCost(
+            xdrConfig.LedgerMaxReadLedgerEntries.InnerValue,
+            xdrConfig.LedgerMaxReadBytes.InnerValue,
+            xdrConfig.LedgerMaxWriteLedgerEntries.InnerValue,
+            xdrConfig.LedgerMaxWriteBytes.InnerValue,
+            xdrConfig.TxMaxReadLedgerEntries.InnerValue,
+            xdrConfig.TxMaxReadBytes.InnerValue,
+            xdrConfig.TxMaxWriteLedgerEntries.InnerValue,
+            xdrConfig.TxMaxWriteBytes.InnerValue,
+            xdrConfig.FeeReadLedgerEntry.InnerValue,
+            xdrConfig.FeeWriteLedgerEntry.InnerValue,
+            xdrConfig.FeeRead1KB.InnerValue,
+            xdrConfig.BucketListTargetSizeBytes.InnerValue,
+            xdrConfig.WriteFee1KBBucketListLow.InnerValue,
+            xdrConfig.WriteFee1KBBucketListHigh.InnerValue,
+            xdrConfig.BucketListWriteFeeGrowthFactor.InnerValue);
     }
 }

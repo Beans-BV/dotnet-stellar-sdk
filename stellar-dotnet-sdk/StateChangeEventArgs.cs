@@ -5,19 +5,18 @@
 
 using System;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+public sealed partial class EventSource
 {
-    public sealed partial class EventSource
+    /// <summary>
+    ///     Server Sent Error Event Object
+    /// </summary>
+    public sealed class StateChangeEventArgs : EventArgs
     {
         /// <summary>
-        ///     Server Sent Error Event Object
+        ///     New State changed to
         /// </summary>
-        public sealed class StateChangeEventArgs : EventArgs
-        {
-            /// <summary>
-            /// New State changed to
-            /// </summary>
-            public EventSourceState NewState { get; internal set; }
-        }
+        public EventSourceState NewState { get; internal set; }
     }
 }

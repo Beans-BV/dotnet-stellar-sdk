@@ -2,48 +2,41 @@ using System;
 using System.Linq;
 using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk.responses.results
+namespace stellar_dotnet_sdk.responses.results;
+
+/// <summary>
+///     Operation successful.
+/// </summary>
+public class ManageSellOfferSuccess : ManageSellOfferResult
 {
-    /// <summary>
-    /// Operation successful.
-    /// </summary>
-    public class ManageSellOfferSuccess : ManageSellOfferResult
+    protected ManageSellOfferSuccess(ClaimAtom[] offersClaimed)
     {
-        public override bool IsSuccess => true;
+        OffersClaimed = offersClaimed;
+    }
 
-        /// <summary>
-        /// Offers that got claimed while creating this offer.
-        /// </summary>
-        public ClaimAtom[] OffersClaimed { get; set; }
+    public override bool IsSuccess => true;
 
-        public static ManageSellOfferSuccess FromXdr(xdr.ManageOfferSuccessResult result)
+    /// <summary>
+    ///     Offers that got claimed while creating this offer.
+    /// </summary>
+    public ClaimAtom[] OffersClaimed { get; }
+
+    public static ManageSellOfferSuccess FromXdr(ManageOfferSuccessResult result)
+    {
+        var offersClaimed = result.OffersClaimed.Select(ClaimAtom.FromXdr).ToArray();
+
+        switch (result.Offer.Discriminant.InnerValue)
         {
-            var offersClaimed = result.OffersClaimed.Select(ClaimAtom.FromXdr).ToArray();
-
-            switch (result.Offer.Discriminant.InnerValue)
-            {
-                case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_CREATED:
-                    var createdOffer = OfferEntry.FromXdr(result.Offer.Offer);
-                    return new ManageSellOfferCreated
-                    {
-                        OffersClaimed = offersClaimed,
-                        Offer = createdOffer,
-                    };
-                case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_UPDATED:
-                    var updatedOffer = OfferEntry.FromXdr(result.Offer.Offer);
-                    return new ManageSellOfferUpdated
-                    {
-                        OffersClaimed = offersClaimed,
-                        Offer = updatedOffer,
-                    };
-                case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_DELETED:
-                    return new ManageSellOfferDeleted
-                    {
-                        OffersClaimed = offersClaimed
-                    };
-                default:
-                    throw new SystemException("Unknown ManageSellOfferSuccess type");
-            }
+            case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_CREATED:
+                var createdOffer = OfferEntry.FromXdr(result.Offer.Offer);
+                return new ManageSellOfferCreated(createdOffer, offersClaimed);
+            case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_UPDATED:
+                var updatedOffer = OfferEntry.FromXdr(result.Offer.Offer);
+                return new ManageSellOfferUpdated(updatedOffer, offersClaimed);
+            case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_DELETED:
+                return new ManageSellOfferDeleted(offersClaimed);
+            default:
+                throw new SystemException("Unknown ManageSellOfferSuccess type");
         }
     }
 }

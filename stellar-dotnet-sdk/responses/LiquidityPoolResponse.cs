@@ -1,60 +1,68 @@
 ﻿using Newtonsoft.Json;
 using stellar_dotnet_sdk.converters;
-using stellar_dotnet_sdk.responses.operations;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk.responses
+namespace stellar_dotnet_sdk.responses;
+
+public class LiquidityPoolResponse : Response, IPagingToken
 {
-    public class LiquidityPoolResponse : Response, IPagingToken
+    public LiquidityPoolResponse(LiquidityPoolID id, string pagingToken, int feeBp,
+        LiquidityPoolType.LiquidityPoolTypeEnum type, string totalTrustlines, string totalShares, Reserve[] reserves,
+        LiquidityPoolResponseLinks links)
     {
-        [JsonProperty(PropertyName = "id")]
-        public LiquidityPoolID ID { get; set; }
+        ID = id;
+        PagingToken = pagingToken;
+        FeeBP = feeBp;
+        Type = type;
+        TotalTrustlines = totalTrustlines;
+        TotalShares = totalShares;
+        Reserves = reserves;
+        Links = links;
+    }
 
-        [JsonProperty(PropertyName = "paging_token")]
-        public string PagingToken { get; set; }
+    [JsonProperty(PropertyName = "id")] public LiquidityPoolID ID { get; set; }
 
-        [JsonProperty(PropertyName = "fee_bp")]
-        public int FeeBP { get; set; }
+    [JsonProperty(PropertyName = "fee_bp")]
+    public int FeeBP { get; set; }
 
-        [JsonConverter(typeof(LiquidityPoolTypeEnumJsonConverter))]
-        [JsonProperty(PropertyName = "type")]
-        public xdr.LiquidityPoolType.LiquidityPoolTypeEnum Type { get; set; }
+    [JsonConverter(typeof(LiquidityPoolTypeEnumJsonConverter))]
+    [JsonProperty(PropertyName = "type")]
+    public LiquidityPoolType.LiquidityPoolTypeEnum Type { get; set; }
 
-        [JsonProperty(PropertyName = "total_trustlines")]
-        public string TotalTrustlines { get; set; }
+    [JsonProperty(PropertyName = "total_trustlines")]
+    public string TotalTrustlines { get; set; }
 
-        [JsonProperty(PropertyName = "total_shares")]
-        public string TotalShares { get; set; }
+    [JsonProperty(PropertyName = "total_shares")]
+    public string TotalShares { get; set; }
 
-        [JsonProperty(PropertyName = "reserves")]
-        public Reserve[] Reserves { get; set; }
+    [JsonProperty(PropertyName = "reserves")]
+    public Reserve[] Reserves { get; set; }
 
-        [JsonProperty(PropertyName = "_links")]
-        public LiquidityPoolResponseLinks Links { get; set; }
+    [JsonProperty(PropertyName = "_links")]
+    public LiquidityPoolResponseLinks Links { get; set; }
 
-        public class LiquidityPoolResponseLinks
+    [JsonProperty(PropertyName = "paging_token")]
+    public string PagingToken { get; set; }
+
+    public class LiquidityPoolResponseLinks
+    {
+        public LiquidityPoolResponseLinks(Link effects, Link operations, Link self, Link transactions)
         {
-            [JsonProperty(PropertyName = "effects")]
-            public Link Effects { get; set; }
-
-            [JsonProperty(PropertyName = "operations")]
-            public Link Operations { get; set; }
-
-            [JsonProperty(PropertyName = "self")]
-            public Link Self { get; set; }
-
-            [JsonProperty(PropertyName = "transactions")]
-            public Link Transactions { get; set; }
-
-            public LiquidityPoolResponseLinks(Link effects, Link operations, Link self, Link transactions)
-            {
-                Effects = effects;
-                Operations = operations;
-                Self = self;
-                Transactions = transactions;
-            }
+            Effects = effects;
+            Operations = operations;
+            Self = self;
+            Transactions = transactions;
         }
+
+        [JsonProperty(PropertyName = "effects")]
+        public Link Effects { get; set; }
+
+        [JsonProperty(PropertyName = "operations")]
+        public Link Operations { get; set; }
+
+        [JsonProperty(PropertyName = "self")] public Link Self { get; set; }
+
+        [JsonProperty(PropertyName = "transactions")]
+        public Link Transactions { get; set; }
     }
 }

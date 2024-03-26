@@ -20,7 +20,7 @@ public class ClaimableBalanceIDType
         CLAIMABLE_BALANCE_ID_TYPE_V0 = 0
     }
 
-    public ClaimableBalanceIDTypeEnum InnerValue { get; set; } = default;
+    public ClaimableBalanceIDTypeEnum InnerValue { get; set; }
 
     public static ClaimableBalanceIDType Create(ClaimableBalanceIDTypeEnum v)
     {

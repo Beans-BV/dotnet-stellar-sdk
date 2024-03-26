@@ -1,10 +1,9 @@
-﻿namespace stellar_dotnet_sdk.responses.results
+﻿namespace stellar_dotnet_sdk.responses.results;
+
+/// <summary>
+///     Success.
+/// </summary>
+public class SetTrustlineFlagsSuccess : SetTrustlineFlagsResult
 {
-    /// <summary>
-    /// Success.
-    /// </summary>
-    public class SetTrustlineFlagsSuccess : SetTrustlineFlagsResult
-    {
-        public override bool IsSuccess => true;
-    }
+    public override bool IsSuccess => true;
 }
