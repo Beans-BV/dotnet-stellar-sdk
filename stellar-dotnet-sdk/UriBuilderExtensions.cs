@@ -32,7 +32,7 @@ namespace stellar_dotnet_sdk
 
         public static UriBuilder SetPath(this UriBuilder uri, string path)
         {
-            uri.Path = path;
+            uri.Path = path.StartsWith("/") ? path : $"/{path}";
             return uri;
         }
 
