@@ -71,7 +71,8 @@
             <article class="content wrap" id="_content" data-uid="stellar_dotnet_sdk.CreateContractHostFunction">
   <h1 id="stellar_dotnet_sdk_CreateContractHostFunction" data-uid="stellar_dotnet_sdk.CreateContractHostFunction">Class CreateContractHostFunction
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Represents a create contract host function.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
 
   <div class="inheritance">
@@ -136,6 +137,62 @@
         <td><a class="xref" href="stellar_dotnet_sdk.ContractExecutable.html">ContractExecutable</a></td>
         <td><span class="parametername">executable</span></td>
         <td></td>
+      </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  <a id="stellar_dotnet_sdk_CreateContractHostFunction__ctor_" data-uid="stellar_dotnet_sdk.CreateContractHostFunction.#ctor*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_CreateContractHostFunction__ctor_System_String_System_String_System_Byte___" data-uid="stellar_dotnet_sdk.CreateContractHostFunction.#ctor(System.String,System.String,System.Byte[])"><a href="#collapsible-stellar_dotnet_sdk_CreateContractHostFunction__ctor_System_String_System_String_System_Byte___" class="expander" data-toggle="collapse">CreateContractHostFunction(String, String, Byte[])</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_CreateContractHostFunction__ctor_System_String_System_String_System_Byte___" class="collapse in">
+  <div class="markdown level1 summary"><p>Constructs a create contract host function.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CreateContractHostFunction(string hash, string address, byte[] salt = null)</code></pre>
+  </div>
+
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">hash</span></td>
+        <td><p>SHA-256 hash of the previously uploaded Wasm.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">address</span></td>
+        <td><p>An account address.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span>[]</td>
+        <td><span class="parametername">salt</span></td>
+        <td><p>(Optional) A salt. Will be randomly generated if not provided.</p>
+</td>
       </tr>
   </table>
   

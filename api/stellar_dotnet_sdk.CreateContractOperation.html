@@ -86,6 +86,9 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
+      <a class="xref" href="stellar_dotnet_sdk.InvokeHostFunctionOperation.html#stellar_dotnet_sdk_InvokeHostFunctionOperation_Auth">InvokeHostFunctionOperation.Auth</a>
+    </div>
+    <div>
       <a class="xref" href="stellar_dotnet_sdk.Operation.html#stellar_dotnet_sdk_Operation_SourceAccount">Operation.SourceAccount</a>
     </div>
     <div>
@@ -123,88 +126,8 @@
   
   
   
-  <h3 id="constructors">Constructors
-  </h3>
-  
-  
-  <a id="stellar_dotnet_sdk_CreateContractOperation__ctor_" data-uid="stellar_dotnet_sdk.CreateContractOperation.#ctor*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_CreateContractOperation__ctor_stellar_dotnet_sdk_CreateContractHostFunction_" data-uid="stellar_dotnet_sdk.CreateContractOperation.#ctor(stellar_dotnet_sdk.CreateContractHostFunction)"><a href="#collapsible-stellar_dotnet_sdk_CreateContractOperation__ctor_stellar_dotnet_sdk_CreateContractHostFunction_" class="expander" data-toggle="collapse">CreateContractOperation(CreateContractHostFunction)</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_CreateContractOperation__ctor_stellar_dotnet_sdk_CreateContractHostFunction_" class="collapse in">
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CreateContractOperation(CreateContractHostFunction hostFunction)</code></pre>
-  </div>
-
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Name</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-      <tr>
-        <td><a class="xref" href="stellar_dotnet_sdk.CreateContractHostFunction.html">CreateContractHostFunction</a></td>
-        <td><span class="parametername">hostFunction</span></td>
-        <td></td>
-      </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  </div>
   <h3 id="properties">Properties
   </h3>
-  
-  
-  <a id="stellar_dotnet_sdk_CreateContractOperation_Auth_" data-uid="stellar_dotnet_sdk.CreateContractOperation.Auth*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_CreateContractOperation_Auth" data-uid="stellar_dotnet_sdk.CreateContractOperation.Auth"><a href="#collapsible-stellar_dotnet_sdk_CreateContractOperation_Auth" class="expander" data-toggle="collapse">Auth</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_CreateContractOperation_Auth" class="collapse in">
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SorobanAuthorizationEntry[] Auth { get; }</code></pre>
-  </div>
-
-  
-  
-  
-  
-  <h5 class="propertyValue">Property Value</h5>
-  <table>
-    <tr>
-      <td>
-        <a class="xref" href="stellar_dotnet_sdk.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a>[]
-        <p>
-      </td>
-    </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  </div>
   
   
   <a id="stellar_dotnet_sdk_CreateContractOperation_HostFunction_" data-uid="stellar_dotnet_sdk.CreateContractOperation.HostFunction*"></a>
@@ -245,57 +168,6 @@
   </h3>
   
   
-  <a id="stellar_dotnet_sdk_CreateContractOperation_FromInvokeHostFunctionOperationXdr_" data-uid="stellar_dotnet_sdk.CreateContractOperation.FromInvokeHostFunctionOperationXdr*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_CreateContractOperation_FromInvokeHostFunctionOperationXdr_stellar_dotnet_sdk_xdr_InvokeHostFunctionOp_" data-uid="stellar_dotnet_sdk.CreateContractOperation.FromInvokeHostFunctionOperationXdr(stellar_dotnet_sdk.xdr.InvokeHostFunctionOp)"><a href="#collapsible-stellar_dotnet_sdk_CreateContractOperation_FromInvokeHostFunctionOperationXdr_stellar_dotnet_sdk_xdr_InvokeHostFunctionOp_" class="expander" data-toggle="collapse">FromInvokeHostFunctionOperationXdr(InvokeHostFunctionOp)</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_CreateContractOperation_FromInvokeHostFunctionOperationXdr_stellar_dotnet_sdk_xdr_InvokeHostFunctionOp_" class="collapse in">
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static CreateContractOperation FromInvokeHostFunctionOperationXdr(InvokeHostFunctionOp xdrInvokeHostFunctionOp)</code></pre>
-  </div>
-
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Name</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-      <tr>
-        <td><span class="xref">stellar_dotnet_sdk.xdr.InvokeHostFunctionOp</span></td>
-        <td><span class="parametername">xdrInvokeHostFunctionOp</span></td>
-        <td></td>
-      </tr>
-  </table>
-  
-  <h5 class="returns">Returns</h5>
-  <table>
-    <tr>
-      <td>
-        <a class="xref" href="stellar_dotnet_sdk.CreateContractOperation.html">CreateContractOperation</a>
-        <p>
-      </td>
-    </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  </div>
-  
-  
   <a id="stellar_dotnet_sdk_CreateContractOperation_FromOperationXdrBase64_" data-uid="stellar_dotnet_sdk.CreateContractOperation.FromOperationXdrBase64*"></a>
   
   <h4 id="stellar_dotnet_sdk_CreateContractOperation_FromOperationXdrBase64_System_String_" data-uid="stellar_dotnet_sdk.CreateContractOperation.FromOperationXdrBase64(System.String)"><a href="#collapsible-stellar_dotnet_sdk_CreateContractOperation_FromOperationXdrBase64_System_String_" class="expander" data-toggle="collapse">FromOperationXdrBase64(String)</a></h4>
@@ -333,42 +205,6 @@
         <a class="xref" href="stellar_dotnet_sdk.CreateContractOperation.html">CreateContractOperation</a>
         <p><p>CreateContractOperation object</p>
 </p>
-      </td>
-    </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  </div>
-  
-  
-  <a id="stellar_dotnet_sdk_CreateContractOperation_ToInvokeHostFunctionOperationXdr_" data-uid="stellar_dotnet_sdk.CreateContractOperation.ToInvokeHostFunctionOperationXdr*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_CreateContractOperation_ToInvokeHostFunctionOperationXdr" data-uid="stellar_dotnet_sdk.CreateContractOperation.ToInvokeHostFunctionOperationXdr"><a href="#collapsible-stellar_dotnet_sdk_CreateContractOperation_ToInvokeHostFunctionOperationXdr" class="expander" data-toggle="collapse">ToInvokeHostFunctionOperationXdr()</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_CreateContractOperation_ToInvokeHostFunctionOperationXdr" class="collapse in">
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public InvokeHostFunctionOp ToInvokeHostFunctionOperationXdr()</code></pre>
-  </div>
-
-  
-  <h5 class="returns">Returns</h5>
-  <table>
-    <tr>
-      <td>
-        <span class="xref">stellar_dotnet_sdk.xdr.InvokeHostFunctionOp</span>
-        <p>
       </td>
     </tr>
   </table>

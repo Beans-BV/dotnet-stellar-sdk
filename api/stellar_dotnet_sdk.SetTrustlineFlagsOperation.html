@@ -72,8 +72,10 @@
   <h1 id="stellar_dotnet_sdk_SetTrustlineFlagsOperation" data-uid="stellar_dotnet_sdk.SetTrustlineFlagsOperation">Class SetTrustlineFlagsOperation
   </h1>
   <div class="markdown level0 summary"><p>Represents a <a class="xref" href="stellar_dotnet_sdk.SetTrustlineFlagsOperation.html">SetTrustlineFlagsOperation</a>.
-Use <a class="xref" href="stellar_dotnet_sdk.SetTrustlineFlagsOperation.Builder.html">SetTrustlineFlagsOperation.Builder</a> to create a new SetTrustlineFlagsOperation.</p>
-<p>See also: <a href="https://www.stellar.org/developers/guides/concepts/list-of-operations.html">Set Trustline Flags</a></p>
+Use the <a class="xref" href="stellar_dotnet_sdk.SetTrustlineFlagsOperation.Builder.html">SetTrustlineFlagsOperation.Builder</a> to create a new SetTrustlineFlagsOperation.
+<a href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#set-trustline-flags">
+Set Trustline Flags
+</a></p>
 </div>
   <div class="markdown level0 conceptual"></div>
 
@@ -134,7 +136,7 @@ Use <a class="xref" href="stellar_dotnet_sdk.SetTrustlineFlagsOperation.Builder.
   <h4 id="stellar_dotnet_sdk_SetTrustlineFlagsOperation_Asset" data-uid="stellar_dotnet_sdk.SetTrustlineFlagsOperation.Asset"><a href="#collapsible-stellar_dotnet_sdk_SetTrustlineFlagsOperation_Asset" class="expander" data-toggle="collapse">Asset</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_SetTrustlineFlagsOperation_Asset" class="collapse in">
-  <div class="markdown level1 summary"><p>The asset to use in the operation.</p>
+  <div class="markdown level1 summary"><p>The asset trustline whose flags are being modified.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -171,12 +173,15 @@ Use <a class="xref" href="stellar_dotnet_sdk.SetTrustlineFlagsOperation.Builder.
   <h4 id="stellar_dotnet_sdk_SetTrustlineFlagsOperation_ClearFlags" data-uid="stellar_dotnet_sdk.SetTrustlineFlagsOperation.ClearFlags"><a href="#collapsible-stellar_dotnet_sdk_SetTrustlineFlagsOperation_ClearFlags" class="expander" data-toggle="collapse">ClearFlags</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_SetTrustlineFlagsOperation_ClearFlags" class="collapse in">
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>One or more flags (combined via bitwise OR) indicating which flags to clear. Possibilities include those for
+SetFlags as well as 4, which prevents the issuer from clawing back its asset (both from accounts and claimable
+balances).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint? ClearFlags { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public uint ClearFlags { get; }</code></pre>
   </div>
 
   
@@ -187,7 +192,7 @@ Use <a class="xref" href="stellar_dotnet_sdk.SetTrustlineFlagsOperation.Builder.
   <table>
     <tr>
       <td>
-        <span class="xref">System.Nullable</span>&lt;<span class="xref">System.UInt32</span>&gt;
+        <span class="xref">System.UInt32</span>
         <p>
       </td>
     </tr>
@@ -207,12 +212,15 @@ Use <a class="xref" href="stellar_dotnet_sdk.SetTrustlineFlagsOperation.Builder.
   <h4 id="stellar_dotnet_sdk_SetTrustlineFlagsOperation_SetFlags" data-uid="stellar_dotnet_sdk.SetTrustlineFlagsOperation.SetFlags"><a href="#collapsible-stellar_dotnet_sdk_SetTrustlineFlagsOperation_SetFlags" class="expander" data-toggle="collapse">SetFlags</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_SetTrustlineFlagsOperation_SetFlags" class="collapse in">
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>One or more flags (combined via bitwise-OR) indicating which flags to set.
+Possible flags are: 1 if the trustor is authorized to transact with the asset or 2 if the trustor is authorized
+to maintain offers but not to perform other transactions.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint? SetFlags { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public uint SetFlags { get; }</code></pre>
   </div>
 
   
@@ -223,7 +231,7 @@ Use <a class="xref" href="stellar_dotnet_sdk.SetTrustlineFlagsOperation.Builder.
   <table>
     <tr>
       <td>
-        <span class="xref">System.Nullable</span>&lt;<span class="xref">System.UInt32</span>&gt;
+        <span class="xref">System.UInt32</span>
         <p>
       </td>
     </tr>
@@ -243,7 +251,7 @@ Use <a class="xref" href="stellar_dotnet_sdk.SetTrustlineFlagsOperation.Builder.
   <h4 id="stellar_dotnet_sdk_SetTrustlineFlagsOperation_Trustor" data-uid="stellar_dotnet_sdk.SetTrustlineFlagsOperation.Trustor"><a href="#collapsible-stellar_dotnet_sdk_SetTrustlineFlagsOperation_Trustor" class="expander" data-toggle="collapse">Trustor</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_SetTrustlineFlagsOperation_Trustor" class="collapse in">
-  <div class="markdown level1 summary"><p>Account whose trustline is affected by this operation.</p>
+  <div class="markdown level1 summary"><p>The account that established this trustline.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
