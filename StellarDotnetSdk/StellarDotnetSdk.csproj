@@ -1,0 +1,106 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Version>9.1.1</Version>
+        <ApplicationIcon/>
+        <OutputType>Library</OutputType>
+        <StartupObject/>
+        <Description>The .NET Stellar SDK facilitates client integration with the Stellar Horizon API server and submission of Stellar transactions. It has two main uses: querying Horizon and building, signing, and submitting transactions to the Stellar network.</Description>
+        <PackageId>StellarDotnetSdk</PackageId>
+        <PackageLicense>sss</PackageLicense>
+        <EnablePackageValidation>true</EnablePackageValidation>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <Copyright>Copyright © 2018 Elucidsoft; Copyright © 2024 Beans-BV</Copyright>
+        <PackageProjectUrl>https://github.com/Beans-BV/dotnet-stellar-sdk</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Beans-BV/dotnet-stellar-sdk</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>'.NET Core' 'Stellar' 'Horizon' 'Blockchain' 'Crypto' 'Distributed Ledger'</PackageTags>
+        <ReleaseNotes>https://github.com/Beans-BV/dotnet-stellar-sdk/releases</ReleaseNotes>
+        <Nullable>enable</Nullable>
+        <WarningLevel>1</WarningLevel>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+    <PropertyGroup>
+        <PackageReadmeFile>nugetreadme.md</PackageReadmeFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="dotnetstandard-bip32" Version="1.0.0"/>
+        <PackageReference Include="dotnetstandard-bip39" Version="1.0.2"/>
+        <PackageReference Include="LaunchDarkly.EventSource" Version="3.3.2"/>
+        <PackageReference Include="Nett" Version="0.10.0"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.2"/>
+        <PackageReference Include="NSec.Cryptography" Version="22.4.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\LICENSE.txt" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\nugetreadme.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\StellarDotnetSdk.Xdr\StellarDotnetSdk.Xdr.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="converters\" />
+        <Folder Include="federation\" />
+        <Folder Include="Properties\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="AccountFlag.cs" />
+      <Compile Remove="IAccountId.cs" />
+      <Compile Remove="AssetTypeCreditAlphaNum.cs" />
+      <Compile Remove="ChangeTrustAsset.cs" />
+      <Compile Remove="Claimant.cs" />
+      <Compile Remove="ClaimPredicateBeforeRelativeTime.cs" />
+      <Compile Remove="converters\AssetAmountJsonConverter.cs" />
+      <Compile Remove="converters\LiquidityPoolClaimableAssetAmountJsonConverter.cs" />
+      <Compile Remove="converters\LiquidityPoolIDJsonConverter.cs" />
+      <Compile Remove="converters\LiquidityPoolTypeEnumJsonConverter.cs" />
+      <Compile Remove="IEventSource.cs" />
+      <Compile Remove="ServerSentErrorEventArgs.cs" />
+      <Compile Remove="ServerSentEventArgs.cs" />
+      <Compile Remove="SSEEventSource.cs" />
+      <Compile Remove="StateChangeEventArgs.cs" />
+      <Compile Remove="AccountNotFoundException.cs" />
+      <Compile Remove="AccountRequiresMemoException.cs" />
+      <Compile Remove="AssetCodeLengthInvalidException.cs" />
+      <Compile Remove="FormatException.cs" />
+      <Compile Remove="MemoTooLongException.cs" />
+      <Compile Remove="NoNetworkSelectedException.cs" />
+      <Compile Remove="TooManySignaturesException.cs" />
+      <Compile Remove="federation\ConnectionErrorException.cs" />
+      <Compile Remove="federation\Federation.cs" />
+      <Compile Remove="federation\FederationResponse.cs" />
+      <Compile Remove="federation\NotFoundException.cs" />
+      <Compile Remove="federation\ServerErrorException.cs" />
+      <Compile Remove="AccountEntryExtensionV1.cs" />
+      <Compile Remove="ConfigSettingContractBandwidth.cs" />
+      <Compile Remove="ConfigSettingContractCompute.cs" />
+      <Compile Remove="ConfigSettingContractCostParamsCpuInstructions.cs" />
+      <Compile Remove="ConfigSettingContractCostParamsMemoryBytes.cs" />
+      <Compile Remove="ConfigSettingContractExecutionLanes.cs" />
+      <Compile Remove="ConfigSettingContractHistoricalData.cs" />
+      <Compile Remove="EvictionIterator.cs" />
+      <Compile Remove="LedgerEntryAccount.cs" />
+      <Compile Remove="LedgerEntryContractData.cs" />
+      <Compile Remove="LedgerEntryRemoved.cs" />
+      <Compile Remove="LedgerEntryState.cs" />
+      <Compile Remove="LedgerEntryTrustline.cs" />
+      <Compile Remove="LedgerEntryTTL.cs" />
+      <Compile Remove="OfferEntryExtension.cs" />
+      <Compile Remove="TrustlineEntryExtensionV1.cs" />
+      <Compile Remove="MemoHashAbstract.cs" />
+      <Compile Remove="MemoNone.cs" />
+      <Compile Remove="CreateAccountOperation.cs" />
+      <Compile Remove="requests\OffersRequestBuilder.cs" />
+      <Compile Remove="requests\PathsRequestBuilder.cs" />
+      <Compile Remove="responses\effects\AccountDebitedEffectResponse.cs" />
+      <Compile Remove="responses\effects\AccountSponsorshipUpdatedEffectResponse.cs" />
+      <Compile Remove="responses\results\ChangeTrustNoIssuer.cs" />
+    </ItemGroup>
+</Project>

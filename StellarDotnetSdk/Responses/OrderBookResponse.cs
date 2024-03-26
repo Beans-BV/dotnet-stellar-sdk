@@ -1,0 +1,54 @@
+﻿using System;
+using Newtonsoft.Json;
+using StellarDotnetSdk.Assets;
+
+namespace StellarDotnetSdk.Responses;
+
+public class OrderBookResponse
+{
+    public OrderBookResponse(Asset orderBookBase, Asset counter, Row[] asks, Row[] bids)
+    {
+        OrderBookBase = orderBookBase;
+        Counter = counter;
+        Asks = asks;
+        Bids = bids;
+    }
+
+    [JsonProperty(PropertyName = "base")]
+    [JsonConverter(typeof(AssetDeserializer))]
+    public Asset OrderBookBase { get; private set; }
+
+    [JsonProperty(PropertyName = "counter")]
+    [JsonConverter(typeof(AssetDeserializer))]
+    public Asset Counter { get; private set; }
+
+    [JsonProperty(PropertyName = "asks")] public Row[] Asks { get; private set; }
+
+    [JsonProperty(PropertyName = "bids")] public Row[] Bids { get; private set; }
+
+    /// Represents order book row.
+    public class Row
+    {
+        public Row(string amount, string price, Price priceR)
+        {
+            Amount = amount ?? throw new ArgumentNullException(nameof(amount), "amount cannot be null");
+            Price = price ?? throw new ArgumentNullException(nameof(price), "price cannot be null");
+            PriceR = priceR ?? throw new ArgumentNullException(nameof(priceR), "priceR cannot be null");
+        }
+
+        [JsonProperty(PropertyName = "amount")]
+        public string Amount { get; private set; }
+
+        /// <summary>
+        ///     The ask/bid price.
+        /// </summary>
+        [JsonProperty(PropertyName = "price")]
+        public string Price { get; private set; }
+
+        /// <summary>
+        ///     The ask/bid price as a ratio.
+        /// </summary>
+        [JsonProperty(PropertyName = "price_r")]
+        public Price PriceR { get; private set; }
+    }
+}

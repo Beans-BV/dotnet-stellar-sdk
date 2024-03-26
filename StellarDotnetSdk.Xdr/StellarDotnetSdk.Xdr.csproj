@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Version>9.1.1</Version>
+        <OutputType>Library</OutputType>
+        <StartupObject/>
+        <Description>The .NET Standard XDR Objects for the Stellar Network Protocol</Description>
+        <PackageId>StellarDotnetSdk.Xdr</PackageId>
+        <PackageLicense/>
+        <EnablePackageValidation>true</EnablePackageValidation>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <Copyright>Copyright © 2018 Elucidsoft; Copyright © 2024 Beans-BV</Copyright>
+        <PackageProjectUrl>https://github.com/Beans-BV/dotnet-stellar-sdk</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Beans-BV/dotnet-stellar-sdk</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>'.NET Core' 'Stellar' 'Horizon' 'Blockchain' 'Crypto' 'XDR'</PackageTags>
+        <ReleaseNotes>https://github.com/Beans-BV/dotnet-stellar-sdk/releases</ReleaseNotes>
+        <WarningLevel>0</WarningLevel>
+        <IsPackable>true</IsPackable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Nullable>disable</Nullable>
+        <RootNamespace>StellarDotnetSdk.Xdr</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\LICENSE.txt" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\nugetreadme.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Remove="generated\ClaimPredicateType.cs" />
+      <Compile Remove="generated\ClawbackClaimableBalanceOp.cs" />
+      <Compile Remove="generated\ClawbackClaimableBalanceResult.cs" />
+      <Compile Remove="generated\CreateClaimableBalanceOp.cs" />
+      <Compile Remove="generated\CreateClaimableBalanceResult.cs" />
+      <Compile Remove="generated\ExtendFootprintTTLResultCode.cs" />
+      <Compile Remove="generated\FloodAdvert.cs" />
+      <Compile Remove="generated\InnerTransactionResultPair.cs" />
+      <Compile Remove="generated\InvokeHostFunctionResult.cs" />
+      <Compile Remove="generated\LedgerEntryExtensionV1.cs" />
+      <Compile Remove="generated\ManageDataOp.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="generated\" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <PackageReadmeFile>nugetreadme.md</PackageReadmeFile>
+    </PropertyGroup>
+
+</Project>

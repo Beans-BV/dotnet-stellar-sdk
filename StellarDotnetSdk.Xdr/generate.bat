@@ -1,0 +1,1 @@
+xdrgen -o ./ ./x/*.x --language=csharp --namespace=StellarDotnetSdk.Xdr
