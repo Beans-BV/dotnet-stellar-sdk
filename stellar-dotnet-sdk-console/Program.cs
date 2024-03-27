@@ -12,8 +12,13 @@ public class Program
     {
         Network.UsePublicNetwork();
         using var server = new Server("https://horizon.stellar.org");
+
+        var paymentsWithoutTransactions = await server.Payments.Execute().ConfigureAwait(false);
+        var paymentsWithTransactions = await server.Payments.IncludeTransaction().Execute().ConfigureAwait(false);
+
+        // await CreateAccount(server).ConfigureAwait(false);
         
-        await CreateAccount(server).ConfigureAwait(false);
+        Console.ReadLine();
     }
     
     private static async Task CreateAccount(Server server)

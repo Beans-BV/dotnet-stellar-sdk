@@ -80,5 +80,11 @@ namespace stellar_dotnet_sdk.responses.operations
         /// </summary>
         [JsonProperty(PropertyName = "_links")]
         public OperationResponseLinks Links { get; private set; }
+        
+        /// <summary>
+        /// Returns the transaction this operation belongs to.
+        /// </summary>
+        [JsonProperty(PropertyName = "transaction")]
+        public TransactionResponse? Transaction { get; private set; }
     }
 }

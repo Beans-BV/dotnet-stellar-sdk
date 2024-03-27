@@ -8,23 +8,23 @@ public interface IPaymentsRequestInitialBuilder : IPaymentsRequestBuilder
 {
     ///<Summary>
     /// Builds request to <code>GET /accounts/{account}/payments</code>
-    /// <a href="https://www.stellar.org/developers/horizon/reference/payments-for-account.html">Effects for Account</a>
+    /// <a href="https://developers.stellar.org/network/horizon/resources/get-payments-by-account-id">Payments for Account</a>
     /// </Summary>
     /// <param name="account">Account for which to get payments</param>
     /// <returns>The <see cref="PaymentsRequestBuilder"/> instance.</returns>
     IPaymentsRequestBuilder ForAccount(string account);
     
     ///<Summary>
-    /// Builds request to <code>GET /ledgers/{ledgerSeq}/effects</code>
-    /// <a href="https://www.stellar.org/developers/horizon/reference/payments-for-ledger.html">Effects for Ledger</a>
+    /// Builds request to <code>GET /ledgers/{ledgerSeq}/payments</code>
+    /// <a href="https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-payments">Payments for Ledger</a>
     /// </Summary>
-    /// <param name="ledgerSeq">Ledger for which to get effects</param> 
+    /// <param name="ledgerSeq">Ledger for which to get payments</param> 
     /// <returns>The <see cref="PaymentsRequestBuilder"/> instance.</returns>
     IPaymentsRequestBuilder ForLedger(long ledgerSeq);
     
     ///<Summary>
     /// Builds request to <code>GET /transactions/{transactionId}/payments</code>
-    /// <a href="https://www.stellar.org/developers/horizon/reference/payments-for-transaction.html">Effect for Transaction</a>
+    /// Payments for Transaction
     /// </Summary>
     /// <param name="transactionId">Transaction ID for which to get payments</param>
     /// <returns>The <see cref="PaymentsRequestBuilder"/> instance.</returns>returns>
