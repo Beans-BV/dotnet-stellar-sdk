@@ -6,16 +6,43 @@ namespace stellar_dotnet_sdk.requests;
 
 public interface IPaymentsRequestInitialBuilder : IPaymentsRequestBuilder
 {
+    ///<Summary>
+    /// Builds request to <code>GET /accounts/{account}/payments</code>
+    /// <a href="https://www.stellar.org/developers/horizon/reference/payments-for-account.html">Effects for Account</a>
+    /// </Summary>
+    /// <param name="account">Account for which to get payments</param>
+    /// <returns>The <see cref="PaymentsRequestBuilder"/> instance.</returns>
     IPaymentsRequestBuilder ForAccount(string account);
+    
+    ///<Summary>
+    /// Builds request to <code>GET /ledgers/{ledgerSeq}/effects</code>
+    /// <a href="https://www.stellar.org/developers/horizon/reference/payments-for-ledger.html">Effects for Ledger</a>
+    /// </Summary>
+    /// <param name="ledgerSeq">Ledger for which to get effects</param> 
+    /// <returns>The <see cref="PaymentsRequestBuilder"/> instance.</returns>
     IPaymentsRequestBuilder ForLedger(long ledgerSeq);
+    
+    ///<Summary>
+    /// Builds request to <code>GET /transactions/{transactionId}/payments</code>
+    /// <a href="https://www.stellar.org/developers/horizon/reference/payments-for-transaction.html">Effect for Transaction</a>
+    /// </Summary>
+    /// <param name="transactionId">Transaction ID for which to get payments</param>
+    /// <returns>The <see cref="PaymentsRequestBuilder"/> instance.</returns>returns>
     IPaymentsRequestBuilder ForTransaction(string transactionId);
 }
 
 public interface IPaymentsRequestBuilder : IRequestBuilderStreamable<OperationResponse>, IRequestBuilderExecutePageable<IPaymentsRequestBuilder, OperationResponse>
 {
-    IPaymentsRequestBuilder JoinTransactions(bool value);
+    /// <summary>
+    /// Adds a parameter defining whether to include transaction data in the payments.
+    /// </summary>
+    /// <returns>The <see cref="PaymentsRequestBuilder"/> instance.</returns>
+    IPaymentsRequestBuilder IncludeTransaction();
 }
 
+/// <summary>
+/// Request builder to help build a payments request to fetch payment operations from Horizon.
+/// </summary>
 public class PaymentsRequestBuilder : RequestBuilderStreamable<IPaymentsRequestBuilder, OperationResponse>, IPaymentsRequestInitialBuilder
 {
     private PaymentsRequestBuilder(Uri serverURI, HttpClient httpClient)
@@ -34,12 +61,7 @@ public class PaymentsRequestBuilder : RequestBuilderStreamable<IPaymentsRequestB
         return new PaymentsRequestBuilder(serverURI, httpClient);
     }
 
-    ///<Summary>
-    /// Builds request to <code>GET /accounts/{account}/payments</code>
-    /// <a href="https://www.stellar.org/developers/horizon/reference/payments-for-account.html">Effects for Account</a>
-    /// </Summary>
-    /// <param name="account">Account for which to get payments</param>
-    /// <returns>The <see cref="PaymentsRequestBuilder"/> instance.</returns>
+    /// <inheritdoc />
     public IPaymentsRequestBuilder ForAccount(string account)
     {
         account = account ?? throw new ArgumentNullException(nameof(account), "account cannot be null");
@@ -47,24 +69,14 @@ public class PaymentsRequestBuilder : RequestBuilderStreamable<IPaymentsRequestB
         return this;
     }
 
-    ///<Summary>
-    /// Builds request to <code>GET /ledgers/{ledgerSeq}/effects</code>
-    /// <a href="https://www.stellar.org/developers/horizon/reference/payments-for-ledger.html">Effects for Ledger</a>
-    /// </Summary>
-    /// <param name="ledgerSeq">Ledger for which to get effects</param> 
-    /// <returns>The <see cref="PaymentsRequestBuilder"/> instance.</returns>
+    /// <inheritdoc />
     public IPaymentsRequestBuilder ForLedger(long ledgerSeq)
     {
         SetSegments("ledgers", ledgerSeq.ToString(), "payments");
         return this;
     }
 
-    ///<Summary>
-    /// Builds request to <code>GET /transactions/{transactionId}/payments</code>
-    /// <a href="https://www.stellar.org/developers/horizon/reference/payments-for-transaction.html">Effect for Transaction</a>
-    /// </Summary>
-    /// <param name="transactionId">Transaction ID for which to get payments</param>
-    /// <returns>The <see cref="PaymentsRequestBuilder"/> instance.</returns>returns>
+    /// <inheritdoc />
     public IPaymentsRequestBuilder ForTransaction(string transactionId)
     {
         transactionId = transactionId ?? throw new ArgumentNullException(nameof(transactionId), "transactionId cannot be null");
@@ -72,21 +84,10 @@ public class PaymentsRequestBuilder : RequestBuilderStreamable<IPaymentsRequestB
         return this;
     }
     
-    /// <summary>
-    /// Adds a parameter defining whether to attach transaction data in the payments.
-    /// </summary>
-    /// <param name="value">Set to true to include transaction data in the payments.</param>
-    /// <returns>The <see cref="PaymentsRequestBuilder"/> instance.</returns>
-    public IPaymentsRequestBuilder JoinTransactions(bool value)
+    /// <inheritdoc />
+    public IPaymentsRequestBuilder IncludeTransaction()
     {
-        if (value)
-        {
-            UriBuilder.SetQueryParam("join", "transactions");
-        }
-        else
-        {
-            UriBuilder.RemoveQueryParam("join");
-        }
+        UriBuilder.SetQueryParam("join", "transactions");
         return this;
     }
 }

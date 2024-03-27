@@ -7,6 +7,9 @@ namespace stellar_dotnet_sdk.requests;
 
 public interface IRequestBuilderExecutePageable<T, TResponse> : IRequestBuilder<T> where T : class where TResponse : class
 {
+    ///<Summary>
+    /// Build and execute request.
+    /// </Summary>
     Task<Page<TResponse>> Execute();
 }
 
@@ -17,9 +20,7 @@ public class RequestBuilderExecutePageable<T, TResponse> : RequestBuilder<T>, IR
     {
     }
 
-    ///<Summary>
-    /// Build and execute request.
-    /// </Summary>
+    /// <inheritdoc />
     public async Task<Page<TResponse>> Execute()
     {
         return await Execute<Page<TResponse>>(BuildUri());

@@ -51,9 +51,8 @@ public interface IRequestBuilder<T> where T : class
     ///     "https://www.stellar.org/developers/horizon/learn/responses.html
     ///     responses as ledgers close.
     /// </summary>
-    /// <param name="listener">
-    ///     EventListener implementation with AccountResponse type
-    ///     <returns>EventSource object, so you can close() connection when not needed anymore</returns>
+    /// <param name="listener">EventListener implementation with AccountResponse type</param>
+    /// <returns>EventSource object, so you can close() connection when not needed anymore</returns>
     Uri BuildUri();
 }
 

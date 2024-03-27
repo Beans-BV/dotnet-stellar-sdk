@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using stellar_dotnet_sdk;
 using stellar_dotnet_sdk.requests;
 using stellar_dotnet_sdk.responses.operations;
@@ -17,11 +18,11 @@ public class PaymentsRequestBuilderTest
     {
         using var server = new Server("https://horizon-testnet.stellar.org");
         var uri = server.Payments
+            .IncludeTransaction()
             .Limit(200)
             .Order(OrderDirection.DESC)
-            .JoinTransactions(true)
             .BuildUri();
-        Assert.AreEqual("https://horizon-testnet.stellar.org/payments?limit=200&order=desc&join=transactions", uri.ToString());
+        Assert.AreEqual("https://horizon-testnet.stellar.org/payments?join=transactions&limit=200&order=desc", uri.ToString());
     }
 
     [TestMethod]
@@ -30,11 +31,11 @@ public class PaymentsRequestBuilderTest
         using var server = new Server("https://horizon-testnet.stellar.org");
         var uri = server.Payments
             .ForAccount("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H")
+            .IncludeTransaction()
             .Limit(200)
             .Order(OrderDirection.DESC)
-            .JoinTransactions(false)
             .BuildUri();
-        Assert.AreEqual("https://horizon-testnet.stellar.org/accounts/GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H/payments?limit=200&order=desc", uri.ToString());
+        Assert.AreEqual("https://horizon-testnet.stellar.org/accounts/GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H/payments?join=transactions&limit=200&order=desc", uri.ToString());
     }
 
     [TestMethod]
@@ -43,12 +44,11 @@ public class PaymentsRequestBuilderTest
         using var server = new Server("https://horizon-testnet.stellar.org");
         var uri = server.Payments
             .ForLedger(200000000000L)
-            .JoinTransactions(true)
+            .IncludeTransaction()
             .Limit(50)
             .Order(OrderDirection.ASC)
-            .JoinTransactions(false)
             .BuildUri();
-        Assert.AreEqual("https://horizon-testnet.stellar.org/ledgers/200000000000/payments?limit=50&order=asc", uri.ToString());
+        Assert.AreEqual("https://horizon-testnet.stellar.org/ledgers/200000000000/payments?join=transactions&limit=50&order=asc", uri.ToString());
     }
 
     [TestMethod]
@@ -57,10 +57,8 @@ public class PaymentsRequestBuilderTest
         using var server = new Server("https://horizon-testnet.stellar.org");
         var uri = server.Payments
             .ForTransaction("991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3")
-            .JoinTransactions(false)
-            .JoinTransactions(true)
             .BuildUri();
-        Assert.AreEqual("https://horizon-testnet.stellar.org/transactions/991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3/payments?join=transactions", uri.ToString());
+        Assert.AreEqual("https://horizon-testnet.stellar.org/transactions/991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3/payments", uri.ToString());
     }
 
     [TestMethod]

@@ -7,6 +7,17 @@ namespace stellar_dotnet_sdk.requests;
 public interface IRequestBuilderStreamable<TResponse> where TResponse : class
 {
     IEventSource EventSource { get; set; }
+    
+    ///<Summary>
+    /// Allows to stream SSE events from horizon.
+    /// Certain endpoints in Horizon can be called in streaming mode using Server-Sent Events.
+    /// This mode will keep the connection to horizon open and horizon will continue to return
+    /// responses as ledgers close.
+    /// <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
+    /// <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
+    /// </Summary>
+    /// <param name="listener">EventListener implementation with EffectResponse type</param>
+    /// <returns>EventSource object, so you can <code>close()</code> connection when not needed anymore</returns>
     IEventSource Stream(EventHandler<TResponse> listener);
 }
 
@@ -24,18 +35,10 @@ public class RequestBuilderStreamable<T, TResponse>
         EventSource = eventSource;
     }
 
+    /// <inheritdoc />
     public IEventSource EventSource { get; set; }
 
-    ///<Summary>
-    /// Allows to stream SSE events from horizon.
-    /// Certain endpoints in Horizon can be called in streaming mode using Server-Sent Events.
-    /// This mode will keep the connection to horizon open and horizon will continue to return
-    /// responses as ledgers close.
-    /// <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-    /// <a href="https://www.stellar.org/developers/horizon/learn/responses.html" target="_blank">Response Format documentation</a>
-    /// </Summary>
-    /// <param name="listener">EventListener implementation with EffectResponse type</param>
-    /// <returns>EventSource object, so you can <code>close()</code> connection when not needed anymore</param>
+    /// <inheritdoc />
     public IEventSource Stream(EventHandler<TResponse> listener)
     {
         if (EventSource == null)
