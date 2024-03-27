@@ -24,7 +24,7 @@ namespace stellar_dotnet_sdk_test.requests
             var server = new Server("https://horizon-testnet.stellar.org");
             var uri = server.ClaimableBalances.ForAsset(asset).BuildUri();
             Assert.AreEqual(
-                "https://horizon-testnet.stellar.org/claimable_balances?asset=ABC:GBM2LMVS2EG3GHJ5DKR7CKZ4TP6DQKCHRMDKCZK6WG2NGQVTLF35YE6O",
+                "https://horizon-testnet.stellar.org/claimable_balances?asset=ABC%3aGBM2LMVS2EG3GHJ5DKR7CKZ4TP6DQKCHRMDKCZK6WG2NGQVTLF35YE6O",
                 uri.ToString());
         }
 

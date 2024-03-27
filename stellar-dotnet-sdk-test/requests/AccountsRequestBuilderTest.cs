@@ -103,7 +103,7 @@ namespace stellar_dotnet_sdk_test.requests
                 var req = server.Accounts.WithTrustline(asset);
 
                 Assert.AreEqual(
-                    "https://horizon-testnet.stellar.org/accounts?asset=FOO:GAGLYFZJMN5HEULSTH5CIGPOPAVUYPG5YSWIYDJMAPIECYEBPM2TA3QR",
+                    "https://horizon-testnet.stellar.org/accounts?asset=FOO%3aGAGLYFZJMN5HEULSTH5CIGPOPAVUYPG5YSWIYDJMAPIECYEBPM2TA3QR",
                     req.BuildUri().ToString());
                 var accounts = await req.Execute();
 

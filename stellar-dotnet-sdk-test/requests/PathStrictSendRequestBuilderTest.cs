@@ -30,7 +30,7 @@ namespace stellar_dotnet_sdk_test.requests
                                 "source_asset_code=USD&" +
                                 "source_asset_issuer=GAEDTJ4PPEFVW5XV2S7LUXBEHNQMX5Q2GM562RJGOQG7GVCE5H3HIB4V&" +
                                 "destination_account=GAEDTJ4PPEFVW5XV2S7LUXBEHNQMX5Q2GM562RJGOQG7GVCE5H3HIB4V&" +
-                                "destination_assets=native,USD:GAEDTJ4PPEFVW5XV2S7LUXBEHNQMX5Q2GM562RJGOQG7GVCE5H3HIB4V",
+                                "destination_assets=native%2cUSD%3aGAEDTJ4PPEFVW5XV2S7LUXBEHNQMX5Q2GM562RJGOQG7GVCE5H3HIB4V",
                     req.BuildUri().ToString());
             }
         }

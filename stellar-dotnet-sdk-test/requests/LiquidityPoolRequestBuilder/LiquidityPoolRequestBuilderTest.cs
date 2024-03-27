@@ -36,7 +36,7 @@ namespace stellar_dotnet_sdk_test.requests
                 var uri = server.LiquidityPools
                         .ForReserves("EURT:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S", "PHP:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S")
                         .BuildUri();
-                Assert.AreEqual("https://horizon-testnet.stellar.org/liquidity_pools?reserves=EURT:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S,PHP:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S", uri.ToString());
+                Assert.AreEqual("https://horizon-testnet.stellar.org/liquidity_pools?reserves=EURT%3aGAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S%2cPHP%3aGAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S", uri.ToString());
             }
         }
 

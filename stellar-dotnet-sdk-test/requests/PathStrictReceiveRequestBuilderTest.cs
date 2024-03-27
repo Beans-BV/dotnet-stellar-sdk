@@ -27,7 +27,7 @@ namespace stellar_dotnet_sdk_test.requests
 
                 Assert.AreEqual("https://horizon-testnet.stellar.org/paths/strict-receive?" +
                                 "source_account=GARSFJNXJIHO6ULUBK3DBYKVSIZE7SC72S5DYBCHU7DKL22UXKVD7MXP&" +
-                                "source_assets=native,USD:GAEDTJ4PPEFVW5XV2S7LUXBEHNQMX5Q2GM562RJGOQG7GVCE5H3HIB4V&" +
+                                "source_assets=native%2cUSD%3aGAEDTJ4PPEFVW5XV2S7LUXBEHNQMX5Q2GM562RJGOQG7GVCE5H3HIB4V&" +
                                 "destination_account=GAEDTJ4PPEFVW5XV2S7LUXBEHNQMX5Q2GM562RJGOQG7GVCE5H3HIB4V&" +
                                 "destination_asset_type=credit_alphanum4&" +
                                 "destination_asset_code=USD&" +

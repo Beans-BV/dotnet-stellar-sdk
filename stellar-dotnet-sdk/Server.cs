@@ -80,7 +80,7 @@ namespace stellar_dotnet_sdk
 
         public PathStrictReceiveRequestBuilder PathStrictReceive => new PathStrictReceiveRequestBuilder(_serverUri, _httpClient);
 
-        public PaymentsRequestBuilder Payments => new PaymentsRequestBuilder(_serverUri, _httpClient);
+        public IPaymentsRequestInitialBuilder Payments => PaymentsRequestBuilder.Create(_serverUri, _httpClient);
 
         public TransactionsRequestBuilder Transactions => new TransactionsRequestBuilder(_serverUri, _httpClient);
 
