@@ -128,7 +128,7 @@
   
   <h5 id="stellar_dotnet_sdk_requests_RequestBuilderExecutePageable_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class RequestBuilderExecutePageable&lt;T, TResponse&gt; : RequestBuilder&lt;T&gt; where T : class where TResponse : class</code></pre>
+    <pre><code class="lang-csharp hljs">public class RequestBuilderExecutePageable&lt;T, TResponse&gt; : RequestBuilder&lt;T&gt;, IRequestBuilderExecutePageable&lt;T, TResponse&gt;, IRequestBuilder&lt;T&gt; where T : class where TResponse : class</code></pre>
   </div>
 
   
@@ -164,7 +164,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RequestBuilderExecutePageable(Uri serverUri, string defaultSegment, HttpClient httpClient)</code></pre>
+    <pre><code class="lang-csharp hljs">protected RequestBuilderExecutePageable(Uri serverUri, string defaultSegment, HttpClient httpClient)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -237,6 +237,8 @@
   
   
   
+  <h5 class="implements">Implements</h5>
+      <div><a class="xref" href="stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable-2.html#stellar_dotnet_sdk_requests_IRequestBuilderExecutePageable_2_Execute">IRequestBuilderExecutePageable&lt;T, TResponse&gt;.Execute()</a></div>
   
   
   

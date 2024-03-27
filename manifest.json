@@ -1677,7 +1677,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.LiquidityPoolsRequestBuilder.html",
-          "hash": "lhM33GmHWPWbUG4i4ufr8OqGI4g4svHc6lWdSSECwX0="
+          "hash": "C3NjcnDeVNJ4UMPLMoBOIKqXx1C7ihs5kh5+O3OOhz4="
         }
       },
       "is_incremental": false,
@@ -2613,7 +2613,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.Server.html",
-          "hash": "NHylIOCvzhvmWHmVSVILFPuRfAC2jVWEKxl8bLRLKUE="
+          "hash": "BAWZsi9LxovVZKVLIxDiNC4yNlv+y9w38rm5OmXa5aE="
         }
       },
       "is_incremental": false,
@@ -3057,7 +3057,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.UriBuilderExtensions.html",
-          "hash": "wx2oAfd6QKGRYNGHJ4TjgD9VIWzAVZoy6ARP94j92Dw="
+          "hash": "Dj5ZYxIIWMbdX/pU/8JLneRjkO1QbI3fzy/zl1MZiMs="
         }
       },
       "is_incremental": false,
@@ -3297,7 +3297,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.AccountsRequestBuilder.html",
-          "hash": "gH5GLAwY13Kn7vIr+bfMDBBuNa1d7VFsODagUIBnSrM="
+          "hash": "eNJvShoHMl8iQE2wlp4q7+FeriAnffduqSPh2Zb1hnE="
         }
       },
       "is_incremental": false,
@@ -3309,7 +3309,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.AssetsRequestBuilder.html",
-          "hash": "tsQA6OZnZrCJEYdFBCWHi40EU9RcQxhojPapf2JpN84="
+          "hash": "wX9PUPn7cBpsEFXffauopYPX0+6ojCYvDZWpwjR/DPY="
         }
       },
       "is_incremental": false,
@@ -3321,7 +3321,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.ClaimableBalancesRequestBuilder.html",
-          "hash": "aSFg6r0EWomLA1Cjo5DBiv+pJ+oiydCK/oVk72JwduE="
+          "hash": "WdNsGmHqAFHWsGPujt/7EOuWtc5k7zXJk1zD10KhS3U="
         }
       },
       "is_incremental": false,
@@ -3345,7 +3345,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.EffectsRequestBuilder.html",
-          "hash": "xQyePyAF6UW9F7q83797aW+kETWvVJj1jIVqxr3CJuo="
+          "hash": "kPzcsvrqdx4bdHtjgmR9tJr7iPazBzmUyvf1Tzd5tUo="
         }
       },
       "is_incremental": false,
@@ -3357,7 +3357,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.FeeStatsRequestBuilder.html",
-          "hash": "O2OAg6aQw6yyO258h1YlbMMvCDaFVWaGE0NimLfg+BE="
+          "hash": "RmFiJ2E62zjyEzX5qsvPAAfutRcAYOOk3jxTrjNpvAA="
         }
       },
       "is_incremental": false,
@@ -3369,7 +3369,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.FriendBotRequestBuilder.html",
-          "hash": "p21tnhjesh4Jgwh6Ax++goA9p38Iu9E6HmeCwKyB1TU="
+          "hash": "plJ23EHXeqWtD9WnjYinhYfBAhLKDd4fqsIJQ4ORV0Q="
         }
       },
       "is_incremental": false,
@@ -3389,11 +3389,71 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/stellar_dotnet_sdk.requests.IPaymentsRequestBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/stellar_dotnet_sdk.requests.IPaymentsRequestBuilder.html",
+          "hash": "Zw/2UoxeRJ2YfIh0+q7aPnCKy1dfLW1Li/KXkEQRMO4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.html",
+          "hash": "D6tqbhIi2dBJLEA4UoTTXJ4oiZhteiKN78fR4c2VTek="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/stellar_dotnet_sdk.requests.IRequestBuilder-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html",
+          "hash": "/p7xzjwiCSvVd7nHkhWH5OxGrHKxOUCpAip5LTc23Dw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable-2.html",
+          "hash": "ZH1yhP3Lp+iDI+1akBtvG7kiwc48Sbdvsf2cR/JKTao="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/stellar_dotnet_sdk.requests.IRequestBuilderStreamable-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/stellar_dotnet_sdk.requests.IRequestBuilderStreamable-1.html",
+          "hash": "1W/lR4iojMlTcaj5dydHRj84Q5lz1Zvg7ItHwuPAlPY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/stellar_dotnet_sdk.requests.LedgersRequestBuilder.yml",
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.LedgersRequestBuilder.html",
-          "hash": "Wvdw90CRrTuqypqBU+VdjUbgt8IhUFpHIFjfZ/vuuaE="
+          "hash": "Jf+pDZN1Kcq6q4ahDAICuqxKkU+ic+55TTqP58T3UKc="
         }
       },
       "is_incremental": false,
@@ -3417,7 +3477,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.OffersRequestBuilder.html",
-          "hash": "bBqBTxmD6b6a0voX3rqCajqWpVzM0aEMGPt7ty0JRwo="
+          "hash": "m+cF4U5iJmx91zFOCHizamE5Xs/1b5athAfoRLR4QzY="
         }
       },
       "is_incremental": false,
@@ -3429,7 +3489,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.OperationsRequestBuilder.html",
-          "hash": "FnePBtOEgYn/ZFTEtPr4gMyler3ZL+cGvp/4+p7BXL0="
+          "hash": "cugrPne+Qv8CwFP6qkoqWe8Kppckqj0aCbkwQX1Mc58="
         }
       },
       "is_incremental": false,
@@ -3441,7 +3501,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.OrderBookRequestBuilder.html",
-          "hash": "3U5ib5QzlQUJL+dVwH6fv8Ew4DDRqQqFWMQkd9QuHeY="
+          "hash": "y/IEzXnqGwTAGQ8F+HV6+6L9z26gwb4dycMb1xJP7og="
         }
       },
       "is_incremental": false,
@@ -3465,7 +3525,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.PathStrictReceiveRequestBuilder.html",
-          "hash": "o2Iwf+0i1NfdFXNj59JZQXjftM0AkSAS0pUWfOEFkzs="
+          "hash": "fEQtbshFiTnMjZQXPPtlYFAsf2MTshZ+90avcdfX6QQ="
         }
       },
       "is_incremental": false,
@@ -3477,7 +3537,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.PathStrictSendRequestBuilder.html",
-          "hash": "9ctN82RGyC5bo+HByvmvqgss73ZRMKOT2Zk/cu/PTkk="
+          "hash": "F7G+Od5SpyFIPk6+th08XfyXXSgXSczqx/wKoh1rJ3M="
         }
       },
       "is_incremental": false,
@@ -3489,7 +3549,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.PathsRequestBuilder.html",
-          "hash": "S7wZY70Fl3xMX4/4aIczhlGQwtyve5+Y/Lu+71I7vCs="
+          "hash": "JPzKBOuQSwRKw/Q5WQRxGS3tauwAhy1kmPfyXdWYCOs="
         }
       },
       "is_incremental": false,
@@ -3501,7 +3561,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.PaymentsRequestBuilder.html",
-          "hash": "gupoNuRh21/rl22NpyWCTjO24YKEK5CKQMwSlDmnuUo="
+          "hash": "xrfR+SbKUL2CBUWBboA29Fi8+3njU9UIiR4Nruz/arU="
         }
       },
       "is_incremental": false,
@@ -3513,7 +3573,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.RequestBuilder-1.html",
-          "hash": "kqnjtUUKMO93Pzj1lrTL1z9sIRIko82IjGsg812KdFE="
+          "hash": "aToWhVDvubaL3/WzG8saLuioS7Z6SC0/rO2Y2B/yldg="
         }
       },
       "is_incremental": false,
@@ -3525,7 +3585,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.RequestBuilderExecutePageable-2.html",
-          "hash": "TzfJ++z6AN+rq7C3gN6zYYTsbZqybQn2byWF6KwfmZs="
+          "hash": "HKmGjE900Sdxohkuf1k5TsW0GEtrvie5+nyHa+9Qjm4="
         }
       },
       "is_incremental": false,
@@ -3537,7 +3597,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.RequestBuilderStreamable-2.html",
-          "hash": "26322/CrLh/FPEj57ik8wRAOL+NaJqibxkPs3iKY8wI="
+          "hash": "7N6ab7E0esBSwpfUqMgaJVNE7/SMbyiUG4bXqHGlG1I="
         }
       },
       "is_incremental": false,
@@ -3573,7 +3633,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.TradesAggregationRequestBuilder.html",
-          "hash": "w5LG7ekryvwln9N5+83S4EtqFjV8TJmUt18lyk80paQ="
+          "hash": "az9fAu1RLqyahswJXMTObEj8euk9zFMpVmKlOE9yo9Y="
         }
       },
       "is_incremental": false,
@@ -3585,7 +3645,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.TradesRequestBuilder.html",
-          "hash": "KbRRik1FS5V7+yrKdGO8Nt9zQz4mSZJTNFaVp2axf9k="
+          "hash": "uJEwPn0zORwW4djzQeUq02UoBWZqONFmyleexSU6Xb0="
         }
       },
       "is_incremental": false,
@@ -3597,7 +3657,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.TransactionsRequestBuilder.html",
-          "hash": "ZtFklIbpBVOcwB0yo5AmuNq12InqUHReYmfJNQ/NpUo="
+          "hash": "GT00ccBGIYPOUvlwXivjWsCAnXmet0kuXERXI8dy8KE="
         }
       },
       "is_incremental": false,
@@ -3609,7 +3669,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.requests.html",
-          "hash": "lA7FuRuoqArFiqKTrETjP26/xcMFrCWPvrAc/J2NBNA="
+          "hash": "tF14LTt5fh3c7zvpzkDOdMYXtUvpJnV9GO02D1sFabA="
         }
       },
       "is_incremental": false,
@@ -5133,7 +5193,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.AccountMergeOperationResponse.html",
-          "hash": "ETiJ9txw/kcDe+gf+9lT7EwY3QE7lh8zhKOQErpAZ9c="
+          "hash": "NyWNw6ZXHfYJq+HupStQVJbHBcYAFg8lnm89Wn4NGo8="
         }
       },
       "is_incremental": false,
@@ -5145,7 +5205,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.AllowTrustOperationResponse.html",
-          "hash": "MREB9LiCb2WcOrLP/OloRNQ1Mej72GCun8D2xDuUnpI="
+          "hash": "4XfkLKX2ZMX4Zd6Ten8s6CIr1wdeLWPhpR6aguVv3ds="
         }
       },
       "is_incremental": false,
@@ -5157,7 +5217,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.BeginSponsoringFutureReservesOperationResponse.html",
-          "hash": "cqcKSLyxZwnioGF8y5rlEKuVUhnYO6Z1FSPI4yp+c5M="
+          "hash": "kXhGgmuJQ57q1WOx+lI9oyMmZW6MrWc4dc9dirZlswc="
         }
       },
       "is_incremental": false,
@@ -5169,7 +5229,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.BumpSequenceOperationResponse.html",
-          "hash": "TnqXdLyvTHzORFoXMXYOxeWIL/lC32KxQ3+8fGVqUho="
+          "hash": "gZxcSbeSencJ0xODN7Hrb7S++dot0sp8OSZmmQkYIXc="
         }
       },
       "is_incremental": false,
@@ -5181,7 +5241,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.ChangeTrustOperationResponse.html",
-          "hash": "ZmshyO2DCFfOUWiQ4oTq4usHR+KOWuDGdWL7LyITr6Q="
+          "hash": "caJCV7dl94XQ44CQrcV7BgHRtUQVALIQYNU4kcbxCV0="
         }
       },
       "is_incremental": false,
@@ -5193,7 +5253,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.ClaimClaimableBalanceOperationResponse.html",
-          "hash": "2Zrj+Rr5MqYF0B1CT+LJ0x6e/1pCQVdcElVCUgi5k3s="
+          "hash": "NA8kwfeHg03uYzPbWvEuh68UKAjlAn+fr1hD84DBNDM="
         }
       },
       "is_incremental": false,
@@ -5205,7 +5265,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.ClawbackClaimableBalanceOperationResponse.html",
-          "hash": "oKH1jJpbzVnUoV6Qwd+6HsPfeHsCUx7bs3wOUamDE2Q="
+          "hash": "xzTy9rr/GESvyfB+4JP3so8VTqPg1JUeuOQb6zHL78A="
         }
       },
       "is_incremental": false,
@@ -5217,7 +5277,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.ClawbackOperationResponse.html",
-          "hash": "AYK6dcV30jnXKtd+i46QcxLnAep0G8a3mr3zJVZ0zD0="
+          "hash": "35PmUM2/oGaqhLzh6IGthPk152jmgbDvumkCI7C6O58="
         }
       },
       "is_incremental": false,
@@ -5229,7 +5289,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.CreateAccountOperationResponse.html",
-          "hash": "oO5XUT5ty6jVzE3zRFSv5JUtNmxdeox6/oveHrxRmBk="
+          "hash": "mRZFRPKGzV0ur16PLGYgp1nWLdgi+m2MFhIBPEmkvTw="
         }
       },
       "is_incremental": false,
@@ -5241,7 +5301,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.CreateClaimableBalanceOperationResponse.html",
-          "hash": "wb+tdMUR1758FOcFssuJqScAllEqgcv5F3fLntG1+Nk="
+          "hash": "j5pCELjC9OzRxIbUBqsBbjJW3o7an9N9qkgvzv8Mh+0="
         }
       },
       "is_incremental": false,
@@ -5253,7 +5313,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.CreatePassiveOfferOperationResponse.html",
-          "hash": "j+8qpWBwyn6xWrb08V8fmrQZJTzSW/b499Qb9Qmz1H0="
+          "hash": "ki1NkRIpVLWkPAc/MISft2AG7n1OzpyNXqbY15SJDTs="
         }
       },
       "is_incremental": false,
@@ -5265,7 +5325,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.EndSponsoringFutureReservesOperationResponse.html",
-          "hash": "fpV3ThMEIqMsf/VhXs2j1rBPaX/trH+byUYzZIYp560="
+          "hash": "uIZsfZ1gqZSnFWZhow8dSy8dmsnUGE2LZkxqFk5Z8OU="
         }
       },
       "is_incremental": false,
@@ -5277,7 +5337,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.InflationOperationResponse.html",
-          "hash": "CEuB604Opav8Zjm4OY5/eFGR39quT5cv9ERHZhX8ao8="
+          "hash": "1d3Xl+RLWjeEVICZFBdHD8NExDdnkQ0d3UH32tjvw3Y="
         }
       },
       "is_incremental": false,
@@ -5289,7 +5349,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.LiquidityPoolDepositOperationResponse.html",
-          "hash": "9hO1YAa/IyTsTg8fycwOiPh0pxa7xOnJqyCS0SoMo9E="
+          "hash": "2KgWfVV/QsFhh3cP8iKi5cITef7wq984UCOtxb078Js="
         }
       },
       "is_incremental": false,
@@ -5301,7 +5361,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.LiquidityPoolWithdrawOperationResponse.html",
-          "hash": "evo5kwL3FxoAekvA++96ROD61cqTp1JxbSsoHkkTLrg="
+          "hash": "Ji/0KvB2iWOlZKTRHmnVkKa3RT4Xy3w5NyGGmnSGSZE="
         }
       },
       "is_incremental": false,
@@ -5313,7 +5373,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.ManageBuyOfferOperationResponse.html",
-          "hash": "dNcGtOdCWjY7rDhS9mxJ/ySHjbM8ecExUBEZTuwjFdQ="
+          "hash": "jh5wEuHzVLoF0qaVTCMK0/tI07wpM1fc+xXGUzLWBM0="
         }
       },
       "is_incremental": false,
@@ -5325,7 +5385,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.ManageDataOperationResponse.html",
-          "hash": "NJTRUTsmQB/IJvYW1M4Ch0WO4JXRIC7rlk0lEe7RBn4="
+          "hash": "8xhsavh/ZNAMz5B0TgkC0LMX3Hh4QpcKR3GYftmuRes="
         }
       },
       "is_incremental": false,
@@ -5337,7 +5397,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.ManageOfferOperationResponse.html",
-          "hash": "zBZN636p1OYpQNTbRybMMSv8BNT0g3QwBtHYpS34Fr8="
+          "hash": "3rkFoknPpGq71577qlVyf+Vb0s3ZRq66xhFe0GN/HaM="
         }
       },
       "is_incremental": false,
@@ -5349,7 +5409,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.ManageSellOfferOperationResponse.html",
-          "hash": "c5OqYO3lGY1DAC7H0RlF3HE1hNOpHC+ZQQ4kWdBJinY="
+          "hash": "1tiD+q/iabstTl6gYb40cC4xCjnpdB33PmGn3kdcO0Y="
         }
       },
       "is_incremental": false,
@@ -5361,7 +5421,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.OperationResponse.html",
-          "hash": "0/MKqaItAOEJJHNE3ovaWk3zujsiW1YW61LCaMKyJT4="
+          "hash": "sfk66iTa9Rrkkp+JxjIJ1Kn+2Zqslrur3Ag40KZOiJs="
         }
       },
       "is_incremental": false,
@@ -5385,7 +5445,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.PathPaymentStrictReceiveOperationResponse.html",
-          "hash": "Aq7w/s/tm9f96cI9OEg1uUwTU2J+MVucdYfmtGgi0Sc="
+          "hash": "OtwsE1exatlsLtftPf/LU3FNjXlIHl8fUFZtnH4SMXg="
         }
       },
       "is_incremental": false,
@@ -5397,7 +5457,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.PathPaymentStrictSendOperationResponse.html",
-          "hash": "F1UJFQ73HUtV3UsYVfq+EWLMWad5i+LTxPglcceu6W4="
+          "hash": "o4Bhq5DaLidsJqPgGv+uTCyOoCSqr9wcoA+LDg3Q3eQ="
         }
       },
       "is_incremental": false,
@@ -5409,7 +5469,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.PaymentOperationResponse.html",
-          "hash": "ZOPh6T/tVIEsyhCq1xdkUfS3UKigR+tirG42UTehwjA="
+          "hash": "vreL/Ix8Fq/49GgoG6y5yEANn4/y6Te02rpNJyZEpvY="
         }
       },
       "is_incremental": false,
@@ -5421,7 +5481,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.RevokeSponsorshipOperationResponse.html",
-          "hash": "r+M8BPP1WAuH7gtqN1U02mUyVSJrptTZpTd6fGf6B9A="
+          "hash": "d1zDGtofp1/kNAgT4C9hcH7xUQi3kF1YhHxo+M2P05g="
         }
       },
       "is_incremental": false,
@@ -5433,7 +5493,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.SetOptionsOperationResponse.html",
-          "hash": "FTIzBhIlt1diQ4Lnu5idGh4pB14ayesor5JqRcSTqXY="
+          "hash": "2P1KcYIho9oACNglNr5p5UBAW0+9VmDYV15mwojXkWY="
         }
       },
       "is_incremental": false,
@@ -5445,7 +5505,7 @@
       "output": {
         ".html": {
           "relative_path": "api/stellar_dotnet_sdk.responses.operations.SetTrustlineFlagsOperationResponse.html",
-          "hash": "UYTv2oOt509GTT1imro/whEV2CyH1mLg3sNfJdGqx68="
+          "hash": "Bdx0jE9Nfj7AQWHEuv3G62VoSlqoaln0YH1LZCxTFeM="
         }
       },
       "is_incremental": false,
@@ -7737,7 +7797,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "CZegfGei4AZCxEBK/GsPWDhAY8GynkPKF5XKbvImfUE="
+          "hash": "dwuInCqlCAiZ3W9dlXzBvcHy3oqR5rmJFdUDjhVq2dU="
         }
       },
       "is_incremental": false,
@@ -7886,7 +7946,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 643,
+          "total_file_count": 648,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {

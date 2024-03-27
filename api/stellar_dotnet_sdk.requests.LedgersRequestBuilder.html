@@ -129,7 +129,7 @@
   
   <h5 id="stellar_dotnet_sdk_requests_LedgersRequestBuilder_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class LedgersRequestBuilder : RequestBuilderStreamable&lt;LedgersRequestBuilder, LedgerResponse&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class LedgersRequestBuilder : RequestBuilderStreamable&lt;LedgersRequestBuilder, LedgerResponse&gt;, IRequestBuilderExecutePageable&lt;LedgersRequestBuilder, LedgerResponse&gt;, IRequestBuilder&lt;LedgersRequestBuilder&gt;, IRequestBuilderStreamable&lt;LedgerResponse&gt;</code></pre>
   </div>
 
   

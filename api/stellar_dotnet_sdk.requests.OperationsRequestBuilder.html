@@ -129,7 +129,7 @@
   
   <h5 id="stellar_dotnet_sdk_requests_OperationsRequestBuilder_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class OperationsRequestBuilder : RequestBuilderStreamable&lt;OperationsRequestBuilder, OperationResponse&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class OperationsRequestBuilder : RequestBuilderStreamable&lt;OperationsRequestBuilder, OperationResponse&gt;, IRequestBuilderExecutePageable&lt;OperationsRequestBuilder, OperationResponse&gt;, IRequestBuilder&lt;OperationsRequestBuilder&gt;, IRequestBuilderStreamable&lt;OperationResponse&gt;</code></pre>
   </div>
 
   

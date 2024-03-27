@@ -12898,6 +12898,252 @@ references:
   isSpec: "True"
   fullName: stellar_dotnet_sdk.requests.HttpResponseException.StatusCode
   nameWithType: HttpResponseException.StatusCode
+- uid: stellar_dotnet_sdk.requests.IPaymentsRequestBuilder
+  name: IPaymentsRequestBuilder
+  href: api/stellar_dotnet_sdk.requests.IPaymentsRequestBuilder.html
+  commentId: T:stellar_dotnet_sdk.requests.IPaymentsRequestBuilder
+  fullName: stellar_dotnet_sdk.requests.IPaymentsRequestBuilder
+  nameWithType: IPaymentsRequestBuilder
+- uid: stellar_dotnet_sdk.requests.IPaymentsRequestBuilder.IncludeTransaction
+  name: IncludeTransaction()
+  href: api/stellar_dotnet_sdk.requests.IPaymentsRequestBuilder.html#stellar_dotnet_sdk_requests_IPaymentsRequestBuilder_IncludeTransaction
+  commentId: M:stellar_dotnet_sdk.requests.IPaymentsRequestBuilder.IncludeTransaction
+  fullName: stellar_dotnet_sdk.requests.IPaymentsRequestBuilder.IncludeTransaction()
+  nameWithType: IPaymentsRequestBuilder.IncludeTransaction()
+- uid: stellar_dotnet_sdk.requests.IPaymentsRequestBuilder.IncludeTransaction*
+  name: IncludeTransaction
+  href: api/stellar_dotnet_sdk.requests.IPaymentsRequestBuilder.html#stellar_dotnet_sdk_requests_IPaymentsRequestBuilder_IncludeTransaction_
+  commentId: Overload:stellar_dotnet_sdk.requests.IPaymentsRequestBuilder.IncludeTransaction
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.IPaymentsRequestBuilder.IncludeTransaction
+  nameWithType: IPaymentsRequestBuilder.IncludeTransaction
+- uid: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder
+  name: IPaymentsRequestInitialBuilder
+  href: api/stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.html
+  commentId: T:stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder
+  fullName: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder
+  nameWithType: IPaymentsRequestInitialBuilder
+- uid: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForAccount(System.String)
+  name: ForAccount(String)
+  href: api/stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.html#stellar_dotnet_sdk_requests_IPaymentsRequestInitialBuilder_ForAccount_System_String_
+  commentId: M:stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForAccount(System.String)
+  fullName: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForAccount(System.String)
+  nameWithType: IPaymentsRequestInitialBuilder.ForAccount(String)
+- uid: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForAccount*
+  name: ForAccount
+  href: api/stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.html#stellar_dotnet_sdk_requests_IPaymentsRequestInitialBuilder_ForAccount_
+  commentId: Overload:stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForAccount
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForAccount
+  nameWithType: IPaymentsRequestInitialBuilder.ForAccount
+- uid: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForLedger(System.Int64)
+  name: ForLedger(Int64)
+  href: api/stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.html#stellar_dotnet_sdk_requests_IPaymentsRequestInitialBuilder_ForLedger_System_Int64_
+  commentId: M:stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForLedger(System.Int64)
+  fullName: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForLedger(System.Int64)
+  nameWithType: IPaymentsRequestInitialBuilder.ForLedger(Int64)
+- uid: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForLedger*
+  name: ForLedger
+  href: api/stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.html#stellar_dotnet_sdk_requests_IPaymentsRequestInitialBuilder_ForLedger_
+  commentId: Overload:stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForLedger
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForLedger
+  nameWithType: IPaymentsRequestInitialBuilder.ForLedger
+- uid: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForTransaction(System.String)
+  name: ForTransaction(String)
+  href: api/stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.html#stellar_dotnet_sdk_requests_IPaymentsRequestInitialBuilder_ForTransaction_System_String_
+  commentId: M:stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForTransaction(System.String)
+  fullName: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForTransaction(System.String)
+  nameWithType: IPaymentsRequestInitialBuilder.ForTransaction(String)
+- uid: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForTransaction*
+  name: ForTransaction
+  href: api/stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.html#stellar_dotnet_sdk_requests_IPaymentsRequestInitialBuilder_ForTransaction_
+  commentId: Overload:stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForTransaction
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.IPaymentsRequestInitialBuilder.ForTransaction
+  nameWithType: IPaymentsRequestInitialBuilder.ForTransaction
+- uid: stellar_dotnet_sdk.requests.IRequestBuilder`1
+  name: IRequestBuilder<T>
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html
+  commentId: T:stellar_dotnet_sdk.requests.IRequestBuilder`1
+  name.vb: IRequestBuilder(Of T)
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilder<T>
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilder(Of T)
+  nameWithType: IRequestBuilder<T>
+  nameWithType.vb: IRequestBuilder(Of T)
+- uid: stellar_dotnet_sdk.requests.IRequestBuilder`1.BuildUri
+  name: BuildUri()
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_BuildUri
+  commentId: M:stellar_dotnet_sdk.requests.IRequestBuilder`1.BuildUri
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilder<T>.BuildUri()
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilder(Of T).BuildUri()
+  nameWithType: IRequestBuilder<T>.BuildUri()
+  nameWithType.vb: IRequestBuilder(Of T).BuildUri()
+- uid: stellar_dotnet_sdk.requests.IRequestBuilder`1.BuildUri*
+  name: BuildUri
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_BuildUri_
+  commentId: Overload:stellar_dotnet_sdk.requests.IRequestBuilder`1.BuildUri
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilder<T>.BuildUri
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilder(Of T).BuildUri
+  nameWithType: IRequestBuilder<T>.BuildUri
+  nameWithType.vb: IRequestBuilder(Of T).BuildUri
+- uid: stellar_dotnet_sdk.requests.IRequestBuilder`1.Cursor(System.String)
+  name: Cursor(String)
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Cursor_System_String_
+  commentId: M:stellar_dotnet_sdk.requests.IRequestBuilder`1.Cursor(System.String)
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilder<T>.Cursor(System.String)
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilder(Of T).Cursor(System.String)
+  nameWithType: IRequestBuilder<T>.Cursor(String)
+  nameWithType.vb: IRequestBuilder(Of T).Cursor(String)
+- uid: stellar_dotnet_sdk.requests.IRequestBuilder`1.Cursor*
+  name: Cursor
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Cursor_
+  commentId: Overload:stellar_dotnet_sdk.requests.IRequestBuilder`1.Cursor
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilder<T>.Cursor
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilder(Of T).Cursor
+  nameWithType: IRequestBuilder<T>.Cursor
+  nameWithType.vb: IRequestBuilder(Of T).Cursor
+- uid: stellar_dotnet_sdk.requests.IRequestBuilder`1.Execute*
+  name: Execute
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Execute_
+  commentId: Overload:stellar_dotnet_sdk.requests.IRequestBuilder`1.Execute
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilder<T>.Execute
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilder(Of T).Execute
+  nameWithType: IRequestBuilder<T>.Execute
+  nameWithType.vb: IRequestBuilder(Of T).Execute
+- uid: stellar_dotnet_sdk.requests.IRequestBuilder`1.Execute``1(Uri)
+  name: Execute<TZ>(Uri)
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Execute__1_Uri_
+  commentId: M:stellar_dotnet_sdk.requests.IRequestBuilder`1.Execute``1(Uri)
+  name.vb: Execute(Of TZ)(Uri)
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilder<T>.Execute<TZ>(Uri)
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilder(Of T).Execute(Of TZ)(Uri)
+  nameWithType: IRequestBuilder<T>.Execute<TZ>(Uri)
+  nameWithType.vb: IRequestBuilder(Of T).Execute(Of TZ)(Uri)
+- uid: stellar_dotnet_sdk.requests.IRequestBuilder`1.Limit(System.Int32)
+  name: Limit(Int32)
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Limit_System_Int32_
+  commentId: M:stellar_dotnet_sdk.requests.IRequestBuilder`1.Limit(System.Int32)
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilder<T>.Limit(System.Int32)
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilder(Of T).Limit(System.Int32)
+  nameWithType: IRequestBuilder<T>.Limit(Int32)
+  nameWithType.vb: IRequestBuilder(Of T).Limit(Int32)
+- uid: stellar_dotnet_sdk.requests.IRequestBuilder`1.Limit*
+  name: Limit
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Limit_
+  commentId: Overload:stellar_dotnet_sdk.requests.IRequestBuilder`1.Limit
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilder<T>.Limit
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilder(Of T).Limit
+  nameWithType: IRequestBuilder<T>.Limit
+  nameWithType.vb: IRequestBuilder(Of T).Limit
+- uid: stellar_dotnet_sdk.requests.IRequestBuilder`1.Order(stellar_dotnet_sdk.requests.OrderDirection)
+  name: Order(OrderDirection)
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Order_stellar_dotnet_sdk_requests_OrderDirection_
+  commentId: M:stellar_dotnet_sdk.requests.IRequestBuilder`1.Order(stellar_dotnet_sdk.requests.OrderDirection)
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilder<T>.Order(stellar_dotnet_sdk.requests.OrderDirection)
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilder(Of T).Order(stellar_dotnet_sdk.requests.OrderDirection)
+  nameWithType: IRequestBuilder<T>.Order(OrderDirection)
+  nameWithType.vb: IRequestBuilder(Of T).Order(OrderDirection)
+- uid: stellar_dotnet_sdk.requests.IRequestBuilder`1.Order*
+  name: Order
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Order_
+  commentId: Overload:stellar_dotnet_sdk.requests.IRequestBuilder`1.Order
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilder<T>.Order
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilder(Of T).Order
+  nameWithType: IRequestBuilder<T>.Order
+  nameWithType.vb: IRequestBuilder(Of T).Order
+- uid: stellar_dotnet_sdk.requests.IRequestBuilder`1.Uri
+  name: Uri
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Uri
+  commentId: P:stellar_dotnet_sdk.requests.IRequestBuilder`1.Uri
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilder<T>.Uri
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilder(Of T).Uri
+  nameWithType: IRequestBuilder<T>.Uri
+  nameWithType.vb: IRequestBuilder(Of T).Uri
+- uid: stellar_dotnet_sdk.requests.IRequestBuilder`1.Uri*
+  name: Uri
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Uri_
+  commentId: Overload:stellar_dotnet_sdk.requests.IRequestBuilder`1.Uri
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilder<T>.Uri
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilder(Of T).Uri
+  nameWithType: IRequestBuilder<T>.Uri
+  nameWithType.vb: IRequestBuilder(Of T).Uri
+- uid: stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable`2
+  name: IRequestBuilderExecutePageable<T, TResponse>
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable-2.html
+  commentId: T:stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable`2
+  name.vb: IRequestBuilderExecutePageable(Of T, TResponse)
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable<T, TResponse>
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable(Of T, TResponse)
+  nameWithType: IRequestBuilderExecutePageable<T, TResponse>
+  nameWithType.vb: IRequestBuilderExecutePageable(Of T, TResponse)
+- uid: stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable`2.Execute
+  name: Execute()
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable-2.html#stellar_dotnet_sdk_requests_IRequestBuilderExecutePageable_2_Execute
+  commentId: M:stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable`2.Execute
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable<T, TResponse>.Execute()
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable(Of T, TResponse).Execute()
+  nameWithType: IRequestBuilderExecutePageable<T, TResponse>.Execute()
+  nameWithType.vb: IRequestBuilderExecutePageable(Of T, TResponse).Execute()
+- uid: stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable`2.Execute*
+  name: Execute
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable-2.html#stellar_dotnet_sdk_requests_IRequestBuilderExecutePageable_2_Execute_
+  commentId: Overload:stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable`2.Execute
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable<T, TResponse>.Execute
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilderExecutePageable(Of T, TResponse).Execute
+  nameWithType: IRequestBuilderExecutePageable<T, TResponse>.Execute
+  nameWithType.vb: IRequestBuilderExecutePageable(Of T, TResponse).Execute
+- uid: stellar_dotnet_sdk.requests.IRequestBuilderStreamable`1
+  name: IRequestBuilderStreamable<TResponse>
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilderStreamable-1.html
+  commentId: T:stellar_dotnet_sdk.requests.IRequestBuilderStreamable`1
+  name.vb: IRequestBuilderStreamable(Of TResponse)
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilderStreamable<TResponse>
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilderStreamable(Of TResponse)
+  nameWithType: IRequestBuilderStreamable<TResponse>
+  nameWithType.vb: IRequestBuilderStreamable(Of TResponse)
+- uid: stellar_dotnet_sdk.requests.IRequestBuilderStreamable`1.EventSource
+  name: EventSource
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilderStreamable-1.html#stellar_dotnet_sdk_requests_IRequestBuilderStreamable_1_EventSource
+  commentId: P:stellar_dotnet_sdk.requests.IRequestBuilderStreamable`1.EventSource
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilderStreamable<TResponse>.EventSource
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilderStreamable(Of TResponse).EventSource
+  nameWithType: IRequestBuilderStreamable<TResponse>.EventSource
+  nameWithType.vb: IRequestBuilderStreamable(Of TResponse).EventSource
+- uid: stellar_dotnet_sdk.requests.IRequestBuilderStreamable`1.EventSource*
+  name: EventSource
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilderStreamable-1.html#stellar_dotnet_sdk_requests_IRequestBuilderStreamable_1_EventSource_
+  commentId: Overload:stellar_dotnet_sdk.requests.IRequestBuilderStreamable`1.EventSource
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilderStreamable<TResponse>.EventSource
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilderStreamable(Of TResponse).EventSource
+  nameWithType: IRequestBuilderStreamable<TResponse>.EventSource
+  nameWithType.vb: IRequestBuilderStreamable(Of TResponse).EventSource
+- uid: stellar_dotnet_sdk.requests.IRequestBuilderStreamable`1.Stream(EventHandler{`0})
+  name: Stream(EventHandler<TResponse>)
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilderStreamable-1.html#stellar_dotnet_sdk_requests_IRequestBuilderStreamable_1_Stream_EventHandler__0__
+  commentId: M:stellar_dotnet_sdk.requests.IRequestBuilderStreamable`1.Stream(EventHandler{`0})
+  name.vb: Stream(EventHandler(Of TResponse))
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilderStreamable<TResponse>.Stream(EventHandler<TResponse>)
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilderStreamable(Of TResponse).Stream(EventHandler(Of TResponse))
+  nameWithType: IRequestBuilderStreamable<TResponse>.Stream(EventHandler<TResponse>)
+  nameWithType.vb: IRequestBuilderStreamable(Of TResponse).Stream(EventHandler(Of TResponse))
+- uid: stellar_dotnet_sdk.requests.IRequestBuilderStreamable`1.Stream*
+  name: Stream
+  href: api/stellar_dotnet_sdk.requests.IRequestBuilderStreamable-1.html#stellar_dotnet_sdk_requests_IRequestBuilderStreamable_1_Stream_
+  commentId: Overload:stellar_dotnet_sdk.requests.IRequestBuilderStreamable`1.Stream
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.IRequestBuilderStreamable<TResponse>.Stream
+  fullName.vb: stellar_dotnet_sdk.requests.IRequestBuilderStreamable(Of TResponse).Stream
+  nameWithType: IRequestBuilderStreamable<TResponse>.Stream
+  nameWithType.vb: IRequestBuilderStreamable(Of TResponse).Stream
 - uid: stellar_dotnet_sdk.requests.LedgersRequestBuilder
   name: LedgersRequestBuilder
   href: api/stellar_dotnet_sdk.requests.LedgersRequestBuilder.html
@@ -13517,19 +13763,19 @@ references:
   commentId: T:stellar_dotnet_sdk.requests.PaymentsRequestBuilder
   fullName: stellar_dotnet_sdk.requests.PaymentsRequestBuilder
   nameWithType: PaymentsRequestBuilder
-- uid: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.#ctor(Uri,HttpClient)
-  name: PaymentsRequestBuilder(Uri, HttpClient)
-  href: api/stellar_dotnet_sdk.requests.PaymentsRequestBuilder.html#stellar_dotnet_sdk_requests_PaymentsRequestBuilder__ctor_Uri_HttpClient_
-  commentId: M:stellar_dotnet_sdk.requests.PaymentsRequestBuilder.#ctor(Uri,HttpClient)
-  fullName: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.PaymentsRequestBuilder(Uri, HttpClient)
-  nameWithType: PaymentsRequestBuilder.PaymentsRequestBuilder(Uri, HttpClient)
-- uid: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.#ctor*
-  name: PaymentsRequestBuilder
-  href: api/stellar_dotnet_sdk.requests.PaymentsRequestBuilder.html#stellar_dotnet_sdk_requests_PaymentsRequestBuilder__ctor_
-  commentId: Overload:stellar_dotnet_sdk.requests.PaymentsRequestBuilder.#ctor
+- uid: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.Create(Uri,HttpClient)
+  name: Create(Uri, HttpClient)
+  href: api/stellar_dotnet_sdk.requests.PaymentsRequestBuilder.html#stellar_dotnet_sdk_requests_PaymentsRequestBuilder_Create_Uri_HttpClient_
+  commentId: M:stellar_dotnet_sdk.requests.PaymentsRequestBuilder.Create(Uri,HttpClient)
+  fullName: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.Create(Uri, HttpClient)
+  nameWithType: PaymentsRequestBuilder.Create(Uri, HttpClient)
+- uid: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.Create*
+  name: Create
+  href: api/stellar_dotnet_sdk.requests.PaymentsRequestBuilder.html#stellar_dotnet_sdk_requests_PaymentsRequestBuilder_Create_
+  commentId: Overload:stellar_dotnet_sdk.requests.PaymentsRequestBuilder.Create
   isSpec: "True"
-  fullName: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.PaymentsRequestBuilder
-  nameWithType: PaymentsRequestBuilder.PaymentsRequestBuilder
+  fullName: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.Create
+  nameWithType: PaymentsRequestBuilder.Create
 - uid: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.ForAccount(System.String)
   name: ForAccount(String)
   href: api/stellar_dotnet_sdk.requests.PaymentsRequestBuilder.html#stellar_dotnet_sdk_requests_PaymentsRequestBuilder_ForAccount_System_String_
@@ -13569,6 +13815,19 @@ references:
   isSpec: "True"
   fullName: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.ForTransaction
   nameWithType: PaymentsRequestBuilder.ForTransaction
+- uid: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.IncludeTransaction
+  name: IncludeTransaction()
+  href: api/stellar_dotnet_sdk.requests.PaymentsRequestBuilder.html#stellar_dotnet_sdk_requests_PaymentsRequestBuilder_IncludeTransaction
+  commentId: M:stellar_dotnet_sdk.requests.PaymentsRequestBuilder.IncludeTransaction
+  fullName: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.IncludeTransaction()
+  nameWithType: PaymentsRequestBuilder.IncludeTransaction()
+- uid: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.IncludeTransaction*
+  name: IncludeTransaction
+  href: api/stellar_dotnet_sdk.requests.PaymentsRequestBuilder.html#stellar_dotnet_sdk_requests_PaymentsRequestBuilder_IncludeTransaction_
+  commentId: Overload:stellar_dotnet_sdk.requests.PaymentsRequestBuilder.IncludeTransaction
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.PaymentsRequestBuilder.IncludeTransaction
+  nameWithType: PaymentsRequestBuilder.IncludeTransaction
 - uid: stellar_dotnet_sdk.requests.RequestBuilder`1
   name: RequestBuilder<T>
   href: api/stellar_dotnet_sdk.requests.RequestBuilder-1.html
@@ -22637,6 +22896,19 @@ references:
   isSpec: "True"
   fullName: stellar_dotnet_sdk.responses.operations.OperationResponse.SourceAccountMuxedID
   nameWithType: OperationResponse.SourceAccountMuxedID
+- uid: stellar_dotnet_sdk.responses.operations.OperationResponse.Transaction
+  name: Transaction
+  href: api/stellar_dotnet_sdk.responses.operations.OperationResponse.html#stellar_dotnet_sdk_responses_operations_OperationResponse_Transaction
+  commentId: P:stellar_dotnet_sdk.responses.operations.OperationResponse.Transaction
+  fullName: stellar_dotnet_sdk.responses.operations.OperationResponse.Transaction
+  nameWithType: OperationResponse.Transaction
+- uid: stellar_dotnet_sdk.responses.operations.OperationResponse.Transaction*
+  name: Transaction
+  href: api/stellar_dotnet_sdk.responses.operations.OperationResponse.html#stellar_dotnet_sdk_responses_operations_OperationResponse_Transaction_
+  commentId: Overload:stellar_dotnet_sdk.responses.operations.OperationResponse.Transaction
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.responses.operations.OperationResponse.Transaction
+  nameWithType: OperationResponse.Transaction
 - uid: stellar_dotnet_sdk.responses.operations.OperationResponse.TransactionHash
   name: TransactionHash
   href: api/stellar_dotnet_sdk.responses.operations.OperationResponse.html#stellar_dotnet_sdk_responses_operations_OperationResponse_TransactionHash
@@ -35759,6 +36031,19 @@ references:
   isSpec: "True"
   fullName: stellar_dotnet_sdk.UriBuilderExtensions.GetQueryParams
   nameWithType: UriBuilderExtensions.GetQueryParams
+- uid: stellar_dotnet_sdk.UriBuilderExtensions.RemoveQueryParam(UriBuilder,System.String)
+  name: RemoveQueryParam(UriBuilder, String)
+  href: api/stellar_dotnet_sdk.UriBuilderExtensions.html#stellar_dotnet_sdk_UriBuilderExtensions_RemoveQueryParam_UriBuilder_System_String_
+  commentId: M:stellar_dotnet_sdk.UriBuilderExtensions.RemoveQueryParam(UriBuilder,System.String)
+  fullName: stellar_dotnet_sdk.UriBuilderExtensions.RemoveQueryParam(UriBuilder, System.String)
+  nameWithType: UriBuilderExtensions.RemoveQueryParam(UriBuilder, String)
+- uid: stellar_dotnet_sdk.UriBuilderExtensions.RemoveQueryParam*
+  name: RemoveQueryParam
+  href: api/stellar_dotnet_sdk.UriBuilderExtensions.html#stellar_dotnet_sdk_UriBuilderExtensions_RemoveQueryParam_
+  commentId: Overload:stellar_dotnet_sdk.UriBuilderExtensions.RemoveQueryParam
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.UriBuilderExtensions.RemoveQueryParam
+  nameWithType: UriBuilderExtensions.RemoveQueryParam
 - uid: stellar_dotnet_sdk.UriBuilderExtensions.SetPath(UriBuilder,System.String)
   name: SetPath(UriBuilder, String)
   href: api/stellar_dotnet_sdk.UriBuilderExtensions.html#stellar_dotnet_sdk_UriBuilderExtensions_SetPath_UriBuilder_System_String_

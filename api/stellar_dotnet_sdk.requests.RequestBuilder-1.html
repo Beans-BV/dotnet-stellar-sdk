@@ -92,7 +92,7 @@
   
   <h5 id="stellar_dotnet_sdk_requests_RequestBuilder_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class RequestBuilder&lt;T&gt; : object where T : class</code></pre>
+    <pre><code class="lang-csharp hljs">public class RequestBuilder&lt;T&gt; : object, IRequestBuilder&lt;T&gt; where T : class</code></pre>
   </div>
 
   
@@ -268,6 +268,8 @@
   
   
   
+  <h5 class="implements">Implements</h5>
+      <div><a class="xref" href="stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Uri">IRequestBuilder&lt;T&gt;.Uri</a></div>
   
   
   
@@ -306,6 +308,8 @@
   
   
   
+  <h5 class="implements">Implements</h5>
+      <div><a class="xref" href="stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_BuildUri">IRequestBuilder&lt;T&gt;.BuildUri()</a></div>
   
   
   
@@ -361,6 +365,8 @@ Read <a href="https://www.stellar.org/developers/horizon/reference/resources/pag
   
   
   
+  <h5 class="implements">Implements</h5>
+      <div><a class="xref" href="stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Cursor_System_String_">IRequestBuilder&lt;T&gt;.Cursor(String)</a></div>
   
   
   
@@ -422,6 +428,8 @@ Read <a href="https://www.stellar.org/developers/horizon/reference/resources/pag
   
   
   
+  <h5 class="implements">Implements</h5>
+      <div><a class="xref" href="stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Execute__1_Uri_">IRequestBuilder&lt;T&gt;.Execute&lt;TZ&gt;(Uri)</a></div>
   
   
   
@@ -476,6 +484,8 @@ For range and default values check documentation of the endpoint requested.</p>
   
   
   
+  <h5 class="implements">Implements</h5>
+      <div><a class="xref" href="stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Limit_System_Int32_">IRequestBuilder&lt;T&gt;.Limit(Int32)</a></div>
   
   
   
@@ -528,6 +538,8 @@ For range and default values check documentation of the endpoint requested.</p>
   
   
   
+  <h5 class="implements">Implements</h5>
+      <div><a class="xref" href="stellar_dotnet_sdk.requests.IRequestBuilder-1.html#stellar_dotnet_sdk_requests_IRequestBuilder_1_Order_stellar_dotnet_sdk_requests_OrderDirection_">IRequestBuilder&lt;T&gt;.Order(OrderDirection)</a></div>
   
   
   
