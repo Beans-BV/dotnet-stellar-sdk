@@ -1,16 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using Moq.Language;
-using stellar_dotnet_sdk;
-using stellar_dotnet_sdk.federation;
-using stellar_dotnet_sdk.responses;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using Moq.Language;
+using stellar_dotnet_sdk;
+using stellar_dotnet_sdk.federation;
+using stellar_dotnet_sdk.requests;
+using stellar_dotnet_sdk.responses;
 
 namespace stellar_dotnet_sdk_test
 {
@@ -56,13 +60,27 @@ namespace stellar_dotnet_sdk_test
             };
         }
 
-        public static HttpResponseMessage ResponseMessage(HttpStatusCode statusCode, string content)
+        public static HttpResponseMessage ResponseMessage(
+            HttpStatusCode statusCode,
+            string content,
+            IDictionary<string, IEnumerable<string>>? headers = null)
         {
-            return new HttpResponseMessage
+            var response = new HttpResponseMessage
             {
                 StatusCode = statusCode,
                 Content = new StringContent(content)
             };
+
+            if (headers == null)
+                return response;
+
+            foreach (var header in headers)
+                if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
+                    response.Content.Headers.ContentType = new MediaTypeHeaderValue(header.Value.First());
+                else
+                    response.Headers.TryAddWithoutValidation(header.Key, header.Value);
+
+            return response;
         }
 
         public Transaction BuildTransaction()
@@ -123,10 +141,10 @@ namespace stellar_dotnet_sdk_test
             messageHandler
                 .Setup(h => h.Send(It.IsAny<HttpRequestMessage>()))
                 .Callback<HttpRequestMessage>(msg =>
-                    {
-                        clientName = msg.Headers.GetValues("X-Client-Name").FirstOrDefault();
-                        clientVersion = msg.Headers.GetValues("X-Client-Version").FirstOrDefault();
-                    })
+                {
+                    clientName = msg.Headers.GetValues("X-Client-Name").FirstOrDefault();
+                    clientVersion = msg.Headers.GetValues("X-Client-Version").FirstOrDefault();
+                })
                 .Returns(ResponseMessage(HttpOk, json));
 
             var response = await server.SubmitTransaction(
@@ -151,11 +169,14 @@ namespace stellar_dotnet_sdk_test
             Assert.IsFalse(response.IsSuccess());
             Assert.IsNull(response.Ledger);
             Assert.IsNull(response.Hash);
-            Assert.AreEqual(response.SubmitTransactionResponseExtras.EnvelopeXdr, "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
-            Assert.AreEqual(response.SubmitTransactionResponseExtras.ResultXdr, "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
+            Assert.AreEqual(response.SubmitTransactionResponseExtras.EnvelopeXdr,
+                "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
+            Assert.AreEqual(response.SubmitTransactionResponseExtras.ResultXdr,
+                "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
             Assert.IsNotNull(response.SubmitTransactionResponseExtras);
             Assert.AreEqual("tx_failed", response.SubmitTransactionResponseExtras.ExtrasResultCodes.TransactionResultCode);
-            Assert.AreEqual("op_no_destination", response.SubmitTransactionResponseExtras.ExtrasResultCodes.OperationsResultCodes[0]);
+            Assert.AreEqual("op_no_destination",
+                response.SubmitTransactionResponseExtras.ExtrasResultCodes.OperationsResultCodes[0]);
 
             var result = response.Result;
             Assert.IsInstanceOfType(result, typeof(TransactionResultFailed));
@@ -183,9 +204,10 @@ namespace stellar_dotnet_sdk_test
             var json = File.ReadAllText(Path.Combine("testdata", "serverFailure.json"));
             When().Returns(ResponseMessage(HttpBadRequest, json));
 
-            ConnectionErrorException ex = await Assert.ThrowsExceptionAsync<ConnectionErrorException>(async () =>
+            var ex = await Assert.ThrowsExceptionAsync<ConnectionErrorException>(async () =>
             {
-                await _server.SubmitTransaction(BuildTransaction(), new SubmitTransactionOptions { EnsureSuccess = true });
+                await _server.SubmitTransaction(BuildTransaction(),
+                    new SubmitTransactionOptions { EnsureSuccess = true });
             });
 
             Assert.IsTrue(ex.Message.Contains("Status code (BadRequest) is not success."));
@@ -196,9 +218,10 @@ namespace stellar_dotnet_sdk_test
         {
             When().Returns(ResponseMessage(HttpBadRequest, ""));
 
-            ConnectionErrorException ex = await Assert.ThrowsExceptionAsync<ConnectionErrorException>(async () =>
+            var ex = await Assert.ThrowsExceptionAsync<ConnectionErrorException>(async () =>
             {
-                await _server.SubmitTransaction(BuildTransaction(), new SubmitTransactionOptions { EnsureSuccess = true });
+                await _server.SubmitTransaction(BuildTransaction(),
+                    new SubmitTransactionOptions { EnsureSuccess = true });
             });
 
             Assert.AreEqual(ex.Message, "Status code (BadRequest) is not success.");
@@ -209,9 +232,10 @@ namespace stellar_dotnet_sdk_test
         {
             When().Returns(ResponseMessage(HttpBadRequest));
 
-            ConnectionErrorException ex = await Assert.ThrowsExceptionAsync<ConnectionErrorException>(async () =>
+            var ex = await Assert.ThrowsExceptionAsync<ConnectionErrorException>(async () =>
             {
-                await _server.SubmitTransaction(BuildTransaction(), new SubmitTransactionOptions { EnsureSuccess = true });
+                await _server.SubmitTransaction(BuildTransaction(),
+                    new SubmitTransactionOptions { EnsureSuccess = true });
             });
 
             Assert.AreEqual(ex.Message, "Status code (BadRequest) is not success.");
@@ -252,7 +276,8 @@ namespace stellar_dotnet_sdk_test
             When().Returns(ResponseMessage(HttpOk, json));
 
             var response = await _server.SubmitTransaction(
-                BuildFeeBumpTransaction().ToEnvelopeXdrBase64(), new SubmitTransactionOptions { SkipMemoRequiredCheck = false, FeeBumpTransaction = true });
+                BuildFeeBumpTransaction().ToEnvelopeXdrBase64(),
+                new SubmitTransactionOptions { SkipMemoRequiredCheck = false, FeeBumpTransaction = true });
             Assert.IsTrue(response.IsSuccess());
             Assert.AreEqual(response.Ledger, (uint)826150);
             Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
@@ -314,6 +339,92 @@ namespace stellar_dotnet_sdk_test
             Assert.IsNull(response.SubmitTransactionResponseExtras);
         }
 
+        [TestMethod]
+        public async Task TestSubmitTransactionTooManyRequestsWithRetryAfterInt()
+        {
+            When().Returns(ResponseMessage(
+                HttpStatusCode.TooManyRequests,
+                "",
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Retry-After", new[] { "10" } }
+                }));
+
+            var exception = await Assert.ThrowsExceptionAsync<TooManyRequestsException>(
+                () => _server.SubmitTransaction(
+                    BuildTransaction(),
+                    new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
+
+            Assert.AreEqual(10, exception.RetryAfter);
+        }
+
+        [TestMethod]
+        public async Task TestSubmitTransactionTooManyRequestsWithRetryAfterDateTime()
+        {
+            var utcNow = DateTime.UtcNow;
+
+            When().Returns(ResponseMessage(
+                HttpStatusCode.TooManyRequests,
+                "",
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Retry-After", new[] { JsonSerializer.Serialize(utcNow.AddSeconds(10)).Trim('"') } }
+                }));
+
+            var clock = new FakeClock(utcNow);
+
+            var exception = await Assert.ThrowsExceptionAsync<TooManyRequestsException>(
+                () => _server.SubmitTransaction(
+                    BuildTransaction(),
+                    new SubmitTransactionOptions { SkipMemoRequiredCheck = true },
+                    clock));
+
+            Assert.AreEqual(10, exception.RetryAfter);
+        }
+
+        [TestMethod]
+        public async Task TestSubmitTransactionServiceUnavailableWithRetryAfterInt()
+        {
+            When().Returns(ResponseMessage(
+                HttpStatusCode.ServiceUnavailable,
+                "",
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Retry-After", new[] { "10" } }
+                }));
+
+            var exception = await Assert.ThrowsExceptionAsync<ServiceUnavailableException>(
+                () => _server.SubmitTransaction(
+                    BuildTransaction(),
+                    new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
+
+            Assert.AreEqual(10, exception.RetryAfter);
+        }
+
+        [TestMethod]
+        public async Task TestSubmitTransactionServiceUnavailableWithRetryAfterDateTime()
+        {
+            var utcNow = DateTime.UtcNow;
+
+            When().Returns(ResponseMessage(
+                HttpStatusCode.ServiceUnavailable,
+                "",
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Retry-After", new[] { JsonSerializer.Serialize(utcNow.AddSeconds(10)).Trim('"') } }
+                }));
+
+            var clock = new FakeClock(utcNow);
+
+            var exception = await Assert.ThrowsExceptionAsync<ServiceUnavailableException>(
+                () => _server.SubmitTransaction(
+                    BuildTransaction(),
+                    new SubmitTransactionOptions { SkipMemoRequiredCheck = true },
+                    clock));
+
+            Assert.AreEqual(10, exception.RetryAfter);
+        }
+
         public class FakeHttpMessageHandler : HttpMessageHandler
         {
             public Uri RequestUri { get; private set; }
@@ -323,11 +434,24 @@ namespace stellar_dotnet_sdk_test
                 throw new NotImplementedException();
             }
 
-            protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+                CancellationToken cancellationToken)
             {
                 RequestUri = request.RequestUri;
                 return await Task.FromResult(Send(request));
             }
+        }
+
+        private class FakeClock : IClock
+        {
+            public FakeClock(DateTime utcNow)
+            {
+                UtcNow = utcNow;
+                Now = utcNow.ToLocalTime();
+            }
+
+            public DateTime Now { get; }
+            public DateTime UtcNow { get; }
         }
     }
 }
