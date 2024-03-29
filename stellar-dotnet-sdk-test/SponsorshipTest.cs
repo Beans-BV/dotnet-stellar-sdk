@@ -12,16 +12,15 @@ namespace stellar_dotnet_sdk_test;
 public class SponsorshipTest
 {
     private const string DataName = "my secret";
-    private readonly Server _server = new("https://horizon-testnet.stellar.org");
 
-    private readonly KeyPair _sponsoredAccount =
-        KeyPair.FromSecretSeed("SDBNUIC2JMIYKGLJUFI743AQDWPBOWKG42GADHEY3FQDTQLJADYPQZTP");
+    private readonly Server _server = new("https://horizon-testnet.stellar.org");private readonly KeyPair _sponsoredAccount =
+        KeyPair.FromSecretSeed("SBV33ITENGZRQ3UEUY5XD3NOBHHSGZY2ADF2OQ7JC2FR2S3BV3DSHEGC");
 
     private readonly KeyPair _sponsoringAccount =
-        KeyPair.FromSecretSeed("SDR4PTKMR5TAQQCL3RI2MLXXSXQDIR7DCAONQNQP6UCDZCD4OVRWXUHI");
+        KeyPair.FromSecretSeed("SBQZZETKBHMRVNPEM7TMYAXORIRIDBBS6HD43C3PFH75SI54QAC6YTE2");
 
     private Asset _assetA =
-        new AssetTypeCreditAlphaNum4("AAA", "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA");
+        new AssetTypeCreditAlphaNum4("XXX", "GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS");
 
     // "GC3TDMFTMYZY2G4C77AKAVC3BR4KL6WMQ6K2MHISKDH2OHRFS7CVVEAF";
     private string SponsoredId => _sponsoredAccount.AccountId;

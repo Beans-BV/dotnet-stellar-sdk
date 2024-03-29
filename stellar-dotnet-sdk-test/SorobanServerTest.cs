@@ -44,18 +44,18 @@ public class SorobanServerTest
     private readonly SorobanServer _sorobanServer = new("https://soroban-testnet.stellar.org");
 
     private readonly KeyPair _sourceAccount =
-        KeyPair.FromSecretSeed("SDR4PTKMR5TAQQCL3RI2MLXXSXQDIR7DCAONQNQP6UCDZCD4OVRWXUHI");
+        KeyPair.FromSecretSeed("SBQZZETKBHMRVNPEM7TMYAXORIRIDBBS6HD43C3PFH75SI54QAC6YTE2");
 
     private readonly KeyPair _targetAccount =
-        KeyPair.FromSecretSeed("SDBNUIC2JMIYKGLJUFI743AQDWPBOWKG42GADHEY3FQDTQLJADYPQZTP");
+        KeyPair.FromSecretSeed("SBV33ITENGZRQ3UEUY5XD3NOBHHSGZY2ADF2OQ7JC2FR2S3BV3DSHEGC");
 
     private Asset _asset =
-        new AssetTypeCreditAlphaNum4("BBB", "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA");
+        new AssetTypeCreditAlphaNum4("XXX", "GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS");
 
-    // "GC3TDMFTMYZY2G4C77AKAVC3BR4KL6WMQ6K2MHISKDH2OHRFS7CVVEAF"
+    // "GDUFELVZEZ3CX5PLYJAGPZ7CIM3HTVAD2JRHKXTGK4N5B2ADCALW7NGW"
     private string TargetAccountId => _targetAccount.AccountId;
 
-    // "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA";
+    // "GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS";
     private string SourceAccountId => _sourceAccount.AccountId;
 
     [TestInitialize]
@@ -66,7 +66,7 @@ public class SorobanServerTest
         await TestNetUtil.CheckAndCreateAccountOnTestnet(SourceAccountId);
         await TestNetUtil.CheckAndCreateAccountOnTestnet(TargetAccountId);
 
-        _asset = new AssetTypeCreditAlphaNum4("AAA", SourceAccountId);
+        _asset = new AssetTypeCreditAlphaNum4("XXX", SourceAccountId);
     }
 
     [TestCleanup]
@@ -90,7 +90,7 @@ public class SorobanServerTest
         var response = await _sorobanServer.GetNetwork();
         Assert.AreEqual("https://friendbot.stellar.org/", response.FriendbotUrl);
         Assert.AreEqual("Test SDF Network ; September 2015", response.Passphrase);
-        Assert.AreEqual(20, response.ProtocolVersion);
+        Assert.AreEqual(21, response.ProtocolVersion);
     }
 
     [TestMethod]
@@ -790,7 +790,7 @@ public class SorobanServerTest
 
         var ledgerKeyData = new LedgerKey[]
         {
-            new LedgerKeyData(SourceAccountId, "passkey")
+            new LedgerKeyData(TargetAccountId, "passkey")
         };
         var dataResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyData);
 
@@ -807,7 +807,7 @@ public class SorobanServerTest
         Assert.AreEqual(0U, ledgerEntry.LiveUntilLedger);
         Assert.IsTrue(ledgerEntry.LastModifiedLedgerSeq > 0);
         Assert.AreEqual("it's a secret", Encoding.UTF8.GetString(ledgerEntry.DataValue));
-        Assert.AreEqual(SourceAccountId, ledgerKey.Account.AccountId);
+        Assert.AreEqual(TargetAccountId, ledgerKey.Account.AccountId);
         Assert.IsNull(ledgerEntry.LedgerExtensionV1);
         Assert.IsNull(ledgerEntry.DataExtension);
     }

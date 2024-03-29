@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 
 namespace stellar_dotnet_sdk.requests;
 
-public class TooManyRequestsException : Exception
+public class ServiceUnavailableException : Exception
 {
-    public TooManyRequestsException(object? retryAfter = null)
-        : base("The rate limit for the requesting IP address is over its allowed limit.")
+    public ServiceUnavailableException(object? retryAfter = null)
+        : base("The server is currently unable to handle the request due to a temporary overloading or maintenance of the server.")
     {
         try
         {

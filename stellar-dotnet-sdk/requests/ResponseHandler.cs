@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using stellar_dotnet_sdk.responses;
@@ -12,25 +13,32 @@ public class ResponseHandler<T> where T : class
         var statusCode = response.StatusCode;
         var content = await response.Content.ReadAsStringAsync();
 
-        if ((int)statusCode == 429)
+        switch ((int)statusCode)
         {
-            var retryAfterHeaderValue = response.Headers.GetValues("Retry-After").FirstOrDefault();
-            if (retryAfterHeaderValue != null)
-            {
-                var retryAfter = int.Parse(retryAfterHeaderValue);
-                throw new TooManyRequestsException(retryAfter);
-            }
+            case (int)HttpStatusCode.ServiceUnavailable:
+                throw new ServiceUnavailableException(
+                    response.Headers.Contains("Retry-After")
+                        ? response.Headers.GetValues("Retry-After").First()
+                        : null);
+            case (int)HttpStatusCode.TooManyRequests:
+                throw new TooManyRequestsException(
+                    response.Headers.Contains("Retry-After")
+                        ? response.Headers.GetValues("Retry-After").First()
+                        : null);
+            case >= 300:
+                throw new HttpResponseException((int)statusCode, response.ReasonPhrase);
         }
-
-        if ((int)statusCode >= 300)
-            throw new HttpResponseException((int)statusCode, response.ReasonPhrase);
 
         if (string.IsNullOrWhiteSpace(content))
             throw new ClientProtocolException("Response contains no content");
 
         var responseObj = JsonSingleton.GetInstance<T>(content);
 
-        if (responseObj is Response responseInstance) responseInstance.SetHeaders(response.Headers);
+        if (responseObj is Response)
+        {
+            var responseInstance = responseObj as Response;
+            responseInstance.SetHeaders(response.Headers);
+        }
 
         return responseObj;
     }
