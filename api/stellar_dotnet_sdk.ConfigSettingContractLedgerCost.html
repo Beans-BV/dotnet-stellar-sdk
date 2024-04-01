@@ -86,10 +86,13 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="stellar_dotnet_sdk.LedgerEntryConfigSetting.html#stellar_dotnet_sdk_LedgerEntryConfigSetting_FromXdrLedgerEntry_stellar_dotnet_sdk_xdr_LedgerEntry_">LedgerEntryConfigSetting.FromXdrLedgerEntry(LedgerEntry)</a>
+      <a class="xref" href="stellar_dotnet_sdk.LedgerEntryConfigSetting.html#stellar_dotnet_sdk_LedgerEntryConfigSetting_FromXdrLedgerEntryData_stellar_dotnet_sdk_xdr_LedgerEntry_LedgerEntryData_">LedgerEntryConfigSetting.FromXdrLedgerEntryData(LedgerEntry.LedgerEntryData)</a>
     </div>
     <div>
       <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html#stellar_dotnet_sdk_LedgerEntry_LastModifiedLedgerSeq">LedgerEntry.LastModifiedLedgerSeq</a>
+    </div>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html#stellar_dotnet_sdk_LedgerEntry_LiveUntilLedger">LedgerEntry.LiveUntilLedger</a>
     </div>
     <div>
       <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html#stellar_dotnet_sdk_LedgerEntry_LedgerExtensionV1">LedgerEntry.LedgerExtensionV1</a>
@@ -99,12 +102,6 @@
     </div>
     <div>
       <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html#stellar_dotnet_sdk_LedgerEntry_FromXdrBase64_System_String_">LedgerEntry.FromXdrBase64(String)</a>
-    </div>
-    <div>
-      <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html#stellar_dotnet_sdk_LedgerEntry_ToXdrBase64">LedgerEntry.ToXdrBase64()</a>
-    </div>
-    <div>
-      <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html#stellar_dotnet_sdk_LedgerEntry_ExtraFieldsFromXdr_stellar_dotnet_sdk_xdr_LedgerEntry_stellar_dotnet_sdk_LedgerEntry_">LedgerEntry.ExtraFieldsFromXdr(LedgerEntry, LedgerEntry)</a>
     </div>
   </div>
   
@@ -134,7 +131,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long BucketListTargetSizeBytes { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long BucketListTargetSizeBytes { get; }</code></pre>
   </div>
 
   
@@ -170,7 +167,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint BucketListWriteFeeGrowthFactor { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public uint BucketListWriteFeeGrowthFactor { get; }</code></pre>
   </div>
 
   
@@ -206,7 +203,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long FeeRead1KB { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long FeeRead1KB { get; }</code></pre>
   </div>
 
   
@@ -242,7 +239,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long FeeReadLedgerEntry { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long FeeReadLedgerEntry { get; }</code></pre>
   </div>
 
   
@@ -278,7 +275,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long FeeWriteLedgerEntry { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long FeeWriteLedgerEntry { get; }</code></pre>
   </div>
 
   
@@ -314,7 +311,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint LedgerMaxReadBytes { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public uint LedgerMaxReadBytes { get; }</code></pre>
   </div>
 
   
@@ -350,7 +347,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint LedgerMaxReadLedgerEntries { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public uint LedgerMaxReadLedgerEntries { get; }</code></pre>
   </div>
 
   
@@ -386,7 +383,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint LedgerMaxWriteBytes { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public uint LedgerMaxWriteBytes { get; }</code></pre>
   </div>
 
   
@@ -422,7 +419,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint LedgerMaxWriteLedgerEntries { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public uint LedgerMaxWriteLedgerEntries { get; }</code></pre>
   </div>
 
   
@@ -458,7 +455,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint TxMaxReadBytes { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public uint TxMaxReadBytes { get; }</code></pre>
   </div>
 
   
@@ -494,7 +491,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint TxMaxReadLedgerEntries { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public uint TxMaxReadLedgerEntries { get; }</code></pre>
   </div>
 
   
@@ -530,7 +527,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint TxMaxWriteBytes { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public uint TxMaxWriteBytes { get; }</code></pre>
   </div>
 
   
@@ -566,7 +563,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint TxMaxWriteLedgerEntries { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public uint TxMaxWriteLedgerEntries { get; }</code></pre>
   </div>
 
   
@@ -602,7 +599,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long WriteFee1KBBucketListHigh { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long WriteFee1KBBucketListHigh { get; }</code></pre>
   </div>
 
   
@@ -638,7 +635,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long WriteFee1KBBucketListLow { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long WriteFee1KBBucketListLow { get; }</code></pre>
   </div>
 
   
@@ -700,78 +697,6 @@
     <tr>
       <td>
         <a class="xref" href="stellar_dotnet_sdk.ConfigSettingContractLedgerCost.html">ConfigSettingContractLedgerCost</a>
-        <p>
-      </td>
-    </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  </div>
-  
-  
-  <a id="stellar_dotnet_sdk_ConfigSettingContractLedgerCost_ToXdr_" data-uid="stellar_dotnet_sdk.ConfigSettingContractLedgerCost.ToXdr*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_ConfigSettingContractLedgerCost_ToXdr" data-uid="stellar_dotnet_sdk.ConfigSettingContractLedgerCost.ToXdr"><a href="#collapsible-stellar_dotnet_sdk_ConfigSettingContractLedgerCost_ToXdr" class="expander" data-toggle="collapse">ToXdr()</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_ConfigSettingContractLedgerCost_ToXdr" class="collapse in">
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ConfigSettingContractLedgerCostV0 ToXdr()</code></pre>
-  </div>
-
-  
-  <h5 class="returns">Returns</h5>
-  <table>
-    <tr>
-      <td>
-        <span class="xref">stellar_dotnet_sdk.xdr.ConfigSettingContractLedgerCostV0</span>
-        <p>
-      </td>
-    </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  </div>
-  
-  
-  <a id="stellar_dotnet_sdk_ConfigSettingContractLedgerCost_ToXdrConfigSettingEntry_" data-uid="stellar_dotnet_sdk.ConfigSettingContractLedgerCost.ToXdrConfigSettingEntry*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_ConfigSettingContractLedgerCost_ToXdrConfigSettingEntry" data-uid="stellar_dotnet_sdk.ConfigSettingContractLedgerCost.ToXdrConfigSettingEntry"><a href="#collapsible-stellar_dotnet_sdk_ConfigSettingContractLedgerCost_ToXdrConfigSettingEntry" class="expander" data-toggle="collapse">ToXdrConfigSettingEntry()</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_ConfigSettingContractLedgerCost_ToXdrConfigSettingEntry" class="collapse in">
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ConfigSettingEntry ToXdrConfigSettingEntry()</code></pre>
-  </div>
-
-  
-  <h5 class="returns">Returns</h5>
-  <table>
-    <tr>
-      <td>
-        <span class="xref">stellar_dotnet_sdk.xdr.ConfigSettingEntry</span>
         <p>
       </td>
     </tr>

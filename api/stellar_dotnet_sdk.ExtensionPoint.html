@@ -71,7 +71,8 @@
             <article class="content wrap" id="_content" data-uid="stellar_dotnet_sdk.ExtensionPoint">
   <h1 id="stellar_dotnet_sdk_ExtensionPoint" data-uid="stellar_dotnet_sdk.ExtensionPoint">Class ExtensionPoint
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Base class for extension points.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
 
   <div class="inheritance">
@@ -104,12 +105,13 @@
   <h4 id="stellar_dotnet_sdk_ExtensionPoint_FromXdr_stellar_dotnet_sdk_xdr_ExtensionPoint_" data-uid="stellar_dotnet_sdk.ExtensionPoint.FromXdr(stellar_dotnet_sdk.xdr.ExtensionPoint)"><a href="#collapsible-stellar_dotnet_sdk_ExtensionPoint_FromXdr_stellar_dotnet_sdk_xdr_ExtensionPoint_" class="expander" data-toggle="collapse">FromXdr(ExtensionPoint)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_ExtensionPoint_FromXdr_stellar_dotnet_sdk_xdr_ExtensionPoint_" class="collapse in">
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates the corresponding <code>ExtensionPoint</code> object from an <code>xdr.ExtensionPoint</code> object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static ExtensionPoint FromXdr(ExtensionPoint xdr)</code></pre>
+    <pre><code class="lang-csharp hljs">public static ExtensionPoint FromXdr(ExtensionPoint xdrExtensionPoint)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -123,8 +125,9 @@
   </thead>
       <tr>
         <td><span class="xref">stellar_dotnet_sdk.xdr.ExtensionPoint</span></td>
-        <td><span class="parametername">xdr</span></td>
-        <td></td>
+        <td><span class="parametername">xdrExtensionPoint</span></td>
+        <td><p>An <code>xdr.ExtensionPoint</code> object to be converted.</p>
+</td>
       </tr>
   </table>
   
@@ -133,7 +136,8 @@
     <tr>
       <td>
         <a class="xref" href="stellar_dotnet_sdk.ExtensionPoint.html">ExtensionPoint</a>
-        <p>
+        <p><p>A <code>ExtensionPoint</code> object. Returns null if the provided object is null.</p>
+</p>
       </td>
     </tr>
   </table>
@@ -155,7 +159,8 @@
   <h4 id="stellar_dotnet_sdk_ExtensionPoint_FromXdrBase64_System_String_" data-uid="stellar_dotnet_sdk.ExtensionPoint.FromXdrBase64(System.String)"><a href="#collapsible-stellar_dotnet_sdk_ExtensionPoint_FromXdrBase64_System_String_" class="expander" data-toggle="collapse">FromXdrBase64(String)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_ExtensionPoint_FromXdrBase64_System_String_" class="collapse in">
-  <div class="markdown level1 summary"><p>Creates a new ExtensionPoint object from the given ExtensionPoint XDR base64 string.</p>
+  <div class="markdown level1 summary"><p>Creates a new <code>ExtensionPoint</code> object from the given <span class="xref">stellar_dotnet_sdk.xdr.ExtensionPoint</span> base-64 encoded XDR
+string.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -185,7 +190,7 @@
     <tr>
       <td>
         <a class="xref" href="stellar_dotnet_sdk.ExtensionPoint.html">ExtensionPoint</a>
-        <p><p>ExtensionPoint object</p>
+        <p><p>An <code>ExtensionPoint</code> object decoded and deserialized from the provided string.</p>
 </p>
       </td>
     </tr>

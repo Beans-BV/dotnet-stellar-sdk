@@ -109,7 +109,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ContractExecutableWasm(string value)</code></pre>
+    <pre><code class="lang-csharp hljs">public ContractExecutableWasm(string hash)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -123,7 +123,7 @@
   </thead>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">value</span></td>
+        <td><span class="parametername">hash</span></td>
         <td></td>
       </tr>
   </table>
@@ -148,12 +148,13 @@
   <h4 id="stellar_dotnet_sdk_ContractExecutableWasm_WasmHash" data-uid="stellar_dotnet_sdk.ContractExecutableWasm.WasmHash"><a href="#collapsible-stellar_dotnet_sdk_ContractExecutableWasm_WasmHash" class="expander" data-toggle="collapse">WasmHash</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_ContractExecutableWasm_WasmHash" class="collapse in">
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Base-64 encoded string of SHA-256 hash of a previously uploaded Wasm.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string WasmHash { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string WasmHash { get; }</code></pre>
   </div>
 
   

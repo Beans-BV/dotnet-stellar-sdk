@@ -88,7 +88,7 @@
   
   <h5 id="stellar_dotnet_sdk_SignerUtil_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SignerUtil : object</code></pre>
+    <pre><code class="lang-csharp hljs">public static class SignerUtil : object</code></pre>
   </div>
 
   
@@ -104,8 +104,8 @@
   <h4 id="stellar_dotnet_sdk_SignerUtil_Ed25519PublicKey_stellar_dotnet_sdk_KeyPair_" data-uid="stellar_dotnet_sdk.SignerUtil.Ed25519PublicKey(stellar_dotnet_sdk.KeyPair)"><a href="#collapsible-stellar_dotnet_sdk_SignerUtil_Ed25519PublicKey_stellar_dotnet_sdk_KeyPair_" class="expander" data-toggle="collapse">Ed25519PublicKey(KeyPair)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_SignerUtil_Ed25519PublicKey_stellar_dotnet_sdk_KeyPair_" class="collapse in">
-  <div class="markdown level1 summary"><p>Create <pre><code>ed25519PublicKey</code></pre> <span class="xref">stellar_dotnet_sdk.xdr.SignerKey</span> from
-a <see cref="!:xdr.KeyPair"></see></p>
+  <div class="markdown level1 summary"><p>Creates an <code>ed25519PublicKey</code> <code>xdr.SignerKey</code> from
+a <code>KeyPair</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -135,7 +135,7 @@ a <see cref="!:xdr.KeyPair"></see></p>
     <tr>
       <td>
         <span class="xref">stellar_dotnet_sdk.xdr.SignerKey</span>
-        <p><p>sdkxdr.SignerKey</p>
+        <p><p>An <code>ed25519PublicKey</code> <code>xdr.SignerKey</code> object.</p>
 </p>
       </td>
     </tr>
@@ -158,8 +158,8 @@ a <see cref="!:xdr.KeyPair"></see></p>
   <h4 id="stellar_dotnet_sdk_SignerUtil_PreAuthTx_stellar_dotnet_sdk_Transaction_" data-uid="stellar_dotnet_sdk.SignerUtil.PreAuthTx(stellar_dotnet_sdk.Transaction)"><a href="#collapsible-stellar_dotnet_sdk_SignerUtil_PreAuthTx_stellar_dotnet_sdk_Transaction_" class="expander" data-toggle="collapse">PreAuthTx(Transaction)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_SignerUtil_PreAuthTx_stellar_dotnet_sdk_Transaction_" class="collapse in">
-  <div class="markdown level1 summary"><p>Create <pre><code>preAuthTx</code></pre> <span class="xref">stellar_dotnet_sdk.xdr.SignerKey</span> from
-a <span class="xref">stellar_dotnet_sdk.xdr.Transaction</span> hash.</p>
+  <div class="markdown level1 summary"><p>Creates a <code>preAuthTx</code> <code>xdr.SignerKey</code> from
+an <code>xdr.Transaction</code> object.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -189,7 +189,7 @@ a <span class="xref">stellar_dotnet_sdk.xdr.Transaction</span> hash.</p>
     <tr>
       <td>
         <span class="xref">stellar_dotnet_sdk.xdr.SignerKey</span>
-        <p><p>sdkxdr.SignerKey</p>
+        <p><p>A <code>preAuthTx</code> <code>xdr.SignerKey</code> object.</p>
 </p>
       </td>
     </tr>
@@ -212,8 +212,8 @@ a <span class="xref">stellar_dotnet_sdk.xdr.Transaction</span> hash.</p>
   <h4 id="stellar_dotnet_sdk_SignerUtil_PreAuthTx_stellar_dotnet_sdk_Transaction_stellar_dotnet_sdk_Network_" data-uid="stellar_dotnet_sdk.SignerUtil.PreAuthTx(stellar_dotnet_sdk.Transaction,stellar_dotnet_sdk.Network)"><a href="#collapsible-stellar_dotnet_sdk_SignerUtil_PreAuthTx_stellar_dotnet_sdk_Transaction_stellar_dotnet_sdk_Network_" class="expander" data-toggle="collapse">PreAuthTx(Transaction, Network)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_SignerUtil_PreAuthTx_stellar_dotnet_sdk_Transaction_stellar_dotnet_sdk_Network_" class="collapse in">
-  <div class="markdown level1 summary"><p>Create <pre><code>preAuthTx</code></pre> <span class="xref">stellar_dotnet_sdk.xdr.SignerKey</span> from
-a <span class="xref">stellar_dotnet_sdk.xdr.Transaction</span> hash.</p>
+  <div class="markdown level1 summary"><p>Creates a <code>preAuthTx</code> <code>xdr.SignerKey</code> from
+an <code>xdr.Transaction</code> object for the specified network.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -248,7 +248,7 @@ a <span class="xref">stellar_dotnet_sdk.xdr.Transaction</span> hash.</p>
     <tr>
       <td>
         <span class="xref">stellar_dotnet_sdk.xdr.SignerKey</span>
-        <p><p>sdkxdr.SignerKey</p>
+        <p><p>A <code>preAuthTx</code> <code>xdr.SignerKey</code> object.</p>
 </p>
       </td>
     </tr>
@@ -271,7 +271,7 @@ a <span class="xref">stellar_dotnet_sdk.xdr.Transaction</span> hash.</p>
   <h4 id="stellar_dotnet_sdk_SignerUtil_PreAuthTx_System_Byte___" data-uid="stellar_dotnet_sdk.SignerUtil.PreAuthTx(System.Byte[])"><a href="#collapsible-stellar_dotnet_sdk_SignerUtil_PreAuthTx_System_Byte___" class="expander" data-toggle="collapse">PreAuthTx(Byte[])</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_SignerUtil_PreAuthTx_System_Byte___" class="collapse in">
-  <div class="markdown level1 summary"><p>Create <pre><code>preAuthTx</code></pre> <span class="xref">stellar_dotnet_sdk.xdr.SignerKey</span> from
+  <div class="markdown level1 summary"><p>Creates a <code>preAuthTx</code> <code>xdr.SignerKey</code> from
 a transaction hash.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -302,7 +302,7 @@ a transaction hash.</p>
     <tr>
       <td>
         <span class="xref">stellar_dotnet_sdk.xdr.SignerKey</span>
-        <p><p>sdkxdr.SignerKey</p>
+        <p><p>A <code>preAuthTx</code> <code>xdr.SignerKey</code> object.</p>
 </p>
       </td>
     </tr>
@@ -325,8 +325,8 @@ a transaction hash.</p>
   <h4 id="stellar_dotnet_sdk_SignerUtil_Sha256Hash_System_Byte___" data-uid="stellar_dotnet_sdk.SignerUtil.Sha256Hash(System.Byte[])"><a href="#collapsible-stellar_dotnet_sdk_SignerUtil_Sha256Hash_System_Byte___" class="expander" data-toggle="collapse">Sha256Hash(Byte[])</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_SignerUtil_Sha256Hash_System_Byte___" class="collapse in">
-  <div class="markdown level1 summary"><p>Create <pre><code>sha256Hash</code></pre> <span class="xref">stellar_dotnet_sdk.xdr.SignerKey</span> from
-a sha256 hash of a preimage.</p>
+  <div class="markdown level1 summary"><p>Creates an <code>SHA256</code> <code>xdr.SignerKey</code> from
+the SHA256 hash of a preimage.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -356,7 +356,7 @@ a sha256 hash of a preimage.</p>
     <tr>
       <td>
         <span class="xref">stellar_dotnet_sdk.xdr.SignerKey</span>
-        <p><p>sdkxdr.SignerKey</p>
+        <p><p>An <code>SHA256</code> <code>xdr.SignerKey</code> object.</p>
 </p>
       </td>
     </tr>
@@ -379,7 +379,7 @@ a sha256 hash of a preimage.</p>
   <h4 id="stellar_dotnet_sdk_SignerUtil_SignedPayload_stellar_dotnet_sdk_SignedPayloadSigner_" data-uid="stellar_dotnet_sdk.SignerUtil.SignedPayload(stellar_dotnet_sdk.SignedPayloadSigner)"><a href="#collapsible-stellar_dotnet_sdk_SignerUtil_SignedPayload_stellar_dotnet_sdk_SignedPayloadSigner_" class="expander" data-toggle="collapse">SignedPayload(SignedPayloadSigner)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_SignerUtil_SignedPayload_stellar_dotnet_sdk_SignedPayloadSigner_" class="collapse in">
-  <div class="markdown level1 summary"><p>Create SignerKey from SignedPayloadSigner</p>
+  <div class="markdown level1 summary"><p>Creates a <code>preAuthTx</code> <code>xdr.SignerKey</code> from a <code>SignedPayloadSigner</code> object.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -409,7 +409,8 @@ a sha256 hash of a preimage.</p>
     <tr>
       <td>
         <span class="xref">stellar_dotnet_sdk.xdr.SignerKey</span>
-        <p>
+        <p><p>A <code>xdr.SignerKey</code> object.</p>
+</p>
       </td>
     </tr>
   </table>

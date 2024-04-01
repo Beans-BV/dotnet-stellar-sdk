@@ -107,6 +107,55 @@
   
   
   
+  <h3 id="constructors">Constructors
+  </h3>
+  
+  
+  <a id="stellar_dotnet_sdk_SCContractInstance__ctor_" data-uid="stellar_dotnet_sdk.SCContractInstance.#ctor*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_SCContractInstance__ctor_stellar_dotnet_sdk_ContractExecutable_stellar_dotnet_sdk_SCMap_" data-uid="stellar_dotnet_sdk.SCContractInstance.#ctor(stellar_dotnet_sdk.ContractExecutable,stellar_dotnet_sdk.SCMap)"><a href="#collapsible-stellar_dotnet_sdk_SCContractInstance__ctor_stellar_dotnet_sdk_ContractExecutable_stellar_dotnet_sdk_SCMap_" class="expander" data-toggle="collapse">SCContractInstance(ContractExecutable, SCMap)</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_SCContractInstance__ctor_stellar_dotnet_sdk_ContractExecutable_stellar_dotnet_sdk_SCMap_" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SCContractInstance(ContractExecutable executable, SCMap storage)</code></pre>
+  </div>
+
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+      <tr>
+        <td><a class="xref" href="stellar_dotnet_sdk.ContractExecutable.html">ContractExecutable</a></td>
+        <td><span class="parametername">executable</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="stellar_dotnet_sdk.SCMap.html">SCMap</a></td>
+        <td><span class="parametername">storage</span></td>
+        <td></td>
+      </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
   <h3 id="properties">Properties
   </h3>
   
@@ -121,7 +170,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ContractExecutable Executable { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public ContractExecutable Executable { get; }</code></pre>
   </div>
 
   
@@ -152,12 +201,13 @@
   <h4 id="stellar_dotnet_sdk_SCContractInstance_Storage" data-uid="stellar_dotnet_sdk.SCContractInstance.Storage"><a href="#collapsible-stellar_dotnet_sdk_SCContractInstance_Storage" class="expander" data-toggle="collapse">Storage</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_SCContractInstance_Storage" class="collapse in">
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p><span class="xref">stellar_dotnet_sdk.xdr.SCContractInstance.Storage</span> can be null.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SCMap Storage { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public SCMap Storage { get; }</code></pre>
   </div>
 
   
@@ -210,57 +260,6 @@
       <tr>
         <td><span class="xref">stellar_dotnet_sdk.xdr.SCVal</span></td>
         <td><span class="parametername">xdrVal</span></td>
-        <td></td>
-      </tr>
-  </table>
-  
-  <h5 class="returns">Returns</h5>
-  <table>
-    <tr>
-      <td>
-        <a class="xref" href="stellar_dotnet_sdk.SCContractInstance.html">SCContractInstance</a>
-        <p>
-      </td>
-    </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  </div>
-  
-  
-  <a id="stellar_dotnet_sdk_SCContractInstance_FromXdr_" data-uid="stellar_dotnet_sdk.SCContractInstance.FromXdr*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_SCContractInstance_FromXdr_stellar_dotnet_sdk_xdr_SCContractInstance_" data-uid="stellar_dotnet_sdk.SCContractInstance.FromXdr(stellar_dotnet_sdk.xdr.SCContractInstance)"><a href="#collapsible-stellar_dotnet_sdk_SCContractInstance_FromXdr_stellar_dotnet_sdk_xdr_SCContractInstance_" class="expander" data-toggle="collapse">FromXdr(SCContractInstance)</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_SCContractInstance_FromXdr_stellar_dotnet_sdk_xdr_SCContractInstance_" class="collapse in">
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static SCContractInstance FromXdr(SCContractInstance xdr)</code></pre>
-  </div>
-
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Name</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-      <tr>
-        <td><span class="xref">stellar_dotnet_sdk.xdr.SCContractInstance</span></td>
-        <td><span class="parametername">xdr</span></td>
         <td></td>
       </tr>
   </table>

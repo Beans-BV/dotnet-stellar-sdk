@@ -72,8 +72,8 @@
   <h1 id="stellar_dotnet_sdk_AccountRequiresMemoException" data-uid="stellar_dotnet_sdk.AccountRequiresMemoException">Class AccountRequiresMemoException
   </h1>
   <div class="markdown level0 summary"><p>AccountRequiresMemoException is thrown when a transaction is trying to submit a payment operation to an account
-that requires a memo.</p>
-<p>See SEP0029: <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md">https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md</a></p>
+that requires a memo.
+See SEP0029: <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md">https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md</a></p>
 </div>
   <div class="markdown level0 conceptual"></div>
 
@@ -103,15 +103,15 @@ that requires a memo.</p>
   
   <a id="stellar_dotnet_sdk_AccountRequiresMemoException__ctor_" data-uid="stellar_dotnet_sdk.AccountRequiresMemoException.#ctor*"></a>
   
-  <h4 id="stellar_dotnet_sdk_AccountRequiresMemoException__ctor_System_String_System_String_stellar_dotnet_sdk_Operation_" data-uid="stellar_dotnet_sdk.AccountRequiresMemoException.#ctor(System.String,System.String,stellar_dotnet_sdk.Operation)"><a href="#collapsible-stellar_dotnet_sdk_AccountRequiresMemoException__ctor_System_String_System_String_stellar_dotnet_sdk_Operation_" class="expander" data-toggle="collapse">AccountRequiresMemoException(String, String, Operation)</a></h4>
+  <h4 id="stellar_dotnet_sdk_AccountRequiresMemoException__ctor_System_String_" data-uid="stellar_dotnet_sdk.AccountRequiresMemoException.#ctor(System.String)"><a href="#collapsible-stellar_dotnet_sdk_AccountRequiresMemoException__ctor_System_String_" class="expander" data-toggle="collapse">AccountRequiresMemoException(String)</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_AccountRequiresMemoException__ctor_System_String_System_String_stellar_dotnet_sdk_Operation_" class="collapse in">
+  <div id="collapsible-stellar_dotnet_sdk_AccountRequiresMemoException__ctor_System_String_" class="collapse in">
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AccountRequiresMemoException(string message, string accountId, Operation operation)</code></pre>
+    <pre><code class="lang-csharp hljs">public AccountRequiresMemoException(string message)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -128,97 +128,11 @@ that requires a memo.</p>
         <td><span class="parametername">message</span></td>
         <td></td>
       </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">accountId</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="stellar_dotnet_sdk.Operation.html">Operation</a></td>
-        <td><span class="parametername">operation</span></td>
-        <td></td>
-      </tr>
   </table>
   
   
   
   
-  
-  
-  
-  
-  
-  
-  
-  </div>
-  <h3 id="properties">Properties
-  </h3>
-  
-  
-  <a id="stellar_dotnet_sdk_AccountRequiresMemoException_AccountId_" data-uid="stellar_dotnet_sdk.AccountRequiresMemoException.AccountId*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_AccountRequiresMemoException_AccountId" data-uid="stellar_dotnet_sdk.AccountRequiresMemoException.AccountId"><a href="#collapsible-stellar_dotnet_sdk_AccountRequiresMemoException_AccountId" class="expander" data-toggle="collapse">AccountId</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_AccountRequiresMemoException_AccountId" class="collapse in">
-  <div class="markdown level1 summary"><p>AccountId which requires the memo.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string AccountId { get; }</code></pre>
-  </div>
-
-  
-  
-  
-  
-  <h5 class="propertyValue">Property Value</h5>
-  <table>
-    <tr>
-      <td>
-        <span class="xref">System.String</span>
-        <p>
-      </td>
-    </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  </div>
-  
-  
-  <a id="stellar_dotnet_sdk_AccountRequiresMemoException_Operation_" data-uid="stellar_dotnet_sdk.AccountRequiresMemoException.Operation*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_AccountRequiresMemoException_Operation" data-uid="stellar_dotnet_sdk.AccountRequiresMemoException.Operation"><a href="#collapsible-stellar_dotnet_sdk_AccountRequiresMemoException_Operation" class="expander" data-toggle="collapse">Operation</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_AccountRequiresMemoException_Operation" class="collapse in">
-  <div class="markdown level1 summary"><p>Operation where AccountId is the destination.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Operation Operation { get; }</code></pre>
-  </div>
-
-  
-  
-  
-  
-  <h5 class="propertyValue">Property Value</h5>
-  <table>
-    <tr>
-      <td>
-        <a class="xref" href="stellar_dotnet_sdk.Operation.html">Operation</a>
-        <p>
-      </td>
-    </tr>
-  </table>
   
   
   

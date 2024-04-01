@@ -116,57 +116,15 @@
   
   <a id="stellar_dotnet_sdk_responses_AccountResponse__ctor_" data-uid="stellar_dotnet_sdk.responses.AccountResponse.#ctor*"></a>
   
-  <h4 id="stellar_dotnet_sdk_responses_AccountResponse__ctor_System_String_" data-uid="stellar_dotnet_sdk.responses.AccountResponse.#ctor(System.String)"><a href="#collapsible-stellar_dotnet_sdk_responses_AccountResponse__ctor_System_String_" class="expander" data-toggle="collapse">AccountResponse(String)</a></h4>
+  <h4 id="stellar_dotnet_sdk_responses_AccountResponse__ctor_System_String_System_Int64_stellar_dotnet_sdk_responses_Balance___Dictionary_System_String_System_String__stellar_dotnet_sdk_responses_Flags_System_String_System_String_stellar_dotnet_sdk_responses_Signer___stellar_dotnet_sdk_responses_Thresholds_stellar_dotnet_sdk_responses_AccountResponseLinks_" data-uid="stellar_dotnet_sdk.responses.AccountResponse.#ctor(System.String,System.Int64,stellar_dotnet_sdk.responses.Balance[],Dictionary{System.String,System.String},stellar_dotnet_sdk.responses.Flags,System.String,System.String,stellar_dotnet_sdk.responses.Signer[],stellar_dotnet_sdk.responses.Thresholds,stellar_dotnet_sdk.responses.AccountResponseLinks)"><a href="#collapsible-stellar_dotnet_sdk_responses_AccountResponse__ctor_System_String_System_Int64_stellar_dotnet_sdk_responses_Balance___Dictionary_System_String_System_String__stellar_dotnet_sdk_responses_Flags_System_String_System_String_stellar_dotnet_sdk_responses_Signer___stellar_dotnet_sdk_responses_Thresholds_stellar_dotnet_sdk_responses_AccountResponseLinks_" class="expander" data-toggle="collapse">AccountResponse(String, Int64, Balance[], Dictionary&lt;String, String&gt;, Flags, String, String, Signer[], Thresholds, AccountResponseLinks)</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_responses_AccountResponse__ctor_System_String_" class="collapse in">
+  <div id="collapsible-stellar_dotnet_sdk_responses_AccountResponse__ctor_System_String_System_Int64_stellar_dotnet_sdk_responses_Balance___Dictionary_System_String_System_String__stellar_dotnet_sdk_responses_Flags_System_String_System_String_stellar_dotnet_sdk_responses_Signer___stellar_dotnet_sdk_responses_Thresholds_stellar_dotnet_sdk_responses_AccountResponseLinks_" class="collapse in">
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AccountResponse(string accountId)</code></pre>
-  </div>
-
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Name</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">accountId</span></td>
-        <td></td>
-      </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  </div>
-  
-  
-  <a id="stellar_dotnet_sdk_responses_AccountResponse__ctor_" data-uid="stellar_dotnet_sdk.responses.AccountResponse.#ctor*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_responses_AccountResponse__ctor_System_String_System_Int64_" data-uid="stellar_dotnet_sdk.responses.AccountResponse.#ctor(System.String,System.Int64)"><a href="#collapsible-stellar_dotnet_sdk_responses_AccountResponse__ctor_System_String_System_Int64_" class="expander" data-toggle="collapse">AccountResponse(String, Int64)</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_responses_AccountResponse__ctor_System_String_System_Int64_" class="collapse in">
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public AccountResponse(string accountId, long sequenceNumber)</code></pre>
+    <pre><code class="lang-csharp hljs">public AccountResponse(string accountId, long sequenceNumber, Balance[] balances, Dictionary&lt;string, string&gt; data, Flags flags, string homeDomain, string inflationDestination, Signer[] signers, Thresholds thresholds, AccountResponseLinks links)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -186,6 +144,46 @@
       <tr>
         <td><span class="xref">System.Int64</span></td>
         <td><span class="parametername">sequenceNumber</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="stellar_dotnet_sdk.responses.Balance.html">Balance</a>[]</td>
+        <td><span class="parametername">balances</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Dictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">data</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="stellar_dotnet_sdk.responses.Flags.html">Flags</a></td>
+        <td><span class="parametername">flags</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">homeDomain</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">inflationDestination</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="stellar_dotnet_sdk.responses.Signer.html">Signer</a>[]</td>
+        <td><span class="parametername">signers</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="stellar_dotnet_sdk.responses.Thresholds.html">Thresholds</a></td>
+        <td><span class="parametername">thresholds</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="stellar_dotnet_sdk.responses.AccountResponseLinks.html">AccountResponseLinks</a></td>
+        <td><span class="parametername">links</span></td>
         <td></td>
       </tr>
   </table>
@@ -791,57 +789,6 @@
   </div>
   <h3 id="methods">Methods
   </h3>
-  
-  
-  <a id="stellar_dotnet_sdk_responses_AccountResponse_GetKeyPair_" data-uid="stellar_dotnet_sdk.responses.AccountResponse.GetKeyPair*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_responses_AccountResponse_GetKeyPair_System_String_" data-uid="stellar_dotnet_sdk.responses.AccountResponse.GetKeyPair(System.String)"><a href="#collapsible-stellar_dotnet_sdk_responses_AccountResponse_GetKeyPair_System_String_" class="expander" data-toggle="collapse">GetKeyPair(String)</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_responses_AccountResponse_GetKeyPair_System_String_" class="collapse in">
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public KeyPair GetKeyPair(string accountId)</code></pre>
-  </div>
-
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Name</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">accountId</span></td>
-        <td></td>
-      </tr>
-  </table>
-  
-  <h5 class="returns">Returns</h5>
-  <table>
-    <tr>
-      <td>
-        <a class="xref" href="stellar_dotnet_sdk.KeyPair.html">KeyPair</a>
-        <p>
-      </td>
-    </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  </div>
   
   
   <a id="stellar_dotnet_sdk_responses_AccountResponse_IncrementSequenceNumber_" data-uid="stellar_dotnet_sdk.responses.AccountResponse.IncrementSequenceNumber*"></a>

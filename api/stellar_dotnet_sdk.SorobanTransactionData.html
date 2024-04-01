@@ -94,6 +94,112 @@
   
   
   
+  <h3 id="constructors">Constructors
+  </h3>
+  
+  
+  <a id="stellar_dotnet_sdk_SorobanTransactionData__ctor_" data-uid="stellar_dotnet_sdk.SorobanTransactionData.#ctor*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_SorobanTransactionData__ctor_stellar_dotnet_sdk_LedgerKey_System_Boolean_" data-uid="stellar_dotnet_sdk.SorobanTransactionData.#ctor(stellar_dotnet_sdk.LedgerKey,System.Boolean)"><a href="#collapsible-stellar_dotnet_sdk_SorobanTransactionData__ctor_stellar_dotnet_sdk_LedgerKey_System_Boolean_" class="expander" data-toggle="collapse">SorobanTransactionData(LedgerKey, Boolean)</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_SorobanTransactionData__ctor_stellar_dotnet_sdk_LedgerKey_System_Boolean_" class="collapse in">
+  <div class="markdown level1 summary"><p>A shortcut to create a <code>SorobanTransactionData</code> object containing a <code>LedgerKey</code> of an entry to be
+restored.
+<a class="xref" href="stellar_dotnet_sdk.RestoreFootprintOperation.html">RestoreFootprintOperation</a></p>
+<param name="key">
+<param name="toExtend">True: To be used in an RestoreTtl operation. False: To be used in a ExtendTtl operation.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SorobanTransactionData(LedgerKey key, bool toExtend)</code></pre>
+  </div>
+
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+      <tr>
+        <td><a class="xref" href="stellar_dotnet_sdk.LedgerKey.html">LedgerKey</a></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">toExtend</span></td>
+        <td></td>
+      </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  <a id="stellar_dotnet_sdk_SorobanTransactionData__ctor_" data-uid="stellar_dotnet_sdk.SorobanTransactionData.#ctor*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_SorobanTransactionData__ctor_stellar_dotnet_sdk_SorobanResources_System_Int64_stellar_dotnet_sdk_ExtensionPoint_" data-uid="stellar_dotnet_sdk.SorobanTransactionData.#ctor(stellar_dotnet_sdk.SorobanResources,System.Int64,stellar_dotnet_sdk.ExtensionPoint)"><a href="#collapsible-stellar_dotnet_sdk_SorobanTransactionData__ctor_stellar_dotnet_sdk_SorobanResources_System_Int64_stellar_dotnet_sdk_ExtensionPoint_" class="expander" data-toggle="collapse">SorobanTransactionData(SorobanResources, Int64, ExtensionPoint)</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_SorobanTransactionData__ctor_stellar_dotnet_sdk_SorobanResources_System_Int64_stellar_dotnet_sdk_ExtensionPoint_" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SorobanTransactionData(SorobanResources resources, long resourceFee, ExtensionPoint extensionPoint = null)</code></pre>
+  </div>
+
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+      <tr>
+        <td><a class="xref" href="stellar_dotnet_sdk.SorobanResources.html">SorobanResources</a></td>
+        <td><span class="parametername">resources</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">resourceFee</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="stellar_dotnet_sdk.ExtensionPoint.html">ExtensionPoint</a></td>
+        <td><span class="parametername">extensionPoint</span></td>
+        <td></td>
+      </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
   <h3 id="properties">Properties
   </h3>
   
@@ -108,7 +214,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ExtensionPoint ExtensionPoint { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public ExtensionPoint ExtensionPoint { get; }</code></pre>
   </div>
 
   
@@ -144,7 +250,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long ResourceFee { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long ResourceFee { get; }</code></pre>
   </div>
 
   
@@ -180,7 +286,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SorobanResources Resources { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public SorobanResources Resources { get; }</code></pre>
   </div>
 
   
@@ -213,12 +319,13 @@
   <h4 id="stellar_dotnet_sdk_SorobanTransactionData_FromXdr_stellar_dotnet_sdk_xdr_SorobanTransactionData_" data-uid="stellar_dotnet_sdk.SorobanTransactionData.FromXdr(stellar_dotnet_sdk.xdr.SorobanTransactionData)"><a href="#collapsible-stellar_dotnet_sdk_SorobanTransactionData_FromXdr_stellar_dotnet_sdk_xdr_SorobanTransactionData_" class="expander" data-toggle="collapse">FromXdr(SorobanTransactionData)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_SorobanTransactionData_FromXdr_stellar_dotnet_sdk_xdr_SorobanTransactionData_" class="collapse in">
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Converts an <code>xdr.SorobanTransactionData</code> object to a <code>SorobanTransactionData</code> object.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static SorobanTransactionData FromXdr(SorobanTransactionData xdr)</code></pre>
+    <pre><code class="lang-csharp hljs">public static SorobanTransactionData FromXdr(SorobanTransactionData xdrSorobanTransactionData)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -232,8 +339,8 @@
   </thead>
       <tr>
         <td><span class="xref">stellar_dotnet_sdk.xdr.SorobanTransactionData</span></td>
-        <td><span class="parametername">xdr</span></td>
-        <td><p>The <span class="xref">stellar_dotnet_sdk.xdr.SorobanTransactionData</span> can still be null when its containing <span class="xref">stellar_dotnet_sdk.xdr.Transaction.TransactionExt</span>'s Discriminant is 0.</p>
+        <td><span class="parametername">xdrSorobanTransactionData</span></td>
+        <td><p>The <code>xdr.SorobanTransactionData</code> to be converted.</p>
 </td>
       </tr>
   </table>
@@ -243,7 +350,63 @@
     <tr>
       <td>
         <a class="xref" href="stellar_dotnet_sdk.SorobanTransactionData.html">SorobanTransactionData</a>
-        <p>
+        <p><p>A <code>SorobanTransactionData</code> object equivalent to the specified <code>xdr.SorobanTransactionData</code> object.</p>
+</p>
+      </td>
+    </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  <a id="stellar_dotnet_sdk_SorobanTransactionData_FromXdrBase64_" data-uid="stellar_dotnet_sdk.SorobanTransactionData.FromXdrBase64*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_SorobanTransactionData_FromXdrBase64_System_String_" data-uid="stellar_dotnet_sdk.SorobanTransactionData.FromXdrBase64(System.String)"><a href="#collapsible-stellar_dotnet_sdk_SorobanTransactionData_FromXdrBase64_System_String_" class="expander" data-toggle="collapse">FromXdrBase64(String)</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_SorobanTransactionData_FromXdrBase64_System_String_" class="collapse in">
+  <div class="markdown level1 summary"><p>Creates a new SorobanTransactionData object from the given SorobanTransactionData XDR base64 string.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static SorobanTransactionData FromXdrBase64(string xdrBase64)</code></pre>
+  </div>
+
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">xdrBase64</span></td>
+        <td><p>A base-64 encoded XDR string of an
+<span class="xref">stellar_dotnet_sdk.xdr.SorobanTransactionData</span> object.</p>
+</td>
+      </tr>
+  </table>
+  
+  <h5 class="returns">Returns</h5>
+  <table>
+    <tr>
+      <td>
+        <a class="xref" href="stellar_dotnet_sdk.SorobanTransactionData.html">SorobanTransactionData</a>
+        <p><p>A <a class="xref" href="stellar_dotnet_sdk.SorobanTransactionData.html">SorobanTransactionData</a> that decoded and deserialized from the specified string.</p>
+</p>
       </td>
     </tr>
   </table>
