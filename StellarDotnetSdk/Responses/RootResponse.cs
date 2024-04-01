@@ -1,0 +1,44 @@
+﻿using Newtonsoft.Json;
+
+namespace StellarDotnetSdk.Responses;
+
+public class RootResponse : Response
+{
+    public RootResponse(string horizonVersion, string stellarCoreVersion, int historyLatestLedger,
+        int historyElderLedger,
+        int coreLatestLedger, string networkPassphrase, int currentProtocolVersion, int coreSupportedProtocolVersion)
+    {
+        HorizonVersion = horizonVersion;
+        StellarCoreVersion = stellarCoreVersion;
+        HistoryLatestLedger = historyLatestLedger;
+        HistoryElderLedger = historyElderLedger;
+        CoreLatestLedger = coreLatestLedger;
+        NetworkPassphrase = networkPassphrase;
+        CurrentProtocolVersion = currentProtocolVersion;
+        CoreSupportedProtocolVersion = coreSupportedProtocolVersion;
+    }
+
+    [JsonProperty(PropertyName = "horizon_version")]
+    public string HorizonVersion { get; }
+
+    [JsonProperty(PropertyName = "core_version")]
+    public string StellarCoreVersion { get; }
+
+    [JsonProperty(PropertyName = "history_latest_ledger")]
+    public int HistoryLatestLedger { get; }
+
+    [JsonProperty(PropertyName = "history_elder_ledger")]
+    public int HistoryElderLedger { get; }
+
+    [JsonProperty(PropertyName = "core_latest_ledger")]
+    public int CoreLatestLedger { get; }
+
+    [JsonProperty(PropertyName = "network_passphrase")]
+    public string NetworkPassphrase { get; }
+
+    [JsonProperty(PropertyName = "current_protocol_version")]
+    public int CurrentProtocolVersion { get; }
+
+    [JsonProperty(PropertyName = "core_supported_protocol_version")]
+    public int CoreSupportedProtocolVersion { get; }
+}

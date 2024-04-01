@@ -1,0 +1,64 @@
+using System;
+using System.Linq;
+using StellarDotnetSdk.Xdr;
+using Asset = StellarDotnetSdk.Assets.Asset;
+
+namespace StellarDotnetSdk.Responses.Results;
+
+public class PathPaymentStrictSendResult : OperationResult
+{
+    public static PathPaymentStrictSendResult FromXdr(Xdr.PathPaymentStrictSendResult result)
+    {
+        switch (result.Discriminant.InnerValue)
+        {
+            case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum.PATH_PAYMENT_STRICT_SEND_SUCCESS:
+                return new PathPaymentStrictSendSuccess
+                {
+                    Offers = OffersFromXdr(result.Success.Offers),
+                    Last = PathPaymentStrictSendSuccess.SimplePaymentResult.FromXdr(result.Success.Last)
+                };
+            case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum.PATH_PAYMENT_STRICT_SEND_MALFORMED:
+                return new PathPaymentStrictSendMalformed();
+            case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum
+                .PATH_PAYMENT_STRICT_SEND_UNDERFUNDED:
+                return new PathPaymentStrictSendUnderfunded();
+            case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum
+                .PATH_PAYMENT_STRICT_SEND_SRC_NO_TRUST:
+                return new PathPaymentStrictSendSrcNoTrust();
+            case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum
+                .PATH_PAYMENT_STRICT_SEND_SRC_NOT_AUTHORIZED:
+                return new PathPaymentStrictSendSrcNotAuthorized();
+            case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum
+                .PATH_PAYMENT_STRICT_SEND_NO_DESTINATION:
+                return new PathPaymentStrictSendNoDestination();
+            case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum.PATH_PAYMENT_STRICT_SEND_NO_TRUST:
+                return new PathPaymentStrictSendNoTrust();
+            case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum
+                .PATH_PAYMENT_STRICT_SEND_NOT_AUTHORIZED:
+                return new PathPaymentStrictSendNotAuthorized();
+            case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum.PATH_PAYMENT_STRICT_SEND_LINE_FULL:
+                return new PathPaymentStrictSendLineFull();
+            case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum.PATH_PAYMENT_STRICT_SEND_NO_ISSUER:
+                return new PathPaymentStrictSendNoIssuer
+                {
+                    NoIssuer = Asset.FromXdr(result.NoIssuer)
+                };
+            case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum
+                .PATH_PAYMENT_STRICT_SEND_TOO_FEW_OFFERS:
+                return new PathPaymentStrictSendTooFewOffers();
+            case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum
+                .PATH_PAYMENT_STRICT_SEND_OFFER_CROSS_SELF:
+                return new PathPaymentStrictSendOfferCrossSelf();
+            case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum
+                .PATH_PAYMENT_STRICT_SEND_UNDER_DESTMIN:
+                return new PathPaymentStrictSendUnderDestMin();
+            default:
+                throw new SystemException("Unknown PathPayment type");
+        }
+    }
+
+    private static ClaimAtom[] OffersFromXdr(Xdr.ClaimAtom[] offers)
+    {
+        return offers.Select(ClaimAtom.FromXdr).ToArray();
+    }
+}
