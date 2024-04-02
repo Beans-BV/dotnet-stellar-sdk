@@ -143,15 +143,16 @@
   
   <a id="stellar_dotnet_sdk_LedgerKeyContractCode__ctor_" data-uid="stellar_dotnet_sdk.LedgerKeyContractCode.#ctor*"></a>
   
-  <h4 id="stellar_dotnet_sdk_LedgerKeyContractCode__ctor_stellar_dotnet_sdk_Hash_" data-uid="stellar_dotnet_sdk.LedgerKeyContractCode.#ctor(stellar_dotnet_sdk.Hash)"><a href="#collapsible-stellar_dotnet_sdk_LedgerKeyContractCode__ctor_stellar_dotnet_sdk_Hash_" class="expander" data-toggle="collapse">LedgerKeyContractCode(Hash)</a></h4>
+  <h4 id="stellar_dotnet_sdk_LedgerKeyContractCode__ctor_System_Byte___" data-uid="stellar_dotnet_sdk.LedgerKeyContractCode.#ctor(System.Byte[])"><a href="#collapsible-stellar_dotnet_sdk_LedgerKeyContractCode__ctor_System_Byte___" class="expander" data-toggle="collapse">LedgerKeyContractCode(Byte[])</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_LedgerKeyContractCode__ctor_stellar_dotnet_sdk_Hash_" class="collapse in">
-  <div class="markdown level1 summary"></div>
+  <div id="collapsible-stellar_dotnet_sdk_LedgerKeyContractCode__ctor_System_Byte___" class="collapse in">
+  <div class="markdown level1 summary"><p>Constructs a <code>LedgerKeyContractCode</code> object from the byte array of the hash of the ledger entry.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LedgerKeyContractCode(Hash hash)</code></pre>
+    <pre><code class="lang-csharp hljs">public LedgerKeyContractCode(byte[] hash)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -164,9 +165,10 @@
     </tr>
   </thead>
       <tr>
-        <td><a class="xref" href="stellar_dotnet_sdk.Hash.html">Hash</a></td>
+        <td><span class="xref">System.Byte</span>[]</td>
         <td><span class="parametername">hash</span></td>
-        <td></td>
+        <td><p>a 32-element byte array.</p>
+</td>
       </tr>
   </table>
   
@@ -188,7 +190,9 @@
   <h4 id="stellar_dotnet_sdk_LedgerKeyContractCode__ctor_System_String_" data-uid="stellar_dotnet_sdk.LedgerKeyContractCode.#ctor(System.String)"><a href="#collapsible-stellar_dotnet_sdk_LedgerKeyContractCode__ctor_System_String_" class="expander" data-toggle="collapse">LedgerKeyContractCode(String)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_LedgerKeyContractCode__ctor_System_String_" class="collapse in">
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Constructs a <code>LedgerKeyContractCode</code> object from a base-64 encoded string of the hash of the ledger entry.
+Use this to fetch contract wasm byte-code.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
@@ -208,7 +212,8 @@
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">base64String</span></td>
-        <td></td>
+        <td><p>A base-64 encoded string.</p>
+</td>
       </tr>
   </table>
   
@@ -237,7 +242,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Hash Hash { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public byte[] Hash { get; }</code></pre>
   </div>
 
   
@@ -248,7 +253,7 @@
   <table>
     <tr>
       <td>
-        <a class="xref" href="stellar_dotnet_sdk.Hash.html">Hash</a>
+        <span class="xref">System.Byte</span>[]
         <p>
       </td>
     </tr>
