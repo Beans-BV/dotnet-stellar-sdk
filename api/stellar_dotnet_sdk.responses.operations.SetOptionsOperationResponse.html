@@ -102,6 +102,9 @@ See: <a href="https://www.stellar.org/developers/horizon/reference/resources/ope
       <a class="xref" href="stellar_dotnet_sdk.responses.operations.OperationResponse.html#stellar_dotnet_sdk_responses_operations_OperationResponse_SourceAccountMuxedID">OperationResponse.SourceAccountMuxedID</a>
     </div>
     <div>
+      <a class="xref" href="stellar_dotnet_sdk.responses.operations.OperationResponse.html#stellar_dotnet_sdk_responses_operations_OperationResponse_PagingToken">OperationResponse.PagingToken</a>
+    </div>
+    <div>
       <a class="xref" href="stellar_dotnet_sdk.responses.operations.OperationResponse.html#stellar_dotnet_sdk_responses_operations_OperationResponse_Type">OperationResponse.Type</a>
     </div>
     <div>
@@ -118,9 +121,6 @@ See: <a href="https://www.stellar.org/developers/horizon/reference/resources/ope
     </div>
     <div>
       <a class="xref" href="stellar_dotnet_sdk.responses.operations.OperationResponse.html#stellar_dotnet_sdk_responses_operations_OperationResponse_Transaction">OperationResponse.Transaction</a>
-    </div>
-    <div>
-      <a class="xref" href="stellar_dotnet_sdk.responses.operations.OperationResponse.html#stellar_dotnet_sdk_responses_operations_OperationResponse_PagingToken">OperationResponse.PagingToken</a>
     </div>
     <div>
       <a class="xref" href="stellar_dotnet_sdk.responses.Response.html#stellar_dotnet_sdk_responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
@@ -204,22 +204,19 @@ See: <a href="https://www.stellar.org/developers/horizon/reference/resources/ope
       <tr>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">lowThreshold</span></td>
-        <td><p>A number from 0-255 representing the threshold this account sets on all operations it
-performs that have a low threshold.</p>
+        <td><p>A number from 0-255 representing the threshold this account sets on all operations it performs that have a low threshold.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">medThreshold</span></td>
-        <td><p>A number from 0-255 representing the threshold this account sets on all operations it
-performs that have a medium threshold.</p>
+        <td><p>A number from 0-255 representing the threshold this account sets on all operations it performs that have a medium threshold.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">highThreshold</span></td>
-        <td><p>A number from 0-255 representing the threshold this account sets on all operations it
-performs that have a high threshold.</p>
+        <td><p>A number from 0-255 representing the threshold this account sets on all operations it performs that have a high threshold.</p>
 </td>
       </tr>
       <tr>
@@ -255,16 +252,14 @@ performs that have a high threshold.</p>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
         <td><span class="parametername">clearFlags</span></td>
-        <td><p>Indicates which flags to clear. For details about the flags, please refer to the accounts doc. The bit mask integer
-subtracts
+        <td><p>Indicates which flags to clear. For details about the flags, please refer to the accounts doc. The bit mask integer subtracts
 from the existing flags of the account. This allows for setting specific bits without knowledge of existing flags.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span>[]</td>
         <td><span class="parametername">setFlags</span></td>
-        <td><p>Indicates which flags to set. For details about the flags, please refer to the accounts doc. The bit mask integer
-adds onto the
+        <td><p>Indicates which flags to set. For details about the flags, please refer to the accounts doc. The bit mask integer adds onto the
 existing flags of the account. This allows for setting specific bits without knowledge of existing flags.</p>
 </td>
       </tr>
@@ -290,8 +285,7 @@ existing flags of the account. This allows for setting specific bits without kno
   <h4 id="stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_ClearFlags" data-uid="stellar_dotnet_sdk.responses.operations.SetOptionsOperationResponse.ClearFlags"><a href="#collapsible-stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_ClearFlags" class="expander" data-toggle="collapse">ClearFlags</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_ClearFlags" class="collapse in">
-  <div class="markdown level1 summary"><p>Indicates which flags to clear. For details about the flags, please refer to the accounts doc. The bit mask integer
-subtracts
+  <div class="markdown level1 summary"><p>Indicates which flags to clear. For details about the flags, please refer to the accounts doc. The bit mask integer subtracts
 from the existing flags of the account. This allows for setting specific bits without knowledge of existing flags.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -329,8 +323,7 @@ from the existing flags of the account. This allows for setting specific bits wi
   <h4 id="stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_HighThreshold" data-uid="stellar_dotnet_sdk.responses.operations.SetOptionsOperationResponse.HighThreshold"><a href="#collapsible-stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_HighThreshold" class="expander" data-toggle="collapse">HighThreshold</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_HighThreshold" class="collapse in">
-  <div class="markdown level1 summary"><p>A number from 0-255 representing the threshold this account sets on all operations it performs that have a high
-threshold.</p>
+  <div class="markdown level1 summary"><p>A number from 0-255 representing the threshold this account sets on all operations it performs that have a high threshold.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -441,8 +434,7 @@ threshold.</p>
   <h4 id="stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_LowThreshold" data-uid="stellar_dotnet_sdk.responses.operations.SetOptionsOperationResponse.LowThreshold"><a href="#collapsible-stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_LowThreshold" class="expander" data-toggle="collapse">LowThreshold</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_LowThreshold" class="collapse in">
-  <div class="markdown level1 summary"><p>A number from 0-255 representing the threshold this account sets on all operations it performs that have a low
-threshold.</p>
+  <div class="markdown level1 summary"><p>A number from 0-255 representing the threshold this account sets on all operations it performs that have a low threshold.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -516,8 +508,7 @@ threshold.</p>
   <h4 id="stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_MedThreshold" data-uid="stellar_dotnet_sdk.responses.operations.SetOptionsOperationResponse.MedThreshold"><a href="#collapsible-stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_MedThreshold" class="expander" data-toggle="collapse">MedThreshold</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_MedThreshold" class="collapse in">
-  <div class="markdown level1 summary"><p>A number from 0-255 representing the threshold this account sets on all operations it performs that have a medium
-threshold.</p>
+  <div class="markdown level1 summary"><p>A number from 0-255 representing the threshold this account sets on all operations it performs that have a medium threshold.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -554,8 +545,7 @@ threshold.</p>
   <h4 id="stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_SetFlags" data-uid="stellar_dotnet_sdk.responses.operations.SetOptionsOperationResponse.SetFlags"><a href="#collapsible-stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_SetFlags" class="expander" data-toggle="collapse">SetFlags</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_responses_operations_SetOptionsOperationResponse_SetFlags" class="collapse in">
-  <div class="markdown level1 summary"><p>Indicates which flags to set. For details about the flags, please refer to the accounts doc. The bit mask integer
-adds onto the
+  <div class="markdown level1 summary"><p>Indicates which flags to set. For details about the flags, please refer to the accounts doc. The bit mask integer adds onto the
 existing flags of the account. This allows for setting specific bits without knowledge of existing flags.</p>
 </div>
   <div class="markdown level1 conceptual"></div>

@@ -94,75 +94,6 @@
   
   
   
-  <h3 id="constructors">Constructors
-  </h3>
-  
-  
-  <a id="stellar_dotnet_sdk_responses_Predicate__ctor_" data-uid="stellar_dotnet_sdk.responses.Predicate.#ctor*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_responses_Predicate__ctor_stellar_dotnet_sdk_responses_Predicate___stellar_dotnet_sdk_responses_Predicate___stellar_dotnet_sdk_responses_Predicate_System_Boolean_System_String_System_Nullable_System_Int64__" data-uid="stellar_dotnet_sdk.responses.Predicate.#ctor(stellar_dotnet_sdk.responses.Predicate[],stellar_dotnet_sdk.responses.Predicate[],stellar_dotnet_sdk.responses.Predicate,System.Boolean,System.String,System.Nullable{System.Int64})"><a href="#collapsible-stellar_dotnet_sdk_responses_Predicate__ctor_stellar_dotnet_sdk_responses_Predicate___stellar_dotnet_sdk_responses_Predicate___stellar_dotnet_sdk_responses_Predicate_System_Boolean_System_String_System_Nullable_System_Int64__" class="expander" data-toggle="collapse">Predicate(Predicate[], Predicate[], Predicate, Boolean, String, Nullable&lt;Int64&gt;)</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_responses_Predicate__ctor_stellar_dotnet_sdk_responses_Predicate___stellar_dotnet_sdk_responses_Predicate___stellar_dotnet_sdk_responses_Predicate_System_Boolean_System_String_System_Nullable_System_Int64__" class="collapse in">
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Predicate(Predicate[] and, Predicate[] or, Predicate not, bool unconditional, string absBefore, long? relBefore)</code></pre>
-  </div>
-
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Name</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-      <tr>
-        <td><a class="xref" href="stellar_dotnet_sdk.responses.Predicate.html">Predicate</a>[]</td>
-        <td><span class="parametername">and</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="stellar_dotnet_sdk.responses.Predicate.html">Predicate</a>[]</td>
-        <td><span class="parametername">or</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="stellar_dotnet_sdk.responses.Predicate.html">Predicate</a></td>
-        <td><span class="parametername">not</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">unconditional</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">absBefore</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
-        <td><span class="parametername">relBefore</span></td>
-        <td></td>
-      </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  </div>
   <h3 id="properties">Properties
   </h3>
   
@@ -177,7 +108,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string? AbsBefore { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string AbsBefore { get; set; }</code></pre>
   </div>
 
   
@@ -188,7 +119,7 @@
   <table>
     <tr>
       <td>
-        <span class="xref">System.Nullable</span>&lt;<span class="xref">System.String</span>&gt;
+        <span class="xref">System.String</span>
         <p>
       </td>
     </tr>
@@ -321,7 +252,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long? RelBefore { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public long? RelBefore { get; set; }</code></pre>
   </div>
 
   
@@ -357,7 +288,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Unconditional { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Unconditional { get; set; }</code></pre>
   </div>
 
   

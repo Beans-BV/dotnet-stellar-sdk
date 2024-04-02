@@ -140,16 +140,16 @@
   
   <a id="stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_" data-uid="stellar_dotnet_sdk.WebAuthentication.BuildChallengeTransaction*"></a>
   
-  <h4 id="stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_stellar_dotnet_sdk_KeyPair_stellar_dotnet_sdk_KeyPair_System_String_System_String_System_Byte___System_Nullable_DateTimeOffset__System_Nullable_TimeSpan__stellar_dotnet_sdk_Network_System_Nullable_System_String__stellar_dotnet_sdk_KeyPair_" data-uid="stellar_dotnet_sdk.WebAuthentication.BuildChallengeTransaction(stellar_dotnet_sdk.KeyPair,stellar_dotnet_sdk.KeyPair,System.String,System.String,System.Byte[],System.Nullable{DateTimeOffset},System.Nullable{TimeSpan},stellar_dotnet_sdk.Network,System.Nullable{System.String},stellar_dotnet_sdk.KeyPair)"><a href="#collapsible-stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_stellar_dotnet_sdk_KeyPair_stellar_dotnet_sdk_KeyPair_System_String_System_String_System_Byte___System_Nullable_DateTimeOffset__System_Nullable_TimeSpan__stellar_dotnet_sdk_Network_System_Nullable_System_String__stellar_dotnet_sdk_KeyPair_" class="expander" data-toggle="collapse">BuildChallengeTransaction(KeyPair, KeyPair, String, String, Byte[], Nullable&lt;DateTimeOffset&gt;, Nullable&lt;TimeSpan&gt;, Network, Nullable&lt;String&gt;, KeyPair)</a></h4>
+  <h4 id="stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_stellar_dotnet_sdk_KeyPair_stellar_dotnet_sdk_KeyPair_System_String_System_String_System_Byte___System_Nullable_DateTimeOffset__System_Nullable_TimeSpan__stellar_dotnet_sdk_Network_System_String_stellar_dotnet_sdk_KeyPair_" data-uid="stellar_dotnet_sdk.WebAuthentication.BuildChallengeTransaction(stellar_dotnet_sdk.KeyPair,stellar_dotnet_sdk.KeyPair,System.String,System.String,System.Byte[],System.Nullable{DateTimeOffset},System.Nullable{TimeSpan},stellar_dotnet_sdk.Network,System.String,stellar_dotnet_sdk.KeyPair)"><a href="#collapsible-stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_stellar_dotnet_sdk_KeyPair_stellar_dotnet_sdk_KeyPair_System_String_System_String_System_Byte___System_Nullable_DateTimeOffset__System_Nullable_TimeSpan__stellar_dotnet_sdk_Network_System_String_stellar_dotnet_sdk_KeyPair_" class="expander" data-toggle="collapse">BuildChallengeTransaction(KeyPair, KeyPair, String, String, Byte[], Nullable&lt;DateTimeOffset&gt;, Nullable&lt;TimeSpan&gt;, Network, String, KeyPair)</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_stellar_dotnet_sdk_KeyPair_stellar_dotnet_sdk_KeyPair_System_String_System_String_System_Byte___System_Nullable_DateTimeOffset__System_Nullable_TimeSpan__stellar_dotnet_sdk_Network_System_Nullable_System_String__stellar_dotnet_sdk_KeyPair_" class="collapse in">
+  <div id="collapsible-stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_stellar_dotnet_sdk_KeyPair_stellar_dotnet_sdk_KeyPair_System_String_System_String_System_Byte___System_Nullable_DateTimeOffset__System_Nullable_TimeSpan__stellar_dotnet_sdk_Network_System_String_stellar_dotnet_sdk_KeyPair_" class="collapse in">
   <div class="markdown level1 summary"><p>Build a challenge transaction you can use for Stellar Web Authentication.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Transaction BuildChallengeTransaction(KeyPair serverKeypair, KeyPair clientAccountId, string homeDomain, string webAuthDomain, byte[] nonce = null, DateTimeOffset? now = null, TimeSpan? timeout = null, Network network = null, string? clientDomain = null, KeyPair clientSigningKey = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Transaction BuildChallengeTransaction(KeyPair serverKeypair, KeyPair clientAccountId, string homeDomain, string webAuthDomain, byte[] nonce = null, DateTimeOffset? now = null, TimeSpan? timeout = null, Network network = null, string clientDomain = null, KeyPair clientSigningKey = null)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -210,7 +210,7 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">System.String</span></td>
         <td><span class="parametername">clientDomain</span></td>
         <td><p>Optional Client Domain</p>
 </td>
@@ -247,16 +247,16 @@
   
   <a id="stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_" data-uid="stellar_dotnet_sdk.WebAuthentication.BuildChallengeTransaction*"></a>
   
-  <h4 id="stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_stellar_dotnet_sdk_KeyPair_System_String_System_String_System_String_System_Byte___System_Nullable_DateTimeOffset__System_Nullable_TimeSpan__stellar_dotnet_sdk_Network_System_Nullable_System_String__stellar_dotnet_sdk_KeyPair_" data-uid="stellar_dotnet_sdk.WebAuthentication.BuildChallengeTransaction(stellar_dotnet_sdk.KeyPair,System.String,System.String,System.String,System.Byte[],System.Nullable{DateTimeOffset},System.Nullable{TimeSpan},stellar_dotnet_sdk.Network,System.Nullable{System.String},stellar_dotnet_sdk.KeyPair)"><a href="#collapsible-stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_stellar_dotnet_sdk_KeyPair_System_String_System_String_System_String_System_Byte___System_Nullable_DateTimeOffset__System_Nullable_TimeSpan__stellar_dotnet_sdk_Network_System_Nullable_System_String__stellar_dotnet_sdk_KeyPair_" class="expander" data-toggle="collapse">BuildChallengeTransaction(KeyPair, String, String, String, Byte[], Nullable&lt;DateTimeOffset&gt;, Nullable&lt;TimeSpan&gt;, Network, Nullable&lt;String&gt;, KeyPair)</a></h4>
+  <h4 id="stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_stellar_dotnet_sdk_KeyPair_System_String_System_String_System_String_System_Byte___System_Nullable_DateTimeOffset__System_Nullable_TimeSpan__stellar_dotnet_sdk_Network_System_String_stellar_dotnet_sdk_KeyPair_" data-uid="stellar_dotnet_sdk.WebAuthentication.BuildChallengeTransaction(stellar_dotnet_sdk.KeyPair,System.String,System.String,System.String,System.Byte[],System.Nullable{DateTimeOffset},System.Nullable{TimeSpan},stellar_dotnet_sdk.Network,System.String,stellar_dotnet_sdk.KeyPair)"><a href="#collapsible-stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_stellar_dotnet_sdk_KeyPair_System_String_System_String_System_String_System_Byte___System_Nullable_DateTimeOffset__System_Nullable_TimeSpan__stellar_dotnet_sdk_Network_System_String_stellar_dotnet_sdk_KeyPair_" class="expander" data-toggle="collapse">BuildChallengeTransaction(KeyPair, String, String, String, Byte[], Nullable&lt;DateTimeOffset&gt;, Nullable&lt;TimeSpan&gt;, Network, String, KeyPair)</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_stellar_dotnet_sdk_KeyPair_System_String_System_String_System_String_System_Byte___System_Nullable_DateTimeOffset__System_Nullable_TimeSpan__stellar_dotnet_sdk_Network_System_Nullable_System_String__stellar_dotnet_sdk_KeyPair_" class="collapse in">
+  <div id="collapsible-stellar_dotnet_sdk_WebAuthentication_BuildChallengeTransaction_stellar_dotnet_sdk_KeyPair_System_String_System_String_System_String_System_Byte___System_Nullable_DateTimeOffset__System_Nullable_TimeSpan__stellar_dotnet_sdk_Network_System_String_stellar_dotnet_sdk_KeyPair_" class="collapse in">
   <div class="markdown level1 summary"><p>Build a challenge transaction you can use for Stellar Web Authentication.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Transaction BuildChallengeTransaction(KeyPair serverKeypair, string clientAccountId, string homeDomain, string webAuthDomain, byte[] nonce = null, DateTimeOffset? now = null, TimeSpan? timeout = null, Network network = null, string? clientDomain = null, KeyPair clientKeypair = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Transaction BuildChallengeTransaction(KeyPair serverKeypair, string clientAccountId, string homeDomain, string webAuthDomain, byte[] nonce = null, DateTimeOffset? now = null, TimeSpan? timeout = null, Network network = null, string clientDomain = null, KeyPair clientKeypair = null)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -317,7 +317,7 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">System.String</span></td>
         <td><span class="parametername">clientDomain</span></td>
         <td></td>
       </tr>
@@ -356,8 +356,8 @@
   <h4 id="stellar_dotnet_sdk_WebAuthentication_ReadChallengeTransaction_stellar_dotnet_sdk_Transaction_System_String_System_String_System_String_stellar_dotnet_sdk_Network_System_Nullable_DateTimeOffset__" data-uid="stellar_dotnet_sdk.WebAuthentication.ReadChallengeTransaction(stellar_dotnet_sdk.Transaction,System.String,System.String,System.String,stellar_dotnet_sdk.Network,System.Nullable{DateTimeOffset})"><a href="#collapsible-stellar_dotnet_sdk_WebAuthentication_ReadChallengeTransaction_stellar_dotnet_sdk_Transaction_System_String_System_String_System_String_stellar_dotnet_sdk_Network_System_Nullable_DateTimeOffset__" class="expander" data-toggle="collapse">ReadChallengeTransaction(Transaction, String, String, String, Network, Nullable&lt;DateTimeOffset&gt;)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_WebAuthentication_ReadChallengeTransaction_stellar_dotnet_sdk_Transaction_System_String_System_String_System_String_stellar_dotnet_sdk_Network_System_Nullable_DateTimeOffset__" class="collapse in">
-  <div class="markdown level1 summary"><p>Read a SEP 10 challenge transaction and return the client account id.
-Performs the following checks:</p>
+  <div class="markdown level1 summary"><p>Read a SEP 10 challenge transaction and return the client account id.</p>
+<p>Performs the following checks:</p>
 <ol>
 <li>Transaction sequence number is 0</li>
 <li>Transaction source account is <code data-dev-comment-type="paramref" class="paramref">serverAccountId</code></li>
@@ -458,8 +458,8 @@ Performs the following checks:</p>
   <h4 id="stellar_dotnet_sdk_WebAuthentication_ReadChallengeTransaction_stellar_dotnet_sdk_Transaction_System_String_System_String___System_String_stellar_dotnet_sdk_Network_System_Nullable_DateTimeOffset__" data-uid="stellar_dotnet_sdk.WebAuthentication.ReadChallengeTransaction(stellar_dotnet_sdk.Transaction,System.String,System.String[],System.String,stellar_dotnet_sdk.Network,System.Nullable{DateTimeOffset})"><a href="#collapsible-stellar_dotnet_sdk_WebAuthentication_ReadChallengeTransaction_stellar_dotnet_sdk_Transaction_System_String_System_String___System_String_stellar_dotnet_sdk_Network_System_Nullable_DateTimeOffset__" class="expander" data-toggle="collapse">ReadChallengeTransaction(Transaction, String, String[], String, Network, Nullable&lt;DateTimeOffset&gt;)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_WebAuthentication_ReadChallengeTransaction_stellar_dotnet_sdk_Transaction_System_String_System_String___System_String_stellar_dotnet_sdk_Network_System_Nullable_DateTimeOffset__" class="collapse in">
-  <div class="markdown level1 summary"><p>Read a SEP 10 challenge transaction and return the client account id.
-Performs the following checks:</p>
+  <div class="markdown level1 summary"><p>Read a SEP 10 challenge transaction and return the client account id.</p>
+<p>Performs the following checks:</p>
 <ol>
 <li>Transaction sequence number is 0</li>
 <li>Transaction source account is <code data-dev-comment-type="paramref" class="paramref">serverAccountId</code></li>
@@ -559,8 +559,8 @@ Performs the following checks:</p>
   <h4 id="stellar_dotnet_sdk_WebAuthentication_VerifyChallengeTransaction_stellar_dotnet_sdk_Transaction_System_String_System_String_System_String_stellar_dotnet_sdk_Network_System_Nullable_DateTimeOffset__" data-uid="stellar_dotnet_sdk.WebAuthentication.VerifyChallengeTransaction(stellar_dotnet_sdk.Transaction,System.String,System.String,System.String,stellar_dotnet_sdk.Network,System.Nullable{DateTimeOffset})"><a href="#collapsible-stellar_dotnet_sdk_WebAuthentication_VerifyChallengeTransaction_stellar_dotnet_sdk_Transaction_System_String_System_String_System_String_stellar_dotnet_sdk_Network_System_Nullable_DateTimeOffset__" class="expander" data-toggle="collapse">VerifyChallengeTransaction(Transaction, String, String, String, Network, Nullable&lt;DateTimeOffset&gt;)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_WebAuthentication_VerifyChallengeTransaction_stellar_dotnet_sdk_Transaction_System_String_System_String_System_String_stellar_dotnet_sdk_Network_System_Nullable_DateTimeOffset__" class="collapse in">
-  <div class="markdown level1 summary"><p>Verify that a transaction is a valid Stellar Web Authentication transaction.
-Performs the following checks:</p>
+  <div class="markdown level1 summary"><p>Verify that a transaction is a valid Stellar Web Authentication transaction.</p>
+<p>Performs the following checks:</p>
 <ol>
 <li>Transaction sequence number is 0</li>
 <li>Transaction source account is <code data-dev-comment-type="paramref" class="paramref">serverAccountId</code></li>
@@ -661,8 +661,8 @@ Performs the following checks:</p>
   <h4 id="stellar_dotnet_sdk_WebAuthentication_VerifyChallengeTransactionSigners_stellar_dotnet_sdk_Transaction_System_String_ICollection_System_String__System_String_System_String_stellar_dotnet_sdk_Network_System_Nullable_DateTimeOffset__" data-uid="stellar_dotnet_sdk.WebAuthentication.VerifyChallengeTransactionSigners(stellar_dotnet_sdk.Transaction,System.String,ICollection{System.String},System.String,System.String,stellar_dotnet_sdk.Network,System.Nullable{DateTimeOffset})"><a href="#collapsible-stellar_dotnet_sdk_WebAuthentication_VerifyChallengeTransactionSigners_stellar_dotnet_sdk_Transaction_System_String_ICollection_System_String__System_String_System_String_stellar_dotnet_sdk_Network_System_Nullable_DateTimeOffset__" class="expander" data-toggle="collapse">VerifyChallengeTransactionSigners(Transaction, String, ICollection&lt;String&gt;, String, String, Network, Nullable&lt;DateTimeOffset&gt;)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_WebAuthentication_VerifyChallengeTransactionSigners_stellar_dotnet_sdk_Transaction_System_String_ICollection_System_String__System_String_System_String_stellar_dotnet_sdk_Network_System_Nullable_DateTimeOffset__" class="collapse in">
-  <div class="markdown level1 summary"><p>Verify that all signers of a SEP 10 transaction are accounted for.
-A transaction is verified if it signed by the server account, and all other signatures match the provided
+  <div class="markdown level1 summary"><p>Verify that all signers of a SEP 10 transaction are accounted for.</p>
+<p>A transaction is verified if it signed by the server account, and all other signatures match the provided
 signers. Additional signers can be provided that do not have a signature, but all signatures must be
 matched to a signer for verification to succeed. If verification succeeds, the list of signers that were
 found is returned, excluding the server account id.</p>

@@ -71,7 +71,7 @@
             <article class="content wrap" id="_content" data-uid="stellar_dotnet_sdk.ExtendFootprintOperation">
   <h1 id="stellar_dotnet_sdk_ExtendFootprintOperation" data-uid="stellar_dotnet_sdk.ExtendFootprintOperation">Class ExtendFootprintOperation
   </h1>
-  <div class="markdown level0 summary"><p>Operation that extends footprint TTL.</p>
+  <div class="markdown level0 summary"><p>Operation that extends footprint TTL</p>
 </div>
   <div class="markdown level0 conceptual"></div>
 
@@ -137,7 +137,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint ExtendTo { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public uint ExtendTo { get; set; }</code></pre>
   </div>
 
   
@@ -173,7 +173,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ExtensionPoint ExtensionPoint { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public ExtensionPoint ExtensionPoint { get; set; }</code></pre>
   </div>
 
   
@@ -199,6 +199,57 @@
   </div>
   <h3 id="methods">Methods
   </h3>
+  
+  
+  <a id="stellar_dotnet_sdk_ExtendFootprintOperation_FromExtendFootprintTTLOperationXdr_" data-uid="stellar_dotnet_sdk.ExtendFootprintOperation.FromExtendFootprintTTLOperationXdr*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_ExtendFootprintOperation_FromExtendFootprintTTLOperationXdr_stellar_dotnet_sdk_xdr_ExtendFootprintTTLOp_" data-uid="stellar_dotnet_sdk.ExtendFootprintOperation.FromExtendFootprintTTLOperationXdr(stellar_dotnet_sdk.xdr.ExtendFootprintTTLOp)"><a href="#collapsible-stellar_dotnet_sdk_ExtendFootprintOperation_FromExtendFootprintTTLOperationXdr_stellar_dotnet_sdk_xdr_ExtendFootprintTTLOp_" class="expander" data-toggle="collapse">FromExtendFootprintTTLOperationXdr(ExtendFootprintTTLOp)</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_ExtendFootprintOperation_FromExtendFootprintTTLOperationXdr_stellar_dotnet_sdk_xdr_ExtendFootprintTTLOp_" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ExtendFootprintOperation FromExtendFootprintTTLOperationXdr(ExtendFootprintTTLOp xdrExtendFootprintTTLOp)</code></pre>
+  </div>
+
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+      <tr>
+        <td><span class="xref">stellar_dotnet_sdk.xdr.ExtendFootprintTTLOp</span></td>
+        <td><span class="parametername">xdrExtendFootprintTTLOp</span></td>
+        <td></td>
+      </tr>
+  </table>
+  
+  <h5 class="returns">Returns</h5>
+  <table>
+    <tr>
+      <td>
+        <a class="xref" href="stellar_dotnet_sdk.ExtendFootprintOperation.html">ExtendFootprintOperation</a>
+        <p>
+      </td>
+    </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
   
   
   <a id="stellar_dotnet_sdk_ExtendFootprintOperation_FromOperationXdrBase64_" data-uid="stellar_dotnet_sdk.ExtendFootprintOperation.FromOperationXdrBase64*"></a>
@@ -238,6 +289,42 @@
         <a class="xref" href="stellar_dotnet_sdk.ExtendFootprintOperation.html">ExtendFootprintOperation</a>
         <p><p>ExtendFootprintOperation object</p>
 </p>
+      </td>
+    </tr>
+  </table>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+  
+  
+  <a id="stellar_dotnet_sdk_ExtendFootprintOperation_ToExtendFootprintTTLOperationXdr_" data-uid="stellar_dotnet_sdk.ExtendFootprintOperation.ToExtendFootprintTTLOperationXdr*"></a>
+  
+  <h4 id="stellar_dotnet_sdk_ExtendFootprintOperation_ToExtendFootprintTTLOperationXdr" data-uid="stellar_dotnet_sdk.ExtendFootprintOperation.ToExtendFootprintTTLOperationXdr"><a href="#collapsible-stellar_dotnet_sdk_ExtendFootprintOperation_ToExtendFootprintTTLOperationXdr" class="expander" data-toggle="collapse">ToExtendFootprintTTLOperationXdr()</a></h4>
+  
+  <div id="collapsible-stellar_dotnet_sdk_ExtendFootprintOperation_ToExtendFootprintTTLOperationXdr" class="collapse in">
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ExtendFootprintTTLOp ToExtendFootprintTTLOperationXdr()</code></pre>
+  </div>
+
+  
+  <h5 class="returns">Returns</h5>
+  <table>
+    <tr>
+      <td>
+        <span class="xref">stellar_dotnet_sdk.xdr.ExtendFootprintTTLOp</span>
+        <p>
       </td>
     </tr>
   </table>

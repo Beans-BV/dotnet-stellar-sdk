@@ -146,13 +146,12 @@
   <h4 id="stellar_dotnet_sdk_LedgerKeyTTL__ctor_System_String_" data-uid="stellar_dotnet_sdk.LedgerKeyTTL.#ctor(System.String)"><a href="#collapsible-stellar_dotnet_sdk_LedgerKeyTTL__ctor_System_String_" class="expander" data-toggle="collapse">LedgerKeyTTL(String)</a></h4>
   
   <div id="collapsible-stellar_dotnet_sdk_LedgerKeyTTL__ctor_System_String_" class="collapse in">
-  <div class="markdown level1 summary"><p>Constructs a <code>LedgerKeyTTL</code> object from a base-64 encoded string of the hash of the ledger entry.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LedgerKeyTTL(string base64String)</code></pre>
+    <pre><code class="lang-csharp hljs">public LedgerKeyTTL(string hexString)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -166,9 +165,8 @@
   </thead>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">base64String</span></td>
-        <td><p>A base-64 encoded string.</p>
-</td>
+        <td><span class="parametername">hexString</span></td>
+        <td></td>
       </tr>
   </table>
   
@@ -197,7 +195,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public byte[] Key { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Hash Key { get; }</code></pre>
   </div>
 
   
@@ -208,7 +206,7 @@
   <table>
     <tr>
       <td>
-        <span class="xref">System.Byte</span>[]
+        <a class="xref" href="stellar_dotnet_sdk.Hash.html">Hash</a>
         <p>
       </td>
     </tr>

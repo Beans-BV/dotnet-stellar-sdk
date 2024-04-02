@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class LedgerEntryUpdated
+    <title>Class RevokeSponsorshipOperation
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class LedgerEntryUpdated
+    <meta name="title" content="Class RevokeSponsorshipOperation
    ">
     <meta name="generator" content="docfx 2.59.2.0">
     
@@ -68,8 +68,8 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="stellar_dotnet_sdk.LedgerEntryUpdated">
-  <h1 id="stellar_dotnet_sdk_LedgerEntryUpdated" data-uid="stellar_dotnet_sdk.LedgerEntryUpdated">Class LedgerEntryUpdated
+            <article class="content wrap" id="_content" data-uid="stellar_dotnet_sdk.RevokeSponsorshipOperation">
+  <h1 id="stellar_dotnet_sdk_RevokeSponsorshipOperation" data-uid="stellar_dotnet_sdk.RevokeSponsorshipOperation">Class RevokeSponsorshipOperation
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
@@ -77,112 +77,56 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="stellar_dotnet_sdk.LedgerEntryChange.html">LedgerEntryChange</a></div>
-    <div class="level2"><span class="xref">LedgerEntryUpdated</span></div>
+    <div class="level1"><a class="xref" href="stellar_dotnet_sdk.Operation.html">Operation</a></div>
+    <div class="level2"><span class="xref">RevokeSponsorshipOperation</span></div>
   </div>
   
+      <div class="level3"><a class="xref" href="stellar_dotnet_sdk.RevokeLedgerEntrySponsorshipOperation.html">RevokeLedgerEntrySponsorshipOperation</a></div>
+      <div class="level3"><a class="xref" href="stellar_dotnet_sdk.RevokeSignerSponsorshipOperation.html">RevokeSignerSponsorshipOperation</a></div>
   
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="stellar_dotnet_sdk.LedgerEntryChange.html#stellar_dotnet_sdk_LedgerEntryChange_FromXdr_stellar_dotnet_sdk_xdr_LedgerEntryChange_">LedgerEntryChange.FromXdr(LedgerEntryChange)</a>
+      <a class="xref" href="stellar_dotnet_sdk.Operation.html#stellar_dotnet_sdk_Operation_SourceAccount">Operation.SourceAccount</a>
+    </div>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.Operation.html#stellar_dotnet_sdk_Operation_Threshold">Operation.Threshold</a>
+    </div>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.Operation.html#stellar_dotnet_sdk_Operation_ToXdrAmount_System_String_">Operation.ToXdrAmount(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.Operation.html#stellar_dotnet_sdk_Operation_FromXdrAmount_System_Int64_">Operation.FromXdrAmount(Int64)</a>
+    </div>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.Operation.html#stellar_dotnet_sdk_Operation_FromXdrBase64_System_String_">Operation.FromXdrBase64(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.Operation.html#stellar_dotnet_sdk_Operation_ToXdr">Operation.ToXdr()</a>
+    </div>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.Operation.html#stellar_dotnet_sdk_Operation_ToXdrBase64">Operation.ToXdrBase64()</a>
+    </div>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.Operation.html#stellar_dotnet_sdk_Operation_FromXdr_stellar_dotnet_sdk_xdr_Operation_">Operation.FromXdr(Operation)</a>
+    </div>
+    <div>
+      <a class="xref" href="stellar_dotnet_sdk.Operation.html#stellar_dotnet_sdk_Operation_ToOperationBody">Operation.ToOperationBody()</a>
     </div>
   </div>
   
   <h6><strong>Namespace</strong>: System.Dynamic.ExpandoObject</h6>
   <h6><strong>Assembly</strong>: stellar-dotnet-sdk.dll</h6>
   
-  <h5 id="stellar_dotnet_sdk_LedgerEntryUpdated_syntax">Syntax</h5>
+  <h5 id="stellar_dotnet_sdk_RevokeSponsorshipOperation_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class LedgerEntryUpdated : LedgerEntryChange</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class RevokeSponsorshipOperation : Operation</code></pre>
   </div>
 
   
   
   
   
-  <h3 id="constructors">Constructors
-  </h3>
-  
-  
-  <a id="stellar_dotnet_sdk_LedgerEntryUpdated__ctor_" data-uid="stellar_dotnet_sdk.LedgerEntryUpdated.#ctor*"></a>
-  
-  <h4 id="stellar_dotnet_sdk_LedgerEntryUpdated__ctor_stellar_dotnet_sdk_xdr_LedgerEntry_" data-uid="stellar_dotnet_sdk.LedgerEntryUpdated.#ctor(stellar_dotnet_sdk.xdr.LedgerEntry)"><a href="#collapsible-stellar_dotnet_sdk_LedgerEntryUpdated__ctor_stellar_dotnet_sdk_xdr_LedgerEntry_" class="expander" data-toggle="collapse">LedgerEntryUpdated(LedgerEntry)</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_LedgerEntryUpdated__ctor_stellar_dotnet_sdk_xdr_LedgerEntry_" class="collapse in">
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LedgerEntryUpdated(LedgerEntry createdEntry)</code></pre>
-  </div>
-
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Name</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-      <tr>
-        <td><span class="xref">stellar_dotnet_sdk.xdr.LedgerEntry</span></td>
-        <td><span class="parametername">createdEntry</span></td>
-        <td></td>
-      </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  </div>
-  <h3 id="fields">Fields
-  </h3>
-  
-  
-  
-  <h4 id="stellar_dotnet_sdk_LedgerEntryUpdated_UpdatedEntry" data-uid="stellar_dotnet_sdk.LedgerEntryUpdated.UpdatedEntry"><a href="#collapsible-stellar_dotnet_sdk_LedgerEntryUpdated_UpdatedEntry" class="expander" data-toggle="collapse">UpdatedEntry</a></h4>
-  
-  <div id="collapsible-stellar_dotnet_sdk_LedgerEntryUpdated_UpdatedEntry" class="collapse in">
-  <div class="markdown level1 summary"><p>The <code>LedgerEntry</code> object that was updated.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly LedgerEntry UpdatedEntry</code></pre>
-  </div>
-
-  
-  
-  
-  <h5 class="fieldValue">Field Value</h5>
-  <table>
-    <tr>
-      <td>
-        <a class="xref" href="stellar_dotnet_sdk.LedgerEntry.html">LedgerEntry</a>
-        <p>
-      </td>
-    </tr>
-  </table>
-  
-  
-  
-  
-  
-  
-  
-  
-  </div>
   
   
 </article>

@@ -84,18 +84,13 @@
       <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.FeeBumpTransactionResultSuccess.html">FeeBumpTransactionResultSuccess</a></div>
       <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultBadAuth.html">TransactionResultBadAuth</a></div>
       <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultBadAuthExtra.html">TransactionResultBadAuthExtra</a></div>
-      <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultBadMinSeqAgeOrGap.html">TransactionResultBadMinSeqAgeOrGap</a></div>
       <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultBadSeq.html">TransactionResultBadSeq</a></div>
-      <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultBadSponsorship.html">TransactionResultBadSponsorship</a></div>
       <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultFailed.html">TransactionResultFailed</a></div>
       <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultInsufficientBalance.html">TransactionResultInsufficientBalance</a></div>
       <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultInsufficientFee.html">TransactionResultInsufficientFee</a></div>
       <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultInternalError.html">TransactionResultInternalError</a></div>
-      <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultMalformed.html">TransactionResultMalformed</a></div>
       <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultMissingOperation.html">TransactionResultMissingOperation</a></div>
       <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultNoAccount.html">TransactionResultNoAccount</a></div>
-      <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultNotSupported.html">TransactionResultNotSupported</a></div>
-      <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultSorobanInvalid.html">TransactionResultSorobanInvalid</a></div>
       <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultSuccess.html">TransactionResultSuccess</a></div>
       <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultTooEarly.html">TransactionResultTooEarly</a></div>
       <div class="level2"><a class="xref" href="stellar_dotnet_sdk.responses.TransactionResultTooLate.html">TransactionResultTooLate</a></div>
@@ -106,7 +101,7 @@
   
   <h5 id="stellar_dotnet_sdk_responses_TransactionResult_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class TransactionResult : object</code></pre>
+    <pre><code class="lang-csharp hljs">public class TransactionResult : object</code></pre>
   </div>
 
   
@@ -128,7 +123,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string? FeeCharged { get; protected set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string FeeCharged { get; set; }</code></pre>
   </div>
 
   
@@ -139,7 +134,7 @@
   <table>
     <tr>
       <td>
-        <span class="xref">System.Nullable</span>&lt;<span class="xref">System.String</span>&gt;
+        <span class="xref">System.String</span>
         <p>
       </td>
     </tr>
@@ -164,7 +159,7 @@
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract bool IsSuccess { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual bool IsSuccess { get; }</code></pre>
   </div>
 
   
@@ -243,18 +238,17 @@
   </div>
   
   
-  <a id="stellar_dotnet_sdk_responses_TransactionResult_FromXdrBase64_" data-uid="stellar_dotnet_sdk.responses.TransactionResult.FromXdrBase64*"></a>
+  <a id="stellar_dotnet_sdk_responses_TransactionResult_FromXdr_" data-uid="stellar_dotnet_sdk.responses.TransactionResult.FromXdr*"></a>
   
-  <h4 id="stellar_dotnet_sdk_responses_TransactionResult_FromXdrBase64_System_String_" data-uid="stellar_dotnet_sdk.responses.TransactionResult.FromXdrBase64(System.String)"><a href="#collapsible-stellar_dotnet_sdk_responses_TransactionResult_FromXdrBase64_System_String_" class="expander" data-toggle="collapse">FromXdrBase64(String)</a></h4>
+  <h4 id="stellar_dotnet_sdk_responses_TransactionResult_FromXdr_System_String_" data-uid="stellar_dotnet_sdk.responses.TransactionResult.FromXdr(System.String)"><a href="#collapsible-stellar_dotnet_sdk_responses_TransactionResult_FromXdr_System_String_" class="expander" data-toggle="collapse">FromXdr(String)</a></h4>
   
-  <div id="collapsible-stellar_dotnet_sdk_responses_TransactionResult_FromXdrBase64_System_String_" class="collapse in">
-  <div class="markdown level1 summary"><p>Creates a new TransactionResult object from the given TransactionResult XDR base64 string.</p>
-</div>
+  <div id="collapsible-stellar_dotnet_sdk_responses_TransactionResult_FromXdr_System_String_" class="collapse in">
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TransactionResult FromXdrBase64(string xdrBase64)</code></pre>
+    <pre><code class="lang-csharp hljs">public static TransactionResult FromXdr(string encoded)</code></pre>
   </div>
 
   <h5 class="parameters">Parameters</h5>
@@ -268,7 +262,7 @@
   </thead>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">xdrBase64</span></td>
+        <td><span class="parametername">encoded</span></td>
         <td></td>
       </tr>
   </table>
@@ -278,8 +272,7 @@
     <tr>
       <td>
         <a class="xref" href="stellar_dotnet_sdk.responses.TransactionResult.html">TransactionResult</a>
-        <p><p>LedgerEntry object</p>
-</p>
+        <p>
       </td>
     </tr>
   </table>
