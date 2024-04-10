@@ -47,9 +47,6 @@
         <Compile Remove="generated\LedgerEntryExtensionV1.cs"/>
         <Compile Remove="generated\ManageDataOp.cs"/>
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="generated\"/>
-    </ItemGroup>
 
     <PropertyGroup>
         <PackageReadmeFile>nugetreadme.md</PackageReadmeFile>

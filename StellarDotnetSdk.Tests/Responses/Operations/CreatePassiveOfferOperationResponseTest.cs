@@ -14,16 +14,18 @@ public class CreatePassiveOfferOperationResponseTest
     [TestMethod]
     public void TestDeserializeCreatePassiveOfferOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/createPassiveOffer", "createPassiveOffer.json"));
+        var jsonPath = Utils.GetTestDataPath("createPassiveOffer.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<CreatePassiveOfferOperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertCreatePassiveOfferData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeCreatePassiveOfferOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/createPassiveOffer", "createPassiveOffer.json"));
+        var jsonPath = Utils.GetTestDataPath("createPassiveOffer.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<CreatePassiveOfferOperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<CreatePassiveOfferOperationResponse>(serialized);

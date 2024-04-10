@@ -13,18 +13,18 @@ public class PathPaymentStrictSendOperationResponseTest
     [TestMethod]
     public void TestDeserializePathPaymentStrictSendOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/pathPaymentStrictSend",
-            "pathPaymentStrictSend.json"));
+        var jsonPath = Utils.GetTestDataPath("pathPaymentStrictSend.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertPathPaymentStrictSendData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializePathPaymentStrictSendOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/pathPaymentStrictSend",
-            "pathPaymentStrictSend.json"));
+        var jsonPath = Utils.GetTestDataPath("pathPaymentStrictSend.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -37,16 +37,21 @@ public class PathPaymentStrictSendOperationResponseTest
         Assert.IsTrue(instance is PathPaymentStrictSendOperationResponse);
         var operation = (PathPaymentStrictSendOperationResponse)instance;
 
-        var operationTest = new PathPaymentStrictSendOperationResponse(
-            "GCXVEEBWI4YMRK6AFJQSEUBYDQL4PZ24ECAPJE2ZIAPIQZLZIBAX3LIF",
-            "GCXVEEBWI4YMRK6AFJQSEUBYDQL4PZ24ECAPJE2ZIAPIQZLZIBAX3LIF",
-            "native", "", "",
-            "0.0859000",
-            "credit_alphanum4", "KIN", "GBDEVU63Y6NTHJQQZIKVTC23NWLQVP3WJ2RI2OTSJTNYOIGICST6DUXR",
-            "1000.0000000",
-            "0.0859000",
-            new Asset[] { }
-        );
+        var operationTest = new PathPaymentStrictSendOperationResponse
+        {
+            From = "GCXVEEBWI4YMRK6AFJQSEUBYDQL4PZ24ECAPJE2ZIAPIQZLZIBAX3LIF",
+            To = "GCXVEEBWI4YMRK6AFJQSEUBYDQL4PZ24ECAPJE2ZIAPIQZLZIBAX3LIF",
+            AssetType = "native",
+            AssetCode = "",
+            AssetIssuer = "",
+            Amount = "0.0859000",
+            SourceAssetType = "credit_alphanum4",
+            SourceAssetCode = "KIN",
+            SourceAssetIssuer = "GBDEVU63Y6NTHJQQZIKVTC23NWLQVP3WJ2RI2OTSJTNYOIGICST6DUXR",
+            SourceAmount = "1000.0000000",
+            DestinationMin = "0.0859000",
+            Path = new Asset[] { }
+        };
 
         Assert.AreEqual(operation.From, operationTest.From);
         Assert.AreEqual(operation.To, operationTest.To);

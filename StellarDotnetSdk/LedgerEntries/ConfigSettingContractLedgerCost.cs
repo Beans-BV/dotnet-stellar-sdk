@@ -7,7 +7,7 @@ public class ConfigSettingContractLedgerCost : LedgerEntryConfigSetting
     private ConfigSettingContractLedgerCost(uint ledgerMaxReadLedgerEntries, uint ledgerMaxReadBytes,
         uint ledgerMaxWriteLedgerEntries, uint ledgerMaxWriteBytes, uint txMaxReadLedgerEntries, uint txMaxReadBytes,
         uint txMaxWriteLedgerEntries, uint txMaxWriteBytes, long feeReadLedgerEntry, long feeWriteLedgerEntry,
-        long feeRead1KB, long bucketListTargetSizeBytes, long writeFee1KBBucketListLow, long writeFee1KBBucketListHigh,
+        long feeRead1Kb, long bucketListTargetSizeBytes, long writeFee1KbBucketListLow, long writeFee1KbBucketListHigh,
         uint bucketListWriteFeeGrowthFactor)
     {
         LedgerMaxReadLedgerEntries = ledgerMaxReadLedgerEntries;
@@ -20,10 +20,10 @@ public class ConfigSettingContractLedgerCost : LedgerEntryConfigSetting
         TxMaxWriteBytes = txMaxWriteBytes;
         FeeReadLedgerEntry = feeReadLedgerEntry;
         FeeWriteLedgerEntry = feeWriteLedgerEntry;
-        FeeRead1KB = feeRead1KB;
+        FeeRead1Kb = feeRead1Kb;
         BucketListTargetSizeBytes = bucketListTargetSizeBytes;
-        WriteFee1KBBucketListLow = writeFee1KBBucketListLow;
-        WriteFee1KBBucketListHigh = writeFee1KBBucketListHigh;
+        WriteFee1KbBucketListLow = writeFee1KbBucketListLow;
+        WriteFee1KbBucketListHigh = writeFee1KbBucketListHigh;
         BucketListWriteFeeGrowthFactor = bucketListWriteFeeGrowthFactor;
     }
 
@@ -37,10 +37,10 @@ public class ConfigSettingContractLedgerCost : LedgerEntryConfigSetting
     public uint TxMaxWriteBytes { get; }
     public long FeeReadLedgerEntry { get; }
     public long FeeWriteLedgerEntry { get; }
-    public long FeeRead1KB { get; }
+    public long FeeRead1Kb { get; }
     public long BucketListTargetSizeBytes { get; }
-    public long WriteFee1KBBucketListLow { get; }
-    public long WriteFee1KBBucketListHigh { get; }
+    public long WriteFee1KbBucketListLow { get; }
+    public long WriteFee1KbBucketListHigh { get; }
     public uint BucketListWriteFeeGrowthFactor { get; }
 
     public static ConfigSettingContractLedgerCost FromXdr(ConfigSettingContractLedgerCostV0 xdrConfig)

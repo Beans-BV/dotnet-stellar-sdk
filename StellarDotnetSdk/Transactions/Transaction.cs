@@ -1,22 +1,22 @@
 ﻿using System;
+using System.Linq;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Xdr;
-using memos_Memo = StellarDotnetSdk.Memos.Memo;
+using Memo = StellarDotnetSdk.Memos.Memo;
 using MuxedAccount = StellarDotnetSdk.Accounts.MuxedAccount;
 using Operation = StellarDotnetSdk.Operations.Operation;
-using Operations_SorobanAuthorizationEntry = StellarDotnetSdk.Operations.SorobanAuthorizationEntry;
-using Soroban_SorobanTransactionData = StellarDotnetSdk.Soroban.SorobanTransactionData;
-using xdr_Int64 = StellarDotnetSdk.Xdr.Int64;
+using SorobanAuthorizationEntry = StellarDotnetSdk.Operations.SorobanAuthorizationEntry;
+using SorobanTransactionData = StellarDotnetSdk.Soroban.SorobanTransactionData;
+using Int64 = StellarDotnetSdk.Xdr.Int64;
 
 namespace StellarDotnetSdk.Transactions;
 
 public class Transaction : TransactionBase
 {
-    internal Transaction(IAccountId sourceAccount, uint fee, long sequenceNumber, Operation[] operations,
-        memos_Memo? memo,
-        TransactionPreconditions preconditions)
+    internal Transaction(IAccountId sourceAccount, uint fee, long sequenceNumber,
+        Operation[] operations, Memo? memo, TransactionPreconditions? preconditions)
     {
         SourceAccount = sourceAccount ??
                         throw new ArgumentNullException(nameof(sourceAccount), "sourceAccount cannot be null");
@@ -27,14 +27,13 @@ public class Transaction : TransactionBase
         if (operations.Length == 0)
             throw new ArgumentNullException(nameof(operations), "At least one operation required");
 
-        Memo = memo ?? memos_Memo.None();
+        Memo = memo ?? Memo.None();
         Preconditions = preconditions;
     }
 
     internal Transaction(IAccountId sourceAccount, uint fee, long sequenceNumber, Operation[] operations,
-        memos_Memo? memo,
-        TransactionPreconditions preconditions, Soroban_SorobanTransactionData? sorobanData) : this(sourceAccount, fee,
-        sequenceNumber, operations, memo, preconditions)
+        Memo? memo, TransactionPreconditions? preconditions, SorobanTransactionData? sorobanData)
+        : this(sourceAccount, fee, sequenceNumber, operations, memo, preconditions)
     {
         SorobanTransactionData = sorobanData;
     }
@@ -47,20 +46,20 @@ public class Transaction : TransactionBase
 
     public Operation[] Operations { get; }
 
-    public memos_Memo? Memo { get; }
+    public Memo Memo { get; }
 
-    public TransactionPreconditions Preconditions { get; }
+    public TransactionPreconditions? Preconditions { get; }
 
-    public TimeBounds? TimeBounds => Preconditions.TimeBounds;
+    public TimeBounds? TimeBounds => Preconditions?.TimeBounds;
 
-    public Soroban_SorobanTransactionData? SorobanTransactionData { get; set; }
+    public SorobanTransactionData? SorobanTransactionData { get; set; }
 
     public void AddResourceFee(uint resourceFee)
     {
         Fee += resourceFee;
     }
 
-    public void SetSorobanAuthorization(Operations_SorobanAuthorizationEntry[] auth)
+    public void SetSorobanAuthorization(SorobanAuthorizationEntry[] auth)
     {
         foreach (var operation in Operations)
             if (operation is InvokeHostFunctionOperation invokeHostFunctionOperation)
@@ -71,7 +70,6 @@ public class Transaction : TransactionBase
     ///     Returns signature base for the given network.
     /// </summary>
     /// <param name="network">The network <see cref="Network" /> the transaction will be sent to.</param>
-    /// <returns></returns>
     public override byte[] SignatureBase(Network? network)
     {
         if (network == null)
@@ -100,7 +98,6 @@ public class Transaction : TransactionBase
     /// <summary>
     ///     Generates Transaction XDR object.
     /// </summary>
-    /// <returns></returns>
     public TransactionV0 ToXdr()
     {
         return ToXdrV0();
@@ -109,66 +106,28 @@ public class Transaction : TransactionBase
     /// <summary>
     ///     Generates Transaction XDR object.
     /// </summary>
-    /// <returns></returns>
     public TransactionV0 ToXdrV0()
     {
-        if (!(SourceAccount is KeyPair))
+        if (SourceAccount is not KeyPair)
             throw new Exception("TransactionEnvelope V0 expects a KeyPair source account");
 
-        // fee
-        var fee = new Uint32 { InnerValue = Fee };
-
-        // sequenceNumber
-        var sequenceNumberUint = new xdr_Int64(SequenceNumber);
-        var sequenceNumber = new SequenceNumber { InnerValue = sequenceNumberUint };
-
-        // sourceAccount
-        var sourceAccount = new Uint256(SourceAccount.PublicKey);
-
-        // operations
-        var operations = new Xdr.Operation[Operations.Length];
-
-        for (var i = 0; i < Operations.Length; i++)
-            operations[i] = Operations[i].ToXdr();
-
-        // ext
-        var ext = new TransactionV0.TransactionV0Ext { Discriminant = 0 };
-
-        var transaction = new TransactionV0
+        return new TransactionV0
         {
-            Fee = fee,
-            SeqNum = sequenceNumber,
-            SourceAccountEd25519 = sourceAccount,
-            Operations = operations,
-            Memo = Memo?.ToXdr(),
+            Fee = new Uint32(Fee),
+            SeqNum = new SequenceNumber(new Int64(SequenceNumber)),
+            SourceAccountEd25519 = new Uint256(SourceAccount.PublicKey),
+            Operations = Operations.Select(x => x.ToXdr()).ToArray(),
+            Memo = Memo.ToXdr(),
             TimeBounds = TimeBounds?.ToXdr(),
-            Ext = ext
+            Ext = new TransactionV0.TransactionV0Ext { Discriminant = 0 }
         };
-        return transaction;
     }
 
     /// <summary>
     ///     Generates Transaction XDR object.
     /// </summary>
-    /// <returns></returns>
     public Xdr.Transaction ToXdrV1()
     {
-        // fee
-        var fee = new Uint32 { InnerValue = Fee };
-
-        // sequenceNumber
-        var sequenceNumberUint = new xdr_Int64(SequenceNumber);
-        var sequenceNumber = new SequenceNumber { InnerValue = sequenceNumberUint };
-
-        // sourceAccount
-        var sourceAccount = SourceAccount.MuxedAccount;
-
-        // operations
-        var operations = new Xdr.Operation[Operations.Length];
-
-        for (var i = 0; i < Operations.Length; i++)
-            operations[i] = Operations[i].ToXdr();
-
         // ext
         var ext = new Xdr.Transaction.TransactionExt { Discriminant = 0 };
         if (SorobanTransactionData != null)
@@ -177,28 +136,26 @@ public class Transaction : TransactionBase
             ext.SorobanData = SorobanTransactionData.ToXdr();
         }
 
-        var transaction = new Xdr.Transaction
+        return new Xdr.Transaction
         {
-            Fee = fee,
-            SeqNum = sequenceNumber,
-            SourceAccount = sourceAccount,
-            Operations = operations,
-            Memo = Memo?.ToXdr(),
-            Cond = Preconditions.ToXDR(),
+            Fee = new Uint32(Fee),
+            SeqNum = new SequenceNumber(new Int64(SequenceNumber)),
+            SourceAccount = SourceAccount.MuxedAccount,
+            Operations = Operations.Select(x => x.ToXdr()).ToArray(),
+            Memo = Memo.ToXdr(),
+            Cond = Preconditions?.ToXdr() ?? new Preconditions(),
             Ext = ext
         };
-        return transaction;
     }
 
     /// <summary>
     ///     Generates TransactionEnvelope XDR object. Transaction need to have at least one signature.
     /// </summary>
-    /// <returns></returns>
     public override TransactionEnvelope ToEnvelopeXdr(TransactionXdrVersion version = TransactionXdrVersion.V1)
     {
         if (Signatures.Count == 0)
             throw new NotEnoughSignaturesException(
-                "Transaction must be signed by at least one signer. Use transaction.sign().");
+                "Transaction must be signed by at least one signer. Use transaction.Sign().");
 
         return ToEnvelopeXdr(version, Signatures.ToArray());
     }
@@ -206,43 +163,31 @@ public class Transaction : TransactionBase
     /// <summary>
     ///     Generates TransactionEnvelope XDR object. This transaction MUST be signed before being useful
     /// </summary>
-    /// <returns></returns>
     public override TransactionEnvelope ToUnsignedEnvelopeXdr(
         TransactionXdrVersion version = TransactionXdrVersion.V1)
     {
         if (Signatures.Count > 0)
             throw new TooManySignaturesException("Transaction must not be signed. Use ToEnvelopeXDR.");
 
-        return ToEnvelopeXdr(version, new DecoratedSignature[0]);
+        return ToEnvelopeXdr(version, Array.Empty<DecoratedSignature>());
     }
 
     private TransactionEnvelope ToEnvelopeXdr(TransactionXdrVersion version, DecoratedSignature[] signatures)
     {
-        var thisXdr = new TransactionEnvelope();
-        if (version == TransactionXdrVersion.V0)
+        return version switch
         {
-            thisXdr.Discriminant = new EnvelopeType
-                { InnerValue = EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_V0 };
-            thisXdr.V0 = new TransactionV0Envelope();
-
-            var transaction = ToXdrV0();
-            thisXdr.V0.Tx = transaction;
-            thisXdr.V0.Signatures = signatures;
-        }
-        else if (version == TransactionXdrVersion.V1)
-        {
-            thisXdr.Discriminant = new EnvelopeType { InnerValue = EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX };
-            thisXdr.V1 = new TransactionV1Envelope();
-            var transaction = ToXdrV1();
-            thisXdr.V1.Tx = transaction;
-            thisXdr.V1.Signatures = signatures;
-        }
-        else
-        {
-            throw new Exception($"Invalid TransactionXdrVersion {version}");
-        }
-
-        return thisXdr;
+            TransactionXdrVersion.V0 => new TransactionEnvelope
+            {
+                Discriminant = EnvelopeType.Create(EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_V0),
+                V0 = new TransactionV0Envelope { Tx = ToXdrV0(), Signatures = signatures }
+            },
+            TransactionXdrVersion.V1 => new TransactionEnvelope
+            {
+                Discriminant = EnvelopeType.Create(EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX),
+                V1 = new TransactionV1Envelope { Tx = ToXdrV1(), Signatures = signatures }
+            },
+            _ => throw new ArgumentException($"Invalid TransactionXdrVersion {version}", nameof(version))
+        };
     }
 
     public static Transaction FromEnvelopeXdr(string envelope)
@@ -256,16 +201,13 @@ public class Transaction : TransactionBase
     public static Transaction FromEnvelopeXdr(TransactionEnvelope envelope)
     {
         {
-            switch (envelope.Discriminant.InnerValue)
+            return envelope.Discriminant.InnerValue switch
             {
-                case EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_V0:
-                    return FromEnvelopeXdrV0(envelope.V0);
-                case EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX:
-                    return FromEnvelopeXdrV1(envelope.V1);
-                default:
-                    throw new ArgumentException(
-                        $"Invalid TransactionEnvelope: expected an ENVELOPE_TYPE_TX or ENVELOPE_TYPE_TX_V0 but received {envelope.Discriminant.InnerValue}");
-            }
+                EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_V0 => FromEnvelopeXdrV0(envelope.V0),
+                EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX => FromEnvelopeXdrV1(envelope.V1),
+                _ => throw new ArgumentException(
+                    $"Invalid TransactionEnvelope: expected an ENVELOPE_TYPE_TX or ENVELOPE_TYPE_TX_V0 but received {envelope.Discriminant.InnerValue}")
+            };
         }
     }
 
@@ -275,18 +217,16 @@ public class Transaction : TransactionBase
         var fee = transactionXdr.Fee.InnerValue;
         var sourceAccount = KeyPair.FromPublicKey(transactionXdr.SourceAccountEd25519.InnerValue);
         var sequenceNumber = transactionXdr.SeqNum.InnerValue.InnerValue;
-        var memo = transactionXdr.Memo != null ? memos_Memo.FromXdr(transactionXdr.Memo) : null;
-        var preconditions = new TransactionPreconditions
-        {
-            TimeBounds = TimeBounds.FromXdr(transactionXdr.TimeBounds)
-        };
+        var memo = Memo.FromXdr(transactionXdr.Memo);
+        var preconditions = transactionXdr.TimeBounds != null
+            ? new TransactionPreconditions { TimeBounds = TimeBounds.FromXdr(transactionXdr.TimeBounds) }
+            : null;
 
         var operations = new Operation[transactionXdr.Operations.Length];
         for (var i = 0; i < transactionXdr.Operations.Length; i++)
             operations[i] = Operation.FromXdr(transactionXdr.Operations[i]);
 
-        var transaction =
-            new Transaction(sourceAccount, fee, sequenceNumber, operations, memo, preconditions);
+        var transaction = new Transaction(sourceAccount, fee, sequenceNumber, operations, memo, preconditions);
 
         foreach (var signature in envelope.Signatures) transaction.Signatures.Add(signature);
 
@@ -299,15 +239,15 @@ public class Transaction : TransactionBase
         var fee = transactionXdr.Fee.InnerValue;
         var sourceAccount = MuxedAccount.FromXdrMuxedAccount(transactionXdr.SourceAccount);
         var sequenceNumber = transactionXdr.SeqNum.InnerValue.InnerValue;
-        var memo = memos_Memo.FromXdr(transactionXdr.Memo);
-        var preconditions = TransactionPreconditions.FromXDR(transactionXdr.Cond);
+        var memo = Memo.FromXdr(transactionXdr.Memo);
+        var preconditions = TransactionPreconditions.FromXdr(transactionXdr.Cond);
 
         var operations = new Operation[transactionXdr.Operations.Length];
         for (var i = 0; i < transactionXdr.Operations.Length; i++)
             operations[i] = Operation.FromXdr(transactionXdr.Operations[i]);
 
         var sorobanData = transactionXdr.Ext.SorobanData != null
-            ? Soroban_SorobanTransactionData.FromXdr(transactionXdr.Ext.SorobanData)
+            ? SorobanTransactionData.FromXdr(transactionXdr.Ext.SorobanData)
             : null;
 
         var transaction =

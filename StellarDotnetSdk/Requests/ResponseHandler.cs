@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
@@ -12,18 +13,19 @@ public class ResponseHandler<T> where T : class
         var statusCode = response.StatusCode;
         var content = await response.Content.ReadAsStringAsync();
 
-        if ((int)statusCode == 429)
+        switch ((int)statusCode)
         {
-            var retryAfterHeaderValue = response.Headers.GetValues("Retry-After").FirstOrDefault();
-            if (retryAfterHeaderValue != null)
+            case 429:
             {
-                var retryAfter = int.Parse(retryAfterHeaderValue);
+                var retryAfterHeaderValue = response.Headers.Contains("Retry-After")
+                    ? response.Headers.GetValues("Retry-After").First()
+                    : null;
+                var retryAfter = retryAfterHeaderValue != null ? int.Parse(retryAfterHeaderValue) : (int?)null;
                 throw new TooManyRequestsException(retryAfter);
             }
+            case >= 300:
+                throw new HttpResponseException((int)statusCode, response.ReasonPhrase);
         }
-
-        if ((int)statusCode >= 300)
-            throw new HttpResponseException((int)statusCode, response.ReasonPhrase);
 
         if (string.IsNullOrWhiteSpace(content))
             throw new ClientProtocolException("Response contains no content");

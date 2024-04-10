@@ -11,18 +11,18 @@ public class RevokeSponsorshipOperationResponseTest
 {
     //Revoke Sponsorship Account ID
     [TestMethod]
-    public void TestSerializationRevokeSponsorshipAccountIDOperation()
+    public void TestSerializationRevokeSponsorshipAccountIdOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/revokeSponsorship",
-            "revokeSponsorshipAccountID.json"));
+        var jsonPath = Utils.GetTestDataPath("revokeSponsorshipAccountID.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
         Assert.IsNotNull(back);
-        AssertRevokeSponsorshipAccountIDData(back);
+        AssertRevokeSponsorshipAccountIdData(back);
     }
 
-    private static void AssertRevokeSponsorshipAccountIDData(OperationResponse instance)
+    private static void AssertRevokeSponsorshipAccountIdData(OperationResponse instance)
     {
         Assert.IsTrue(instance is RevokeSponsorshipOperationResponse);
         var operation = (RevokeSponsorshipOperationResponse)instance;
@@ -35,8 +35,8 @@ public class RevokeSponsorshipOperationResponseTest
     [TestMethod]
     public void TestSerializationRevokeSponsorshipClaimableBalanceOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/revokeSponsorship",
-            "revokeSponsorshipClaimableBalance.json"));
+        var jsonPath = Utils.GetTestDataPath("revokeSponsorshipClaimableBalance.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -58,8 +58,8 @@ public class RevokeSponsorshipOperationResponseTest
     [TestMethod]
     public void TestSerializationRevokeSponsorshipDataOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/revokeSponsorship",
-            "revokeSponsorshipData.json"));
+        var jsonPath = Utils.GetTestDataPath("revokeSponsorshipData.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -81,8 +81,8 @@ public class RevokeSponsorshipOperationResponseTest
     [TestMethod]
     public void TestSerializationRevokeSponsorshipOfferOperation()
     {
-        var json = File.ReadAllText(
-            Path.Combine("testdata/operations/revokeSponsorship", "revokeSponsorshipOffer.json"));
+        var jsonPath = Utils.GetTestDataPath("revokeSponsorshipOffer.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -103,8 +103,8 @@ public class RevokeSponsorshipOperationResponseTest
     [TestMethod]
     public void TestSerializationRevokeSponsorshipSignerKey()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/revokeSponsorship",
-            "revokeSponsorshipSignerKey.json"));
+        var jsonPath = Utils.GetTestDataPath("revokeSponsorshipSignerKey.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -126,8 +126,8 @@ public class RevokeSponsorshipOperationResponseTest
     [TestMethod]
     public void TestSerializationRevokeSponsorshipTrustline()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/revokeSponsorship",
-            "revokeSponsorshipTrustline.json"));
+        var jsonPath = Utils.GetTestDataPath("revokeSponsorshipTrustline.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);

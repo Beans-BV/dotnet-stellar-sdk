@@ -48,8 +48,8 @@ public interface IPaymentsRequestBuilder : IRequestBuilderStreamable<OperationRe
 public class PaymentsRequestBuilder : RequestBuilderStreamable<IPaymentsRequestBuilder, OperationResponse>,
     IPaymentsRequestInitialBuilder
 {
-    private PaymentsRequestBuilder(Uri serverURI, HttpClient httpClient)
-        : base(serverURI, "payments", httpClient)
+    private PaymentsRequestBuilder(Uri serverUri, HttpClient httpClient)
+        : base(serverUri, "payments", httpClient)
     {
     }
 
@@ -87,14 +87,14 @@ public class PaymentsRequestBuilder : RequestBuilderStreamable<IPaymentsRequestB
     /// <summary>
     ///     Creates a new <see cref="PaymentsRequestBuilder" /> to build requests to <code>GET /payments</code>
     /// </summary>
-    /// <param name="serverURI">The Horizon server URI.</param>
+    /// <param name="serverUri">The Horizon server URI.</param>
     /// <param name="httpClient">The HttpClient to use for the requests.</param>
     /// <returns>
     ///     The <see cref="IPaymentsRequestInitialBuilder" /> interface for the <see cref="PaymentsRequestBuilder" />
     ///     instance.
     /// </returns>
-    public static IPaymentsRequestInitialBuilder Create(Uri serverURI, HttpClient httpClient)
+    public static IPaymentsRequestInitialBuilder Create(Uri serverUri, HttpClient httpClient)
     {
-        return new PaymentsRequestBuilder(serverURI, httpClient);
+        return new PaymentsRequestBuilder(serverUri, httpClient);
     }
 }

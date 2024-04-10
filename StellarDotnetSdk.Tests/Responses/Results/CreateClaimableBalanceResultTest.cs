@@ -1,7 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Responses.Results;
-using XDR = StellarDotnetSdk.Xdr;
+using StellarDotnetSdk.Xdr;
+using CreateClaimableBalanceResult = StellarDotnetSdk.Xdr.CreateClaimableBalanceResult;
+using OperationResult = StellarDotnetSdk.Xdr.OperationResult;
+using ResultCodeEnum = StellarDotnetSdk.Xdr.CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
@@ -11,92 +14,73 @@ public class CreateClaimableBalanceResultTest
     [TestMethod]
     public void TestLowReserve()
     {
-        var operationResultTr = new XDR.OperationResult.OperationResultTr();
-        operationResultTr.Discriminant.InnerValue = XDR.OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE;
+        var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CREATE_CLAIMABLE_BALANCE_LOW_RESERVE);
 
-        var result = new XDR.CreateClaimableBalanceResult();
-        result.Discriminant.InnerValue = XDR.CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum
-            .CREATE_CLAIMABLE_BALANCE_LOW_RESERVE;
-        operationResultTr.CreateClaimableBalanceResult = result;
-
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
-            typeof(CreateClaimableBalanceResult), false);
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
+            typeof(CreateClaimableBalanceLowReserve), false);
     }
 
     [TestMethod]
     public void TestMalformed()
     {
-        var operationResultTr = new XDR.OperationResult.OperationResultTr();
-        operationResultTr.Discriminant.InnerValue = XDR.OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE;
+        var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CREATE_CLAIMABLE_BALANCE_MALFORMED);
 
-        var result = new XDR.CreateClaimableBalanceResult();
-        result.Discriminant.InnerValue = XDR.CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum
-            .CREATE_CLAIMABLE_BALANCE_MALFORMED;
-        operationResultTr.CreateClaimableBalanceResult = result;
-
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
-            typeof(CreateClaimableBalanceResult), false);
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
+            typeof(CreateClaimableBalanceMalformed), false);
     }
 
     [TestMethod]
     public void TestNotAuthorized()
     {
-        var operationResultTr = new XDR.OperationResult.OperationResultTr();
-        operationResultTr.Discriminant.InnerValue = XDR.OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE;
+        var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED);
 
-        var result = new XDR.CreateClaimableBalanceResult();
-        result.Discriminant.InnerValue = XDR.CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum
-            .CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED;
-        operationResultTr.CreateClaimableBalanceResult = result;
-
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
-            typeof(CreateClaimableBalanceResult), false);
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
+            typeof(CreateClaimableBalanceNotAuthorized), false);
     }
 
     [TestMethod]
     public void TestNoTrust()
     {
-        var operationResultTr = new XDR.OperationResult.OperationResultTr();
-        operationResultTr.Discriminant.InnerValue = XDR.OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE;
+        var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CREATE_CLAIMABLE_BALANCE_NO_TRUST);
 
-        var result = new XDR.CreateClaimableBalanceResult();
-        result.Discriminant.InnerValue = XDR.CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum
-            .CREATE_CLAIMABLE_BALANCE_NO_TRUST;
-        operationResultTr.CreateClaimableBalanceResult = result;
-
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
-            typeof(CreateClaimableBalanceResult), false);
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
+            typeof(CreateClaimableBalanceNoTrust), false);
     }
 
     [TestMethod]
     public void TestSuccess()
     {
-        var operationResultTr = new XDR.OperationResult.OperationResultTr();
-        operationResultTr.Discriminant.InnerValue = XDR.OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE;
+        var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CREATE_CLAIMABLE_BALANCE_SUCCESS);
+        operationResultTr.CreateClaimableBalanceResult.BalanceID =
+            new ClaimableBalanceID
+            {
+                Discriminant = ClaimableBalanceIDType.Create(ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum
+                    .CLAIMABLE_BALANCE_ID_TYPE_V0),
+                V0 = new Hash(Convert.FromBase64String("i7gJhVls6QELGhMtAlC+ScMatzkwXW/s9+UoKVhN13Y="))
+            };
 
-        var result = new XDR.CreateClaimableBalanceResult();
-        result.BalanceID = new XDR.ClaimableBalanceID();
-        result.BalanceID.V0 = new XDR.Hash(Convert.FromBase64String("i7gJhVls6QELGhMtAlC+ScMatzkwXW/s9+UoKVhN13Y="));
-        result.Discriminant.InnerValue = XDR.CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum
-            .CREATE_CLAIMABLE_BALANCE_SUCCESS;
-        operationResultTr.CreateClaimableBalanceResult = result;
-
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
-            typeof(CreateClaimableBalanceResult), true);
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
+            typeof(CreateClaimableBalanceSuccess), true);
     }
 
     [TestMethod]
     public void TestUnderfunded()
     {
-        var operationResultTr = new XDR.OperationResult.OperationResultTr();
-        operationResultTr.Discriminant.InnerValue = XDR.OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE;
+        var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CREATE_CLAIMABLE_BALANCE_UNDERFUNDED);
 
-        var result = new XDR.CreateClaimableBalanceResult();
-        result.Discriminant.InnerValue = XDR.CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum
-            .CREATE_CLAIMABLE_BALANCE_UNDERFUNDED;
-        operationResultTr.CreateClaimableBalanceResult = result;
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
+            typeof(CreateClaimableBalanceUnderfunded), false);
+    }
 
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
-            typeof(CreateClaimableBalanceResult), false);
+    private static OperationResult.OperationResultTr CreateOperationResultTr(ResultCodeEnum type)
+    {
+        return new OperationResult.OperationResultTr
+        {
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE),
+            CreateClaimableBalanceResult = new CreateClaimableBalanceResult
+            {
+                Discriminant = CreateClaimableBalanceResultCode.Create(type)
+            }
+        };
     }
 }

@@ -4,12 +4,12 @@ namespace StellarDotnetSdk.LedgerEntries;
 
 public class LedgerEntryExtensionV1
 {
-    public LedgerEntryExtensionV1(KeyPair sponsoringID)
+    public LedgerEntryExtensionV1(KeyPair sponsoringId)
     {
-        SponsoringID = sponsoringID;
+        SponsoringId = sponsoringId;
     }
 
-    public KeyPair SponsoringID { get; }
+    public KeyPair SponsoringId { get; }
 
     public static LedgerEntryExtensionV1 FromXdr(Xdr.LedgerEntryExtensionV1 xdrEntryExtensionV1)
     {

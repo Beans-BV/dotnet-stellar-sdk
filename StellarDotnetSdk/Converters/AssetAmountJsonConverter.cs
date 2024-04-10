@@ -11,7 +11,6 @@ public class AssetAmountJsonConverter : JsonConverter<AssetAmount>
         bool hasExistingValue, JsonSerializer serializer)
     {
         var jt = JToken.ReadFrom(reader);
-        // TODO Consider moving this portion to a helper
         var assetName = jt.Value<string>("asset");
         var asset = string.IsNullOrEmpty(assetName) ? null : Asset.Create(assetName);
 

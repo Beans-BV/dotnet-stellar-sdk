@@ -4,12 +4,12 @@ namespace StellarDotnetSdk.LedgerEntries;
 
 public class ConfigSettingContractHistoricalData : LedgerEntryConfigSetting
 {
-    private ConfigSettingContractHistoricalData(long feeHistorical1KB)
+    private ConfigSettingContractHistoricalData(long feeHistorical1Kb)
     {
-        FeeHistorical1KB = feeHistorical1KB;
+        FeeHistorical1Kb = feeHistorical1Kb;
     }
 
-    public long FeeHistorical1KB { get; }
+    public long FeeHistorical1Kb { get; }
 
     public static ConfigSettingContractHistoricalData FromXdr(ConfigSettingContractHistoricalDataV0 xdrConfig)
     {

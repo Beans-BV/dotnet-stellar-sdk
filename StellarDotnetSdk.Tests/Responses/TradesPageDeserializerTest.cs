@@ -12,16 +12,18 @@ public class TradesPageDeserializerTest
     [TestMethod]
     public void TestDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "tradesPage.json"));
+        var jsonPath = Utils.GetTestDataPath("tradePage.json");
+        var json = File.ReadAllText(jsonPath);
         var tradesPage = JsonSingleton.GetInstance<Page<TradeResponse>>(json);
-
+        Assert.IsNotNull(tradesPage);
         AssertTestData(tradesPage);
     }
 
     [TestMethod]
     public void TestSerializeDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "tradesPage.json"));
+        var jsonPath = Utils.GetTestDataPath("tradePage.json");
+        var json = File.ReadAllText(jsonPath);
         var tradesPage = JsonSingleton.GetInstance<Page<TradeResponse>>(json);
         var serialized = JsonConvert.SerializeObject(tradesPage);
         var back = JsonConvert.DeserializeObject<Page<TradeResponse>>(serialized);

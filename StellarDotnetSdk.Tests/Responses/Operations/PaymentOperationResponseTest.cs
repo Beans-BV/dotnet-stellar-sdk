@@ -15,20 +15,22 @@ public class PaymentOperationResponseTest
     [TestMethod]
     public void TestDeserializePaymentOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/payment", "payment.json"));
+        var jsonPath = Utils.GetTestDataPath("payment.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<PaymentOperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertPaymentOperationTestData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializePaymentOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/payment", "payment.json"));
+        var jsonPath = Utils.GetTestDataPath("payment.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<PaymentOperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<PaymentOperationResponse>(serialized);
-
+        Assert.IsNotNull(back);
         AssertPaymentOperationTestData(back);
     }
 
@@ -36,7 +38,7 @@ public class PaymentOperationResponseTest
     {
         Assert.AreEqual(operation.SourceAccount, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
         Assert.IsNull(operation.SourceAccountMuxed);
-        Assert.IsNull(operation.SourceAccountMuxedID);
+        Assert.IsNull(operation.SourceAccountMuxedId);
 
         Assert.AreEqual(operation.Id, 3940808587743233L);
 
@@ -93,20 +95,22 @@ public class PaymentOperationResponseTest
     [TestMethod]
     public void TestDeserializePaymentOperationNonNative()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/payment", "paymentNonNative.json"));
+        var jsonPath = Utils.GetTestDataPath("paymentNonNative.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertNonNativePaymentData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializePaymentOperationNonNative()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/payment", "paymentNonNative.json"));
+        var jsonPath = Utils.GetTestDataPath("paymentNonNative.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
-
+        Assert.IsNotNull(back);
         AssertNonNativePaymentData(back);
     }
 
@@ -126,20 +130,22 @@ public class PaymentOperationResponseTest
     [TestMethod]
     public void TestDeserializePaymentOperationMuxed()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/payment", "paymentMuxed.json"));
+        var jsonPath = Utils.GetTestDataPath("paymentMuxed.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertPaymentOperationTestDataMuxed(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializePaymentOperationMuxed()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/payment", "paymentMuxed.json"));
+        var jsonPath = Utils.GetTestDataPath("paymentMuxed.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
-
+        Assert.IsNotNull(back);
         AssertPaymentOperationTestDataMuxed(back);
     }
 
@@ -151,7 +157,7 @@ public class PaymentOperationResponseTest
         Assert.AreEqual(operation.SourceAccount, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
         Assert.AreEqual(operation.SourceAccountMuxed,
             "MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24");
-        Assert.AreEqual(operation.SourceAccountMuxedID, 5123456789UL);
+        Assert.AreEqual(operation.SourceAccountMuxedId, 5123456789UL);
 
         Assert.AreEqual(operation.Id, 3940808587743233L);
 

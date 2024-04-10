@@ -9,34 +9,34 @@ public class ManageDataResultTest
     [TestMethod]
     public void TestSuccess()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAKAAAAAAAAAAA=", typeof(ManageDataSuccess), true);
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAKAAAAAAAAAAA=", typeof(ManageDataSuccess), true);
     }
 
     [TestMethod]
     public void TestNotSupportedYet()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAK/////wAAAAA=", typeof(ManageDataNotSupportedYet),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAK/////wAAAAA=", typeof(ManageDataNotSupportedYet),
             false);
     }
 
     [TestMethod]
     public void TestNameNotFound()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAK/////gAAAAA=", typeof(ManageDataNameNotFound),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAK/////gAAAAA=", typeof(ManageDataNameNotFound),
             false);
     }
 
     [TestMethod]
     public void TestLowReserve()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAK/////QAAAAA=", typeof(ManageDataLowReserve),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAK/////QAAAAA=", typeof(ManageDataLowReserve),
             false);
     }
 
     [TestMethod]
     public void TestInvalidName()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAK/////AAAAAA=", typeof(ManageDataInvalidName),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAK/////AAAAAA=", typeof(ManageDataInvalidName),
             false);
     }
 }

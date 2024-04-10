@@ -2,41 +2,26 @@
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Effects;
+#nullable disable
 
 /// <summary>
 ///     Represents account_debited effect response.
-///     See: https://www.stellar.org/developers/horizon/reference/resources/effect.html
-///     <seealso cref="Requests.EffectsRequestBuilder" />
-///     <seealso cref="Server" />
 /// </summary>
 public class AccountDebitedEffectResponse : EffectResponse
 {
-    public AccountDebitedEffectResponse()
-    {
-    }
-
-    /// <inheritdoc />
-    public AccountDebitedEffectResponse(string amount, string assetType, string assetCode, string assetIssuer)
-    {
-        Amount = amount;
-        AssetType = assetType;
-        AssetCode = assetCode;
-        AssetIssuer = assetIssuer;
-    }
-
     public override int TypeId => 3;
 
     [JsonProperty(PropertyName = "amount")]
-    public string Amount { get; private set; }
+    public string Amount { get; init; }
 
     [JsonProperty(PropertyName = "asset_type")]
-    public string AssetType { get; private set; }
+    public string AssetType { get; init; }
 
     [JsonProperty(PropertyName = "asset_code")]
-    public string AssetCode { get; private set; }
+    public string AssetCode { get; init; }
 
     [JsonProperty(PropertyName = "asset_issuer")]
-    public string AssetIssuer { get; private set; }
+    public string AssetIssuer { get; init; }
 
     public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
 }

@@ -2,66 +2,35 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using StellarDotnetSdk.Xdr;
+using TransactionResult = StellarDotnetSdk.Responses.Results.TransactionResult;
 
 namespace StellarDotnetSdk.Responses;
+#nullable disable
 
 public class SubmitTransactionResponse : Response
 {
-    private readonly string _envelopeXdr;
-    private readonly string _resultXdr;
-
-    public SubmitTransactionResponse(Extras extras, uint? ledger, string hash, string envelopeXdr, string resultXdr)
-    {
-        SubmitTransactionResponseExtras = extras;
-        Ledger = ledger;
-        Hash = hash;
-        _envelopeXdr = envelopeXdr;
-        _resultXdr = resultXdr;
-    }
-
-    [JsonProperty(PropertyName = "hash")] public string Hash { get; private set; }
-
-    [JsonProperty(PropertyName = "ledger")]
-    public uint? Ledger { get; private set; }
-
     [JsonProperty(PropertyName = "envelope_xdr")]
-    public string EnvelopeXdr
-    {
-        get
-        {
-            if (IsSuccess())
-                return _envelopeXdr;
-            return SubmitTransactionResponseExtras.EnvelopeXdr;
-        }
-    }
+    private string _envelopeXdr;
 
     [JsonProperty(PropertyName = "result_xdr")]
-    public string ResultXdr
-    {
-        get
-        {
-            if (IsSuccess())
-                return _resultXdr;
-            return SubmitTransactionResponseExtras.ResultXdr;
-        }
-    }
+    private string _resultXdr;
 
-    public TransactionResult Result
-    {
-        get
-        {
-            if (IsSuccess()) return TransactionResult.FromXdrBase64(_resultXdr);
-            return TransactionResult.FromXdrBase64(SubmitTransactionResponseExtras.ResultXdr);
-        }
-    }
+    [JsonProperty(PropertyName = "hash")] public string Hash { get; init; }
+
+    [JsonProperty(PropertyName = "ledger")]
+    public uint? Ledger { get; init; }
+
+    public string EnvelopeXdr => IsSuccess ? _envelopeXdr : SubmitTransactionResponseExtras.EnvelopeXdr;
+
+    public string ResultXdr => IsSuccess ? _resultXdr : SubmitTransactionResponseExtras.ResultXdr;
+
+    public TransactionResult Result =>
+        TransactionResult.FromXdrBase64(IsSuccess ? _resultXdr : SubmitTransactionResponseExtras.ResultXdr);
 
     [JsonProperty(PropertyName = "extras")]
-    public Extras SubmitTransactionResponseExtras { get; }
+    public Extras SubmitTransactionResponseExtras { get; init; }
 
-    public bool IsSuccess()
-    {
-        return Ledger != null;
-    }
+    public bool IsSuccess => Ledger != null;
 
     /// <summary>
     ///     Helper method that returns Offer ID for ManageOffer from TransactionResult Xdr.
@@ -77,7 +46,7 @@ public class SubmitTransactionResponse : Response
     /// </returns>
     public long? GetOfferIdFromResult(int position)
     {
-        if (!IsSuccess()) return null;
+        if (!IsSuccess) return null;
 
         var bytes = Convert.FromBase64String(ResultXdr);
         var xdrInputStream = new XdrDataInputStream(bytes);
@@ -103,24 +72,16 @@ public class SubmitTransactionResponse : Response
     /// <summary>
     ///     Additional information returned by a server.
     /// </summary>
-    [JsonObject]
     public class Extras
     {
-        public Extras(string envelopeXdr, string resultXdr, ResultCodes resultCodes)
-        {
-            EnvelopeXdr = envelopeXdr;
-            ResultXdr = resultXdr;
-            ExtrasResultCodes = resultCodes;
-        }
-
         [JsonProperty(PropertyName = "envelope_xdr")]
-        public string EnvelopeXdr { get; }
+        public string EnvelopeXdr { get; init; }
 
         [JsonProperty(PropertyName = "result_xdr")]
-        public string ResultXdr { get; }
+        public string ResultXdr { get; init; }
 
         [JsonProperty(PropertyName = "result_codes")]
-        public ResultCodes ExtrasResultCodes { get; }
+        public ResultCodes ExtrasResultCodes { get; init; }
 
         /// <summary>
         ///     Contains result codes for this transaction.
@@ -132,17 +93,11 @@ public class SubmitTransactionResponse : Response
         /// </summary>
         public class ResultCodes
         {
-            public ResultCodes(string transactionResultCode, List<string> operationsResultCodes)
-            {
-                TransactionResultCode = transactionResultCode;
-                OperationsResultCodes = operationsResultCodes;
-            }
-
             [JsonProperty(PropertyName = "transaction")]
-            public string TransactionResultCode { get; }
+            public string TransactionResultCode { get; init; }
 
             [JsonProperty(PropertyName = "operations")]
-            public List<string> OperationsResultCodes { get; }
+            public List<string> OperationsResultCodes { get; init; }
         }
     }
 }

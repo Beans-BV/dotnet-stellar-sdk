@@ -1,44 +1,31 @@
 ﻿using Newtonsoft.Json;
 
 namespace StellarDotnetSdk.Responses;
+#nullable disable
 
 public class RootResponse : Response
 {
-    public RootResponse(string horizonVersion, string stellarCoreVersion, int historyLatestLedger,
-        int historyElderLedger,
-        int coreLatestLedger, string networkPassphrase, int currentProtocolVersion, int coreSupportedProtocolVersion)
-    {
-        HorizonVersion = horizonVersion;
-        StellarCoreVersion = stellarCoreVersion;
-        HistoryLatestLedger = historyLatestLedger;
-        HistoryElderLedger = historyElderLedger;
-        CoreLatestLedger = coreLatestLedger;
-        NetworkPassphrase = networkPassphrase;
-        CurrentProtocolVersion = currentProtocolVersion;
-        CoreSupportedProtocolVersion = coreSupportedProtocolVersion;
-    }
-
     [JsonProperty(PropertyName = "horizon_version")]
-    public string HorizonVersion { get; }
+    public string HorizonVersion { get; init; }
 
     [JsonProperty(PropertyName = "core_version")]
-    public string StellarCoreVersion { get; }
+    public string StellarCoreVersion { get; init; }
 
     [JsonProperty(PropertyName = "history_latest_ledger")]
-    public int HistoryLatestLedger { get; }
+    public int HistoryLatestLedger { get; init; }
 
     [JsonProperty(PropertyName = "history_elder_ledger")]
-    public int HistoryElderLedger { get; }
+    public int HistoryElderLedger { get; init; }
 
     [JsonProperty(PropertyName = "core_latest_ledger")]
-    public int CoreLatestLedger { get; }
+    public int CoreLatestLedger { get; init; }
 
     [JsonProperty(PropertyName = "network_passphrase")]
-    public string NetworkPassphrase { get; }
+    public string NetworkPassphrase { get; init; }
 
     [JsonProperty(PropertyName = "current_protocol_version")]
-    public int CurrentProtocolVersion { get; }
+    public int CurrentProtocolVersion { get; init; }
 
     [JsonProperty(PropertyName = "core_supported_protocol_version")]
-    public int CoreSupportedProtocolVersion { get; }
+    public int CoreSupportedProtocolVersion { get; init; }
 }

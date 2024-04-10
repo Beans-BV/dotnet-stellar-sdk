@@ -1,23 +1,37 @@
 ﻿using Newtonsoft.Json;
 
 namespace StellarDotnetSdk.Responses.Effects;
+#nullable disable
 
-/// <inheritdoc />
 public class SignerEffectResponse : EffectResponse
 {
-    public SignerEffectResponse()
-    {
-    }
-
-    public SignerEffectResponse(int weight, string publicKey)
-    {
-        Weight = weight;
-        PublicKey = publicKey;
-    }
-
     [JsonProperty(PropertyName = "weight")]
-    public int Weight { get; private set; }
+    public int Weight { get; init; }
 
     [JsonProperty(PropertyName = "public_key")]
-    public string PublicKey { get; private set; }
+    public string PublicKey { get; init; }
+}
+
+/// <summary>
+///     Represents signer_removed effect response.
+/// </summary>
+public class SignerRemovedEffectResponse : SignerEffectResponse
+{
+    public override int TypeId => 11;
+}
+
+/// <summary>
+///     Represents signer_updated effect response.
+/// </summary>
+public class SignerUpdatedEffectResponse : SignerEffectResponse
+{
+    public override int TypeId => 12;
+}
+
+/// <summary>
+///     Represents signer_created effect response.
+/// </summary>
+public class SignerCreatedEffectResponse : SignerEffectResponse
+{
+    public override int TypeId => 10;
 }

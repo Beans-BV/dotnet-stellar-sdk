@@ -1,18 +1,13 @@
 using Newtonsoft.Json;
 
 namespace StellarDotnetSdk.Responses;
+#nullable disable
 
 public class Claimant
 {
-    public Claimant(string destination, Predicate predicate)
-    {
-        Destination = destination;
-        Predicate = predicate;
-    }
-
     [JsonProperty(PropertyName = "destination")]
-    public string Destination { get; set; }
+    public string Destination { get; init; }
 
     [JsonProperty(PropertyName = "predicate")]
-    public Predicate Predicate { get; set; }
+    public Predicate Predicate { get; init; }
 }

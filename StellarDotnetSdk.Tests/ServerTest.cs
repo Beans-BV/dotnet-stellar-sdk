@@ -3,16 +3,15 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Moq.Language;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Federation;
 using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
-using StellarDotnetSdk.Responses;
+using StellarDotnetSdk.Responses.Results;
+using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
 
 namespace StellarDotnetSdk.Tests;
@@ -20,53 +19,9 @@ namespace StellarDotnetSdk.Tests;
 [TestClass]
 public class ServerTest
 {
-    private const HttpStatusCode HttpOk = HttpStatusCode.OK;
     private const HttpStatusCode HttpBadRequest = HttpStatusCode.BadRequest;
-
-    private Mock<FakeHttpMessageHandler> _fakeHttpMessageHandler;
-    private HttpClient _httpClient;
-    private Server _server;
-
-    private ISetupSequentialResult<HttpResponseMessage> When()
-    {
-        return _fakeHttpMessageHandler.SetupSequence(a => a.Send(It.IsAny<HttpRequestMessage>()));
-    }
-
-    [TestInitialize]
-    public void Setup()
-    {
-        Network.UseTestNetwork();
-
-        _fakeHttpMessageHandler = new Mock<FakeHttpMessageHandler> { CallBase = true };
-        _httpClient = new HttpClient(_fakeHttpMessageHandler.Object);
-        _server = new Server("https://horizon.stellar.org", _httpClient);
-    }
-
-    [TestCleanup]
-    public void Cleanup()
-    {
-        Network.Use(null);
-        _httpClient.Dispose();
-        _server.Dispose();
-    }
-
-    public static HttpResponseMessage ResponseMessage(HttpStatusCode statusCode)
-    {
-        return new HttpResponseMessage
-        {
-            StatusCode = statusCode,
-            Content = null
-        };
-    }
-
-    public static HttpResponseMessage ResponseMessage(HttpStatusCode statusCode, string content)
-    {
-        return new HttpResponseMessage
-        {
-            StatusCode = statusCode,
-            Content = new StringContent(content)
-        };
-    }
+    private const string ServerFailureJsonPath = "Responses/serverFailure.json";
+    private const string ServerSuccessJsonPath = "Responses/serverSuccess.json";
 
     private static Transaction BuildTransaction()
     {
@@ -75,7 +30,7 @@ public class ServerTest
 
         var account = new Account(source.AccountId, 2908908335136768L);
         var builder = new TransactionBuilder(account)
-            .AddOperation(new CreateAccountOperation.Builder(destination, "2000").Build())
+            .AddOperation(new CreateAccountOperation(destination, "2000"))
             .AddMemo(Memo.Text("Hello world!"));
 
         Assert.AreEqual(1, builder.OperationsCount);
@@ -101,13 +56,11 @@ public class ServerTest
     [TestMethod]
     public async Task TestSubmitTransactionSuccess()
     {
-        var json = await File.ReadAllTextAsync(Path.Combine("testdata", "serverSuccess.json"));
-        When().Returns(ResponseMessage(HttpOk, json));
-
-        var response = await _server.SubmitTransaction(
+        using var server = await Utils.CreateTestServerWithJson("Responses/serverSuccess.json");
+        var response = await server.SubmitTransaction(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
         Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccess());
+        Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, (uint)826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
@@ -116,11 +69,14 @@ public class ServerTest
     [TestMethod]
     public async Task TestDefaultClientHeaders()
     {
-        var messageHandler = new Mock<FakeHttpMessageHandler> { CallBase = true };
+        Network.UseTestNetwork();
+        var messageHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
         var httpClient = Server.CreateHttpClient(messageHandler.Object);
         var server = new Server("https://horizon.stellar.org", httpClient);
 
-        var json = File.ReadAllText(Path.Combine("testdata", "serverSuccess.json"));
+        var jsonPath = Utils.GetTestDataPath("Responses/serverSuccess.json");
+
+        var json = await File.ReadAllTextAsync(jsonPath);
         var clientName = "";
         var clientVersion = "";
 
@@ -131,12 +87,12 @@ public class ServerTest
                 clientName = msg.Headers.GetValues("X-Client-Name").FirstOrDefault();
                 clientVersion = msg.Headers.GetValues("X-Client-Version").FirstOrDefault();
             })
-            .Returns(ResponseMessage(HttpOk, json));
+            .Returns(new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent(json) });
 
         var response = await server.SubmitTransaction(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
         Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccess());
+        Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual("StellarDotnetSdk", clientName);
         Assert.IsFalse(string.IsNullOrWhiteSpace(clientVersion));
         var result = response.Result;
@@ -147,13 +103,12 @@ public class ServerTest
     [TestMethod]
     public async Task TestSubmitTransactionFail()
     {
-        var json = await File.ReadAllTextAsync(Path.Combine("testdata", "serverFailure.json"));
-        When().Returns(ResponseMessage(HttpBadRequest, json));
+        using var server = await Utils.CreateTestServerWithJson(ServerFailureJsonPath, HttpBadRequest);
 
-        var response = await _server.SubmitTransaction(
+        var response = await server.SubmitTransaction(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
         Assert.IsNotNull(response);
-        Assert.IsFalse(response.IsSuccess());
+        Assert.IsFalse(response.IsSuccess);
         Assert.IsNull(response.Ledger);
         Assert.IsNull(response.Hash);
         Assert.AreEqual(response.SubmitTransactionResponseExtras.EnvelopeXdr,
@@ -174,13 +129,12 @@ public class ServerTest
     [TestMethod]
     public async Task TestSubmitTransactionEnsureSuccess()
     {
-        var json = await File.ReadAllTextAsync(Path.Combine("testdata", "serverSuccess.json"));
-        When().Returns(ResponseMessage(HttpOk, json));
+        using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
-        var response = await _server.SubmitTransaction(
+        var response = await server.SubmitTransaction(
             BuildTransaction().ToEnvelopeXdrBase64(), new SubmitTransactionOptions { EnsureSuccess = true });
         Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccess());
+        Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, (uint)826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
@@ -189,12 +143,11 @@ public class ServerTest
     [TestMethod]
     public async Task TestSubmitTransactionEnsureSuccessWithContent()
     {
-        var json = await File.ReadAllTextAsync(Path.Combine("testdata", "serverFailure.json"));
-        When().Returns(ResponseMessage(HttpBadRequest, json));
+        using var server = await Utils.CreateTestServerWithJson(ServerFailureJsonPath, HttpBadRequest);
 
         var ex = await Assert.ThrowsExceptionAsync<ConnectionErrorException>(async () =>
         {
-            await _server.SubmitTransaction(BuildTransaction(),
+            await server.SubmitTransaction(BuildTransaction(),
                 new SubmitTransactionOptions { EnsureSuccess = true });
         });
 
@@ -204,11 +157,10 @@ public class ServerTest
     [TestMethod]
     public async Task TestSubmitTransactionEnsureSuccessWithEmptyContent()
     {
-        When().Returns(ResponseMessage(HttpBadRequest, ""));
-
+        using var server = Utils.CreateTestServerWithContent("", HttpBadRequest);
         var ex = await Assert.ThrowsExceptionAsync<ConnectionErrorException>(async () =>
         {
-            await _server.SubmitTransaction(BuildTransaction(),
+            await server.SubmitTransaction(BuildTransaction(),
                 new SubmitTransactionOptions { EnsureSuccess = true });
         });
 
@@ -218,11 +170,11 @@ public class ServerTest
     [TestMethod]
     public async Task TestSubmitTransactionEnsureSuccessWithNullContent()
     {
-        When().Returns(ResponseMessage(HttpBadRequest));
+        using var server = Utils.CreateTestServerWithContent(null, HttpBadRequest);
 
         var ex = await Assert.ThrowsExceptionAsync<ConnectionErrorException>(async () =>
         {
-            await _server.SubmitTransaction(BuildTransaction(),
+            await server.SubmitTransaction(BuildTransaction(),
                 new SubmitTransactionOptions { EnsureSuccess = true });
         });
 
@@ -232,13 +184,12 @@ public class ServerTest
     [TestMethod]
     public async Task TestNoSkipMemoRequiredCheck()
     {
-        var json = await File.ReadAllTextAsync(Path.Combine("testdata", "serverSuccess.json"));
-        When().Returns(ResponseMessage(HttpOk, json));
+        using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
-        var response = await _server.SubmitTransaction(
+        var response = await server.SubmitTransaction(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = false });
         Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccess());
+        Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, (uint)826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
@@ -247,13 +198,12 @@ public class ServerTest
     [TestMethod]
     public async Task TestSubmitTransactionEnvelopeBase64()
     {
-        var json = await File.ReadAllTextAsync(Path.Combine("testdata", "serverSuccess.json"));
-        When().Returns(ResponseMessage(HttpOk, json));
+        using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
-        var response = await _server.SubmitTransaction(
+        var response = await server.SubmitTransaction(
             BuildTransaction().ToEnvelopeXdrBase64(), new SubmitTransactionOptions { SkipMemoRequiredCheck = false });
         Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccess());
+        Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, (uint)826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
@@ -262,14 +212,13 @@ public class ServerTest
     [TestMethod]
     public async Task TestSubmitFeeBumpTransactionEnvelopeBase64()
     {
-        var json = await File.ReadAllTextAsync(Path.Combine("testdata", "serverSuccess.json"));
-        When().Returns(ResponseMessage(HttpOk, json));
+        using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
-        var response = await _server.SubmitTransaction(
+        var response = await server.SubmitTransaction(
             BuildFeeBumpTransaction().ToEnvelopeXdrBase64(),
             new SubmitTransactionOptions { SkipMemoRequiredCheck = false, FeeBumpTransaction = true });
         Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccess());
+        Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, (uint)826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
@@ -278,12 +227,11 @@ public class ServerTest
     [TestMethod]
     public async Task TestSubmitFeeBumpTransactionWithoutOptions()
     {
-        var json = await File.ReadAllTextAsync(Path.Combine("testdata", "serverSuccess.json"));
-        When().Returns(ResponseMessage(HttpOk, json));
+        using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
-        var response = await _server.SubmitTransaction(BuildFeeBumpTransaction());
+        var response = await server.SubmitTransaction(BuildFeeBumpTransaction());
         Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccess());
+        Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, (uint)826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
@@ -292,13 +240,12 @@ public class ServerTest
     [TestMethod]
     public async Task TestSubmitFeeBumpTransactionWithOptions()
     {
-        var json = await File.ReadAllTextAsync(Path.Combine("testdata", "serverSuccess.json"));
-        When().Returns(ResponseMessage(HttpOk, json));
+        using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
-        var response = await _server.SubmitTransaction(
+        var response = await server.SubmitTransaction(
             BuildFeeBumpTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = false });
         Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccess());
+        Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, (uint)826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
@@ -307,12 +254,11 @@ public class ServerTest
     [TestMethod]
     public async Task TestSubmitTransactionWithoutOptions()
     {
-        var json = await File.ReadAllTextAsync(Path.Combine("testdata", "serverSuccess.json"));
-        When().Returns(ResponseMessage(HttpOk, json));
+        using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
-        var response = await _server.SubmitTransaction(BuildTransaction());
+        var response = await server.SubmitTransaction(BuildTransaction());
         Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccess());
+        Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, (uint)826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
@@ -321,13 +267,12 @@ public class ServerTest
     [TestMethod]
     public async Task TestSubmitTransactionEnvelopeBase64WithoutOptions()
     {
-        var json = await File.ReadAllTextAsync(Path.Combine("testdata", "serverSuccess.json"));
-        When().Returns(ResponseMessage(HttpOk, json));
+        using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
-        var response = await _server.SubmitTransaction(
+        var response = await server.SubmitTransaction(
             BuildTransaction().ToEnvelopeXdrBase64());
         Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccess());
+        Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, (uint)826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
@@ -349,22 +294,5 @@ public class ServerTest
         Assert.AreEqual(hostFunction.FunctionName.InnerValue, "submit");
         Assert.AreEqual(((SCSymbol)hostFunction.Args[0]).InnerValue, "dancinRaph");
         Assert.AreEqual(invokeContractOperation.Auth.Length, 0);
-    }
-
-    public class FakeHttpMessageHandler : HttpMessageHandler
-    {
-        public Uri RequestUri { get; private set; }
-
-        public virtual HttpResponseMessage Send(HttpRequestMessage request)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-            CancellationToken cancellationToken)
-        {
-            RequestUri = request.RequestUri;
-            return await Task.FromResult(Send(request));
-        }
     }
 }

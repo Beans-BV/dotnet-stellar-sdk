@@ -11,16 +11,18 @@ public class TradeAggregationsPageDeserializerTest
     [TestMethod]
     public void TestDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "tradeAggregationsPage.json"));
+        var jsonPath = Utils.GetTestDataPath("tradeAggregationPage.json");
+        var json = File.ReadAllText(jsonPath);
         var tradeAggregationsPage = JsonSingleton.GetInstance<Page<TradeAggregationResponse>>(json);
-
+        Assert.IsNotNull(tradeAggregationsPage);
         AssertTestData(tradeAggregationsPage);
     }
 
     [TestMethod]
     public void TestSerializeDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "tradeAggregationsPage.json"));
+        var jsonPath = Utils.GetTestDataPath("tradeAggregationPage.json");
+        var json = File.ReadAllText(jsonPath);
         var tradeAggregationsPage = JsonSingleton.GetInstance<Page<TradeAggregationResponse>>(json);
         var serialized = JsonConvert.SerializeObject(tradeAggregationsPage);
         var back = JsonConvert.DeserializeObject<Page<TradeAggregationResponse>>(serialized);
@@ -32,9 +34,10 @@ public class TradeAggregationsPageDeserializerTest
     [TestMethod]
     public void TestDeserializePre100()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "tradeAggregationsPagePre100.json"));
+        var jsonPath = Utils.GetTestDataPath("tradeAggregationPagePre100.json");
+        var json = File.ReadAllText(jsonPath);
         var tradeAggregationsPage = JsonSingleton.GetInstance<Page<TradeAggregationResponse>>(json);
-
+        Assert.IsNotNull(tradeAggregationsPage);
         AssertTestData(tradeAggregationsPage);
     }
 
@@ -42,7 +45,8 @@ public class TradeAggregationsPageDeserializerTest
     [TestMethod]
     public void TestSerializeDeserializePre100()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "tradeAggregationsPagePre100.json"));
+        var jsonPath = Utils.GetTestDataPath("tradeAggregationPagePre100.json");
+        var json = File.ReadAllText(jsonPath);
         var tradeAggregationsPage = JsonSingleton.GetInstance<Page<TradeAggregationResponse>>(json);
         var serialized = JsonConvert.SerializeObject(tradeAggregationsPage);
         var back = JsonConvert.DeserializeObject<Page<TradeAggregationResponse>>(serialized);

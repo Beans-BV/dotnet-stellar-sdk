@@ -13,11 +13,9 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
     }
 
     /// <summary>
-    ///     Requests specific uri and returns LedgerResponse
+    ///     Requests specific uri and returns LedgerResponse.
     ///     This method is helpful for getting the links.
     /// </summary>
-    /// <param name="uri"></param>
-    /// <returns></returns>
     public async Task<TransactionResponse> Transaction(Uri uri)
     {
         var responseHandler = new ResponseHandler<TransactionResponse>();
@@ -27,10 +25,10 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
     }
 
     /// <summary>
-    ///     Requests <code>GET /ledgers/{ledgerSeq}</code>
-    ///     <a href="https://www.stellar.org/developers/horizon/reference/ledgers-single.html">Ledger Details</a>
+    ///     Requests <code>GET /transactions/{transactionId}</code>
+    ///     <a href="https://developers.stellar.org/network/horizon/resources/retrieve-a-transaction">Retrieve a Transaction</a>
     /// </summary>
-    /// <param name="ledgerSeq">Ledger to fetch</param>
+    /// <param name="transactionId">ID of the transaction to fetch.</param>
     public Task<TransactionResponse> Transaction(string transactionId)
     {
         SetSegments("transactions", transactionId);
@@ -39,7 +37,10 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
 
     /// <Summary>
     ///     Builds request to <code>GET /accounts/{account}/transactions</code>
-    ///     <a href="https://www.stellar.org/developers/horizon/reference/payments-for-account.html">Transactions for Account</a>
+    ///     <a href="https://developers.stellar.org/network/horizon/resources/get-transactions-by-account-id">
+    ///         Retrieve an
+    ///         Account's Transactions
+    ///     </a>
     /// </Summary>
     /// <param name="account">Account for which to get transactions</param>
     public TransactionsRequestBuilder ForAccount(string account)
@@ -49,10 +50,14 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
         return this;
     }
 
-    /// <Summary>
+    /// <summary>
     ///     Builds request to <code>GET /claimable_balances/{claimable_balance_id}/transactions</code>
-    ///     See: https://www.stellar.org/developers/horizon/reference/transactions-for-claimable-balance.html
-    /// </Summary>
+    ///     See:
+    ///     <a href="https://developers.stellar.org/network/horizon/resources/cb-retrieve-related-transactions">
+    ///         Retrieve
+    ///         related transactions
+    ///     </a>
+    /// </summary>
     /// <param name="claimableBalance">Claimable Balance for which to get transactions</param>
     public TransactionsRequestBuilder ForClaimableBalance(string claimableBalance)
     {
@@ -64,10 +69,13 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
         return this;
     }
 
-    /// <Summary>
+    /// <summary>
     ///     Builds request to <code>GET /ledgers/{ledgerSeq}/transactions</code>
-    ///     <a href="https://www.stellar.org/developers/horizon/reference/payments-for-ledger.html">Transactions for Ledger</a>
-    /// </Summary>
+    ///     <a href="https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-transactions">
+    ///         Retrieve a
+    ///         Ledger's Transactions
+    ///     </a>
+    /// </summary>
     /// <param name="ledgerSeq">Ledger for which to get transactions</param>
     public TransactionsRequestBuilder ForLedger(long ledgerSeq)
     {
@@ -79,13 +87,9 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
     ///     Set <code>include_failed</code> flag to include failed transactions.
     /// </summary>
     /// <param name="includeFailed">Set to true to include failed transactions in results</param>
-    /// <returns>
-    ///     <see cref="OperationsRequestBuilder" />
-    /// </returns>
     public TransactionsRequestBuilder IncludeFailed(bool includeFailed)
     {
         UriBuilder.SetQueryParam("include_failed", includeFailed.ToString().ToLowerInvariant());
-
         return this;
     }
 }

@@ -12,16 +12,18 @@ public class CreateAccountOperationResponseTest
     [TestMethod]
     public void TestDeserializeCreateAccountOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/createAccount", "createAccount.json"));
+        var jsonPath = Utils.GetTestDataPath("createAccount.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertCreateAccountOperationData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeCreateAccountOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/createAccount", "createAccount.json"));
+        var jsonPath = Utils.GetTestDataPath("createAccount.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -42,7 +44,7 @@ public class CreateAccountOperationResponseTest
         Assert.AreEqual(operation.StartingBalance, "299454.904954");
         Assert.AreEqual(operation.Funder, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
         Assert.IsNull(operation.FunderMuxed);
-        Assert.IsNull(operation.FunderMuxedID);
+        Assert.IsNull(operation.FunderMuxedId);
 
         Assert.IsTrue(operation.TransactionSuccessful);
         Assert.AreEqual(operation.Links.Effects.Href, "/operations/3936840037961729/effects{?cursor,limit,order}");
@@ -56,16 +58,18 @@ public class CreateAccountOperationResponseTest
     [TestMethod]
     public void TestDeserializeCreateAccountOperationMuxed()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/createAccount", "createAccountMuxed.json"));
+        var jsonPath = Utils.GetTestDataPath("createAccountMuxed.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertCreateAccountOperationDataMuxed(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeCreateAccountOperationMuxed()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/createAccount", "createAccountMuxed.json"));
+        var jsonPath = Utils.GetTestDataPath("createAccountMuxed.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -86,7 +90,7 @@ public class CreateAccountOperationResponseTest
         Assert.AreEqual(operation.StartingBalance, "299454.904954");
         Assert.AreEqual(operation.Funder, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
         Assert.AreEqual(operation.FunderMuxed, "MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24");
-        Assert.AreEqual(operation.FunderMuxedID, 5123456789UL);
+        Assert.AreEqual(operation.FunderMuxedId, 5123456789UL);
 
         Assert.IsTrue(operation.TransactionSuccessful);
         Assert.AreEqual(operation.Links.Effects.Href, "/operations/3936840037961729/effects{?cursor,limit,order}");

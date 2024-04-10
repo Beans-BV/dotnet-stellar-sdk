@@ -1,5 +1,6 @@
 ﻿using System;
-using StellarDotnetSdk.Xdr;
+using ResultCodeEnum =
+    StellarDotnetSdk.Xdr.EndSponsoringFutureReservesResultCode.EndSponsoringFutureReservesResultCodeEnum;
 
 namespace StellarDotnetSdk.Responses.Results;
 
@@ -7,16 +8,24 @@ public class EndSponsoringFutureReservesResult : OperationResult
 {
     public static EndSponsoringFutureReservesResult FromXdr(Xdr.EndSponsoringFutureReservesResult result)
     {
-        switch (result.Discriminant.InnerValue)
+        return result.Discriminant.InnerValue switch
         {
-            case EndSponsoringFutureReservesResultCode.EndSponsoringFutureReservesResultCodeEnum
-                .END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED:
-                return new EndSponsoringFutureReservesNotSponsored();
-            case EndSponsoringFutureReservesResultCode.EndSponsoringFutureReservesResultCodeEnum
-                .END_SPONSORING_FUTURE_RESERVES_SUCCESS:
-                return new EndSponsoringFutureReservesSuccess();
-            default:
-                throw new SystemException("Unknown EndSponsoringFutureReserves type");
-        }
+            ResultCodeEnum.END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED
+                => new EndSponsoringFutureReservesNotSponsored(),
+            ResultCodeEnum.END_SPONSORING_FUTURE_RESERVES_SUCCESS
+                => new EndSponsoringFutureReservesSuccess(),
+            _ => throw new ArgumentOutOfRangeException(nameof(result),
+                "Unknown EndSponsoringFutureReservesResult type.")
+        };
     }
 }
+
+public class EndSponsoringFutureReservesSuccess : EndSponsoringFutureReservesResult
+{
+    public override bool IsSuccess => true;
+}
+
+/// <summary>
+///     Source account is not sponsored.
+/// </summary>
+public class EndSponsoringFutureReservesNotSponsored : EndSponsoringFutureReservesResult;

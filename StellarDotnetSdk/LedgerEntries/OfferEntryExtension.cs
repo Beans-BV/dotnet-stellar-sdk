@@ -8,12 +8,4 @@ public class OfferEntryExtension
     {
         return new OfferEntryExtension();
     }
-
-    public OfferEntry.OfferEntryExt ToXdr()
-    {
-        return new OfferEntry.OfferEntryExt
-        {
-            Discriminant = 0
-        };
-    }
 }

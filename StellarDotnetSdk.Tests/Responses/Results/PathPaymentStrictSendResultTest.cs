@@ -1,6 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
@@ -11,7 +10,7 @@ public class PathPaymentStrictSendResultTest
     [TestMethod]
     public void TestSuccess()
     {
-        var tx = Util.AssertResultOfType(
+        var tx = Utils.AssertResultOfType(
             "AAAAAACYloD/////AAAAAQAAAAAAAAANAAAAAAAAAAEAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAAAE0gAAAAAAAAAAAJiWgAAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAADDUAAAAAAAyzXIcEd0vK9XlVfmjyQE9QpJjOLzYUN5orR0N+Dz+QAAAABVVNEAAAAAAAqg0ayXzXGPwPxfJ6TMpldG5JTYoiaEeRCPhBaGuhjrgAAAAAAAw1AAAAAAA==",
             typeof(PathPaymentStrictSendSuccess), true);
         var failed = (TransactionResultFailed)tx;
@@ -22,27 +21,29 @@ public class PathPaymentStrictSendResultTest
             op.Last.Asset);
         Assert.AreEqual("0.02", op.Last.Amount);
         Assert.AreEqual(1, op.Offers.Length);
-        var offer = op.Offers[0];
-        Assert.AreEqual("GAVIGRVSL424MPYD6F6J5EZSTFORXESTMKEJUEPEII7BAWQ25BR25DUC", offer.V0.Seller.AccountId);
-        Assert.AreEqual(1234, offer.V0.OfferID);
-        Assert.AreEqual(new AssetTypeNative(), offer.V0.AssetSold);
-        Assert.AreEqual("1", offer.V0.AmountSold);
+        Assert.IsInstanceOfType(op.Offers[0], typeof(ClaimAtomV0));
+        var offer = (ClaimAtomV0)op.Offers[0];
+        Assert.AreEqual("GAVIGRVSL424MPYD6F6J5EZSTFORXESTMKEJUEPEII7BAWQ25BR25DUC", offer.Seller.AccountId);
+        Assert.AreEqual(1234, offer.OfferId);
+        Assert.AreEqual(new AssetTypeNative(), offer.AssetSold);
+        Assert.AreEqual("1", offer.AmountSold);
         Assert.AreEqual(Asset.CreateNonNativeAsset("USD", "GAVIGRVSL424MPYD6F6J5EZSTFORXESTMKEJUEPEII7BAWQ25BR25DUC"),
-            offer.V0.AssetBought);
-        Assert.AreEqual("0.02", offer.V0.AmountBought);
+            offer.AssetBought);
+        Assert.AreEqual("0.02", offer.AmountBought);
     }
 
     [TestMethod]
     public void TestMalformed()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN/////wAAAAA=", typeof(PathPaymentStrictSendMalformed),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN/////wAAAAA=",
+            typeof(PathPaymentStrictSendMalformed),
             false);
     }
 
     [TestMethod]
     public void TestUnderfunded()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN/////gAAAAA=",
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN/////gAAAAA=",
             typeof(PathPaymentStrictSendUnderfunded),
             false);
     }
@@ -50,14 +51,15 @@ public class PathPaymentStrictSendResultTest
     [TestMethod]
     public void TestSrcNoTrust()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN/////QAAAAA=", typeof(PathPaymentStrictSendSrcNoTrust),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN/////QAAAAA=",
+            typeof(PathPaymentStrictSendSrcNoTrust),
             false);
     }
 
     [TestMethod]
     public void TestSrcNotAuthorized()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN/////AAAAAA=",
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN/////AAAAAA=",
             typeof(PathPaymentStrictSendSrcNotAuthorized),
             false);
     }
@@ -65,7 +67,7 @@ public class PathPaymentStrictSendResultTest
     [TestMethod]
     public void TestNoDestination()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////+wAAAAA=",
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////+wAAAAA=",
             typeof(PathPaymentStrictSendNoDestination),
             false);
     }
@@ -73,14 +75,15 @@ public class PathPaymentStrictSendResultTest
     [TestMethod]
     public void TestNoTrust()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////+gAAAAA=", typeof(PathPaymentStrictSendNoTrust),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////+gAAAAA=",
+            typeof(PathPaymentStrictSendNoTrust),
             false);
     }
 
     [TestMethod]
     public void TestNotAuthorized()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////+QAAAAA=",
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////+QAAAAA=",
             typeof(PathPaymentStrictSendNotAuthorized),
             false);
     }
@@ -88,14 +91,15 @@ public class PathPaymentStrictSendResultTest
     [TestMethod]
     public void TestLineFull()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////+AAAAAA=", typeof(PathPaymentStrictSendLineFull),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////+AAAAAA=",
+            typeof(PathPaymentStrictSendLineFull),
             false);
     }
 
     [TestMethod]
     public void TestNoIssuer()
     {
-        var tx = Util.AssertResultOfType(
+        var tx = Utils.AssertResultOfType(
             "AAAAAACYloD/////AAAAAQAAAAAAAAAN////9wAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAA==",
             typeof(PathPaymentStrictSendNoIssuer), false);
         var failed = (TransactionResultFailed)tx;
@@ -107,7 +111,7 @@ public class PathPaymentStrictSendResultTest
     [TestMethod]
     public void TestTooFewOffer()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////9gAAAAA=",
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////9gAAAAA=",
             typeof(PathPaymentStrictSendTooFewOffers),
             false);
     }
@@ -115,7 +119,7 @@ public class PathPaymentStrictSendResultTest
     [TestMethod]
     public void TestOfferCrossSelf()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////9QAAAAA=",
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////9QAAAAA=",
             typeof(PathPaymentStrictSendOfferCrossSelf),
             false);
     }
@@ -123,7 +127,7 @@ public class PathPaymentStrictSendResultTest
     [TestMethod]
     public void TestUnderDestMin()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////9AAAAAA=",
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////9AAAAAA=",
             typeof(PathPaymentStrictSendUnderDestMin),
             false);
     }

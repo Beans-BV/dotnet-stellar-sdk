@@ -11,15 +11,18 @@ public class AccountPageDeserializerTest
     [TestMethod]
     public void TestDeserializeAccountPage()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "accountPage.json"));
+        var jsonPath = Utils.GetTestDataPath("accountPage.json");
+        var json = File.ReadAllText(jsonPath);
         var accountsPage = JsonSingleton.GetInstance<Page<AccountResponse>>(json);
+        Assert.IsNotNull(accountsPage);
         AssertTestData(accountsPage);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeAccountPage()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "accountPage.json"));
+        var jsonPath = Utils.GetTestDataPath("accountPage.json");
+        var json = File.ReadAllText(jsonPath);
         var accountsPage = JsonSingleton.GetInstance<Page<AccountResponse>>(json);
         var serialized = JsonConvert.SerializeObject(accountsPage);
         var back = JsonConvert.DeserializeObject<Page<AccountResponse>>(serialized);

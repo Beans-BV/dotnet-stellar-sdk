@@ -1,42 +1,29 @@
 ﻿using Newtonsoft.Json;
 
 namespace StellarDotnetSdk.Responses;
+#nullable disable
 
 public class TradeAggregationResponse : Response
 {
-    public TradeAggregationResponse(string timestamp, string tradeCount, string baseVolume, string counterVolume,
-        string avg, string high, string low, string open, string close)
-    {
-        Timestamp = timestamp;
-        TradeCount = tradeCount;
-        BaseVolume = baseVolume;
-        CounterVolume = counterVolume;
-        Avg = avg;
-        High = high;
-        Low = low;
-        Open = open;
-        Close = close;
-    }
-
     [JsonProperty(PropertyName = "timestamp")]
-    public string Timestamp { get; }
+    public string Timestamp { get; init; }
 
     [JsonProperty(PropertyName = "trade_count")]
-    public string TradeCount { get; }
+    public string TradeCount { get; init; }
 
     [JsonProperty(PropertyName = "base_volume")]
-    public string BaseVolume { get; }
+    public string BaseVolume { get; init; }
 
     [JsonProperty(PropertyName = "counter_volume")]
-    public string CounterVolume { get; }
+    public string CounterVolume { get; init; }
 
-    [JsonProperty(PropertyName = "avg")] public string Avg { get; }
+    [JsonProperty(PropertyName = "avg")] public string Avg { get; init; }
 
-    [JsonProperty(PropertyName = "high")] public string High { get; }
+    [JsonProperty(PropertyName = "high")] public string High { get; init; }
 
-    [JsonProperty(PropertyName = "low")] public string Low { get; }
+    [JsonProperty(PropertyName = "low")] public string Low { get; init; }
 
-    [JsonProperty(PropertyName = "open")] public string Open { get; }
+    [JsonProperty(PropertyName = "open")] public string Open { get; init; }
 
-    [JsonProperty(PropertyName = "close")] public string Close { get; }
+    [JsonProperty(PropertyName = "close")] public string Close { get; init; }
 }

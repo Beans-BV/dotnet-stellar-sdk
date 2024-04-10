@@ -7,9 +7,7 @@ namespace StellarDotnetSdk.Xdr;
 
 //  struct LedgerCloseMetaV1
 //  {
-//      // We forgot to add an ExtensionPoint in v0 but at least
-//      // we can add one now in v1.
-//      ExtensionPoint ext;
+//      LedgerCloseMetaExt ext;
 //  
 //      LedgerHeaderHistoryEntry ledgerHeader;
 //  
@@ -41,7 +39,7 @@ namespace StellarDotnetSdk.Xdr;
 //  ===========================================================================
 public class LedgerCloseMetaV1
 {
-    public ExtensionPoint Ext { get; set; }
+    public LedgerCloseMetaExt Ext { get; set; }
     public LedgerHeaderHistoryEntry LedgerHeader { get; set; }
     public GeneralizedTransactionSet TxSet { get; set; }
     public TransactionResultMeta[] TxProcessing { get; set; }
@@ -53,7 +51,7 @@ public class LedgerCloseMetaV1
 
     public static void Encode(XdrDataOutputStream stream, LedgerCloseMetaV1 encodedLedgerCloseMetaV1)
     {
-        ExtensionPoint.Encode(stream, encodedLedgerCloseMetaV1.Ext);
+        LedgerCloseMetaExt.Encode(stream, encodedLedgerCloseMetaV1.Ext);
         LedgerHeaderHistoryEntry.Encode(stream, encodedLedgerCloseMetaV1.LedgerHeader);
         GeneralizedTransactionSet.Encode(stream, encodedLedgerCloseMetaV1.TxSet);
         var txProcessingsize = encodedLedgerCloseMetaV1.TxProcessing.Length;
@@ -81,7 +79,7 @@ public class LedgerCloseMetaV1
     public static LedgerCloseMetaV1 Decode(XdrDataInputStream stream)
     {
         var decodedLedgerCloseMetaV1 = new LedgerCloseMetaV1();
-        decodedLedgerCloseMetaV1.Ext = ExtensionPoint.Decode(stream);
+        decodedLedgerCloseMetaV1.Ext = LedgerCloseMetaExt.Decode(stream);
         decodedLedgerCloseMetaV1.LedgerHeader = LedgerHeaderHistoryEntry.Decode(stream);
         decodedLedgerCloseMetaV1.TxSet = GeneralizedTransactionSet.Decode(stream);
         var txProcessingsize = stream.ReadInt();

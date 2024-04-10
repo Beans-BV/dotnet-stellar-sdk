@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Claimant;
+using StellarDotnetSdk.Claimants;
 using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.LedgerEntries;
 using StellarDotnetSdk.LedgerKeys;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Requests.SorobanRpc;
-using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
 using StellarDotnetSdk.Responses.Results;
 using StellarDotnetSdk.Responses.SorobanRpc;
@@ -22,14 +21,20 @@ using StellarDotnetSdk.Transactions;
 using StellarDotnetSdk.Xdr;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using Asset = StellarDotnetSdk.Assets.Asset;
-using ChangeTrustAsset = StellarDotnetSdk.Assets.ChangeTrustAsset;
+using Claimant = StellarDotnetSdk.Claimants.Claimant;
 using CollectionAssert = NUnit.Framework.CollectionAssert;
 using DiagnosticEvent = StellarDotnetSdk.Soroban.DiagnosticEvent;
+using LedgerFootprint = StellarDotnetSdk.Soroban.LedgerFootprint;
 using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
+using SCBytes = StellarDotnetSdk.Soroban.SCBytes;
+using SCContractInstance = StellarDotnetSdk.Soroban.SCContractInstance;
+using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
+using SCVal = StellarDotnetSdk.Soroban.SCVal;
+using SCVec = StellarDotnetSdk.Soroban.SCVec;
 using SorobanResources = StellarDotnetSdk.Soroban.SorobanResources;
 using SorobanTransactionData = StellarDotnetSdk.Soroban.SorobanTransactionData;
 using Transaction = StellarDotnetSdk.Transactions.Transaction;
-using TransactionResult = StellarDotnetSdk.Responses.TransactionResult;
+using TransactionResult = StellarDotnetSdk.Responses.Results.TransactionResult;
 
 namespace StellarDotnetSdk.Tests;
 
@@ -38,24 +43,24 @@ public class SorobanServerTest
 {
     private const string HelloContractWasmId = "waZQUG98IMj00Wquc/iU8wLNAR1+8zre9XLyCzT3ZT4=";
     private const string HelloContractId = "CDMTUCYPBMWUFESK2EZA6ZZMSEX3NNOMZEXZD2VVJGZ332DYTKCEBFI5";
-    private readonly string _helloWasmPath = Path.GetFullPath("wasm/soroban_hello_world_contract.wasm");
+    private readonly string _helloWasmPath = Path.GetFullPath("TestData/Wasm/soroban_hello_world_contract.wasm");
     private readonly Server _server = new("https://horizon-testnet.stellar.org");
 
     private readonly SorobanServer _sorobanServer = new("https://soroban-testnet.stellar.org");
 
     private readonly KeyPair _sourceAccount =
-        KeyPair.FromSecretSeed("SDR4PTKMR5TAQQCL3RI2MLXXSXQDIR7DCAONQNQP6UCDZCD4OVRWXUHI");
+        KeyPair.FromSecretSeed("SBQZZETKBHMRVNPEM7TMYAXORIRIDBBS6HD43C3PFH75SI54QAC6YTE2");
 
     private readonly KeyPair _targetAccount =
-        KeyPair.FromSecretSeed("SDBNUIC2JMIYKGLJUFI743AQDWPBOWKG42GADHEY3FQDTQLJADYPQZTP");
+        KeyPair.FromSecretSeed("SBV33ITENGZRQ3UEUY5XD3NOBHHSGZY2ADF2OQ7JC2FR2S3BV3DSHEGC");
 
     private Asset _asset =
-        new AssetTypeCreditAlphaNum4("BBB", "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA");
+        new AssetTypeCreditAlphaNum4("XXX", "GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS");
 
-    // "GC3TDMFTMYZY2G4C77AKAVC3BR4KL6WMQ6K2MHISKDH2OHRFS7CVVEAF"
+    // "GDUFELVZEZ3CX5PLYJAGPZ7CIM3HTVAD2JRHKXTGK4N5B2ADCALW7NGW"
     private string TargetAccountId => _targetAccount.AccountId;
 
-    // "GARRDNS77ZSI6PPXRBWTHIVX4RS2ULVBKNJXFRV77AZUNLDUNV2NAHJA";
+    // "GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS";
     private string SourceAccountId => _sourceAccount.AccountId;
 
     [TestInitialize]
@@ -63,8 +68,8 @@ public class SorobanServerTest
     {
         Network.UseTestNetwork();
 
-        await TestNetUtil.CheckAndCreateAccountOnTestnet(SourceAccountId);
-        await TestNetUtil.CheckAndCreateAccountOnTestnet(TargetAccountId);
+        await Utils.CheckAndCreateAccountOnTestnet(SourceAccountId);
+        await Utils.CheckAndCreateAccountOnTestnet(TargetAccountId);
 
         _asset = new AssetTypeCreditAlphaNum4("AAA", SourceAccountId);
     }
@@ -111,7 +116,7 @@ public class SorobanServerTest
     [TestMethod]
     public async Task TestExtendFootprint()
     {
-        await ExtendFootprintTTL(HelloContractWasmId, 1000);
+        await ExtendFootprintTtl(HelloContractWasmId, 1000);
     }
 
     [TestMethod]
@@ -141,7 +146,7 @@ public class SorobanServerTest
         var arg = new SCSymbol("gents");
         var functionName = new SCSymbol("hello1");
         var invokeContractOperation =
-            new InvokeContractOperation.Builder(address, functionName, new SCVal[] { arg }).Build();
+            new InvokeContractOperation(address, functionName, new SCVal[] { arg });
         var tx = new TransactionBuilder(account).AddOperation(invokeContractOperation).Build();
 
         var simulateResponse = await _sorobanServer.SimulateTransaction(tx);
@@ -371,9 +376,8 @@ public class SorobanServerTest
 
         // Load the account with the updated sequence number from Soroban server
         var account = await _sorobanServer.GetAccount(SourceAccountId);
-        var uploadOperation = new UploadContractOperation.Builder(wasm).SetSourceAccount(_sourceAccount).Build();
-        var tx = new TransactionBuilder(account)
-            .AddOperation(uploadOperation).Build();
+        var uploadOperation = new UploadContractOperation(wasm, _sourceAccount);
+        var tx = new TransactionBuilder(account).AddOperation(uploadOperation).Build();
 
         var simulateResponse = await SimulateAndUpdateTransaction(tx);
         AssertSimulateResponse(simulateResponse);
@@ -462,8 +466,7 @@ public class SorobanServerTest
     {
         await Task.Delay(2000);
         var account = await _server.Accounts.Account(SourceAccountId);
-        var createContractOperation =
-            new CreateContractOperation.Builder(account.AccountId, contractWasmId, null).Build();
+        var createContractOperation = CreateContractOperation.FromAddress(contractWasmId, account.AccountId);
         var tx = new TransactionBuilder(account).AddOperation(createContractOperation).Build();
 
         var simulateResponse = await SimulateAndUpdateTransaction(tx);
@@ -494,7 +497,7 @@ public class SorobanServerTest
     public async Task TestASeriesOfHostFunctionInvocation()
     {
         var contractWasmId = await UploadContract(_helloWasmPath);
-        await ExtendFootprintTTL(contractWasmId, 10000);
+        await ExtendFootprintTtl(contractWasmId, 10000);
         await RestoreFootprint(contractWasmId);
         var (ledger, createdContractId) = await CreateContract(contractWasmId);
         await InvokeContract(createdContractId);
@@ -513,12 +516,10 @@ public class SorobanServerTest
         var randomAccount = await _sorobanServer.GetAccount(randomAccountId);
 
         var asset = Asset.CreateNonNativeAsset("VNDT", randomAccountId);
-        var changeTrustAsset = ChangeTrustAsset.Create(asset);
 
-        var changeTrustOperation = new ChangeTrustOperation.Builder(changeTrustAsset, ChangeTrustOperation.MaxLimit)
-            .SetSourceAccount(_sourceAccount).Build();
+        var changeTrustOperation = new ChangeTrustOperation(asset, ChangeTrustOperation.MaxLimit, _sourceAccount);
 
-        var paymentOperation = new PaymentOperation.Builder(_sourceAccount, asset, "200").Build();
+        var paymentOperation = new PaymentOperation(_sourceAccount, asset, "200");
 
         var tx = new TransactionBuilder(randomAccount).AddOperation(changeTrustOperation).AddOperation(paymentOperation)
             .Build();
@@ -527,11 +528,11 @@ public class SorobanServerTest
         var submitResponse = await _server.SubmitTransaction(tx);
 
         Assert.IsNotNull(submitResponse);
-        Assert.IsTrue(submitResponse.IsSuccess());
+        Assert.IsTrue(submitResponse.IsSuccess);
 
         randomAccount = await _sorobanServer.GetAccount(randomAccountId);
 
-        var createContractOperation = new CreateContractOperation.Builder(asset).Build();
+        var createContractOperation = CreateContractOperation.FromAsset(asset);
 
         tx = new TransactionBuilder(randomAccount).AddOperation(createContractOperation).Build();
 
@@ -563,7 +564,7 @@ public class SorobanServerTest
         var arg = new SCSymbol("gents");
         var functionName = new SCSymbol("hello");
         var invokeContractOperation =
-            new InvokeContractOperation.Builder(address, functionName, new SCVal[] { arg }).Build();
+            new InvokeContractOperation(address, functionName, new SCVal[] { arg });
         var tx = new TransactionBuilder(account).AddOperation(invokeContractOperation).Build();
 
         var simulateResponse = await SimulateAndUpdateTransaction(tx);
@@ -603,7 +604,7 @@ public class SorobanServerTest
     {
         await Task.Delay(2000);
         var account = await _server.Accounts.Account(SourceAccountId);
-        var restoreOperation = new RestoreFootprintOperation.Builder().Build();
+        var restoreOperation = new RestoreFootprintOperation();
         var tx = new TransactionBuilder(account).AddOperation(restoreOperation).Build();
         LedgerKey key;
         if (StrKey.IsValidContractId(id))
@@ -640,12 +641,12 @@ public class SorobanServerTest
         Assert.AreEqual("restore_footprint", operationResponse.Type);
     }
 
-    private async Task ExtendFootprintTTL(string wasmId, uint extentTo)
+    private async Task ExtendFootprintTtl(string wasmId, uint extentTo)
     {
         await Task.Delay(2000);
         var account = await _server.Accounts.Account(SourceAccountId);
 
-        var extendOperation = new ExtendFootprintOperation.Builder(extentTo).Build();
+        var extendOperation = new ExtendFootprintOperation(extentTo);
         var tx = new TransactionBuilder(account).AddOperation(extendOperation).Build();
         var ledgerFootprint = new LedgerFootprint
         {
@@ -703,16 +704,16 @@ public class SorobanServerTest
     private async Task<string> CreateClaimableBalance()
     {
         var account = await _sorobanServer.GetAccount(SourceAccountId);
-        var operation = new CreateClaimableBalanceOperation.Builder(new AssetTypeNative(), "100",
-            new Claimant.Claimant[]
+        var operation = new CreateClaimableBalanceOperation(new AssetTypeNative(), "100",
+            new Claimant[]
             {
                 new(SourceAccountId, new ClaimPredicateUnconditional())
-            }).Build();
+            });
         var tx = new TransactionBuilder(account).AddOperation(operation).Build();
         tx.Sign(_sourceAccount);
         var txResponse = await _server.SubmitTransaction(tx);
         Assert.IsNotNull(txResponse);
-        Assert.IsTrue(txResponse.IsSuccess());
+        Assert.IsTrue(txResponse.IsSuccess);
         Assert.IsNotNull(txResponse.ResultXdr);
         var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
         Assert.IsTrue(transactionResult.IsSuccess);
@@ -730,14 +731,14 @@ public class SorobanServerTest
     {
         var account = await _sorobanServer.GetAccount(SourceAccountId);
 
-        var operation = new ChangeTrustOperation.Builder(assetA, assetB).Build();
+        var operation = new ChangeTrustOperation(assetA, assetB);
 
         var tx = new TransactionBuilder(account).AddOperation(operation).Build();
         tx.Sign(_sourceAccount);
 
         var txResponse = await _server.SubmitTransaction(tx);
         Assert.IsNotNull(txResponse);
-        Assert.IsTrue(txResponse.IsSuccess());
+        Assert.IsTrue(txResponse.IsSuccess);
         Assert.IsNotNull(txResponse.ResultXdr);
         var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
         Assert.IsTrue(transactionResult.IsSuccess);
@@ -753,7 +754,7 @@ public class SorobanServerTest
     {
         var account = await _server.Accounts.Account(TargetAccountId);
 
-        var trustOperation = new ChangeTrustOperation.Builder(asset).Build();
+        var trustOperation = new ChangeTrustOperation(asset);
 
         var tx = new TransactionBuilder(account)
             .AddOperation(trustOperation)
@@ -762,7 +763,7 @@ public class SorobanServerTest
 
         var txResponse = await _server.SubmitTransaction(tx);
         Assert.IsNotNull(txResponse);
-        Assert.IsTrue(txResponse.IsSuccess());
+        Assert.IsTrue(txResponse.IsSuccess);
         Assert.IsNotNull(txResponse.ResultXdr);
         var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
         Assert.IsTrue(transactionResult.IsSuccess);
@@ -778,7 +779,7 @@ public class SorobanServerTest
     {
         var account = await _sorobanServer.GetAccount(TargetAccountId);
 
-        var manageDataOperation = new ManageDataOperation.Builder("passkey", "it's a secret").Build();
+        var manageDataOperation = new ManageDataOperation("passkey", "it's a secret");
 
         var tx = new TransactionBuilder(account)
             .AddOperation(manageDataOperation)
@@ -787,11 +788,11 @@ public class SorobanServerTest
 
         var txResponse = await _server.SubmitTransaction(tx);
         Assert.IsNotNull(txResponse);
-        Assert.IsTrue(txResponse.IsSuccess());
+        Assert.IsTrue(txResponse.IsSuccess);
 
         var ledgerKeyData = new LedgerKey[]
         {
-            new LedgerKeyData(SourceAccountId, "passkey")
+            new LedgerKeyData(TargetAccountId, "passkey")
         };
         var dataResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyData);
 
@@ -808,7 +809,7 @@ public class SorobanServerTest
         Assert.AreEqual(0U, ledgerEntry.LiveUntilLedger);
         Assert.IsTrue(ledgerEntry.LastModifiedLedgerSeq > 0);
         Assert.AreEqual("it's a secret", Encoding.UTF8.GetString(ledgerEntry.DataValue));
-        Assert.AreEqual(SourceAccountId, ledgerKey.Account.AccountId);
+        Assert.AreEqual(TargetAccountId, ledgerKey.Account.AccountId);
         Assert.IsNull(ledgerEntry.LedgerExtensionV1);
         Assert.IsNull(ledgerEntry.DataExtension);
     }
@@ -818,9 +819,8 @@ public class SorobanServerTest
     {
         var account = await _sorobanServer.GetAccount(SourceAccountId);
 
-        var nativeAsset = new AssetTypeNative();
         const string price = "1.5";
-        var manageSellOfferOperation = new ManageSellOfferOperation.Builder(nativeAsset, _asset, "1", "1.5").Build();
+        var manageSellOfferOperation = new ManageSellOfferOperation(new AssetTypeNative(), _asset, "1", "1.5", 0);
 
         var tx = new TransactionBuilder(account)
             .AddOperation(manageSellOfferOperation)
@@ -829,7 +829,7 @@ public class SorobanServerTest
 
         var txResponse = await _server.SubmitTransaction(tx);
         Assert.IsNotNull(txResponse);
-        Assert.IsTrue(txResponse.IsSuccess());
+        Assert.IsTrue(txResponse.IsSuccess);
 
         Assert.IsNotNull(txResponse.ResultXdr);
         var transactionResult = TransactionResult.FromXdrBase64(txResponse.ResultXdr);
@@ -868,8 +868,8 @@ public class SorobanServerTest
         var buyingAsset = (AssetTypeCreditAlphaNum4)ledgerEntry.Buying;
         Assert.AreEqual(((AssetTypeCreditAlphaNum4)_asset).Code, buyingAsset.Code);
         Assert.AreEqual(((AssetTypeCreditAlphaNum4)_asset).Issuer, buyingAsset.Issuer);
-        Assert.AreEqual(offerId, ledgerEntry.OfferID);
-        Assert.AreEqual(SourceAccountId, ledgerEntry.SellerID.AccountId);
+        Assert.AreEqual(offerId, ledgerEntry.OfferId);
+        Assert.AreEqual(SourceAccountId, ledgerEntry.SellerId.AccountId);
         Assert.AreEqual(Price.FromString(price), ledgerEntry.Price);
         Assert.AreEqual(0U, ledgerEntry.Flags);
         Assert.IsNull(ledgerEntry.LedgerExtensionV1);
@@ -908,13 +908,13 @@ public class SorobanServerTest
         Assert.IsInstanceOfType(claimant.Predicate, typeof(ClaimPredicateUnconditional));
         CollectionAssert.AreEqual(Convert.FromHexString(claimableBalanceId), ledgerKey.BalanceId);
 
-        var claimClaimableBalanceOperation = new ClaimClaimableBalanceOperation.Builder(claimableBalanceId).Build();
+        var claimClaimableBalanceOperation = new ClaimClaimableBalanceOperation(claimableBalanceId);
         var account = await _sorobanServer.GetAccount(SourceAccountId);
         var tx = new TransactionBuilder(account).AddOperation(claimClaimableBalanceOperation).Build();
         tx.Sign(_sourceAccount);
         var txResponse = await _server.SubmitTransaction(tx);
         Assert.IsNotNull(txResponse);
-        Assert.IsTrue(txResponse.IsSuccess());
+        Assert.IsTrue(txResponse.IsSuccess);
     }
 
     // TODO Test liquidity pool with some deposits/withdrawals

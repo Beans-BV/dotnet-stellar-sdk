@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Responses.Effects;
 
 namespace StellarDotnetSdk.Requests;

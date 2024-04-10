@@ -7,7 +7,7 @@ namespace StellarDotnetSdk.Requests;
 
 public interface IRequestBuilderStreamable<TResponse> where TResponse : class
 {
-    IEventSource EventSource { get; set; }
+    IEventSource? EventSource { get; set; }
 
     /// <Summary>
     ///     Allows to stream SSE events from horizon.
@@ -42,15 +42,14 @@ public class RequestBuilderStreamable<T, TResponse>
     }
 
     /// <inheritdoc />
-    public IEventSource EventSource { get; set; }
+    public IEventSource? EventSource { get; set; }
 
     /// <inheritdoc />
     public IEventSource Stream(EventHandler<TResponse> listener)
     {
-        if (EventSource == null)
-            EventSource = new SSEEventSource(BuildUri());
+        EventSource ??= new SseEventSource(BuildUri());
 
-        EventSource.Message += (sender, e) =>
+        EventSource.Message += (_, e) =>
         {
             var responseObject = JsonSingleton.GetInstance<TResponse>(e.Data) ??
                                  throw new NotSupportedException("Unknown response type");
@@ -61,7 +60,7 @@ public class RequestBuilderStreamable<T, TResponse>
                 EventSource.Url = BuildUri();
             }
 
-            listener?.Invoke(this, responseObject);
+            listener.Invoke(this, responseObject);
         };
 
         return EventSource;

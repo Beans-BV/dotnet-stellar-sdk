@@ -5,18 +5,18 @@ namespace StellarDotnetSdk.Soroban;
 
 public class ContractEvent
 {
-    private ContractEvent(ExtensionPoint extensionPoint, string? contractID, SCVal[] topics, SCVal data,
+    private ContractEvent(ExtensionPoint extensionPoint, string? contractId, SCVal[] topics, SCVal data,
         ContractEventType type)
     {
         ExtensionPoint = extensionPoint;
-        ContractID = contractID;
+        ContractId = contractId;
         Topics = topics;
         Data = data;
         Type = type;
     }
 
     public ExtensionPoint ExtensionPoint { get; }
-    public string? ContractID { get; }
+    public string? ContractId { get; }
     public SCVal[] Topics { get; }
     public SCVal? Data { get; }
     public ContractEventType Type { get; }
@@ -37,7 +37,7 @@ public class ContractEvent
     public string ToString()
     {
         var value = "";
-        if (ContractID != null) value += $"- ContractId: {ContractID}\n";
+        if (ContractId != null) value += $"- ContractId: {ContractId}\n";
         var data = "Empty";
         if (Data != null)
             data = Data switch

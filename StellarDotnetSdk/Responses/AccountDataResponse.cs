@@ -3,15 +3,10 @@ using System.Text;
 using Newtonsoft.Json;
 
 namespace StellarDotnetSdk.Responses;
-
+#nullable disable
 public class AccountDataResponse : Response
 {
-    public AccountDataResponse(string value)
-    {
-        Value = value;
-    }
-
-    [JsonProperty(PropertyName = "value")] public string Value { get; private set; }
+    [JsonProperty(PropertyName = "value")] public string Value { get; init; }
 
     public string ValueDecoded
     {

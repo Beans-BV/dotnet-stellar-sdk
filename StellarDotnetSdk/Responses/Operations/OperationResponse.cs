@@ -4,13 +4,14 @@ using StellarDotnetSdk.Converters;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
+#nullable disable
 /// <summary>
 ///     Abstract class for operation responses.
 ///     See: https://www.stellar.org/developers/horizon/reference/resources/operation.html
 ///     <seealso cref="Requests.OperationsRequestBuilder" />
 ///     <seealso cref="Server" />
 /// </summary>
-[JsonConverter(typeof(OperationDeserializer))]
+[JsonConverter(typeof(OperationResponseJsonConverter))]
 public abstract class OperationResponse : Response, IPagingToken
 {
     /// <summary>
@@ -29,7 +30,7 @@ public abstract class OperationResponse : Response, IPagingToken
     public string SourceAccountMuxed { get; private set; }
 
     [JsonProperty(PropertyName = "source_account_muxed_id")]
-    public ulong? SourceAccountMuxedID { get; private set; }
+    public ulong? SourceAccountMuxedId { get; private set; }
 
     /// <summary>
     ///     Returns operation type. Possible types:
@@ -74,7 +75,7 @@ public abstract class OperationResponse : Response, IPagingToken
     /// </summary>
     [JsonProperty(PropertyName = "_links")]
     public OperationResponseLinks Links { get; private set; }
-
+#nullable restore
     /// <summary>
     ///     Returns the transaction this operation belongs to.
     /// </summary>

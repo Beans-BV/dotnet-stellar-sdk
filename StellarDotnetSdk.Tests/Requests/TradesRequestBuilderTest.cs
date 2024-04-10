@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Requests;
@@ -37,20 +36,15 @@ public class TradesRequestBuilderTest
     [TestMethod]
     public async Task TestTradesExecute()
     {
-        var jsonResponse = File.ReadAllText(Path.Combine("testdata", "tradesPage.json"));
-        var fakeHttpClient = FakeHttpClient.CreateFakeHttpClient(jsonResponse);
+        using var server = await Utils.CreateTestServerWithJson("Responses/tradePage.json");
+        var trades = await server.Trades
+            .BaseAsset(new AssetTypeCreditAlphaNum4("EUR",
+                "GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W"))
+            .CounterAsset(new AssetTypeCreditAlphaNum4("USD",
+                "GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ"))
+            .Execute();
 
-        using (var server = new Server("https://horizon-testnet.stellar.org", fakeHttpClient))
-        {
-            var trades = await server.Trades
-                .BaseAsset(new AssetTypeCreditAlphaNum4("EUR",
-                    "GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W"))
-                .CounterAsset(new AssetTypeCreditAlphaNum4("USD",
-                    "GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ"))
-                .Execute();
-
-            TradesPageDeserializerTest.AssertTestData(trades);
-        }
+        TradesPageDeserializerTest.AssertTestData(trades);
     }
 
     [TestMethod]

@@ -1,29 +1,23 @@
 ﻿using Newtonsoft.Json;
 
 namespace StellarDotnetSdk.Federation;
+#nullable disable
 
 /// <summary>
 ///     Object to hold a response from a federation server.
-///     See https://www.stellar.org/developers/learn/concepts/federation.html
+///     See
+///     <a href="https://developers.stellar.org/docs/learn/encyclopedia/federation#federation-response">Federation response</a>
 /// </summary>
 public class FederationResponse
 {
-    public FederationResponse(string stellarAddress, string accountId, string memoType, string memo)
-    {
-        StellarAddress = stellarAddress;
-        AccountId = accountId;
-        MemoType = memoType;
-        Memo = memo;
-    }
-
     [JsonProperty(PropertyName = "stellar_address")]
-    public string StellarAddress { get; private set; }
+    public string StellarAddress { get; init; }
 
     [JsonProperty(PropertyName = "account_id")]
-    public string AccountId { get; private set; }
+    public string AccountId { get; init; }
 
     [JsonProperty(PropertyName = "memo_type")]
-    public string MemoType { get; private set; }
+    public string MemoType { get; init; }
 
-    [JsonProperty(PropertyName = "memo")] public string Memo { get; private set; }
+    [JsonProperty(PropertyName = "memo")] public string Memo { get; init; }
 }

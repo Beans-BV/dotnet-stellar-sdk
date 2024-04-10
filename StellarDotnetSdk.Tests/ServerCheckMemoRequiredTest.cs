@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Moq.Language;
 using Newtonsoft.Json;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
@@ -20,36 +19,6 @@ namespace StellarDotnetSdk.Tests;
 [TestClass]
 public class ServerCheckMemoRequiredTest
 {
-    private const HttpStatusCode HttpOk = HttpStatusCode.OK;
-    private const HttpStatusCode HttpBadRequest = HttpStatusCode.BadRequest;
-
-    private Mock<ServerTest.FakeHttpMessageHandler> _fakeHttpMessageHandler;
-    private HttpClient _httpClient;
-    private Server _server;
-
-    private ISetupSequentialResult<HttpResponseMessage> When()
-    {
-        return _fakeHttpMessageHandler.SetupSequence(a => a.Send(It.IsAny<HttpRequestMessage>()));
-    }
-
-    [TestInitialize]
-    public void Setup()
-    {
-        Network.UseTestNetwork();
-
-        _fakeHttpMessageHandler = new Mock<ServerTest.FakeHttpMessageHandler> { CallBase = true };
-        _httpClient = new HttpClient(_fakeHttpMessageHandler.Object);
-        _server = new Server("https://horizon.stellar.org", _httpClient);
-    }
-
-    [TestCleanup]
-    public void Cleanup()
-    {
-        Network.Use(null);
-        _httpClient.Dispose();
-        _server.Dispose();
-    }
-
     [TestMethod]
     public async Task TestFailsIfMemoIsRequired()
     {
@@ -59,10 +28,11 @@ public class ServerCheckMemoRequiredTest
             { "config.memo_required", "MQ==" }
         };
         var json = BuildAccountResponse(accountId, data);
-        When().Returns(ServerTest.ResponseMessage(HttpOk, json));
+
+        using var server = Utils.CreateTestServerWithContent(json);
 
         var tx = BuildTransaction(accountId);
-        await Assert.ThrowsExceptionAsync<AccountRequiresMemoException>(() => _server.CheckMemoRequired(tx));
+        await Assert.ThrowsExceptionAsync<AccountRequiresMemoException>(() => server.CheckMemoRequired(tx));
     }
 
     [TestMethod]
@@ -70,10 +40,10 @@ public class ServerCheckMemoRequiredTest
     {
         var accountId = "GAYHAAKPAQLMGIJYMIWPDWCGUCQ5LAWY4Q7Q3IKSP57O7GUPD3NEOSEA";
         var json = BuildAccountResponse(accountId);
-        When().Returns(ServerTest.ResponseMessage(HttpStatusCode.NotFound, json));
+        using var server = Utils.CreateTestServerWithContent(json, HttpStatusCode.NotFound);
 
         var tx = BuildTransaction(accountId);
-        await _server.CheckMemoRequired(tx);
+        await server.CheckMemoRequired(tx);
     }
 
     [TestMethod]
@@ -81,10 +51,10 @@ public class ServerCheckMemoRequiredTest
     {
         var accountId = "GAYHAAKPAQLMGIJYMIWPDWCGUCQ5LAWY4Q7Q3IKSP57O7GUPD3NEOSEA";
         var json = BuildAccountResponse(accountId);
-        When().Returns(ServerTest.ResponseMessage(HttpStatusCode.OK, json));
+        using var server = Utils.CreateTestServerWithContent(json);
 
         var tx = BuildTransaction(accountId);
-        await _server.CheckMemoRequired(tx);
+        await server.CheckMemoRequired(tx);
     }
 
     [TestMethod]
@@ -92,10 +62,10 @@ public class ServerCheckMemoRequiredTest
     {
         var accountId = "GAYHAAKPAQLMGIJYMIWPDWCGUCQ5LAWY4Q7Q3IKSP57O7GUPD3NEOSEA";
         var json = BuildAccountResponse(accountId);
-        When().Returns(ServerTest.ResponseMessage(HttpStatusCode.BadRequest, json));
+        using var server = Utils.CreateTestServerWithContent(json, HttpStatusCode.BadRequest);
 
         var tx = BuildTransaction(accountId);
-        await Assert.ThrowsExceptionAsync<HttpResponseException>(() => _server.CheckMemoRequired(tx));
+        await Assert.ThrowsExceptionAsync<HttpResponseException>(() => server.CheckMemoRequired(tx));
     }
 
     [TestMethod]
@@ -103,13 +73,12 @@ public class ServerCheckMemoRequiredTest
     {
         var accountId = "GAYHAAKPAQLMGIJYMIWPDWCGUCQ5LAWY4Q7Q3IKSP57O7GUPD3NEOSEA";
         var json = BuildAccountResponse(accountId);
-        When().Returns(ServerTest.ResponseMessage(HttpStatusCode.OK, json));
+        using var server = Utils.CreateTestServerWithContent(json);
 
-        var payment = new PaymentOperation.Builder(KeyPair.FromAccountId(accountId), new AssetTypeNative(), "100.500")
-            .Build();
+        var payment = new PaymentOperation(KeyPair.FromAccountId(accountId), new AssetTypeNative(), "100.500");
 
         var tx = BuildTransaction(accountId, new Operation[] { payment });
-        await _server.CheckMemoRequired(tx);
+        await server.CheckMemoRequired(tx);
     }
 
     [TestMethod]
@@ -129,44 +98,63 @@ public class ServerCheckMemoRequiredTest
 
         var operations = new Operation[]
         {
-            new AccountMergeOperation.Builder(KeyPair.FromAccountId(destinations[0])).Build(),
-            new PathPaymentStrictSendOperation.Builder(native, "5.00", KeyPair.FromAccountId(destinations[1]),
-                    native, "5.00")
-                .SetPath(new Asset[] { gbp, eur })
-                .Build(),
-            new PathPaymentStrictReceiveOperation.Builder(native, "5.00", KeyPair.FromAccountId(destinations[2]),
-                    native, "5.00")
-                .SetPath(new Asset[] { gbp, eur })
-                .Build(),
-            new ChangeTrustOperation.Builder(ChangeTrustAsset.Create(gbp), "10000").Build()
+            new AccountMergeOperation(KeyPair.FromAccountId(destinations[0])),
+            new PathPaymentStrictSendOperation(native, "5.00", KeyPair.FromAccountId(destinations[1]),
+                native, "5.00", [gbp, eur]),
+            new PathPaymentStrictReceiveOperation(native, "5.00", KeyPair.FromAccountId(destinations[2]),
+                native, "5.00", [gbp, eur]),
+            new ChangeTrustOperation(gbp, "10000")
         };
 
-        When()
-            .Returns(ServerTest.ResponseMessage(HttpStatusCode.OK, BuildAccountResponse(accountId)))
-            .Returns(ServerTest.ResponseMessage(HttpStatusCode.OK, BuildAccountResponse(destinations[0])))
-            .Returns(ServerTest.ResponseMessage(HttpStatusCode.OK, BuildAccountResponse(destinations[1])))
-            .Returns(ServerTest.ResponseMessage(HttpStatusCode.OK, BuildAccountResponse(destinations[2])));
+        var mockFakeHttpMessageHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
+        var httpClient = new HttpClient(mockFakeHttpMessageHandler.Object);
 
+        mockFakeHttpMessageHandler.SetupSequence(a => a.Send(It.IsAny<HttpRequestMessage>()))
+            .Returns(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(BuildAccountResponse(accountId))
+            })
+            .Returns(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(BuildAccountResponse(destinations[0]))
+            })
+            .Returns(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(BuildAccountResponse(destinations[1]))
+            })
+            .Returns(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(BuildAccountResponse(destinations[2]))
+            });
+
+        Network.UseTestNetwork();
+        using var server = new Server("https://horizon-testnet.stellar.org", httpClient);
         var tx = BuildTransaction(accountId, operations, Memo.None());
-        await _server.CheckMemoRequired(tx);
+        await server.CheckMemoRequired(tx);
     }
 
     [TestMethod]
     public async Task TestSkipCheckIfHasMemo()
     {
+        using var server = Utils.CreateTestServerWithContent(null);
         var accountId = "GAYHAAKPAQLMGIJYMIWPDWCGUCQ5LAWY4Q7Q3IKSP57O7GUPD3NEOSEA";
-        var tx = BuildTransaction(accountId, new Operation[] { }, Memo.Text("foobar"));
-        await _server.CheckMemoRequired(tx);
+        var tx = BuildTransaction(accountId, [], Memo.Text("foobar"));
+        await server.CheckMemoRequired(tx);
     }
 
     [TestMethod]
     public async Task TestCheckFeeBumpTransaction()
     {
         var accountId = "GAYHAAKPAQLMGIJYMIWPDWCGUCQ5LAWY4Q7Q3IKSP57O7GUPD3NEOSEA";
-        var innerTx = BuildTransaction(accountId, new Operation[] { }, Memo.Text("foobar"));
+        var innerTx = BuildTransaction(accountId, [], Memo.Text("foobar"));
         var feeSource = KeyPair.FromAccountId("GD7HCWFO77E76G6BKJLRHRFRLE6I7BMPJQZQKGNYTT3SPE6BA4DHJAQY");
         var tx = TransactionBuilder.BuildFeeBumpTransaction(feeSource, innerTx, 200);
-        await _server.CheckMemoRequired(tx);
+        using var server = Utils.CreateTestServerWithContent("");
+        await server.CheckMemoRequired(tx);
     }
 
     [TestMethod]
@@ -177,31 +165,69 @@ public class ServerCheckMemoRequiredTest
         var muxed = MuxedAccountMed25519.FromMuxedAccountId(
             "MAAAAAAAAAAAJURAAB2X52XFQP6FBXLGT6LWOOWMEXWHEWBDVRZ7V5WH34Y22MPFBHUHY");
 
-        var payment = new PaymentOperation.Builder(muxed, new AssetTypeNative(), "100.500")
-            .Build();
+        var payment = new PaymentOperation(muxed, new AssetTypeNative(), "100.500");
 
-        var tx = BuildTransaction(accountId, new Operation[] { payment }, Memo.None(), true);
-        await _server.CheckMemoRequired(tx);
+        var tx = BuildTransaction(accountId, [payment], Memo.None(), true);
+        using var server = Utils.CreateTestServerWithContent("");
+        await server.CheckMemoRequired(tx);
     }
 
     private string BuildAccountResponse(string accountId, Dictionary<string, string>? data = null)
     {
         var accountData = data ?? new Dictionary<string, string>();
-        var response = new AccountResponse(accountId, 3298702387052545, new[]
+        var response = new AccountResponse
+        {
+            SubentryCount = 1,
+            SequenceUpdatedAtLedger = null,
+            SequenceUpdatedAtTime = null,
+            InflationDestination = null,
+            HomeDomain = null,
+            Thresholds = new Thresholds
             {
-                new Balance("native", null, null, "12345.6789", null, "0.0", "0.0", false, true,
-                    "1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469")
-            }, accountData, new Flags(false, false, false, false), null,
-            null, new[]
+                LowThreshold = 0,
+                MedThreshold = 0,
+                HighThreshold = 0
+            },
+            Flags = new Flags
             {
-                new StellarDotnetSdk.Responses.Signer(accountId, "ed25519_public_key", 1)
-            }, new Thresholds(0, 0, 0), null);
+                AuthRequired = false,
+                AuthRevocable = false,
+                AuthImmutable = false,
+                AuthClawback = false
+            },
+            Balances =
+            [
+                new Balance
+                {
+                    AssetType = "native",
+                    AssetIssuer = "12345.6789",
+                    BuyingLiabilities = "0.0",
+                    SellingLiabilities = "0.0",
+                    IsAuthorized = false,
+                    IsAuthorizedToMaintainLiabilities = true,
+                    LiquidityPoolId = "1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469"
+                }
+            ],
+            Signers =
+            [
+                new AccountResponse.Signer
+                {
+                    Key = accountId,
+                    Type = "ed25519_public_key",
+                    Weight = 1
+                }
+            ],
+            Links = null,
+            Data = accountData,
+            AccountId = accountId,
+            SequenceNumber = 3298702387052545
+        };
         return JsonConvert.SerializeObject(response);
     }
 
     private Transaction BuildTransaction(string destination)
     {
-        return BuildTransaction(destination, new Operation[] { });
+        return BuildTransaction(destination, []);
     }
 
     private Transaction BuildTransaction(string destinationAccountId, Operation[] operations, Memo? memo = null,
@@ -213,8 +239,7 @@ public class ServerCheckMemoRequiredTest
         var builder = new TransactionBuilder(account);
         if (!skipDefaultOp)
             builder.AddOperation(
-                new PaymentOperation.Builder(destination, new AssetTypeNative(), "100.50")
-                    .Build());
+                new PaymentOperation(destination, new AssetTypeNative(), "100.50"));
 
         if (memo != null) builder.AddMemo(memo);
 

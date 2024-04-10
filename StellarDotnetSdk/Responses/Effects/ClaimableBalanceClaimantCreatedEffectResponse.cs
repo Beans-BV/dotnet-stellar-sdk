@@ -1,38 +1,23 @@
 ﻿using Newtonsoft.Json;
 
 namespace StellarDotnetSdk.Responses.Effects;
+#nullable disable
 
 /// <summary>
 ///     Represents claimable_balance_created effect response.
-///     See: https://www.stellar.org/developers/horizon/reference/resources/effect.html
-///     <seealso cref="Requests.EffectsRequestBuilder" />
-///     <seealso cref="Server" />
 /// </summary>
 public class ClaimableBalanceClaimantCreatedEffectResponse : EffectResponse
 {
-    public ClaimableBalanceClaimantCreatedEffectResponse()
-    {
-    }
-
-    public ClaimableBalanceClaimantCreatedEffectResponse(string asset, string balanceID, string amount,
-        Predicate predicate)
-    {
-        Asset = asset;
-        BalanceID = balanceID;
-        Amount = amount;
-        Predicate = predicate;
-    }
-
     public override int TypeId => 51;
 
-    [JsonProperty(PropertyName = "asset")] public string Asset { get; private set; }
+    [JsonProperty(PropertyName = "asset")] public string Asset { get; init; }
 
     [JsonProperty(PropertyName = "balance_id")]
-    public string BalanceID { get; private set; }
+    public string BalanceId { get; init; }
 
     [JsonProperty(PropertyName = "amount")]
-    public string Amount { get; private set; }
+    public string Amount { get; init; }
 
     [JsonProperty(PropertyName = "predicate")]
-    public Predicate Predicate { get; private set; }
+    public Predicate Predicate { get; set; }
 }

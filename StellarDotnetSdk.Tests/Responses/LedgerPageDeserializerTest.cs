@@ -11,16 +11,18 @@ public class LedgerPageDeserializerTest
     [TestMethod]
     public void TestDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "ledgerPage.json"));
+        var jsonPath = Utils.GetTestDataPath("ledgerPage.json");
+        var json = File.ReadAllText(jsonPath);
         var ledgersPage = JsonSingleton.GetInstance<Page<LedgerResponse>>(json);
-
+        Assert.IsNotNull(ledgersPage);
         AssertTestData(ledgersPage);
     }
 
     [TestMethod]
     public void TestSerializeDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "ledgerPage.json"));
+        var jsonPath = Utils.GetTestDataPath("ledgerPage.json");
+        var json = File.ReadAllText(jsonPath);
         var ledgersPage = JsonSingleton.GetInstance<Page<LedgerResponse>>(json);
         var serialized = JsonConvert.SerializeObject(ledgersPage);
         var back = JsonConvert.DeserializeObject<Page<LedgerResponse>>(serialized);

@@ -4,12 +4,13 @@ using System.Threading.Tasks;
 using LaunchDarkly.EventSource;
 
 namespace StellarDotnetSdk.EventSources;
+#nullable disable
 
-public class SSEEventSource : IEventSource, IDisposable
+public class SseEventSource : IEventSource, IDisposable
 {
     private readonly LaunchDarkly.EventSource.EventSource _eventSource;
 
-    public SSEEventSource(Uri uri, Action<ConfigurationBuilder> configureEventSource = null)
+    public SseEventSource(Uri uri, Action<ConfigurationBuilder> configureEventSource = null)
     {
         Url = uri;
         var config = new ConfigurationBuilder(uri);

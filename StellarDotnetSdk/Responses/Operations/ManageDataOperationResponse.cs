@@ -2,27 +2,15 @@
 
 namespace StellarDotnetSdk.Responses.Operations;
 
+#nullable disable
 /// <summary>
 ///     Represents ManageData operation response.
-///     See: https://www.stellar.org/developers/horizon/reference/resources/operation.html
-///     <seealso cref="Requests.OperationsRequestBuilder" />
-///     <seealso cref="Server" />
 /// </summary>
 public class ManageDataOperationResponse : OperationResponse
 {
-    public ManageDataOperationResponse()
-    {
-    }
-
-    public ManageDataOperationResponse(string name, string value)
-    {
-        Name = name;
-        Value = value;
-    }
-
     public override int TypeId => 10;
 
-    [JsonProperty] public string Name { get; private set; }
+    [JsonProperty] public string Name { get; init; }
 
-    [JsonProperty] public string Value { get; private set; }
+    [JsonProperty] public string Value { get; init; }
 }

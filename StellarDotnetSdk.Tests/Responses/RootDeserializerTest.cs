@@ -11,16 +11,18 @@ public class RootDeserializerTest
     [TestMethod]
     public void TestDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "root.json"));
+        var jsonPath = Utils.GetTestDataPath("root.json");
+        var json = File.ReadAllText(jsonPath);
         var root = JsonSingleton.GetInstance<RootResponse>(json);
-
+        Assert.IsNotNull(root);
         AssertTestData(root);
     }
 
     [TestMethod]
     public void TestSerializeDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "root.json"));
+        var jsonPath = Utils.GetTestDataPath("root.json");
+        var json = File.ReadAllText(jsonPath);
         var root = JsonSingleton.GetInstance<RootResponse>(json);
         var serialized = JsonConvert.SerializeObject(root);
         var back = JsonConvert.DeserializeObject<RootResponse>(serialized);

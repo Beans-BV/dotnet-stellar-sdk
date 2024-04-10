@@ -3,22 +3,16 @@ using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
 
 namespace StellarDotnetSdk.Responses.Effects;
+#nullable disable
 
 [JsonConverter(typeof(LiquidityPoolClaimableAssetAmountJsonConverter))]
 public class LiquidityPoolClaimableAssetAmount
 {
-    public LiquidityPoolClaimableAssetAmount(Asset asset, string amount, string claimableBalanceID)
-    {
-        Asset = asset;
-        Amount = amount;
-        ClaimableBalanceID = claimableBalanceID;
-    }
-
-    [JsonProperty(PropertyName = "asset")] public Asset Asset { get; }
+    [JsonProperty(PropertyName = "asset")] public Asset Asset { get; init; }
 
     [JsonProperty(PropertyName = "amount")]
-    public string Amount { get; }
+    public string Amount { get; init; }
 
     [JsonProperty(PropertyName = "claimable_balance_id")]
-    public string ClaimableBalanceID { get; } // TODO: Check if nullable
+    public string ClaimableBalanceId { get; init; } // TODO: Check if nullable
 }

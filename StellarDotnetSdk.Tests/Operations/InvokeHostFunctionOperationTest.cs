@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Soroban;
 
 namespace StellarDotnetSdk.Tests.Operations;
 
@@ -16,7 +17,7 @@ public class InvokeHostFunctionOperationTest
 
     private readonly SCAccountId _accountAddress = new("GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP");
 
-    private readonly SCVal[] _args = { new SCString("world"), new SCBytes(new byte[] { 0x00, 0x01, 0x02 }) };
+    private readonly SCVal[] _args = [new SCString("world"), new SCBytes([0x00, 0x01, 0x02])];
 
     private readonly SCAddress _contractAddress =
         new SCContractId("CDJ4RICANSXXZ275W2OY2U7RO73HYURBGBRHVW2UUXZNGEBIVBNRKEF7");
@@ -29,13 +30,7 @@ public class InvokeHostFunctionOperationTest
 
     private SorobanAddressCredentials InitSorobanAddressCredentials()
     {
-        return new SorobanAddressCredentials
-        {
-            Address = _accountAddress,
-            Nonce = Nonce,
-            SignatureExpirationLedger = SignatureExpirationLedger,
-            Signature = _signature
-        };
+        return new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
     }
 
     private SorobanAuthorizationEntry InitAuthEntry()
@@ -44,18 +39,13 @@ public class InvokeHostFunctionOperationTest
             new SorobanAuthorizedContractFunction(
                 new InvokeContractHostFunction(_contractAddress, _functionName, _args));
 
-        var rootInvocation = new SorobanAuthorizedInvocation
-        {
-            Function = authorizedContractFn,
-            SubInvocations = new SorobanAuthorizedInvocation[]
-            {
-                new()
-                {
-                    Function = authorizedContractFn,
-                    SubInvocations = Array.Empty<SorobanAuthorizedInvocation>()
-                }
-            }
-        };
+        var rootInvocation = new SorobanAuthorizedInvocation(
+            authorizedContractFn,
+            [
+                new SorobanAuthorizedInvocation(
+                    authorizedContractFn,
+                    Array.Empty<SorobanAuthorizedInvocation>())
+            ]);
 
         return new SorobanAuthorizationEntry(InitSorobanAddressCredentials(), rootInvocation);
     }
@@ -63,18 +53,13 @@ public class InvokeHostFunctionOperationTest
     [TestMethod]
     public void TestCreateContractOperationWithMissingSourceAccount()
     {
-        var contractExecutableWasm = new ContractExecutableWasm(WasmHash);
         var salt = new byte[32];
         RandomNumberGenerator.Create().GetBytes(salt);
-        var contractIdAddressPreimage = new ContractIDAddressPreimage(_accountAddress.InnerValue, salt);
-        var builder = new CreateContractOperation.Builder();
-        builder.SetContractIDPreimage(contractIdAddressPreimage);
-        builder.SetExecutable(contractExecutableWasm);
-        var operation = builder.Build();
+        var operation = CreateContractOperation.FromAddress(WasmHash, _accountAddress.InnerValue, salt);
 
         // Act
-        var operationXdrBase64 = operation.ToXdrBase64();
-        var decodedOperation = CreateContractOperation.FromOperationXdrBase64(operationXdrBase64);
+        var xdrOperation = operation.ToXdr();
+        var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
 
         var contractIdPreimage = (ContractIDAddressPreimage)operation.HostFunction.ContractIDPreimage;
         var decodedContractIdPreimage = (ContractIDAddressPreimage)decodedOperation.HostFunction.ContractIDPreimage;
@@ -94,46 +79,15 @@ public class InvokeHostFunctionOperationTest
     }
 
     [TestMethod]
-    public void TestCreateContractOperationWithMissingPreimage()
-    {
-        var contractExecutableWasm = new ContractExecutableWasm(WasmHash);
-        var builder = new CreateContractOperation.Builder();
-        builder.SetSourceAccount(_sourceAccount);
-        builder.SetExecutable(contractExecutableWasm);
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
-        Assert.AreEqual("Contract ID preimage cannot be null", ex.Message);
-    }
-
-    [TestMethod]
-    public void TestCreateContractOperationWithMissingExecutable()
-    {
-        var salt = new byte[32];
-        RandomNumberGenerator.Create().GetBytes(salt);
-        var contractIdAddressPreimage = new ContractIDAddressPreimage(_accountAddress.InnerValue, salt);
-        var builder = new CreateContractOperation.Builder();
-        builder.SetSourceAccount(_sourceAccount);
-        builder.SetContractIDPreimage(contractIdAddressPreimage);
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
-        Assert.AreEqual("Executable cannot be null", ex.Message);
-    }
-
-    [TestMethod]
     public void TestCreateContractOperationFromAddressWithMissingAuthorizationEntry()
     {
-        var contractExecutableWasm = new ContractExecutableWasm(WasmHash);
         var salt = new byte[32];
         RandomNumberGenerator.Create().GetBytes(salt);
-        var contractIdAddressPreimage = new ContractIDAddressPreimage(_accountAddress.InnerValue, salt);
-        var builder = new CreateContractOperation.Builder();
-        builder.SetSourceAccount(_sourceAccount);
-        builder.SetExecutable(contractExecutableWasm);
-        builder.SetContractIDPreimage(contractIdAddressPreimage);
-        var operation = builder.Build();
+        var operation = CreateContractOperation.FromAddress(WasmHash, _accountAddress.InnerValue, salt, _sourceAccount);
 
         // Act
-        var operationXdrBase64 = operation.ToXdrBase64();
-
-        var decodedOperation = CreateContractOperation.FromOperationXdrBase64(operationXdrBase64);
+        var xdrOperation = operation.ToXdr();
+        var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
 
         var contractIdPreimage = (ContractIDAddressPreimage)operation.HostFunction.ContractIDPreimage;
         var decodedContractIdPreimage = (ContractIDAddressPreimage)decodedOperation.HostFunction.ContractIDPreimage;
@@ -161,21 +115,14 @@ public class InvokeHostFunctionOperationTest
     [TestMethod]
     public void TestCreateContractOperationFromAddressWithValidArguments()
     {
-        var contractExecutableWasm = new ContractExecutableWasm(WasmHash);
         var salt = new byte[32];
         RandomNumberGenerator.Create().GetBytes(salt);
-        var contractIdAddressPreimage = new ContractIDAddressPreimage(_accountAddress.InnerValue, salt);
-        var builder = new CreateContractOperation.Builder();
-        builder.SetSourceAccount(_sourceAccount);
-        builder.SetExecutable(contractExecutableWasm);
-        builder.SetContractIDPreimage(contractIdAddressPreimage);
-        builder.SetAuth(new[] { InitAuthEntry() });
-        var operation = builder.Build();
+        var operation = CreateContractOperation.FromAddress(WasmHash, _accountAddress.InnerValue, salt, _sourceAccount);
+        operation.Auth = [InitAuthEntry()];
 
         // Act
-        var operationXdrBase64 = operation.ToXdrBase64();
-
-        var decodedOperation = CreateContractOperation.FromOperationXdrBase64(operationXdrBase64);
+        var xdrOperation = operation.ToXdr();
+        var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
 
         var contractIdPreimage = (ContractIDAddressPreimage)operation.HostFunction.ContractIDPreimage;
         var decodedContractIdPreimage = (ContractIDAddressPreimage)decodedOperation.HostFunction.ContractIDPreimage;
@@ -190,26 +137,51 @@ public class InvokeHostFunctionOperationTest
         Assert.AreEqual(address.InnerValue, decodedAddress.InnerValue);
         CollectionAssert.AreEqual(contractIdPreimage.Salt, decodedContractIdPreimage.Salt);
         Assert.AreEqual(contractExecutable.WasmHash, decodedContractExecutable.WasmHash);
-        Assert.AreEqual(operation.Auth.Length, decodedOperation.Auth.Length);
-        for (var i = 0; i < operation.Auth.Length; i++)
-            Assert.AreEqual(operation.Auth[i].ToXdrBase64(), decodedOperation.Auth[i].ToXdrBase64());
+        Assert.AreEqual(1, decodedOperation.Auth.Length);
+
+        var credentials = InitSorobanAddressCredentials();
+        var decodedAuth = decodedOperation.Auth[0];
+        Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
+        var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
+        Assert.AreEqual(((SCAccountId)credentials.Address).InnerValue,
+            ((SCAccountId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(credentials.Nonce, decodedCredentials.Nonce);
+        Assert.AreEqual(credentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
+        Assert.AreEqual(((SCString)credentials.Signature).InnerValue,
+            ((SCString)decodedCredentials.Signature).InnerValue);
+
+        Assert.IsInstanceOfType(decodedAuth.RootInvocation.Function, typeof(SorobanAuthorizedContractFunction));
+        var decodedRootFunction = ((SorobanAuthorizedContractFunction)decodedAuth.RootInvocation.Function).HostFunction;
+        Assert.IsNotNull(decodedRootFunction);
+        Assert.AreEqual(_functionName.InnerValue, decodedRootFunction.FunctionName.InnerValue);
+        Assert.AreEqual(_args.Length, decodedRootFunction.Args.Length);
+        Assert.AreEqual(((SCString)_args[0]).InnerValue, ((SCString)decodedRootFunction.Args[0]).InnerValue);
+        CollectionAssert.AreEqual(((SCBytes)_args[1]).InnerValue, ((SCBytes)decodedRootFunction.Args[1]).InnerValue);
+        Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
+
+        var decodedSubInvocations = decodedAuth.RootInvocation.SubInvocations;
+        Assert.AreEqual(1, decodedSubInvocations.Length);
+        Assert.AreEqual(0, decodedSubInvocations[0].SubInvocations.Length);
+
+        var decodedSubFunction = ((SorobanAuthorizedContractFunction)decodedSubInvocations[0].Function).HostFunction;
+        Assert.IsNotNull(decodedSubFunction);
+        Assert.AreEqual(_functionName.InnerValue, decodedSubFunction.FunctionName.InnerValue);
+        Assert.AreEqual(_args.Length, decodedSubFunction.Args.Length);
+        Assert.AreEqual(((SCString)_args[0]).InnerValue, ((SCString)decodedSubFunction.Args[0]).InnerValue);
+        CollectionAssert.AreEqual(((SCBytes)_args[1]).InnerValue, ((SCBytes)decodedSubFunction.Args[1]).InnerValue);
+
         Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
     }
 
     [TestMethod]
     public void TestCreateContractOperationWithStellarAssetExecutable()
     {
-        var builder = new CreateContractOperation.Builder();
-        builder.SetSourceAccount(_sourceAccount);
-        builder.SetExecutable(new ContractExecutableStellarAsset());
-        builder.SetContractIDPreimage(new ContractIDAssetPreimage(new AssetTypeCreditAlphaNum4("VNDC",
-            "GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP")));
-        var operation = builder.Build();
+        var operation = CreateContractOperation.FromAsset(new AssetTypeCreditAlphaNum4("VNDC",
+            "GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP"), _sourceAccount);
 
         // Act
-        var operationXdrBase64 = operation.ToXdrBase64();
-
-        var decodedOperation = CreateContractOperation.FromOperationXdrBase64(operationXdrBase64);
+        var xdrOperation = operation.ToXdr();
+        var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
 
         var contractIdPreimage = (ContractIDAssetPreimage)operation.HostFunction.ContractIDPreimage;
         var decodedContractIdPreimage = (ContractIDAssetPreimage)decodedOperation.HostFunction.ContractIDPreimage;
@@ -226,31 +198,18 @@ public class InvokeHostFunctionOperationTest
     }
 
     [TestMethod]
-    public void TestUploadContractOperationWithMissingWasm()
-    {
-        var builder = new UploadContractOperation.Builder();
-
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
-        Assert.AreEqual("Wasm cannot be null", ex.Message);
-    }
-
-    [TestMethod]
     public void TestUploadContractOperationWithMissingSourceAccount()
     {
-        byte[] wasm = { 0x00, 0x01, 0x02, 0x03, 0x34, 0x45, 0x66, 0x46 };
+        byte[] wasm = [0x00, 0x01, 0x02, 0x03, 0x34, 0x45, 0x66, 0x46];
 
-        var builder = new UploadContractOperation.Builder();
-        builder.SetWasm(wasm);
-
-        var operation = builder.Build();
+        var operation = new UploadContractOperation(wasm);
 
         // Act
-        var operationXdrBase64 = operation.ToXdrBase64();
-
-        var decodedOperation = UploadContractOperation.FromOperationXdrBase64(operationXdrBase64);
+        var xdrOperation = operation.ToXdr();
+        var decodedOperation = (UploadContractOperation)Operation.FromXdr(xdrOperation);
 
         // Assert
-        CollectionAssert.AreEqual(operation.HostFunction.Wasm, decodedOperation.HostFunction.Wasm);
+        CollectionAssert.AreEqual(operation.Wasm, decodedOperation.Wasm);
         Assert.AreEqual(operation.Auth.Length, decodedOperation.Auth.Length);
         Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
     }
@@ -259,18 +218,13 @@ public class InvokeHostFunctionOperationTest
     public void TestUploadContractOperationWithMissingAuthorizationEntry()
     {
         // Arrange
-        byte[] wasm = { 0x00, 0x01, 0x02, 0x03, 0x34, 0x45, 0x66, 0x46 };
+        byte[] wasm = [0x00, 0x01, 0x02, 0x03, 0x34, 0x45, 0x66, 0x46];
 
-        var builder = new UploadContractOperation.Builder();
-        builder.SetWasm(wasm);
-        builder.SetSourceAccount(_sourceAccount);
-
-        var operation = builder.Build();
+        var operation = new UploadContractOperation(wasm, _sourceAccount);
 
         // Act
-        var operationXdrBase64 = operation.ToXdrBase64();
-
-        var decodedOperation = UploadContractOperation.FromOperationXdrBase64(operationXdrBase64);
+        var xdrOperation = operation.ToXdr();
+        var decodedOperation = (UploadContractOperation)Operation.FromXdr(xdrOperation);
 
         // Assert
         CollectionAssert.AreEqual(operation.HostFunction.Wasm, decodedOperation.HostFunction.Wasm);
@@ -290,59 +244,25 @@ public class InvokeHostFunctionOperationTest
     public void TestUploadContractOperationWithValidArguments()
     {
         // Arrange
-        byte[] wasm = { 0x00, 0x01, 0x02, 0x03, 0x34, 0x45, 0x66, 0x46 };
+        byte[] wasm = [0x00, 0x01, 0x02, 0x03, 0x34, 0x45, 0x66, 0x46];
 
-        var builder = new UploadContractOperation.Builder();
-        builder.SetWasm(wasm);
-        builder.SetSourceAccount(_sourceAccount);
-        var authEntry = InitAuthEntry();
-        builder.AddAuth(authEntry);
-        builder.AddAuth(authEntry);
-        builder.RemoveAuth(authEntry);
-        var operation = builder.Build();
+        var operation = new UploadContractOperation(wasm, _sourceAccount)
+        {
+            Auth = [InitAuthEntry()]
+        };
 
         // Act
-        var operationXdrBase64 = operation.ToXdrBase64();
-
-        var decodedOperation = UploadContractOperation.FromOperationXdrBase64(operationXdrBase64);
+        var xdrOperation = operation.ToXdr();
+        var decodedOperation = (UploadContractOperation)Operation.FromXdr(xdrOperation);
 
         // Assert
-        CollectionAssert.AreEqual(operation.HostFunction.Wasm, decodedOperation.HostFunction.Wasm);
+        CollectionAssert.AreEqual(operation.Wasm, decodedOperation.Wasm);
         Assert.AreEqual(operation.Auth.Length, decodedOperation.Auth.Length);
-        for (var i = 0; i < operation.Auth.Length; i++)
-            Assert.AreEqual(operation.Auth[i].ToXdrBase64(), decodedOperation.Auth[i].ToXdrBase64());
         var decodedSourceAccount = decodedOperation.SourceAccount;
         Assert.IsNotNull(decodedSourceAccount);
         Assert.AreEqual(_sourceAccount.AccountId, decodedSourceAccount.AccountId);
     }
 
-    [TestMethod]
-    public void TestInvokeContractOperationWithMissingAddress()
-    {
-        var builder = new InvokeContractOperation.Builder();
-        builder.SetSourceAccount(_sourceAccount);
-        builder.SetFunctionName(_functionName);
-        builder.SetArgs(_args);
-
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
-        Assert.AreEqual("Contract address cannot be null", ex.Message);
-    }
-
-    [TestMethod]
-    public void TestInvokeContractOperationWithMissingFunctionName()
-    {
-        var arg = new SCString("world");
-        SCVal[] args = { arg };
-        var builder = new InvokeContractOperation.Builder();
-        builder.SetSourceAccount(_sourceAccount);
-        builder.SetArgs(args);
-        builder.SetContractAddress(_contractAddress);
-
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => builder.Build());
-        Assert.AreEqual("Function name cannot be null", ex.Message);
-    }
-
-    /// <summary></summary>
     /// <remarks>
     ///     It's not necessary to check each of the hostFunction.Args element for type and properties,
     ///     since there are already other tests in the <see cref="ScValTest" /> class that cover different scenarios for
@@ -351,13 +271,7 @@ public class InvokeHostFunctionOperationTest
     [TestMethod]
     public void TestInvokeContractOperationWithMissingAuthorizationEntry()
     {
-        var builder = new InvokeContractOperation.Builder();
-        builder.SetSourceAccount(_sourceAccount);
-        builder.SetFunctionName(_functionName);
-        builder.SetArgs(_args);
-        builder.SetContractAddress(_contractAddress);
-
-        var operation = builder.Build();
+        var operation = new InvokeContractOperation(_contractAddress, _functionName, _args, _sourceAccount);
 
         // Act
         var xdrOperation = operation.ToXdr();
@@ -384,7 +298,6 @@ public class InvokeHostFunctionOperationTest
         Assert.AreEqual(_sourceAccount.AccountId, decodedSourceAccount.AccountId);
     }
 
-    /// <summary></summary>
     /// <remarks>
     ///     It's not necessary to check each of the hostFunction.Args element for type and properties,
     ///     since there are already other tests in class <see cref="ScValTest" /> that cover different scenarios for
@@ -396,14 +309,10 @@ public class InvokeHostFunctionOperationTest
     [TestMethod]
     public void TestInvokeContractOperationWithValidArguments()
     {
-        var builder = new InvokeContractOperation.Builder();
-        builder.SetSourceAccount(_sourceAccount);
-        builder.SetFunctionName(_functionName);
-        builder.SetArgs(_args);
-        builder.SetContractAddress(_contractAddress);
-        builder.AddAuth(InitAuthEntry());
-
-        var operation = builder.Build();
+        var operation = new InvokeContractOperation(_contractAddress, _functionName, _args, _sourceAccount)
+        {
+            Auth = [InitAuthEntry()]
+        };
 
         // Act
         var xdrOperation = operation.ToXdr();
@@ -424,9 +333,6 @@ public class InvokeHostFunctionOperationTest
             Assert.AreEqual(hostFunction.Args[i].ToXdrBase64(),
                 decodedHostFunction.Args[i].ToXdrBase64());
         Assert.AreEqual(operation.Auth.Length, decodedOperation.Auth.Length);
-
-        for (var i = 0; i < operation.Auth.Length; i++)
-            Assert.AreEqual(operation.Auth[i].ToXdrBase64(), decodedOperation.Auth[i].ToXdrBase64());
 
         var decodedSourceAccount = decodedOperation.SourceAccount;
         Assert.IsNotNull(decodedSourceAccount);

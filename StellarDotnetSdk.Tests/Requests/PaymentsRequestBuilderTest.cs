@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses.Operations;
-using StellarDotnetSdk.Tests.Responses;
 using StellarDotnetSdk.Tests.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Requests;
@@ -69,10 +68,7 @@ public class PaymentsRequestBuilderTest
     [TestMethod]
     public async Task TestPaymentsExecute()
     {
-        var jsonResponse = File.ReadAllText(Path.Combine("testdata/operations", "operationPage.json"));
-        var fakeHttpClient = FakeHttpClient.CreateFakeHttpClient(jsonResponse);
-
-        using var server = new Server("https://horizon-testnet.stellar.org", fakeHttpClient);
+        using var server = await Utils.CreateTestServerWithJson("Responses/operationPage.json");
         var payments = await server.Payments
             .ForAccount("GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7")
             .Execute();
@@ -83,7 +79,8 @@ public class PaymentsRequestBuilderTest
     [TestMethod]
     public async Task TestStream()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/payment", "payment.json"));
+        var jsonPath = Utils.GetTestDataPath("Responses/Operations/payment.json");
+        var json = await File.ReadAllTextAsync(jsonPath);
 
         var streamableTest =
             new StreamableTest<PaymentOperationResponse>(json,

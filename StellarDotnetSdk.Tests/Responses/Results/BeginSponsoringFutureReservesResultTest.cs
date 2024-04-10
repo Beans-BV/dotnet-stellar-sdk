@@ -19,7 +19,7 @@ public class BeginSponsoringFutureReservesResultTest
             .BeginSponsoringFutureReservesResultCodeEnum.BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED;
         operationResultTr.BeginSponsoringFutureReservesResult = result;
 
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
             typeof(BeginSponsoringFutureReservesAlreadySponsored), false);
     }
 
@@ -35,7 +35,7 @@ public class BeginSponsoringFutureReservesResultTest
             .BeginSponsoringFutureReservesResultCodeEnum.BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED;
         operationResultTr.BeginSponsoringFutureReservesResult = result;
 
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
             typeof(BeginSponsoringFutureReservesMalformed), false);
     }
 
@@ -51,7 +51,7 @@ public class BeginSponsoringFutureReservesResultTest
             .BeginSponsoringFutureReservesResultCodeEnum.BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE;
         operationResultTr.BeginSponsoringFutureReservesResult = result;
 
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
             typeof(BeginSponsoringFutureReservesRecursive), false);
     }
 
@@ -67,7 +67,7 @@ public class BeginSponsoringFutureReservesResultTest
             .BeginSponsoringFutureReservesResultCodeEnum.BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS;
         operationResultTr.BeginSponsoringFutureReservesResult = result;
 
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
             typeof(BeginSponsoringFutureReservesSuccess), true);
     }
 }

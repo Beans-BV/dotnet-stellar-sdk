@@ -28,7 +28,7 @@ public class RevokeSponsorshipResultTest
         };
         operationResultTr.RevokeSponsorshipResult = result;
 
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
             typeof(RevokeSponsorshipDoesNotExist), false);
     }
 
@@ -53,7 +53,8 @@ public class RevokeSponsorshipResultTest
         };
         operationResultTr.RevokeSponsorshipResult = result;
 
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr), typeof(RevokeSponsorshipLowReserve),
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
+            typeof(RevokeSponsorshipLowReserve),
             false);
     }
 
@@ -78,7 +79,8 @@ public class RevokeSponsorshipResultTest
         };
         operationResultTr.RevokeSponsorshipResult = result;
 
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr), typeof(RevokeSponsorshipNotSponsor),
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
+            typeof(RevokeSponsorshipNotSponsor),
             false);
     }
 
@@ -103,7 +105,7 @@ public class RevokeSponsorshipResultTest
         };
         operationResultTr.RevokeSponsorshipResult = result;
 
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
             typeof(RevokeSponsorshipOnlyTransferable), false);
     }
 
@@ -127,7 +129,8 @@ public class RevokeSponsorshipResultTest
         };
         operationResultTr.RevokeSponsorshipResult = result;
 
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr), typeof(RevokeSponsorshipSuccess),
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
+            typeof(RevokeSponsorshipSuccess),
             true);
     }
 }

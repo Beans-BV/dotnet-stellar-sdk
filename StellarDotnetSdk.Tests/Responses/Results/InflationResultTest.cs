@@ -1,5 +1,4 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
@@ -10,7 +9,7 @@ public class InflationResultTest
     [TestMethod]
     public void TestSuccess()
     {
-        var tx = Util.AssertResultOfType(
+        var tx = Utils.AssertResultOfType(
             "AAAAAACYloD/////AAAAAQAAAAAAAAAJAAAAAAAAAAIAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAJiWgAAAAAADLNchwR3S8r1eVV+aPJAT1CkmM4vNhQ3mitHQ34PP5AAAAAABMS0AAAAAAA==",
             typeof(InflationSuccess), true);
         var failed = (TransactionResultFailed)tx;
@@ -24,6 +23,6 @@ public class InflationResultTest
     [TestMethod]
     public void TestNotTime()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAJ/////wAAAAA=", typeof(InflationNotTime), false);
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAJ/////wAAAAA=", typeof(InflationNotTime), false);
     }
 }

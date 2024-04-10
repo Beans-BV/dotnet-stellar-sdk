@@ -33,7 +33,7 @@ public class StrKey
             var xdrPayloadSigner = new xdrSDK.SignerKey.SignerKeyEd25519SignedPayload
             {
                 Payload = signedPayloadSigner.Payload,
-                Ed25519 = signedPayloadSigner.SignerAccountID.InnerValue.Ed25519
+                Ed25519 = signedPayloadSigner.SignerAccountId.InnerValue.Ed25519
             };
 
             var stream = new xdrSDK.XdrDataOutputStream();

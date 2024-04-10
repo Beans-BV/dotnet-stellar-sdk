@@ -1,4 +1,3 @@
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
@@ -44,7 +43,7 @@ public class ClaimableBalancesRequestBuilderTest
     public void TestForSponsor()
     {
         var sponsor = KeyPair.FromAccountId("GBM2LMVS2EG3GHJ5DKR7CKZ4TP6DQKCHRMDKCZK6WG2NGQVTLF35YE6O");
-        var server = new Server("https://horizon-testnet.stellar.org");
+        using var server = Utils.CreateTestServerWithContent(null);
         var uri = server.ClaimableBalances.ForSponsor(sponsor).BuildUri();
         Assert.AreEqual(
             "https://horizon-testnet.stellar.org/claimable_balances?sponsor=GBM2LMVS2EG3GHJ5DKR7CKZ4TP6DQKCHRMDKCZK6WG2NGQVTLF35YE6O",
@@ -54,15 +53,10 @@ public class ClaimableBalancesRequestBuilderTest
     [TestMethod]
     public async Task TestClaimableBalance()
     {
-        var jsonResponse = File.ReadAllText(Path.Combine("testdata", "claimableBalance.json"));
-        var fakeHttpClient = FakeHttpClient.CreateFakeHttpClient(jsonResponse);
-
-        using (var server = new Server("https://horizon-testnet.stellar.org", fakeHttpClient))
-        {
-            var claimableBalance =
-                await server.ClaimableBalances.ClaimableBalance(
-                    "00000000c582697b67cbec7f9ce64f4dc67bfb2bfd26318bb9f964f4d70e3f41f650b1e6");
-            ClaimableBalanceDeserializerTest.AssertTestData(claimableBalance);
-        }
+        using var server = await Utils.CreateTestServerWithJson("Responses/claimableBalance.json");
+        var claimableBalance =
+            await server.ClaimableBalances.ClaimableBalance(
+                "00000000c582697b67cbec7f9ce64f4dc67bfb2bfd26318bb9f964f4d70e3f41f650b1e6");
+        ClaimableBalanceDeserializerTest.AssertTestData(claimableBalance);
     }
 }

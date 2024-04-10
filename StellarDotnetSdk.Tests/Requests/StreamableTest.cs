@@ -11,7 +11,7 @@ public class StreamableTest<T> where T : class
     private readonly string _eventId;
     private readonly string _json;
     private readonly Action<T> _testAction;
-    private SSEEventSource? _eventSource;
+    private SseEventSource? _eventSource;
     private FakeStreamableRequestBuilder? _requestBuilder;
 
     public StreamableTest(string json, Action<T> action, string? eventId = null)
@@ -23,16 +23,16 @@ public class StreamableTest<T> where T : class
         _eventId = eventId ?? "1234";
     }
 
-    public string LastEventId => _eventSource.LastEventId;
-    public string Uri => _requestBuilder.BuildUri().ToString();
+    public string? LastEventId => _eventSource?.LastEventId;
+    public string? Uri => _requestBuilder?.BuildUri().ToString();
 
     public async Task Run()
     {
-        var fakeHandler = new FakeHttpMessageHandler();
+        var fakeHandler = new FakeStreamableHttpMessageHandler();
         var stream = $"event: open\ndata: hello\n\nid: {_eventId}\ndata: {_json}\n\n";
         fakeHandler.QueueResponse(FakeResponse.StartsStream(StreamAction.Write(stream)));
 
-        _eventSource = new SSEEventSource(new Uri("http://test.com"),
+        _eventSource = new SseEventSource(new Uri("http://test.com"),
             builder => builder.MessageHandler(fakeHandler));
 
         _requestBuilder = new FakeStreamableRequestBuilder(new Uri("https://horizon-testnet.stellar.org"), "test",

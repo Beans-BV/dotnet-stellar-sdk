@@ -13,8 +13,8 @@ public class ClawbackClaimableBalance
     [TestMethod]
     public void TestClawbackClaimableBalance()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/clawbackClaimableBalance",
-            "clawbackClaimableBalance.json"));
+        var jsonPath = Utils.GetTestDataPath("clawbackClaimableBalance.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -28,9 +28,7 @@ public class ClawbackClaimableBalance
         var operation = (ClawbackClaimableBalanceOperationResponse)instance;
 
         Assert.AreEqual(214525026504705, operation.Id);
-        Assert.AreEqual(
-            new ClawbackClaimableBalanceOperationResponse(
-                "00000000526674017c3cf392614b3f2f500230affd58c7c364625c350c61058fbeacbdf7").BalanceID,
-            operation.BalanceID);
+        Assert.AreEqual("00000000526674017c3cf392614b3f2f500230affd58c7c364625c350c61058fbeacbdf7",
+            operation.BalanceId);
     }
 }

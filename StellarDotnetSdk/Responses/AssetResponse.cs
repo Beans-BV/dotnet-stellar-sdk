@@ -2,27 +2,9 @@
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses;
-
+#nullable disable
 public class AssetResponse : Response, IPagingToken
 {
-    public AssetResponse(string assetType, string assetCode, string assetIssuer, string pagingToken, string amount,
-        int numAccounts, AssetResponseFlags flags, AssetResponseLinks links, AssetAccounts accounts,
-        AssetBalances balances, string claimableBalancesAmount, string liquidityPoolsAmount)
-    {
-        AssetType = assetType;
-        AssetCode = assetCode;
-        AssetIssuer = assetIssuer;
-        PagingToken = pagingToken;
-        Amount = amount;
-        NumAccounts = numAccounts;
-        Flags = flags;
-        Links = links;
-        Accounts = accounts;
-        Balances = balances;
-        ClaimableBalancesAmount = claimableBalancesAmount;
-        LiquidityPoolsAmount = liquidityPoolsAmount;
-    }
-
     [JsonProperty(PropertyName = "_links")]
     public AssetResponseLinks Links { get; init; }
 
@@ -126,5 +108,31 @@ public class AssetResponse : Response, IPagingToken
 
         [JsonProperty(PropertyName = "unauthorized")]
         public string Unauthorized { get; init; }
+    }
+
+    public class AssetResponseLinks
+    {
+        [JsonProperty(PropertyName = "toml")] public Link Toml { get; init; }
+    }
+
+    public class AssetResponseFlags
+    {
+        /// <summary>
+        ///     The anchor must approve anyone who wants to hold this asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "auth_required")]
+        public bool AuthRequired { get; init; }
+
+        /// <summary>
+        ///     The anchor can freeze the asset.
+        /// </summary>
+        [JsonProperty(PropertyName = "auth_revocable")]
+        public bool AuthRevocable { get; init; }
+
+        /// <summary>
+        ///     None of the authorization flags can be init and the issuing account can never be deleted.
+        /// </summary>
+        [JsonProperty(PropertyName = "auth_immutable")]
+        public bool AuthImmutable { get; init; }
     }
 }

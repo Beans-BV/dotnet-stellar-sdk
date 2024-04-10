@@ -1,4 +1,5 @@
-﻿using StellarDotnetSdk.Xdr;
+﻿using StellarDotnetSdk.LiquidityPool;
+using StellarDotnetSdk.Xdr;
 using Assets_Asset = StellarDotnetSdk.Assets.Asset;
 
 namespace StellarDotnetSdk.LedgerKeys;

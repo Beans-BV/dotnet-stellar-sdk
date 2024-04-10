@@ -12,7 +12,7 @@ public class LiquidityPoolTypeEnumJsonConverter : JsonConverter<LiquidityPoolTyp
         return reader.Value switch
         {
             "constant_product" => LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
-            _ => throw new Exception("type is not readable")
+            _ => throw new Exception("tywpe is not readable")
         };
     }
 

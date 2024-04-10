@@ -14,16 +14,18 @@ public class ManageOfferOperationResponseTest
     [TestMethod]
     public void TestDeserializeManageOfferOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/manageOffer", "manageOffer.json"));
+        var jsonPath = Utils.GetTestDataPath("manageOffer.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertManageOfferData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeManageOfferOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/manageOffer", "manageOffer.json"));
+        var jsonPath = Utils.GetTestDataPath("manageOffer.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);

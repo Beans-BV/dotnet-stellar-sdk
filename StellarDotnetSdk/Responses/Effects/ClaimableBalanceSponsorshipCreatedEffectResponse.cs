@@ -1,30 +1,17 @@
 ﻿using Newtonsoft.Json;
 
 namespace StellarDotnetSdk.Responses.Effects;
-
+#nullable disable
 /// <summary>
 ///     Represents claimable_balance_sponsorship_created effect response.
-///     See: https://www.stellar.org/developers/horizon/reference/resources/effect.html
-///     <seealso cref="Requests.EffectsRequestBuilder" />
-///     <seealso cref="Server" />
 /// </summary>
 public class ClaimableBalanceSponsorshipCreatedEffectResponse : EffectResponse
 {
-    public ClaimableBalanceSponsorshipCreatedEffectResponse()
-    {
-    }
-
-    public ClaimableBalanceSponsorshipCreatedEffectResponse(string balanceID, string sponsor)
-    {
-        BalanceID = balanceID;
-        Sponsor = sponsor;
-    }
-
     public override int TypeId => 69;
 
     [JsonProperty(PropertyName = "balance_id")]
-    public string BalanceID { get; private set; }
+    public string BalanceId { get; init; }
 
     [JsonProperty(PropertyName = "sponsor")]
-    public string Sponsor { get; private set; }
+    public string Sponsor { get; init; }
 }

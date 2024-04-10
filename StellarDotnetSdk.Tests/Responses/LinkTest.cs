@@ -20,10 +20,13 @@ public class LinkTest
         Assert.AreEqual("/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7",
             string.Concat(link.Uri.Segments));
 
-        var jsonResponse = File.ReadAllText(Path.Combine("testdata", "account.json"));
-        var fakeHttpClient = FakeHttpClient.CreateFakeHttpClient(jsonResponse);
+        var jsonPath = Utils.GetTestDataPath("account.json");
+
+        var json = await File.ReadAllTextAsync(jsonPath);
+        var fakeHttpClient = Utils.CreateFakeHttpClient(json);
 
         var response = await link.Follow(fakeHttpClient);
+
         AccountDeserializerTest.AssertTestData(response);
     }
 

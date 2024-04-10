@@ -14,16 +14,18 @@ public class ManageBuyOfferOperationResponseTest
     [TestMethod]
     public void TestDeserializeManageBuyOfferOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/manageBuyOffer", "manageBuyOffer.json"));
+        var jsonPath = Utils.GetTestDataPath("manageBuyOffer.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertManageBuyOfferData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeManageBuyOfferOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/manageBuyOffer", "manageBuyOffer.json"));
+        var jsonPath = Utils.GetTestDataPath("manageBuyOffer.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -35,16 +37,18 @@ public class ManageBuyOfferOperationResponseTest
     [TestMethod]
     public void TestDeserializeManageBuyOfferOperationPre100()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/manageBuyOffer", "manageBuyOfferPre100.json"));
+        var jsonPath = Utils.GetTestDataPath("manageBuyOfferPre100.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertManageBuyOfferData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeManageBuyOfferOperationPre100()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/manageBuyOffer", "manageBuyOfferPre100.json"));
+        var jsonPath = Utils.GetTestDataPath("manageBuyOfferPre100.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);

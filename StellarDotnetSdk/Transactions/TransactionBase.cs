@@ -73,7 +73,8 @@ public abstract class TransactionBase
     {
         if (signer == null)
             throw new ArgumentNullException(nameof(signer), "signer cannot be null");
-
+        if (network == null)
+            throw new ArgumentNullException(nameof(network), "network cannot be null");
         var txHash = Hash(network);
         Signatures.Add(signer.SigningKey.SignDecorated(txHash));
     }

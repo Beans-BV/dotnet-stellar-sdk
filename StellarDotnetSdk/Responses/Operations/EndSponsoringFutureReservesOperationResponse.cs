@@ -2,32 +2,20 @@
 
 namespace StellarDotnetSdk.Responses.Operations;
 
+#nullable disable
 /// <summary>
 ///     Represents AccountMerge operation response.
-///     See: https://www.stellar.org/developers/horizon/reference/resources/operation.html
-///     <seealso cref="Requests.OperationsRequestBuilder" />
-///     <seealso cref="Server" />
 /// </summary>
 public class EndSponsoringFutureReservesOperationResponse : OperationResponse
 {
-    public EndSponsoringFutureReservesOperationResponse()
-    {
-    }
-
-
-    public EndSponsoringFutureReservesOperationResponse(string beginSponsor)
-    {
-        BeginSponsor = beginSponsor;
-    }
-
     public override int TypeId => 17;
 
     [JsonProperty(PropertyName = "begin_sponsor")]
-    public string BeginSponsor { get; private set; }
+    public string BeginSponsor { get; init; }
 
     [JsonProperty(PropertyName = "begin_sponsor_muxed")]
-    public string BeginSponsorMuxed { get; private set; }
+    public string BeginSponsorMuxed { get; init; }
 
     [JsonProperty(PropertyName = "begin_sponsor_muxed_id")]
-    public ulong? BeginSponsorMuxedID { get; private set; }
+    public ulong? BeginSponsorMuxedID { get; init; }
 }

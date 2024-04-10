@@ -10,9 +10,10 @@ public class TransactionPageDeserializeTest
     [TestMethod]
     public void TestDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "transactionPage.json"));
+        var jsonPath = Utils.GetTestDataPath("transactionPage.json");
+        var json = File.ReadAllText(jsonPath);
         var transactionsPage = JsonSingleton.GetInstance<Page<TransactionResponse>>(json);
-
+        Assert.IsNotNull(transactionsPage);
         AssertTestData(transactionsPage);
     }
 

@@ -1,68 +1,48 @@
 ﻿using Newtonsoft.Json;
 using StellarDotnetSdk.Converters;
+using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Responses;
+#nullable disable
 
 public class LiquidityPoolResponse : Response, IPagingToken
 {
-    public LiquidityPoolResponse(LiquidityPoolID id, string pagingToken, int feeBp,
-        LiquidityPoolType.LiquidityPoolTypeEnum type, string totalTrustlines, string totalShares, Reserve[] reserves,
-        LiquidityPoolResponseLinks links)
-    {
-        ID = id;
-        PagingToken = pagingToken;
-        FeeBP = feeBp;
-        Type = type;
-        TotalTrustlines = totalTrustlines;
-        TotalShares = totalShares;
-        Reserves = reserves;
-        Links = links;
-    }
-
-    [JsonProperty(PropertyName = "id")] public LiquidityPoolID ID { get; set; }
+    [JsonProperty(PropertyName = "id")] public LiquidityPoolID Id { get; init; }
 
     [JsonProperty(PropertyName = "fee_bp")]
-    public int FeeBP { get; set; }
+    public int FeeBp { get; init; }
 
     [JsonConverter(typeof(LiquidityPoolTypeEnumJsonConverter))]
     [JsonProperty(PropertyName = "type")]
-    public LiquidityPoolType.LiquidityPoolTypeEnum Type { get; set; }
+    public LiquidityPoolType.LiquidityPoolTypeEnum Type { get; init; }
 
     [JsonProperty(PropertyName = "total_trustlines")]
-    public string TotalTrustlines { get; set; }
+    public string TotalTrustlines { get; init; }
 
     [JsonProperty(PropertyName = "total_shares")]
-    public string TotalShares { get; set; }
+    public string TotalShares { get; init; }
 
     [JsonProperty(PropertyName = "reserves")]
-    public Reserve[] Reserves { get; set; }
+    public Reserve[] Reserves { get; init; }
 
     [JsonProperty(PropertyName = "_links")]
-    public LiquidityPoolResponseLinks Links { get; set; }
+    public LiquidityPoolResponseLinks Links { get; init; }
 
     [JsonProperty(PropertyName = "paging_token")]
-    public string PagingToken { get; set; }
+    public string PagingToken { get; init; }
 
     public class LiquidityPoolResponseLinks
     {
-        public LiquidityPoolResponseLinks(Link effects, Link operations, Link self, Link transactions)
-        {
-            Effects = effects;
-            Operations = operations;
-            Self = self;
-            Transactions = transactions;
-        }
-
         [JsonProperty(PropertyName = "effects")]
-        public Link Effects { get; set; }
+        public Link Effects { get; init; }
 
         [JsonProperty(PropertyName = "operations")]
-        public Link Operations { get; set; }
+        public Link Operations { get; init; }
 
-        [JsonProperty(PropertyName = "self")] public Link Self { get; set; }
+        [JsonProperty(PropertyName = "self")] public Link Self { get; init; }
 
         [JsonProperty(PropertyName = "transactions")]
-        public Link Transactions { get; set; }
+        public Link Transactions { get; init; }
     }
 }

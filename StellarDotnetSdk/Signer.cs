@@ -1,4 +1,5 @@
-﻿using StellarDotnetSdk.Xdr;
+﻿using System;
+using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk;
 
@@ -6,7 +7,11 @@ public class Signer
 {
     public Signer(SignerKey key, uint weight)
     {
+        Key = key ?? throw new ArgumentNullException(nameof(key), "signer key cannot be null");
+        if (weight > 255)
+            throw new ArgumentException("weight must be an integer between 0 and 255 (inclusive).", nameof(weight));
         Key = key;
+
         Weight = weight;
     }
 

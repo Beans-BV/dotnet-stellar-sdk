@@ -12,16 +12,18 @@ public class OrderBookDeserializerTest
     [TestMethod]
     public void TestDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "orderBook.json"));
+        var jsonPath = Utils.GetTestDataPath("orderBook.json");
+        var json = File.ReadAllText(jsonPath);
         var orderBook = JsonSingleton.GetInstance<OrderBookResponse>(json);
-
+        Assert.IsNotNull(orderBook);
         AssertTestData(orderBook);
     }
 
     [TestMethod]
     public void TestSerializeDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "orderBook.json"));
+        var jsonPath = Utils.GetTestDataPath("orderBook.json");
+        var json = File.ReadAllText(jsonPath);
         var orderBook = JsonSingleton.GetInstance<OrderBookResponse>(json);
         var serialized = JsonConvert.SerializeObject(orderBook);
         var back = JsonConvert.DeserializeObject<OrderBookResponse>(serialized);

@@ -5,28 +5,52 @@ using StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Operations;
 
 /// <summary>
-///     Represents a <c>RevokeSponsorshipOperation</c>.
-///     Use <see cref="Builder" /> to create a new RevokeSignerSponsorshipOperation.
-///     See also:
+///     Sponsoring account can remove or transfer sponsorships of existing signers; the logic of this operation depends on
+///     the state of the source account.
+///     See:
 ///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#revoke-sponsorship">
-///         Revoke
-///         Sponsorship
+///         Revoke sponsorship
 ///     </a>
 /// </summary>
 public class RevokeSignerSponsorshipOperation : Operation
 {
-    private RevokeSignerSponsorshipOperation(KeyPair account, SignerKey signerKey)
+    /// <summary>
+    ///     Constructs a new <c>RevokeSignerSponsorshipOperation</c>.
+    /// </summary>
+    /// <param name="account">Account of a signer that may have its sponsorship modified.</param>
+    /// <param name="accountId">The signer's Ed25519 public key.</param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
+    public RevokeSignerSponsorshipOperation(KeyPair account, string accountId, IAccountId? sourceAccount = null)
+        : this(account, SignerUtil.Ed25519PublicKey(KeyPair.FromAccountId(accountId)), sourceAccount)
     {
-        Account = account;
-        SignerKey = signerKey;
     }
 
+    /// <summary>
+    ///     Constructs a new <c>RevokeSignerSponsorshipOperation</c>.
+    /// </summary>
+    /// <param name="account">Account of a signer that may have its sponsorship modified.</param>
+    /// <param name="signerKey">Signer key of a signer that may have its sponsorship modified.</param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
+    public RevokeSignerSponsorshipOperation(KeyPair account, SignerKey signerKey, IAccountId? sourceAccount = null)
+        : base(sourceAccount)
+    {
+        Account = account ?? throw new ArgumentNullException(nameof(account));
+        SignerKey = signerKey ?? throw new ArgumentNullException(nameof(signerKey));
+    }
+
+    /// <summary>
+    ///     Account of a signer that may have its sponsorship modified.
+    /// </summary>
     public KeyPair Account { get; }
+
+    /// <summary>
+    ///     Signer key of a signer that may have its sponsorship modified.
+    /// </summary>
     public SignerKey SignerKey { get; }
 
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
-        var body = new Xdr.Operation.OperationBody
+        return new Xdr.Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP),
             RevokeSponsorshipOp = new RevokeSponsorshipOp
@@ -40,59 +64,13 @@ public class RevokeSignerSponsorshipOperation : Operation
                 }
             }
         };
-        return body;
     }
 
-    /// <summary>
-    ///     Builder for <c>RevokeSignerSponsorshipOperation</c> operation.
-    /// </summary>
-    /// <see cref="BeginSponsoringFutureReservesOperation" />
-    public class Builder
+    public static RevokeSignerSponsorshipOperation FromXdr(
+        RevokeSponsorshipOp.RevokeSponsorshipOpSigner revokeSignerSponsorshipOp)
     {
-        private readonly KeyPair _account;
-        private readonly SignerKey _signerKey;
-        private KeyPair? _sourceAccount;
-
-        /// <summary>
-        ///     Constructs a new <c>RevokeSignerSponsorshipOperation</c> builder from a RevokeSponsorshipOpSigner XDR.
-        /// </summary>
-        public Builder(RevokeSponsorshipOp.RevokeSponsorshipOpSigner op)
-        {
-            _account = KeyPair.FromXdrPublicKey(op.AccountID.InnerValue);
-            _signerKey = op.SignerKey;
-        }
-
-        /// <summary>
-        ///     Constructs a new <c>RevokeSignerSponsorshipOperation</c> builder with the given account and signer key.
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="signerKey"></param>
-        public Builder(KeyPair account, SignerKey signerKey)
-        {
-            _account = account ?? throw new ArgumentNullException(nameof(account));
-            _signerKey = signerKey ?? throw new ArgumentNullException(nameof(signerKey));
-        }
-
-        /// <summary>
-        ///     Sets the source account for this operation.
-        /// </summary>
-        /// <param name="account">The operation's source account.</param>
-        /// <returns>Builder object so you can chain methods.</returns>
-        public Builder SetSourceAccount(KeyPair account)
-        {
-            _sourceAccount = account;
-            return this;
-        }
-
-        /// <summary>
-        ///     Builds an operation
-        /// </summary>
-        public RevokeSignerSponsorshipOperation Build()
-        {
-            var operation = new RevokeSignerSponsorshipOperation(_account, _signerKey);
-            if (_sourceAccount != null)
-                operation.SourceAccount = _sourceAccount;
-            return operation;
-        }
+        return new RevokeSignerSponsorshipOperation(
+            KeyPair.FromXdrPublicKey(revokeSignerSponsorshipOp.AccountID.InnerValue),
+            revokeSignerSponsorshipOp.SignerKey);
     }
 }

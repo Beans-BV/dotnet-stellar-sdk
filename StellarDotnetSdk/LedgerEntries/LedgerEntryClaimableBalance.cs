@@ -2,7 +2,7 @@
 using System.Linq;
 using StellarDotnetSdk.Xdr;
 using Assets_Asset = StellarDotnetSdk.Assets.Asset;
-using claimant_Claimant = StellarDotnetSdk.Claimant.Claimant;
+using claimant_Claimant = StellarDotnetSdk.Claimants.Claimant;
 
 namespace StellarDotnetSdk.LedgerEntries;
 

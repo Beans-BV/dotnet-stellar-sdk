@@ -1,51 +1,33 @@
 ﻿using Newtonsoft.Json;
 
 namespace StellarDotnetSdk.Responses.Effects;
+#nullable disable
 
 /// <summary>
 ///     Represents trustline_updated effect response.
-///     See: https://www.stellar.org/developers/horizon/reference/resources/effect.html
-///     <seealso cref="Requests.EffectsRequestBuilder" />
-///     <seealso cref="Server" />
 /// </summary>
 public class TrustlineFlagsUpdatedEffectResponse : EffectResponse
 {
-    public TrustlineFlagsUpdatedEffectResponse()
-    {
-    }
-
-    public TrustlineFlagsUpdatedEffectResponse(string assetType, string assetCode, string assetIssuer, string trustor,
-        bool authorizedFlag, bool authorizedToMaintainLiabilities, bool clawbackEnabledFlag)
-    {
-        AssetType = assetType;
-        AssetCode = assetCode;
-        AssetIssuer = assetIssuer;
-        Trustor = trustor;
-        AuthorizedFlag = authorizedFlag;
-        AuthorizedToMaintainLiabilities = authorizedToMaintainLiabilities;
-        ClawbackEnabledFlag = clawbackEnabledFlag;
-    }
-
     public override int TypeId => 26;
 
     [JsonProperty(PropertyName = "asset_type")]
-    public string AssetType { get; private set; }
+    public string AssetType { get; init; }
 
     [JsonProperty(PropertyName = "asset_code")]
-    public string AssetCode { get; private set; }
+    public string AssetCode { get; init; }
 
     [JsonProperty(PropertyName = "asset_issuer")]
-    public string AssetIssuer { get; private set; }
+    public string AssetIssuer { get; init; }
 
     [JsonProperty(PropertyName = "trustor")]
-    public string Trustor { get; private set; }
+    public string Trustor { get; init; }
 
     [JsonProperty(PropertyName = "authorized_flag")]
-    public bool AuthorizedFlag { get; private set; }
+    public bool AuthorizedFlag { get; init; }
 
     [JsonProperty(PropertyName = "authorized_to_maintain_liabilities")]
-    public bool AuthorizedToMaintainLiabilities { get; private set; }
+    public bool AuthorizedToMaintainLiabilities { get; init; }
 
     [JsonProperty(PropertyName = "clawback_enabled_flag")]
-    public bool ClawbackEnabledFlag { get; private set; }
+    public bool ClawbackEnabledFlag { get; init; }
 }

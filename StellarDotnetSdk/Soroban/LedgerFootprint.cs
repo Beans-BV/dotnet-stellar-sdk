@@ -2,7 +2,7 @@
 using System.Linq;
 using StellarDotnetSdk.LedgerKeys;
 
-namespace StellarDotnetSdk;
+namespace StellarDotnetSdk.Soroban;
 
 /// <summary>
 ///     See

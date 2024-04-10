@@ -11,22 +11,22 @@ public class SignedPayloadSigner
 {
     public const int SignedPayloadMaxPayloadLength = 64;
 
-    public SignedPayloadSigner(AccountID signerAccountID, byte[] payload)
+    public SignedPayloadSigner(AccountID signerAccountId, byte[] payload)
     {
-        if (signerAccountID == null)
-            throw new ArgumentNullException(nameof(signerAccountID), "signerAccountID cannot be null");
+        if (signerAccountId == null)
+            throw new ArgumentNullException(nameof(signerAccountId), "signerAccountID cannot be null");
 
         if (payload == null) throw new ArgumentNullException(nameof(payload), "payload cannot be null");
 
         if (payload.Length > SignedPayloadMaxPayloadLength)
             throw new ArgumentException($"Invalid payload length, must be less than {SignedPayloadMaxPayloadLength}");
 
-        if (signerAccountID.InnerValue.Discriminant is not
+        if (signerAccountId.InnerValue.Discriminant is not
             { InnerValue: PublicKeyType.PublicKeyTypeEnum.PUBLIC_KEY_TYPE_ED25519 })
             throw new ArgumentException(
                 "Invalid payload signer, only ED25519 public key accounts are supported at the moment");
 
-        SignerAccountID = signerAccountID;
+        SignerAccountId = signerAccountId;
         Payload = payload;
     }
 
@@ -43,6 +43,6 @@ public class SignedPayloadSigner
     {
     }
 
-    public AccountID SignerAccountID { get; private set; }
+    public AccountID SignerAccountId { get; private set; }
     public byte[] Payload { get; private set; }
 }

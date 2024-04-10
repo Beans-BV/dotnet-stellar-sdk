@@ -1,23 +1,23 @@
 ﻿using System;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Xdr;
-using Assets_Asset = StellarDotnetSdk.Assets.Asset;
+using Asset = StellarDotnetSdk.Assets.Asset;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
 public class LedgerEntryOffer : LedgerEntry
 {
     private LedgerEntryOffer(
-        KeyPair sellerID,
-        long offerID,
+        KeyPair sellerId,
+        long offerId,
         long amount,
-        Assets_Asset buying,
-        Assets_Asset selling,
+        Asset buying,
+        Asset selling,
         Price price,
         uint flags)
     {
-        SellerID = sellerID;
-        OfferID = offerID;
+        SellerId = sellerId;
+        OfferId = offerId;
         Amount = amount;
         Buying = buying;
         Selling = selling;
@@ -25,15 +25,15 @@ public class LedgerEntryOffer : LedgerEntry
         Flags = flags;
     }
 
-    public KeyPair SellerID { get; }
+    public KeyPair SellerId { get; }
 
-    public long OfferID { get; }
+    public long OfferId { get; }
 
     public long Amount { get; }
 
-    public Assets_Asset Buying { get; }
+    public Asset Buying { get; }
 
-    public Assets_Asset Selling { get; }
+    public Asset Selling { get; }
 
     public Price Price { get; }
 
@@ -61,8 +61,8 @@ public class LedgerEntryOffer : LedgerEntry
             KeyPair.FromXdrPublicKey(xdrOfferEntry.SellerID.InnerValue),
             xdrOfferEntry.OfferID.InnerValue,
             xdrOfferEntry.Amount.InnerValue,
-            Assets_Asset.FromXdr(xdrOfferEntry.Buying),
-            Assets_Asset.FromXdr(xdrOfferEntry.Selling),
+            Asset.FromXdr(xdrOfferEntry.Buying),
+            Asset.FromXdr(xdrOfferEntry.Selling),
             new Price(xdrOfferEntry.Price.N.InnerValue, xdrOfferEntry.Price.D.InnerValue),
             xdrOfferEntry.Flags.InnerValue);
 

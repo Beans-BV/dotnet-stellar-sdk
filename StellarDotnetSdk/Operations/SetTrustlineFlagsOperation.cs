@@ -1,20 +1,29 @@
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Xdr;
-using Assets_Asset = StellarDotnetSdk.Assets.Asset;
+using Asset = StellarDotnetSdk.Assets.Asset;
 
 namespace StellarDotnetSdk.Operations;
 
 /// <summary>
-///     Represents a <see cref="SetTrustlineFlagsOperation" />.
-///     Use the <see cref="Builder" /> to create a new SetTrustlineFlagsOperation.
-///     <seealso
-///         href="https://developers.stellar.org/docs/fundamentals-and-concepts/list-of-operations#set-trustline-flags">
-///         Set Trustline Flags
-///     </seealso>
+///     Allows issuing account to configure authorization and trustline flags to an asset.
+///     See:
+///     <a
+///         href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#set-trustline-flags">
+///         Set trustline flags
+///     </a>
 /// </summary>
 public class SetTrustlineFlagsOperation : Operation
 {
-    private SetTrustlineFlagsOperation(Assets_Asset asset, KeyPair trustor, uint setFlags, uint clearFlags)
+    /// <summary>
+    ///     Constructs a <see cref="SetTrustlineFlagsOperation" />.
+    /// </summary>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
+    public SetTrustlineFlagsOperation(
+        Asset asset,
+        KeyPair trustor,
+        uint setFlags,
+        uint clearFlags,
+        IAccountId? sourceAccount = null) : base(sourceAccount)
     {
         Asset = asset;
         Trustor = trustor;
@@ -25,7 +34,7 @@ public class SetTrustlineFlagsOperation : Operation
     /// <summary>
     ///     The asset trustline whose flags are being modified.
     /// </summary>
-    public Assets_Asset Asset { get; }
+    public Asset Asset { get; }
 
     /// <summary>
     ///     The account that established this trustline.
@@ -63,54 +72,13 @@ public class SetTrustlineFlagsOperation : Operation
         return body;
     }
 
-    /// <summary>
-    ///     Constructs a <see cref="SetTrustlineFlagsOperation" /> builder.
-    /// </summary>
-    public class Builder
+    public static SetTrustlineFlagsOperation FromXdr(SetTrustLineFlagsOp setTrustLineFlagsOp)
     {
-        private readonly Assets_Asset _asset;
-        private readonly uint _clearFlags;
-        private readonly uint _setFlags;
-        private readonly KeyPair _trustor;
-
-        private KeyPair? _sourceAccount;
-
-        public Builder(SetTrustLineFlagsOp op)
-        {
-            _asset = Assets_Asset.FromXdr(op.Asset);
-            _trustor = KeyPair.FromXdrPublicKey(op.Trustor.InnerValue);
-            _setFlags = op.SetFlags.InnerValue;
-            _clearFlags = op.ClearFlags.InnerValue;
-        }
-
-        public Builder(Assets_Asset asset, KeyPair trustor, uint setFlags, uint clearFlags)
-        {
-            _asset = asset;
-            _trustor = trustor;
-            _setFlags = setFlags;
-            _clearFlags = clearFlags;
-        }
-
-        /// <summary>
-        ///     Sets the source account for this operation.
-        /// </summary>
-        /// <param name="account">The operation's source account.</param>
-        /// <returns>Builder object so you can chain methods.</returns>
-        public Builder SetSourceAccount(KeyPair account)
-        {
-            _sourceAccount = account;
-            return this;
-        }
-
-        /// <summary>
-        ///     Builds an operation
-        /// </summary>
-        public SetTrustlineFlagsOperation Build()
-        {
-            var operation = new SetTrustlineFlagsOperation(_asset, _trustor, _setFlags, _clearFlags);
-            if (_sourceAccount != null)
-                operation.SourceAccount = _sourceAccount;
-            return operation;
-        }
+        return new SetTrustlineFlagsOperation(
+            Asset.FromXdr(setTrustLineFlagsOp.Asset),
+            KeyPair.FromXdrPublicKey(setTrustLineFlagsOp.Trustor.InnerValue),
+            setTrustLineFlagsOp.SetFlags.InnerValue,
+            setTrustLineFlagsOp.ClearFlags.InnerValue
+        );
     }
 }

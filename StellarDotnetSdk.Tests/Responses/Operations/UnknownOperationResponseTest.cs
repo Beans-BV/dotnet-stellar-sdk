@@ -12,7 +12,8 @@ public class UnknownOperationResponseTest
     [TestMethod]
     public void TestDeserializeUnknownOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/unknownOperation", "unknownOperation.json"));
+        var jsonPath = Utils.GetTestDataPath("unknownOperation.json");
+        var json = File.ReadAllText(jsonPath);
         Assert.ThrowsException<JsonSerializationException>(() =>
             JsonSingleton.GetInstance<OperationResponse>(json));
     }

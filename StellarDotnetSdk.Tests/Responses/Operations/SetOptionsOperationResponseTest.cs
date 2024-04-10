@@ -13,16 +13,18 @@ public class SetOptionsOperationResponseTest
     [TestMethod]
     public void TestDeserializeSetOptionsOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/setOptions", "setOptions.json"));
+        var jsonPath = Utils.GetTestDataPath("setOptions.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertSetOptionsData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeSetOptionsOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/setOptions", "setOptions.json"));
+        var jsonPath = Utils.GetTestDataPath("setOptions.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -52,16 +54,18 @@ public class SetOptionsOperationResponseTest
     [TestMethod]
     public void TestDeserializeSetOptionsOperationWithNonEd25519Key()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/setOptions", "setOptionsNonEd25519Key.json"));
+        var jsonPath = Utils.GetTestDataPath("setOptionsNonEd25519Key.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertSetOptionsOperationWithNonEd25519KeyData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeSetOptionsOperationWithNonEd25519Key()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/setOptions", "setOptionsNonEd25519Key.json"));
+        var jsonPath = Utils.GetTestDataPath("setOptionsNonEd25519Key.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);

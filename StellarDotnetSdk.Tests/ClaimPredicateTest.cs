@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StellarDotnetSdk.Claimant;
+using StellarDotnetSdk.Claimants;
 using xdrSDK = StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Tests;

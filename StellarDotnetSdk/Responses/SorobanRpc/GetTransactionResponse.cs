@@ -1,5 +1,8 @@
 ﻿using System;
+using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
+using SCBytes = StellarDotnetSdk.Soroban.SCBytes;
+using SCVal = StellarDotnetSdk.Soroban.SCVal;
 using Soroban_TransactionMetaV3 = StellarDotnetSdk.Soroban.TransactionMetaV3;
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;

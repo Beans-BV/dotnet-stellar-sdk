@@ -1,21 +1,28 @@
 ﻿using System;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Xdr;
-using Assets_Asset = StellarDotnetSdk.Assets.Asset;
+using Asset = StellarDotnetSdk.Assets.Asset;
 using MuxedAccount = StellarDotnetSdk.Accounts.MuxedAccount;
-using xdr_Int64 = StellarDotnetSdk.Xdr.Int64;
+using Int64 = StellarDotnetSdk.Xdr.Int64;
 
 namespace StellarDotnetSdk.Operations;
 
 /// <summary>
-///     Represents a <see cref="PaymentOp" /> operation.
-///     Use <see cref="Builder" /> to create a new PaymentOperation.
-///     See also:
+///     Sends an amount in a specific asset to a destination account
+///     See:
 ///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#payment">Payment</a>
 /// </summary>
 public class PaymentOperation : Operation
 {
-    private PaymentOperation(IAccountId destination, Assets_Asset asset, string amount)
+    // <summary>
+    ///     Constructs a new <c>PaymentOperation</c>.
+    // </summary>
+    /// <param name="destination">The destination keypair (uses only the public key).</param>
+    /// <param name="asset">The asset to send.</param>
+    /// <param name="amount">The amount to send in lumens.</param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
+    public PaymentOperation(IAccountId destination, Asset asset, string amount, IAccountId? sourceAccount = null) :
+        base(sourceAccount)
     {
         Destination = destination ?? throw new ArgumentNullException(nameof(destination), "destination cannot be null");
         Asset = asset ?? throw new ArgumentNullException(nameof(asset), "asset cannot be null");
@@ -30,7 +37,7 @@ public class PaymentOperation : Operation
     /// <summary>
     ///     Asset to send to the destination account.
     /// </summary>
-    public Assets_Asset Asset { get; }
+    public Asset Asset { get; }
 
     /// <summary>
     ///     Amount of the aforementioned asset to send.
@@ -39,79 +46,23 @@ public class PaymentOperation : Operation
 
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
-        var body = new Xdr.Operation.OperationBody
+        return new Xdr.Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.PAYMENT),
             PaymentOp = new PaymentOp
             {
                 Destination = Destination.MuxedAccount,
                 Asset = Asset.ToXdr(),
-                Amount = new xdr_Int64 { InnerValue = ToXdrAmount(Amount) }
+                Amount = new Int64 { InnerValue = ToXdrAmount(Amount) }
             }
         };
-        return body;
     }
 
-    /// <summary>
-    ///     Builds Payment operation.
-    /// </summary>
-    /// <see cref="PathPaymentStrictSendOperation" />
-    /// ///
-    /// <see cref="PathPaymentStrictReceiveOperation" />
-    public class Builder
+    public static PaymentOperation FromXdr(PaymentOp paymentOp)
     {
-        private readonly string _amount;
-        private readonly Assets_Asset _asset;
-        private readonly IAccountId _destination;
-
-        private IAccountId? _sourceAccount;
-
-        /// <summary>
-        ///     Construct a new PaymentOperation builder from a PaymentOp XDR.
-        /// </summary>
-        /// <param name="op">
-        ///     <see cref="PaymentOp" />
-        /// </param>
-        public Builder(PaymentOp op)
-        {
-            _destination = MuxedAccount.FromXdrMuxedAccount(op.Destination);
-            _asset = Assets_Asset.FromXdr(op.Asset);
-            _amount = FromXdrAmount(op.Amount.InnerValue);
-        }
-
-        /// <summary>
-        ///     Creates a new PaymentOperation builder.
-        /// </summary>
-        /// <param name="destination">The destination keypair (uses only the public key).</param>
-        /// <param name="asset">The asset to send.</param>
-        /// <param name="amount">The amount to send in lumens.</param>
-        public Builder(IAccountId destination, Assets_Asset asset, string amount)
-        {
-            _destination = destination;
-            _asset = asset;
-            _amount = amount;
-        }
-
-        /// <summary>
-        ///     Sets the source account for this operation.
-        /// </summary>
-        /// <param name="account">The operation's source account.</param>
-        /// <returns>Builder object so you can chain methods.</returns>
-        public Builder SetSourceAccount(IAccountId account)
-        {
-            _sourceAccount = account;
-            return this;
-        }
-
-        /// <summary>
-        ///     Builds an operation
-        /// </summary>
-        public PaymentOperation Build()
-        {
-            var operation = new PaymentOperation(_destination, _asset, _amount);
-            if (_sourceAccount != null)
-                operation.SourceAccount = _sourceAccount;
-            return operation;
-        }
+        return new PaymentOperation(
+            MuxedAccount.FromXdrMuxedAccount(paymentOp.Destination),
+            Asset.FromXdr(paymentOp.Asset),
+            FromXdrAmount(paymentOp.Amount.InnerValue));
     }
 }

@@ -28,7 +28,7 @@ public class FeeBumpTransaction : TransactionBase
             throw new NoNetworkSelectedException();
 
         // Hashed NetworkID
-        var networkHash = new Hash { InnerValue = network.NetworkId };
+        var networkHash = new Hash(network.NetworkId);
         var taggedTransaction = new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction
         {
             Discriminant = EnvelopeType.Create(EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_FEE_BUMP),
@@ -48,12 +48,12 @@ public class FeeBumpTransaction : TransactionBase
 
     public Xdr.FeeBumpTransaction ToXdr()
     {
-        var fee = new xdr_Int64 { InnerValue = Fee };
+        var fee = new xdr_Int64(Fee);
         var feeSource = FeeSource.MuxedAccount;
 
         var inner = new Xdr.FeeBumpTransaction.FeeBumpTransactionInnerTx
         {
-            Discriminant = new EnvelopeType { InnerValue = EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX },
+            Discriminant = EnvelopeType.Create(EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX),
             V1 = new TransactionV1Envelope
             {
                 Tx = InnerTransaction.ToXdrV1(),
@@ -63,14 +63,13 @@ public class FeeBumpTransaction : TransactionBase
 
         var ext = new Xdr.FeeBumpTransaction.FeeBumpTransactionExt { Discriminant = 0 };
 
-        var transaction = new Xdr.FeeBumpTransaction
+        return new Xdr.FeeBumpTransaction
         {
             Fee = fee,
             FeeSource = feeSource,
             InnerTx = inner,
             Ext = ext
         };
-        return transaction;
     }
 
     public override TransactionEnvelope ToEnvelopeXdr(TransactionXdrVersion version = TransactionXdrVersion.V1)
@@ -85,7 +84,7 @@ public class FeeBumpTransaction : TransactionBase
     public override TransactionEnvelope ToUnsignedEnvelopeXdr(TransactionXdrVersion version = TransactionXdrVersion.V1)
     {
         if (Signatures.Count > 0)
-            throw new TooManySignaturesException("FeeBumpTransaction must not be signed. Use ToEnvelopeXDR.");
+            throw new TooManySignaturesException("FeeBumpTransaction must not be signed. Use ToEnvelopeXdr().");
         return ToEnvelopeXdr(Array.Empty<DecoratedSignature>());
     }
 
@@ -93,8 +92,7 @@ public class FeeBumpTransaction : TransactionBase
     {
         return new TransactionEnvelope
         {
-            Discriminant =
-                new EnvelopeType { InnerValue = EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_FEE_BUMP },
+            Discriminant = EnvelopeType.Create(EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_FEE_BUMP),
             FeeBump = new FeeBumpTransactionEnvelope { Tx = ToXdr(), Signatures = signatures }
         };
     }

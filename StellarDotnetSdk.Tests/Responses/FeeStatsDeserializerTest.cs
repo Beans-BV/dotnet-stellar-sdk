@@ -11,15 +11,18 @@ public class FeeStatsDeserializerTest
     [TestMethod]
     public void TestDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "feeStats.json"));
+        var jsonPath = Utils.GetTestDataPath("feeStats.json");
+        var json = File.ReadAllText(jsonPath);
         var stats = JsonSingleton.GetInstance<FeeStatsResponse>(json);
+        Assert.IsNotNull(stats);
         AssertTestData(stats);
     }
 
     [TestMethod]
     public void TestSerializeDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "feeStats.json"));
+        var jsonPath = Utils.GetTestDataPath("feeStats.json");
+        var json = File.ReadAllText(jsonPath);
         var stats = JsonConvert.DeserializeObject<FeeStatsResponse>(json);
 
         var serialized = JsonConvert.SerializeObject(stats);

@@ -110,16 +110,12 @@ public static class WebAuthentication
 
         var timeBounds = new TimeBounds(validFrom, validFor);
 
-        var operation = new ManageDataOperation.Builder(manageDataKey, manageDataValue)
-            .SetSourceAccount(clientAccountId)
-            .Build();
+        var operation = new ManageDataOperation(manageDataKey, manageDataValue, clientAccountId);
 
         var webAuthDataKey = "web_auth_domain";
         var webAuthDataValue = Encoding.UTF8.GetBytes(webAuthDomain);
 
-        var webAuthOperation = new ManageDataOperation.Builder(webAuthDataKey, webAuthDataValue)
-            .SetSourceAccount(serverKeypair)
-            .Build();
+        var webAuthOperation = new ManageDataOperation(webAuthDataKey, webAuthDataValue, serverKeypair);
 
         var txBuilder = new TransactionBuilder(serverAccount)
             .AddTimeBounds(timeBounds)
@@ -130,9 +126,7 @@ public static class WebAuthentication
         if (!string.IsNullOrEmpty(clientDomain))
         {
             var clientDomainOperation =
-                new ManageDataOperation.Builder("client_domain", Encoding.UTF8.GetBytes(clientDomain))
-                    .SetSourceAccount(clientSigningKey)
-                    .Build();
+                new ManageDataOperation("client_domain", Encoding.UTF8.GetBytes(clientDomain), clientSigningKey);
 
             txBuilder.AddOperation(clientDomainOperation);
         }
@@ -166,7 +160,7 @@ public static class WebAuthentication
         string homeDomain, string webAuthDomain,
         Network? network = null, DateTimeOffset? now = null)
     {
-        return ReadChallengeTransaction(transaction, serverAccountId, new string[1] { homeDomain }, webAuthDomain,
+        return ReadChallengeTransaction(transaction, serverAccountId, [homeDomain], webAuthDomain,
             network, now);
     }
 
@@ -207,11 +201,9 @@ public static class WebAuthentication
             throw new InvalidWebAuthenticationException("Challenge transaction source must be serverAccountId");
 
         if (transaction.Operations.Length < 1)
-            throw new InvalidWebAuthenticationException("Challenge transaction must contain atleast one operation");
+            throw new InvalidWebAuthenticationException("Challenge transaction must contain at least one operation");
 
-        var operation = transaction.Operations[0] as ManageDataOperation;
-
-        if (operation is null)
+        if (transaction.Operations[0] is not ManageDataOperation operation)
             throw new InvalidWebAuthenticationException(
                 "Challenge transaction operation must be of type ManageDataOperation");
 
@@ -238,7 +230,7 @@ public static class WebAuthentication
         var subsequentOperations = transaction.Operations;
         foreach (var op in subsequentOperations.Skip(1))
         {
-            if (!(op is ManageDataOperation opManageData))
+            if (op is not ManageDataOperation opManageData)
                 throw new InvalidWebAuthenticationException(
                     "The transaction has operations that are not of type 'manageData'");
 
@@ -260,6 +252,9 @@ public static class WebAuthentication
                 "Challenge transaction operation source account cannot be a muxed account");
 
         var clientAccountId = clientAccountKeypair.Address;
+
+        if (operation.Value == null)
+            throw new InvalidWebAuthenticationException("Challenge transaction operation data must be present");
 
         var stringValue = Encoding.UTF8.GetString(operation.Value);
         if (stringValue.Length != 64)
@@ -322,7 +317,7 @@ public static class WebAuthentication
         ICollection<string> signers, string homeDomain, string webAuthDomain, Network? network = null,
         DateTimeOffset? now = null)
     {
-        if (!signers.Any())
+        if (signers.Count == 0)
             throw new ArgumentException($"{nameof(signers)} must be non-empty");
 
         network ??= Network.Current;
@@ -331,13 +326,9 @@ public static class WebAuthentication
 
         // If the client domain is included in the challenge transaction,
         // verify that the transaction is signed by the operation's source account.
-        KeyPair clientSigningKey = null;
-        foreach (var operation in transaction.Operations)
-            if (operation is ManageDataOperation && ((ManageDataOperation)operation).Name == "client_domain")
-            {
-                clientSigningKey = KeyPair.FromAccountId(operation.SourceAccount.AccountId);
-                break;
-            }
+        KeyPair? clientSigningKey = null;
+        var sourceAccountId = transaction.Operations.FirstOrDefault(x => x is ManageDataOperation { Name: "client_domain" })?.SourceAccount?.AccountId;
+        if (sourceAccountId != null) clientSigningKey = KeyPair.FromAccountId(sourceAccountId);
 
         // Remove server signer if present
         var serverKeypair = KeyPair.FromAccountId(serverAccountId);
@@ -346,7 +337,7 @@ public static class WebAuthentication
         var additionalSigners = new List<string> { serverKeypair.Address };
         if (clientSigningKey != null) additionalSigners.Add(clientSigningKey.Address);
 
-        var allSigners = clientSigners.Select(signer => signer.Clone() as string).ToList();
+        var allSigners = clientSigners.Select(signer => (string)signer.Clone()).ToList();
         allSigners.AddRange(additionalSigners);
 
         var allSignersFound = VerifyTransactionSignatures(transaction, allSigners, network);
@@ -422,8 +413,8 @@ public static class WebAuthentication
         return timeBounds.MinTime <= unixNow && unixNow <= timeBounds.MaxTime;
     }
 
-    private static ICollection<string> VerifyTransactionSignatures(Transaction transaction,
-        IEnumerable<string> signers, Network network)
+    private static ICollection<string> VerifyTransactionSignatures(
+        Transaction transaction, IEnumerable<string> signers, Network network)
     {
         var txHash = transaction.Hash(network);
         var signaturesUsed = new Dictionary<DecoratedSignature, string>();

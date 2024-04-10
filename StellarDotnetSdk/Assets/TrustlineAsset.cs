@@ -1,6 +1,8 @@
 ﻿using System;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Xdr;
+using LiquidityPoolParameters = StellarDotnetSdk.LiquidityPool.LiquidityPoolParameters;
 
 namespace StellarDotnetSdk.Assets;
 
@@ -50,31 +52,21 @@ public abstract class TrustlineAsset
 
     public static TrustlineAsset FromXdr(TrustLineAsset trustLineAssetXdr)
     {
-        string accountID;
-        string assetCode;
-
-        switch (trustLineAssetXdr.Discriminant.InnerValue)
+        return trustLineAssetXdr.Discriminant.InnerValue switch
         {
-            case AssetType.AssetTypeEnum.ASSET_TYPE_NATIVE:
-                return Create(new AssetTypeNative());
-
-            case AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM4:
-                assetCode = Util.PaddedByteArrayToString(trustLineAssetXdr.AlphaNum4.AssetCode.InnerValue);
-                accountID = KeyPair.FromXdrPublicKey(trustLineAssetXdr.AlphaNum4.Issuer.InnerValue).AccountId;
-                return Create(new AssetTypeCreditAlphaNum4(assetCode, accountID));
-
-            case AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM12:
-                assetCode = Util.PaddedByteArrayToString(trustLineAssetXdr.AlphaNum12.AssetCode.InnerValue);
-                accountID = KeyPair.FromXdrPublicKey(trustLineAssetXdr.AlphaNum12.Issuer.InnerValue).AccountId;
-                return Create(new AssetTypeCreditAlphaNum12(assetCode, accountID));
-
-            case AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE:
-                return new LiquidityPoolShareTrustlineAsset(
-                    LiquidityPoolID.FromXdr(trustLineAssetXdr.LiquidityPoolID));
-
-            default:
-                throw new ArgumentException($"Unknown asset type {trustLineAssetXdr.Discriminant.InnerValue}");
-        }
+            AssetType.AssetTypeEnum.ASSET_TYPE_NATIVE => Create(new AssetTypeNative()),
+            AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM4
+                => Create(new AssetTypeCreditAlphaNum4(
+                    Util.PaddedByteArrayToString(trustLineAssetXdr.AlphaNum4.AssetCode.InnerValue),
+                    KeyPair.FromXdrPublicKey(trustLineAssetXdr.AlphaNum4.Issuer.InnerValue).AccountId)),
+            AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM12
+                => Create(new AssetTypeCreditAlphaNum12(
+                    Util.PaddedByteArrayToString(trustLineAssetXdr.AlphaNum12.AssetCode.InnerValue),
+                    KeyPair.FromXdrPublicKey(trustLineAssetXdr.AlphaNum12.Issuer.InnerValue).AccountId)),
+            AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE
+                => new LiquidityPoolShareTrustlineAsset(LiquidityPoolID.FromXdr(trustLineAssetXdr.LiquidityPoolID)),
+            _ => throw new ArgumentException($"Unknown asset type {trustLineAssetXdr.Discriminant.InnerValue}")
+        };
     }
 
     public new abstract bool Equals(object obj);
@@ -104,7 +96,7 @@ public abstract class TrustlineAsset
 
         public override bool Equals(object? obj)
         {
-            if (obj != null || typeof(Wrapper).Equals(obj.GetType())) return false;
+            if (obj == null || typeof(Wrapper) == obj.GetType()) return false;
 
             var other = (Wrapper)obj;
             return Asset.Equals(other.Asset);

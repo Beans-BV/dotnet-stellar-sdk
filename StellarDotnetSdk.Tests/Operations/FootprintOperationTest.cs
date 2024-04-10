@@ -15,25 +15,17 @@ public class FootprintOperationTest
     [TestMethod]
     public void TestExtendFootprintOperationWithMissingExtensionPoint()
     {
-        var builder = new ExtendFootprintOperation.Builder(10000U);
-        builder.SetSourceAccount(_sourceAccount);
-
-        var operation = builder.Build();
+        var operation = new ExtendFootprintOperation(10000U, null, _sourceAccount);
         Assert.IsInstanceOfType(operation.ExtensionPoint, typeof(ExtensionPointZero));
     }
 
     [TestMethod]
     public void TestExtendFootprintOperationWithMissingSourceAccount()
     {
-        var zeroExt = new ExtensionPointZero();
-        var builder = new ExtendFootprintOperation.Builder(10000U);
-        builder.SetExtensionPoint(zeroExt);
-
-        var operation = builder.Build();
+        var operation = new ExtendFootprintOperation(10000U, new ExtensionPointZero());
 
         // Act
         var xdrOperation = operation.ToXdr();
-
         var decodedOperation = (ExtendFootprintOperation)Operation.FromXdr(xdrOperation);
 
         // Assert
@@ -45,16 +37,10 @@ public class FootprintOperationTest
     [TestMethod]
     public void TestExtendFootprintOperationWithValidConfiguration()
     {
-        var zeroExt = new ExtensionPointZero();
-        var builder = new ExtendFootprintOperation.Builder(10000U);
-        builder.SetExtensionPoint(zeroExt);
-        builder.SetSourceAccount(_sourceAccount);
-
-        var operation = builder.Build();
+        var operation = new ExtendFootprintOperation(10000U, new ExtensionPointZero(), _sourceAccount);
 
         // Act
         var xdrOperation = operation.ToXdr();
-
         var decodedOperation = (ExtendFootprintOperation)Operation.FromXdr(xdrOperation);
 
         // Assert
@@ -66,36 +52,25 @@ public class FootprintOperationTest
     [TestMethod]
     public void TestRestoreFootprintOperationWithMissingSourceAccount()
     {
-        var zeroExt = new ExtensionPointZero();
-        var builder = new RestoreFootprintOperation.Builder();
-        builder.SetExtensionPoint(zeroExt);
-
-        var operation = builder.Build();
+        var operation = new RestoreFootprintOperation();
 
         // Act
-        var operationXdrBase64 = operation.ToXdrBase64();
-
-        var decodedOperation = RestoreFootprintOperation.FromOperationXdrBase64(operationXdrBase64);
+        var xdrOperation = operation.ToXdr();
+        var decodedOperation = (RestoreFootprintOperation)Operation.FromXdr(xdrOperation);
 
         // Assert
-        Assert.AreEqual(operation.ExtensionPoint.ToXdrBase64(), decodedOperation.ExtensionPoint.ToXdrBase64());
+        Assert.IsInstanceOfType(decodedOperation.ExtensionPoint, typeof(ExtensionPointZero));
         Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
     }
 
     [TestMethod]
     public void TestRestoreFootprintOperationWithValidConfiguration()
     {
-        var zeroExt = new ExtensionPointZero();
-        var builder = new RestoreFootprintOperation.Builder();
-        builder.SetExtensionPoint(zeroExt);
-        builder.SetSourceAccount(_sourceAccount);
-
-        var operation = builder.Build();
+        var operation = new RestoreFootprintOperation(null, _sourceAccount);
 
         // Act
-        var operationXdrBase64 = operation.ToXdrBase64();
-
-        var decodedOperation = RestoreFootprintOperation.FromOperationXdrBase64(operationXdrBase64);
+        var xdrOperation = operation.ToXdr();
+        var decodedOperation = (RestoreFootprintOperation)Operation.FromXdr(xdrOperation);
 
         // Assert
         // ExtensionPoint has no properties

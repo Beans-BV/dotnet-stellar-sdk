@@ -11,15 +11,18 @@ public class ClaimableBalanceDeserializerTest
     [TestMethod]
     public void TestDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "claimableBalance.json"));
+        var jsonPath = Utils.GetTestDataPath("claimableBalance.json");
+        var json = File.ReadAllText(jsonPath);
         var claimableBalance = JsonSingleton.GetInstance<ClaimableBalanceResponse>(json);
+        Assert.IsNotNull(claimableBalance);
         AssertTestData(claimableBalance);
     }
 
     [TestMethod]
     public void TestSerializeDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "claimableBalance.json"));
+        var jsonPath = Utils.GetTestDataPath("claimableBalance.json");
+        var json = File.ReadAllText(jsonPath);
         var claimableBalance = JsonConvert.DeserializeObject<ClaimableBalanceResponse>(json);
 
         var serialized = JsonConvert.SerializeObject(claimableBalance);

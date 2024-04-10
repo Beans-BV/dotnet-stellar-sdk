@@ -13,8 +13,8 @@ public class CreateClaimableBalanceOperationResponseTest
     [TestMethod]
     public void TestSerializationCreateClaimableBalanceOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/createClaimableBalance",
-            "createClaimableBalance.json"));
+        var jsonPath = Utils.GetTestDataPath("createClaimableBalance.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -25,8 +25,8 @@ public class CreateClaimableBalanceOperationResponseTest
     [TestMethod]
     public void TestSerializationCreateClaimableBalanceAbsBeforeMaxIntOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/createClaimableBalance",
-            "createClaimableBalanceAbsBeforeMaxInt.json"));
+        var jsonPath = Utils.GetTestDataPath("createClaimableBalanceAbsBeforeMaxInt.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         Assert.IsTrue(instance is CreateClaimableBalanceOperationResponse);
         var operation = (CreateClaimableBalanceOperationResponse)instance;
@@ -45,8 +45,13 @@ public class CreateClaimableBalanceOperationResponseTest
         Assert.AreEqual("1.0000000", operation.Amount);
         Assert.AreEqual("GAEJ2UF46PKAPJYED6SQ45CKEHSXV63UQEYHVUZSVJU6PK5Y4ZVA4ELU", operation.Claimants[0].Destination);
 
-        var back = new CreateClaimableBalanceOperationResponse(operation.Sponsor, operation.Asset, operation.Amount,
-            operation.Claimants);
+        var back = new CreateClaimableBalanceOperationResponse
+        {
+            Sponsor = operation.Sponsor,
+            Asset = operation.Asset,
+            Amount = operation.Amount,
+            Claimants = operation.Claimants
+        };
         Assert.IsNotNull(back);
     }
 }

@@ -13,8 +13,8 @@ public class EndSponsoringFutureReservesOperationResponseTest
     [TestMethod]
     public void TestSerializationEndSponsoringFutureReservesOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/endSponsoringFutureReserves",
-            "endSponsoringFutureReserves.json"));
+        var jsonPath = Utils.GetTestDataPath("endSponsoringFutureReserves.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -32,7 +32,10 @@ public class EndSponsoringFutureReservesOperationResponseTest
         Assert.IsNull(operation.BeginSponsorMuxed);
         Assert.IsNull(operation.BeginSponsorMuxedID);
 
-        var back = new EndSponsoringFutureReservesOperationResponse(operation.BeginSponsor);
+        var back = new EndSponsoringFutureReservesOperationResponse
+        {
+            BeginSponsor = operation.BeginSponsor
+        };
         Assert.IsNotNull(back);
     }
 
@@ -40,8 +43,8 @@ public class EndSponsoringFutureReservesOperationResponseTest
     [TestMethod]
     public void TestSerializationEndSponsoringFutureReservesOperationMuxed()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/endSponsoringFutureReserves",
-            "endSponsoringFutureReservesMuxed.json"));
+        var jsonPath = Utils.GetTestDataPath("endSponsoringFutureReservesMuxed.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -60,7 +63,10 @@ public class EndSponsoringFutureReservesOperationResponseTest
             operation.BeginSponsorMuxed);
         Assert.AreEqual(5123456789UL, operation.BeginSponsorMuxedID);
 
-        var back = new EndSponsoringFutureReservesOperationResponse(operation.BeginSponsor);
+        var back = new EndSponsoringFutureReservesOperationResponse
+        {
+            BeginSponsor = operation.BeginSponsor
+        };
         Assert.IsNotNull(back);
     }
 }

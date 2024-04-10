@@ -50,4 +50,10 @@
         <Folder Include="federation\"/>
         <Folder Include="Properties\"/>
     </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="Operations\AllowTrustOperation.cs"/>
+        <Compile Remove="Operations\InflationOperation.cs"/>
+        <Compile Remove="Operations\ManageOfferOperation.cs"/>
+    </ItemGroup>
 </Project>

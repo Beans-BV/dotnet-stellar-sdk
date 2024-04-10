@@ -74,7 +74,7 @@ public class Server : IDisposable
 
     public void Dispose()
     {
-        if (_internalHttpClient) _httpClient?.Dispose();
+        if (_internalHttpClient) _httpClient.Dispose();
     }
 
     public RootResponse Root()
@@ -196,8 +196,6 @@ public class Server : IDisposable
     ///     It will sequentially load each destination account and check if it has the data field
     ///     <c>config.memo_required</c> set to <c>"MQ=="</c>.
     /// </summary>
-    /// <param name="transaction"></param>
-    /// <returns></returns>
     /// <exception cref="AccountRequiresMemoException"></exception>
     public async Task CheckMemoRequired(TransactionBase transaction)
     {

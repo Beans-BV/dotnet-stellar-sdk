@@ -12,16 +12,18 @@ public class AccountMergeOperationResponseTest
     [TestMethod]
     public void TestDeserializeAccountMergeOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/accountMerge", "accountMerge.json"));
+        var jsonPath = Utils.GetTestDataPath("accountMerge.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertAccountMergeData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeAccountMergeOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/accountMerge", "accountMerge.json"));
+        var jsonPath = Utils.GetTestDataPath("accountMerge.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -44,16 +46,18 @@ public class AccountMergeOperationResponseTest
     [TestMethod]
     public void TestDeserializeAccountMergeOperationMuxed()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/accountMerge", "accountMergeMuxed.json"));
+        var jsonPath = Utils.GetTestDataPath("accountMergeMuxed.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertAccountMergeDataMuxed(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeAccountMergeOperationMuxed()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/accountMerge", "accountMergeMuxed.json"));
+        var jsonPath = Utils.GetTestDataPath("accountMergeMuxed.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);

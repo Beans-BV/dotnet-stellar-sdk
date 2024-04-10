@@ -145,7 +145,8 @@ public class RequestBuilder<T> : IRequestBuilder<T> where T : class
     /// </summary>
     /// <param name="listener">
     ///     EventListener implementation with AccountResponse type
-    ///     <returns>EventSource object, so you can close() connection when not needed anymore</returns>
+    /// </param>
+    /// <returns>EventSource object, so you can close() connection when not needed anymore</returns>
     public Uri BuildUri()
     {
         if (_segments.Count <= 0)

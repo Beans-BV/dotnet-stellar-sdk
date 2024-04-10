@@ -12,7 +12,7 @@ public class StrKeyTest
     [TestMethod]
     public void TestDecodeEncode()
     {
-        var seed = "SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE";
+        const string seed = "SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE";
         var secret = StrKey.DecodeCheck(StrKey.VersionByte.SEED, seed);
         var encoded = StrKey.EncodeCheck(StrKey.VersionByte.SEED, secret);
 
@@ -23,7 +23,7 @@ public class StrKeyTest
     [ExpectedException(typeof(FormatException))]
     public void TestDecodeInvalidVersionByte()
     {
-        var address = "GCZHXL5HXQX5ABDM26LHYRCQZ5OJFHLOPLZX47WEBP3V2PF5AVFK2A5D";
+        const string address = "GCZHXL5HXQX5ABDM26LHYRCQZ5OJFHLOPLZX47WEBP3V2PF5AVFK2A5D";
         StrKey.DecodeCheck(StrKey.VersionByte.SEED, address);
     }
 
@@ -31,14 +31,14 @@ public class StrKeyTest
     [ExpectedException(typeof(FormatException))]
     public void TestDecodeInvalidSeed()
     {
-        var seed = "SAA6NXOBOXP3RXGAXBW6PGFI5BPK4ODVAWITS4VDOMN5C2M4B66ZML";
+        const string seed = "SAA6NXOBOXP3RXGAXBW6PGFI5BPK4ODVAWITS4VDOMN5C2M4B66ZML";
         StrKey.DecodeCheck(StrKey.VersionByte.SEED, seed);
     }
 
     [TestMethod]
     public void TestDecodeEncodeMuxedAccount()
     {
-        var address = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ";
+        const string address = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ";
         var muxed = StrKey.DecodeStellarMuxedAccount(address);
         Assert.IsTrue(StrKey.IsValidMuxedAccount(address));
         Assert.AreEqual(0UL, muxed.Med25519.Id.InnerValue);
@@ -54,7 +54,7 @@ public class StrKeyTest
     [TestMethod]
     public void TestDecodeEncodeMuxedAccountWithLargeId()
     {
-        var address = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK";
+        const string address = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK";
         var muxed = StrKey.DecodeStellarMuxedAccount(address);
         Assert.IsTrue(StrKey.IsValidMuxedAccount(address));
         Assert.AreEqual(9223372036854775808UL, muxed.Med25519.Id.InnerValue);
@@ -69,7 +69,7 @@ public class StrKeyTest
     [TestMethod]
     public void IsValidEd25519PublicKey()
     {
-        var address = "GCZHXL5HXQX5ABDM26LHYRCQZ5OJFHLOPLZX47WEBP3V2PF5AVFK2A5D";
+        const string address = "GCZHXL5HXQX5ABDM26LHYRCQZ5OJFHLOPLZX47WEBP3V2PF5AVFK2A5D";
         var result = StrKey.IsValidEd25519PublicKey(address);
 
         Assert.IsTrue(result);
@@ -108,7 +108,7 @@ public class StrKeyTest
     [TestMethod]
     public void IsValidEd25519SecretSeed()
     {
-        var seed = "SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE";
+        const string seed = "SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE";
         var result = StrKey.IsValidEd25519SecretSeed(seed);
 
         Assert.IsTrue(result);
@@ -117,7 +117,7 @@ public class StrKeyTest
     [TestMethod]
     public void IsNotValidEd25519SecretSeed()
     {
-        var seed = "GCZHXL5HXQX5ABDM26LHYRCQZ5OJFHLOPLZX47WEBP3V2PF5AVFK2A5D";
+        const string seed = "GCZHXL5HXQX5ABDM26LHYRCQZ5OJFHLOPLZX47WEBP3V2PF5AVFK2A5D";
         var result = StrKey.IsValidEd25519SecretSeed(seed);
 
         Assert.IsFalse(result);
@@ -166,7 +166,7 @@ public class StrKeyTest
             0x00, 0x00, 0x00
         }.ToArray();
 
-        var hashX = "PA3D5KRYM6CB7OWQ6TWYRR3Z4T7GNZLKERYNZGGA5SOAOPIFY6YQGAAAAAEQAAAAAAAAAAAAAAAAAABBXA";
+        const string hashX = "PA3D5KRYM6CB7OWQ6TWYRR3Z4T7GNZLKERYNZGGA5SOAOPIFY6YQGAAAAAEQAAAAAAAAAAAAAAAAAABBXA";
         Assert.AreEqual(hashX, StrKey.EncodeCheck(StrKey.VersionByte.SIGNED_PAYLOAD, data));
         Assert.IsTrue(data.SequenceEqual(StrKey.DecodeCheck(StrKey.VersionByte.SIGNED_PAYLOAD, hashX)));
     }

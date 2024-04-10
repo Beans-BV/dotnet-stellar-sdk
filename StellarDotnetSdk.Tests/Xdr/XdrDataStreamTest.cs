@@ -7,7 +7,7 @@ namespace StellarDotnetSdk.Tests.Xdr;
 [TestClass]
 public class XdrDataStreamTest
 {
-    public static string BackAndForthXdrStreaming(string inputString)
+    private static string BackAndForthXdrStreaming(string inputString)
     {
         var xdrOutputStream = new XdrDataOutputStream();
         xdrOutputStream.WriteString(inputString);
@@ -24,21 +24,21 @@ public class XdrDataStreamTest
     [TestMethod]
     public void BackAndForthXdrStreamingWithStandardAscii()
     {
-        var memo = "Dollar Sign $";
+        const string memo = "Dollar Sign $";
         Assert.AreEqual(memo, BackAndForthXdrStreaming(memo));
     }
 
     [TestMethod]
     public void BackAndForthXdrStreamingWithNonStandardAscii()
     {
-        var memo = "Euro Sign €";
+        const string memo = "Euro Sign €";
         Assert.AreEqual(memo, BackAndForthXdrStreaming(memo));
     }
 
     [TestMethod]
     public void BackAndForthXdrStreamingWithAllNonStandardAscii()
     {
-        var memo = "øûý™€♠♣♥†‡µ¢£€";
+        const string memo = "øûý™€♠♣♥†‡µ¢£€";
         Assert.AreEqual(memo, BackAndForthXdrStreaming(memo));
     }
 

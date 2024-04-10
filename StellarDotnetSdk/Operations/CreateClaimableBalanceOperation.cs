@@ -2,13 +2,12 @@ using System.Linq;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Xdr;
 using Asset = StellarDotnetSdk.Assets.Asset;
-using claimant_Claimant = StellarDotnetSdk.Claimant.Claimant;
+using SdkClaimant = StellarDotnetSdk.Claimants.Claimant;
 
 namespace StellarDotnetSdk.Operations;
 
 /// <summary>
 ///     Moves an amount of asset from the operation source account into a new ClaimableBalanceEntry.
-///     <p>Use <see cref="Builder" /> to create a new <c>CreateClaimableBalanceOperation</c>.</p>
 ///     See:
 ///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#create-claimable-balance">
 ///         Create claimable balance
@@ -16,7 +15,15 @@ namespace StellarDotnetSdk.Operations;
 /// </summary>
 public class CreateClaimableBalanceOperation : Operation
 {
-    private CreateClaimableBalanceOperation(Asset asset, string amount, claimant_Claimant[] claimants)
+    /// <summary>
+    ///     Constructs a new <c>CreateClaimableBalanceOperation</c>.
+    /// </summary>
+    /// <param name="asset">Asset that will be held in the ClaimableBalanceEntry.</param>
+    /// <param name="amount">Amount of <c>Asset</c> stored in the ClaimableBalanceEntry.</param>
+    /// <param name="claimants">The claimants that can claim this ClaimableBalanceEntry.</param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
+    public CreateClaimableBalanceOperation(Asset asset, string amount, SdkClaimant[] claimants,
+        IAccountId? sourceAccount = null) : base(sourceAccount)
     {
         Asset = asset;
         Amount = amount;
@@ -36,7 +43,7 @@ public class CreateClaimableBalanceOperation : Operation
     /// <summary>
     ///     List of <c>Claimant</c>s (account address and ClaimPredicate pair) that can claim this ClaimableBalanceEntry.
     /// </summary>
-    public claimant_Claimant[] Claimants { get; }
+    public SdkClaimant[] Claimants { get; }
 
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
@@ -52,60 +59,12 @@ public class CreateClaimableBalanceOperation : Operation
         };
     }
 
-    /// <summary>
-    ///     Builder for <c>CreateClaimableBalanceOperation</c> operation.
-    /// </summary>
-    public class Builder
+    public static CreateClaimableBalanceOperation FromXdr(CreateClaimableBalanceOp createClaimableBalanceOp)
     {
-        private readonly string _amount;
-        private readonly Asset _asset;
-        private readonly claimant_Claimant[] _claimants;
-        private KeyPair? _sourceAccount;
-
-        /// <summary>
-        ///     Constructs a new <c>CreateClaimableBalanceOperation</c> builder.
-        /// </summary>
-        /// <param name="createClaimableBalanceOp">A <c>CreateClaimableBalanceOp</c> XDR object.</param>
-        public Builder(CreateClaimableBalanceOp createClaimableBalanceOp)
-        {
-            _asset = Asset.FromXdr(createClaimableBalanceOp.Asset);
-            _amount = FromXdrAmount(createClaimableBalanceOp.Amount.InnerValue);
-            _claimants = createClaimableBalanceOp.Claimants.Select(claimant_Claimant.FromXdr).ToArray();
-        }
-
-        /// <summary>
-        ///     Constructs a new <c>ClawbackClaimableBalanceOperation</c> builder.
-        /// </summary>
-        /// <param name="asset">Asset that will be held in the ClaimableBalanceEntry.</param>
-        /// <param name="amount">The amount of <c>asset</c> stored in the ClaimableBalanceEntry.</param>
-        /// <param name="claimants">The claimants that can claim this ClaimableBalanceEntry.</param>
-        public Builder(Asset asset, string amount, claimant_Claimant[] claimants)
-        {
-            _asset = asset;
-            _amount = amount;
-            _claimants = claimants;
-        }
-
-        /// <summary>
-        ///     Sets the source account for this operation.
-        /// </summary>
-        /// <param name="account">The operation's source account.</param>
-        /// <returns>Builder object so you can chain methods.</returns>
-        public Builder SetSourceAccount(KeyPair account)
-        {
-            _sourceAccount = account;
-            return this;
-        }
-
-        /// <summary>
-        ///     Builds an operation.
-        /// </summary>
-        public CreateClaimableBalanceOperation Build()
-        {
-            var operation = new CreateClaimableBalanceOperation(_asset, _amount, _claimants);
-            if (_sourceAccount != null)
-                operation.SourceAccount = _sourceAccount;
-            return operation;
-        }
+        return new CreateClaimableBalanceOperation(
+            Asset.FromXdr(createClaimableBalanceOp.Asset),
+            StellarDotnetSdk.Amount.FromXdr(createClaimableBalanceOp.Amount.InnerValue),
+            createClaimableBalanceOp.Claimants.Select(SdkClaimant.FromXdr).ToArray()
+        );
     }
 }

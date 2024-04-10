@@ -31,12 +31,9 @@ public class
     {
         UriBuilder.SetQueryParam("source_asset_type", asset.Type);
 
-        if (asset is AssetTypeCreditAlphaNum)
-        {
-            var creditAlphaNumAsset = (AssetTypeCreditAlphaNum)asset;
-            UriBuilder.SetQueryParam("source_asset_code", creditAlphaNumAsset.Code);
-            UriBuilder.SetQueryParam("source_asset_issuer", creditAlphaNumAsset.Issuer);
-        }
+        if (asset is not AssetTypeCreditAlphaNum creditAlphaNumAsset) return this;
+        UriBuilder.SetQueryParam("source_asset_code", creditAlphaNumAsset.Code);
+        UriBuilder.SetQueryParam("source_asset_issuer", creditAlphaNumAsset.Issuer);
 
         return this;
     }

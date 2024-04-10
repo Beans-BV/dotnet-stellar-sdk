@@ -1,31 +1,25 @@
 ﻿using Newtonsoft.Json;
 
 namespace StellarDotnetSdk.Responses.Effects;
+#nullable disable
 
 public class ContractCreditedEffectResponse : EffectResponse
 {
+    // TODO Find out which TypeId and add tests
+    // public override int TypeId => ;
+
     [JsonProperty(PropertyName = "amount")]
-    public string Amount;
+    public string Amount { get; init; }
 
     [JsonProperty(PropertyName = "asset_code")]
-    public string AssetCode;
+    public string AssetCode { get; init; }
 
     [JsonProperty(PropertyName = "asset_issuer")]
-    public string AssetIssuer;
+    public string AssetIssuer { get; init; }
 
     [JsonProperty(PropertyName = "asset_type")]
-    public string AssetType;
+    public string AssetType { get; init; }
 
     [JsonProperty(PropertyName = "contract")]
-    public string Contract;
-
-    public ContractCreditedEffectResponse(string amount, string assetCode, string assetIssuer, string assetType,
-        string contract)
-    {
-        Amount = amount;
-        AssetCode = assetCode;
-        AssetIssuer = assetIssuer;
-        AssetType = assetType;
-        Contract = contract;
-    }
+    public string Contract { get; init; }
 }

@@ -7,7 +7,6 @@ namespace StellarDotnetSdk.Operations;
 /// <summary>
 ///     Claims a ClaimableBalanceEntry that corresponds to the BalanceID and adds the amount of an asset on the entry to
 ///     the source account.
-///     <p>Use <see cref="Builder" /> to create a new <c>ClaimClaimableBalanceOperation</c>.</p>
 ///     See:
 ///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#claim-claimable-balance">
 ///         Claim claimable balance
@@ -15,7 +14,17 @@ namespace StellarDotnetSdk.Operations;
 /// </summary>
 public class ClaimClaimableBalanceOperation : Operation
 {
-    private ClaimClaimableBalanceOperation(byte[] balanceId)
+    /// <summary>
+    ///     Constructs a new <c>ClaimClaimableBalanceOperation</c>.
+    /// </summary>
+    /// <param name="balanceId">The hex-encoded ID of the ClaimableBalanceEntry to be claimed.</param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
+    public ClaimClaimableBalanceOperation(string balanceId, IAccountId? sourceAccount = null) : this(
+        Util.HexToBytes(balanceId), sourceAccount)
+    {
+    }
+
+    private ClaimClaimableBalanceOperation(byte[] balanceId, IAccountId? sourceAccount = null) : base(sourceAccount)
     {
         // Backwards compat - was previously expecting no type to be set, set CLAIMABLE_BALANCE_ID_TYPE_V0 to match previous behaviour.
         if (balanceId.Length == 32)
@@ -50,45 +59,5 @@ public class ClaimClaimableBalanceOperation : Operation
                 BalanceID = ClaimableBalanceID.Decode(new XdrDataInputStream(BalanceIdInBytes))
             }
         };
-    }
-
-    /// <summary>
-    ///     Builder for <c>ClaimClaimableBalanceOperation</c>.
-    /// </summary>
-    public class Builder
-    {
-        private readonly byte[] _balanceId;
-        private KeyPair? _sourceAccount;
-
-        /// <summary>
-        ///     Constructs a new <c>ClaimClaimableBalanceOperation</c> builder.
-        /// </summary>
-        /// <param name="balanceId">The hex-encoded ID of the ClaimableBalanceEntry to be claimed.</param>
-        public Builder(string balanceId)
-        {
-            _balanceId = Util.HexToBytes(balanceId);
-        }
-
-        /// <summary>
-        ///     Sets the source account for this operation.
-        /// </summary>
-        /// <param name="account">The operation's source account.</param>
-        /// <returns>Builder object so you can chain methods.</returns>
-        public Builder SetSourceAccount(KeyPair account)
-        {
-            _sourceAccount = account;
-            return this;
-        }
-
-        /// <summary>
-        ///     Builds an operation.
-        /// </summary>
-        public ClaimClaimableBalanceOperation Build()
-        {
-            var operation = new ClaimClaimableBalanceOperation(_balanceId);
-            if (_sourceAccount != null)
-                operation.SourceAccount = _sourceAccount;
-            return operation;
-        }
     }
 }

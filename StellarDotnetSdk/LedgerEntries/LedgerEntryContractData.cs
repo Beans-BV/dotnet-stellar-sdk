@@ -1,6 +1,8 @@
 ﻿using System;
 using StellarDotnetSdk.Xdr;
-using Soroban_ExtensionPoint = StellarDotnetSdk.Soroban.ExtensionPoint;
+using SCAddress = StellarDotnetSdk.Soroban.SCAddress;
+using SCVal = StellarDotnetSdk.Soroban.SCVal;
+using ExtensionPoint = StellarDotnetSdk.Soroban.ExtensionPoint;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
@@ -11,7 +13,7 @@ public class LedgerEntryContractData : LedgerEntry
         SCVal value,
         SCAddress contract,
         ContractDataDurability durability,
-        Soroban_ExtensionPoint extensionPoint)
+        ExtensionPoint extensionPoint)
     {
         Key = key;
         Value = value;
@@ -28,7 +30,7 @@ public class LedgerEntryContractData : LedgerEntry
 
     public ContractDataDurability Durability { get; }
 
-    public Soroban_ExtensionPoint ExtensionPoint { get; }
+    public ExtensionPoint ExtensionPoint { get; }
 
     /// <summary>
     ///     Creates the corresponding LedgerEntryContractData object from a <see cref="Xdr.LedgerEntry.LedgerEntryData" />
@@ -52,6 +54,6 @@ public class LedgerEntryContractData : LedgerEntry
             SCVal.FromXdr(xdrContractDataEntry.Val),
             SCAddress.FromXdr(xdrContractDataEntry.Contract),
             xdrContractDataEntry.Durability,
-            Soroban_ExtensionPoint.FromXdr(xdrContractDataEntry.Ext));
+            ExtensionPoint.FromXdr(xdrContractDataEntry.Ext));
     }
 }

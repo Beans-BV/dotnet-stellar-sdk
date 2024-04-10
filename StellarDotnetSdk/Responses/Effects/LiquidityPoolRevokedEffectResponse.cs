@@ -1,29 +1,18 @@
 ﻿using Newtonsoft.Json;
 
 namespace StellarDotnetSdk.Responses.Effects;
+#nullable disable
 
 public class LiquidityPoolRevokedEffectResponse : EffectResponse
 {
-    public LiquidityPoolRevokedEffectResponse()
-    {
-    }
-
-    public LiquidityPoolRevokedEffectResponse(LiquidityPool liquidityPool,
-        LiquidityPoolClaimableAssetAmount[] reservesRevoked, string sharesRevoked)
-    {
-        LiquidityPool = liquidityPool;
-        ReservesRevoked = reservesRevoked;
-        SharesRevoked = sharesRevoked;
-    }
-
     public override int TypeId => 95;
 
     [JsonProperty(PropertyName = "liquidity_pool")]
-    public LiquidityPool LiquidityPool { get; private set; }
+    public LiquidityPool.LiquidityPool LiquidityPool { get; init; }
 
     [JsonProperty(PropertyName = "reserves_revoked")]
-    public LiquidityPoolClaimableAssetAmount[] ReservesRevoked { get; private set; }
+    public LiquidityPoolClaimableAssetAmount[] ReservesRevoked { get; init; }
 
     [JsonProperty(PropertyName = "shares_revoked")]
-    public string SharesRevoked { get; private set; }
+    public string SharesRevoked { get; init; }
 }

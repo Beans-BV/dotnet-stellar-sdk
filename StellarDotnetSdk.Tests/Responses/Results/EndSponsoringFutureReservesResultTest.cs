@@ -18,7 +18,7 @@ public class EndSponsoringFutureReservesResultTest
             .EndSponsoringFutureReservesResultCodeEnum.END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED;
         operationResultTr.EndSponsoringFutureReservesResult = result;
 
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
             typeof(EndSponsoringFutureReservesNotSponsored), false);
     }
 
@@ -33,7 +33,7 @@ public class EndSponsoringFutureReservesResultTest
             .EndSponsoringFutureReservesResultCodeEnum.END_SPONSORING_FUTURE_RESERVES_SUCCESS;
         operationResultTr.EndSponsoringFutureReservesResult = result;
 
-        Util.AssertResultOfType(Util.CreateTransactionResultXdr(operationResultTr),
+        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
             typeof(EndSponsoringFutureReservesSuccess), true);
     }
 }

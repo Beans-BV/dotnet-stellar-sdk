@@ -13,12 +13,12 @@ public class ClaimClaimableBalanceOperationResponseTest
     [TestMethod]
     public void TestSerializationClaimClaimableBalanceOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/claimClaimableBalance",
-            "claimClaimableBalance.json"));
+        var jsonPath = Utils.GetTestDataPath("claimClaimableBalance.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
-
+        Assert.IsNotNull(back);
         AssertClaimClaimableBalanceData(back);
     }
 
@@ -34,7 +34,11 @@ public class ClaimClaimableBalanceOperationResponseTest
         Assert.IsNull(operation.ClaimantMuxed);
         Assert.IsNull(operation.ClaimantMuxedID);
 
-        var back = new ClaimClaimableBalanceOperationResponse(operation.BalanceID, operation.Claimant);
+        var back = new ClaimClaimableBalanceOperationResponse
+        {
+            BalanceID = operation.BalanceID,
+            Claimant = operation.Claimant
+        };
         Assert.IsNotNull(back);
     }
 
@@ -42,8 +46,8 @@ public class ClaimClaimableBalanceOperationResponseTest
     [TestMethod]
     public void TestSerializationClaimClaimableBalanceOperationMuxed()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/claimClaimableBalance",
-            "claimClaimableBalanceMuxed.json"));
+        var jsonPath = Utils.GetTestDataPath("claimClaimableBalanceMuxed.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -64,7 +68,11 @@ public class ClaimClaimableBalanceOperationResponseTest
             operation.ClaimantMuxed);
         Assert.AreEqual(5123456789UL, operation.ClaimantMuxedID);
 
-        var back = new ClaimClaimableBalanceOperationResponse(operation.BalanceID, operation.Claimant);
+        var back = new ClaimClaimableBalanceOperationResponse
+        {
+            BalanceID = operation.BalanceID,
+            Claimant = operation.Claimant
+        };
         Assert.IsNotNull(back);
     }
 }

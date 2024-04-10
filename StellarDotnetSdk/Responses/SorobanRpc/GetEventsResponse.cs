@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using StellarDotnetSdk.Soroban;
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;
 

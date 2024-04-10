@@ -8,11 +8,7 @@ namespace StellarDotnetSdk.Soroban;
 /// </summary>
 public class SorobanTransactionMeta
 {
-    /// <summary>
-    ///     We can use this to add more fields.
-    /// </summary>
-    public ExtensionPoint ExtensionPoint { get; private init; } = new ExtensionPointZero();
-
+    public SorobanTransactionMetaExtensionV1? SorobanTransactionMetaExtensionV1 { get; private set; }
 
     public SCVal ReturnValue { get; private init; } = new SCVoid();
 
@@ -35,13 +31,18 @@ public class SorobanTransactionMeta
     public static SorobanTransactionMeta? FromXdr(Xdr.SorobanTransactionMeta? xdrSorobanTransactionMeta)
     {
         if (xdrSorobanTransactionMeta == null) return null;
-        return new SorobanTransactionMeta
+        var meta = new SorobanTransactionMeta
         {
-            ExtensionPoint = ExtensionPoint.FromXdr(xdrSorobanTransactionMeta.Ext),
             ReturnValue = SCVal.FromXdr(xdrSorobanTransactionMeta.ReturnValue),
             Events = xdrSorobanTransactionMeta.Events.Select(ContractEvent.FromXdr).ToArray(),
             DiagnosticEvents = xdrSorobanTransactionMeta.DiagnosticEvents.Select(DiagnosticEvent.FromXdr).ToArray()
         };
+
+        if (xdrSorobanTransactionMeta.Ext.Discriminant == 1)
+            meta.SorobanTransactionMetaExtensionV1 =
+                SorobanTransactionMetaExtensionV1.FromXdr(xdrSorobanTransactionMeta.Ext.V1);
+
+        return meta;
     }
 
     /// <summary>

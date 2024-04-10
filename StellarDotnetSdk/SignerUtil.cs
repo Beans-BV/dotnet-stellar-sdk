@@ -5,8 +5,6 @@ using Transaction = StellarDotnetSdk.Transactions.Transaction;
 
 namespace StellarDotnetSdk;
 
-using Transaction = Transaction;
-
 /// <summary>
 ///     Signer is a helper class that creates <see cref="Xdr.SignerKey" /> objects.
 /// </summary>
@@ -103,7 +101,7 @@ public static class SignerUtil
         var payloadSigner = new SignerKey.SignerKeyEd25519SignedPayload
         {
             Payload = signedPayloadSigner.Payload,
-            Ed25519 = signedPayloadSigner.SignerAccountID.InnerValue.Ed25519
+            Ed25519 = signedPayloadSigner.SignerAccountId.InnerValue.Ed25519
         };
 
         signerKey.Discriminant.InnerValue = SignerKeyType.SignerKeyTypeEnum.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD;

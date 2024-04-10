@@ -32,7 +32,8 @@ public class StateArchivalSettings : LedgerEntryConfigSetting
 
     public static StateArchivalSettings FromXdr(Xdr.StateArchivalSettings xdrConfig)
     {
-        return new StateArchivalSettings(xdrConfig.MaxEntryTTL.InnerValue,
+        return new StateArchivalSettings(
+            xdrConfig.MaxEntryTTL.InnerValue,
             xdrConfig.MinTemporaryTTL.InnerValue,
             xdrConfig.MinPersistentTTL.InnerValue,
             xdrConfig.PersistentRentRateDenominator.InnerValue,

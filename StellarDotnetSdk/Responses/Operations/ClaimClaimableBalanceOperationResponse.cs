@@ -2,36 +2,23 @@
 
 namespace StellarDotnetSdk.Responses.Operations;
 
+#nullable disable
 /// <summary>
 ///     Represents AccountMerge operation response.
-///     See: https://www.stellar.org/developers/horizon/reference/resources/operation.html
-///     <seealso cref="Requests.OperationsRequestBuilder" />
-///     <seealso cref="Server" />
 /// </summary>
 public class ClaimClaimableBalanceOperationResponse : OperationResponse
 {
-    public ClaimClaimableBalanceOperationResponse()
-    {
-    }
-
-
-    public ClaimClaimableBalanceOperationResponse(string balanceID, string claimant)
-    {
-        BalanceID = balanceID;
-        Claimant = claimant;
-    }
-
     public override int TypeId => 15;
 
     [JsonProperty(PropertyName = "balance_id")]
-    public string BalanceID { get; private set; }
+    public string BalanceID { get; init; }
 
     [JsonProperty(PropertyName = "claimant")]
-    public string Claimant { get; private set; }
+    public string Claimant { get; init; }
 
     [JsonProperty(PropertyName = "claimant_muxed")]
-    public string ClaimantMuxed { get; private set; }
+    public string ClaimantMuxed { get; init; }
 
     [JsonProperty(PropertyName = "claimant_muxed_id")]
-    public ulong? ClaimantMuxedID { get; private set; }
+    public ulong? ClaimantMuxedID { get; init; }
 }

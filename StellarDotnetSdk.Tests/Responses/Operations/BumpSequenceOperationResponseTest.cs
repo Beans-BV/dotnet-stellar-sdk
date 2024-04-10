@@ -12,16 +12,18 @@ public class BumpSequenceOperationResponseTest
     [TestMethod]
     public void TestDeserializeBumpSequenceOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/bumpSequence", "bumpSequence.json"));
+        var jsonPath = Utils.GetTestDataPath("bumpSequence.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertBumpSequenceData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeBumpSequenceOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/bumpSequence", "bumpSequence.json"));
+        var jsonPath = Utils.GetTestDataPath("bumpSequence.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);

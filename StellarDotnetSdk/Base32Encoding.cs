@@ -118,4 +118,9 @@ public static class Base32Encoding
 
         throw new ArgumentException("Byte is not a value Base32 value.", "b");
     }
+
+    public class Base32EncodingOptions
+    {
+        public bool OmitPadding { get; set; }
+    }
 }

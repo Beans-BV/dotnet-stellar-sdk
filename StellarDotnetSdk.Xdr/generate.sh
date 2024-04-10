@@ -9,7 +9,7 @@ ulimit -n 4096
 echo "New ulimit: $(ulimit -n)"
 
 # Run the xdrgen command
-sudo xdrgen -o ./ ./x/*.x --language=csharp --namespace=stellar_dotnet_sdk.xdr
+sudo xdrgen -o ./ ./schemes/*.x --language=csharp --namespace=StellarDotnetSdk.Xdr
 echo "Ran xdrgen command"
 
 # Reset the ulimit to its original value

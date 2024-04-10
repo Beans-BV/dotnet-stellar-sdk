@@ -4,8 +4,15 @@ using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Responses.Effects;
+#nullable disable
 
-[JsonConverter(typeof(EffectDeserializer))]
+/// <summary>
+///     Base class for effect responses.
+///     See: <a href="https://developers.stellar.org/network/horizon/resources/list-all-effects">All effects</a>
+///     <seealso cref="Requests.EffectsRequestBuilder" />
+///     <seealso cref="Server" />
+/// </summary>
+[JsonConverter(typeof(EffectResponseJsonConverter))]
 public abstract class EffectResponse : Response, IPagingToken
 {
     [JsonProperty(PropertyName = "id")] public string Id { get; protected set; }
@@ -17,7 +24,7 @@ public abstract class EffectResponse : Response, IPagingToken
     public string AccountMuxed { get; protected set; }
 
     [JsonProperty(PropertyName = "account_muxed_id")]
-    public ulong? AccountMuxedID { get; protected set; }
+    public ulong? AccountMuxedId { get; protected set; }
 
     [JsonProperty(PropertyName = "type")] public string Type { get; protected set; }
 

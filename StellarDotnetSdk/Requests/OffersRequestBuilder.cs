@@ -31,7 +31,6 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
     ///     https://www.stellar.org/developers/horizon/reference/endpoints/offers.html
     /// </summary>
     /// <param name="options">The filter options</param>
-    /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     public OffersRequestBuilder Offers(OffersRequestOptions options)
     {
@@ -51,11 +50,10 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
     ///     https://www.stellar.org/developers/horizon/reference/endpoints/offers.html
     /// </summary>
     /// <param name="optionsAction">The filter options</param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentNullException">Thrown when <c>optionsAction</c> is null.</exception>
     public OffersRequestBuilder Offers(Action<OffersRequestOptions> optionsAction)
     {
-        if (optionsAction == null) throw new ArgumentNullException(nameof(optionsAction));
+        ArgumentNullException.ThrowIfNull(optionsAction);
 
         var options = new OffersRequestOptions();
         optionsAction.Invoke(options);
@@ -113,16 +111,16 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
         /// <summary>
         ///     Account ID of the offer creator.
         /// </summary>
-        public string Seller { get; set; }
+        public string? Seller { get; set; }
 
         /// <summary>
         ///     The asset being sold.
         /// </summary>
-        public Asset Selling { get; set; }
+        public Asset? Selling { get; set; }
 
         /// <summary>
         ///     The asset being bought.
         /// </summary>
-        public Asset Buying { get; set; }
+        public Asset? Buying { get; set; }
     }
 }

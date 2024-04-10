@@ -13,8 +13,6 @@ public interface ITransactionBuilderAccount
     /// </summary>
     long IncrementedSequenceNumber { get; }
 
-    void SetSequenceNumber(long sequenceNumber);
-
     /// <summary>
     ///     Increments sequence number in this object by one.
     /// </summary>

@@ -1,24 +1,40 @@
 using System;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Xdr;
-using Assets_Asset = StellarDotnetSdk.Assets.Asset;
+using Asset = StellarDotnetSdk.Assets.Asset;
 using Int64 = StellarDotnetSdk.Xdr.Int64;
 using xdr_Operation = StellarDotnetSdk.Xdr.Operation;
 
 namespace StellarDotnetSdk.Operations;
 
 /// <summary>
-///     Represents a <see cref="ManageBuyOfferOp" />.
-///     Use <see cref="Builder" /> to create a new ManageBuyOfferOperation.
-///     See also:
+///     Creates, updates, or deletes an offer to buy a specific amount of an asset for another.
+///     See:
 ///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-buy-offer">
 ///         Manage buy offer
 ///     </a>
 /// </summary>
 public class ManageBuyOfferOperation : Operation
 {
-    private ManageBuyOfferOperation(Assets_Asset selling, Assets_Asset buying, string buyAmount, string price,
-        long offerId)
+    /// <summary>
+    ///     Constructs a new <c>ManageBuyOfferOperation</c>.
+    /// </summary>
+    /// <param name="selling">The asset being sold in this operation.</param>
+    /// <param name="buying"> The asset being bought in this operation.</param>
+    /// <param name="buyAmount"> Amount being bought.</param>
+    /// <param name="price"> Price of 1 unit of buying in terms of selling.</param>
+    /// <param name="offerId">
+    ///     If 0, will create a new offer. Existing offer id numbers can be found using
+    ///     the Offers for Account endpoint.
+    /// </param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
+    public ManageBuyOfferOperation(
+        Asset selling,
+        Asset buying,
+        string buyAmount,
+        string price,
+        long offerId,
+        IAccountId? sourceAccount = null) : base(sourceAccount)
     {
         Selling = selling ?? throw new ArgumentNullException(nameof(selling), "selling cannot be null");
         Buying = buying ?? throw new ArgumentNullException(nameof(buying), "buying cannot be null");
@@ -27,9 +43,9 @@ public class ManageBuyOfferOperation : Operation
         OfferId = offerId;
     }
 
-    public Assets_Asset Selling { get; }
+    public Asset Selling { get; }
 
-    public Assets_Asset Buying { get; }
+    public Asset Buying { get; }
 
     public string BuyAmount { get; }
 
@@ -46,84 +62,25 @@ public class ManageBuyOfferOperation : Operation
             {
                 Selling = Selling.ToXdr(),
                 Buying = Buying.ToXdr(),
-                BuyAmount = new Int64 { InnerValue = ToXdrAmount(BuyAmount) },
+                BuyAmount = new Int64(ToXdrAmount(BuyAmount)),
                 Price = StellarDotnetSdk.Price.FromString(Price).ToXdr(),
-                OfferID = new Int64 { InnerValue = OfferId }
+                OfferID = new Int64(OfferId)
             }
         };
         return body;
     }
 
-    public class Builder
+    public static ManageBuyOfferOperation FromXdr(ManageBuyOfferOp manageBuyOfferOp)
     {
-        private readonly string _buyAmount;
-        private readonly Assets_Asset _buying;
-        private readonly long _offerId;
-        private readonly string _price;
-
-        private readonly Assets_Asset _selling;
-
-        private KeyPair? _mSourceAccount;
-
-        /// <summary>
-        ///     Construct a new ManageBuyOffer builder from a ManageBuyOfferOp XDR.
-        /// </summary>
-        /// <param name="op">
-        ///     <see cref="ManageBuyOfferOp" />
-        /// </param>
-        public Builder(ManageBuyOfferOp op)
-        {
-            _selling = Assets_Asset.FromXdr(op.Selling);
-            _buying = Assets_Asset.FromXdr(op.Buying);
-            _buyAmount = FromXdrAmount(op.BuyAmount.InnerValue);
-            var n = new decimal(op.Price.N.InnerValue);
-            var d = new decimal(op.Price.D.InnerValue);
-            _price = Amount.DecimalToString(decimal.Divide(n, d));
-            _offerId = op.OfferID.InnerValue;
-        }
-
-        /// <summary>
-        ///     Creates a new ManageBuyOffer builder.
-        /// </summary>
-        /// <param name="selling">The asset being sold in this operation</param>
-        /// <param name="buying"> The asset being bought in this operation</param>
-        /// <param name="buyAmount"> Amount being bought.</param>
-        /// <param name="price"> Price of 1 unit of buying in terms of selling.</param>
-        /// <param name="offerId">
-        ///     Optional, if not provided, will create a new offer. Existing offer id numbers can be found using
-        ///     the Offers for Account endpoint.
-        /// </param>
-        /// <exception cref="ArithmeticException">when amount has more than 7 decimal places.</exception>
-        public Builder(Assets_Asset selling, Assets_Asset buying, string amount, string price, long? offerId = null)
-        {
-            _selling = selling ?? throw new ArgumentNullException(nameof(selling), "selling cannot be null");
-            _buying = buying ?? throw new ArgumentNullException(nameof(buying), "buying cannot be null");
-            _buyAmount = amount ?? throw new ArgumentNullException(nameof(amount), "amount cannot be null");
-            _price = price ?? throw new ArgumentNullException(nameof(price), "price cannot be null");
-            _offerId = offerId ?? 0L;
-        }
-
-        /// <summary>
-        ///     Sets the source account for this operation.
-        /// </summary>
-        /// <param name="sourceAccount">The operation's source account.</param>
-        /// <returns>Builder object so you can chain methods.</returns>
-        public Builder SetSourceAccount(KeyPair sourceAccount)
-        {
-            _mSourceAccount = sourceAccount ??
-                              throw new ArgumentNullException(nameof(sourceAccount), "sourceAccount cannot be null");
-            return this;
-        }
-
-        /// <summary>
-        ///     Builds an operation
-        /// </summary>
-        public ManageBuyOfferOperation Build()
-        {
-            var operation = new ManageBuyOfferOperation(_selling, _buying, _buyAmount, _price, _offerId);
-            if (_mSourceAccount != null)
-                operation.SourceAccount = _mSourceAccount;
-            return operation;
-        }
+        return new ManageBuyOfferOperation(
+            Asset.FromXdr(manageBuyOfferOp.Selling),
+            Asset.FromXdr(manageBuyOfferOp.Buying),
+            FromXdrAmount(manageBuyOfferOp.BuyAmount.InnerValue),
+            Amount.DecimalToString(
+                decimal.Divide(
+                    new decimal(manageBuyOfferOp.Price.N.InnerValue),
+                    new decimal(manageBuyOfferOp.Price.D.InnerValue))),
+            manageBuyOfferOp.OfferID.InnerValue
+        );
     }
 }

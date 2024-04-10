@@ -10,5 +10,5 @@ public class HttpResponseException : Exception
         StatusCode = statusCode;
     }
 
-    public int StatusCode { get; set; }
+    public int StatusCode { get; }
 }

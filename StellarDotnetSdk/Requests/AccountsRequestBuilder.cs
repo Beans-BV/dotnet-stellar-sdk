@@ -47,7 +47,6 @@ public class AccountsRequestBuilder : RequestBuilderExecutePageable<AccountsRequ
     ///     https://www.stellar.org/developers/horizon/reference/accounts-single.html
     /// </summary>
     /// <param name="account">Account to fetch</param>
-    /// <returns></returns>
     public async Task<AccountResponse> Account(string account)
     {
         SetSegments("accounts", account);
@@ -60,7 +59,6 @@ public class AccountsRequestBuilder : RequestBuilderExecutePageable<AccountsRequ
     /// </summary>
     /// <param name="account">Account to fetch</param>
     /// <param name="key">Key to the data needing retrieval.</param>
-    /// <returns></returns>
     public async Task<AccountDataResponse> AccountData(string accountId, string key)
     {
         SetSegments("accounts", accountId, "data", key);

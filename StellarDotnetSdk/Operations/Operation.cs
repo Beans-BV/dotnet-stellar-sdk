@@ -2,6 +2,7 @@
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Transactions;
 using StellarDotnetSdk.Xdr;
+using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
 using MuxedAccount = StellarDotnetSdk.Accounts.MuxedAccount;
 
 namespace StellarDotnetSdk.Operations;
@@ -13,17 +14,15 @@ namespace StellarDotnetSdk.Operations;
 /// </summary>
 public abstract class Operation
 {
-    private IAccountId? _sourceAccount;
+    protected Operation(IAccountId? sourceAccount)
+    {
+        SourceAccount = sourceAccount;
+    }
 
     /// <summary>
     ///     The account to execute this operation upon.
     /// </summary>
-    public IAccountId? SourceAccount
-    {
-        get => _sourceAccount;
-        set => _sourceAccount =
-            value ?? throw new ArgumentNullException(nameof(SourceAccount), "source account cannot be null");
-    }
+    public IAccountId? SourceAccount { get; protected set; }
 
     /// <summary>
     ///     Threshold level for the operation.
@@ -38,19 +37,6 @@ public abstract class Operation
     public static string FromXdrAmount(long value)
     {
         return Amount.FromXdr(value);
-    }
-
-    /// <summary>
-    ///     Creates a new Operation object from the given Operation XDR base64-encoded string.
-    /// </summary>
-    /// <param name="xdrBase64"></param>
-    /// <returns>Operation object</returns>
-    public static Operation FromXdrBase64(string xdrBase64)
-    {
-        var bytes = Convert.FromBase64String(xdrBase64);
-        var reader = new XdrDataInputStream(bytes);
-        var thisXdr = Xdr.Operation.Decode(reader);
-        return FromXdr(thisXdr);
     }
 
     /// <summary>
@@ -76,9 +62,6 @@ public abstract class Operation
         return Convert.ToBase64String(writer.ToArray());
     }
 
-    // TODO Consider removing this as there is no practical use.
-    /// <summary>
-    /// </summary>
     /// <returns>new Operation object from Operation XDR object.</returns>
     /// <param name="thisXdr">XDR object</param>
     public static Operation FromXdr(Xdr.Operation thisXdr)
@@ -86,78 +69,77 @@ public abstract class Operation
         var body = thisXdr.Body;
         Operation operation = body.Discriminant.InnerValue switch
         {
-            OperationType.OperationTypeEnum.CREATE_ACCOUNT => new CreateAccountOperation.Builder(
-                body.CreateAccountOp).Build(),
-            OperationType.OperationTypeEnum.PAYMENT => new PaymentOperation.Builder(body.PaymentOp).Build(),
+            OperationType.OperationTypeEnum.CREATE_ACCOUNT => CreateAccountOperation.FromXdr(
+                body.CreateAccountOp),
+            OperationType.OperationTypeEnum.PAYMENT => PaymentOperation.FromXdr(body.PaymentOp),
             OperationType.OperationTypeEnum.PATH_PAYMENT_STRICT_RECEIVE =>
-                new PathPaymentStrictReceiveOperation.Builder(body.PathPaymentStrictReceiveOp).Build(),
-            OperationType.OperationTypeEnum.MANAGE_SELL_OFFER => new ManageSellOfferOperation.Builder(
-                body.ManageSellOfferOp).Build(),
+                PathPaymentStrictReceiveOperation.FromXdr(body.PathPaymentStrictReceiveOp),
+            OperationType.OperationTypeEnum.MANAGE_SELL_OFFER => ManageSellOfferOperation.FromXdr(
+                body.ManageSellOfferOp),
             OperationType.OperationTypeEnum.CREATE_PASSIVE_SELL_OFFER =>
-                new CreatePassiveSellOfferOperation.Builder(body.CreatePassiveSellOfferOp).Build(),
+                CreatePassiveSellOfferOperation.FromXdr(body.CreatePassiveSellOfferOp),
             OperationType.OperationTypeEnum.SET_OPTIONS =>
-                new SetOptionsOperation.Builder(body.SetOptionsOp).Build(),
-            OperationType.OperationTypeEnum.CHANGE_TRUST => new ChangeTrustOperation.Builder(body.ChangeTrustOp)
-                .Build(),
+                SetOptionsOperation.FromXdr(body.SetOptionsOp),
+            OperationType.OperationTypeEnum.CHANGE_TRUST => ChangeTrustOperation.FromXdr(body.ChangeTrustOp),
             OperationType.OperationTypeEnum.ALLOW_TRUST =>
-                new AllowTrustOperation.Builder(body.AllowTrustOp).Build(),
+                throw new NotSupportedException("AllowTrustOperation is no longer supported."),
             OperationType.OperationTypeEnum.ACCOUNT_MERGE =>
-                new AccountMergeOperation.Builder(body.Destination).Build(),
-            OperationType.OperationTypeEnum.INFLATION => new InflationOperation.Builder().Build(),
+                new AccountMergeOperation(body.Destination),
+            OperationType.OperationTypeEnum.INFLATION => throw new NotSupportedException(
+                "InflationOperation is no longer supported."),
             OperationType.OperationTypeEnum.MANAGE_DATA =>
-                new ManageDataOperation.Builder(body.ManageDataOp).Build(),
-            OperationType.OperationTypeEnum.BUMP_SEQUENCE => new BumpSequenceOperation.Builder(body.BumpSequenceOp
-                    .BumpTo.InnerValue.InnerValue)
-                .Build(),
-            OperationType.OperationTypeEnum.MANAGE_BUY_OFFER => new ManageBuyOfferOperation.Builder(
-                body.ManageBuyOfferOp).Build(),
-            OperationType.OperationTypeEnum.PATH_PAYMENT_STRICT_SEND => new PathPaymentStrictSendOperation.Builder(
-                body.PathPaymentStrictSendOp).Build(),
-            OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE => new CreateClaimableBalanceOperation.Builder(
-                body.CreateClaimableBalanceOp).Build(),
-            OperationType.OperationTypeEnum.CLAIM_CLAIMABLE_BALANCE => new ClaimClaimableBalanceOperation.Builder(
-                Util.BytesToHex(
-                    body.ClaimClaimableBalanceOp.BalanceID.V0.InnerValue)).Build(),
+                ManageDataOperation.FromXdr(body.ManageDataOp),
+            OperationType.OperationTypeEnum.BUMP_SEQUENCE => new BumpSequenceOperation(body.BumpSequenceOp
+                .BumpTo.InnerValue.InnerValue),
+            OperationType.OperationTypeEnum.MANAGE_BUY_OFFER => ManageBuyOfferOperation.FromXdr(
+                body.ManageBuyOfferOp),
+            OperationType.OperationTypeEnum.PATH_PAYMENT_STRICT_SEND => PathPaymentStrictSendOperation.FromXdr(
+                body.PathPaymentStrictSendOp),
+            OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE => CreateClaimableBalanceOperation.FromXdr(
+                body.CreateClaimableBalanceOp),
+            OperationType.OperationTypeEnum.CLAIM_CLAIMABLE_BALANCE => new ClaimClaimableBalanceOperation(
+                Util.BytesToHex(body.ClaimClaimableBalanceOp.BalanceID.V0.InnerValue)),
             OperationType.OperationTypeEnum.BEGIN_SPONSORING_FUTURE_RESERVES =>
-                new BeginSponsoringFutureReservesOperation.Builder(body.BeginSponsoringFutureReservesOp.SponsoredID
-                    .InnerValue).Build(),
+                new BeginSponsoringFutureReservesOperation(
+                    KeyPair.FromXdrPublicKey(body.BeginSponsoringFutureReservesOp.SponsoredID.InnerValue)),
             OperationType.OperationTypeEnum.END_SPONSORING_FUTURE_RESERVES =>
-                new EndSponsoringFutureReservesOperation.Builder().Build(),
+                new EndSponsoringFutureReservesOperation(),
             OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP =>
                 body.RevokeSponsorshipOp.Discriminant.InnerValue switch
                 {
                     RevokeSponsorshipType.RevokeSponsorshipTypeEnum.REVOKE_SPONSORSHIP_LEDGER_ENTRY =>
-                        new RevokeLedgerEntrySponsorshipOperation.Builder(body.RevokeSponsorshipOp.LedgerKey).Build(),
+                        new RevokeLedgerEntrySponsorshipOperation(
+                            LedgerKey.FromXdr(body.RevokeSponsorshipOp.LedgerKey)),
                     RevokeSponsorshipType.RevokeSponsorshipTypeEnum.REVOKE_SPONSORSHIP_SIGNER =>
-                        new RevokeSignerSponsorshipOperation.Builder(body.RevokeSponsorshipOp.Signer).Build(),
+                        RevokeSignerSponsorshipOperation.FromXdr(body.RevokeSponsorshipOp.Signer),
                     _ => throw new ArgumentOutOfRangeException(nameof(body.RevokeSponsorshipOp.Discriminant),
                         "Invalid RevokeSponsorshipTypeEnum.")
                 },
-            OperationType.OperationTypeEnum.CLAWBACK => new ClawbackOperation.Builder(body.ClawbackOp).Build(),
+            OperationType.OperationTypeEnum.CLAWBACK => ClawbackOperation.FromXdr(body.ClawbackOp),
             OperationType.OperationTypeEnum.CLAWBACK_CLAIMABLE_BALANCE =>
-                new ClawbackClaimableBalanceOperation.Builder(
-                    Util.BytesToHex(body.ClawbackClaimableBalanceOp.BalanceID.V0.InnerValue)).Build(),
-            OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS => new SetTrustlineFlagsOperation.Builder(
-                body.SetTrustLineFlagsOp).Build(),
-            OperationType.OperationTypeEnum.LIQUIDITY_POOL_DEPOSIT => new LiquidityPoolDepositOperation.Builder(
-                body.LiquidityPoolDepositOp).Build(),
-            OperationType.OperationTypeEnum.LIQUIDITY_POOL_WITHDRAW => new LiquidityPoolWithdrawOperation.Builder(
-                body.LiquidityPoolWithdrawOp).Build(),
+                new ClawbackClaimableBalanceOperation(
+                    Util.BytesToHex(body.ClawbackClaimableBalanceOp.BalanceID.V0.InnerValue)),
+            OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS => SetTrustlineFlagsOperation.FromXdr(
+                body.SetTrustLineFlagsOp),
+            OperationType.OperationTypeEnum.LIQUIDITY_POOL_DEPOSIT => LiquidityPoolDepositOperation.FromXdr(
+                body.LiquidityPoolDepositOp),
+            OperationType.OperationTypeEnum.LIQUIDITY_POOL_WITHDRAW => LiquidityPoolWithdrawOperation.FromXdr(
+                body.LiquidityPoolWithdrawOp),
             OperationType.OperationTypeEnum.INVOKE_HOST_FUNCTION => body.InvokeHostFunctionOp.HostFunction
                     .Discriminant.InnerValue switch
                 {
                     HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_INVOKE_CONTRACT =>
-                        new InvokeContractOperation.Builder(body.InvokeHostFunctionOp).Build(),
+                        InvokeContractOperation.FromXdr(body.InvokeHostFunctionOp),
                     HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT =>
-                        new CreateContractOperation.Builder(body.InvokeHostFunctionOp).Build(),
+                        CreateContractOperation.FromXdr(body.InvokeHostFunctionOp),
                     HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM =>
-                        new UploadContractOperation.Builder(body.InvokeHostFunctionOp).Build(),
+                        UploadContractOperation.FromXdr(body.InvokeHostFunctionOp),
                     _ => throw new InvalidOperationException("Unknown HostFunction type")
                 },
-            OperationType.OperationTypeEnum.EXTEND_FOOTPRINT_TTL => new ExtendFootprintOperation.Builder(
-                body.ExtendFootprintTTLOp).Build(),
-            OperationType.OperationTypeEnum.RESTORE_FOOTPRINT => new RestoreFootprintOperation.Builder(
-                body.RestoreFootprintOp).Build(),
+            OperationType.OperationTypeEnum.EXTEND_FOOTPRINT_TTL => ExtendFootprintOperation.FromXdr(
+                body.ExtendFootprintTTLOp),
+            OperationType.OperationTypeEnum.RESTORE_FOOTPRINT => RestoreFootprintOperation.FromXdr(
+                body.RestoreFootprintOp),
             _ => throw new InvalidOperationException("Unknown operation body " + body.Discriminant.InnerValue)
         };
 
@@ -168,8 +150,8 @@ public abstract class Operation
     }
 
     /// <summary>
-    ///     Generates OperationBody XDR object
+    ///     Generates <c>Xdr.OperationBody</c> object.
     /// </summary>
-    /// <returns>OperationBody XDR object</returns>
+    /// <returns>OperationBody XDR object.</returns>
     public abstract Xdr.Operation.OperationBody ToOperationBody();
 }

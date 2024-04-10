@@ -1,17 +1,18 @@
 ﻿using System;
+using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
 public class LedgerEntryLiquidityPool : LedgerEntry
 {
-    private LedgerEntryLiquidityPool(LiquidityPoolID liquidityPoolID, LiquidityPoolEntryBody liquidityPoolBody)
+    private LedgerEntryLiquidityPool(LiquidityPoolID liquidityPoolId, LiquidityPoolEntryBody liquidityPoolBody)
     {
-        LiquidityPoolID = liquidityPoolID;
+        LiquidityPoolId = liquidityPoolId;
         LiquidityPoolBody = liquidityPoolBody;
     }
 
-    public LiquidityPoolID LiquidityPoolID { get; }
+    public LiquidityPoolID LiquidityPoolId { get; }
     public LiquidityPoolEntryBody LiquidityPoolBody { get; }
 
     /// <summary>

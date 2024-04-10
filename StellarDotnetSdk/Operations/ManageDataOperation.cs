@@ -7,14 +7,25 @@ using xdr_Operation = StellarDotnetSdk.Xdr.Operation;
 namespace StellarDotnetSdk.Operations;
 
 /// <summary>
-///     Represents a <see cref="ManageDataOp" />.
-///     Use <see cref="Builder" /> to create a new ManageDataOperation.
-///     See also:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-data">Manage Data</a>
+///     Sets, modifies, or deletes a data entry (name/value pair) that is attached to an account.
+///     See:
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-data">Manage data</a>
 /// </summary>
 public class ManageDataOperation : Operation
 {
-    private ManageDataOperation(string name, byte[]? value)
+    /// <summary>
+    ///     Constructs a new <c>ManageDataOperation</c>.
+    /// </summary>
+    /// <param name="name">
+    ///     The name of data entry - string up to 64 bytes long. If this is a new Name it will add the given
+    ///     name/value pair to the account. If this Name is already present then the associated value will be modified.
+    /// </param>
+    /// <param name="value">
+    ///     (optional) If not present then the existing Name will be deleted. If present then this value will
+    ///     be set in the DataEntry. Up to 64 bytes long.
+    /// </param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
+    public ManageDataOperation(string name, byte[]? value, IAccountId? sourceAccount = null) : base(sourceAccount)
     {
         if (name == null) throw new ArgumentNullException(nameof(name), "name cannot be null");
         if (name.Length > 64) throw new ArgumentException("Data name cannot exceed 64 characters.", nameof(name));
@@ -22,8 +33,19 @@ public class ManageDataOperation : Operation
         Value = value;
     }
 
+    public ManageDataOperation(string name, string? value, IAccountId? sourceAccount = null)
+        : this(name, value != null ? Encoding.UTF8.GetBytes(value) : null, sourceAccount)
+    {
+    }
+
+    /// <summary>
+    ///     Name of data entry.
+    /// </summary>
     public string Name { get; }
 
+    /// <summary>
+    ///     Value of data entry.
+    /// </summary>
     public byte[]? Value { get; }
 
     public override xdr_Operation.OperationBody ToOperationBody()
@@ -40,63 +62,8 @@ public class ManageDataOperation : Operation
         return body;
     }
 
-    public class Builder
+    public static ManageDataOperation FromXdr(ManageDataOp manageDataOp)
     {
-        private readonly string _name;
-        private readonly byte[]? _value;
-
-        private IAccountId? _mSourceAccount;
-
-        /// <summary>
-        ///     Construct a new ManageOffer builder from a ManageDataOp XDR.
-        /// </summary>
-        /// <param name="op">
-        ///     <see cref="ManageDataOp" />
-        /// </param>
-        public Builder(ManageDataOp op)
-        {
-            _name = op.DataName.InnerValue;
-            _value = op.DataValue?.InnerValue;
-        }
-
-        public Builder(string name, string? value)
-        {
-            _name = name ?? throw new ArgumentNullException(nameof(name), "name cannot be null");
-            _value = value != null ? Encoding.UTF8.GetBytes(value) : null;
-        }
-
-        /// <summary>
-        ///     Creates a new ManageData builder. If you want to delete data entry pass null as a <code>value</code> param.
-        /// </summary>
-        /// <param name="name">The name of data entry</param>
-        /// <param name="value">The value of data entry. <code>null</code>null will delete data entry.</param>
-        public Builder(string name, byte[]? value)
-        {
-            _name = name ?? throw new ArgumentNullException(nameof(name), "name cannot be null");
-            _value = value;
-        }
-
-        /// <summary>
-        ///     Sets the source account for this operation.
-        /// </summary>
-        /// <param name="sourceAccount">The operation's source account.</param>
-        /// <returns>Builder object so you can chain methods.</returns>
-        public Builder SetSourceAccount(IAccountId sourceAccount)
-        {
-            _mSourceAccount = sourceAccount ??
-                              throw new ArgumentNullException(nameof(sourceAccount), "sourceAccount cannot be null");
-            return this;
-        }
-
-        /// <summary>
-        ///     Builds an operation
-        /// </summary>
-        public ManageDataOperation Build()
-        {
-            var operation = new ManageDataOperation(_name, _value);
-            if (_mSourceAccount != null)
-                operation.SourceAccount = _mSourceAccount;
-            return operation;
-        }
+        return new ManageDataOperation(manageDataOp.DataName.InnerValue, manageDataOp.DataValue?.InnerValue);
     }
 }

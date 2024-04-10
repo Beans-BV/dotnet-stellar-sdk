@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Operations;
-using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Results;
 using StellarDotnetSdk.Transactions;
 
@@ -36,14 +35,12 @@ public class FeeBumpOperationTest
 
         var transactionBuilder = new TransactionBuilder(sourceAccount);
 
-        var paymentOperationBuilder = new PaymentOperation.Builder(
+        var paymentOperation = new PaymentOperation(
             sponsorKeyPair,
             new AssetTypeNative(),
             "10"
         );
-        transactionBuilder.AddOperation(
-            paymentOperationBuilder.Build()
-        );
+        transactionBuilder.AddOperation(paymentOperation);
         var transaction = transactionBuilder.Build();
         transaction.Sign(sourceKeyPair);
 
@@ -55,7 +52,7 @@ public class FeeBumpOperationTest
 
         var response = await server.SubmitTransaction(feeBumpTransaction);
         Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccess());
+        Assert.IsTrue(response.IsSuccess);
         Assert.IsFalse(string.IsNullOrEmpty(response.Hash));
         Assert.IsInstanceOfType(response.Result, typeof(FeeBumpTransactionResultSuccess));
         var result = (FeeBumpTransactionResultSuccess)response.Result;
@@ -90,14 +87,12 @@ public class FeeBumpOperationTest
 
         var transactionBuilder = new TransactionBuilder(sourceAccount);
 
-        var paymentOperationBuilder = new PaymentOperation.Builder(
+        var paymentOperation = new PaymentOperation(
             sponsorKeyPair,
             new AssetTypeNative(),
             "100000"
         );
-        transactionBuilder.AddOperation(
-            paymentOperationBuilder.Build()
-        );
+        transactionBuilder.AddOperation(paymentOperation);
         var transaction = transactionBuilder.Build();
         transaction.Sign(sourceKeyPair);
 
@@ -110,7 +105,7 @@ public class FeeBumpOperationTest
         var response = await server.SubmitTransaction(feeBumpTransaction);
 
         Assert.IsNotNull(response);
-        Assert.IsFalse(response.IsSuccess());
+        Assert.IsFalse(response.IsSuccess);
 
         var result = response.Result as FeeBumpTransactionResultFailed;
         Assert.IsNotNull(result);
@@ -145,17 +140,13 @@ public class FeeBumpOperationTest
         var transactionBuilder = new TransactionBuilder(sourceAccount);
         transactionBuilder.SetFee(maxFee);
 
-        var paymentOperationBuilder = new PaymentOperation.Builder(
+        var paymentOperation = new PaymentOperation(
             sponsorKeyPair,
             new AssetTypeNative(),
             "1000"
         );
-        transactionBuilder.AddOperation(
-            paymentOperationBuilder.Build()
-        );
-        transactionBuilder.AddOperation(
-            paymentOperationBuilder.Build()
-        );
+        transactionBuilder.AddOperation(paymentOperation);
+        transactionBuilder.AddOperation(paymentOperation);
         var transaction = transactionBuilder.Build();
         transaction.Sign(sourceKeyPair);
 
@@ -196,17 +187,13 @@ public class FeeBumpOperationTest
         var transactionBuilder = new TransactionBuilder(sourceAccount);
         transactionBuilder.SetFee(maxFee);
 
-        var paymentOperationBuilder = new PaymentOperation.Builder(
+        var paymentOperation = new PaymentOperation(
             sponsorKeyPair,
             new AssetTypeNative(),
             "1000"
         );
-        transactionBuilder.AddOperation(
-            paymentOperationBuilder.Build()
-        );
-        transactionBuilder.AddOperation(
-            paymentOperationBuilder.Build()
-        );
+        transactionBuilder.AddOperation(paymentOperation);
+        transactionBuilder.AddOperation(paymentOperation);
         var transaction = transactionBuilder.Build();
         transaction.Sign(sourceKeyPair);
 
@@ -220,7 +207,7 @@ public class FeeBumpOperationTest
         var response = await server.SubmitTransaction(feeBumpTransaction);
 
         Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccess());
+        Assert.IsTrue(response.IsSuccess);
         Assert.IsFalse(string.IsNullOrEmpty(response.Hash));
         Assert.IsInstanceOfType(response.Result, typeof(FeeBumpTransactionResultSuccess));
     }

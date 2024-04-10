@@ -3,6 +3,14 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Transactions;
 
+/// <summary>
+///     See:
+///     <a
+///         href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/operations-and-transactions#time-bounds">
+///         Time
+///         bounds
+///     </a>
+/// </summary>
 public class TimeBounds
 {
     private readonly ulong _maxTime;
@@ -52,7 +60,7 @@ public class TimeBounds
     }
 
     /// <summary>
-    ///     Timebounds constructor.
+    ///     Time bounds constructor.
     /// </summary>
     /// <param name="minTime">earliest time the transaction is valid from</param>
     /// <param name="duration">duration window the transaction is valid for</param>
@@ -61,7 +69,7 @@ public class TimeBounds
     }
 
     /// <summary>
-    ///     Timebounds constructor.
+    ///     Time bounds constructor.
     /// </summary>
     /// <param name="duration">duration window the transaction is valid for from now</param>
     public TimeBounds(TimeSpan duration) : this(DateTimeOffset.UtcNow, duration)
@@ -73,8 +81,6 @@ public class TimeBounds
 
     public static TimeBounds FromXdr(Xdr.TimeBounds timeBounds)
     {
-        if (timeBounds == null) return null;
-
         return new TimeBounds(
             timeBounds.MinTime.InnerValue.InnerValue,
             timeBounds.MaxTime.InnerValue.InnerValue
@@ -83,14 +89,11 @@ public class TimeBounds
 
     public Xdr.TimeBounds ToXdr()
     {
-        var timeBounds = new Xdr.TimeBounds();
-        var minTime = new Uint64();
-        var maxTime = new Uint64();
-        minTime.InnerValue = _minTime;
-        maxTime.InnerValue = _maxTime;
-        timeBounds.MinTime = new TimePoint(minTime);
-        timeBounds.MaxTime = new TimePoint(maxTime);
-        return timeBounds;
+        return new Xdr.TimeBounds
+        {
+            MinTime = new TimePoint(new Uint64(_minTime)),
+            MaxTime = new TimePoint(new Uint64(_maxTime))
+        };
     }
 
     public override bool Equals(object? o)
@@ -106,8 +109,6 @@ public class TimeBounds
 
     public override int GetHashCode()
     {
-        return HashCode.Start
-            .Hash(MinTime)
-            .Hash(MaxTime);
+        return HashCode.Start.Hash(MinTime).Hash(MaxTime);
     }
 }

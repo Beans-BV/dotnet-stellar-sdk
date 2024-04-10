@@ -2,29 +2,18 @@
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Effects;
+#nullable disable
 
 public class LiquidityPoolDepositedEffectResponse : EffectResponse
 {
-    public LiquidityPoolDepositedEffectResponse()
-    {
-    }
-
-    public LiquidityPoolDepositedEffectResponse(LiquidityPool liquidityPool, AssetAmount[] reservesDeposited,
-        string sharesReceived)
-    {
-        LiquidityPool = liquidityPool;
-        ReservesDeposited = reservesDeposited;
-        SharesReceived = sharesReceived;
-    }
-
     public override int TypeId => 90;
 
     [JsonProperty(PropertyName = "liquidity_pool")]
-    public LiquidityPool LiquidityPool { get; private set; }
+    public LiquidityPool.LiquidityPool LiquidityPool { get; init; }
 
     [JsonProperty(PropertyName = "reserves_deposited")]
-    public AssetAmount[] ReservesDeposited { get; private set; }
+    public AssetAmount[] ReservesDeposited { get; init; }
 
     [JsonProperty(PropertyName = "shares_received")]
-    public string SharesReceived { get; private set; }
+    public string SharesReceived { get; init; }
 }

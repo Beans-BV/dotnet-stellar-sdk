@@ -8,18 +8,18 @@ namespace StellarDotnetSdk.Tests.Requests;
 [TestClass]
 public class RequestBuilderStreamableTest
 {
-    private readonly Uri _uri = new("http://test.com");
+    private readonly Uri _uri = new("https://test.com");
 
     [TestMethod]
     public async Task TestHelloStream()
     {
         // Check we skip the first message with "hello" data
-        var fakeHandler = new FakeHttpMessageHandler();
+        var fakeHandler = new FakeStreamableHttpMessageHandler();
         var stream = "event: open\ndata: hello\n\ndata: foobar\n\n";
         fakeHandler.QueueResponse(FakeResponse.StartsStream(StreamAction.Write(stream)));
 
-        using var eventSource = new SSEEventSource(_uri, builder => builder.MessageHandler(fakeHandler));
-        string dataReceived = null;
+        using var eventSource = new SseEventSource(_uri, builder => builder.MessageHandler(fakeHandler));
+        string? dataReceived = null;
         eventSource.Message += (sender, args) =>
         {
             dataReceived = args.Data;
@@ -34,12 +34,12 @@ public class RequestBuilderStreamableTest
     [TestMethod]
     public async Task TestStreamErrorEvent()
     {
-        var fakeHandler = new FakeHttpMessageHandler();
+        var fakeHandler = new FakeStreamableHttpMessageHandler();
         fakeHandler.QueueResponse(FakeResponse.WithIOError());
         fakeHandler.QueueResponse(FakeResponse.WithIOError());
         fakeHandler.QueueResponse(FakeResponse.StartsStream());
 
-        using var eventSource = new SSEEventSource(_uri, builder => builder.MessageHandler(fakeHandler));
+        using var eventSource = new SseEventSource(_uri, builder => builder.MessageHandler(fakeHandler));
         var errorCount = 0;
         eventSource.Error += (sender, args) =>
         {

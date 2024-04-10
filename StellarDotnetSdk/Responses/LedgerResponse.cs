@@ -3,104 +3,72 @@ using StellarDotnetSdk.Responses.Effects;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Responses;
+#nullable disable
 
 public class LedgerResponse : Response, IPagingToken
 {
-    public LedgerResponse(uint sequence, string hash, string pagingToken, string prevHash,
-        int? failedTransactionCount, int successfulTransactionCount, int operationCount, string closedAt,
-        string totalCoins, string feePool, long baseFee, string baseReserve, string baseFeeInStroops,
-        string baseReserveInStroops, int maxTxSetSize, int? txSetOperationCount, LedgerResponseLinks links)
-    {
-        Sequence = sequence;
-        Hash = hash;
-        PagingToken = pagingToken;
-        PrevHash = prevHash;
-        FailedTransactionCount = failedTransactionCount;
-        SuccessfulTransactionCount = successfulTransactionCount;
-        OperationCount = operationCount;
-        ClosedAt = closedAt;
-        TotalCoins = totalCoins;
-        FeePool = feePool;
-        BaseFee = baseFee;
-        BaseFeeInStroops = baseFeeInStroops;
-        BaseReserve = baseReserve;
-        BaseReserveInStroops = baseReserveInStroops;
-        MaxTxSetSize = maxTxSetSize;
-        TxSetOperationCount = txSetOperationCount;
-        Links = links;
-    }
-
     [JsonProperty(PropertyName = "sequence")]
-    public uint Sequence { get; private set; }
+    public uint Sequence { get; init; }
 
-    [JsonProperty(PropertyName = "hash")] public string Hash { get; private set; }
+    [JsonProperty(PropertyName = "hash")] public string Hash { get; init; }
 
     [JsonProperty(PropertyName = "prev_hash")]
-    public string PrevHash { get; private set; }
+    public string PrevHash { get; init; }
 
     [JsonProperty(PropertyName = "successful_transaction_count")]
-    public int SuccessfulTransactionCount { get; private set; }
+    public int SuccessfulTransactionCount { get; init; }
 
     [JsonProperty(PropertyName = "failed_transaction_count")]
-    public int? FailedTransactionCount { get; private set; }
+    public int? FailedTransactionCount { get; init; }
 
     [JsonProperty(PropertyName = "operation_count")]
-    public int OperationCount { get; private set; }
+    public int OperationCount { get; init; }
 
     [JsonProperty(PropertyName = "closed_at")]
-    public string ClosedAt { get; private set; }
+    public string ClosedAt { get; init; }
 
     [JsonProperty(PropertyName = "total_coins")]
-    public string TotalCoins { get; private set; }
+    public string TotalCoins { get; init; }
 
     [JsonProperty(PropertyName = "fee_pool")]
-    public string FeePool { get; private set; }
+    public string FeePool { get; init; }
 
     [JsonProperty(PropertyName = "base_fee")]
-    public long BaseFee { get; private set; }
+    public long BaseFee { get; init; }
 
     [JsonProperty(PropertyName = "base_reserve")]
-    public string BaseReserve { get; private set; }
+    public string BaseReserve { get; init; }
 
     [JsonProperty(PropertyName = "max_tx_set_size")]
-    public int MaxTxSetSize { get; private set; }
+    public int MaxTxSetSize { get; init; }
 
     [JsonProperty(PropertyName = "base_fee_in_stroops")]
-    public string BaseFeeInStroops { get; private set; }
+    public string BaseFeeInStroops { get; init; }
 
     [JsonProperty(PropertyName = "base_reserve_in_stroops")]
-    public string BaseReserveInStroops { get; private set; }
+    public string BaseReserveInStroops { get; init; }
 
     [JsonProperty(PropertyName = "tx_set_operation_count")]
-    public int? TxSetOperationCount { get; private set; }
+    public int? TxSetOperationCount { get; init; }
 
     [JsonProperty(PropertyName = "_links")]
-    public LedgerResponseLinks Links { get; private set; }
+    public LedgerResponseLinks Links { get; init; }
 
     [JsonProperty(PropertyName = "paging_token")]
-    public string PagingToken { get; private set; }
+    public string PagingToken { get; init; }
 
     /// Links connected to ledger.
     public class LedgerResponseLinks
     {
-        public LedgerResponseLinks(Link<Page<EffectResponse>> effects, Link<Page<OperationResponse>> operations,
-            Link<LedgerResponse> self, Link<Page<TransactionResponse>> transactions)
-        {
-            Effects = effects;
-            Operations = operations;
-            Self = self;
-            Transactions = transactions;
-        }
-
         [JsonProperty(PropertyName = "effects")]
-        public Link<Page<EffectResponse>> Effects { get; private set; }
+        public Link<Page<EffectResponse>> Effects { get; init; }
 
         [JsonProperty(PropertyName = "operations")]
-        public Link<Page<OperationResponse>> Operations { get; private set; }
+        public Link<Page<OperationResponse>> Operations { get; init; }
 
-        [JsonProperty(PropertyName = "self")] public Link<LedgerResponse> Self { get; private set; }
+        [JsonProperty(PropertyName = "self")] public Link<LedgerResponse> Self { get; init; }
 
         [JsonProperty(PropertyName = "transactions")]
-        public Link<Page<TransactionResponse>> Transactions { get; private set; }
+        public Link<Page<TransactionResponse>> Transactions { get; init; }
     }
 }

@@ -16,9 +16,10 @@ public class AccountDeserializerTest
     [TestMethod]
     public void TestDeserializeAccountResponse()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "account.json"));
+        var jsonPath = Utils.GetTestDataPath("account.json");
+        var json = File.ReadAllText(jsonPath);
         var account = JsonSingleton.GetInstance<AccountResponse>(json);
-
+        Assert.IsNotNull(account);
         AssertTestData(account);
     }
 
@@ -34,7 +35,8 @@ public class AccountDeserializerTest
     [TestMethod]
     public void TestSerializeDeserializeAccountResponse()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "account.json"));
+        var jsonPath = Utils.GetTestDataPath("account.json");
+        var json = File.ReadAllText(jsonPath);
         var account = JsonConvert.DeserializeObject<AccountResponse>(json);
         var serialized = JsonConvert.SerializeObject(account);
         var back = JsonConvert.DeserializeObject<AccountResponse>(serialized);

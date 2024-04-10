@@ -1,5 +1,7 @@
 ﻿using System;
+using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Xdr;
+using LiquidityPoolParameters = StellarDotnetSdk.LiquidityPool.LiquidityPoolParameters;
 
 namespace StellarDotnetSdk.Assets;
 

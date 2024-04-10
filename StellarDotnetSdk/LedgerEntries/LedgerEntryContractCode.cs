@@ -1,19 +1,19 @@
 ﻿using System;
 using StellarDotnetSdk.Xdr;
-using Soroban_ExtensionPoint = StellarDotnetSdk.Soroban.ExtensionPoint;
+using ExtensionPoint = StellarDotnetSdk.Soroban.ExtensionPoint;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
 public class LedgerEntryContractCode : LedgerEntry
 {
-    private LedgerEntryContractCode(byte[] hash, byte[] code, Soroban_ExtensionPoint extensionPoint)
+    private LedgerEntryContractCode(byte[] hash, byte[] code, ExtensionPoint extensionPoint)
     {
         Hash = hash;
         Code = code;
         ExtensionPoint = extensionPoint;
     }
 
-    public Soroban_ExtensionPoint ExtensionPoint { get; }
+    public ExtensionPoint ExtensionPoint { get; }
 
     /// <summary>
     ///     Unique identifier of the executable file.
@@ -45,6 +45,6 @@ public class LedgerEntryContractCode : LedgerEntry
         return new LedgerEntryContractCode(
             xdrContractDataEntry.Hash.InnerValue,
             xdrContractDataEntry.Code,
-            Soroban_ExtensionPoint.FromXdr(xdrContractDataEntry.Ext));
+            ExtensionPoint.FromXdr(xdrContractDataEntry.Ext));
     }
 }

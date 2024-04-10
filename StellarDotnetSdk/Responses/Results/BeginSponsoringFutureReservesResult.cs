@@ -1,5 +1,6 @@
 ﻿using System;
-using StellarDotnetSdk.Xdr;
+using ResultCodeEnum =
+    StellarDotnetSdk.Xdr.BeginSponsoringFutureReservesResultCode.BeginSponsoringFutureReservesResultCodeEnum;
 
 namespace StellarDotnetSdk.Responses.Results;
 
@@ -7,22 +8,38 @@ public class BeginSponsoringFutureReservesResult : OperationResult
 {
     public static BeginSponsoringFutureReservesResult FromXdr(Xdr.BeginSponsoringFutureReservesResult result)
     {
-        switch (result.Discriminant.InnerValue)
+        return result.Discriminant.InnerValue switch
         {
-            case BeginSponsoringFutureReservesResultCode.BeginSponsoringFutureReservesResultCodeEnum
-                .BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED:
-                return new BeginSponsoringFutureReservesAlreadySponsored();
-            case BeginSponsoringFutureReservesResultCode.BeginSponsoringFutureReservesResultCodeEnum
-                .BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED:
-                return new BeginSponsoringFutureReservesMalformed();
-            case BeginSponsoringFutureReservesResultCode.BeginSponsoringFutureReservesResultCodeEnum
-                .BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
-                return new BeginSponsoringFutureReservesRecursive();
-            case BeginSponsoringFutureReservesResultCode.BeginSponsoringFutureReservesResultCodeEnum
-                .BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS:
-                return new BeginSponsoringFutureReservesSuccess();
-            default:
-                throw new SystemException("Unknown BeginSponsoringFutureReserves type");
-        }
+            ResultCodeEnum.BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED
+                => new BeginSponsoringFutureReservesAlreadySponsored(),
+            ResultCodeEnum.BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED
+                => new BeginSponsoringFutureReservesMalformed(),
+            ResultCodeEnum.BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE
+                => new BeginSponsoringFutureReservesRecursive(),
+            ResultCodeEnum.BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS
+                => new BeginSponsoringFutureReservesSuccess(),
+            _ => throw new ArgumentOutOfRangeException(nameof(result),
+                "Unknown BeginSponsoringFutureReservesResult type.")
+        };
     }
 }
+
+public class BeginSponsoringFutureReservesSuccess : BeginSponsoringFutureReservesResult
+{
+    public override bool IsSuccess => true;
+}
+
+/// <summary>
+///     Source account is equal to sponsoredID.
+/// </summary>
+public class BeginSponsoringFutureReservesMalformed : BeginSponsoringFutureReservesResult;
+
+/// <summary>
+///     Source account is already sponsoring sponsoredID.
+/// </summary>
+public class BeginSponsoringFutureReservesAlreadySponsored : BeginSponsoringFutureReservesResult;
+
+/// <summary>
+///     Either source account is currently being sponsored, or sponsoredID is sponsoring another account.
+/// </summary>
+public class BeginSponsoringFutureReservesRecursive : BeginSponsoringFutureReservesResult;

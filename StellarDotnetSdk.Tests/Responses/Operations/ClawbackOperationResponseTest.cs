@@ -14,7 +14,8 @@ public class ClawbackOperationResponseTest
     [TestMethod]
     public void TestSerializeClawback()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/clawback", "clawback.json"));
+        var jsonPath = Utils.GetTestDataPath("clawback.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -43,7 +44,8 @@ public class ClawbackOperationResponseTest
     [TestMethod]
     public void TestSerializeClawbackMuxed()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/clawback", "clawbackMuxed.json"));
+        var jsonPath = Utils.GetTestDataPath("clawbackMuxed.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);

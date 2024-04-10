@@ -3,9 +3,9 @@ using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Exceptions;
-using StellarDotnetSdk.Memos;
+using StellarDotnetSdk.Xdr;
 using FormatException = System.FormatException;
-using sdkxdr = StellarDotnetSdk.Xdr;
+using Memo = StellarDotnetSdk.Memos.Memo;
 
 namespace StellarDotnetSdk.Tests;
 
@@ -16,14 +16,14 @@ public class MemoTest
     public void TestMemoNone()
     {
         var memo = Memo.None();
-        Assert.AreEqual(sdkxdr.MemoType.MemoTypeEnum.MEMO_NONE, memo.ToXdr().Discriminant.InnerValue);
+        Assert.AreEqual(MemoType.MemoTypeEnum.MEMO_NONE, memo.ToXdr().Discriminant.InnerValue);
     }
 
     [TestMethod]
     public void TestMemoTextSuccess()
     {
         var memo = Memo.Text("test");
-        Assert.AreEqual(sdkxdr.MemoType.MemoTypeEnum.MEMO_TEXT, memo.ToXdr().Discriminant.InnerValue);
+        Assert.AreEqual(MemoType.MemoTypeEnum.MEMO_TEXT, memo.ToXdr().Discriminant.InnerValue);
         Assert.AreEqual("test", memo.MemoTextValue);
     }
 
@@ -31,7 +31,7 @@ public class MemoTest
     public void TestMemoTextUtf8()
     {
         var memo = Memo.Text("三");
-        Assert.AreEqual(sdkxdr.MemoType.MemoTypeEnum.MEMO_TEXT, memo.ToXdr().Discriminant.InnerValue);
+        Assert.AreEqual(MemoType.MemoTypeEnum.MEMO_TEXT, memo.ToXdr().Discriminant.InnerValue);
         Assert.AreEqual("三", memo.MemoTextValue);
     }
 
@@ -82,7 +82,7 @@ public class MemoTest
     {
         var memo = Memo.Id(9223372036854775807L);
         Assert.AreEqual(9223372036854775807UL, memo.IdValue);
-        Assert.AreEqual(sdkxdr.MemoType.MemoTypeEnum.MEMO_ID, memo.ToXdr().Discriminant.InnerValue);
+        Assert.AreEqual(MemoType.MemoTypeEnum.MEMO_ID, memo.ToXdr().Discriminant.InnerValue);
         Assert.AreEqual(9223372036854775807UL, memo.ToXdr().Id.InnerValue);
     }
 
@@ -90,7 +90,7 @@ public class MemoTest
     public void TestMemoHashSuccess()
     {
         var memo = Memo.Hash("4142434445464748494a4b4c");
-        Assert.AreEqual(sdkxdr.MemoType.MemoTypeEnum.MEMO_HASH, memo.ToXdr().Discriminant.InnerValue);
+        Assert.AreEqual(MemoType.MemoTypeEnum.MEMO_HASH, memo.ToXdr().Discriminant.InnerValue);
         var test = "ABCDEFGHIJKL";
         Assert.AreEqual(test, Util.PaddedByteArrayToString(memo.MemoBytes));
         Assert.AreEqual("4142434445464748494a4b4c", memo.GetTrimmedHexValue());
@@ -101,7 +101,7 @@ public class MemoTest
     {
         var bytes = Enumerable.Repeat((byte)'A', 10).ToArray();
         var memo = Memo.Hash(bytes);
-        Assert.AreEqual(sdkxdr.MemoType.MemoTypeEnum.MEMO_HASH, memo.ToXdr().Discriminant.InnerValue);
+        Assert.AreEqual(MemoType.MemoTypeEnum.MEMO_HASH, memo.ToXdr().Discriminant.InnerValue);
         Assert.AreEqual("AAAAAAAAAA", Util.PaddedByteArrayToString(memo.MemoBytes));
         Assert.AreEqual("4141414141414141414100000000000000000000000000000000000000000000", memo.GetHexValue());
         Assert.AreEqual("41414141414141414141", memo.GetTrimmedHexValue());
@@ -140,7 +140,7 @@ public class MemoTest
     {
         var memo = Memo.ReturnHash("4142434445464748494a4b4c");
         var memoXdr = memo.ToXdr();
-        Assert.AreEqual(sdkxdr.MemoType.MemoTypeEnum.MEMO_RETURN, memoXdr.Discriminant.InnerValue);
+        Assert.AreEqual(MemoType.MemoTypeEnum.MEMO_RETURN, memoXdr.Discriminant.InnerValue);
         Assert.IsNull(memoXdr.Hash);
         Assert.AreEqual("4142434445464748494a4b4c0000000000000000000000000000000000000000",
             BitConverter.ToString(memoXdr.RetHash.InnerValue).Replace("-", "").ToLower());
@@ -148,7 +148,7 @@ public class MemoTest
     }
 
     [TestMethod]
-    public void TestMemoIDEquality()
+    public void TestMemoIdEquality()
     {
         var memo = Memo.Id(9223372036854775807L);
         var memo2 = Memo.Id(9223372036854775807L);

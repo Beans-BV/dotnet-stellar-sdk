@@ -2,47 +2,51 @@
 
 namespace StellarDotnetSdk.Responses.Operations;
 
+#nullable disable
+
 public class InvokeHostFunctionOperationResponse : OperationResponse
 {
+    public override int TypeId => 24;
+
     [JsonProperty(PropertyName = "address")]
-    public string Address;
+    public string Address { get; init; }
 
     [JsonProperty(PropertyName = "asset_balance_changes")]
-    public AssetContractBalanceChange[] assetBalanceChanges;
+    public AssetContractBalanceChange[] AssetBalanceChanges { get; init; }
 
     [JsonProperty(PropertyName = "function")]
-    public string Function;
+    public string Function { get; init; }
 
     [JsonProperty(PropertyName = "parameters")]
-    public HostFunctionParameter[] Parameters;
+    public HostFunctionParameter[] Parameters { get; init; }
 
-    [JsonProperty(PropertyName = "salt")] public string Salt;
+    [JsonProperty(PropertyName = "salt")] public string Salt { get; init; }
 
     public class HostFunctionParameter
     {
-        [JsonProperty(PropertyName = "type")] public string Type;
+        [JsonProperty(PropertyName = "type")] public string Type { get; init; }
 
-        [JsonProperty(PropertyName = "value")] public string Value;
+        [JsonProperty(PropertyName = "value")] public string Value { get; init; }
     }
 
     public class AssetContractBalanceChange
     {
         [JsonProperty(PropertyName = "amount")]
-        public string Amount;
+        public string Amount { get; init; }
 
         [JsonProperty(PropertyName = "asset_code")]
-        public string AssetCode;
+        public string AssetCode { get; init; }
 
         [JsonProperty(PropertyName = "asset_issuer")]
-        public string AssetIssuer;
+        public string AssetIssuer { get; init; }
 
         [JsonProperty(PropertyName = "asset_type")]
-        public string AssetType;
+        public string AssetType { get; init; }
 
-        [JsonProperty(PropertyName = "from")] public string From;
+        [JsonProperty(PropertyName = "from")] public string From { get; init; }
 
-        [JsonProperty(PropertyName = "to")] public string To;
+        [JsonProperty(PropertyName = "to")] public string To { get; init; }
 
-        [JsonProperty(PropertyName = "type")] public string Type;
+        [JsonProperty(PropertyName = "type")] public string Type { get; init; }
     }
 }

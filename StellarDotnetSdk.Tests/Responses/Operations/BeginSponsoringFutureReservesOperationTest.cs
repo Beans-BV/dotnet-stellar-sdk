@@ -13,8 +13,8 @@ public class BeginSponsoringFutureReservesOperationTest
     [TestMethod]
     public void TestSerializationBeginSponsoringFutureReservesOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/beginSponsoringFutureReserves",
-            "beginSponsoringFutureReserves.json"));
+        var jsonPath = Utils.GetTestDataPath("beginSponsoringFutureReserves.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -28,9 +28,12 @@ public class BeginSponsoringFutureReservesOperationTest
         var operation = (BeginSponsoringFutureReservesOperationResponse)instance;
 
         Assert.AreEqual(215542933753857, operation.Id);
-        Assert.AreEqual("GAXHU2XHSMTZYAKFCVTULAYUL34BFPPLRVJYZMEOHP7IWPZJKSVY67RJ", operation.SponsoredID);
+        Assert.AreEqual("GAXHU2XHSMTZYAKFCVTULAYUL34BFPPLRVJYZMEOHP7IWPZJKSVY67RJ", operation.SponsoredId);
 
-        var back = new BeginSponsoringFutureReservesOperationResponse(operation.SponsoredID);
+        var back = new BeginSponsoringFutureReservesOperationResponse
+        {
+            SponsoredId = operation.SponsoredId
+        };
         Assert.IsNotNull(back);
     }
 }

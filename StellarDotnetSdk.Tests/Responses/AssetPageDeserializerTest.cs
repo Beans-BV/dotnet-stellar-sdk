@@ -13,16 +13,18 @@ public class AssetPageDeserializerTest
     [TestMethod]
     public void TestDeserializeAssetPage()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "assetPage.json"));
+        var jsonPath = Utils.GetTestDataPath("assetPage.json");
+        var json = File.ReadAllText(jsonPath);
         var assetsPage = JsonSingleton.GetInstance<Page<AssetResponse>>(json);
-
+        Assert.IsNotNull(assetsPage);
         AssertTestData(assetsPage);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeAssetPage()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "assetPage.json"));
+        var jsonPath = Utils.GetTestDataPath("assetPage.json");
+        var json = File.ReadAllText(jsonPath);
         var assetsPage = JsonConvert.DeserializeObject<Page<AssetResponse>>(json);
         var serialized = JsonConvert.SerializeObject(assetsPage);
         var back = JsonConvert.DeserializeObject<Page<AssetResponse>>(serialized);
@@ -34,7 +36,12 @@ public class AssetPageDeserializerTest
     [Obsolete]
     public void TestAssetResponseFlagDefaultsToNotImmutable()
     {
-        var assetResponseFlags = new AssetResponseFlags(true, true);
+        var assetResponseFlags = new AssetResponse.AssetResponseFlags
+        {
+            AuthRequired = true,
+            AuthRevocable = true,
+            AuthImmutable = false
+        };
         Assert.IsTrue(assetResponseFlags.AuthRequired);
         Assert.IsTrue(assetResponseFlags.AuthRevocable);
         Assert.IsFalse(assetResponseFlags.AuthImmutable);

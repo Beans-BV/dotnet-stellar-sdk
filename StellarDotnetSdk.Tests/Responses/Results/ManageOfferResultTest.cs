@@ -1,7 +1,6 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
@@ -10,9 +9,30 @@ namespace StellarDotnetSdk.Tests.Responses.Results;
 public class ManageOfferResultTest
 {
     [TestMethod]
-    public void TestSuccessCreated()
+    public void TestBuyOfferCreated()
     {
-        var tx = Util.AssertResultOfType(
+        var transactionResult = (TransactionResultSuccess)TransactionResult.FromXdrBase64(
+            "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAALtJgdGXASRLp/M5ZpckEa10nJPtYvrgX6M5wTPacDUYAAAAAAAAnIMAAAABWFhYAAAAAAC7SYHRlwEkS6fzOWaXJBGtdJyT7WL64F+jOcEz2nA1GAAAAAAAAAACWgHFAAAAAAoAAABlAAAAAAAAAAAAAAAA");
+        Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.AreEqual(1, transactionResult.Results.Count);
+        var op = (ManageBuyOfferCreated)transactionResult.Results[0];
+        var offer = op.Offer;
+        Assert.AreEqual("GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS", offer.Seller.AccountId);
+        Assert.AreEqual(40067, offer.OfferId);
+        Assert.AreEqual("XXX:GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS", offer.Selling.CanonicalName());
+        Assert.AreEqual(
+            new AssetTypeNative(),
+            offer.Buying);
+        Assert.AreEqual("1010", offer.Amount);
+        Assert.AreEqual(new Price(10, 101), offer.Price);
+
+        Assert.AreEqual(0, op.OffersClaimed.Length);
+    }
+
+    [TestMethod]
+    public void TestSellOfferCreated()
+    {
+        var tx = Utils.AssertResultOfType(
             "AAAAAACYloD/////AAAAAQAAAAAAAAADAAAAAAAAAAEAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAAAE0gAAAAAAAAAAAJiWgAAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAADDUAAAAAAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAAABNIAAAAAAAAAAVVTRAAAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAJiWgAAAA+gAABEYAAAAAQAAAAAAAAAA",
             typeof(ManageSellOfferCreated), true);
         var failed = (TransactionResultFailed)tx;
@@ -31,9 +51,9 @@ public class ManageOfferResultTest
     }
 
     [TestMethod]
-    public void TestSuccessUpdated()
+    public void TestSellOfferUpdated()
     {
-        var tx = Util.AssertResultOfType(
+        var tx = Utils.AssertResultOfType(
             "AAAAAACYloD/////AAAAAQAAAAAAAAADAAAAAAAAAAEAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAAAE0gAAAAAAAAAAAJiWgAAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAADDUAAAAABAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAAABNIAAAAAAAAAAVVTRAAAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAJiWgAAAA+gAABEYAAAAAQAAAAAAAAAA",
             typeof(ManageSellOfferUpdated), true);
         var failed = (TransactionResultFailed)tx;
@@ -52,95 +72,145 @@ public class ManageOfferResultTest
     }
 
     [TestMethod]
-    public void TestSuccessDeleted()
+    public void TestSellOfferDeletedWithClaimAtomV0()
     {
-        var tx = Util.AssertResultOfType(
+        var tx = Utils.AssertResultOfType(
             "AAAAAACYloD/////AAAAAQAAAAAAAAADAAAAAAAAAAEAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAAAE0gAAAAAAAAAAAJiWgAAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAADDUAAAAACAAAAAA==",
             typeof(ManageSellOfferDeleted), true);
         var failed = (TransactionResultFailed)tx;
         var op = (ManageSellOfferDeleted)failed.Results[0];
         Assert.AreEqual(1, op.OffersClaimed.Length);
+        var claimAtomV0 = (ClaimAtomV0)op.OffersClaimed[0];
+        Assert.AreEqual(1234L, claimAtomV0.OfferId);
+        Assert.AreEqual("GAVIGRVSL424MPYD6F6J5EZSTFORXESTMKEJUEPEII7BAWQ25BR25DUC", claimAtomV0.Seller.AccountId);
+        Assert.AreEqual("native", claimAtomV0.AssetSold.CanonicalName());
+        Assert.AreEqual("1", claimAtomV0.AmountSold);
+        Assert.AreEqual("USD:GAVIGRVSL424MPYD6F6J5EZSTFORXESTMKEJUEPEII7BAWQ25BR25DUC",
+            claimAtomV0.AssetBought.CanonicalName());
+        Assert.AreEqual("0.02", claimAtomV0.AmountBought);
+    }
+
+    [TestMethod]
+    public void TestSellOfferDeletedWithClaimOrderBook()
+    {
+        var transactionResult = (TransactionResultSuccess)TransactionResult.FromXdrBase64(
+            "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAADAAAAAAAAAAEAAAABAAAAALtJgdGXASRLp/M5ZpckEa10nJPtYvrgX6M5wTPacDUYAAAAAAAAnDoAAAABWFhYAAAAAAC7SYHRlwEkS6fzOWaXJBGtdJyT7WL64F+jOcEz2nA1GAAAAAADk4cAAAAAAAAAAAAC+vCAAAAAAgAAAAA=");
+        Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.AreEqual(1, transactionResult.Results.Count);
+        var op = (ManageSellOfferDeleted)transactionResult.Results[0];
+        Assert.AreEqual(1, op.OffersClaimed.Length);
+        var claimAtomV0 = (ClaimAtomOrderBook)op.OffersClaimed[0];
+        Assert.AreEqual(39994L, claimAtomV0.OfferId);
+        Assert.AreEqual("GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS", claimAtomV0.Seller.AccountId);
+        Assert.AreEqual("XXX:GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS",
+            claimAtomV0.AssetSold.CanonicalName());
+        Assert.AreEqual("6", claimAtomV0.AmountSold);
+        Assert.AreEqual("native", claimAtomV0.AssetBought.CanonicalName());
+        Assert.AreEqual("5", claimAtomV0.AmountBought);
+    }
+
+    [TestMethod]
+    public void TestBuyOfferDeletedWithClaimOrderBook()
+    {
+        var transactionResult = (TransactionResultSuccess)TransactionResult.FromXdrBase64(
+            "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAMAAAAAAAAAAEAAAABAAAAALtJgdGXASRLp/M5ZpckEa10nJPtYvrgX6M5wTPacDUYAAAAAAAAnIAAAAABWFhYAAAAAAC7SYHRlwEkS6fzOWaXJBGtdJyT7WL64F+jOcEz2nA1GAAAAAAELB2AAAAAAVlZWQAAAAAA6FIuuSZ2K/XrwkBn5+JDNnnUA9JidV5mVxvQ6AMQF28AAAAABJbtQAAAAAIAAAAA");
+        Assert.IsTrue(transactionResult.IsSuccess);
+        Assert.AreEqual(1, transactionResult.Results.Count);
+        var op = (ManageBuyOfferDeleted)transactionResult.Results[0];
+        Assert.AreEqual(1, op.OffersClaimed.Length);
+        var claimAtomV0 = (ClaimAtomOrderBook)op.OffersClaimed[0];
+        Assert.AreEqual(40064L, claimAtomV0.OfferId);
+        Assert.AreEqual("GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS", claimAtomV0.Seller.AccountId);
+        Assert.AreEqual("XXX:GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS",
+            claimAtomV0.AssetSold.CanonicalName());
+        Assert.AreEqual("7", claimAtomV0.AmountSold);
+        Assert.AreEqual("YYY:GDUFELVZEZ3CX5PLYJAGPZ7CIM3HTVAD2JRHKXTGK4N5B2ADCALW7NGW",
+            claimAtomV0.AssetBought.CanonicalName());
+        Assert.AreEqual("7.7", claimAtomV0.AmountBought);
     }
 
     [TestMethod]
     public void TestMalformed()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD/////wAAAAA=", typeof(ManageSellOfferMalformed),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD/////wAAAAA=", typeof(ManageSellOfferMalformed),
             false);
     }
 
     [TestMethod]
     public void TestUnderfunded()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////+QAAAAA=", typeof(ManageSellOfferUnderfunded),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////+QAAAAA=", typeof(ManageSellOfferUnderfunded),
             false);
     }
 
     [TestMethod]
     public void TestSellNoTrust()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD/////gAAAAA=", typeof(ManageSellOfferSellNoTrust),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD/////gAAAAA=", typeof(ManageSellOfferSellNoTrust),
             false);
     }
 
     [TestMethod]
     public void TestBuyNoTrust()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD/////QAAAAA=", typeof(ManageSellOfferBuyNoTrust),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD/////QAAAAA=", typeof(ManageSellOfferBuyNoTrust),
             false);
     }
 
     [TestMethod]
     public void TestSellNotAuthorized()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD/////AAAAAA=",
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD/////AAAAAA=",
             typeof(ManageSellOfferSellNotAuthorized), false);
     }
 
     [TestMethod]
     public void TestBuyNotAuthorized()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////+wAAAAA=", typeof(ManageSellOfferBuyNotAuthorized),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////+wAAAAA=",
+            typeof(ManageSellOfferBuyNotAuthorized),
             false);
     }
 
     [TestMethod]
     public void TestLineFull()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////+gAAAAA=", typeof(ManageSellOfferLineFull), false);
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////+gAAAAA=", typeof(ManageSellOfferLineFull),
+            false);
     }
 
     [TestMethod]
     public void TestCrossSelf()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////+AAAAAA=", typeof(ManageSellOfferCrossSelf),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////+AAAAAA=", typeof(ManageSellOfferCrossSelf),
             false);
     }
 
     [TestMethod]
     public void TestSellNoIssuer()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////9wAAAAA=", typeof(ManageSellOfferSellNoIssuer),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////9wAAAAA=", typeof(ManageSellOfferSellNoIssuer),
             false);
     }
 
     [TestMethod]
     public void TestBuyNoIssuer()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////9gAAAAA=", typeof(ManageSellOfferBuyNoIssuer),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////9gAAAAA=", typeof(ManageSellOfferBuyNoIssuer),
             false);
     }
 
     [TestMethod]
     public void TestNotFound()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////9QAAAAA=", typeof(ManageSellOfferNotFound), false);
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////9QAAAAA=", typeof(ManageSellOfferNotFound),
+            false);
     }
 
     [TestMethod]
     public void TestLowReserve()
     {
-        Util.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////9AAAAAA=", typeof(ManageSellOfferLowReserve),
+        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAD////9AAAAAA=", typeof(ManageSellOfferLowReserve),
             false);
     }
 
@@ -156,6 +226,6 @@ public class ManageOfferResultTest
         Assert.IsNotNull(manageOfferResult);
         Assert.IsTrue(manageOfferResult.IsSuccess);
         var offer = manageOfferResult.Offer;
-        Assert.IsFalse(offer.Flags.HasFlag(OfferEntry.OfferEntryFlags.Passive));
+        Assert.IsFalse(offer.Flags.HasFlag(OfferEntry.OfferEntryFlags.PASSIVE));
     }
 }

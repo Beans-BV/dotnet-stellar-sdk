@@ -2,39 +2,26 @@
 
 namespace StellarDotnetSdk.Responses.Operations;
 
+#nullable disable
 /// <summary>
 ///     Represents CreateAccount operation response.
-///     See: https://www.stellar.org/developers/horizon/reference/resources/operation.html
-///     <seealso cref="Requests.OperationsRequestBuilder" />
-///     <seealso cref="Server" />
 /// </summary>
 public class CreateAccountOperationResponse : OperationResponse
 {
-    public CreateAccountOperationResponse()
-    {
-    }
-
-    public CreateAccountOperationResponse(string account, string funder, string startingBalance)
-    {
-        Account = account;
-        Funder = funder;
-        StartingBalance = startingBalance;
-    }
-
     public override int TypeId => 0;
 
     [JsonProperty(PropertyName = "account")]
-    public string Account { get; private set; }
+    public string Account { get; init; }
 
     [JsonProperty(PropertyName = "funder")]
-    public string Funder { get; private set; }
+    public string Funder { get; init; }
 
     [JsonProperty(PropertyName = "funder_muxed")]
-    public string FunderMuxed { get; private set; }
+    public string FunderMuxed { get; init; }
 
     [JsonProperty(PropertyName = "funder_muxed_id")]
-    public ulong? FunderMuxedID { get; private set; }
+    public ulong? FunderMuxedId { get; init; }
 
     [JsonProperty(PropertyName = "starting_balance")]
-    public string StartingBalance { get; private set; }
+    public string StartingBalance { get; init; }
 }

@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Converters;
 
@@ -21,7 +22,11 @@ public class ReserveJsonConverter : JsonConverter<Reserve>
 
         if (amount == null) throw new ArgumentException("JSON value for amount is missing.", nameof(amount));
 
-        return new Reserve(amount, asset);
+        return new Reserve
+        {
+            Amount = amount,
+            Asset = asset
+        };
     }
 
     public override void WriteJson(JsonWriter writer, Reserve? value, JsonSerializer serializer)

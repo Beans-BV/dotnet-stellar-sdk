@@ -9,7 +9,7 @@ public static class Federation
     ///     This method is a helper method for handling user inputs that contain `destination` value.
     ///     It accepts two types of values:
     ///     For Stellar address (ex. bob*stellar.org`) it splits Stellar address and then tries to find information about
-    ///     federation server instellar.toml file for a given domain.
+    ///     federation server in stellar.toml file for a given domain.
     ///     For account ID (ex. GB5XVAABEQMY63WTHDQ5RXADGYF345VWMNPTN2GFUDZT57D57ZQTJ7PS) it simply returns the
     ///     given Account ID.
     /// </summary>
@@ -27,18 +27,18 @@ public static class Federation
     public static async Task<FederationResponse> Resolve(string value)
     {
         var tokens = Regex.Split(value, "\\*");
-        if (tokens.Length == 1)
-            return new FederationResponse(null, value, null, null);
-
-        if (tokens.Length == 2)
+        switch (tokens.Length)
         {
-            var domain = tokens[1];
-            using (var server = await FederationServer.CreateForDomain(domain))
+            case 1:
+                return new FederationResponse { AccountId = value };
+            case 2:
             {
+                var domain = tokens[1];
+                using var server = await FederationServer.CreateForDomain(domain);
                 return await server.ResolveAddress(value);
             }
+            default:
+                throw new MalformedAddressException();
         }
-
-        throw new MalformedAddressException();
     }
 }

@@ -7,19 +7,12 @@ namespace StellarDotnetSdk.Responses;
 /// </summary>
 public class Thresholds
 {
-    public Thresholds(int lowThreshold, int medThreshold, int highThreshold)
-    {
-        LowThreshold = lowThreshold;
-        MedThreshold = medThreshold;
-        HighThreshold = highThreshold;
-    }
-
     [JsonProperty(PropertyName = "low_threshold")]
-    public int LowThreshold { get; private set; }
+    public int LowThreshold { get; init; }
 
     [JsonProperty(PropertyName = "med_threshold")]
-    public int MedThreshold { get; private set; }
+    public int MedThreshold { get; init; }
 
     [JsonProperty(PropertyName = "high_threshold")]
-    public int HighThreshold { get; private set; }
+    public int HighThreshold { get; init; }
 }

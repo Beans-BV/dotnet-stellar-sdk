@@ -2,7 +2,8 @@
 using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Operations;
-using InitSorobanAddressCredentials = StellarDotnetSdk.Operations.SorobanAddressCredentials;
+using StellarDotnetSdk.Soroban;
+using SorobanAddressCredentials = StellarDotnetSdk.Operations.SorobanAddressCredentials;
 using SorobanAuthorizationEntry = StellarDotnetSdk.Operations.SorobanAuthorizationEntry;
 using SorobanAuthorizedInvocation = StellarDotnetSdk.Operations.SorobanAuthorizedInvocation;
 using SorobanCredentials = StellarDotnetSdk.Operations.SorobanCredentials;
@@ -19,28 +20,13 @@ public class SorobanAuthorizationTest
 
     private readonly SCAccountId _accountAddress = new("GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP");
 
-    private readonly ContractExecutable _contractExecutableWasm =
-        new ContractExecutableWasm(WasmId);
+    private readonly ContractExecutableWasm _contractExecutableWasm = new(WasmId);
 
     private readonly SCString _signature = new("Signature");
 
-    private InitSorobanAddressCredentials InitSorobanAddressCredentials()
+    private SorobanAddressCredentials InitSorobanAddressCredentials()
     {
-        return new InitSorobanAddressCredentials
-        {
-            Address = _accountAddress,
-            Nonce = Nonce,
-            SignatureExpirationLedger = SignatureExpirationLedger,
-            Signature = _signature
-        };
-    }
-
-    private ContractIDAddressPreimage InitContractIDAddressPreimage()
-    {
-        var salt = new byte[32];
-        RandomNumberGenerator.Create().GetBytes(salt);
-
-        return new ContractIDAddressPreimage(_accountAddress.InnerValue, salt);
+        return new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
     }
 
     [TestMethod]
@@ -49,8 +35,8 @@ public class SorobanAuthorizationTest
         var sorobanCredentials = InitSorobanAddressCredentials();
 
         // Act
-        var credentialsXdrBase64 = sorobanCredentials.ToXdrBase64();
-        var decodedCredentials = (InitSorobanAddressCredentials)SorobanCredentials.FromXdrBase64(credentialsXdrBase64);
+        var xdrCredentials = sorobanCredentials.ToXdr();
+        var decodedCredentials = (SorobanAddressCredentials)SorobanCredentials.FromXdr(xdrCredentials);
 
         // Assert
         Assert.AreEqual(((SCAccountId)sorobanCredentials.Address).InnerValue,
@@ -64,23 +50,21 @@ public class SorobanAuthorizationTest
     [TestMethod]
     public void TestSorobanAddressCredentialsWithMissingAddress()
     {
-        var sorobanCredentials = InitSorobanAddressCredentials();
-        sorobanCredentials.Address = null;
-
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => sorobanCredentials.ToXdrBase64());
-        Assert.AreEqual("Address cannot be null.", ex.Message);
+        var ex = Assert.ThrowsException<ArgumentNullException>(() =>
+            new SorobanAddressCredentials(null, Nonce, SignatureExpirationLedger, _signature));
+        Assert.IsTrue(ex.Message.Contains("Address cannot be null."));
     }
 
     [TestMethod]
     public void TestSorobanAddressCredentialsWithAddressBeingAContractAddress()
     {
         var contractAddress = new SCContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
-        var sorobanCredentials = InitSorobanAddressCredentials();
-        sorobanCredentials.Address = contractAddress;
+        var sorobanCredentials =
+            new SorobanAddressCredentials(contractAddress, Nonce, SignatureExpirationLedger, _signature);
 
         // Act
-        var credentialsXdrBase64 = sorobanCredentials.ToXdrBase64();
-        var decodedCredentials = (InitSorobanAddressCredentials)SorobanCredentials.FromXdrBase64(credentialsXdrBase64);
+        var xdrCredentials = sorobanCredentials.ToXdr();
+        var decodedCredentials = (SorobanAddressCredentials)SorobanCredentials.FromXdr(xdrCredentials);
 
         // Assert
         Assert.AreEqual(contractAddress.InnerValue, ((SCContractId)decodedCredentials.Address).InnerValue);
@@ -93,22 +77,19 @@ public class SorobanAuthorizationTest
     [TestMethod]
     public void TestSorobanAddressCredentialsWithMissingSignature()
     {
-        var sorobanCredentials = InitSorobanAddressCredentials();
-        sorobanCredentials.Signature = null;
-
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => sorobanCredentials.ToXdrBase64());
-        Assert.AreEqual("Signature cannot be null.", ex.Message);
+        var ex = Assert.ThrowsException<ArgumentNullException>(()
+            => new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, null));
+        Assert.IsTrue(ex.Message.Contains("Signature cannot be null."));
     }
 
     [TestMethod]
     public void TestSorobanAddressCredentialsWithZeroSignatureExpirationLedger()
     {
-        var sorobanCredentials = InitSorobanAddressCredentials();
-        sorobanCredentials.SignatureExpirationLedger = 0;
+        var sorobanCredentials = new SorobanAddressCredentials(_accountAddress, Nonce, 0, _signature);
 
         // Act 
-        var credentialsXdrBase64 = sorobanCredentials.ToXdrBase64();
-        var decodedCredentials = (InitSorobanAddressCredentials)SorobanCredentials.FromXdrBase64(credentialsXdrBase64);
+        var xdrCredentials = sorobanCredentials.ToXdr();
+        var decodedCredentials = (SorobanAddressCredentials)SorobanCredentials.FromXdr(xdrCredentials);
 
         // Assert
         Assert.AreEqual(((SCAccountId)sorobanCredentials.Address).InnerValue,
@@ -122,11 +103,11 @@ public class SorobanAuthorizationTest
     [TestMethod]
     public void TestSorobanAddressCredentialsWithZeroNonce()
     {
-        var sorobanCredentials = InitSorobanAddressCredentials();
-        sorobanCredentials.Nonce = 0;
+        var sorobanCredentials =
+            new SorobanAddressCredentials(_accountAddress, 0, SignatureExpirationLedger, _signature);
         // Act 
-        var credentialsXdrBase64 = sorobanCredentials.ToXdrBase64();
-        var decodedCredentials = (InitSorobanAddressCredentials)SorobanCredentials.FromXdrBase64(credentialsXdrBase64);
+        var xdrCredentials = sorobanCredentials.ToXdr();
+        var decodedCredentials = (SorobanAddressCredentials)SorobanCredentials.FromXdr(xdrCredentials);
 
         // Assert
         Assert.AreEqual(((SCAccountId)sorobanCredentials.Address).InnerValue,
@@ -137,138 +118,153 @@ public class SorobanAuthorizationTest
         Assert.AreEqual(sorobanCredentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
     }
 
-    /// <summary></summary>
-    /// <remarks>
-    ///     It's not necessary to check for the authEntry.Credentials type and properties,
-    ///     since there are already other tests in the <see cref="SorobanAuthorizationTest" /> class that cover different
-    ///     scenarios
-    ///     for <see cref="SorobanCredentials" />
-    /// </remarks>
     [TestMethod]
     public void TestSorobanAuthorizationEntryWithEmptySubInvocations()
     {
-        var rootInvocation = new SorobanAuthorizedInvocation
-        {
-            Function = new SorobanAuthorizedCreateContractFunction(
-                new CreateContractHostFunction(InitContractIDAddressPreimage(), _contractExecutableWasm)),
-            SubInvocations = Array.Empty<SorobanAuthorizedInvocation>()
-        };
+        var salt = new byte[32];
+        RandomNumberGenerator.Create().GetBytes(salt);
 
-        var authEntry = new SorobanAuthorizationEntry(InitSorobanAddressCredentials(), rootInvocation);
+        var preimage = new ContractIDAddressPreimage(_accountAddress.InnerValue, salt);
+        var rootInvocation = new SorobanAuthorizedInvocation(
+            new SorobanAuthorizedCreateContractFunction(
+                new CreateContractHostFunction(preimage, _contractExecutableWasm)),
+            []);
 
-        var authEntryXdrBase64 = authEntry.ToXdrBase64();
-        var decodedAuthEntry = SorobanAuthorizationEntry.FromXdrBase64(authEntryXdrBase64);
+        var credentials = InitSorobanAddressCredentials();
+        var authEntry = new SorobanAuthorizationEntry(credentials, rootInvocation);
 
-        TestEqualInvocations(authEntry.RootInvocation, decodedAuthEntry.RootInvocation);
+        var xdrAuth = authEntry.ToXdr();
+        var decodedAuth = SorobanAuthorizationEntry.FromXdr(xdrAuth);
 
-        Assert.AreEqual(authEntry.Credentials.ToXdrBase64(), decodedAuthEntry.Credentials.ToXdrBase64());
+        Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
+        var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
+        Assert.AreEqual(((SCAccountId)credentials.Address).InnerValue,
+            ((SCAccountId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(credentials.Nonce, decodedCredentials.Nonce);
+        Assert.AreEqual(credentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
+        Assert.AreEqual(((SCString)credentials.Signature).InnerValue,
+            ((SCString)decodedCredentials.Signature).InnerValue);
+
+        Assert.IsInstanceOfType(decodedAuth.RootInvocation.Function, typeof(SorobanAuthorizedCreateContractFunction));
+        var decodedRootFunction =
+            ((SorobanAuthorizedCreateContractFunction)decodedAuth.RootInvocation.Function).HostFunction;
+        Assert.IsNotNull(decodedRootFunction);
+        Assert.IsInstanceOfType(decodedRootFunction.ContractIDPreimage, typeof(ContractIDAddressPreimage));
+        var decodedPreimage = (ContractIDAddressPreimage)decodedRootFunction.ContractIDPreimage;
+        Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
+        CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
+        Assert.IsInstanceOfType(decodedRootFunction.Executable, typeof(ContractExecutableWasm));
+        var decodedExecutable = (ContractExecutableWasm)decodedRootFunction.Executable;
+        Assert.AreEqual(_contractExecutableWasm.WasmHash, decodedExecutable.WasmHash);
+
+        var decodedSubInvocations = decodedAuth.RootInvocation.SubInvocations;
+        Assert.AreEqual(0, decodedSubInvocations.Length);
     }
 
-    /// <summary></summary>
-    /// <remarks>
-    ///     It's not necessary to check for the authEntry.Credentials type and properties,
-    ///     since there are already other tests in the <see cref="SorobanAuthorizationTest" /> class that cover different
-    ///     scenarios
-    ///     for <see cref="SorobanCredentials" />
-    /// </remarks>
     [TestMethod]
     public void TestSorobanAuthorizationEntryContainingAuthorizedCreateContractFunction()
     {
-        var authorizedCreateContractFn =
-            new SorobanAuthorizedCreateContractFunction(
-                new CreateContractHostFunction(WasmId, _accountAddress.InnerValue));
+        var hostFunction = new CreateContractHostFunction(WasmId, _accountAddress.InnerValue);
+        var authorizedCreateContractFn = new SorobanAuthorizedCreateContractFunction(hostFunction);
 
-        var rootInvocation = new SorobanAuthorizedInvocation
-        {
-            Function = authorizedCreateContractFn,
-            SubInvocations = new SorobanAuthorizedInvocation[]
-            {
-                new()
-                {
-                    Function = authorizedCreateContractFn,
-                    SubInvocations = Array.Empty<SorobanAuthorizedInvocation>()
-                }
-            }
-        };
+        var rootInvocation = new SorobanAuthorizedInvocation(
+            authorizedCreateContractFn,
+            [
+                new SorobanAuthorizedInvocation(authorizedCreateContractFn, Array.Empty<SorobanAuthorizedInvocation>())
+            ]);
 
-        var authEntry = new SorobanAuthorizationEntry(InitSorobanAddressCredentials(), rootInvocation);
+        var credentials = InitSorobanAddressCredentials();
+        var authEntry = new SorobanAuthorizationEntry(credentials, rootInvocation);
 
-        var authEntryXdrBase64 = authEntry.ToXdrBase64();
-        var decodedAuthEntry = SorobanAuthorizationEntry.FromXdrBase64(authEntryXdrBase64);
+        var xdrAuth = authEntry.ToXdr();
+        var decodedAuth = SorobanAuthorizationEntry.FromXdr(xdrAuth);
 
-        TestEqualInvocations(authEntry.RootInvocation, decodedAuthEntry.RootInvocation);
+        Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
+        var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
+        Assert.AreEqual(((SCAccountId)credentials.Address).InnerValue,
+            ((SCAccountId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(credentials.Nonce, decodedCredentials.Nonce);
+        Assert.AreEqual(credentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
+        Assert.AreEqual(((SCString)credentials.Signature).InnerValue,
+            ((SCString)decodedCredentials.Signature).InnerValue);
 
-        Assert.AreEqual(authEntry.Credentials.ToXdrBase64(), decodedAuthEntry.Credentials.ToXdrBase64());
+        Assert.IsInstanceOfType(decodedAuth.RootInvocation.Function, typeof(SorobanAuthorizedCreateContractFunction));
+        var decodedRootFunction =
+            ((SorobanAuthorizedCreateContractFunction)decodedAuth.RootInvocation.Function).HostFunction;
+        Assert.IsNotNull(decodedRootFunction);
+        Assert.IsInstanceOfType(decodedRootFunction.ContractIDPreimage, typeof(ContractIDAddressPreimage));
+        var decodedPreimage = (ContractIDAddressPreimage)decodedRootFunction.ContractIDPreimage;
+        Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
+        var salt = ((ContractIDAddressPreimage)hostFunction.ContractIDPreimage).Salt;
+        CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
+        Assert.IsInstanceOfType(decodedRootFunction.Executable, typeof(ContractExecutableWasm));
+        var decodedExecutable = (ContractExecutableWasm)decodedRootFunction.Executable;
+        Assert.AreEqual(_contractExecutableWasm.WasmHash, decodedExecutable.WasmHash);
+
+        var decodedSubInvocations = decodedAuth.RootInvocation.SubInvocations;
+        Assert.AreEqual(1, decodedSubInvocations.Length);
+        Assert.AreEqual(0, decodedSubInvocations[0].SubInvocations.Length);
+
+        var decodedSubFunction =
+            ((SorobanAuthorizedCreateContractFunction)decodedSubInvocations[0].Function).HostFunction;
+        Assert.IsNotNull(decodedSubFunction);
+        Assert.IsInstanceOfType(decodedSubFunction.ContractIDPreimage, typeof(ContractIDAddressPreimage));
+        decodedPreimage = (ContractIDAddressPreimage)decodedSubFunction.ContractIDPreimage;
+        Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
+        CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
+        Assert.IsInstanceOfType(decodedSubFunction.Executable, typeof(ContractExecutableWasm));
+        decodedExecutable = (ContractExecutableWasm)decodedSubFunction.Executable;
+        Assert.AreEqual(_contractExecutableWasm.WasmHash, decodedExecutable.WasmHash);
     }
 
-    /// <summary></summary>
-    /// <remarks>
-    ///     It's not necessary to check for the authEntry.Credentials type and properties,
-    ///     since there are already other tests in the <see cref="SorobanAuthorizationTest" /> class that cover different
-    ///     scenarios
-    ///     for <see cref="SorobanCredentials" />
-    /// </remarks>
     [TestMethod]
     public void TestSorobanAuthorizationEntryContainingAuthorizedContractFunction()
     {
         var contractAddress = new SCContractId("CDJ4RICANSXXZ275W2OY2U7RO73HYURBGBRHVW2UUXZNGEBIVBNRKEF7");
+        var functionName = "hello";
+        var argName = "world";
+        var args = new SCVal[] { new SCBool(false), new SCString(argName) };
         var authorizedContractFn = new SorobanAuthorizedContractFunction(
-            new InvokeContractHostFunction(contractAddress,
-                new SCSymbol("hello"),
-                new SCVal[] { new SCBool(false), new SCString("world") }));
+            new InvokeContractHostFunction(contractAddress, new SCSymbol(functionName), args));
 
-        var rootInvocation = new SorobanAuthorizedInvocation
-        {
-            Function = authorizedContractFn,
-            SubInvocations = new SorobanAuthorizedInvocation[]
-            {
-                new()
-                {
-                    Function = authorizedContractFn,
-                    SubInvocations = Array.Empty<SorobanAuthorizedInvocation>()
-                }
-            }
-        };
+        var rootInvocation = new SorobanAuthorizedInvocation(
+            authorizedContractFn,
+            [
+                new SorobanAuthorizedInvocation(authorizedContractFn, [])
+            ]);
 
-        var authEntry = new SorobanAuthorizationEntry(InitSorobanAddressCredentials(), rootInvocation);
+        var credentials = InitSorobanAddressCredentials();
+        var authEntry = new SorobanAuthorizationEntry(credentials, rootInvocation);
 
-        var authEntryXdrBase64 = authEntry.ToXdrBase64();
-        var decodedAuthEntry = SorobanAuthorizationEntry.FromXdrBase64(authEntryXdrBase64);
+        var xdrAuth = authEntry.ToXdr();
+        var decodedAuth = SorobanAuthorizationEntry.FromXdr(xdrAuth);
 
-        TestEqualInvocations(authEntry.RootInvocation, decodedAuthEntry.RootInvocation);
+        Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
+        var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
+        Assert.AreEqual(((SCAccountId)credentials.Address).InnerValue,
+            ((SCAccountId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(credentials.Nonce, decodedCredentials.Nonce);
+        Assert.AreEqual(credentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
+        Assert.AreEqual(((SCString)credentials.Signature).InnerValue,
+            ((SCString)decodedCredentials.Signature).InnerValue);
 
-        Assert.AreEqual(authEntry.Credentials.ToXdrBase64(), decodedAuthEntry.Credentials.ToXdrBase64());
-    }
+        Assert.IsInstanceOfType(decodedAuth.RootInvocation.Function, typeof(SorobanAuthorizedContractFunction));
+        var decodedRootFunction = ((SorobanAuthorizedContractFunction)decodedAuth.RootInvocation.Function).HostFunction;
+        Assert.IsNotNull(decodedRootFunction);
+        Assert.AreEqual(functionName, decodedRootFunction.FunctionName.InnerValue);
+        Assert.AreEqual(args.Length, decodedRootFunction.Args.Length);
+        Assert.AreEqual(((SCBool)args[0]).InnerValue, ((SCBool)decodedRootFunction.Args[0]).InnerValue);
+        Assert.AreEqual(((SCString)args[1]).InnerValue, ((SCString)decodedRootFunction.Args[1]).InnerValue);
 
-    /// <summary></summary>
-    /// <remarks>
-    ///     It's not necessary to check for the HostFunction type and properties,
-    ///     since there are already other tests in the <see cref="Operations.InvokeHostFunctionOperationTest" /> class that
-    ///     cover different scenarios
-    ///     for <see cref="HostFunction" />
-    /// </remarks>
-    private void TestEqualInvocations(SorobanAuthorizedInvocation expected, SorobanAuthorizedInvocation actual)
-    {
-        Assert.AreEqual(expected.Function.GetType(), actual.Function.GetType());
-        switch (expected.Function)
-        {
-            case SorobanAuthorizedContractFunction expectedContractFn:
-                var expectedContractHostFunction = expectedContractFn.HostFunction;
-                var actualContractHostFunction = ((SorobanAuthorizedContractFunction)actual.Function).HostFunction;
-                Assert.AreEqual(expectedContractHostFunction.ToXdrBase64(),
-                    actualContractHostFunction.ToXdrBase64());
-                break;
-            case SorobanAuthorizedCreateContractFunction expectedCreateContractFn:
-                var expectedCreateContractHostFunction = expectedCreateContractFn.HostFunction;
-                var actualCreateContractHostFunction =
-                    ((SorobanAuthorizedCreateContractFunction)actual.Function).HostFunction;
-                Assert.AreEqual(expectedCreateContractHostFunction.ToXdrBase64(),
-                    actualCreateContractHostFunction.ToXdrBase64());
-                break;
-        }
+        var decodedSubInvocations = decodedAuth.RootInvocation.SubInvocations;
+        Assert.AreEqual(1, decodedSubInvocations.Length);
+        Assert.AreEqual(0, decodedSubInvocations[0].SubInvocations.Length);
 
-        Assert.AreEqual(expected.SubInvocations.Length, actual.SubInvocations.Length);
-        for (var i = 0; i < expected.SubInvocations.Length; i++)
-            TestEqualInvocations(expected.SubInvocations[0], actual.SubInvocations[0]);
+        var decodedSubFunction = ((SorobanAuthorizedContractFunction)decodedSubInvocations[0].Function).HostFunction;
+        Assert.IsNotNull(decodedSubFunction);
+        Assert.AreEqual(functionName, decodedSubFunction.FunctionName.InnerValue);
+        Assert.AreEqual(args.Length, decodedSubFunction.Args.Length);
+        Assert.AreEqual(((SCBool)args[0]).InnerValue, ((SCBool)decodedSubFunction.Args[0]).InnerValue);
+        Assert.AreEqual(((SCString)args[1]).InnerValue, ((SCString)decodedSubFunction.Args[1]).InnerValue);
     }
 }

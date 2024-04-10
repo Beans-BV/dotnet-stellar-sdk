@@ -16,70 +16,83 @@ public class OfferEntry
         /// <summary>
         ///     Issuer has authorized account to perform transactions with its credit.
         /// </summary>
-        Passive = 1
+        PASSIVE = 1
+    }
+
+    public OfferEntry(
+        KeyPair seller,
+        long offerId,
+        Asset selling,
+        Asset buying,
+        string amount,
+        Price price,
+        OfferEntryFlags flags)
+    {
+        Seller = seller;
+        OfferId = offerId;
+        Selling = selling;
+        Buying = buying;
+        Amount = amount;
+        Price = price;
+        Flags = flags;
     }
 
     /// <summary>
     ///     Offer Seller.
     /// </summary>
-    public KeyPair Seller { get; set; }
+    public KeyPair Seller { get; }
 
     /// <summary>
     ///     Unique Id of Offer.
     /// </summary>
-    public long OfferId { get; set; }
+    public long OfferId { get; }
 
     /// <summary>
     ///     Selling Asset.
     /// </summary>
-    public Asset Selling { get; set; }
+    public Asset Selling { get; }
 
     /// <summary>
     ///     Buying Asset.
     /// </summary>
-    public Asset Buying { get; set; }
+    public Asset Buying { get; }
 
     /// <summary>
     ///     Amount of Selling asset.
     /// </summary>
-    public string Amount { get; set; }
+    public string Amount { get; }
 
     /// <summary>
     ///     Price for this offer, after fees.
     ///     Price of Selling in terms of Buying.
     ///     Price = AmountBuying / AmountSelling
     /// </summary>
-    public Price Price { get; set; }
+    public Price Price { get; }
 
     /// <summary>
     ///     Flags for offer.
     /// </summary>
-    public OfferEntryFlags Flags { get; set; }
+    public OfferEntryFlags Flags { get; }
 
     public static OfferEntry FromXdr(Xdr.OfferEntry entry)
     {
-        return new OfferEntry
-        {
-            Seller = KeyPair.FromXdrPublicKey(entry.SellerID.InnerValue),
-            OfferId = entry.OfferID.InnerValue,
-            Selling = Asset.FromXdr(entry.Selling),
-            Buying = Asset.FromXdr(entry.Buying),
-            Amount = StellarDotnetSdk.Amount.FromXdr(entry.Amount.InnerValue),
-            Price = Price.FromXdr(entry.Price),
-            Flags = FlagsFromXdr(entry.Flags.InnerValue)
-        };
+        return new OfferEntry(
+            KeyPair.FromXdrPublicKey(entry.SellerID.InnerValue),
+            entry.OfferID.InnerValue,
+            Asset.FromXdr(entry.Selling),
+            Asset.FromXdr(entry.Buying),
+            StellarDotnetSdk.Amount.FromXdr(entry.Amount.InnerValue),
+            Price.FromXdr(entry.Price),
+            FlagsFromXdr(entry.Flags.InnerValue));
     }
 
     public static OfferEntryFlags FlagsFromXdr(uint flags)
     {
-        switch (flags)
+        return flags switch
         {
-            case 0:
-                return 0;
-            case 1: // PASSIVE_FLAG
-                return OfferEntryFlags.Passive;
-            default:
-                throw new SystemException("Unknown OfferEntryFlags type");
-        }
+            0 => 0,
+            1 => OfferEntryFlags.PASSIVE,
+            _ => throw new ArgumentOutOfRangeException(nameof(flags), "Unknown OfferEntryFlags type.")
+        };
     }
 }

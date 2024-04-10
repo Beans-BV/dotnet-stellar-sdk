@@ -14,9 +14,11 @@ public class TransactionDeserializerTest
     [TestMethod]
     public void TestDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "transactionTransaction.json"));
+        var jsonPath = Utils.GetTestDataPath("transactionTransaction.json");
+        var json = File.ReadAllText(jsonPath);
         var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
 
+        Assert.IsNotNull(transaction);
         AssertTestData(transaction);
         Assert.AreEqual(100L, transaction.FeeCharged);
         Assert.AreEqual(1050L, transaction.MaxFee);
@@ -25,8 +27,11 @@ public class TransactionDeserializerTest
     [TestMethod]
     public void TestDeserializeOfVersionBefore020()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "transactionTransactionPre020.json"));
+        var jsonPath = Utils.GetTestDataPath("transactionTransactionPre020.json");
+        var json = File.ReadAllText(jsonPath);
         var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
+
+        Assert.IsNotNull(transaction);
         AssertTestData(transaction);
         Assert.AreEqual(0L, transaction.FeeCharged);
         Assert.AreEqual(0L, transaction.MaxFee);
@@ -35,8 +40,11 @@ public class TransactionDeserializerTest
     [TestMethod]
     public void TestDeserializeWithTextMemo()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "transactionTransactionTextMemo.json"));
+        var jsonPath = Utils.GetTestDataPath("transactionTransactionTextMemo.json");
+        var json = File.ReadAllText(jsonPath);
         var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
+
+        Assert.IsNotNull(transaction);
         var memo = (MemoText)transaction.Memo;
         Assert.IsNotNull(memo);
         var encoded = Convert.ToBase64String(memo.MemoBytesValue);
@@ -46,13 +54,16 @@ public class TransactionDeserializerTest
     [TestMethod]
     public void TestSerializeDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "transactionTransaction.json"));
+        var jsonPath = Utils.GetTestDataPath("transactionTransaction.json");
+        var json = File.ReadAllText(jsonPath);
         var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
         var serialized = JsonConvert.SerializeObject(transaction);
         var back = JsonConvert.DeserializeObject<TransactionResponse>(serialized);
         Assert.IsNotNull(back);
         Assert.IsTrue(back.Successful);
         AssertTestData(back);
+
+        Assert.IsNotNull(transaction);
         Assert.AreEqual(100L, transaction.FeeCharged);
         Assert.AreEqual(1050L, transaction.MaxFee);
     }
@@ -96,9 +107,11 @@ public class TransactionDeserializerTest
     [TestMethod]
     public void TestDeserializeWithoutMemo()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "transactionTransactionWithoutMemo.json"));
+        var jsonPath = Utils.GetTestDataPath("transactionTransactionWithoutMemo.json");
+        var json = File.ReadAllText(jsonPath);
         var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
 
+        Assert.IsNotNull(transaction);
         Assert.IsFalse(transaction.Successful);
         Assert.IsTrue(transaction.Memo is MemoNone);
     }
@@ -106,14 +119,32 @@ public class TransactionDeserializerTest
     [TestMethod]
     public void TestDeserializeWithMemoText()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "transactionTransactionWithMemo.json"));
+        var jsonPath = Utils.GetTestDataPath("transactionTransactionWithMemo.json");
+        var json = File.ReadAllText(jsonPath);
         var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
-        var copyTransaction = new TransactionResponse(transaction.Hash, transaction.Ledger, transaction.CreatedAt,
-            transaction.SourceAccount,
-            transaction.FeeAccount, transaction.Successful, transaction.PagingToken, transaction.SourceAccountSequence,
-            transaction.MaxFee, transaction.FeeCharged, transaction.OperationCount, transaction.EnvelopeXdr,
-            transaction.ResultXdr, transaction.ResultMetaXdr, transaction.Memo, transaction.Signatures,
-            transaction.FeeBumpTx, transaction.InnerTx, transaction.Links);
+        Assert.IsNotNull(transaction);
+        var copyTransaction = new TransactionResponse
+        {
+            Hash = transaction.Hash,
+            Ledger = transaction.Ledger,
+            CreatedAt = transaction.CreatedAt,
+            SourceAccount = transaction.SourceAccount,
+            FeeAccount = transaction.FeeAccount,
+            Successful = transaction.Successful,
+            SourceAccountSequence = transaction.SourceAccountSequence,
+            FeeCharged = transaction.FeeCharged,
+            MaxFee = transaction.MaxFee,
+            OperationCount = transaction.OperationCount,
+            EnvelopeXdr = transaction.EnvelopeXdr,
+            ResultXdr = transaction.ResultXdr,
+            ResultMetaXdr = transaction.ResultMetaXdr,
+            Signatures = transaction.Signatures,
+            FeeBumpTx = transaction.FeeBumpTx,
+            InnerTx = transaction.InnerTx,
+            Links = transaction.Links,
+            Memo = transaction.Memo,
+            PagingToken = transaction.PagingToken
+        };
 
         Assert.AreEqual(transaction.MemoValue, copyTransaction.MemoValue);
         Assert.IsFalse(transaction.Successful);
@@ -122,16 +153,29 @@ public class TransactionDeserializerTest
     [TestMethod]
     public void TestDeserializeTransactionPreProtocol13()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "transactionTransaction.json"));
+        var jsonPath = Utils.GetTestDataPath("transactionTransaction.json");
+        var json = File.ReadAllText(jsonPath);
         var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
 
-        var transaction2 = new TransactionResponse(transaction.Hash, transaction.Ledger, transaction.CreatedAt,
-            transaction.SourceAccount,
-            transaction.Successful, transaction.PagingToken, transaction.SourceAccountSequence, transaction.FeeCharged,
-            transaction.OperationCount,
-            transaction.EnvelopeXdr, transaction.ResultXdr, transaction.ResultMetaXdr, transaction.Memo,
-            transaction.Links);
+        Assert.IsNotNull(transaction);
 
+        var transaction2 = new TransactionResponse
+        {
+            Hash = transaction.Hash,
+            Ledger = transaction.Ledger,
+            CreatedAt = transaction.CreatedAt,
+            SourceAccount = transaction.SourceAccount,
+            Successful = transaction.Successful,
+            SourceAccountSequence = transaction.SourceAccountSequence,
+            FeeCharged = transaction.FeeCharged,
+            OperationCount = transaction.OperationCount,
+            EnvelopeXdr = transaction.EnvelopeXdr,
+            ResultXdr = transaction.ResultXdr,
+            ResultMetaXdr = transaction.ResultMetaXdr,
+            Links = transaction.Links,
+            Memo = transaction.Memo,
+            PagingToken = transaction.PagingToken
+        };
 
         Assert.AreEqual(transaction.Hash, transaction2.Hash);
         Assert.AreEqual(transaction.Ledger, transaction2.Ledger);
@@ -146,16 +190,32 @@ public class TransactionDeserializerTest
     [TestMethod]
     public void TestDeserializeFeeBump()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "transactionFeeBump.json"));
+        var jsonPath = Utils.GetTestDataPath("transactionFeeBump.json");
+        var json = File.ReadAllText(jsonPath);
         var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
-
-        var transaction2 = new TransactionResponse(transaction.Hash, transaction.Ledger, transaction.CreatedAt,
-            transaction.SourceAccount, transaction.FeeAccount,
-            transaction.Successful, transaction.PagingToken, transaction.SourceAccountSequence, transaction.MaxFee,
-            123L, transaction.OperationCount,
-            transaction.EnvelopeXdr, transaction.ResultXdr, transaction.ResultMetaXdr, transaction.Memo,
-            transaction.Signatures, transaction.FeeBumpTx,
-            transaction.InnerTx, transaction.Links);
+        Assert.IsNotNull(transaction);
+        var transaction2 = new TransactionResponse
+        {
+            Hash = transaction.Hash,
+            Ledger = transaction.Ledger,
+            CreatedAt = transaction.CreatedAt,
+            SourceAccount = transaction.SourceAccount,
+            FeeAccount = transaction.FeeAccount,
+            Successful = transaction.Successful,
+            PagingToken = transaction.PagingToken,
+            SourceAccountSequence = transaction.SourceAccountSequence,
+            MaxFee = transaction.MaxFee,
+            FeeCharged = 123L,
+            OperationCount = transaction.OperationCount,
+            EnvelopeXdr = transaction.EnvelopeXdr,
+            ResultXdr = transaction.ResultXdr,
+            ResultMetaXdr = transaction.ResultMetaXdr,
+            Memo = transaction.Memo,
+            Signatures = transaction.Signatures,
+            FeeBumpTx = transaction.FeeBumpTx,
+            InnerTx = transaction.InnerTx,
+            Links = transaction.Links
+        };
 
 
         Assert.AreEqual(transaction.Hash, transaction2.Hash);
@@ -182,9 +242,11 @@ public class TransactionDeserializerTest
     [TestMethod]
     public void TestDeserializeMuxed()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "transactionMuxed.json"));
+        var jsonPath = Utils.GetTestDataPath("transactionMuxed.json");
+        var json = File.ReadAllText(jsonPath);
         var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
 
+        Assert.IsNotNull(transaction);
         Assert.AreEqual("GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2", transaction.SourceAccount);
         Assert.AreEqual("MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24",
             transaction.AccountMuxed);

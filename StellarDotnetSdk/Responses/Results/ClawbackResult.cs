@@ -1,5 +1,5 @@
 ﻿using System;
-using StellarDotnetSdk.Xdr;
+using ResultCodeEnum = StellarDotnetSdk.Xdr.ClawbackResultCode.ClawbackResultCodeEnum;
 
 namespace StellarDotnetSdk.Responses.Results;
 
@@ -7,20 +7,40 @@ public class ClawbackResult : OperationResult
 {
     public static ClawbackResult FromXdr(Xdr.ClawbackResult result)
     {
-        switch (result.Discriminant.InnerValue)
+        return result.Discriminant.InnerValue switch
         {
-            case ClawbackResultCode.ClawbackResultCodeEnum.CLAWBACK_MALFORMED:
-                return new ClawbackMalformed();
-            case ClawbackResultCode.ClawbackResultCodeEnum.CLAWBACK_NOT_CLAWBACK_ENABLED:
-                return new ClawbackNotClawbackEnabled();
-            case ClawbackResultCode.ClawbackResultCodeEnum.CLAWBACK_NO_TRUST:
-                return new ClawbackNoTrust();
-            case ClawbackResultCode.ClawbackResultCodeEnum.CLAWBACK_SUCCESS:
-                return new ClawbackSuccess();
-            case ClawbackResultCode.ClawbackResultCodeEnum.CLAWBACK_UNDERFUNDED:
-                return new ClawbackUnderfunded();
-            default:
-                throw new SystemException("Unknown ClawbackResult type");
-        }
+            ResultCodeEnum.CLAWBACK_MALFORMED => new ClawbackMalformed(),
+            ResultCodeEnum.CLAWBACK_NOT_CLAWBACK_ENABLED => new ClawbackNotClawbackEnabled(),
+            ResultCodeEnum.CLAWBACK_NO_TRUST => new ClawbackNoTrust(),
+            ResultCodeEnum.CLAWBACK_SUCCESS => new ClawbackSuccess(),
+            ResultCodeEnum.CLAWBACK_UNDERFUNDED => new ClawbackUnderfunded(),
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ClawbackResult type.")
+        };
     }
 }
+
+public class ClawbackSuccess : ClawbackResult
+{
+    public override bool IsSuccess => true;
+}
+
+/// <summary>
+///     The input to the clawback is invalid.
+/// </summary>
+public class ClawbackMalformed : ClawbackResult;
+
+/// <summary>
+///     The trustline between From and the issuer account for this Asset does not have clawback enabled.
+/// </summary>
+public class ClawbackNotClawbackEnabled : ClawbackResult;
+
+/// <summary>
+///     The From account does not trust the issuer of the asset.
+/// </summary>
+public class ClawbackNoTrust : ClawbackResult;
+
+/// <summary>
+///     The From account does not have a sufficient available balance of the asset (after accounting for selling
+///     liabilities).
+/// </summary>
+public class ClawbackUnderfunded : ClawbackResult;

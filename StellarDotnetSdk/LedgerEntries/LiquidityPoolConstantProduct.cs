@@ -1,5 +1,6 @@
 ﻿using System;
 using StellarDotnetSdk.Xdr;
+using LiquidityPoolConstantProductParameters = StellarDotnetSdk.LiquidityPool.LiquidityPoolConstantProductParameters;
 
 namespace StellarDotnetSdk.LedgerEntries;
 

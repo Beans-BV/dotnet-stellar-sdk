@@ -1,8 +1,8 @@
 ﻿using System;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Xdr;
-using ledgerkeys_LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
-using xdr_Int64 = StellarDotnetSdk.Xdr.Int64;
+using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
+using Int64 = StellarDotnetSdk.Xdr.Int64;
 
 namespace StellarDotnetSdk.Soroban;
 
@@ -15,11 +15,11 @@ public class SorobanTransactionData
     ///     <param name="key"></param>
     ///     <param name="toExtend">True: To be used in an RestoreTtl operation. False: To be used in a ExtendTtl operation.</param>
     /// </summary>
-    public SorobanTransactionData(ledgerkeys_LedgerKey key, bool toExtend)
+    public SorobanTransactionData(LedgerKey key, bool toExtend)
     {
         var footprint = toExtend
-            ? new LedgerFootprint { ReadOnly = new[] { key } }
-            : new LedgerFootprint { ReadWrite = new[] { key } };
+            ? new LedgerFootprint { ReadOnly = [key] }
+            : new LedgerFootprint { ReadWrite = [key] };
         Resources = new SorobanResources(footprint, 0, 0, 0);
     }
 
@@ -40,7 +40,7 @@ public class SorobanTransactionData
         {
             Ext = ExtensionPoint.ToXdr(),
             Resources = Resources.ToXdr(),
-            ResourceFee = new xdr_Int64(ResourceFee)
+            ResourceFee = new Int64(ResourceFee)
         };
     }
 

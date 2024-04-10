@@ -3,53 +3,36 @@ using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
+#nullable disable
 /// <summary>
 ///     Represents ChangeTrust operation response.
-///     See: https://www.stellar.org/developers/horizon/reference/resources/operation.html
-///     <seealso cref="Requests.OperationsRequestBuilder" />
-///     <seealso cref="Server" />
 /// </summary>
 public class ChangeTrustOperationResponse : OperationResponse
 {
-    public ChangeTrustOperationResponse()
-    {
-    }
-
-    public ChangeTrustOperationResponse(string assetCode, string assetIssuer, string assetType, string limit,
-        string trustee, string trustor)
-    {
-        AssetCode = assetCode;
-        AssetIssuer = assetIssuer;
-        AssetType = assetType;
-        Limit = limit;
-        Trustee = trustee;
-        Trustor = trustor;
-    }
-
     public override int TypeId => 6;
 
     [JsonProperty(PropertyName = "asset_code")]
-    public string AssetCode { get; private set; }
+    public string AssetCode { get; init; }
 
     [JsonProperty(PropertyName = "asset_issuer")]
-    public string AssetIssuer { get; private set; }
+    public string AssetIssuer { get; init; }
 
     [JsonProperty(PropertyName = "asset_type")]
-    public string AssetType { get; private set; }
+    public string AssetType { get; init; }
 
-    [JsonProperty(PropertyName = "limit")] public string Limit { get; private set; }
+    [JsonProperty(PropertyName = "limit")] public string Limit { get; init; }
 
     [JsonProperty(PropertyName = "trustee")]
-    public string Trustee { get; private set; }
+    public string Trustee { get; init; }
 
     [JsonProperty(PropertyName = "trustor")]
-    public string Trustor { get; private set; }
+    public string Trustor { get; init; }
 
     [JsonProperty(PropertyName = "trustor_muxed")]
-    public string TrustorMuxed { get; private set; }
+    public string TrustorMuxed { get; init; }
 
     [JsonProperty(PropertyName = "trustor_muxed_id")]
-    public ulong? TrustorMuxedID { get; private set; }
+    public ulong? TrustorMuxedID { get; init; }
 
     public AssetTypeCreditAlphaNum Asset => Assets.Asset.CreateNonNativeAsset(AssetCode, AssetIssuer);
 }

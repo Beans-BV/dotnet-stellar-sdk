@@ -1,1 +1,1 @@
-xdrgen -o ./generated *.x --language=csharp --namespace=stellar_dotnet_sdk.xdr
+xdrgen -o ./ ./schemes/*.x --language=csharp --namespace=StellarDotnetSdk.Xdr

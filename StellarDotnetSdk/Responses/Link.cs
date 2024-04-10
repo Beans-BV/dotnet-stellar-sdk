@@ -22,9 +22,8 @@ public class Link
     public virtual bool Templated => false;
 }
 
-[JsonConverter(typeof(LinkDeserializer))]
-public class Link<TResponse> : Link
-    where TResponse : Response
+[JsonConverter(typeof(LinkJsonConverter))]
+public class Link<TResponse> : Link where TResponse : Response
 {
     public Link(string href) : base(href)
     {
@@ -32,14 +31,12 @@ public class Link<TResponse> : Link
 
     public static Link<TResponse> Create(string href, bool templated)
     {
-        if (templated) return new TemplatedLink<TResponse>(href);
-        return new Link<TResponse>(href);
+        return templated ? new TemplatedLink<TResponse>(href) : new Link<TResponse>(href);
     }
 
     /// <summary>
     ///     Resolve template Uri by performing variables substitution.
     /// </summary>
-    /// <returns></returns>
     public virtual Uri Resolve()
     {
         return Uri;
@@ -63,9 +60,6 @@ public class Link<TResponse> : Link
     /// <summary>
     ///     Follow the Link, retrieving the linked resource.
     /// </summary>
-    /// <param name="httpClient"></param>
-    /// <param name="parameters"></param>
-    /// <returns></returns>
     public Task<TResponse> Follow(HttpClient httpClient, IDictionary<string, object> parameters)
     {
         return DoFollow(httpClient, Resolve(parameters));
@@ -74,8 +68,6 @@ public class Link<TResponse> : Link
     /// <summary>
     ///     Follow the Link, retrieving the linked resource.
     /// </summary>
-    /// <param name="httpClient"></param>
-    /// <returns></returns>
     public Task<TResponse> Follow(HttpClient httpClient)
     {
         return Follow(httpClient, null);
@@ -84,7 +76,6 @@ public class Link<TResponse> : Link
     /// <summary>
     ///     Follow the Link, retrieving the linked resource.
     /// </summary>
-    /// <returns></returns>
     public Task<TResponse> Follow()
     {
         return Follow(new HttpClient());
@@ -93,8 +84,6 @@ public class Link<TResponse> : Link
     /// <summary>
     ///     Follow the Link, retrieving the linked resource.
     /// </summary>
-    /// <param name="parameters"></param>
-    /// <returns></returns>
     public Task<TResponse> Follow(object parameters)
     {
         return Follow(new HttpClient(), parameters);
@@ -103,8 +92,6 @@ public class Link<TResponse> : Link
     /// <summary>
     ///     Follow the Link, retrieving the linked resource.
     /// </summary>
-    /// <param name="parameters"></param>
-    /// <returns></returns>
     public Task<TResponse> Follow(IDictionary<string, object> parameters)
     {
         return Follow(new HttpClient(), parameters);
@@ -128,13 +115,13 @@ public class TemplatedLink<TResponse> : Link<TResponse>
         _uriTemplate = null;
     }
 
-    public override Uri Uri => ParseUri()?.Resolve();
+    public override Uri Uri => ParseUri().Resolve();
 
     public override bool Templated => true;
 
     public override Uri Resolve()
     {
-        return ParseUri()?.Resolve();
+        return ParseUri().Resolve();
     }
 
     /// <summary>
@@ -152,7 +139,7 @@ public class TemplatedLink<TResponse> : Link<TResponse>
     /// <returns></returns>
     public override Uri Resolve(object parameters)
     {
-        return ParseUri()?.Resolve(parameters);
+        return ParseUri().Resolve(parameters);
     }
 
     /// <summary>
@@ -162,13 +149,11 @@ public class TemplatedLink<TResponse> : Link<TResponse>
     /// <returns></returns>
     public override Uri Resolve(IDictionary<string, object> parameters)
     {
-        return ParseUri()?.Resolve(parameters);
+        return ParseUri().Resolve(parameters);
     }
-
 
     private UriTemplate ParseUri()
     {
-        if (_uriTemplate is null) _uriTemplate = new UriTemplate(Href);
-        return _uriTemplate;
+        return _uriTemplate ??= new UriTemplate(Href);
     }
 }

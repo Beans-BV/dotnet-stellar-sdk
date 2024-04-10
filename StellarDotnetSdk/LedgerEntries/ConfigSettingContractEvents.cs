@@ -4,14 +4,14 @@ namespace StellarDotnetSdk.LedgerEntries;
 
 public class ConfigSettingContractEvents : LedgerEntryConfigSetting
 {
-    private ConfigSettingContractEvents(uint txMaxContractEventsSizeBytes, long feeContractEvents1KB)
+    private ConfigSettingContractEvents(uint txMaxContractEventsSizeBytes, long feeContractEvents1Kb)
     {
         TxMaxContractEventsSizeBytes = txMaxContractEventsSizeBytes;
-        FeeContractEvents1KB = feeContractEvents1KB;
+        FeeContractEvents1Kb = feeContractEvents1Kb;
     }
 
     public uint TxMaxContractEventsSizeBytes { get; }
-    public long FeeContractEvents1KB { get; }
+    public long FeeContractEvents1Kb { get; }
 
     public static ConfigSettingContractEvents FromXdr(ConfigSettingContractEventsV0 xdrConfig)
     {

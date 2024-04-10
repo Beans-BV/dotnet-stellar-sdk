@@ -13,16 +13,18 @@ public class ManageDataOperationResponseTest
     [TestMethod]
     public void TestManageDataOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/manageData", "manageData.json"));
+        var jsonPath = Utils.GetTestDataPath("manageData.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertManageDataData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeManageDataOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/manageData", "manageData.json"));
+        var jsonPath = Utils.GetTestDataPath("manageData.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -44,16 +46,18 @@ public class ManageDataOperationResponseTest
     [TestMethod]
     public void TestDeserializeManageDataOperationValueEmpty()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/manageData", "manageDataValueEmpty.json"));
+        var jsonPath = Utils.GetTestDataPath("manageDataValueEmpty.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertManageDataValueEmptyData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeManageDataOperationValueEmpty()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/manageData", "manageDataValueEmpty.json"));
+        var jsonPath = Utils.GetTestDataPath("manageDataValueEmpty.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);

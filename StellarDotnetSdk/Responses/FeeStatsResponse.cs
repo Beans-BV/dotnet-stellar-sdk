@@ -2,81 +2,53 @@
 
 namespace StellarDotnetSdk.Responses;
 
+#nullable disable
+
 public class FeeStatsResponse : Response
 {
-    public FeeStatsResponse(decimal ledgerCapacityUsage, long lastLedgerBaseFee, uint lastLedger,
-        FeeStatsResponseData feeCharged, FeeStatsResponseData maxFee)
-    {
-        LedgerCapacityUsage = ledgerCapacityUsage;
-        LastLedgerBaseFee = lastLedgerBaseFee;
-        LastLedger = lastLedger;
-        FeeCharged = feeCharged;
-        MaxFee = maxFee;
-    }
-
     [JsonProperty(PropertyName = "ledger_capacity_usage")]
-    public decimal LedgerCapacityUsage { get; }
+    public decimal LedgerCapacityUsage { get; init; }
 
     [JsonProperty(PropertyName = "last_ledger_base_fee")]
-    public long LastLedgerBaseFee { get; }
+    public long LastLedgerBaseFee { get; init; }
 
     [JsonProperty(PropertyName = "last_ledger")]
-    public uint LastLedger { get; }
+    public uint LastLedger { get; init; }
 
     [JsonProperty(PropertyName = "fee_charged")]
-    public FeeStatsResponseData FeeCharged { get; private set; }
+    public FeeStatsResponseData FeeCharged { get; init; }
 
     [JsonProperty(PropertyName = "max_fee")]
-    public FeeStatsResponseData MaxFee { get; private set; }
+    public FeeStatsResponseData MaxFee { get; init; }
 
     public class FeeStatsResponseData
     {
-        public FeeStatsResponseData(long max, long min, long mode, long p10, long p20, long p30, long p40, long p50,
-            long p60,
-            long p70, long p80, long p90, long p95, long p99)
-        {
-            Max = max;
-            Min = min;
-            Mode = mode;
-            P10 = p10;
-            P20 = p20;
-            P30 = p30;
-            P40 = p40;
-            P50 = p50;
-            P60 = p60;
-            P70 = p70;
-            P80 = p80;
-            P90 = p90;
-            P95 = p95;
-            P99 = p99;
-        }
+        [JsonProperty(PropertyName = "max")] public long Max { get; init; }
 
-        [JsonProperty(PropertyName = "max")] public long Max { get; }
+        [JsonProperty(PropertyName = "min")] public long Min { get; init; }
 
-        [JsonProperty(PropertyName = "min")] public long Min { get; }
+        [JsonProperty(PropertyName = "mode")] public long Mode { get; init; }
 
-        [JsonProperty(PropertyName = "mode")] public long Mode { get; }
+        [JsonProperty(PropertyName = "p10")] public long P10 { get; init; }
 
-        [JsonProperty(PropertyName = "p10")] public long P10 { get; }
+        [JsonProperty(PropertyName = "p20")] public long P20 { get; init; }
 
-        [JsonProperty(PropertyName = "p20")] public long P20 { get; }
+        [JsonProperty(PropertyName = "p30")] public long P30 { get; init; }
 
-        [JsonProperty(PropertyName = "p30")] public long P30 { get; }
+        [JsonProperty(PropertyName = "p40")] public long P40 { get; init; }
 
-        [JsonProperty(PropertyName = "p40")] public long P40 { get; }
+        [JsonProperty(PropertyName = "p50")] public long P50 { get; init; }
 
-        [JsonProperty(PropertyName = "p50")] public long P50 { get; }
+        [JsonProperty(PropertyName = "p60")] public long P60 { get; init; }
 
-        [JsonProperty(PropertyName = "p60")] public long P60 { get; }
+        [JsonProperty(PropertyName = "p70")] public long P70 { get; init; }
 
-        [JsonProperty(PropertyName = "p70")] public long P70 { get; }
+        [JsonProperty(PropertyName = "p80")] public long P80 { get; init; }
 
-        [JsonProperty(PropertyName = "p80")] public long P80 { get; }
+        [JsonProperty(PropertyName = "p90")] public long P90 { get; init; }
 
-        [JsonProperty(PropertyName = "p90")] public long P90 { get; }
+        [JsonProperty(PropertyName = "p95")] public long P95 { get; init; }
 
-        [JsonProperty(PropertyName = "p95")] public long P95 { get; }
-
-        [JsonProperty(PropertyName = "p99")] public long P99 { get; }
+        [JsonProperty(PropertyName = "p99")] public long P99 { get; init; }
     }
 }

@@ -3,70 +3,49 @@ using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
+#nullable disable
 /// <summary>
 ///     Represents CreatePassiveOffer operation response.
-///     See: https://www.stellar.org/developers/horizon/reference/resources/operation.html
-///     <seealso cref="Requests.OperationsRequestBuilder" />
-///     <seealso cref="Server" />
 /// </summary>
 public class CreatePassiveOfferOperationResponse : OperationResponse
 {
-    public CreatePassiveOfferOperationResponse()
-    {
-    }
-
-    public CreatePassiveOfferOperationResponse(int offerId, string amount, string price, string buyingAssetType,
-        string buyingAssetCode, string buyingAssetIssuer, string sellingAssetType, string sellingAssetCode,
-        string sellingAssetIssuer)
-    {
-        OfferId = offerId;
-        Amount = amount;
-        Price = price;
-        BuyingAssetType = buyingAssetType;
-        BuyingAssetCode = buyingAssetCode;
-        BuyingAssetIssuer = buyingAssetIssuer;
-        SellingAssetType = sellingAssetType;
-        SellingAssetCode = sellingAssetCode;
-        SellingAssetIssuer = sellingAssetIssuer;
-    }
-
     public override int TypeId => 4;
 
     [JsonProperty(PropertyName = "offer_id")]
-    public int OfferId { get; private set; }
+    public int OfferId { get; init; }
 
     [JsonProperty(PropertyName = "amount")]
-    public string Amount { get; private set; }
+    public string Amount { get; init; }
 
     /// <summary>
     ///     The ask price as a ratio.
     /// </summary>
     [JsonProperty(PropertyName = "price_r")]
-    public Price PriceRatio { get; private set; }
+    public Price PriceRatio { get; init; }
 
     /// <summary>
     ///     The ask price.
     /// </summary>
     [JsonProperty(PropertyName = "price")]
-    public string Price { get; private set; }
+    public string Price { get; init; }
 
     [JsonProperty(PropertyName = "buying_asset_type")]
-    public string BuyingAssetType { get; private set; }
+    public string BuyingAssetType { get; init; }
 
     [JsonProperty(PropertyName = "buying_asset_code")]
-    public string BuyingAssetCode { get; private set; }
+    public string BuyingAssetCode { get; init; }
 
     [JsonProperty(PropertyName = "buying_asset_issuer")]
-    public string BuyingAssetIssuer { get; private set; }
+    public string BuyingAssetIssuer { get; init; }
 
     [JsonProperty(PropertyName = "selling_asset_type")]
-    public string SellingAssetType { get; private set; }
+    public string SellingAssetType { get; init; }
 
     [JsonProperty(PropertyName = "selling_asset_code")]
-    public string SellingAssetCode { get; private set; }
+    public string SellingAssetCode { get; init; }
 
     [JsonProperty(PropertyName = "selling_asset_issuer")]
-    public string SellingAssetIssuer { get; private set; }
+    public string SellingAssetIssuer { get; init; }
 
     public Asset BuyingAsset => Asset.Create(BuyingAssetType, BuyingAssetCode, BuyingAssetIssuer);
 

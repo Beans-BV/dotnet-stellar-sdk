@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Xdr;
 using Asset = StellarDotnetSdk.Assets.Asset;
 
@@ -24,13 +25,21 @@ public class ClaimLiquidityAtomTest
         var liquidityPool = new LiquidityPoolID(LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
             asset1, asset2, 100);
         claimLiquidityAtomXdr.LiquidityPoolID = liquidityPool.ToXdr();
+        var claimAtom = new StellarDotnetSdk.Xdr.ClaimAtom
+        {
+            Discriminant = new ClaimAtomType
+            {
+                InnerValue = ClaimAtomType.ClaimAtomTypeEnum.CLAIM_ATOM_TYPE_LIQUIDITY_POOL
+            },
+            LiquidityPool = claimLiquidityAtomXdr
+        };
 
-        var claimLiquidityAtom = StellarDotnetSdk.Responses.Results.ClaimLiquidityAtom.FromXdr(claimLiquidityAtomXdr);
+        var claimAtomLiquidityPool = (ClaimAtomLiquidityPool)ClaimAtom.FromXdr(claimAtom);
 
-        Assert.AreEqual(claimLiquidityAtom.AmountBought, "0.00001");
-        Assert.AreEqual(claimLiquidityAtom.AmountSold, "0.00001");
-        Assert.AreEqual(claimLiquidityAtom.AssetBought, asset1);
-        Assert.AreEqual(claimLiquidityAtom.AssetSold, asset2);
-        Assert.AreEqual(claimLiquidityAtom.LiquidityPoolID.Hash, liquidityPool.Hash);
+        Assert.AreEqual(claimAtomLiquidityPool.AmountBought, "0.00001");
+        Assert.AreEqual(claimAtomLiquidityPool.AmountSold, "0.00001");
+        Assert.AreEqual(claimAtomLiquidityPool.AssetBought, asset1);
+        Assert.AreEqual(claimAtomLiquidityPool.AssetSold, asset2);
+        Assert.AreEqual(claimAtomLiquidityPool.LiquidityPoolId.Hash, liquidityPool.Hash);
     }
 }

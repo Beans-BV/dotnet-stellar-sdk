@@ -119,7 +119,7 @@ public class WebAuthenticationTest
 
         var nonce = new byte[64];
         var tx = new TransactionBuilder(new Account(serverKeypair.AccountId, 0))
-            .AddOperation(new ManageDataOperation.Builder("NET auth", nonce).Build())
+            .AddOperation(new ManageDataOperation("NET auth", nonce))
             .Build();
         tx.Sign(clientKeypair);
 
@@ -164,9 +164,7 @@ public class WebAuthenticationTest
 
         var tx = new TransactionBuilder(new Account(serverKeypair.AccountId, -1))
             .AddOperation(
-                new AccountMergeOperation.Builder(serverKeypair)
-                    .SetSourceAccount(clientKeypair)
-                    .Build())
+                new AccountMergeOperation(serverKeypair, clientKeypair))
             .Build();
         tx.Sign(clientKeypair);
 
@@ -188,7 +186,7 @@ public class WebAuthenticationTest
         var now = DateTimeOffset.Now;
         var nonce = new byte[64];
         var tx = new TransactionBuilder(new Account(serverKeypair.AccountId, -1))
-            .AddOperation(new ManageDataOperation.Builder("NET auth", nonce).Build())
+            .AddOperation(new ManageDataOperation("NET auth", nonce))
             .Build();
         tx.Sign(clientKeypair);
 
@@ -210,10 +208,7 @@ public class WebAuthenticationTest
         var now = DateTimeOffset.Now;
         var nonce = new byte[64];
         var tx = new TransactionBuilder(new Account(serverKeypair.AccountId, -1))
-            .AddOperation(
-                new ManageDataOperation.Builder("NET auth", nonce)
-                    .SetSourceAccount(clientKeypair)
-                    .Build())
+            .AddOperation(new ManageDataOperation("NET auth", nonce, clientKeypair))
             .Build();
         tx.Sign(clientKeypair);
 
@@ -428,8 +423,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -439,10 +433,10 @@ public class WebAuthenticationTest
         transaction.Sign(serverKeypair);
         transaction.Sign(clientKeypair);
 
-        var readTransactionID = WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId,
+        var readTransactionId = WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId,
             HomeDomain, WebAuthDomain, Network.Test());
-
-        Assert.AreEqual(clientKeypair.AccountId, readTransactionID);
+        Assert.IsNotNull(readTransactionId);
+        Assert.AreEqual(clientKeypair.AccountId, readTransactionId);
     }
 
     [TestMethod]
@@ -460,8 +454,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -470,10 +463,10 @@ public class WebAuthenticationTest
 
         transaction.Sign(serverKeypair);
 
-        var readTransactionID = WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId,
+        var readTransactionId = WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId,
             HomeDomain, WebAuthDomain, Network.Test());
-
-        Assert.AreEqual(clientKeypair.AccountId, readTransactionID);
+        Assert.IsNotNull(readTransactionId);
+        Assert.AreEqual(clientKeypair.AccountId, readTransactionId);
     }
 
     [TestMethod]
@@ -490,8 +483,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -510,7 +502,7 @@ public class WebAuthenticationTest
     }
 
     [TestMethod]
-    public void TestReadChallengeTransactionInvalidServerAccountIDMismatch()
+    public void TestReadChallengeTransactionInvalidServerAccountIdMismatch()
     {
         Network.Use(Network.Test());
 
@@ -523,8 +515,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -558,8 +549,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -585,7 +575,7 @@ public class WebAuthenticationTest
         var txSource = new Account(serverKeypair.Address, -1);
         var opSource = new Account(clientKeypair.Address, 0);
 
-        var operation = new BumpSequenceOperation.Builder(100).SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new BumpSequenceOperation(100, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -618,7 +608,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data);
         var transaction = new TransactionBuilder(txSource)
             .SetFee(100)
             .AddOperation(operation)
@@ -654,8 +644,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA?AAAAAAAAAAAAAAAAAAAAAAAAAA");
         var base64Data = plainTextBytes;
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -687,8 +676,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -728,8 +716,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -771,8 +758,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -818,8 +804,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -866,8 +851,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -913,8 +897,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -960,8 +943,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1002,8 +984,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1047,8 +1028,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1089,8 +1069,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1125,8 +1104,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1166,8 +1144,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1208,8 +1185,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1253,8 +1229,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1298,8 +1273,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1340,8 +1314,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1383,8 +1356,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1424,8 +1396,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1467,8 +1438,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1509,8 +1479,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1521,10 +1490,7 @@ public class WebAuthenticationTest
         transaction.Sign(clientKeypair);
         transaction.Sign(clientKeypair);
 
-        var signers = new[]
-        {
-            clientKeypair.Address
-        };
+        var signers = new[] { clientKeypair.Address };
 
         try
         {
@@ -1551,8 +1517,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1589,10 +1554,8 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
-        var notValidOperation = new PaymentOperation.Builder(KeyPair.Random(), new AssetTypeNative(), "50")
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
+        var notValidOperation = new PaymentOperation(KeyPair.Random(), new AssetTypeNative(), "50", opSource.KeyPair);
 
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
@@ -1630,10 +1593,8 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
-        var notValidOperation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(KeyPair.Random()).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
+        var notValidOperation = new ManageDataOperation(ManageDataOperationName, base64Data, KeyPair.Random());
 
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
@@ -1660,7 +1621,7 @@ public class WebAuthenticationTest
     public void TestReadChallengeTransactionBadHomeDomain()
     {
         var serverKeypair = KeyPair.Random();
-        var clientAccountId = "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF";
+        const string clientAccountId = "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF";
 
         Network.UseTestNetwork();
         try
@@ -1680,7 +1641,7 @@ public class WebAuthenticationTest
     public void TestReadChallengeTransactionNoHomeDomain()
     {
         var serverKeypair = KeyPair.Random();
-        var clientAccountId = "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF";
+        const string clientAccountId = "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF";
 
         Network.UseTestNetwork();
         try
@@ -1711,7 +1672,7 @@ public class WebAuthenticationTest
     public void TestReadChallengeTransactionExpiredTimeBounds()
     {
         var serverKeypair = KeyPair.Random();
-        var clientAccountId = "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF";
+        const string clientAccountId = "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF";
 
         Network.UseTestNetwork();
         try
@@ -1741,8 +1702,7 @@ public class WebAuthenticationTest
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
-        var operation = new ManageDataOperation.Builder(ManageDataOperationName, base64Data)
-            .SetSourceAccount(opSource.KeyPair).Build();
+        var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var transaction = new TransactionBuilder(txSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1752,11 +1712,11 @@ public class WebAuthenticationTest
         transaction.Sign(serverKeypair);
         transaction.Sign(clientKeypair);
 
-        var readTransactionID =
-            WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId, HomeDomain, "",
-                Network.Test());
+        var readTransactionId = WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId,
+            HomeDomain, "",
+            Network.Test());
 
-        Assert.AreEqual(clientKeypair.AccountId, readTransactionID);
+        Assert.AreEqual(clientKeypair.AccountId, readTransactionId);
     }
 
     [TestMethod]

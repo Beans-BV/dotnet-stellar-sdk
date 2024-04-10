@@ -7,7 +7,7 @@ namespace StellarDotnetSdk.Xdr;
 
 //  struct SorobanTransactionMeta 
 //  {
-//      ExtensionPoint ext;
+//      SorobanTransactionMetaExt ext;
 //  
 //      ContractEvent events<>;             // custom events populated by the
 //                                          // contracts themselves.
@@ -22,14 +22,14 @@ namespace StellarDotnetSdk.Xdr;
 //  ===========================================================================
 public class SorobanTransactionMeta
 {
-    public ExtensionPoint Ext { get; set; }
+    public SorobanTransactionMetaExt Ext { get; set; }
     public ContractEvent[] Events { get; set; }
     public SCVal ReturnValue { get; set; }
     public DiagnosticEvent[] DiagnosticEvents { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SorobanTransactionMeta encodedSorobanTransactionMeta)
     {
-        ExtensionPoint.Encode(stream, encodedSorobanTransactionMeta.Ext);
+        SorobanTransactionMetaExt.Encode(stream, encodedSorobanTransactionMeta.Ext);
         var eventssize = encodedSorobanTransactionMeta.Events.Length;
         stream.WriteInt(eventssize);
         for (var i = 0; i < eventssize; i++) ContractEvent.Encode(stream, encodedSorobanTransactionMeta.Events[i]);
@@ -43,7 +43,7 @@ public class SorobanTransactionMeta
     public static SorobanTransactionMeta Decode(XdrDataInputStream stream)
     {
         var decodedSorobanTransactionMeta = new SorobanTransactionMeta();
-        decodedSorobanTransactionMeta.Ext = ExtensionPoint.Decode(stream);
+        decodedSorobanTransactionMeta.Ext = SorobanTransactionMetaExt.Decode(stream);
         var eventssize = stream.ReadInt();
         decodedSorobanTransactionMeta.Events = new ContractEvent[eventssize];
         for (var i = 0; i < eventssize; i++) decodedSorobanTransactionMeta.Events[i] = ContractEvent.Decode(stream);

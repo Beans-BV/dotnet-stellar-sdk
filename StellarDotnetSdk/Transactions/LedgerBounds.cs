@@ -3,12 +3,17 @@
 namespace StellarDotnetSdk.Transactions;
 
 /// <summary>
-///     LedgerBounds are Preconditions of a transaction per
-///     <a href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md#specification">CAP-21</a>
+///     Ledger bounds are a precondition of a transaction.
+///     See:
+///     <a
+///         href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/operations-and-transactions#ledger-bounds">
+///         Ledger
+///         bounds
+///     </a>
 /// </summary>
 public class LedgerBounds
 {
-    public LedgerBounds(uint minLedger, uint maxLedger)
+    private LedgerBounds(uint minLedger, uint maxLedger)
     {
         MinLedger = minLedger;
         MaxLedger = maxLedger;

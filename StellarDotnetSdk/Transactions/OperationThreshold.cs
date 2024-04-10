@@ -3,13 +3,12 @@ using StellarDotnetSdk.Operations;
 namespace StellarDotnetSdk.Transactions;
 
 /// <summary>
-///     Operation threshold level.
+///     Operation threshold levels.
 /// </summary>
 public enum OperationThreshold
 {
     /// <summary>
     ///     Low security level.
-    ///     <seealso cref="AllowTrustOperation" />
     ///     <seealso cref="BumpSequenceOperation" />
     /// </summary>
     LOW = 1,

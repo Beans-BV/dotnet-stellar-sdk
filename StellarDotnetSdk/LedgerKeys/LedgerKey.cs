@@ -1,7 +1,10 @@
 using System;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Xdr;
+using SCAddress = StellarDotnetSdk.Soroban.SCAddress;
+using SCVal = StellarDotnetSdk.Soroban.SCVal;
 
 namespace StellarDotnetSdk.LedgerKeys;
 

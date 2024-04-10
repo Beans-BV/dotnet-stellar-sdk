@@ -11,16 +11,18 @@ public class FriendBotResponseTest
     [TestMethod]
     public void TestDeserializeFriendBotResponseFailureResponse()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "friendBotFail.json"));
+        var jsonPath = Utils.GetTestDataPath("friendBotFail.json");
+        var json = File.ReadAllText(jsonPath);
         var friendBotResponse = JsonSingleton.GetInstance<FriendBotResponse>(json);
-
+        Assert.IsNotNull(friendBotResponse);
         AssertFriendBotResponseFailureData(friendBotResponse);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeFriendBotResponseFailureResponse()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "friendBotFail.json"));
+        var jsonPath = Utils.GetTestDataPath("friendBotFail.json");
+        var json = File.ReadAllText(jsonPath);
         var friendBotResponse = JsonSingleton.GetInstance<FriendBotResponse>(json);
         var serialized = JsonConvert.SerializeObject(friendBotResponse);
         var back = JsonConvert.DeserializeObject<FriendBotResponse>(serialized);
@@ -46,16 +48,18 @@ public class FriendBotResponseTest
     [TestMethod]
     public void TestDeserializeFriendBotResponseSuccessResponse()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "friendBotSuccess.json"));
+        var jsonPath = Utils.GetTestDataPath("friendBotSuccess.json");
+        var json = File.ReadAllText(jsonPath);
         var friendBotResponse = JsonSingleton.GetInstance<FriendBotResponse>(json);
-
+        Assert.IsNotNull(friendBotResponse);
         AssertSuccessTestData(friendBotResponse);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeFriendBotResponseSuccessResponse()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "friendBotSuccess.json"));
+        var jsonPath = Utils.GetTestDataPath("friendBotSuccess.json");
+        var json = File.ReadAllText(jsonPath);
         var friendBotResponse = JsonSingleton.GetInstance<FriendBotResponse>(json);
         var serialized = JsonConvert.SerializeObject(friendBotResponse);
         var back = JsonConvert.DeserializeObject<FriendBotResponse>(serialized);

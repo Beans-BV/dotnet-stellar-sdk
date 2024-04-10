@@ -18,13 +18,18 @@ public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<Liqu
 
         var amount = jt.Value<string>("amount");
 
-        var claimableBalanceID = jt.Value<string>("claimable_balance_id");
+        var claimableBalanceId = jt.Value<string>("claimable_balance_id");
 
         if (asset == null) throw new ArgumentException("JSON value for asset is missing.", nameof(asset));
 
         if (amount == null) throw new ArgumentException("JSON value for amount is missing.", nameof(amount));
 
-        return new LiquidityPoolClaimableAssetAmount(asset, amount, claimableBalanceID);
+        return new LiquidityPoolClaimableAssetAmount
+        {
+            Asset = asset,
+            Amount = amount,
+            ClaimableBalanceId = claimableBalanceId
+        };
     }
 
     public override void WriteJson(JsonWriter writer, LiquidityPoolClaimableAssetAmount? value,
@@ -33,7 +38,7 @@ public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<Liqu
         var jo = new JObject();
         if (value?.Asset != null) jo.Add("asset", value.Asset.CanonicalName());
         if (value?.Amount != null) jo.Add("amount", value.Amount);
-        if (value?.ClaimableBalanceID != null) jo.Add("claimable_balance_id", value.ClaimableBalanceID);
+        if (value?.ClaimableBalanceId != null) jo.Add("claimable_balance_id", value.ClaimableBalanceId);
         jo.WriteTo(writer);
     }
 }

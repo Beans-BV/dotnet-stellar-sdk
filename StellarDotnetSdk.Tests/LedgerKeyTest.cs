@@ -3,8 +3,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.LedgerKeys;
+using StellarDotnetSdk.LiquidityPool;
+using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
 using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
+using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
 
 namespace StellarDotnetSdk.Tests;
 
@@ -29,7 +32,7 @@ public class LedgerKeyTest
     public void TestLedgerKeyDataWithTooLongName()
     {
         var keypair = KeyPair.FromAccountId("GCFRHRU5YRI3IN3IMRMYGWWEG2PX2B6MYH2RJW7NEDE2PTYPISPT3RU7");
-        var dataName = "This is a 73 characters long string which is too strong for String64 type";
+        const string dataName = "This is a 73 characters long string which is too strong for String64 type";
         var ex = Assert.ThrowsException<ArgumentException>(() => LedgerKey.Data(keypair, dataName));
         Assert.IsTrue(ex.Message.Contains("Data name cannot exceed 64 characters."));
     }
@@ -188,7 +191,7 @@ public class LedgerKeyTest
     }
 
     [TestMethod]
-    public void TestLedgerKeyTTLCreationFromValidHashString()
+    public void TestLedgerKeyTtlCreationFromValidHashString()
     {
         var ledgerKey = (LedgerKeyTTL)LedgerKey.TTL("AQIDBAUGBwgJAAECAwQFBgcICQABAgMEBQYHCAkAAQI=");
 
@@ -201,7 +204,7 @@ public class LedgerKeyTest
     }
 
     [TestMethod]
-    public void TestLedgerKeyTTLCreationFromInvalidHashString()
+    public void TestLedgerKeyTtlCreationFromInvalidHashString()
     {
         var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
             LedgerKey.ContractCode("AQIDBAUGBwgJAAECAwQFBgcICQABAgMEBQYHCAkAAQIDBA=="));

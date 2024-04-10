@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Responses;
 
 public static class JsonSingleton
 {
-    public static T GetInstance<T>(string content)
+    public static T? GetInstance<T>(string content)
     {
         var pageResponseConversions = new[]
         {
@@ -27,18 +27,18 @@ public static class JsonSingleton
 
         var jsonConverters = new JsonConverter[]
         {
-            new AssetDeserializer(),
-            new KeyPairTypeAdapter(),
-            new OperationDeserializer(),
-            new EffectDeserializer()
+            new AssetJsonConverter(),
+            new KeyPairJsonConverter(),
+            new OperationResponseJsonConverter(),
+            new EffectResponseJsonConverter()
         };
 
         var pageJsonConverters = new JsonConverter[]
         {
-            new AssetDeserializer(),
-            new KeyPairTypeAdapter(),
-            new OperationDeserializer(),
-            new EffectDeserializer()
+            new AssetJsonConverter(),
+            new KeyPairJsonConverter(),
+            new OperationResponseJsonConverter(),
+            new EffectResponseJsonConverter()
         };
 
         if (pageResponseConversions.Contains(typeof(T)))

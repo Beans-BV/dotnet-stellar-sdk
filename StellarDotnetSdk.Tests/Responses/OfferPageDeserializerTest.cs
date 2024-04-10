@@ -13,16 +13,18 @@ public class OfferPageDeserializerTest
     [TestMethod]
     public void TestDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "offerPage.json"));
+        var jsonPath = Utils.GetTestDataPath("offerPage.json");
+        var json = File.ReadAllText(jsonPath);
         var offerResponsePage = JsonSingleton.GetInstance<Page<OfferResponse>>(json);
-
+        Assert.IsNotNull(offerResponsePage);
         AssertTestData(offerResponsePage);
     }
 
     [TestMethod]
     public void TestSerializeDeserialize()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "offerPage.json"));
+        var jsonPath = Utils.GetTestDataPath("offerPage.json");
+        var json = File.ReadAllText(jsonPath);
         var offerResponsePage = JsonSingleton.GetInstance<Page<OfferResponse>>(json);
         var serialized = JsonConvert.SerializeObject(offerResponsePage);
         var back = JsonConvert.DeserializeObject<Page<OfferResponse>>(serialized);
@@ -34,9 +36,10 @@ public class OfferPageDeserializerTest
     [TestMethod]
     public void TestDeserializePre100()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "offerPagePre100.json"));
+        var jsonPath = Utils.GetTestDataPath("offerPagePre100.json");
+        var json = File.ReadAllText(jsonPath);
         var offerResponsePage = JsonSingleton.GetInstance<Page<OfferResponse>>(json);
-
+        Assert.IsNotNull(offerResponsePage);
         AssertTestData(offerResponsePage);
     }
 
@@ -44,7 +47,8 @@ public class OfferPageDeserializerTest
     [TestMethod]
     public void TestSerializeDeserializePre100()
     {
-        var json = File.ReadAllText(Path.Combine("testdata", "offerPagePre100.json"));
+        var jsonPath = Utils.GetTestDataPath("offerPagePre100.json");
+        var json = File.ReadAllText(jsonPath);
         var offerResponsePage = JsonSingleton.GetInstance<Page<OfferResponse>>(json);
         var serialized = JsonConvert.SerializeObject(offerResponsePage);
         var back = JsonConvert.DeserializeObject<Page<OfferResponse>>(serialized);

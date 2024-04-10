@@ -1,28 +1,41 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace StellarDotnetSdk.Responses.Effects;
+#nullable disable
 
-/// <inheritdoc />
 public class TrustlineAuthorizationResponse : EffectResponse
 {
-    public TrustlineAuthorizationResponse()
-    {
-    }
-
-    /// <inheritdoc />
-    public TrustlineAuthorizationResponse(string trustor, string assetType, string assetCode)
-    {
-        Trustor = trustor;
-        AssetType = assetType;
-        AssetCode = assetCode;
-    }
-
     [JsonProperty(PropertyName = "trustor")]
-    public string Trustor { get; private set; }
+    public string Trustor { get; init; }
 
     [JsonProperty(PropertyName = "asset_type")]
-    public string AssetType { get; private set; }
+    public string AssetType { get; init; }
 
     [JsonProperty(PropertyName = "asset_code")]
-    public string AssetCode { get; private set; }
+    public string AssetCode { get; init; }
+}
+
+/// <summary>
+///     Represents trustline_deauthorized effect response.
+/// </summary>
+[Obsolete("Deprecated in favor of 'TrustlineFlagsUpdatedEffectResponse'")]
+public class TrustlineDeauthorizedEffectResponse : TrustlineAuthorizationResponse
+{
+    public override int TypeId => 24;
+}
+
+[Obsolete("Deprecated in favor of 'TrustlineFlagsUpdatedEffectResponse'")]
+public class TrustlineAuthorizedToMaintainLiabilitiesEffectResponse : TrustlineAuthorizationResponse
+{
+    public override int TypeId => 25;
+}
+
+/// <summary>
+///     Represents trustline_authorized effect response.
+/// </summary>
+[Obsolete("Deprecated in favor of 'TrustlineFlagsUpdatedEffectResponse'")]
+public class TrustlineAuthorizedEffectResponse : TrustlineAuthorizationResponse
+{
+    public override int TypeId => 23;
 }

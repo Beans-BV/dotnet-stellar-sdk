@@ -14,16 +14,18 @@ public class AllowTrustOperationResponseTest
     [TestMethod]
     public void TestDeserializeAllowTrustOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/allowTrust", "allowTrust.json"));
+        var jsonPath = Utils.GetTestDataPath("allowTrust.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertAllowTrustOperationData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeAllowTrustOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/allowTrust", "allowTrust.json"));
+        var jsonPath = Utils.GetTestDataPath("allowTrust.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
@@ -50,16 +52,18 @@ public class AllowTrustOperationResponseTest
     [TestMethod]
     public void TestDeserializeAllowTrustOperationMuxed()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/allowTrust", "allowTrustMuxed.json"));
+        var jsonPath = Utils.GetTestDataPath("allowTrustMuxed.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertAllowTrustOperationMuxed(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeAllowTrustOperationMuxed()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/allowTrust", "allowTrustMuxed.json"));
+        var jsonPath = Utils.GetTestDataPath("allowTrustMuxed.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);

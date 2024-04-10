@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Tests.Responses;
@@ -45,10 +44,7 @@ public class AssetsRequestBuilderTest
     [TestMethod]
     public async Task TestAssetExecute()
     {
-        var jsonResponse = await File.ReadAllTextAsync(Path.Combine("testdata", "assetPage.json"));
-        var fakeHttpClient = FakeHttpClient.CreateFakeHttpClient(jsonResponse);
-
-        using var server = new Server("https://horizon-testnet.stellar.org", fakeHttpClient);
+        using var server = await Utils.CreateTestServerWithJson("Responses/assetPage.json");
         // the asset code string really doesn't matter for testing, as the response is static for testing purposes...
         var assetsPage = await server.Assets.AssetCode("")
             .Execute();

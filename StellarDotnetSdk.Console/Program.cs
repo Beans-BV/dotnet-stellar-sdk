@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Transactions;
@@ -12,20 +13,20 @@ public static class Program
 
     public static async Task Main(string[] args)
     {
-        Network.UsePublicNetwork();
-        using var server = new Server("https://horizon.stellar.org");
+        // Network.UsePublicNetwork();
+        using var server = new Server("https://horizon-testnet.stellar.org");
 
         var paymentsWithoutTransactions = await server.Payments.Execute().ConfigureAwait(false);
         var paymentsWithTransactions = await server.Payments.IncludeTransaction().Execute().ConfigureAwait(false);
 
-        // await CreateAccount(server).ConfigureAwait(false);
+        await CreateAccount(server).ConfigureAwait(false);
 
         SysConsole.ReadLine();
     }
 
     private static async Task CreateAccount(Server server)
     {
-        var source = KeyPair.FromSecretSeed("{TO_BE_CONFIGURED}");
+        var source = KeyPair.FromSecretSeed("SDR4PTKMR5TAQQCL3RI2MLXXSXQDIR7DCAONQNQP6UCDZCD4OVRWXUHI");
         SysConsole.WriteLine("Source account: {TO_BE_CONFIGURED}");
         var destination = KeyPair.Random();
         SysConsole.WriteLine("Destination account: " + destination.AccountId);
@@ -33,13 +34,13 @@ public static class Program
         var sourceAccount = await server.Accounts.Account(source.AccountId).ConfigureAwait(false);
         var transaction = new TransactionBuilder(sourceAccount)
             .SetFee(DefaultFee)
-            .AddOperation(new CreateAccountOperation.Builder(destination, "1").Build())
+            .AddOperation(new CreateAccountOperation(destination, "1"))
             .Build();
 
         transaction.Sign(source);
 
         var response = await server.SubmitTransaction(transaction).ConfigureAwait(false);
-        if (response.IsSuccess())
+        if (response.IsSuccess)
         {
             SysConsole.WriteLine("Create account response: " + response.Hash);
             await DeleteAccount(server, destination, source).ConfigureAwait(false);
@@ -59,7 +60,7 @@ public static class Program
         var accountToDelete = await server.Accounts.Account(source.AccountId).ConfigureAwait(false);
         var transaction = new TransactionBuilder(accountToDelete)
             .SetFee(DefaultFee)
-            .AddOperation(new AccountMergeOperation.Builder(destination).Build())
+            .AddOperation(new AccountMergeOperation(destination))
             .Build();
 
         transaction.Sign(source);
@@ -69,7 +70,7 @@ public static class Program
         feeBumpTransaction.Sign(destination);
 
         var response = await server.SubmitTransaction(feeBumpTransaction).ConfigureAwait(false);
-        if (response.IsSuccess())
+        if (response.IsSuccess)
         {
             SysConsole.WriteLine("Delete account response: " + response.Hash);
         }

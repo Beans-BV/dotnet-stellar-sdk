@@ -12,16 +12,18 @@ public class InflationOperationResponseTest
     [TestMethod]
     public void TestDeserializeInflationOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/inflation", "inflation.json"));
+        var jsonPath = Utils.GetTestDataPath("inflation.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-
+        Assert.IsNotNull(instance);
         AssertInflationData(instance);
     }
 
     [TestMethod]
     public void TestSerializeDeserializeInflationOperation()
     {
-        var json = File.ReadAllText(Path.Combine("testdata/operations/inflation", "inflation.json"));
+        var jsonPath = Utils.GetTestDataPath("inflation.json");
+        var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<OperationResponse>(json);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
