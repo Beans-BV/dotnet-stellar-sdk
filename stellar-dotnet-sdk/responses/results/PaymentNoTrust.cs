@@ -1,10 +1,8 @@
-namespace stellar_dotnet_sdk.responses.results
-{
-    /// <summary>
-    /// Destination missing a trust line for asset.
-    /// </summary>
-    public class PaymentNoTrust : PaymentResult
-    {
+namespace stellar_dotnet_sdk.responses.results;
 
-    }
+/// <summary>
+///     Destination missing a trust line for asset.
+/// </summary>
+public class PaymentNoTrust : PaymentResult
+{
 }

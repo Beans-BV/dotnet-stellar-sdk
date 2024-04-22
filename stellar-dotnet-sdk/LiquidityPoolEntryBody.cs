@@ -18,7 +18,8 @@ public abstract class LiquidityPoolEntryBody
     {
         return xdrBody.Discriminant.InnerValue switch
         {
-            LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT => LiquidityPoolConstantProduct.FromXdrLiquidityPoolEntryBody(xdrBody),
+            LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT => LiquidityPoolConstantProduct
+                .FromXdrLiquidityPoolEntryBody(xdrBody),
             _ => throw new InvalidOperationException("Unknown liquidity pool type")
         };
     }

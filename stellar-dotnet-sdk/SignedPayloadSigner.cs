@@ -1,59 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using stellar_dotnet_sdk.xdr;
 
-namespace stellar_dotnet_sdk
+namespace stellar_dotnet_sdk;
+
+/// <summary>
+///     Data model for the https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#xdr-changes signed
+///     payload signer
+/// </summary>
+public class SignedPayloadSigner
 {
-    /// <summary>
-    /// Data model for the https://github.com/stellar/stellar-protocol/blob/master/core/cap-0040.md#xdr-changes signed payload signer
-    /// </summary>
-    public class SignedPayloadSigner
+    public const int SignedPayloadMaxPayloadLength = 64;
+
+    public SignedPayloadSigner(AccountID signerAccountID, byte[] payload)
     {
-        public const int SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH = 64;
+        if (signerAccountID == null)
+            throw new ArgumentNullException(nameof(signerAccountID), "signerAccountID cannot be null");
 
-        public xdr.AccountID SignerAccountID { get; private set; }
-        public byte[] Payload { get; private set; }
+        if (payload == null) throw new ArgumentNullException(nameof(payload), "payload cannot be null");
 
-        public SignedPayloadSigner(xdr.AccountID signerAccountID, byte[] payload)
-        {
-            New(signerAccountID, payload);
-        }
+        if (payload.Length > SignedPayloadMaxPayloadLength)
+            throw new ArgumentException($"Invalid payload length, must be less than {SignedPayloadMaxPayloadLength}");
 
-        public SignedPayloadSigner(byte[] signerED25519PublicKey, byte[] payload)
-        {
-            var publicKeyXDR = new xdr.PublicKey();
-            publicKeyXDR.Discriminant.InnerValue = xdr.PublicKeyType.PublicKeyTypeEnum.PUBLIC_KEY_TYPE_ED25519;
-            publicKeyXDR.Ed25519 = new xdr.Uint256(signerED25519PublicKey);
+        if (signerAccountID.InnerValue.Discriminant is not
+            { InnerValue: PublicKeyType.PublicKeyTypeEnum.PUBLIC_KEY_TYPE_ED25519 })
+            throw new ArgumentException(
+                "Invalid payload signer, only ED25519 public key accounts are supported at the moment");
 
-            New(new xdr.AccountID(publicKeyXDR), payload);
-        }
-
-        private SignedPayloadSigner New(xdr.AccountID signerAccountID, byte[] payload)
-        {
-            if (signerAccountID == null)
-            {
-                throw new ArgumentNullException(nameof(signerAccountID), "signerAccountID cannot be null");
-            }
-
-            if (payload == null)
-            {
-                throw new ArgumentNullException(nameof(payload), "payload cannot be null");
-            }
-
-            if (payload.Length > SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH)
-            {
-                throw new ArgumentException($"Invalid payload length, must be less than {SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH}");
-            }
-
-            if (signerAccountID.InnerValue.Discriminant == null || signerAccountID.InnerValue.Discriminant.InnerValue != xdr.PublicKeyType.PublicKeyTypeEnum.PUBLIC_KEY_TYPE_ED25519)
-            {
-                throw new ArgumentException("Invalid payload signer, only ED25519 public key accounts are supported at the moment");
-            }
-
-            SignerAccountID = signerAccountID;
-            Payload = payload;
-
-            return this;
-        }
+        SignerAccountID = signerAccountID;
+        Payload = payload;
     }
+
+    public SignedPayloadSigner(byte[] signerED25519PublicKey, byte[] payload)
+        : this(
+            new AccountID(new PublicKey
+            {
+                Discriminant =
+                {
+                    InnerValue = PublicKeyType.PublicKeyTypeEnum.PUBLIC_KEY_TYPE_ED25519
+                },
+                Ed25519 = new Uint256(signerED25519PublicKey)
+            }), payload)
+    {
+    }
+
+    public AccountID SignerAccountID { get; private set; }
+    public byte[] Payload { get; private set; }
 }

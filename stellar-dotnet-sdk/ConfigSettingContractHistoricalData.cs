@@ -4,31 +4,15 @@ namespace stellar_dotnet_sdk;
 
 public class ConfigSettingContractHistoricalData : LedgerEntryConfigSetting
 {
-    public long FeeHistorical1KB { get; set; }
-
-    public static ConfigSettingContractHistoricalData FromXdr(xdr.ConfigSettingContractHistoricalDataV0 xdrConfig)
+    private ConfigSettingContractHistoricalData(long feeHistorical1KB)
     {
-        return new ConfigSettingContractHistoricalData
-        {
-            FeeHistorical1KB = xdrConfig.FeeHistorical1KB.InnerValue
-        };
+        FeeHistorical1KB = feeHistorical1KB;
     }
 
-    public xdr.ConfigSettingContractHistoricalDataV0 ToXdr()
-    {
-        return new xdr.ConfigSettingContractHistoricalDataV0
-        {
-            FeeHistorical1KB = new Int64(FeeHistorical1KB)
-        };
-    }
+    public long FeeHistorical1KB { get; }
 
-    public ConfigSettingEntry ToXdrConfigSettingEntry()
+    public static ConfigSettingContractHistoricalData FromXdr(ConfigSettingContractHistoricalDataV0 xdrConfig)
     {
-        return new ConfigSettingEntry
-        {
-            Discriminant =
-                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0),
-            ContractHistoricalData = ToXdr()
-        };
+        return new ConfigSettingContractHistoricalData(xdrConfig.FeeHistorical1KB.InnerValue);
     }
 }

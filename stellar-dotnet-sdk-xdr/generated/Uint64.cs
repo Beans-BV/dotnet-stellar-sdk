@@ -19,7 +19,7 @@ public class Uint64
         InnerValue = value;
     }
 
-    public ulong InnerValue { get; set; } = default;
+    public ulong InnerValue { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, Uint64 encodedUint64)
     {

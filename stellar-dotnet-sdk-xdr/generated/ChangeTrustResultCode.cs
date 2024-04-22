@@ -42,7 +42,7 @@ public class ChangeTrustResultCode
         CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES = -8
     }
 
-    public ChangeTrustResultCodeEnum InnerValue { get; set; } = default;
+    public ChangeTrustResultCodeEnum InnerValue { get; set; }
 
     public static ChangeTrustResultCode Create(ChangeTrustResultCodeEnum v)
     {

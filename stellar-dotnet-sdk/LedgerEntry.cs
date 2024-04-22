@@ -3,128 +3,89 @@ using stellar_dotnet_sdk.xdr;
 
 namespace stellar_dotnet_sdk;
 
+/// <summary>
+///     Abstract class for ledger entries.
+///     See https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/ledgers
+/// </summary>
 public abstract class LedgerEntry
 {
+    /// <summary>
+    ///     The ledger number of the last time this entry was updated.
+    /// </summary>
     public uint LastModifiedLedgerSeq { get; set; }
 
-    public LedgerEntryExtensionV1? LedgerExtensionV1 { get; set; }
+    /// <summary>
+    ///     The ledger sequence number after which the ledger entry would expire.
+    ///     This field exists only for ContractCodeEntry and ContractDataEntry ledger entries (optional).
+    /// </summary>
+    public uint? LiveUntilLedger { get; set; }
 
-    public xdr.LedgerEntry ToXdr()
+    /// <summary>
+    ///     Extension.
+    /// </summary>
+    public LedgerEntryExtensionV1? LedgerExtensionV1 { get; private set; }
+
+    /// <summary>
+    ///     Creates the corresponding <c>LedgerEntry</c> object from an <c>xdr.LedgerEntryData</c> object.
+    /// </summary>
+    /// <param name="xdrLedgerEntry">An <c>xdr.LedgerEntryData</c> object to be converted.</param>
+    /// <returns>A <c>LedgerEntry</c> object.</returns>
+    private static LedgerEntry FromXdr(xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
-        var xdrLedgerEntry = new xdr.LedgerEntry
+        return xdrLedgerEntryData.Discriminant.InnerValue switch
         {
-            Data = new xdr.LedgerEntry.LedgerEntryData
-            {
-                Discriminant = new LedgerEntryType()
-            },
-            LastModifiedLedgerSeq = new Uint32(LastModifiedLedgerSeq),
-            Ext = new xdr.LedgerEntry.LedgerEntryExt
-            {
-                Discriminant = LedgerExtensionV1 != null ? 1 : 0,
-                V1 = LedgerExtensionV1?.ToXdr() ?? new xdr.LedgerEntryExtensionV1()
-            }
-        };
-
-        switch (this)
-        {
-            case LedgerEntryAccount accountEntry:
-                xdrLedgerEntry.Data.Discriminant.InnerValue = LedgerEntryType.LedgerEntryTypeEnum.ACCOUNT;
-                xdrLedgerEntry.Data.Account = accountEntry.ToXdr();
-                break;
-            case LedgerEntryOffer offerEntry:
-                xdrLedgerEntry.Data.Discriminant.InnerValue = LedgerEntryType.LedgerEntryTypeEnum.OFFER;
-                xdrLedgerEntry.Data.Offer = offerEntry.ToXdr();
-                break;
-            case LedgerEntryTrustline trustlineEntry:
-                xdrLedgerEntry.Data.Discriminant.InnerValue = LedgerEntryType.LedgerEntryTypeEnum.TRUSTLINE;
-                xdrLedgerEntry.Data.TrustLine = trustlineEntry.ToXdr();
-                break;
-            case LedgerEntryData dataEntry:
-                xdrLedgerEntry.Data.Discriminant.InnerValue = LedgerEntryType.LedgerEntryTypeEnum.DATA;
-                xdrLedgerEntry.Data.Data = dataEntry.ToXdr();
-                break;
-            case LedgerEntryClaimableBalance claimableBalanceEntry:
-                xdrLedgerEntry.Data.Discriminant.InnerValue = LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE;
-                xdrLedgerEntry.Data.ClaimableBalance = claimableBalanceEntry.ToXdr();
-                break;
-            case LedgerEntryLiquidityPool liquidityPoolEntry:
-                xdrLedgerEntry.Data.Discriminant.InnerValue = LedgerEntryType.LedgerEntryTypeEnum.LIQUIDITY_POOL;
-                xdrLedgerEntry.Data.LiquidityPool = liquidityPoolEntry.ToXdr();
-                break;
-            case LedgerEntryContractData contractDataEntry:
-                xdrLedgerEntry.Data.Discriminant.InnerValue = LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_DATA;
-                xdrLedgerEntry.Data.ContractData = contractDataEntry.ToXdr();
-                break;
-            case LedgerEntryContractCode contractCodeEntry:
-                xdrLedgerEntry.Data.Discriminant.InnerValue = LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE;
-                xdrLedgerEntry.Data.ContractCode = contractCodeEntry.ToXdr();
-                break;
-            case LedgerEntryConfigSetting configSettingEntry:
-                xdrLedgerEntry.Data.Discriminant.InnerValue = LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING;
-                xdrLedgerEntry.Data.ConfigSetting = configSettingEntry.ToXdr();
-                break;
-            case LedgerEntryTTL ttlEntry:
-                xdrLedgerEntry.Data.Discriminant.InnerValue = LedgerEntryType.LedgerEntryTypeEnum.TTL;
-                xdrLedgerEntry.Data.Ttl = ttlEntry.ToXdr();
-                break;
-            default:
-                throw new InvalidOperationException("Unknown LedgerEntry type");
-        }
-
-        return xdrLedgerEntry;
-    }
-
-    public static LedgerEntry FromXdr(xdr.LedgerEntry xdrLedgerEntry)
-    {
-        return xdrLedgerEntry.Data.Discriminant.InnerValue switch
-        {
-            LedgerEntryType.LedgerEntryTypeEnum.ACCOUNT => LedgerEntryAccount.FromXdrLedgerEntry(xdrLedgerEntry),
-            LedgerEntryType.LedgerEntryTypeEnum.TRUSTLINE => LedgerEntryTrustline.FromXdrLedgerEntry(xdrLedgerEntry),
-            LedgerEntryType.LedgerEntryTypeEnum.OFFER => LedgerEntryOffer.FromXdrLedgerEntry(xdrLedgerEntry),
-            LedgerEntryType.LedgerEntryTypeEnum.DATA => LedgerEntryData.FromXdrLedgerEntry(xdrLedgerEntry),
-            LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE => LedgerEntryClaimableBalance.FromXdrLedgerEntry(xdrLedgerEntry),
-            LedgerEntryType.LedgerEntryTypeEnum.LIQUIDITY_POOL => LedgerEntryLiquidityPool.FromXdrLedgerEntry(xdrLedgerEntry),
-            LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_DATA => LedgerEntryContractData.FromXdrLedgerEntry(xdrLedgerEntry),
-            LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE => LedgerEntryContractCode.FromXdrLedgerEntry(xdrLedgerEntry),
-            LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING => LedgerEntryConfigSetting.FromXdrLedgerEntry(xdrLedgerEntry),
-            LedgerEntryType.LedgerEntryTypeEnum.TTL => LedgerEntryTTL.FromXdrLedgerEntry(xdrLedgerEntry),
+            LedgerEntryType.LedgerEntryTypeEnum.ACCOUNT =>
+                LedgerEntryAccount.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.TRUSTLINE =>
+                LedgerEntryTrustline.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.OFFER =>
+                LedgerEntryOffer.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.DATA =>
+                LedgerEntryData.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE =>
+                LedgerEntryClaimableBalance.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.LIQUIDITY_POOL =>
+                LedgerEntryLiquidityPool.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_DATA =>
+                LedgerEntryContractData.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE =>
+                LedgerEntryContractCode.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING =>
+                LedgerEntryConfigSetting.FromXdrLedgerEntryData(xdrLedgerEntryData),
+            LedgerEntryType.LedgerEntryTypeEnum.TTL =>
+                LedgerEntryTTL.FromXdrLedgerEntryData(xdrLedgerEntryData),
             _ => throw new InvalidOperationException("Unknown LedgerEntry type")
         };
     }
 
     /// <summary>
-    ///     Creates a new LedgerEntry object from the given LedgerEntry XDR base64 string.
+    ///     Creates the corresponding LedgerEntry object from an <see cref="xdr.LedgerEntry">xdr.LedgerEntry</see> object.
     /// </summary>
-    /// <param name="xdrBase64"></param>
-    /// <returns>LedgerEntry object</returns>
+    /// <param name="xdrLedgerEntry">An <see cref="xdr.LedgerEntry">xdr.LedgerEntry</see> object to be converted.</param>
+    /// <returns>A <c>LedgerEntry</c> object.</returns>
+    public static LedgerEntry FromXdr(xdr.LedgerEntry xdrLedgerEntry)
+    {
+        var ledgerEntry = FromXdr(xdrLedgerEntry.Data);
+        ledgerEntry.LastModifiedLedgerSeq = xdrLedgerEntry.LastModifiedLedgerSeq.InnerValue;
+        if (xdrLedgerEntry.Ext.Discriminant == 1)
+            ledgerEntry.LedgerExtensionV1 = LedgerEntryExtensionV1.FromXdr(xdrLedgerEntry.Ext.V1);
+        return ledgerEntry;
+    }
+
+    /// <summary>
+    ///     Creates a <c>LedgerEntry</c> object from a base-64 encoded XDR string of an
+    ///     <see cref="xdr.LedgerEntry.LedgerEntryData" />.
+    /// </summary>
+    /// <param name="xdrBase64">
+    ///     A base-64 encoded XDR string of an
+    ///     <see cref="xdr.LedgerEntry.LedgerEntryData">xdr.LedgerEntryData</see> object.
+    /// </param>
+    /// <returns>A <c>LedgerEntry</c> object decoded and deserialized from the provided string.</returns>
     public static LedgerEntry FromXdrBase64(string xdrBase64)
     {
         var bytes = Convert.FromBase64String(xdrBase64);
         var reader = new XdrDataInputStream(bytes);
-        var thisXdr = xdr.LedgerEntry.Decode(reader);
+        var thisXdr = xdr.LedgerEntry.LedgerEntryData.Decode(reader);
         return FromXdr(thisXdr);
-    }
-
-    /// <summary>
-    ///     Returns a base64-encoded string that represents the XDR (External Data Representation) format of a
-    ///     <see cref="LedgerEntry" /> object.
-    /// </summary>
-    /// <returns>
-    ///     A base64-encoded string that contains the XDR representation of the
-    ///     <see cref="stellar_dotnet_sdk.xdr.LedgerEntry" /> object.
-    /// </returns>
-    public string ToXdrBase64()
-    {
-        var ledgerEntry = ToXdr();
-        var writer = new XdrDataOutputStream();
-        xdr.LedgerEntry.Encode(writer, ledgerEntry);
-        return Convert.ToBase64String(writer.ToArray());
-    }
-
-    protected static void ExtraFieldsFromXdr(xdr.LedgerEntry xdrLedgerEntry, LedgerEntry ledgerEntry)
-    {
-        ledgerEntry.LastModifiedLedgerSeq = xdrLedgerEntry.LastModifiedLedgerSeq.InnerValue;
-        if (xdrLedgerEntry.Ext.Discriminant == 1)
-            ledgerEntry.LedgerExtensionV1 = LedgerEntryExtensionV1.FromXdr(xdrLedgerEntry.Ext.V1);
     }
 }

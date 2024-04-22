@@ -1,37 +1,36 @@
-namespace stellar_dotnet_sdk.responses.results
+namespace stellar_dotnet_sdk.responses.results;
+
+/// <summary>
+///     Operation successful.
+/// </summary>
+public class InflationSuccess : InflationResult
 {
+    public override bool IsSuccess => true;
+
     /// <summary>
-    /// Operation successful.
+    ///     Inflation Payouts.
     /// </summary>
-    public class InflationSuccess : InflationResult
+    public InflationPayout[] Payouts { get; set; }
+
+    public class InflationPayout
     {
-        public override bool IsSuccess => true;
+        /// <summary>
+        ///     Account receiving inflation.
+        /// </summary>
+        public KeyPair Destination { get; set; }
 
         /// <summary>
-        /// Inflation Payouts.
+        ///     Amount set to account.
         /// </summary>
-        public InflationPayout[] Payouts { get; set; }
+        public string Amount { get; set; }
 
-        public class InflationPayout
+        public static InflationPayout FromXdr(xdr.InflationPayout payout)
         {
-            /// <summary>
-            /// Account receiving inflation.
-            /// </summary>
-            public KeyPair Destination { get; set; }
-
-            /// <summary>
-            /// Amount set to account.
-            /// </summary>
-            public string Amount { get; set; }
-
-            public static InflationPayout FromXdr(xdr.InflationPayout payout)
+            return new InflationPayout
             {
-                return new InflationPayout
-                {
-                    Amount = stellar_dotnet_sdk.Amount.FromXdr(payout.Amount.InnerValue),
-                    Destination = KeyPair.FromXdrPublicKey(payout.Destination.InnerValue)
-                };
-            }
+                Amount = stellar_dotnet_sdk.Amount.FromXdr(payout.Amount.InnerValue),
+                Destination = KeyPair.FromXdrPublicKey(payout.Destination.InnerValue)
+            };
         }
     }
 }

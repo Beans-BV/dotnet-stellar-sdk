@@ -16,7 +16,7 @@ namespace stellar_dotnet_sdk_test;
 public class OperationTest
 {
     [TestMethod]
-    [Obsolete]
+    [Obsolete("Deprecated")]
     public void TestCreateAccountOperation()
     {
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
@@ -33,10 +33,11 @@ public class OperationTest
         var parsedOperation = (CreateAccountOperation)Operation.FromXdr(xdr);
 
         Assert.AreEqual(10000000000L, xdr.Body.CreateAccountOp.StartingBalance.InnerValue);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(destination.AccountId, parsedOperation.Destination.AccountId);
         Assert.AreEqual(startingAmount, parsedOperation.StartingBalance);
-        Assert.AreEqual(OperationThreshold.Medium, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAAAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAACVAvkAA==",
@@ -44,7 +45,7 @@ public class OperationTest
     }
 
     [TestMethod]
-    [Obsolete]
+    [Obsolete("Deprecated")]
     public void TestPaymentOperation()
     {
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
@@ -63,11 +64,12 @@ public class OperationTest
         var parsedOperation = (PaymentOperation)Operation.FromXdr(xdr);
 
         Assert.AreEqual(10000000000L, xdr.Body.PaymentOp.Amount.InnerValue);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(destination.AccountId, parsedOperation.Destination.AccountId);
         Assert.IsTrue(parsedOperation.Asset is AssetTypeNative);
         Assert.AreEqual(amount, parsedOperation.Amount);
-        Assert.AreEqual(OperationThreshold.Medium, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAEAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAAAAAAAlQL5AA=",
@@ -112,13 +114,14 @@ public class OperationTest
         Assert.AreEqual(1000L, xdr.Body.PathPaymentStrictReceiveOp.SendMax.InnerValue);
         Assert.AreEqual(1000L, xdr.Body.PathPaymentStrictReceiveOp.DestAmount.InnerValue);
         Assert.IsTrue(parsedOperation.SendAsset is AssetTypeNative);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(destination.AccountId, parsedOperation.Destination.AccountId);
         Assert.AreEqual(sendMax, parsedOperation.SendMax);
         Assert.IsTrue(parsedOperation.DestAsset is AssetTypeCreditAlphaNum4);
         Assert.AreEqual(destAmount, parsedOperation.DestAmount);
         Assert.AreEqual(path.Length, parsedOperation.Path.Length);
-        Assert.AreEqual(OperationThreshold.Medium, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAIAAAAAAAAAAAAAA+gAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEAAAAAACNlYd30HdCuLI54eyYjyX/fDyH9IJWIr/hKDcXKQbq1QAAAAAAAAPoAAAAAgAAAAFVU0QAAAAAACoIKnpnw8rtrfxa276dFZo1C19mDqWXtG4ufhWrLUd1AAAAAlRFU1RURVNUAAAAAAAAAABE/ttVl8BLV0csW/xgXtbXOVf1lMyDluMiafl0IDVFIg==",
@@ -157,13 +160,14 @@ public class OperationTest
         Assert.AreEqual(1000L, xdr.Body.PathPaymentStrictReceiveOp.SendMax.InnerValue);
         Assert.AreEqual(1000L, xdr.Body.PathPaymentStrictReceiveOp.DestAmount.InnerValue);
         Assert.IsTrue(parsedOperation.SendAsset is AssetTypeNative);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(destination.AccountId, parsedOperation.Destination.AccountId);
         Assert.AreEqual(sendMax, parsedOperation.SendMax);
         Assert.IsTrue(parsedOperation.DestAsset is AssetTypeCreditAlphaNum4);
         Assert.AreEqual(destAmount, parsedOperation.DestAmount);
         Assert.AreEqual(0, parsedOperation.Path.Length);
-        Assert.AreEqual(OperationThreshold.Medium, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAIAAAAAAAAAAAAAA+gAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEAAAAAACNlYd30HdCuLI54eyYjyX/fDyH9IJWIr/hKDcXKQbq1QAAAAAAAAPoAAAAAA==",
@@ -206,13 +210,14 @@ public class OperationTest
         var parsedOperation = (PathPaymentStrictSendOperation)Operation.FromXdr(xdr);
 
         Assert.IsTrue(parsedOperation.SendAsset is AssetTypeNative);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(destination.AccountId, parsedOperation.Destination.AccountId);
         Assert.AreEqual(sendAmount, parsedOperation.SendAmount);
         Assert.IsTrue(parsedOperation.DestAsset is AssetTypeCreditAlphaNum4);
         Assert.AreEqual(destMin, parsedOperation.DestMin);
         Assert.AreEqual(path.Length, parsedOperation.Path.Length);
-        Assert.AreEqual(OperationThreshold.Medium, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAA0AAAAAAAAAAAAAA+gAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEAAAAAACNlYd30HdCuLI54eyYjyX/fDyH9IJWIr/hKDcXKQbq1QAAAAAAAAPoAAAAAgAAAAFVU0QAAAAAACoIKnpnw8rtrfxa276dFZo1C19mDqWXtG4ufhWrLUd1AAAAAlRFU1RURVNUAAAAAAAAAABE/ttVl8BLV0csW/xgXtbXOVf1lMyDluMiafl0IDVFIg==",
@@ -249,13 +254,14 @@ public class OperationTest
         var parsedOperation = (PathPaymentStrictSendOperation)Operation.FromXdr(xdr);
 
         Assert.IsTrue(parsedOperation.SendAsset is AssetTypeNative);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(destination.AccountId, parsedOperation.Destination.AccountId);
         Assert.AreEqual(sendAmount, parsedOperation.SendAmount);
         Assert.IsTrue(parsedOperation.DestAsset is AssetTypeCreditAlphaNum4);
         Assert.AreEqual(destMin, parsedOperation.DestMin);
         Assert.AreEqual(0, parsedOperation.Path.Length);
-        Assert.AreEqual(OperationThreshold.Medium, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAA0AAAAAAAAAAAAAA+gAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEAAAAAACNlYd30HdCuLI54eyYjyX/fDyH9IJWIr/hKDcXKQbq1QAAAAAAAAPoAAAAAA==",
@@ -280,10 +286,11 @@ public class OperationTest
         var parsedOperation = (ChangeTrustOperation)Operation.FromXdr(xdr);
 
         Assert.AreEqual(long.MaxValue, xdr.Body.ChangeTrustOp.Limit.InnerValue);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.IsTrue(((ChangeTrustAsset.Wrapper)parsedOperation.Asset).Asset is AssetTypeNative);
         Assert.AreEqual(limit, parsedOperation.Limit);
-        Assert.AreEqual(OperationThreshold.Medium, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAYAAAAAf/////////8=",
@@ -307,10 +314,11 @@ public class OperationTest
         var parsedOperation = (ChangeTrustOperation)Operation.FromXdr(xdr);
 
         Assert.AreEqual(long.MaxValue, xdr.Body.ChangeTrustOp.Limit.InnerValue);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.IsTrue(((ChangeTrustAsset.Wrapper)parsedOperation.Asset).Asset is AssetTypeNative);
         Assert.AreEqual(ChangeTrustOperation.MaxLimit, parsedOperation.Limit);
-        Assert.AreEqual(OperationThreshold.Medium, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAYAAAAAf/////////8=",
@@ -334,12 +342,12 @@ public class OperationTest
 
         var xdr = operation.ToXdr();
         var parsedOperation = (AllowTrustOperation)Operation.FromXdr(xdr);
-
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(trustor.AccountId, parsedOperation.Trustor.AccountId);
         Assert.AreEqual(assetCode, parsedOperation.AssetCode);
 
-        Assert.AreEqual(OperationThreshold.Low, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.LOW, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAcAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEQQAAAAE=",
@@ -351,17 +359,13 @@ public class OperationTest
     [Obsolete]
     private static void TestAllowTrustOperationAuthorize(KeyPair source, KeyPair trustor, string assetCode)
     {
-        AllowTrustOperation operation = null;
-        xdrSDK.Operation xdr = null;
-        AllowTrustOperation parsedOperation = null;
-
         //Authorize: true, MaintainLiabilities: false -> true, false
-        operation = new AllowTrustOperation.Builder(trustor, assetCode, true, false)
+        var operation = new AllowTrustOperation.Builder(trustor, assetCode, true, false)
             .SetSourceAccount(source)
             .Build();
 
-        xdr = operation.ToXdr();
-        parsedOperation = (AllowTrustOperation)Operation.FromXdr(xdr);
+        var xdr = operation.ToXdr();
+        var parsedOperation = (AllowTrustOperation)Operation.FromXdr(xdr);
 
         Assert.AreEqual(true, parsedOperation.Authorize);
         Assert.AreEqual(false, parsedOperation.AuthorizeToMaintainLiabilities);
@@ -412,11 +416,10 @@ public class OperationTest
         var buying = Asset.CreateNonNativeAsset("USD", issuer.AccountId);
         var amount = "0.00001";
         var price = "0.85334384"; // n=5333399 d=6250000
-        var priceObj = Price.FromString(price);
+        Price.FromString(price);
         long offerId = 1;
 
-        var operation = new ManageSellOfferOperation.Builder(selling, buying, amount, price)
-            .SetOfferId(offerId)
+        var operation = new ManageSellOfferOperation.Builder(selling, buying, amount, price, offerId)
             .SetSourceAccount(source)
             .Build();
 
@@ -441,8 +444,7 @@ public class OperationTest
         var priceObj = Price.FromString(price);
         long offerId = 1;
 
-        var operation = new ManageSellOfferOperation.Builder(selling, buying, amount, price)
-            .SetOfferId(offerId)
+        var operation = new ManageSellOfferOperation.Builder(selling, buying, amount, price, offerId)
             .SetSourceAccount(source)
             .Build();
 
@@ -458,7 +460,7 @@ public class OperationTest
         Assert.AreEqual(priceObj.Numerator, 5333399);
         Assert.AreEqual(priceObj.Denominator, 6250000);
         Assert.AreEqual(offerId, parsedOperation.OfferId);
-        Assert.AreEqual(OperationThreshold.Medium, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAMAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZABRYZcAX14QAAAAAAAAAAE=",
@@ -481,8 +483,7 @@ public class OperationTest
         var priceObj = Price.FromString(price);
         long offerId = 1;
 
-        var operation = new ManageBuyOfferOperation.Builder(selling, buying, amount, price)
-            .SetOfferId(offerId)
+        var operation = new ManageBuyOfferOperation.Builder(selling, buying, amount, price, offerId)
             .SetSourceAccount(source)
             .Build();
 
@@ -498,7 +499,7 @@ public class OperationTest
         Assert.AreEqual(priceObj.Numerator, 5333399);
         Assert.AreEqual(priceObj.Denominator, 6250000);
         Assert.AreEqual(offerId, parsedOperation.OfferId);
-        Assert.AreEqual(OperationThreshold.Medium, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAwAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZABRYZcAX14QAAAAAAAAAAE=",
@@ -517,7 +518,7 @@ public class OperationTest
         var buying = Asset.CreateNonNativeAsset("USD", issuer.AccountId);
         var amount = "0.00001";
         var price = "2.93850088"; // n=36731261 d=12500000
-        var priceObj = Price.FromString(price);
+        Price.FromString(price);
 
         var operation = new CreatePassiveSellOfferOperation.Builder(selling, buying, amount, price)
             .SetSourceAccount(source)
@@ -558,7 +559,7 @@ public class OperationTest
         Assert.AreEqual(price, parsedOperation.Price);
         Assert.AreEqual(priceObj.Numerator, 36731261);
         Assert.AreEqual(priceObj.Denominator, 12500000);
-        Assert.AreEqual(OperationThreshold.Medium, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAQAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZAIweX0Avrwg",
@@ -583,7 +584,7 @@ public class OperationTest
         var parsedOperation = (AccountMergeOperation)Operation.FromXdr(xdr);
 
         Assert.AreEqual(destination.AccountId, parsedOperation.Destination.AccountId);
-        Assert.AreEqual(OperationThreshold.High, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.HIGH, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAgAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxA=",
@@ -606,8 +607,9 @@ public class OperationTest
         var parsedOperation = (ManageDataOperation)Operation.FromXdr(xdr);
 
         Assert.AreEqual("test", parsedOperation.Name);
+        Assert.IsNotNull(parsedOperation.Value);
         Assert.IsTrue(new byte[] { 0, 1, 2, 3, 4 }.SequenceEqual(parsedOperation.Value));
-        Assert.AreEqual(OperationThreshold.Medium, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
 
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAoAAAAEdGVzdAAAAAEAAAAFAAECAwQAAAA=",
@@ -621,7 +623,7 @@ public class OperationTest
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
-        var operation = new ManageDataOperation.Builder("test", null)
+        var operation = new ManageDataOperation.Builder("test", (string?)null)
             .SetSourceAccount(source)
             .Build();
 
@@ -691,7 +693,7 @@ public class OperationTest
         var parsedOperation = (BumpSequenceOperation)Operation.FromXdr(xdr);
 
         Assert.AreEqual(156L, parsedOperation.BumpTo);
-        Assert.AreEqual(OperationThreshold.Low, parsedOperation.Threshold);
+        Assert.AreEqual(OperationThreshold.LOW, parsedOperation.Threshold);
 
         Assert.AreEqual("AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAsAAAAAAAAAnA==",
             operation.ToXdrBase64());
@@ -711,6 +713,8 @@ public class OperationTest
         var xdr = operation.ToXdr();
 
         var parsedOperation = (InflationOperation)Operation.FromXdr(xdr);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
 
         Assert.AreEqual("AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAk=", operation.ToXdrBase64());
@@ -727,12 +731,8 @@ public class OperationTest
         var destination = KeyPair.FromSecretSeed("SBMSVD4KKELKGZXHBUQTIROWUAPQASDX7KEJITARP4VMZ6KLUHOGPTYW");
 
         var asset = new AssetTypeNative();
-        var claimant = new Claimant
-        {
-            Destination = destination,
-            Predicate = ClaimPredicate.Not(ClaimPredicate.BeforeRelativeTime(
-                new xdrSDK.Duration(new xdrSDK.Uint64((ulong)TimeSpan.FromHours(7.0).TotalSeconds))))
-        };
+        var claimant = new Claimant(destination, ClaimPredicate.Not(ClaimPredicate.BeforeRelativeTime(
+            new xdrSDK.Duration(new xdrSDK.Uint64((ulong)TimeSpan.FromHours(7.0).TotalSeconds)))));
 
         var operation = new CreateClaimableBalanceOperation.Builder(asset, "123.45", new[] { claimant })
             .SetSourceAccount(source)
@@ -741,64 +741,12 @@ public class OperationTest
         var xdr = operation.ToXdr();
 
         var parsedOperation = (CreateClaimableBalanceOperation)Operation.FromXdr(xdr);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
 
         Assert.AreEqual(
             "AAAAAQAAAADg3G3hclysZlFitS+s5zWyiiJD5B0STWy5LXCj6i5yxQAAAA4AAAAAAAAAAEmU+aAAAAABAAAAAAAAAAAlyvHaD8duz+iEXkJUUbsHkklIlH46oMrMMYrt0odkfgAAAAMAAAABAAAABQAAAAAAAGJw",
-            operation.ToXdrBase64());
-    }
-
-    /// <summary>
-    ///     The API didn't previously did not support the balance id type within the balance id (expected 32 bytes rather than
-    ///     the full 36).
-    ///     This tests that we can still pass in the 32 bytes for compatability and use the default type (0).
-    /// </summary>
-    [TestMethod]
-    [Obsolete]
-    public void TestClaimClaimableBalanceWithLegacyByteIdOperation()
-    {
-        // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
-        var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
-
-        var balanceId = Enumerable.Repeat((byte)0x07, 32).ToArray();
-        var operation = new ClaimClaimableBalanceOperation.Builder(balanceId)
-            .SetSourceAccount(source)
-            .Build();
-
-        var xdr = operation.ToXdr();
-
-        var parsedOperation = (ClaimClaimableBalanceOperation)Operation.FromXdr(xdr);
-        Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
-
-        Assert.AreEqual(
-            "AAAAAQAAAADg3G3hclysZlFitS+s5zWyiiJD5B0STWy5LXCj6i5yxQAAAA8AAAAABwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc=",
-            operation.ToXdrBase64());
-    }
-
-    /// <summary>
-    ///     Claim a claimable balance using the byte representation of the balance id.
-    /// </summary>
-    [TestMethod]
-    [Obsolete]
-    public void TestClaimClaimableBalanceWithByteIdOperation()
-    {
-        // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
-        var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
-
-        // Prepend type bytes (first four bytes are the balance id type)
-        var balanceId = Enumerable.Repeat((byte)0x07, 32).Prepend((byte)0).Prepend((byte)0).Prepend((byte)0)
-            .Prepend((byte)0).ToArray();
-        var operation = new ClaimClaimableBalanceOperation.Builder(balanceId)
-            .SetSourceAccount(source)
-            .Build();
-
-        var xdr = operation.ToXdr();
-
-        var parsedOperation = (ClaimClaimableBalanceOperation)Operation.FromXdr(xdr);
-        Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
-
-        Assert.AreEqual(
-            "AAAAAQAAAADg3G3hclysZlFitS+s5zWyiiJD5B0STWy5LXCj6i5yxQAAAA8AAAAABwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc=",
             operation.ToXdrBase64());
     }
 
@@ -815,6 +763,8 @@ public class OperationTest
 
         var xdr = operation.ToXdr();
         var parsedOperation = (ClaimClaimableBalanceOperation)Operation.FromXdr(xdr);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
         CollectionAssert.AreEqual(operation.BalanceId, parsedOperation.BalanceId);
 
@@ -827,19 +777,6 @@ public class OperationTest
     public void TestClaimClaimableBalanceOperationInvalidEmptyBalanceId()
     {
         var balanceId = "";
-        var accountId = KeyPair.FromAccountId("GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN");
-
-        Assert.ThrowsException<ArgumentException>(() =>
-            new ClaimClaimableBalanceOperation.Builder(balanceId).SetSourceAccount(accountId).Build());
-    }
-
-    /// <summary>
-    ///     The first 4 bytes of the balance id are the balance id type, these are required. The default is 0x00000000.
-    /// </summary>
-    [TestMethod]
-    public void TestClaimClaimableBalanceOperationInvalidClaimableBalanceIDTypeMissing()
-    {
-        var balanceId = "6d6a0c142516a9cc7885a85c5aba3a1f4af5181cf9e7a809ac7ae5e4a58c825f";
         var accountId = KeyPair.FromAccountId("GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN");
 
         Assert.ThrowsException<ArgumentException>(() =>
@@ -876,6 +813,8 @@ public class OperationTest
         var xdr = operation.ToXdr();
 
         var parsedOperation = (BeginSponsoringFutureReservesOperation)Operation.FromXdr(xdr);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
 
         Assert.AreEqual(
@@ -890,13 +829,13 @@ public class OperationTest
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
 
-        var operation = new EndSponsoringFutureReservesOperation.Builder()
-            .SetSourceAccount(source)
-            .Build();
+        var operation = new EndSponsoringFutureReservesOperation.Builder(source).Build();
 
         var xdr = operation.ToXdr();
 
         var parsedOperation = (EndSponsoringFutureReservesOperation)Operation.FromXdr(xdr);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
 
         Assert.AreEqual("AAAAAQAAAADg3G3hclysZlFitS+s5zWyiiJD5B0STWy5LXCj6i5yxQAAABE=", operation.ToXdrBase64());
@@ -920,11 +859,28 @@ public class OperationTest
         var xdr = operation.ToXdr();
 
         var parsedOperation = (RevokeLedgerEntrySponsorshipOperation)Operation.FromXdr(xdr);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
 
         Assert.AreEqual(
             "AAAAAQAAAADg3G3hclysZlFitS+s5zWyiiJD5B0STWy5LXCj6i5yxQAAABIAAAAAAAAAAAAAAAAlyvHaD8duz+iEXkJUUbsHkklIlH46oMrMMYrt0odkfg==",
             operation.ToXdrBase64());
+    }
+
+    [TestMethod]
+    public void TestRevokeClaimableBalanceSponsorshipOperation()
+    {
+        var operation =
+            new RevokeLedgerEntrySponsorshipOperation.Builder(
+                "c8789370cda62cdb5be83642f5af61829c0c77afde7d0fb7577a8f320467563f").Build();
+
+        var operationXdrBase64 = operation.ToXdrBase64();
+        var decodedOperation = (RevokeLedgerEntrySponsorshipOperation)Operation.FromXdrBase64(operationXdrBase64);
+
+        Assert.IsNull(decodedOperation.SourceAccount);
+        CollectionAssert.AreEqual(((LedgerKeyClaimableBalance)operation.LedgerKey).BalanceId,
+            ((LedgerKeyClaimableBalance)decodedOperation.LedgerKey).BalanceId);
     }
 
     [TestMethod]
@@ -946,6 +902,8 @@ public class OperationTest
         var xdr = operation.ToXdr();
 
         var parsedOperation = (RevokeSignerSponsorshipOperation)Operation.FromXdr(xdr);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
 
         Assert.AreEqual(
@@ -982,6 +940,8 @@ public class OperationTest
         var xdr = operation.ToXdr();
 
         var parsedOperation = (ClawbackOperation)Operation.FromXdr(xdr);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(operation.Amount, parsedOperation.Amount);
         Assert.AreEqual(operation.Asset, parsedOperation.Asset);
@@ -1005,30 +965,14 @@ public class OperationTest
         var xdr = operation.ToXdr();
 
         var parsedOperation = (ClawbackClaimableBalanceOperation)Operation.FromXdr(xdr);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(operation.BalanceId.Length, parsedOperation.BalanceId.Length);
     }
 
     [TestMethod]
-    public void TestClawbackClaimableBalanceOperationLengthNotCorrect()
-    {
-        // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
-        var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
-
-        try
-        {
-            var operation = new ClawbackClaimableBalanceOperation.Builder(new byte[34])
-                .SetSourceAccount(source)
-                .Build();
-        }
-        catch (ArgumentException e)
-        {
-            Assert.AreEqual(e.Message, new ArgumentException("Must be 36 bytes long", "balanceId").Message);
-        }
-    }
-
-    [TestMethod]
-    [Obsolete]
+    [Obsolete("Deprecated")]
     public void TestSetTrustlineFlagsOperation()
     {
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
@@ -1043,6 +987,8 @@ public class OperationTest
         var xdr = operation.ToXdr();
 
         var parsedOperation = (SetTrustlineFlagsOperation)Operation.FromXdr(xdr);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(operation.Asset, parsedOperation.Asset);
         Assert.AreEqual(operation.Trustor.AccountId, parsedOperation.Trustor.AccountId);

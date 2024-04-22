@@ -8,7 +8,7 @@ public class ConfigSettingContractCostParamEntry
     public long ConstTerm { get; set; }
     public long LinearTerm { get; set; }
 
-    public static ConfigSettingContractCostParamEntry FromXdr(xdr.ContractCostParamEntry xdrEntry)
+    public static ConfigSettingContractCostParamEntry FromXdr(ContractCostParamEntry xdrEntry)
     {
         return new ConfigSettingContractCostParamEntry
         {
@@ -18,9 +18,9 @@ public class ConfigSettingContractCostParamEntry
         };
     }
 
-    public xdr.ContractCostParamEntry ToXdr()
+    public ContractCostParamEntry ToXdr()
     {
-        return new xdr.ContractCostParamEntry
+        return new ContractCostParamEntry
         {
             Ext = ExtensionPoint.ToXdr(),
             ConstTerm = new Int64(ConstTerm),

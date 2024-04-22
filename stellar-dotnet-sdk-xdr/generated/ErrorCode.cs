@@ -28,7 +28,7 @@ public class ErrorCode
         ERR_LOAD = 4
     }
 
-    public ErrorCodeEnum InnerValue { get; set; } = default;
+    public ErrorCodeEnum InnerValue { get; set; }
 
     public static ErrorCode Create(ErrorCodeEnum v)
     {

@@ -90,7 +90,7 @@ public class ContractCostType
         ChaCha20DrawBytes = 22
     }
 
-    public ContractCostTypeEnum InnerValue { get; set; } = default;
+    public ContractCostTypeEnum InnerValue { get; set; }
 
     public static ContractCostType Create(ContractCostTypeEnum v)
     {

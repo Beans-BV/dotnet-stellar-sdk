@@ -32,7 +32,7 @@ public class ManageDataResultCode
         MANAGE_DATA_INVALID_NAME = -4
     }
 
-    public ManageDataResultCodeEnum InnerValue { get; set; } = default;
+    public ManageDataResultCodeEnum InnerValue { get; set; }
 
     public static ManageDataResultCode Create(ManageDataResultCodeEnum v)
     {

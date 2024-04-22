@@ -1,15 +1,12 @@
-﻿using System;
+using System;
 
 namespace stellar_dotnet_sdk.requests;
 
 public class TooManyRequestsException : Exception
 {
-    public TooManyRequestsException(
-        object? retryAfter = null,
-        IClock? clock = null)
+    public TooManyRequestsException(object? retryAfter = null)
         : base("The rate limit for the requesting IP address is over its allowed limit.")
     {
-        clock ??= new SystemClock();
         try
         {
             var retryAfterStringValue = retryAfter?.ToString();
@@ -22,7 +19,7 @@ public class TooManyRequestsException : Exception
             }
             else if (DateTime.TryParse(retryAfterStringValue, out var retryAfterDateTime))
             {
-                RetryAfter = (retryAfterDateTime - clock.UtcNow).Seconds;
+                RetryAfter = (retryAfterDateTime - DateTime.UtcNow).Seconds;
             }
         }
         catch (Exception)

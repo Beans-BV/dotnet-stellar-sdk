@@ -13,9 +13,8 @@ public enum OrderDirection
 
 public interface IRequestBuilder<T> where T : class
 {
-    Task<TZ> Execute<TZ>(Uri uri) where TZ : class;
-
     string Uri { get; }
+    Task<TZ> Execute<TZ>(Uri uri) where TZ : class;
 
     /// <summary>
     ///     Sets <code>cursor</code> parameter on the request.
@@ -62,21 +61,9 @@ public interface IRequestBuilder<T> where T : class
 public class RequestBuilder<T> : IRequestBuilder<T> where T : class
 {
     private readonly List<string> _segments;
-    private bool _segmentsAdded;
-    protected readonly UriBuilder UriBuilder;
     private readonly Uri _serverUri;
-
-    public static HttpClient HttpClient { get; set; }
-
-    public async Task<TZ> Execute<TZ>(Uri uri) where TZ : class
-    {
-        var responseHandler = new ResponseHandler<TZ>();
-
-        var response = await HttpClient.GetAsync(uri);
-        return await responseHandler.HandleResponse(response);
-    }
-
-    public string Uri => BuildUri().ToString();
+    protected readonly UriBuilder UriBuilder;
+    private bool _segmentsAdded;
 
     public RequestBuilder(Uri serverUri, string defaultSegment, HttpClient httpClient)
     {
@@ -92,21 +79,17 @@ public class RequestBuilder<T> : IRequestBuilder<T> where T : class
         HttpClient = httpClient;
     }
 
-    protected RequestBuilder<T> SetSegments(params string[] segments)
+    public static HttpClient HttpClient { get; set; }
+
+    public async Task<TZ> Execute<TZ>(Uri uri) where TZ : class
     {
-        if (_segmentsAdded)
-            throw new Exception("URL segments have been already added.");
+        var responseHandler = new ResponseHandler<TZ>();
 
-        _segmentsAdded = true;
-
-        //Remove default segments
-        _segments.Clear();
-
-        foreach (var segment in segments)
-            _segments.Add(segment);
-
-        return this;
+        var response = await HttpClient.GetAsync(uri);
+        return await responseHandler.HandleResponse(response);
     }
+
+    public string Uri => BuildUri().ToString();
 
     /// <summary>
     ///     Sets <code>cursor</code> parameter on the request.
@@ -164,20 +147,33 @@ public class RequestBuilder<T> : IRequestBuilder<T> where T : class
     {
         if (_segments.Count <= 0)
             throw new NotSupportedException("No segments defined.");
-            
+
         var path = _serverUri.AbsolutePath.TrimEnd('/');
 
         foreach (var segment in _segments)
         {
-            if (!path.EndsWith("/"))
-            {
-                path += "/";   
-            }
+            if (!path.EndsWith("/")) path += "/";
             path += segment;
         }
 
         UriBuilder.Path = path;
 
         return UriBuilder.Uri;
+    }
+
+    protected RequestBuilder<T> SetSegments(params string[] segments)
+    {
+        if (_segmentsAdded)
+            throw new Exception("URL segments have been already added.");
+
+        _segmentsAdded = true;
+
+        //Remove default segments
+        _segments.Clear();
+
+        foreach (var segment in segments)
+            _segments.Add(segment);
+
+        return this;
     }
 }

@@ -9,7 +9,13 @@ public class LedgerKeyLiquidityPool : LedgerKey
         LiquidityPoolID = poolId;
     }
 
-    public LiquidityPoolID LiquidityPoolID { get; set; }
+    public LedgerKeyLiquidityPool(Asset assetA, Asset assetB, int fee)
+    {
+        LiquidityPoolID = new LiquidityPoolID(LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+            assetA, assetB, fee);
+    }
+
+    public LiquidityPoolID LiquidityPoolID { get; }
 
     public override xdr.LedgerKey ToXdr()
     {
@@ -19,7 +25,7 @@ public class LedgerKeyLiquidityPool : LedgerKey
                 new LedgerEntryType { InnerValue = LedgerEntryType.LedgerEntryTypeEnum.LIQUIDITY_POOL },
             LiquidityPool = new xdr.LedgerKey.LedgerKeyLiquidityPool
             {
-                LiquidityPoolID = new PoolID(new xdr.Hash(LiquidityPoolID.Hash))
+                LiquidityPoolID = new PoolID(new Hash(LiquidityPoolID.Hash))
             }
         };
     }

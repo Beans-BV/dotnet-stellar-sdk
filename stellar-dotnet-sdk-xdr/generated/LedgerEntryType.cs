@@ -38,7 +38,7 @@ public class LedgerEntryType
         TTL = 9
     }
 
-    public LedgerEntryTypeEnum InnerValue { get; set; } = default;
+    public LedgerEntryTypeEnum InnerValue { get; set; }
 
     public static LedgerEntryType Create(LedgerEntryTypeEnum v)
     {

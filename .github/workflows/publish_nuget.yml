@@ -1,16 +1,8 @@
 name: Publish to NuGet
-on: 
-  workflow_dispatch:
-  push:
-    branches:
-    - master
-  pull_request_target:
-    types:
-    - opened
-    - synchronize
+on:
   release:
     types:
-    - published
+      - published
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
@@ -22,57 +14,43 @@ jobs:
   create_nuget:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-    - run: dotnet pack --configuration Release --output ${{env.NuGetDirectory}}
-    - uses: actions/upload-artifact@v3
-      with:
-        name: nuget
-        if-no-files-found: error
-        retention-days: 7
-        path: ${{env.NuGetDirectory}}/*.nupkg
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+      - run: dotnet pack --configuration Release --output ${{env.NuGetDirectory}} -p:PackageVersion=${{github.event.release.tag_name}}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: nuget
+          if-no-files-found: error
+          retention-days: 7
+          path: ${{env.NuGetDirectory}}/*.nupkg
 
   validate_nuget:
     runs-on: ubuntu-latest
     needs: create_nuget
     steps:
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-    
-    - uses: actions/download-artifact@v3
-      with:
-        name: nuget
-        path: ${{env.NuGetDirectory}}
-    
-    - name: Install nuget validator
-      run: dotnet tool update Meziantou.Framework.NuGetPackageValidation.Tool --global
-    - name: Validate package
-      run: meziantou.validate-nuget-package --excluded-rules IconMustBeSet,Symbols,AuthorMustBeSet (Get-ChildItem "${{env.NuGetDirectory}}/*.nupkg")
-  run_test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-    - name: Run tests
-      run: dotnet test --configuration Release
-  deploy:
-    # Publish only when creating a GitHub Release
-    # https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository
-    if: github.event_name == 'release'
-    runs-on: ubuntu-latest
-    needs: 
-    - validate_nuget
-    - run_test
-    steps:
-      # Download the NuGet package created in the previous job
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+
       - uses: actions/download-artifact@v3
         with:
           name: nuget
           path: ${{env.NuGetDirectory}}
 
-      # Install the .NET SDK indicated in the global.json file
+      - name: Install nuget validator
+        run: dotnet tool update Meziantou.Framework.NuGetPackageValidation.Tool --global
+      - name: Validate package
+        run: meziantou.validate-nuget-package --excluded-rules IconMustBeSet,Symbols,AuthorMustBeSet (Get-ChildItem "${{env.NuGetDirectory}}/*.nupkg")
+  deploy:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    needs: validate_nuget
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: nuget
+          path: ${{env.NuGetDirectory}}
+
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v4
       - name: Publish NuGet package
