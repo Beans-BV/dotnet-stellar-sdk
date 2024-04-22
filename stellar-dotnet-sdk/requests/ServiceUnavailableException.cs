@@ -1,15 +1,12 @@
-﻿using System;
+using System;
 
 namespace stellar_dotnet_sdk.requests;
 
 public class ServiceUnavailableException : Exception
 {
-    public ServiceUnavailableException(
-        object? retryAfter = null,
-        IClock? clock = null)
+    public ServiceUnavailableException(object? retryAfter = null)
         : base("The server is currently unable to handle the request due to a temporary overloading or maintenance of the server.")
     {
-        clock ??= new SystemClock();
         try
         {
             var retryAfterStringValue = retryAfter?.ToString();
@@ -22,7 +19,7 @@ public class ServiceUnavailableException : Exception
             }
             else if (DateTime.TryParse(retryAfterStringValue, out var retryAfterDateTime))
             {
-                RetryAfter = (retryAfterDateTime - clock.UtcNow).Seconds;
+                RetryAfter = (retryAfterDateTime - DateTime.UtcNow).Seconds;
             }
         }
         catch (Exception)
