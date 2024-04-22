@@ -13886,6 +13886,41 @@ references:
   fullName.vb: stellar_dotnet_sdk.requests.ResponseHandler(Of T).HandleResponse
   nameWithType: ResponseHandler<T>.HandleResponse
   nameWithType.vb: ResponseHandler(Of T).HandleResponse
+- uid: stellar_dotnet_sdk.requests.ServiceUnavailableException
+  name: ServiceUnavailableException
+  href: api/stellar_dotnet_sdk.requests.ServiceUnavailableException.html
+  commentId: T:stellar_dotnet_sdk.requests.ServiceUnavailableException
+  fullName: stellar_dotnet_sdk.requests.ServiceUnavailableException
+  nameWithType: ServiceUnavailableException
+- uid: stellar_dotnet_sdk.requests.ServiceUnavailableException.#ctor(System.Nullable{System.Object})
+  name: ServiceUnavailableException(Nullable<Object>)
+  href: api/stellar_dotnet_sdk.requests.ServiceUnavailableException.html#stellar_dotnet_sdk_requests_ServiceUnavailableException__ctor_System_Nullable_System_Object__
+  commentId: M:stellar_dotnet_sdk.requests.ServiceUnavailableException.#ctor(System.Nullable{System.Object})
+  name.vb: ServiceUnavailableException(Nullable(Of Object))
+  fullName: stellar_dotnet_sdk.requests.ServiceUnavailableException.ServiceUnavailableException(System.Nullable<System.Object>)
+  fullName.vb: stellar_dotnet_sdk.requests.ServiceUnavailableException.ServiceUnavailableException(System.Nullable(Of System.Object))
+  nameWithType: ServiceUnavailableException.ServiceUnavailableException(Nullable<Object>)
+  nameWithType.vb: ServiceUnavailableException.ServiceUnavailableException(Nullable(Of Object))
+- uid: stellar_dotnet_sdk.requests.ServiceUnavailableException.#ctor*
+  name: ServiceUnavailableException
+  href: api/stellar_dotnet_sdk.requests.ServiceUnavailableException.html#stellar_dotnet_sdk_requests_ServiceUnavailableException__ctor_
+  commentId: Overload:stellar_dotnet_sdk.requests.ServiceUnavailableException.#ctor
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.ServiceUnavailableException.ServiceUnavailableException
+  nameWithType: ServiceUnavailableException.ServiceUnavailableException
+- uid: stellar_dotnet_sdk.requests.ServiceUnavailableException.RetryAfter
+  name: RetryAfter
+  href: api/stellar_dotnet_sdk.requests.ServiceUnavailableException.html#stellar_dotnet_sdk_requests_ServiceUnavailableException_RetryAfter
+  commentId: P:stellar_dotnet_sdk.requests.ServiceUnavailableException.RetryAfter
+  fullName: stellar_dotnet_sdk.requests.ServiceUnavailableException.RetryAfter
+  nameWithType: ServiceUnavailableException.RetryAfter
+- uid: stellar_dotnet_sdk.requests.ServiceUnavailableException.RetryAfter*
+  name: RetryAfter
+  href: api/stellar_dotnet_sdk.requests.ServiceUnavailableException.html#stellar_dotnet_sdk_requests_ServiceUnavailableException_RetryAfter_
+  commentId: Overload:stellar_dotnet_sdk.requests.ServiceUnavailableException.RetryAfter
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.requests.ServiceUnavailableException.RetryAfter
+  nameWithType: ServiceUnavailableException.RetryAfter
 - uid: stellar_dotnet_sdk.requests.sorobanrpc
   name: stellar_dotnet_sdk.requests.sorobanrpc
   href: api/stellar_dotnet_sdk.requests.sorobanrpc.html
@@ -14100,12 +14135,15 @@ references:
   commentId: T:stellar_dotnet_sdk.requests.TooManyRequestsException
   fullName: stellar_dotnet_sdk.requests.TooManyRequestsException
   nameWithType: TooManyRequestsException
-- uid: stellar_dotnet_sdk.requests.TooManyRequestsException.#ctor(System.Int32)
-  name: TooManyRequestsException(Int32)
-  href: api/stellar_dotnet_sdk.requests.TooManyRequestsException.html#stellar_dotnet_sdk_requests_TooManyRequestsException__ctor_System_Int32_
-  commentId: M:stellar_dotnet_sdk.requests.TooManyRequestsException.#ctor(System.Int32)
-  fullName: stellar_dotnet_sdk.requests.TooManyRequestsException.TooManyRequestsException(System.Int32)
-  nameWithType: TooManyRequestsException.TooManyRequestsException(Int32)
+- uid: stellar_dotnet_sdk.requests.TooManyRequestsException.#ctor(System.Nullable{System.Object})
+  name: TooManyRequestsException(Nullable<Object>)
+  href: api/stellar_dotnet_sdk.requests.TooManyRequestsException.html#stellar_dotnet_sdk_requests_TooManyRequestsException__ctor_System_Nullable_System_Object__
+  commentId: M:stellar_dotnet_sdk.requests.TooManyRequestsException.#ctor(System.Nullable{System.Object})
+  name.vb: TooManyRequestsException(Nullable(Of Object))
+  fullName: stellar_dotnet_sdk.requests.TooManyRequestsException.TooManyRequestsException(System.Nullable<System.Object>)
+  fullName.vb: stellar_dotnet_sdk.requests.TooManyRequestsException.TooManyRequestsException(System.Nullable(Of System.Object))
+  nameWithType: TooManyRequestsException.TooManyRequestsException(Nullable<Object>)
+  nameWithType.vb: TooManyRequestsException.TooManyRequestsException(Nullable(Of Object))
 - uid: stellar_dotnet_sdk.requests.TooManyRequestsException.#ctor*
   name: TooManyRequestsException
   href: api/stellar_dotnet_sdk.requests.TooManyRequestsException.html#stellar_dotnet_sdk_requests_TooManyRequestsException__ctor_
@@ -36375,6 +36413,57 @@ references:
   isSpec: "True"
   fullName: stellar_dotnet_sdk.SubmitTransactionOptions.SkipMemoRequiredCheck
   nameWithType: SubmitTransactionOptions.SkipMemoRequiredCheck
+- uid: stellar_dotnet_sdk.SubmitTransactionTimeoutResponseException
+  name: SubmitTransactionTimeoutResponseException
+  href: api/stellar_dotnet_sdk.SubmitTransactionTimeoutResponseException.html
+  commentId: T:stellar_dotnet_sdk.SubmitTransactionTimeoutResponseException
+  fullName: stellar_dotnet_sdk.SubmitTransactionTimeoutResponseException
+  nameWithType: SubmitTransactionTimeoutResponseException
+- uid: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException
+  name: SubmitTransactionUnknownResponseException
+  href: api/stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.html
+  commentId: T:stellar_dotnet_sdk.SubmitTransactionUnknownResponseException
+  fullName: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException
+  nameWithType: SubmitTransactionUnknownResponseException
+- uid: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.#ctor(HttpStatusCode,System.String)
+  name: SubmitTransactionUnknownResponseException(HttpStatusCode, String)
+  href: api/stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.html#stellar_dotnet_sdk_SubmitTransactionUnknownResponseException__ctor_HttpStatusCode_System_String_
+  commentId: M:stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.#ctor(HttpStatusCode,System.String)
+  fullName: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.SubmitTransactionUnknownResponseException(HttpStatusCode, System.String)
+  nameWithType: SubmitTransactionUnknownResponseException.SubmitTransactionUnknownResponseException(HttpStatusCode, String)
+- uid: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.#ctor*
+  name: SubmitTransactionUnknownResponseException
+  href: api/stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.html#stellar_dotnet_sdk_SubmitTransactionUnknownResponseException__ctor_
+  commentId: Overload:stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.#ctor
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.SubmitTransactionUnknownResponseException
+  nameWithType: SubmitTransactionUnknownResponseException.SubmitTransactionUnknownResponseException
+- uid: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.Body
+  name: Body
+  href: api/stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.html#stellar_dotnet_sdk_SubmitTransactionUnknownResponseException_Body
+  commentId: P:stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.Body
+  fullName: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.Body
+  nameWithType: SubmitTransactionUnknownResponseException.Body
+- uid: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.Body*
+  name: Body
+  href: api/stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.html#stellar_dotnet_sdk_SubmitTransactionUnknownResponseException_Body_
+  commentId: Overload:stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.Body
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.Body
+  nameWithType: SubmitTransactionUnknownResponseException.Body
+- uid: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.Code
+  name: Code
+  href: api/stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.html#stellar_dotnet_sdk_SubmitTransactionUnknownResponseException_Code
+  commentId: P:stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.Code
+  fullName: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.Code
+  nameWithType: SubmitTransactionUnknownResponseException.Code
+- uid: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.Code*
+  name: Code
+  href: api/stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.html#stellar_dotnet_sdk_SubmitTransactionUnknownResponseException_Code_
+  commentId: Overload:stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.Code
+  isSpec: "True"
+  fullName: stellar_dotnet_sdk.SubmitTransactionUnknownResponseException.Code
+  nameWithType: SubmitTransactionUnknownResponseException.Code
 - uid: stellar_dotnet_sdk.TimeBounds
   name: TimeBounds
   href: api/stellar_dotnet_sdk.TimeBounds.html
