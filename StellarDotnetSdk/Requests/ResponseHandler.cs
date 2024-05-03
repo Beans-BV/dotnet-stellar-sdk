@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Exceptions;
@@ -15,14 +16,16 @@ public class ResponseHandler<T> where T : class
 
         switch ((int)statusCode)
         {
-            case 429:
-            {
-                var retryAfterHeaderValue = response.Headers.Contains("Retry-After")
-                    ? response.Headers.GetValues("Retry-After").First()
-                    : null;
-                var retryAfter = retryAfterHeaderValue != null ? int.Parse(retryAfterHeaderValue) : (int?)null;
-                throw new TooManyRequestsException(retryAfter);
-            }
+            case (int)HttpStatusCode.ServiceUnavailable:
+                throw new ServiceUnavailableException(
+                    response.Headers.Contains("Retry-After")
+                        ? response.Headers.GetValues("Retry-After").First()
+                        : null);
+            case (int)HttpStatusCode.TooManyRequests:
+                throw new TooManyRequestsException(
+                    response.Headers.Contains("Retry-After")
+                        ? response.Headers.GetValues("Retry-After").First()
+                        : null);
             case >= 300:
                 throw new HttpResponseException((int)statusCode, response.ReasonPhrase);
         }

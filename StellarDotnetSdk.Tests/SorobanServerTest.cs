@@ -55,7 +55,7 @@ public class SorobanServerTest
         KeyPair.FromSecretSeed("SBV33ITENGZRQ3UEUY5XD3NOBHHSGZY2ADF2OQ7JC2FR2S3BV3DSHEGC");
 
     private Asset _asset =
-        new AssetTypeCreditAlphaNum4("XXX", "GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS");
+        new AssetTypeCreditAlphaNum4("XXA", "GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS");
 
     // "GDUFELVZEZ3CX5PLYJAGPZ7CIM3HTVAD2JRHKXTGK4N5B2ADCALW7NGW"
     private string TargetAccountId => _targetAccount.AccountId;
@@ -71,7 +71,7 @@ public class SorobanServerTest
         await Utils.CheckAndCreateAccountOnTestnet(SourceAccountId);
         await Utils.CheckAndCreateAccountOnTestnet(TargetAccountId);
 
-        _asset = new AssetTypeCreditAlphaNum4("AAA", SourceAccountId);
+        _asset = new AssetTypeCreditAlphaNum4("XXA", SourceAccountId);
     }
 
     [TestCleanup]
@@ -95,7 +95,7 @@ public class SorobanServerTest
         var response = await _sorobanServer.GetNetwork();
         Assert.AreEqual("https://friendbot.stellar.org/", response.FriendbotUrl);
         Assert.AreEqual("Test SDF Network ; September 2015", response.Passphrase);
-        Assert.AreEqual(20, response.ProtocolVersion);
+        Assert.AreEqual(21, response.ProtocolVersion);
     }
 
     [TestMethod]
@@ -399,7 +399,7 @@ public class SorobanServerTest
 
         Assert.IsNotNull(contractWasmId);
 
-        await Task.Delay(5000);
+        await Task.Delay(2000);
 
         var operationResponse = await GetHorizonOperation(txHash, transactionEnvelopeXdrBase64);
 
@@ -483,7 +483,7 @@ public class SorobanServerTest
         var ledger = getTransactionResponse.Ledger;
         Assert.IsNotNull(contractId);
 
-        await Task.Delay(3000);
+        await Task.Delay(1000);
 
         var operationResponse = await GetHorizonOperation(txHash, transactionEnvelopeXdrBase64);
         Assert.IsInstanceOfType(operationResponse, typeof(InvokeHostFunctionOperationResponse));
@@ -602,7 +602,6 @@ public class SorobanServerTest
     /// <param name="id">could either be a wasmId or a contractId.</param>
     private async Task RestoreFootprint(string id)
     {
-        await Task.Delay(2000);
         var account = await _server.Accounts.Account(SourceAccountId);
         var restoreOperation = new RestoreFootprintOperation();
         var tx = new TransactionBuilder(account).AddOperation(restoreOperation).Build();
@@ -643,7 +642,6 @@ public class SorobanServerTest
 
     private async Task ExtendFootprintTtl(string wasmId, uint extentTo)
     {
-        await Task.Delay(2000);
         var account = await _server.Accounts.Account(SourceAccountId);
 
         var extendOperation = new ExtendFootprintOperation(extentTo);
@@ -667,7 +665,7 @@ public class SorobanServerTest
         Assert.IsNotNull(txHash);
         await PollTransaction(txHash);
 
-        await Task.Delay(2000);
+        await Task.Delay(1000);
 
         var operationResponse = await GetHorizonOperation(txHash, transactionEnvelopeXdrBase64);
         Assert.IsInstanceOfType(operationResponse, typeof(ExtendFootprintOperationResponse));
@@ -681,7 +679,6 @@ public class SorobanServerTest
         GetTransactionResponse? transactionResponse = null;
         while (status == GetTransactionResponse.GetTransactionStatus.NOT_FOUND)
         {
-            await Task.Delay(5000);
             transactionResponse = await _sorobanServer.GetTransaction(transactionHash);
 
             status = transactionResponse.Status;
@@ -694,6 +691,10 @@ public class SorobanServerTest
             else if (status == GetTransactionResponse.GetTransactionStatus.SUCCESS)
             {
                 Assert.IsNotNull(transactionResponse.ResultXdr);
+            }
+            else
+            {
+                await Task.Delay(500);    
             }
         }
 
@@ -951,7 +952,7 @@ public class SorobanServerTest
         var parameters = constantProduct.Parameters;
         Assert.IsInstanceOfType(parameters.AssetA, typeof(AssetTypeNative));
         Assert.IsInstanceOfType(parameters.AssetB, typeof(AssetTypeCreditAlphaNum4));
-        Assert.AreEqual("AAA", ((AssetTypeCreditAlphaNum4)parameters.AssetB).Code);
+        Assert.AreEqual("XXA", ((AssetTypeCreditAlphaNum4)parameters.AssetB).Code);
         Assert.AreEqual(SourceAccountId, ((AssetTypeCreditAlphaNum4)parameters.AssetB).Issuer);
     }
 

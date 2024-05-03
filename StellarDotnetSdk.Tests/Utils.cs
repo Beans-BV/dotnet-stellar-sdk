@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -113,6 +116,14 @@ public static class Utils
         return new Server(uri, httpClient);
     }
 
+    public static Server CreateTestServerWithHeaders(Dictionary<string, IEnumerable<string>> headers, HttpStatusCode statusCode = HttpStatusCode.OK,
+        string uri = "https://horizon-testnet.stellar.org")
+    {
+        Network.UseTestNetwork();
+        var httpClient = CreateFakeHttpClient("", statusCode, headers);
+        return new Server(uri, httpClient);
+    }
+    
     public static async Task<Server> CreateTestServerWithJson(string pathToJson,
         HttpStatusCode statusCode = HttpStatusCode.OK, string uri = "https://horizon-testnet.stellar.org")
     {
@@ -121,7 +132,8 @@ public static class Utils
         return CreateTestServerWithContent(content, statusCode, uri);
     }
 
-    public static HttpClient CreateFakeHttpClient(string? content, HttpStatusCode statusCode = HttpStatusCode.OK)
+    public static HttpClient CreateFakeHttpClient(string? content, HttpStatusCode statusCode = HttpStatusCode.OK,
+        IDictionary<string, IEnumerable<string>>? headers = null)
     {
         var mockFakeHttpMessageHandler = new Mock<FakeHttpMessageHandler> { CallBase = true };
         var httpClient = new HttpClient(mockFakeHttpMessageHandler.Object);
@@ -135,6 +147,13 @@ public static class Utils
         httpResponseMessage.Headers.Add("X-Ratelimit-Limit", "-1");
         httpResponseMessage.Headers.Add("X-Ratelimit-Remaining", "-1");
         httpResponseMessage.Headers.Add("X-Ratelimit-Reset", "-1");
+        if (headers != null)
+        {
+            foreach (var header in headers)
+            {
+                httpResponseMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
+        }
 
         mockFakeHttpMessageHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>())).Returns(httpResponseMessage);
 

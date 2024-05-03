@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -7,12 +8,14 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Federation;
 using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Responses.Results;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace StellarDotnetSdk.Tests;
 
@@ -294,5 +297,79 @@ public class ServerTest
         Assert.AreEqual(hostFunction.FunctionName.InnerValue, "submit");
         Assert.AreEqual(((SCSymbol)hostFunction.Args[0]).InnerValue, "dancinRaph");
         Assert.AreEqual(invokeContractOperation.Auth.Length, 0);
+    }
+
+
+    [TestMethod]
+    public async Task TestSubmitTransactionTooManyRequestsWithRetryAfterInt()
+    {
+        var server = Utils.CreateTestServerWithHeaders(
+            new Dictionary<string, IEnumerable<string>>
+            {
+                { "Retry-After", new[] { "10" } }
+            },
+            HttpStatusCode.TooManyRequests);
+
+        var exception = await Assert.ThrowsExceptionAsync<TooManyRequestsException>(
+            () => server.SubmitTransaction(
+                BuildTransaction(),
+                new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
+
+        Assert.AreEqual(10, exception.RetryAfter);
+    }
+
+    [TestMethod]
+    public async Task TestSubmitTransactionTooManyRequestsWithRetryAfterDateTime()
+    {
+        var server = Utils.CreateTestServerWithHeaders(
+            new Dictionary<string, IEnumerable<string>>
+            {
+                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10)).Trim('"') } }
+            },
+            HttpStatusCode.TooManyRequests);
+
+        var exception = await Assert.ThrowsExceptionAsync<TooManyRequestsException>(
+            () => server.SubmitTransaction(
+                BuildTransaction(),
+                new SubmitTransactionOptions { SkipMemoRequiredCheck = true }
+            ));
+
+        Assert.IsTrue(exception.RetryAfter is >= 7 and <= 10, "The RetryAfter value is outside the expected range.");
+    }
+
+    [TestMethod]
+    public async Task TestSubmitTransactionServiceUnavailableWithRetryAfterInt()
+    {
+        var server = Utils.CreateTestServerWithHeaders(
+            new Dictionary<string, IEnumerable<string>>
+            {
+                { "Retry-After", new[] { "10" } }
+            },
+            HttpStatusCode.ServiceUnavailable);
+
+        var exception = await Assert.ThrowsExceptionAsync<ServiceUnavailableException>(
+            () => server.SubmitTransaction(
+                BuildTransaction(),
+                new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
+
+        Assert.AreEqual(10, exception.RetryAfter);
+    }
+
+    [TestMethod]
+    public async Task TestSubmitTransactionServiceUnavailableWithRetryAfterDateTime()
+    {
+        var server = Utils.CreateTestServerWithHeaders(
+            new Dictionary<string, IEnumerable<string>>
+            {
+                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10)).Trim('"') } }
+            },
+            HttpStatusCode.ServiceUnavailable);
+     
+        var exception = await Assert.ThrowsExceptionAsync<ServiceUnavailableException>(
+            () => server.SubmitTransaction(
+                BuildTransaction(),
+                new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
+
+        Assert.IsTrue(exception.RetryAfter is >= 7 and <= 10, "The RetryAfter value is outside the expected range.");
     }
 }

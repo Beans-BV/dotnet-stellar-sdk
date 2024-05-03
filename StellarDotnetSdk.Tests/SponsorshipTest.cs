@@ -23,7 +23,7 @@ public class SponsorshipTest
         KeyPair.FromSecretSeed("SBQZZETKBHMRVNPEM7TMYAXORIRIDBBS6HD43C3PFH75SI54QAC6YTE2");
 
     private Asset _assetA =
-        new AssetTypeCreditAlphaNum4("XXX", "GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS");
+        new AssetTypeCreditAlphaNum4("XXXY", "GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS");
 
     // "GDUFELVZEZ3CX5PLYJAGPZ7CIM3HTVAD2JRHKXTGK4N5B2ADCALW7NGW";
     private string SponsoredId => _sponsoredAccount.AccountId;
@@ -39,7 +39,7 @@ public class SponsorshipTest
         await Utils.CheckAndCreateAccountOnTestnet(SponsoringId);
         await Utils.CheckAndCreateAccountOnTestnet(SponsoredId);
 
-        _assetA = new AssetTypeCreditAlphaNum4("AAA", SponsoringId);
+        _assetA = new AssetTypeCreditAlphaNum4("XXXY", SponsoringId);
     }
 
     [TestCleanup]

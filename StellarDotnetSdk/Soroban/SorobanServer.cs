@@ -91,7 +91,7 @@ public class SorobanServer : IDisposable
     /// </returns>
     public Task<GetTransactionResponse> GetTransaction(string txHash)
     {
-        return SendRequest<object, GetTransactionResponse>("getTransaction", new[] { txHash });
+        return SendRequest<object, GetTransactionResponse>("getTransaction", new { hash = txHash });
     }
 
     /// <summary>

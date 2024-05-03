@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using stellar_dotnet_sdk;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Federation;
@@ -94,8 +97,6 @@ public class Server : IDisposable
     ///     Submit a transaction to the network.
     ///     This method will check if any of the destination accounts require a memo.
     /// </summary>
-    /// <param name="transaction"></param>
-    /// <returns></returns>
     public Task<SubmitTransactionResponse?> SubmitTransaction(Transaction transaction)
     {
         var options = new SubmitTransactionOptions { SkipMemoRequiredCheck = false };
@@ -107,9 +108,6 @@ public class Server : IDisposable
     ///     This method will check if any of the destination accounts require a memo.  Change the SkipMemoRequiredCheck
     ///     options to change this behaviour.
     /// </summary>
-    /// <param name="transaction"></param>
-    /// <param name="options"></param>
-    /// <returns></returns>
     public Task<SubmitTransactionResponse?> SubmitTransaction(Transaction transaction, SubmitTransactionOptions options)
     {
         return SubmitTransaction(transaction.ToEnvelopeXdrBase64(), options);
@@ -119,8 +117,6 @@ public class Server : IDisposable
     ///     Submit a transaction to the network.
     ///     This method will check if any of the destination accounts require a memo.
     /// </summary>
-    /// <param name="transactionEnvelopeBase64"></param>
-    /// <returns></returns>
     public Task<SubmitTransactionResponse?> SubmitTransaction(string transactionEnvelopeBase64)
     {
         var options = new SubmitTransactionOptions { SkipMemoRequiredCheck = false };
@@ -145,10 +141,8 @@ public class Server : IDisposable
     ///     This method will check if any of the destination accounts require a memo.  Change the SkipMemoRequiredCheck
     ///     options to change this behaviour.
     /// </summary>
-    /// <param name="transactionEnvelopeBase64"></param>
-    /// <param name="options"></param>
-    /// <returns></returns>
-    public async Task<SubmitTransactionResponse?> SubmitTransaction(string transactionEnvelopeBase64,
+    public async Task<SubmitTransactionResponse?> SubmitTransaction(
+        string transactionEnvelopeBase64,
         SubmitTransactionOptions options)
     {
         if (!options.SkipMemoRequiredCheck)
@@ -163,29 +157,49 @@ public class Server : IDisposable
             await CheckMemoRequired(tx);
         }
 
-        var transactionUri = new UriBuilder(_serverUri).SetPath("/transactions").Uri;
+        var transactionUriBuilder = new UriBuilder(_serverUri);
+
+        var path = _serverUri.AbsolutePath.TrimEnd('/');
+        transactionUriBuilder.SetPath($"{path}/transactions");
 
         var paramsPairs = new List<KeyValuePair<string, string>>
         {
             new("tx", transactionEnvelopeBase64)
         };
 
-        var response = await _httpClient.PostAsync(transactionUri, new FormUrlEncodedContent(paramsPairs.ToArray()));
+        var response =
+            await _httpClient.PostAsync(transactionUriBuilder.Uri, new FormUrlEncodedContent(paramsPairs.ToArray()));
+        var responseString = await response.Content.ReadAsStringAsync();
 
         if (options.EnsureSuccess && !response.IsSuccessStatusCode)
         {
-            var responseString = string.Empty;
-            if (response.Content != null) responseString = await response.Content.ReadAsStringAsync();
-
             throw new ConnectionErrorException(
                 $"Status code ({response.StatusCode}) is not success.{(!string.IsNullOrEmpty(responseString) ? " Content: " + responseString : "")}");
         }
 
-        if (response.Content == null) return null;
+        switch (response.StatusCode)
         {
-            var responseString = await response.Content.ReadAsStringAsync();
-            var submitTransactionResponse = JsonSingleton.GetInstance<SubmitTransactionResponse>(responseString);
-            return submitTransactionResponse;
+            case HttpStatusCode.OK:
+            case HttpStatusCode.BadRequest:
+                var submitTransactionResponse = JsonSingleton.GetInstance<SubmitTransactionResponse>(
+                    responseString);
+                return submitTransactionResponse;
+            case HttpStatusCode.ServiceUnavailable:
+                throw new ServiceUnavailableException(
+                    response.Headers.Contains("Retry-After")
+                        ? response.Headers.GetValues("Retry-After").First()
+                        : null
+                );
+            case HttpStatusCode.TooManyRequests:
+                throw new TooManyRequestsException(
+                    response.Headers.Contains("Retry-After")
+                        ? response.Headers.GetValues("Retry-After").First()
+                        : null
+                );
+            case HttpStatusCode.GatewayTimeout:
+                throw new SubmitTransactionTimeoutResponseException();
+            default:
+                throw new SubmitTransactionUnknownResponseException(response.StatusCode, responseString);
         }
     }
 
@@ -196,12 +210,11 @@ public class Server : IDisposable
     ///     It will sequentially load each destination account and check if it has the data field
     ///     <c>config.memo_required</c> set to <c>"MQ=="</c>.
     /// </summary>
-    /// <exception cref="AccountRequiresMemoException"></exception>
     public async Task CheckMemoRequired(TransactionBase transaction)
     {
         var tx = GetTransactionToCheck(transaction);
 
-        if (tx.Memo != null && !Equals(tx.Memo, Memo.None())) return;
+        if (!Equals(tx.Memo, Memo.None())) return;
 
         var destinations = new HashSet<string>();
 
@@ -220,9 +233,9 @@ public class Server : IDisposable
             try
             {
                 var account = await Accounts.Account(destination);
-                if (!account.Data.ContainsKey(AccountRequiresMemoKey)) continue;
+                if (!account.Data.TryGetValue(AccountRequiresMemoKey, out var value)) continue;
 
-                if (account.Data[AccountRequiresMemoKey] == AccountRequiresMemo)
+                if (value == AccountRequiresMemo)
                     throw new AccountRequiresMemoException("Account requires memo");
             }
             catch (HttpResponseException ex)
