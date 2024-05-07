@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,11 +39,16 @@ public static class Utils
     {
         if (Path.GetDirectoryName(jsonFilePath) != "") return Path.Combine("TestData", jsonFilePath);
         // testFilePath would be something like C:\workspace\dotnet-stellar-sdk\StellarDotnetSdk.Tests\Responses\Effects\LiquidityPoolEffectResponseTest.cs on Windows
-        // rootPath would be something like C:\workspace\dotnet-stellar-sdk\StellarDotnetSdk.Tests\ on Windows
         // testFileDirectoryPath would be something like C:\workspace\dotnet-stellar-sdk\StellarDotnetSdk.Tests\Responses\Effects\ on Windows
-        var rootPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, @"..\..\..\"));
-        var testFileDirectoryPath = Path.GetDirectoryName(testFilePath) ?? rootPath;
-        // Responses\Effects\
+        // AppContext.BaseDirectory would be /home/runner/work/dotnet-stellar-sdk/dotnet-stellar-sdk/StellarDotnetSdk.Tests/bin/Release/net8.0 on Linux
+        // and C:\workspace\dotnet-stellar-sdk\StellarDotnetSdk.Tests\bin\Release\net8.0 on Windows
+        // rootPath would be something like C:\workspace\dotnet-stellar-sdk\StellarDotnetSdk.Tests\ on Windows
+        var rootPath =
+            Path.GetDirectoryName(
+                Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(AppContext.BaseDirectory))));
+
+        var testFileDirectoryPath = Path.GetDirectoryName(testFilePath);
+        // Would be responses\Effects\
         var testRelativeDirectoryPath = Path.GetRelativePath(rootPath, testFileDirectoryPath);
 
         return Path.Combine("TestData", testRelativeDirectoryPath, jsonFilePath);
@@ -116,14 +119,15 @@ public static class Utils
         return new Server(uri, httpClient);
     }
 
-    public static Server CreateTestServerWithHeaders(Dictionary<string, IEnumerable<string>> headers, HttpStatusCode statusCode = HttpStatusCode.OK,
+    public static Server CreateTestServerWithHeaders(Dictionary<string, IEnumerable<string>> headers,
+        HttpStatusCode statusCode = HttpStatusCode.OK,
         string uri = "https://horizon-testnet.stellar.org")
     {
         Network.UseTestNetwork();
         var httpClient = CreateFakeHttpClient("", statusCode, headers);
         return new Server(uri, httpClient);
     }
-    
+
     public static async Task<Server> CreateTestServerWithJson(string pathToJson,
         HttpStatusCode statusCode = HttpStatusCode.OK, string uri = "https://horizon-testnet.stellar.org")
     {
@@ -148,12 +152,8 @@ public static class Utils
         httpResponseMessage.Headers.Add("X-Ratelimit-Remaining", "-1");
         httpResponseMessage.Headers.Add("X-Ratelimit-Reset", "-1");
         if (headers != null)
-        {
             foreach (var header in headers)
-            {
                 httpResponseMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
-            }
-        }
 
         mockFakeHttpMessageHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>())).Returns(httpResponseMessage);
 

@@ -368,7 +368,7 @@ public class SponsorshipTest
     public async Task TestRevokeSponsorshipClaimableBalance()
     {
         var balanceId = await CreateSponsoredClaimableBalance();
-        await Task.Delay(5000);
+        await Task.Delay(2000);
         await RevokeClaimableBalanceSponsorship(balanceId);
     }
 
@@ -376,7 +376,7 @@ public class SponsorshipTest
     public async Task TestRevokeSponsorshipData()
     {
         await CreateSponsoredData();
-        await Task.Delay(3000);
+        await Task.Delay(2000);
         await RevokeDataSponsorship();
     }
 
@@ -391,7 +391,7 @@ public class SponsorshipTest
     public async Task TestRevokeSponsorshipTrustline()
     {
         await CreateSponsoredTrustline(_assetA);
-        await Task.Delay(5000);
+        await Task.Delay(2000);
         await RevokeTrustlineSponsorship(_assetA);
     }
 }

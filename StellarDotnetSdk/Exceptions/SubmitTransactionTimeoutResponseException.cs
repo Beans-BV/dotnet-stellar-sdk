@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace stellar_dotnet_sdk;
+namespace StellarDotnetSdk.Exceptions;
 
 public class SubmitTransactionTimeoutResponseException : Exception
 {

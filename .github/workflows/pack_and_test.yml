@@ -21,9 +21,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: GitHub Ref
-        run: echo ${{github.ref}}
-      - uses: actions/checkout@v3
-        
+        run: | 
+          echo "GitHub Ref: ${{github.ref}}"
+      - name: GitHub Head Ref
+        run: |
+          echo "GitHub Head Ref: ${{github.head_ref}}"
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{github.head_ref}}
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
       - name: Pack
