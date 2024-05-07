@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Version>9.1.4</Version>
+        <ApplicationIcon/>
+        <OutputType>Library</OutputType>
+        <StartupObject/>
+        <Description>The .NET Stellar SDK facilitates client integration with the Stellar Horizon API server and submission of Stellar transactions. It has two main uses: querying Horizon and building, signing, and submitting transactions to the Stellar network.</Description>
+        <PackageId>StellarDotnetSdk</PackageId>
+        <PackageLicense>sss</PackageLicense>
+        <EnablePackageValidation>true</EnablePackageValidation>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <Copyright>Copyright © 2018 Elucidsoft; Copyright © 2024 Beans-BV</Copyright>
+        <PackageProjectUrl>https://github.com/Beans-BV/dotnet-stellar-sdk</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Beans-BV/dotnet-stellar-sdk</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>'.NET Core' 'Stellar' 'Horizon' 'Blockchain' 'Crypto' 'Distributed Ledger'</PackageTags>
+        <ReleaseNotes>https://github.com/Beans-BV/dotnet-stellar-sdk/releases</ReleaseNotes>
+        <Nullable>enable</Nullable>
+        <WarningLevel>1</WarningLevel>
+        <LangVersion>12</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+    <PropertyGroup>
+        <PackageReadmeFile>nugetreadme.md</PackageReadmeFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="dotnetstandard-bip32" Version="1.0.0"/>
+        <PackageReference Include="dotnetstandard-bip39" Version="1.0.2"/>
+        <PackageReference Include="LaunchDarkly.EventSource" Version="3.3.2"/>
+        <PackageReference Include="Nett" Version="0.10.0"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.2"/>
+        <PackageReference Include="NSec.Cryptography" Version="22.4.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\LICENSE.txt" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\nugetreadme.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\StellarDotnetSdk.Xdr\StellarDotnetSdk.Xdr.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="converters\"/>
+        <Folder Include="federation\"/>
+        <Folder Include="Properties\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="Operations\AllowTrustOperation.cs"/>
+        <Compile Remove="Operations\InflationOperation.cs"/>
+        <Compile Remove="Operations\ManageOfferOperation.cs"/>
+    </ItemGroup>
+</Project>

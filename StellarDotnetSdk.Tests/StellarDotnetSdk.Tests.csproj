@@ -1,0 +1,476 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <Nullable>enable</Nullable>
+        <LangVersion>12</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebugType>full</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Appveyor.TestLogger" Version="2.0.0"/>
+        <PackageReference Include="coverlet.msbuild" Version="3.1.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="coveralls.io" Version="1.4.2"/>
+        <PackageReference Include="FakeItEasy" Version="7.3.1"/>
+        <PackageReference Include="Fare" Version="2.2.1"/>
+        <PackageReference Include="FluentAssertions" Version="6.7.0"/>
+        <PackageReference Include="FsCheck.NUnit" Version="2.16.5"/>
+        <PackageReference Include="NSec.Cryptography" Version="22.4.0"/>
+        <PackageReference Include="NUnit3TestAdapter" Version="4.2.1"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1"/>
+        <PackageReference Include="Moq" Version="4.18.2"/>
+        <PackageReference Include="MSTest.TestAdapter" Version="2.2.10"/>
+        <PackageReference Include="MSTest.TestFramework" Version="2.2.10"/>
+        <PackageReference Include="SpecFlow.MsTest" Version="3.9.74"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\StellarDotnetSdk\StellarDotnetSdk.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="TestData\Operations\accountMergeMuxed.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Operations\manageOffer\manageOffer.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="wasm\soroban_events_contract.wasm">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="wasm\soroban_hello_world_contract.wasm">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\LiquidityPoolCreatedEffectResponse.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\LiquidityPoolDepositedEffectResponse.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\LiquidityPoolRemovedEffectResponse.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\LiquidityPoolRevokedEffectResponse.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\LiquidityPoolTradeEffectResponse.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\LiquidityPoolWithdrewEffectResponse.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\liquidityPool.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Wasm\soroban_events_contract.wasm">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Wasm\soroban_hello_world_contract.wasm">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\LiquidityPoolWithdrawOperationResponse.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\LiquidityPoolDepositOperationResponse.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\accountMerge.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\accountMergeMuxed.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\allowTrust.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\allowTrustMuxed.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\beginSponsoringFutureReserves.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\bumpSequence.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\changeTrust.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\changeTrustMuxed.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\claimClaimableBalance.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\claimClaimableBalanceMuxed.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\clawback.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\clawbackMuxed.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\clawbackClaimableBalance.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\createAccount.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\createAccountMuxed.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\endSponsoringFutureReserves.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\endSponsoringFutureReservesMuxed.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\inflation.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\createPassiveOffer.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\createClaimableBalance.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\createClaimableBalanceAbsBeforeMaxInt.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\manageBuyOffer.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\manageBuyOfferPre100.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\setTrustlineFlags.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\setOptions.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\setOptionsNonEd25519Key.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\manageOffer.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\payment.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\paymentMuxed.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\paymentNonNative.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\manageData.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\manageDataValueEmpty.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\revokeSponsorshipAccountID.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\revokeSponsorshipClaimableBalance.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\revokeSponsorshipData.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\revokeSponsorshipOffer.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\revokeSponsorshipSignerKey.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\revokeSponsorshipTrustline.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\pathPaymentStrictSend.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\pathPaymentStrictReceive.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\account.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Operations\unknownOperation.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\accountSponsorshipCreated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\accountSponsorshipRemoved.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\accountSponsorshipUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\claimableBalanceClaimantCreated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\claimableBalanceClaimed.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\claimableBalanceClawedBack.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\claimableBalanceCreated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\claimableBalanceSponsorshipCreated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\claimableBalanceSponsorshipRemoved.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\claimableBalanceSponsorshipUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\trustlineAuthorized.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\trustlineAuthorizedToMaintainLiabilities.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\trustlineCreated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\trustlineDeAuthorized.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\trustlineFlagsUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\trustlineRemoved.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\trustlineUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\trustlineSponsorshipCreated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\trustlineSponsorshipRemoved.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\trustlineSponsorshipUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\signerSponsorshipCreated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\signerSponsorshipRemoved.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\signerSponsorshipUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\dataSponsorshipCreated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\dataSponsorshipRemoved.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\dataSponsorshipUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectAccountCreated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectAccountCredited.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectAccountDebited.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectAccountFlagsUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectAccountHomeDomainUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectAccountInflationUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectAccountRemoved.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectAccountThresholdsUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectDataCreated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectDataRemoved.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectDataUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectOfferCreated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectOfferRemoved.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectOfferUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectPage.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectSequenceBumped.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectSignerCreated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectSignerRemoved.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectSignerUpdated.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectTrade.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectTradePre100.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectUnknown.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\accountsWithSigner.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\accountsWithTrustline.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\friendBotSuccess.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\ledger.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\ledgerNullValues.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\claimableBalance.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\accountData.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\accountPage.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\assetPage.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\ledgerPage.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\_liquidityPool.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\liquidityPoolPage.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\offerPage.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\operationPage.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\pathPage.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\tradeAggregationPage.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\tradeAggregationPagePre100.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\tradePage.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\transactionPage.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\transactionTransaction.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\feeStats.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\root.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\transactionMuxed.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\transactionTransactionPre020.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\transactionTransactionTextMemo.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\transactionTransactionWithMemo.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\transactionTransactionWithoutMemo.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\assetAssetTypeCredit.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\assetAssetTypeNative.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\friendBotFail.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\offerPagePre100.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\orderBook.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\serverFailure.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\serverSuccess.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\submitTransactionNoOfferId.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\submitTransactionOperationFailure.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\submitTransactionSuccess.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\submitTransactionTransactionFailure.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\transactionFeeBump.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="KeyPairBIP39Tests.cs"/>
+        <Compile Remove="KeyPairTest.cs"/>
+        <Compile Remove="MuxedAccountTest.cs"/>
+        <Compile Remove="AssetAmountTest.cs"/>
+        <Compile Remove="AssetTest.cs"/>
+        <Compile Remove="TransactionPreconditionsTest.cs"/>
+    </ItemGroup>
+</Project>

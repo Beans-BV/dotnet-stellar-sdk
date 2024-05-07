@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "stellar-dotnet-sdk", "stellar-dotnet-sdk\stellar-dotnet-sdk.csproj", "{6041C4AE-94DE-435B-84F5-D35D2CC5B9DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StellarDotnetSdk", "StellarDotnetSdk\StellarDotnetSdk.csproj", "{6041C4AE-94DE-435B-84F5-D35D2CC5B9DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "stellar-dotnet-sdk-test", "stellar-dotnet-sdk-test\stellar-dotnet-sdk-test.csproj", "{B005220F-602B-4888-A72F-A4583181773A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StellarDotnetSdk.Tests", "StellarDotnetSdk.Tests\StellarDotnetSdk.Tests.csproj", "{B005220F-602B-4888-A72F-A4583181773A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "stellar-dotnet-sdk-console", "stellar-dotnet-sdk-console\stellar-dotnet-sdk-console.csproj", "{7BA6DFB8-5736-47EC-8995-E652D221E077}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StellarDotnetSdk.Console", "StellarDotnetSdk.Console\StellarDotnetSdk.Console.csproj", "{7BA6DFB8-5736-47EC-8995-E652D221E077}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stellar-dotnet-sdk-xdr", "stellar-dotnet-sdk-xdr\stellar-dotnet-sdk-xdr.csproj", "{DB19EF41-BF22-41D0-B856-858C6FC17068}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StellarDotnetSdk.Xdr", "StellarDotnetSdk.Xdr\StellarDotnetSdk.Xdr.csproj", "{DB19EF41-BF22-41D0-B856-858C6FC17068}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFiles", "{AF4AA978-5DCC-4343-9134-EA1CE2CF3FB7}"
 	ProjectSection(SolutionItems) = preProject

@@ -7,6 +7,8 @@ on:
     types:
       - opened
       - synchronize
+    branches:
+      - feature/**
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
@@ -18,7 +20,16 @@ jobs:
   pack_and_test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: GitHub Ref
+        run: | 
+          echo "GitHub Ref: ${{github.ref}}"
+      - name: GitHub Head Ref
+        run: |
+          echo "GitHub Head Ref: ${{github.head_ref}}"
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{github.head_ref}}
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
       - name: Pack
