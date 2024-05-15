@@ -16,7 +16,6 @@ public class GetLedgerEntriesResponse
     [JsonProperty(PropertyName = "entries")]
     private LedgerEntryResult[]? EntryResults { get; }
 
-    [JsonProperty(PropertyName = "latestLedger")]
     public uint? LatestLedger { get; }
 
     public LedgerEntry[]? LedgerEntries =>

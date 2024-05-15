@@ -1,8 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿namespace StellarDotnetSdk.Responses.SorobanRpc;
 
-namespace StellarDotnetSdk.Responses.SorobanRpc;
-
-[JsonObject]
 public class SorobanRpcResponse<T> : Response
 {
     public SorobanRpcResponse(string jsonRpc, string id, T result)
@@ -12,11 +9,9 @@ public class SorobanRpcResponse<T> : Response
         Result = result;
     }
 
-    [JsonProperty(PropertyName = "id")] public string Id { get; }
+    public string Id { get; }
 
-    [JsonProperty(PropertyName = "jsonrpc")]
     public string JsonRpc { get; }
 
-    [JsonProperty(PropertyName = "result")]
     public T Result { get; }
 }

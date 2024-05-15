@@ -13,6 +13,7 @@ using Asset = StellarDotnetSdk.Assets.Asset;
 using ClaimableBalanceEntryExtensionV1 = StellarDotnetSdk.Xdr.ClaimableBalanceEntryExtensionV1;
 using Claimant = StellarDotnetSdk.Xdr.Claimant;
 using ClaimPredicate = StellarDotnetSdk.Xdr.ClaimPredicate;
+using ContractCodeCostInputs = StellarDotnetSdk.Xdr.ContractCodeCostInputs;
 using EvictionIterator = StellarDotnetSdk.LedgerEntries.EvictionIterator;
 using ExtensionPoint = StellarDotnetSdk.Xdr.ExtensionPoint;
 using Int32 = StellarDotnetSdk.Xdr.Int32;
@@ -886,17 +887,21 @@ public class LedgerEntryTest
     }
 
     [TestMethod]
-    public void TestLedgerEntryContractCodeWithAllPropertiesPopulated()
+    public void TestLedgerEntryContractCodeV0WithAllPropertiesPopulated()
     {
         var xdrContractCodeEntry = new ContractCodeEntry
         {
-            Ext = new ExtensionPoint(),
-            Hash = new Hash(new byte[]
-                { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2 }),
-            Code = new byte[]
+            Ext = new ContractCodeEntry.ContractCodeEntryExt
             {
-                1, 2, 3
-            }
+                Discriminant = 0
+            },
+            Hash = new Hash([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 3
+            ]),
+            Code =
+            [
+                1, 2, 3, 4
+            ]
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
@@ -912,9 +917,83 @@ public class LedgerEntryTest
         // Assert
         CollectionAssert.AreEqual(xdrContractCodeEntry.Code, decodedLedgerEntry.Code);
         CollectionAssert.AreEqual(xdrContractCodeEntry.Hash.InnerValue, decodedLedgerEntry.Hash);
-        Assert.IsInstanceOfType(decodedLedgerEntry.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.IsNull(decodedLedgerEntry.ExtensionPoint);
     }
 
+    [TestMethod]
+    public void TestLedgerEntryContractCodeV1WithAllPropertiesPopulated()
+    {
+        var xdrContractCodeEntry = new ContractCodeEntry
+        {
+            Ext = new ContractCodeEntry.ContractCodeEntryExt
+            {
+                Discriminant = 1,
+                V1 = new ContractCodeEntry.ContractCodeEntryExt.ContractCodeEntryV1
+                {
+                    Ext = new ExtensionPoint
+                    {
+                        Discriminant = 0
+                    },
+                    CostInputs = new ContractCodeCostInputs
+                    {
+                        Ext = new ExtensionPoint
+                        {
+                            Discriminant = 0
+                        },
+                        NInstructions = new Uint32(1),
+                        NFunctions = new Uint32(2),
+                        NGlobals = new Uint32(3),
+                        NTableEntries = new Uint32(4),
+                        NTypes = new Uint32(5),
+                        NDataSegments = new Uint32(6),
+                        NElemSegments = new Uint32(7),
+                        NImports = new Uint32(8),
+                        NExports = new Uint32(9),
+                        NDataSegmentBytes = new Uint32(10)
+                    }
+                }
+            },
+            Hash = new Hash([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2
+            ]),
+            Code =
+            [
+                1, 2, 3
+            ]
+        };
+
+        var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
+        {
+            Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE),
+            ContractCode = xdrContractCodeEntry
+        };
+        var os = new XdrDataOutputStream();
+        StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
+        var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+        var decodedLedgerEntry = (LedgerEntryContractCode)LedgerEntry.FromXdrBase64(entryXdrBase64);
+
+        // Assert
+        CollectionAssert.AreEqual(xdrContractCodeEntry.Code, decodedLedgerEntry.Code);
+        CollectionAssert.AreEqual(xdrContractCodeEntry.Hash.InnerValue, decodedLedgerEntry.Hash);
+
+        var xdrCostInputs = xdrContractCodeEntry.Ext.V1.CostInputs;
+        var decodedCostInputs = decodedLedgerEntry.CostInputs;
+        Assert.IsNotNull(decodedCostInputs);
+
+        Assert.AreEqual(xdrCostInputs.NInstructions.InnerValue, decodedCostInputs.NInstructions);
+        Assert.AreEqual(xdrCostInputs.NFunctions.InnerValue, decodedCostInputs.NFunctions);
+        Assert.AreEqual(xdrCostInputs.NGlobals.InnerValue, decodedCostInputs.NGlobals);
+        Assert.AreEqual(xdrCostInputs.NTableEntries.InnerValue, decodedCostInputs.NTableEntries);
+        Assert.AreEqual(xdrCostInputs.NTypes.InnerValue, decodedCostInputs.NTypes);
+        Assert.AreEqual(xdrCostInputs.NDataSegments.InnerValue, decodedCostInputs.NDataSegments);
+        Assert.AreEqual(xdrCostInputs.NElemSegments.InnerValue, decodedCostInputs.NElemSegments);
+        Assert.AreEqual(xdrCostInputs.NImports.InnerValue, decodedCostInputs.NImports);
+        Assert.AreEqual(xdrCostInputs.NExports.InnerValue, decodedCostInputs.NExports);
+        Assert.AreEqual(xdrCostInputs.NDataSegmentBytes.InnerValue, decodedCostInputs.NDataSegmentBytes);
+
+        Assert.IsInstanceOfType(decodedLedgerEntry.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.IsInstanceOfType(decodedCostInputs.ExtensionPoint, typeof(ExtensionPointZero));
+    }
 
     [TestMethod]
     public void TestLedgerEntryConfigSettingContractBandwidthV0()

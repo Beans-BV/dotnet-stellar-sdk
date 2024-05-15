@@ -569,8 +569,8 @@ public class TransactionTest
         var keyData = new LedgerKeyData(KeyPair.Random(), "firstKey");
         var footprint = new LedgerFootprint
         {
-            ReadOnly = new LedgerKey[] { keyAccount },
-            ReadWrite = new LedgerKey[] { keyData }
+            ReadOnly = [keyAccount],
+            ReadWrite = [keyData]
         };
         var sorobanData = new SorobanTransactionData(new SorobanResources(footprint, 10, 20, 30), 100);
 

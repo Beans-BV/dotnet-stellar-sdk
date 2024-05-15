@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses.Results;
+using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
 using XdrTransactionResult = StellarDotnetSdk.Xdr.TransactionResult;
 using Int64 = StellarDotnetSdk.Xdr.Int64;
@@ -117,6 +118,15 @@ public static class Utils
         Network.UseTestNetwork();
         var httpClient = CreateFakeHttpClient(content, statusCode);
         return new Server(uri, httpClient);
+    }
+
+    public static SorobanServer CreateTestSorobanServerWithContent(string? content,
+        HttpStatusCode statusCode = HttpStatusCode.OK,
+        string uri = "https://soroban-testnet.stellar.org")
+    {
+        Network.UseTestNetwork();
+        var httpClient = CreateFakeHttpClient(content, statusCode);
+        return new SorobanServer(uri, httpClient);
     }
 
     public static Server CreateTestServerWithHeaders(Dictionary<string, IEnumerable<string>> headers,

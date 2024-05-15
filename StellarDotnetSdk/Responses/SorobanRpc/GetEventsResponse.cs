@@ -6,7 +6,6 @@ namespace StellarDotnetSdk.Responses.SorobanRpc;
 /// <summary>
 ///     Holds the details of the response of <c>getEvents()</c>.
 /// </summary>
-[JsonObject]
 public class GetEventsResponse
 {
     public GetEventsResponse(EventInfo[]? events, long? latestLedger)
@@ -18,16 +17,13 @@ public class GetEventsResponse
     /// <summary>
     ///     If error is present then results will not be in the response
     /// </summary>
-    [JsonProperty("events")]
     public EventInfo[]? Events { get; }
 
     /// <summary>
     ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.
     /// </summary>
-    [JsonProperty("latestLedger")]
     public long? LatestLedger { get; }
 
-    [JsonObject]
     public class EventInfo
     {
         public EventInfo(string contractId, string id, bool inSuccessfulContractCall, int ledger, string ledgerClosedAt,
@@ -47,38 +43,32 @@ public class GetEventsResponse
         /// <summary>
         ///     StrKey representation of the contract address that emitted this event.
         /// </summary>
-        [JsonProperty("contractId")]
         public string ContractId { get; }
 
         /// <summary>
         ///     Unique identifier for this event.
         /// </summary>
-        [JsonProperty("id")]
         public string Id { get; }
 
         /// <summary>
         ///     If true the event was emitted during a successful contract call.
         /// </summary>
-        [JsonProperty("inSuccessfulContractCall")]
         public bool InSuccessfulContractCall { get; }
 
         /// <summary>
         ///     Sequence number of the ledger in which this event was emitted.
         /// </summary>
-        [JsonProperty("ledger")]
         public int Ledger { get; }
 
         /// <summary>
         ///     ISO-8601 timestamp of the ledger closing time.
         ///     See https://www.iso.org/iso-8601-date-and-time-format.html.
         /// </summary>
-        [JsonProperty("ledgerClosedAt")]
         public string LedgerClosedAt { get; }
 
         /// <summary>
         ///     Duplicate of <c>id</c> field, but in the standard place for pagination tokens.
         /// </summary>
-        [JsonProperty("pagingToken")]
         public string PagingToken { get; }
 
         /// <summary>
@@ -96,7 +86,6 @@ public class GetEventsResponse
         /// <summary>
         ///     The type of event emission. Allowed values: contract, diagnostic, system.
         /// </summary>
-        [JsonProperty("type")]
         public string Type { get; }
 
         /// <summary>
@@ -107,7 +96,8 @@ public class GetEventsResponse
         ///     Can be deserialized into an <see cref="SCVal" /> object by calling
         ///     <see cref="SCVal.FromXdrBase64">SCVal.FromXdrBase64()</see>.
         /// </remarks>
-        [JsonProperty("value")]
         public string Value { get; }
+
+        [JsonProperty("txHash")] public string TransactionHash { get; }
     }
 }

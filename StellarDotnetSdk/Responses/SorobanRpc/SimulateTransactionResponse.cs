@@ -13,14 +13,13 @@ namespace StellarDotnetSdk.Responses.SorobanRpc;
 ///     </para>
 ///     See https://soroban.stellar.org/api/methods/simulateTransaction/
 /// </summary>
-[JsonObject]
 public class SimulateTransactionResponse
 {
     private readonly string? _transactionData;
 
     public SimulateTransactionResponse(string? transactionData, string? error, SimulateTransactionCost? cost,
         string[]? events, long? latestLedger, uint? minResourceFee, RestorePreamble? restorePreambleInfo,
-        SimulateInvokeHostFunctionResult[]? results)
+        SimulateInvokeHostFunctionResult[]? results, LedgerEntryChange[] stateChanges)
     {
         _transactionData = transactionData;
         Error = error;
@@ -30,6 +29,7 @@ public class SimulateTransactionResponse
         MinResourceFee = minResourceFee;
         RestorePreambleInfo = restorePreambleInfo;
         Results = results;
+        StateChanges = stateChanges;
     }
 
     [Obsolete(
@@ -80,6 +80,8 @@ public class SimulateTransactionResponse
     [JsonProperty(PropertyName = "restorePreamble")]
     public RestorePreamble? RestorePreambleInfo { get; } // TODO Unit test
 
+    public LedgerEntryChange[]? StateChanges { get; }
+
     /// <summary>
     ///     An array of the individual host function call results.
     ///     This will only contain a single element if present, because only a single
@@ -114,73 +116,84 @@ public class SimulateTransactionResponse
     ///     containing the
     ///     <c>RestoreFootprint</c> operation.
     /// </summary>
-    [JsonObject]
     public class RestorePreamble
     {
-        [JsonProperty(PropertyName = "transactionData")]
-        private readonly string _transactionData;
+        public RestorePreamble(string transactionData, long minResourceFee)
+        {
+            TransactionData = transactionData;
+            MinResourceFee = minResourceFee;
+        }
+
+        private string TransactionData { get; }
 
         /// <summary>
         ///     Recommended minimum resource fee to add when submitting the <c>RestoreFootprint</c> operation. This fee is to be
         ///     added on
         ///     top of the Stellar network fee.
         /// </summary>
-        [JsonProperty(PropertyName = "minResourceFee")]
-        public readonly long MinResourceFee;
-
-        public RestorePreamble(string transactionData, long minResourceFee)
-        {
-            _transactionData = transactionData;
-            MinResourceFee = minResourceFee;
-        }
+        public long MinResourceFee { get; }
 
         /// <summary>
         ///     The recommended Soroban Transaction Data to use when submitting the <c>RestoreFootprint</c> operation.
         /// </summary>
         public SorobanTransactionData SorobanTransactionData =>
-            SorobanTransactionData.FromXdrBase64(_transactionData); //TODO Unit test
+            SorobanTransactionData.FromXdrBase64(TransactionData); // TODO Unit test
     }
 
     /// <summary>
     ///     Information about the fees expected, instructions used, etc.
     /// </summary>
-    [JsonObject]
     public class SimulateTransactionCost
     {
         /// <summary>
         ///     Number of the total cpu instructions consumed by this transaction.
         /// </summary>
         [JsonProperty(PropertyName = "cpuInsns")]
-        public readonly long CpuInstructions;
+        public long CpuInstructions { get; }
 
         /// <summary>
         ///     Number of the total memory bytes allocated by this transaction.
         /// </summary>
         [JsonProperty(PropertyName = "memBytes")]
-        public readonly long MemoryBytes;
+        public long MemoryBytes { get; }
     }
 
     /// <summary>
     ///     Used as a part of simulate transaction.
     ///     See https://soroban.stellar.org/api/methods/simulateTransaction
     /// </summary>
-    [JsonObject]
     public class SimulateInvokeHostFunctionResult
     {
-        /// <summary>
-        ///     Array of serialized base64 strings - Per-address authorizations recorded when simulating this Host Function call.
-        /// </summary>
-        [JsonProperty(PropertyName = "auth")] public readonly string[]? Auth;
-
-        /// <summary>
-        ///     (optional) Only present on success. xdr-encoded return value of the contract call operation.
-        /// </summary>
-        [JsonProperty(PropertyName = "xdr")] public readonly string? Xdr; // TODO Unit test on error
-
         public SimulateInvokeHostFunctionResult(string[]? auth, string? xdr)
         {
             Auth = auth;
             Xdr = xdr;
         }
+
+        /// <summary>
+        ///     Array of serialized base64 strings - Per-address authorizations recorded when simulating this Host Function call.
+        /// </summary>
+        public string[]? Auth { get; }
+
+        /// <summary>
+        ///     (optional) Only present on success. xdr-encoded return value of the contract call operation.
+        /// </summary>
+        public string? Xdr { get; } // TODO Unit test on error
+    }
+
+    public class LedgerEntryChange
+    {
+        public LedgerEntryChange(string type, string key, string? before, string? after)
+        {
+            Type = type;
+            Key = key;
+            Before = before;
+            After = after;
+        }
+
+        public string Type { get; }
+        public string Key { get; }
+        public string? Before { get; }
+        public string? After { get; }
     }
 }
