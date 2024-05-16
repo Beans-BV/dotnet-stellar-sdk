@@ -7,8 +7,6 @@ on:
     types:
       - opened
       - synchronize
-    branches:
-      - feature/**
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
