@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <Version>9.1.4</Version>
+        <Version>10.0.0</Version>
         <OutputType>Library</OutputType>
         <StartupObject/>
         <Description>The .NET Standard XDR Objects for the Stellar Network Protocol</Description>
