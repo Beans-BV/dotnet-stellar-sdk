@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using StellarDotnetSdk.LedgerKeys;
 
 namespace StellarDotnetSdk.Soroban;
@@ -13,8 +12,8 @@ namespace StellarDotnetSdk.Soroban;
 /// </summary>
 public class LedgerFootprint
 {
-    public LedgerKey[] ReadOnly { get; init; } = Array.Empty<LedgerKey>();
-    public LedgerKey[] ReadWrite { get; init; } = Array.Empty<LedgerKey>();
+    public LedgerKey[] ReadOnly { get; init; } = [];
+    public LedgerKey[] ReadWrite { get; init; } = [];
 
     public Xdr.LedgerFootprint ToXdr()
     {

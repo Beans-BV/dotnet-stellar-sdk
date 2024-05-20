@@ -6,7 +6,17 @@ namespace StellarDotnetSdk.Xdr;
 // === xdr source ============================================================
 
 //  struct ContractCodeEntry {
-//      ExtensionPoint ext;
+//      union switch (int v)
+//      {
+//          case 0:
+//              void;
+//          case 1:
+//              struct
+//              {
+//                  ExtensionPoint ext;
+//                  ContractCodeCostInputs costInputs;
+//              } v1;
+//      } ext;
 //  
 //      Hash hash;
 //      opaque code<>;
@@ -15,13 +25,13 @@ namespace StellarDotnetSdk.Xdr;
 //  ===========================================================================
 public class ContractCodeEntry
 {
-    public ExtensionPoint Ext { get; set; }
+    public ContractCodeEntryExt Ext { get; set; }
     public Hash Hash { get; set; }
     public byte[] Code { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, ContractCodeEntry encodedContractCodeEntry)
     {
-        ExtensionPoint.Encode(stream, encodedContractCodeEntry.Ext);
+        ContractCodeEntryExt.Encode(stream, encodedContractCodeEntry.Ext);
         Hash.Encode(stream, encodedContractCodeEntry.Hash);
         var codesize = encodedContractCodeEntry.Code.Length;
         stream.WriteInt(codesize);
@@ -31,11 +41,68 @@ public class ContractCodeEntry
     public static ContractCodeEntry Decode(XdrDataInputStream stream)
     {
         var decodedContractCodeEntry = new ContractCodeEntry();
-        decodedContractCodeEntry.Ext = ExtensionPoint.Decode(stream);
+        decodedContractCodeEntry.Ext = ContractCodeEntryExt.Decode(stream);
         decodedContractCodeEntry.Hash = Hash.Decode(stream);
         var codesize = stream.ReadInt();
         decodedContractCodeEntry.Code = new byte[codesize];
         stream.Read(decodedContractCodeEntry.Code, 0, codesize);
         return decodedContractCodeEntry;
+    }
+
+    public class ContractCodeEntryExt
+    {
+        public int Discriminant { get; set; }
+
+        public ContractCodeEntryV1 V1 { get; set; }
+
+        public static void Encode(XdrDataOutputStream stream, ContractCodeEntryExt encodedContractCodeEntryExt)
+        {
+            stream.WriteInt(encodedContractCodeEntryExt.Discriminant);
+            switch (encodedContractCodeEntryExt.Discriminant)
+            {
+                case 0:
+                    break;
+                case 1:
+                    ContractCodeEntryV1.Encode(stream, encodedContractCodeEntryExt.V1);
+                    break;
+            }
+        }
+
+        public static ContractCodeEntryExt Decode(XdrDataInputStream stream)
+        {
+            var decodedContractCodeEntryExt = new ContractCodeEntryExt();
+            var discriminant = stream.ReadInt();
+            decodedContractCodeEntryExt.Discriminant = discriminant;
+            switch (decodedContractCodeEntryExt.Discriminant)
+            {
+                case 0:
+                    break;
+                case 1:
+                    decodedContractCodeEntryExt.V1 = ContractCodeEntryV1.Decode(stream);
+                    break;
+            }
+
+            return decodedContractCodeEntryExt;
+        }
+
+        public class ContractCodeEntryV1
+        {
+            public ExtensionPoint Ext { get; set; }
+            public ContractCodeCostInputs CostInputs { get; set; }
+
+            public static void Encode(XdrDataOutputStream stream, ContractCodeEntryV1 encodedContractCodeEntryV1)
+            {
+                ExtensionPoint.Encode(stream, encodedContractCodeEntryV1.Ext);
+                ContractCodeCostInputs.Encode(stream, encodedContractCodeEntryV1.CostInputs);
+            }
+
+            public static ContractCodeEntryV1 Decode(XdrDataInputStream stream)
+            {
+                var decodedContractCodeEntryV1 = new ContractCodeEntryV1();
+                decodedContractCodeEntryV1.Ext = ExtensionPoint.Decode(stream);
+                decodedContractCodeEntryV1.CostInputs = ContractCodeCostInputs.Decode(stream);
+                return decodedContractCodeEntryV1;
+            }
+        }
     }
 }

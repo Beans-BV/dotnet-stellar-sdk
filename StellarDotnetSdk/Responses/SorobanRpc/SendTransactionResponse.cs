@@ -1,13 +1,10 @@
-﻿using Newtonsoft.Json;
-
-namespace StellarDotnetSdk.Responses.SorobanRpc;
+﻿namespace StellarDotnetSdk.Responses.SorobanRpc;
 
 /// <summary>
 ///     Transaction status and network state. The result will include if the transaction was successfully enqueued, and
 ///     information about the current ledger.
 /// </summary>
 /// <seealso href="https://soroban.stellar.org/api/methods/sendTransaction" />
-[JsonObject]
 public class SendTransactionResponse
 {
     public enum SendTransactionStatus

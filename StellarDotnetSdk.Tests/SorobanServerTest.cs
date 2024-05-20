@@ -87,6 +87,9 @@ public class SorobanServerTest
     {
         var response = await _sorobanServer.GetHealth();
         Assert.AreEqual("healthy", response.Status);
+        Assert.IsTrue(response.LatestLedger > 0);
+        Assert.IsTrue(response.OldestLedger > 0);
+        Assert.IsTrue(response.LedgerRetentionWindow > 0);
     }
 
     [TestMethod]
@@ -102,7 +105,7 @@ public class SorobanServerTest
     public async Task TestGetLatestLedger()
     {
         var response = await _sorobanServer.GetLatestLedger();
-        Assert.AreEqual(20, response.ProtocolVersion);
+        Assert.AreEqual(21, response.ProtocolVersion);
         Assert.IsTrue(response.Sequence > 0);
         Assert.IsTrue(response.Id != null);
     }
@@ -179,11 +182,14 @@ public class SorobanServerTest
     {
         var response = await _sorobanServer.GetLatestLedger();
         var latestLedger = response.Sequence;
-        var eventFilter = new GetEventsRequest.EventFilter();
+        var eventFilter = new GetEventsRequest.EventFilter
+        {
+            Type = "contract"
+        };
         var getEventsRequest = new GetEventsRequest
         {
             StartLedger = latestLedger - 1000,
-            Filters = new[] { eventFilter }, Pagination = new GetEventsRequest.PaginationOptions
+            Filters = [eventFilter], Pagination = new GetEventsRequest.PaginationOptions
             {
                 Limit = 10
             }
@@ -295,7 +301,7 @@ public class SorobanServerTest
         Assert.IsNotNull(ledgerKey);
 
         Assert.IsTrue(ledgerEntry.LiveUntilLedger > 0);
-        Assert.IsInstanceOfType(ledgerEntry.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.IsNotNull(ledgerEntry.ContractCodeExtensionV1);
         Assert.AreEqual(HelloContractWasmId, Convert.ToBase64String(ledgerEntry.Hash));
         Assert.IsNotNull(ledgerEntry.Code);
         Assert.IsTrue(ledgerEntry.Code.Length > 1);
@@ -471,7 +477,13 @@ public class SorobanServerTest
 
         var simulateResponse = await SimulateAndUpdateTransaction(tx);
         AssertSimulateResponse(simulateResponse);
-
+        var stateChanges = simulateResponse.StateChanges;
+        Assert.IsNotNull(stateChanges);
+        Assert.AreEqual(1, stateChanges.Length);
+        Assert.AreEqual("created", stateChanges[0].Type);
+        Assert.IsNotNull(stateChanges[0].Key);
+        Assert.IsNull(stateChanges[0].Before);
+        Assert.IsNotNull(stateChanges[0].After);
         var transactionEnvelopeXdrBase64 = tx.ToEnvelopeXdrBase64();
 
         var sendResponse = await SendTransaction(tx);
@@ -694,7 +706,7 @@ public class SorobanServerTest
             }
             else
             {
-                await Task.Delay(500);    
+                await Task.Delay(500);
             }
         }
 
@@ -994,6 +1006,139 @@ public class SorobanServerTest
         Assert.AreEqual(GetTransactionResponse.GetTransactionStatus.NOT_FOUND, getTransactionResponse.Status);
     }
 
+    [TestMethod]
+    public async Task TestSimulateTransaction()
+    {
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "transactionData": "AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==",
+                    "minResourceFee": "58181",
+                    "events": [
+                        "AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=",
+                        "AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ="
+                    ],
+                    "results": [
+                        {
+                            "auth": [
+                                "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA"
+                            ],
+                            "xdr": "AAAAAwAAABQ="
+                        }
+                    ],
+                    "cost": { "cpuInsns": "1646885", "memBytes": "1296481" },
+                    "stateChanges": [
+                        {
+                            "type": "created",
+                            "key": "AAAAAAAAAABuaCbVXZ2DlXWarV6UxwbW3GNJgpn3ASChIFp5bxSIWg==",
+                            "before": null,
+                            "after": "AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+                        }
+                    ],
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        var sourceAccount = new Account(_sourceAccount, 1L);
+        var paymentOperation = new PaymentOperation(_sourceAccount, new AssetTypeNative(), "10");
+        var transaction = new TransactionBuilder(sourceAccount).AddOperation(paymentOperation).Build();
+        var response = await sorobanServer.SimulateTransaction(transaction);
+
+        Assert.IsNotNull(response);
+
+        // SorobanTransactionData
+        var sorobanData = response.SorobanTransactionData;
+
+        Assert.IsNotNull(sorobanData);
+        Assert.IsInstanceOfType(sorobanData.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.AreEqual(2L, sorobanData.ResourceFee);
+        var sorobanResources = sorobanData.Resources;
+        Assert.IsNotNull(sorobanResources);
+        Assert.AreEqual(1976262U, sorobanResources.Instructions);
+        Assert.AreEqual(1428U, sorobanResources.ReadBytes);
+        Assert.AreEqual(136U, sorobanResources.WriteBytes);
+        var footprint = sorobanResources.Footprint;
+        Assert.IsNotNull(footprint);
+        Assert.AreEqual(2, footprint.ReadOnly.Length);
+        var readOnly0 = footprint.ReadOnly[0];
+        var readOnly1 = footprint.ReadOnly[1];
+        var readWrite = footprint.ReadWrite[0];
+        if (readOnly0
+            is LedgerKeyContractData
+            {
+                Contract: SCContractId contractId,
+                Key: SCLedgerKeyContractInstance
+            } contractData)
+        {
+            Assert.AreEqual("CDU3PZ4LXVETIFVLS33RDXLD63JZ5GXS7PCV2DJ7BBT6EBPA2AB7YR5H", contractId.InnerValue);
+            Assert.AreEqual(
+                ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT,
+                contractData.Durability.InnerValue);
+        }
+        else
+        {
+            Assert.Fail();
+        }
+
+        if (readOnly1 is LedgerKeyContractCode contractCode)
+            Assert.AreEqual("8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuME=", Convert.ToBase64String(contractCode.Hash));
+        else
+            Assert.Fail();
+
+        if (readWrite is LedgerKeyContractData { Contract: SCContractId contractId1, Key: SCVec vec } contractData1)
+        {
+            Assert.AreEqual("CDU3PZ4LXVETIFVLS33RDXLD63JZ5GXS7PCV2DJ7BBT6EBPA2AB7YR5H", contractId1.InnerValue);
+            Assert.AreEqual(2, vec.InnerValue.Length);
+            Assert.IsTrue(vec.InnerValue[0] is SCSymbol { InnerValue: "Counter" });
+            Assert.IsTrue(vec.InnerValue[1] is SCAccountId
+            {
+                InnerValue: "GBMLPRFCZDZJPKUPHUSHCKA737GOZL7ERZLGGMJ6YGHBFJZ6ZKMKCZTM"
+            });
+            Assert.AreEqual(
+                ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT,
+                contractData1.Durability.InnerValue);
+        }
+
+        Assert.AreEqual(1, footprint.ReadWrite.Length);
+        Assert.AreEqual(58181U, response.MinResourceFee);
+        var events = response.Events;
+        Assert.IsNotNull(events);
+        Assert.AreEqual(2, events.Length);
+        Assert.AreEqual(
+            "AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=",
+            events[0]);
+        Assert.AreEqual(
+            "AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=",
+            events[1]);
+        Assert.AreEqual(14245L, response.LatestLedger);
+
+        var results = response.Results;
+        Assert.IsNotNull(results);
+        Assert.AreEqual(1, results.Length);
+        Assert.AreEqual("AAAAAwAAABQ=", results[0].Xdr);
+        var auths = results[0].Auth;
+        Assert.IsNotNull(auths);
+        Assert.AreEqual(1, auths.Length);
+        Assert.AreEqual(
+            "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA",
+            auths[0]);
+
+        // LedgerEntryChanges
+        Assert.IsNotNull(response.StateChanges);
+        Assert.AreEqual(1, response.StateChanges.Length);
+        var stateChanges = response.StateChanges[0];
+        Assert.IsNotNull(stateChanges);
+        Assert.AreEqual("created", stateChanges.Type);
+        Assert.AreEqual("AAAAAAAAAABuaCbVXZ2DlXWarV6UxwbW3GNJgpn3ASChIFp5bxSIWg==", stateChanges.Key);
+        Assert.IsNull(stateChanges.Before);
+        Assert.AreEqual(
+            "AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+            stateChanges.After);
+    }
     // TODO TestGetLedgerEntriesOfTypeTTL()
     // TODO TestGetLedgerEntriesOfTypeConfigSetting()
 }

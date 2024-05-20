@@ -21,7 +21,7 @@ public abstract class ExtensionPoint
     ///     Creates the corresponding <c>ExtensionPoint</c> object from an <c>xdr.ExtensionPoint</c> object.
     /// </summary>
     /// <param name="xdrExtensionPoint">An <c>xdr.ExtensionPoint</c> object to be converted.</param>
-    /// <returns>A <c>ExtensionPoint</c> object. Returns null if the provided object is null.</returns>
+    /// <returns>An <c>ExtensionPoint</c> object.</returns>
     public static ExtensionPoint FromXdr(Xdr.ExtensionPoint xdrExtensionPoint)
     {
         return xdrExtensionPoint.Discriminant switch

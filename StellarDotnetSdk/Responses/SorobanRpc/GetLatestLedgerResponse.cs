@@ -1,8 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿namespace StellarDotnetSdk.Responses.SorobanRpc;
 
-namespace StellarDotnetSdk.Responses.SorobanRpc;
-
-[JsonObject]
 public class GetLatestLedgerResponse
 {
     public GetLatestLedgerResponse(string id, int protocolVersion, int sequence)
@@ -16,18 +13,15 @@ public class GetLatestLedgerResponse
     ///     Hash identifier of the latest ledger (as a hex-encoded string) known to Soroban RPC at the time it handled the
     ///     request.
     /// </summary>
-    [JsonProperty("id")]
     public string Id { get; }
 
     /// <summary>
     ///     Stellar Core protocol version associated with the latest ledger.
     /// </summary>
-    [JsonProperty("protocolVersion")]
     public int ProtocolVersion { get; }
 
     /// <summary>
     ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.
     /// </summary>
-    [JsonProperty("sequence")]
     public int Sequence { get; }
 }

@@ -6,14 +6,13 @@ namespace StellarDotnetSdk.LedgerEntries;
 
 public class LedgerEntryContractCode : LedgerEntry
 {
-    private LedgerEntryContractCode(byte[] hash, byte[] code, ExtensionPoint extensionPoint)
+    private LedgerEntryContractCode(byte[] hash, byte[] code)
     {
         Hash = hash;
         Code = code;
-        ExtensionPoint = extensionPoint;
     }
 
-    public ExtensionPoint ExtensionPoint { get; }
+    public ContractCodeEntryExtensionV1? ContractCodeExtensionV1 { get; private set; }
 
     /// <summary>
     ///     Unique identifier of the executable file.
@@ -40,11 +39,14 @@ public class LedgerEntryContractCode : LedgerEntry
         return FromXdr(xdrLedgerEntryData.ContractCode);
     }
 
-    private static LedgerEntryContractCode FromXdr(ContractCodeEntry xdrContractDataEntry)
+    private static LedgerEntryContractCode FromXdr(ContractCodeEntry xdrContractCodeEntry)
     {
-        return new LedgerEntryContractCode(
-            xdrContractDataEntry.Hash.InnerValue,
-            xdrContractDataEntry.Code,
-            ExtensionPoint.FromXdr(xdrContractDataEntry.Ext));
+        var ledgerEntryContractCode = new LedgerEntryContractCode(
+            xdrContractCodeEntry.Hash.InnerValue,
+            xdrContractCodeEntry.Code);
+        if (xdrContractCodeEntry.Ext.Discriminant == 1)
+            ledgerEntryContractCode.ContractCodeExtensionV1 =
+                ContractCodeEntryExtensionV1.FromXdr(xdrContractCodeEntry.Ext.V1);
+        return ledgerEntryContractCode;
     }
 }
