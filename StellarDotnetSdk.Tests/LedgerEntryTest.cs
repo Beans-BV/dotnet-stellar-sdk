@@ -917,7 +917,7 @@ public class LedgerEntryTest
         // Assert
         CollectionAssert.AreEqual(xdrContractCodeEntry.Code, decodedLedgerEntry.Code);
         CollectionAssert.AreEqual(xdrContractCodeEntry.Hash.InnerValue, decodedLedgerEntry.Hash);
-        Assert.IsNull(decodedLedgerEntry.ExtensionPoint);
+        Assert.IsNull(decodedLedgerEntry.ContractCodeExtensionV1);
     }
 
     [TestMethod]
@@ -975,9 +975,9 @@ public class LedgerEntryTest
         // Assert
         CollectionAssert.AreEqual(xdrContractCodeEntry.Code, decodedLedgerEntry.Code);
         CollectionAssert.AreEqual(xdrContractCodeEntry.Hash.InnerValue, decodedLedgerEntry.Hash);
-
+        Assert.IsNotNull(decodedLedgerEntry.ContractCodeExtensionV1);
         var xdrCostInputs = xdrContractCodeEntry.Ext.V1.CostInputs;
-        var decodedCostInputs = decodedLedgerEntry.CostInputs;
+        var decodedCostInputs = decodedLedgerEntry.ContractCodeExtensionV1.CostInputs;
         Assert.IsNotNull(decodedCostInputs);
 
         Assert.AreEqual(xdrCostInputs.NInstructions.InnerValue, decodedCostInputs.NInstructions);
@@ -991,7 +991,7 @@ public class LedgerEntryTest
         Assert.AreEqual(xdrCostInputs.NExports.InnerValue, decodedCostInputs.NExports);
         Assert.AreEqual(xdrCostInputs.NDataSegmentBytes.InnerValue, decodedCostInputs.NDataSegmentBytes);
 
-        Assert.IsInstanceOfType(decodedLedgerEntry.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.IsInstanceOfType(decodedLedgerEntry.ContractCodeExtensionV1.ExtensionPoint, typeof(ExtensionPointZero));
         Assert.IsInstanceOfType(decodedCostInputs.ExtensionPoint, typeof(ExtensionPointZero));
     }
 

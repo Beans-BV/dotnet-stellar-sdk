@@ -6,15 +6,13 @@ namespace StellarDotnetSdk.LedgerEntries;
 
 public class LedgerEntryContractCode : LedgerEntry
 {
-    private LedgerEntryContractCode(byte[] hash, byte[] code, ExtensionPoint? extensionPoint, ContractCodeCostInputs? costInputs)
+    private LedgerEntryContractCode(byte[] hash, byte[] code)
     {
         Hash = hash;
         Code = code;
-        ExtensionPoint = extensionPoint;
-        CostInputs = costInputs;
     }
 
-    public ExtensionPoint? ExtensionPoint { get; }
+    public ContractCodeEntryExtensionV1? ContractCodeExtensionV1 { get; private set; }
 
     /// <summary>
     ///     Unique identifier of the executable file.
@@ -26,7 +24,6 @@ public class LedgerEntryContractCode : LedgerEntry
     /// </summary>
     public byte[] Code { get; }
 
-    public ContractCodeCostInputs? CostInputs { get; }
     /// <summary>
     ///     Creates the corresponding LedgerEntryContractCode object from a <see cref="Xdr.LedgerEntry.LedgerEntryData" />
     ///     object.
@@ -42,13 +39,14 @@ public class LedgerEntryContractCode : LedgerEntry
         return FromXdr(xdrLedgerEntryData.ContractCode);
     }
 
-    private static LedgerEntryContractCode FromXdr(ContractCodeEntry xdrContractDataEntry)
+    private static LedgerEntryContractCode FromXdr(ContractCodeEntry xdrContractCodeEntry)
     {
-        return new LedgerEntryContractCode(
-            xdrContractDataEntry.Hash.InnerValue,
-            xdrContractDataEntry.Code,
-            xdrContractDataEntry.Ext.Discriminant == 1 ? ExtensionPoint.FromXdr(xdrContractDataEntry.Ext.V1.Ext) : null,
-            xdrContractDataEntry.Ext.Discriminant == 1
-                ? ContractCodeCostInputs.FromXdr(xdrContractDataEntry.Ext.V1.CostInputs) : null);
+        var ledgerEntryContractCode = new LedgerEntryContractCode(
+            xdrContractCodeEntry.Hash.InnerValue,
+            xdrContractCodeEntry.Code);
+        if (xdrContractCodeEntry.Ext.Discriminant == 1)
+            ledgerEntryContractCode.ContractCodeExtensionV1 =
+                ContractCodeEntryExtensionV1.FromXdr(xdrContractCodeEntry.Ext.V1);
+        return ledgerEntryContractCode;
     }
 }

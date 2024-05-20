@@ -301,7 +301,7 @@ public class SorobanServerTest
         Assert.IsNotNull(ledgerKey);
 
         Assert.IsTrue(ledgerEntry.LiveUntilLedger > 0);
-        Assert.IsInstanceOfType(ledgerEntry.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.IsNotNull(ledgerEntry.ContractCodeExtensionV1);
         Assert.AreEqual(HelloContractWasmId, Convert.ToBase64String(ledgerEntry.Hash));
         Assert.IsNotNull(ledgerEntry.Code);
         Assert.IsTrue(ledgerEntry.Code.Length > 1);
