@@ -5,7 +5,7 @@
         <OutputType>Library</OutputType>
         <StartupObject/>
         <Description>The .NET Standard XDR Objects for the Stellar Network Protocol</Description>
-        <PackageId>StellarDotnetSdk.Xdr</PackageId>
+        <PackageId>stellar-dotnet-sdk-xdr</PackageId>
         <PackageLicense/>
         <EnablePackageValidation>true</EnablePackageValidation>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
