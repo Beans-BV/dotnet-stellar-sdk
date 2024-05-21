@@ -1,60 +1,55 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
 
-namespace StellarDotnetSdk.Responses;
-#nullable disable
-
-/// <summary>
-///     Represents offer response.
-/// </summary>
-public class OfferResponse : Response, IPagingToken
+namespace StellarDotnetSdk.Responses
 {
-    [JsonProperty(PropertyName = "id")] public string Id { get; init; }
-
-    [JsonProperty(PropertyName = "seller")]
-    public string Seller { get; init; }
-
-    [JsonProperty(PropertyName = "selling")]
-    [JsonConverter(typeof(AssetJsonConverter))]
-    public Asset Selling { get; init; }
-
-    [JsonProperty(PropertyName = "buying")]
-    [JsonConverter(typeof(AssetJsonConverter))]
-    public Asset Buying { get; init; }
-
-    [JsonProperty(PropertyName = "amount")]
-    public string Amount { get; init; }
-
     /// <summary>
-    ///     The ask/bid price as a ratio.
+    ///     Represents offer response.
     /// </summary>
-    [JsonProperty(PropertyName = "price_r")]
-    public Price PriceRatio { get; init; }
-
-    /// <summary>
-    ///     The ask/bid price.
-    /// </summary>
-    [JsonProperty(PropertyName = "price")]
-    public string Price { get; init; }
-
-    [JsonProperty(PropertyName = "last_modified_ledger")]
-    public int LastModifiedLedger { get; init; }
-
-    [JsonProperty(PropertyName = "last_modified_time")]
-    public string LastModifiedTime { get; init; }
-
-    [JsonProperty(PropertyName = "_links")]
-    public OfferResponseLinks Links { get; init; }
-
-    [JsonProperty(PropertyName = "paging_token")]
-    public string PagingToken { get; init; }
-
-    public class OfferResponseLinks
+    public class OfferResponse : Response, IPagingToken
     {
-        [JsonProperty(PropertyName = "self")] public Link<OfferResponse> Self { get; init; }
+        [JsonPropertyName("id")] public string Id { get; init; }
 
-        [JsonProperty(PropertyName = "offer_maker")]
-        public Link<AccountResponse> OfferMaker { get; init; }
+        [JsonPropertyName("seller")] public string Seller { get; init; }
+
+        [JsonPropertyName("selling")]
+        [JsonConverter(typeof(AssetJsonConverter))]
+        public Asset Selling { get; init; }
+
+        [JsonPropertyName("buying")]
+        [JsonConverter(typeof(AssetJsonConverter))]
+        public Asset Buying { get; init; }
+
+        [JsonPropertyName("amount")] public string Amount { get; init; }
+
+        /// <summary>
+        ///     The ask/bid price as a ratio.
+        /// </summary>
+        [JsonPropertyName("price_r")]
+        public Price PriceRatio { get; init; }
+
+        /// <summary>
+        ///     The ask/bid price.
+        /// </summary>
+        [JsonPropertyName("price")]
+        public string Price { get; init; }
+
+        [JsonPropertyName("last_modified_ledger")]
+        public int LastModifiedLedger { get; init; }
+
+        [JsonPropertyName("last_modified_time")]
+        public string LastModifiedTime { get; init; }
+
+        [JsonPropertyName("_links")] public OfferResponseLinks Links { get; init; }
+
+        [JsonPropertyName("paging_token")] public string PagingToken { get; init; }
+
+        public class OfferResponseLinks
+        {
+            [JsonPropertyName("self")] public Link<OfferResponse> Self { get; init; }
+
+            [JsonPropertyName("offer_maker")] public Link<AccountResponse> OfferMaker { get; init; }
+        }
     }
 }

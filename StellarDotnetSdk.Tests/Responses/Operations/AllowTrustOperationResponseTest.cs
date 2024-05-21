@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
@@ -16,7 +16,7 @@ public class AllowTrustOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("allowTrust.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
         Assert.IsNotNull(instance);
         AssertAllowTrustOperationData(instance);
     }
@@ -26,9 +26,9 @@ public class AllowTrustOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("allowTrust.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);
         AssertAllowTrustOperationData(back);
     }
@@ -54,7 +54,7 @@ public class AllowTrustOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("allowTrustMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
         Assert.IsNotNull(instance);
         AssertAllowTrustOperationMuxed(instance);
     }
@@ -64,9 +64,9 @@ public class AllowTrustOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("allowTrustMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);
         AssertAllowTrustOperationMuxed(back);
     }

@@ -1,6 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Transactions;
 using SysConsole = System.Console;
 
@@ -12,15 +18,25 @@ public static class Program
 
     public static async Task Main(string[] args)
     {
-        // Network.UsePublicNetwork();
-        using var server = new Server("https://horizon-testnet.stellar.org");
-
-        var paymentsWithoutTransactions = await server.Payments.Execute().ConfigureAwait(false);
-        var paymentsWithTransactions = await server.Payments.IncludeTransaction().Execute().ConfigureAwait(false);
-
-        await CreateAccount(server).ConfigureAwait(false);
-
-        SysConsole.ReadLine();
+        string json = """
+                      {
+                        "href": "/ledgers/898826/effects{?cursor,limit,order}",
+                        "templated": true
+                      }
+                      """;
+        string json2 = """
+                       {
+                           "href": "https://horizon-testnet.stellar.org/assets?cursor=&limit=200&order=desc"
+                       }
+                       """;
+        // var back = JsonSerializer.Deserialize<Link<AssetResponse>>(json2);
+        JsonSerializerOptions options = new JsonSerializerOptions();
+        options.Converters.Add(new LinkJsonConverter<AssetResponse>());
+        // var back2 = JsonSingleton2.GetInstance<Page<AssetResponse>.PageLinks<AssetResponse>>(json);
+        var back2 = JsonSingleton2.GetInstance<Link<Page<AssetResponse>>>(json2);
+        var backEffect = JsonSingleton2.GetInstance<Link<Page<LedgerResponse>>>(json);
+        var led = await backEffect.Follow();
+        // var back3 = JsonSerializer.Deserialize<Link<AssetResponse>>(json2, options);
     }
 
     private static async Task CreateAccount(Server server)

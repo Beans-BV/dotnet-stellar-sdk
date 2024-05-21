@@ -13,7 +13,7 @@ public class AssetDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("assetAssetTypeNative.json");
         var json = File.ReadAllText(jsonPath);
-        var asset = JsonSingleton.GetInstance<Asset>(json);
+        var asset = JsonSingleton2.GetInstance<Asset>(json);
         Assert.IsNotNull(asset);
         Assert.AreEqual(asset.Type, "native");
     }
@@ -23,7 +23,7 @@ public class AssetDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("assetAssetTypeCredit.json");
         var json = File.ReadAllText(jsonPath);
-        var asset = JsonSingleton.GetInstance<Asset>(json);
+        var asset = JsonSingleton2.GetInstance<Asset>(json);
         Assert.IsNotNull(asset);
         Assert.AreEqual(asset.Type, "credit_alphanum4");
         var creditAsset = (AssetTypeCreditAlphaNum)asset;

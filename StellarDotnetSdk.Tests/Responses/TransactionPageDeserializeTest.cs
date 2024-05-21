@@ -12,7 +12,7 @@ public class TransactionPageDeserializeTest
     {
         var jsonPath = Utils.GetTestDataPath("transactionPage.json");
         var json = File.ReadAllText(jsonPath);
-        var transactionsPage = JsonSingleton.GetInstance<Page<TransactionResponse>>(json);
+        var transactionsPage = JsonSingleton2.GetInstance<Page<TransactionResponse>>(json);
         Assert.IsNotNull(transactionsPage);
         AssertTestData(transactionsPage);
     }

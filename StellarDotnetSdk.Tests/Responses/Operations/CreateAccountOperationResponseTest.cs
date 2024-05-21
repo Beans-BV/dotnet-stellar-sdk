@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
 
@@ -14,7 +14,7 @@ public class CreateAccountOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("createAccount.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
         Assert.IsNotNull(instance);
         AssertCreateAccountOperationData(instance);
     }
@@ -24,9 +24,9 @@ public class CreateAccountOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("createAccount.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);
         AssertCreateAccountOperationData(back);
     }
@@ -60,7 +60,7 @@ public class CreateAccountOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("createAccountMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
         Assert.IsNotNull(instance);
         AssertCreateAccountOperationDataMuxed(instance);
     }
@@ -70,9 +70,9 @@ public class CreateAccountOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("createAccountMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);
         AssertCreateAccountOperationDataMuxed(back);
     }

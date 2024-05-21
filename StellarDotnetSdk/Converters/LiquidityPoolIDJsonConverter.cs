@@ -1,19 +1,25 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.LiquidityPool;
 
 namespace StellarDotnetSdk.Converters;
 
 public class LiquidityPoolIdJsonConverter : JsonConverter<LiquidityPoolId>
 {
-    public override LiquidityPoolId? ReadJson(JsonReader reader, Type objectType, LiquidityPoolId? existingValue,
-        bool hasExistingValue, JsonSerializer serializer)
+    public override LiquidityPoolId? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        return reader.Value != null ? new LiquidityPoolId((string)reader.Value) : null;
+        if (reader.TokenType != JsonTokenType.String)
+        {
+            throw new JsonException();
+        }
+
+        var liquidityPoolId = reader.GetString();
+        return liquidityPoolId is null ? null : new LiquidityPoolId(liquidityPoolId);
     }
 
-    public override void WriteJson(JsonWriter writer, LiquidityPoolId? value, JsonSerializer serializer)
+    public override void Write(Utf8JsonWriter writer, LiquidityPoolId? value, JsonSerializerOptions options)
     {
-        writer.WriteValue(value?.ToString());
+        writer.WriteStringValue(value?.ToString());
     }
 }

@@ -1,6 +1,6 @@
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
@@ -13,7 +13,7 @@ public class ClaimableBalanceDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("claimableBalance.json");
         var json = File.ReadAllText(jsonPath);
-        var claimableBalance = JsonSingleton.GetInstance<ClaimableBalanceResponse>(json);
+        var claimableBalance = JsonSingleton2.GetInstance<ClaimableBalanceResponse>(json);
         Assert.IsNotNull(claimableBalance);
         AssertTestData(claimableBalance);
     }
@@ -23,10 +23,10 @@ public class ClaimableBalanceDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("claimableBalance.json");
         var json = File.ReadAllText(jsonPath);
-        var claimableBalance = JsonConvert.DeserializeObject<ClaimableBalanceResponse>(json);
+        var claimableBalance = JsonSerializer.Deserialize<ClaimableBalanceResponse>(json);
 
-        var serialized = JsonConvert.SerializeObject(claimableBalance);
-        var back = JsonConvert.DeserializeObject<ClaimableBalanceResponse>(serialized);
+        var serialized = JsonSerializer.Serialize(claimableBalance);
+        var back = JsonSerializer.Deserialize<ClaimableBalanceResponse>(serialized);
         Assert.IsNotNull(back);
         Assert.IsNotNull(claimableBalance);
         Assert.AreEqual(claimableBalance.LastModifiedLedger, back.LastModifiedLedger);

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
 
@@ -14,7 +14,7 @@ public class AccountMergeOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("accountMerge.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
         Assert.IsNotNull(instance);
         AssertAccountMergeData(instance);
     }
@@ -24,9 +24,9 @@ public class AccountMergeOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("accountMerge.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);
         AssertAccountMergeData(back);
     }
@@ -48,7 +48,7 @@ public class AccountMergeOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("accountMergeMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
         Assert.IsNotNull(instance);
         AssertAccountMergeDataMuxed(instance);
     }
@@ -58,9 +58,9 @@ public class AccountMergeOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("accountMergeMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);
         AssertAccountMergeDataMuxed(back);
     }

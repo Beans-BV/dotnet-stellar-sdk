@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
@@ -13,7 +13,7 @@ public class TradeAggregationsPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("tradeAggregationPage.json");
         var json = File.ReadAllText(jsonPath);
-        var tradeAggregationsPage = JsonSingleton.GetInstance<Page<TradeAggregationResponse>>(json);
+        var tradeAggregationsPage = JsonSingleton2.GetInstance<Page<TradeAggregationResponse>>(json);
         Assert.IsNotNull(tradeAggregationsPage);
         AssertTestData(tradeAggregationsPage);
     }
@@ -23,9 +23,9 @@ public class TradeAggregationsPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("tradeAggregationPage.json");
         var json = File.ReadAllText(jsonPath);
-        var tradeAggregationsPage = JsonSingleton.GetInstance<Page<TradeAggregationResponse>>(json);
-        var serialized = JsonConvert.SerializeObject(tradeAggregationsPage);
-        var back = JsonConvert.DeserializeObject<Page<TradeAggregationResponse>>(serialized);
+        var tradeAggregationsPage = JsonSingleton2.GetInstance<Page<TradeAggregationResponse>>(json);
+        var serialized = JsonSerializer.Serialize(tradeAggregationsPage);
+        var back = JsonSerializer.Deserialize<Page<TradeAggregationResponse>>(serialized);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }
@@ -36,7 +36,7 @@ public class TradeAggregationsPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("tradeAggregationPagePre100.json");
         var json = File.ReadAllText(jsonPath);
-        var tradeAggregationsPage = JsonSingleton.GetInstance<Page<TradeAggregationResponse>>(json);
+        var tradeAggregationsPage = JsonSingleton2.GetInstance<Page<TradeAggregationResponse>>(json);
         Assert.IsNotNull(tradeAggregationsPage);
         AssertTestData(tradeAggregationsPage);
     }
@@ -47,9 +47,9 @@ public class TradeAggregationsPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("tradeAggregationPagePre100.json");
         var json = File.ReadAllText(jsonPath);
-        var tradeAggregationsPage = JsonSingleton.GetInstance<Page<TradeAggregationResponse>>(json);
-        var serialized = JsonConvert.SerializeObject(tradeAggregationsPage);
-        var back = JsonConvert.DeserializeObject<Page<TradeAggregationResponse>>(serialized);
+        var tradeAggregationsPage = JsonSingleton2.GetInstance<Page<TradeAggregationResponse>>(json);
+        var serialized = JsonSerializer.Serialize(tradeAggregationsPage);
+        var back = JsonSerializer.Deserialize<Page<TradeAggregationResponse>>(serialized);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

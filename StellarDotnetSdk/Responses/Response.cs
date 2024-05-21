@@ -1,21 +1,23 @@
 ﻿using System.Linq;
 using System.Net.Http.Headers;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
-namespace StellarDotnetSdk.Responses;
-
-[JsonObject(MemberSerialization.OptIn)]
-public abstract class Response
+namespace StellarDotnetSdk.Responses
 {
-    private const string XRateLimitLimit = "X-Ratelimit-Limit";
-    private const string XRateLimitRemaining = "X-Ratelimit-Remaining";
-    private const string XRateLimitReset = "X-Ratelimit-Reset";
+    public abstract class Response
+    {
+        private const string XRateLimitLimit = "X-Ratelimit-Limit";
+        private const string XRateLimitRemaining = "X-Ratelimit-Remaining";
+        private const string XRateLimitReset = "X-Ratelimit-Reset";
 
-    protected int RateLimitLimit { get; private set; }
+        [JsonIgnore]
+        protected int RateLimitLimit { get; private set; }
 
-    protected int RateLimitRemaining { get; private set; }
+        [JsonIgnore]
+        protected int RateLimitRemaining { get; private set; }
 
-    protected int RateLimitReset { get; private set; }
+        [JsonIgnore]
+        protected int RateLimitReset { get; private set; }
 
     public void SetHeaders(HttpResponseHeaders headers)
     {

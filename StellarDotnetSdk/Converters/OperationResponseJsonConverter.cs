@@ -1,33 +1,46 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 using StellarDotnetSdk.Responses.Operations;
+using JsonException = System.Text.Json.JsonException;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace StellarDotnetSdk.Converters;
 
-public class OperationResponseJsonConverter : JsonConverter<OperationResponse>
+public class OperationResponseJsonConverter : System.Text.Json.Serialization.JsonConverter<OperationResponse>
 {
-    public override bool CanWrite => false;
-
-    public override void WriteJson(JsonWriter writer, OperationResponse? value, JsonSerializer serializer)
+    public override void Write(Utf8JsonWriter writer, OperationResponse value, JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }
-
-    public override OperationResponse ReadJson(JsonReader reader, Type objectType, OperationResponse? existingValue,
-        bool hasExistingValue,
-        JsonSerializer serializer)
+    
+    public override OperationResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var jsonObject = JObject.Load(reader);
-        var type = jsonObject.GetValue("type_i");
-        if (type == null)
+        using JsonDocument document = JsonDocument.ParseValue(ref reader);
+        var root = document.RootElement;
+        string type = root.GetProperty("Type").GetString();
+
+        switch (type)
         {
-            throw new ArgumentException("JSON value for type_i is missing.", nameof(type));
+            case "0":
+                return JsonSerializer.Deserialize<CreateAccountOperationResponse>(root.GetRawText(), options);
+            case "1":
+                return JsonSerializer.Deserialize<PaymentOperationResponse>(root.GetRawText(), options);
+            default:
+                throw new JsonException("Unknown type.");
         }
-        var response = CreateResponse(type.ToObject<int>());
-        serializer.Populate(jsonObject.CreateReader(), response);
-        return response;
     }
+
+    // public override OperationResponse ReadJson(JsonReader reader, Type objectType, OperationResponse? existingValue,
+    //     bool hasExistingValue,
+    //     JsonSerializer serializer)
+    // {
+    //     var jsonObject = JObject.Load(reader);
+    //     var type = jsonObject.GetValue("type_i");
+    //     if (type == null) throw new ArgumentException("JSON value for type_i is missing.", nameof(type));
+    //     var response = CreateResponse(type.ToObject<int>());
+    //     serializer. Populate(jsonObject.CreateReader(), response);
+    //     return response;
+    // }
 
     private static OperationResponse CreateResponse(int type)
     {
@@ -60,7 +73,7 @@ public class OperationResponseJsonConverter : JsonConverter<OperationResponse>
             24 => new InvokeHostFunctionOperationResponse(),
             25 => new ExtendFootprintOperationResponse(),
             26 => new RestoreFootprintOperationResponse(),
-            _ => throw new JsonSerializationException($"Invalid operation 'type_i'='{type}'"),
+            _ => throw new JsonException($"Invalid operation 'type_i'='{type}'")
         };
     }
 }

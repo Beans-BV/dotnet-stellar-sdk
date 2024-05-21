@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.LiquidityPool;
 
 namespace StellarDotnetSdk.Responses.Operations;
@@ -11,9 +12,9 @@ public class LiquidityPoolWithdrawOperationResponse : OperationResponse
 
     [JsonProperty("liquidity_pool_id")] public LiquidityPoolId LiquidityPoolId { get; init; }
 
-    [JsonProperty("reserves_min")] public List<Reserve> ReservesMin { get; init; }
+    [JsonPropertyName("reserves_min")] public List<Reserve> ReservesMin { get; init; }
 
-    [JsonProperty("reserves_received")] public List<Reserve> ReservesReceived { get; init; }
+    [JsonPropertyName("reserves_received")] public List<Reserve> ReservesReceived { get; init; }
 
-    [JsonProperty("shares")] public string Shares { get; init; }
+    [JsonPropertyName("shares")] public string Shares { get; init; }
 }

@@ -35,7 +35,7 @@ public class ResponseHandler<T> where T : class
             throw new ClientProtocolException("Response contains no content");
         }
 
-        var responseObj = JsonSingleton.GetInstance<T>(content);
+        var responseObj = JsonSingleton2.GetInstance<T>(content);
 
         if (responseObj is Response responseInstance)
         {

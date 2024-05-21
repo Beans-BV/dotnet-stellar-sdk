@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
@@ -15,9 +15,9 @@ public class LiquidityPoolOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolDepositOperationResponse.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolDepositOperationResponse);
         Assert.IsNotNull(instance);
@@ -50,10 +50,10 @@ public class LiquidityPoolOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolWithdrawOperationResponse.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
+        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var serialized = JsonSerializer.Serialize(instance);
         Assert.IsNotNull(serialized);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolWithdrawOperationResponse);
         Assert.IsNotNull(instance);

@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.LedgerEntries;
 using StellarDotnetSdk.LedgerKeys;
 
@@ -13,7 +13,7 @@ public class GetLedgerEntriesResponse
         LatestLedger = latestLedger;
     }
 
-    [JsonProperty(PropertyName = "entries")]
+    [JsonPropertyName("entries")]
     private LedgerEntryResult[]? EntryResults { get; }
 
     public uint? LatestLedger { get; }
@@ -33,7 +33,7 @@ public class GetLedgerEntriesResponse
         /// <summary>
         ///     The base-64 encoded XDR string of the key of the ledger entry.
         /// </summary>
-        [JsonProperty(PropertyName = "key")] private readonly string _key;
+        [JsonPropertyName("key")] private readonly string _key;
 
         /// <summary>
         ///     The base-64 encoded XDR string of the <see cref="Xdr.LedgerEntry.LedgerEntryData" /> object.
@@ -43,14 +43,14 @@ public class GetLedgerEntriesResponse
         /// <summary>
         ///     The ledger number of the last time this entry was updated (optional).
         /// </summary>
-        [JsonProperty(PropertyName = "lastModifiedLedgerSeq")]
+        [JsonPropertyName("lastModifiedLedgerSeq")]
         public readonly uint LastModifiedLedger;
 
         /// <summary>
         ///     The ledger sequence number after which the ledger entry would expire. This field exists only for ContractCodeEntry
         ///     and ContractDataEntry ledger entries (optional).
         /// </summary>
-        [JsonProperty(PropertyName = "liveUntilLedgerSeq")]
+        [JsonPropertyName("liveUntilLedgerSeq")]
         public readonly uint LiveUntilLedger;
 
         public LedgerEntryResult(string key, uint lastModifiedLedger, uint liveUntilLedger, string xdr)

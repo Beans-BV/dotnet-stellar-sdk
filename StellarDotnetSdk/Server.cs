@@ -287,7 +287,9 @@ public class Server : IDisposable
         {
             case HttpStatusCode.OK:
             case HttpStatusCode.BadRequest:
-                return JsonSingleton.GetInstance<T>(responseString);
+                var submitTransactionResponse = JsonSingleton2.GetInstance<SubmitTransactionResponse>(
+                    responseString);
+                return submitTransactionResponse;
             case HttpStatusCode.ServiceUnavailable:
             case HttpStatusCode.TooManyRequests:
                 throw CreateExceptionWithRetryInfo(response);

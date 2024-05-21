@@ -51,7 +51,7 @@ public class RequestBuilderStreamable<T, TResponse>
 
         EventSource.Message += (_, e) =>
         {
-            var responseObject = JsonSingleton.GetInstance<TResponse>(e.Data) ??
+            var responseObject = JsonSingleton2.GetInstance<TResponse>(e.Data) ??
                                  throw new NotSupportedException("Unknown response type");
 
             if (responseObject is IPagingToken page)
