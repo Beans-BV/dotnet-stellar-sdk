@@ -181,7 +181,7 @@ public class Server : IDisposable
         {
             case HttpStatusCode.OK:
             case HttpStatusCode.BadRequest:
-                var submitTransactionResponse = JsonSingleton.GetInstance<SubmitTransactionResponse>(
+                var submitTransactionResponse = JsonSingleton2.GetInstance<SubmitTransactionResponse>(
                     responseString);
                 return submitTransactionResponse;
             case HttpStatusCode.ServiceUnavailable:

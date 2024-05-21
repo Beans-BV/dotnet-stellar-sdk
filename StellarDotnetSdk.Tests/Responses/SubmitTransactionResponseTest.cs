@@ -12,7 +12,7 @@ public class SubmitTransactionResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("submitTransactionTransactionFailure.json");
         var json = File.ReadAllText(jsonPath);
-        var submitTransactionResponse = JsonSingleton.GetInstance<SubmitTransactionResponse>(json);
+        var submitTransactionResponse = JsonSingleton2.GetInstance<SubmitTransactionResponse>(json);
         Assert.IsNotNull(submitTransactionResponse);
         Assert.AreEqual(submitTransactionResponse.IsSuccess, false);
         Assert.AreEqual(submitTransactionResponse.EnvelopeXdr,
@@ -28,7 +28,7 @@ public class SubmitTransactionResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("submitTransactionOperationFailure.json");
         var json = File.ReadAllText(jsonPath);
-        var submitTransactionResponse = JsonSingleton.GetInstance<SubmitTransactionResponse>(json);
+        var submitTransactionResponse = JsonSingleton2.GetInstance<SubmitTransactionResponse>(json);
         Assert.IsNotNull(submitTransactionResponse);
         Assert.AreEqual(submitTransactionResponse.IsSuccess, false);
         Assert.AreEqual(submitTransactionResponse.EnvelopeXdr,
@@ -47,7 +47,7 @@ public class SubmitTransactionResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("submitTransactionSuccess.json");
         var json = File.ReadAllText(jsonPath);
-        var submitTransactionResponse = JsonSingleton.GetInstance<SubmitTransactionResponse>(json);
+        var submitTransactionResponse = JsonSingleton2.GetInstance<SubmitTransactionResponse>(json);
         Assert.IsNotNull(submitTransactionResponse);
         Assert.AreEqual(submitTransactionResponse.IsSuccess, true);
         Assert.AreEqual(submitTransactionResponse.Hash,
@@ -65,7 +65,7 @@ public class SubmitTransactionResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("submitTransactionNoOfferId.json");
         var json = File.ReadAllText(jsonPath);
-        var submitTransactionResponse = JsonSingleton.GetInstance<SubmitTransactionResponse>(json);
+        var submitTransactionResponse = JsonSingleton2.GetInstance<SubmitTransactionResponse>(json);
         Assert.IsNotNull(submitTransactionResponse);
         Assert.AreEqual(submitTransactionResponse.IsSuccess, true);
         Assert.IsNull(submitTransactionResponse.GetOfferIdFromResult(0));

@@ -13,7 +13,7 @@ public class EffectsPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectPage.json");
         var json = File.ReadAllText(jsonPath);
-        var effectsPage = JsonSingleton.GetInstance<Page<EffectResponse>>(json);
+        var effectsPage = JsonSingleton2.GetInstance<Page<EffectResponse>>(json);
         Assert.IsNotNull(effectsPage);
         AssertTestData(effectsPage);
     }

@@ -1,8 +1,7 @@
 ﻿using System.IO;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
 
@@ -17,7 +16,7 @@ public class OperationPageDeserializerTest
     public void TestDeserialize()
     {
         var json = File.ReadAllText(_getTestDataPath);
-        var operationsPage = JsonSingleton.GetInstance<Page<OperationResponse>>(json);
+        var operationsPage = JsonSingleton2.GetInstance<Page<OperationResponse>>(json);
         Assert.IsNotNull(operationsPage);
         AssertTestData(operationsPage);
     }
@@ -26,10 +25,9 @@ public class OperationPageDeserializerTest
     public void TestSerializeDeserialize()
     {
         var json = File.ReadAllText(_getTestDataPath);
-        var operationsPage = JsonSingleton.GetInstance<Page<OperationResponse>>(json);
-        var serialized = JsonConvert.SerializeObject(operationsPage, new OperationResponseJsonConverter());
-        var back = JsonConvert.DeserializeObject<Page<OperationResponse>>(serialized,
-            new OperationResponseJsonConverter());
+        var operationsPage = JsonSingleton2.GetInstance<Page<OperationResponse>>(json);
+        var serialized = JsonSerializer.Serialize(operationsPage);
+        var back = JsonSerializer.Deserialize<Page<OperationResponse>>(serialized);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

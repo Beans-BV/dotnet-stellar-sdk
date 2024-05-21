@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
@@ -13,7 +13,7 @@ public class FriendBotResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("friendBotFail.json");
         var json = File.ReadAllText(jsonPath);
-        var friendBotResponse = JsonSingleton.GetInstance<FriendBotResponse>(json);
+        var friendBotResponse = JsonSingleton2.GetInstance<FriendBotResponse>(json);
         Assert.IsNotNull(friendBotResponse);
         AssertFriendBotResponseFailureData(friendBotResponse);
     }
@@ -23,9 +23,9 @@ public class FriendBotResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("friendBotFail.json");
         var json = File.ReadAllText(jsonPath);
-        var friendBotResponse = JsonSingleton.GetInstance<FriendBotResponse>(json);
-        var serialized = JsonConvert.SerializeObject(friendBotResponse);
-        var back = JsonConvert.DeserializeObject<FriendBotResponse>(serialized);
+        var friendBotResponse = JsonSingleton2.GetInstance<FriendBotResponse>(json);
+        var serialized = JsonSerializer.Serialize(friendBotResponse);
+        var back = JsonSerializer.Deserialize<FriendBotResponse>(serialized);
         Assert.IsNotNull(back);
         AssertFriendBotResponseFailureData(back);
     }
@@ -50,7 +50,7 @@ public class FriendBotResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("friendBotSuccess.json");
         var json = File.ReadAllText(jsonPath);
-        var friendBotResponse = JsonSingleton.GetInstance<FriendBotResponse>(json);
+        var friendBotResponse = JsonSingleton2.GetInstance<FriendBotResponse>(json);
         Assert.IsNotNull(friendBotResponse);
         AssertSuccessTestData(friendBotResponse);
     }
@@ -60,9 +60,9 @@ public class FriendBotResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("friendBotSuccess.json");
         var json = File.ReadAllText(jsonPath);
-        var friendBotResponse = JsonSingleton.GetInstance<FriendBotResponse>(json);
-        var serialized = JsonConvert.SerializeObject(friendBotResponse);
-        var back = JsonConvert.DeserializeObject<FriendBotResponse>(serialized);
+        var friendBotResponse = JsonSingleton2.GetInstance<FriendBotResponse>(json);
+        var serialized = JsonSerializer.Serialize(friendBotResponse);
+        var back = JsonSerializer.Deserialize<FriendBotResponse>(serialized);
         Assert.IsNotNull(back);
         AssertSuccessTestData(back);
     }

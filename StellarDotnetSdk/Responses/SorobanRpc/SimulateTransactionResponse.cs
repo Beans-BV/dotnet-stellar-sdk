@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Soroban;
 
@@ -77,7 +77,7 @@ public class SimulateTransactionResponse
     ///         operations.
     ///     </para>
     /// </summary>
-    [JsonProperty(PropertyName = "restorePreamble")]
+    [JsonPropertyName("restorePreamble")]
     public RestorePreamble? RestorePreambleInfo { get; } // TODO Unit test
 
     public LedgerEntryChange[]? StateChanges { get; }
@@ -148,13 +148,13 @@ public class SimulateTransactionResponse
         /// <summary>
         ///     Number of the total cpu instructions consumed by this transaction.
         /// </summary>
-        [JsonProperty(PropertyName = "cpuInsns")]
+        [JsonPropertyName("cpuInsns")]
         public long CpuInstructions { get; }
 
         /// <summary>
         ///     Number of the total memory bytes allocated by this transaction.
         /// </summary>
-        [JsonProperty(PropertyName = "memBytes")]
+        [JsonPropertyName("memBytes")]
         public long MemoryBytes { get; }
     }
 

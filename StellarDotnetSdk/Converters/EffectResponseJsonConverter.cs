@@ -1,29 +1,31 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses.Effects;
 
 namespace StellarDotnetSdk.Converters;
 
 public class EffectResponseJsonConverter : JsonConverter<EffectResponse>
 {
-    public override bool CanWrite => false;
-
-    public override void WriteJson(JsonWriter writer, EffectResponse? value, JsonSerializer serializer)
+    public override EffectResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        throw new NotImplementedException();
+        if (reader.TokenType != JsonTokenType.StartObject)
+        {
+            throw new JsonException();
+        }
+
+        using (var jsonDocument = JsonDocument.ParseValue(ref reader))
+        {
+            var jsonObject = jsonDocument.RootElement;
+            var type = jsonObject.GetProperty("type_i");
+            var response = CreateResponse(type.GetInt32());
+            return (EffectResponse)JsonSerializer.Deserialize(jsonObject.GetRawText(), response.GetType(), options);
+        }
     }
 
-    public override EffectResponse ReadJson(JsonReader reader, Type objectType, EffectResponse? existingValue,
-        bool hasExistingValue,
-        JsonSerializer serializer)
+    public override void Write(Utf8JsonWriter writer, EffectResponse value, JsonSerializerOptions options)
     {
-        var jsonObject = JObject.Load(reader);
-        var type = jsonObject.GetValue("type_i");
-        if (type == null) throw new ArgumentException("JSON value for type_i is missing.", nameof(type));
-        var response = CreateResponse(type.ToObject<int>());
-        serializer.Populate(jsonObject.CreateReader(), response);
-        return response;
+        throw new NotImplementedException();
     }
 
     private static EffectResponse CreateResponse(int type)
@@ -89,7 +91,7 @@ public class EffectResponseJsonConverter : JsonConverter<EffectResponse>
             93 => new LiquidityPoolCreatedEffectResponse(),
             94 => new LiquidityPoolRemovedEffectResponse(),
             95 => new LiquidityPoolRevokedEffectResponse(),
-            _ => throw new JsonSerializationException($"Unknown 'type_i'='{type}'")
+            _ => throw new JsonException($"Unknown 'type_i'='{type}'")
         };
     }
 }

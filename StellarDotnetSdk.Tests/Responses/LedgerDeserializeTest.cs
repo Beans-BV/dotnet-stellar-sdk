@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
@@ -13,7 +13,7 @@ public class LedgerDeserializeTest
     {
         var jsonPath = Utils.GetTestDataPath("ledger.json");
         var json = File.ReadAllText(jsonPath);
-        var ledger = JsonSingleton.GetInstance<LedgerResponse>(json);
+        var ledger = JsonSingleton2.GetInstance<LedgerResponse>(json);
         Assert.IsNotNull(ledger);
         AssertTestData(ledger);
     }
@@ -23,9 +23,9 @@ public class LedgerDeserializeTest
     {
         var jsonPath = Utils.GetTestDataPath("ledger.json");
         var json = File.ReadAllText(jsonPath);
-        var ledger = JsonSingleton.GetInstance<LedgerResponse>(json);
-        var serialized = JsonConvert.SerializeObject(ledger);
-        var back = JsonConvert.DeserializeObject<LedgerResponse>(serialized);
+        var ledger = JsonSingleton2.GetInstance<LedgerResponse>(json);
+        var serialized = JsonSerializer.Serialize(ledger);
+        var back = JsonSerializer.Deserialize<LedgerResponse>(serialized);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }
@@ -35,7 +35,7 @@ public class LedgerDeserializeTest
     {
         var jsonPath = Utils.GetTestDataPath("ledgerNullValues.json");
         var json = File.ReadAllText(jsonPath);
-        var ledger = JsonSingleton.GetInstance<LedgerResponse>(json);
+        var ledger = JsonSingleton2.GetInstance<LedgerResponse>(json);
         Assert.IsNotNull(ledger);
         Assert.AreEqual(ledger.Hash, "7f7cc428fa2b5f17fea0dba3bdbd36972f3dff4fae9345cc1f013b1133bbf7c4");
         Assert.AreEqual(ledger.PagingToken, "2147483648000");

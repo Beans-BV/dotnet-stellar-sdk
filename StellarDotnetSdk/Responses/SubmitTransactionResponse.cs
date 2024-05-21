@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Xdr;
 using TransactionResult = StellarDotnetSdk.Responses.Results.TransactionResult;
 
@@ -9,15 +9,15 @@ namespace StellarDotnetSdk.Responses;
 
 public class SubmitTransactionResponse : Response
 {
-    [JsonProperty(PropertyName = "envelope_xdr")]
+    [JsonPropertyName("envelope_xdr")]
     private string _envelopeXdr;
 
-    [JsonProperty(PropertyName = "result_xdr")]
+    [JsonPropertyName("result_xdr")]
     private string _resultXdr;
 
-    [JsonProperty(PropertyName = "hash")] public string Hash { get; init; }
+    [JsonPropertyName("hash")] public string Hash { get; init; }
 
-    [JsonProperty(PropertyName = "ledger")]
+    [JsonPropertyName("ledger")]
     public uint? Ledger { get; init; }
 
     public string EnvelopeXdr => IsSuccess ? _envelopeXdr : SubmitTransactionResponseExtras.EnvelopeXdr;
@@ -27,7 +27,7 @@ public class SubmitTransactionResponse : Response
     public TransactionResult Result =>
         TransactionResult.FromXdrBase64(IsSuccess ? _resultXdr : SubmitTransactionResponseExtras.ResultXdr);
 
-    [JsonProperty(PropertyName = "extras")]
+    [JsonPropertyName("extras")]
     public Extras SubmitTransactionResponseExtras { get; init; }
 
     public bool IsSuccess => Ledger != null;
@@ -74,13 +74,13 @@ public class SubmitTransactionResponse : Response
     /// </summary>
     public class Extras
     {
-        [JsonProperty(PropertyName = "envelope_xdr")]
+        [JsonPropertyName("envelope_xdr")]
         public string EnvelopeXdr { get; init; }
 
-        [JsonProperty(PropertyName = "result_xdr")]
+        [JsonPropertyName("result_xdr")]
         public string ResultXdr { get; init; }
 
-        [JsonProperty(PropertyName = "result_codes")]
+        [JsonPropertyName("result_codes")]
         public ResultCodes ExtrasResultCodes { get; init; }
 
         /// <summary>
@@ -93,10 +93,10 @@ public class SubmitTransactionResponse : Response
         /// </summary>
         public class ResultCodes
         {
-            [JsonProperty(PropertyName = "transaction")]
+            [JsonPropertyName("transaction")]
             public string TransactionResultCode { get; init; }
 
-            [JsonProperty(PropertyName = "operations")]
+            [JsonPropertyName("operations")]
             public List<string> OperationsResultCodes { get; init; }
         }
     }

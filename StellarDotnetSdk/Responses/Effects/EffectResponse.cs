@@ -1,5 +1,5 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Operations;
 
@@ -15,29 +15,29 @@ namespace StellarDotnetSdk.Responses.Effects;
 [JsonConverter(typeof(EffectResponseJsonConverter))]
 public abstract class EffectResponse : Response, IPagingToken
 {
-    [JsonProperty(PropertyName = "id")] public string Id { get; protected set; }
+    [JsonPropertyName("id")] public string Id { get; protected set; }
 
-    [JsonProperty(PropertyName = "account")]
+    [JsonPropertyName("account")]
     public string Account { get; protected set; }
 
-    [JsonProperty(PropertyName = "account_muxed")]
+    [JsonPropertyName("account_muxed")]
     public string AccountMuxed { get; protected set; }
 
-    [JsonProperty(PropertyName = "account_muxed_id")]
+    [JsonPropertyName("account_muxed_id")]
     public ulong? AccountMuxedId { get; protected set; }
 
-    [JsonProperty(PropertyName = "type")] public string Type { get; protected set; }
+    [JsonPropertyName("type")] public string Type { get; protected set; }
 
-    [JsonProperty(PropertyName = "type_i")]
+    [JsonPropertyName("type_i")]
     public virtual int TypeId { get; }
 
-    [JsonProperty(PropertyName = "_links")]
+    [JsonPropertyName("_links")]
     public EffectsResponseLinks Links { get; protected set; }
 
-    [JsonProperty(PropertyName = "created_at")]
+    [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; protected set; }
 
-    [JsonProperty(PropertyName = "paging_token")]
+    [JsonPropertyName("paging_token")]
     public string PagingToken { get; protected set; }
 
     /// <summary>
@@ -53,13 +53,13 @@ public abstract class EffectResponse : Response, IPagingToken
             Succeeds = succeeds;
         }
 
-        [JsonProperty(PropertyName = "operation")]
+        [JsonPropertyName("operation")]
         public Link<OperationResponse> Operation { get; }
 
-        [JsonProperty(PropertyName = "precedes")]
+        [JsonPropertyName("precedes")]
         public Link<EffectResponse> Precedes { get; }
 
-        [JsonProperty(PropertyName = "succeeds")]
+        [JsonPropertyName("succeeds")]
         public Link<EffectResponse> Succeeds { get; }
     }
 }

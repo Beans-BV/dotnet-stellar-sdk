@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
@@ -13,7 +13,7 @@ public class FeeStatsDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("feeStats.json");
         var json = File.ReadAllText(jsonPath);
-        var stats = JsonSingleton.GetInstance<FeeStatsResponse>(json);
+        var stats = JsonSingleton2.GetInstance<FeeStatsResponse>(json);
         Assert.IsNotNull(stats);
         AssertTestData(stats);
     }
@@ -23,10 +23,10 @@ public class FeeStatsDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("feeStats.json");
         var json = File.ReadAllText(jsonPath);
-        var stats = JsonConvert.DeserializeObject<FeeStatsResponse>(json);
+        var stats = JsonSerializer.Deserialize<FeeStatsResponse>(json);
 
-        var serialized = JsonConvert.SerializeObject(stats);
-        var back = JsonConvert.DeserializeObject<FeeStatsResponse>(serialized);
+        var serialized = JsonSerializer.Serialize(stats);
+        var back = JsonSerializer.Deserialize<FeeStatsResponse>(serialized);
         Assert.IsNotNull(stats);
         Assert.IsNotNull(back);
         Assert.AreEqual(stats.LastLedger, back.LastLedger);

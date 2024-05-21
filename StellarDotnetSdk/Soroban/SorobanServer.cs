@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using System.Text.Json;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.LedgerEntries;
@@ -210,7 +210,7 @@ public class SorobanServer : IDisposable
         var responseHandler = new ResponseHandler<SorobanRpcResponse<TR>>();
         var requestId = GenerateRequestId();
         SorobanRpcRequest<T> sorobanRpcRequest = new(requestId, method, parameters);
-        var httpContent = new StringContent(JsonConvert.SerializeObject(sorobanRpcRequest), Encoding.UTF8,
+        var httpContent = new StringContent(JsonSerializer.Serialize(sorobanRpcRequest), Encoding.UTF8,
             "application/json");
 
         var response = await _httpClient.PostAsync(_serverUri, httpContent);

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Soroban;
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;
@@ -80,7 +80,7 @@ public class GetEventsResponse
         ///     Can be deserialized into an <see cref="SCVal" /> object by calling
         ///     <see cref="SCVal.FromXdrBase64">SCVal.FromXdrBase64()</see>.
         /// </remarks>
-        [JsonProperty("topic")]
+        [JsonPropertyName("topic")]
         public string[] Topics { get; }
 
         /// <summary>
@@ -98,6 +98,6 @@ public class GetEventsResponse
         /// </remarks>
         public string Value { get; }
 
-        [JsonProperty("txHash")] public string TransactionHash { get; }
+        [JsonPropertyName("txHash")] public string TransactionHash { get; }
     }
 }

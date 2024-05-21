@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using System.Text.Json;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Responses;
@@ -16,7 +16,7 @@ public class LiquidityPoolDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("liquidityPool.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<LiquidityPoolResponse>(json);
+        var instance = JsonSingleton2.GetInstance<LiquidityPoolResponse>(json);
         Assert.IsNotNull(instance);
         Assert.AreEqual(new LiquidityPoolID("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"),
             instance.Id);
@@ -52,9 +52,9 @@ public class LiquidityPoolDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("liquidityPool.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<LiquidityPoolResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var parsed = JsonConvert.DeserializeObject<LiquidityPoolResponse>(serialized);
+        var instance = JsonSingleton2.GetInstance<LiquidityPoolResponse>(json);
+        var serialized = JsonSerializer.Serialize(instance);
+        var parsed = JsonSerializer.Deserialize<LiquidityPoolResponse>(serialized);
         Assert.IsNotNull(parsed);
         Assert.AreEqual(new LiquidityPoolID("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"),
             parsed.Id);

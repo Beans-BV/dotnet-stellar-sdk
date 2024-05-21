@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
 #nullable disable
@@ -10,9 +11,9 @@ public class SignerSponsorshipCreatedEffectResponse : EffectResponse
 {
     public override int TypeId => 72;
 
-    [JsonProperty(PropertyName = "signer")]
+    [JsonPropertyName("signer")]
     public string Signer { get; init; }
 
-    [JsonProperty(PropertyName = "sponsor")]
+    [JsonPropertyName("sponsor")]
     public string Sponsor { get; init; }
 }
