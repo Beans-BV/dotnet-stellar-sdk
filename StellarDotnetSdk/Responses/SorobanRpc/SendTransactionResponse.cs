@@ -1,4 +1,7 @@
-﻿namespace StellarDotnetSdk.Responses.SorobanRpc;
+﻿using System.Text.Json.Serialization;
+using StellarDotnetSdk.Converters;
+
+namespace StellarDotnetSdk.Responses.SorobanRpc;
 
 /// <summary>
 ///     Transaction status and network state. The result will include if the transaction was successfully enqueued, and
@@ -34,22 +37,22 @@ public class SendTransactionResponse
     ///     (optional) If the transaction status is ERROR, this will be a base64 encoded string of the raw TransactionResult
     ///     XDR struct containing details on why stellar-core rejected the transaction.
     /// </summary>
-    public string? ErrorResultXdr { get; }
+    public string? ErrorResultXdr { get; init; }
 
     /// <summary>
     ///     The transaction hash (a hex-encoded string).
     /// </summary>
-    public string Hash { get; }
+    public string Hash { get; init; }
 
     /// <summary>
     ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.
     /// </summary>
-    public long? LatestLedger { get; }
+    public long? LatestLedger { get; init; }
 
     /// <summary>
     ///     The unix timestamp of the close time of the latest ledger known to Soroban RPC at the time it handled the request.
     /// </summary>
-    public long? LatestLedgerCloseTime { get; }
+    public long? LatestLedgerCloseTime { get; init; }
 
     /// <summary>
     ///     The current status of the transaction by hash, one of: ERROR, PENDING, DUPLICATE, TRY_AGAIN_LATER.
@@ -59,5 +62,6 @@ public class SendTransactionResponse
     ///     TRY_AGAIN_LATER represents the status value returned by stellar-core when a submitted transaction was not included
     ///     in the previous 4 ledgers and get banned for being added in the next few ledgers.
     /// </summary>
-    public SendTransactionStatus Status { get; }
+    [JsonConverter(typeof(SendTransactionStatusEnumJsonConverter))]
+    public SendTransactionStatus Status { get; init; }
 }

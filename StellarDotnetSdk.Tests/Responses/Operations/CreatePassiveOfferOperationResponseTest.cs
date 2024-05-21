@@ -1,9 +1,9 @@
 ﻿using System.IO;
+using System.Text.Json;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Responses;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
@@ -16,7 +16,8 @@ public class CreatePassiveOfferOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("createPassiveOffer.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<CreatePassiveOfferOperationResponse>(json);
+        var instance =
+            JsonSerializer.Deserialize<CreatePassiveOfferOperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertCreatePassiveOfferData(instance);
     }
@@ -26,9 +27,10 @@ public class CreatePassiveOfferOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("createPassiveOffer.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<CreatePassiveOfferOperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<CreatePassiveOfferOperationResponse>(serialized);
+        var instance =
+            JsonSerializer.Deserialize<CreatePassiveOfferOperationResponse>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<CreatePassiveOfferOperationResponse>(serialized);
         Assert.IsNotNull(back);
         AssertCreatePassiveOfferData(back);
     }

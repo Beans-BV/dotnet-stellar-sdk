@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Text.Json;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
@@ -15,7 +16,7 @@ public class AssetPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("assetPage.json");
         var json = File.ReadAllText(jsonPath);
-        var assetsPage = JsonSingleton.GetInstance<Page<AssetResponse>>(json);
+        var assetsPage = JsonSerializer.Deserialize<Page<AssetResponse>>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(assetsPage);
         AssertTestData(assetsPage);
     }
@@ -25,9 +26,9 @@ public class AssetPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("assetPage.json");
         var json = File.ReadAllText(jsonPath);
-        var assetsPage = JsonConvert.DeserializeObject<Page<AssetResponse>>(json);
-        var serialized = JsonConvert.SerializeObject(assetsPage);
-        var back = JsonConvert.DeserializeObject<Page<AssetResponse>>(serialized);
+        var assetsPage = JsonSerializer.Deserialize<Page<AssetResponse>>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(assetsPage);
+        var back = JsonSerializer.Deserialize<Page<AssetResponse>>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

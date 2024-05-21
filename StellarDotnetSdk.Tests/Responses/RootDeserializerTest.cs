@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
@@ -13,7 +14,7 @@ public class RootDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("root.json");
         var json = File.ReadAllText(jsonPath);
-        var root = JsonSingleton.GetInstance<RootResponse>(json);
+        var root = JsonSerializer.Deserialize<RootResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(root);
         AssertTestData(root);
     }
@@ -23,9 +24,9 @@ public class RootDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("root.json");
         var json = File.ReadAllText(jsonPath);
-        var root = JsonSingleton.GetInstance<RootResponse>(json);
-        var serialized = JsonConvert.SerializeObject(root);
-        var back = JsonConvert.DeserializeObject<RootResponse>(serialized);
+        var root = JsonSerializer.Deserialize<RootResponse>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(root);
+        var back = JsonSerializer.Deserialize<RootResponse>(serialized);
 
         Assert.IsNotNull(back);
         AssertTestData(back);

@@ -16,91 +16,64 @@ public class TransactionInfo
         FAILED,
     }
 
-    public TransactionInfo(
-        TransactionStatus status,
-        long? ledger,
-        long? createdAt,
-        int? applicationOrder,
-        bool? feeBump,
-        string? envelopeXdr,
-        string? resultXdr,
-        string? resultMetaXdr,
-        string? txHash,
-        Events? events = null,
-        string[]? diagnosticEventsXdr = null
-    )
-    {
-        Status = status;
-        Ledger = ledger;
-        CreatedAt = createdAt;
-        ApplicationOrder = applicationOrder;
-        FeeBump = feeBump;
-        EnvelopeXdr = envelopeXdr;
-        ResultXdr = resultXdr;
-        ResultMetaXdr = resultMetaXdr;
-        TxHash = txHash;
-        Events = events;
-        DiagnosticEventsXdr = diagnosticEventsXdr;
-    }
-
     /// <summary>
     ///     The current status of the transaction by hash
     /// </summary>
-    public TransactionStatus Status { get; }
+    public TransactionStatus Status { get; init; }
 
     /// <summary>
     ///     (optional) The sequence number of the ledger which included the transaction. This field is only present if status
     ///     is SUCCESS or FAILED.
     /// </summary>
-    public long? Ledger { get; }
+    public long? Ledger { get; init; }
 
     /// <summary>
     ///     (optional) The unix timestamp of when the transaction was included in the ledger. This field is only present if
     ///     status is SUCCESS or FAILED.
     /// </summary>
-    public long? CreatedAt { get; }
+    public long? CreatedAt { get; init; }
 
     /// <summary>
     ///     (optional) The index of the transaction among all transactions included in the ledger. This field is only present
     ///     if status is SUCCESS or FAILED.
     /// </summary>
-    public int? ApplicationOrder { get; }
+    public int? ApplicationOrder { get; init; }
 
     /// <summary>
     ///     (optional) Indicates whether the transaction was fee bumped. This field is only present if status is SUCCESS or
     ///     FAILED.
     /// </summary>
-    public bool? FeeBump { get; }
+    public bool? FeeBump { get; init; }
 
     /// <summary>
     ///     (optional) A base64 encoded string of the raw TransactionEnvelope XDR struct for this transaction.
     /// </summary>
-    public string? EnvelopeXdr { get; }
+    public string? EnvelopeXdr { get; init; }
 
     /// <summary>
     ///     (optional) A base64 encoded string of the raw TransactionResult XDR struct for this transaction. This field is only
     ///     present if status is SUCCESS or FAILED.
     /// </summary>
-    public string? ResultXdr { get; }
+    public string? ResultXdr { get; init; }
 
     /// <summary>
     ///     (optional) A base64 encoded string of the raw TransactionMeta XDR struct for this transaction.
     /// </summary>
-    public string? ResultMetaXdr { get; }
+    public string? ResultMetaXdr { get; init; }
 
     /// <summary>
     ///     (optional) A base64 encoded slice of xdr.DiagnosticEvent. This is only present if the
     ///     ENABLE_SOROBAN_DIAGNOSTIC_EVENTS has been enabled in the stellar-core config.
     /// </summary>
     [Obsolete("Deprecated in favor of Events.DiagnosticEventsXdr. Will be removed in the next version.")]
-    public string[]? DiagnosticEventsXdr { get; }
+    public string[]? DiagnosticEventsXdr { get; init; }
 
-    public Events? Events { get; }
+    public Events? Events { get; init; }
 
     /// <summary>
     ///     (optional) Hex-encoded transaction hash string.
     /// </summary>
-    public string? TxHash { get; }
+    public string? TxHash { get; init; }
 
     public SCVal? ResultValue
     {

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses;
 
@@ -7,6 +7,9 @@ namespace StellarDotnetSdk.Responses;
 /// </summary>
 public class Price
 {
-    [JsonProperty(PropertyName = "n")] public string Numerator { get; init; }
-    [JsonProperty(PropertyName = "d")] public string Denominator { get; init; }
+    [JsonPropertyName("n")]
+    public string Numerator { get; init; }
+
+    [JsonPropertyName("d")]
+    public string Denominator { get; init; }
 }

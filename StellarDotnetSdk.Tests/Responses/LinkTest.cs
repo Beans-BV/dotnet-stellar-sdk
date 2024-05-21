@@ -14,8 +14,11 @@ public class LinkTest
     [TestMethod]
     public async Task TestLink()
     {
-        var link = new Link<AccountResponse>(
-            "https://horizon.stellar.org/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
+        var link = new Link<AccountResponse>
+        {
+            Href =
+                "https://horizon.stellar.org/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7"
+        };
         Assert.AreEqual("horizon.stellar.org", link.Uri.Host);
         Assert.AreEqual("/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7",
             string.Concat(link.Uri.Segments));
@@ -33,8 +36,11 @@ public class LinkTest
     [TestMethod]
     public void TestTemplatedLink()
     {
-        var link = new TemplatedLink<OperationResponse>(
-            "https://horizon.stellar.org/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/operations{?cursor,limit,order}");
+        var link = new TemplatedLink<OperationResponse>
+        {
+            Href =
+                "https://horizon.stellar.org/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/operations{?cursor,limit,order}"
+        };
         Assert.AreEqual("horizon.stellar.org", link.Uri.Host);
         Assert.AreEqual("/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/operations",
             string.Concat(link.Uri.Segments));
@@ -43,8 +49,11 @@ public class LinkTest
     [TestMethod]
     public void TestTemplatedLinkWithQueryParameters()
     {
-        var link = new TemplatedLink<OperationResponse>(
-            "https://horizon.stellar.org/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/operations{?cursor,limit,order}");
+        var link = new TemplatedLink<OperationResponse>
+        {
+            Href =
+                "https://horizon.stellar.org/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/operations{?cursor,limit,order}"
+        };
         var uri = link.Resolve(new
         {
             limit = 10,
@@ -61,8 +70,11 @@ public class LinkTest
     [TestMethod]
     public void TestTemplatedLinkWithVariable()
     {
-        var link = new TemplatedLink<AccountDataResponse>(
-            "https://horizon.stellar.org/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/data/{key}");
+        var link = new TemplatedLink<AccountDataResponse>
+        {
+            Href =
+                "https://horizon.stellar.org/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/data/{key}"
+        };
 
         var uri = link.Resolve(new
         {

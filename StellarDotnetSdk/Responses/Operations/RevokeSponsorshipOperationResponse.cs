@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Operations;
 #nullable disable
@@ -10,30 +10,30 @@ public class RevokeSponsorshipOperationResponse : OperationResponse
 {
     public override int TypeId => 18;
 
-    [JsonProperty(PropertyName = "account_id")]
+    [JsonPropertyName("account_id")]
     public string AccountId { get; init; }
 
-    [JsonProperty(PropertyName = "claimable_balance_id")]
+    [JsonPropertyName("claimable_balance_id")]
     public string ClaimableBalanceId { get; init; }
 
-    [JsonProperty(PropertyName = "data_account_id")]
+    [JsonPropertyName("data_account_id")]
     public string DataAccountId { get; init; }
 
-    [JsonProperty(PropertyName = "data_name")]
+    [JsonPropertyName("data_name")]
     public string DataName { get; init; }
 
-    [JsonProperty(PropertyName = "offer_id")]
+    [JsonPropertyName("offer_id")]
     public string OfferId { get; init; }
 
-    [JsonProperty(PropertyName = "trustline_account_id")]
+    [JsonPropertyName("trustline_account_id")]
     public string TrustlineAccountId { get; init; }
 
-    [JsonProperty(PropertyName = "trustline_asset")]
+    [JsonPropertyName("trustline_asset")]
     public string TrustlineAsset { get; init; }
 
-    [JsonProperty(PropertyName = "signer_account_id")]
+    [JsonPropertyName("signer_account_id")]
     public string SignerAccountId { get; init; }
 
-    [JsonProperty(PropertyName = "signer_key")]
+    [JsonPropertyName("signer_key")]
     public string SignerKey { get; init; }
 }

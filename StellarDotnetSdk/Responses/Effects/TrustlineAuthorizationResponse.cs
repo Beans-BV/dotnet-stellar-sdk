@@ -1,18 +1,18 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
 #nullable disable
 
 public class TrustlineAuthorizationResponse : EffectResponse
 {
-    [JsonProperty(PropertyName = "trustor")]
+    [JsonPropertyName("trustor")]
     public string Trustor { get; init; }
 
-    [JsonProperty(PropertyName = "asset_type")]
+    [JsonPropertyName("asset_type")]
     public string AssetType { get; init; }
 
-    [JsonProperty(PropertyName = "asset_code")]
+    [JsonPropertyName("asset_code")]
     public string AssetCode { get; init; }
 }
 

@@ -1,5 +1,5 @@
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using StellarDotnetSdk.Claimants;
 using StellarDotnetSdk.Responses;
 
@@ -13,7 +13,7 @@ public class PredicateDeserializerTest
     {
         const string json =
             "{\"and\":[{\"or\":[{\"rel_before\":12},{\"abs_before\":\"2020-08-26T11:15:39Z\"}]},{\"not\":{\"unconditional\":true}}]}";
-        var predicate = JsonConvert.DeserializeObject<Predicate>(json);
+        var predicate = JsonSerializer.Deserialize<Predicate>(json);
         Assert.IsNotNull(predicate);
         var claimPredicate = predicate.ToClaimPredicate();
 

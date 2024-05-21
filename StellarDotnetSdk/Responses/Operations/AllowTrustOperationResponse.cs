@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
@@ -15,49 +15,49 @@ public class AllowTrustOperationResponse : OperationResponse
     /// <summary>
     ///     Trustor account.
     /// </summary>
-    [JsonProperty(PropertyName = "trustor")]
+    [JsonPropertyName("trustor")]
     public string Trustor { get; init; }
 
     /// <summary>
     ///     Trustee account.
     /// </summary>
-    [JsonProperty(PropertyName = "trustee")]
+    [JsonPropertyName("trustee")]
     public string Trustee { get; init; }
 
     /// <summary>
     ///     Trustee account.
     /// </summary>
-    [JsonProperty(PropertyName = "trustee_muxed")]
+    [JsonPropertyName("trustee_muxed")]
     public string TrusteeMuxed { get; init; }
 
     /// <summary>
     ///     Trustee account.
     /// </summary>
-    [JsonProperty(PropertyName = "trustee_muxed_id")]
+    [JsonPropertyName("trustee_muxed_id")]
     public ulong? TrusteeMuxedID { get; init; }
 
     /// <summary>
     ///     Asset type (native / alphanum4 / alphanum12)
     /// </summary>
-    [JsonProperty(PropertyName = "asset_type")]
+    [JsonPropertyName("asset_type")]
     public string AssetType { get; init; }
 
     /// <summary>
     ///     Asset code.
     /// </summary>
-    [JsonProperty(PropertyName = "asset_code")]
+    [JsonPropertyName("asset_code")]
     public string AssetCode { get; init; }
 
     /// <summary>
     ///     Asset issuer.
     /// </summary>
-    [JsonProperty(PropertyName = "asset_issuer")]
+    [JsonPropertyName("asset_issuer")]
     public string AssetIssuer { get; init; }
 
     /// <summary>
     ///     true when allowing trust, false when revoking trust
     /// </summary>
-    [JsonProperty(PropertyName = "authorize")]
+    [JsonPropertyName("authorize")]
     public bool Authorize { get; init; }
 
     /// <summary>

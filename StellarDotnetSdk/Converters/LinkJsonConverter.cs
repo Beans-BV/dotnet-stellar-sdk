@@ -1,54 +1,37 @@
 using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 
-namespace StellarDotnetSdk.Converters;
-
-// We have to use reflection because Newtonsoft.Json does not support generic JsonConverters
-// https://github.com/JamesNK/Newtonsoft.Json/issues/1332
-public class LinkJsonConverter : JsonConverter
+namespace StellarDotnetSdk.Converters
 {
-    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+    public class LinkJsonConverter<T> : JsonConverter<Link<T>> where T : Response
     {
-        if (value is Link link)
+        public override Link<T>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var jsonObject = new JObject { new JProperty("href", link.Href) };
-            if (link.Templated)
-            {
-                jsonObject.Add(new JProperty("templated", link.Templated));
-            }
+            if (reader.TokenType == JsonTokenType.Null)
+                return null;
 
-            jsonObject.WriteTo(writer);
-        }
-        else
-        {
-            throw new JsonSerializationException();
-        }
-    }
+            using var jsonDocument = JsonDocument.ParseValue(ref reader);
+            var jsonObject = jsonDocument.RootElement;
+            var templated = jsonObject.TryGetProperty("templated", out var templatedElement)
+                ? templatedElement.GetBoolean()
+                : false;
+            var href = jsonObject.GetProperty("href").GetString();
 
-    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue,
-        JsonSerializer serializer)
-    {
-        if (reader.TokenType == JsonToken.Null)
-        {
-            return null;
+            if (href == null)
+                throw new JsonException();
+            
+            return (Link<T>)typeToConvert.GetMethod("Create").Invoke(null, [href, templated]);
         }
 
-        var jsonObject = JObject.Load(reader);
-        var templated = jsonObject.GetValue("templated")?.ToObject<bool>() ?? false;
-        var href = jsonObject.GetValue("href")?.ToObject<string>();
-
-        if (href is null)
+        public override void Write(Utf8JsonWriter writer, Link<T> value, JsonSerializerOptions options)
         {
-            throw new JsonSerializationException();
+            writer.WriteStartObject();
+            writer.WriteString("href", value.Href);
+            if (value.Templated)
+                writer.WriteBoolean("templated", value.Templated);
+            writer.WriteEndObject();
         }
-
-        return objectType.GetMethod("Create")?.Invoke(null, [href, templated]);
-    }
-
-    public override bool CanConvert(Type objectType)
-    {
-        return objectType == typeof(Link<>);
     }
 }

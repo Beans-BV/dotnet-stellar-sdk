@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using TransactionResult = StellarDotnetSdk.Responses.Results.TransactionResult;
 
 namespace StellarDotnetSdk.Responses;
@@ -13,20 +13,22 @@ public class SubmitTransactionAsyncResponse : Response
         ERROR,
     }
 
-    [JsonProperty(PropertyName = "error_result_xdr")]
-    private string? _errorResultXdr;
+    [JsonPropertyName("error_result_xdr")]
+    [JsonInclude]
+    private string? ErrorResultXdr { get; init; }
 
-    [JsonProperty(PropertyName = "hash")] public string? Hash { get; init; }
+    [JsonPropertyName("hash")]
+    public string? Hash { get; init; }
 
     /// <summary>
     ///     Status of the transaction submission.
     /// </summary>
-    [JsonProperty(PropertyName = "tx_status")]
+    [JsonPropertyName("tx_status")]
     public TransactionStatus TxStatus { get; init; }
 
     /// <summary>
     ///     Present only if the submission status <c>TxStatus</c> is an ERROR.
     /// </summary>
     public TransactionResult? ErrorResult =>
-        _errorResultXdr != null ? TransactionResult.FromXdrBase64(_errorResultXdr) : null;
+        ErrorResultXdr != null ? TransactionResult.FromXdrBase64(ErrorResultXdr) : null;
 }

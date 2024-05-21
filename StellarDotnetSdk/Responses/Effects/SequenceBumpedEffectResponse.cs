@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
 
@@ -9,6 +9,6 @@ public class SequenceBumpedEffectResponse : EffectResponse
 {
     public override int TypeId => 43;
 
-    [JsonProperty(PropertyName = "new_seq")]
+    [JsonPropertyName("new_seq")]
     public long NewSequence { get; init; }
 }

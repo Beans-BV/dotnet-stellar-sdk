@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Federation;
 #nullable disable
@@ -10,14 +10,14 @@ namespace StellarDotnetSdk.Federation;
 /// </summary>
 public class FederationResponse
 {
-    [JsonProperty(PropertyName = "stellar_address")]
+    [JsonPropertyName("stellar_address")]
     public string StellarAddress { get; init; }
 
-    [JsonProperty(PropertyName = "account_id")]
+    [JsonPropertyName("account_id")]
     public string AccountId { get; init; }
 
-    [JsonProperty(PropertyName = "memo_type")]
+    [JsonPropertyName("memo_type")]
     public string MemoType { get; init; }
 
-    [JsonProperty(PropertyName = "memo")] public string Memo { get; init; }
+    [JsonPropertyName("memo")] public string Memo { get; init; }
 }

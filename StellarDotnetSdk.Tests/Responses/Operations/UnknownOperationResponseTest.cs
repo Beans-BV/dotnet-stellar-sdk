@@ -1,7 +1,7 @@
 ﻿using System.IO;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
-using StellarDotnetSdk.Responses;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
@@ -14,7 +14,7 @@ public class UnknownOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("unknownOperation.json");
         var json = File.ReadAllText(jsonPath);
-        Assert.ThrowsException<JsonSerializationException>(() =>
-            JsonSingleton.GetInstance<OperationResponse>(json));
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions));
     }
 }

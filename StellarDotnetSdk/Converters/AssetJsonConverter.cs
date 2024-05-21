@@ -1,54 +1,70 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
-namespace StellarDotnetSdk.Converters;
-
-public class AssetJsonConverter : JsonConverter<Asset>
+namespace StellarDotnetSdk.Converters
 {
-    public override void WriteJson(JsonWriter writer, Asset? value, JsonSerializer serializer)
+    public class AssetJsonConverter : JsonConverter<Asset>
     {
-        var jsonObject = new JObject();
-        var assetType = new JProperty("asset_type", value?.Type);
-        jsonObject.Add(assetType);
-        if (value is AssetTypeCreditAlphaNum credit)
+        public override void Write(Utf8JsonWriter writer, Asset value, JsonSerializerOptions options)
         {
-            var code = new JProperty("asset_code", credit.Code);
-            jsonObject.Add(code);
-            var issuer = new JProperty("asset_issuer", credit.Issuer);
-            jsonObject.Add(issuer);
+            writer.WriteStartObject();
+            writer.WriteString("asset_type", value?.Type);
+            if (value is AssetTypeCreditAlphaNum credit)
+            {
+                writer.WriteString("asset_code", credit.Code);
+                writer.WriteString("asset_issuer", credit.Issuer);
+            }
+
+            writer.WriteEndObject();
         }
 
-        jsonObject.WriteTo(writer);
-    }
-
-    public override Asset ReadJson(JsonReader reader, Type objectType, Asset? existingValue, bool hasExistingValue,
-        JsonSerializer serializer)
-    {
-        var jt = JToken.ReadFrom(reader);
-        var type = jt.Value<string>("asset_type");
-        if (type == null)
+        public override Asset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            throw new ArgumentException("JSON value for asset_type is missing.", nameof(type));
-        }
+            if (reader.TokenType != JsonTokenType.StartObject)
+            {
+                throw new JsonException();
+            }
 
-        if (type == "native")
-        {
-            return new AssetTypeNative();
-        }
+            string? type = null;
+            string? code = null;
+            string? issuer = null;
 
-        var code = jt.Value<string>("asset_code");
-        if (code == null)
-        {
-            throw new ArgumentException("JSON value for asset_code is missing.", nameof(code));
-        }
-        var issuer = jt.Value<string>("asset_issuer");
-        if (issuer == null)
-        {
-            throw new ArgumentException("JSON value for asset_issuer is missing.", nameof(issuer));
-        }
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonTokenType.PropertyName)
+                {
+                    string propertyName = reader.GetString();
+                    reader.Read();
+                    switch (propertyName)
+                    {
+                        case "asset_type":
+                            type = reader.GetString();
+                            break;
+                        case "asset_code":
+                            code = reader.GetString();
+                            break;
+                        case "asset_issuer":
+                            issuer = reader.GetString();
+                            break;
+                    }
+                }
 
-        return Asset.CreateNonNativeAsset(code, issuer);
+                if (reader.TokenType == JsonTokenType.EndObject)
+                {
+                    break;
+                }
+            }
+
+            if (type == null) throw new ArgumentException("JSON value for asset_type is missing.", nameof(type));
+
+            if (type == "native") return new AssetTypeNative();
+
+            if (code == null) throw new ArgumentException("JSON value for asset_code is missing.", nameof(code));
+            if (issuer == null) throw new ArgumentException("JSON value for asset_issuer is missing.", nameof(issuer));
+
+            return Asset.CreateNonNativeAsset(code, issuer);
+        }
     }
 }

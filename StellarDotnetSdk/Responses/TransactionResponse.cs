@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Responses.Effects;
 using StellarDotnetSdk.Responses.Operations;
@@ -12,78 +11,79 @@ namespace StellarDotnetSdk.Responses;
 
 public class TransactionResponse : Response, IPagingToken
 {
-    [JsonProperty(PropertyName = "hash")] public string Hash { get; init; }
+    [JsonPropertyName("hash")] public string Hash { get; init; }
 
-    [JsonProperty(PropertyName = "ledger")]
-    public uint Ledger { get; init; }
+    [JsonPropertyName("ledger")]
+    public long Ledger { get; init; }
 
-    [JsonProperty(PropertyName = "created_at")]
+    [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; init; }
 
-    [JsonProperty(PropertyName = "source_account")]
+    [JsonPropertyName("source_account")]
     public string SourceAccount { get; init; }
 
-    [JsonProperty(PropertyName = "fee_account")]
+
+    [JsonPropertyName("fee_account")]
     public string FeeAccount { get; set; }
 
-    [JsonProperty(PropertyName = "fee_account_muxed")]
+    [JsonPropertyName("fee_account_muxed")]
     public string FeeAccountMuxed { get; set; }
 
-    [DefaultValue(true)]
-    [JsonProperty(PropertyName = "successful", DefaultValueHandling = DefaultValueHandling.Populate)]
-    public bool Successful { get; init; }
+    [JsonPropertyName("successful")]
+    public bool Successful { get; init; } = true;
 
-    [JsonProperty(PropertyName = "source_account_sequence")]
+    [JsonPropertyName("source_account_sequence")]
     public long SourceAccountSequence { get; init; }
 
-    [JsonProperty(PropertyName = "fee_charged")]
+    [JsonPropertyName("fee_charged")]
     public long FeeCharged { get; set; }
 
-    [JsonProperty(PropertyName = "max_fee")]
+    [JsonPropertyName("max_fee")]
     public long MaxFee { get; init; }
 
-    [JsonProperty(PropertyName = "operation_count")]
+    [JsonPropertyName("operation_count")]
     public int OperationCount { get; init; }
 
-    [JsonProperty(PropertyName = "envelope_xdr")]
+    [JsonPropertyName("envelope_xdr")]
     public string EnvelopeXdr { get; init; }
 
-    [JsonProperty(PropertyName = "result_xdr")]
+    [JsonPropertyName("result_xdr")]
     public string ResultXdr { get; init; }
 
-    [JsonProperty(PropertyName = "result_meta_xdr")]
+    [JsonPropertyName("result_meta_xdr")]
     public string ResultMetaXdr { get; init; }
 
-    [JsonProperty(PropertyName = "signatures")]
+    [JsonPropertyName("signatures")]
     public List<string> Signatures { get; init; }
 
-    [JsonProperty(PropertyName = "fee_bump_transaction")]
+    [JsonPropertyName("fee_bump_transaction")]
     public FeeBumpTransaction FeeBumpTx { get; set; }
 
-    [JsonProperty(PropertyName = "inner_transaction")]
+    [JsonPropertyName("inner_transaction")]
     public InnerTransaction InnerTx { get; init; }
 
-    [JsonProperty(PropertyName = "_links")]
+    [JsonPropertyName("_links")]
     public TransactionResponseLinks Links { get; init; }
 
-    [JsonProperty(PropertyName = "memo_type")]
+    [JsonPropertyName("memo_type")]
     public string MemoType { get; init; }
 #nullable restore
 
-    [JsonProperty(PropertyName = "account_muxed_id")]
+    [JsonPropertyName("account_muxed_id")]
     public ulong? AccountMuxedId { get; init; }
 
-    [JsonProperty(PropertyName = "account_muxed")]
+    [JsonPropertyName("account_muxed")]
     public string? AccountMuxed { get; init; }
 
-    [JsonProperty(PropertyName = "fee_account_muxed_id")]
+    [JsonPropertyName("fee_account_muxed_id")]
     public ulong? FeeAccountMuxedId { get; set; }
 
-    [JsonProperty(PropertyName = "memo")] public string? MemoValue { get; init; }
+    [JsonPropertyName("memo")] public string? MemoValue { get; init; }
 
-    [JsonProperty(PropertyName = "memo_bytes")]
+    [JsonPropertyName("memo_bytes")]
     public string? MemoBytes { get; init; }
 
+    [JsonIgnore]
     public Memo Memo
     {
         get
@@ -137,7 +137,7 @@ public class TransactionResponse : Response, IPagingToken
 
     public TransactionResult Result => TransactionResult.FromXdrBase64(ResultXdr);
 
-    [JsonProperty(PropertyName = "paging_token")]
+    [JsonPropertyName("paging_token")]
     public string PagingToken { get; init; }
 
     public class FeeBumpTransaction
@@ -148,27 +148,20 @@ public class TransactionResponse : Response, IPagingToken
             Signatures = signatures;
         }
 
-        [JsonProperty(PropertyName = "hash")] public string Hash { get; init; }
+        [JsonPropertyName("hash")] public string Hash { get; init; }
 
-        [JsonProperty(PropertyName = "signatures")]
+        [JsonPropertyName("signatures")]
         public List<string> Signatures { get; init; }
     }
 
     public class InnerTransaction
     {
-        public InnerTransaction(string hash, List<string> signatures, long maxFee)
-        {
-            Hash = hash;
-            Signatures = signatures;
-            MaxFee = maxFee;
-        }
+        [JsonPropertyName("hash")] public string Hash { get; init; }
 
-        [JsonProperty(PropertyName = "hash")] public string Hash { get; init; }
-
-        [JsonProperty(PropertyName = "signatures")]
+        [JsonPropertyName("signatures")]
         public List<string> Signatures { get; init; }
 
-        [JsonProperty(PropertyName = "max_fee")]
+        [JsonPropertyName("max_fee")]
         public long MaxFee { get; init; }
     }
 }
@@ -176,36 +169,23 @@ public class TransactionResponse : Response, IPagingToken
 /// Links connected to transaction.
 public class TransactionResponseLinks
 {
-    public TransactionResponseLinks(Link<AccountResponse> account, Link<Page<EffectResponse>> effects,
-        Link<LedgerResponse> ledger, Link<Page<OperationResponse>> operations, Link<TransactionResponse> self,
-        Link<TransactionResponse> precedes, Link<TransactionResponse> succeeds)
-    {
-        Account = account;
-        Effects = effects;
-        Ledger = ledger;
-        Operations = operations;
-        Self = self;
-        Precedes = precedes;
-        Succeeds = succeeds;
-    }
-
-    [JsonProperty(PropertyName = "account")]
+    [JsonPropertyName("account")]
     public Link<AccountResponse> Account { get; init; }
 
-    [JsonProperty(PropertyName = "effects")]
+    [JsonPropertyName("effects")]
     public Link<Page<EffectResponse>> Effects { get; init; }
 
-    [JsonProperty(PropertyName = "ledger")]
+    [JsonPropertyName("ledger")]
     public Link<LedgerResponse> Ledger { get; init; }
 
-    [JsonProperty(PropertyName = "operations")]
+    [JsonPropertyName("operations")]
     public Link<Page<OperationResponse>> Operations { get; init; }
 
-    [JsonProperty(PropertyName = "precedes")]
+    [JsonPropertyName("precedes")]
     public Link<TransactionResponse> Precedes { get; init; }
 
-    [JsonProperty(PropertyName = "self")] public Link<TransactionResponse> Self { get; init; }
+    [JsonPropertyName("self")] public Link<TransactionResponse> Self { get; init; }
 
-    [JsonProperty(PropertyName = "succeeds")]
+    [JsonPropertyName("succeeds")]
     public Link<TransactionResponse> Succeeds { get; init; }
 }

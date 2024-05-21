@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
 #nullable disable
@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Responses.Effects;
 /// </summary>
 public class AccountHomeDomainUpdatedEffectResponse : EffectResponse
 {
-    [JsonProperty(PropertyName = "home_domain")]
+    [JsonPropertyName("home_domain")]
     public string HomeDomain { get; init; }
 
     public override int TypeId => 5;

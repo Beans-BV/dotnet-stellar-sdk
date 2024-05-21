@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Effects;
@@ -8,12 +8,12 @@ public class LiquidityPoolDepositedEffectResponse : EffectResponse
 {
     public override int TypeId => 90;
 
-    [JsonProperty(PropertyName = "liquidity_pool")]
+    [JsonPropertyName("liquidity_pool")]
     public LiquidityPool.LiquidityPool LiquidityPool { get; init; }
 
-    [JsonProperty(PropertyName = "reserves_deposited")]
+    [JsonPropertyName("reserves_deposited")]
     public AssetAmount[] ReservesDeposited { get; init; }
 
-    [JsonProperty(PropertyName = "shares_received")]
+    [JsonPropertyName("shares_received")]
     public string SharesReceived { get; init; }
 }

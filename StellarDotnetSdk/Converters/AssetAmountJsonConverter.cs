@@ -1,45 +1,45 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
-namespace StellarDotnetSdk.Converters;
-
-public class AssetAmountJsonConverter : JsonConverter<AssetAmount>
+namespace StellarDotnetSdk.Converters
 {
-    public override AssetAmount ReadJson(JsonReader reader, Type objectType, AssetAmount? existingValue,
-        bool hasExistingValue, JsonSerializer serializer)
+    public class AssetAmountJsonConverter : JsonConverter<AssetAmount>
     {
-        var jt = JToken.ReadFrom(reader);
-        var assetName = jt.Value<string>("asset");
-        var asset = string.IsNullOrEmpty(assetName) ? null : Asset.Create(assetName);
-
-        var amount = jt.Value<string>("amount");
-
-        if (asset == null)
+        public override AssetAmount Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            throw new ArgumentException("JSON value for asset is missing.", nameof(asset));
+            if (reader.TokenType != JsonTokenType.StartObject)
+            {
+                throw new JsonException();
+            }
+
+            using (var jsonDocument = JsonDocument.ParseValue(ref reader))
+            {
+                var jsonObject = jsonDocument.RootElement;
+                var assetName = jsonObject.GetProperty("asset").GetString();
+                var asset = string.IsNullOrEmpty(assetName) ? null : Asset.Create(assetName);
+
+                var amount = jsonObject.GetProperty("amount").GetString();
+
+                if (asset == null) throw new ArgumentException("JSON value for asset is missing.", nameof(asset));
+                if (amount == null) throw new ArgumentException("JSON value for amount is missing.", nameof(amount));
+
+                return new AssetAmount(asset, amount);
+            }
         }
 
-        if (amount == null)
+        public override void Write(Utf8JsonWriter writer, AssetAmount value, JsonSerializerOptions options)
         {
-            throw new ArgumentException("JSON value for amount is missing.", nameof(amount));
+            writer.WriteStartObject();
+            if (value.Asset != null) writer.WriteString("asset", value.Asset.CanonicalName());
+            if (value.Amount != null) writer.WriteString("amount", value.Amount);
+            writer.WriteEndObject();
         }
 
-        return new AssetAmount(asset, amount);
-    }
-
-    public override void WriteJson(JsonWriter writer, AssetAmount? value, JsonSerializer serializer)
-    {
-        var jo = new JObject();
-        if (value?.Asset != null)
+        public override bool CanConvert(Type typeToConvert)
         {
-            jo.Add("asset", value.Asset.CanonicalName());
+            return typeToConvert == typeof(AssetAmount);
         }
-        if (value?.Amount != null)
-        {
-            jo.Add("amount", value.Amount);
-        }
-        jo.WriteTo(writer);
     }
 }

@@ -1,37 +1,37 @@
 ﻿using System.Linq;
 using System.Net.Http.Headers;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
-namespace StellarDotnetSdk.Responses;
-
-[JsonObject(MemberSerialization.OptIn)]
-public abstract class Response
+namespace StellarDotnetSdk.Responses
 {
-    private const string XRateLimitLimit = "X-Ratelimit-Limit";
-    private const string XRateLimitRemaining = "X-Ratelimit-Remaining";
-    private const string XRateLimitReset = "X-Ratelimit-Reset";
-
-    protected int RateLimitLimit { get; private set; }
-
-    protected int RateLimitRemaining { get; private set; }
-
-    protected int RateLimitReset { get; private set; }
-
-    public void SetHeaders(HttpResponseHeaders headers)
+    public abstract class Response
     {
-        if (headers.Contains(XRateLimitLimit))
-        {
-            RateLimitLimit = int.Parse(headers.GetValues(XRateLimitLimit).First());
-        }
+        private const string XRateLimitLimit = "X-Ratelimit-Limit";
+        private const string XRateLimitRemaining = "X-Ratelimit-Remaining";
+        private const string XRateLimitReset = "X-Ratelimit-Reset";
 
-        if (headers.Contains(XRateLimitRemaining))
-        {
-            RateLimitRemaining = int.Parse(headers.GetValues(XRateLimitRemaining).First());
-        }
+        [JsonIgnore] protected int RateLimitLimit { get; private set; }
 
-        if (headers.Contains(XRateLimitReset))
+        [JsonIgnore] protected int RateLimitRemaining { get; private set; }
+
+        [JsonIgnore] protected int RateLimitReset { get; private set; }
+
+        public void SetHeaders(HttpResponseHeaders headers)
         {
-            RateLimitReset = int.Parse(headers.GetValues(XRateLimitReset).First());
+            if (headers.Contains(XRateLimitLimit))
+            {
+                RateLimitLimit = int.Parse(headers.GetValues(XRateLimitLimit).First());
+            }
+
+            if (headers.Contains(XRateLimitRemaining))
+            {
+                RateLimitRemaining = int.Parse(headers.GetValues(XRateLimitRemaining).First());
+            }
+
+            if (headers.Contains(XRateLimitReset))
+            {
+                RateLimitReset = int.Parse(headers.GetValues(XRateLimitReset).First());
+            }
         }
     }
 }

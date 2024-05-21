@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses;
 #nullable disable
 public class AccountDataResponse : Response
 {
-    [JsonProperty(PropertyName = "value")] public string Value { get; init; }
+    [JsonPropertyName("value")] public string Value { get; init; }
 
     public string ValueDecoded
     {

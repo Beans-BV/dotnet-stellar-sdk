@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
 #nullable disable
@@ -7,7 +7,7 @@ namespace StellarDotnetSdk.Responses.Effects;
 /// </summary>
 public class AccountCreatedEffectResponse : EffectResponse
 {
-    [JsonProperty(PropertyName = "starting_balance")]
+    [JsonPropertyName("starting_balance")]
     public string StartingBalance { get; init; }
 
     public override int TypeId => 0;

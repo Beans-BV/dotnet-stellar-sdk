@@ -37,8 +37,8 @@
         }
       },
       {
-        "timestamp": 1517526000000,
-        "trade_count": 15,
+        "timestamp": "1517526000000",
+        "trade_count": "15",
         "base_volume": "3913.8224543",
         "counter_volume": "719.4993608",
         "avg": "0.1838355",
