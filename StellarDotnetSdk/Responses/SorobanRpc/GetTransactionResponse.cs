@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.Json.Serialization;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
 using SCBytes = StellarDotnetSdk.Soroban.SCBytes;
@@ -16,46 +18,24 @@ public class GetTransactionResponse
         FAILED
     }
 
-    public GetTransactionResponse(int applicationOrder, long createdAt, string? envelopeXdr, bool feeBump,
-        long latestLedger, long latestLedgerCloseTime, long ledger, long oldestLedger, long oldestLedgerCloseTime,
-        string? resultMetaXdr, string? resultXdr, GetTransactionStatus status)
-    {
-        ApplicationOrder = applicationOrder;
-        CreatedAt = createdAt;
-        EnvelopeXdr = envelopeXdr;
-        FeeBump = feeBump;
-        LatestLedger = latestLedger;
-        LatestLedgerCloseTime = latestLedgerCloseTime;
-        Ledger = ledger;
-        OldestLedger = oldestLedger;
-        OldestLedgerCloseTime = oldestLedgerCloseTime;
-        ResultMetaXdr = resultMetaXdr;
-        ResultXdr = resultXdr;
-        Status = status;
-    }
+    public int ApplicationOrder { get; init; }
+    public long CreatedAt { get; init; }
+    public string? EnvelopeXdr { get; init; }
+    public bool FeeBump { get; init; }
+    public long LatestLedger { get; init; }
 
-    public int ApplicationOrder { get; }
+    public long LatestLedgerCloseTime { get; init; }
 
-    public long CreatedAt { get; }
+    public long Ledger { get; init; }
+    public long OldestLedger { get; init; }
 
-    public string? EnvelopeXdr { get; }
+    public long OldestLedgerCloseTime { get; init; }
 
-    public bool FeeBump { get; }
+    public string? ResultMetaXdr { get; init; }
+    public string? ResultXdr { get; init; }
 
-    public long LatestLedger { get; }
-
-    public long LatestLedgerCloseTime { get; }
-
-    public long Ledger { get; }
-
-    public long OldestLedger { get; }
-
-    public long OldestLedgerCloseTime { get; }
-
-    public string? ResultMetaXdr { get; }
-
-    public string? ResultXdr { get; }
-    public GetTransactionStatus Status { get; }
+    [JsonConverter(typeof(GetTransactionStatusEnumJsonConverter))]
+    public GetTransactionStatus Status { get; init; }
 
     public SCVal? ResultValue
     {

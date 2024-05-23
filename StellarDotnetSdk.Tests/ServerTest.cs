@@ -64,7 +64,7 @@ public class ServerTest
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
-        Assert.AreEqual(response.Ledger, (uint)826150);
+        Assert.AreEqual(response.Ledger, 826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
@@ -138,7 +138,7 @@ public class ServerTest
             BuildTransaction().ToEnvelopeXdrBase64(), new SubmitTransactionOptions { EnsureSuccess = true });
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
-        Assert.AreEqual(response.Ledger, (uint)826150);
+        Assert.AreEqual(response.Ledger, 826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
@@ -193,7 +193,7 @@ public class ServerTest
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = false });
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
-        Assert.AreEqual(response.Ledger, (uint)826150);
+        Assert.AreEqual(response.Ledger, 826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
@@ -207,7 +207,7 @@ public class ServerTest
             BuildTransaction().ToEnvelopeXdrBase64(), new SubmitTransactionOptions { SkipMemoRequiredCheck = false });
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
-        Assert.AreEqual(response.Ledger, (uint)826150);
+        Assert.AreEqual(response.Ledger, 826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
@@ -222,7 +222,7 @@ public class ServerTest
             new SubmitTransactionOptions { SkipMemoRequiredCheck = false, FeeBumpTransaction = true });
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
-        Assert.AreEqual(response.Ledger, (uint)826150);
+        Assert.AreEqual(response.Ledger, 826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
@@ -235,7 +235,7 @@ public class ServerTest
         var response = await server.SubmitTransaction(BuildFeeBumpTransaction());
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
-        Assert.AreEqual(response.Ledger, (uint)826150);
+        Assert.AreEqual(response.Ledger, 826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
@@ -249,7 +249,7 @@ public class ServerTest
             BuildFeeBumpTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = false });
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
-        Assert.AreEqual(response.Ledger, (uint)826150);
+        Assert.AreEqual(response.Ledger, 826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
@@ -262,7 +262,7 @@ public class ServerTest
         var response = await server.SubmitTransaction(BuildTransaction());
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
-        Assert.AreEqual(response.Ledger, (uint)826150);
+        Assert.AreEqual(response.Ledger, 826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
@@ -276,7 +276,7 @@ public class ServerTest
             BuildTransaction().ToEnvelopeXdrBase64());
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
-        Assert.AreEqual(response.Ledger, (uint)826150);
+        Assert.AreEqual(response.Ledger, 826150);
         Assert.AreEqual(response.Hash, "2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42");
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
@@ -364,7 +364,7 @@ public class ServerTest
                 { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10)).Trim('"') } }
             },
             HttpStatusCode.ServiceUnavailable);
-     
+
         var exception = await Assert.ThrowsExceptionAsync<ServiceUnavailableException>(
             () => server.SubmitTransaction(
                 BuildTransaction(),

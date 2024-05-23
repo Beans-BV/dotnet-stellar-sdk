@@ -1,26 +1,26 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses;
 #nullable disable
 
 public class ClaimableBalanceResponse : Response
 {
-    [JsonProperty(PropertyName = "id")] public string Id { get; init; }
+    [JsonPropertyName("id")] public string Id { get; init; }
 
-    [JsonProperty(PropertyName = "paging_token")]
+    [JsonPropertyName("paging_token")]
     public string PagingToken { get; init; }
 
-    [JsonProperty(PropertyName = "asset")] public string Asset { get; init; }
+    [JsonPropertyName("asset")] public string Asset { get; init; }
 
-    [JsonProperty(PropertyName = "amount")]
+    [JsonPropertyName("amount")]
     public string Amount { get; init; }
 
-    [JsonProperty(PropertyName = "sponsor")]
+    [JsonPropertyName("sponsor")]
     public string Sponsor { get; init; }
 
-    [JsonProperty(PropertyName = "last_modified_ledger")]
+    [JsonPropertyName("last_modified_ledger")]
     public long LastModifiedLedger { get; init; }
 
-    [JsonProperty(PropertyName = "claimants")]
+    [JsonPropertyName("claimants")]
     public Claimant[] Claimants { get; init; }
 }

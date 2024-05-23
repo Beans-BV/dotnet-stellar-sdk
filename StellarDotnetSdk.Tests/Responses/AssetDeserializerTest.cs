@@ -1,7 +1,8 @@
 ﻿using System.IO;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Responses;
+using StellarDotnetSdk.Converters;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
@@ -13,7 +14,7 @@ public class AssetDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("assetAssetTypeNative.json");
         var json = File.ReadAllText(jsonPath);
-        var asset = JsonSingleton.GetInstance<Asset>(json);
+        var asset = JsonSerializer.Deserialize<Asset>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(asset);
         Assert.AreEqual(asset.Type, "native");
     }
@@ -23,7 +24,7 @@ public class AssetDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("assetAssetTypeCredit.json");
         var json = File.ReadAllText(jsonPath);
-        var asset = JsonSingleton.GetInstance<Asset>(json);
+        var asset = JsonSerializer.Deserialize<Asset>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(asset);
         Assert.AreEqual(asset.Type, "credit_alphanum4");
         var creditAsset = (AssetTypeCreditAlphaNum)asset;

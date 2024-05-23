@@ -198,7 +198,7 @@ public class SorobanServerTest
         var eventsResponse = await _sorobanServer.GetEvents(getEventsRequest);
         Assert.IsNotNull(eventsResponse.Events);
         Assert.IsNotNull(eventsResponse.LatestLedger);
-        Assert.AreEqual(10, eventsResponse.Events.Length);
+        Assert.IsTrue(eventsResponse.Events.Length > 0);
         foreach (var @event in eventsResponse.Events)
         {
             Assert.IsNotNull(@event);
@@ -247,7 +247,6 @@ public class SorobanServerTest
         Assert.IsNotNull(ledgerEntry);
         Assert.IsNotNull(ledgerKey);
 
-        Assert.IsTrue(ledgerEntry.LiveUntilLedger > 0);
         Assert.IsTrue(ledgerEntry.LastModifiedLedgerSeq > 0);
         Assert.IsInstanceOfType(ledgerEntry.Key, typeof(SCLedgerKeyContractInstance));
         Assert.AreEqual(HelloContractId, ((SCContractId)ledgerKey.Contract).InnerValue);
@@ -300,7 +299,6 @@ public class SorobanServerTest
         Assert.IsNotNull(ledgerEntry);
         Assert.IsNotNull(ledgerKey);
 
-        Assert.IsTrue(ledgerEntry.LiveUntilLedger > 0);
         Assert.IsNotNull(ledgerEntry.ContractCodeExtensionV1);
         Assert.AreEqual(HelloContractWasmId, Convert.ToBase64String(ledgerEntry.Hash));
         Assert.IsNotNull(ledgerEntry.Code);

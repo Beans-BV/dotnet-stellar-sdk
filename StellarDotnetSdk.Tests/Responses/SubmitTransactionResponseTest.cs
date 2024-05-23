@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
@@ -12,7 +14,8 @@ public class SubmitTransactionResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("submitTransactionTransactionFailure.json");
         var json = File.ReadAllText(jsonPath);
-        var submitTransactionResponse = JsonSingleton.GetInstance<SubmitTransactionResponse>(json);
+        var submitTransactionResponse =
+            JsonSerializer.Deserialize<SubmitTransactionResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(submitTransactionResponse);
         Assert.AreEqual(submitTransactionResponse.IsSuccess, false);
         Assert.AreEqual(submitTransactionResponse.EnvelopeXdr,
@@ -28,7 +31,8 @@ public class SubmitTransactionResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("submitTransactionOperationFailure.json");
         var json = File.ReadAllText(jsonPath);
-        var submitTransactionResponse = JsonSingleton.GetInstance<SubmitTransactionResponse>(json);
+        var submitTransactionResponse =
+            JsonSerializer.Deserialize<SubmitTransactionResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(submitTransactionResponse);
         Assert.AreEqual(submitTransactionResponse.IsSuccess, false);
         Assert.AreEqual(submitTransactionResponse.EnvelopeXdr,
@@ -47,12 +51,13 @@ public class SubmitTransactionResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("submitTransactionSuccess.json");
         var json = File.ReadAllText(jsonPath);
-        var submitTransactionResponse = JsonSingleton.GetInstance<SubmitTransactionResponse>(json);
+        var submitTransactionResponse =
+            JsonSerializer.Deserialize<SubmitTransactionResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(submitTransactionResponse);
         Assert.AreEqual(submitTransactionResponse.IsSuccess, true);
         Assert.AreEqual(submitTransactionResponse.Hash,
             "ee14b93fcd31d4cfe835b941a0a8744e23a6677097db1fafe0552d8657bed940");
-        Assert.AreEqual(submitTransactionResponse.Ledger, (uint)3128812);
+        Assert.AreEqual(submitTransactionResponse.Ledger, 3128812);
         Assert.AreEqual(submitTransactionResponse.EnvelopeXdr,
             "AAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAZAAT3TUAAAAwAAAAAAAAAAAAAAABAAAAAAAAAAMAAAABSU5SAAAAAAA0jDEZkBgx+hCc5IIv+z6CoaYTB8jRkIA6drZUv3YRlwAAAAFVU0QAAAAAADSMMRmQGDH6EJzkgi/7PoKhphMHyNGQgDp2tlS/dhGXAAAAAAX14QAAAAAKAAAAAQAAAAAAAAAAAAAAAAAAAAG/dhGXAAAAQLuStfImg0OeeGAQmvLkJSZ1MPSkCzCYNbGqX5oYNuuOqZ5SmWhEsC7uOD9ha4V7KengiwNlc0oMNqBVo22S7gk=");
         Assert.AreEqual(submitTransactionResponse.ResultXdr,
@@ -65,7 +70,8 @@ public class SubmitTransactionResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("submitTransactionNoOfferId.json");
         var json = File.ReadAllText(jsonPath);
-        var submitTransactionResponse = JsonSingleton.GetInstance<SubmitTransactionResponse>(json);
+        var submitTransactionResponse =
+            JsonSerializer.Deserialize<SubmitTransactionResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(submitTransactionResponse);
         Assert.AreEqual(submitTransactionResponse.IsSuccess, true);
         Assert.IsNull(submitTransactionResponse.GetOfferIdFromResult(0));

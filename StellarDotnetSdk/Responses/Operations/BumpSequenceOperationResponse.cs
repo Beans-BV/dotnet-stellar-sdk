@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
@@ -9,6 +10,6 @@ public class BumpSequenceOperationResponse : OperationResponse
 {
     public override int TypeId => 11;
 
-    [JsonProperty(PropertyName = "bump_to")]
-    public long BumpTo { get; init; }
+    [JsonPropertyName("bump_to")]
+    public string BumpTo { get; init; }
 }

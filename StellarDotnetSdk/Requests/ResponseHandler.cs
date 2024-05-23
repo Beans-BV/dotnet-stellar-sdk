@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Responses;
 
@@ -33,7 +35,7 @@ public class ResponseHandler<T> where T : class
         if (string.IsNullOrWhiteSpace(content))
             throw new ClientProtocolException("Response contains no content");
 
-        var responseObj = JsonSingleton.GetInstance<T>(content);
+        var responseObj = JsonSerializer.Deserialize<T>(content, JsonOptions.DefaultOptions);
 
         if (responseObj is Response responseInstance) responseInstance.SetHeaders(response.Headers);
 

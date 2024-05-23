@@ -1,34 +1,35 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Requests.SorobanRpc;
 
 public class GetEventsRequest
 {
-    [JsonProperty(PropertyName = "startLedger")]
+    [JsonPropertyName("startLedger")]
     public long? StartLedger { get; set; }
 
-    [JsonProperty(PropertyName = "filters")]
+    [JsonPropertyName("filters")]
     public EventFilter[]? Filters { get; set; }
 
-    [JsonProperty(PropertyName = "pagination")]
+    [JsonPropertyName("pagination")]
     public PaginationOptions? Pagination { get; set; }
 
     public class EventFilter
     {
-        [JsonProperty(PropertyName = "type")] public string? Type { get; set; }
+        [JsonPropertyName("type")] public string? Type { get; set; }
 
-        [JsonProperty(PropertyName = "contractIds")]
+        [JsonPropertyName("contractIds")]
         public string[]? ContractIds { get; set; }
 
-        [JsonProperty(PropertyName = "topics")]
+        [JsonPropertyName("topics")]
         public string[][]? Topics { get; set; }
     }
 
     public class PaginationOptions
     {
-        [JsonProperty(PropertyName = "cursor")]
+        [JsonPropertyName("cursor")]
         public string? Cursor;
 
-        [JsonProperty(PropertyName = "limit")] public long? Limit;
+        [JsonPropertyName("limit")] public long? Limit;
     }
 }
