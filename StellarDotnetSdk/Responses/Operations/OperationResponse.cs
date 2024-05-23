@@ -19,23 +19,23 @@ public abstract class OperationResponse : Response, IPagingToken
     ///     ID of the operation
     /// </summary>
     [JsonPropertyName("id")]
-    public long Id { get; private set; }
+    public long Id { get; init; }
 
     /// <summary>
     ///     Source Account of Operation
     /// </summary>
     [JsonPropertyName("source_account")]
-    public string SourceAccount { get; private set; }
+    public string SourceAccount { get; init; }
 
     [JsonPropertyName("source_account_muxed")]
-    public string SourceAccountMuxed { get; private set; }
+    public string SourceAccountMuxed { get; init; }
 
     [JsonPropertyName("source_account_muxed_id")]
-    public ulong? SourceAccountMuxedId { get; private set; }
+    public ulong? SourceAccountMuxedId { get; init; }
 
     /// <summary>
     ///     Returns operation type. Possible types:
-    ///     crete_account
+    ///     create_account
     ///     payment
     ///     allow_trust
     ///     change_trust
@@ -48,7 +48,7 @@ public abstract class OperationResponse : Response, IPagingToken
     ///     manage_data
     /// </summary>
     [JsonPropertyName("type")]
-    public string Type { get; private set; }
+    public string Type { get; init; }
 
     [JsonPropertyName("type_i")]
     public virtual int TypeId { get; }
@@ -56,37 +56,35 @@ public abstract class OperationResponse : Response, IPagingToken
     /// <summary>
     /// </summary>
     [JsonPropertyName("created_at")]
-    public DateTime CreatedAt { get; private set; }
+    public DateTime CreatedAt { get; init; }
 
     /// <summary>
     ///     Returns transaction hash of transaction this operation belongs to.
     /// </summary>
     [JsonPropertyName("transaction_hash")]
-    public string TransactionHash { get; private set; }
+    public string TransactionHash { get; init; }
 
     /// <summary>
     ///     Returns whether the operation transaction was successful.
     /// </summary>
-    [DefaultValue(true)]
-    // [JsonPropertyName("transaction_successful", DefaultValueHandling = DefaultValueHandling.Populate)]
     [JsonPropertyName("transaction_successful")]
-    public bool TransactionSuccessful { get; private set; }
+    public bool TransactionSuccessful { get; init; } = true;
 
     /// <summary>
     ///     Links of Paging
     /// </summary>
     [JsonPropertyName("_links")]
-    public OperationResponseLinks Links { get; private set; }
+    public OperationResponseLinks Links { get; init; }
 #nullable restore
     /// <summary>
     ///     Returns the transaction this operation belongs to.
     /// </summary>
     [JsonPropertyName("transaction")]
-    public TransactionResponse? Transaction { get; private set; }
+    public TransactionResponse? Transaction { get; init; }
 
     /// <summary>
     ///     Paging Token of Paging
     /// </summary>
     [JsonPropertyName("paging_token")]
-    public string PagingToken { get; private set; }
+    public string PagingToken { get; init; }
 }

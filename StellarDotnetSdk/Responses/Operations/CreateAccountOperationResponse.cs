@@ -7,6 +7,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// <summary>
 ///     Represents CreateAccount operation response.
 /// </summary>
+
 public class CreateAccountOperationResponse : OperationResponse
 {
     public override int TypeId => 0;

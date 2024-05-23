@@ -7,16 +7,11 @@ namespace StellarDotnetSdk.Responses.SorobanRpc;
 
 public class GetLedgerEntriesResponse
 {
-    public GetLedgerEntriesResponse(LedgerEntryResult[]? entryResults, uint? latestLedger)
-    {
-        EntryResults = entryResults;
-        LatestLedger = latestLedger;
-    }
-
+    [JsonInclude]
     [JsonPropertyName("entries")]
-    private LedgerEntryResult[]? EntryResults { get; }
+    private LedgerEntryResult[]? EntryResults { get; init; }
 
-    public uint? LatestLedger { get; }
+    public long? LatestLedger { get; init; }
 
     public LedgerEntry[]? LedgerEntries =>
         EntryResults?.Select(x => x.LedgerEntry).ToArray();
@@ -33,37 +28,33 @@ public class GetLedgerEntriesResponse
         /// <summary>
         ///     The base-64 encoded XDR string of the key of the ledger entry.
         /// </summary>
-        [JsonPropertyName("key")] private readonly string _key;
+        [JsonInclude] [JsonPropertyName("key")]
+        private string _key;
 
         /// <summary>
         ///     The base-64 encoded XDR string of the <see cref="Xdr.LedgerEntry.LedgerEntryData" /> object.
         /// </summary>
-        private readonly string _xdr;
+        [JsonInclude]
+        [JsonPropertyName("xdr")]
+        private string _xdr;
 
         /// <summary>
         ///     The ledger number of the last time this entry was updated (optional).
         /// </summary>
         [JsonPropertyName("lastModifiedLedgerSeq")]
-        public readonly uint LastModifiedLedger;
+        public uint LastModifiedLedger { get; init; }
 
         /// <summary>
         ///     The ledger sequence number after which the ledger entry would expire. This field exists only for ContractCodeEntry
         ///     and ContractDataEntry ledger entries (optional).
         /// </summary>
         [JsonPropertyName("liveUntilLedgerSeq")]
-        public readonly uint LiveUntilLedger;
-
-        public LedgerEntryResult(string key, uint lastModifiedLedger, uint liveUntilLedger, string xdr)
-        {
-            _key = key;
-            LastModifiedLedger = lastModifiedLedger;
-            LiveUntilLedger = liveUntilLedger;
-            _xdr = xdr;
-        }
+        public uint LiveUntilLedger { get; init; }
 
         /// <summary>
         ///     The corresponding <see cref="LedgerEntry" /> object constructed based on this response.
         /// </summary>
+        [JsonIgnore]
         public LedgerEntry LedgerEntry
         {
             get

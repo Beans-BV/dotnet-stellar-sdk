@@ -9,16 +9,18 @@ namespace StellarDotnetSdk.Responses;
 
 public class SubmitTransactionResponse : Response
 {
+    [JsonInclude]
     [JsonPropertyName("envelope_xdr")]
     private string _envelopeXdr;
 
+    [JsonInclude]
     [JsonPropertyName("result_xdr")]
     private string _resultXdr;
 
     [JsonPropertyName("hash")] public string Hash { get; init; }
 
     [JsonPropertyName("ledger")]
-    public uint? Ledger { get; init; }
+    public long? Ledger { get; init; }
 
     public string EnvelopeXdr => IsSuccess ? _envelopeXdr : SubmitTransactionResponseExtras.EnvelopeXdr;
 

@@ -15,7 +15,7 @@ public class TransactionResponse : Response, IPagingToken
     [JsonPropertyName("hash")] public string Hash { get; init; }
 
     [JsonPropertyName("ledger")]
-    public uint Ledger { get; init; }
+    public long Ledger { get; init; }
 
     [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; init; }
@@ -30,10 +30,8 @@ public class TransactionResponse : Response, IPagingToken
     [JsonPropertyName("fee_account_muxed")]
     public string FeeAccountMuxed { get; set; }
 
-    [DefaultValue(true)]
     [JsonPropertyName("successful")]
-    // [JsonPropertyName("successful", DefaultValueHandling = DefaultValueHandling.Populate)]
-    public bool Successful { get; init; }
+    public bool Successful { get; init; } = true;
 
     [JsonPropertyName("source_account_sequence")]
     public long SourceAccountSequence { get; init; }
@@ -86,6 +84,7 @@ public class TransactionResponse : Response, IPagingToken
     [JsonPropertyName("memo_bytes")]
     public string? MemoBytes { get; init; }
 
+    [JsonIgnore]
     public Memo Memo
     {
         get
@@ -158,13 +157,6 @@ public class TransactionResponse : Response, IPagingToken
 
     public class InnerTransaction
     {
-        public InnerTransaction(string hash, List<string> signatures, long maxFee)
-        {
-            Hash = hash;
-            Signatures = signatures;
-            MaxFee = maxFee;
-        }
-
         [JsonPropertyName("hash")] public string Hash { get; init; }
 
         [JsonPropertyName("signatures")]
@@ -178,19 +170,6 @@ public class TransactionResponse : Response, IPagingToken
 /// Links connected to transaction.
 public class TransactionResponseLinks
 {
-    public TransactionResponseLinks(Link<AccountResponse> account, Link<Page<EffectResponse>> effects,
-        Link<LedgerResponse> ledger, Link<Page<OperationResponse>> operations, Link<TransactionResponse> self,
-        Link<TransactionResponse> precedes, Link<TransactionResponse> succeeds)
-    {
-        Account = account;
-        Effects = effects;
-        Ledger = ledger;
-        Operations = operations;
-        Self = self;
-        Precedes = precedes;
-        Succeeds = succeeds;
-    }
-
     [JsonPropertyName("account")]
     public Link<AccountResponse> Account { get; init; }
 

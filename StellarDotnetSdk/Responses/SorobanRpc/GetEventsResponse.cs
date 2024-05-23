@@ -20,12 +20,12 @@ public class GetEventsResponse
     /// <summary>
     ///     If error is present then results will not be in the response
     /// </summary>
-    public EventInfo[]? Events { get; }
+    public EventInfo[]? Events { get; init; }
 
     /// <summary>
     ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.
     /// </summary>
-    public long? LatestLedger { get; }
+    public long? LatestLedger { get; init; }
 
     public string? Cursor { get; }
 
@@ -58,28 +58,28 @@ public class GetEventsResponse
         /// <summary>
         ///     StrKey representation of the contract address that emitted this event.
         /// </summary>
-        public string ContractId { get; }
+        public string ContractId { get; init; }
 
         /// <summary>
         ///     Unique identifier for this event.
         /// </summary>
-        public string Id { get; }
+        public string Id { get; init; }
 
         /// <summary>
         ///     If true the event was emitted during a successful contract call.
         /// </summary>
-        public bool InSuccessfulContractCall { get; }
+        public bool InSuccessfulContractCall { get; init; }
 
         /// <summary>
         ///     Sequence number of the ledger in which this event was emitted.
         /// </summary>
-        public int Ledger { get; }
+        public long Ledger { get; init; }
 
         /// <summary>
         ///     ISO-8601 timestamp of the ledger closing time.
         ///     See https://www.iso.org/iso-8601-date-and-time-format.html.
         /// </summary>
-        public string LedgerClosedAt { get; }
+        public string LedgerClosedAt { get; init; }
 
         /// <summary>
         ///     Duplicate of <c>id</c> field, but in the standard place for pagination tokens.
@@ -98,12 +98,12 @@ public class GetEventsResponse
         ///     <see cref="SCVal.FromXdrBase64">SCVal.FromXdrBase64()</see>.
         /// </remarks>
         [JsonPropertyName("topic")]
-        public string[] Topics { get; }
+        public string[] Topics { get; init; }
 
         /// <summary>
         ///     The type of event emission. Allowed values: contract, diagnostic, system.
         /// </summary>
-        public string Type { get; }
+        public string Type { get; init; }
 
         /// <summary>
         ///     A base-64 encoded XDR string of an <see cref="Xdr.SCVal">xdr.SCVal</see> object represents the data the event was
@@ -113,8 +113,8 @@ public class GetEventsResponse
         ///     Can be deserialized into an <see cref="SCVal" /> object by calling
         ///     <see cref="SCVal.FromXdrBase64">SCVal.FromXdrBase64()</see>.
         /// </remarks>
-        public string Value { get; }
+        public string Value { get; init; }
 
-        [JsonPropertyName("txHash")] public string TransactionHash { get; }
+        [JsonPropertyName("txHash")] public string TransactionHash { get; init; }
     }
 }

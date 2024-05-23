@@ -1,7 +1,8 @@
 ﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
@@ -14,7 +15,7 @@ public class OrderBookDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("orderBook.json");
         var json = File.ReadAllText(jsonPath);
-        var orderBook = JsonSingleton2.GetInstance<OrderBookResponse>(json);
+        var orderBook = JsonSerializer.Deserialize<OrderBookResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(orderBook);
         AssertTestData(orderBook);
     }
@@ -24,7 +25,7 @@ public class OrderBookDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("orderBook.json");
         var json = File.ReadAllText(jsonPath);
-        var orderBook = JsonSingleton2.GetInstance<OrderBookResponse>(json);
+        var orderBook = JsonSerializer.Deserialize<OrderBookResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(orderBook);
         var back = JsonSerializer.Deserialize<OrderBookResponse>(serialized);
         Assert.IsNotNull(back);

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Text.Json;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Text.Json;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses;
 using MuxedAccount = StellarDotnetSdk.Xdr.MuxedAccount;
 
@@ -18,7 +19,7 @@ public class AccountDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("account.json");
         var json = File.ReadAllText(jsonPath);
-        var account = JsonSingleton2.GetInstance<AccountResponse>(json);
+        var account = JsonSerializer.Deserialize<AccountResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(account);
         AssertTestData(account);
     }

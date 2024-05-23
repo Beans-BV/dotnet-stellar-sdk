@@ -1,6 +1,7 @@
 ﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
@@ -13,7 +14,7 @@ public class LedgerPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("ledgerPage.json");
         var json = File.ReadAllText(jsonPath);
-        var ledgersPage = JsonSingleton2.GetInstance<Page<LedgerResponse>>(json);
+        var ledgersPage = JsonSerializer.Deserialize<Page<LedgerResponse>>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(ledgersPage);
         AssertTestData(ledgersPage);
     }
@@ -23,7 +24,7 @@ public class LedgerPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("ledgerPage.json");
         var json = File.ReadAllText(jsonPath);
-        var ledgersPage = JsonSingleton2.GetInstance<Page<LedgerResponse>>(json);
+        var ledgersPage = JsonSerializer.Deserialize<Page<LedgerResponse>>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(ledgersPage);
         var back = JsonSerializer.Deserialize<Page<LedgerResponse>>(serialized);
         Assert.IsNotNull(back);

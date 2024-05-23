@@ -4,8 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Federation;
 using StellarDotnetSdk.Memos;
@@ -287,8 +289,8 @@ public class Server : IDisposable
         {
             case HttpStatusCode.OK:
             case HttpStatusCode.BadRequest:
-                var submitTransactionResponse = JsonSingleton2.GetInstance<SubmitTransactionResponse>(
-                    responseString);
+                var submitTransactionResponse = JsonSerializer.Deserialize<SubmitTransactionResponse>(
+                    responseString, JsonOptions.DefaultOptions);
                 return submitTransactionResponse;
             case HttpStatusCode.ServiceUnavailable:
             case HttpStatusCode.TooManyRequests:

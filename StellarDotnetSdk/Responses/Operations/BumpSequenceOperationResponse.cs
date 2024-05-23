@@ -11,5 +11,5 @@ public class BumpSequenceOperationResponse : OperationResponse
     public override int TypeId => 11;
 
     [JsonPropertyName("bump_to")]
-    public long BumpTo { get; init; }
+    public string BumpTo { get; init; }
 }
