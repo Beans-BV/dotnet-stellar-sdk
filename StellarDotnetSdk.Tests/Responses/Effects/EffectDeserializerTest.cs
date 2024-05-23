@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Responses;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Effects;
 
 namespace StellarDotnetSdk.Tests.Responses.Effects;
@@ -16,7 +16,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertAccountCreatedData(instance);
     }
@@ -26,7 +26,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -64,7 +64,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertAccountRemovedData(instance);
     }
@@ -74,7 +74,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -102,7 +102,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountCredited.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertAccountCreditedData(instance);
     }
@@ -112,7 +112,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountCredited.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -151,7 +151,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountDebited.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertAccountDebitedData(instance);
     }
@@ -161,7 +161,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountDebited.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -200,7 +200,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountThresholdsUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertAccountThresholdsUpdatedData(instance);
     }
@@ -210,7 +210,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountThresholdsUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -249,7 +249,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountHomeDomainUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertAccountHomeDomainUpdatedData(instance);
     }
@@ -259,7 +259,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountHomeDomainUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -291,7 +291,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountFlagsUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         Assert.IsNotNull(instance);
         AssertAccountFlagsUpdatedData(instance);
@@ -302,7 +302,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountFlagsUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -339,7 +339,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectSignerCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertSignerCreatedData(instance);
     }
@@ -349,7 +349,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectSignerCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -386,7 +386,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectSignerRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertSignerRemoveData(instance);
     }
@@ -396,7 +396,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectSignerRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -433,7 +433,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectSignerUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertSignerUpdatedData(instance);
     }
@@ -443,7 +443,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectSignerUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -480,7 +480,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertTrustlineCreatedData(instance);
     }
@@ -490,7 +490,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -530,7 +530,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertTrustlineRemovedData(instance);
     }
@@ -540,7 +540,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -580,7 +580,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertTrustlineUpdatedData(instance);
     }
@@ -590,7 +590,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -631,7 +631,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineAuthorized.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertTrustlineAuthorizedData(instance);
     }
@@ -642,7 +642,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineAuthorizedToMaintainLiabilities.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertTrustlineAuthorizedToMaintainLiabilitiesEffect(instance);
     }
@@ -653,7 +653,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineAuthorized.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -729,7 +729,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineDeAuthorized.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertTrustlineDeauthorizedData(instance);
     }
@@ -740,7 +740,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineDeAuthorized.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -780,7 +780,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectTrade.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertTradeData(instance);
     }
@@ -790,35 +790,11 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectTrade.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
         AssertTradeData(back);
-    }
-
-    //Before Horizon 1.0.0 the OfferID in the json was a long.
-    [TestMethod]
-    public void TestDeserializeTradeEffectPre100()
-    {
-        var jsonPath = Utils.GetTestDataPath("effectTradePre100.json");
-        var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
-        Assert.IsNotNull(instance);
-        AssertTradeDataPre100(instance);
-    }
-
-    //Before Horizon 1.0.0 the OfferID in the json was a long.
-    [TestMethod]
-    public void TestSerializeDeserializeTradeEffectPre100()
-    {
-        var jsonPath = Utils.GetTestDataPath("effectTradePre100.json");
-        var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
-        var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
-        Assert.IsNotNull(back);
-        AssertTradeDataPre100(back);
     }
 
     private static void AssertTradeDataPre100(EffectResponse instance)
@@ -904,7 +880,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountInflationUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertAccountInflationUpdated(instance);
     }
@@ -914,7 +890,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectAccountInflationUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -936,7 +912,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectDataCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertDataCreatedData(instance);
     }
@@ -946,7 +922,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectDataCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -968,7 +944,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectDataRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertDataRemovedData(instance);
     }
@@ -978,7 +954,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectDataRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1000,7 +976,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectDataUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertDataUpdatedData(instance);
     }
@@ -1010,7 +986,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectDataUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1032,7 +1008,8 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectUnknown.json");
         var json = File.ReadAllText(jsonPath);
-        Assert.ThrowsException<JsonException>(() => JsonSingleton2.GetInstance<EffectResponse>(json));
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions));
     }
 
     [TestMethod]
@@ -1040,7 +1017,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectSequenceBumped.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertSequenceBumpedData(instance);
     }
@@ -1050,7 +1027,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectSequenceBumped.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1072,7 +1049,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectOfferCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertOfferCreatedData(instance);
     }
@@ -1082,7 +1059,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectOfferCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1103,7 +1080,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectOfferRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertOfferRemovedData(instance);
     }
@@ -1113,7 +1090,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectOfferRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1134,7 +1111,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectOfferUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertOfferUpdatedData(instance);
     }
@@ -1144,7 +1121,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("effectOfferUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1166,7 +1143,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("accountSponsorshipCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1190,7 +1167,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("accountSponsorshipRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1215,7 +1192,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("accountSponsorshipUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1241,7 +1218,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("claimableBalanceClaimantCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1275,7 +1252,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("claimableBalanceClaimed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1306,7 +1283,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("claimableBalanceCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1337,7 +1314,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("claimableBalanceSponsorshipCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1366,7 +1343,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("claimableBalanceSponsorshipRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1395,7 +1372,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("claimableBalanceSponsorshipUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1424,7 +1401,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("signerSponsorshipCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1449,7 +1426,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("signerSponsorshipRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1475,7 +1452,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("signerSponsorshipUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1502,7 +1479,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineSponsorshipCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1527,7 +1504,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineSponsorshipRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1553,7 +1530,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineSponsorshipUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1584,7 +1561,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("dataSponsorshipCreated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1609,7 +1586,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("dataSponsorshipRemoved.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1636,7 +1613,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("dataSponsorshipUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1664,7 +1641,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("trustlineFlagsUpdated.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1703,7 +1680,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("claimableBalanceClawedBack.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1729,7 +1706,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolCreatedEffectResponse.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1759,7 +1736,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolDepositedEffectResponse.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1790,7 +1767,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolRemovedEffectResponse.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1807,7 +1784,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolRevokedEffectResponse.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);
@@ -1844,7 +1821,7 @@ public class EffectDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolTradeEffectResponse.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<EffectResponse>(json);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
         Assert.IsNotNull(back);

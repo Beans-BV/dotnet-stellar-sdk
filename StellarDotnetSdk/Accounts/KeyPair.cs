@@ -152,6 +152,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <summary>
     ///     The signing key.
     /// </summary>
+    [JsonIgnore]
     public KeyPair SigningKey => this;
 
     /// <summary>

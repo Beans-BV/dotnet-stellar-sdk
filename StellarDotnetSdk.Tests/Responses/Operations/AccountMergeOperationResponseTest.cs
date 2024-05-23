@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
-using StellarDotnetSdk.Responses;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
@@ -14,7 +14,7 @@ public class AccountMergeOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("accountMerge.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertAccountMergeData(instance);
     }
@@ -24,7 +24,7 @@ public class AccountMergeOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("accountMerge.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);
@@ -48,7 +48,7 @@ public class AccountMergeOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("accountMergeMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertAccountMergeDataMuxed(instance);
     }
@@ -58,7 +58,7 @@ public class AccountMergeOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("accountMergeMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);

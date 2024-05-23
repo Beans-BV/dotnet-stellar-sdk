@@ -1,8 +1,8 @@
 ﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Responses;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
@@ -16,7 +16,7 @@ public class ClawbackOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("clawback.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);
@@ -46,7 +46,7 @@ public class ClawbackOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("clawbackMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);

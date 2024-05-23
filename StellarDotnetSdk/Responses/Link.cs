@@ -17,7 +17,6 @@ public class Link
     public virtual bool Templated => false;
 }
 
-[JsonConverter(typeof(LinkJsonConverter<>))]
 public class Link<TResponse> : Link where TResponse : Response  
 {
     public static Link<TResponse> Create(string href, bool templated)

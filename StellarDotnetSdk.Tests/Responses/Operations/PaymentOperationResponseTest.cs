@@ -1,9 +1,9 @@
 ﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Memos;
-using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
@@ -17,7 +17,7 @@ public class PaymentOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("payment.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<PaymentOperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<PaymentOperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertPaymentOperationTestData(instance);
     }
@@ -27,7 +27,7 @@ public class PaymentOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("payment.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<PaymentOperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<PaymentOperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<PaymentOperationResponse>(serialized);
         Assert.IsNotNull(back);
@@ -97,7 +97,7 @@ public class PaymentOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("paymentNonNative.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertNonNativePaymentData(instance);
     }
@@ -107,7 +107,7 @@ public class PaymentOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("paymentNonNative.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);
@@ -132,7 +132,7 @@ public class PaymentOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("paymentMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertPaymentOperationTestDataMuxed(instance);
     }
@@ -142,7 +142,7 @@ public class PaymentOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("paymentMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);

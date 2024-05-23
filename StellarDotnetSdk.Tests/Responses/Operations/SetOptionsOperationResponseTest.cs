@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
-using StellarDotnetSdk.Responses;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
@@ -15,7 +15,7 @@ public class SetOptionsOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("setOptions.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertSetOptionsData(instance);
     }
@@ -25,7 +25,7 @@ public class SetOptionsOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("setOptions.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);
@@ -56,7 +56,7 @@ public class SetOptionsOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("setOptionsNonEd25519Key.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertSetOptionsOperationWithNonEd25519KeyData(instance);
     }
@@ -66,7 +66,7 @@ public class SetOptionsOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("setOptionsNonEd25519Key.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton2.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);

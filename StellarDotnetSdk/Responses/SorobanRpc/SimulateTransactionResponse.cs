@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json.Serialization;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Soroban;
 
@@ -15,32 +16,18 @@ namespace StellarDotnetSdk.Responses.SorobanRpc;
 /// </summary>
 public class SimulateTransactionResponse
 {
-    private readonly string? _transactionData;
-
-    public SimulateTransactionResponse(string? transactionData, string? error, SimulateTransactionCost? cost,
-        string[]? events, long? latestLedger, uint? minResourceFee, RestorePreamble? restorePreambleInfo,
-        SimulateInvokeHostFunctionResult[]? results, LedgerEntryChange[] stateChanges)
-    {
-        _transactionData = transactionData;
-        Error = error;
-        Cost = cost;
-        Events = events;
-        LatestLedger = latestLedger;
-        MinResourceFee = minResourceFee;
-        RestorePreambleInfo = restorePreambleInfo;
-        Results = results;
-        StateChanges = stateChanges;
-    }
+    [JsonInclude]
+    [JsonPropertyName("transactionData")] private string? _transactionData;
 
     [Obsolete(
         "The cost object is legacy, inaccurate, and will be deprecated in future RPC releases. Please use SorobanTransactionData to retrieve the correct resources.")]
-    public SimulateTransactionCost? Cost { get; }
+    public SimulateTransactionCost? Cost { get; init; }
 
     /// <summary>
     ///     This field will include details about why the invoke host function call failed.
     /// </summary>
     /// <para>(optional) Only present if the transaction failed.</para>
-    public string? Error { get; }
+    public string? Error { get; init; }
 
     /// <summary>
     ///     Array of serialized base64 strings - Array of the events emitted during the contract invocation. The events are
@@ -50,12 +37,12 @@ public class SimulateTransactionResponse
     ///         providing extra context about what failed.
     ///     </para>
     /// </summary>
-    public string[]? Events { get; }
+    public string[]? Events { get; init; }
 
     /// <summary>
     ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.
     /// </summary>
-    public long? LatestLedger { get; }
+    public long? LatestLedger { get; init; }
 
     /// <summary>
     ///     (Optional) Not present in case of error.
@@ -65,7 +52,7 @@ public class SimulateTransactionResponse
     ///     </para>
     ///     See https://developers.stellar.org/docs/encyclopedia/fees-surge-pricing-fee-strategies#network-fees-on-stellar.
     /// </summary>
-    public uint? MinResourceFee { get; }
+    public uint? MinResourceFee { get; init; }
 
     /// <summary>
     ///     If present, it indicates that the simulation detected archived ledger entries which need to be restored before the
@@ -78,22 +65,23 @@ public class SimulateTransactionResponse
     ///     </para>
     /// </summary>
     [JsonPropertyName("restorePreamble")]
-    public RestorePreamble? RestorePreambleInfo { get; } // TODO Unit test
+    public RestorePreamble? RestorePreambleInfo { get; init; } // TODO Unit test
 
-    public LedgerEntryChange[]? StateChanges { get; }
+    [JsonPropertyName("stateChanges")] public LedgerEntryChange[]? StateChanges { get; init; }
 
     /// <summary>
     ///     An array of the individual host function call results.
     ///     This will only contain a single element if present, because only a single
     ///     <c>invokeHostFunctionOperation</c> is supported per transaction.
     /// </summary>
-    public SimulateInvokeHostFunctionResult[]? Results { get; }
+    public SimulateInvokeHostFunctionResult[]? Results { get; init; }
 
     /// <summary>
     ///     The recommended Soroban Transaction Data to use when submitting the simulated transaction. This data contains the
     ///     refundable fee and resource usage information such as the ledger footprint and IO access data.
     ///     <para>Not present in case of error.</para>
     /// </summary>
+    [JsonIgnore]
     public SorobanTransactionData? SorobanTransactionData =>
         _transactionData != null ? SorobanTransactionData.FromXdrBase64(_transactionData) : null;
 
@@ -118,20 +106,14 @@ public class SimulateTransactionResponse
     /// </summary>
     public class RestorePreamble
     {
-        public RestorePreamble(string transactionData, long minResourceFee)
-        {
-            TransactionData = transactionData;
-            MinResourceFee = minResourceFee;
-        }
-
-        private string TransactionData { get; }
+        private string TransactionData { get; init; }
 
         /// <summary>
         ///     Recommended minimum resource fee to add when submitting the <c>RestoreFootprint</c> operation. This fee is to be
         ///     added on
         ///     top of the Stellar network fee.
         /// </summary>
-        public long MinResourceFee { get; }
+        public long MinResourceFee { get; init; }
 
         /// <summary>
         ///     The recommended Soroban Transaction Data to use when submitting the <c>RestoreFootprint</c> operation.
@@ -149,13 +131,13 @@ public class SimulateTransactionResponse
         ///     Number of the total cpu instructions consumed by this transaction.
         /// </summary>
         [JsonPropertyName("cpuInsns")]
-        public long CpuInstructions { get; }
+        public long CpuInstructions { get; init; }
 
         /// <summary>
         ///     Number of the total memory bytes allocated by this transaction.
         /// </summary>
         [JsonPropertyName("memBytes")]
-        public long MemoryBytes { get; }
+        public long MemoryBytes { get; init; }
     }
 
     /// <summary>
@@ -164,36 +146,22 @@ public class SimulateTransactionResponse
     /// </summary>
     public class SimulateInvokeHostFunctionResult
     {
-        public SimulateInvokeHostFunctionResult(string[]? auth, string? xdr)
-        {
-            Auth = auth;
-            Xdr = xdr;
-        }
-
         /// <summary>
         ///     Array of serialized base64 strings - Per-address authorizations recorded when simulating this Host Function call.
         /// </summary>
-        public string[]? Auth { get; }
+        public string[]? Auth { get; init; }
 
         /// <summary>
         ///     (optional) Only present on success. xdr-encoded return value of the contract call operation.
         /// </summary>
-        public string? Xdr { get; } // TODO Unit test on error
+        public string? Xdr { get; init; } // TODO Unit test on error
     }
 
     public class LedgerEntryChange
     {
-        public LedgerEntryChange(string type, string key, string? before, string? after)
-        {
-            Type = type;
-            Key = key;
-            Before = before;
-            After = after;
-        }
-
-        public string Type { get; }
-        public string Key { get; }
-        public string? Before { get; }
-        public string? After { get; }
+        public string Type { get; init; }
+        public string Key { get; init; }
+        public string? Before { get; init; }
+        public string? After { get; init; }
     }
 }

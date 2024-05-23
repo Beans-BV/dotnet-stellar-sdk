@@ -13,7 +13,7 @@ public class FriendBotResponse
     [JsonPropertyName("title")] public string Title { get; init; }
 
     [JsonPropertyName("status")]
-    public string Status { get; init; }
+    public int Status { get; init; }
 
     [JsonPropertyName("extras")]
     public SubmitTransactionResponse.Extras Extras { get; init; }
@@ -24,7 +24,7 @@ public class FriendBotResponse
     [JsonPropertyName("hash")] public string Hash { get; init; }
 
     [JsonPropertyName("ledger")]
-    public string Ledger { get; init; }
+    public long Ledger { get; init; }
 
     [JsonPropertyName("envelope_xdr")]
     public string EnvelopeXdr { get; init; }

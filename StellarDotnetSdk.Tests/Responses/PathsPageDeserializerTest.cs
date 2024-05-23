@@ -1,7 +1,8 @@
 ﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
@@ -14,7 +15,7 @@ public class PathsPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("pathPage.json");
         var json = File.ReadAllText(jsonPath);
-        var pathsPage = JsonSingleton2.GetInstance<Page<PathResponse>>(json);
+        var pathsPage = JsonSerializer.Deserialize<Page<PathResponse>>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(pathsPage);
         AssertTestData(pathsPage);
     }
@@ -24,7 +25,7 @@ public class PathsPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("pathPage.json");
         var json = File.ReadAllText(jsonPath);
-        var pathsPage = JsonSingleton2.GetInstance<Page<PathResponse>>(json);
+        var pathsPage = JsonSerializer.Deserialize<Page<PathResponse>>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(pathsPage);
         var back = JsonSerializer.Deserialize<Page<PathResponse>>(serialized);
         Assert.IsNotNull(back);

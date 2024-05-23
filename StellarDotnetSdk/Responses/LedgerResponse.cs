@@ -7,7 +7,7 @@ namespace StellarDotnetSdk.Responses;
 
 public class LedgerResponse : Response, IPagingToken
 {
-    [JsonPropertyName("sequence")] public uint Sequence { get; init; }
+    [JsonPropertyName("sequence")] public long Sequence { get; init; }
 
     [JsonPropertyName("hash")] public string Hash { get; init; }
 
@@ -34,10 +34,10 @@ public class LedgerResponse : Response, IPagingToken
     [JsonPropertyName("max_tx_set_size")] public int MaxTxSetSize { get; init; }
 
     [JsonPropertyName("base_fee_in_stroops")]
-    public string BaseFeeInStroops { get; init; }
+    public long BaseFeeInStroops { get; init; }
 
     [JsonPropertyName("base_reserve_in_stroops")]
-    public string BaseReserveInStroops { get; init; }
+    public long BaseReserveInStroops { get; init; }
 
     [JsonPropertyName("tx_set_operation_count")]
     public int? TxSetOperationCount { get; init; }

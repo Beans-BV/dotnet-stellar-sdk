@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Effects;
 using StellarDotnetSdk.Responses.Operations;
 
@@ -31,7 +32,7 @@ public class AccountResponse : Response, ITransactionBuilderAccount
 
     [JsonPropertyName("_links")] public AccountResponseLinks Links { get; init; }
 
-    [JsonPropertyName("Data")] public Dictionary<string, string> Data { get; init; }
+    [JsonPropertyName("data")] public Dictionary<string, string> Data { get; init; }
 
     [JsonPropertyName("account_id")] public string AccountId { get; init; }
 

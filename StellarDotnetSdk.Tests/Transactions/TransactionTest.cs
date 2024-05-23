@@ -10,7 +10,6 @@ using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
-using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
 using Memo = StellarDotnetSdk.Memos.Memo;
 using SorobanResources = StellarDotnetSdk.Soroban.SorobanResources;
 using SorobanTransactionData = StellarDotnetSdk.Soroban.SorobanTransactionData;

@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Accounts;
-using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Responses;
@@ -12,31 +11,101 @@ using SysConsole = System.Console;
 
 namespace StellarDotnetSdk.Console;
 
+[JsonConverter(typeof(PersonConverter))]
+internal abstract class Person
+{
+    [JsonPropertyName("name")] public string Name { get; set; }
+    [JsonPropertyName("type")] public string Type { get; set; }
+    [JsonPropertyName("gender")] public string Gender { get; set; }
+
+    [JsonPropertyName("disabled")] public bool IsDisabled { get; init; } = true;
+}
+
+internal class Worker : Person
+{
+    [JsonPropertyName("company")] public string Company { get; set; }
+
+    [JsonPropertyName("salary")]
+    [JsonInclude]
+    public long Salary { get; set; }
+}
+
+internal class Farmer : Person
+{
+    [JsonInclude] [JsonPropertyName("ranch")]
+    // [JsonPropertyName("ranch")] 
+    private string _ranch;
+
+    [JsonPropertyName("farm")] public string Farm { get; set; }
+}
+
+internal class PersonConverter : JsonConverter<Person>
+{
+    public override Person Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        using (var document = JsonDocument.ParseValue(ref reader))
+        {
+            var root = document.RootElement;
+            var type = root.GetProperty("type").GetString();
+            switch (type)
+            {
+                case "Worker":
+                    return JsonSerializer.Deserialize<Worker>(root.GetRawText(), options);
+                case "Farmer":
+                    return JsonSerializer.Deserialize<Farmer>(root.GetRawText(), options);
+                default:
+                    throw new JsonException("Unknown type.");
+            }
+        }
+    }
+
+    public override void Write(Utf8JsonWriter writer, Person value, JsonSerializerOptions options)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 public static class Program
 {
     private const int DefaultFee = 1000000;
 
     public static async Task Main(string[] args)
     {
-        string json = """
-                      {
-                        "href": "/ledgers/898826/effects{?cursor,limit,order}",
-                        "templated": true
-                      }
-                      """;
-        string json2 = """
-                       {
-                           "href": "https://horizon-testnet.stellar.org/assets?cursor=&limit=200&order=desc"
-                       }
-                       """;
-        // var back = JsonSerializer.Deserialize<Link<AssetResponse>>(json2);
-        JsonSerializerOptions options = new JsonSerializerOptions();
-        options.Converters.Add(new LinkJsonConverter<AssetResponse>());
-        // var back2 = JsonSingleton2.GetInstance<Page<AssetResponse>.PageLinks<AssetResponse>>(json);
-        var back2 = JsonSingleton2.GetInstance<Link<Page<AssetResponse>>>(json2);
-        var backEffect = JsonSingleton2.GetInstance<Link<Page<LedgerResponse>>>(json);
-        var led = await backEffect.Follow();
-        // var back3 = JsonSerializer.Deserialize<Link<AssetResponse>>(json2, options);
+        var json = """
+                   {
+                     "href": "/ledgers/898826/effects{?cursor,limit,order}",
+                     "templated": true
+                   }
+                   """;
+        var json2 = """
+                    {
+                        "href": "https://horizon-testnet.stellar.org/assets?cursor=&limit=200&order=desc"
+                    }
+                    """;
+        var options = new JsonSerializerOptions();
+        options.Converters.Add(new LinkJsonConverter<Response>());
+        options.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+        options.PropertyNameCaseInsensitive = true;
+        var workerJson = """
+                         {
+                             "name": "Cuong",
+                             "type": "Worker",
+                             "company": "Microsoft",
+                             "gender": "Male",
+                             "salary": "100000"
+                         }
+                         """;
+        var farmerJson = """
+                         {
+                             "name": "Cuong",
+                             "type": "Farmer",
+                             "gender": "Male",
+                             "ranch": "Oxen Ranch"
+                         }
+                         """;
+
+        var worker = JsonSerializer.Deserialize<Person>(workerJson, options);
+        var farmer = JsonSerializer.Deserialize<Person>(farmerJson);
     }
 
     private static async Task CreateAccount(Server server)

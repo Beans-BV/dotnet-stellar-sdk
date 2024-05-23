@@ -10,5 +10,5 @@ public class LiquidityPoolRemovedEffectResponse : EffectResponse
     public override int TypeId => 94;
 
     [JsonPropertyName("liquidity_pool_id")]
-    public LiquidityPoolID LiquidityPoolId { get; private set; }
+    public LiquidityPoolID LiquidityPoolId { get; init; }
 }
