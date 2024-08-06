@@ -6,11 +6,11 @@ namespace StellarDotnetSdk.LedgerKeys;
 public class LedgerKeyContractCode : LedgerKey
 {
     /// <summary>
-    ///     Constructs a <c>LedgerKeyContractCode</c> object from a base-64 encoded string of the hash of the ledger entry.
+    ///     Constructs a <c>LedgerKeyContractCode</c> object from a hex encoded string of the hash of the ledger entry.
     ///     Use this to fetch contract wasm byte-code.
     /// </summary>
-    /// <param name="base64String">A base-64 encoded string.</param>
-    public LedgerKeyContractCode(string base64String) : this(Convert.FromBase64String(base64String))
+    /// <param name="hexString">A hex encoded string.</param>
+    public LedgerKeyContractCode(string hexString) : this(Convert.FromHexString(hexString))
     {
     }
 
@@ -41,6 +41,6 @@ public class LedgerKeyContractCode : LedgerKey
 
     public static LedgerKeyContractCode FromXdr(Xdr.LedgerKey.LedgerKeyContractCode xdr)
     {
-        return new LedgerKeyContractCode(Convert.ToBase64String(xdr.Hash.InnerValue));
+        return new LedgerKeyContractCode(Convert.ToHexString(xdr.Hash.InnerValue));
     }
 }

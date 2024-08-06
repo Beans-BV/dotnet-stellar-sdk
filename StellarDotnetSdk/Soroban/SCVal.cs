@@ -1342,13 +1342,13 @@ public class ContractExecutableWasm : ContractExecutable
     }
 
     /// <summary>
-    ///     Base-64 encoded string of SHA-256 hash of a previously uploaded Wasm.
+    ///     Hex encoded string of SHA-256 hash of a previously uploaded Wasm bytes.
     /// </summary>
     public string WasmHash { get; }
 
     public static ContractExecutableWasm FromXdr(Xdr.ContractExecutable xdr)
     {
-        return new ContractExecutableWasm(Convert.ToBase64String(xdr.WasmHash.InnerValue));
+        return new ContractExecutableWasm(Convert.ToHexString(xdr.WasmHash.InnerValue));
     }
 
     public override Xdr.ContractExecutable ToXdr()
@@ -1359,7 +1359,7 @@ public class ContractExecutableWasm : ContractExecutable
             {
                 InnerValue = ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_WASM
             },
-            WasmHash = new Hash(Convert.FromBase64String(WasmHash))
+            WasmHash = new Hash(Convert.FromHexString(WasmHash))
         };
     }
 }

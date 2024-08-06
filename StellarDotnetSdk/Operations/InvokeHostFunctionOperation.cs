@@ -108,22 +108,25 @@ public class CreateContractOperation : InvokeHostFunctionOperation
     /// <summary>
     ///     Creates a new <c>CreateContractOperation</c> using the provided address and salt.
     /// </summary>
-    /// <param name="wasmId"></param>
+    /// <param name="wasmHash">
+    ///     (aka Wasm ID or hash ID or just hash), a hex-encoded string of the unique identifier of a
+    ///     WebAssembly (Wasm) bytecode that represents a compiled smart contract on the Stellar network.
+    /// </param>
     /// <param name="accountId"></param>
-    /// <param name="salt"></param>
+    /// <param name="salt">(Optional) Custom salt 32-byte salt for the token ID. It will be randomly generated if omitted.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
-    public static CreateContractOperation FromAddress(string wasmId, string accountId, byte[]? salt = null,
+    public static CreateContractOperation FromAddress(string wasmHash, string accountId, byte[]? salt = null,
         IAccountId? sourceAccount = null)
     {
         return new CreateContractOperation(
             new CreateContractHostFunction(
                 new ContractIDAddressPreimage(accountId, salt),
-                new ContractExecutableWasm(wasmId)),
+                new ContractExecutableWasm(wasmHash)),
             sourceAccount);
     }
 
     /// <summary>
-    ///     Creates a new <c>CreateContractOperation</c> using the Stellar asset.
+    ///     Creates a new <c>CreateContractOperation</c> to deploy builtin Soroban Asset Contract using the Stellar asset.
     /// </summary>
     /// <param name="asset">The contract will be created using this Stellar asset.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>

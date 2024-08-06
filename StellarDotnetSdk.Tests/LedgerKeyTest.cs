@@ -156,7 +156,9 @@ public class LedgerKeyTest
     [TestMethod]
     public void TestLedgerKeyContractCodeCreationFromValidHashString()
     {
-        var ledgerKey = (LedgerKeyContractCode)LedgerKey.ContractCode("AQIDBAUGBwgJAAECAwQFBgcICQABAgMEBQYHCAkAAQI=");
+        var ledgerKey =
+            (LedgerKeyContractCode)LedgerKey.ContractCode(
+                "0102030405060708090001020304050607080900010203040506070809000102");
 
         // Act
         var ledgerKeyXdrBase64 = ledgerKey.ToXdrBase64();
@@ -170,7 +172,7 @@ public class LedgerKeyTest
     public void TestLedgerKeyContractCodeCreationFromInvalidHashString()
     {
         var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-            LedgerKey.ContractCode("AQIDBAUGBwgJAAECAwQFBgcICQABAgMEBQYHCAkAAg=="));
+            LedgerKey.ContractCode("01020304050607080900010203040506070809000102030405060708090002"));
         Assert.IsTrue(ex.Message.Contains("Hash must have exactly 32 bytes."));
     }
 
@@ -207,7 +209,7 @@ public class LedgerKeyTest
     public void TestLedgerKeyTtlCreationFromInvalidHashString()
     {
         var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
-            LedgerKey.ContractCode("AQIDBAUGBwgJAAECAwQFBgcICQABAgMEBQYHCAkAAQIDBA=="));
+            LedgerKey.ContractCode("01020304050607080900010203040506070809000102030405060708090001020304"));
         Assert.IsTrue(ex.Message.Contains("Hash must have exactly 32 bytes."));
     }
 }

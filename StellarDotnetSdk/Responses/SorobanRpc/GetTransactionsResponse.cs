@@ -1,27 +1,22 @@
 ﻿namespace StellarDotnetSdk.Responses.SorobanRpc;
 
-public class GetTransactionResponse : TransactionInfo
+public class GetTransactionsResponse
 {
-    public GetTransactionResponse(
-        TransactionStatus status,
+    public GetTransactionsResponse(
+        TransactionInfo[]? transactions,
         long latestLedger,
-        long latestLedgerCloseTime,
+        long latestLedgerCloseTimestamp,
         long oldestLedger,
-        long oldestLedgerCloseTime,
-        long ledger,
-        long createdAt,
-        int applicationOrder,
-        bool feeBump,
-        string? envelopeXdr,
-        string? resultXdr,
-        string? resultMetaXdr)
-        : base(status, ledger, createdAt, applicationOrder, feeBump, envelopeXdr, resultXdr, resultMetaXdr)
+        long oldestLedgerCloseTimestamp)
     {
+        Transactions = transactions;
         LatestLedger = latestLedger;
-        LatestLedgerCloseTime = latestLedgerCloseTime;
+        LatestLedgerCloseTimestamp = latestLedgerCloseTimestamp;
         OldestLedger = oldestLedger;
-        OldestLedgerCloseTime = oldestLedgerCloseTime;
+        OldestLedgerCloseTimestamp = oldestLedgerCloseTimestamp;
     }
+
+    public TransactionInfo[]? Transactions { get; }
 
     /// <summary>
     ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.
@@ -31,7 +26,7 @@ public class GetTransactionResponse : TransactionInfo
     /// <summary>
     ///     The unix timestamp of the close time of the latest ledger known to Soroban RPC at the time it handled the request.
     /// </summary>
-    public long LatestLedgerCloseTime { get; }
+    public long LatestLedgerCloseTimestamp { get; }
 
     /// <summary>
     ///     The sequence number of the oldest ledger ingested by Soroban RPC at the time it handled the request.
@@ -42,5 +37,5 @@ public class GetTransactionResponse : TransactionInfo
     ///     The unix timestamp of the close time of the oldest ledger ingested by Soroban RPC at the time it handled the
     ///     request.
     /// </summary>
-    public long OldestLedgerCloseTime { get; }
+    public long OldestLedgerCloseTimestamp { get; }
 }
