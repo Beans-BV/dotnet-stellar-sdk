@@ -439,8 +439,8 @@ public class SorobanServerTest
               "result": {
                 "entries": [
                   {
-                    "key": "AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA\u003d\u003d",
-                    "xdr": "AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JAAAABazqg5CAAADrQAAAAoAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAABZnkAAAAAZnAVKA\u003d\u003d",
+                    "key": "AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JA==",
+                    "xdr": "AAAAAAAAAADBPp7TMinJylnn+6dQXJACNc15LF+aJ2Py1BaR4P10JAAAABazqg5CAAADrQAAAAoAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAABZnkAAAAAZnAVKA==",
                     "lastModifiedLedgerSeq": 91769
                   }
                 ],
@@ -449,7 +449,7 @@ public class SorobanServerTest
             }
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
-        var response = await _sorobanServer.GetLedgerEntries(ledgerKeyAccounts);
+        var response = await sorobanServer.GetLedgerEntries(ledgerKeyAccounts);
 
         Assert.IsNotNull(response.LatestLedger);
         Assert.IsNotNull(response.LedgerEntries);
