@@ -9,7 +9,8 @@ namespace StellarDotnetSdk.Xdr;
 
 //  enum SurveyMessageCommandType
 //  {
-//      SURVEY_TOPOLOGY = 0
+//      SURVEY_TOPOLOGY = 0,
+//      TIME_SLICED_SURVEY_TOPOLOGY = 1
 //  };
 
 //  ===========================================================================
@@ -17,7 +18,8 @@ public class SurveyMessageCommandType
 {
     public enum SurveyMessageCommandTypeEnum
     {
-        SURVEY_TOPOLOGY = 0
+        SURVEY_TOPOLOGY = 0,
+        TIME_SLICED_SURVEY_TOPOLOGY = 1
     }
 
     public SurveyMessageCommandTypeEnum InnerValue { get; set; }
@@ -36,6 +38,7 @@ public class SurveyMessageCommandType
         switch (value)
         {
             case 0: return Create(SurveyMessageCommandTypeEnum.SURVEY_TOPOLOGY);
+            case 1: return Create(SurveyMessageCommandTypeEnum.TIME_SLICED_SURVEY_TOPOLOGY);
             default:
                 throw new Exception("Unknown enum value: " + value);
         }

@@ -11,6 +11,8 @@ namespace StellarDotnetSdk.Xdr;
 //      TopologyResponseBodyV0 topologyResponseBodyV0;
 //  case SURVEY_TOPOLOGY_RESPONSE_V1:
 //      TopologyResponseBodyV1 topologyResponseBodyV1;
+//  case SURVEY_TOPOLOGY_RESPONSE_V2:
+//      TopologyResponseBodyV2 topologyResponseBodyV2;
 //  };
 
 //  ===========================================================================
@@ -20,6 +22,7 @@ public class SurveyResponseBody
 
     public TopologyResponseBodyV0 TopologyResponseBodyV0 { get; set; }
     public TopologyResponseBodyV1 TopologyResponseBodyV1 { get; set; }
+    public TopologyResponseBodyV2 TopologyResponseBodyV2 { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SurveyResponseBody encodedSurveyResponseBody)
     {
@@ -31,6 +34,9 @@ public class SurveyResponseBody
                 break;
             case SurveyMessageResponseType.SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V1:
                 TopologyResponseBodyV1.Encode(stream, encodedSurveyResponseBody.TopologyResponseBodyV1);
+                break;
+            case SurveyMessageResponseType.SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V2:
+                TopologyResponseBodyV2.Encode(stream, encodedSurveyResponseBody.TopologyResponseBodyV2);
                 break;
         }
     }
@@ -47,6 +53,9 @@ public class SurveyResponseBody
                 break;
             case SurveyMessageResponseType.SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V1:
                 decodedSurveyResponseBody.TopologyResponseBodyV1 = TopologyResponseBodyV1.Decode(stream);
+                break;
+            case SurveyMessageResponseType.SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V2:
+                decodedSurveyResponseBody.TopologyResponseBodyV2 = TopologyResponseBodyV2.Decode(stream);
                 break;
         }
 
