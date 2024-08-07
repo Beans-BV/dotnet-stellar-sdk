@@ -563,11 +563,11 @@ public class SorobanServerTest
 
         Assert.IsNotNull(simulateResponse.SorobanTransactionData);
 
-        tx.SorobanTransactionData = simulateResponse.SorobanTransactionData;
+        tx.SetSorobanTransactionData(simulateResponse.SorobanTransactionData);
         if (simulateResponse.SorobanAuthorization != null)
-            tx.SetSorobanAuthorization(simulateResponse.SorobanAuthorization);
+        tx.SetSorobanAuthorization(simulateResponse.SorobanAuthorization);
         Assert.IsNotNull(simulateResponse.MinResourceFee);
-        tx.AddResourceFee(simulateResponse.MinResourceFee.Value + 100000);
+        tx.AddResourceFee(simulateResponse.MinResourceFee.Value);
         tx.Sign(signer ?? _sourceAccount);
 
         return simulateResponse;
@@ -738,7 +738,7 @@ public class SorobanServerTest
         else
             key = new LedgerKeyContractCode(id);
 
-        tx.SorobanTransactionData = new SorobanTransactionData(key, false);
+        tx.SetSorobanTransactionData(new SorobanTransactionData(key, false));
 
         await SimulateAndUpdateTransaction(tx);
 
@@ -780,7 +780,7 @@ public class SorobanServerTest
         var resources = new SorobanResources(ledgerFootprint, 0, 0, 0);
         var transactionData = new SorobanTransactionData(resources, 0);
 
-        tx.SorobanTransactionData = transactionData;
+        tx.SetSorobanTransactionData(transactionData);
 
         await SimulateAndUpdateTransaction(tx);
 
