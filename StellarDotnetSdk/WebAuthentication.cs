@@ -36,25 +36,39 @@ public static class WebAuthentication
     /// <param name="homeDomain">The server home domain</param>
     /// <param name="webAuthDomain">The server auth domain</param>
     /// <param name="nonce">48 bytes long cryptographic-quality random data</param>
-    /// <param name="now">The datetime from which the transaction is valid</param>
-    /// <param name="timeout">The transaction lifespan</param>
+    /// <param name="validFrom">The datetime from which the transaction is valid</param>
+    /// <param name="validFor">The transaction lifespan</param>
     /// <param name="network">The network the transaction will be submitted to</param>
     /// <returns>The challenge transaction</returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    public static Transaction BuildChallengeTransaction(KeyPair serverKeypair, string clientAccountId,
-        string homeDomain, string webAuthDomain, byte[]? nonce = null, DateTimeOffset? now = null,
-        TimeSpan? timeout = null,
-        Network? network = null, string? clientDomain = null, KeyPair? clientKeypair = null)
+    public static Transaction BuildChallengeTransaction(
+        KeyPair serverKeypair,
+        string clientAccountId,
+        string homeDomain,
+        string webAuthDomain,
+        byte[]? nonce = null,
+        DateTimeOffset? validFrom = null,
+        TimeSpan? validFor = null,
+        Network? network = null,
+        string? clientDomain = null,
+        KeyPair? clientKeypair = null)
     {
         if (string.IsNullOrEmpty(clientAccountId)) throw new ArgumentNullException(nameof(clientAccountId));
-
         if (StrKey.DecodeVersionByte(clientAccountId) != StrKey.VersionByte.ACCOUNT_ID)
             throw new InvalidWebAuthenticationException($"{nameof(clientAccountId)} is not a valid account id");
         var clientAccountKeypair = KeyPair.FromAccountId(clientAccountId);
-        return BuildChallengeTransaction(serverKeypair, clientAccountKeypair, homeDomain, webAuthDomain, nonce, now,
-            timeout,
-            network, clientDomain, clientKeypair);
+        return BuildChallengeTransaction(
+            serverKeypair,
+            clientAccountKeypair,
+            homeDomain,
+            webAuthDomain,
+            nonce,
+            validFrom,
+            validFor,
+            network,
+            clientDomain,
+            clientKeypair);
     }
 
     /// <summary>
@@ -65,21 +79,28 @@ public static class WebAuthentication
     /// <param name="homeDomain">The server home domain</param>
     /// <param name="webAuthDomain">The server auth domain</param>
     /// <param name="nonce">48 bytes long cryptographic-quality random data</param>
-    /// <param name="now">The datetime from which the transaction is valid</param>
-    /// <param name="timeout">The transaction lifespan</param>
+    /// <param name="validFrom">The datetime from which the transaction is valid</param>
+    /// <param name="validFor">The transaction lifespan</param>
     /// <param name="network">The network the transaction will be submitted to</param>
     /// <param name="clientDomain">Optional Client Domain</param>
     /// <param name="clientDomain">Client Signing Key (Used with Client Domain)</param>
     /// <returns>The challenge transaction</returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    public static Transaction BuildChallengeTransaction(KeyPair serverKeypair, KeyPair clientAccountId,
-        string homeDomain, string webAuthDomain, byte[]? nonce = null, DateTimeOffset? now = null,
-        TimeSpan? timeout = null,
-        Network? network = null, string? clientDomain = null, KeyPair? clientSigningKey = null)
+    public static Transaction BuildChallengeTransaction(
+        KeyPair serverKeypair,
+        KeyPair clientAccountId,
+        string homeDomain,
+        string webAuthDomain,
+        byte[]? nonce = null,
+        DateTimeOffset? validFrom = null,
+        TimeSpan? validFor = null,
+        Network? network = null,
+        string? clientDomain = null,
+        KeyPair? clientSigningKey = null)
     {
-        if (serverKeypair is null) throw new ArgumentNullException(nameof(serverKeypair));
-        if (clientAccountId is null) throw new ArgumentNullException(nameof(clientAccountId));
+        ArgumentNullException.ThrowIfNull(serverKeypair);
+        ArgumentNullException.ThrowIfNull(clientAccountId);
         if (string.IsNullOrEmpty(homeDomain)) throw new ArgumentNullException(nameof(homeDomain));
         if (string.IsNullOrEmpty(webAuthDomain)) throw new ArgumentNullException(nameof(webAuthDomain));
         if (!string.IsNullOrEmpty(clientDomain) && clientSigningKey is null)
@@ -97,10 +118,9 @@ public static class WebAuthentication
             throw new ArgumentException("nonce must be 48 bytes long");
         }
 
-        network = network ?? Network.Current;
-        var validFrom = now ?? DateTimeOffset.Now;
-        var validFor = timeout ?? TimeSpan.FromMinutes(5.0);
-
+        network ??= Network.Current;
+        validFrom ??= DateTimeOffset.Now;
+        validFor ??= TimeSpan.FromMinutes(5.0);
 
         // Sequence number is incremented by 1 before building the transaction, set it to -1 to have 0
         var serverAccount = new Account(serverKeypair, -1);
@@ -108,7 +128,7 @@ public static class WebAuthentication
         var manageDataKey = $"{homeDomain} auth";
         var manageDataValue = Encoding.UTF8.GetBytes(Convert.ToBase64String(nonce));
 
-        var timeBounds = new TimeBounds(validFrom, validFor);
+        var timeBounds = new TimeBounds(validFrom.Value, validFor.Value);
 
         var operation = new ManageDataOperation(manageDataKey, manageDataValue, clientAccountId);
 
@@ -156,12 +176,21 @@ public static class WebAuthentication
     /// <param name="now">Current time, defaults to DateTimeOffset.Now</param>
     /// <returns>The client account id</returns>
     /// <exception cref="InvalidWebAuthenticationException"></exception>
-    public static string ReadChallengeTransaction(Transaction transaction, string serverAccountId,
-        string homeDomain, string webAuthDomain,
-        Network? network = null, DateTimeOffset? now = null)
+    public static string ReadChallengeTransaction(
+        Transaction transaction,
+        string serverAccountId,
+        string homeDomain,
+        string webAuthDomain,
+        Network? network = null,
+        DateTimeOffset? now = null)
     {
-        return ReadChallengeTransaction(transaction, serverAccountId, [homeDomain], webAuthDomain,
-            network, now);
+        return ReadChallengeTransaction(
+            transaction,
+            serverAccountId,
+            [homeDomain],
+            webAuthDomain,
+            network,
+            now);
     }
 
     /// <summary>
@@ -182,9 +211,13 @@ public static class WebAuthentication
     /// <param name="now">Current time, defaults to DateTimeOffset.Now + GracePeriod</param>
     /// <returns>The client account id</returns>
     /// <exception cref="InvalidWebAuthenticationException"></exception>
-    public static string ReadChallengeTransaction(Transaction transaction, string serverAccountId,
-        string[] homeDomains, string webAuthDomain,
-        Network? network = null, DateTimeOffset? now = null)
+    public static string ReadChallengeTransaction(
+        Transaction transaction,
+        string serverAccountId,
+        string[] homeDomains,
+        string webAuthDomain,
+        Network? network = null,
+        DateTimeOffset? now = null)
     {
         network ??= Network.Current;
 
@@ -264,7 +297,7 @@ public static class WebAuthentication
         try
         {
             // There is no need to check for decoded value length since we know it's valid base64 and 64 bytes long.
-            var _ = Convert.FromBase64String(stringValue);
+            _ = Convert.FromBase64String(stringValue);
         }
         catch (FormatException)
         {
@@ -275,16 +308,21 @@ public static class WebAuthentication
         if (!ValidateSignedBy(transaction, serverAccountId, network))
             throw new InvalidWebAuthenticationException("Challenge transaction not signed by server");
 
-        if (!ValidateTimeBounds(transaction.TimeBounds, now ?? DateTimeOffset.Now.AddSeconds(GracePeriod)))
+        if (!ValidateTimeBounds(transaction.TimeBounds, now ?? DateTimeOffset.Now))
             throw new InvalidWebAuthenticationException("Challenge transaction expired");
 
         return clientAccountId;
     }
 
-    public static ICollection<string> VerifyChallengeTransactionThreshold(Transaction transaction,
+    public static ICollection<string> VerifyChallengeTransactionThreshold(
+        Transaction transaction,
         string serverAccountId,
-        int threshold, Dictionary<string, int> signerSummary, string homeDomain, string webAuthDomain,
-        Network? network = null, DateTimeOffset? now = null)
+        int threshold,
+        Dictionary<string, int> signerSummary,
+        string homeDomain,
+        string webAuthDomain,
+        Network? network = null,
+        DateTimeOffset? now = null)
     {
         var signersFound =
             VerifyChallengeTransactionSigners(transaction, serverAccountId, signerSummary.Keys.ToArray(),
@@ -313,8 +351,13 @@ public static class WebAuthentication
     /// <param name="now">Current time, defaults to DateTimeOffset.Now</param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static string[] VerifyChallengeTransactionSigners(Transaction transaction, string serverAccountId,
-        ICollection<string> signers, string homeDomain, string webAuthDomain, Network? network = null,
+    public static string[] VerifyChallengeTransactionSigners(
+        Transaction transaction,
+        string serverAccountId,
+        ICollection<string> signers,
+        string homeDomain,
+        string webAuthDomain,
+        Network? network = null,
         DateTimeOffset? now = null)
     {
         if (signers.Count == 0)
@@ -327,7 +370,8 @@ public static class WebAuthentication
         // If the client domain is included in the challenge transaction,
         // verify that the transaction is signed by the operation's source account.
         KeyPair? clientSigningKey = null;
-        var sourceAccountId = transaction.Operations.FirstOrDefault(x => x is ManageDataOperation { Name: "client_domain" })?.SourceAccount?.AccountId;
+        var sourceAccountId = transaction.Operations
+            .FirstOrDefault(x => x is ManageDataOperation { Name: "client_domain" })?.SourceAccount?.AccountId;
         if (sourceAccountId != null) clientSigningKey = KeyPair.FromAccountId(sourceAccountId);
 
         // Remove server signer if present
@@ -384,9 +428,13 @@ public static class WebAuthentication
     /// <returns>True if the transaction is valid</returns>
     /// <exception cref="InvalidWebAuthenticationException"></exception>
     [Obsolete("Use VerifyChallengeTransactionThreshold and VerifyChallengeTransactionSigners")]
-    public static bool VerifyChallengeTransaction(Transaction transaction, string serverAccountId,
-        string homeDomain, string webAuthDomain,
-        Network? network = null, DateTimeOffset? now = null)
+    public static bool VerifyChallengeTransaction(
+        Transaction transaction,
+        string serverAccountId,
+        string homeDomain,
+        string webAuthDomain,
+        Network? network = null,
+        DateTimeOffset? now = null)
     {
         network ??= Network.Current;
 
@@ -405,16 +453,23 @@ public static class WebAuthentication
         return signaturesUsed.Count == 1;
     }
 
-    private static bool ValidateTimeBounds(TimeBounds? timeBounds, DateTimeOffset now)
+    private static bool ValidateTimeBounds(
+        TimeBounds? timeBounds,
+        DateTimeOffset now)
     {
-        if (timeBounds is null) return false;
-        if (timeBounds.MinTime == 0 || timeBounds.MaxTime == 0) return false;
+        if (timeBounds is null || timeBounds.MinTime == 0 || timeBounds.MaxTime == 0) return false;
         var unixNow = now.ToUnixTimeSeconds();
-        return timeBounds.MinTime <= unixNow && unixNow <= timeBounds.MaxTime;
+        // Apply grace period to time bounds check
+        var graceStart = timeBounds.MinTime - GracePeriod;
+        var graceEnd = timeBounds.MaxTime + GracePeriod;
+
+        return graceStart <= unixNow && unixNow <= graceEnd;
     }
 
     private static ICollection<string> VerifyTransactionSignatures(
-        Transaction transaction, IEnumerable<string> signers, Network network)
+        Transaction transaction,
+        IEnumerable<string> signers,
+        Network network)
     {
         var txHash = transaction.Hash(network);
         var signaturesUsed = new Dictionary<DecoratedSignature, string>();

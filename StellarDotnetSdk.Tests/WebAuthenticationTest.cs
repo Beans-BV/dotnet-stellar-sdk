@@ -18,25 +18,36 @@ public class WebAuthenticationTest
     private const string HomeDomain = "thisisatest.sandbox.anchor.anchordomain.com";
     private const string WebAuthDomain = "thisisatest.sandbox.anchor.webauth.com";
     private const string ClientDomain = "thisisatest.sandbox.anchor.client.com";
+    private KeyPair _clientKeypair = null!;
 
-    private string ManageDataOperationName => $"{HomeDomain} auth";
+    private KeyPair _serverKeypair = null!;
+
+    private const string ManageDataOperationName = $"{HomeDomain} auth";
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        Network.UseTestNetwork();
+
+        _serverKeypair = KeyPair.Random();
+        _clientKeypair = KeyPair.Random();
+    }
 
     [TestMethod]
     public void TestBuildChallengeTransaction()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientAccountId = "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF";
-        Network.UseTestNetwork();
-        var tx = WebAuthentication.BuildChallengeTransaction(serverKeypair, clientAccountId, HomeDomain, WebAuthDomain);
+        const string clientAccountId = "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF";
+        var transaction =
+            WebAuthentication.BuildChallengeTransaction(_serverKeypair, clientAccountId, HomeDomain, WebAuthDomain);
 
-        var serializedTx = tx.ToEnvelopeXdrBase64();
+        var serializedTx = transaction.ToEnvelopeXdrBase64();
         var back = Transaction.FromEnvelopeXdr(serializedTx);
 
         Assert.IsNotNull(back.TimeBounds);
         var timeout = back.TimeBounds.MaxTime - back.TimeBounds.MinTime;
         Assert.AreEqual(300, timeout);
 
-        CheckAccounts(back, serverKeypair);
+        CheckAccounts(back, _serverKeypair);
         CheckOperation(back, clientAccountId);
     }
 
@@ -44,7 +55,6 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestBuildChallengeTransactionWithOptions()
     {
-        var serverKeypair = KeyPair.Random();
         var clientAccountId = KeyPair.FromAccountId("GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF");
 
         var nonce = new byte[48];
@@ -53,25 +63,24 @@ public class WebAuthenticationTest
         var now = new DateTimeOffset();
         var duration = TimeSpan.FromMinutes(10.0);
 
-        var tx = WebAuthentication
-            .BuildChallengeTransaction(serverKeypair, clientAccountId, HomeDomain, WebAuthDomain, nonce, now, duration,
+        var transaction = WebAuthentication
+            .BuildChallengeTransaction(_serverKeypair, clientAccountId, HomeDomain, WebAuthDomain, nonce, now, duration,
                 Network.Test());
 
-        var serializedTx = tx.ToEnvelopeXdrBase64();
+        var serializedTx = transaction.ToEnvelopeXdrBase64();
         var back = Transaction.FromEnvelopeXdr(serializedTx);
 
         Assert.IsNotNull(back.TimeBounds);
         var timeout = back.TimeBounds.MaxTime - back.TimeBounds.MinTime;
         Assert.AreEqual(600, timeout);
 
-        CheckAccounts(back, serverKeypair);
+        CheckAccounts(back, _serverKeypair);
         CheckOperation(back, clientAccountId.Address);
     }
 
     [TestMethod]
     public void TestBuildChallengeTransactionFailsWithMuxedAccount()
     {
-        var serverKeypair = KeyPair.Random();
         var clientAccountId =
             MuxedAccountMed25519.FromMuxedAccountId(
                 "MAAAAAAAAAAAJURAAB2X52XFQP6FBXLGT6LWOOWMEXWHEWBDVRZ7V5WH34Y22MPFBHUHY");
@@ -84,7 +93,7 @@ public class WebAuthenticationTest
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.BuildChallengeTransaction(serverKeypair, clientAccountId.Address, HomeDomain,
+            WebAuthentication.BuildChallengeTransaction(_serverKeypair, clientAccountId.Address, HomeDomain,
                 WebAuthDomain, nonce, now, duration, Network.Test());
         });
     }
@@ -93,17 +102,14 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionReturnsTrueForValidTransaction()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-        Network.UseTestNetwork();
-
         var now = DateTimeOffset.Now;
 
-        var tx = WebAuthentication.BuildChallengeTransaction(serverKeypair, clientKeypair.AccountId, HomeDomain,
-            WebAuthDomain, now: now);
-        tx.Sign(clientKeypair);
+        var transaction = WebAuthentication.BuildChallengeTransaction(_serverKeypair, _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain, validFrom: now);
+        transaction.Sign(_clientKeypair);
 
-        Assert.IsTrue(WebAuthentication.VerifyChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain,
+        Assert.IsTrue(WebAuthentication.VerifyChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain,
             WebAuthDomain, now: now));
     }
 
@@ -111,21 +117,18 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionThrowsIfSequenceIsNotZero()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-        Network.UseTestNetwork();
-
         var now = DateTimeOffset.Now;
 
         var nonce = new byte[64];
-        var tx = new TransactionBuilder(new Account(serverKeypair.AccountId, 0))
+        var transaction = new TransactionBuilder(new Account(_serverKeypair.AccountId, 0))
             .AddOperation(new ManageDataOperation("NET auth", nonce))
             .Build();
-        tx.Sign(clientKeypair);
+        transaction.Sign(_clientKeypair);
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.VerifyChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain,
+                WebAuthDomain,
                 now: now);
         });
     }
@@ -134,20 +137,17 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionThrowsIfServerAccountIdIsDifferent()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        Network.UseTestNetwork();
-
         var now = DateTimeOffset.Now;
 
-        var tx = WebAuthentication.BuildChallengeTransaction(serverKeypair, clientKeypair.AccountId, HomeDomain,
-            WebAuthDomain, now: now);
-        tx.Sign(clientKeypair);
+        var transaction = WebAuthentication.BuildChallengeTransaction(_serverKeypair, _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain, validFrom: now);
+        transaction.Sign(_clientKeypair);
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(tx, KeyPair.Random().AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.VerifyChallengeTransaction(transaction, KeyPair.Random().AccountId, HomeDomain,
+                WebAuthDomain,
                 now: now);
         });
     }
@@ -156,21 +156,18 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionThrowsIfTransactionHasNoManageDataOperation()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-        Network.UseTestNetwork();
-
         var now = DateTimeOffset.Now;
 
-        var tx = new TransactionBuilder(new Account(serverKeypair.AccountId, -1))
+        var transaction = new TransactionBuilder(new Account(_serverKeypair.AccountId, -1))
             .AddOperation(
-                new AccountMergeOperation(serverKeypair, clientKeypair))
+                new AccountMergeOperation(_serverKeypair, _clientKeypair))
             .Build();
-        tx.Sign(clientKeypair);
+        transaction.Sign(_clientKeypair);
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.VerifyChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain,
+                WebAuthDomain,
                 now: now);
         });
     }
@@ -179,20 +176,17 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionThrowsIfOperationHasNoSourceAccount()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-        Network.UseTestNetwork();
-
         var now = DateTimeOffset.Now;
         var nonce = new byte[64];
-        var tx = new TransactionBuilder(new Account(serverKeypair.AccountId, -1))
+        var transaction = new TransactionBuilder(new Account(_serverKeypair.AccountId, -1))
             .AddOperation(new ManageDataOperation("NET auth", nonce))
             .Build();
-        tx.Sign(clientKeypair);
+        transaction.Sign(_clientKeypair);
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.VerifyChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain,
+                WebAuthDomain,
                 now: now);
         });
     }
@@ -201,20 +195,17 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionThrowsIfOperationDataIsNotBase64Encoded()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-        Network.UseTestNetwork();
-
         var now = DateTimeOffset.Now;
         var nonce = new byte[64];
-        var tx = new TransactionBuilder(new Account(serverKeypair.AccountId, -1))
-            .AddOperation(new ManageDataOperation("NET auth", nonce, clientKeypair))
+        var transaction = new TransactionBuilder(new Account(_serverKeypair.AccountId, -1))
+            .AddOperation(new ManageDataOperation("NET auth", nonce, _clientKeypair))
             .Build();
-        tx.Sign(clientKeypair);
+        transaction.Sign(_clientKeypair);
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.VerifyChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain,
+                WebAuthDomain,
                 now: now);
         });
     }
@@ -223,21 +214,18 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionThrowsIfNotSignedByServer()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        Network.UseTestNetwork();
-
         var now = DateTimeOffset.Now;
 
-        var tx = WebAuthentication.BuildChallengeTransaction(serverKeypair, clientKeypair.AccountId, HomeDomain,
-            WebAuthDomain, now: now);
-        tx.Signatures.Clear();
-        tx.Sign(clientKeypair);
+        var transaction = WebAuthentication.BuildChallengeTransaction(_serverKeypair, _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain, validFrom: now);
+        transaction.Signatures.Clear();
+        transaction.Sign(_clientKeypair);
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.VerifyChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain,
+                WebAuthDomain,
                 now: now);
         });
     }
@@ -246,20 +234,17 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionThrowsIfSignedByServerOnDifferentNetwork()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        Network.UseTestNetwork();
-
         var now = DateTimeOffset.Now;
 
-        var tx = WebAuthentication.BuildChallengeTransaction(serverKeypair, clientKeypair.AccountId, HomeDomain,
-            WebAuthDomain, now: now);
-        tx.Sign(clientKeypair);
+        var transaction = WebAuthentication.BuildChallengeTransaction(_serverKeypair, _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain, validFrom: now);
+        transaction.Sign(_clientKeypair);
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.VerifyChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain,
+                WebAuthDomain,
                 now: now, network: Network.Public());
         });
     }
@@ -268,19 +253,16 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionThrowsIfNotSignedByClient()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        Network.UseTestNetwork();
-
         var now = DateTimeOffset.Now;
 
-        var tx = WebAuthentication.BuildChallengeTransaction(serverKeypair, clientKeypair.AccountId, HomeDomain,
-            WebAuthDomain, now: now);
+        var transaction = WebAuthentication.BuildChallengeTransaction(_serverKeypair, _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain, validFrom: now);
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.VerifyChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain,
+                WebAuthDomain,
                 now: now);
         });
     }
@@ -289,20 +271,17 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionThrowsIfSignedByClientOnDifferentNetwork()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        Network.UseTestNetwork();
-
         var now = DateTimeOffset.Now;
 
-        var tx = WebAuthentication.BuildChallengeTransaction(serverKeypair, clientKeypair.AccountId, HomeDomain,
-            WebAuthDomain, now: now);
-        tx.Sign(clientKeypair, Network.Public());
+        var transaction = WebAuthentication.BuildChallengeTransaction(_serverKeypair, _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain, validFrom: now);
+        transaction.Sign(_clientKeypair, Network.Public());
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.VerifyChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain,
+                WebAuthDomain,
                 now: now, network: Network.Test());
         });
     }
@@ -311,20 +290,17 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionThrowsIfItsTooEarly()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        Network.UseTestNetwork();
-
         var now = DateTimeOffset.Now;
 
-        var tx = WebAuthentication.BuildChallengeTransaction(serverKeypair, clientKeypair.AccountId, HomeDomain,
-            WebAuthDomain, now: now);
-        tx.Sign(clientKeypair);
+        var transaction = WebAuthentication.BuildChallengeTransaction(_serverKeypair, _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain, validFrom: now);
+        transaction.Sign(_clientKeypair);
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.VerifyChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain,
+                WebAuthDomain,
                 now: now.Subtract(TimeSpan.FromDays(1.0)));
         });
     }
@@ -333,20 +309,17 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionThrowsIfItsTooLate()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        Network.UseTestNetwork();
-
         var now = DateTimeOffset.Now;
 
-        var tx = WebAuthentication.BuildChallengeTransaction(serverKeypair, clientKeypair.AccountId, HomeDomain,
-            WebAuthDomain, now: now);
-        tx.Sign(clientKeypair);
+        var transaction = WebAuthentication.BuildChallengeTransaction(_serverKeypair, _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain, validFrom: now);
+        transaction.Sign(_clientKeypair);
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.VerifyChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain,
+                WebAuthDomain,
                 now: now.Add(TimeSpan.FromDays(1.0)));
         });
     }
@@ -355,17 +328,16 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionThrowsIfServerIsMuxedAccount()
     {
-        // It's impossible to build a wrong tx from our api. Use an xdr instead.
-        var txXdr =
-            "AAAAAgAAAQAAAAAAAAAE0rqb5mZeN3cTjZYz9BOSuxs4tkP5296i8kJKWXS13pWGAAAAZAAAAAAAAAAAAAAAAQAAAABerG8LAAAAAF6scDcAAAAAAAAAAQAAAAEAAAAA13Pc/rMj75EaJFmzR1eWVHBeJuoq+8FinXpG7DXEsvoAAAAKAAAACE5FVCBhdXRoAAAAAQAAAEBIRmxJQi94UFFsYTBaSzNRamx3akFUL25JS3pUeFFFK1hFVE9EQkIzZHpOQWRsR0svOGJnbFBydSttaEJpNzdEAAAAAAAAAAK13pWGAAAAQGlkGeaHtcnaSyQP4NSU/CaRC6rUd7qXvVlJc/3TuWmY0kAC9/mXmLtnzFn2Hz+0cwVi1+wwtxfboxIHOABIsg81xLL6AAAAQB23cGeF7SR9bZEf6rRh+ck7h6PqvUQFDDDI3qE09y19SdvMWMs5Ksthm//dXMZE7+QJbKqxpJbpKC2klMTZJQ0=";
+        // It's impossible to build a wrong transaction from our api. Use a xdr instead.
+        const string transactionXdr = "AAAAAgAAAQAAAAAAAAAE0rqb5mZeN3cTjZYz9BOSuxs4tkP5296i8kJKWXS13pWGAAAAZAAAAAAAAAAAAAAAAQAAAABerG8LAAAAAF6scDcAAAAAAAAAAQAAAAEAAAAA13Pc/rMj75EaJFmzR1eWVHBeJuoq+8FinXpG7DXEsvoAAAAKAAAACE5FVCBhdXRoAAAAAQAAAEBIRmxJQi94UFFsYTBaSzNRamx3akFUL25JS3pUeFFFK1hFVE9EQkIzZHpOQWRsR0svOGJnbFBydSttaEJpNzdEAAAAAAAAAAK13pWGAAAAQGlkGeaHtcnaSyQP4NSU/CaRC6rUd7qXvVlJc/3TuWmY0kAC9/mXmLtnzFn2Hz+0cwVi1+wwtxfboxIHOABIsg81xLL6AAAAQB23cGeF7SR9bZEf6rRh+ck7h6PqvUQFDDDI3qE09y19SdvMWMs5Ksthm//dXMZE7+QJbKqxpJbpKC2klMTZJQ0=";
 
-        var serverKeypair =
-            KeyPair.FromAccountId("GC5JXZTGLY3XOE4NSYZ7IE4SXMNTRNSD7HN55IXSIJFFS5FV32KYM6PH");
+        var serverKeypair = KeyPair.FromAccountId("GC5JXZTGLY3XOE4NSYZ7IE4SXMNTRNSD7HN55IXSIJFFS5FV32KYM6PH");
         var now = DateTimeOffset.Now;
-        var tx = Transaction.FromEnvelopeXdr(txXdr);
+        var transaction = Transaction.FromEnvelopeXdr(transactionXdr);
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.VerifyChallengeTransaction(transaction, serverKeypair.AccountId, HomeDomain,
+                WebAuthDomain,
                 now: now.Add(TimeSpan.FromDays(1.0)));
         });
     }
@@ -374,31 +346,30 @@ public class WebAuthenticationTest
     [Obsolete]
     public void TestVerifyChallengeTransactionThrowsIfClientIsMuxedAccount()
     {
-        // It's impossible to build a wrong tx from our api. Use an xdr instead.
-        var txXdr =
-            "AAAAAgAAAABe3OrOugPm3BfyQ9xP+UUMEk8hiM0WwMSpVN9FIOxuXgAAAGQAAAAAAAAAAAAAAAEAAAAAXqxwZQAAAABerHGRAAAAAAAAAAEAAAABAAABAAAAAAAAAATSXtzqzroD5twX8kPcT/lFDBJPIYjNFsDEqVTfRSDsbl4AAAAKAAAACE5FVCBhdXRoAAAAAQAAAEAvU0VaNWppQjRZTXZTYlBNN1VobzJ6QmxqcVBiN0IyRDVJbGx6NEZxUWh4SmhHVmJWT0VsdHhyRlE5ZUNIL2RLAAAAAAAAAAIg7G5eAAAAQGKw8yxSA/tnK34nv6VIQ/r1bazvm3vInbU4dpSersY/7uN5MKZEKIMbioevHIpYZ6pwJdm7qRPbGj9YyCU+BQsNYg7iAAAAQKCdrKY6g6pEg/DfhOfOyRU8cKcg1qVSQwekXlKkQTzw/MpyLqYYRlxP5Z+P0TLDxmCn8KyawafIum24hvE11ws=";
+        // It's impossible to build a wrong transaction from our api. Use a xdr instead.
+        const string transactionXdr = "AAAAAgAAAABe3OrOugPm3BfyQ9xP+UUMEk8hiM0WwMSpVN9FIOxuXgAAAGQAAAAAAAAAAAAAAAEAAAAAXqxwZQAAAABerHGRAAAAAAAAAAEAAAABAAABAAAAAAAAAATSXtzqzroD5twX8kPcT/lFDBJPIYjNFsDEqVTfRSDsbl4AAAAKAAAACE5FVCBhdXRoAAAAAQAAAEAvU0VaNWppQjRZTXZTYlBNN1VobzJ6QmxqcVBiN0IyRDVJbGx6NEZxUWh4SmhHVmJWT0VsdHhyRlE5ZUNIL2RLAAAAAAAAAAIg7G5eAAAAQGKw8yxSA/tnK34nv6VIQ/r1bazvm3vInbU4dpSersY/7uN5MKZEKIMbioevHIpYZ6pwJdm7qRPbGj9YyCU+BQsNYg7iAAAAQKCdrKY6g6pEg/DfhOfOyRU8cKcg1qVSQwekXlKkQTzw/MpyLqYYRlxP5Z+P0TLDxmCn8KyawafIum24hvE11ws=";
 
-        var serverKeypair =
-            KeyPair.FromAccountId("GBPNZ2WOXIB6NXAX6JB5YT7ZIUGBETZBRDGRNQGEVFKN6RJA5RXF4SJ2");
+        var serverKeypair = KeyPair.FromAccountId("GBPNZ2WOXIB6NXAX6JB5YT7ZIUGBETZBRDGRNQGEVFKN6RJA5RXF4SJ2");
         var now = DateTimeOffset.Now;
-        var tx = Transaction.FromEnvelopeXdr(txXdr);
+        var transaction = Transaction.FromEnvelopeXdr(transactionXdr);
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.VerifyChallengeTransaction(transaction, serverKeypair.AccountId, HomeDomain,
+                WebAuthDomain,
                 now: now.Add(TimeSpan.FromDays(1.0)));
         });
     }
 
-    private void CheckAccounts(Transaction tx, KeyPair serverKeypair)
+    private void CheckAccounts(Transaction transaction, KeyPair serverKeypair)
     {
-        Assert.AreEqual(0, tx.SequenceNumber);
-        Assert.AreEqual(serverKeypair.AccountId, tx.SourceAccount.AccountId);
+        Assert.AreEqual(0, transaction.SequenceNumber);
+        Assert.AreEqual(serverKeypair.AccountId, transaction.SourceAccount.AccountId);
     }
 
-    private void CheckOperation(Transaction tx, string clientAccountId)
+    private void CheckOperation(Transaction transaction, string clientAccountId)
     {
-        Assert.AreEqual(2, tx.Operations.Length);
-        var operation = tx.Operations[0] as ManageDataOperation;
+        Assert.AreEqual(2, transaction.Operations.Length);
+        var operation = transaction.Operations[0] as ManageDataOperation;
         Assert.IsNotNull(operation);
         Assert.AreEqual($"{HomeDomain} auth", operation.Name);
         Assert.IsNotNull(operation.SourceAccount);
@@ -412,79 +383,64 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestReadChallengeTransactionValidSignedByServerAndClient()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
 
-        var readTransactionId = WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId,
+        var readTransactionId = WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId,
             HomeDomain, WebAuthDomain, Network.Test());
         Assert.IsNotNull(readTransactionId);
-        Assert.AreEqual(clientKeypair.AccountId, readTransactionId);
+        Assert.AreEqual(_clientKeypair.AccountId, readTransactionId);
     }
 
     [TestMethod]
     public void TestReadChallengeTransactionValidSignedByServer()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
+        transaction.Sign(_serverKeypair);
 
-        var readTransactionId = WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId,
+        var readTransactionId = WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId,
             HomeDomain, WebAuthDomain, Network.Test());
         Assert.IsNotNull(readTransactionId);
-        Assert.AreEqual(clientKeypair.AccountId, readTransactionId);
+        Assert.AreEqual(_clientKeypair.AccountId, readTransactionId);
     }
 
     [TestMethod]
     public void TestReadChallengeTransactionInvalidNotSignedByServer()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
@@ -492,7 +448,7 @@ public class WebAuthenticationTest
 
         try
         {
-            WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain, WebAuthDomain,
                 Network.Test());
         }
         catch (Exception exception)
@@ -504,29 +460,24 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestReadChallengeTransactionInvalidServerAccountIdMismatch()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(KeyPair.Random().Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(KeyPair.Random().Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
+        transaction.Sign(_serverKeypair);
 
         try
         {
-            WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId,
+            WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId,
                 HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
@@ -538,28 +489,23 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestReadChallengeTransactionInvalidSequenceNoNotZero()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, 1234);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, 1234);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
+        transaction.Sign(_serverKeypair);
 
         var ex = Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
-            WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId, HomeDomain,
+            WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain,
                 WebAuthDomain, Network.Test()));
         Assert.IsTrue(ex.Message.Contains("Challenge transaction sequence number must be 0"));
     }
@@ -567,26 +513,21 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestReadChallengeTransactionInvalidOperationWrongType()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var operation = new BumpSequenceOperation(100, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
+        transaction.Sign(_serverKeypair);
 
         try
         {
-            WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId,
+            WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId,
                 HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
@@ -599,17 +540,13 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestReadChallengeTransactionInvalidOperationNoSourceAccount()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .SetFee(100)
             .AddOperation(operation)
             .AddMemo(Memo.None())
@@ -617,11 +554,11 @@ public class WebAuthenticationTest
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
+        transaction.Sign(_serverKeypair);
 
         try
         {
-            WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId,
+            WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId,
                 HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
@@ -633,19 +570,14 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestReadChallengeTransactionInvalidDataValueWrongEncodedLength()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA?AAAAAAAAAAAAAAAAAAAAAAAAAA");
         var base64Data = plainTextBytes;
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
@@ -653,7 +585,7 @@ public class WebAuthenticationTest
 
         try
         {
-            WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId,
+            WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId,
                 HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
@@ -665,36 +597,31 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionThresholdInvalidServer()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_clientKeypair);
 
         var threshold = 1;
         var signerSummary = new Dictionary<string, int>
         {
-            { clientKeypair.Address, 1 }
+            { _clientKeypair.Address, 1 }
         };
 
         try
         {
             WebAuthentication.VerifyChallengeTransactionThreshold(transaction,
-                serverKeypair.AccountId, threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test());
+                _serverKeypair.AccountId, threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
         {
@@ -705,39 +632,34 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionThresholdValidServerAndClientKeyMeetingThreshold()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
 
         var threshold = 1;
         var signerSummary = new Dictionary<string, int>
         {
-            { clientKeypair.Address, 1 }
+            { _clientKeypair.Address, 1 }
         };
 
         var wantSigners = new[]
         {
-            clientKeypair.Address
+            _clientKeypair.Address
         };
 
-        var signersFound = WebAuthentication.VerifyChallengeTransactionThreshold(transaction, serverKeypair.AccountId,
+        var signersFound = WebAuthentication.VerifyChallengeTransactionThreshold(transaction, _serverKeypair.AccountId,
             threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test()).ToList();
 
         for (var i = 0; i < wantSigners.Length; i++) Assert.AreEqual(signersFound[i], wantSigners[i]);
@@ -746,43 +668,39 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTxThresholdValidServerAndMultipleClientKeyMeetingThreshold()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
         var client2Keypair = KeyPair.Random();
 
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
         transaction.Sign(client2Keypair);
 
         var threshold = 3;
         var signerSummary = new Dictionary<string, int>
         {
-            { clientKeypair.Address, 1 },
+            { _clientKeypair.Address, 1 },
             { client2Keypair.Address, 2 }
         };
 
         var wantSigners = new[]
         {
-            clientKeypair.Address,
+            _clientKeypair.Address,
             client2Keypair.Address
         };
 
-        var signersFound = WebAuthentication.VerifyChallengeTransactionThreshold(transaction, serverKeypair.AccountId,
+        var signersFound = WebAuthentication.VerifyChallengeTransactionThreshold(transaction, _serverKeypair.AccountId,
             threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test()).ToList();
 
         for (var i = 0; i < wantSigners.Length; i++) Assert.AreEqual(signersFound[i], wantSigners[i]);
@@ -791,45 +709,41 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionThresholdValidServerAndMultipleClientKeyMeetingThresholdSomeUnused()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
         var client2Keypair = KeyPair.Random();
         var client3Keypair = KeyPair.Random();
 
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
         transaction.Sign(client2Keypair);
 
         var threshold = 3;
         var signerSummary = new Dictionary<string, int>
         {
-            { clientKeypair.Address, 1 },
+            { _clientKeypair.Address, 1 },
             { client2Keypair.Address, 2 },
             { client3Keypair.Address, 2 }
         };
 
         var wantSigners = new[]
         {
-            clientKeypair.Address,
+            _clientKeypair.Address,
             client2Keypair.Address
         };
 
-        var signersFound = WebAuthentication.VerifyChallengeTransactionThreshold(transaction, serverKeypair.AccountId,
+        var signersFound = WebAuthentication.VerifyChallengeTransactionThreshold(transaction, _serverKeypair.AccountId,
             threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test()).ToList();
 
         for (var i = 0; i < wantSigners.Length; i++) Assert.AreEqual(signersFound[i], wantSigners[i]);
@@ -838,34 +752,30 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionThresholdInvalidServerAndMultipleClientKeyNotMeetingThreshold()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
         var client2Keypair = KeyPair.Random();
         var client3Keypair = KeyPair.Random();
 
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
         transaction.Sign(client2Keypair);
 
         var threshold = 10;
         var signerSummary = new Dictionary<string, int>
         {
-            { clientKeypair.Address, 1 },
+            { _clientKeypair.Address, 1 },
             { client2Keypair.Address, 2 },
             { client3Keypair.Address, 2 }
         };
@@ -873,7 +783,7 @@ public class WebAuthenticationTest
         try
         {
             WebAuthentication.VerifyChallengeTransactionThreshold(transaction,
-                serverKeypair.AccountId, threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test());
+                _serverKeypair.AccountId, threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
         {
@@ -884,42 +794,38 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionThresholdInvalidClientKeyUnrecognized()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
         var client2Keypair = KeyPair.Random();
         var client3Keypair = KeyPair.Random();
 
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
         transaction.Sign(client2Keypair);
         transaction.Sign(client3Keypair);
 
         var threshold = 3;
         var signerSummary = new Dictionary<string, int>
         {
-            { clientKeypair.Address, 1 },
+            { _clientKeypair.Address, 1 },
             { client2Keypair.Address, 2 }
         };
 
         try
         {
             WebAuthentication.VerifyChallengeTransactionThreshold(transaction,
-                serverKeypair.AccountId, threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test());
+                _serverKeypair.AccountId, threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
         {
@@ -930,28 +836,24 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionThresholdInvalidNoSigners()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
         var client2Keypair = KeyPair.Random();
         var client3Keypair = KeyPair.Random();
 
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
         transaction.Sign(client2Keypair);
         transaction.Sign(client3Keypair);
 
@@ -961,7 +863,7 @@ public class WebAuthenticationTest
         try
         {
             WebAuthentication.VerifyChallengeTransactionThreshold(transaction,
-                serverKeypair.AccountId, threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test());
+                _serverKeypair.AccountId, threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
         {
@@ -972,43 +874,39 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionThresholdWeightsAddToMoreThan8Bits()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
         var client2Keypair = KeyPair.Random();
 
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
         transaction.Sign(client2Keypair);
 
         var threshold = 1;
         var signerSummary = new Dictionary<string, int>
         {
-            { clientKeypair.Address, 255 },
+            { _clientKeypair.Address, 255 },
             { client2Keypair.Address, 1 }
         };
 
         var wantSigners = new[]
         {
-            clientKeypair.Address,
+            _clientKeypair.Address,
             client2Keypair.Address
         };
 
-        var signersFound = WebAuthentication.VerifyChallengeTransactionThreshold(transaction, serverKeypair.AccountId,
+        var signersFound = WebAuthentication.VerifyChallengeTransactionThreshold(transaction, _serverKeypair.AccountId,
             threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test()).ToList();
 
         for (var i = 0; i < wantSigners.Length; i++) Assert.AreEqual(signersFound[i], wantSigners[i]);
@@ -1017,37 +915,32 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionSignersInvalidServer()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        //transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        //transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
 
         var threshold = 1;
         var signerSummary = new Dictionary<string, int>
         {
-            { clientKeypair.Address, 255 }
+            { _clientKeypair.Address, 255 }
         };
 
         try
         {
             WebAuthentication.VerifyChallengeTransactionThreshold(transaction,
-                serverKeypair.AccountId, threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test());
+                _serverKeypair.AccountId, threshold, signerSummary, HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
         {
@@ -1058,69 +951,59 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionSignersValidServerAndClientMasterKey()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
 
         var signers = new[]
         {
-            clientKeypair.Address
+            _clientKeypair.Address
         };
 
-        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(transaction, serverKeypair.AccountId,
+        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(transaction, _serverKeypair.AccountId,
             signers, HomeDomain, WebAuthDomain, Network.Test());
 
-        Assert.AreEqual(clientKeypair.Address, signersFound[0]);
+        Assert.AreEqual(_clientKeypair.Address, signersFound[0]);
     }
 
     [TestMethod]
     public void TestVerifyChallengeTransactionSignersInvalidServerAndNoClient()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
+        transaction.Sign(_serverKeypair);
 
         var signers = new[]
         {
-            clientKeypair.Address
+            _clientKeypair.Address
         };
 
         try
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(transaction, serverKeypair.AccountId,
+            WebAuthentication.VerifyChallengeTransactionSigners(transaction, _serverKeypair.AccountId,
                 signers, HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
@@ -1132,36 +1015,32 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionSignersInvalidServerAndUnrecognizedClient()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
         var unrecognizedKeypair = KeyPair.Random();
 
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
+        transaction.Sign(_serverKeypair);
         transaction.Sign(unrecognizedKeypair);
 
         var signers = new[]
         {
-            clientKeypair.Address
+            _clientKeypair.Address
         };
 
         try
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(transaction, serverKeypair.AccountId,
+            WebAuthentication.VerifyChallengeTransactionSigners(transaction, _serverKeypair.AccountId,
                 signers, HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
@@ -1173,42 +1052,38 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionSignersValidServerAndMultipleClientSigners()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
         var client2Keypair = KeyPair.Random();
 
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
         transaction.Sign(client2Keypair);
 
         var signers = new[]
         {
-            clientKeypair.Address,
+            _clientKeypair.Address,
             client2Keypair.Address
         };
 
         var wantSigners = new[]
         {
-            clientKeypair.Address,
+            _clientKeypair.Address,
             client2Keypair.Address
         };
 
-        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(transaction, serverKeypair.AccountId,
+        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(transaction, _serverKeypair.AccountId,
             signers, HomeDomain, WebAuthDomain, Network.Test()).ToList();
 
         for (var i = 0; i < wantSigners.Length; i++) Assert.AreEqual(signersFound[i], wantSigners[i]);
@@ -1217,42 +1092,38 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionSignersValidServerAndMultipleClientSignersReverseOrder()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
         var client2Keypair = KeyPair.Random();
 
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
+        transaction.Sign(_serverKeypair);
         transaction.Sign(client2Keypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_clientKeypair);
 
         var signers = new[]
         {
-            clientKeypair.Address,
+            _clientKeypair.Address,
             client2Keypair.Address
         };
 
         var wantSigners = new[]
         {
-            clientKeypair.Address,
+            _clientKeypair.Address,
             client2Keypair.Address
         };
 
-        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(transaction, serverKeypair.AccountId,
+        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(transaction, _serverKeypair.AccountId,
             signers, HomeDomain, WebAuthDomain, Network.Test()).ToList();
 
         for (var i = 0; i < wantSigners.Length; i++) Assert.AreEqual(signersFound[i], wantSigners[i]);
@@ -1261,26 +1132,22 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionSignersValidServerAndClientSignersNotMasterKey()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
         var client2Keypair = KeyPair.Random();
 
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
+        transaction.Sign(_serverKeypair);
         transaction.Sign(client2Keypair);
 
         var signers = new[]
@@ -1293,7 +1160,7 @@ public class WebAuthenticationTest
             client2Keypair.Address
         };
 
-        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(transaction, serverKeypair.AccountId,
+        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(transaction, _serverKeypair.AccountId,
             signers, HomeDomain, WebAuthDomain, Network.Test()).ToList();
 
         for (var i = 0; i < wantSigners.Length; i++) Assert.AreEqual(signersFound[i], wantSigners[i]);
@@ -1302,31 +1169,27 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionSignersValidServerAndClientSignersIgnoresServerSigner()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
         var client2Keypair = KeyPair.Random();
 
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
+        transaction.Sign(_serverKeypair);
         transaction.Sign(client2Keypair);
 
         var signers = new[]
         {
-            serverKeypair.Address,
+            _serverKeypair.Address,
             client2Keypair.Address
         };
 
@@ -1335,7 +1198,7 @@ public class WebAuthenticationTest
             client2Keypair.Address
         };
 
-        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(transaction, serverKeypair.AccountId,
+        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(transaction, _serverKeypair.AccountId,
             signers, HomeDomain, WebAuthDomain, Network.Test()).ToList();
 
         for (var i = 0; i < wantSigners.Length; i++) Assert.AreEqual(signersFound[i], wantSigners[i]);
@@ -1344,36 +1207,32 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionSignersInvalidServerNoClientSignersIgnoresServerSigner()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
         var client2Keypair = KeyPair.Random();
 
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
+        transaction.Sign(_serverKeypair);
 
         var signers = new[]
         {
-            serverKeypair.Address,
+            _serverKeypair.Address,
             client2Keypair.Address
         };
 
         try
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(transaction, serverKeypair.AccountId,
+            WebAuthentication.VerifyChallengeTransactionSigners(transaction, _serverKeypair.AccountId,
                 signers, HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
@@ -1385,39 +1244,34 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionSignersValidServerAndClientSignersIgnoresDuplicateSigner()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
 
         var signers = new[]
         {
-            clientKeypair.Address,
-            clientKeypair.Address
+            _clientKeypair.Address,
+            _clientKeypair.Address
         };
 
         var wantSigners = new[]
         {
-            clientKeypair.Address
+            _clientKeypair.Address
         };
 
-        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(transaction, serverKeypair.AccountId,
+        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(transaction, _serverKeypair.AccountId,
             signers, HomeDomain, WebAuthDomain, Network.Test()).ToList();
 
         for (var i = 0; i < wantSigners.Length; i++) Assert.AreEqual(signersFound[i], wantSigners[i]);
@@ -1426,37 +1280,33 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionSignersInvalidServerAndClientSignersIgnoresDuplicateSignerInError()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
         var client2Keypair = KeyPair.Random();
 
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
+        transaction.Sign(_serverKeypair);
         transaction.Sign(client2Keypair);
 
         var signers = new[]
         {
-            clientKeypair.Address,
-            clientKeypair.Address
+            _clientKeypair.Address,
+            _clientKeypair.Address
         };
 
         try
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(transaction, serverKeypair.AccountId,
+            WebAuthentication.VerifyChallengeTransactionSigners(transaction, _serverKeypair.AccountId,
                 signers, HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
@@ -1468,33 +1318,28 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionSignersInvalidServerAndClientSignersFailsDuplicateSignatures()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
+        transaction.Sign(_clientKeypair);
 
-        var signers = new[] { clientKeypair.Address };
+        var signers = new[] { _clientKeypair.Address };
 
         try
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(transaction, serverKeypair.AccountId,
+            WebAuthentication.VerifyChallengeTransactionSigners(transaction, _serverKeypair.AccountId,
                 signers, HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
@@ -1506,32 +1351,27 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionSignersInvalidNoSigners()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
 
         var signers = Array.Empty<string>();
 
         try
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(transaction, serverKeypair.AccountId,
+            WebAuthentication.VerifyChallengeTransactionSigners(transaction, _serverKeypair.AccountId,
                 signers, HomeDomain, WebAuthDomain, Network.Test());
         }
         catch (Exception exception)
@@ -1543,13 +1383,8 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionNotValidSubsequentOperation()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
@@ -1557,19 +1392,19 @@ public class WebAuthenticationTest
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var notValidOperation = new PaymentOperation(KeyPair.Random(), new AssetTypeNative(), "50", opSource.KeyPair);
 
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddOperation(notValidOperation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
 
         try
         {
-            WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain, WebAuthDomain,
                 Network.Test());
         }
         catch (Exception exception)
@@ -1582,13 +1417,8 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestVerifyChallengeTransactionNotValidSubsequentDataOperation()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
@@ -1596,19 +1426,19 @@ public class WebAuthenticationTest
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
         var notValidOperation = new ManageDataOperation(ManageDataOperationName, base64Data, KeyPair.Random());
 
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddOperation(notValidOperation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
 
         try
         {
-            WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain, WebAuthDomain,
                 Network.Test());
         }
         catch (Exception exception)
@@ -1620,15 +1450,14 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestReadChallengeTransactionBadHomeDomain()
     {
-        var serverKeypair = KeyPair.Random();
         const string clientAccountId = "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF";
 
-        Network.UseTestNetwork();
         try
         {
-            var tx = WebAuthentication.BuildChallengeTransaction(serverKeypair, clientAccountId, HomeDomain,
+            var transaction = WebAuthentication.BuildChallengeTransaction(_serverKeypair, clientAccountId, HomeDomain,
                 WebAuthDomain);
-            WebAuthentication.ReadChallengeTransaction(tx, serverKeypair.AccountId, $"{HomeDomain}bad", WebAuthDomain);
+            WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId, $"{HomeDomain}bad",
+                WebAuthDomain);
         }
         catch (InvalidWebAuthenticationException e)
         {
@@ -1640,15 +1469,13 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestReadChallengeTransactionNoHomeDomain()
     {
-        var serverKeypair = KeyPair.Random();
         const string clientAccountId = "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF";
 
-        Network.UseTestNetwork();
         try
         {
-            var tx = WebAuthentication.BuildChallengeTransaction(serverKeypair, clientAccountId, HomeDomain,
+            var transaction = WebAuthentication.BuildChallengeTransaction(_serverKeypair, clientAccountId, HomeDomain,
                 WebAuthDomain);
-            WebAuthentication.ReadChallengeTransaction(tx, serverKeypair.AccountId, Array.Empty<string>(),
+            WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId, Array.Empty<string>(),
                 WebAuthDomain);
         }
         catch (InvalidWebAuthenticationException e)
@@ -1660,26 +1487,21 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestReadChallengeTransactionNoTransaction()
     {
-        var serverKeypair = KeyPair.Random();
-
-        Network.UseTestNetwork();
         var ex = Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
-            WebAuthentication.ReadChallengeTransaction(null, serverKeypair.AccountId, HomeDomain, WebAuthDomain));
+            WebAuthentication.ReadChallengeTransaction(transaction: null, _serverKeypair.AccountId, HomeDomain, WebAuthDomain));
         Assert.AreEqual("Challenge transaction cannot be null", ex.Message);
     }
 
     [TestMethod]
     public void TestReadChallengeTransactionExpiredTimeBounds()
     {
-        var serverKeypair = KeyPair.Random();
         const string clientAccountId = "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF";
 
-        Network.UseTestNetwork();
         try
         {
-            var tx = WebAuthentication.BuildChallengeTransaction(serverKeypair, clientAccountId, HomeDomain,
+            var transaction = WebAuthentication.BuildChallengeTransaction(_serverKeypair, clientAccountId, HomeDomain,
                 WebAuthDomain);
-            WebAuthentication.ReadChallengeTransaction(tx, serverKeypair.AccountId, HomeDomain, WebAuthDomain,
+            WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId, HomeDomain, WebAuthDomain,
                 now: DateTimeOffset.Now.Subtract(new TimeSpan(0, 20, 0)));
         }
         catch (InvalidWebAuthenticationException e)
@@ -1691,60 +1513,186 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestReadChallengeTransactionNoWebAuthDomain()
     {
-        Network.Use(Network.Test());
-
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        var txSource = new Account(serverKeypair.Address, -1);
-        var opSource = new Account(clientKeypair.Address, 0);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation(ManageDataOperationName, base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(txSource)
+        var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
                 { TimeBounds = new TimeBounds(DateTimeOffset.Now, DateTimeOffset.Now.AddSeconds(1000)) })
             .Build();
 
-        transaction.Sign(serverKeypair);
-        transaction.Sign(clientKeypair);
+        transaction.Sign(_serverKeypair);
+        transaction.Sign(_clientKeypair);
 
-        var readTransactionId = WebAuthentication.ReadChallengeTransaction(transaction, serverKeypair.AccountId,
+        var readTransactionId = WebAuthentication.ReadChallengeTransaction(transaction, _serverKeypair.AccountId,
             HomeDomain, "",
             Network.Test());
 
-        Assert.AreEqual(clientKeypair.AccountId, readTransactionId);
+        Assert.AreEqual(_clientKeypair.AccountId, readTransactionId);
     }
 
     [TestMethod]
     public void TestVerifyChallengeTransactionWithClientDomain()
     {
-        var serverKeypair = KeyPair.Random();
-        var clientKeypair = KeyPair.Random();
-
-        Network.UseTestNetwork();
-
         var now = DateTimeOffset.Now;
 
-        var tx = WebAuthentication.BuildChallengeTransaction(serverKeypair, clientKeypair, HomeDomain, WebAuthDomain,
-            now: now, clientDomain: ClientDomain, clientSigningKey: clientKeypair);
-        var manageDataOperation = (ManageDataOperation)tx.Operations[2];
+        var transaction = WebAuthentication.BuildChallengeTransaction(_serverKeypair, _clientKeypair, HomeDomain,
+            WebAuthDomain,
+            validFrom: now, clientDomain: ClientDomain, clientSigningKey: _clientKeypair);
+        var manageDataOperation = (ManageDataOperation)transaction.Operations[2];
 
         var signers = new List<string>
         {
-            serverKeypair.AccountId,
-            clientKeypair.AccountId
+            _serverKeypair.AccountId,
+            _clientKeypair.AccountId
         };
 
         Assert.AreEqual(manageDataOperation.Name, "client_domain");
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(tx, serverKeypair.AccountId, signers, HomeDomain,
+            WebAuthentication.VerifyChallengeTransactionSigners(transaction, _serverKeypair.AccountId, signers,
+                HomeDomain,
                 WebAuthDomain, now: now);
         });
+    }
+
+    [TestMethod]
+    public void TestReadChallengeTransactionWithOutOfLowerBound()
+    {
+        // Arrange
+        var now = DateTimeOffset.Now;
+        // Time bounds start 20 seconds before 'validFrom'
+        var validFrom = now.AddSeconds(-20);
+        var validFor = TimeSpan.FromSeconds(10);
+
+        var transaction = WebAuthentication.BuildChallengeTransaction(
+            _serverKeypair,
+            _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain,
+            validFrom: validFrom,
+            validFor: validFor);
+        transaction.Sign(_serverKeypair);
+
+        // Grace time bounds
+        var graceValidFrom = validFrom.AddSeconds(-WebAuthentication.GracePeriod);
+
+        // Act & Assert
+        Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
+        {
+            WebAuthentication.ReadChallengeTransaction(
+                transaction,
+                _serverKeypair.AccountId,
+                HomeDomain,
+                WebAuthDomain,
+                // Start 1 second before the min time bounds - grace period
+                now: graceValidFrom.AddSeconds(-1));
+        }, "Challenge transaction expired");
+    }
+
+    [TestMethod]
+    public void TestReadChallengeTransactionWithOutOfLowerBoundButWithinGracePeriod()
+    {
+        // Arrange
+        var now = DateTimeOffset.Now;
+        // Time bounds start 20 seconds before 'validFrom'
+        var validFrom = now.AddSeconds(-20);
+        var validFor = TimeSpan.FromSeconds(10);
+
+        var transaction = WebAuthentication.BuildChallengeTransaction(
+            _serverKeypair,
+            _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain,
+            validFrom: validFrom,
+            validFor: validFor);
+        transaction.Sign(_serverKeypair);
+
+        // Grace time bounds
+        var graceValidFrom = validFrom.AddSeconds(-WebAuthentication.GracePeriod);
+
+        // Act & Assert
+        var result = WebAuthentication.ReadChallengeTransaction(
+            transaction,
+            _serverKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain,
+            // Start 1 second after the min time bounds - grace period
+            now: graceValidFrom.AddSeconds(1));
+        Assert.AreEqual(_clientKeypair.AccountId, result);
+    }
+
+    [TestMethod]
+    public void TestReadChallengeTransactionWithOutOfUpperBound()
+    {
+        // Arrange
+        var now = DateTimeOffset.Now;
+        // Time bounds start 20 seconds before 'validFrom'
+        var validFrom = now.AddSeconds(-20);
+        var validFor = TimeSpan.FromSeconds(10);
+
+        var transaction = WebAuthentication.BuildChallengeTransaction(
+            _serverKeypair,
+            _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain,
+            validFrom: validFrom,
+            validFor: validFor);
+        transaction.Sign(_serverKeypair);
+
+        // Grace time bounds
+        var graceValidFor = validFor + TimeSpan.FromSeconds(WebAuthentication.GracePeriod);
+        var graceValidTill = validFrom.Add(graceValidFor);
+
+        // Act & Assert
+        Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
+        {
+            WebAuthentication.ReadChallengeTransaction(
+                transaction,
+                _serverKeypair.AccountId,
+                HomeDomain,
+                WebAuthDomain,
+                // Start 1 after the max time bounds + grace period
+                now: graceValidTill.AddSeconds(1));
+        }, "Challenge transaction expired");
+    }
+
+    [TestMethod]
+    public void TestReadChallengeTransactionWithOutOfUpperBoundButWithinGracePeriod()
+    {
+        // Arrange
+        var now = DateTimeOffset.Now;
+        // Time bounds start 20 seconds before 'validFrom'
+        var validFrom = now.AddSeconds(-20);
+        var validFor = TimeSpan.FromSeconds(10);
+
+        var transaction = WebAuthentication.BuildChallengeTransaction(
+            _serverKeypair,
+            _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain,
+            validFrom: validFrom,
+            validFor: validFor);
+        transaction.Sign(_serverKeypair);
+
+        // Grace time bounds
+        var graceValidFor = validFor + TimeSpan.FromSeconds(WebAuthentication.GracePeriod);
+        var graceValidTill = validFrom.Add(graceValidFor);
+
+        // Act & Assert
+        var result = WebAuthentication.ReadChallengeTransaction(
+            transaction,
+            _serverKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain,
+            // Start 1 second before the max time bounds + grace period
+            now: graceValidTill.AddSeconds(-1));
+        Assert.AreEqual(_clientKeypair.AccountId, result);
     }
 }
