@@ -109,7 +109,7 @@ public class CreateContractOperation : InvokeHostFunctionOperation
     ///     Creates a new <c>CreateContractOperation</c> using the provided address and salt.
     /// </summary>
     /// <param name="wasmHash">
-    ///     (aka Wasm ID or hash ID or just hash), a hex-encoded hash of the WebAssembly (Wasm) bytes that represents a compiled smart contract on the Stellar network.
+    ///     A hex-encoded string of the Wasm bytes of a compiled smart contract.
     /// </param>
     /// <param name="accountId"></param>
     /// <param name="salt">(Optional) Custom salt 32-byte salt for the token ID. It will be randomly generated if omitted.</param>
@@ -276,7 +276,7 @@ public class CreateContractHostFunction : HostFunction
     /// <summary>
     ///     Constructs a create contract host function.
     /// </summary>
-    /// <param name="hash">The hex-encoded hash of a previously uploaded Wasm.</param>
+    /// <param name="hash">ash">A hex-encoded string of previously uploaded Wasm bytes of a compiled smart contract.</param>
     /// <param name="address">An account address.</param>
     /// <param name="salt">(Optional) A salt. Will be randomly generated if not provided.</param>
     public CreateContractHostFunction(string hash, string address, byte[]? salt = null)

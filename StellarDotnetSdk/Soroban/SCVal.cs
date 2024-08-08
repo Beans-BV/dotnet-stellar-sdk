@@ -1342,7 +1342,7 @@ public class ContractExecutableWasm : ContractExecutable
     }
 
     /// <summary>
-    ///     A hex-encoded hash of the WebAssembly (Wasm) bytes.
+    ///     A hex-encoded string of the Wasm bytes of a compiled smart contract.
     /// </summary>
     public string WasmHash { get; }
 
