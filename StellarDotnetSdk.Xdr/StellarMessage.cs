@@ -36,20 +36,6 @@ namespace StellarDotnetSdk.Xdr;
 //  case SURVEY_RESPONSE:
 //      SignedSurveyResponseMessage signedSurveyResponseMessage;
 //  
-//  case TIME_SLICED_SURVEY_REQUEST:
-//      SignedTimeSlicedSurveyRequestMessage signedTimeSlicedSurveyRequestMessage;
-//  
-//  case TIME_SLICED_SURVEY_RESPONSE:
-//      SignedTimeSlicedSurveyResponseMessage signedTimeSlicedSurveyResponseMessage;
-//  
-//  case TIME_SLICED_SURVEY_START_COLLECTING:
-//      SignedTimeSlicedSurveyStartCollectingMessage
-//          signedTimeSlicedSurveyStartCollectingMessage;
-//  
-//  case TIME_SLICED_SURVEY_STOP_COLLECTING:
-//      SignedTimeSlicedSurveyStopCollectingMessage
-//          signedTimeSlicedSurveyStopCollectingMessage;
-//  
 //  // SCP
 //  case GET_SCP_QUORUMSET:
 //      uint256 qSetHash;
@@ -86,10 +72,6 @@ public class StellarMessage
     public TransactionEnvelope Transaction { get; set; }
     public SignedSurveyRequestMessage SignedSurveyRequestMessage { get; set; }
     public SignedSurveyResponseMessage SignedSurveyResponseMessage { get; set; }
-    public SignedTimeSlicedSurveyRequestMessage SignedTimeSlicedSurveyRequestMessage { get; set; }
-    public SignedTimeSlicedSurveyResponseMessage SignedTimeSlicedSurveyResponseMessage { get; set; }
-    public SignedTimeSlicedSurveyStartCollectingMessage SignedTimeSlicedSurveyStartCollectingMessage { get; set; }
-    public SignedTimeSlicedSurveyStopCollectingMessage SignedTimeSlicedSurveyStopCollectingMessage { get; set; }
     public Uint256 QSetHash { get; set; }
     public SCPQuorumSet QSet { get; set; }
     public SCPEnvelope Envelope { get; set; }
@@ -140,22 +122,6 @@ public class StellarMessage
                 break;
             case MessageType.MessageTypeEnum.SURVEY_RESPONSE:
                 SignedSurveyResponseMessage.Encode(stream, encodedStellarMessage.SignedSurveyResponseMessage);
-                break;
-            case MessageType.MessageTypeEnum.TIME_SLICED_SURVEY_REQUEST:
-                SignedTimeSlicedSurveyRequestMessage.Encode(stream,
-                    encodedStellarMessage.SignedTimeSlicedSurveyRequestMessage);
-                break;
-            case MessageType.MessageTypeEnum.TIME_SLICED_SURVEY_RESPONSE:
-                SignedTimeSlicedSurveyResponseMessage.Encode(stream,
-                    encodedStellarMessage.SignedTimeSlicedSurveyResponseMessage);
-                break;
-            case MessageType.MessageTypeEnum.TIME_SLICED_SURVEY_START_COLLECTING:
-                SignedTimeSlicedSurveyStartCollectingMessage.Encode(stream,
-                    encodedStellarMessage.SignedTimeSlicedSurveyStartCollectingMessage);
-                break;
-            case MessageType.MessageTypeEnum.TIME_SLICED_SURVEY_STOP_COLLECTING:
-                SignedTimeSlicedSurveyStopCollectingMessage.Encode(stream,
-                    encodedStellarMessage.SignedTimeSlicedSurveyStopCollectingMessage);
                 break;
             case MessageType.MessageTypeEnum.GET_SCP_QUORUMSET:
                 Uint256.Encode(stream, encodedStellarMessage.QSetHash);
@@ -227,22 +193,6 @@ public class StellarMessage
                 break;
             case MessageType.MessageTypeEnum.SURVEY_RESPONSE:
                 decodedStellarMessage.SignedSurveyResponseMessage = SignedSurveyResponseMessage.Decode(stream);
-                break;
-            case MessageType.MessageTypeEnum.TIME_SLICED_SURVEY_REQUEST:
-                decodedStellarMessage.SignedTimeSlicedSurveyRequestMessage =
-                    SignedTimeSlicedSurveyRequestMessage.Decode(stream);
-                break;
-            case MessageType.MessageTypeEnum.TIME_SLICED_SURVEY_RESPONSE:
-                decodedStellarMessage.SignedTimeSlicedSurveyResponseMessage =
-                    SignedTimeSlicedSurveyResponseMessage.Decode(stream);
-                break;
-            case MessageType.MessageTypeEnum.TIME_SLICED_SURVEY_START_COLLECTING:
-                decodedStellarMessage.SignedTimeSlicedSurveyStartCollectingMessage =
-                    SignedTimeSlicedSurveyStartCollectingMessage.Decode(stream);
-                break;
-            case MessageType.MessageTypeEnum.TIME_SLICED_SURVEY_STOP_COLLECTING:
-                decodedStellarMessage.SignedTimeSlicedSurveyStopCollectingMessage =
-                    SignedTimeSlicedSurveyStopCollectingMessage.Decode(stream);
                 break;
             case MessageType.MessageTypeEnum.GET_SCP_QUORUMSET:
                 decodedStellarMessage.QSetHash = Uint256.Decode(stream);
