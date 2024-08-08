@@ -95,7 +95,7 @@ public class InclusionFee
     public string P90 { get; }
 
     // TODO: Re-check if the result contains this property
-    // See https://developers.stellar.org/docs/data/rpc/api-reference/methods/getFeeStats
+    // See https://github.com/stellar/stellar-docs/issues/892
     /// 95th nearest-rank fee percentile
     // public string P95 { get; }
 
