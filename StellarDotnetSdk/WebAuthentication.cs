@@ -54,9 +54,15 @@ public static class WebAuthentication
         string? clientDomain = null,
         KeyPair? clientKeypair = null)
     {
-        if (string.IsNullOrEmpty(clientAccountId)) throw new ArgumentNullException(nameof(clientAccountId));
+        if (string.IsNullOrEmpty(clientAccountId))
+        {
+            throw new ArgumentNullException(nameof(clientAccountId));
+        }
         if (StrKey.DecodeVersionByte(clientAccountId) != StrKey.VersionByte.ACCOUNT_ID)
+        {
             throw new InvalidWebAuthenticationException($"{nameof(clientAccountId)} is not a valid account id");
+        }
+
         var clientAccountKeypair = KeyPair.FromAccountId(clientAccountId);
         return BuildChallengeTransaction(
             serverKeypair,
@@ -106,7 +112,7 @@ public static class WebAuthentication
         if (!string.IsNullOrEmpty(clientDomain))
         {
             ArgumentNullException.ThrowIfNull(clientSigningKey);
-        }   
+        }
 
         if (nonce is null)
         {
@@ -143,7 +149,7 @@ public static class WebAuthentication
             .AddTimeBounds(timeBounds)
             .AddOperation(operation)
             .AddOperation(webAuthOperation);
-        
+
         if (!string.IsNullOrEmpty(clientDomain))
         {
             var clientDomainOperation =
@@ -223,77 +229,99 @@ public static class WebAuthentication
         network ??= Network.Current;
 
         if (transaction is null)
+        {
             throw new InvalidWebAuthenticationException("Challenge transaction cannot be null");
-
+        }
         if (transaction.SequenceNumber != 0)
+        {
             throw new InvalidWebAuthenticationException("Challenge transaction sequence number must be 0");
-
+        }
         if (transaction.SourceAccount.IsMuxedAccount)
+        {
             throw new InvalidWebAuthenticationException("Challenge transaction source cannot be a muxed account");
-
+        }
         if (transaction.SourceAccount.AccountId != serverAccountId)
+        {
             throw new InvalidWebAuthenticationException("Challenge transaction source must be serverAccountId");
-
+        }
         if (transaction.Operations.Length < 1)
+        {
             throw new InvalidWebAuthenticationException("Challenge transaction must contain at least one operation");
-
+        }
         if (transaction.Operations[0] is not ManageDataOperation operation)
+        {
             throw new InvalidWebAuthenticationException(
                 "Challenge transaction operation must be of type ManageDataOperation");
-
+        }
         if (operation.SourceAccount is null)
+        {
             throw new InvalidWebAuthenticationException("Challenge transaction operation must have source account");
-
+        }
         if (homeDomains == null || homeDomains.Length == 0)
+        {
             throw new InvalidWebAuthenticationException(
                 "Invalid homeDomains: a home domain must be provided for verification");
+        }
 
         var matchedHomeDomain = "";
 
         foreach (var domain in homeDomains)
+        {
             if (operation.Name == $"{domain} auth")
             {
                 matchedHomeDomain = domain;
                 break;
             }
+        }
 
         if (string.IsNullOrEmpty(matchedHomeDomain))
+        {
             throw new InvalidWebAuthenticationException(
                 "Invalid homeDomains: the transaction's operation key name does not match the expected home domain");
+        }
 
         var subsequentOperations = transaction.Operations;
         foreach (var op in subsequentOperations.Skip(1))
         {
             if (op is not ManageDataOperation opManageData)
+            {
                 throw new InvalidWebAuthenticationException(
                     "The transaction has operations that are not of type 'manageData'");
+            }
 
             if (opManageData.SourceAccount?.AccountId != serverAccountId && opManageData.Name != "client_domain")
+            {
                 throw new InvalidWebAuthenticationException("The transaction has operations that are unrecognized");
+            }
 
             var opDataValue = opManageData.Value != null ? Encoding.UTF8.GetString(opManageData.Value) : null;
 
             if (opManageData.Name == "web_auth_domain" &&
                 (opManageData.Value == null || opDataValue != webAuthDomain))
+            {
                 throw new InvalidWebAuthenticationException(
                     $"Invalid 'web_auth_domain' value. Expected: {webAuthDomain} Actual: {opDataValue}");
+            }
         }
 
         var clientAccountKeypair = operation.SourceAccount;
-
         if (clientAccountKeypair.IsMuxedAccount)
+        {
             throw new InvalidWebAuthenticationException(
                 "Challenge transaction operation source account cannot be a muxed account");
-
-        var clientAccountId = clientAccountKeypair.Address;
+        }
 
         if (operation.Value == null)
+        {
             throw new InvalidWebAuthenticationException("Challenge transaction operation data must be present");
+        }
 
         var stringValue = Encoding.UTF8.GetString(operation.Value);
         if (stringValue.Length != 64)
+        {
             throw new InvalidWebAuthenticationException(
                 "Challenge transaction operation data must be 64 bytes long");
+        }
 
         try
         {
@@ -307,12 +335,15 @@ public static class WebAuthentication
         }
 
         if (!ValidateSignedBy(transaction, serverAccountId, network))
+        {
             throw new InvalidWebAuthenticationException("Challenge transaction not signed by server");
-
+        }
         if (!ValidateTimeBounds(transaction.TimeBounds, now ?? DateTimeOffset.Now))
+        {
             throw new InvalidWebAuthenticationException("Challenge transaction expired");
+        }
 
-        return clientAccountId;
+        return clientAccountKeypair.Address;
     }
 
     public static ICollection<string> VerifyChallengeTransactionThreshold(
@@ -331,8 +362,11 @@ public static class WebAuthentication
                 now);
         var weight = signersFound.Sum(signer => signerSummary[signer]);
         if (weight < threshold)
+        {
             throw new InvalidWebAuthenticationException(
                 $"Signers with weight {weight} do not meet threshold {threshold}");
+        }
+
         return signersFound;
     }
 
@@ -362,7 +396,9 @@ public static class WebAuthentication
         DateTimeOffset? now = null)
     {
         if (signers.Count == 0)
+        {
             throw new ArgumentException($"{nameof(signers)} must be non-empty");
+        }
 
         network ??= Network.Current;
 
@@ -373,14 +409,20 @@ public static class WebAuthentication
         KeyPair? clientSigningKey = null;
         var sourceAccountId = transaction.Operations
             .FirstOrDefault(x => x is ManageDataOperation { Name: "client_domain" })?.SourceAccount?.AccountId;
-        if (sourceAccountId != null) clientSigningKey = KeyPair.FromAccountId(sourceAccountId);
+        if (sourceAccountId != null)
+        {
+            clientSigningKey = KeyPair.FromAccountId(sourceAccountId);
+        }
 
         // Remove server signer if present
         var serverKeypair = KeyPair.FromAccountId(serverAccountId);
         var clientSigners = signers.Where(signer => signer != serverKeypair.Address).ToList();
 
         var additionalSigners = new List<string> { serverKeypair.Address };
-        if (clientSigningKey != null) additionalSigners.Add(clientSigningKey.Address);
+        if (clientSigningKey != null)
+        {
+            additionalSigners.Add(clientSigningKey.Address);
+        }
 
         var allSigners = clientSigners.Select(signer => (string)signer.Clone()).ToList();
         allSigners.AddRange(additionalSigners);
@@ -391,21 +433,27 @@ public static class WebAuthentication
         var clientSigningKeyFound = false;
 
         if (clientSigningKey != null)
+        {
             clientSigningKeyFound =
                 !string.IsNullOrEmpty(allSignersFound.FirstOrDefault(signer => signer == clientSigningKey.Address));
-
+        }
         if (serverSigner is null)
+        {
             throw new InvalidWebAuthenticationException("Challenge transaction not signed by server");
-
+        }
         if (clientSigningKey != null && !clientSigningKeyFound)
+        {
             throw new InvalidWebAuthenticationException(
                 "Challenge Transaction not signed by the source account of the 'client_domain' ");
-
+        }
         if (allSignersFound.Count == 1)
+        {
             throw new InvalidWebAuthenticationException("Challenge transaction not signed by client");
-
+        }
         if (allSignersFound.Count != transaction.Signatures.Count)
+        {
             throw new InvalidWebAuthenticationException("Challenge transaction has unrecognized signatures");
+        }
 
         return allSignersFound.Where(signer => signer != serverSigner).ToArray();
     }
@@ -455,6 +503,7 @@ public static class WebAuthentication
         {
             throw new InvalidWebAuthenticationException("Challenge transaction not signed by client");
         }
+
         return true;
     }
 
@@ -478,6 +527,7 @@ public static class WebAuthentication
         {
             return false;
         }
+
         var unixNow = now.ToUnixTimeSeconds();
         // Apply grace period to time bounds check
         var graceStart = timeBounds.MinTime - GracePeriod;
@@ -508,7 +558,10 @@ public static class WebAuthentication
                 {
                     continue;
                 }
-                if (!keypair.Verify(transactionHash, signature.Signature)) continue;
+                if (!keypair.Verify(transactionHash, signature.Signature))
+                {
+                    continue;
+                }
                 signaturesUsed[signature] = keypair.Address;
                 signersFound.Add(keypair.Address);
                 break;
