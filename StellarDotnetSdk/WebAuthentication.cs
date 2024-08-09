@@ -101,10 +101,12 @@ public static class WebAuthentication
     {
         ArgumentNullException.ThrowIfNull(serverKeypair);
         ArgumentNullException.ThrowIfNull(clientAccountId);
-        if (string.IsNullOrEmpty(homeDomain)) throw new ArgumentNullException(nameof(homeDomain));
-        if (string.IsNullOrEmpty(webAuthDomain)) throw new ArgumentNullException(nameof(webAuthDomain));
-        if (!string.IsNullOrEmpty(clientDomain) && clientSigningKey is null)
-            throw new ArgumentNullException(nameof(clientSigningKey));
+        ArgumentException.ThrowIfNullOrEmpty(homeDomain);
+        ArgumentException.ThrowIfNullOrEmpty(webAuthDomain);
+        if (!string.IsNullOrEmpty(clientDomain))
+        {
+            ArgumentNullException.ThrowIfNull(clientSigningKey);
+        }   
 
         if (nonce is null)
         {
@@ -132,30 +134,29 @@ public static class WebAuthentication
 
         var operation = new ManageDataOperation(manageDataKey, manageDataValue, clientAccountId);
 
-        var webAuthDataKey = "web_auth_domain";
+        const string webAuthDataKey = "web_auth_domain";
         var webAuthDataValue = Encoding.UTF8.GetBytes(webAuthDomain);
 
         var webAuthOperation = new ManageDataOperation(webAuthDataKey, webAuthDataValue, serverKeypair);
 
-        var txBuilder = new TransactionBuilder(serverAccount)
+        var transactionBuilder = new TransactionBuilder(serverAccount)
             .AddTimeBounds(timeBounds)
             .AddOperation(operation)
             .AddOperation(webAuthOperation);
-
-
+        
         if (!string.IsNullOrEmpty(clientDomain))
         {
             var clientDomainOperation =
                 new ManageDataOperation("client_domain", Encoding.UTF8.GetBytes(clientDomain), clientSigningKey);
 
-            txBuilder.AddOperation(clientDomainOperation);
+            transactionBuilder.AddOperation(clientDomainOperation);
         }
 
-        var tx = txBuilder.Build();
+        var transaction = transactionBuilder.Build();
 
-        tx.Sign(serverKeypair, network);
+        transaction.Sign(serverKeypair, network);
 
-        return tx;
+        return transaction;
     }
 
     /// <summary>
@@ -438,18 +439,34 @@ public static class WebAuthentication
     {
         network ??= Network.Current;
 
-        var clientAccountId =
-            ReadChallengeTransaction(transaction, serverAccountId, homeDomain, webAuthDomain, network, now);
+        var clientAccountId = ReadChallengeTransaction(
+            transaction,
+            serverAccountId,
+            homeDomain,
+            webAuthDomain,
+            network,
+            now);
 
-        if (!ValidateSignedBy(transaction, clientAccountId, network))
+        var valid = ValidateSignedBy(
+            transaction,
+            clientAccountId,
+            network);
+        if (!valid)
+        {
             throw new InvalidWebAuthenticationException("Challenge transaction not signed by client");
-
+        }
         return true;
     }
 
-    private static bool ValidateSignedBy(Transaction transaction, string accountId, Network network)
+    private static bool ValidateSignedBy(
+        Transaction transaction,
+        string accountId,
+        Network network)
     {
-        var signaturesUsed = VerifyTransactionSignatures(transaction, new[] { accountId }, network);
+        var signaturesUsed = VerifyTransactionSignatures(
+            transaction,
+            new[] { accountId },
+            network);
         return signaturesUsed.Count == 1;
     }
 
@@ -457,7 +474,10 @@ public static class WebAuthentication
         TimeBounds? timeBounds,
         DateTimeOffset now)
     {
-        if (timeBounds is null || timeBounds.MinTime == 0 || timeBounds.MaxTime == 0) return false;
+        if (timeBounds is null || timeBounds.MinTime == 0 || timeBounds.MaxTime == 0)
+        {
+            return false;
+        }
         var unixNow = now.ToUnixTimeSeconds();
         // Apply grace period to time bounds check
         var graceStart = timeBounds.MinTime - GracePeriod;
@@ -471,7 +491,7 @@ public static class WebAuthentication
         IEnumerable<string> signers,
         Network network)
     {
-        var txHash = transaction.Hash(network);
+        var transactionHash = transaction.Hash(network);
         var signaturesUsed = new Dictionary<DecoratedSignature, string>();
         var signersFound = new HashSet<string>();
 
@@ -481,12 +501,14 @@ public static class WebAuthentication
             foreach (var signature in transaction.Signatures)
             {
                 if (signaturesUsed.ContainsKey(signature))
+                {
                     continue;
-
+                }
                 if (!signature.Hint.InnerValue.SequenceEqual(keypair.SignatureHint.InnerValue))
+                {
                     continue;
-
-                if (!keypair.Verify(txHash, signature.Signature)) continue;
+                }
+                if (!keypair.Verify(transactionHash, signature.Signature)) continue;
                 signaturesUsed[signature] = keypair.Address;
                 signersFound.Add(keypair.Address);
                 break;
