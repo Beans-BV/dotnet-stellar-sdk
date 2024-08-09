@@ -26,8 +26,17 @@ public class GetEventsResponse
 
     public class EventInfo
     {
-        public EventInfo(string contractId, string id, bool inSuccessfulContractCall, int ledger, string ledgerClosedAt,
-            string pagingToken, string[] topics, string type, string value)
+        public EventInfo(
+            string contractId,
+            string id,
+            bool inSuccessfulContractCall,
+            int ledger,
+            string ledgerClosedAt,
+            string pagingToken,
+            string[] topics,
+            string type,
+            string value,
+            string transactionHash)
         {
             ContractId = contractId;
             Id = id;
@@ -38,6 +47,7 @@ public class GetEventsResponse
             Topics = topics;
             Type = type;
             Value = value;
+            TransactionHash = transactionHash;
         }
 
         /// <summary>

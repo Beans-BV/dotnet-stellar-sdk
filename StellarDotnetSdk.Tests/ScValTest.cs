@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Tests;
 [TestClass]
 public class ScValTest
 {
-    private const string WasmHash = "ZBYoEJT3IaPMMk3FoRmnEQHoDxewPZL+Uor+xWI4uII=";
+    private const string WasmHash = "6416281094F721A3CC324DC5A119A71101E80F17B03D92FE528AFEC56238B882";
 
     [TestMethod]
     public void TestScBool()

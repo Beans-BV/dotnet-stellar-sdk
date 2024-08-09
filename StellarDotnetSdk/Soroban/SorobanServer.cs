@@ -95,6 +95,40 @@ public class SorobanServer : IDisposable
     }
 
     /// <summary>
+    ///     The <c>getTransactions</c> method return a detailed list of transactions starting from the user specified starting
+    ///     point that you can paginate as long as the pages fall within the history retention of their corresponding RPC
+    ///     provider.
+    /// </summary>
+    /// <param name="txHash"></param>
+    /// <returns></returns>
+    public Task<GetTransactionsResponse> GetTransactions(GetTransactionsRequest request)
+    {
+        return SendRequest<object, GetTransactionsResponse>("getTransactions", request);
+    }
+
+    /// <summary>
+    ///     Version information about the RPC and Captive core. RPC manages its own, pared-down version of Stellar Core
+    ///     optimized for its own subset of needs. we'll refer to this as a "Captive Core" instance.
+    /// </summary>
+    /// <returns></returns>
+    public Task<GetVersionInfoResponse> GetVersionInfo()
+    {
+        return SendRequest<object, GetVersionInfoResponse>("getVersionInfo", null);
+    }
+
+    /// <summary>
+    ///     Statistics for charged inclusion fees. The inclusion fee statistics are calculated from the inclusion fees that
+    ///     were paid for the transactions to be included onto the ledger. For Soroban transactions and Stellar transactions,
+    ///     they each have their own inclusion fees and own surge pricing. Inclusion fees are used to prevent spam and
+    ///     prioritize transactions during network traffic surge.
+    /// </summary>
+    /// <returns></returns>
+    public Task<GetFeeStatsResponse> GetFeeStats()
+    {
+        return SendRequest<object, GetFeeStatsResponse>("getFeeStats", null);
+    }
+
+    /// <summary>
     ///     Fetch a minimal set of current info about a Stellar account. Needed to get the current sequence
     ///     number for the account, so you can build a successful transaction with TransactionBuilder
     /// </summary>

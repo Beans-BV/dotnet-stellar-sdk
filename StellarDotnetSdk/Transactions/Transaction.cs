@@ -52,7 +52,7 @@ public class Transaction : TransactionBase
 
     public TimeBounds? TimeBounds => Preconditions?.TimeBounds;
 
-    public SorobanTransactionData? SorobanTransactionData { get; set; }
+    public SorobanTransactionData? SorobanTransactionData { get; private set; }
 
     public void AddResourceFee(uint resourceFee)
     {
@@ -64,6 +64,11 @@ public class Transaction : TransactionBase
         foreach (var operation in Operations)
             if (operation is InvokeHostFunctionOperation invokeHostFunctionOperation)
                 invokeHostFunctionOperation.Auth = auth;
+    }
+    
+    public void SetSorobanTransactionData(SorobanTransactionData sorobanTransactionData)
+    {
+        SorobanTransactionData = sorobanTransactionData;
     }
 
     /// <summary>

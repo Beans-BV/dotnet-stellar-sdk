@@ -1,34 +1,34 @@
-﻿using Newtonsoft.Json;
-
-namespace StellarDotnetSdk.Requests.SorobanRpc;
+﻿namespace StellarDotnetSdk.Requests.SorobanRpc;
 
 public class GetEventsRequest
 {
-    [JsonProperty(PropertyName = "startLedger")]
+    /// <summary>
+    /// Ledger sequence number to start fetching responses from (inclusive). This method will return an error if startLedger is less than the oldest ledger stored in this node, or greater than the latest ledger seen by this node. If a cursor is included in the request, startLedger must be omitted.
+    /// </summary>
     public long? StartLedger { get; set; }
 
-    [JsonProperty(PropertyName = "filters")]
+    /// <summary>
+    /// List of filters for the returned events. Events matching any of the filters are included. To match a filter, an event must match both a contractId and a topic. Maximum 5 filters are allowed per request.
+    /// </summary>
     public EventFilter[]? Filters { get; set; }
 
-    [JsonProperty(PropertyName = "pagination")]
     public PaginationOptions? Pagination { get; set; }
 
     public class EventFilter
     {
-        [JsonProperty(PropertyName = "type")] public string? Type { get; set; }
+        /// <summary>
+        /// A comma separated list of event types (system, contract, or diagnostic) used to filter events. If omitted, all event types are included.
+        /// </summary>
+        public string? Type { get; set; }
 
-        [JsonProperty(PropertyName = "contractIds")]
+        /// <summary>
+        /// List of contract IDs to query for events. If omitted, return events for all contracts. Maximum 5 contract IDs are allowed per request.
+        /// </summary>
         public string[]? ContractIds { get; set; }
 
-        [JsonProperty(PropertyName = "topics")]
+        /// <summary>
+        /// List of topic filters. If omitted, query for all events. If multiple filters are specified, events will be included if they match any of the filters. Maximum 5 filters are allowed per request.
+        /// </summary>
         public string[][]? Topics { get; set; }
-    }
-
-    public class PaginationOptions
-    {
-        [JsonProperty(PropertyName = "cursor")]
-        public string? Cursor;
-
-        [JsonProperty(PropertyName = "limit")] public long? Limit;
     }
 }

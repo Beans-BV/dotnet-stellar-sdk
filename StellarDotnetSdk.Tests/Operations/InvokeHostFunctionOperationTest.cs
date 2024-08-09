@@ -11,7 +11,7 @@ namespace StellarDotnetSdk.Tests.Operations;
 [TestClass]
 public class InvokeHostFunctionOperationTest
 {
-    private const string WasmHash = "ZBYoEJT3IaPMMk3FoRmnEQHoDxewPZL+Uor+xWI4uII=";
+    private const string WasmHash = "6416281094F721A3CC324DC5A119A71101E80F17B03D92FE528AFEC56238B882";
     private const long Nonce = -9223372036854775807;
     private const uint SignatureExpirationLedger = 1319013123;
 

@@ -15,7 +15,7 @@ public class SendTransactionResponse
         ERROR
     }
 
-    public SendTransactionResponse(string? errorResultXdr, string? hash, long? latestLedger,
+    public SendTransactionResponse(string? errorResultXdr, string hash, long? latestLedger,
         long? latestLedgerCloseTime, SendTransactionStatus status)
     {
         ErrorResultXdr = errorResultXdr;
@@ -32,9 +32,9 @@ public class SendTransactionResponse
     public string? ErrorResultXdr { get; }
 
     /// <summary>
-    ///     The transaction hash (in an hex-encoded string).
+    ///     The transaction hash (a hex-encoded string).
     /// </summary>
-    public string? Hash { get; }
+    public string Hash { get; }
 
     /// <summary>
     ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.

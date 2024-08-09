@@ -16,11 +16,11 @@ public class SorobanAuthorizationTest
     private const long Nonce = -9223372036854775807;
     private const uint SignatureExpirationLedger = 1319013123;
 
-    private const string WasmId = "ZBYoEJT3IaPMMk3FoRmnEQHoDxewPZL+Uor+xWI4uII=";
+    private const string WasmHash = "6416281094F721A3CC324DC5A119A71101E80F17B03D92FE528AFEC56238B882";
 
     private readonly SCAccountId _accountAddress = new("GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP");
 
-    private readonly ContractExecutableWasm _contractExecutableWasm = new(WasmId);
+    private readonly ContractExecutableWasm _contractExecutableWasm = new(WasmHash);
 
     private readonly SCString _signature = new("Signature");
 
@@ -164,7 +164,7 @@ public class SorobanAuthorizationTest
     [TestMethod]
     public void TestSorobanAuthorizationEntryContainingAuthorizedCreateContractFunction()
     {
-        var hostFunction = new CreateContractHostFunction(WasmId, _accountAddress.InnerValue);
+        var hostFunction = new CreateContractHostFunction(WasmHash, _accountAddress.InnerValue);
         var authorizedCreateContractFn = new SorobanAuthorizedCreateContractFunction(hostFunction);
 
         var rootInvocation = new SorobanAuthorizedInvocation(
