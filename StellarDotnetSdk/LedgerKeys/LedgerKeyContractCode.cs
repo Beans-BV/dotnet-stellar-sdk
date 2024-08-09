@@ -9,8 +9,8 @@ public class LedgerKeyContractCode : LedgerKey
     ///     Constructs a <c>LedgerKeyContractCode</c> object from a hex encoded string of the hash of the ledger entry.
     ///     Use this to fetch contract wasm byte-code.
     /// </summary>
-    /// <param name="hexString">A hex encoded string.</param>
-    public LedgerKeyContractCode(string hexString) : this(Convert.FromHexString(hexString))
+    /// <param name="wasmHash">A hex-encoded string of the Wasm bytes of a compiled smart contract.</param>
+    public LedgerKeyContractCode(string wasmHash) : this(Convert.FromHexString(wasmHash))
     {
     }
 

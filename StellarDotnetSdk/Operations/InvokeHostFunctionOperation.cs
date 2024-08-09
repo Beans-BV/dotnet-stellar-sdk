@@ -276,13 +276,13 @@ public class CreateContractHostFunction : HostFunction
     /// <summary>
     ///     Constructs a create contract host function.
     /// </summary>
-    /// <param name="hash">ash">A hex-encoded string of previously uploaded Wasm bytes of a compiled smart contract.</param>
+    /// <param name="wasmHash">A hex-encoded string of previously uploaded Wasm bytes of a compiled smart contract.</param>
     /// <param name="address">An account address.</param>
     /// <param name="salt">(Optional) A salt. Will be randomly generated if not provided.</param>
-    public CreateContractHostFunction(string hash, string address, byte[]? salt = null)
+    public CreateContractHostFunction(string wasmHash, string address, byte[]? salt = null)
     {
         ContractIDPreimage = new ContractIDAddressPreimage(address, salt);
-        Executable = new ContractExecutableWasm(hash);
+        Executable = new ContractExecutableWasm(wasmHash);
     }
 
     public ContractIDPreimage ContractIDPreimage { get; }
