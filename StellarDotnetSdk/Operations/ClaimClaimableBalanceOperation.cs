@@ -34,7 +34,10 @@ public class ClaimClaimableBalanceOperation : Operation
             balanceId = expanded;
         }
 
-        if (balanceId.Length != 36) throw new ArgumentException("Must be 36 bytes long", nameof(balanceId));
+        if (balanceId.Length != 36)
+        {
+            throw new ArgumentException("Must be 36 bytes long", nameof(balanceId));
+        }
 
         BalanceIdInBytes = balanceId;
     }
@@ -56,8 +59,8 @@ public class ClaimClaimableBalanceOperation : Operation
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CLAIM_CLAIMABLE_BALANCE),
             ClaimClaimableBalanceOp = new ClaimClaimableBalanceOp
             {
-                BalanceID = ClaimableBalanceID.Decode(new XdrDataInputStream(BalanceIdInBytes))
-            }
+                BalanceID = ClaimableBalanceID.Decode(new XdrDataInputStream(BalanceIdInBytes)),
+            },
         };
     }
 }

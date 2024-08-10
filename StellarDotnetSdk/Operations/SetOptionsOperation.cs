@@ -58,7 +58,10 @@ public class SetOptionsOperation : Operation
     /// <returns>SetOptionsOperation object so you can chain methods.</returns>
     public SetOptionsOperation SetClearFlags(int clearFlags)
     {
-        if (clearFlags < 0) throw new ArgumentException("clearFlags must be non negative.", nameof(clearFlags));
+        if (clearFlags < 0)
+        {
+            throw new ArgumentException("clearFlags must be non negative.", nameof(clearFlags));
+        }
         ClearFlags = (uint)clearFlags;
         return this;
     }
@@ -73,7 +76,10 @@ public class SetOptionsOperation : Operation
     /// <returns>SetOptionsOperation object so you can chain methods.</returns>
     public SetOptionsOperation SetSetFlags(int setFlags)
     {
-        if (setFlags < 0) throw new ArgumentException("setFlags must be non negative.", nameof(setFlags));
+        if (setFlags < 0)
+        {
+            throw new ArgumentException("setFlags must be non negative.", nameof(setFlags));
+        }
         SetFlags = (uint)setFlags;
         return this;
     }
@@ -87,8 +93,10 @@ public class SetOptionsOperation : Operation
     public SetOptionsOperation SetMasterKeyWeight(int masterKeyWeight)
     {
         if (masterKeyWeight is < 0 or > 255)
+        {
             throw new ArgumentException("masterKeyWeight must be an integer between 0 and 255 (inclusive).",
                 nameof(masterKeyWeight));
+        }
         MasterKeyWeight = (uint)masterKeyWeight;
         return this;
     }
@@ -102,8 +110,10 @@ public class SetOptionsOperation : Operation
     public SetOptionsOperation SetLowThreshold(int lowThreshold)
     {
         if (lowThreshold is < 0 or > 255)
+        {
             throw new ArgumentException("lowThreshold must be an integer between 0 and 255 (inclusive).",
                 nameof(lowThreshold));
+        }
         LowThreshold = (uint)lowThreshold;
         return this;
     }
@@ -117,8 +127,10 @@ public class SetOptionsOperation : Operation
     public SetOptionsOperation SetMediumThreshold(int mediumThreshold)
     {
         if (mediumThreshold is < 0 or > 255)
+        {
             throw new ArgumentException("mediumThreshold must be an integer between 0 and 255 (inclusive).",
                 nameof(mediumThreshold));
+        }
         MediumThreshold = (uint)mediumThreshold;
         return this;
     }
@@ -132,8 +144,10 @@ public class SetOptionsOperation : Operation
     public SetOptionsOperation SetHighThreshold(int highThreshold)
     {
         if (highThreshold is < 0 or > 255)
+        {
             throw new ArgumentException("highThreshold must be an integer between 0 and 255 (inclusive).",
                 nameof(highThreshold));
+        }
         HighThreshold = (uint)highThreshold;
         return this;
     }
@@ -146,7 +160,9 @@ public class SetOptionsOperation : Operation
     public SetOptionsOperation SetHomeDomain(string homeDomain)
     {
         if (homeDomain.Length > 32)
+        {
             throw new ArgumentException("Home domain must be <= 32 characters");
+        }
         HomeDomain = homeDomain;
         return this;
     }
@@ -159,7 +175,10 @@ public class SetOptionsOperation : Operation
     /// <returns>SetOptionsOperation object so you can chain methods.</returns>
     public SetOptionsOperation SetSigner(string accountId, int weight)
     {
-        if (accountId == null) throw new ArgumentNullException(nameof(accountId), "signer cannot be null");
+        if (accountId == null)
+        {
+            throw new ArgumentNullException(nameof(accountId), "signer cannot be null");
+        }
 
         return SetSigner(SignerUtil.Ed25519PublicKey(KeyPair.FromAccountId(accountId)), weight);
     }
@@ -179,28 +198,55 @@ public class SetOptionsOperation : Operation
     public override xdr_Operation.OperationBody ToOperationBody()
     {
         var op = new SetOptionsOp();
-        if (InflationDestination != null) op.InflationDest = new AccountID(InflationDestination.XdrPublicKey);
+        if (InflationDestination != null)
+        {
+            op.InflationDest = new AccountID(InflationDestination.XdrPublicKey);
+        }
 
-        if (ClearFlags != null) op.ClearFlags = new Uint32(ClearFlags.Value);
+        if (ClearFlags != null)
+        {
+            op.ClearFlags = new Uint32(ClearFlags.Value);
+        }
 
-        if (SetFlags != null) op.SetFlags = new Uint32(SetFlags.Value);
+        if (SetFlags != null)
+        {
+            op.SetFlags = new Uint32(SetFlags.Value);
+        }
 
-        if (MasterKeyWeight != null) op.MasterWeight = new Uint32(MasterKeyWeight.Value);
+        if (MasterKeyWeight != null)
+        {
+            op.MasterWeight = new Uint32(MasterKeyWeight.Value);
+        }
 
-        if (LowThreshold != null) op.LowThreshold = new Uint32(LowThreshold.Value);
+        if (LowThreshold != null)
+        {
+            op.LowThreshold = new Uint32(LowThreshold.Value);
+        }
 
-        if (MediumThreshold != null) op.MedThreshold = new Uint32(MediumThreshold.Value);
+        if (MediumThreshold != null)
+        {
+            op.MedThreshold = new Uint32(MediumThreshold.Value);
+        }
 
-        if (HighThreshold != null) op.HighThreshold = new Uint32(HighThreshold.Value);
+        if (HighThreshold != null)
+        {
+            op.HighThreshold = new Uint32(HighThreshold.Value);
+        }
 
-        if (HomeDomain != null) op.HomeDomain = new String32(HomeDomain);
+        if (HomeDomain != null)
+        {
+            op.HomeDomain = new String32(HomeDomain);
+        }
 
-        if (Signer != null) op.Signer = Signer.ToXdr();
+        if (Signer != null)
+        {
+            op.Signer = Signer.ToXdr();
+        }
 
         return new xdr_Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.SET_OPTIONS),
-            SetOptionsOp = op
+            SetOptionsOp = op,
         };
     }
 
@@ -208,23 +254,41 @@ public class SetOptionsOperation : Operation
     {
         var operation = new SetOptionsOperation();
         if (setOptionsOp.InflationDest != null)
+        {
             operation.SetInflationDestination(KeyPair.FromXdrPublicKey(setOptionsOp.InflationDest.InnerValue));
+        }
         if (setOptionsOp.ClearFlags != null)
+        {
             operation.SetClearFlags((int)setOptionsOp.ClearFlags.InnerValue);
+        }
         if (setOptionsOp.SetFlags != null)
+        {
             operation.SetSetFlags((int)setOptionsOp.SetFlags.InnerValue);
+        }
         if (setOptionsOp.MasterWeight != null)
+        {
             operation.SetMasterKeyWeight((int)setOptionsOp.MasterWeight.InnerValue);
+        }
         if (setOptionsOp.LowThreshold != null)
+        {
             operation.SetLowThreshold((int)setOptionsOp.LowThreshold.InnerValue);
+        }
         if (setOptionsOp.MedThreshold != null)
+        {
             operation.SetMediumThreshold((int)setOptionsOp.MedThreshold.InnerValue);
+        }
         if (setOptionsOp.HighThreshold != null)
+        {
             operation.SetHighThreshold((int)setOptionsOp.HighThreshold.InnerValue);
+        }
         if (setOptionsOp.HomeDomain != null)
+        {
             operation.SetHomeDomain(setOptionsOp.HomeDomain.InnerValue);
+        }
         if (setOptionsOp.Signer != null)
+        {
             operation.SetSigner(setOptionsOp.Signer.Key, (int)setOptionsOp.Signer.Weight.InnerValue);
+        }
         return operation;
     }
 }

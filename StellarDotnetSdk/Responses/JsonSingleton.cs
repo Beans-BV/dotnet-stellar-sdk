@@ -22,7 +22,7 @@ public static class JsonSingleton
             typeof(Page<TransactionResponse>),
             typeof(Page<TradeResponse>),
             typeof(Page<TradeAggregationResponse>),
-            typeof(Page<TransactionResponse>)
+            typeof(Page<TransactionResponse>),
         };
 
         var jsonConverters = new JsonConverter[]
@@ -30,7 +30,7 @@ public static class JsonSingleton
             new AssetJsonConverter(),
             new KeyPairJsonConverter(),
             new OperationResponseJsonConverter(),
-            new EffectResponseJsonConverter()
+            new EffectResponseJsonConverter(),
         };
 
         var pageJsonConverters = new JsonConverter[]
@@ -38,11 +38,13 @@ public static class JsonSingleton
             new AssetJsonConverter(),
             new KeyPairJsonConverter(),
             new OperationResponseJsonConverter(),
-            new EffectResponseJsonConverter()
+            new EffectResponseJsonConverter(),
         };
 
         if (pageResponseConversions.Contains(typeof(T)))
+        {
             return JsonConvert.DeserializeObject<T>(content, pageJsonConverters);
+        }
 
         return JsonConvert.DeserializeObject<T>(content, jsonConverters);
     }

@@ -21,7 +21,10 @@ public class SCPHistoryEntryV0
     {
         var quorumSetssize = encodedSCPHistoryEntryV0.QuorumSets.Length;
         stream.WriteInt(quorumSetssize);
-        for (var i = 0; i < quorumSetssize; i++) SCPQuorumSet.Encode(stream, encodedSCPHistoryEntryV0.QuorumSets[i]);
+        for (var i = 0; i < quorumSetssize; i++)
+        {
+            SCPQuorumSet.Encode(stream, encodedSCPHistoryEntryV0.QuorumSets[i]);
+        }
         LedgerSCPMessages.Encode(stream, encodedSCPHistoryEntryV0.LedgerMessages);
     }
 
@@ -30,7 +33,10 @@ public class SCPHistoryEntryV0
         var decodedSCPHistoryEntryV0 = new SCPHistoryEntryV0();
         var quorumSetssize = stream.ReadInt();
         decodedSCPHistoryEntryV0.QuorumSets = new SCPQuorumSet[quorumSetssize];
-        for (var i = 0; i < quorumSetssize; i++) decodedSCPHistoryEntryV0.QuorumSets[i] = SCPQuorumSet.Decode(stream);
+        for (var i = 0; i < quorumSetssize; i++)
+        {
+            decodedSCPHistoryEntryV0.QuorumSets[i] = SCPQuorumSet.Decode(stream);
+        }
         decodedSCPHistoryEntryV0.LedgerMessages = LedgerSCPMessages.Decode(stream);
         return decodedSCPHistoryEntryV0;
     }

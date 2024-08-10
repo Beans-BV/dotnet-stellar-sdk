@@ -63,9 +63,15 @@ internal class FakeResponseWithStream : FakeResponse
         {
             foreach (var action in _actions)
             {
-                if (action.Delay != TimeSpan.Zero) await Task.Delay(action.Delay, cancellationToken);
+                if (action.Delay != TimeSpan.Zero)
+                {
+                    await Task.Delay(action.Delay, cancellationToken);
+                }
 
-                if (action.ShouldQuit()) return;
+                if (action.ShouldQuit())
+                {
+                    return;
+                }
 
                 Assert.IsNotNull(action.Content);
                 var data = Encoding.UTF8.GetBytes(action.Content);
@@ -73,7 +79,10 @@ internal class FakeResponseWithStream : FakeResponse
             }
 
             // if we've run out of actions, leave the stream open until it's cancelled
-            while (true) await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+            while (true)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+            }
         }
         catch (Exception)
         {

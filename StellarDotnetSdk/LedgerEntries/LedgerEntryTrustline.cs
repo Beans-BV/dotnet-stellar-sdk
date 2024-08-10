@@ -37,7 +37,9 @@ public class LedgerEntryTrustline : LedgerEntry
     public static LedgerEntryTrustline FromXdrLedgerEntryData(Xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
         if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.TRUSTLINE)
+        {
             throw new ArgumentException("Not a TrustLineEntry.", nameof(xdrLedgerEntryData));
+        }
 
         return FromXdr(xdrLedgerEntryData.TrustLine);
     }
@@ -52,7 +54,9 @@ public class LedgerEntryTrustline : LedgerEntry
             xdrTrustLineEntry.Flags.InnerValue);
 
         if (xdrTrustLineEntry.Ext.Discriminant == 1)
+        {
             ledgerEntryTrustLine.TrustlineExtensionV1 = TrustlineEntryExtensionV1.FromXdr(xdrTrustLineEntry.Ext.V1);
+        }
 
         return ledgerEntryTrustLine;
     }

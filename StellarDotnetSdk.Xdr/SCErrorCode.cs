@@ -35,7 +35,7 @@ public class SCErrorCode
         SCEC_INVALID_ACTION = 6,
         SCEC_INTERNAL_ERROR = 7,
         SCEC_UNEXPECTED_TYPE = 8,
-        SCEC_UNEXPECTED_SIZE = 9
+        SCEC_UNEXPECTED_SIZE = 9,
     }
 
     public SCErrorCodeEnum InnerValue { get; set; }
@@ -44,7 +44,7 @@ public class SCErrorCode
     {
         return new SCErrorCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

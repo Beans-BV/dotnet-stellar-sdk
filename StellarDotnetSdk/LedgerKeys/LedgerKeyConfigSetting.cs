@@ -19,8 +19,8 @@ public class LedgerKeyConfigSetting : LedgerKey
                 new LedgerEntryType { InnerValue = LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING },
             ConfigSetting = new Xdr.LedgerKey.LedgerKeyConfigSetting
             {
-                ConfigSettingID = ConfigSettingID
-            }
+                ConfigSettingID = ConfigSettingID,
+            },
         };
     }
 

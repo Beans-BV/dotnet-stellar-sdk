@@ -46,7 +46,10 @@ public class SubmitTransactionResponse : Response
     /// </returns>
     public long? GetOfferIdFromResult(int position)
     {
-        if (!IsSuccess) return null;
+        if (!IsSuccess)
+        {
+            return null;
+        }
 
         var bytes = Convert.FromBase64String(ResultXdr);
         var xdrInputStream = new XdrDataInputStream(bytes);
@@ -62,9 +65,15 @@ public class SubmitTransactionResponse : Response
         }
 
         if (result.Result.Results[position].Tr.Discriminant.InnerValue !=
-            OperationType.OperationTypeEnum.MANAGE_SELL_OFFER) return null;
+            OperationType.OperationTypeEnum.MANAGE_SELL_OFFER)
+        {
+            return null;
+        }
 
-        if (result.Result.Results[0].Tr.ManageSellOfferResult.Success.Offer.Offer == null) return null;
+        if (result.Result.Results[0].Tr.ManageSellOfferResult.Success.Offer.Offer == null)
+        {
+            return null;
+        }
 
         return result.Result.Results[0].Tr.ManageSellOfferResult.Success.Offer.Offer.OfferID.InnerValue;
     }

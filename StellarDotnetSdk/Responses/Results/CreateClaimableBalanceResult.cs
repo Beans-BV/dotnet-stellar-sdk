@@ -21,7 +21,7 @@ public class CreateClaimableBalanceResult : OperationResult
                 => new CreateClaimableBalanceSuccess(result.BalanceID.V0.InnerValue),
             ResultCodeEnum.CREATE_CLAIMABLE_BALANCE_UNDERFUNDED
                 => new CreateClaimableBalanceUnderfunded(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown CreateClaimableBalanceResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown CreateClaimableBalanceResult type."),
         };
     }
 }

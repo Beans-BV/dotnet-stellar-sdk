@@ -23,7 +23,7 @@ public class AssetType
         ASSET_TYPE_NATIVE = 0,
         ASSET_TYPE_CREDIT_ALPHANUM4 = 1,
         ASSET_TYPE_CREDIT_ALPHANUM12 = 2,
-        ASSET_TYPE_POOL_SHARE = 3
+        ASSET_TYPE_POOL_SHARE = 3,
     }
 
     public AssetTypeEnum InnerValue { get; set; }
@@ -32,7 +32,7 @@ public class AssetType
     {
         return new AssetType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

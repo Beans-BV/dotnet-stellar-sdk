@@ -19,7 +19,7 @@ public class ContractIDPreimageType
     public enum ContractIDPreimageTypeEnum
     {
         CONTRACT_ID_PREIMAGE_FROM_ADDRESS = 0,
-        CONTRACT_ID_PREIMAGE_FROM_ASSET = 1
+        CONTRACT_ID_PREIMAGE_FROM_ASSET = 1,
     }
 
     public ContractIDPreimageTypeEnum InnerValue { get; set; }
@@ -28,7 +28,7 @@ public class ContractIDPreimageType
     {
         return new ContractIDPreimageType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

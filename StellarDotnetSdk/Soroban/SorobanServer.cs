@@ -39,7 +39,10 @@ public class SorobanServer : IDisposable
 
     public void Dispose()
     {
-        if (_internalHttpClient) _httpClient.Dispose();
+        if (_internalHttpClient)
+        {
+            _httpClient.Dispose();
+        }
     }
 
     public static HttpClient CreateHttpClient()
@@ -144,7 +147,9 @@ public class SorobanServer : IDisposable
         var response = await GetLedgerEntry(ledgerKeyAccount);
         if (response.LedgerEntries?.Length == 0 ||
             response.LedgerEntries?[0] is not LedgerEntryAccount ledgerEntryAccount)
+        {
             throw new AccountNotFoundException(accountId);
+        }
         return new Account(ledgerEntryAccount.Account.AccountId, ledgerEntryAccount.SequenceNumber);
     }
 
@@ -210,17 +215,19 @@ public class SorobanServer : IDisposable
     public Task<SimulateTransactionResponse> SimulateTransaction(Transaction transaction, uint? resourceConfig = null)
     {
         if (resourceConfig != null)
+        {
             return SendRequest<object, SimulateTransactionResponse>("simulateTransaction",
                 new
                 {
                     transaction = transaction.ToUnsignedEnvelopeXdrBase64(),
-                    resourceConfig = new { instructionLeeway = resourceConfig }
+                    resourceConfig = new { instructionLeeway = resourceConfig },
                 });
+        }
 
         return SendRequest<object, SimulateTransactionResponse>("simulateTransaction",
             new
             {
-                transaction = transaction.ToUnsignedEnvelopeXdrBase64()
+                transaction = transaction.ToUnsignedEnvelopeXdrBase64(),
             });
     }
 

@@ -66,8 +66,8 @@ public class SetTrustlineFlagsOperation : Operation
                 Asset = Asset.ToXdr(),
                 Trustor = new AccountID(Trustor.XdrPublicKey),
                 SetFlags = new Uint32 { InnerValue = SetFlags },
-                ClearFlags = new Uint32 { InnerValue = ClearFlags }
-            }
+                ClearFlags = new Uint32 { InnerValue = ClearFlags },
+            },
         };
         return body;
     }

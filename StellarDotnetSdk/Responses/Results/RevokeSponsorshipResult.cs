@@ -15,7 +15,7 @@ public class RevokeSponsorshipResult : OperationResult
             ResultCodeEnum.REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE => new RevokeSponsorshipOnlyTransferable(),
             ResultCodeEnum.REVOKE_SPONSORSHIP_SUCCESS => new RevokeSponsorshipSuccess(),
             ResultCodeEnum.REVOKE_SPONSORSHIP_MALFORMED => new RevokeSponsorshipMalformed(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown RevokeSponsorshipResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown RevokeSponsorshipResult type."),
         };
     }
 }

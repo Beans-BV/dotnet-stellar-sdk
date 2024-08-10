@@ -31,11 +31,16 @@ public class ResponseHandler<T> where T : class
         }
 
         if (string.IsNullOrWhiteSpace(content))
+        {
             throw new ClientProtocolException("Response contains no content");
+        }
 
         var responseObj = JsonSingleton.GetInstance<T>(content);
 
-        if (responseObj is Response responseInstance) responseInstance.SetHeaders(response.Headers);
+        if (responseObj is Response responseInstance)
+        {
+            responseInstance.SetHeaders(response.Headers);
+        }
 
         return responseObj;
     }

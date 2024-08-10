@@ -1,6 +1,5 @@
 ﻿using System;
 using StellarDotnetSdk.Xdr;
-using ExtensionPoint = StellarDotnetSdk.Soroban.ExtensionPoint;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
@@ -34,7 +33,9 @@ public class LedgerEntryContractCode : LedgerEntry
     public static LedgerEntryContractCode FromXdrLedgerEntryData(Xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
         if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE)
+        {
             throw new ArgumentException("Not a ContractCodeEntry", nameof(xdrLedgerEntryData));
+        }
 
         return FromXdr(xdrLedgerEntryData.ContractCode);
     }
@@ -45,8 +46,10 @@ public class LedgerEntryContractCode : LedgerEntry
             xdrContractCodeEntry.Hash.InnerValue,
             xdrContractCodeEntry.Code);
         if (xdrContractCodeEntry.Ext.Discriminant == 1)
+        {
             ledgerEntryContractCode.ContractCodeExtensionV1 =
                 ContractCodeEntryExtensionV1.FromXdr(xdrContractCodeEntry.Ext.V1);
+        }
         return ledgerEntryContractCode;
     }
 }

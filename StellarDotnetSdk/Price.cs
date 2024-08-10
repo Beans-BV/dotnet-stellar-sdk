@@ -32,7 +32,9 @@ public class Price
     public static Price FromString(string price)
     {
         if (string.IsNullOrEmpty(price))
+        {
             throw new ArgumentNullException(nameof(price), "price cannot be null");
+        }
 
         var maxInt = new decimal(int.MaxValue);
         var number = Convert.ToDecimal(price, CultureInfo.InvariantCulture);
@@ -41,23 +43,29 @@ public class Price
         var fractions = new List<decimal[]>
         {
             new[] { new decimal(0), new decimal(1) },
-            new[] { new decimal(1), new decimal(0) }
+            new[] { new decimal(1), new decimal(0) },
         };
         var i = 2;
         while (true)
         {
             if (number.CompareTo(maxInt) > 0)
+            {
                 break;
+            }
 
             a = decimal.Floor(number);
             f = decimal.Subtract(number, a);
             var h = decimal.Add(decimal.Multiply(a, fractions[i - 1][0]), fractions[i - 2][0]);
             var k = decimal.Add(decimal.Multiply(a, fractions[i - 1][1]), fractions[i - 2][1]);
             if (h.CompareTo(maxInt) > 0 || k.CompareTo(maxInt) > 0)
+            {
                 break;
+            }
             fractions.Add(new[] { h, k });
             if (f.CompareTo(0m) == 0)
+            {
                 break;
+            }
             number = decimal.Divide(1m, f);
             i += 1;
         }
@@ -75,7 +83,7 @@ public class Price
         return new xdr_Price
         {
             D = new sdkxdr.Int32(Denominator),
-            N = new sdkxdr.Int32(Numerator)
+            N = new sdkxdr.Int32(Numerator),
         };
     }
 
@@ -92,7 +100,9 @@ public class Price
     public override bool Equals(object? obj)
     {
         if (obj is not Price price)
+        {
             return false;
+        }
 
         return Numerator == price.Numerator && Denominator == price.Denominator;
     }

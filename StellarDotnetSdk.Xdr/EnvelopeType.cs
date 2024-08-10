@@ -35,7 +35,7 @@ public class EnvelopeType
         ENVELOPE_TYPE_OP_ID = 6,
         ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7,
         ENVELOPE_TYPE_CONTRACT_ID = 8,
-        ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9
+        ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9,
     }
 
     public EnvelopeTypeEnum InnerValue { get; set; }
@@ -44,7 +44,7 @@ public class EnvelopeType
     {
         return new EnvelopeType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

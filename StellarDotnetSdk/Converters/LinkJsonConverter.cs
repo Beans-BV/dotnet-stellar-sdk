@@ -14,7 +14,10 @@ public class LinkJsonConverter : JsonConverter
         if (value is Link link)
         {
             var jsonObject = new JObject { new JProperty("href", link.Href) };
-            if (link.Templated) jsonObject.Add(new JProperty("templated", link.Templated));
+            if (link.Templated)
+            {
+                jsonObject.Add(new JProperty("templated", link.Templated));
+            }
 
             jsonObject.WriteTo(writer);
         }
@@ -27,13 +30,19 @@ public class LinkJsonConverter : JsonConverter
     public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue,
         JsonSerializer serializer)
     {
-        if (reader.TokenType == JsonToken.Null) return null;
+        if (reader.TokenType == JsonToken.Null)
+        {
+            return null;
+        }
 
         var jsonObject = JObject.Load(reader);
         var templated = jsonObject.GetValue("templated")?.ToObject<bool>() ?? false;
         var href = jsonObject.GetValue("href")?.ToObject<string>();
 
-        if (href is null) throw new JsonSerializationException();
+        if (href is null)
+        {
+            throw new JsonSerializationException();
+        }
 
         return objectType.GetMethod("Create")?.Invoke(null, [href, templated]);
     }

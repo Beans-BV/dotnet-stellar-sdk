@@ -34,8 +34,8 @@ public class LedgerKeyTrustline : LedgerKey
             TrustLine = new Xdr.LedgerKey.LedgerKeyTrustLine
             {
                 AccountID = new AccountID(Account.XdrPublicKey),
-                Asset = Asset.ToXdr()
-            }
+                Asset = Asset.ToXdr(),
+            },
         };
     }
 

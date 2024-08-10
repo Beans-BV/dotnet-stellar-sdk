@@ -97,7 +97,10 @@ public abstract class ChangeTrustAsset
 
         public override int CompareTo(ChangeTrustAsset asset)
         {
-            if (asset.Type == "pool_share") return -1;
+            if (asset.Type == "pool_share")
+            {
+                return -1;
+            }
 
             return Asset.CompareTo(((Wrapper)asset).Asset);
         }

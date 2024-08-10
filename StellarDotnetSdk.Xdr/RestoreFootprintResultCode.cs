@@ -26,7 +26,7 @@ public class RestoreFootprintResultCode
         RESTORE_FOOTPRINT_SUCCESS = 0,
         RESTORE_FOOTPRINT_MALFORMED = -1,
         RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED = -2,
-        RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE = -3
+        RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE = -3,
     }
 
     public RestoreFootprintResultCodeEnum InnerValue { get; set; }
@@ -35,7 +35,7 @@ public class RestoreFootprintResultCode
     {
         return new RestoreFootprintResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

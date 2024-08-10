@@ -25,7 +25,9 @@ public class FeeBumpTransactionEnvelope
         var signaturessize = encodedFeeBumpTransactionEnvelope.Signatures.Length;
         stream.WriteInt(signaturessize);
         for (var i = 0; i < signaturessize; i++)
+        {
             DecoratedSignature.Encode(stream, encodedFeeBumpTransactionEnvelope.Signatures[i]);
+        }
     }
 
     public static FeeBumpTransactionEnvelope Decode(XdrDataInputStream stream)
@@ -35,7 +37,9 @@ public class FeeBumpTransactionEnvelope
         var signaturessize = stream.ReadInt();
         decodedFeeBumpTransactionEnvelope.Signatures = new DecoratedSignature[signaturessize];
         for (var i = 0; i < signaturessize; i++)
+        {
             decodedFeeBumpTransactionEnvelope.Signatures[i] = DecoratedSignature.Decode(stream);
+        }
         return decodedFeeBumpTransactionEnvelope;
     }
 }

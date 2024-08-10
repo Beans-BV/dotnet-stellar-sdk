@@ -33,7 +33,7 @@ public class LedgerBounds
         return new Xdr.LedgerBounds
         {
             MinLedger = new Uint32(MinLedger),
-            MaxLedger = new Uint32(MaxLedger)
+            MaxLedger = new Uint32(MaxLedger),
         };
     }
 }

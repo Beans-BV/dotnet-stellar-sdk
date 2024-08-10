@@ -23,7 +23,7 @@ public class SCPStatementType
         SCP_ST_PREPARE = 0,
         SCP_ST_CONFIRM = 1,
         SCP_ST_EXTERNALIZE = 2,
-        SCP_ST_NOMINATE = 3
+        SCP_ST_NOMINATE = 3,
     }
 
     public SCPStatementTypeEnum InnerValue { get; set; }
@@ -32,7 +32,7 @@ public class SCPStatementType
     {
         return new SCPStatementType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

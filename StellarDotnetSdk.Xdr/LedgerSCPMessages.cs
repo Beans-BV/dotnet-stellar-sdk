@@ -22,7 +22,10 @@ public class LedgerSCPMessages
         Uint32.Encode(stream, encodedLedgerSCPMessages.LedgerSeq);
         var messagessize = encodedLedgerSCPMessages.Messages.Length;
         stream.WriteInt(messagessize);
-        for (var i = 0; i < messagessize; i++) SCPEnvelope.Encode(stream, encodedLedgerSCPMessages.Messages[i]);
+        for (var i = 0; i < messagessize; i++)
+        {
+            SCPEnvelope.Encode(stream, encodedLedgerSCPMessages.Messages[i]);
+        }
     }
 
     public static LedgerSCPMessages Decode(XdrDataInputStream stream)
@@ -31,7 +34,10 @@ public class LedgerSCPMessages
         decodedLedgerSCPMessages.LedgerSeq = Uint32.Decode(stream);
         var messagessize = stream.ReadInt();
         decodedLedgerSCPMessages.Messages = new SCPEnvelope[messagessize];
-        for (var i = 0; i < messagessize; i++) decodedLedgerSCPMessages.Messages[i] = SCPEnvelope.Decode(stream);
+        for (var i = 0; i < messagessize; i++)
+        {
+            decodedLedgerSCPMessages.Messages[i] = SCPEnvelope.Decode(stream);
+        }
         return decodedLedgerSCPMessages;
     }
 }

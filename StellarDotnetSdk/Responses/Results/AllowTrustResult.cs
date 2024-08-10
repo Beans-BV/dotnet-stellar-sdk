@@ -16,7 +16,7 @@ public class AllowTrustResult : OperationResult
             ResultCodeEnum.ALLOW_TRUST_CANT_REVOKE => new AllowTrustCantRevoke(),
             ResultCodeEnum.ALLOW_TRUST_SELF_NOT_ALLOWED => new AllowTrustSelfNotAllowed(),
             ResultCodeEnum.ALLOW_TRUST_LOW_RESERVE => new AllowTrustLowReserve(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown AllowTrustResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown AllowTrustResult type."),
         };
     }
 }

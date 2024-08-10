@@ -24,7 +24,9 @@ public class InvokeHostFunctionSuccessPreImage
         var eventssize = encodedInvokeHostFunctionSuccessPreImage.Events.Length;
         stream.WriteInt(eventssize);
         for (var i = 0; i < eventssize; i++)
+        {
             ContractEvent.Encode(stream, encodedInvokeHostFunctionSuccessPreImage.Events[i]);
+        }
     }
 
     public static InvokeHostFunctionSuccessPreImage Decode(XdrDataInputStream stream)
@@ -34,7 +36,9 @@ public class InvokeHostFunctionSuccessPreImage
         var eventssize = stream.ReadInt();
         decodedInvokeHostFunctionSuccessPreImage.Events = new ContractEvent[eventssize];
         for (var i = 0; i < eventssize; i++)
+        {
             decodedInvokeHostFunctionSuccessPreImage.Events[i] = ContractEvent.Decode(stream);
+        }
         return decodedInvokeHostFunctionSuccessPreImage;
     }
 }

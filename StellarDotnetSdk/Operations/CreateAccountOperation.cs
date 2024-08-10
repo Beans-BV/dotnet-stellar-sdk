@@ -49,8 +49,8 @@ public class CreateAccountOperation : Operation
             CreateAccountOp = new CreateAccountOp
             {
                 Destination = new AccountID(Destination.XdrPublicKey),
-                StartingBalance = new Int64(ToXdrAmount(StartingBalance))
-            }
+                StartingBalance = new Int64(ToXdrAmount(StartingBalance)),
+            },
         };
     }
 

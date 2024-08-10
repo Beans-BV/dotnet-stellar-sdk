@@ -163,9 +163,15 @@ public class SCPStatement
                 decodedSCPStatementPrepare.QuorumSetHash = Hash.Decode(stream);
                 decodedSCPStatementPrepare.Ballot = SCPBallot.Decode(stream);
                 var PreparedPresent = stream.ReadInt();
-                if (PreparedPresent != 0) decodedSCPStatementPrepare.Prepared = SCPBallot.Decode(stream);
+                if (PreparedPresent != 0)
+                {
+                    decodedSCPStatementPrepare.Prepared = SCPBallot.Decode(stream);
+                }
                 var PreparedPrimePresent = stream.ReadInt();
-                if (PreparedPrimePresent != 0) decodedSCPStatementPrepare.PreparedPrime = SCPBallot.Decode(stream);
+                if (PreparedPrimePresent != 0)
+                {
+                    decodedSCPStatementPrepare.PreparedPrime = SCPBallot.Decode(stream);
+                }
                 decodedSCPStatementPrepare.NC = Uint32.Decode(stream);
                 decodedSCPStatementPrepare.NH = Uint32.Decode(stream);
                 return decodedSCPStatementPrepare;

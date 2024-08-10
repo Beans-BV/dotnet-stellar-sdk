@@ -25,7 +25,10 @@ public class TxDemandVector
     {
         var TxDemandVectorsize = encodedTxDemandVector.InnerValue.Length;
         stream.WriteInt(TxDemandVectorsize);
-        for (var i = 0; i < TxDemandVectorsize; i++) Hash.Encode(stream, encodedTxDemandVector.InnerValue[i]);
+        for (var i = 0; i < TxDemandVectorsize; i++)
+        {
+            Hash.Encode(stream, encodedTxDemandVector.InnerValue[i]);
+        }
     }
 
     public static TxDemandVector Decode(XdrDataInputStream stream)
@@ -33,7 +36,10 @@ public class TxDemandVector
         var decodedTxDemandVector = new TxDemandVector();
         var TxDemandVectorsize = stream.ReadInt();
         decodedTxDemandVector.InnerValue = new Hash[TxDemandVectorsize];
-        for (var i = 0; i < TxDemandVectorsize; i++) decodedTxDemandVector.InnerValue[i] = Hash.Decode(stream);
+        for (var i = 0; i < TxDemandVectorsize; i++)
+        {
+            decodedTxDemandVector.InnerValue[i] = Hash.Decode(stream);
+        }
         return decodedTxDemandVector;
     }
 }

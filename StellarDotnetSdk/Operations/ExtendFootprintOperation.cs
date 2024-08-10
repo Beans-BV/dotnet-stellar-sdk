@@ -45,8 +45,8 @@ public class ExtendFootprintOperation : Operation
             ExtendFootprintTTLOp = new ExtendFootprintTTLOp
             {
                 Ext = ExtensionPoint.ToXdr(),
-                ExtendTo = new Uint32(ExtendTo)
-            }
+                ExtendTo = new Uint32(ExtendTo),
+            },
         };
     }
 

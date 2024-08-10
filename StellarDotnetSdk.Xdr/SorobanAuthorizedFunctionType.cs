@@ -19,7 +19,7 @@ public class SorobanAuthorizedFunctionType
     public enum SorobanAuthorizedFunctionTypeEnum
     {
         SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN = 0,
-        SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN = 1
+        SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN = 1,
     }
 
     public SorobanAuthorizedFunctionTypeEnum InnerValue { get; set; }
@@ -28,7 +28,7 @@ public class SorobanAuthorizedFunctionType
     {
         return new SorobanAuthorizedFunctionType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

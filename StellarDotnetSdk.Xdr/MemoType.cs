@@ -25,7 +25,7 @@ public class MemoType
         MEMO_TEXT = 1,
         MEMO_ID = 2,
         MEMO_HASH = 3,
-        MEMO_RETURN = 4
+        MEMO_RETURN = 4,
     }
 
     public MemoTypeEnum InnerValue { get; set; }
@@ -34,7 +34,7 @@ public class MemoType
     {
         return new MemoType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

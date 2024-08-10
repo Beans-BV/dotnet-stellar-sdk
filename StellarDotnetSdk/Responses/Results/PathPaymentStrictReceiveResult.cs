@@ -39,7 +39,7 @@ public class PathPaymentStrictReceiveResult : OperationResult
                 => new PathPaymentStrictReceiveOfferCrossSelf(),
             ResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX
                 => new PathPaymentStrictReceiveOverSendmax(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown PathPaymentResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown PathPaymentResult type."),
         };
     }
 }

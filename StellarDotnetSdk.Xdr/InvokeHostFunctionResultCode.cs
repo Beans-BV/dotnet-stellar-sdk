@@ -30,7 +30,7 @@ public class InvokeHostFunctionResultCode
         INVOKE_HOST_FUNCTION_TRAPPED = -2,
         INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED = -3,
         INVOKE_HOST_FUNCTION_ENTRY_ARCHIVED = -4,
-        INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE = -5
+        INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE = -5,
     }
 
     public InvokeHostFunctionResultCodeEnum InnerValue { get; set; }
@@ -39,7 +39,7 @@ public class InvokeHostFunctionResultCode
     {
         return new InvokeHostFunctionResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

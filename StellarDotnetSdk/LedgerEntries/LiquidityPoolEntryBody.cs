@@ -11,7 +11,7 @@ public abstract class LiquidityPoolEntryBody
         {
             LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT => LiquidityPoolConstantProduct
                 .FromXdrLiquidityPoolEntryBody(xdrBody),
-            _ => throw new InvalidOperationException("Unknown liquidity pool type")
+            _ => throw new InvalidOperationException("Unknown liquidity pool type"),
         };
     }
 }

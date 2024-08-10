@@ -35,7 +35,10 @@ public class LiquidityPoolShareTrustlineAsset : TrustlineAsset
 
     public override bool Equals(object? obj)
     {
-        if (obj is not LiquidityPoolShareTrustlineAsset other) return false;
+        if (obj is not LiquidityPoolShareTrustlineAsset other)
+        {
+            return false;
+        }
 
         return obj.ToString() == other.ToString();
     }
@@ -53,7 +56,7 @@ public class LiquidityPoolShareTrustlineAsset : TrustlineAsset
         var xdr = new TrustLineAsset
         {
             Discriminant = AssetType.Create(AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE),
-            LiquidityPoolID = ID.ToXdr()
+            LiquidityPoolID = ID.ToXdr(),
         };
         return xdr;
     }

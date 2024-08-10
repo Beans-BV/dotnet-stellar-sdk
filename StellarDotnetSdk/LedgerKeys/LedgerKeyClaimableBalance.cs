@@ -38,11 +38,11 @@ public class LedgerKeyClaimableBalance : LedgerKey
                 {
                     Discriminant = new ClaimableBalanceIDType
                     {
-                        InnerValue = ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum.CLAIMABLE_BALANCE_ID_TYPE_V0
+                        InnerValue = ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum.CLAIMABLE_BALANCE_ID_TYPE_V0,
                     },
-                    V0 = new Hash(BalanceId)
-                }
-            }
+                    V0 = new Hash(BalanceId),
+                },
+            },
         };
     }
 

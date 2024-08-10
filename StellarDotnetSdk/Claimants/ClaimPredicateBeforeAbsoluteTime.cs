@@ -30,9 +30,9 @@ public class ClaimPredicateBeforeAbsoluteTime : ClaimPredicate
         {
             Discriminant = new ClaimPredicateType
             {
-                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME
+                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME,
             },
-            AbsBefore = new xdr_Int64((long)TimePoint.InnerValue.InnerValue)
+            AbsBefore = new xdr_Int64((long)TimePoint.InnerValue.InnerValue),
         };
     }
 }

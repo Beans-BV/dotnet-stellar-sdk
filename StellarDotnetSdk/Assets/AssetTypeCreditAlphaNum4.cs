@@ -13,7 +13,9 @@ public class AssetTypeCreditAlphaNum4 : AssetTypeCreditAlphaNum
     public AssetTypeCreditAlphaNum4(string code, string issuer) : base(code, issuer)
     {
         if (code.Length is < 1 or > 4)
+        {
             throw new AssetCodeLengthInvalidException();
+        }
     }
 
     public override string Type => RestApiType;
@@ -22,15 +24,15 @@ public class AssetTypeCreditAlphaNum4 : AssetTypeCreditAlphaNum
     {
         var thisXdr = new Xdr.Asset
         {
-            Discriminant = AssetType.Create(AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM4)
+            Discriminant = AssetType.Create(AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM4),
         };
         var credit = new AlphaNum4
         {
-            AssetCode = new AssetCode4(Util.PaddedByteArray(Code, 4))
+            AssetCode = new AssetCode4(Util.PaddedByteArray(Code, 4)),
         };
         var accountID = new AccountID
         {
-            InnerValue = KeyPair.FromAccountId(Issuer).XdrPublicKey
+            InnerValue = KeyPair.FromAccountId(Issuer).XdrPublicKey,
         };
         credit.Issuer = accountID;
         thisXdr.AlphaNum4 = credit;

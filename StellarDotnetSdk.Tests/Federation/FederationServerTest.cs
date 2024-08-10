@@ -20,7 +20,7 @@ public abstract class FederationServerTest
         fakeHttpMessageHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>())).Returns(new HttpResponseMessage
         {
             StatusCode = HttpStatusCode.OK,
-            Content = new StringContent(StellarToml)
+            Content = new StringContent(StellarToml),
         });
 
         using (var server = await FederationServer.CreateForDomain("stellar.org"))
@@ -79,7 +79,7 @@ public abstract class FederationServerTest
         var httpResponseMessage = new HttpResponseMessage
         {
             StatusCode = statusCode,
-            Content = new StringContent(content)
+            Content = new StringContent(content),
         };
 
         httpResponseMessage.Headers.Add("X-Ratelimit-Limit", "-1");

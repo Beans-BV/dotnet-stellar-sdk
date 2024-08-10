@@ -40,8 +40,8 @@ public class RestoreFootprintOperation : Operation
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.RESTORE_FOOTPRINT),
             RestoreFootprintOp = new RestoreFootprintOp
             {
-                Ext = ExtensionPoint.ToXdr()
-            }
+                Ext = ExtensionPoint.ToXdr(),
+            },
         };
     }
 

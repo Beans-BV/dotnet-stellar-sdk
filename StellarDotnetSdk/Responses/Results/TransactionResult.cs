@@ -65,7 +65,7 @@ public abstract class TransactionResult
             ResultCodeEnum.txBAD_MIN_SEQ_AGE_OR_GAP => new TransactionResultBadMinSeqAgeOrGap(feeCharged),
             ResultCodeEnum.txMALFORMED => new TransactionResultMalformed(feeCharged),
             ResultCodeEnum.txSOROBAN_INVALID => new TransactionResultSorobanInvalid(feeCharged),
-            _ => throw new SystemException("Unknown TransactionResult type")
+            _ => throw new SystemException("Unknown TransactionResult type"),
         };
     }
 }

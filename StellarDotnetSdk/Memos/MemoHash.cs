@@ -16,12 +16,12 @@ public class MemoHash : MemoHashAbstract
     {
         var memo = new Xdr.Memo
         {
-            Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_HASH)
+            Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_HASH),
         };
 
         var hash = new Hash
         {
-            InnerValue = MemoBytes
+            InnerValue = MemoBytes,
         };
 
         memo.Hash = hash;

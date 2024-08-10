@@ -63,8 +63,8 @@ public class ClawbackResultTest
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CLAWBACK),
             ClawbackResult = new ClawbackResult
             {
-                Discriminant = ClawbackResultCode.Create(type)
-            }
+                Discriminant = ClawbackResultCode.Create(type),
+            },
         };
     }
 }

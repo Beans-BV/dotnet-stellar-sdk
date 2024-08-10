@@ -33,7 +33,7 @@ public class AccountFlags
         AUTH_REQUIRED_FLAG = 1,
         AUTH_REVOCABLE_FLAG = 2,
         AUTH_IMMUTABLE_FLAG = 4,
-        AUTH_CLAWBACK_ENABLED_FLAG = 8
+        AUTH_CLAWBACK_ENABLED_FLAG = 8,
     }
 
     public AccountFlagsEnum InnerValue { get; set; }
@@ -42,7 +42,7 @@ public class AccountFlags
     {
         return new AccountFlags
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

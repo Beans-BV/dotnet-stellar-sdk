@@ -27,7 +27,9 @@ public class TransactionPhase
                 var v0Componentssize = encodedTransactionPhase.V0Components.Length;
                 stream.WriteInt(v0Componentssize);
                 for (var i = 0; i < v0Componentssize; i++)
+                {
                     TxSetComponent.Encode(stream, encodedTransactionPhase.V0Components[i]);
+                }
                 break;
         }
     }
@@ -43,7 +45,9 @@ public class TransactionPhase
                 var v0Componentssize = stream.ReadInt();
                 decodedTransactionPhase.V0Components = new TxSetComponent[v0Componentssize];
                 for (var i = 0; i < v0Componentssize; i++)
+                {
                     decodedTransactionPhase.V0Components[i] = TxSetComponent.Decode(stream);
+                }
                 break;
         }
 

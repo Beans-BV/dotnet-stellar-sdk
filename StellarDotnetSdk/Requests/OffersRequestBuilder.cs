@@ -34,13 +34,25 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
     /// <exception cref="ArgumentNullException"></exception>
     public OffersRequestBuilder Offers(OffersRequestOptions options)
     {
-        if (options == null) throw new ArgumentNullException(nameof(options));
+        if (options == null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
 
-        if (options.Seller != null) UriBuilder.SetQueryParam("seller", options.Seller);
+        if (options.Seller != null)
+        {
+            UriBuilder.SetQueryParam("seller", options.Seller);
+        }
 
-        if (options.Selling != null) AddAssetFilterQueryParam("selling", options.Selling);
+        if (options.Selling != null)
+        {
+            AddAssetFilterQueryParam("selling", options.Selling);
+        }
 
-        if (options.Buying != null) AddAssetFilterQueryParam("buying", options.Buying);
+        if (options.Buying != null)
+        {
+            AddAssetFilterQueryParam("buying", options.Buying);
+        }
 
         return this;
     }

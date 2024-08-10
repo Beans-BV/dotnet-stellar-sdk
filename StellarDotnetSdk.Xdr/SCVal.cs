@@ -239,11 +239,17 @@ public class SCVal
                 break;
             case SCValType.SCValTypeEnum.SCV_VEC:
                 var VecPresent = stream.ReadInt();
-                if (VecPresent != 0) decodedSCVal.Vec = SCVec.Decode(stream);
+                if (VecPresent != 0)
+                {
+                    decodedSCVal.Vec = SCVec.Decode(stream);
+                }
                 break;
             case SCValType.SCValTypeEnum.SCV_MAP:
                 var MapPresent = stream.ReadInt();
-                if (MapPresent != 0) decodedSCVal.Map = SCMap.Decode(stream);
+                if (MapPresent != 0)
+                {
+                    decodedSCVal.Map = SCMap.Decode(stream);
+                }
                 break;
             case SCValType.SCValTypeEnum.SCV_ADDRESS:
                 decodedSCVal.Address = SCAddress.Decode(stream);

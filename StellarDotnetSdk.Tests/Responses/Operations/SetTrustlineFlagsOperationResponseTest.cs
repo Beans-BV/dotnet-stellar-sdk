@@ -33,7 +33,7 @@ public class SetTrustlineFlagsOperationResponseTest
             AssetIssuer = "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM",
             Trustor = "GTRUSTORYHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM",
             ClearFlags = ["authorized_to_maintain_liabilities"],
-            SetFlags = ["authorized"]
+            SetFlags = ["authorized"],
         };
         Assert.AreEqual(operation.AssetType, operation2.AssetType);
         Assert.AreEqual(operation.AssetCode, operation2.AssetCode);

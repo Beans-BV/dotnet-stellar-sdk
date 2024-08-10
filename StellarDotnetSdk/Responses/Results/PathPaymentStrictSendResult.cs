@@ -39,7 +39,7 @@ public class PathPaymentStrictSendResult : OperationResult
                 => new PathPaymentStrictSendOfferCrossSelf(),
             ResultCodeEnum.PATH_PAYMENT_STRICT_SEND_UNDER_DESTMIN
                 => new PathPaymentStrictSendUnderDestMin(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown PathPaymentResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown PathPaymentResult type."),
         };
     }
 }

@@ -25,7 +25,10 @@ public class CreateClaimableBalanceOp
         Int64.Encode(stream, encodedCreateClaimableBalanceOp.Amount);
         var claimantssize = encodedCreateClaimableBalanceOp.Claimants.Length;
         stream.WriteInt(claimantssize);
-        for (var i = 0; i < claimantssize; i++) Claimant.Encode(stream, encodedCreateClaimableBalanceOp.Claimants[i]);
+        for (var i = 0; i < claimantssize; i++)
+        {
+            Claimant.Encode(stream, encodedCreateClaimableBalanceOp.Claimants[i]);
+        }
     }
 
     public static CreateClaimableBalanceOp Decode(XdrDataInputStream stream)
@@ -35,7 +38,10 @@ public class CreateClaimableBalanceOp
         decodedCreateClaimableBalanceOp.Amount = Int64.Decode(stream);
         var claimantssize = stream.ReadInt();
         decodedCreateClaimableBalanceOp.Claimants = new Claimant[claimantssize];
-        for (var i = 0; i < claimantssize; i++) decodedCreateClaimableBalanceOp.Claimants[i] = Claimant.Decode(stream);
+        for (var i = 0; i < claimantssize; i++)
+        {
+            decodedCreateClaimableBalanceOp.Claimants[i] = Claimant.Decode(stream);
+        }
         return decodedCreateClaimableBalanceOp;
     }
 }

@@ -93,23 +93,23 @@ public class LiquidityPoolDeserializerTest
         var reserveA = new Reserve
         {
             Amount = "2000.0000000",
-            Asset = assetA
+            Asset = assetA,
         };
 
         var reserveB = new Reserve
         {
             Amount = "2000.0000000",
-            Asset = assetA
+            Asset = assetA,
         };
         var reserveC = new Reserve
         {
             Amount = "1000.0000005",
-            Asset = assetA
+            Asset = assetA,
         };
         var reserveD = new Reserve
         {
             Amount = "2000.0000000",
-            Asset = assetB
+            Asset = assetB,
         };
 
         Assert.AreEqual(reserveA, reserveB);

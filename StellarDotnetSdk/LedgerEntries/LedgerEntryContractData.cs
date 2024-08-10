@@ -42,7 +42,9 @@ public class LedgerEntryContractData : LedgerEntry
     public static LedgerEntryContractData FromXdrLedgerEntryData(Xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
         if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_DATA)
+        {
             throw new ArgumentException("Not a ContractDataEntry", nameof(xdrLedgerEntryData));
+        }
 
         return FromXdr(xdrLedgerEntryData.ContractData);
     }

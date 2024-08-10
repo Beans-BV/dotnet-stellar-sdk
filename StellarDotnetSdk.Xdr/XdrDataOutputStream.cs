@@ -13,7 +13,7 @@ public class XdrDataOutputStream
         null,
         new byte[] { 0x00 },
         new byte[] { 0x00, 0x00 },
-        new byte[] { 0x00, 0x00, 0x00 }
+        new byte[] { 0x00, 0x00, 0x00 },
     };
 
     public XdrDataOutputStream()
@@ -56,7 +56,9 @@ public class XdrDataOutputStream
     private void WriteIntArray(int[] a, int l)
     {
         for (var i = 0; i < l; i++)
+        {
             WriteInt(a[i]);
+        }
     }
 
     public void WriteLong(long v)
@@ -113,7 +115,9 @@ public class XdrDataOutputStream
     private void WriteSingleArray(float[] a, int l)
     {
         for (var i = 0; i < l; i++)
+        {
             WriteSingle(a[i]);
+        }
     }
 
     private unsafe void WriteDouble(double v)
@@ -130,7 +134,9 @@ public class XdrDataOutputStream
     private void WriteDoubleArray(double[] a, int l)
     {
         for (var i = 0; i < l; i++)
+        {
             WriteDouble(a[i]);
+        }
     }
 
     public byte[] ToArray()
@@ -142,7 +148,9 @@ public class XdrDataOutputStream
     {
         var len = (uint)v.LongLength;
         if (len > max)
+        {
             throw new FormatException("unexpected length: " + len);
+        }
 
         try
         {
@@ -177,7 +185,9 @@ public class XdrDataOutputStream
             var padd = _tails[4u - tail];
 
             for (var i = 0; i < padd.Length; i++)
+            {
                 Write(padd[i]);
+            }
         }
     }
 }

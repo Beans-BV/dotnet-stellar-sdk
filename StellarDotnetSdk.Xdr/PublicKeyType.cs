@@ -17,7 +17,7 @@ public class PublicKeyType
 {
     public enum PublicKeyTypeEnum
     {
-        PUBLIC_KEY_TYPE_ED25519 = 0
+        PUBLIC_KEY_TYPE_ED25519 = 0,
     }
 
     public PublicKeyTypeEnum InnerValue { get; set; }
@@ -26,7 +26,7 @@ public class PublicKeyType
     {
         return new PublicKeyType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

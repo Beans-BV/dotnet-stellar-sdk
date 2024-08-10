@@ -65,7 +65,7 @@ public abstract class TrustlineAsset
                     KeyPair.FromXdrPublicKey(trustLineAssetXdr.AlphaNum12.Issuer.InnerValue).AccountId)),
             AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE
                 => new LiquidityPoolShareTrustlineAsset(LiquidityPoolID.FromXdr(trustLineAssetXdr.LiquidityPoolID)),
-            _ => throw new ArgumentException($"Unknown asset type {trustLineAssetXdr.Discriminant.InnerValue}")
+            _ => throw new ArgumentException($"Unknown asset type {trustLineAssetXdr.Discriminant.InnerValue}"),
         };
     }
 
@@ -79,7 +79,7 @@ public abstract class TrustlineAsset
         {
             Wrapper wrapper => wrapper.ToXdrTrustLineAsset(),
             LiquidityPoolShareTrustlineAsset poolShareTrustlineAsset => poolShareTrustlineAsset.ToXdrTrustLineAsset(),
-            _ => throw new InvalidOperationException("Unknown TrustLineAsset type")
+            _ => throw new InvalidOperationException("Unknown TrustLineAsset type"),
         };
     }
 
@@ -96,7 +96,10 @@ public abstract class TrustlineAsset
 
         public override bool Equals(object? obj)
         {
-            if (obj == null || typeof(Wrapper) == obj.GetType()) return false;
+            if (obj == null || typeof(Wrapper) == obj.GetType())
+            {
+                return false;
+            }
 
             var other = (Wrapper)obj;
             return Asset.Equals(other.Asset);
@@ -104,7 +107,10 @@ public abstract class TrustlineAsset
 
         public override int CompareTo(TrustlineAsset asset)
         {
-            if (asset.Type == LiquidityPoolShareTrustlineAsset.RestApiType) return -1;
+            if (asset.Type == LiquidityPoolShareTrustlineAsset.RestApiType)
+            {
+                return -1;
+            }
 
             return Asset.CompareTo(((Wrapper)asset).Asset);
         }

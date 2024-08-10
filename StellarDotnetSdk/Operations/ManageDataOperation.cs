@@ -27,8 +27,14 @@ public class ManageDataOperation : Operation
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public ManageDataOperation(string name, byte[]? value, IAccountId? sourceAccount = null) : base(sourceAccount)
     {
-        if (name == null) throw new ArgumentNullException(nameof(name), "name cannot be null");
-        if (name.Length > 64) throw new ArgumentException("Data name cannot exceed 64 characters.", nameof(name));
+        if (name == null)
+        {
+            throw new ArgumentNullException(nameof(name), "name cannot be null");
+        }
+        if (name.Length > 64)
+        {
+            throw new ArgumentException("Data name cannot exceed 64 characters.", nameof(name));
+        }
         Name = name;
         Value = value;
     }
@@ -56,8 +62,8 @@ public class ManageDataOperation : Operation
             ManageDataOp = new ManageDataOp
             {
                 DataName = new String64(Name),
-                DataValue = Value != null ? new DataValue(Value) : null
-            }
+                DataValue = Value != null ? new DataValue(Value) : null,
+            },
         };
         return body;
     }

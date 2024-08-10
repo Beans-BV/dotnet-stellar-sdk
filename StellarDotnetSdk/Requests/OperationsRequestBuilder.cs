@@ -58,7 +58,9 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
     public OperationsRequestBuilder ForAccount(string account)
     {
         if (account == null)
+        {
             throw new ArgumentNullException(nameof(account), "account cannot be null");
+        }
 
         SetSegments("accounts", account, "operations");
 
@@ -78,7 +80,9 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
     public OperationsRequestBuilder ForClaimableBalance(string claimableBalance)
     {
         if (string.IsNullOrWhiteSpace(claimableBalance))
+        {
             throw new ArgumentNullException(nameof(claimableBalance), "claimableBalance cannot be null");
+        }
 
         SetSegments("claimable_balances", claimableBalance, "operations");
 
@@ -124,7 +128,9 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
     public OperationsRequestBuilder ForTransaction(string transactionId)
     {
         if (string.IsNullOrWhiteSpace(transactionId))
+        {
             throw new ArgumentNullException(nameof(transactionId), "transactionId cannot be null");
+        }
 
         SetSegments("transactions", transactionId, "operations");
 

@@ -23,7 +23,7 @@ public class ThresholdIndexes
         THRESHOLD_MASTER_WEIGHT = 0,
         THRESHOLD_LOW = 1,
         THRESHOLD_MED = 2,
-        THRESHOLD_HIGH = 3
+        THRESHOLD_HIGH = 3,
     }
 
     public ThresholdIndexesEnum InnerValue { get; set; }
@@ -32,7 +32,7 @@ public class ThresholdIndexes
     {
         return new ThresholdIndexes
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

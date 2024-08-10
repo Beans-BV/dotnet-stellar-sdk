@@ -14,7 +14,7 @@ public class CreateAccountResult : OperationResult
             ResultCodeEnum.CREATE_ACCOUNT_UNDERFUNDED => new CreateAccountUnderfunded(),
             ResultCodeEnum.CREATE_ACCOUNT_LOW_RESERVE => new CreateAccountLowReserve(),
             ResultCodeEnum.CREATE_ACCOUNT_ALREADY_EXIST => new CreateAccountAlreadyExists(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown CreateAccountResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown CreateAccountResult type."),
         };
     }
 }

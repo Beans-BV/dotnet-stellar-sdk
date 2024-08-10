@@ -19,7 +19,7 @@ public class BeginSponsoringFutureReservesResult : OperationResult
             ResultCodeEnum.BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS
                 => new BeginSponsoringFutureReservesSuccess(),
             _ => throw new ArgumentOutOfRangeException(nameof(result),
-                "Unknown BeginSponsoringFutureReservesResult type.")
+                "Unknown BeginSponsoringFutureReservesResult type."),
         };
     }
 }

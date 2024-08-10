@@ -104,7 +104,7 @@ public class TransactionResponse : Response, IPagingToken
                 "return" => MemoValue != null
                     ? Memo.ReturnHash(Convert.FromBase64String(MemoValue))
                     : throw new ArgumentNullException(nameof(MemoValue)),
-                _ => throw new ArgumentException(nameof(MemoType))
+                _ => throw new ArgumentException(nameof(MemoType)),
             };
         }
         init

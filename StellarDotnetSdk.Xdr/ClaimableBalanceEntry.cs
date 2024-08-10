@@ -44,7 +44,10 @@ public class ClaimableBalanceEntry
         ClaimableBalanceID.Encode(stream, encodedClaimableBalanceEntry.BalanceID);
         var claimantssize = encodedClaimableBalanceEntry.Claimants.Length;
         stream.WriteInt(claimantssize);
-        for (var i = 0; i < claimantssize; i++) Claimant.Encode(stream, encodedClaimableBalanceEntry.Claimants[i]);
+        for (var i = 0; i < claimantssize; i++)
+        {
+            Claimant.Encode(stream, encodedClaimableBalanceEntry.Claimants[i]);
+        }
         Asset.Encode(stream, encodedClaimableBalanceEntry.Asset);
         Int64.Encode(stream, encodedClaimableBalanceEntry.Amount);
         ClaimableBalanceEntryExt.Encode(stream, encodedClaimableBalanceEntry.Ext);
@@ -56,7 +59,10 @@ public class ClaimableBalanceEntry
         decodedClaimableBalanceEntry.BalanceID = ClaimableBalanceID.Decode(stream);
         var claimantssize = stream.ReadInt();
         decodedClaimableBalanceEntry.Claimants = new Claimant[claimantssize];
-        for (var i = 0; i < claimantssize; i++) decodedClaimableBalanceEntry.Claimants[i] = Claimant.Decode(stream);
+        for (var i = 0; i < claimantssize; i++)
+        {
+            decodedClaimableBalanceEntry.Claimants[i] = Claimant.Decode(stream);
+        }
         decodedClaimableBalanceEntry.Asset = Asset.Decode(stream);
         decodedClaimableBalanceEntry.Amount = Int64.Decode(stream);
         decodedClaimableBalanceEntry.Ext = ClaimableBalanceEntryExt.Decode(stream);

@@ -17,7 +17,7 @@ public class LiquidityPoolDepositResult : OperationResult
             ResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_LINE_FULL => new LiquidityPoolDepositLineFull(),
             ResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_BAD_PRICE => new LiquidityPoolDepositBadPrice(),
             ResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_POOL_FULL => new LiquidityPoolDepositPoolFull(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown LiquidityPoolDepositResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown LiquidityPoolDepositResult type."),
         };
     }
 }

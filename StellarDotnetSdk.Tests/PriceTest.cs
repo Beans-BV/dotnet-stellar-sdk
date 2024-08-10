@@ -32,7 +32,7 @@ public class PriceTest
             new("4119.0", new Price(4119, 1)),
             new("1073742464.5", new Price(1073742464, 1)),
             new("1635962526.2", new Price(1635962526, 1)),
-            new("2147483647", new Price(2147483647, 1))
+            new("2147483647", new Price(2147483647, 1)),
         };
 
         foreach (var test in tests)

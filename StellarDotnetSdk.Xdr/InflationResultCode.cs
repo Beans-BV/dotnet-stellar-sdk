@@ -21,7 +21,7 @@ public class InflationResultCode
     public enum InflationResultCodeEnum
     {
         INFLATION_SUCCESS = 0,
-        INFLATION_NOT_TIME = -1
+        INFLATION_NOT_TIME = -1,
     }
 
     public InflationResultCodeEnum InnerValue { get; set; }
@@ -30,7 +30,7 @@ public class InflationResultCode
     {
         return new InflationResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

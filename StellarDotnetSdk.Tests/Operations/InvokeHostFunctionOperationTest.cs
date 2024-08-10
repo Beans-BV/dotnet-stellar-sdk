@@ -44,7 +44,7 @@ public class InvokeHostFunctionOperationTest
             [
                 new SorobanAuthorizedInvocation(
                     authorizedContractFn,
-                    Array.Empty<SorobanAuthorizedInvocation>())
+                    Array.Empty<SorobanAuthorizedInvocation>()),
             ]);
 
         return new SorobanAuthorizationEntry(InitSorobanAddressCredentials(), rootInvocation);
@@ -248,7 +248,7 @@ public class InvokeHostFunctionOperationTest
 
         var operation = new UploadContractOperation(wasm, _sourceAccount)
         {
-            Auth = [InitAuthEntry()]
+            Auth = [InitAuthEntry()],
         };
 
         // Act
@@ -290,8 +290,10 @@ public class InvokeHostFunctionOperationTest
         Assert.AreEqual(hostFunction.Args.Length, decodedFunction.Args.Length);
 
         for (var i = 0; i < hostFunction.Args.Length; i++)
+        {
             Assert.AreEqual(hostFunction.Args[i].ToXdrBase64(),
                 decodedFunction.Args[i].ToXdrBase64());
+        }
         Assert.AreEqual(operation.Auth.Length, decodedOperation.Auth.Length);
         var decodedSourceAccount = decodedOperation.SourceAccount;
         Assert.IsNotNull(decodedSourceAccount);
@@ -311,7 +313,7 @@ public class InvokeHostFunctionOperationTest
     {
         var operation = new InvokeContractOperation(_contractAddress, _functionName, _args, _sourceAccount)
         {
-            Auth = [InitAuthEntry()]
+            Auth = [InitAuthEntry()],
         };
 
         // Act
@@ -330,8 +332,10 @@ public class InvokeHostFunctionOperationTest
         Assert.AreEqual(hostFunction.Args.Length, decodedHostFunction.Args.Length);
 
         for (var i = 0; i < hostFunction.Args.Length; i++)
+        {
             Assert.AreEqual(hostFunction.Args[i].ToXdrBase64(),
                 decodedHostFunction.Args[i].ToXdrBase64());
+        }
         Assert.AreEqual(operation.Auth.Length, decodedOperation.Auth.Length);
 
         var decodedSourceAccount = decodedOperation.SourceAccount;

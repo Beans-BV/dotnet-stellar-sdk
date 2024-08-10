@@ -25,7 +25,7 @@ public class BucketEntryType
         METAENTRY = -1,
         LIVEENTRY = 0,
         DEADENTRY = 1,
-        INITENTRY = 2
+        INITENTRY = 2,
     }
 
     public BucketEntryTypeEnum InnerValue { get; set; }
@@ -34,7 +34,7 @@ public class BucketEntryType
     {
         return new BucketEntryType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -24,7 +24,9 @@ public class TimeBounds
     public TimeBounds(ulong minTime, ulong maxTime)
     {
         if (maxTime != TransactionPreconditions.TimeoutInfinite && minTime >= maxTime)
+        {
             throw new ArgumentException("minTime must be < maxTime");
+        }
 
         _minTime = minTime;
         _maxTime = maxTime;
@@ -33,11 +35,17 @@ public class TimeBounds
     public TimeBounds(long minTime, long maxTime)
     {
         if (minTime < 0)
+        {
             throw new ArgumentException("minTime must be >= 0");
+        }
         if (maxTime < 0)
+        {
             throw new ArgumentException("maxTime must be >= 0");
+        }
         if (maxTime != 0 && minTime >= maxTime)
+        {
             throw new ArgumentException("minTime must be < maxTime");
+        }
         _minTime = (ulong)minTime;
         _maxTime = (ulong)maxTime;
     }
@@ -50,7 +58,9 @@ public class TimeBounds
     public TimeBounds(DateTimeOffset? minTime = null, DateTimeOffset? maxTime = null)
     {
         if (minTime >= maxTime)
+        {
             throw new ArgumentException("minTime must be < maxTime");
+        }
 
         var minEpoch = minTime?.ToUnixTimeSeconds() ?? 0;
         var maxEpoch = maxTime?.ToUnixTimeSeconds() ?? 0;
@@ -92,18 +102,27 @@ public class TimeBounds
         return new Xdr.TimeBounds
         {
             MinTime = new TimePoint(new Uint64(_minTime)),
-            MaxTime = new TimePoint(new Uint64(_maxTime))
+            MaxTime = new TimePoint(new Uint64(_maxTime)),
         };
     }
 
     public override bool Equals(object? o)
     {
-        if (this == o) return true;
-        if (o == null || GetType() != o.GetType()) return false;
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || GetType() != o.GetType())
+        {
+            return false;
+        }
 
         var that = (TimeBounds)o;
 
-        if (MinTime != that.MinTime) return false;
+        if (MinTime != that.MinTime)
+        {
+            return false;
+        }
         return MaxTime == that.MaxTime;
     }
 

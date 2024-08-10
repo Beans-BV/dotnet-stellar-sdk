@@ -25,7 +25,10 @@ public class TxAdvertVector
     {
         var TxAdvertVectorsize = encodedTxAdvertVector.InnerValue.Length;
         stream.WriteInt(TxAdvertVectorsize);
-        for (var i = 0; i < TxAdvertVectorsize; i++) Hash.Encode(stream, encodedTxAdvertVector.InnerValue[i]);
+        for (var i = 0; i < TxAdvertVectorsize; i++)
+        {
+            Hash.Encode(stream, encodedTxAdvertVector.InnerValue[i]);
+        }
     }
 
     public static TxAdvertVector Decode(XdrDataInputStream stream)
@@ -33,7 +36,10 @@ public class TxAdvertVector
         var decodedTxAdvertVector = new TxAdvertVector();
         var TxAdvertVectorsize = stream.ReadInt();
         decodedTxAdvertVector.InnerValue = new Hash[TxAdvertVectorsize];
-        for (var i = 0; i < TxAdvertVectorsize; i++) decodedTxAdvertVector.InnerValue[i] = Hash.Decode(stream);
+        for (var i = 0; i < TxAdvertVectorsize; i++)
+        {
+            decodedTxAdvertVector.InnerValue[i] = Hash.Decode(stream);
+        }
         return decodedTxAdvertVector;
     }
 }

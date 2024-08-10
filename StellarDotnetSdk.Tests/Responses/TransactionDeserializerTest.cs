@@ -143,7 +143,7 @@ public class TransactionDeserializerTest
             InnerTx = transaction.InnerTx,
             Links = transaction.Links,
             Memo = transaction.Memo,
-            PagingToken = transaction.PagingToken
+            PagingToken = transaction.PagingToken,
         };
 
         Assert.AreEqual(transaction.MemoValue, copyTransaction.MemoValue);
@@ -174,7 +174,7 @@ public class TransactionDeserializerTest
             ResultMetaXdr = transaction.ResultMetaXdr,
             Links = transaction.Links,
             Memo = transaction.Memo,
-            PagingToken = transaction.PagingToken
+            PagingToken = transaction.PagingToken,
         };
 
         Assert.AreEqual(transaction.Hash, transaction2.Hash);
@@ -214,7 +214,7 @@ public class TransactionDeserializerTest
             Signatures = transaction.Signatures,
             FeeBumpTx = transaction.FeeBumpTx,
             InnerTx = transaction.InnerTx,
-            Links = transaction.Links
+            Links = transaction.Links,
         };
 
 

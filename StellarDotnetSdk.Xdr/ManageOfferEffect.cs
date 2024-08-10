@@ -21,7 +21,7 @@ public class ManageOfferEffect
     {
         MANAGE_OFFER_CREATED = 0,
         MANAGE_OFFER_UPDATED = 1,
-        MANAGE_OFFER_DELETED = 2
+        MANAGE_OFFER_DELETED = 2,
     }
 
     public ManageOfferEffectEnum InnerValue { get; set; }
@@ -30,7 +30,7 @@ public class ManageOfferEffect
     {
         return new ManageOfferEffect
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

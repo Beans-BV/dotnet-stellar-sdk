@@ -32,7 +32,7 @@ public class BeginSponsoringFutureReservesOperationTest
 
         var back = new BeginSponsoringFutureReservesOperationResponse
         {
-            SponsoredId = operation.SponsoredId
+            SponsoredId = operation.SponsoredId,
         };
         Assert.IsNotNull(back);
     }

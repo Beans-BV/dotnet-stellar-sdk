@@ -26,7 +26,9 @@ public class ContractCostParams
         var ContractCostParamssize = encodedContractCostParams.InnerValue.Length;
         stream.WriteInt(ContractCostParamssize);
         for (var i = 0; i < ContractCostParamssize; i++)
+        {
             ContractCostParamEntry.Encode(stream, encodedContractCostParams.InnerValue[i]);
+        }
     }
 
     public static ContractCostParams Decode(XdrDataInputStream stream)
@@ -35,7 +37,9 @@ public class ContractCostParams
         var ContractCostParamssize = stream.ReadInt();
         decodedContractCostParams.InnerValue = new ContractCostParamEntry[ContractCostParamssize];
         for (var i = 0; i < ContractCostParamssize; i++)
+        {
             decodedContractCostParams.InnerValue[i] = ContractCostParamEntry.Decode(stream);
+        }
         return decodedContractCostParams;
     }
 }

@@ -66,8 +66,8 @@ public class CreatePassiveSellOfferOperation : Operation
                 Selling = Selling.ToXdr(),
                 Buying = Buying.ToXdr(),
                 Amount = new Int64(ToXdrAmount(Amount)),
-                Price = StellarDotnetSdk.Price.FromString(Price).ToXdr()
-            }
+                Price = StellarDotnetSdk.Price.FromString(Price).ToXdr(),
+            },
         };
     }
 

@@ -24,7 +24,9 @@ public class SorobanAuthorizedInvocation
         var subInvocationssize = encodedSorobanAuthorizedInvocation.SubInvocations.Length;
         stream.WriteInt(subInvocationssize);
         for (var i = 0; i < subInvocationssize; i++)
+        {
             Encode(stream, encodedSorobanAuthorizedInvocation.SubInvocations[i]);
+        }
     }
 
     public static SorobanAuthorizedInvocation Decode(XdrDataInputStream stream)
@@ -34,7 +36,9 @@ public class SorobanAuthorizedInvocation
         var subInvocationssize = stream.ReadInt();
         decodedSorobanAuthorizedInvocation.SubInvocations = new SorobanAuthorizedInvocation[subInvocationssize];
         for (var i = 0; i < subInvocationssize; i++)
+        {
             decodedSorobanAuthorizedInvocation.SubInvocations[i] = Decode(stream);
+        }
         return decodedSorobanAuthorizedInvocation;
     }
 }

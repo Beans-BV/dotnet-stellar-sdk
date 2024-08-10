@@ -19,7 +19,7 @@ public class TxSetComponentType
 {
     public enum TxSetComponentTypeEnum
     {
-        TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE = 0
+        TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE = 0,
     }
 
     public TxSetComponentTypeEnum InnerValue { get; set; }
@@ -28,7 +28,7 @@ public class TxSetComponentType
     {
         return new TxSetComponentType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

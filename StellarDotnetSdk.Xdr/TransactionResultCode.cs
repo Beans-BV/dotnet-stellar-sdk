@@ -57,7 +57,7 @@ public class TransactionResultCode
         txBAD_SPONSORSHIP = -14,
         txBAD_MIN_SEQ_AGE_OR_GAP = -15,
         txMALFORMED = -16,
-        txSOROBAN_INVALID = -17
+        txSOROBAN_INVALID = -17,
     }
 
     public TransactionResultCodeEnum InnerValue { get; set; }
@@ -66,7 +66,7 @@ public class TransactionResultCode
     {
         return new TransactionResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

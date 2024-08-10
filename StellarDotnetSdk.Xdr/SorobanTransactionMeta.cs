@@ -32,12 +32,17 @@ public class SorobanTransactionMeta
         SorobanTransactionMetaExt.Encode(stream, encodedSorobanTransactionMeta.Ext);
         var eventssize = encodedSorobanTransactionMeta.Events.Length;
         stream.WriteInt(eventssize);
-        for (var i = 0; i < eventssize; i++) ContractEvent.Encode(stream, encodedSorobanTransactionMeta.Events[i]);
+        for (var i = 0; i < eventssize; i++)
+        {
+            ContractEvent.Encode(stream, encodedSorobanTransactionMeta.Events[i]);
+        }
         SCVal.Encode(stream, encodedSorobanTransactionMeta.ReturnValue);
         var diagnosticEventssize = encodedSorobanTransactionMeta.DiagnosticEvents.Length;
         stream.WriteInt(diagnosticEventssize);
         for (var i = 0; i < diagnosticEventssize; i++)
+        {
             DiagnosticEvent.Encode(stream, encodedSorobanTransactionMeta.DiagnosticEvents[i]);
+        }
     }
 
     public static SorobanTransactionMeta Decode(XdrDataInputStream stream)
@@ -46,12 +51,17 @@ public class SorobanTransactionMeta
         decodedSorobanTransactionMeta.Ext = SorobanTransactionMetaExt.Decode(stream);
         var eventssize = stream.ReadInt();
         decodedSorobanTransactionMeta.Events = new ContractEvent[eventssize];
-        for (var i = 0; i < eventssize; i++) decodedSorobanTransactionMeta.Events[i] = ContractEvent.Decode(stream);
+        for (var i = 0; i < eventssize; i++)
+        {
+            decodedSorobanTransactionMeta.Events[i] = ContractEvent.Decode(stream);
+        }
         decodedSorobanTransactionMeta.ReturnValue = SCVal.Decode(stream);
         var diagnosticEventssize = stream.ReadInt();
         decodedSorobanTransactionMeta.DiagnosticEvents = new DiagnosticEvent[diagnosticEventssize];
         for (var i = 0; i < diagnosticEventssize; i++)
+        {
             decodedSorobanTransactionMeta.DiagnosticEvents[i] = DiagnosticEvent.Decode(stream);
+        }
         return decodedSorobanTransactionMeta;
     }
 }

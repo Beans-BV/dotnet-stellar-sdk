@@ -39,7 +39,7 @@ public class ChangeTrustResultCode
         CHANGE_TRUST_SELF_NOT_ALLOWED = -5,
         CHANGE_TRUST_TRUST_LINE_MISSING = -6,
         CHANGE_TRUST_CANNOT_DELETE = -7,
-        CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES = -8
+        CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES = -8,
     }
 
     public ChangeTrustResultCodeEnum InnerValue { get; set; }
@@ -48,7 +48,7 @@ public class ChangeTrustResultCode
     {
         return new ChangeTrustResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

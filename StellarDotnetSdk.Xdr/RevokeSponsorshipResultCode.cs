@@ -30,7 +30,7 @@ public class RevokeSponsorshipResultCode
         REVOKE_SPONSORSHIP_NOT_SPONSOR = -2,
         REVOKE_SPONSORSHIP_LOW_RESERVE = -3,
         REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE = -4,
-        REVOKE_SPONSORSHIP_MALFORMED = -5
+        REVOKE_SPONSORSHIP_MALFORMED = -5,
     }
 
     public RevokeSponsorshipResultCodeEnum InnerValue { get; set; }
@@ -39,7 +39,7 @@ public class RevokeSponsorshipResultCode
     {
         return new RevokeSponsorshipResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

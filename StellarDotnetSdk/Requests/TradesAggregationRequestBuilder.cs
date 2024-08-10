@@ -41,7 +41,10 @@ public class
     public TradesAggregationRequestBuilder BaseAsset(Asset asset)
     {
         UriBuilder.SetQueryParam("base_asset_type", asset.Type);
-        if (asset is not AssetTypeCreditAlphaNum creditAlphaNumAsset) return this;
+        if (asset is not AssetTypeCreditAlphaNum creditAlphaNumAsset)
+        {
+            return this;
+        }
         UriBuilder.SetQueryParam("base_asset_code", creditAlphaNumAsset.Code);
         UriBuilder.SetQueryParam("base_asset_issuer", creditAlphaNumAsset.Issuer);
 
@@ -51,7 +54,10 @@ public class
     public TradesAggregationRequestBuilder CounterAsset(Asset asset)
     {
         UriBuilder.SetQueryParam("counter_asset_type", asset.Type);
-        if (asset is not AssetTypeCreditAlphaNum creditAlphaNumAsset) return this;
+        if (asset is not AssetTypeCreditAlphaNum creditAlphaNumAsset)
+        {
+            return this;
+        }
         UriBuilder.SetQueryParam("counter_asset_code", creditAlphaNumAsset.Code);
         UriBuilder.SetQueryParam("counter_asset_issuer", creditAlphaNumAsset.Issuer);
 

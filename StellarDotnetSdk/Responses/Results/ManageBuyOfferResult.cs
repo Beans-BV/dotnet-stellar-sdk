@@ -24,7 +24,7 @@ public class ManageBuyOfferResult : OperationResult
             ResultCodeEnum.MANAGE_BUY_OFFER_BUY_NO_ISSUER => new ManageBuyOfferBuyNoIssuer(),
             ResultCodeEnum.MANAGE_BUY_OFFER_NOT_FOUND => new ManageBuyOfferNotFound(),
             ResultCodeEnum.MANAGE_BUY_OFFER_LOW_RESERVE => new ManageBuyOfferLowReserve(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ManageOfferResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ManageOfferResult type."),
         };
     }
 }
@@ -50,7 +50,7 @@ public class ManageBuyOfferSuccess : ManageBuyOfferResult
             ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_CREATED => ManageBuyOfferCreated.FromXdr(result),
             ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_UPDATED => ManageBuyOfferUpdated.FromXdr(result),
             ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_DELETED => ManageBuyOfferDeleted.FromXdr(result),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ManageBuyOfferSuccess type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ManageBuyOfferSuccess type."),
         };
     }
 }

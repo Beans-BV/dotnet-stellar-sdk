@@ -27,8 +27,8 @@ public class LedgerKeyContractData : LedgerKey
             {
                 Contract = Contract.ToXdr(),
                 Key = Key.ToXdr(),
-                Durability = Durability
-            }
+                Durability = Durability,
+            },
         };
     }
 

@@ -60,9 +60,9 @@ public class RevokeSignerSponsorshipOperation : Operation
                 Signer = new RevokeSponsorshipOp.RevokeSponsorshipOpSigner
                 {
                     AccountID = new AccountID(Account.XdrPublicKey),
-                    SignerKey = SignerKey
-                }
-            }
+                    SignerKey = SignerKey,
+                },
+            },
         };
     }
 

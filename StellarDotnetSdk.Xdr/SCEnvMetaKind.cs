@@ -17,7 +17,7 @@ public class SCEnvMetaKind
 {
     public enum SCEnvMetaKindEnum
     {
-        SC_ENV_META_KIND_INTERFACE_VERSION = 0
+        SC_ENV_META_KIND_INTERFACE_VERSION = 0,
     }
 
     public SCEnvMetaKindEnum InnerValue { get; set; }
@@ -26,7 +26,7 @@ public class SCEnvMetaKind
     {
         return new SCEnvMetaKind
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

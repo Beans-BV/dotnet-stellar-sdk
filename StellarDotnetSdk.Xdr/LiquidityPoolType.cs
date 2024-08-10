@@ -17,7 +17,7 @@ public class LiquidityPoolType
 {
     public enum LiquidityPoolTypeEnum
     {
-        LIQUIDITY_POOL_CONSTANT_PRODUCT = 0
+        LIQUIDITY_POOL_CONSTANT_PRODUCT = 0,
     }
 
     public LiquidityPoolTypeEnum InnerValue { get; set; }
@@ -26,7 +26,7 @@ public class LiquidityPoolType
     {
         return new LiquidityPoolType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -44,8 +44,10 @@ public class TransactionPreconditions
     public void IsValid()
     {
         if (ExtraSigners?.Count > MaxExtraSignersCount)
+        {
             throw new FormatException(
                 $"Invalid preconditions, too many extra signers, can only have up to {MaxExtraSignersCount}.");
+        }
     }
 
     public bool HasV2()
@@ -74,21 +76,22 @@ public class TransactionPreconditions
                     : null,
                 TimeBounds = preconditions.V2.TimeBounds != null
                     ? TimeBounds.FromXdr(preconditions.V2.TimeBounds)
-                    : null
+                    : null,
             },
             PreconditionType.PreconditionTypeEnum.PRECOND_TIME => new TransactionPreconditions
             {
                 TimeBounds = preconditions.TimeBounds != null
                     ? TimeBounds.FromXdr(preconditions.TimeBounds)
-                    : null
+                    : null,
             },
-            _ => null
+            _ => null,
         };
     }
 
     public Preconditions ToXdr()
     {
         if (HasV2())
+        {
             return new Preconditions
             {
                 Discriminant = PreconditionType.Create(PreconditionType.PreconditionTypeEnum.PRECOND_V2),
@@ -101,19 +104,22 @@ public class TransactionPreconditions
                         : null,
                     MinSeqAge = new Duration(new Uint64(MinSequenceAge ?? 0UL)),
                     MinSeqLedgerGap = new Uint32(MinSequenceLedgerGap ?? 0U),
-                    ExtraSigners = ExtraSigners?.ToArray() ?? Array.Empty<SignerKey>()
-                }
+                    ExtraSigners = ExtraSigners?.ToArray() ?? Array.Empty<SignerKey>(),
+                },
             };
+        }
 
         if (TimeBounds != null)
+        {
             return new Preconditions
             {
                 Discriminant = PreconditionType.Create(PreconditionType.PreconditionTypeEnum.PRECOND_TIME),
-                TimeBounds = TimeBounds.ToXdr()
+                TimeBounds = TimeBounds.ToXdr(),
             };
+        }
         return new Preconditions
         {
-            Discriminant = PreconditionType.Create(PreconditionType.PreconditionTypeEnum.PRECOND_NONE)
+            Discriminant = PreconditionType.Create(PreconditionType.PreconditionTypeEnum.PRECOND_NONE),
         };
     }
 }

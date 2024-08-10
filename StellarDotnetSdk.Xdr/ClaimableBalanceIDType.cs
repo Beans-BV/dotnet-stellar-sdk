@@ -17,7 +17,7 @@ public class ClaimableBalanceIDType
 {
     public enum ClaimableBalanceIDTypeEnum
     {
-        CLAIMABLE_BALANCE_ID_TYPE_V0 = 0
+        CLAIMABLE_BALANCE_ID_TYPE_V0 = 0,
     }
 
     public ClaimableBalanceIDTypeEnum InnerValue { get; set; }
@@ -26,7 +26,7 @@ public class ClaimableBalanceIDType
     {
         return new ClaimableBalanceIDType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

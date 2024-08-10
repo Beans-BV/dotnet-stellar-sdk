@@ -20,7 +20,10 @@ public class LedgerKeyContractCode : LedgerKey
     /// <param name="hash">a 32-element byte array.</param>
     public LedgerKeyContractCode(byte[] hash)
     {
-        if (hash.Length != 32) throw new ArgumentOutOfRangeException(nameof(hash), "Hash must have exactly 32 bytes.");
+        if (hash.Length != 32)
+        {
+            throw new ArgumentOutOfRangeException(nameof(hash), "Hash must have exactly 32 bytes.");
+        }
         Hash = hash;
     }
 
@@ -34,8 +37,8 @@ public class LedgerKeyContractCode : LedgerKey
                 new LedgerEntryType { InnerValue = LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE },
             ContractCode = new Xdr.LedgerKey.LedgerKeyContractCode
             {
-                Hash = new Hash(Hash)
-            }
+                Hash = new Hash(Hash),
+            },
         };
     }
 

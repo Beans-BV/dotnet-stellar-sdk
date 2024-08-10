@@ -34,8 +34,8 @@ public class MuxedAccountMed25519 : IAccountId
                 Med25519 = new Xdr.MuxedAccount.MuxedAccountMed25519
                 {
                     Id = new Uint64(Id),
-                    Ed25519 = new Uint256(Key.PublicKey)
-                }
+                    Ed25519 = new Uint256(Key.PublicKey),
+                },
             };
 
             return muxedAccount;

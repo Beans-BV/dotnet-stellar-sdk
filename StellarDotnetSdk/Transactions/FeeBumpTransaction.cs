@@ -25,20 +25,22 @@ public class FeeBumpTransaction : TransactionBase
     public override byte[] SignatureBase(Network network)
     {
         if (network == null)
+        {
             throw new NoNetworkSelectedException();
+        }
 
         // Hashed NetworkID
         var networkHash = new Hash(network.NetworkId);
         var taggedTransaction = new TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction
         {
             Discriminant = EnvelopeType.Create(EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_FEE_BUMP),
-            FeeBump = ToXdr()
+            FeeBump = ToXdr(),
         };
 
         var txSignature = new TransactionSignaturePayload
         {
             NetworkId = networkHash,
-            TaggedTransaction = taggedTransaction
+            TaggedTransaction = taggedTransaction,
         };
 
         var writer = new XdrDataOutputStream();
@@ -57,8 +59,8 @@ public class FeeBumpTransaction : TransactionBase
             V1 = new TransactionV1Envelope
             {
                 Tx = InnerTransaction.ToXdrV1(),
-                Signatures = InnerTransaction.Signatures.ToArray()
-            }
+                Signatures = InnerTransaction.Signatures.ToArray(),
+            },
         };
 
         var ext = new Xdr.FeeBumpTransaction.FeeBumpTransactionExt { Discriminant = 0 };
@@ -68,15 +70,17 @@ public class FeeBumpTransaction : TransactionBase
             Fee = fee,
             FeeSource = feeSource,
             InnerTx = inner,
-            Ext = ext
+            Ext = ext,
         };
     }
 
     public override TransactionEnvelope ToEnvelopeXdr(TransactionXdrVersion version = TransactionXdrVersion.V1)
     {
         if (Signatures.Count == 0)
+        {
             throw new NotEnoughSignaturesException(
                 "FeeBumpTransaction must be signed by at least one signer. Use transaction.sign().");
+        }
 
         return ToEnvelopeXdr(Signatures.ToArray());
     }
@@ -84,7 +88,9 @@ public class FeeBumpTransaction : TransactionBase
     public override TransactionEnvelope ToUnsignedEnvelopeXdr(TransactionXdrVersion version = TransactionXdrVersion.V1)
     {
         if (Signatures.Count > 0)
+        {
             throw new TooManySignaturesException("FeeBumpTransaction must not be signed. Use ToEnvelopeXdr().");
+        }
         return ToEnvelopeXdr(Array.Empty<DecoratedSignature>());
     }
 
@@ -93,7 +99,7 @@ public class FeeBumpTransaction : TransactionBase
         return new TransactionEnvelope
         {
             Discriminant = EnvelopeType.Create(EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_FEE_BUMP),
-            FeeBump = new FeeBumpTransactionEnvelope { Tx = ToXdr(), Signatures = signatures }
+            FeeBump = new FeeBumpTransactionEnvelope { Tx = ToXdr(), Signatures = signatures },
         };
     }
 
@@ -117,7 +123,10 @@ public class FeeBumpTransaction : TransactionBase
                     var innerTx = Transaction.FromEnvelopeXdrV1(tx.InnerTx.V1);
 
                     var transaction = new FeeBumpTransaction(feeSource, innerTx, fee);
-                    foreach (var signature in envelope.FeeBump.Signatures) transaction.Signatures.Add(signature);
+                    foreach (var signature in envelope.FeeBump.Signatures)
+                    {
+                        transaction.Signatures.Add(signature);
+                    }
 
                     return transaction;
                 default:

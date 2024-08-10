@@ -37,7 +37,7 @@ public class ClaimClaimableBalanceOperationResponseTest
         var back = new ClaimClaimableBalanceOperationResponse
         {
             BalanceID = operation.BalanceID,
-            Claimant = operation.Claimant
+            Claimant = operation.Claimant,
         };
         Assert.IsNotNull(back);
     }
@@ -71,7 +71,7 @@ public class ClaimClaimableBalanceOperationResponseTest
         var back = new ClaimClaimableBalanceOperationResponse
         {
             BalanceID = operation.BalanceID,
-            Claimant = operation.Claimant
+            Claimant = operation.Claimant,
         };
         Assert.IsNotNull(back);
     }

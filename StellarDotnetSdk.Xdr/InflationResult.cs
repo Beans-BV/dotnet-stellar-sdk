@@ -28,7 +28,10 @@ public class InflationResult
             case InflationResultCode.InflationResultCodeEnum.INFLATION_SUCCESS:
                 var payoutssize = encodedInflationResult.Payouts.Length;
                 stream.WriteInt(payoutssize);
-                for (var i = 0; i < payoutssize; i++) InflationPayout.Encode(stream, encodedInflationResult.Payouts[i]);
+                for (var i = 0; i < payoutssize; i++)
+                {
+                    InflationPayout.Encode(stream, encodedInflationResult.Payouts[i]);
+                }
                 break;
             case InflationResultCode.InflationResultCodeEnum.INFLATION_NOT_TIME:
                 break;
@@ -46,7 +49,9 @@ public class InflationResult
                 var payoutssize = stream.ReadInt();
                 decodedInflationResult.Payouts = new InflationPayout[payoutssize];
                 for (var i = 0; i < payoutssize; i++)
+                {
                     decodedInflationResult.Payouts[i] = InflationPayout.Decode(stream);
+                }
                 break;
             case InflationResultCode.InflationResultCodeEnum.INFLATION_NOT_TIME:
                 break;

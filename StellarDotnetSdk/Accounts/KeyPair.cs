@@ -49,10 +49,14 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
             KeyBlobFormat.RawPublicKey);
 
         if (privateKey != null)
+        {
             _secretKey = Key.Import(SignatureAlgorithm.Ed25519, privateKey, KeyBlobFormat.RawPrivateKey,
                 new KeyCreationParameters { ExportPolicy = KeyExportPolicies.AllowPlaintextExport });
+        }
         else
+        {
             _secretKey = null;
+        }
 
         SeedBytes = seed;
     }
@@ -101,7 +105,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
             var publicKey = new xdr_PublicKey
             {
                 Discriminant = new PublicKeyType
-                    { InnerValue = PublicKeyType.PublicKeyTypeEnum.PUBLIC_KEY_TYPE_ED25519 }
+                    { InnerValue = PublicKeyType.PublicKeyTypeEnum.PUBLIC_KEY_TYPE_ED25519 },
             };
 
             var uint256 = new Uint256(PublicKey);
@@ -121,7 +125,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
             var signerKey = new SignerKey
             {
                 Discriminant = new SignerKeyType
-                    { InnerValue = SignerKeyType.SignerKeyTypeEnum.SIGNER_KEY_TYPE_ED25519 }
+                    { InnerValue = SignerKeyType.SignerKeyTypeEnum.SIGNER_KEY_TYPE_ED25519 },
             };
 
             var uint256 = new Uint256(PublicKey);
@@ -162,7 +166,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
             var muxedAccount = new Xdr.MuxedAccount
             {
                 Discriminant = new CryptoKeyType { InnerValue = CryptoKeyType.CryptoKeyTypeEnum.KEY_TYPE_ED25519 },
-                Ed25519 = uint256
+                Ed25519 = uint256,
             };
             return muxedAccount;
         }
@@ -172,9 +176,18 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
 
     public bool Equals(KeyPair? other)
     {
-        if (other == null) return false;
-        if (SeedBytes != null && other.SeedBytes == null) return false;
-        if (SeedBytes == null && other.SeedBytes != null) return false;
+        if (other == null)
+        {
+            return false;
+        }
+        if (SeedBytes != null && other.SeedBytes == null)
+        {
+            return false;
+        }
+        if (SeedBytes == null && other.SeedBytes != null)
+        {
+            return false;
+        }
         return _publicKey.Equals(other._publicKey);
     }
 
@@ -301,8 +314,10 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     public byte[] Sign(byte[] data)
     {
         if (_secretKey == null)
+        {
             throw new Exception(
                 "KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.");
+        }
 
         return SignatureAlgorithm.Ed25519.Sign(_secretKey, data);
     }
@@ -321,7 +336,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
         return new DecoratedSignature
         {
             Hint = new SignatureHint(SignatureHint.InnerValue),
-            Signature = new Signature(rawSig)
+            Signature = new Signature(rawSig),
         };
     }
 
@@ -340,12 +355,19 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
 
         //Copy the last four bytes of the payload into the new hint
         if (signerPayload.Length >= hint.Length)
+        {
             Array.Copy(signerPayload, signerPayload.Length - hint.Length, hint, 0, hint.Length);
+        }
         else
+        {
             Array.Copy(signerPayload, 0, hint, 0, signerPayload.Length);
+        }
 
         //XOR the new hint with this key pair's public key hint
-        for (var i = 0; i < hint.Length; i++) hint[i] ^= payloadSignature.Hint.InnerValue[i];
+        for (var i = 0; i < hint.Length; i++)
+        {
+            hint[i] ^= payloadSignature.Hint.InnerValue[i];
+        }
         payloadSignature.Hint.InnerValue = hint;
         return payloadSignature;
     }

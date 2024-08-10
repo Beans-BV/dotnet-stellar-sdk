@@ -40,7 +40,7 @@ public class SetOptionsResultCode
         SET_OPTIONS_THRESHOLD_OUT_OF_RANGE = -7,
         SET_OPTIONS_BAD_SIGNER = -8,
         SET_OPTIONS_INVALID_HOME_DOMAIN = -9,
-        SET_OPTIONS_AUTH_REVOCABLE_REQUIRED = -10
+        SET_OPTIONS_AUTH_REVOCABLE_REQUIRED = -10,
     }
 
     public SetOptionsResultCodeEnum InnerValue { get; set; }
@@ -49,7 +49,7 @@ public class SetOptionsResultCode
     {
         return new SetOptionsResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

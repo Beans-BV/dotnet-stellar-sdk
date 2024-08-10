@@ -38,7 +38,7 @@ public class PaymentResultCode
         PAYMENT_NO_TRUST = -6,
         PAYMENT_NOT_AUTHORIZED = -7,
         PAYMENT_LINE_FULL = -8,
-        PAYMENT_NO_ISSUER = -9
+        PAYMENT_NO_ISSUER = -9,
     }
 
     public PaymentResultCodeEnum InnerValue { get; set; }
@@ -47,7 +47,7 @@ public class PaymentResultCode
     {
         return new PaymentResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

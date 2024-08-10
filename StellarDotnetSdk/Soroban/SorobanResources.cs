@@ -24,7 +24,7 @@ public class SorobanResources
             Footprint = Footprint.ToXdr(),
             Instructions = new Uint32(Instructions),
             ReadBytes = new Uint32(ReadBytes),
-            WriteBytes = new Uint32(WriteBytes)
+            WriteBytes = new Uint32(WriteBytes),
         };
     }
 

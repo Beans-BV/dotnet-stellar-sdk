@@ -71,7 +71,7 @@ public class SCSpecType
         SC_SPEC_TYPE_MAP = 1004,
         SC_SPEC_TYPE_TUPLE = 1005,
         SC_SPEC_TYPE_BYTES_N = 1006,
-        SC_SPEC_TYPE_UDT = 2000
+        SC_SPEC_TYPE_UDT = 2000,
     }
 
     public SCSpecTypeEnum InnerValue { get; set; }
@@ -80,7 +80,7 @@ public class SCSpecType
     {
         return new SCSpecType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

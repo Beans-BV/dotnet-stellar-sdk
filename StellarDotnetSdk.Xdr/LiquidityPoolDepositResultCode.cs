@@ -38,7 +38,7 @@ public class LiquidityPoolDepositResultCode
         LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED = -4,
         LIQUIDITY_POOL_DEPOSIT_LINE_FULL = -5,
         LIQUIDITY_POOL_DEPOSIT_BAD_PRICE = -6,
-        LIQUIDITY_POOL_DEPOSIT_POOL_FULL = -7
+        LIQUIDITY_POOL_DEPOSIT_POOL_FULL = -7,
     }
 
     public LiquidityPoolDepositResultCodeEnum InnerValue { get; set; }
@@ -47,7 +47,7 @@ public class LiquidityPoolDepositResultCode
     {
         return new LiquidityPoolDepositResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -15,7 +15,9 @@ public class AccountEntryExtensionV1
     {
         var entryExtensionV1 = new AccountEntryExtensionV1(Liabilities.FromXdr(xdrExtensionV1.Liabilities));
         if (xdrExtensionV1.Ext.Discriminant == 2)
+        {
             entryExtensionV1.ExtensionV2 = AccountEntryExtensionV2.FromXdr(xdrExtensionV1.Ext.V2);
+        }
 
         return entryExtensionV1;
     }

@@ -27,8 +27,8 @@ public class LedgerKeyLiquidityPool : LedgerKey
                 new LedgerEntryType { InnerValue = LedgerEntryType.LedgerEntryTypeEnum.LIQUIDITY_POOL },
             LiquidityPool = new Xdr.LedgerKey.LedgerKeyLiquidityPool
             {
-                LiquidityPoolID = new PoolID(new Hash(LiquidityPoolID.Hash))
-            }
+                LiquidityPoolID = new PoolID(new Hash(LiquidityPoolID.Hash)),
+            },
         };
     }
 

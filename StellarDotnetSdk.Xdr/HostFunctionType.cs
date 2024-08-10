@@ -21,7 +21,7 @@ public class HostFunctionType
     {
         HOST_FUNCTION_TYPE_INVOKE_CONTRACT = 0,
         HOST_FUNCTION_TYPE_CREATE_CONTRACT = 1,
-        HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM = 2
+        HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM = 2,
     }
 
     public HostFunctionTypeEnum InnerValue { get; set; }
@@ -30,7 +30,7 @@ public class HostFunctionType
     {
         return new HostFunctionType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -31,9 +31,9 @@ public class ClaimPredicateBeforeRelativeTime : ClaimPredicate
         {
             Discriminant = new ClaimPredicateType
             {
-                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_RELATIVE_TIME
+                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_RELATIVE_TIME,
             },
-            RelBefore = new xdr_Int64(Duration)
+            RelBefore = new xdr_Int64(Duration),
         };
     }
 }

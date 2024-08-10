@@ -27,10 +27,16 @@ public class SCSpecFunctionV0
         SCSymbol.Encode(stream, encodedSCSpecFunctionV0.Name);
         var inputssize = encodedSCSpecFunctionV0.Inputs.Length;
         stream.WriteInt(inputssize);
-        for (var i = 0; i < inputssize; i++) SCSpecFunctionInputV0.Encode(stream, encodedSCSpecFunctionV0.Inputs[i]);
+        for (var i = 0; i < inputssize; i++)
+        {
+            SCSpecFunctionInputV0.Encode(stream, encodedSCSpecFunctionV0.Inputs[i]);
+        }
         var outputssize = encodedSCSpecFunctionV0.Outputs.Length;
         stream.WriteInt(outputssize);
-        for (var i = 0; i < outputssize; i++) SCSpecTypeDef.Encode(stream, encodedSCSpecFunctionV0.Outputs[i]);
+        for (var i = 0; i < outputssize; i++)
+        {
+            SCSpecTypeDef.Encode(stream, encodedSCSpecFunctionV0.Outputs[i]);
+        }
     }
 
     public static SCSpecFunctionV0 Decode(XdrDataInputStream stream)
@@ -40,10 +46,16 @@ public class SCSpecFunctionV0
         decodedSCSpecFunctionV0.Name = SCSymbol.Decode(stream);
         var inputssize = stream.ReadInt();
         decodedSCSpecFunctionV0.Inputs = new SCSpecFunctionInputV0[inputssize];
-        for (var i = 0; i < inputssize; i++) decodedSCSpecFunctionV0.Inputs[i] = SCSpecFunctionInputV0.Decode(stream);
+        for (var i = 0; i < inputssize; i++)
+        {
+            decodedSCSpecFunctionV0.Inputs[i] = SCSpecFunctionInputV0.Decode(stream);
+        }
         var outputssize = stream.ReadInt();
         decodedSCSpecFunctionV0.Outputs = new SCSpecTypeDef[outputssize];
-        for (var i = 0; i < outputssize; i++) decodedSCSpecFunctionV0.Outputs[i] = SCSpecTypeDef.Decode(stream);
+        for (var i = 0; i < outputssize; i++)
+        {
+            decodedSCSpecFunctionV0.Outputs[i] = SCSpecTypeDef.Decode(stream);
+        }
         return decodedSCSpecFunctionV0;
     }
 }

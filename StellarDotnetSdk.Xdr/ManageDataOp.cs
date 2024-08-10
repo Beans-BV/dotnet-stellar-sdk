@@ -36,7 +36,10 @@ public class ManageDataOp
         var decodedManageDataOp = new ManageDataOp();
         decodedManageDataOp.DataName = String64.Decode(stream);
         var DataValuePresent = stream.ReadInt();
-        if (DataValuePresent != 0) decodedManageDataOp.DataValue = DataValue.Decode(stream);
+        if (DataValuePresent != 0)
+        {
+            decodedManageDataOp.DataValue = DataValue.Decode(stream);
+        }
         return decodedManageDataOp;
     }
 }

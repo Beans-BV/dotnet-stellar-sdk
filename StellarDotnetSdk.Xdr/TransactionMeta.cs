@@ -36,7 +36,9 @@ public class TransactionMeta
                 var operationssize = encodedTransactionMeta.Operations.Length;
                 stream.WriteInt(operationssize);
                 for (var i = 0; i < operationssize; i++)
+                {
                     OperationMeta.Encode(stream, encodedTransactionMeta.Operations[i]);
+                }
                 break;
             case 1:
                 TransactionMetaV1.Encode(stream, encodedTransactionMeta.V1);
@@ -61,7 +63,9 @@ public class TransactionMeta
                 var operationssize = stream.ReadInt();
                 decodedTransactionMeta.Operations = new OperationMeta[operationssize];
                 for (var i = 0; i < operationssize; i++)
+                {
                     decodedTransactionMeta.Operations[i] = OperationMeta.Decode(stream);
+                }
                 break;
             case 1:
                 decodedTransactionMeta.V1 = TransactionMetaV1.Decode(stream);

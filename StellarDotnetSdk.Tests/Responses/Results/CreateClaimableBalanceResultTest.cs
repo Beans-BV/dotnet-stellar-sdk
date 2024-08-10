@@ -56,7 +56,7 @@ public class CreateClaimableBalanceResultTest
             {
                 Discriminant = ClaimableBalanceIDType.Create(ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum
                     .CLAIMABLE_BALANCE_ID_TYPE_V0),
-                V0 = new Hash(Convert.FromBase64String("i7gJhVls6QELGhMtAlC+ScMatzkwXW/s9+UoKVhN13Y="))
+                V0 = new Hash(Convert.FromBase64String("i7gJhVls6QELGhMtAlC+ScMatzkwXW/s9+UoKVhN13Y=")),
             };
 
         Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
@@ -79,8 +79,8 @@ public class CreateClaimableBalanceResultTest
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE),
             CreateClaimableBalanceResult = new CreateClaimableBalanceResult
             {
-                Discriminant = CreateClaimableBalanceResultCode.Create(type)
-            }
+                Discriminant = CreateClaimableBalanceResultCode.Create(type),
+            },
         };
     }
 }

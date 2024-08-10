@@ -87,7 +87,7 @@ public class TrustlineAssetTest
         var trustlineAssetNativeXdr = new XDR.TrustLineAsset
         {
             Discriminant = new XDR.AssetType { InnerValue = XDR.AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM4 },
-            AlphaNum4 = Asset.Create($"USD:{keypair.AccountId}").ToXdr().AlphaNum4
+            AlphaNum4 = Asset.Create($"USD:{keypair.AccountId}").ToXdr().AlphaNum4,
         };
 
         var trustlineAsset = (TrustlineAsset.Wrapper)TrustlineAsset.FromXdr(trustlineAssetNativeXdr);
@@ -102,7 +102,7 @@ public class TrustlineAssetTest
         var trustlineAssetNativeXdr = new XDR.TrustLineAsset
         {
             Discriminant = XDR.AssetType.Create(XDR.AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM12),
-            AlphaNum12 = Asset.Create($"USDUSD:{keypair.AccountId}").ToXdr().AlphaNum12
+            AlphaNum12 = Asset.Create($"USDUSD:{keypair.AccountId}").ToXdr().AlphaNum12,
         };
 
         var trustlineAsset = (TrustlineAsset.Wrapper)TrustlineAsset.FromXdr(trustlineAssetNativeXdr);
@@ -114,7 +114,7 @@ public class TrustlineAssetTest
     {
         var trustlineAssetNativeXdr = new XDR.TrustLineAsset
         {
-            Discriminant = XDR.AssetType.Create(XDR.AssetType.AssetTypeEnum.ASSET_TYPE_NATIVE)
+            Discriminant = XDR.AssetType.Create(XDR.AssetType.AssetTypeEnum.ASSET_TYPE_NATIVE),
         };
 
         var trustlineAsset = (TrustlineAsset.Wrapper)TrustlineAsset.FromXdr(trustlineAssetNativeXdr);

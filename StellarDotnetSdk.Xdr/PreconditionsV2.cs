@@ -84,23 +84,38 @@ public class PreconditionsV2
         Uint32.Encode(stream, encodedPreconditionsV2.MinSeqLedgerGap);
         var extraSignerssize = encodedPreconditionsV2.ExtraSigners.Length;
         stream.WriteInt(extraSignerssize);
-        for (var i = 0; i < extraSignerssize; i++) SignerKey.Encode(stream, encodedPreconditionsV2.ExtraSigners[i]);
+        for (var i = 0; i < extraSignerssize; i++)
+        {
+            SignerKey.Encode(stream, encodedPreconditionsV2.ExtraSigners[i]);
+        }
     }
 
     public static PreconditionsV2 Decode(XdrDataInputStream stream)
     {
         var decodedPreconditionsV2 = new PreconditionsV2();
         var TimeBoundsPresent = stream.ReadInt();
-        if (TimeBoundsPresent != 0) decodedPreconditionsV2.TimeBounds = TimeBounds.Decode(stream);
+        if (TimeBoundsPresent != 0)
+        {
+            decodedPreconditionsV2.TimeBounds = TimeBounds.Decode(stream);
+        }
         var LedgerBoundsPresent = stream.ReadInt();
-        if (LedgerBoundsPresent != 0) decodedPreconditionsV2.LedgerBounds = LedgerBounds.Decode(stream);
+        if (LedgerBoundsPresent != 0)
+        {
+            decodedPreconditionsV2.LedgerBounds = LedgerBounds.Decode(stream);
+        }
         var MinSeqNumPresent = stream.ReadInt();
-        if (MinSeqNumPresent != 0) decodedPreconditionsV2.MinSeqNum = SequenceNumber.Decode(stream);
+        if (MinSeqNumPresent != 0)
+        {
+            decodedPreconditionsV2.MinSeqNum = SequenceNumber.Decode(stream);
+        }
         decodedPreconditionsV2.MinSeqAge = Duration.Decode(stream);
         decodedPreconditionsV2.MinSeqLedgerGap = Uint32.Decode(stream);
         var extraSignerssize = stream.ReadInt();
         decodedPreconditionsV2.ExtraSigners = new SignerKey[extraSignerssize];
-        for (var i = 0; i < extraSignerssize; i++) decodedPreconditionsV2.ExtraSigners[i] = SignerKey.Decode(stream);
+        for (var i = 0; i < extraSignerssize; i++)
+        {
+            decodedPreconditionsV2.ExtraSigners[i] = SignerKey.Decode(stream);
+        }
         return decodedPreconditionsV2;
     }
 }

@@ -23,7 +23,7 @@ public class LedgerEntryChangeType
         LEDGER_ENTRY_CREATED = 0,
         LEDGER_ENTRY_UPDATED = 1,
         LEDGER_ENTRY_REMOVED = 2,
-        LEDGER_ENTRY_STATE = 3
+        LEDGER_ENTRY_STATE = 3,
     }
 
     public LedgerEntryChangeTypeEnum InnerValue { get; set; }
@@ -32,7 +32,7 @@ public class LedgerEntryChangeType
     {
         return new LedgerEntryChangeType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

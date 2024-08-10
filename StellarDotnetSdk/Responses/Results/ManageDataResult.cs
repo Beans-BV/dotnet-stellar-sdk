@@ -14,7 +14,7 @@ public class ManageDataResult : OperationResult
             ResultCodeEnum.MANAGE_DATA_NAME_NOT_FOUND => new ManageDataNameNotFound(),
             ResultCodeEnum.MANAGE_DATA_LOW_RESERVE => new ManageDataLowReserve(),
             ResultCodeEnum.MANAGE_DATA_INVALID_NAME => new ManageDataInvalidName(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ManageDataResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ManageDataResult type."),
         };
     }
 }

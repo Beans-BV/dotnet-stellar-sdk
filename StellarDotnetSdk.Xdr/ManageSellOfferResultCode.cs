@@ -51,7 +51,7 @@ public class ManageSellOfferResultCode
         MANAGE_SELL_OFFER_SELL_NO_ISSUER = -9,
         MANAGE_SELL_OFFER_BUY_NO_ISSUER = -10,
         MANAGE_SELL_OFFER_NOT_FOUND = -11,
-        MANAGE_SELL_OFFER_LOW_RESERVE = -12
+        MANAGE_SELL_OFFER_LOW_RESERVE = -12,
     }
 
     public ManageSellOfferResultCodeEnum InnerValue { get; set; }
@@ -60,7 +60,7 @@ public class ManageSellOfferResultCode
     {
         return new ManageSellOfferResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -59,8 +59,8 @@ public class LedgerEntryTest
                 Discriminant = ClaimableBalanceIDType.Create(ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum
                     .CLAIMABLE_BALANCE_ID_TYPE_V0),
                 V0 = new Hash([
-                    1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2
-                ])
+                    1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2,
+                ]),
             },
             Claimants =
             [
@@ -74,17 +74,17 @@ public class LedgerEntryTest
                         {
                             Discriminant = ClaimPredicateType.Create(ClaimPredicateType.ClaimPredicateTypeEnum
                                 .CLAIM_PREDICATE_BEFORE_RELATIVE_TIME),
-                            RelBefore = new Int64(10000)
-                        }
-                    }
-                }
+                            RelBefore = new Int64(10000),
+                        },
+                    },
+                },
             ],
             Asset = _alphaNum12Asset.ToXdr(),
             Amount = new Int64(1000),
             Ext = new ClaimableBalanceEntry.ClaimableBalanceEntryExt
             {
-                Discriminant = 0
-            }
+                Discriminant = 0,
+            },
         };
     }
 
@@ -101,12 +101,12 @@ public class LedgerEntryTest
             HomeDomain = new String32(""),
             Thresholds = new Thresholds([1, 2, 3, 0]),
             Signers = [],
-            Ext = new AccountEntry.AccountEntryExt { Discriminant = 0 }
+            Ext = new AccountEntry.AccountEntryExt { Discriminant = 0 },
         };
         return new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.ACCOUNT),
-            Account = accountEntry
+            Account = accountEntry,
         };
     }
 
@@ -119,15 +119,15 @@ public class LedgerEntryTest
             Key = new SCVal
             {
                 Discriminant = SCValType.Create(SCValType.SCValTypeEnum.SCV_STRING),
-                Str = new StellarDotnetSdk.Xdr.SCString("key 1")
+                Str = new StellarDotnetSdk.Xdr.SCString("key 1"),
             },
             Durability =
                 ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT),
             Val = new SCVal
             {
                 Discriminant = SCValType.Create(SCValType.SCValTypeEnum.SCV_U64),
-                U64 = new Uint64(1000000)
-            }
+                U64 = new Uint64(1000000),
+            },
         };
     }
 
@@ -166,7 +166,7 @@ public class LedgerEntryTest
         var xdrLiabilities = new Liabilities
         {
             Buying = new Int64(100),
-            Selling = new Int64(200)
+            Selling = new Int64(200),
         };
         var xdrLedgerEntry = InitBasicAccountEntry();
         xdrLedgerEntry.Account.Ext = new AccountEntry.AccountEntryExt
@@ -176,10 +176,10 @@ public class LedgerEntryTest
             {
                 Ext = new AccountEntryExtensionV1.AccountEntryExtensionV1Ext
                 {
-                    Discriminant = 0
+                    Discriminant = 0,
                 },
-                Liabilities = xdrLiabilities
-            }
+                Liabilities = xdrLiabilities,
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntry);
@@ -205,7 +205,7 @@ public class LedgerEntryTest
         var xdrLiabilities = new Liabilities
         {
             Buying = new Int64(100),
-            Selling = new Int64(200)
+            Selling = new Int64(200),
         };
         var xdrLedgerEntry = InitBasicAccountEntry();
         var xdrExtensionV2 = new AccountEntryExtensionV2
@@ -216,13 +216,13 @@ public class LedgerEntryTest
             [
                 new SponsorshipDescriptor
                 {
-                    InnerValue = new AccountID(_signerSponsoringId.XdrPublicKey)
-                }
+                    InnerValue = new AccountID(_signerSponsoringId.XdrPublicKey),
+                },
             ],
             Ext = new AccountEntryExtensionV2.AccountEntryExtensionV2Ext
             {
-                Discriminant = 0
-            }
+                Discriminant = 0,
+            },
         };
         xdrLedgerEntry.Account.Ext = new AccountEntry.AccountEntryExt
         {
@@ -232,10 +232,10 @@ public class LedgerEntryTest
                 Ext = new AccountEntryExtensionV1.AccountEntryExtensionV1Ext
                 {
                     Discriminant = 2,
-                    V2 = xdrExtensionV2
+                    V2 = xdrExtensionV2,
                 },
-                Liabilities = xdrLiabilities
-            }
+                Liabilities = xdrLiabilities,
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntry);
@@ -277,14 +277,14 @@ public class LedgerEntryTest
         var xdrLiabilities = new Liabilities
         {
             Buying = new Int64(100),
-            Selling = new Int64(200)
+            Selling = new Int64(200),
         };
         var xdrLedgerEntry = InitBasicAccountEntry();
         var xdrExtensionV3 = new AccountEntryExtensionV3
         {
             Ext = new ExtensionPoint(),
             SeqLedger = new Uint32(11),
-            SeqTime = new TimePoint(new Uint64(10000))
+            SeqTime = new TimePoint(new Uint64(10000)),
         };
         var xdrExtensionV2 = new AccountEntryExtensionV2
         {
@@ -295,8 +295,8 @@ public class LedgerEntryTest
             Ext = new AccountEntryExtensionV2.AccountEntryExtensionV2Ext
             {
                 Discriminant = 3,
-                V3 = xdrExtensionV3
-            }
+                V3 = xdrExtensionV3,
+            },
         };
         xdrLedgerEntry.Account.Ext = new AccountEntry.AccountEntryExt
         {
@@ -306,10 +306,10 @@ public class LedgerEntryTest
                 Ext = new AccountEntryExtensionV1.AccountEntryExtensionV1Ext
                 {
                     Discriminant = 2,
-                    V2 = xdrExtensionV2
+                    V2 = xdrExtensionV2,
                 },
-                Liabilities = xdrLiabilities
-            }
+                Liabilities = xdrLiabilities,
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntry);
@@ -363,8 +363,8 @@ public class LedgerEntryTest
             new StellarDotnetSdk.Xdr.Signer
             {
                 Key = _keyPair.XdrSignerKey,
-                Weight = new Uint32(2)
-            }
+                Weight = new Uint32(2),
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntry);
@@ -409,18 +409,18 @@ public class LedgerEntryTest
             Price = new StellarDotnetSdk.Xdr.Price
             {
                 N = new Int32(1),
-                D = new Int32(10)
+                D = new Int32(10),
             },
             Flags = new Uint32(10),
             Ext = new OfferEntry.OfferEntryExt
             {
-                Discriminant = 0
-            }
+                Discriminant = 0,
+            },
         };
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.OFFER),
-            Offer = xdrOfferEntry
+            Offer = xdrOfferEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -468,20 +468,20 @@ public class LedgerEntryTest
                     Liabilities = new Liabilities
                     {
                         Buying = new Int64(100),
-                        Selling = new Int64(100)
+                        Selling = new Int64(100),
                     },
                     Ext = new TrustLineEntry.TrustLineEntryExt.TrustLineEntryV1.TrustLineEntryV1Ext
                     {
-                        Discriminant = 0
-                    }
-                }
-            }
+                        Discriminant = 0,
+                    },
+                },
+            },
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.TRUSTLINE),
-            TrustLine = xdrTrustlineEntry
+            TrustLine = xdrTrustlineEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -520,9 +520,9 @@ public class LedgerEntryTest
         {
             Ext = new TrustLineEntryExtensionV2.TrustLineEntryExtensionV2Ext
             {
-                Discriminant = 0
+                Discriminant = 0,
             },
-            LiquidityPoolUseCount = new Int32(20)
+            LiquidityPoolUseCount = new Int32(20),
         };
         var xdrTrustlineEntry = new TrustLineEntry
         {
@@ -539,21 +539,21 @@ public class LedgerEntryTest
                     Liabilities = new Liabilities
                     {
                         Buying = new Int64(100),
-                        Selling = new Int64(100)
+                        Selling = new Int64(100),
                     },
                     Ext = new TrustLineEntry.TrustLineEntryExt.TrustLineEntryV1.TrustLineEntryV1Ext
                     {
                         Discriminant = 2,
-                        V2 = xdrExtensionV2
-                    }
-                }
-            }
+                        V2 = xdrExtensionV2,
+                    },
+                },
+            },
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.TRUSTLINE),
-            TrustLine = xdrTrustlineEntry
+            TrustLine = xdrTrustlineEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -598,14 +598,14 @@ public class LedgerEntryTest
 
             Ext = new DataEntry.DataEntryExt
             {
-                Discriminant = 0
-            }
+                Discriminant = 0,
+            },
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.DATA),
-            Data = xdrDataEntry
+            Data = xdrDataEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -631,12 +631,12 @@ public class LedgerEntryTest
                 ClaimableBalanceIDType.Create(ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum
                     .CLAIMABLE_BALANCE_ID_TYPE_V0),
             V0 = new Hash(new byte[]
-                { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3 })
+                { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3 }),
         };
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE),
-            ClaimableBalance = xdrClaimableBalanceEntry
+            ClaimableBalance = xdrClaimableBalanceEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -654,12 +654,12 @@ public class LedgerEntryTest
                 ClaimableBalanceIDType.Create(ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum
                     .CLAIMABLE_BALANCE_ID_TYPE_V0),
             V0 = new Hash(new byte[]
-                { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1 })
+                { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1 }),
         };
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE),
-            ClaimableBalance = xdrClaimableBalanceEntry
+            ClaimableBalance = xdrClaimableBalanceEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -680,7 +680,7 @@ public class LedgerEntryTest
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE),
-            ClaimableBalance = xdrClaimableBalanceEntry
+            ClaimableBalance = xdrClaimableBalanceEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -721,19 +721,19 @@ public class LedgerEntryTest
         {
             Ext = new ClaimableBalanceEntryExtensionV1.ClaimableBalanceEntryExtensionV1Ext
             {
-                Discriminant = 0
+                Discriminant = 0,
             },
-            Flags = new Uint32(4)
+            Flags = new Uint32(4),
         };
         xdrClaimableBalanceEntry.Ext = new ClaimableBalanceEntry.ClaimableBalanceEntryExt
         {
             Discriminant = 1,
-            V1 = xdrExtension
+            V1 = xdrExtension,
         };
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE),
-            ClaimableBalance = xdrClaimableBalanceEntry
+            ClaimableBalance = xdrClaimableBalanceEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -776,8 +776,8 @@ public class LedgerEntryTest
             LiquidityPoolID = new PoolID
             {
                 InnerValue = new Hash([
-                    1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2
-                ])
+                    1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2,
+                ]),
             },
             Body = new LiquidityPoolEntry.LiquidityPoolEntryBody
             {
@@ -789,20 +789,20 @@ public class LedgerEntryTest
                     {
                         AssetA = _nativeAsset.ToXdr(),
                         AssetB = _alphaNum4Asset.ToXdr(),
-                        Fee = new Int32(100)
+                        Fee = new Int32(100),
                     },
                     ReserveA = new Int64(1000),
                     ReserveB = new Int64(2000),
                     TotalPoolShares = new Int64(1000000),
-                    PoolSharesTrustLineCount = new Int64(10)
-                }
-            }
+                    PoolSharesTrustLineCount = new Int64(10),
+                },
+            },
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.LIQUIDITY_POOL),
-            LiquidityPool = xdrLiquidityPoolEntry
+            LiquidityPool = xdrLiquidityPoolEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -836,7 +836,7 @@ public class LedgerEntryTest
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_DATA),
-            ContractData = xdrContractDataEntry
+            ContractData = xdrContractDataEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -862,12 +862,12 @@ public class LedgerEntryTest
         {
             Discriminant = SCAddressType.Create(SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_ACCOUNT),
             AccountId = new AccountID(KeyPair.FromAccountId("GCZFMH32MF5EAWETZTKF3ZV5SEVJPI53UEMDNSW55WBR75GMZJU4U573")
-                .XdrPublicKey)
+                .XdrPublicKey),
         };
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_DATA),
-            ContractData = xdrContractDataEntry
+            ContractData = xdrContractDataEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -893,21 +893,21 @@ public class LedgerEntryTest
         {
             Ext = new ContractCodeEntry.ContractCodeEntryExt
             {
-                Discriminant = 0
+                Discriminant = 0,
             },
             Hash = new Hash([
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 3
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 3,
             ]),
             Code =
             [
-                1, 2, 3, 4
-            ]
+                1, 2, 3, 4,
+            ],
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE),
-            ContractCode = xdrContractCodeEntry
+            ContractCode = xdrContractCodeEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -932,13 +932,13 @@ public class LedgerEntryTest
                 {
                     Ext = new ExtensionPoint
                     {
-                        Discriminant = 0
+                        Discriminant = 0,
                     },
                     CostInputs = new ContractCodeCostInputs
                     {
                         Ext = new ExtensionPoint
                         {
-                            Discriminant = 0
+                            Discriminant = 0,
                         },
                         NInstructions = new Uint32(1),
                         NFunctions = new Uint32(2),
@@ -949,23 +949,23 @@ public class LedgerEntryTest
                         NElemSegments = new Uint32(7),
                         NImports = new Uint32(8),
                         NExports = new Uint32(9),
-                        NDataSegmentBytes = new Uint32(10)
-                    }
-                }
+                        NDataSegmentBytes = new Uint32(10),
+                    },
+                },
             },
             Hash = new Hash([
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2,
             ]),
             Code =
             [
-                1, 2, 3
-            ]
+                1, 2, 3,
+            ],
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE),
-            ContractCode = xdrContractCodeEntry
+            ContractCode = xdrContractCodeEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1002,7 +1002,7 @@ public class LedgerEntryTest
         {
             LedgerMaxTxsSizeBytes = new Uint32(1024),
             TxMaxSizeBytes = new Uint32(2048),
-            FeeTxSize1KB = new Int64(3072)
+            FeeTxSize1KB = new Int64(3072),
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
@@ -1012,8 +1012,8 @@ public class LedgerEntryTest
             {
                 Discriminant =
                     ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_BANDWIDTH_V0),
-                ContractBandwidth = xdrConfigSetting
-            }
+                ContractBandwidth = xdrConfigSetting,
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1037,15 +1037,15 @@ public class LedgerEntryTest
                 {
                     Ext = new ExtensionPoint(),
                     ConstTerm = new Int64(10),
-                    LinearTerm = new Int64(20)
+                    LinearTerm = new Int64(20),
                 },
                 new()
                 {
                     Ext = new ExtensionPoint(),
                     ConstTerm = new Int64(30),
-                    LinearTerm = new Int64(40)
-                }
-            }
+                    LinearTerm = new Int64(40),
+                },
+            },
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
@@ -1055,8 +1055,8 @@ public class LedgerEntryTest
             {
                 Discriminant = ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
                     .CONFIG_SETTING_CONTRACT_COST_PARAMS_MEMORY_BYTES),
-                ContractCostParamsMemBytes = xdrConfigSetting
-            }
+                ContractCostParamsMemBytes = xdrConfigSetting,
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1088,15 +1088,15 @@ public class LedgerEntryTest
                 {
                     Ext = new ExtensionPoint(),
                     ConstTerm = new Int64(100),
-                    LinearTerm = new Int64(200)
+                    LinearTerm = new Int64(200),
                 },
                 new()
                 {
                     Ext = new ExtensionPoint(),
                     ConstTerm = new Int64(300),
-                    LinearTerm = new Int64(400)
-                }
-            }
+                    LinearTerm = new Int64(400),
+                },
+            },
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
@@ -1106,8 +1106,8 @@ public class LedgerEntryTest
             {
                 Discriminant = ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
                     .CONFIG_SETTING_CONTRACT_COST_PARAMS_CPU_INSTRUCTIONS),
-                ContractCostParamsCpuInsns = xdrConfigSetting
-            }
+                ContractCostParamsCpuInsns = xdrConfigSetting,
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1136,7 +1136,7 @@ public class LedgerEntryTest
             LedgerMaxInstructions = new Int64(10),
             TxMaxInstructions = new Int64(20),
             FeeRatePerInstructionsIncrement = new Int64(30),
-            TxMemoryLimit = new Uint32(40)
+            TxMemoryLimit = new Uint32(40),
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
@@ -1146,8 +1146,8 @@ public class LedgerEntryTest
             {
                 Discriminant =
                     ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_COMPUTE_V0),
-                ContractCompute = xdrConfigSetting
-            }
+                ContractCompute = xdrConfigSetting,
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1168,7 +1168,7 @@ public class LedgerEntryTest
         var xdrConfigSetting = new ConfigSettingContractEventsV0
         {
             TxMaxContractEventsSizeBytes = new Uint32(100),
-            FeeContractEvents1KB = new Int64(1100)
+            FeeContractEvents1KB = new Int64(1100),
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
@@ -1178,8 +1178,8 @@ public class LedgerEntryTest
             {
                 Discriminant =
                     ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_EVENTS_V0),
-                ContractEvents = xdrConfigSetting
-            }
+                ContractEvents = xdrConfigSetting,
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1197,7 +1197,7 @@ public class LedgerEntryTest
     {
         var xdrConfigSetting = new ConfigSettingContractExecutionLanesV0
         {
-            LedgerMaxTxCount = new Uint32(1000)
+            LedgerMaxTxCount = new Uint32(1000),
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
@@ -1207,8 +1207,8 @@ public class LedgerEntryTest
             {
                 Discriminant =
                     ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_EXECUTION_LANES),
-                ContractExecutionLanes = xdrConfigSetting
-            }
+                ContractExecutionLanes = xdrConfigSetting,
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1224,7 +1224,7 @@ public class LedgerEntryTest
     {
         var xdrConfigSetting = new ConfigSettingContractHistoricalDataV0
         {
-            FeeHistorical1KB = new Int64(1000)
+            FeeHistorical1KB = new Int64(1000),
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
@@ -1235,8 +1235,8 @@ public class LedgerEntryTest
                 Discriminant =
                     ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
                         .CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0),
-                ContractHistoricalData = xdrConfigSetting
-            }
+                ContractHistoricalData = xdrConfigSetting,
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1266,7 +1266,7 @@ public class LedgerEntryTest
             BucketListTargetSizeBytes = new Int64(120),
             WriteFee1KBBucketListLow = new Int64(130),
             WriteFee1KBBucketListHigh = new Int64(140),
-            BucketListWriteFeeGrowthFactor = new Uint32(150)
+            BucketListWriteFeeGrowthFactor = new Uint32(150),
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
@@ -1276,8 +1276,8 @@ public class LedgerEntryTest
             {
                 Discriminant =
                     ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_V0),
-                ContractLedgerCost = xdrConfigSetting
-            }
+                ContractLedgerCost = xdrConfigSetting,
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1324,7 +1324,7 @@ public class LedgerEntryTest
             BucketListSizeWindowSampleSize = new Uint32(70),
             BucketListWindowSamplePeriod = new Uint32(80),
             EvictionScanSize = new Uint32(90),
-            StartingEvictionScanLevel = new Uint32(100)
+            StartingEvictionScanLevel = new Uint32(100),
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
@@ -1334,8 +1334,8 @@ public class LedgerEntryTest
             {
                 Discriminant =
                     ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_STATE_ARCHIVAL),
-                StateArchivalSettings = xdrConfigSetting
-            }
+                StateArchivalSettings = xdrConfigSetting,
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1367,7 +1367,7 @@ public class LedgerEntryTest
         {
             BucketListLevel = new Uint32(10),
             IsCurrBucket = true,
-            BucketFileOffset = new Uint64(100)
+            BucketFileOffset = new Uint64(100),
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
@@ -1377,8 +1377,8 @@ public class LedgerEntryTest
             {
                 Discriminant =
                     ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_EVICTION_ITERATOR),
-                EvictionIterator = xdrConfigSetting
-            }
+                EvictionIterator = xdrConfigSetting,
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1401,8 +1401,8 @@ public class LedgerEntryTest
             {
                 Discriminant =
                     ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES),
-                ContractMaxSizeBytes = new Uint32(10)
-            }
+                ContractMaxSizeBytes = new Uint32(10),
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1425,8 +1425,8 @@ public class LedgerEntryTest
                 Discriminant =
                     ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
                         .CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES),
-                ContractDataKeySizeBytes = new Uint32(10)
-            }
+                ContractDataKeySizeBytes = new Uint32(10),
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1448,8 +1448,8 @@ public class LedgerEntryTest
             {
                 Discriminant = ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
                     .CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES),
-                ContractDataEntrySizeBytes = new Uint32(10)
-            }
+                ContractDataEntrySizeBytes = new Uint32(10),
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1471,8 +1471,8 @@ public class LedgerEntryTest
             {
                 Discriminant =
                     ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW),
-                BucketListSizeWindow = new Uint64[] { new(100), new(200) }
-            }
+                BucketListSizeWindow = new Uint64[] { new(100), new(200) },
+            },
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1483,8 +1483,10 @@ public class LedgerEntryTest
         Assert.AreEqual(xdrLedgerEntryData.ConfigSetting.BucketListSizeWindow.Length,
             decodedConfigSetting.InnerValue.Length);
         for (var i = 0; i < decodedConfigSetting.InnerValue.Length; i++)
+        {
             Assert.AreEqual(xdrLedgerEntryData.ConfigSetting.BucketListSizeWindow[i].InnerValue,
                 decodedConfigSetting.InnerValue[i]);
+        }
     }
 
 
@@ -1495,13 +1497,13 @@ public class LedgerEntryTest
         {
             KeyHash = new Hash(new byte[]
                 { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2 }),
-            LiveUntilLedgerSeq = new Uint32(100000)
+            LiveUntilLedgerSeq = new Uint32(100000),
         };
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.TTL),
-            Ttl = xdrTtlEntry
+            Ttl = xdrTtlEntry,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);

@@ -40,8 +40,8 @@ public class BumpSequenceOperation : Operation
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.BUMP_SEQUENCE),
             BumpSequenceOp = new BumpSequenceOp
             {
-                BumpTo = new SequenceNumber(new Int64(BumpTo))
-            }
+                BumpTo = new SequenceNumber(new Int64(BumpTo)),
+            },
         };
     }
 }

@@ -25,7 +25,9 @@ public class InvokeHostFunctionOp
         var authsize = encodedInvokeHostFunctionOp.Auth.Length;
         stream.WriteInt(authsize);
         for (var i = 0; i < authsize; i++)
+        {
             SorobanAuthorizationEntry.Encode(stream, encodedInvokeHostFunctionOp.Auth[i]);
+        }
     }
 
     public static InvokeHostFunctionOp Decode(XdrDataInputStream stream)
@@ -35,7 +37,9 @@ public class InvokeHostFunctionOp
         var authsize = stream.ReadInt();
         decodedInvokeHostFunctionOp.Auth = new SorobanAuthorizationEntry[authsize];
         for (var i = 0; i < authsize; i++)
+        {
             decodedInvokeHostFunctionOp.Auth[i] = SorobanAuthorizationEntry.Decode(stream);
+        }
         return decodedInvokeHostFunctionOp;
     }
 }

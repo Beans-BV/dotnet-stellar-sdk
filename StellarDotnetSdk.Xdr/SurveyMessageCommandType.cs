@@ -17,7 +17,7 @@ public class SurveyMessageCommandType
 {
     public enum SurveyMessageCommandTypeEnum
     {
-        SURVEY_TOPOLOGY = 0
+        SURVEY_TOPOLOGY = 0,
     }
 
     public SurveyMessageCommandTypeEnum InnerValue { get; set; }
@@ -26,7 +26,7 @@ public class SurveyMessageCommandType
     {
         return new SurveyMessageCommandType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

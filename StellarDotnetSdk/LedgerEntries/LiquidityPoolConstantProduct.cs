@@ -39,7 +39,9 @@ public class LiquidityPoolConstantProduct : LiquidityPoolEntryBody
         LiquidityPoolEntry.LiquidityPoolEntryBody xdrBody)
     {
         if (xdrBody.Discriminant.InnerValue != LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT)
+        {
             throw new ArgumentException("Not a LiquidityPoolConstantProduct", nameof(xdrBody));
+        }
         return FromXdr(xdrBody.ConstantProduct);
     }
 }

@@ -44,7 +44,10 @@ public class Predicate
             return claimant_ClaimPredicate.Not(predicate);
         }
 
-        if (Unconditional) return claimant_ClaimPredicate.Unconditional();
+        if (Unconditional)
+        {
+            return claimant_ClaimPredicate.Unconditional();
+        }
 
         if (AbsBefore != null)
         {
@@ -53,7 +56,9 @@ public class Predicate
         }
 
         if (RelBefore != null)
+        {
             return claimant_ClaimPredicate.BeforeRelativeTime(new Duration(new Uint64((ulong)RelBefore.Value)));
+        }
 
         throw new Exception("Invalid Predicate");
     }

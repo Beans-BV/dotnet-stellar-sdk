@@ -21,7 +21,7 @@ public class PreconditionType
     {
         PRECOND_NONE = 0,
         PRECOND_TIME = 1,
-        PRECOND_V2 = 2
+        PRECOND_V2 = 2,
     }
 
     public PreconditionTypeEnum InnerValue { get; set; }
@@ -30,7 +30,7 @@ public class PreconditionType
     {
         return new PreconditionType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -25,7 +25,10 @@ public class PeerStatList
     {
         var PeerStatListsize = encodedPeerStatList.InnerValue.Length;
         stream.WriteInt(PeerStatListsize);
-        for (var i = 0; i < PeerStatListsize; i++) PeerStats.Encode(stream, encodedPeerStatList.InnerValue[i]);
+        for (var i = 0; i < PeerStatListsize; i++)
+        {
+            PeerStats.Encode(stream, encodedPeerStatList.InnerValue[i]);
+        }
     }
 
     public static PeerStatList Decode(XdrDataInputStream stream)
@@ -33,7 +36,10 @@ public class PeerStatList
         var decodedPeerStatList = new PeerStatList();
         var PeerStatListsize = stream.ReadInt();
         decodedPeerStatList.InnerValue = new PeerStats[PeerStatListsize];
-        for (var i = 0; i < PeerStatListsize; i++) decodedPeerStatList.InnerValue[i] = PeerStats.Decode(stream);
+        for (var i = 0; i < PeerStatListsize; i++)
+        {
+            decodedPeerStatList.InnerValue[i] = PeerStats.Decode(stream);
+        }
         return decodedPeerStatList;
     }
 }

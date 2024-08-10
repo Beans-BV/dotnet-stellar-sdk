@@ -16,7 +16,10 @@ public class Reserve
 #nullable restore
     public override bool Equals(object? obj)
     {
-        if (obj is not Reserve other) return false;
+        if (obj is not Reserve other)
+        {
+            return false;
+        }
 
         return Equals(Asset, other.Asset) && Equals(Amount, other.Amount);
     }

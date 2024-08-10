@@ -24,7 +24,10 @@ public class InvokeContractArgs
         SCSymbol.Encode(stream, encodedInvokeContractArgs.FunctionName);
         var argssize = encodedInvokeContractArgs.Args.Length;
         stream.WriteInt(argssize);
-        for (var i = 0; i < argssize; i++) SCVal.Encode(stream, encodedInvokeContractArgs.Args[i]);
+        for (var i = 0; i < argssize; i++)
+        {
+            SCVal.Encode(stream, encodedInvokeContractArgs.Args[i]);
+        }
     }
 
     public static InvokeContractArgs Decode(XdrDataInputStream stream)
@@ -34,7 +37,10 @@ public class InvokeContractArgs
         decodedInvokeContractArgs.FunctionName = SCSymbol.Decode(stream);
         var argssize = stream.ReadInt();
         decodedInvokeContractArgs.Args = new SCVal[argssize];
-        for (var i = 0; i < argssize; i++) decodedInvokeContractArgs.Args[i] = SCVal.Decode(stream);
+        for (var i = 0; i < argssize; i++)
+        {
+            decodedInvokeContractArgs.Args[i] = SCVal.Decode(stream);
+        }
         return decodedInvokeContractArgs;
     }
 }

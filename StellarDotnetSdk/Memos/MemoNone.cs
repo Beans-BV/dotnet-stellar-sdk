@@ -8,7 +8,7 @@ public class MemoNone : Memo
     {
         var memo = new Xdr.Memo
         {
-            Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_NONE)
+            Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_NONE),
         };
         return memo;
     }

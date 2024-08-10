@@ -17,7 +17,10 @@ public class Account : ITransactionBuilderAccount
     /// </param>
     public Account(string accountId, long? sequenceNumber)
     {
-        if (accountId is null) throw new ArgumentNullException(nameof(accountId), "accountId cannot be null");
+        if (accountId is null)
+        {
+            throw new ArgumentNullException(nameof(accountId), "accountId cannot be null");
+        }
 
         MuxedAccount = KeyPair.FromAccountId(accountId);
         SequenceNumber = sequenceNumber ??

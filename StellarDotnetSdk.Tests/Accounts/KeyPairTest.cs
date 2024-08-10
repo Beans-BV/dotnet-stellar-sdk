@@ -76,7 +76,7 @@ public class KeyPairTest
             {
                 "SDYZ5IYOML3LTWJ6WIAC2YWORKVO7GJRTPPGGNJQERH72I6ZCQHDAJZN",
                 "GABXJTV7ELEB2TQZKJYEGXBUIG6QODJULKJDI65KZMIZZG2EACJU5EA7"
-            }
+            },
         };
 
         foreach (var (key, accountId) in keypairs)
@@ -163,7 +163,10 @@ public class KeyPairTest
         var sig = keypair.SignPayloadDecorated(payload);
         var bytes = new byte[] { 0xFF & 252, 65, 0, 50 };
 
-        for (var i = 0; i < sig.Hint.InnerValue.Length; i++) sig.Hint.InnerValue[i] = bytes[i];
+        for (var i = 0; i < sig.Hint.InnerValue.Length; i++)
+        {
+            sig.Hint.InnerValue[i] = bytes[i];
+        }
     }
 
 
@@ -177,6 +180,9 @@ public class KeyPairTest
         var sig = keypair.SignPayloadDecorated(payload);
         var bytes = new byte[] { 255, 64, 7, 55 };
 
-        for (var i = 0; i < sig.Hint.InnerValue.Length; i++) sig.Hint.InnerValue[i] = bytes[i];
+        for (var i = 0; i < sig.Hint.InnerValue.Length; i++)
+        {
+            sig.Hint.InnerValue[i] = bytes[i];
+        }
     }
 }

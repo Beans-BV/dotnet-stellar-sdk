@@ -102,7 +102,9 @@ public class ConfigSettingEntry
                 var bucketListSizeWindowsize = encodedConfigSettingEntry.BucketListSizeWindow.Length;
                 stream.WriteInt(bucketListSizeWindowsize);
                 for (var i = 0; i < bucketListSizeWindowsize; i++)
+                {
                     Uint64.Encode(stream, encodedConfigSettingEntry.BucketListSizeWindow[i]);
+                }
                 break;
             case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_EVICTION_ITERATOR:
                 EvictionIterator.Encode(stream, encodedConfigSettingEntry.EvictionIterator);
@@ -157,7 +159,9 @@ public class ConfigSettingEntry
                 var bucketListSizeWindowsize = stream.ReadInt();
                 decodedConfigSettingEntry.BucketListSizeWindow = new Uint64[bucketListSizeWindowsize];
                 for (var i = 0; i < bucketListSizeWindowsize; i++)
+                {
                     decodedConfigSettingEntry.BucketListSizeWindow[i] = Uint64.Decode(stream);
+                }
                 break;
             case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_EVICTION_ITERATOR:
                 decodedConfigSettingEntry.EvictionIterator = EvictionIterator.Decode(stream);

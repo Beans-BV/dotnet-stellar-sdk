@@ -43,12 +43,18 @@ public class ClaimPredicate
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_AND:
                 var andPredicatessize = encodedClaimPredicate.AndPredicates.Length;
                 stream.WriteInt(andPredicatessize);
-                for (var i = 0; i < andPredicatessize; i++) Encode(stream, encodedClaimPredicate.AndPredicates[i]);
+                for (var i = 0; i < andPredicatessize; i++)
+                {
+                    Encode(stream, encodedClaimPredicate.AndPredicates[i]);
+                }
                 break;
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_OR:
                 var orPredicatessize = encodedClaimPredicate.OrPredicates.Length;
                 stream.WriteInt(orPredicatessize);
-                for (var i = 0; i < orPredicatessize; i++) Encode(stream, encodedClaimPredicate.OrPredicates[i]);
+                for (var i = 0; i < orPredicatessize; i++)
+                {
+                    Encode(stream, encodedClaimPredicate.OrPredicates[i]);
+                }
                 break;
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_NOT:
                 if (encodedClaimPredicate.NotPredicate != null)
@@ -83,16 +89,25 @@ public class ClaimPredicate
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_AND:
                 var andPredicatessize = stream.ReadInt();
                 decodedClaimPredicate.AndPredicates = new ClaimPredicate[andPredicatessize];
-                for (var i = 0; i < andPredicatessize; i++) decodedClaimPredicate.AndPredicates[i] = Decode(stream);
+                for (var i = 0; i < andPredicatessize; i++)
+                {
+                    decodedClaimPredicate.AndPredicates[i] = Decode(stream);
+                }
                 break;
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_OR:
                 var orPredicatessize = stream.ReadInt();
                 decodedClaimPredicate.OrPredicates = new ClaimPredicate[orPredicatessize];
-                for (var i = 0; i < orPredicatessize; i++) decodedClaimPredicate.OrPredicates[i] = Decode(stream);
+                for (var i = 0; i < orPredicatessize; i++)
+                {
+                    decodedClaimPredicate.OrPredicates[i] = Decode(stream);
+                }
                 break;
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_NOT:
                 var NotPredicatePresent = stream.ReadInt();
-                if (NotPredicatePresent != 0) decodedClaimPredicate.NotPredicate = Decode(stream);
+                if (NotPredicatePresent != 0)
+                {
+                    decodedClaimPredicate.NotPredicate = Decode(stream);
+                }
                 break;
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
                 decodedClaimPredicate.AbsBefore = Int64.Decode(stream);

@@ -12,7 +12,9 @@ public abstract class LiquidityPoolParameters
         Asset assetB, int feeBp)
     {
         if (type != LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT)
+        {
             throw new ArgumentException($"Unknown liquidity pool type {type}");
+        }
 
         return new LiquidityPoolConstantProductParameters(assetA, assetB, feeBp);
     }

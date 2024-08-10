@@ -36,8 +36,8 @@ public class Claimant
             V0 = new Xdr.Claimant.ClaimantV0
             {
                 Destination = new AccountID(Destination.XdrPublicKey),
-                Predicate = Predicate.ToXdr()
-            }
+                Predicate = Predicate.ToXdr(),
+            },
         };
     }
 

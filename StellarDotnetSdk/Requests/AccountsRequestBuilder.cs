@@ -72,11 +72,20 @@ public class AccountsRequestBuilder : RequestBuilderExecutePageable<AccountsRequ
     /// <param name="options">The filtering options</param>
     public AccountsRequestBuilder Accounts(AccountsRequestOptions options)
     {
-        if (options == null) throw new ArgumentNullException(nameof(options));
+        if (options == null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
 
-        if (options.Signer != null) UriBuilder.SetQueryParam("signer", options.Signer);
+        if (options.Signer != null)
+        {
+            UriBuilder.SetQueryParam("signer", options.Signer);
+        }
 
-        if (options.Asset != null) UriBuilder.SetQueryParam("asset", AssetToQueryParam(options.Asset));
+        if (options.Asset != null)
+        {
+            UriBuilder.SetQueryParam("asset", AssetToQueryParam(options.Asset));
+        }
 
         return this;
     }
@@ -88,7 +97,10 @@ public class AccountsRequestBuilder : RequestBuilderExecutePageable<AccountsRequ
     /// <param name="optionsAction"></param>
     public AccountsRequestBuilder Accounts(Action<AccountsRequestOptions> optionsAction)
     {
-        if (optionsAction == null) throw new ArgumentNullException(nameof(optionsAction));
+        if (optionsAction == null)
+        {
+            throw new ArgumentNullException(nameof(optionsAction));
+        }
         var options = new AccountsRequestOptions();
         optionsAction.Invoke(options);
         return Accounts(options);
@@ -120,7 +132,7 @@ public class AccountsRequestBuilder : RequestBuilderExecutePageable<AccountsRequ
         {
             AssetTypeNative _ => "native",
             AssetTypeCreditAlphaNum credit => $"{credit.Code}:{credit.Issuer}",
-            _ => throw new ArgumentException($"Unknown Asset type {asset.Type}")
+            _ => throw new ArgumentException($"Unknown Asset type {asset.Type}"),
         };
     }
 

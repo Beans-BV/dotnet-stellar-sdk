@@ -53,8 +53,8 @@ public class PaymentOperation : Operation
             {
                 Destination = Destination.MuxedAccount,
                 Asset = Asset.ToXdr(),
-                Amount = new Int64 { InnerValue = ToXdrAmount(Amount) }
-            }
+                Amount = new Int64 { InnerValue = ToXdrAmount(Amount) },
+            },
         };
     }
 

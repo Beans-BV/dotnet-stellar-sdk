@@ -25,7 +25,7 @@ public class ServerCheckMemoRequiredTest
         var accountId = "GAYHAAKPAQLMGIJYMIWPDWCGUCQ5LAWY4Q7Q3IKSP57O7GUPD3NEOSEA";
         var data = new Dictionary<string, string>
         {
-            { "config.memo_required", "MQ==" }
+            { "config.memo_required", "MQ==" },
         };
         var json = BuildAccountResponse(accountId, data);
 
@@ -89,7 +89,7 @@ public class ServerCheckMemoRequiredTest
         {
             "GASGNGGXDNJE5C2O7LDCATIVYSSTZKB24SHYS6F4RQT4M4IGNYXB4TIV",
             "GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB",
-            "GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ"
+            "GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ",
         };
 
         var native = new AssetTypeNative();
@@ -103,7 +103,7 @@ public class ServerCheckMemoRequiredTest
                 native, "5.00", [gbp, eur]),
             new PathPaymentStrictReceiveOperation(native, "5.00", KeyPair.FromAccountId(destinations[2]),
                 native, "5.00", [gbp, eur]),
-            new ChangeTrustOperation(gbp, "10000")
+            new ChangeTrustOperation(gbp, "10000"),
         };
 
         var mockFakeHttpMessageHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
@@ -113,22 +113,22 @@ public class ServerCheckMemoRequiredTest
             .Returns(new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(BuildAccountResponse(accountId))
+                Content = new StringContent(BuildAccountResponse(accountId)),
             })
             .Returns(new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(BuildAccountResponse(destinations[0]))
+                Content = new StringContent(BuildAccountResponse(destinations[0])),
             })
             .Returns(new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(BuildAccountResponse(destinations[1]))
+                Content = new StringContent(BuildAccountResponse(destinations[1])),
             })
             .Returns(new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(BuildAccountResponse(destinations[2]))
+                Content = new StringContent(BuildAccountResponse(destinations[2])),
             });
 
         Network.UseTestNetwork();
@@ -186,14 +186,14 @@ public class ServerCheckMemoRequiredTest
             {
                 LowThreshold = 0,
                 MedThreshold = 0,
-                HighThreshold = 0
+                HighThreshold = 0,
             },
             Flags = new Flags
             {
                 AuthRequired = false,
                 AuthRevocable = false,
                 AuthImmutable = false,
-                AuthClawback = false
+                AuthClawback = false,
             },
             Balances =
             [
@@ -205,8 +205,8 @@ public class ServerCheckMemoRequiredTest
                     SellingLiabilities = "0.0",
                     IsAuthorized = false,
                     IsAuthorizedToMaintainLiabilities = true,
-                    LiquidityPoolId = "1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469"
-                }
+                    LiquidityPoolId = "1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469",
+                },
             ],
             Signers =
             [
@@ -214,13 +214,13 @@ public class ServerCheckMemoRequiredTest
                 {
                     Key = accountId,
                     Type = "ed25519_public_key",
-                    Weight = 1
-                }
+                    Weight = 1,
+                },
             ],
             Links = null,
             Data = accountData,
             AccountId = accountId,
-            SequenceNumber = 3298702387052545
+            SequenceNumber = 3298702387052545,
         };
         return JsonConvert.SerializeObject(response);
     }
@@ -238,12 +238,20 @@ public class ServerCheckMemoRequiredTest
         var account = new Account(destinationAccountId, 56199647068161);
         var builder = new TransactionBuilder(account);
         if (!skipDefaultOp)
+        {
             builder.AddOperation(
                 new PaymentOperation(destination, new AssetTypeNative(), "100.50"));
+        }
 
-        if (memo != null) builder.AddMemo(memo);
+        if (memo != null)
+        {
+            builder.AddMemo(memo);
+        }
 
-        foreach (var operation in operations) builder.AddOperation(operation);
+        foreach (var operation in operations)
+        {
+            builder.AddOperation(operation);
+        }
 
         var tx = builder.Build();
         tx.Sign(keypair);

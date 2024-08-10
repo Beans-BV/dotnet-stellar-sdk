@@ -135,7 +135,9 @@ public class PathPaymentStrictReceiveResult
             var offerssize = encodedPathPaymentStrictReceiveResultSuccess.Offers.Length;
             stream.WriteInt(offerssize);
             for (var i = 0; i < offerssize; i++)
+            {
                 ClaimAtom.Encode(stream, encodedPathPaymentStrictReceiveResultSuccess.Offers[i]);
+            }
             SimplePaymentResult.Encode(stream, encodedPathPaymentStrictReceiveResultSuccess.Last);
         }
 
@@ -145,7 +147,9 @@ public class PathPaymentStrictReceiveResult
             var offerssize = stream.ReadInt();
             decodedPathPaymentStrictReceiveResultSuccess.Offers = new ClaimAtom[offerssize];
             for (var i = 0; i < offerssize; i++)
+            {
                 decodedPathPaymentStrictReceiveResultSuccess.Offers[i] = ClaimAtom.Decode(stream);
+            }
             decodedPathPaymentStrictReceiveResultSuccess.Last = SimplePaymentResult.Decode(stream);
             return decodedPathPaymentStrictReceiveResultSuccess;
         }

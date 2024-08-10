@@ -23,10 +23,15 @@ public class PersistedSCPStateV1
         var scpEnvelopessize = encodedPersistedSCPStateV1.ScpEnvelopes.Length;
         stream.WriteInt(scpEnvelopessize);
         for (var i = 0; i < scpEnvelopessize; i++)
+        {
             SCPEnvelope.Encode(stream, encodedPersistedSCPStateV1.ScpEnvelopes[i]);
+        }
         var quorumSetssize = encodedPersistedSCPStateV1.QuorumSets.Length;
         stream.WriteInt(quorumSetssize);
-        for (var i = 0; i < quorumSetssize; i++) SCPQuorumSet.Encode(stream, encodedPersistedSCPStateV1.QuorumSets[i]);
+        for (var i = 0; i < quorumSetssize; i++)
+        {
+            SCPQuorumSet.Encode(stream, encodedPersistedSCPStateV1.QuorumSets[i]);
+        }
     }
 
     public static PersistedSCPStateV1 Decode(XdrDataInputStream stream)
@@ -35,10 +40,15 @@ public class PersistedSCPStateV1
         var scpEnvelopessize = stream.ReadInt();
         decodedPersistedSCPStateV1.ScpEnvelopes = new SCPEnvelope[scpEnvelopessize];
         for (var i = 0; i < scpEnvelopessize; i++)
+        {
             decodedPersistedSCPStateV1.ScpEnvelopes[i] = SCPEnvelope.Decode(stream);
+        }
         var quorumSetssize = stream.ReadInt();
         decodedPersistedSCPStateV1.QuorumSets = new SCPQuorumSet[quorumSetssize];
-        for (var i = 0; i < quorumSetssize; i++) decodedPersistedSCPStateV1.QuorumSets[i] = SCPQuorumSet.Decode(stream);
+        for (var i = 0; i < quorumSetssize; i++)
+        {
+            decodedPersistedSCPStateV1.QuorumSets[i] = SCPQuorumSet.Decode(stream);
+        }
         return decodedPersistedSCPStateV1;
     }
 }

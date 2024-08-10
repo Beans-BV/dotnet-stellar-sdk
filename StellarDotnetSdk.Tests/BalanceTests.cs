@@ -30,7 +30,7 @@ public class BalanceTests
             BalanceString = expectedBalance,
             IsAuthorized = expectedIsAuthorized,
             IsAuthorizedToMaintainLiabilities = expectedIsAuthorizedToMaintainLiabilities,
-            LiquidityPoolId = expectedLiquidityPoolId
+            LiquidityPoolId = expectedLiquidityPoolId,
         };
 
         // expected
@@ -92,7 +92,7 @@ public class BalanceTests
             BuyingLiabilities = expectedBuyingLiabilities,
             SellingLiabilities = expectedSellingLiabilities,
             IsAuthorized = expectedIsAuthorized,
-            IsAuthorizedToMaintainLiabilities = expectedIsAuthorizedToMaintainLiabilities
+            IsAuthorizedToMaintainLiabilities = expectedIsAuthorizedToMaintainLiabilities,
         };
 
         // expected
@@ -132,7 +132,7 @@ public class BalanceTests
             BuyingLiabilities = A.Dummy<string>(),
             SellingLiabilities = A.Dummy<string>(),
             IsAuthorized = A.Dummy<bool>(),
-            IsAuthorizedToMaintainLiabilities = A.Dummy<bool>()
+            IsAuthorizedToMaintainLiabilities = A.Dummy<bool>(),
         };
 
         return (Sut.Asset is AssetTypeCreditAlphaNum4).ToProperty();
@@ -151,7 +151,7 @@ public class BalanceTests
             BuyingLiabilities = A.Dummy<string>(),
             SellingLiabilities = A.Dummy<string>(),
             IsAuthorized = A.Dummy<bool>(),
-            IsAuthorizedToMaintainLiabilities = A.Dummy<bool>()
+            IsAuthorizedToMaintainLiabilities = A.Dummy<bool>(),
         };
 
         return (Sut.Asset is AssetTypeCreditAlphaNum12).ToProperty();
@@ -170,7 +170,7 @@ public class BalanceTests
             BuyingLiabilities = A.Dummy<string>(),
             SellingLiabilities = A.Dummy<string>(),
             IsAuthorized = A.Dummy<bool>(),
-            IsAuthorizedToMaintainLiabilities = A.Dummy<bool>()
+            IsAuthorizedToMaintainLiabilities = A.Dummy<bool>(),
         };
 
         // actual 
@@ -196,7 +196,7 @@ public class BalanceTests
             SellingLiabilities = A.Dummy<string>(),
             IsAuthorized = A.Dummy<bool>(),
             IsAuthorizedToMaintainLiabilities = A.Dummy<bool>(),
-            LiquidityPoolId = expectedLiquidityPoolId
+            LiquidityPoolId = expectedLiquidityPoolId,
         };
 
         // actual 

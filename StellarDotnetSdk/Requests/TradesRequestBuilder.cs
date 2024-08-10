@@ -54,7 +54,9 @@ public class TradesRequestBuilder : RequestBuilderExecutePageable<TradesRequestB
     public TradesRequestBuilder ForAccount(string accountId)
     {
         if (accountId is null)
+        {
             throw new ArgumentNullException(nameof(accountId), "accountId cannot be null");
+        }
         SetSegments("accounts", accountId, "trades");
         return this;
     }

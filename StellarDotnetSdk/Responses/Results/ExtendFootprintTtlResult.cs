@@ -18,7 +18,7 @@ public class ExtendFootprintTtlResult : OperationResult
                 => new ExtendFootprintTtlResourceLimitExceeded(),
             ResultCodeEnum.EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE
                 => new ExtendFootprintTtlInsufficientRefundableFee(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ExtendFootprintTtlResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ExtendFootprintTtlResult type."),
         };
     }
 }

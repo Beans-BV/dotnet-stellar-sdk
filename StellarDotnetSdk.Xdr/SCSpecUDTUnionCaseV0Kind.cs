@@ -19,7 +19,7 @@ public class SCSpecUDTUnionCaseV0Kind
     public enum SCSpecUDTUnionCaseV0KindEnum
     {
         SC_SPEC_UDT_UNION_CASE_VOID_V0 = 0,
-        SC_SPEC_UDT_UNION_CASE_TUPLE_V0 = 1
+        SC_SPEC_UDT_UNION_CASE_TUPLE_V0 = 1,
     }
 
     public SCSpecUDTUnionCaseV0KindEnum InnerValue { get; set; }
@@ -28,7 +28,7 @@ public class SCSpecUDTUnionCaseV0Kind
     {
         return new SCSpecUDTUnionCaseV0Kind
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

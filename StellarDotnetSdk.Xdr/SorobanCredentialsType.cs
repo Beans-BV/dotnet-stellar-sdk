@@ -19,7 +19,7 @@ public class SorobanCredentialsType
     public enum SorobanCredentialsTypeEnum
     {
         SOROBAN_CREDENTIALS_SOURCE_ACCOUNT = 0,
-        SOROBAN_CREDENTIALS_ADDRESS = 1
+        SOROBAN_CREDENTIALS_ADDRESS = 1,
     }
 
     public SorobanCredentialsTypeEnum InnerValue { get; set; }
@@ -28,7 +28,7 @@ public class SorobanCredentialsType
     {
         return new SorobanCredentialsType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

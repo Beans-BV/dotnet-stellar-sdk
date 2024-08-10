@@ -20,7 +20,10 @@ public class EffectResponseJsonConverter : JsonConverter<EffectResponse>
     {
         var jsonObject = JObject.Load(reader);
         var type = jsonObject.GetValue("type_i");
-        if (type == null) throw new ArgumentException("JSON value for type_i is missing.", nameof(type));
+        if (type == null)
+        {
+            throw new ArgumentException("JSON value for type_i is missing.", nameof(type));
+        }
         var response = CreateResponse(type.ToObject<int>());
         serializer.Populate(jsonObject.CreateReader(), response);
         return response;
@@ -89,7 +92,7 @@ public class EffectResponseJsonConverter : JsonConverter<EffectResponse>
             93 => new LiquidityPoolCreatedEffectResponse(),
             94 => new LiquidityPoolRemovedEffectResponse(),
             95 => new LiquidityPoolRevokedEffectResponse(),
-            _ => throw new JsonSerializationException($"Unknown 'type_i'='{type}'")
+            _ => throw new JsonSerializationException($"Unknown 'type_i'='{type}'"),
         };
     }
 }

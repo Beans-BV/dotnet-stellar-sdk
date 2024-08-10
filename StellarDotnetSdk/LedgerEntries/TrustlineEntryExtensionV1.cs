@@ -17,7 +17,9 @@ public class TrustlineEntryExtensionV1
     {
         var entryExtensionV1 = new TrustlineEntryExtensionV1(Liabilities.FromXdr(xdrExtensionV1.Liabilities));
         if (xdrExtensionV1.Ext.Discriminant == 2)
+        {
             entryExtensionV1.TrustlineExtensionV2 = TrustLineEntryExtensionV2.FromXdr(xdrExtensionV1.Ext.V2);
+        }
 
         return entryExtensionV1;
     }

@@ -26,7 +26,9 @@ public class LedgerEntryChanges
         var LedgerEntryChangessize = encodedLedgerEntryChanges.InnerValue.Length;
         stream.WriteInt(LedgerEntryChangessize);
         for (var i = 0; i < LedgerEntryChangessize; i++)
+        {
             LedgerEntryChange.Encode(stream, encodedLedgerEntryChanges.InnerValue[i]);
+        }
     }
 
     public static LedgerEntryChanges Decode(XdrDataInputStream stream)
@@ -35,7 +37,9 @@ public class LedgerEntryChanges
         var LedgerEntryChangessize = stream.ReadInt();
         decodedLedgerEntryChanges.InnerValue = new LedgerEntryChange[LedgerEntryChangessize];
         for (var i = 0; i < LedgerEntryChangessize; i++)
+        {
             decodedLedgerEntryChanges.InnerValue[i] = LedgerEntryChange.Decode(stream);
+        }
         return decodedLedgerEntryChanges;
     }
 }

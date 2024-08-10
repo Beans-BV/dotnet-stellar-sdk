@@ -19,7 +19,7 @@ public class OfferEntryFlags
 {
     public enum OfferEntryFlagsEnum
     {
-        PASSIVE_FLAG = 1
+        PASSIVE_FLAG = 1,
     }
 
     public OfferEntryFlagsEnum InnerValue { get; set; }
@@ -28,7 +28,7 @@ public class OfferEntryFlags
     {
         return new OfferEntryFlags
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -24,7 +24,7 @@ public class EndSponsoringFutureReservesOperation : Operation
     {
         return new Xdr.Operation.OperationBody
         {
-            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.END_SPONSORING_FUTURE_RESERVES)
+            Discriminant = OperationType.Create(OperationType.OperationTypeEnum.END_SPONSORING_FUTURE_RESERVES),
         };
     }
 }

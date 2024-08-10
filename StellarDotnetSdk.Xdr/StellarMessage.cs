@@ -103,7 +103,10 @@ public class StellarMessage
             case MessageType.MessageTypeEnum.PEERS:
                 var peerssize = encodedStellarMessage.Peers.Length;
                 stream.WriteInt(peerssize);
-                for (var i = 0; i < peerssize; i++) PeerAddress.Encode(stream, encodedStellarMessage.Peers[i]);
+                for (var i = 0; i < peerssize; i++)
+                {
+                    PeerAddress.Encode(stream, encodedStellarMessage.Peers[i]);
+                }
                 break;
             case MessageType.MessageTypeEnum.GET_TX_SET:
                 Uint256.Encode(stream, encodedStellarMessage.TxSetHash);
@@ -174,7 +177,10 @@ public class StellarMessage
             case MessageType.MessageTypeEnum.PEERS:
                 var peerssize = stream.ReadInt();
                 decodedStellarMessage.Peers = new PeerAddress[peerssize];
-                for (var i = 0; i < peerssize; i++) decodedStellarMessage.Peers[i] = PeerAddress.Decode(stream);
+                for (var i = 0; i < peerssize; i++)
+                {
+                    decodedStellarMessage.Peers[i] = PeerAddress.Decode(stream);
+                }
                 break;
             case MessageType.MessageTypeEnum.GET_TX_SET:
                 decodedStellarMessage.TxSetHash = Uint256.Decode(stream);

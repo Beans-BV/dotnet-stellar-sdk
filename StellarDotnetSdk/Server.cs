@@ -77,7 +77,10 @@ public class Server : IDisposable
 
     public void Dispose()
     {
-        if (_internalHttpClient) _httpClient.Dispose();
+        if (_internalHttpClient)
+        {
+            _httpClient.Dispose();
+        }
     }
 
     public RootResponse Root()
@@ -150,9 +153,13 @@ public class Server : IDisposable
             TransactionBase tx;
 
             if (options.FeeBumpTransaction)
+            {
                 tx = FeeBumpTransaction.FromEnvelopeXdr(transactionEnvelopeBase64);
+            }
             else
+            {
                 tx = Transaction.FromEnvelopeXdr(transactionEnvelopeBase64);
+            }
 
             await CheckMemoRequired(tx);
         }
@@ -164,7 +171,7 @@ public class Server : IDisposable
 
         var paramsPairs = new List<KeyValuePair<string, string>>
         {
-            new("tx", transactionEnvelopeBase64)
+            new("tx", transactionEnvelopeBase64),
         };
 
         var response =
@@ -214,34 +221,53 @@ public class Server : IDisposable
     {
         var tx = GetTransactionToCheck(transaction);
 
-        if (!Equals(tx.Memo, Memo.None())) return;
+        if (!Equals(tx.Memo, Memo.None()))
+        {
+            return;
+        }
 
         var destinations = new HashSet<string>();
 
         foreach (var operation in tx.Operations)
         {
-            if (!IsPaymentOperation(operation)) continue;
+            if (!IsPaymentOperation(operation))
+            {
+                continue;
+            }
 
             // If it's a muxed account it already contains the memo.
             var destinationKey = PaymentOperationDestination(operation);
-            if (destinationKey.IsMuxedAccount) continue;
+            if (destinationKey.IsMuxedAccount)
+            {
+                continue;
+            }
 
             var destination = destinationKey.Address;
 
-            if (!destinations.Add(destination)) continue;
+            if (!destinations.Add(destination))
+            {
+                continue;
+            }
 
             try
             {
                 var account = await Accounts.Account(destination);
-                if (!account.Data.TryGetValue(AccountRequiresMemoKey, out var value)) continue;
+                if (!account.Data.TryGetValue(AccountRequiresMemoKey, out var value))
+                {
+                    continue;
+                }
 
                 if (value == AccountRequiresMemo)
+                {
                     throw new AccountRequiresMemoException("Account requires memo");
+                }
             }
             catch (HttpResponseException ex)
             {
                 if (ex.StatusCode != 404)
+                {
                     throw;
+                }
             }
         }
     }

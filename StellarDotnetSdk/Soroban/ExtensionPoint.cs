@@ -13,7 +13,7 @@ public abstract class ExtensionPoint
         return this switch
         {
             ExtensionPointZero extensionPointZero => extensionPointZero.ToExtensionPointXdr(),
-            _ => throw new InvalidOperationException("Unknown ExtensionPoint type.")
+            _ => throw new InvalidOperationException("Unknown ExtensionPoint type."),
         };
     }
 
@@ -27,7 +27,7 @@ public abstract class ExtensionPoint
         return xdrExtensionPoint.Discriminant switch
         {
             0 => ExtensionPointZero.FromExtensionPointXdr(xdrExtensionPoint),
-            _ => throw new InvalidOperationException("Unknown ExtensionPoint type.")
+            _ => throw new InvalidOperationException("Unknown ExtensionPoint type."),
         };
     }
 
@@ -63,14 +63,16 @@ public class ExtensionPointZero : ExtensionPoint
     {
         return new Xdr.ExtensionPoint
         {
-            Discriminant = 0
+            Discriminant = 0,
         };
     }
 
     public static ExtensionPointZero FromExtensionPointXdr(Xdr.ExtensionPoint xdrExtensionPoint)
     {
         if (xdrExtensionPoint.Discriminant != 0)
+        {
             throw new ArgumentException("Not an ExtensionPointZero", nameof(xdrExtensionPoint));
+        }
 
         return FromXdr();
     }

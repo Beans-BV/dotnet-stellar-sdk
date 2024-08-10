@@ -9,9 +9,13 @@ public class LedgerEntryData : LedgerEntry
     private LedgerEntryData(KeyPair account, string dataName, byte[] dataValue)
     {
         if (dataValue.Length > 64)
+        {
             throw new ArgumentException("Data value cannot exceed 64 bytes.", nameof(dataValue));
+        }
         if (dataName.Length > 64)
+        {
             throw new ArgumentException("Data name cannot exceed 64 characters.", nameof(dataName));
+        }
 
         Account = account;
         DataName = dataName;
@@ -35,7 +39,9 @@ public class LedgerEntryData : LedgerEntry
     public static LedgerEntryData FromXdrLedgerEntryData(Xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
         if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.DATA)
+        {
             throw new ArgumentException("Not a DataEntry", nameof(xdrLedgerEntryData));
+        }
         return FromXdr(xdrLedgerEntryData.Data);
     }
 
@@ -47,7 +53,9 @@ public class LedgerEntryData : LedgerEntry
             xdrDataEntry.DataValue.InnerValue);
 
         if (xdrDataEntry.Ext.Discriminant != 0)
+        {
             ledgerEntryData.DataExtension = DataEntryExtension.FromXdr(xdrDataEntry.Ext);
+        }
 
         return ledgerEntryData;
     }

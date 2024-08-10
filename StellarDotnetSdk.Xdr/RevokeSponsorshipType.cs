@@ -19,7 +19,7 @@ public class RevokeSponsorshipType
     public enum RevokeSponsorshipTypeEnum
     {
         REVOKE_SPONSORSHIP_LEDGER_ENTRY = 0,
-        REVOKE_SPONSORSHIP_SIGNER = 1
+        REVOKE_SPONSORSHIP_SIGNER = 1,
     }
 
     public RevokeSponsorshipTypeEnum InnerValue { get; set; }
@@ -28,7 +28,7 @@ public class RevokeSponsorshipType
     {
         return new RevokeSponsorshipType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

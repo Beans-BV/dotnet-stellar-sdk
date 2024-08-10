@@ -23,7 +23,9 @@ public class LedgerEntryTTL : LedgerEntry
     public static LedgerEntryTTL FromXdrLedgerEntryData(Xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
         if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.TTL)
+        {
             throw new ArgumentException("Not a TTLEntry.", nameof(xdrLedgerEntryData));
+        }
 
         return FromXdr(xdrLedgerEntryData.Ttl);
     }

@@ -14,17 +14,26 @@ public class SignedPayloadSigner
     public SignedPayloadSigner(AccountID signerAccountId, byte[] payload)
     {
         if (signerAccountId == null)
+        {
             throw new ArgumentNullException(nameof(signerAccountId), "signerAccountID cannot be null");
+        }
 
-        if (payload == null) throw new ArgumentNullException(nameof(payload), "payload cannot be null");
+        if (payload == null)
+        {
+            throw new ArgumentNullException(nameof(payload), "payload cannot be null");
+        }
 
         if (payload.Length > SignedPayloadMaxPayloadLength)
+        {
             throw new ArgumentException($"Invalid payload length, must be less than {SignedPayloadMaxPayloadLength}");
+        }
 
         if (signerAccountId.InnerValue.Discriminant is not
             { InnerValue: PublicKeyType.PublicKeyTypeEnum.PUBLIC_KEY_TYPE_ED25519 })
+        {
             throw new ArgumentException(
                 "Invalid payload signer, only ED25519 public key accounts are supported at the moment");
+        }
 
         SignerAccountId = signerAccountId;
         Payload = payload;
@@ -36,9 +45,9 @@ public class SignedPayloadSigner
             {
                 Discriminant =
                 {
-                    InnerValue = PublicKeyType.PublicKeyTypeEnum.PUBLIC_KEY_TYPE_ED25519
+                    InnerValue = PublicKeyType.PublicKeyTypeEnum.PUBLIC_KEY_TYPE_ED25519,
                 },
-                Ed25519 = new Uint256(signerED25519PublicKey)
+                Ed25519 = new Uint256(signerED25519PublicKey),
             }), payload)
     {
     }

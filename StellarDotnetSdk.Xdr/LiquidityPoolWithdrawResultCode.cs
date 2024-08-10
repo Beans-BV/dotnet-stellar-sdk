@@ -33,7 +33,7 @@ public class LiquidityPoolWithdrawResultCode
         LIQUIDITY_POOL_WITHDRAW_NO_TRUST = -2,
         LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED = -3,
         LIQUIDITY_POOL_WITHDRAW_LINE_FULL = -4,
-        LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM = -5
+        LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM = -5,
     }
 
     public LiquidityPoolWithdrawResultCodeEnum InnerValue { get; set; }
@@ -42,7 +42,7 @@ public class LiquidityPoolWithdrawResultCode
     {
         return new LiquidityPoolWithdrawResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

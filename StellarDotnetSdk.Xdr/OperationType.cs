@@ -69,7 +69,7 @@ public class OperationType
         LIQUIDITY_POOL_WITHDRAW = 23,
         INVOKE_HOST_FUNCTION = 24,
         EXTEND_FOOTPRINT_TTL = 25,
-        RESTORE_FOOTPRINT = 26
+        RESTORE_FOOTPRINT = 26,
     }
 
     public OperationTypeEnum InnerValue { get; set; }
@@ -78,7 +78,7 @@ public class OperationType
     {
         return new OperationType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

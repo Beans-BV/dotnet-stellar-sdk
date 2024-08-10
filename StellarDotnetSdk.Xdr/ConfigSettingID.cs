@@ -43,7 +43,7 @@ public class ConfigSettingID
         CONFIG_SETTING_STATE_ARCHIVAL = 10,
         CONFIG_SETTING_CONTRACT_EXECUTION_LANES = 11,
         CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW = 12,
-        CONFIG_SETTING_EVICTION_ITERATOR = 13
+        CONFIG_SETTING_EVICTION_ITERATOR = 13,
     }
 
     public ConfigSettingIDEnum InnerValue { get; set; }
@@ -52,7 +52,7 @@ public class ConfigSettingID
     {
         return new ConfigSettingID
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

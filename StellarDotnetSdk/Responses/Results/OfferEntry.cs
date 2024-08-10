@@ -16,7 +16,7 @@ public class OfferEntry
         /// <summary>
         ///     Issuer has authorized account to perform transactions with its credit.
         /// </summary>
-        PASSIVE = 1
+        PASSIVE = 1,
     }
 
     public OfferEntry(
@@ -92,7 +92,7 @@ public class OfferEntry
         {
             0 => 0,
             1 => OfferEntryFlags.PASSIVE,
-            _ => throw new ArgumentOutOfRangeException(nameof(flags), "Unknown OfferEntryFlags type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(flags), "Unknown OfferEntryFlags type."),
         };
     }
 }

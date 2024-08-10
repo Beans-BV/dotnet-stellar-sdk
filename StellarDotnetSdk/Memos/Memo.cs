@@ -88,7 +88,7 @@ public abstract class Memo
             MemoType.MemoTypeEnum.MEMO_TEXT => Text(memo.Text),
             MemoType.MemoTypeEnum.MEMO_HASH => Hash(memo.Hash.InnerValue),
             MemoType.MemoTypeEnum.MEMO_RETURN => ReturnHash(memo.RetHash.InnerValue),
-            _ => throw new SystemException("Unknown memo type")
+            _ => throw new SystemException("Unknown memo type"),
         };
     }
 

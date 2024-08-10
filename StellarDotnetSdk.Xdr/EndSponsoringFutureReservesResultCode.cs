@@ -22,7 +22,7 @@ public class EndSponsoringFutureReservesResultCode
     public enum EndSponsoringFutureReservesResultCodeEnum
     {
         END_SPONSORING_FUTURE_RESERVES_SUCCESS = 0,
-        END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED = -1
+        END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED = -1,
     }
 
     public EndSponsoringFutureReservesResultCodeEnum InnerValue { get; set; }
@@ -31,7 +31,7 @@ public class EndSponsoringFutureReservesResultCode
     {
         return new EndSponsoringFutureReservesResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

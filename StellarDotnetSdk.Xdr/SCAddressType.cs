@@ -19,7 +19,7 @@ public class SCAddressType
     public enum SCAddressTypeEnum
     {
         SC_ADDRESS_TYPE_ACCOUNT = 0,
-        SC_ADDRESS_TYPE_CONTRACT = 1
+        SC_ADDRESS_TYPE_CONTRACT = 1,
     }
 
     public SCAddressTypeEnum InnerValue { get; set; }
@@ -28,7 +28,7 @@ public class SCAddressType
     {
         return new SCAddressType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

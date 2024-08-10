@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Requests;
 public enum OrderDirection
 {
     ASC,
-    DESC
+    DESC,
 }
 
 /// <summary>
@@ -76,7 +76,9 @@ public class RequestBuilder<T> : IRequestBuilder<T> where T : class
         _segments = new List<string>();
 
         if (!string.IsNullOrEmpty(defaultSegment))
+        {
             SetSegments(defaultSegment);
+        }
 
         _segmentsAdded = false; //Allow overwriting segments
         HttpClient = httpClient;
@@ -150,13 +152,18 @@ public class RequestBuilder<T> : IRequestBuilder<T> where T : class
     public Uri BuildUri()
     {
         if (_segments.Count <= 0)
+        {
             throw new NotSupportedException("No segments defined.");
+        }
 
         var path = _serverUri.AbsolutePath.TrimEnd('/');
 
         foreach (var segment in _segments)
         {
-            if (!path.EndsWith("/")) path += "/";
+            if (!path.EndsWith("/"))
+            {
+                path += "/";
+            }
             path += segment;
         }
 
@@ -168,7 +175,9 @@ public class RequestBuilder<T> : IRequestBuilder<T> where T : class
     protected RequestBuilder<T> SetSegments(params string[] segments)
     {
         if (_segmentsAdded)
+        {
             throw new Exception("URL segments have been already added.");
+        }
 
         _segmentsAdded = true;
 
@@ -176,7 +185,9 @@ public class RequestBuilder<T> : IRequestBuilder<T> where T : class
         _segments.Clear();
 
         foreach (var segment in segments)
+        {
             _segments.Add(segment);
+        }
 
         return this;
     }

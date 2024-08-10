@@ -8,7 +8,9 @@ public static class Base32Encoding
     public static byte[] ToBytes(string input)
     {
         if (string.IsNullOrEmpty(input))
+        {
             throw new ArgumentNullException("input");
+        }
 
         input = input.TrimEnd('='); //remove padding characters
         var byteCount = input.Length * 5 / 8; //this must be TRUNCATED
@@ -39,7 +41,9 @@ public static class Base32Encoding
 
         //if we didn't end with a full byte
         if (arrayIndex != byteCount)
+        {
             returnArray[arrayIndex] = curByte;
+        }
 
         return returnArray;
     }
@@ -55,7 +59,9 @@ public static class Base32Encoding
     public static string ToString(byte[] input, Base32EncodingOptions options)
     {
         if (input == null || input.Length == 0)
+        {
             throw new ArgumentNullException("input");
+        }
 
         var charCount = (int)Math.Ceiling(input.Length / 5d) * 8;
         var returnArray = new char[charCount];
@@ -84,8 +90,12 @@ public static class Base32Encoding
         {
             returnArray[arrayIndex++] = ValueToChar(nextChar);
             if (!options.OmitPadding)
+            {
                 while (arrayIndex != charCount)
+                {
                     returnArray[arrayIndex++] = '='; //padding
+                }
+            }
         }
 
         return new string(returnArray.Slice(0, arrayIndex));
@@ -97,13 +107,19 @@ public static class Base32Encoding
 
         //65-90 == uppercase letters
         if (value < 91 && value > 64)
+        {
             return value - 65;
+        }
         //50-55 == numbers 2-7
         if (value < 56 && value > 49)
+        {
             return value - 24;
+        }
         //97-122 == lowercase letters
         if (value < 123 && value > 96)
+        {
             return value - 97;
+        }
 
         throw new ArgumentException("Character is not a Base32 character.", "c");
     }
@@ -111,10 +127,14 @@ public static class Base32Encoding
     private static char ValueToChar(byte b)
     {
         if (b < 26)
+        {
             return (char)(b + 65);
+        }
 
         if (b < 32)
+        {
             return (char)(b + 24);
+        }
 
         throw new ArgumentException("Byte is not a value Base32 value.", "b");
     }

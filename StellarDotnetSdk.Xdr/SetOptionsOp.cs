@@ -135,23 +135,50 @@ public class SetOptionsOp
     {
         var decodedSetOptionsOp = new SetOptionsOp();
         var InflationDestPresent = stream.ReadInt();
-        if (InflationDestPresent != 0) decodedSetOptionsOp.InflationDest = AccountID.Decode(stream);
+        if (InflationDestPresent != 0)
+        {
+            decodedSetOptionsOp.InflationDest = AccountID.Decode(stream);
+        }
         var ClearFlagsPresent = stream.ReadInt();
-        if (ClearFlagsPresent != 0) decodedSetOptionsOp.ClearFlags = Uint32.Decode(stream);
+        if (ClearFlagsPresent != 0)
+        {
+            decodedSetOptionsOp.ClearFlags = Uint32.Decode(stream);
+        }
         var SetFlagsPresent = stream.ReadInt();
-        if (SetFlagsPresent != 0) decodedSetOptionsOp.SetFlags = Uint32.Decode(stream);
+        if (SetFlagsPresent != 0)
+        {
+            decodedSetOptionsOp.SetFlags = Uint32.Decode(stream);
+        }
         var MasterWeightPresent = stream.ReadInt();
-        if (MasterWeightPresent != 0) decodedSetOptionsOp.MasterWeight = Uint32.Decode(stream);
+        if (MasterWeightPresent != 0)
+        {
+            decodedSetOptionsOp.MasterWeight = Uint32.Decode(stream);
+        }
         var LowThresholdPresent = stream.ReadInt();
-        if (LowThresholdPresent != 0) decodedSetOptionsOp.LowThreshold = Uint32.Decode(stream);
+        if (LowThresholdPresent != 0)
+        {
+            decodedSetOptionsOp.LowThreshold = Uint32.Decode(stream);
+        }
         var MedThresholdPresent = stream.ReadInt();
-        if (MedThresholdPresent != 0) decodedSetOptionsOp.MedThreshold = Uint32.Decode(stream);
+        if (MedThresholdPresent != 0)
+        {
+            decodedSetOptionsOp.MedThreshold = Uint32.Decode(stream);
+        }
         var HighThresholdPresent = stream.ReadInt();
-        if (HighThresholdPresent != 0) decodedSetOptionsOp.HighThreshold = Uint32.Decode(stream);
+        if (HighThresholdPresent != 0)
+        {
+            decodedSetOptionsOp.HighThreshold = Uint32.Decode(stream);
+        }
         var HomeDomainPresent = stream.ReadInt();
-        if (HomeDomainPresent != 0) decodedSetOptionsOp.HomeDomain = String32.Decode(stream);
+        if (HomeDomainPresent != 0)
+        {
+            decodedSetOptionsOp.HomeDomain = String32.Decode(stream);
+        }
         var SignerPresent = stream.ReadInt();
-        if (SignerPresent != 0) decodedSetOptionsOp.Signer = Signer.Decode(stream);
+        if (SignerPresent != 0)
+        {
+            decodedSetOptionsOp.Signer = Signer.Decode(stream);
+        }
         return decodedSetOptionsOp;
     }
 }

@@ -15,7 +15,7 @@ public class EndSponsoringFutureReservesResult : OperationResult
             ResultCodeEnum.END_SPONSORING_FUTURE_RESERVES_SUCCESS
                 => new EndSponsoringFutureReservesSuccess(),
             _ => throw new ArgumentOutOfRangeException(nameof(result),
-                "Unknown EndSponsoringFutureReservesResult type.")
+                "Unknown EndSponsoringFutureReservesResult type."),
         };
     }
 }

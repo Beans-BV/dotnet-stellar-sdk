@@ -19,7 +19,9 @@ public class ConfigUpgradeSet
         var updatedEntrysize = encodedConfigUpgradeSet.UpdatedEntry.Length;
         stream.WriteInt(updatedEntrysize);
         for (var i = 0; i < updatedEntrysize; i++)
+        {
             ConfigSettingEntry.Encode(stream, encodedConfigUpgradeSet.UpdatedEntry[i]);
+        }
     }
 
     public static ConfigUpgradeSet Decode(XdrDataInputStream stream)
@@ -28,7 +30,9 @@ public class ConfigUpgradeSet
         var updatedEntrysize = stream.ReadInt();
         decodedConfigUpgradeSet.UpdatedEntry = new ConfigSettingEntry[updatedEntrysize];
         for (var i = 0; i < updatedEntrysize; i++)
+        {
             decodedConfigUpgradeSet.UpdatedEntry[i] = ConfigSettingEntry.Decode(stream);
+        }
         return decodedConfigUpgradeSet;
     }
 }

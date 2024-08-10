@@ -88,7 +88,7 @@ public class SCValType
         SCV_ADDRESS = 18,
         SCV_CONTRACT_INSTANCE = 19,
         SCV_LEDGER_KEY_CONTRACT_INSTANCE = 20,
-        SCV_LEDGER_KEY_NONCE = 21
+        SCV_LEDGER_KEY_NONCE = 21,
     }
 
     public SCValTypeEnum InnerValue { get; set; }
@@ -97,7 +97,7 @@ public class SCValType
     {
         return new SCValType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

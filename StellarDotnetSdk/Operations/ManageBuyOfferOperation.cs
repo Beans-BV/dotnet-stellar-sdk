@@ -64,8 +64,8 @@ public class ManageBuyOfferOperation : Operation
                 Buying = Buying.ToXdr(),
                 BuyAmount = new Int64(ToXdrAmount(BuyAmount)),
                 Price = StellarDotnetSdk.Price.FromString(Price).ToXdr(),
-                OfferID = new Int64(OfferId)
-            }
+                OfferID = new Int64(OfferId),
+            },
         };
         return body;
     }

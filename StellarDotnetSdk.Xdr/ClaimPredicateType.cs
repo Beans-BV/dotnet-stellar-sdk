@@ -27,7 +27,7 @@ public class ClaimPredicateType
         CLAIM_PREDICATE_OR = 2,
         CLAIM_PREDICATE_NOT = 3,
         CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME = 4,
-        CLAIM_PREDICATE_BEFORE_RELATIVE_TIME = 5
+        CLAIM_PREDICATE_BEFORE_RELATIVE_TIME = 5,
     }
 
     public ClaimPredicateTypeEnum InnerValue { get; set; }
@@ -36,7 +36,7 @@ public class ClaimPredicateType
     {
         return new ClaimPredicateType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

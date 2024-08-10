@@ -50,7 +50,7 @@ public class CreateClaimableBalanceOperationResponseTest
             Sponsor = operation.Sponsor,
             Asset = operation.Asset,
             Amount = operation.Amount,
-            Claimants = operation.Claimants
+            Claimants = operation.Claimants,
         };
         Assert.IsNotNull(back);
     }

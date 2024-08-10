@@ -15,7 +15,10 @@ public class LedgerKeyTTL : LedgerKey
 
     private LedgerKeyTTL(byte[] key)
     {
-        if (key.Length != 32) throw new ArgumentOutOfRangeException(nameof(key), "Key must have exactly 32 bytes.");
+        if (key.Length != 32)
+        {
+            throw new ArgumentOutOfRangeException(nameof(key), "Key must have exactly 32 bytes.");
+        }
         Key = key;
     }
 
@@ -29,8 +32,8 @@ public class LedgerKeyTTL : LedgerKey
                 new LedgerEntryType { InnerValue = LedgerEntryType.LedgerEntryTypeEnum.TTL },
             Ttl = new Xdr.LedgerKey.LedgerKeyTtl
             {
-                KeyHash = new Hash(Key)
-            }
+                KeyHash = new Hash(Key),
+            },
         };
     }
 

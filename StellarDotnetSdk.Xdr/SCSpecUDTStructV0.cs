@@ -28,7 +28,10 @@ public class SCSpecUDTStructV0
         stream.WriteString(encodedSCSpecUDTStructV0.Name);
         var fieldssize = encodedSCSpecUDTStructV0.Fields.Length;
         stream.WriteInt(fieldssize);
-        for (var i = 0; i < fieldssize; i++) SCSpecUDTStructFieldV0.Encode(stream, encodedSCSpecUDTStructV0.Fields[i]);
+        for (var i = 0; i < fieldssize; i++)
+        {
+            SCSpecUDTStructFieldV0.Encode(stream, encodedSCSpecUDTStructV0.Fields[i]);
+        }
     }
 
     public static SCSpecUDTStructV0 Decode(XdrDataInputStream stream)
@@ -39,7 +42,10 @@ public class SCSpecUDTStructV0
         decodedSCSpecUDTStructV0.Name = stream.ReadString();
         var fieldssize = stream.ReadInt();
         decodedSCSpecUDTStructV0.Fields = new SCSpecUDTStructFieldV0[fieldssize];
-        for (var i = 0; i < fieldssize; i++) decodedSCSpecUDTStructV0.Fields[i] = SCSpecUDTStructFieldV0.Decode(stream);
+        for (var i = 0; i < fieldssize; i++)
+        {
+            decodedSCSpecUDTStructV0.Fields[i] = SCSpecUDTStructFieldV0.Decode(stream);
+        }
         return decodedSCSpecUDTStructV0;
     }
 }

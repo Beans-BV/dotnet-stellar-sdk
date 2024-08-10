@@ -39,7 +39,7 @@ public abstract class SCVal
             SCContractInstance scContractInstance => scContractInstance.ToSCValXdr(),
             SCLedgerKeyContractInstance scLedgerKeyContractInstance => scLedgerKeyContractInstance.ToSCValXdr(),
             SCNonceKey scNonceKey => scNonceKey.ToSCValXdr(),
-            _ => throw new InvalidOperationException("Unknown SCVal type")
+            _ => throw new InvalidOperationException("Unknown SCVal type"),
         };
     }
 
@@ -70,7 +70,7 @@ public abstract class SCVal
             SCValType.SCValTypeEnum.SCV_LEDGER_KEY_CONTRACT_INSTANCE =>
                 SCLedgerKeyContractInstance.FromSCValXdr(xdrVal),
             SCValType.SCValTypeEnum.SCV_LEDGER_KEY_NONCE => SCNonceKey.FromSCValXdr(xdrVal),
-            _ => throw new InvalidOperationException("Unknown SCVal type")
+            _ => throw new InvalidOperationException("Unknown SCVal type"),
         };
     }
 
@@ -119,9 +119,9 @@ public class SCBool : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_BOOL
+                InnerValue = SCValType.SCValTypeEnum.SCV_BOOL,
             },
-            B = ToXdr()
+            B = ToXdr(),
         };
     }
 
@@ -133,7 +133,9 @@ public class SCBool : SCVal
     public static SCBool FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_BOOL)
+        {
             throw new ArgumentException("Not an SCBool.", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.B);
     }
@@ -151,15 +153,17 @@ public class SCVoid : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_VOID
-            }
+                InnerValue = SCValType.SCValTypeEnum.SCV_VOID,
+            },
         };
     }
 
     public static SCVoid FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_VOID)
+        {
             throw new ArgumentException("Not an SCVoid", nameof(xdrVal));
+        }
 
         return FromXdr();
     }
@@ -188,7 +192,7 @@ public abstract class SCError : SCVal
             SCBudgetError scBudgetError => scBudgetError.ToSCErrorXdr(),
             SCValueError scValueError => scValueError.ToSCErrorXdr(),
             SCAuthError scAuthError => scAuthError.ToSCErrorXdr(),
-            _ => throw new InvalidOperationException("Unknown SCVal type")
+            _ => throw new InvalidOperationException("Unknown SCVal type"),
         };
     }
 
@@ -198,16 +202,18 @@ public abstract class SCError : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_ERROR
+                InnerValue = SCValType.SCValTypeEnum.SCV_ERROR,
             },
-            Error = ToXdr()
+            Error = ToXdr(),
         };
     }
 
     public static SCError FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_ERROR)
+        {
             throw new ArgumentException("Not an SCError", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.Error);
     }
@@ -226,7 +232,7 @@ public abstract class SCError : SCVal
             SCErrorType.SCErrorTypeEnum.SCE_BUDGET => SCBudgetError.FromSCErrorXdr(xdrSCError),
             SCErrorType.SCErrorTypeEnum.SCE_VALUE => SCValueError.FromSCErrorXdr(xdrSCError),
             SCErrorType.SCErrorTypeEnum.SCE_AUTH => SCAuthError.FromSCErrorXdr(xdrSCError),
-            _ => throw new InvalidOperationException("Unknown SCError type")
+            _ => throw new InvalidOperationException("Unknown SCError type"),
         };
     }
 }
@@ -251,9 +257,9 @@ public class SCContractError : SCError
         {
             Discriminant = new SCErrorType
             {
-                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_CONTRACT
+                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_CONTRACT,
             },
-            ContractCode = new Uint32(ContractCode)
+            ContractCode = new Uint32(ContractCode),
         };
     }
 }
@@ -264,7 +270,7 @@ public class SCWasmVmError : SCError
     {
         return new SCWasmVmError
         {
-            Code = xdrSCError.Code.InnerValue
+            Code = xdrSCError.Code.InnerValue,
         };
     }
 
@@ -274,9 +280,9 @@ public class SCWasmVmError : SCError
         {
             Discriminant = new SCErrorType
             {
-                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_WASM_VM
+                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_WASM_VM,
             },
-            Code = SCErrorCode.Create(Code)
+            Code = SCErrorCode.Create(Code),
         };
     }
 }
@@ -287,7 +293,7 @@ public class SCContextError : SCError
     {
         return new SCContextError
         {
-            Code = xdrSCError.Code.InnerValue
+            Code = xdrSCError.Code.InnerValue,
         };
     }
 
@@ -297,9 +303,9 @@ public class SCContextError : SCError
         {
             Discriminant = new SCErrorType
             {
-                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_CONTEXT
+                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_CONTEXT,
             },
-            Code = SCErrorCode.Create(Code)
+            Code = SCErrorCode.Create(Code),
         };
     }
 }
@@ -310,7 +316,7 @@ public class SCStorageError : SCError
     {
         return new SCStorageError
         {
-            Code = xdrSCError.Code.InnerValue
+            Code = xdrSCError.Code.InnerValue,
         };
     }
 
@@ -320,9 +326,9 @@ public class SCStorageError : SCError
         {
             Discriminant = new SCErrorType
             {
-                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_STORAGE
+                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_STORAGE,
             },
-            Code = SCErrorCode.Create(Code)
+            Code = SCErrorCode.Create(Code),
         };
     }
 }
@@ -333,7 +339,7 @@ public class SCObjectError : SCError
     {
         return new SCObjectError
         {
-            Code = xdrSCError.Code.InnerValue
+            Code = xdrSCError.Code.InnerValue,
         };
     }
 
@@ -343,9 +349,9 @@ public class SCObjectError : SCError
         {
             Discriminant = new SCErrorType
             {
-                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_OBJECT
+                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_OBJECT,
             },
-            Code = SCErrorCode.Create(Code)
+            Code = SCErrorCode.Create(Code),
         };
     }
 }
@@ -356,7 +362,7 @@ public class SCCryptoError : SCError
     {
         return new SCCryptoError
         {
-            Code = xdrSCError.Code.InnerValue
+            Code = xdrSCError.Code.InnerValue,
         };
     }
 
@@ -366,9 +372,9 @@ public class SCCryptoError : SCError
         {
             Discriminant = new SCErrorType
             {
-                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_CRYPTO
+                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_CRYPTO,
             },
-            Code = SCErrorCode.Create(Code)
+            Code = SCErrorCode.Create(Code),
         };
     }
 }
@@ -379,7 +385,7 @@ public class SCEventsError : SCError
     {
         return new SCEventsError
         {
-            Code = xdrSCError.Code.InnerValue
+            Code = xdrSCError.Code.InnerValue,
         };
     }
 
@@ -389,9 +395,9 @@ public class SCEventsError : SCError
         {
             Discriminant = new SCErrorType
             {
-                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_EVENTS
+                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_EVENTS,
             },
-            Code = SCErrorCode.Create(Code)
+            Code = SCErrorCode.Create(Code),
         };
     }
 }
@@ -402,7 +408,7 @@ public class SCBudgetError : SCError
     {
         return new SCBudgetError
         {
-            Code = xdrSCError.Code.InnerValue
+            Code = xdrSCError.Code.InnerValue,
         };
     }
 
@@ -412,9 +418,9 @@ public class SCBudgetError : SCError
         {
             Discriminant = new SCErrorType
             {
-                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_BUDGET
+                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_BUDGET,
             },
-            Code = SCErrorCode.Create(Code)
+            Code = SCErrorCode.Create(Code),
         };
     }
 }
@@ -425,7 +431,7 @@ public class SCValueError : SCError
     {
         return new SCValueError
         {
-            Code = xdrSCError.Code.InnerValue
+            Code = xdrSCError.Code.InnerValue,
         };
     }
 
@@ -435,9 +441,9 @@ public class SCValueError : SCError
         {
             Discriminant = new SCErrorType
             {
-                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_VALUE
+                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_VALUE,
             },
-            Code = SCErrorCode.Create(Code)
+            Code = SCErrorCode.Create(Code),
         };
     }
 }
@@ -448,7 +454,7 @@ public class SCAuthError : SCError
     {
         return new SCAuthError
         {
-            Code = xdrSCError.Code.InnerValue
+            Code = xdrSCError.Code.InnerValue,
         };
     }
 
@@ -458,9 +464,9 @@ public class SCAuthError : SCError
         {
             Discriminant = new SCErrorType
             {
-                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_AUTH
+                InnerValue = SCErrorType.SCErrorTypeEnum.SCE_AUTH,
             },
-            Code = SCErrorCode.Create(Code)
+            Code = SCErrorCode.Create(Code),
         };
     }
 }
@@ -485,9 +491,9 @@ public class SCUint32 : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_U32
+                InnerValue = SCValType.SCValTypeEnum.SCV_U32,
             },
-            U32 = ToXdr()
+            U32 = ToXdr(),
         };
     }
 
@@ -499,7 +505,9 @@ public class SCUint32 : SCVal
     public static SCUint32 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_U32)
+        {
             throw new ArgumentException("Not an SCUint32", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.U32);
     }
@@ -525,9 +533,9 @@ public class SCInt32 : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_I32
+                InnerValue = SCValType.SCValTypeEnum.SCV_I32,
             },
-            I32 = ToXdr()
+            I32 = ToXdr(),
         };
     }
 
@@ -539,7 +547,9 @@ public class SCInt32 : SCVal
     public static SCInt32 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_I32)
+        {
             throw new ArgumentException("Not an SCInt32", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.I32);
     }
@@ -565,9 +575,9 @@ public class SCUint64 : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_U64
+                InnerValue = SCValType.SCValTypeEnum.SCV_U64,
             },
-            U64 = ToXdr()
+            U64 = ToXdr(),
         };
     }
 
@@ -579,7 +589,9 @@ public class SCUint64 : SCVal
     public static SCUint64 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_U64)
+        {
             throw new ArgumentException("Not an SCUint64", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.U64);
     }
@@ -605,9 +617,9 @@ public class SCInt64 : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_I64
+                InnerValue = SCValType.SCValTypeEnum.SCV_I64,
             },
-            I64 = ToXdr()
+            I64 = ToXdr(),
         };
     }
 
@@ -619,7 +631,9 @@ public class SCInt64 : SCVal
     public static SCInt64 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_I64)
+        {
             throw new ArgumentException("Not an SCInt64", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.I64);
     }
@@ -645,9 +659,9 @@ public class SCTimePoint : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_TIMEPOINT
+                InnerValue = SCValType.SCValTypeEnum.SCV_TIMEPOINT,
             },
-            Timepoint = ToXdr()
+            Timepoint = ToXdr(),
         };
     }
 
@@ -659,7 +673,9 @@ public class SCTimePoint : SCVal
     public static SCTimePoint FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_TIMEPOINT)
+        {
             throw new ArgumentException("Not an SCTimePoint", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.Timepoint);
     }
@@ -685,9 +701,9 @@ public class SCDuration : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_DURATION
+                InnerValue = SCValType.SCValTypeEnum.SCV_DURATION,
             },
-            Duration = ToXdr()
+            Duration = ToXdr(),
         };
     }
 
@@ -699,7 +715,9 @@ public class SCDuration : SCVal
     public static SCDuration FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_DURATION)
+        {
             throw new ArgumentException("Not an SCDuration", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.Duration);
     }
@@ -721,7 +739,7 @@ public class SCUint128 : SCVal
         return new UInt128Parts
         {
             Lo = new Uint64(Lo),
-            Hi = new Uint64(Hi)
+            Hi = new Uint64(Hi),
         };
     }
 
@@ -731,9 +749,9 @@ public class SCUint128 : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_U128
+                InnerValue = SCValType.SCValTypeEnum.SCV_U128,
             },
-            U128 = ToXdr()
+            U128 = ToXdr(),
         };
     }
 
@@ -745,7 +763,9 @@ public class SCUint128 : SCVal
     public static SCUint128 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_U128)
+        {
             throw new ArgumentException("Not an SCUint128", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.U128);
     }
@@ -767,7 +787,7 @@ public class SCInt128 : SCVal
         return new Int128Parts
         {
             Lo = new Uint64(Lo),
-            Hi = new Int64(Hi)
+            Hi = new Int64(Hi),
         };
     }
 
@@ -777,13 +797,13 @@ public class SCInt128 : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_I128
+                InnerValue = SCValType.SCValTypeEnum.SCV_I128,
             },
             I128 = new Int128Parts
             {
                 Hi = new Int64(Hi),
-                Lo = new Uint64(Lo)
-            }
+                Lo = new Uint64(Lo),
+            },
         };
     }
 
@@ -795,7 +815,9 @@ public class SCInt128 : SCVal
     public static SCInt128 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_I128)
+        {
             throw new ArgumentException("Not an SCInt128", nameof(xdrVal));
+        }
 
         return new SCInt128(xdrVal.I128.Lo.InnerValue, xdrVal.I128.Hi.InnerValue);
     }
@@ -815,7 +837,7 @@ public class SCUint256 : SCVal
             HiHi = new Uint64(HiHi),
             HiLo = new Uint64(HiLo),
             LoHi = new Uint64(LoHi),
-            LoLo = new Uint64(LoLo)
+            LoLo = new Uint64(LoLo),
         };
     }
 
@@ -825,9 +847,9 @@ public class SCUint256 : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_U256
+                InnerValue = SCValType.SCValTypeEnum.SCV_U256,
             },
-            U256 = ToXdr()
+            U256 = ToXdr(),
         };
     }
 
@@ -838,14 +860,16 @@ public class SCUint256 : SCVal
             HiHi = xdrUInt256Parts.HiHi.InnerValue,
             HiLo = xdrUInt256Parts.HiLo.InnerValue,
             LoHi = xdrUInt256Parts.LoHi.InnerValue,
-            LoLo = xdrUInt256Parts.LoLo.InnerValue
+            LoLo = xdrUInt256Parts.LoLo.InnerValue,
         };
     }
 
     public static SCUint256 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_U256)
+        {
             throw new ArgumentException("Not an SCUint256", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.U256);
     }
@@ -865,7 +889,7 @@ public class SCInt256 : SCVal
             HiHi = new Int64(HiHi),
             HiLo = new Uint64(HiLo),
             LoHi = new Uint64(LoHi),
-            LoLo = new Uint64(LoLo)
+            LoLo = new Uint64(LoLo),
         };
     }
 
@@ -875,9 +899,9 @@ public class SCInt256 : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_I256
+                InnerValue = SCValType.SCValTypeEnum.SCV_I256,
             },
-            I256 = ToXdr()
+            I256 = ToXdr(),
         };
     }
 
@@ -888,14 +912,16 @@ public class SCInt256 : SCVal
             HiHi = xdrInt256Parts.HiHi.InnerValue,
             HiLo = xdrInt256Parts.HiLo.InnerValue,
             LoHi = xdrInt256Parts.LoHi.InnerValue,
-            LoLo = xdrInt256Parts.LoLo.InnerValue
+            LoLo = xdrInt256Parts.LoLo.InnerValue,
         };
     }
 
     public static SCInt256 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_I256)
+        {
             throw new ArgumentException("Not an SCInt256", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.I256);
     }
@@ -921,9 +947,9 @@ public class SCBytes : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_BYTES
+                InnerValue = SCValType.SCValTypeEnum.SCV_BYTES,
             },
-            Bytes = ToXdr()
+            Bytes = ToXdr(),
         };
     }
 
@@ -935,7 +961,9 @@ public class SCBytes : SCVal
     public static SCBytes FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_BYTES)
+        {
             throw new ArgumentException("Not an SCBytes", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.Bytes);
     }
@@ -961,9 +989,9 @@ public class SCString : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_STRING
+                InnerValue = SCValType.SCValTypeEnum.SCV_STRING,
             },
-            Str = ToXdr()
+            Str = ToXdr(),
         };
     }
 
@@ -975,7 +1003,9 @@ public class SCString : SCVal
     public static SCString FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_STRING)
+        {
             throw new ArgumentException("Not an SCString", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.Str);
     }
@@ -1001,9 +1031,9 @@ public class SCSymbol : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_SYMBOL
+                InnerValue = SCValType.SCValTypeEnum.SCV_SYMBOL,
             },
-            Sym = ToXdr()
+            Sym = ToXdr(),
         };
     }
 
@@ -1015,7 +1045,9 @@ public class SCSymbol : SCVal
     public static SCSymbol FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_SYMBOL)
+        {
             throw new ArgumentException("Not an SCSymbol", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.Sym);
     }
@@ -1041,9 +1073,9 @@ public class SCVec : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_VEC
+                InnerValue = SCValType.SCValTypeEnum.SCV_VEC,
             },
-            Vec = ToXdr()
+            Vec = ToXdr(),
         };
     }
 
@@ -1055,7 +1087,9 @@ public class SCVec : SCVal
     public static SCVec FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_VEC)
+        {
             throw new ArgumentException("Not an SCVec", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.Vec);
     }
@@ -1084,9 +1118,9 @@ public class SCMap : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_MAP
+                InnerValue = SCValType.SCValTypeEnum.SCV_MAP,
             },
-            Map = ToXdr()
+            Map = ToXdr(),
         };
     }
 
@@ -1098,7 +1132,9 @@ public class SCMap : SCVal
     public static SCMap FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_MAP)
+        {
             throw new ArgumentException("Not an SCMap", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.Map);
     }
@@ -1125,7 +1161,7 @@ public class SCMapEntry
         return new Xdr.SCMapEntry
         {
             Key = Key.ToXdr(),
-            Val = Value.ToXdr()
+            Val = Value.ToXdr(),
         };
     }
 }
@@ -1138,14 +1174,16 @@ public abstract class SCAddress : SCVal
         {
             SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_ACCOUNT => SCAccountId.FromXdr(xdrSCAddress),
             SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CONTRACT => SCContractId.FromXdr(xdrSCAddress),
-            _ => throw new ArgumentOutOfRangeException(nameof(xdrSCAddress), "Invalid address type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(xdrSCAddress), "Invalid address type."),
         };
     }
 
     public static SCAddress FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_ADDRESS)
+        {
             throw new ArgumentException("Not an SCAddress", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.Address);
     }
@@ -1156,9 +1194,9 @@ public abstract class SCAddress : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_ADDRESS
+                InnerValue = SCValType.SCValTypeEnum.SCV_ADDRESS,
             },
-            Address = ToXdr()
+            Address = ToXdr(),
         };
     }
 
@@ -1170,7 +1208,9 @@ public class SCAccountId : SCAddress
     public SCAccountId(string value)
     {
         if (!StrKey.IsValidEd25519PublicKey(value))
+        {
             throw new ArgumentException("Invalid account ID.", nameof(value));
+        }
 
         InnerValue = value;
     }
@@ -1189,9 +1229,9 @@ public class SCAccountId : SCAddress
         {
             Discriminant = new SCAddressType
             {
-                InnerValue = SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_ACCOUNT
+                InnerValue = SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_ACCOUNT,
             },
-            AccountId = new AccountID(KeyPair.FromAccountId(InnerValue).XdrPublicKey)
+            AccountId = new AccountID(KeyPair.FromAccountId(InnerValue).XdrPublicKey),
         };
     }
 }
@@ -1201,7 +1241,9 @@ public class SCContractId : SCAddress
     public SCContractId(string value)
     {
         if (!StrKey.IsValidContractId(value))
+        {
             throw new ArgumentException("Invalid contract id", nameof(value));
+        }
 
         InnerValue = value;
     }
@@ -1213,7 +1255,9 @@ public class SCContractId : SCAddress
         var value = StrKey.EncodeContractId(xdr.ContractId.InnerValue);
 
         if (!StrKey.IsValidContractId(value))
+        {
             throw new InvalidOperationException("Invalid contract id");
+        }
 
         return new SCContractId(value);
     }
@@ -1221,15 +1265,17 @@ public class SCContractId : SCAddress
     public override Xdr.SCAddress ToXdr()
     {
         if (!StrKey.IsValidContractId(InnerValue))
+        {
             throw new InvalidOperationException("Invalid contract id");
+        }
 
         return new Xdr.SCAddress
         {
             Discriminant = new SCAddressType
             {
-                InnerValue = SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CONTRACT
+                InnerValue = SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CONTRACT,
             },
-            ContractId = new Hash(StrKey.DecodeContractId(InnerValue))
+            ContractId = new Hash(StrKey.DecodeContractId(InnerValue)),
         };
     }
 }
@@ -1242,8 +1288,8 @@ public class SCLedgerKeyContractInstance : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_LEDGER_KEY_CONTRACT_INSTANCE
-            }
+                InnerValue = SCValType.SCValTypeEnum.SCV_LEDGER_KEY_CONTRACT_INSTANCE,
+            },
         };
     }
 
@@ -1255,7 +1301,9 @@ public class SCLedgerKeyContractInstance : SCVal
     public static SCLedgerKeyContractInstance FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_LEDGER_KEY_CONTRACT_INSTANCE)
+        {
             throw new ArgumentException("Not an SCLedgerKeyContractInstance", nameof(xdrVal));
+        }
 
         return FromXdr();
     }
@@ -1286,7 +1334,9 @@ public class SCContractInstance : SCVal
     public static SCContractInstance FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_CONTRACT_INSTANCE)
+        {
             throw new ArgumentException("Not an SCContractInstance.", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.Instance);
     }
@@ -1296,7 +1346,7 @@ public class SCContractInstance : SCVal
         return new Xdr.SCContractInstance
         {
             Executable = Executable.ToXdr(),
-            Storage = Storage?.ToXdr()
+            Storage = Storage?.ToXdr(),
         };
     }
 
@@ -1306,9 +1356,9 @@ public class SCContractInstance : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_CONTRACT_INSTANCE
+                InnerValue = SCValType.SCValTypeEnum.SCV_CONTRACT_INSTANCE,
             },
-            Instance = ToXdr()
+            Instance = ToXdr(),
         };
     }
 }
@@ -1327,7 +1377,7 @@ public abstract class ContractExecutable
             ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_STELLAR_ASSET =>
                 new ContractExecutableStellarAsset(),
             _ => throw new ArgumentOutOfRangeException(nameof(xdrContractExecutable),
-                "Not a valid contract executable type.")
+                "Not a valid contract executable type."),
         };
     }
 
@@ -1357,9 +1407,9 @@ public class ContractExecutableWasm : ContractExecutable
         {
             Discriminant = new ContractExecutableType
             {
-                InnerValue = ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_WASM
+                InnerValue = ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_WASM,
             },
-            WasmHash = new Hash(Convert.FromHexString(WasmHash))
+            WasmHash = new Hash(Convert.FromHexString(WasmHash)),
         };
     }
 }
@@ -1372,8 +1422,8 @@ public class ContractExecutableStellarAsset : ContractExecutable
         {
             Discriminant = new ContractExecutableType
             {
-                InnerValue = ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_STELLAR_ASSET
-            }
+                InnerValue = ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_STELLAR_ASSET,
+            },
         };
     }
 }
@@ -1391,7 +1441,7 @@ public class SCNonceKey : SCVal
     {
         return new Xdr.SCNonceKey
         {
-            Nonce = new Int64(Nonce)
+            Nonce = new Int64(Nonce),
         };
     }
 
@@ -1401,9 +1451,9 @@ public class SCNonceKey : SCVal
         {
             Discriminant = new SCValType
             {
-                InnerValue = SCValType.SCValTypeEnum.SCV_LEDGER_KEY_NONCE
+                InnerValue = SCValType.SCValTypeEnum.SCV_LEDGER_KEY_NONCE,
             },
-            NonceKey = ToXdr()
+            NonceKey = ToXdr(),
         };
     }
 
@@ -1415,7 +1465,9 @@ public class SCNonceKey : SCVal
     public static SCNonceKey FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_LEDGER_KEY_NONCE)
+        {
             throw new ArgumentException("Not an SCNonceKey", nameof(xdrVal));
+        }
 
         return FromXdr(xdrVal.NonceKey);
     }

@@ -10,7 +10,10 @@ public static class AssetExtensions
     /// <returns></returns>
     public static string ToQueryParameterEncodedString(this Asset asset)
     {
-        if (asset is not AssetTypeCreditAlphaNum creditAsset) return asset.Type;
+        if (asset is not AssetTypeCreditAlphaNum creditAsset)
+        {
+            return asset.Type;
+        }
         return $"{creditAsset.Code}:{creditAsset.Issuer}";
     }
 }

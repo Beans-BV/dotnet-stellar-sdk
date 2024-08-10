@@ -28,7 +28,7 @@ public class ClawbackResultCode
         CLAWBACK_MALFORMED = -1,
         CLAWBACK_NOT_CLAWBACK_ENABLED = -2,
         CLAWBACK_NO_TRUST = -3,
-        CLAWBACK_UNDERFUNDED = -4
+        CLAWBACK_UNDERFUNDED = -4,
     }
 
     public ClawbackResultCodeEnum InnerValue { get; set; }
@@ -37,7 +37,7 @@ public class ClawbackResultCode
     {
         return new ClawbackResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

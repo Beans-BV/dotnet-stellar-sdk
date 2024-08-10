@@ -24,10 +24,16 @@ public class SCPNomination
         Hash.Encode(stream, encodedSCPNomination.QuorumSetHash);
         var votessize = encodedSCPNomination.Votes.Length;
         stream.WriteInt(votessize);
-        for (var i = 0; i < votessize; i++) Value.Encode(stream, encodedSCPNomination.Votes[i]);
+        for (var i = 0; i < votessize; i++)
+        {
+            Value.Encode(stream, encodedSCPNomination.Votes[i]);
+        }
         var acceptedsize = encodedSCPNomination.Accepted.Length;
         stream.WriteInt(acceptedsize);
-        for (var i = 0; i < acceptedsize; i++) Value.Encode(stream, encodedSCPNomination.Accepted[i]);
+        for (var i = 0; i < acceptedsize; i++)
+        {
+            Value.Encode(stream, encodedSCPNomination.Accepted[i]);
+        }
     }
 
     public static SCPNomination Decode(XdrDataInputStream stream)
@@ -36,10 +42,16 @@ public class SCPNomination
         decodedSCPNomination.QuorumSetHash = Hash.Decode(stream);
         var votessize = stream.ReadInt();
         decodedSCPNomination.Votes = new Value[votessize];
-        for (var i = 0; i < votessize; i++) decodedSCPNomination.Votes[i] = Value.Decode(stream);
+        for (var i = 0; i < votessize; i++)
+        {
+            decodedSCPNomination.Votes[i] = Value.Decode(stream);
+        }
         var acceptedsize = stream.ReadInt();
         decodedSCPNomination.Accepted = new Value[acceptedsize];
-        for (var i = 0; i < acceptedsize; i++) decodedSCPNomination.Accepted[i] = Value.Decode(stream);
+        for (var i = 0; i < acceptedsize; i++)
+        {
+            decodedSCPNomination.Accepted[i] = Value.Decode(stream);
+        }
         return decodedSCPNomination;
     }
 }

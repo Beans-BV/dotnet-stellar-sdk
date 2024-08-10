@@ -29,7 +29,7 @@ public class LedgerUpgradeType
         LEDGER_UPGRADE_BASE_RESERVE = 4,
         LEDGER_UPGRADE_FLAGS = 5,
         LEDGER_UPGRADE_CONFIG = 6,
-        LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE = 7
+        LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE = 7,
     }
 
     public LedgerUpgradeTypeEnum InnerValue { get; set; }
@@ -38,7 +38,7 @@ public class LedgerUpgradeType
     {
         return new LedgerUpgradeType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

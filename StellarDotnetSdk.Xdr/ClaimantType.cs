@@ -17,7 +17,7 @@ public class ClaimantType
 {
     public enum ClaimantTypeEnum
     {
-        CLAIMANT_TYPE_V0 = 0
+        CLAIMANT_TYPE_V0 = 0,
     }
 
     public ClaimantTypeEnum InnerValue { get; set; }
@@ -26,7 +26,7 @@ public class ClaimantType
     {
         return new ClaimantType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -5,13 +5,16 @@ namespace StellarDotnetSdk.Exceptions;
 public class ServiceUnavailableException : Exception
 {
     public ServiceUnavailableException(object? retryAfter = null)
-        : base("The server is currently unable to handle the request due to a temporary overloading or maintenance of the server.")
+        : base(
+            "The server is currently unable to handle the request due to a temporary overloading or maintenance of the server.")
     {
         try
         {
             var retryAfterStringValue = retryAfter?.ToString();
-            if (string.IsNullOrWhiteSpace(retryAfterStringValue)) 
+            if (string.IsNullOrWhiteSpace(retryAfterStringValue))
+            {
                 return;
+            }
 
             if (int.TryParse(retryAfterStringValue, out var retryAfterInt))
             {

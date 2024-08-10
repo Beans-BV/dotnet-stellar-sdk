@@ -25,5 +25,5 @@ public enum AccountFlag
     /// <summary>
     ///     With this setting, an anchor can unilaterally take away any portion of its issued asset(s) from any asset holder.
     /// </summary>
-    AUTH_CLAWBACK_FLAG = AccountFlags.AccountFlagsEnum.AUTH_CLAWBACK_ENABLED_FLAG
+    AUTH_CLAWBACK_FLAG = AccountFlags.AccountFlagsEnum.AUTH_CLAWBACK_ENABLED_FLAG,
 }

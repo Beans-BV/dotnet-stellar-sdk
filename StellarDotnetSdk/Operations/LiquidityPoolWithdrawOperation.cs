@@ -89,8 +89,8 @@ public class LiquidityPoolWithdrawOperation : Operation
                 LiquidityPoolID = LiquidityPoolId.ToXdr(),
                 Amount = new xdr_Int64(ToXdrAmount(Amount)),
                 MinAmountA = new xdr_Int64(ToXdrAmount(MinAmountA)),
-                MinAmountB = new xdr_Int64(ToXdrAmount(MinAmountB))
-            }
+                MinAmountB = new xdr_Int64(ToXdrAmount(MinAmountB)),
+            },
         };
         return body;
     }

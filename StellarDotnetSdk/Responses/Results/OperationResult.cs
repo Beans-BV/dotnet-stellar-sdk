@@ -22,7 +22,7 @@ public class OperationResult
             OperationResultCodeEnum.opTOO_MANY_SUBENTRIES => new OperationResultTooManySubEntries(),
             OperationResultCodeEnum.opEXCEEDED_WORK_LIMIT => new OperationResultExceededWorkLimit(),
             OperationResultCodeEnum.opTOO_MANY_SPONSORING => new OperationResultTooManySponsoring(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown OperationResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown OperationResult type."),
         };
     }
 
@@ -84,7 +84,7 @@ public class OperationResult
                 => ExtendFootprintTtlResult.FromXdr(result.ExtendFootprintTTLResult),
             OperationTypeEnum.RESTORE_FOOTPRINT
                 => RestoreFootprintResult.FromXdr(result.RestoreFootprintResult),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown OperationType.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown OperationType."),
         };
     }
 }

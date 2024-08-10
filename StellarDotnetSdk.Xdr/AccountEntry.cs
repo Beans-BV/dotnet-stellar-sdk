@@ -74,7 +74,10 @@ public class AccountEntry
         Thresholds.Encode(stream, encodedAccountEntry.Thresholds);
         var signerssize = encodedAccountEntry.Signers.Length;
         stream.WriteInt(signerssize);
-        for (var i = 0; i < signerssize; i++) Signer.Encode(stream, encodedAccountEntry.Signers[i]);
+        for (var i = 0; i < signerssize; i++)
+        {
+            Signer.Encode(stream, encodedAccountEntry.Signers[i]);
+        }
         AccountEntryExt.Encode(stream, encodedAccountEntry.Ext);
     }
 
@@ -86,13 +89,19 @@ public class AccountEntry
         decodedAccountEntry.SeqNum = SequenceNumber.Decode(stream);
         decodedAccountEntry.NumSubEntries = Uint32.Decode(stream);
         var InflationDestPresent = stream.ReadInt();
-        if (InflationDestPresent != 0) decodedAccountEntry.InflationDest = AccountID.Decode(stream);
+        if (InflationDestPresent != 0)
+        {
+            decodedAccountEntry.InflationDest = AccountID.Decode(stream);
+        }
         decodedAccountEntry.Flags = Uint32.Decode(stream);
         decodedAccountEntry.HomeDomain = String32.Decode(stream);
         decodedAccountEntry.Thresholds = Thresholds.Decode(stream);
         var signerssize = stream.ReadInt();
         decodedAccountEntry.Signers = new Signer[signerssize];
-        for (var i = 0; i < signerssize; i++) decodedAccountEntry.Signers[i] = Signer.Decode(stream);
+        for (var i = 0; i < signerssize; i++)
+        {
+            decodedAccountEntry.Signers[i] = Signer.Decode(stream);
+        }
         decodedAccountEntry.Ext = AccountEntryExt.Decode(stream);
         return decodedAccountEntry;
     }

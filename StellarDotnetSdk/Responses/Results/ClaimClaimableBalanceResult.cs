@@ -15,7 +15,7 @@ public class ClaimClaimableBalanceResult : OperationResult
             ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED => new ClaimClaimableBalanceNotAuthorized(),
             ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_NO_TRUST => new ClaimClaimableBalanceNoTrust(),
             ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_SUCCESS => new ClaimClaimableBalanceSuccess(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ClaimClaimableBalanceResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ClaimClaimableBalanceResult type."),
         };
     }
 }

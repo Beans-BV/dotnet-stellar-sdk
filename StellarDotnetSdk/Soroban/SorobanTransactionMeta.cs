@@ -30,17 +30,22 @@ public class SorobanTransactionMeta
     /// <returns>A <c>SorobanTransactionMeta</c> object. Returns null if the provided object is null.</returns>
     public static SorobanTransactionMeta? FromXdr(Xdr.SorobanTransactionMeta? xdrSorobanTransactionMeta)
     {
-        if (xdrSorobanTransactionMeta == null) return null;
+        if (xdrSorobanTransactionMeta == null)
+        {
+            return null;
+        }
         var meta = new SorobanTransactionMeta
         {
             ReturnValue = SCVal.FromXdr(xdrSorobanTransactionMeta.ReturnValue),
             Events = xdrSorobanTransactionMeta.Events.Select(ContractEvent.FromXdr).ToArray(),
-            DiagnosticEvents = xdrSorobanTransactionMeta.DiagnosticEvents.Select(DiagnosticEvent.FromXdr).ToArray()
+            DiagnosticEvents = xdrSorobanTransactionMeta.DiagnosticEvents.Select(DiagnosticEvent.FromXdr).ToArray(),
         };
 
         if (xdrSorobanTransactionMeta.Ext.Discriminant == 1)
+        {
             meta.SorobanTransactionMetaExtensionV1 =
                 SorobanTransactionMetaExtensionV1.FromXdr(xdrSorobanTransactionMeta.Ext.V1);
+        }
 
         return meta;
     }
@@ -53,9 +58,14 @@ public class SorobanTransactionMeta
     public string ToDebugString()
     {
         var value = "";
-        for (var i = 0; i < Events.Length; i++) value += $"Event {i + 1}\n:{Events[i].ToString()}\n";
+        for (var i = 0; i < Events.Length; i++)
+        {
+            value += $"Event {i + 1}\n:{Events[i].ToString()}\n";
+        }
         for (var i = 0; i < DiagnosticEvents.Length; i++)
+        {
             value += $"Diagnostic event {i + 1}:\n{DiagnosticEvents[i].ToString()}\n";
+        }
         return value;
     }
 }

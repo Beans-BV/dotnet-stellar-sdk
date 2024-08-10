@@ -29,7 +29,9 @@ public class AccountEntryExtensionV2
                 .Select(x => x.InnerValue != null ? KeyPair.FromXdrPublicKey(x.InnerValue.InnerValue) : null)
                 .ToArray());
         if (xdrExtensionV2.Ext.Discriminant == 3)
+        {
             entryExtensionV2.ExtensionV3 = AccountEntryExtensionV3.FromXdr(xdrExtensionV2.Ext.V3);
+        }
 
         return entryExtensionV2;
     }

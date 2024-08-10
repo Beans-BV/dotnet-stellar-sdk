@@ -97,7 +97,10 @@ public class Operation
     {
         var decodedOperation = new Operation();
         var SourceAccountPresent = stream.ReadInt();
-        if (SourceAccountPresent != 0) decodedOperation.SourceAccount = MuxedAccount.Decode(stream);
+        if (SourceAccountPresent != 0)
+        {
+            decodedOperation.SourceAccount = MuxedAccount.Decode(stream);
+        }
         decodedOperation.Body = OperationBody.Decode(stream);
         return decodedOperation;
     }

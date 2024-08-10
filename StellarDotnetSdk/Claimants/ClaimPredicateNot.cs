@@ -17,9 +17,9 @@ public class ClaimPredicateNot : ClaimPredicate
         {
             Discriminant = new ClaimPredicateType
             {
-                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_NOT
+                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_NOT,
             },
-            NotPredicate = Predicate.ToXdr()
+            NotPredicate = Predicate.ToXdr(),
         };
     }
 }

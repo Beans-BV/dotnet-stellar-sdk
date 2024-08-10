@@ -1,5 +1,4 @@
-﻿using System;
-using StellarDotnetSdk.Soroban;
+﻿using StellarDotnetSdk.Soroban;
 
 namespace StellarDotnetSdk.LedgerEntries;
 

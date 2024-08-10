@@ -16,7 +16,9 @@ public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
         AssetB = assetB ?? throw new ArgumentNullException(nameof(assetB), "assetB cannot be null");
 
         if (assetA.CompareTo(assetB) >= 0)
+        {
             throw new ArgumentException("Asset A must be < Asset B (Lexicographic Order).");
+        }
 
         Fee = feeBp;
     }
@@ -27,7 +29,10 @@ public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
 
     public override bool Equals(object? obj)
     {
-        if (obj is not LiquidityPoolConstantProductParameters other) return false;
+        if (obj is not LiquidityPoolConstantProductParameters other)
+        {
+            return false;
+        }
         return Equals(AssetA, other.AssetA) && Equals(AssetB, other.AssetB) && Equals(Fee, other.Fee);
     }
 
@@ -42,15 +47,15 @@ public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
         {
             Discriminant =
             {
-                InnerValue = LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT
-            }
+                InnerValue = LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+            },
         };
 
         var parameters = new Xdr.LiquidityPoolConstantProductParameters
         {
             AssetA = AssetA.ToXdr(),
             AssetB = AssetB.ToXdr(),
-            Fee = new Int32(Fee)
+            Fee = new Int32(Fee),
         };
 
         liquidityPoolParametersXdr.ConstantProduct = parameters;

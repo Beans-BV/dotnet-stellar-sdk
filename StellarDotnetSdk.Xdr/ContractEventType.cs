@@ -21,7 +21,7 @@ public class ContractEventType
     {
         SYSTEM = 0,
         CONTRACT = 1,
-        DIAGNOSTIC = 2
+        DIAGNOSTIC = 2,
     }
 
     public ContractEventTypeEnum InnerValue { get; set; }
@@ -30,7 +30,7 @@ public class ContractEventType
     {
         return new ContractEventType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

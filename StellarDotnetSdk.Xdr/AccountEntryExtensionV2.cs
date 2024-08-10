@@ -36,7 +36,9 @@ public class AccountEntryExtensionV2
         var signerSponsoringIDssize = encodedAccountEntryExtensionV2.SignerSponsoringIDs.Length;
         stream.WriteInt(signerSponsoringIDssize);
         for (var i = 0; i < signerSponsoringIDssize; i++)
+        {
             SponsorshipDescriptor.Encode(stream, encodedAccountEntryExtensionV2.SignerSponsoringIDs[i]);
+        }
         AccountEntryExtensionV2Ext.Encode(stream, encodedAccountEntryExtensionV2.Ext);
     }
 
@@ -48,7 +50,9 @@ public class AccountEntryExtensionV2
         var signerSponsoringIDssize = stream.ReadInt();
         decodedAccountEntryExtensionV2.SignerSponsoringIDs = new SponsorshipDescriptor[signerSponsoringIDssize];
         for (var i = 0; i < signerSponsoringIDssize; i++)
+        {
             decodedAccountEntryExtensionV2.SignerSponsoringIDs[i] = SponsorshipDescriptor.Decode(stream);
+        }
         decodedAccountEntryExtensionV2.Ext = AccountEntryExtensionV2Ext.Decode(stream);
         return decodedAccountEntryExtensionV2;
     }

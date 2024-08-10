@@ -51,7 +51,7 @@ public class PathPaymentStrictReceiveOperationResponseTest
             SourceAssetType = "credit_alphanum4",
             SourceMax = "10.0",
             SourceAmount = "10.0",
-            Path = new Asset[] { }
+            Path = new Asset[] { },
         };
 
         Assert.AreEqual(operation.From, operationTest.From);

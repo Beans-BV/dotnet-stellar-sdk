@@ -27,8 +27,8 @@ public class LedgerKeyOffer : LedgerKey
             Offer = new Xdr.LedgerKey.LedgerKeyOffer
             {
                 SellerID = new AccountID(Seller.XdrPublicKey),
-                OfferID = new Int64(OfferId)
-            }
+                OfferID = new Int64(OfferId),
+            },
         };
     }
 

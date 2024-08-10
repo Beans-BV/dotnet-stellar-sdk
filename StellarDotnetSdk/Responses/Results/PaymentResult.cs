@@ -19,7 +19,7 @@ public class PaymentResult : OperationResult
             PaymentResultCodeEnum.PAYMENT_NOT_AUTHORIZED => new PaymentNotAuthorized(),
             PaymentResultCodeEnum.PAYMENT_LINE_FULL => new PaymentLineFull(),
             PaymentResultCodeEnum.PAYMENT_NO_ISSUER => new PaymentNoIssuer(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown PaymentResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown PaymentResult type."),
         };
     }
 }

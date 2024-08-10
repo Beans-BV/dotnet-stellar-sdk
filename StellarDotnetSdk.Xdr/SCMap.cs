@@ -25,7 +25,10 @@ public class SCMap
     {
         var SCMapsize = encodedSCMap.InnerValue.Length;
         stream.WriteInt(SCMapsize);
-        for (var i = 0; i < SCMapsize; i++) SCMapEntry.Encode(stream, encodedSCMap.InnerValue[i]);
+        for (var i = 0; i < SCMapsize; i++)
+        {
+            SCMapEntry.Encode(stream, encodedSCMap.InnerValue[i]);
+        }
     }
 
     public static SCMap Decode(XdrDataInputStream stream)
@@ -33,7 +36,10 @@ public class SCMap
         var decodedSCMap = new SCMap();
         var SCMapsize = stream.ReadInt();
         decodedSCMap.InnerValue = new SCMapEntry[SCMapsize];
-        for (var i = 0; i < SCMapsize; i++) decodedSCMap.InnerValue[i] = SCMapEntry.Decode(stream);
+        for (var i = 0; i < SCMapsize; i++)
+        {
+            decodedSCMap.InnerValue[i] = SCMapEntry.Decode(stream);
+        }
         return decodedSCMap;
     }
 }

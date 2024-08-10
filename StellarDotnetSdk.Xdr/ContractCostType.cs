@@ -158,7 +158,7 @@ public class ContractCostType
         InstantiateWasmExports = 41,
         InstantiateWasmDataSegmentBytes = 42,
         Sec1DecodePointUncompressed = 43,
-        VerifyEcdsaSecp256r1Sig = 44
+        VerifyEcdsaSecp256r1Sig = 44,
     }
 
     public ContractCostTypeEnum InnerValue { get; set; }
@@ -167,7 +167,7 @@ public class ContractCostType
     {
         return new ContractCostType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

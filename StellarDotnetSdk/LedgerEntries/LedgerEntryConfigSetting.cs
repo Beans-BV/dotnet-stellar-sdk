@@ -19,7 +19,9 @@ public class LedgerEntryConfigSetting : LedgerEntry
     public static LedgerEntryConfigSetting FromXdrLedgerEntryData(Xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
         if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING)
+        {
             throw new ArgumentException("Not a ConfigSettingEntry.", nameof(xdrLedgerEntryData));
+        }
 
         var xdrConfigSetting = xdrLedgerEntryData.ConfigSetting;
 
@@ -53,7 +55,7 @@ public class LedgerEntryConfigSetting : LedgerEntry
                 ConfigSettingContractDataEntrySizeBytes.FromXdr(xdrConfigSetting.ContractDataEntrySizeBytes),
             CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW =>
                 ConfigSettingBucketListSizeWindow.FromXdr(xdrConfigSetting.BucketListSizeWindow),
-            _ => throw new InvalidOperationException("Unknown ConfigSetting type.")
+            _ => throw new InvalidOperationException("Unknown ConfigSetting type."),
         };
         return ledgerEntryConfigSetting;
     }

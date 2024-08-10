@@ -181,7 +181,7 @@ public class LedgerKeyTest
     {
         var ledgerKey = (LedgerKeyConfigSetting)LedgerKey.ConfigSetting(new ConfigSettingID
         {
-            InnerValue = ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_STATE_ARCHIVAL
+            InnerValue = ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_STATE_ARCHIVAL,
         });
 
         // Act

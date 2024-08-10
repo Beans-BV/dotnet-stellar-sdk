@@ -30,7 +30,9 @@ public class ClawbackClaimableBalanceOperation : Operation
         }
 
         if (balanceIdInBytes.Length != 36)
+        {
             throw new ArgumentException("Must be 36 bytes long", nameof(balanceIdInBytes));
+        }
 
         BalanceIdInBytes = balanceIdInBytes;
     }
@@ -52,8 +54,8 @@ public class ClawbackClaimableBalanceOperation : Operation
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CLAWBACK_CLAIMABLE_BALANCE),
             ClawbackClaimableBalanceOp = new ClawbackClaimableBalanceOp
             {
-                BalanceID = ClaimableBalanceID.Decode(new XdrDataInputStream(BalanceIdInBytes))
-            }
+                BalanceID = ClaimableBalanceID.Decode(new XdrDataInputStream(BalanceIdInBytes)),
+            },
         };
     }
 }

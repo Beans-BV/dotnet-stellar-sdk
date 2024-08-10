@@ -22,13 +22,13 @@ public class FederationTest
             .Returns(new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent("FEDERATION_SERVER = \"https://api.stellar.org/federation\"")
+                Content = new StringContent("FEDERATION_SERVER = \"https://api.stellar.org/federation\""),
             })
             .Returns(new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
                 Content = new StringContent(
-                    "{\"stellar_address\":\"bob*stellar.org\",\"account_id\":\"GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY\"}")
+                    "{\"stellar_address\":\"bob*stellar.org\",\"account_id\":\"GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY\"}"),
             });
 
         var response = await StellarDotnetSdk.Federation.Federation.Resolve("bob*stellar.org");

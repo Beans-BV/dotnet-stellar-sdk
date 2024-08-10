@@ -17,7 +17,7 @@ public class ClawbackClaimableBalanceResult : OperationResult
                 => new ClawbackClaimableBalanceNotIssuer(),
             ResultCodeEnum.CLAWBACK_CLAIMABLE_BALANCE_SUCCESS
                 => new ClawbackClaimableBalanceSuccess(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ClawbackClaimableBalanceResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ClawbackClaimableBalanceResult type."),
         };
     }
 }

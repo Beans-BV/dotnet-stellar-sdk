@@ -21,7 +21,7 @@ public class BumpSequenceResultCode
     public enum BumpSequenceResultCodeEnum
     {
         BUMP_SEQUENCE_SUCCESS = 0,
-        BUMP_SEQUENCE_BAD_SEQ = -1
+        BUMP_SEQUENCE_BAD_SEQ = -1,
     }
 
     public BumpSequenceResultCodeEnum InnerValue { get; set; }
@@ -30,7 +30,7 @@ public class BumpSequenceResultCode
     {
         return new BumpSequenceResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

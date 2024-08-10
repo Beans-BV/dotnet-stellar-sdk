@@ -16,9 +16,15 @@ public class AssetAmountJsonConverter : JsonConverter<AssetAmount>
 
         var amount = jt.Value<string>("amount");
 
-        if (asset == null) throw new ArgumentException("JSON value for asset is missing.", nameof(asset));
+        if (asset == null)
+        {
+            throw new ArgumentException("JSON value for asset is missing.", nameof(asset));
+        }
 
-        if (amount == null) throw new ArgumentException("JSON value for amount is missing.", nameof(amount));
+        if (amount == null)
+        {
+            throw new ArgumentException("JSON value for amount is missing.", nameof(amount));
+        }
 
         return new AssetAmount(asset, amount);
     }
@@ -26,8 +32,14 @@ public class AssetAmountJsonConverter : JsonConverter<AssetAmount>
     public override void WriteJson(JsonWriter writer, AssetAmount? value, JsonSerializer serializer)
     {
         var jo = new JObject();
-        if (value?.Asset != null) jo.Add("asset", value.Asset.CanonicalName());
-        if (value?.Amount != null) jo.Add("amount", value.Amount);
+        if (value?.Asset != null)
+        {
+            jo.Add("asset", value.Asset.CanonicalName());
+        }
+        if (value?.Amount != null)
+        {
+            jo.Add("amount", value.Amount);
+        }
         jo.WriteTo(writer);
     }
 }

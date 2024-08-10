@@ -17,7 +17,7 @@ public class RestoreFootprintResult : OperationResult
                 => new RestoreFootprintResourceLimitExceeded(),
             ResultCodeEnum.RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE
                 => new RestoreFootprintInsufficientRefundableFee(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown RestoreFootprintResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown RestoreFootprintResult type."),
         };
     }
 }

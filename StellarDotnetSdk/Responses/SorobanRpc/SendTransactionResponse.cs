@@ -12,7 +12,7 @@ public class SendTransactionResponse
         PENDING,
         DUPLICATE,
         TRY_AGAIN_LATER,
-        ERROR
+        ERROR,
     }
 
     public SendTransactionResponse(string? errorResultXdr, string hash, long? latestLedger,

@@ -18,7 +18,7 @@ public class ContractDataDurability
     public enum ContractDataDurabilityEnum
     {
         TEMPORARY = 0,
-        PERSISTENT = 1
+        PERSISTENT = 1,
     }
 
     public ContractDataDurabilityEnum InnerValue { get; set; }
@@ -27,7 +27,7 @@ public class ContractDataDurability
     {
         return new ContractDataDurability
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -26,7 +26,7 @@ public class ClawbackClaimableBalanceResultCode
         CLAWBACK_CLAIMABLE_BALANCE_SUCCESS = 0,
         CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST = -1,
         CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER = -2,
-        CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED = -3
+        CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED = -3,
     }
 
     public ClawbackClaimableBalanceResultCodeEnum InnerValue { get; set; }
@@ -35,7 +35,7 @@ public class ClawbackClaimableBalanceResultCode
     {
         return new ClawbackClaimableBalanceResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -65,7 +65,7 @@ public class MessageType
         SEND_MORE = 16,
         SEND_MORE_EXTENDED = 20,
         FLOOD_ADVERT = 18,
-        FLOOD_DEMAND = 19
+        FLOOD_DEMAND = 19,
     }
 
     public MessageTypeEnum InnerValue { get; set; }
@@ -74,7 +74,7 @@ public class MessageType
     {
         return new MessageType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

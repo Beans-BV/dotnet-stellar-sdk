@@ -26,7 +26,10 @@ public class AssetAmount
 
     public override bool Equals(object? obj)
     {
-        if (obj is not AssetAmount other) return false;
+        if (obj is not AssetAmount other)
+        {
+            return false;
+        }
 
         return Equals(Asset, other.Asset) && Equals(Amount, other.Amount);
     }

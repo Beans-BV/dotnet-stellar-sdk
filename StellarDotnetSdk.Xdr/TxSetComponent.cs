@@ -69,18 +69,25 @@ public class TxSetComponent
             var txssize = encodedTxSetComponentTxsMaybeDiscountedFee.Txs.Length;
             stream.WriteInt(txssize);
             for (var i = 0; i < txssize; i++)
+            {
                 TransactionEnvelope.Encode(stream, encodedTxSetComponentTxsMaybeDiscountedFee.Txs[i]);
+            }
         }
 
         public static TxSetComponentTxsMaybeDiscountedFee Decode(XdrDataInputStream stream)
         {
             var decodedTxSetComponentTxsMaybeDiscountedFee = new TxSetComponentTxsMaybeDiscountedFee();
             var BaseFeePresent = stream.ReadInt();
-            if (BaseFeePresent != 0) decodedTxSetComponentTxsMaybeDiscountedFee.BaseFee = Int64.Decode(stream);
+            if (BaseFeePresent != 0)
+            {
+                decodedTxSetComponentTxsMaybeDiscountedFee.BaseFee = Int64.Decode(stream);
+            }
             var txssize = stream.ReadInt();
             decodedTxSetComponentTxsMaybeDiscountedFee.Txs = new TransactionEnvelope[txssize];
             for (var i = 0; i < txssize; i++)
+            {
                 decodedTxSetComponentTxsMaybeDiscountedFee.Txs[i] = TransactionEnvelope.Decode(stream);
+            }
             return decodedTxSetComponentTxsMaybeDiscountedFee;
         }
     }

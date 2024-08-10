@@ -69,7 +69,9 @@ public class XdrDataInputStream
     {
         var arr = new int[l];
         for (var i = 0; i < l; i++)
+        {
             arr[i] = ReadInt();
+        }
         return arr;
     }
 
@@ -145,7 +147,9 @@ public class XdrDataInputStream
     {
         var arr = new float[l];
         for (var i = 0; i < l; i++)
+        {
             arr[i] = ReadSingle();
+        }
 
         return arr;
     }
@@ -170,7 +174,9 @@ public class XdrDataInputStream
     {
         var arr = new double[l];
         for (var i = 0; i < l; i++)
+        {
             arr[i] = ReadDouble();
+        }
         return arr;
     }
 
@@ -219,7 +225,9 @@ public class XdrDataInputStream
         Array.Copy(_bytes, _pos + len, tailBytes, 0, tailLength);
 
         if (tailBytes.Any(a => a != 0))
+        {
             throw new IOException("non-zero padding");
+        }
 
         _pos += (int)len + tailLength;
 
@@ -239,10 +247,14 @@ public class XdrDataInputStream
         }
 
         if (len > max)
+        {
             throw new FormatException("unexpected length: " + len);
+        }
 
         if (max <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(max));
+        }
 
         return len;
     }

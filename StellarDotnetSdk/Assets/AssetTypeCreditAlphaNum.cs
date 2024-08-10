@@ -52,7 +52,10 @@ public abstract class AssetTypeCreditAlphaNum : Asset
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
-        if (obj is not AssetTypeCreditAlphaNum numObj) return false;
+        if (obj is not AssetTypeCreditAlphaNum numObj)
+        {
+            return false;
+        }
 
         return Code.Equals(numObj.Code) &&
                Issuer.Equals(numObj.Issuer);

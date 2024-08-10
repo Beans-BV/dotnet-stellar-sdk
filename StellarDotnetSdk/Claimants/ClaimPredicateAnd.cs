@@ -19,9 +19,9 @@ public class ClaimPredicateAnd : ClaimPredicate
         {
             Discriminant = new ClaimPredicateType
             {
-                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_AND
+                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_AND,
             },
-            AndPredicates = new[] { LeftPredicate.ToXdr(), RightPredicate.ToXdr() }
+            AndPredicates = new[] { LeftPredicate.ToXdr(), RightPredicate.ToXdr() },
         };
     }
 }

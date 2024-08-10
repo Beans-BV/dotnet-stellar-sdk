@@ -163,7 +163,7 @@ public class StrKeyTest
             0x00,
 
             //Padding
-            0x00, 0x00, 0x00
+            0x00, 0x00, 0x00,
         }.ToArray();
 
         const string hashX = "PA3D5KRYM6CB7OWQ6TWYRR3Z4T7GNZLKERYNZGGA5SOAOPIFY6YQGAAAAAEQAAAAAAAAAAAAAAAAAABBXA";

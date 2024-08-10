@@ -9,9 +9,13 @@ public abstract class MemoHashAbstract : Memo
     public MemoHashAbstract(byte[] bytes)
     {
         if (bytes.Length < 32)
+        {
             bytes = Util.PaddedByteArray(bytes, 32);
+        }
         else if (bytes.Length > 32)
+        {
             throw new MemoTooLongException("MEMO_HASH can contain 32 bytes at max.");
+        }
 
         MemoBytes = bytes;
     }

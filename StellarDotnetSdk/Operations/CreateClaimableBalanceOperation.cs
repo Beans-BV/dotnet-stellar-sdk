@@ -54,8 +54,8 @@ public class CreateClaimableBalanceOperation : Operation
             {
                 Amount = new Int64(ToXdrAmount(Amount)),
                 Asset = Asset.ToXdr(),
-                Claimants = Claimants.Select(claimant => claimant.ToXdr()).ToArray()
-            }
+                Claimants = Claimants.Select(claimant => claimant.ToXdr()).ToArray(),
+            },
         };
     }
 

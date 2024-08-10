@@ -14,7 +14,7 @@ public abstract class TransactionBase
     public enum TransactionXdrVersion
     {
         V0,
-        V1
+        V1,
     }
 
     public TransactionBase()
@@ -72,9 +72,13 @@ public abstract class TransactionBase
     public void Sign(IAccountId signer, Network network)
     {
         if (signer == null)
+        {
             throw new ArgumentNullException(nameof(signer), "signer cannot be null");
+        }
         if (network == null)
+        {
             throw new ArgumentNullException(nameof(network), "network cannot be null");
+        }
         var txHash = Hash(network);
         Signatures.Add(signer.SigningKey.SignDecorated(txHash));
     }
@@ -87,7 +91,7 @@ public abstract class TransactionBase
     {
         var signature = new Signature
         {
-            InnerValue = preimage ?? throw new ArgumentNullException(nameof(preimage), "preimage cannot be null")
+            InnerValue = preimage ?? throw new ArgumentNullException(nameof(preimage), "preimage cannot be null"),
         };
 
         var hash = Util.Hash(preimage);
@@ -100,7 +104,7 @@ public abstract class TransactionBase
         var decoratedSignature = new DecoratedSignature
         {
             Hint = signatureHint,
-            Signature = signature
+            Signature = signature,
         };
 
         Signatures.Add(decoratedSignature);
@@ -116,15 +120,19 @@ public abstract class TransactionBase
     public void Sign(string publicKey, string signature)
     {
         if (publicKey == null)
+        {
             throw new ArgumentNullException(nameof(publicKey), "public key cannot be null");
+        }
 
         if (signature == null)
+        {
             throw new ArgumentNullException(nameof(signature), "signature cannot be null");
+        }
 
         var signatureBytes = Convert.FromBase64String(signature);
         var signatureObj = new Signature
         {
-            InnerValue = signatureBytes
+            InnerValue = signatureBytes,
         };
 
         // this can throw a bunch of errors. Wrap in Try/Catch for consistent failure.
@@ -141,12 +149,14 @@ public abstract class TransactionBase
         }
 
         if (!keyPair.Verify(Hash(), signatureObj.InnerValue))
+        {
             throw new ArgumentException("Invalid signature", nameof(signature));
+        }
 
         var decoratedSignature = new DecoratedSignature
         {
             Hint = signatureHint,
-            Signature = signatureObj
+            Signature = signatureObj,
         };
 
         Signatures.Add(decoratedSignature);

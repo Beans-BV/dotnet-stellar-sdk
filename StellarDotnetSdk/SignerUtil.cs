@@ -19,7 +19,9 @@ public static class SignerUtil
     public static SignerKey Ed25519PublicKey(KeyPair keyPair)
     {
         if (keyPair == null)
+        {
             throw new ArgumentNullException(nameof(keyPair), "keyPair cannot be null");
+        }
 
         return keyPair.XdrSignerKey;
     }
@@ -33,7 +35,9 @@ public static class SignerUtil
     public static SignerKey Sha256Hash(byte[] hash)
     {
         if (hash == null)
+        {
             throw new ArgumentNullException(nameof(hash), "hash cannot be null");
+        }
 
         var signerKey = new SignerKey();
         var value = CreateUint256(hash);
@@ -65,7 +69,9 @@ public static class SignerUtil
     public static SignerKey PreAuthTx(Transaction tx, Network network)
     {
         if (tx == null)
+        {
             throw new ArgumentNullException(nameof(tx), "tx cannot be null");
+        }
 
         return PreAuthTx(tx.Hash(network));
     }
@@ -79,7 +85,9 @@ public static class SignerUtil
     public static SignerKey PreAuthTx(byte[] hash)
     {
         if (hash == null)
+        {
             throw new ArgumentNullException(nameof(hash), "hash cannot be null");
+        }
 
         var signerKey = new SignerKey();
         var value = CreateUint256(hash);
@@ -101,7 +109,7 @@ public static class SignerUtil
         var payloadSigner = new SignerKey.SignerKeyEd25519SignedPayload
         {
             Payload = signedPayloadSigner.Payload,
-            Ed25519 = signedPayloadSigner.SignerAccountId.InnerValue.Ed25519
+            Ed25519 = signedPayloadSigner.SignerAccountId.InnerValue.Ed25519,
         };
 
         signerKey.Discriminant.InnerValue = SignerKeyType.SignerKeyTypeEnum.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD;
@@ -118,7 +126,9 @@ public static class SignerUtil
     private static Uint256 CreateUint256(byte[] hash)
     {
         if (hash.Length != 32)
+        {
             throw new ArgumentException("hash must be 32 bytes long");
+        }
 
         return new Uint256(hash);
     }

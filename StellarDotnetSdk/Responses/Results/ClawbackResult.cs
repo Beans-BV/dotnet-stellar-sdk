@@ -14,7 +14,7 @@ public class ClawbackResult : OperationResult
             ResultCodeEnum.CLAWBACK_NO_TRUST => new ClawbackNoTrust(),
             ResultCodeEnum.CLAWBACK_SUCCESS => new ClawbackSuccess(),
             ResultCodeEnum.CLAWBACK_UNDERFUNDED => new ClawbackUnderfunded(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ClawbackResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ClawbackResult type."),
         };
     }
 }

@@ -25,7 +25,9 @@ public class LedgerEntryLiquidityPool : LedgerEntry
     public static LedgerEntryLiquidityPool FromXdrLedgerEntryData(Xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
         if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.LIQUIDITY_POOL)
+        {
             throw new ArgumentException("Not a LiquidityPoolEntry", nameof(xdrLedgerEntryData));
+        }
 
         return FromXdr(xdrLedgerEntryData);
     }

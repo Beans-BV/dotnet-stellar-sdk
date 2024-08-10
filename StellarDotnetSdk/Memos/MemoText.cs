@@ -10,11 +10,15 @@ public class MemoText : Memo
     public MemoText(string text)
     {
         if (text is null)
+        {
             throw new ArgumentNullException(nameof(text), "text cannot be null");
+        }
 
         var bytes = Encoding.UTF8.GetBytes(text);
         if (bytes.Length > 28)
+        {
             throw new MemoTooLongException("text must be <= 28 bytes. length=" + bytes.Length);
+        }
 
         MemoBytesValue = bytes;
     }
@@ -22,9 +26,13 @@ public class MemoText : Memo
     public MemoText(byte[] text)
     {
         if (text is null)
+        {
             throw new ArgumentNullException(nameof(text), "text cannot be null");
+        }
         if (text.Length > 28)
+        {
             throw new MemoTooLongException("text must be <= 28 bytes. length=" + text.Length);
+        }
 
         MemoBytesValue = text;
     }
@@ -37,7 +45,7 @@ public class MemoText : Memo
         return new Xdr.Memo
         {
             Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_TEXT),
-            Text = MemoTextValue
+            Text = MemoTextValue,
         };
     }
 

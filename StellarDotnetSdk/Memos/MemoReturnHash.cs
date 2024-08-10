@@ -16,12 +16,12 @@ public class MemoReturnHash : MemoHashAbstract
     {
         var memo = new Xdr.Memo
         {
-            Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_RETURN)
+            Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_RETURN),
         };
 
         var hash = new Hash
         {
-            InnerValue = MemoBytes
+            InnerValue = MemoBytes,
         };
 
         memo.RetHash = hash;

@@ -54,7 +54,7 @@ public abstract class LedgerEntry
                 LedgerEntryConfigSetting.FromXdrLedgerEntryData(xdrLedgerEntryData),
             LedgerEntryType.LedgerEntryTypeEnum.TTL =>
                 LedgerEntryTTL.FromXdrLedgerEntryData(xdrLedgerEntryData),
-            _ => throw new InvalidOperationException("Unknown LedgerEntry type")
+            _ => throw new InvalidOperationException("Unknown LedgerEntry type"),
         };
     }
 
@@ -68,7 +68,9 @@ public abstract class LedgerEntry
         var ledgerEntry = FromXdr(xdrLedgerEntry.Data);
         ledgerEntry.LastModifiedLedgerSeq = xdrLedgerEntry.LastModifiedLedgerSeq.InnerValue;
         if (xdrLedgerEntry.Ext.Discriminant == 1)
+        {
             ledgerEntry.LedgerExtensionV1 = LedgerEntryExtensionV1.FromXdr(xdrLedgerEntry.Ext.V1);
+        }
         return ledgerEntry;
     }
 

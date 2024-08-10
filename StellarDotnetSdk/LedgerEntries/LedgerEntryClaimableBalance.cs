@@ -33,7 +33,9 @@ public class LedgerEntryClaimableBalance : LedgerEntry
     public static LedgerEntryClaimableBalance FromXdrLedgerEntryData(Xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
         if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE)
+        {
             throw new ArgumentException("Not a ClaimableBalanceEntry", nameof(xdrLedgerEntryData));
+        }
 
         return FromXdr(xdrLedgerEntryData.ClaimableBalance);
     }
@@ -47,8 +49,10 @@ public class LedgerEntryClaimableBalance : LedgerEntry
             xdrClaimableBalanceEntry.Amount.InnerValue);
 
         if (xdrClaimableBalanceEntry.Ext.Discriminant == 1)
+        {
             ledgerEntryClaimableBalance.ClaimableBalanceEntryExtensionV1 =
                 ClaimableBalanceEntryExtensionV1.FromXdr(xdrClaimableBalanceEntry.Ext.V1);
+        }
 
         return ledgerEntryClaimableBalance;
     }

@@ -113,8 +113,8 @@ public class RevokeLedgerEntrySponsorshipOperation : Operation
             {
                 Discriminant = RevokeSponsorshipType.Create(RevokeSponsorshipType.RevokeSponsorshipTypeEnum
                     .REVOKE_SPONSORSHIP_LEDGER_ENTRY),
-                LedgerKey = LedgerKey.ToXdr()
-            }
+                LedgerKey = LedgerKey.ToXdr(),
+            },
         };
     }
 }

@@ -40,7 +40,7 @@ public abstract class ClaimAtom(
             ClaimAtomType.ClaimAtomTypeEnum.CLAIM_ATOM_TYPE_ORDER_BOOK => ClaimAtomOrderBook.FromXdr(xdrClaimAtom),
             ClaimAtomType.ClaimAtomTypeEnum.CLAIM_ATOM_TYPE_LIQUIDITY_POOL => ClaimAtomLiquidityPool.FromXdr(
                 xdrClaimAtom),
-            _ => throw new ArgumentOutOfRangeException(nameof(xdrClaimAtom), "Unknown ClaimAtom type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(xdrClaimAtom), "Unknown ClaimAtom type."),
         };
     }
 }

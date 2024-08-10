@@ -49,7 +49,7 @@ public class LinkTest
         {
             limit = 10,
             order = OrderDirection.DESC,
-            cursor = "now"
+            cursor = "now",
         });
 
         var query = HttpUtility.ParseQueryString(uri.Query);
@@ -66,7 +66,7 @@ public class LinkTest
 
         var uri = link.Resolve(new
         {
-            key = "foobar"
+            key = "foobar",
         });
 
         Assert.AreEqual(

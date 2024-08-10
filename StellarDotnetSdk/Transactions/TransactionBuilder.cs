@@ -40,7 +40,9 @@ public class TransactionBuilder
     public static FeeBumpTransaction BuildFeeBumpTransaction(IAccountId feeSource, Transaction inner)
     {
         if (inner.Operations.Length == 0)
+        {
             throw new Exception("Invalid fee bump transaction, it should contain at least one operation");
+        }
 
         var innerFee = inner.Fee / inner.Operations.Length;
         var feeBumpFee = checked(innerFee * (inner.Operations.Length + 1));
@@ -51,10 +53,15 @@ public class TransactionBuilder
     public static FeeBumpTransaction BuildFeeBumpTransaction(IAccountId feeSource, Transaction inner, long fee)
     {
         if (inner.Operations.Length == 0)
+        {
             throw new Exception("Invalid fee bump transaction, it should contain at least one operation");
+        }
 
         var innerFee = inner.Fee / inner.Operations.Length;
-        if (fee < innerFee) throw new Exception($"Invalid fee, it should be at least {innerFee} stroops");
+        if (fee < innerFee)
+        {
+            throw new Exception($"Invalid fee, it should be at least {innerFee} stroops");
+        }
 
         var feeBumpFee = checked(fee * (inner.Operations.Length + 1));
 
@@ -70,7 +77,9 @@ public class TransactionBuilder
     public TransactionBuilder AddOperation(Operations_Operation operation)
     {
         if (operation == null)
+        {
             throw new ArgumentNullException(nameof(operation), "operation cannot be null");
+        }
 
         _operations.Add(operation);
         return this;
@@ -92,7 +101,9 @@ public class TransactionBuilder
     public TransactionBuilder AddMemo(memos_Memo memo)
     {
         if (_memo != null)
+        {
             throw new ArgumentException("Memo has been already added.", nameof(memo));
+        }
 
         _memo = memo ?? throw new ArgumentNullException(nameof(memo), "memo cannot be null");
 
@@ -107,9 +118,15 @@ public class TransactionBuilder
     /// <returns>Builder object so you can chain methods.</returns>
     public TransactionBuilder AddTimeBounds(TimeBounds timeBounds)
     {
-        if (timeBounds == null) throw new ArgumentNullException(nameof(timeBounds), "timeBounds cannot be null");
+        if (timeBounds == null)
+        {
+            throw new ArgumentNullException(nameof(timeBounds), "timeBounds cannot be null");
+        }
 
-        if (_preconditions.TimeBounds != null) throw new Exception("TimeBounds already set.");
+        if (_preconditions.TimeBounds != null)
+        {
+            throw new Exception("TimeBounds already set.");
+        }
 
         _preconditions.TimeBounds = timeBounds;
 
@@ -125,7 +142,9 @@ public class TransactionBuilder
     public TransactionBuilder SetFee(uint fee)
     {
         if (_fee <= 0)
+        {
             throw new ArgumentException("Fee must be a positive amount", nameof(fee));
+        }
 
         _fee = fee;
 
@@ -178,7 +197,7 @@ public class TransactionBuilder
             EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_V0 => Transaction.FromEnvelopeXdr(envelope),
             EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX => Transaction.FromEnvelopeXdr(envelope),
             EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_FEE_BUMP => FeeBumpTransaction.FromEnvelopeXdr(envelope),
-            _ => throw new ArgumentException($"Unknown envelope type {envelope.Discriminant.InnerValue}")
+            _ => throw new ArgumentException($"Unknown envelope type {envelope.Discriminant.InnerValue}"),
         };
     }
 }

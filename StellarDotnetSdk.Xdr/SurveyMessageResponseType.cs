@@ -19,7 +19,7 @@ public class SurveyMessageResponseType
     public enum SurveyMessageResponseTypeEnum
     {
         SURVEY_TOPOLOGY_RESPONSE_V0 = 0,
-        SURVEY_TOPOLOGY_RESPONSE_V1 = 1
+        SURVEY_TOPOLOGY_RESPONSE_V1 = 1,
     }
 
     public SurveyMessageResponseTypeEnum InnerValue { get; set; }
@@ -28,7 +28,7 @@ public class SurveyMessageResponseType
     {
         return new SurveyMessageResponseType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

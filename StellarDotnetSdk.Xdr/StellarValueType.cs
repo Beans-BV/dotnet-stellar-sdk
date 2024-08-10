@@ -19,7 +19,7 @@ public class StellarValueType
     public enum StellarValueTypeEnum
     {
         STELLAR_VALUE_BASIC = 0,
-        STELLAR_VALUE_SIGNED = 1
+        STELLAR_VALUE_SIGNED = 1,
     }
 
     public StellarValueTypeEnum InnerValue { get; set; }
@@ -28,7 +28,7 @@ public class StellarValueType
     {
         return new StellarValueType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

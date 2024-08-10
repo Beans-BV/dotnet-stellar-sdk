@@ -20,12 +20,18 @@ public abstract class Response
     public void SetHeaders(HttpResponseHeaders headers)
     {
         if (headers.Contains(XRateLimitLimit))
+        {
             RateLimitLimit = int.Parse(headers.GetValues(XRateLimitLimit).First());
+        }
 
         if (headers.Contains(XRateLimitRemaining))
+        {
             RateLimitRemaining = int.Parse(headers.GetValues(XRateLimitRemaining).First());
+        }
 
         if (headers.Contains(XRateLimitReset))
+        {
             RateLimitReset = int.Parse(headers.GetValues(XRateLimitReset).First());
+        }
     }
 }

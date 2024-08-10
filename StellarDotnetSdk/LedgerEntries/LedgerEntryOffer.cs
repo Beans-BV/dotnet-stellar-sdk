@@ -50,7 +50,9 @@ public class LedgerEntryOffer : LedgerEntry
     public static LedgerEntryOffer FromXdrLedgerEntryData(Xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
         if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.OFFER)
+        {
             throw new ArgumentException("Not an OfferEntry", nameof(xdrLedgerEntryData));
+        }
 
         return FromXdr(xdrLedgerEntryData.Offer);
     }
@@ -67,7 +69,9 @@ public class LedgerEntryOffer : LedgerEntry
             xdrOfferEntry.Flags.InnerValue);
 
         if (xdrOfferEntry.Ext.Discriminant != 0)
+        {
             ledgerEntryOffer.OfferExtension = OfferEntryExtension.FromXdr(xdrOfferEntry.Ext);
+        }
 
         return ledgerEntryOffer;
     }

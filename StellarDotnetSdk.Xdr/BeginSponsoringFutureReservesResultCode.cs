@@ -26,7 +26,7 @@ public class BeginSponsoringFutureReservesResultCode
         BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS = 0,
         BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED = -1,
         BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED = -2,
-        BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE = -3
+        BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE = -3,
     }
 
     public BeginSponsoringFutureReservesResultCodeEnum InnerValue { get; set; }
@@ -35,7 +35,7 @@ public class BeginSponsoringFutureReservesResultCode
     {
         return new BeginSponsoringFutureReservesResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -23,7 +23,7 @@ public class SignerKeyType
         SIGNER_KEY_TYPE_ED25519 = 0,
         SIGNER_KEY_TYPE_PRE_AUTH_TX = 1,
         SIGNER_KEY_TYPE_HASH_X = 2,
-        SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD = 3
+        SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD = 3,
     }
 
     public SignerKeyTypeEnum InnerValue { get; set; }
@@ -32,7 +32,7 @@ public class SignerKeyType
     {
         return new SignerKeyType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

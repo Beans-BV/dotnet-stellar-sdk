@@ -37,20 +37,26 @@ public class ContractEvent
     public string ToString()
     {
         var value = "";
-        if (ContractId != null) value += $"- ContractId: {ContractId}\n";
+        if (ContractId != null)
+        {
+            value += $"- ContractId: {ContractId}\n";
+        }
         var data = "Empty";
         if (Data != null)
+        {
             data = Data switch
             {
                 SCString scString => scString.InnerValue,
                 SCSymbol scSymbol => scSymbol.InnerValue,
                 SCUint64 scUint64 => scUint64.InnerValue.ToString(),
-                _ => data
+                _ => data,
             };
+        }
         value += $"- Data: {data}\n";
 
         var topics = "";
         if (Topics.Length > 0)
+        {
             for (var i = 0; i < Topics.Length; i++)
             {
                 var topicString = "";
@@ -59,12 +65,15 @@ public class ContractEvent
                     SCString scString => scString.InnerValue,
                     SCSymbol scSymbol => scSymbol.InnerValue,
                     SCError error => error.Code.ToString(),
-                    _ => topicString
+                    _ => topicString,
                 };
                 topics += $"\t+ Topic {i + 1}: {topicString}\n";
             }
+        }
         else
+        {
             topics = "Empty";
+        }
 
         value += $"- Topics:\n{topics}";
         return value;

@@ -33,7 +33,10 @@ public class TransactionMetaV3
         LedgerEntryChanges.Encode(stream, encodedTransactionMetaV3.TxChangesBefore);
         var operationssize = encodedTransactionMetaV3.Operations.Length;
         stream.WriteInt(operationssize);
-        for (var i = 0; i < operationssize; i++) OperationMeta.Encode(stream, encodedTransactionMetaV3.Operations[i]);
+        for (var i = 0; i < operationssize; i++)
+        {
+            OperationMeta.Encode(stream, encodedTransactionMetaV3.Operations[i]);
+        }
         LedgerEntryChanges.Encode(stream, encodedTransactionMetaV3.TxChangesAfter);
         if (encodedTransactionMetaV3.SorobanMeta != null)
         {
@@ -53,10 +56,16 @@ public class TransactionMetaV3
         decodedTransactionMetaV3.TxChangesBefore = LedgerEntryChanges.Decode(stream);
         var operationssize = stream.ReadInt();
         decodedTransactionMetaV3.Operations = new OperationMeta[operationssize];
-        for (var i = 0; i < operationssize; i++) decodedTransactionMetaV3.Operations[i] = OperationMeta.Decode(stream);
+        for (var i = 0; i < operationssize; i++)
+        {
+            decodedTransactionMetaV3.Operations[i] = OperationMeta.Decode(stream);
+        }
         decodedTransactionMetaV3.TxChangesAfter = LedgerEntryChanges.Decode(stream);
         var SorobanMetaPresent = stream.ReadInt();
-        if (SorobanMetaPresent != 0) decodedTransactionMetaV3.SorobanMeta = SorobanTransactionMeta.Decode(stream);
+        if (SorobanMetaPresent != 0)
+        {
+            decodedTransactionMetaV3.SorobanMeta = SorobanTransactionMeta.Decode(stream);
+        }
         return decodedTransactionMetaV3;
     }
 }

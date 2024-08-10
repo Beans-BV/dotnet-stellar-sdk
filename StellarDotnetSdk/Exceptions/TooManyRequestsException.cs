@@ -10,8 +10,10 @@ public class TooManyRequestsException : Exception
         try
         {
             var retryAfterStringValue = retryAfter?.ToString();
-            if (string.IsNullOrWhiteSpace(retryAfterStringValue)) 
+            if (string.IsNullOrWhiteSpace(retryAfterStringValue))
+            {
                 return;
+            }
 
             if (int.TryParse(retryAfterStringValue, out var retryAfterInt))
             {

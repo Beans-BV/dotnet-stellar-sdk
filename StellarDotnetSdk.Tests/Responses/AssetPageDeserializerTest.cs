@@ -40,7 +40,7 @@ public class AssetPageDeserializerTest
         {
             AuthRequired = true,
             AuthRevocable = true,
-            AuthImmutable = false
+            AuthImmutable = false,
         };
         Assert.IsTrue(assetResponseFlags.AuthRequired);
         Assert.IsTrue(assetResponseFlags.AuthRevocable);

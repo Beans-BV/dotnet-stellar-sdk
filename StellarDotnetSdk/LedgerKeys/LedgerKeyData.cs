@@ -13,7 +13,9 @@ public class LedgerKeyData : LedgerKey
     public LedgerKeyData(KeyPair account, string dataName)
     {
         if (dataName.Length > 64)
+        {
             throw new ArgumentException("Data name cannot exceed 64 characters.", nameof(dataName));
+        }
         Account = account;
         DataName = dataName;
     }
@@ -30,8 +32,8 @@ public class LedgerKeyData : LedgerKey
             Data = new Xdr.LedgerKey.LedgerKeyData
             {
                 AccountID = new AccountID(Account.XdrPublicKey),
-                DataName = new String64(DataName)
-            }
+                DataName = new String64(DataName),
+            },
         };
     }
 

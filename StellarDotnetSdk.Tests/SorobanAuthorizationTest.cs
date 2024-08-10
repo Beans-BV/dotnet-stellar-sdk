@@ -170,7 +170,7 @@ public class SorobanAuthorizationTest
         var rootInvocation = new SorobanAuthorizedInvocation(
             authorizedCreateContractFn,
             [
-                new SorobanAuthorizedInvocation(authorizedCreateContractFn, Array.Empty<SorobanAuthorizedInvocation>())
+                new SorobanAuthorizedInvocation(authorizedCreateContractFn, Array.Empty<SorobanAuthorizedInvocation>()),
             ]);
 
         var credentials = InitSorobanAddressCredentials();
@@ -230,7 +230,7 @@ public class SorobanAuthorizationTest
         var rootInvocation = new SorobanAuthorizedInvocation(
             authorizedContractFn,
             [
-                new SorobanAuthorizedInvocation(authorizedContractFn, [])
+                new SorobanAuthorizedInvocation(authorizedContractFn, []),
             ]);
 
         var credentials = InitSorobanAddressCredentials();

@@ -14,16 +14,16 @@ public class SetTrustlineFlagsResultTest
         {
             Discriminant =
             {
-                InnerValue = XDR.OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS
+                InnerValue = XDR.OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS,
             },
             SetTrustLineFlagsResult = new XDR.SetTrustLineFlagsResult
             {
                 Discriminant =
                 {
                     InnerValue = XDR.SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum
-                        .SET_TRUST_LINE_FLAGS_CANT_REVOKE
-                }
-            }
+                        .SET_TRUST_LINE_FLAGS_CANT_REVOKE,
+                },
+            },
         };
 
         Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
@@ -38,16 +38,16 @@ public class SetTrustlineFlagsResultTest
         {
             Discriminant =
             {
-                InnerValue = XDR.OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS
+                InnerValue = XDR.OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS,
             },
             SetTrustLineFlagsResult = new XDR.SetTrustLineFlagsResult
             {
                 Discriminant =
                 {
                     InnerValue = XDR.SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum
-                        .SET_TRUST_LINE_FLAGS_INVALID_STATE
-                }
-            }
+                        .SET_TRUST_LINE_FLAGS_INVALID_STATE,
+                },
+            },
         };
 
         Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
@@ -61,16 +61,16 @@ public class SetTrustlineFlagsResultTest
         {
             Discriminant =
             {
-                InnerValue = XDR.OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS
+                InnerValue = XDR.OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS,
             },
             SetTrustLineFlagsResult = new XDR.SetTrustLineFlagsResult
             {
                 Discriminant =
                 {
                     InnerValue = XDR.SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum
-                        .SET_TRUST_LINE_FLAGS_MALFORMED
-                }
-            }
+                        .SET_TRUST_LINE_FLAGS_MALFORMED,
+                },
+            },
         };
 
         Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
@@ -85,16 +85,16 @@ public class SetTrustlineFlagsResultTest
         {
             Discriminant =
             {
-                InnerValue = XDR.OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS
+                InnerValue = XDR.OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS,
             },
             SetTrustLineFlagsResult = new XDR.SetTrustLineFlagsResult
             {
                 Discriminant =
                 {
                     InnerValue = XDR.SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum
-                        .SET_TRUST_LINE_FLAGS_NO_TRUST_LINE
-                }
-            }
+                        .SET_TRUST_LINE_FLAGS_NO_TRUST_LINE,
+                },
+            },
         };
 
         Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
@@ -108,16 +108,16 @@ public class SetTrustlineFlagsResultTest
         {
             Discriminant =
             {
-                InnerValue = XDR.OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS
+                InnerValue = XDR.OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS,
             },
             SetTrustLineFlagsResult = new XDR.SetTrustLineFlagsResult
             {
                 Discriminant =
                 {
                     InnerValue = XDR.SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum
-                        .SET_TRUST_LINE_FLAGS_SUCCESS
-                }
-            }
+                        .SET_TRUST_LINE_FLAGS_SUCCESS,
+                },
+            },
         };
 
         Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),

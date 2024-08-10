@@ -15,7 +15,7 @@ public class InflationResult : OperationResult
                 => new InflationSuccess(result.Payouts.Select(InflationSuccess.InflationPayout.FromXdr).ToArray()),
             InflationResultCode.InflationResultCodeEnum.INFLATION_NOT_TIME
                 => new InflationNotTime(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown InflationResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown InflationResult type."),
         };
     }
 }

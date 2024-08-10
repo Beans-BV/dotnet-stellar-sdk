@@ -28,14 +28,26 @@ public class AssetJsonConverter : JsonConverter<Asset>
     {
         var jt = JToken.ReadFrom(reader);
         var type = jt.Value<string>("asset_type");
-        if (type == null) throw new ArgumentException("JSON value for asset_type is missing.", nameof(type));
+        if (type == null)
+        {
+            throw new ArgumentException("JSON value for asset_type is missing.", nameof(type));
+        }
 
-        if (type == "native") return new AssetTypeNative();
+        if (type == "native")
+        {
+            return new AssetTypeNative();
+        }
 
         var code = jt.Value<string>("asset_code");
-        if (code == null) throw new ArgumentException("JSON value for asset_code is missing.", nameof(code));
+        if (code == null)
+        {
+            throw new ArgumentException("JSON value for asset_code is missing.", nameof(code));
+        }
         var issuer = jt.Value<string>("asset_issuer");
-        if (issuer == null) throw new ArgumentException("JSON value for asset_issuer is missing.", nameof(issuer));
+        if (issuer == null)
+        {
+            throw new ArgumentException("JSON value for asset_issuer is missing.", nameof(issuer));
+        }
 
         return Asset.CreateNonNativeAsset(code, issuer);
     }

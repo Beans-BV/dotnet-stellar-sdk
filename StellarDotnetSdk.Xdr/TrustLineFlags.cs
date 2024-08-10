@@ -26,7 +26,7 @@ public class TrustLineFlags
     {
         AUTHORIZED_FLAG = 1,
         AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG = 2,
-        TRUSTLINE_CLAWBACK_ENABLED_FLAG = 4
+        TRUSTLINE_CLAWBACK_ENABLED_FLAG = 4,
     }
 
     public TrustLineFlagsEnum InnerValue { get; set; }
@@ -35,7 +35,7 @@ public class TrustLineFlags
     {
         return new TrustLineFlags
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

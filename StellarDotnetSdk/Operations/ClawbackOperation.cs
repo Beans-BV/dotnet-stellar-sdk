@@ -50,8 +50,8 @@ public class ClawbackOperation : Operation
             {
                 Amount = new Int64(ToXdrAmount(Amount)),
                 Asset = Asset.ToXdr(),
-                From = From.MuxedAccount
-            }
+                From = From.MuxedAccount,
+            },
         };
     }
 

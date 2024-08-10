@@ -59,7 +59,7 @@ public class TransactionMetaV3
             Operations = xdrTransactionMetaV3.Operations
                 .Select(x => x.Changes.InnerValue.Select(ledgerentries_LedgerEntryChange.FromXdr).ToArray())
                 .ToArray(),
-            SorobanMeta = SorobanTransactionMeta.FromXdr(xdrTransactionMetaV3.SorobanMeta)
+            SorobanMeta = SorobanTransactionMeta.FromXdr(xdrTransactionMetaV3.SorobanMeta),
         };
     }
 

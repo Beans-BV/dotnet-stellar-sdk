@@ -15,7 +15,10 @@ public class AssetTypeNative : Asset
 
     public override bool Equals(object? obj)
     {
-        if (obj is not AssetTypeNative) return false;
+        if (obj is not AssetTypeNative)
+        {
+            return false;
+        }
         return GetHashCode() == obj.GetHashCode();
     }
 
@@ -23,7 +26,7 @@ public class AssetTypeNative : Asset
     {
         var thisXdr = new Xdr.Asset
         {
-            Discriminant = AssetType.Create(AssetType.AssetTypeEnum.ASSET_TYPE_NATIVE)
+            Discriminant = AssetType.Create(AssetType.AssetTypeEnum.ASSET_TYPE_NATIVE),
         };
         return thisXdr;
     }
@@ -36,7 +39,10 @@ public class AssetTypeNative : Asset
 
     public override int CompareTo(Asset asset)
     {
-        if (asset.Type == RestApiType) return 0;
+        if (asset.Type == RestApiType)
+        {
+            return 0;
+        }
         return -1;
     }
 }

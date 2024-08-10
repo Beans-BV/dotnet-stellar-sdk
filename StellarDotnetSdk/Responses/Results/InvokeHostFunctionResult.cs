@@ -21,7 +21,7 @@ public class InvokeHostFunctionResult : OperationResult
                 => new InvokeHostFunctionEntryArchived(),
             ResultCodeEnum.INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE
                 => new InvokeHostFunctionInsufficientRefundableFee(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown InvokeHostFunctionResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown InvokeHostFunctionResult type."),
         };
     }
 }

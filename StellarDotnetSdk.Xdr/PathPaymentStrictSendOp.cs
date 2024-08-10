@@ -38,7 +38,10 @@ public class PathPaymentStrictSendOp
         Int64.Encode(stream, encodedPathPaymentStrictSendOp.DestMin);
         var pathsize = encodedPathPaymentStrictSendOp.Path.Length;
         stream.WriteInt(pathsize);
-        for (var i = 0; i < pathsize; i++) Asset.Encode(stream, encodedPathPaymentStrictSendOp.Path[i]);
+        for (var i = 0; i < pathsize; i++)
+        {
+            Asset.Encode(stream, encodedPathPaymentStrictSendOp.Path[i]);
+        }
     }
 
     public static PathPaymentStrictSendOp Decode(XdrDataInputStream stream)
@@ -51,7 +54,10 @@ public class PathPaymentStrictSendOp
         decodedPathPaymentStrictSendOp.DestMin = Int64.Decode(stream);
         var pathsize = stream.ReadInt();
         decodedPathPaymentStrictSendOp.Path = new Asset[pathsize];
-        for (var i = 0; i < pathsize; i++) decodedPathPaymentStrictSendOp.Path[i] = Asset.Decode(stream);
+        for (var i = 0; i < pathsize; i++)
+        {
+            decodedPathPaymentStrictSendOp.Path[i] = Asset.Decode(stream);
+        }
         return decodedPathPaymentStrictSendOp;
     }
 }

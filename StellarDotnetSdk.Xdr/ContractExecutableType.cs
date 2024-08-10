@@ -19,7 +19,7 @@ public class ContractExecutableType
     public enum ContractExecutableTypeEnum
     {
         CONTRACT_EXECUTABLE_WASM = 0,
-        CONTRACT_EXECUTABLE_STELLAR_ASSET = 1
+        CONTRACT_EXECUTABLE_STELLAR_ASSET = 1,
     }
 
     public ContractExecutableTypeEnum InnerValue { get; set; }
@@ -28,7 +28,7 @@ public class ContractExecutableType
     {
         return new ContractExecutableType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -54,8 +54,8 @@ public class BeginSponsoringFutureReservesOperation : Operation
                 OperationType.Create(OperationType.OperationTypeEnum.BEGIN_SPONSORING_FUTURE_RESERVES),
             BeginSponsoringFutureReservesOp = new BeginSponsoringFutureReservesOp
             {
-                SponsoredID = new AccountID(SponsoredId.XdrPublicKey)
-            }
+                SponsoredID = new AccountID(SponsoredId.XdrPublicKey),
+            },
         };
     }
 }

@@ -99,7 +99,7 @@ public class OperationTest
         Asset[] path =
         {
             new AssetTypeCreditAlphaNum4("USD", pathIssuer1.AccountId),
-            new AssetTypeCreditAlphaNum12("TESTTEST", pathIssuer2.AccountId)
+            new AssetTypeCreditAlphaNum12("TESTTEST", pathIssuer2.AccountId),
         };
 
         var operation = new PathPaymentStrictReceiveOperation(
@@ -192,7 +192,7 @@ public class OperationTest
         Asset[] path =
         {
             new AssetTypeCreditAlphaNum4("USD", pathIssuer1.AccountId),
-            new AssetTypeCreditAlphaNum12("TESTTEST", pathIssuer2.AccountId)
+            new AssetTypeCreditAlphaNum12("TESTTEST", pathIssuer2.AccountId),
         };
 
         var operation = new PathPaymentStrictSendOperation(

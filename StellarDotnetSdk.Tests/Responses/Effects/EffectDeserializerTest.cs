@@ -54,7 +54,7 @@ public class EffectDeserializerTest
 
         var back = new AccountCreatedEffectResponse
         {
-            StartingBalance = effect.StartingBalance
+            StartingBalance = effect.StartingBalance,
         };
         Assert.IsNotNull(back);
     }
@@ -141,7 +141,7 @@ public class EffectDeserializerTest
             Amount = effect.Amount,
             AssetType = effect.AssetType,
             AssetCode = effect.AssetCode,
-            AssetIssuer = effect.AssetIssuer
+            AssetIssuer = effect.AssetIssuer,
         };
         Assert.IsNotNull(back);
     }
@@ -190,7 +190,7 @@ public class EffectDeserializerTest
             Amount = effect.Amount,
             AssetType = effect.AssetType,
             AssetCode = effect.AssetCode,
-            AssetIssuer = effect.AssetIssuer
+            AssetIssuer = effect.AssetIssuer,
         };
         Assert.IsNotNull(back);
     }
@@ -239,7 +239,7 @@ public class EffectDeserializerTest
         {
             LowThreshold = effect.LowThreshold,
             MedThreshold = effect.MedThreshold,
-            HighThreshold = effect.HighThreshold
+            HighThreshold = effect.HighThreshold,
         };
         Assert.IsNotNull(back);
     }
@@ -329,7 +329,7 @@ public class EffectDeserializerTest
         var back = new AccountFlagsUpdatedEffectResponse
         {
             AuthRequiredFlag = effect.AuthRequiredFlag,
-            AuthRevocableFlag = effect.AuthRevocableFlag
+            AuthRevocableFlag = effect.AuthRevocableFlag,
         };
         Assert.IsNotNull(back);
     }
@@ -376,7 +376,7 @@ public class EffectDeserializerTest
         var back = new SignerCreatedEffectResponse
         {
             Weight = effect.Weight,
-            PublicKey = effect.PublicKey
+            PublicKey = effect.PublicKey,
         };
         Assert.IsNotNull(back);
     }
@@ -423,7 +423,7 @@ public class EffectDeserializerTest
         var back = new SignerRemovedEffectResponse
         {
             Weight = effect.Weight,
-            PublicKey = effect.PublicKey
+            PublicKey = effect.PublicKey,
         };
         Assert.IsNotNull(back);
     }
@@ -470,7 +470,7 @@ public class EffectDeserializerTest
         var back = new SignerUpdatedEffectResponse
         {
             Weight = effect.Weight,
-            PublicKey = effect.PublicKey
+            PublicKey = effect.PublicKey,
         };
         Assert.IsNotNull(back);
     }
@@ -520,7 +520,7 @@ public class EffectDeserializerTest
             Limit = effect.Limit,
             AssetType = effect.AssetType,
             AssetCode = effect.AssetCode,
-            AssetIssuer = effect.AssetIssuer
+            AssetIssuer = effect.AssetIssuer,
         };
         Assert.IsNotNull(back);
     }
@@ -570,7 +570,7 @@ public class EffectDeserializerTest
             Limit = effect.Limit,
             AssetType = effect.AssetType,
             AssetCode = effect.AssetCode,
-            AssetIssuer = effect.AssetIssuer
+            AssetIssuer = effect.AssetIssuer,
         };
         Assert.IsNotNull(back);
     }
@@ -620,7 +620,7 @@ public class EffectDeserializerTest
             Limit = effect.Limit,
             AssetType = effect.AssetType,
             AssetCode = effect.AssetCode,
-            AssetIssuer = effect.AssetIssuer
+            AssetIssuer = effect.AssetIssuer,
         };
         Assert.IsNotNull(back);
     }
@@ -683,7 +683,7 @@ public class EffectDeserializerTest
         {
             Trustor = effect.Trustor,
             AssetType = effect.AssetType,
-            AssetCode = effect.AssetCode
+            AssetCode = effect.AssetCode,
         };
         Assert.IsNotNull(back);
     }
@@ -699,7 +699,7 @@ public class EffectDeserializerTest
         {
             Trustor = "GB3E4AB4VWXJDUVN4Z3CPBU5HTMWVEQXONZYVDFMHQD6333KHCOL3UBR",
             AssetType = "credit_alphanum12",
-            AssetCode = "TESTTEST"
+            AssetCode = "TESTTEST",
         };
 
         Assert.AreEqual(effect.Account, "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
@@ -718,7 +718,7 @@ public class EffectDeserializerTest
         {
             Trustor = effect.Trustor,
             AssetType = effect.AssetType,
-            AssetCode = effect.AssetCode
+            AssetCode = effect.AssetCode,
         };
         Assert.IsNotNull(back);
     }
@@ -770,7 +770,7 @@ public class EffectDeserializerTest
         {
             Trustor = effect.Trustor,
             AssetType = effect.AssetType,
-            AssetCode = effect.AssetCode
+            AssetCode = effect.AssetCode,
         };
         Assert.IsNotNull(back);
     }
@@ -854,7 +854,7 @@ public class EffectDeserializerTest
             BoughtAmount = effect.BoughtAmount,
             BoughtAssetType = effect.BoughtAssetType,
             BoughtAssetCode = effect.BoughtAssetCode,
-            BoughtAssetIssuer = effect.BoughtAssetType
+            BoughtAssetIssuer = effect.BoughtAssetType,
         };
         Assert.IsNotNull(back);
     }
@@ -894,7 +894,7 @@ public class EffectDeserializerTest
             BoughtAmount = effect.BoughtAmount,
             BoughtAssetType = effect.BoughtAssetType,
             BoughtAssetCode = effect.BoughtAssetCode,
-            BoughtAssetIssuer = effect.BoughtAssetType
+            BoughtAssetIssuer = effect.BoughtAssetType,
         };
         Assert.IsNotNull(back);
     }
@@ -1263,7 +1263,7 @@ public class EffectDeserializerTest
             Asset = effect.Asset,
             BalanceId = effect.BalanceId,
             Amount = effect.Amount,
-            Predicate = effect.Predicate
+            Predicate = effect.Predicate,
         };
         Assert.IsNotNull(back);
     }
@@ -1295,7 +1295,7 @@ public class EffectDeserializerTest
         {
             Asset = effect.Asset,
             BalanceId = effect.BalanceId,
-            Amount = effect.Amount
+            Amount = effect.Amount,
         };
         Assert.IsNotNull(back);
     }
@@ -1326,7 +1326,7 @@ public class EffectDeserializerTest
         {
             Asset = effect.Asset,
             BalanceId = effect.BalanceId,
-            Amount = effect.Amount
+            Amount = effect.Amount,
         };
         Assert.IsNotNull(back);
     }
@@ -1355,7 +1355,7 @@ public class EffectDeserializerTest
         var back = new ClaimableBalanceSponsorshipCreatedEffectResponse
         {
             BalanceId = effect.BalanceId,
-            Sponsor = effect.Sponsor
+            Sponsor = effect.Sponsor,
         };
         Assert.IsNotNull(back);
     }
@@ -1384,7 +1384,7 @@ public class EffectDeserializerTest
         var back = new ClaimableBalanceSponsorshipRemovedEffectResponse
         {
             BalanceId = effect.BalanceId,
-            FormerSponsor = effect.FormerSponsor
+            FormerSponsor = effect.FormerSponsor,
         };
         Assert.IsNotNull(back);
     }
@@ -1413,7 +1413,7 @@ public class EffectDeserializerTest
 
         var back = new ClaimableBalanceSponsorshipUpdatedEffectResponse
         {
-            BalanceId = effect.BalanceId, FormerSponsor = effect.FormerSponsor, NewSponsor = effect.NewSponsor
+            BalanceId = effect.BalanceId, FormerSponsor = effect.FormerSponsor, NewSponsor = effect.NewSponsor,
         };
         Assert.IsNotNull(back);
     }
@@ -1573,7 +1573,7 @@ public class EffectDeserializerTest
         {
             Asset = effect.Asset,
             FormerSponsor = effect.FormerSponsor,
-            NewSponsor = effect.NewSponsor
+            NewSponsor = effect.NewSponsor,
         };
         Assert.IsNotNull(back);
     }
@@ -1692,7 +1692,7 @@ public class EffectDeserializerTest
             Trustor = effect.Trustor,
             AuthorizedFlag = effect.AuthorizedFlag,
             AuthorizedToMaintainLiabilities = effect.AuthorizedToMaintainLiabilities,
-            ClawbackEnabledFlag = effect.ClawbackEnabledFlag
+            ClawbackEnabledFlag = effect.ClawbackEnabledFlag,
         };
         Assert.IsNotNull(back);
     }

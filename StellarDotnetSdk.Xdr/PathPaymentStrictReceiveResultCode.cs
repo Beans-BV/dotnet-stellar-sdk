@@ -53,7 +53,7 @@ public class PathPaymentStrictReceiveResultCode
         PATH_PAYMENT_STRICT_RECEIVE_NO_ISSUER = -9,
         PATH_PAYMENT_STRICT_RECEIVE_TOO_FEW_OFFERS = -10,
         PATH_PAYMENT_STRICT_RECEIVE_OFFER_CROSS_SELF = -11,
-        PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX = -12
+        PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX = -12,
     }
 
     public PathPaymentStrictReceiveResultCodeEnum InnerValue { get; set; }
@@ -62,7 +62,7 @@ public class PathPaymentStrictReceiveResultCode
     {
         return new PathPaymentStrictReceiveResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

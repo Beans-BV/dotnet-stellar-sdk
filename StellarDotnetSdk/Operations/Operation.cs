@@ -45,7 +45,10 @@ public abstract class Operation
     public Xdr.Operation ToXdr()
     {
         var thisXdr = new Xdr.Operation();
-        if (SourceAccount != null) thisXdr.SourceAccount = SourceAccount.MuxedAccount;
+        if (SourceAccount != null)
+        {
+            thisXdr.SourceAccount = SourceAccount.MuxedAccount;
+        }
 
         thisXdr.Body = ToOperationBody();
         return thisXdr;
@@ -113,7 +116,7 @@ public abstract class Operation
                     RevokeSponsorshipType.RevokeSponsorshipTypeEnum.REVOKE_SPONSORSHIP_SIGNER =>
                         RevokeSignerSponsorshipOperation.FromXdr(body.RevokeSponsorshipOp.Signer),
                     _ => throw new ArgumentOutOfRangeException(nameof(body.RevokeSponsorshipOp.Discriminant),
-                        "Invalid RevokeSponsorshipTypeEnum.")
+                        "Invalid RevokeSponsorshipTypeEnum."),
                 },
             OperationType.OperationTypeEnum.CLAWBACK => ClawbackOperation.FromXdr(body.ClawbackOp),
             OperationType.OperationTypeEnum.CLAWBACK_CLAIMABLE_BALANCE =>
@@ -134,17 +137,19 @@ public abstract class Operation
                         CreateContractOperation.FromXdr(body.InvokeHostFunctionOp),
                     HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM =>
                         UploadContractOperation.FromXdr(body.InvokeHostFunctionOp),
-                    _ => throw new InvalidOperationException("Unknown HostFunction type")
+                    _ => throw new InvalidOperationException("Unknown HostFunction type"),
                 },
             OperationType.OperationTypeEnum.EXTEND_FOOTPRINT_TTL => ExtendFootprintOperation.FromXdr(
                 body.ExtendFootprintTTLOp),
             OperationType.OperationTypeEnum.RESTORE_FOOTPRINT => RestoreFootprintOperation.FromXdr(
                 body.RestoreFootprintOp),
-            _ => throw new InvalidOperationException("Unknown operation body " + body.Discriminant.InnerValue)
+            _ => throw new InvalidOperationException("Unknown operation body " + body.Discriminant.InnerValue),
         };
 
         if (thisXdr.SourceAccount != null)
+        {
             operation.SourceAccount = MuxedAccount.FromXdrMuxedAccount(thisXdr.SourceAccount);
+        }
 
         return operation;
     }

@@ -63,7 +63,7 @@ public class LiquidityPoolShareChangeTrustAsset : ChangeTrustAsset
         var xdr = new Xdr.ChangeTrustAsset
         {
             Discriminant = AssetType.Create(AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE),
-            LiquidityPool = Parameters.ToXdr()
+            LiquidityPool = Parameters.ToXdr(),
         };
         return xdr;
     }

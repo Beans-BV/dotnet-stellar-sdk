@@ -67,8 +67,8 @@ public class ClaimClaimableBalanceResultTest
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CLAIM_CLAIMABLE_BALANCE),
             ClaimClaimableBalanceResult = new ClaimClaimableBalanceResult
             {
-                Discriminant = ClaimClaimableBalanceResultCode.Create(type)
-            }
+                Discriminant = ClaimClaimableBalanceResultCode.Create(type),
+            },
         };
     }
 }

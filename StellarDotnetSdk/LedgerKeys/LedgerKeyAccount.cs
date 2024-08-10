@@ -22,7 +22,7 @@ public class LedgerKeyAccount : LedgerKey
         {
             Discriminant =
                 new LedgerEntryType { InnerValue = LedgerEntryType.LedgerEntryTypeEnum.ACCOUNT },
-            Account = new Xdr.LedgerKey.LedgerKeyAccount { AccountID = new AccountID(Account.XdrPublicKey) }
+            Account = new Xdr.LedgerKey.LedgerKeyAccount { AccountID = new AccountID(Account.XdrPublicKey) },
         };
     }
 

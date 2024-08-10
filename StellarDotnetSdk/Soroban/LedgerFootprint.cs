@@ -20,7 +20,7 @@ public class LedgerFootprint
         return new Xdr.LedgerFootprint
         {
             ReadOnly = ReadOnly.Select(x => x.ToXdr()).ToArray(),
-            ReadWrite = ReadWrite.Select(x => x.ToXdr()).ToArray()
+            ReadWrite = ReadWrite.Select(x => x.ToXdr()).ToArray(),
         };
     }
 
@@ -29,7 +29,7 @@ public class LedgerFootprint
         return new LedgerFootprint
         {
             ReadOnly = xdr.ReadOnly.Select(LedgerKey.FromXdr).ToArray(),
-            ReadWrite = xdr.ReadWrite.Select(LedgerKey.FromXdr).ToArray()
+            ReadWrite = xdr.ReadWrite.Select(LedgerKey.FromXdr).ToArray(),
         };
     }
 }

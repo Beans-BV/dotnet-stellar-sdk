@@ -17,7 +17,7 @@ public class SCMetaKind
 {
     public enum SCMetaKindEnum
     {
-        SC_META_V0 = 0
+        SC_META_V0 = 0,
     }
 
     public SCMetaKindEnum InnerValue { get; set; }
@@ -26,7 +26,7 @@ public class SCMetaKind
     {
         return new SCMetaKind
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

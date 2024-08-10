@@ -33,7 +33,7 @@ public class AllowTrustResultCode
         ALLOW_TRUST_TRUST_NOT_REQUIRED = -3,
         ALLOW_TRUST_CANT_REVOKE = -4,
         ALLOW_TRUST_SELF_NOT_ALLOWED = -5,
-        ALLOW_TRUST_LOW_RESERVE = -6
+        ALLOW_TRUST_LOW_RESERVE = -6,
     }
 
     public AllowTrustResultCodeEnum InnerValue { get; set; }
@@ -42,7 +42,7 @@ public class AllowTrustResultCode
     {
         return new AllowTrustResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

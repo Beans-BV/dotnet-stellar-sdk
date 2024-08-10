@@ -27,7 +27,10 @@ public class SorobanTransactionData
     {
         Resources = resources;
         ResourceFee = resourceFee;
-        if (extensionPoint != null) ExtensionPoint = extensionPoint;
+        if (extensionPoint != null)
+        {
+            ExtensionPoint = extensionPoint;
+        }
     }
 
     public ExtensionPoint ExtensionPoint { get; } = new ExtensionPointZero();
@@ -40,7 +43,7 @@ public class SorobanTransactionData
         {
             Ext = ExtensionPoint.ToXdr(),
             Resources = Resources.ToXdr(),
-            ResourceFee = new Int64(ResourceFee)
+            ResourceFee = new Int64(ResourceFee),
         };
     }
 

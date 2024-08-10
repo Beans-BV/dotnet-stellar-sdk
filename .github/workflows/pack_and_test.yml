@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: GitHub Ref
-        run: | 
+        run: |
           echo "GitHub Ref: ${{github.ref}}"
       - name: GitHub Head Ref
         run: |

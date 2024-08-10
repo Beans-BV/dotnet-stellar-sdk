@@ -20,7 +20,10 @@ public class OperationResponseJsonConverter : JsonConverter<OperationResponse>
     {
         var jsonObject = JObject.Load(reader);
         var type = jsonObject.GetValue("type_i");
-        if (type == null) throw new ArgumentException("JSON value for type_i is missing.", nameof(type));
+        if (type == null)
+        {
+            throw new ArgumentException("JSON value for type_i is missing.", nameof(type));
+        }
         var response = CreateResponse(type.ToObject<int>());
         serializer.Populate(jsonObject.CreateReader(), response);
         return response;
@@ -57,7 +60,7 @@ public class OperationResponseJsonConverter : JsonConverter<OperationResponse>
             24 => new InvokeHostFunctionOperationResponse(),
             25 => new ExtendFootprintOperationResponse(),
             26 => new RestoreFootprintOperationResponse(),
-            _ => throw new JsonSerializationException($"Invalid operation 'type_i'='{type}'")
+            _ => throw new JsonSerializationException($"Invalid operation 'type_i'='{type}'"),
         };
     }
 }

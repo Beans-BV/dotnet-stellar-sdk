@@ -11,7 +11,7 @@ public class BumpSequenceResult : OperationResult
         {
             ResultCodeEnum.BUMP_SEQUENCE_SUCCESS => new BumpSequenceSuccess(),
             ResultCodeEnum.BUMP_SEQUENCE_BAD_SEQ => new BumpSequenceBadSeq(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown BumpSequenceResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown BumpSequenceResult type."),
         };
     }
 }

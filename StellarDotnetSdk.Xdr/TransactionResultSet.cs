@@ -20,7 +20,9 @@ public class TransactionResultSet
         var resultssize = encodedTransactionResultSet.Results.Length;
         stream.WriteInt(resultssize);
         for (var i = 0; i < resultssize; i++)
+        {
             TransactionResultPair.Encode(stream, encodedTransactionResultSet.Results[i]);
+        }
     }
 
     public static TransactionResultSet Decode(XdrDataInputStream stream)
@@ -29,7 +31,9 @@ public class TransactionResultSet
         var resultssize = stream.ReadInt();
         decodedTransactionResultSet.Results = new TransactionResultPair[resultssize];
         for (var i = 0; i < resultssize; i++)
+        {
             decodedTransactionResultSet.Results[i] = TransactionResultPair.Decode(stream);
+        }
         return decodedTransactionResultSet;
     }
 }

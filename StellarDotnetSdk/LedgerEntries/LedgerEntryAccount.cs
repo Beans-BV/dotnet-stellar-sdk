@@ -19,13 +19,21 @@ public class LedgerEntryAccount : LedgerEntry
         byte[] thresholds)
     {
         if (homeDomain == null)
+        {
             throw new ArgumentNullException(nameof(homeDomain), "Home domain cannot be null.");
+        }
         if (homeDomain.Length > 32)
+        {
             throw new ArgumentException("Home domain cannot exceed 32 characters.", nameof(homeDomain));
+        }
         if (thresholds == null)
+        {
             throw new ArgumentNullException(nameof(thresholds), "Thresholds cannot be null.");
+        }
         if (thresholds.Length > 4)
+        {
             throw new ArgumentException("Thresholds cannot exceed 4 bytes.", nameof(thresholds));
+        }
 
         Account = account;
         Balance = balance;
@@ -66,7 +74,9 @@ public class LedgerEntryAccount : LedgerEntry
     public static LedgerEntryAccount FromXdrLedgerEntryData(Xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
         if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.ACCOUNT)
+        {
             throw new ArgumentException("Not an AccountEntry.", nameof(xdrLedgerEntryData));
+        }
 
         return FromXdr(xdrLedgerEntryData.Account);
     }
@@ -85,7 +95,9 @@ public class LedgerEntryAccount : LedgerEntry
                 : null, thresholds: xdrAccountEntry.Thresholds.InnerValue,
             signers: xdrAccountEntry.Signers.Select(Signer.FromXdr).ToArray());
         if (xdrAccountEntry.Ext.Discriminant == 1)
+        {
             ledgerEntryAccount.AccountExtensionV1 = AccountEntryExtensionV1.FromXdr(xdrAccountEntry.Ext.V1);
+        }
         return ledgerEntryAccount;
     }
 }

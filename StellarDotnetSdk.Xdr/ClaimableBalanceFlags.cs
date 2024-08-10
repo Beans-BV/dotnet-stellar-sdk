@@ -19,7 +19,7 @@ public class ClaimableBalanceFlags
 {
     public enum ClaimableBalanceFlagsEnum
     {
-        CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG = 1
+        CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG = 1,
     }
 
     public ClaimableBalanceFlagsEnum InnerValue { get; set; }
@@ -28,7 +28,7 @@ public class ClaimableBalanceFlags
     {
         return new ClaimableBalanceFlags
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

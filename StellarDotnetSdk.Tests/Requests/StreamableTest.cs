@@ -45,7 +45,10 @@ public class StreamableTest<T> where T : class
         var task = _requestBuilder.Stream(handler).Connect();
         var timeoutTask = Task.Delay(TimeSpan.FromSeconds(5.0));
         var completedTask = await Task.WhenAny(task, timeoutTask).ConfigureAwait(false);
-        if (completedTask != task) throw new Exception("Task did not complete.");
+        if (completedTask != task)
+        {
+            throw new Exception("Task did not complete.");
+        }
     }
 
     public class FakeStreamableRequestBuilder : RequestBuilderStreamable<FakeStreamableRequestBuilder, T>

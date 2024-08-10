@@ -25,7 +25,7 @@ public abstract class LedgerEntryChange
                 new LedgerEntryRemoved(xdrLedgerEntryChange.Removed),
             LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_STATE =>
                 new LedgerEntryState(xdrLedgerEntryChange.State),
-            _ => throw new InvalidOperationException("Unknown LedgerEntryChange type.")
+            _ => throw new InvalidOperationException("Unknown LedgerEntryChange type."),
         };
     }
 }

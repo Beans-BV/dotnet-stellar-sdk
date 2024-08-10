@@ -38,7 +38,10 @@ public static class Utils
     /// <returns>The relative path to the JSON data file.</returns>
     public static string GetTestDataPath(string jsonFilePath, [CallerFilePath] string testFilePath = "")
     {
-        if (Path.GetDirectoryName(jsonFilePath) != "") return Path.Combine("TestData", jsonFilePath);
+        if (Path.GetDirectoryName(jsonFilePath) != "")
+        {
+            return Path.Combine("TestData", jsonFilePath);
+        }
         // testFilePath would be something like C:\workspace\dotnet-stellar-sdk\StellarDotnetSdk.Tests\Responses\Effects\LiquidityPoolEffectResponseTest.cs on Windows
         // testFileDirectoryPath would be something like C:\workspace\dotnet-stellar-sdk\StellarDotnetSdk.Tests\Responses\Effects\ on Windows
         // AppContext.BaseDirectory would be /home/runner/work/dotnet-stellar-sdk/dotnet-stellar-sdk/StellarDotnetSdk.Tests/bin/Release/net8.0 on Linux
@@ -77,15 +80,15 @@ public static class Utils
             {
                 Discriminant =
                 {
-                    InnerValue = TransactionResultCode.TransactionResultCodeEnum.txFAILED
+                    InnerValue = TransactionResultCode.TransactionResultCodeEnum.txFAILED,
                 },
-                Results = new OperationResult[1]
-            }
+                Results = new OperationResult[1],
+            },
         };
 
         transactionResult.Result.Results[0] = new OperationResult
         {
-            Tr = operationResultTr
+            Tr = operationResultTr,
         };
 
         var outputStream = new XdrDataOutputStream();
@@ -155,15 +158,19 @@ public static class Utils
         var httpResponseMessage = new HttpResponseMessage
         {
             StatusCode = statusCode,
-            Content = content != null ? new StringContent(content) : null
+            Content = content != null ? new StringContent(content) : null,
         };
 
         httpResponseMessage.Headers.Add("X-Ratelimit-Limit", "-1");
         httpResponseMessage.Headers.Add("X-Ratelimit-Remaining", "-1");
         httpResponseMessage.Headers.Add("X-Ratelimit-Reset", "-1");
         if (headers != null)
+        {
             foreach (var header in headers)
+            {
                 httpResponseMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
+        }
 
         mockFakeHttpMessageHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>())).Returns(httpResponseMessage);
 

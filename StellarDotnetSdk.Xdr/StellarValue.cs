@@ -42,7 +42,10 @@ public class StellarValue
         TimePoint.Encode(stream, encodedStellarValue.CloseTime);
         var upgradessize = encodedStellarValue.Upgrades.Length;
         stream.WriteInt(upgradessize);
-        for (var i = 0; i < upgradessize; i++) UpgradeType.Encode(stream, encodedStellarValue.Upgrades[i]);
+        for (var i = 0; i < upgradessize; i++)
+        {
+            UpgradeType.Encode(stream, encodedStellarValue.Upgrades[i]);
+        }
         StellarValueExt.Encode(stream, encodedStellarValue.Ext);
     }
 
@@ -53,7 +56,10 @@ public class StellarValue
         decodedStellarValue.CloseTime = TimePoint.Decode(stream);
         var upgradessize = stream.ReadInt();
         decodedStellarValue.Upgrades = new UpgradeType[upgradessize];
-        for (var i = 0; i < upgradessize; i++) decodedStellarValue.Upgrades[i] = UpgradeType.Decode(stream);
+        for (var i = 0; i < upgradessize; i++)
+        {
+            decodedStellarValue.Upgrades[i] = UpgradeType.Decode(stream);
+        }
         decodedStellarValue.Ext = StellarValueExt.Decode(stream);
         return decodedStellarValue;
     }

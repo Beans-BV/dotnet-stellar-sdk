@@ -22,11 +22,11 @@ public class TransactionPreconditionsTest
                 LedgerBounds = new xdrSDK.LedgerBounds
                 {
                     MinLedger = new xdrSDK.Uint32(1),
-                    MaxLedger = new xdrSDK.Uint32(2)
+                    MaxLedger = new xdrSDK.Uint32(2),
                 },
                 MinSeqNum = new xdrSDK.SequenceNumber(new xdrSDK.Int64(4L)),
-                MinSeqLedgerGap = new xdrSDK.Uint32(0)
-            }
+                MinSeqLedgerGap = new xdrSDK.Uint32(0),
+            },
         };
 
         var stream = new xdrSDK.XdrDataOutputStream();
@@ -56,12 +56,12 @@ public class TransactionPreconditionsTest
                 TimeBounds = new xdrSDK.TimeBounds
                 {
                     MinTime = new xdrSDK.TimePoint(new xdrSDK.Uint64(minTime)),
-                    MaxTime = new xdrSDK.TimePoint(new xdrSDK.Uint64(maxTime))
+                    MaxTime = new xdrSDK.TimePoint(new xdrSDK.Uint64(maxTime)),
                 },
                 MinSeqLedgerGap = new xdrSDK.Uint32(0),
                 MinSeqAge = new xdrSDK.Duration(new xdrSDK.Uint64(0L)),
-                ExtraSigners = []
-            }
+                ExtraSigners = [],
+            },
         };
 
         var stream = new xdrSDK.XdrDataOutputStream();
@@ -94,15 +94,15 @@ public class TransactionPreconditionsTest
             {
                 Ed25519 = new xdrSDK.Uint256(
                     StrKey.DecodeStellarAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR")),
-                Payload = payload
-            }
+                Payload = payload,
+            },
         };
 
         var preconditions = new TransactionPreconditions
         {
             TimeBounds = new TimeBounds(1, 2),
             MinSequenceNumber = 3,
-            ExtraSigners = new List<xdrSDK.SignerKey> { signerKey, signerKey, signerKey }
+            ExtraSigners = new List<xdrSDK.SignerKey> { signerKey, signerKey, signerKey },
         };
 
         var xdr = preconditions.ToXdr();
@@ -125,7 +125,7 @@ public class TransactionPreconditionsTest
     {
         var preconditions = new TransactionPreconditions
         {
-            TimeBounds = new TimeBounds(1, 2)
+            TimeBounds = new TimeBounds(1, 2),
         };
 
         var xdr = preconditions.ToXdr();
@@ -160,7 +160,7 @@ public class TransactionPreconditionsTest
         var preconditions = new TransactionPreconditions
         {
             TimeBounds = new TimeBounds(1, 2),
-            ExtraSigners = new List<xdrSDK.SignerKey> { new(), new(), new() }
+            ExtraSigners = new List<xdrSDK.SignerKey> { new(), new(), new() },
         };
         Assert.ThrowsException<FormatException>(() => preconditions.IsValid());
     }
@@ -178,10 +178,10 @@ public class TransactionPreconditionsTest
                 LedgerBounds = new xdrSDK.LedgerBounds
                 {
                     MinLedger = new xdrSDK.Uint32(1),
-                    MaxLedger = new xdrSDK.Uint32(2)
+                    MaxLedger = new xdrSDK.Uint32(2),
                 },
-                MinSeqNum = new xdrSDK.SequenceNumber(new xdrSDK.Int64(4L))
-            }
+                MinSeqNum = new xdrSDK.SequenceNumber(new xdrSDK.Int64(4L)),
+            },
         };
 
         var transactionPreconditions = TransactionPreconditions.FromXdr(preconditions);

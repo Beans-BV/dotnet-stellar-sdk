@@ -16,7 +16,7 @@ public class SetTrustlineFlagsResult : OperationResult
             ResultCodeEnum.SET_TRUST_LINE_FLAGS_NO_TRUST_LINE => new SetTrustlineFlagsNoTrustline(),
             ResultCodeEnum.SET_TRUST_LINE_FLAGS_SUCCESS => new SetTrustlineFlagsSuccess(),
             ResultCodeEnum.SET_TRUST_LINE_FLAGS_LOW_RESERVE => new SetTrustlineFlagsLowReserve(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown SetTrustlineFlagsResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown SetTrustlineFlagsResult type."),
         };
     }
 }

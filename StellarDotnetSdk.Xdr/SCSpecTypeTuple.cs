@@ -19,7 +19,10 @@ public class SCSpecTypeTuple
     {
         var valueTypessize = encodedSCSpecTypeTuple.ValueTypes.Length;
         stream.WriteInt(valueTypessize);
-        for (var i = 0; i < valueTypessize; i++) SCSpecTypeDef.Encode(stream, encodedSCSpecTypeTuple.ValueTypes[i]);
+        for (var i = 0; i < valueTypessize; i++)
+        {
+            SCSpecTypeDef.Encode(stream, encodedSCSpecTypeTuple.ValueTypes[i]);
+        }
     }
 
     public static SCSpecTypeTuple Decode(XdrDataInputStream stream)
@@ -27,7 +30,10 @@ public class SCSpecTypeTuple
         var decodedSCSpecTypeTuple = new SCSpecTypeTuple();
         var valueTypessize = stream.ReadInt();
         decodedSCSpecTypeTuple.ValueTypes = new SCSpecTypeDef[valueTypessize];
-        for (var i = 0; i < valueTypessize; i++) decodedSCSpecTypeTuple.ValueTypes[i] = SCSpecTypeDef.Decode(stream);
+        for (var i = 0; i < valueTypessize; i++)
+        {
+            decodedSCSpecTypeTuple.ValueTypes[i] = SCSpecTypeDef.Decode(stream);
+        }
         return decodedSCSpecTypeTuple;
     }
 }

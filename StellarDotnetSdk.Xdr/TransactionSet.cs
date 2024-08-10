@@ -22,7 +22,10 @@ public class TransactionSet
         Hash.Encode(stream, encodedTransactionSet.PreviousLedgerHash);
         var txssize = encodedTransactionSet.Txs.Length;
         stream.WriteInt(txssize);
-        for (var i = 0; i < txssize; i++) TransactionEnvelope.Encode(stream, encodedTransactionSet.Txs[i]);
+        for (var i = 0; i < txssize; i++)
+        {
+            TransactionEnvelope.Encode(stream, encodedTransactionSet.Txs[i]);
+        }
     }
 
     public static TransactionSet Decode(XdrDataInputStream stream)
@@ -31,7 +34,10 @@ public class TransactionSet
         decodedTransactionSet.PreviousLedgerHash = Hash.Decode(stream);
         var txssize = stream.ReadInt();
         decodedTransactionSet.Txs = new TransactionEnvelope[txssize];
-        for (var i = 0; i < txssize; i++) decodedTransactionSet.Txs[i] = TransactionEnvelope.Decode(stream);
+        for (var i = 0; i < txssize; i++)
+        {
+            decodedTransactionSet.Txs[i] = TransactionEnvelope.Decode(stream);
+        }
         return decodedTransactionSet;
     }
 }

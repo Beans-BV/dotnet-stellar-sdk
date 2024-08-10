@@ -25,7 +25,7 @@ public class AccountMergeResult : OperationResult
                 => new AccountMergeDestFull(),
             ResultCodeEnum.ACCOUNT_MERGE_IS_SPONSOR
                 => new AccountMergeIsSponsor(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown AccountMergeResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown AccountMergeResult type."),
         };
     }
 }

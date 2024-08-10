@@ -56,7 +56,10 @@ public class ContractEvent
         var decodedContractEvent = new ContractEvent();
         decodedContractEvent.Ext = ExtensionPoint.Decode(stream);
         var ContractIDPresent = stream.ReadInt();
-        if (ContractIDPresent != 0) decodedContractEvent.ContractID = Hash.Decode(stream);
+        if (ContractIDPresent != 0)
+        {
+            decodedContractEvent.ContractID = Hash.Decode(stream);
+        }
         decodedContractEvent.Type = ContractEventType.Decode(stream);
         decodedContractEvent.Body = ContractEventBody.Decode(stream);
         return decodedContractEvent;
@@ -103,7 +106,10 @@ public class ContractEvent
             {
                 var topicssize = encodedContractEventV0.Topics.Length;
                 stream.WriteInt(topicssize);
-                for (var i = 0; i < topicssize; i++) SCVal.Encode(stream, encodedContractEventV0.Topics[i]);
+                for (var i = 0; i < topicssize; i++)
+                {
+                    SCVal.Encode(stream, encodedContractEventV0.Topics[i]);
+                }
                 SCVal.Encode(stream, encodedContractEventV0.Data);
             }
 
@@ -112,7 +118,10 @@ public class ContractEvent
                 var decodedContractEventV0 = new ContractEventV0();
                 var topicssize = stream.ReadInt();
                 decodedContractEventV0.Topics = new SCVal[topicssize];
-                for (var i = 0; i < topicssize; i++) decodedContractEventV0.Topics[i] = SCVal.Decode(stream);
+                for (var i = 0; i < topicssize; i++)
+                {
+                    decodedContractEventV0.Topics[i] = SCVal.Decode(stream);
+                }
                 decodedContractEventV0.Data = SCVal.Decode(stream);
                 return decodedContractEventV0;
             }

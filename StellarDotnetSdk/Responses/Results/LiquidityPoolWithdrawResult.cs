@@ -15,7 +15,7 @@ public class LiquidityPoolWithdrawResult : OperationResult
             ResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED => new LiquidityPoolWithdrawUnderfunded(),
             ResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_LINE_FULL => new LiquidityPoolWithdrawLineFull(),
             ResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM => new LiquidityPoolWithdrawUnderMinimum(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown LiquidityPoolWithdrawResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown LiquidityPoolWithdrawResult type."),
         };
     }
 }

@@ -22,12 +22,17 @@ internal class UriTemplate
 
     public Uri Resolve(object? parameters)
     {
-        if (parameters is null) return Resolve();
+        if (parameters is null)
+        {
+            return Resolve();
+        }
 
         var parametersDict = new Dictionary<string, object>();
         var properties = parameters.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
         foreach (var propertyInfo in properties)
+        {
             parametersDict[propertyInfo.Name] = propertyInfo.GetValue(parameters, null);
+        }
 
         return Resolve(parametersDict);
     }
@@ -39,6 +44,7 @@ internal class UriTemplate
         var expressionBuilder = new StringBuilder();
 
         foreach (var character in _template.ToCharArray())
+        {
             switch (currentState)
             {
                 case States.COPYING_LITERALS:
@@ -70,8 +76,12 @@ internal class UriTemplate
 
                     break;
             }
+        }
 
-        if (currentState == States.PARSING_EXPRESSION) throw new ArgumentException("Malformed template, expecting }");
+        if (currentState == States.PARSING_EXPRESSION)
+        {
+            throw new ArgumentException("Malformed template, expecting }");
+        }
 
         return new Uri(resultBuilder.ToString());
     }
@@ -79,8 +89,14 @@ internal class UriTemplate
     private void ProcessExpression(StringBuilder expression, StringBuilder result,
         IDictionary<string, object> parameters)
     {
-        if (parameters == null) return;
-        if (expression.Length == 0) throw new ArgumentException("Malformed template {}");
+        if (parameters == null)
+        {
+            return;
+        }
+        if (expression.Length == 0)
+        {
+            throw new ArgumentException("Malformed template {}");
+        }
 
         var isQueryParameter = expression[0] == '?';
         var isFirst = true;
@@ -109,19 +125,32 @@ internal class UriTemplate
     private void ProcessVariable(string varName, bool isQueryParameter, bool isFirst, StringBuilder result,
         IDictionary<string, object> parameters)
     {
-        if (parameters == null) return;
-        if (!parameters.ContainsKey(varName)) return;
+        if (parameters == null)
+        {
+            return;
+        }
+        if (!parameters.ContainsKey(varName))
+        {
+            return;
+        }
 
         if (isFirst)
         {
-            if (isQueryParameter) result.Append('?');
+            if (isQueryParameter)
+            {
+                result.Append('?');
+            }
         }
         else
         {
             if (isQueryParameter)
+            {
                 result.Append('&');
+            }
             else
+            {
                 result.Append(',');
+            }
         }
 
         if (isQueryParameter)
@@ -133,16 +162,22 @@ internal class UriTemplate
         var value = parameters[varName];
 
         if (value is string stringValue)
+        {
             result.Append(stringValue);
+        }
         else if (value is OrderDirection order)
+        {
             result.Append(order.ToString().ToLower());
+        }
         else
+        {
             result.Append(value);
+        }
     }
 
     private enum States
     {
         COPYING_LITERALS,
-        PARSING_EXPRESSION
+        PARSING_EXPRESSION,
     }
 }

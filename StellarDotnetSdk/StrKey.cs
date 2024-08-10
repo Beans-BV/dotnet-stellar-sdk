@@ -18,7 +18,7 @@ public class StrKey
         PRE_AUTH_TX = 19 << 3,
         SHA256_HASH = 23 << 3,
         SIGNED_PAYLOAD = 15 << 3,
-        CONTRACT = 2 << 3
+        CONTRACT = 2 << 3,
     }
 
     public static string EncodeStellarAccountId(byte[] data)
@@ -33,7 +33,7 @@ public class StrKey
             var xdrPayloadSigner = new xdrSDK.SignerKey.SignerKeyEd25519SignedPayload
             {
                 Payload = signedPayloadSigner.Payload,
-                Ed25519 = signedPayloadSigner.SignerAccountId.InnerValue.Ed25519
+                Ed25519 = signedPayloadSigner.SignerAccountId.InnerValue.Ed25519,
             };
 
             var stream = new xdrSDK.XdrDataOutputStream();
@@ -100,7 +100,10 @@ public class StrKey
     {
         var muxed = new MuxedAccount();
 
-        if (data.Length == 0) throw new ArgumentException("Address is empty");
+        if (data.Length == 0)
+        {
+            throw new ArgumentException("Address is empty");
+        }
 
         switch (DecodeVersionByte(data))
         {
@@ -157,7 +160,9 @@ public class StrKey
         var decoded = CheckedBase32Decode(encoded);
         var versionByte = decoded[0];
         if (!Enum.IsDefined(typeof(VersionByte), versionByte))
+        {
             throw new FormatException("Version byte is invalid");
+        }
         return (VersionByte)versionByte;
     }
 
@@ -165,7 +170,7 @@ public class StrKey
     {
         var bytes = new List<byte>
         {
-            (byte)versionByte
+            (byte)versionByte,
         };
 
         bytes.AddRange(data);
@@ -189,12 +194,16 @@ public class StrKey
         Array.Copy(decoded, decoded.Length - 2, checksum, 0, checksum.Length);
 
         if (decodedVersionByte != (byte)versionByte)
+        {
             throw new FormatException("Version byte is invalid");
+        }
 
         var expectedChecksum = CalculateChecksum(payload);
 
         if (!expectedChecksum.SequenceEqual(checksum))
+        {
             throw new FormatException("Checksum invalid");
+        }
 
         return data;
     }
@@ -226,7 +235,7 @@ public class StrKey
         return new[]
         {
             (byte)crc,
-            (byte)((uint)crc >> 8)
+            (byte)((uint)crc >> 8),
         };
     }
 
@@ -236,7 +245,10 @@ public class StrKey
         {
             var decoded = DecodeCheck(versionByte, encoded);
             // Muxed accounts are encoded as a 64 bit ulong wih 32 bytes of data
-            if (versionByte == VersionByte.MUXED_ACCOUNT) return decoded.Length == 40;
+            if (versionByte == VersionByte.MUXED_ACCOUNT)
+            {
+                return decoded.Length == 40;
+            }
 
             // All other types have 32 bytes of data
             return decoded.Length == 32;
@@ -270,11 +282,17 @@ public class StrKey
     private static byte[] CheckedBase32Decode(string encoded)
     {
         if (encoded.Length == 0)
+        {
             throw new ArgumentException("Encoded string is empty");
+        }
 
         foreach (var t in encoded)
+        {
             if (t > 127)
+            {
                 throw new ArgumentException("Illegal characters in encoded string.");
+            }
+        }
 
         return Base32Encoding.ToBytes(encoded);
     }

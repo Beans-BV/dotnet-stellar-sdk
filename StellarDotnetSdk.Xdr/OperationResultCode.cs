@@ -30,7 +30,7 @@ public class OperationResultCode
         opNOT_SUPPORTED = -3,
         opTOO_MANY_SUBENTRIES = -4,
         opEXCEEDED_WORK_LIMIT = -5,
-        opTOO_MANY_SPONSORING = -6
+        opTOO_MANY_SPONSORING = -6,
     }
 
     public OperationResultCodeEnum InnerValue { get; set; }
@@ -39,7 +39,7 @@ public class OperationResultCode
     {
         return new OperationResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

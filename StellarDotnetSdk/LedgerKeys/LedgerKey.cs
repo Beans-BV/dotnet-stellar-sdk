@@ -77,7 +77,7 @@ public abstract class LedgerKey
             LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE => LedgerKeyContractCode.FromXdr(xdr.ContractCode),
             LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING => LedgerKeyConfigSetting.FromXdr(xdr.ConfigSetting),
             LedgerEntryType.LedgerEntryTypeEnum.TTL => LedgerKeyTTL.FromXdr(xdr.Ttl),
-            _ => throw new Exception("Unknown ledger key " + xdr.Discriminant.InnerValue)
+            _ => throw new Exception("Unknown ledger key " + xdr.Discriminant.InnerValue),
         };
     }
 

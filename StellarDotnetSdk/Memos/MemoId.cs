@@ -16,7 +16,7 @@ public class MemoId : Memo
         return new Xdr.Memo
         {
             Discriminant = MemoType.Create(MemoType.MemoTypeEnum.MEMO_ID),
-            Id = new Uint64(IdValue)
+            Id = new Uint64(IdValue),
         };
     }
 

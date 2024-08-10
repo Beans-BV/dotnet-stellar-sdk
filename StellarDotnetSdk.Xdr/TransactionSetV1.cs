@@ -22,7 +22,10 @@ public class TransactionSetV1
         Hash.Encode(stream, encodedTransactionSetV1.PreviousLedgerHash);
         var phasessize = encodedTransactionSetV1.Phases.Length;
         stream.WriteInt(phasessize);
-        for (var i = 0; i < phasessize; i++) TransactionPhase.Encode(stream, encodedTransactionSetV1.Phases[i]);
+        for (var i = 0; i < phasessize; i++)
+        {
+            TransactionPhase.Encode(stream, encodedTransactionSetV1.Phases[i]);
+        }
     }
 
     public static TransactionSetV1 Decode(XdrDataInputStream stream)
@@ -31,7 +34,10 @@ public class TransactionSetV1
         decodedTransactionSetV1.PreviousLedgerHash = Hash.Decode(stream);
         var phasessize = stream.ReadInt();
         decodedTransactionSetV1.Phases = new TransactionPhase[phasessize];
-        for (var i = 0; i < phasessize; i++) decodedTransactionSetV1.Phases[i] = TransactionPhase.Decode(stream);
+        for (var i = 0; i < phasessize; i++)
+        {
+            decodedTransactionSetV1.Phases[i] = TransactionPhase.Decode(stream);
+        }
         return decodedTransactionSetV1;
     }
 }

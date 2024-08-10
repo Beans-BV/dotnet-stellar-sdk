@@ -21,7 +21,7 @@ public class LedgerHeaderFlags
     {
         DISABLE_LIQUIDITY_POOL_TRADING_FLAG = 1,
         DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG = 2,
-        DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG = 4
+        DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG = 4,
     }
 
     public LedgerHeaderFlagsEnum InnerValue { get; set; }
@@ -30,7 +30,7 @@ public class LedgerHeaderFlags
     {
         return new LedgerHeaderFlags
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -85,7 +85,9 @@ public class InnerTransactionResult
                     var resultssize = encodedInnerTransactionResultResult.Results.Length;
                     stream.WriteInt(resultssize);
                     for (var i = 0; i < resultssize; i++)
+                    {
                         OperationResult.Encode(stream, encodedInnerTransactionResultResult.Results[i]);
+                    }
                     break;
                 case TransactionResultCode.TransactionResultCodeEnum.txTOO_EARLY:
                 case TransactionResultCode.TransactionResultCodeEnum.txTOO_LATE:
@@ -118,7 +120,9 @@ public class InnerTransactionResult
                     var resultssize = stream.ReadInt();
                     decodedInnerTransactionResultResult.Results = new OperationResult[resultssize];
                     for (var i = 0; i < resultssize; i++)
+                    {
                         decodedInnerTransactionResultResult.Results[i] = OperationResult.Decode(stream);
+                    }
                     break;
                 case TransactionResultCode.TransactionResultCodeEnum.txTOO_EARLY:
                 case TransactionResultCode.TransactionResultCodeEnum.txTOO_LATE:

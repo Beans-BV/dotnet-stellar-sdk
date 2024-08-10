@@ -29,9 +29,9 @@ public class ClaimLiquidityAtomTest
         {
             Discriminant = new ClaimAtomType
             {
-                InnerValue = ClaimAtomType.ClaimAtomTypeEnum.CLAIM_ATOM_TYPE_LIQUIDITY_POOL
+                InnerValue = ClaimAtomType.ClaimAtomTypeEnum.CLAIM_ATOM_TYPE_LIQUIDITY_POOL,
             },
-            LiquidityPool = claimLiquidityAtomXdr
+            LiquidityPool = claimLiquidityAtomXdr,
         };
 
         var claimAtomLiquidityPool = (ClaimAtomLiquidityPool)ClaimAtom.FromXdr(claimAtom);

@@ -20,7 +20,7 @@ public class SetOptionsResult : OperationResult
             ResultCodeEnum.SET_OPTIONS_BAD_SIGNER => new SetOptionsBadSigner(),
             ResultCodeEnum.SET_OPTIONS_INVALID_HOME_DOMAIN => new SetOptionsInvalidHomeDomain(),
             ResultCodeEnum.SET_OPTIONS_AUTH_REVOCABLE_REQUIRED => new SetOptionsAuthRevocableRequired(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown SetOptionsResult type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown SetOptionsResult type."),
         };
     }
 }

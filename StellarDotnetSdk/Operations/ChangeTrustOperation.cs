@@ -79,8 +79,8 @@ public class ChangeTrustOperation : Operation
             ChangeTrustOp = new ChangeTrustOp
             {
                 Line = Asset.ToXdr(),
-                Limit = new Int64(ToXdrAmount(Limit))
-            }
+                Limit = new Int64(ToXdrAmount(Limit)),
+            },
         };
     }
 

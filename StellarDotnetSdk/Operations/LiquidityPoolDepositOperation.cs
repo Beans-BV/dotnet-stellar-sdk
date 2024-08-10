@@ -95,8 +95,8 @@ public class LiquidityPoolDepositOperation : Operation
                 MaxAmountA = new xdr_Int64(ToXdrAmount(MaxAmountA)),
                 MaxAmountB = new xdr_Int64(ToXdrAmount(MaxAmountB)),
                 MinPrice = MinPrice.ToXdr(),
-                MaxPrice = MaxPrice.ToXdr()
-            }
+                MaxPrice = MaxPrice.ToXdr(),
+            },
         };
     }
 

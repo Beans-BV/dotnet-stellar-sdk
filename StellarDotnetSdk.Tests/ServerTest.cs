@@ -306,7 +306,7 @@ public class ServerTest
         var server = Utils.CreateTestServerWithHeaders(
             new Dictionary<string, IEnumerable<string>>
             {
-                { "Retry-After", new[] { "10" } }
+                { "Retry-After", new[] { "10" } },
             },
             HttpStatusCode.TooManyRequests);
 
@@ -324,7 +324,7 @@ public class ServerTest
         var server = Utils.CreateTestServerWithHeaders(
             new Dictionary<string, IEnumerable<string>>
             {
-                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10)).Trim('"') } }
+                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10)).Trim('"') } },
             },
             HttpStatusCode.TooManyRequests);
 
@@ -343,7 +343,7 @@ public class ServerTest
         var server = Utils.CreateTestServerWithHeaders(
             new Dictionary<string, IEnumerable<string>>
             {
-                { "Retry-After", new[] { "10" } }
+                { "Retry-After", new[] { "10" } },
             },
             HttpStatusCode.ServiceUnavailable);
 
@@ -361,10 +361,10 @@ public class ServerTest
         var server = Utils.CreateTestServerWithHeaders(
             new Dictionary<string, IEnumerable<string>>
             {
-                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10)).Trim('"') } }
+                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10)).Trim('"') } },
             },
             HttpStatusCode.ServiceUnavailable);
-     
+
         var exception = await Assert.ThrowsExceptionAsync<ServiceUnavailableException>(
             () => server.SubmitTransaction(
                 BuildTransaction(),

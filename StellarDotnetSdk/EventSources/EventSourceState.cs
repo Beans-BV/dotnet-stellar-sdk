@@ -16,6 +16,6 @@ public sealed partial class EventSource
         OPEN = 1,
         CLOSED = 2,
         SHUTDOWN = 3,
-        RAW = 4
+        RAW = 4,
     }
 }

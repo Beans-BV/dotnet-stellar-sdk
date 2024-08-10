@@ -29,7 +29,7 @@ public class CreateAccountResultCode
         CREATE_ACCOUNT_MALFORMED = -1,
         CREATE_ACCOUNT_UNDERFUNDED = -2,
         CREATE_ACCOUNT_LOW_RESERVE = -3,
-        CREATE_ACCOUNT_ALREADY_EXIST = -4
+        CREATE_ACCOUNT_ALREADY_EXIST = -4,
     }
 
     public CreateAccountResultCodeEnum InnerValue { get; set; }
@@ -38,7 +38,7 @@ public class CreateAccountResultCode
     {
         return new CreateAccountResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

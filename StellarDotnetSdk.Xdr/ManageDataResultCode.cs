@@ -29,7 +29,7 @@ public class ManageDataResultCode
         MANAGE_DATA_NOT_SUPPORTED_YET = -1,
         MANAGE_DATA_NAME_NOT_FOUND = -2,
         MANAGE_DATA_LOW_RESERVE = -3,
-        MANAGE_DATA_INVALID_NAME = -4
+        MANAGE_DATA_INVALID_NAME = -4,
     }
 
     public ManageDataResultCodeEnum InnerValue { get; set; }
@@ -38,7 +38,7 @@ public class ManageDataResultCode
     {
         return new ManageDataResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

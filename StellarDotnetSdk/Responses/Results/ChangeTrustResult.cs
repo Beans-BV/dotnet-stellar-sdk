@@ -18,7 +18,7 @@ public class ChangeTrustResult : OperationResult
             ResultCodeEnum.CHANGE_TRUST_TRUST_LINE_MISSING => new ChangeTrustTrustlineMissing(),
             ResultCodeEnum.CHANGE_TRUST_CANNOT_DELETE => new ChangeTrustCannotDelete(),
             ResultCodeEnum.CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES => new ChangeTrustNotAuthMaintainLiabilities(),
-            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ChangeTrust type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ChangeTrust type."),
         };
     }
 }

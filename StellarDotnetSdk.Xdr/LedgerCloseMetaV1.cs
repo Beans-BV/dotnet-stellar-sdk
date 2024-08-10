@@ -57,23 +57,34 @@ public class LedgerCloseMetaV1
         var txProcessingsize = encodedLedgerCloseMetaV1.TxProcessing.Length;
         stream.WriteInt(txProcessingsize);
         for (var i = 0; i < txProcessingsize; i++)
+        {
             TransactionResultMeta.Encode(stream, encodedLedgerCloseMetaV1.TxProcessing[i]);
+        }
         var upgradesProcessingsize = encodedLedgerCloseMetaV1.UpgradesProcessing.Length;
         stream.WriteInt(upgradesProcessingsize);
         for (var i = 0; i < upgradesProcessingsize; i++)
+        {
             UpgradeEntryMeta.Encode(stream, encodedLedgerCloseMetaV1.UpgradesProcessing[i]);
+        }
         var scpInfosize = encodedLedgerCloseMetaV1.ScpInfo.Length;
         stream.WriteInt(scpInfosize);
-        for (var i = 0; i < scpInfosize; i++) SCPHistoryEntry.Encode(stream, encodedLedgerCloseMetaV1.ScpInfo[i]);
+        for (var i = 0; i < scpInfosize; i++)
+        {
+            SCPHistoryEntry.Encode(stream, encodedLedgerCloseMetaV1.ScpInfo[i]);
+        }
         Uint64.Encode(stream, encodedLedgerCloseMetaV1.TotalByteSizeOfBucketList);
         var evictedTemporaryLedgerKeyssize = encodedLedgerCloseMetaV1.EvictedTemporaryLedgerKeys.Length;
         stream.WriteInt(evictedTemporaryLedgerKeyssize);
         for (var i = 0; i < evictedTemporaryLedgerKeyssize; i++)
+        {
             LedgerKey.Encode(stream, encodedLedgerCloseMetaV1.EvictedTemporaryLedgerKeys[i]);
+        }
         var evictedPersistentLedgerEntriessize = encodedLedgerCloseMetaV1.EvictedPersistentLedgerEntries.Length;
         stream.WriteInt(evictedPersistentLedgerEntriessize);
         for (var i = 0; i < evictedPersistentLedgerEntriessize; i++)
+        {
             LedgerEntry.Encode(stream, encodedLedgerCloseMetaV1.EvictedPersistentLedgerEntries[i]);
+        }
     }
 
     public static LedgerCloseMetaV1 Decode(XdrDataInputStream stream)
@@ -85,23 +96,34 @@ public class LedgerCloseMetaV1
         var txProcessingsize = stream.ReadInt();
         decodedLedgerCloseMetaV1.TxProcessing = new TransactionResultMeta[txProcessingsize];
         for (var i = 0; i < txProcessingsize; i++)
+        {
             decodedLedgerCloseMetaV1.TxProcessing[i] = TransactionResultMeta.Decode(stream);
+        }
         var upgradesProcessingsize = stream.ReadInt();
         decodedLedgerCloseMetaV1.UpgradesProcessing = new UpgradeEntryMeta[upgradesProcessingsize];
         for (var i = 0; i < upgradesProcessingsize; i++)
+        {
             decodedLedgerCloseMetaV1.UpgradesProcessing[i] = UpgradeEntryMeta.Decode(stream);
+        }
         var scpInfosize = stream.ReadInt();
         decodedLedgerCloseMetaV1.ScpInfo = new SCPHistoryEntry[scpInfosize];
-        for (var i = 0; i < scpInfosize; i++) decodedLedgerCloseMetaV1.ScpInfo[i] = SCPHistoryEntry.Decode(stream);
+        for (var i = 0; i < scpInfosize; i++)
+        {
+            decodedLedgerCloseMetaV1.ScpInfo[i] = SCPHistoryEntry.Decode(stream);
+        }
         decodedLedgerCloseMetaV1.TotalByteSizeOfBucketList = Uint64.Decode(stream);
         var evictedTemporaryLedgerKeyssize = stream.ReadInt();
         decodedLedgerCloseMetaV1.EvictedTemporaryLedgerKeys = new LedgerKey[evictedTemporaryLedgerKeyssize];
         for (var i = 0; i < evictedTemporaryLedgerKeyssize; i++)
+        {
             decodedLedgerCloseMetaV1.EvictedTemporaryLedgerKeys[i] = LedgerKey.Decode(stream);
+        }
         var evictedPersistentLedgerEntriessize = stream.ReadInt();
         decodedLedgerCloseMetaV1.EvictedPersistentLedgerEntries = new LedgerEntry[evictedPersistentLedgerEntriessize];
         for (var i = 0; i < evictedPersistentLedgerEntriessize; i++)
+        {
             decodedLedgerCloseMetaV1.EvictedPersistentLedgerEntries[i] = LedgerEntry.Decode(stream);
+        }
         return decodedLedgerCloseMetaV1;
     }
 }

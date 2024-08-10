@@ -27,7 +27,9 @@ public class UtilTest
         var result = Util.PaddedByteArray(testBytes, 40);
 
         for (var i = 26; i < result.Length; i++)
+        {
             Assert.AreEqual(result[i], 0);
+        }
     }
 
     [TestMethod]
@@ -37,7 +39,9 @@ public class UtilTest
         var result = Util.PaddedByteArray(testString, 40);
 
         for (var i = 26; i < result.Length; i++)
+        {
             Assert.AreEqual(result[i], 0);
+        }
     }
 
     [TestMethod]

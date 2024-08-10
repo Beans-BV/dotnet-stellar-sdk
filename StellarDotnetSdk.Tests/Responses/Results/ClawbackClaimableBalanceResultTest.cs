@@ -51,8 +51,8 @@ public class ClawbackClaimableBalanceOperationResponse
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CLAWBACK_CLAIMABLE_BALANCE),
             ClawbackClaimableBalanceResult = new ClawbackClaimableBalanceResult
             {
-                Discriminant = ClawbackClaimableBalanceResultCode.Create(type)
-            }
+                Discriminant = ClawbackClaimableBalanceResultCode.Create(type),
+            },
         };
     }
 }

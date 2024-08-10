@@ -25,7 +25,10 @@ public class SCVec
     {
         var SCVecsize = encodedSCVec.InnerValue.Length;
         stream.WriteInt(SCVecsize);
-        for (var i = 0; i < SCVecsize; i++) SCVal.Encode(stream, encodedSCVec.InnerValue[i]);
+        for (var i = 0; i < SCVecsize; i++)
+        {
+            SCVal.Encode(stream, encodedSCVec.InnerValue[i]);
+        }
     }
 
     public static SCVec Decode(XdrDataInputStream stream)
@@ -33,7 +36,10 @@ public class SCVec
         var decodedSCVec = new SCVec();
         var SCVecsize = stream.ReadInt();
         decodedSCVec.InnerValue = new SCVal[SCVecsize];
-        for (var i = 0; i < SCVecsize; i++) decodedSCVec.InnerValue[i] = SCVal.Decode(stream);
+        for (var i = 0; i < SCVecsize; i++)
+        {
+            decodedSCVec.InnerValue[i] = SCVal.Decode(stream);
+        }
         return decodedSCVec;
     }
 }

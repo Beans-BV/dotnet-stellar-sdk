@@ -80,7 +80,10 @@ public class LedgerHeader
         Uint32.Encode(stream, encodedLedgerHeader.BaseReserve);
         Uint32.Encode(stream, encodedLedgerHeader.MaxTxSetSize);
         var skipListsize = encodedLedgerHeader.SkipList.Length;
-        for (var i = 0; i < skipListsize; i++) Hash.Encode(stream, encodedLedgerHeader.SkipList[i]);
+        for (var i = 0; i < skipListsize; i++)
+        {
+            Hash.Encode(stream, encodedLedgerHeader.SkipList[i]);
+        }
         LedgerHeaderExt.Encode(stream, encodedLedgerHeader.Ext);
     }
 
@@ -102,7 +105,10 @@ public class LedgerHeader
         decodedLedgerHeader.MaxTxSetSize = Uint32.Decode(stream);
         var skipListsize = 4;
         decodedLedgerHeader.SkipList = new Hash[skipListsize];
-        for (var i = 0; i < skipListsize; i++) decodedLedgerHeader.SkipList[i] = Hash.Decode(stream);
+        for (var i = 0; i < skipListsize; i++)
+        {
+            decodedLedgerHeader.SkipList[i] = Hash.Decode(stream);
+        }
         decodedLedgerHeader.Ext = LedgerHeaderExt.Decode(stream);
         return decodedLedgerHeader;
     }

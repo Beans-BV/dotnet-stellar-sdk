@@ -34,7 +34,7 @@ public class AccountMergeResultCode
         ACCOUNT_MERGE_HAS_SUB_ENTRIES = -4,
         ACCOUNT_MERGE_SEQNUM_TOO_FAR = -5,
         ACCOUNT_MERGE_DEST_FULL = -6,
-        ACCOUNT_MERGE_IS_SPONSOR = -7
+        ACCOUNT_MERGE_IS_SPONSOR = -7,
     }
 
     public AccountMergeResultCodeEnum InnerValue { get; set; }
@@ -43,7 +43,7 @@ public class AccountMergeResultCode
     {
         return new AccountMergeResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

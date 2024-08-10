@@ -34,7 +34,7 @@ public class EndSponsoringFutureReservesOperationResponseTest
 
         var back = new EndSponsoringFutureReservesOperationResponse
         {
-            BeginSponsor = operation.BeginSponsor
+            BeginSponsor = operation.BeginSponsor,
         };
         Assert.IsNotNull(back);
     }
@@ -65,7 +65,7 @@ public class EndSponsoringFutureReservesOperationResponseTest
 
         var back = new EndSponsoringFutureReservesOperationResponse
         {
-            BeginSponsor = operation.BeginSponsor
+            BeginSponsor = operation.BeginSponsor,
         };
         Assert.IsNotNull(back);
     }

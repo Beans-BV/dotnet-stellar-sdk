@@ -66,7 +66,10 @@ public class SseEventSource : IEventSource, IDisposable
 
     private void MessageReceivedEventHandler(object sender, MessageReceivedEventArgs args)
     {
-        if (args.EventName != "message") return;
+        if (args.EventName != "message")
+        {
+            return;
+        }
 
         LastEventId = args.Message.LastEventId;
 

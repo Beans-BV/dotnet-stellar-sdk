@@ -27,8 +27,10 @@ public static class Util
         var len = s.Length;
         var data = new byte[len / 2];
         for (var i = 0; i < len; i += 2)
+        {
             data[i / 2] = (byte)((Convert.ToByte(s[i].ToString(), 16) << 4)
                                  + Convert.ToByte(s[i + 1].ToString(), 16));
+        }
         return data;
     }
 
@@ -83,7 +85,9 @@ public static class Util
     public static bool IsIdentical(this byte[] a1, byte[] a2)
     {
         if (a1.Length != a2.Length)
+        {
             return false;
+        }
 
         return !a1.Where((t, i) => t != a2[i]).Any();
     }
@@ -91,7 +95,9 @@ public static class Util
     private static void Fill<T>(this T[] arr, T value)
     {
         for (var i = 0; i < arr.Length; i++)
+        {
             arr[i] = value;
+        }
     }
 
     public static byte[] ToByteArray(ulong value)

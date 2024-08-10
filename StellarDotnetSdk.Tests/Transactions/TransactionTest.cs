@@ -10,7 +10,6 @@ using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
-using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
 using Memo = StellarDotnetSdk.Memos.Memo;
 using SorobanResources = StellarDotnetSdk.Soroban.SorobanResources;
 using SorobanTransactionData = StellarDotnetSdk.Soroban.SorobanTransactionData;
@@ -570,7 +569,7 @@ public class TransactionTest
         var footprint = new LedgerFootprint
         {
             ReadOnly = [keyAccount],
-            ReadWrite = [keyData]
+            ReadWrite = [keyData],
         };
         var sorobanData = new SorobanTransactionData(new SorobanResources(footprint, 10, 20, 30), 100);
 

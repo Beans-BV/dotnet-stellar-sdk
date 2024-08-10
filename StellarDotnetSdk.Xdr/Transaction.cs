@@ -54,7 +54,10 @@ public class Transaction
         Memo.Encode(stream, encodedTransaction.Memo);
         var operationssize = encodedTransaction.Operations.Length;
         stream.WriteInt(operationssize);
-        for (var i = 0; i < operationssize; i++) Operation.Encode(stream, encodedTransaction.Operations[i]);
+        for (var i = 0; i < operationssize; i++)
+        {
+            Operation.Encode(stream, encodedTransaction.Operations[i]);
+        }
         TransactionExt.Encode(stream, encodedTransaction.Ext);
     }
 
@@ -68,7 +71,10 @@ public class Transaction
         decodedTransaction.Memo = Memo.Decode(stream);
         var operationssize = stream.ReadInt();
         decodedTransaction.Operations = new Operation[operationssize];
-        for (var i = 0; i < operationssize; i++) decodedTransaction.Operations[i] = Operation.Decode(stream);
+        for (var i = 0; i < operationssize; i++)
+        {
+            decodedTransaction.Operations[i] = Operation.Decode(stream);
+        }
         decodedTransaction.Ext = TransactionExt.Decode(stream);
         return decodedTransaction;
     }

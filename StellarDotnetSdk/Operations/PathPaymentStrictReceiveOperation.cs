@@ -51,7 +51,9 @@ public class PathPaymentStrictReceiveOperation : Operation
 
         path ??= Array.Empty<Asset>();
         if (path.Length > 5)
+        {
             throw new ArgumentException("The maximum number of assets in the path is 5.", nameof(path));
+        }
         Path = path;
     }
 
@@ -100,8 +102,8 @@ public class PathPaymentStrictReceiveOperation : Operation
                 Destination = Destination.MuxedAccount,
                 DestAsset = DestAsset.ToXdr(),
                 DestAmount = new Int64 { InnerValue = ToXdrAmount(DestAmount) },
-                Path = Path.Select(a => a.ToXdr()).ToArray()
-            }
+                Path = Path.Select(a => a.ToXdr()).ToArray(),
+            },
         };
     }
 

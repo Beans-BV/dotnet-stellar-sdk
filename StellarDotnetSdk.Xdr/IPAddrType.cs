@@ -19,7 +19,7 @@ public class IPAddrType
     public enum IPAddrTypeEnum
     {
         IPv4 = 0,
-        IPv6 = 1
+        IPv6 = 1,
     }
 
     public IPAddrTypeEnum InnerValue { get; set; }
@@ -28,7 +28,7 @@ public class IPAddrType
     {
         return new IPAddrType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

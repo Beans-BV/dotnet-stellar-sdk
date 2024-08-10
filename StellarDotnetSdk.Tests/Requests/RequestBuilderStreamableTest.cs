@@ -44,7 +44,10 @@ public class RequestBuilderStreamableTest
         eventSource.Error += (sender, args) =>
         {
             errorCount += 1;
-            if (errorCount >= 2) eventSource.Shutdown();
+            if (errorCount >= 2)
+            {
+                eventSource.Shutdown();
+            }
         };
         await eventSource.Connect();
         Assert.AreEqual(2, errorCount);

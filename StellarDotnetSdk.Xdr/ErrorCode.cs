@@ -25,7 +25,7 @@ public class ErrorCode
         ERR_DATA = 1,
         ERR_CONF = 2,
         ERR_AUTH = 3,
-        ERR_LOAD = 4
+        ERR_LOAD = 4,
     }
 
     public ErrorCodeEnum InnerValue { get; set; }
@@ -34,7 +34,7 @@ public class ErrorCode
     {
         return new ErrorCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

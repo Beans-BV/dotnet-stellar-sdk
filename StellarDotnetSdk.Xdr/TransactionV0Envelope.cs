@@ -25,7 +25,9 @@ public class TransactionV0Envelope
         var signaturessize = encodedTransactionV0Envelope.Signatures.Length;
         stream.WriteInt(signaturessize);
         for (var i = 0; i < signaturessize; i++)
+        {
             DecoratedSignature.Encode(stream, encodedTransactionV0Envelope.Signatures[i]);
+        }
     }
 
     public static TransactionV0Envelope Decode(XdrDataInputStream stream)
@@ -35,7 +37,9 @@ public class TransactionV0Envelope
         var signaturessize = stream.ReadInt();
         decodedTransactionV0Envelope.Signatures = new DecoratedSignature[signaturessize];
         for (var i = 0; i < signaturessize; i++)
+        {
             decodedTransactionV0Envelope.Signatures[i] = DecoratedSignature.Decode(stream);
+        }
         return decodedTransactionV0Envelope;
     }
 }

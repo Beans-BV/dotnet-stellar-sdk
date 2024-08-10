@@ -15,7 +15,9 @@ public class FakeStreamableHttpMessageHandler : HttpMessageHandler
         CancellationToken cancellationToken)
     {
         if (_responses.Count == 0)
+        {
             throw new InvalidOperationException("No response configured");
+        }
 
         // RequestReceived?.Invoke(this, request);
 

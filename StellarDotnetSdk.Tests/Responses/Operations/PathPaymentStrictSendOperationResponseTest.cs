@@ -50,7 +50,7 @@ public class PathPaymentStrictSendOperationResponseTest
             SourceAssetIssuer = "GBDEVU63Y6NTHJQQZIKVTC23NWLQVP3WJ2RI2OTSJTNYOIGICST6DUXR",
             SourceAmount = "1000.0000000",
             DestinationMin = "0.0859000",
-            Path = new Asset[] { }
+            Path = new Asset[] { },
         };
 
         Assert.AreEqual(operation.From, operationTest.From);

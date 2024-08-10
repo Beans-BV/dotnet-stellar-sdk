@@ -21,7 +21,7 @@ public class ClaimAtomType
     {
         CLAIM_ATOM_TYPE_V0 = 0,
         CLAIM_ATOM_TYPE_ORDER_BOOK = 1,
-        CLAIM_ATOM_TYPE_LIQUIDITY_POOL = 2
+        CLAIM_ATOM_TYPE_LIQUIDITY_POOL = 2,
     }
 
     public ClaimAtomTypeEnum InnerValue { get; set; }
@@ -30,7 +30,7 @@ public class ClaimAtomType
     {
         return new ClaimAtomType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

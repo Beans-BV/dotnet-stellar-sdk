@@ -62,7 +62,9 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
     public TransactionsRequestBuilder ForClaimableBalance(string claimableBalance)
     {
         if (string.IsNullOrWhiteSpace(claimableBalance))
+        {
             throw new ArgumentNullException(nameof(claimableBalance), "claimableBalance cannot be null");
+        }
 
         SetSegments("claimable_balances", claimableBalance, "transactions");
 

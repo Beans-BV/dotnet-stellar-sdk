@@ -31,7 +31,7 @@ public class SetTrustLineFlagsResultCode
         SET_TRUST_LINE_FLAGS_NO_TRUST_LINE = -2,
         SET_TRUST_LINE_FLAGS_CANT_REVOKE = -3,
         SET_TRUST_LINE_FLAGS_INVALID_STATE = -4,
-        SET_TRUST_LINE_FLAGS_LOW_RESERVE = -5
+        SET_TRUST_LINE_FLAGS_LOW_RESERVE = -5,
     }
 
     public SetTrustLineFlagsResultCodeEnum InnerValue { get; set; }
@@ -40,7 +40,7 @@ public class SetTrustLineFlagsResultCode
     {
         return new SetTrustLineFlagsResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

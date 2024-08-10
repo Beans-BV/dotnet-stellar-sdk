@@ -31,5 +31,5 @@ public enum OperationThreshold
     ///     <seealso cref="SetOptionsOperation" />
     ///     <seealso cref="AccountMergeOperation" />
     /// </summary>
-    HIGH = 3
+    HIGH = 3,
 }

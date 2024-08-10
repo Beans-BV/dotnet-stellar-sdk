@@ -24,12 +24,16 @@ public class FederationServer : IDisposable
     public FederationServer(Uri serverUri, string domain)
     {
         if (serverUri.Scheme != "https")
+        {
             throw new FederationServerInvalidException();
+        }
 
         ServerUri = serverUri;
 
         if (Uri.CheckHostName(domain) == UriHostNameType.Unknown)
+        {
             throw new ArgumentException("Invalid internet domain name supplied.", nameof(domain));
+        }
 
         Domain = domain;
     }
@@ -76,7 +80,9 @@ public class FederationServer : IDisposable
             var response = await _httpClient.GetAsync(stellarTomUri, HttpCompletionOption.ResponseContentRead);
 
             if ((int)response.StatusCode >= 300)
+            {
                 throw new StellarTomlNotFoundInvalidException();
+            }
 
             var responseToml = await response.Content.ReadAsStringAsync();
             stellarToml = Toml.ReadString(responseToml);
@@ -88,7 +94,9 @@ public class FederationServer : IDisposable
 
         var federationServer = stellarToml.Rows.Single(a => a.Key == "FEDERATION_SERVER").Value.Get<string>();
         if (string.IsNullOrWhiteSpace(federationServer))
+        {
             throw new NoFederationServerException();
+        }
 
         return new FederationServer(federationServer, domain);
     }
@@ -97,7 +105,9 @@ public class FederationServer : IDisposable
     {
         var tokens = Regex.Split(address, "\\*");
         if (tokens.Length != 2)
+        {
             throw new MalformedAddressException();
+        }
 
         var uriBuilder = new UriBuilder(ServerUri);
         uriBuilder.SetQueryParam("type", "name");
@@ -114,7 +124,9 @@ public class FederationServer : IDisposable
         catch (HttpResponseException e)
         {
             if (e.StatusCode == 404)
+            {
                 throw new NotFoundException();
+            }
 
             throw new ServerErrorException();
         }

@@ -28,7 +28,10 @@ public class SCSpecUDTEnumV0
         stream.WriteString(encodedSCSpecUDTEnumV0.Name);
         var casessize = encodedSCSpecUDTEnumV0.Cases.Length;
         stream.WriteInt(casessize);
-        for (var i = 0; i < casessize; i++) SCSpecUDTEnumCaseV0.Encode(stream, encodedSCSpecUDTEnumV0.Cases[i]);
+        for (var i = 0; i < casessize; i++)
+        {
+            SCSpecUDTEnumCaseV0.Encode(stream, encodedSCSpecUDTEnumV0.Cases[i]);
+        }
     }
 
     public static SCSpecUDTEnumV0 Decode(XdrDataInputStream stream)
@@ -39,7 +42,10 @@ public class SCSpecUDTEnumV0
         decodedSCSpecUDTEnumV0.Name = stream.ReadString();
         var casessize = stream.ReadInt();
         decodedSCSpecUDTEnumV0.Cases = new SCSpecUDTEnumCaseV0[casessize];
-        for (var i = 0; i < casessize; i++) decodedSCSpecUDTEnumV0.Cases[i] = SCSpecUDTEnumCaseV0.Decode(stream);
+        for (var i = 0; i < casessize; i++)
+        {
+            decodedSCSpecUDTEnumV0.Cases[i] = SCSpecUDTEnumCaseV0.Decode(stream);
+        }
         return decodedSCSpecUDTEnumV0;
     }
 }

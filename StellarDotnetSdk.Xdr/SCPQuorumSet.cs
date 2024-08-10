@@ -24,10 +24,16 @@ public class SCPQuorumSet
         Uint32.Encode(stream, encodedSCPQuorumSet.Threshold);
         var validatorssize = encodedSCPQuorumSet.Validators.Length;
         stream.WriteInt(validatorssize);
-        for (var i = 0; i < validatorssize; i++) NodeID.Encode(stream, encodedSCPQuorumSet.Validators[i]);
+        for (var i = 0; i < validatorssize; i++)
+        {
+            NodeID.Encode(stream, encodedSCPQuorumSet.Validators[i]);
+        }
         var innerSetssize = encodedSCPQuorumSet.InnerSets.Length;
         stream.WriteInt(innerSetssize);
-        for (var i = 0; i < innerSetssize; i++) Encode(stream, encodedSCPQuorumSet.InnerSets[i]);
+        for (var i = 0; i < innerSetssize; i++)
+        {
+            Encode(stream, encodedSCPQuorumSet.InnerSets[i]);
+        }
     }
 
     public static SCPQuorumSet Decode(XdrDataInputStream stream)
@@ -36,10 +42,16 @@ public class SCPQuorumSet
         decodedSCPQuorumSet.Threshold = Uint32.Decode(stream);
         var validatorssize = stream.ReadInt();
         decodedSCPQuorumSet.Validators = new NodeID[validatorssize];
-        for (var i = 0; i < validatorssize; i++) decodedSCPQuorumSet.Validators[i] = NodeID.Decode(stream);
+        for (var i = 0; i < validatorssize; i++)
+        {
+            decodedSCPQuorumSet.Validators[i] = NodeID.Decode(stream);
+        }
         var innerSetssize = stream.ReadInt();
         decodedSCPQuorumSet.InnerSets = new SCPQuorumSet[innerSetssize];
-        for (var i = 0; i < innerSetssize; i++) decodedSCPQuorumSet.InnerSets[i] = Decode(stream);
+        for (var i = 0; i < innerSetssize; i++)
+        {
+            decodedSCPQuorumSet.InnerSets[i] = Decode(stream);
+        }
         return decodedSCPQuorumSet;
     }
 }

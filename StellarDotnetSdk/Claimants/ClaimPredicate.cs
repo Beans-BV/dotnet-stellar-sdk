@@ -58,15 +58,21 @@ public abstract class ClaimPredicate
         {
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_OR:
                 if (xdr.OrPredicates.Length != 2)
+                {
                     throw new Exception("ClaimPredicate.OrPredicates expected to have length 2");
+                }
                 return Or(FromXdr(xdr.OrPredicates[0]), FromXdr(xdr.OrPredicates[1]));
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_AND:
                 if (xdr.AndPredicates.Length != 2)
+                {
                     throw new Exception("ClaimPredicate.AndPredicates expected to have length 2");
+                }
                 return And(FromXdr(xdr.AndPredicates[0]), FromXdr(xdr.AndPredicates[1]));
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_NOT:
                 if (xdr.NotPredicate == null)
+                {
                     throw new Exception("ClaimPredicate.NotPredicate expected to be not null");
+                }
                 return Not(FromXdr(xdr.NotPredicate));
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_UNCONDITIONAL:
                 return Unconditional();

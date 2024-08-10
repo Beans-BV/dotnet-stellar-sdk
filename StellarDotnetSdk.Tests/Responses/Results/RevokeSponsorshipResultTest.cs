@@ -14,8 +14,8 @@ public class RevokeSponsorshipResultTest
         {
             Discriminant =
             {
-                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP
-            }
+                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP,
+            },
         };
 
         var result = new XDR.RevokeSponsorshipResult
@@ -23,8 +23,8 @@ public class RevokeSponsorshipResultTest
             Discriminant =
             {
                 InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum
-                    .REVOKE_SPONSORSHIP_DOES_NOT_EXIST
-            }
+                    .REVOKE_SPONSORSHIP_DOES_NOT_EXIST,
+            },
         };
         operationResultTr.RevokeSponsorshipResult = result;
 
@@ -39,8 +39,8 @@ public class RevokeSponsorshipResultTest
         {
             Discriminant =
             {
-                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP
-            }
+                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP,
+            },
         };
 
         var result = new XDR.RevokeSponsorshipResult
@@ -48,8 +48,8 @@ public class RevokeSponsorshipResultTest
             Discriminant =
             {
                 InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum
-                    .REVOKE_SPONSORSHIP_LOW_RESERVE
-            }
+                    .REVOKE_SPONSORSHIP_LOW_RESERVE,
+            },
         };
         operationResultTr.RevokeSponsorshipResult = result;
 
@@ -65,8 +65,8 @@ public class RevokeSponsorshipResultTest
         {
             Discriminant =
             {
-                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP
-            }
+                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP,
+            },
         };
 
         var result = new XDR.RevokeSponsorshipResult
@@ -74,8 +74,8 @@ public class RevokeSponsorshipResultTest
             Discriminant =
             {
                 InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum
-                    .REVOKE_SPONSORSHIP_NOT_SPONSOR
-            }
+                    .REVOKE_SPONSORSHIP_NOT_SPONSOR,
+            },
         };
         operationResultTr.RevokeSponsorshipResult = result;
 
@@ -91,8 +91,8 @@ public class RevokeSponsorshipResultTest
         {
             Discriminant =
             {
-                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP
-            }
+                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP,
+            },
         };
 
         var result = new XDR.RevokeSponsorshipResult
@@ -100,8 +100,8 @@ public class RevokeSponsorshipResultTest
             Discriminant =
             {
                 InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum
-                    .REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE
-            }
+                    .REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE,
+            },
         };
         operationResultTr.RevokeSponsorshipResult = result;
 
@@ -116,16 +116,16 @@ public class RevokeSponsorshipResultTest
         {
             Discriminant =
             {
-                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP
-            }
+                InnerValue = XDR.OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP,
+            },
         };
 
         var result = new XDR.RevokeSponsorshipResult
         {
             Discriminant =
             {
-                InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum.REVOKE_SPONSORSHIP_SUCCESS
-            }
+                InnerValue = XDR.RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum.REVOKE_SPONSORSHIP_SUCCESS,
+            },
         };
         operationResultTr.RevokeSponsorshipResult = result;
 

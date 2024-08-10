@@ -35,7 +35,7 @@ public class LedgerEntryType
         CONTRACT_DATA = 6,
         CONTRACT_CODE = 7,
         CONFIG_SETTING = 8,
-        TTL = 9
+        TTL = 9,
     }
 
     public LedgerEntryTypeEnum InnerValue { get; set; }
@@ -44,7 +44,7 @@ public class LedgerEntryType
     {
         return new LedgerEntryType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

@@ -38,7 +38,10 @@ public class SponsorshipDescriptor
     {
         var decodedSponsorshipDescriptor = new SponsorshipDescriptor();
         var SponsorshipDescriptorPresent = stream.ReadInt();
-        if (SponsorshipDescriptorPresent != 0) decodedSponsorshipDescriptor.InnerValue = AccountID.Decode(stream);
+        if (SponsorshipDescriptorPresent != 0)
+        {
+            decodedSponsorshipDescriptor.InnerValue = AccountID.Decode(stream);
+        }
         return decodedSponsorshipDescriptor;
     }
 }

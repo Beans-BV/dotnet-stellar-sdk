@@ -10,8 +10,8 @@ public class ClaimPredicateUnconditional : ClaimPredicate
         {
             Discriminant = new ClaimPredicateType
             {
-                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_UNCONDITIONAL
-            }
+                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_UNCONDITIONAL,
+            },
         };
     }
 }

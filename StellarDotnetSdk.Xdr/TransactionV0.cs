@@ -50,7 +50,10 @@ public class TransactionV0
         Memo.Encode(stream, encodedTransactionV0.Memo);
         var operationssize = encodedTransactionV0.Operations.Length;
         stream.WriteInt(operationssize);
-        for (var i = 0; i < operationssize; i++) Operation.Encode(stream, encodedTransactionV0.Operations[i]);
+        for (var i = 0; i < operationssize; i++)
+        {
+            Operation.Encode(stream, encodedTransactionV0.Operations[i]);
+        }
         TransactionV0Ext.Encode(stream, encodedTransactionV0.Ext);
     }
 
@@ -61,11 +64,17 @@ public class TransactionV0
         decodedTransactionV0.Fee = Uint32.Decode(stream);
         decodedTransactionV0.SeqNum = SequenceNumber.Decode(stream);
         var TimeBoundsPresent = stream.ReadInt();
-        if (TimeBoundsPresent != 0) decodedTransactionV0.TimeBounds = TimeBounds.Decode(stream);
+        if (TimeBoundsPresent != 0)
+        {
+            decodedTransactionV0.TimeBounds = TimeBounds.Decode(stream);
+        }
         decodedTransactionV0.Memo = Memo.Decode(stream);
         var operationssize = stream.ReadInt();
         decodedTransactionV0.Operations = new Operation[operationssize];
-        for (var i = 0; i < operationssize; i++) decodedTransactionV0.Operations[i] = Operation.Decode(stream);
+        for (var i = 0; i < operationssize; i++)
+        {
+            decodedTransactionV0.Operations[i] = Operation.Decode(stream);
+        }
         decodedTransactionV0.Ext = TransactionV0Ext.Decode(stream);
         return decodedTransactionV0;
     }

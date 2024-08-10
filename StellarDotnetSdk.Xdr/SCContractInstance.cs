@@ -35,7 +35,10 @@ public class SCContractInstance
         var decodedSCContractInstance = new SCContractInstance();
         decodedSCContractInstance.Executable = ContractExecutable.Decode(stream);
         var StoragePresent = stream.ReadInt();
-        if (StoragePresent != 0) decodedSCContractInstance.Storage = SCMap.Decode(stream);
+        if (StoragePresent != 0)
+        {
+            decodedSCContractInstance.Storage = SCMap.Decode(stream);
+        }
         return decodedSCContractInstance;
     }
 }

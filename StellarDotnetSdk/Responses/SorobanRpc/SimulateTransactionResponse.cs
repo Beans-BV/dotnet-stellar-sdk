@@ -102,7 +102,10 @@ public class SimulateTransactionResponse
     {
         get
         {
-            if (Results is not { Length: > 0 } || Results[0].Auth == null) return null;
+            if (Results is not { Length: > 0 } || Results[0].Auth == null)
+            {
+                return null;
+            }
             return Results[0].Auth?.Select(SorobanAuthorizationEntry.FromXdrBase64).ToArray();
         }
     }

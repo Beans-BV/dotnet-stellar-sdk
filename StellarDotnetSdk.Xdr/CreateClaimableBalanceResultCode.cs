@@ -27,7 +27,7 @@ public class CreateClaimableBalanceResultCode
         CREATE_CLAIMABLE_BALANCE_LOW_RESERVE = -2,
         CREATE_CLAIMABLE_BALANCE_NO_TRUST = -3,
         CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED = -4,
-        CREATE_CLAIMABLE_BALANCE_UNDERFUNDED = -5
+        CREATE_CLAIMABLE_BALANCE_UNDERFUNDED = -5,
     }
 
     public CreateClaimableBalanceResultCodeEnum InnerValue { get; set; }
@@ -36,7 +36,7 @@ public class CreateClaimableBalanceResultCode
     {
         return new CreateClaimableBalanceResultCode
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

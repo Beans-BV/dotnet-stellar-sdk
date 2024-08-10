@@ -50,7 +50,7 @@ public class AccountMergeOperation : Operation
         return new Xdr.Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.ACCOUNT_MERGE),
-            Destination = Destination.MuxedAccount
+            Destination = Destination.MuxedAccount,
         };
     }
 }

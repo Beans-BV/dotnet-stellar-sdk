@@ -21,10 +21,16 @@ public class LedgerFootprint
     {
         var readOnlysize = encodedLedgerFootprint.ReadOnly.Length;
         stream.WriteInt(readOnlysize);
-        for (var i = 0; i < readOnlysize; i++) LedgerKey.Encode(stream, encodedLedgerFootprint.ReadOnly[i]);
+        for (var i = 0; i < readOnlysize; i++)
+        {
+            LedgerKey.Encode(stream, encodedLedgerFootprint.ReadOnly[i]);
+        }
         var readWritesize = encodedLedgerFootprint.ReadWrite.Length;
         stream.WriteInt(readWritesize);
-        for (var i = 0; i < readWritesize; i++) LedgerKey.Encode(stream, encodedLedgerFootprint.ReadWrite[i]);
+        for (var i = 0; i < readWritesize; i++)
+        {
+            LedgerKey.Encode(stream, encodedLedgerFootprint.ReadWrite[i]);
+        }
     }
 
     public static LedgerFootprint Decode(XdrDataInputStream stream)
@@ -32,10 +38,16 @@ public class LedgerFootprint
         var decodedLedgerFootprint = new LedgerFootprint();
         var readOnlysize = stream.ReadInt();
         decodedLedgerFootprint.ReadOnly = new LedgerKey[readOnlysize];
-        for (var i = 0; i < readOnlysize; i++) decodedLedgerFootprint.ReadOnly[i] = LedgerKey.Decode(stream);
+        for (var i = 0; i < readOnlysize; i++)
+        {
+            decodedLedgerFootprint.ReadOnly[i] = LedgerKey.Decode(stream);
+        }
         var readWritesize = stream.ReadInt();
         decodedLedgerFootprint.ReadWrite = new LedgerKey[readWritesize];
-        for (var i = 0; i < readWritesize; i++) decodedLedgerFootprint.ReadWrite[i] = LedgerKey.Decode(stream);
+        for (var i = 0; i < readWritesize; i++)
+        {
+            decodedLedgerFootprint.ReadWrite[i] = LedgerKey.Decode(stream);
+        }
         return decodedLedgerFootprint;
     }
 }

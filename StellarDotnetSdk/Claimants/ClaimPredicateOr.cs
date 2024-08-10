@@ -19,9 +19,9 @@ public class ClaimPredicateOr : ClaimPredicate
         {
             Discriminant = new ClaimPredicateType
             {
-                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_OR
+                InnerValue = ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_OR,
             },
-            OrPredicates = new[] { LeftPredicate.ToXdr(), RightPredicate.ToXdr() }
+            OrPredicates = new[] { LeftPredicate.ToXdr(), RightPredicate.ToXdr() },
         };
     }
 }

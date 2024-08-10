@@ -25,10 +25,16 @@ public abstract class Asset
 
     public static Asset Create(string canonicalForm)
     {
-        if (canonicalForm == "native") return new AssetTypeNative();
+        if (canonicalForm == "native")
+        {
+            return new AssetTypeNative();
+        }
 
         var parts = canonicalForm.Split(':');
-        if (parts.Length != 2) throw new ArgumentException("invalid asset " + canonicalForm);
+        if (parts.Length != 2)
+        {
+            throw new ArgumentException("invalid asset " + canonicalForm);
+        }
         return CreateNonNativeAsset(parts[0], parts[1]);
     }
 
@@ -42,12 +48,18 @@ public abstract class Asset
     public static Asset Create(string? type, string? code, string? issuer)
     {
         if (type == "native")
+        {
             return new AssetTypeNative();
+        }
 
         if (code == null)
+        {
             throw new ArgumentNullException(nameof(code), "Code cannot be null.");
+        }
         if (issuer == null)
+        {
             throw new ArgumentNullException(nameof(issuer), "Issuer cannot be null.");
+        }
 
         return CreateNonNativeAsset(code, issuer);
     }
@@ -61,9 +73,13 @@ public abstract class Asset
     public static AssetTypeCreditAlphaNum CreateNonNativeAsset(string code, string issuer)
     {
         if (code.Length >= 1 && code.Length <= 4)
+        {
             return new AssetTypeCreditAlphaNum4(code, issuer);
+        }
         if (code.Length >= 5 && code.Length <= 12)
+        {
             return new AssetTypeCreditAlphaNum12(code, issuer);
+        }
         throw new AssetCodeLengthInvalidException();
     }
 

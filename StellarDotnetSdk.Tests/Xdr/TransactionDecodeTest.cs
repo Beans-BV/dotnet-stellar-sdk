@@ -47,7 +47,10 @@ public class TransactionDecodeTest
     {
         const string txResult =
             "1exmRdhs3K6CEsvmD+rvuNaxqLfRGu6lkGCLCGOs5N4AAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA==";
-        if (txResult == null) throw new ArgumentNullException(nameof(txResult));
+        if (txResult == null)
+        {
+            throw new ArgumentNullException(nameof(txResult));
+        }
         var bytes = Convert.FromBase64String(txResult);
 
         var transactionResult = TransactionResultPair.Decode(new XdrDataInputStream(bytes));

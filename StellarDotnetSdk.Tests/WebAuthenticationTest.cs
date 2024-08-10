@@ -18,11 +18,11 @@ public class WebAuthenticationTest
     private const string HomeDomain = "thisisatest.sandbox.anchor.anchordomain.com";
     private const string WebAuthDomain = "thisisatest.sandbox.anchor.webauth.com";
     private const string ClientDomain = "thisisatest.sandbox.anchor.client.com";
-    
-    private readonly Network _testnet = Network.Test();
-    private readonly Network _mainnet = Network.Public();
 
     private const string ManageDataOperationName = $"{HomeDomain} auth";
+    private readonly Network _mainnet = Network.Public();
+
+    private readonly Network _testnet = Network.Test();
     private KeyPair _clientKeypair = null!;
 
     private KeyPair _serverKeypair = null!;
@@ -282,10 +282,10 @@ public class WebAuthenticationTest
             WebAuthDomain,
             validFrom: now,
             network: _testnet);
-        
+
         transaction.Sign(
             _clientKeypair,
-            network: _testnet);
+            _testnet);
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
@@ -337,7 +337,7 @@ public class WebAuthenticationTest
 
         transaction.Sign(
             _clientKeypair,
-            network: _mainnet);
+            _mainnet);
 
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {

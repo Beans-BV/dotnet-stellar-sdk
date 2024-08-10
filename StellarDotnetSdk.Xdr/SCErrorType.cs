@@ -35,7 +35,7 @@ public class SCErrorType
         SCE_EVENTS = 6,
         SCE_BUDGET = 7,
         SCE_VALUE = 8,
-        SCE_AUTH = 9
+        SCE_AUTH = 9,
     }
 
     public SCErrorTypeEnum InnerValue { get; set; }
@@ -44,7 +44,7 @@ public class SCErrorType
     {
         return new SCErrorType
         {
-            InnerValue = v
+            InnerValue = v,
         };
     }
 

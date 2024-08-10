@@ -32,7 +32,9 @@ public class ManageOfferSuccessResult
         var offersClaimedsize = encodedManageOfferSuccessResult.OffersClaimed.Length;
         stream.WriteInt(offersClaimedsize);
         for (var i = 0; i < offersClaimedsize; i++)
+        {
             ClaimAtom.Encode(stream, encodedManageOfferSuccessResult.OffersClaimed[i]);
+        }
         ManageOfferSuccessResultOffer.Encode(stream, encodedManageOfferSuccessResult.Offer);
     }
 
@@ -42,7 +44,9 @@ public class ManageOfferSuccessResult
         var offersClaimedsize = stream.ReadInt();
         decodedManageOfferSuccessResult.OffersClaimed = new ClaimAtom[offersClaimedsize];
         for (var i = 0; i < offersClaimedsize; i++)
+        {
             decodedManageOfferSuccessResult.OffersClaimed[i] = ClaimAtom.Decode(stream);
+        }
         decodedManageOfferSuccessResult.Offer = ManageOfferSuccessResultOffer.Decode(stream);
         return decodedManageOfferSuccessResult;
     }
