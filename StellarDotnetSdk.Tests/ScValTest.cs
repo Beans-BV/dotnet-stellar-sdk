@@ -46,11 +46,11 @@ public class ScValTest
     {
         var arithDomainError = new SCWasmVmError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN
         };
         var internalError = new SCWasmVmError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR
         };
         // Act
         var arithDomainErrorXdrBase64 = arithDomainError.ToXdrBase64();
@@ -69,11 +69,11 @@ public class ScValTest
     {
         var arithDomainError = new SCContextError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN
         };
         var internalError = new SCContextError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR
         };
         // Act
         var arithDomainErrorXdrBase64 = arithDomainError.ToXdrBase64();
@@ -92,11 +92,11 @@ public class ScValTest
     {
         var arithDomainError = new SCStorageError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN
         };
         var internalError = new SCStorageError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR
         };
         // Act
         var arithDomainErrorXdrBase64 = arithDomainError.ToXdrBase64();
@@ -115,11 +115,11 @@ public class ScValTest
     {
         var arithDomainError = new SCObjectError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN
         };
         var internalError = new SCObjectError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR
         };
         // Act
         var arithDomainErrorXdrBase64 = arithDomainError.ToXdrBase64();
@@ -138,11 +138,11 @@ public class ScValTest
     {
         var arithDomainError = new SCCryptoError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN
         };
         var internalError = new SCCryptoError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR
         };
         // Act
         var arithDomainErrorXdrBase64 = arithDomainError.ToXdrBase64();
@@ -161,11 +161,11 @@ public class ScValTest
     {
         var arithDomainError = new SCEventsError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN
         };
         var internalError = new SCEventsError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR
         };
         // Act
         var arithDomainErrorXdrBase64 = arithDomainError.ToXdrBase64();
@@ -184,11 +184,11 @@ public class ScValTest
     {
         var arithDomainError = new SCBudgetError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN
         };
         var internalError = new SCBudgetError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR
         };
         // Act
         var arithDomainErrorXdrBase64 = arithDomainError.ToXdrBase64();
@@ -207,11 +207,11 @@ public class ScValTest
     {
         var arithDomainError = new SCValueError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN
         };
         var internalError = new SCValueError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR
         };
         // Act
         var arithDomainErrorXdrBase64 = arithDomainError.ToXdrBase64();
@@ -230,11 +230,11 @@ public class ScValTest
     {
         var arithDomainError = new SCAuthError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_ARITH_DOMAIN
         };
         var internalError = new SCAuthError
         {
-            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR,
+            Code = xdrSDK.SCErrorCode.SCErrorCodeEnum.SCEC_INTERNAL_ERROR
         };
         // Act
         var arithDomainErrorXdrBase64 = arithDomainError.ToXdrBase64();
@@ -341,9 +341,9 @@ public class ScValTest
     }
 
     [TestMethod]
-    public void TestScInt128()
+    public void TestScInt128FromParts()
     {
-        var scInt128 = new SCInt128(18446744073709551615, -9223372036854775807);
+        var scInt128 = new SCInt128(-9223372036854775807, 18446744073709551615);
 
         // Act
         var scInt128XdrBase64 = scInt128.ToXdrBase64();
@@ -355,6 +355,41 @@ public class ScValTest
     }
 
     [TestMethod]
+    public void TestScInt128ConstructedFromValidString()
+    {
+        var scInt128FromString = new SCInt128("18446744073709551616");
+
+        var scInt128FromParts = new SCInt128(1, 0);
+        // Act
+        var scInt128XdrBase64 = scInt128FromString.ToXdrBase64();
+        var fromXdrBase64ScInt128 = (SCInt128)SCVal.FromXdrBase64(scInt128XdrBase64);
+
+        // Assert
+        Assert.AreEqual(scInt128FromString.Lo, fromXdrBase64ScInt128.Lo);
+        Assert.AreEqual(scInt128FromString.Hi, fromXdrBase64ScInt128.Hi);
+
+        Assert.AreEqual(scInt128FromString.Lo, scInt128FromParts.Lo);
+        Assert.AreEqual(scInt128FromString.Hi, scInt128FromParts.Hi);
+    }
+
+    [TestMethod]
+    public void TestScInt128ConstructedFromTooBigNumericString()
+    {
+        var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+        {
+            _ = new SCInt128("170141183460469231731687303715884105728");
+        });
+        Assert.IsTrue(ex.Message.Contains("Value must be between -2^127 and 2^127 - 1."));
+    }
+
+    [TestMethod]
+    public void TestScInt128ConstructedFromInvalidNumericString()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => { _ = new SCInt128("9,223,372,036,854,775,807"); });
+        Assert.IsTrue(ex.Message.Contains("Invalid numeric string."));
+    }
+
+    [TestMethod]
     public void TestScUint256()
     {
         var scUint256 = new SCUint256
@@ -362,7 +397,7 @@ public class ScValTest
             HiHi = 18446744073709551615,
             HiLo = 1,
             LoHi = 18446744073709551614,
-            LoLo = 0,
+            LoLo = 0
         };
 
         // Act
@@ -384,7 +419,7 @@ public class ScValTest
             HiHi = -9223372036854775807,
             HiLo = 18446744073709551614,
             LoHi = 18446744073709551615,
-            LoLo = 18446744073709551613,
+            LoLo = 18446744073709551613
         };
 
         // Act
@@ -486,9 +521,7 @@ public class ScValTest
         // Assert
         Assert.AreEqual(scVec.InnerValue.Length, fromXdrBase64ScVec.InnerValue.Length);
         for (var i = 0; i < scVec.InnerValue.Length; i++)
-        {
             Assert.AreEqual(scVec.InnerValue[i].ToXdrBase64(), fromXdrBase64ScVec.InnerValue[i].ToXdrBase64());
-        }
     }
 
     /// <summary></summary>

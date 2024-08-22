@@ -24,6 +24,7 @@ using Asset = StellarDotnetSdk.Assets.Asset;
 using Claimant = StellarDotnetSdk.Claimants.Claimant;
 using CollectionAssert = NUnit.Framework.CollectionAssert;
 using DiagnosticEvent = StellarDotnetSdk.Soroban.DiagnosticEvent;
+using EvictionIterator = StellarDotnetSdk.LedgerEntries.EvictionIterator;
 using LedgerFootprint = StellarDotnetSdk.Soroban.LedgerFootprint;
 using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
 using SCBytes = StellarDotnetSdk.Soroban.SCBytes;
@@ -33,6 +34,7 @@ using SCVal = StellarDotnetSdk.Soroban.SCVal;
 using SCVec = StellarDotnetSdk.Soroban.SCVec;
 using SorobanResources = StellarDotnetSdk.Soroban.SorobanResources;
 using SorobanTransactionData = StellarDotnetSdk.Soroban.SorobanTransactionData;
+using StateArchivalSettings = StellarDotnetSdk.LedgerEntries.StateArchivalSettings;
 using Transaction = StellarDotnetSdk.Transactions.Transaction;
 using TransactionResult = StellarDotnetSdk.Responses.Results.TransactionResult;
 
@@ -344,7 +346,7 @@ public class SorobanServerTest
         var ledgerKeyContractData = new LedgerKey[]
         {
             new LedgerKeyContractData(new SCContractId(HelloContractId), new SCLedgerKeyContractInstance(),
-                ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT)),
+                ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT))
         };
         var contractDataResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyContractData);
 
@@ -380,12 +382,12 @@ public class SorobanServerTest
         {
             Type = "diagnostic",
             ContractIds = [contractId],
-            Topics = [["*", new SCSymbol("hello").ToXdrBase64()]],
+            Topics = [["*", new SCSymbol("hello").ToXdrBase64()]]
         };
         var getEventsRequest = new GetEventsRequest
         {
             StartLedger = ledger,
-            Filters = [eventFilter],
+            Filters = [eventFilter]
         };
 
         var eventsResponse = await _sorobanServer.GetEvents(getEventsRequest);
@@ -398,7 +400,7 @@ public class SorobanServerTest
     {
         var ledgerKeyContractCodes = new LedgerKey[]
         {
-            new LedgerKeyContractCode(HelloContractWasmHash),
+            new LedgerKeyContractCode(HelloContractWasmHash)
         };
         var contractCodeResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyContractCodes);
         Assert.IsNotNull(contractCodeResponse.LatestLedger);
@@ -428,7 +430,7 @@ public class SorobanServerTest
         var ledgerKeyAccounts = new LedgerKey[]
         {
             new LedgerKeyAccount(accountId1),
-            new LedgerKeyAccount(accountId2),
+            new LedgerKeyAccount(accountId2)
         };
 
         const string json =
@@ -565,9 +567,8 @@ public class SorobanServerTest
 
         tx.SetSorobanTransactionData(simulateResponse.SorobanTransactionData);
         if (simulateResponse.SorobanAuthorization != null)
-        {
             tx.SetSorobanAuthorization(simulateResponse.SorobanAuthorization);
-        }
+
         Assert.IsNotNull(simulateResponse.MinResourceFee);
         tx.AddResourceFee(simulateResponse.MinResourceFee.Value);
         tx.Sign(signer ?? _sourceAccount);
@@ -735,14 +736,10 @@ public class SorobanServerTest
         var tx = new TransactionBuilder(account).AddOperation(restoreOperation).Build();
         LedgerKey key;
         if (StrKey.IsValidContractId(id))
-        {
             key = new LedgerKeyContractData(new SCContractId(id), new SCLedgerKeyContractInstance(),
                 ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT));
-        }
         else
-        {
             key = new LedgerKeyContractCode(id);
-        }
 
         tx.SetSorobanTransactionData(new SorobanTransactionData(key, false));
 
@@ -780,7 +777,7 @@ public class SorobanServerTest
         var tx = new TransactionBuilder(account).AddOperation(extendOperation).Build();
         var ledgerFootprint = new LedgerFootprint
         {
-            ReadOnly = new LedgerKey[] { new LedgerKeyContractCode(wasmHash) },
+            ReadOnly = new LedgerKey[] { new LedgerKeyContractCode(wasmHash) }
         };
 
         var resources = new SorobanResources(ledgerFootprint, 0, 0, 0);
@@ -840,7 +837,7 @@ public class SorobanServerTest
         var operation = new CreateClaimableBalanceOperation(new AssetTypeNative(), "100",
             new Claimant[]
             {
-                new(SourceAccountId, new ClaimPredicateUnconditional()),
+                new(SourceAccountId, new ClaimPredicateUnconditional())
             });
         var tx = new TransactionBuilder(account).AddOperation(operation).Build();
         tx.Sign(_sourceAccount);
@@ -925,7 +922,7 @@ public class SorobanServerTest
 
         var ledgerKeyData = new LedgerKey[]
         {
-            new LedgerKeyData(TargetAccountId, "passkey"),
+            new LedgerKeyData(TargetAccountId, "passkey")
         };
         var dataResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyData);
 
@@ -979,7 +976,7 @@ public class SorobanServerTest
 
         var ledgerKeyData = new LedgerKey[]
         {
-            new LedgerKeyOffer(SourceAccountId, offerId),
+            new LedgerKeyOffer(SourceAccountId, offerId)
         };
         var dataResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyData);
 
@@ -1016,7 +1013,7 @@ public class SorobanServerTest
 
         var ledgerKeys = new LedgerKey[]
         {
-            new LedgerKeyClaimableBalance(claimableBalanceId),
+            new LedgerKeyClaimableBalance(claimableBalanceId)
         };
         var response = await _sorobanServer.GetLedgerEntries(ledgerKeys);
 
@@ -1060,7 +1057,7 @@ public class SorobanServerTest
 
         var ledgerKeys = new LedgerKey[]
         {
-            new LedgerKeyLiquidityPool(nativeAsset, _asset, 30),
+            new LedgerKeyLiquidityPool(nativeAsset, _asset, 30)
         };
         var response = await _sorobanServer.GetLedgerEntries(ledgerKeys);
 
@@ -1095,7 +1092,7 @@ public class SorobanServerTest
 
         var ledgerKeys = new LedgerKey[]
         {
-            new LedgerKeyTrustline(TargetAccountId, _asset),
+            new LedgerKeyTrustline(TargetAccountId, _asset)
         };
         var response = await _sorobanServer.GetLedgerEntries(ledgerKeys);
 
@@ -1191,7 +1188,7 @@ public class SorobanServerTest
             is LedgerKeyContractData
             {
                 Contract: SCContractId contractId,
-                Key: SCLedgerKeyContractInstance,
+                Key: SCLedgerKeyContractInstance
             } contractData)
         {
             Assert.AreEqual("CDU3PZ4LXVETIFVLS33RDXLD63JZ5GXS7PCV2DJ7BBT6EBPA2AB7YR5H", contractId.InnerValue);
@@ -1205,13 +1202,9 @@ public class SorobanServerTest
         }
 
         if (readOnly1 is LedgerKeyContractCode contractCode)
-        {
             Assert.AreEqual("8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuME=", Convert.ToBase64String(contractCode.Hash));
-        }
         else
-        {
             Assert.Fail();
-        }
 
         if (readWrite is LedgerKeyContractData { Contract: SCContractId contractId1, Key: SCVec vec } contractData1)
         {
@@ -1220,7 +1213,7 @@ public class SorobanServerTest
             Assert.IsTrue(vec.InnerValue[0] is SCSymbol { InnerValue: "Counter" });
             Assert.IsTrue(vec.InnerValue[1] is SCAccountId
             {
-                InnerValue: "GBMLPRFCZDZJPKUPHUSHCKA737GOZL7ERZLGGMJ6YGHBFJZ6ZKMKCZTM",
+                InnerValue: "GBMLPRFCZDZJPKUPHUSHCKA737GOZL7ERZLGGMJ6YGHBFJZ6ZKMKCZTM"
             });
             Assert.AreEqual(
                 ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT,
@@ -1665,6 +1658,297 @@ public class SorobanServerTest
             "AAAAAwAAAAAAAAACAAAAAwAc0RwAAAAAAAAAADEswRzGZ9SA3Mvrzsmzixf+OYVAOpOjUuPgoOgLU95JAAAAFxzxIbUAAAIJAAtMUAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAMAAAAAABzRGgAAAABmWd/VAAAAAAAAAAEAHNEcAAAAAAAAAAAxLMEcxmfUgNzL687Js4sX/jmFQDqTo1Lj4KDoC1PeSQAAABcc8SG1AAACCQALTFEAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAAc0RwAAAAAZlnf3wAAAAAAAAAAAAAAAAAAAAA=",
             tx5.ResultMetaXdr);
     }
-    // TODO TestGetLedgerEntriesOfTypeTTL()
-    // TODO TestGetLedgerEntriesOfTypeConfigSetting()
+
+    [TestMethod]
+    public async Task TestGetLedgerEntriesOfTypeConfigSetting()
+    {
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "cee63f05-e7ad-42c8-bc79-ceb9374043a4",
+              "result": {
+                "entries": [
+                  {
+                    "key": "AAAACAAAAAA=",
+                    "xdr": "AAAACAAAAAAAAQAA",
+                    "lastModifiedLedgerSeq": 1157
+                  },
+                  {
+                    "key": "AAAACAAAAAE=",
+                    "xdr": "AAAACAAAAAEAAAAAHc1lAAAAAAAF9eEAAAAAAAAAABkCgAAA",
+                    "lastModifiedLedgerSeq": 1157
+                  },
+                  {
+                    "key": "AAAACAAAAAI=",
+                    "xdr": "AAAACAAAAAIAAADIAAehIAAAAH0AARFwAAAAKAADDUAAAAAZAAEEAAAAAAAAABhqAAAAAAAAJxAAAAAAAAAG+gAAAAAR4aMAAAAAAAAAJmwAAAAAAAAvVAAAE4g=",
+                    "lastModifiedLedgerSeq": 1157
+                  },
+                  {
+                    "key": "AAAACAAAAAM=",
+                    "xdr": "AAAACAAAAAMAAAAAAAA/aw==",
+                    "lastModifiedLedgerSeq": 1157
+                  },
+                  {
+                    "key": "AAAACAAAAAQ=",
+                    "xdr": "AAAACAAAAAQAACAGAAAAAAAAJxA=",
+                    "lastModifiedLedgerSeq": 1157
+                  },
+                  {
+                    "key": "AAAACAAAAAU=",
+                    "xdr": "AAAACAAAAAUAARgAAAEYAAAAAAAAAAZY",
+                    "lastModifiedLedgerSeq": 1157
+                  },
+                  {
+                    "key": "AAAACAAAAAY=",
+                    "xdr": "AAAACAAAAAYAAAAtAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAbIAAAAAAAAAEAAAAAAAAAAAAAAAKgAAAAAAAAAQAAAAAAAAAAAAAAAsAAAAAAAAABAAAAAAAAAAAAAAAScAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAAAAADdAAAAAAAAABoAAAAAAAAAAAAAAUsAAAAAAAAREQAAAAAAAAAAAAAONAAAAAAAABtlAAAAAAAAAAAAAJ1AAAAAAAAAAAAAAAAAAAAAAAAFws8AAAAAAAAP2wAAAAAAAAAAAAZeygAAAAAAALKQAAAAAAAAAAAAAKC2AAAAAAAAAnoAAAAAAAAAAAAAB5kAAAAAAAAAAAAAAAAAAAAAAAAZUQAAAAAAABc3AAAAAAAAAAAAAALHAAAAAAAAAAAAAAAAAAAAAAAjUjQAAAAAAAAAAAAAAAAAAAAAAAAQUAAAAAAAAAAAAAAAAAAAAAAAABJsAAAAAAAAAAAAAAAAAAAAAAAAEkgAAAAAAAAAAAAAAAAAAAAAAAAQoAAAAAAAAAAAAAAAAAAAAAAAAAN0AAAAAAAAAAAAAAAAAAAAAAAABCMAAAAAAAAB9gAAAAAAAAAAAAEddQAAAAAAAGNCAAAAAAAAAAAAAAAAAAAAAAAIQFAAAAAAAAAAAAAAAAAAAAAAAAKw6wAAAAAAAAAAAAAAAAAAAAAAAHUlAAAAAAAAAAAAAAAAAAAAAAAQMkkAAAAAAAAAAAAAAAAAAAAAAAOfGAAAAAAAAAAAAAAAAAAAAAAABQMcAAAAAAAAAAAAAAAAAAAAAAAKtZUAAAAAAAAAAAAAAAAAAAAAAAaNRwAAAAAAAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAKgWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdhAAAAAAAAAAAAAAAAAAAAAAAACnXAAAAAAAAAAAAAAAAAAAAAAAADOQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFn+AAAAAAAAAAAAAAAAAAAAAAAApfgAAAAAAAAAAAAAAAAAAAAAAAymLgAAAAAAAAAAAAAAAAAAAAAABIiMAAAAAAAAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAB1oAAAAAAAAAAAAAAAAAAAAAAC3KSgAAAAAAAAAA",
+                    "lastModifiedLedgerSeq": 1157
+                  },
+                  {
+                    "key": "AAAACAAAAAc=",
+                    "xdr": "AAAACAAAAAcAAAAtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADyAAAAAAAAAYAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIGpQAAAAAAABMnAAAAAAAAAAAAAQ9gAAAAAAAABMEAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALUAAAAAAAAAAAAAAAAAAAAAAAAAYwAAAAAAAAAAAAAAAAAAAAAAAABjAAAAAAAAAAAAAAAAAAAAAAAAAGMAAAAAAAAAAAAAAAAAAAAAAAAAYwAAAAAAAAAAAAAAAAAAAAAAAABjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEnAAAAAAAABk5AAAAAAAAAAAAAAAAAAAAAAAAuWgAAAAAAAAAAAAAAAAAAAAAAAA0bAAAAAAAAAAAAAAAAAAAAAAAABiNAAAAAAAAAAAAAAAAAAAAAAAA/J4AAAAAAAAAAAAAAAAAAAAAAABxkgAAAAAAAAAAAAAAAAAAAAAAALvfAAAAAAAAAAAAAAAAAAAAAAABkz0AAAAAAAAAAAAAAAAAAAAAAACOKgAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAARQwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5FQAAAAAAAAAAAAAAAAAAAAAAABqxAAAAAAAAAAAAAAAAAAAAAAAABAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfpgAAAAAAAAAAAAAAAAAAAAAAAANWEAAAAAAAAAAAAAAAAAAAAAAAF9ZQAAAAAAAAAAAAAAAAAAAAAAACPYAAAAAAAAAAAAAAAAAAAAAAAAAH4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "lastModifiedLedgerSeq": 1157
+                  },
+                  {
+                    "key": "AAAACAAAAAg=",
+                    "xdr": "AAAACAAAAAgAAAD6",
+                    "lastModifiedLedgerSeq": 276293
+                  },
+                  {
+                    "key": "AAAACAAAAAk=",
+                    "xdr": "AAAACAAAAAkAAQAA",
+                    "lastModifiedLedgerSeq": 1157
+                  },
+                  {
+                    "key": "AAAACAAAAAo=",
+                    "xdr": "AAAACAAAAAoAL3YAAABDgAAfpAAAAAAAAAAINwAAAAAAABBuAAAD6AAAAB4AAABAAAGGoAAAAAc=",
+                    "lastModifiedLedgerSeq": 1157
+                  },
+                  {
+                    "key": "AAAACAAAAAs=",
+                    "xdr": "AAAACAAAAAsAAABk",
+                    "lastModifiedLedgerSeq": 1157
+                  },
+                  {
+                    "key": "AAAACAAAAAw=",
+                    "xdr": "AAAACAAAAAwAAAAeAAAAAAAAAGQAAAAAAAAAZAAAAAAAAABkAAAAAAAAAGQAAAAAAAAAZAAAAAAAAABkAAAAAAAAAGQAAAAAAAAAZAAAAAAAAABkAAAAAAAAAGQAAAAAAAAAZAAAAAAAAABkAAAAAAAAAGQAAAAAAAAAZAAAAAAAAABkAAAAAAAAAGQAAAAAAAAAZAAAAAAAAABkAAAAAAAAAGQAAAAAAAAAZAAAAAAAAABkAAAAAAAAAGQAAAAAAAALxAAAAAAAAA0IAAAAAAAADkwAAAAAAAAOTAAAAAAAAA+QAAAAAAAAD5AAAAAAAAAPkAAAAAAAAA+Q",
+                    "lastModifiedLedgerSeq": 512
+                  },
+                  {
+                    "key": "AAAACAAAAA0=",
+                    "xdr": "AAAACAAAAA0AAAAGAAAAAQAAAAAAAAAA",
+                    "lastModifiedLedgerSeq": 575
+                  }
+                ],
+                "latestLedger": 1172233
+              }
+            }
+            """;
+        var ledgerKeyConfigSetting = new LedgerKey[]
+        {
+            new LedgerKeyConfigSetting(
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES)),
+            new LedgerKeyConfigSetting(
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_COMPUTE_V0)),
+            new LedgerKeyConfigSetting(
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_V0)),
+            new LedgerKeyConfigSetting(ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
+                .CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0)),
+            new LedgerKeyConfigSetting(
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_EVENTS_V0)),
+            new LedgerKeyConfigSetting(
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_BANDWIDTH_V0)),
+            new LedgerKeyConfigSetting(ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
+                .CONFIG_SETTING_CONTRACT_COST_PARAMS_CPU_INSTRUCTIONS)),
+            new LedgerKeyConfigSetting(ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
+                .CONFIG_SETTING_CONTRACT_COST_PARAMS_MEMORY_BYTES)),
+            new LedgerKeyConfigSetting(ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
+                .CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES)),
+            new LedgerKeyConfigSetting(ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
+                .CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES)),
+            new LedgerKeyConfigSetting(
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_STATE_ARCHIVAL)),
+            new LedgerKeyConfigSetting(ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
+                .CONFIG_SETTING_CONTRACT_EXECUTION_LANES)),
+            new LedgerKeyConfigSetting(
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW)),
+            new LedgerKeyConfigSetting(
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_EVICTION_ITERATOR))
+        };
+        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        var response = await sorobanServer.GetLedgerEntries(ledgerKeyConfigSetting);
+
+        Assert.IsNotNull(response);
+        var entries = response.LedgerEntries;
+        Assert.IsNotNull(entries);
+        Assert.AreEqual(1172233U, response.LatestLedger);
+        Assert.AreEqual(14, entries.Length);
+
+        var entry0 = entries[0] as ConfigSettingContractMaxSizeBytes;
+        Assert.IsNotNull(entry0);
+        Assert.AreEqual(65536U, entry0.InnerValue);
+
+        var entry1 = entries[1] as ConfigSettingContractCompute;
+        Assert.IsNotNull(entry1);
+        Assert.AreEqual(500000000L, entry1.LedgerMaxInstructions);
+        Assert.AreEqual(100000000L, entry1.TxMaxInstructions);
+        Assert.AreEqual(25L, entry1.FeeRatePerInstructionsIncrement);
+        Assert.AreEqual(41943040U, entry1.TxMemoryLimit);
+
+        var entry2 = entries[2] as ConfigSettingContractLedgerCost;
+        Assert.IsNotNull(entry2);
+        Assert.AreEqual(200U, entry2.LedgerMaxReadLedgerEntries);
+        Assert.AreEqual(500000U, entry2.LedgerMaxReadBytes);
+        Assert.AreEqual(125U, entry2.LedgerMaxWriteLedgerEntries);
+        Assert.AreEqual(70000U, entry2.LedgerMaxWriteBytes);
+        Assert.AreEqual(40U, entry2.TxMaxReadLedgerEntries);
+        Assert.AreEqual(200000U, entry2.TxMaxReadBytes);
+        Assert.AreEqual(25U, entry2.TxMaxWriteLedgerEntries);
+        Assert.AreEqual(66560U, entry2.TxMaxWriteBytes);
+        Assert.AreEqual(6250L, entry2.FeeReadLedgerEntry);
+        Assert.AreEqual(10000L, entry2.FeeWriteLedgerEntry);
+        Assert.AreEqual(1786L, entry2.FeeRead1Kb);
+        Assert.AreEqual(300000000L, entry2.BucketListTargetSizeBytes);
+        Assert.AreEqual(9836L, entry2.WriteFee1KbBucketListLow);
+        Assert.AreEqual(12116L, entry2.WriteFee1KbBucketListHigh);
+        Assert.AreEqual(5000U, entry2.BucketListWriteFeeGrowthFactor);
+
+        var entry3 = entries[3] as ConfigSettingContractHistoricalData;
+        Assert.IsNotNull(entry3);
+        Assert.AreEqual(16235L, entry3.FeeHistorical1Kb);
+
+        var entry4 = entries[4] as ConfigSettingContractEvents;
+        Assert.IsNotNull(entry4);
+        Assert.AreEqual(8198U, entry4.TxMaxContractEventsSizeBytes);
+        Assert.AreEqual(10000L, entry4.FeeContractEvents1Kb);
+
+        var entry5 = entries[5] as ConfigSettingContractBandwidth;
+        Assert.IsNotNull(entry5);
+        Assert.AreEqual(71680U, entry5.LedgerMaxTxsSizeBytes);
+        Assert.AreEqual(71680U, entry5.TxMaxSizeBytes);
+        Assert.AreEqual(1624L, entry5.FeeTxSize1Kb);
+
+        var entry6 = entries[6] as ConfigSettingContractCostParamsCpuInstructions;
+        Assert.IsNotNull(entry6);
+        var paramEntries = entry6.ParamEntries;
+        Assert.IsNotNull(paramEntries);
+        Assert.AreEqual(45, paramEntries.Length);
+
+        var pEntry0 = paramEntries[0];
+        Assert.IsNotNull(pEntry0);
+        Assert.IsInstanceOfType(pEntry0.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.AreEqual(4L, pEntry0.ConstTerm);
+        Assert.AreEqual(0L, pEntry0.LinearTerm);
+
+        var pEntry1 = paramEntries[1];
+        Assert.IsNotNull(pEntry1);
+        Assert.IsInstanceOfType(pEntry1.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.AreEqual(434L, pEntry1.ConstTerm);
+        Assert.AreEqual(16L, pEntry1.LinearTerm);
+
+        var pEntry33 = paramEntries[33];
+        Assert.IsNotNull(pEntry33);
+        Assert.IsInstanceOfType(pEntry33.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.AreEqual(43030L, pEntry33.ConstTerm);
+        Assert.AreEqual(0L, pEntry33.LinearTerm);
+
+        var pEntry44 = paramEntries[44];
+        Assert.IsNotNull(pEntry44);
+        Assert.IsInstanceOfType(pEntry44.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.AreEqual(3000906L, pEntry44.ConstTerm);
+        Assert.AreEqual(0L, pEntry44.LinearTerm);
+
+        var entry7 = entries[7] as ConfigSettingContractCostParamsMemoryBytes;
+        Assert.IsNotNull(entry7);
+        paramEntries = entry7.ParamEntries;
+        Assert.IsNotNull(paramEntries);
+        Assert.AreEqual(45, paramEntries.Length);
+
+        var pEntry3 = paramEntries[3];
+        Assert.IsNotNull(pEntry3);
+        Assert.IsInstanceOfType(pEntry3.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.AreEqual(0L, pEntry3.ConstTerm);
+        Assert.AreEqual(0L, pEntry3.LinearTerm);
+
+        var pEntry6 = paramEntries[6];
+        Assert.IsNotNull(pEntry6);
+        Assert.IsInstanceOfType(pEntry6.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.AreEqual(242L, pEntry6.ConstTerm);
+        Assert.AreEqual(384L, pEntry6.LinearTerm);
+
+        var pEntry12 = paramEntries[12];
+        Assert.IsNotNull(pEntry12);
+        Assert.IsInstanceOfType(pEntry12.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.AreEqual(69472L, pEntry12.ConstTerm);
+        Assert.AreEqual(1217L, pEntry12.LinearTerm);
+
+        var pEntry30 = paramEntries[30];
+        Assert.IsNotNull(pEntry30);
+        Assert.IsInstanceOfType(pEntry30.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.AreEqual(0L, pEntry30.ConstTerm);
+        Assert.AreEqual(103229L, pEntry30.LinearTerm);
+
+        var entry8 = entries[8] as ConfigSettingContractDataKeySizeBytes;
+        Assert.IsNotNull(entry8);
+        Assert.AreEqual(250U, entry8.InnerValue);
+
+        var entry9 = entries[9] as ConfigSettingContractDataEntrySizeBytes;
+        Assert.IsNotNull(entry9);
+        Assert.AreEqual(65536U, entry9.InnerValue);
+
+        var entry10 = entries[10] as StateArchivalSettings;
+        Assert.IsNotNull(entry10);
+        Assert.AreEqual(3110400U, entry10.MaxEntryTTL);
+        Assert.AreEqual(17280U, entry10.MinTemporaryTTL);
+        Assert.AreEqual(2073600U, entry10.MinPersistentTTL);
+        Assert.AreEqual(2103L, entry10.PersistentRentRateDenominator);
+        Assert.AreEqual(4206L, entry10.TempRentRateDenominator);
+        Assert.AreEqual(1000U, entry10.MaxEntriesToArchive);
+        Assert.AreEqual(30U, entry10.BucketListSizeWindowSampleSize);
+        Assert.AreEqual(64U, entry10.BucketListWindowSamplePeriod);
+        Assert.AreEqual(100000U, entry10.EvictionScanSize);
+        Assert.AreEqual(7U, entry10.StartingEvictionScanLevel);
+
+        var entry11 = entries[11] as ConfigSettingContractExecutionLanes;
+        Assert.IsNotNull(entry11);
+        Assert.AreEqual(100U, entry11.LedgerMaxTxCount);
+
+        var entry12 = entries[12] as ConfigSettingBucketListSizeWindow;
+        Assert.IsNotNull(entry12);
+        Assert.AreEqual(30, entry12.InnerValue.Length);
+        Assert.AreEqual(100UL, entry12.InnerValue[0]);
+        Assert.AreEqual(3012UL, entry12.InnerValue[22]);
+        Assert.AreEqual(3984UL, entry12.InnerValue[29]);
+
+        var entry13 = entries[13] as EvictionIterator;
+        Assert.IsNotNull(entry13);
+        Assert.AreEqual(6U, entry13.BucketListLevel);
+        Assert.AreEqual(true, entry13.IsCurrBucket);
+        Assert.AreEqual(0UL, entry13.BucketFileOffset);
+    }
+
+    [TestMethod]
+    public async Task TestGetLedgerEntriesOfTypeTtl()
+    {
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "fd6785fe-3535-4106-b979-b0f01e2ab541",
+              "error": {
+                "code": -32602,
+                "message": "ledger ttl entries cannot be queried directly"
+              }
+            }
+            """;
+
+        var ledgerKeyTtl = new LedgerKey[]
+        {
+            new LedgerKeyTTL("fsh67B45yRcC/gKPI2ky8EPbFMtc8y0fnjUDaI36OKc=")
+        };
+        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        var response = await sorobanServer.GetLedgerEntries(ledgerKeyTtl);
+        Assert.IsNull(response);
+    }
 }

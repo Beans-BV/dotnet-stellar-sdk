@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,11 @@ using StellarDotnetSdk.Transactions;
 
 namespace StellarDotnetSdk.Soroban;
 
+/// <summary>
+///     This class helps you to connect to a local or remote Soroban RPC server
+///     and send requests to the server. It parses the results and provides
+///     corresponding response objects.
+/// </summary>
 public class SorobanServer : IDisposable
 {
     private const string ClientNameHeader = "X-Client-Name";
@@ -24,6 +30,11 @@ public class SorobanServer : IDisposable
     private readonly bool _internalHttpClient;
     private readonly Uri _serverUri;
 
+    /// <summary>
+    ///     Constructs a new instance that will interact with the provided URL.
+    /// </summary>
+    /// <param name="uri">URL of the Soroban RPC server.</param>
+    /// <param name="httpClient">HttpClient instance to use for requests.</param>
     public SorobanServer(string uri, HttpClient httpClient)
     {
         _httpClient = httpClient;
@@ -31,25 +42,36 @@ public class SorobanServer : IDisposable
         _internalHttpClient = false;
     }
 
-    public SorobanServer(string uri)
-        : this(uri, CreateHttpClient())
+    /// <summary>
+    ///     Constructs a new instance that will interact with the provided URL.
+    /// </summary>
+    /// <param name="uri">URL of the Soroban RPC server.</param>
+    /// <param name="bearerToken">Bearer token in case the server requires it.</param>
+    public SorobanServer(string uri, string? bearerToken = null)
     {
+        _serverUri = new Uri(uri);
+        var httpClientHandler = new HttpClientHandler();
+        var httpClient = new HttpClient(httpClientHandler);
+        if (!string.IsNullOrEmpty(bearerToken))
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
+        _httpClient = httpClient;
         _internalHttpClient = true;
     }
 
     public void Dispose()
     {
-        if (_internalHttpClient)
-        {
-            _httpClient.Dispose();
-        }
+        if (_internalHttpClient) _httpClient.Dispose();
     }
 
+    [Obsolete(
+        "Pass your own HttpClient instance to SorobanServer(string uri, HttpClient httpClient) instead. Will be removed in the next major version.")]
     public static HttpClient CreateHttpClient()
     {
         return CreateHttpClient(new HttpClientHandler());
     }
 
+    [Obsolete(
+        "Pass your own HttpClient instance to SorobanServer(string uri, HttpClient httpClient) instead. Will be removed in the next major version.")]
     public static HttpClient CreateHttpClient(HttpMessageHandler handler)
     {
         var httpClient = new HttpClient(handler);
@@ -147,9 +169,7 @@ public class SorobanServer : IDisposable
         var response = await GetLedgerEntry(ledgerKeyAccount);
         if (response.LedgerEntries?.Length == 0 ||
             response.LedgerEntries?[0] is not LedgerEntryAccount ledgerEntryAccount)
-        {
             throw new AccountNotFoundException(accountId);
-        }
         return new Account(ledgerEntryAccount.Account.AccountId, ledgerEntryAccount.SequenceNumber);
     }
 
@@ -215,19 +235,17 @@ public class SorobanServer : IDisposable
     public Task<SimulateTransactionResponse> SimulateTransaction(Transaction transaction, uint? resourceConfig = null)
     {
         if (resourceConfig != null)
-        {
             return SendRequest<object, SimulateTransactionResponse>("simulateTransaction",
                 new
                 {
                     transaction = transaction.ToUnsignedEnvelopeXdrBase64(),
-                    resourceConfig = new { instructionLeeway = resourceConfig },
+                    resourceConfig = new { instructionLeeway = resourceConfig }
                 });
-        }
 
         return SendRequest<object, SimulateTransactionResponse>("simulateTransaction",
             new
             {
-                transaction = transaction.ToUnsignedEnvelopeXdrBase64(),
+                transaction = transaction.ToUnsignedEnvelopeXdrBase64()
             });
     }
 
