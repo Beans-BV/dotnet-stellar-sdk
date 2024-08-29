@@ -775,7 +775,7 @@ public class SCUint128 : SCVal
 public class SCInt128 : SCVal
 {
     /// <summary>
-    /// Constructs a new SCInt128 object from high and low parts.
+    ///     Constructs a new SCInt128 object from high and low parts.
     /// </summary>
     /// <param name="hi">High parts.</param>
     /// <param name="lo">Low parts.</param>
@@ -786,7 +786,7 @@ public class SCInt128 : SCVal
     }
 
     /// <summary>
-    /// Constructs a new SCInt128 object from a numeric string.
+    ///     Constructs a new SCInt128 object from a numeric string.
     /// </summary>
     /// <param name="input">A string represents a 128-bit signed integer.</param>
     public SCInt128(string input)
@@ -804,7 +804,7 @@ public class SCInt128 : SCVal
         Hi = high;
         Lo = low;
     }
-    
+
     public ulong Lo { get; set; }
     public long Hi { get; set; }
 

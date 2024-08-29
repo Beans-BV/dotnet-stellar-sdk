@@ -346,7 +346,7 @@ public class SorobanServerTest
         var ledgerKeyContractData = new LedgerKey[]
         {
             new LedgerKeyContractData(new SCContractId(HelloContractId), new SCLedgerKeyContractInstance(),
-                ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT))
+                ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT)),
         };
         var contractDataResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyContractData);
 
@@ -382,12 +382,12 @@ public class SorobanServerTest
         {
             Type = "diagnostic",
             ContractIds = [contractId],
-            Topics = [["*", new SCSymbol("hello").ToXdrBase64()]]
+            Topics = [["*", new SCSymbol("hello").ToXdrBase64()]],
         };
         var getEventsRequest = new GetEventsRequest
         {
             StartLedger = ledger,
-            Filters = [eventFilter]
+            Filters = [eventFilter],
         };
 
         var eventsResponse = await _sorobanServer.GetEvents(getEventsRequest);
@@ -400,7 +400,7 @@ public class SorobanServerTest
     {
         var ledgerKeyContractCodes = new LedgerKey[]
         {
-            new LedgerKeyContractCode(HelloContractWasmHash)
+            new LedgerKeyContractCode(HelloContractWasmHash),
         };
         var contractCodeResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyContractCodes);
         Assert.IsNotNull(contractCodeResponse.LatestLedger);
@@ -430,7 +430,7 @@ public class SorobanServerTest
         var ledgerKeyAccounts = new LedgerKey[]
         {
             new LedgerKeyAccount(accountId1),
-            new LedgerKeyAccount(accountId2)
+            new LedgerKeyAccount(accountId2),
         };
 
         const string json =
@@ -567,7 +567,9 @@ public class SorobanServerTest
 
         tx.SetSorobanTransactionData(simulateResponse.SorobanTransactionData);
         if (simulateResponse.SorobanAuthorization != null)
+        {
             tx.SetSorobanAuthorization(simulateResponse.SorobanAuthorization);
+        }
 
         Assert.IsNotNull(simulateResponse.MinResourceFee);
         tx.AddResourceFee(simulateResponse.MinResourceFee.Value);
@@ -736,10 +738,14 @@ public class SorobanServerTest
         var tx = new TransactionBuilder(account).AddOperation(restoreOperation).Build();
         LedgerKey key;
         if (StrKey.IsValidContractId(id))
+        {
             key = new LedgerKeyContractData(new SCContractId(id), new SCLedgerKeyContractInstance(),
                 ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT));
+        }
         else
+        {
             key = new LedgerKeyContractCode(id);
+        }
 
         tx.SetSorobanTransactionData(new SorobanTransactionData(key, false));
 
@@ -777,7 +783,7 @@ public class SorobanServerTest
         var tx = new TransactionBuilder(account).AddOperation(extendOperation).Build();
         var ledgerFootprint = new LedgerFootprint
         {
-            ReadOnly = new LedgerKey[] { new LedgerKeyContractCode(wasmHash) }
+            ReadOnly = new LedgerKey[] { new LedgerKeyContractCode(wasmHash) },
         };
 
         var resources = new SorobanResources(ledgerFootprint, 0, 0, 0);
@@ -837,7 +843,7 @@ public class SorobanServerTest
         var operation = new CreateClaimableBalanceOperation(new AssetTypeNative(), "100",
             new Claimant[]
             {
-                new(SourceAccountId, new ClaimPredicateUnconditional())
+                new(SourceAccountId, new ClaimPredicateUnconditional()),
             });
         var tx = new TransactionBuilder(account).AddOperation(operation).Build();
         tx.Sign(_sourceAccount);
@@ -922,7 +928,7 @@ public class SorobanServerTest
 
         var ledgerKeyData = new LedgerKey[]
         {
-            new LedgerKeyData(TargetAccountId, "passkey")
+            new LedgerKeyData(TargetAccountId, "passkey"),
         };
         var dataResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyData);
 
@@ -976,7 +982,7 @@ public class SorobanServerTest
 
         var ledgerKeyData = new LedgerKey[]
         {
-            new LedgerKeyOffer(SourceAccountId, offerId)
+            new LedgerKeyOffer(SourceAccountId, offerId),
         };
         var dataResponse = await _sorobanServer.GetLedgerEntries(ledgerKeyData);
 
@@ -1013,7 +1019,7 @@ public class SorobanServerTest
 
         var ledgerKeys = new LedgerKey[]
         {
-            new LedgerKeyClaimableBalance(claimableBalanceId)
+            new LedgerKeyClaimableBalance(claimableBalanceId),
         };
         var response = await _sorobanServer.GetLedgerEntries(ledgerKeys);
 
@@ -1057,7 +1063,7 @@ public class SorobanServerTest
 
         var ledgerKeys = new LedgerKey[]
         {
-            new LedgerKeyLiquidityPool(nativeAsset, _asset, 30)
+            new LedgerKeyLiquidityPool(nativeAsset, _asset, 30),
         };
         var response = await _sorobanServer.GetLedgerEntries(ledgerKeys);
 
@@ -1092,7 +1098,7 @@ public class SorobanServerTest
 
         var ledgerKeys = new LedgerKey[]
         {
-            new LedgerKeyTrustline(TargetAccountId, _asset)
+            new LedgerKeyTrustline(TargetAccountId, _asset),
         };
         var response = await _sorobanServer.GetLedgerEntries(ledgerKeys);
 
@@ -1188,7 +1194,7 @@ public class SorobanServerTest
             is LedgerKeyContractData
             {
                 Contract: SCContractId contractId,
-                Key: SCLedgerKeyContractInstance
+                Key: SCLedgerKeyContractInstance,
             } contractData)
         {
             Assert.AreEqual("CDU3PZ4LXVETIFVLS33RDXLD63JZ5GXS7PCV2DJ7BBT6EBPA2AB7YR5H", contractId.InnerValue);
@@ -1202,9 +1208,13 @@ public class SorobanServerTest
         }
 
         if (readOnly1 is LedgerKeyContractCode contractCode)
+        {
             Assert.AreEqual("8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuME=", Convert.ToBase64String(contractCode.Hash));
+        }
         else
+        {
             Assert.Fail();
+        }
 
         if (readWrite is LedgerKeyContractData { Contract: SCContractId contractId1, Key: SCVec vec } contractData1)
         {
@@ -1213,7 +1223,7 @@ public class SorobanServerTest
             Assert.IsTrue(vec.InnerValue[0] is SCSymbol { InnerValue: "Counter" });
             Assert.IsTrue(vec.InnerValue[1] is SCAccountId
             {
-                InnerValue: "GBMLPRFCZDZJPKUPHUSHCKA737GOZL7ERZLGGMJ6YGHBFJZ6ZKMKCZTM"
+                InnerValue: "GBMLPRFCZDZJPKUPHUSHCKA737GOZL7ERZLGGMJ6YGHBFJZ6ZKMKCZTM",
             });
             Assert.AreEqual(
                 ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT,
@@ -1773,7 +1783,7 @@ public class SorobanServerTest
             new LedgerKeyConfigSetting(
                 ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW)),
             new LedgerKeyConfigSetting(
-                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_EVICTION_ITERATOR))
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_EVICTION_ITERATOR)),
         };
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
         var response = await sorobanServer.GetLedgerEntries(ledgerKeyConfigSetting);
@@ -1944,7 +1954,7 @@ public class SorobanServerTest
 
         var ledgerKeyTtl = new LedgerKey[]
         {
-            new LedgerKeyTTL("fsh67B45yRcC/gKPI2ky8EPbFMtc8y0fnjUDaI36OKc=")
+            new LedgerKeyTTL("fsh67B45yRcC/gKPI2ky8EPbFMtc8y0fnjUDaI36OKc="),
         };
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 

@@ -13,7 +13,7 @@ public class TransactionInfo
     {
         NOT_FOUND,
         SUCCESS,
-        FAILED
+        FAILED,
     }
 
     public TransactionInfo(TransactionStatus status, long? ledger, long? createdAt, int? applicationOrder,
@@ -86,7 +86,10 @@ public class TransactionInfo
     {
         get
         {
-            if (Status != TransactionStatus.SUCCESS || ResultMetaXdr == null) return null;
+            if (Status != TransactionStatus.SUCCESS || ResultMetaXdr == null)
+            {
+                return null;
+            }
 
             var bytes = Convert.FromBase64String(ResultMetaXdr);
             var reader = new XdrDataInputStream(bytes);
@@ -102,7 +105,10 @@ public class TransactionInfo
     {
         get
         {
-            if (ResultMetaXdr == null) return null;
+            if (ResultMetaXdr == null)
+            {
+                return null;
+            }
             try
             {
                 return Soroban_TransactionMetaV3.FromXdrBase64(ResultMetaXdr);
@@ -118,7 +124,10 @@ public class TransactionInfo
     {
         get
         {
-            if (ResultValue is SCBytes bytes) return Convert.ToHexString(bytes.InnerValue);
+            if (ResultValue is SCBytes bytes)
+            {
+                return Convert.ToHexString(bytes.InnerValue);
+            }
 
             return null;
         }
@@ -129,7 +138,9 @@ public class TransactionInfo
         get
         {
             if (ResultValue is SCContractId contract)
+            {
                 return contract.InnerValue;
+            }
             return null;
         }
     }
