@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Numerics;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Xdr;
 using Int32 = StellarDotnetSdk.Xdr.Int32;
@@ -773,10 +774,35 @@ public class SCUint128 : SCVal
 
 public class SCInt128 : SCVal
 {
-    public SCInt128(ulong lo, long hi)
+    /// <summary>
+    ///     Constructs a new SCInt128 object from high and low parts.
+    /// </summary>
+    /// <param name="hi">High parts.</param>
+    /// <param name="lo">Low parts.</param>
+    public SCInt128(long hi, ulong lo)
     {
         Hi = hi;
         Lo = lo;
+    }
+
+    /// <summary>
+    ///     Constructs a new SCInt128 object from a numeric string.
+    /// </summary>
+    /// <param name="input">A string represents a 128-bit signed integer.</param>
+    public SCInt128(string input)
+    {
+        if (!BigInteger.TryParse(input, out var bigInt))
+        {
+            throw new ArgumentException("Invalid numeric string.", nameof(input));
+        }
+        if (bigInt < BigInteger.MinusOne << 127 || bigInt > (BigInteger.One << 127) - 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(input), "Value must be between -2^127 and 2^127 - 1.");
+        }
+        var low = (ulong)(bigInt & ulong.MaxValue);
+        var high = (long)(bigInt >> 64);
+        Hi = high;
+        Lo = low;
     }
 
     public ulong Lo { get; set; }
@@ -809,7 +835,7 @@ public class SCInt128 : SCVal
 
     public static SCInt128 FromXdr(Int128Parts xdrInt128Parts)
     {
-        return new SCInt128(xdrInt128Parts.Lo.InnerValue, xdrInt128Parts.Hi.InnerValue);
+        return new SCInt128(xdrInt128Parts.Hi.InnerValue, xdrInt128Parts.Lo.InnerValue);
     }
 
     public static SCInt128 FromSCValXdr(Xdr.SCVal xdrVal)
@@ -819,7 +845,7 @@ public class SCInt128 : SCVal
             throw new ArgumentException("Not an SCInt128", nameof(xdrVal));
         }
 
-        return new SCInt128(xdrVal.I128.Lo.InnerValue, xdrVal.I128.Hi.InnerValue);
+        return new SCInt128(xdrVal.I128.Hi.InnerValue, xdrVal.I128.Lo.InnerValue);
     }
 }
 

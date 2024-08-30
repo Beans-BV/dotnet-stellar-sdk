@@ -341,9 +341,9 @@ public class ScValTest
     }
 
     [TestMethod]
-    public void TestScInt128()
+    public void TestScInt128FromParts()
     {
-        var scInt128 = new SCInt128(18446744073709551615, -9223372036854775807);
+        var scInt128 = new SCInt128(-9223372036854775807, 18446744073709551615);
 
         // Act
         var scInt128XdrBase64 = scInt128.ToXdrBase64();
@@ -352,6 +352,41 @@ public class ScValTest
         // Assert
         Assert.AreEqual(scInt128.Lo, fromXdrBase64ScInt128.Lo);
         Assert.AreEqual(scInt128.Hi, fromXdrBase64ScInt128.Hi);
+    }
+
+    [TestMethod]
+    public void TestScInt128ConstructedFromValidString()
+    {
+        var scInt128FromString = new SCInt128("18446744073709551616");
+
+        var scInt128FromParts = new SCInt128(1, 0);
+        // Act
+        var scInt128XdrBase64 = scInt128FromString.ToXdrBase64();
+        var fromXdrBase64ScInt128 = (SCInt128)SCVal.FromXdrBase64(scInt128XdrBase64);
+
+        // Assert
+        Assert.AreEqual(scInt128FromString.Lo, fromXdrBase64ScInt128.Lo);
+        Assert.AreEqual(scInt128FromString.Hi, fromXdrBase64ScInt128.Hi);
+
+        Assert.AreEqual(scInt128FromString.Lo, scInt128FromParts.Lo);
+        Assert.AreEqual(scInt128FromString.Hi, scInt128FromParts.Hi);
+    }
+
+    [TestMethod]
+    public void TestScInt128ConstructedFromTooBigNumericString()
+    {
+        var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+        {
+            _ = new SCInt128("170141183460469231731687303715884105728");
+        });
+        Assert.IsTrue(ex.Message.Contains("Value must be between -2^127 and 2^127 - 1."));
+    }
+
+    [TestMethod]
+    public void TestScInt128ConstructedFromInvalidNumericString()
+    {
+        var ex = Assert.ThrowsException<ArgumentException>(() => { _ = new SCInt128("9,223,372,036,854,775,807"); });
+        Assert.IsTrue(ex.Message.Contains("Invalid numeric string."));
     }
 
     [TestMethod]

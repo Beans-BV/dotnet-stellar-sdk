@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
 using stellar_dotnet_sdk;
@@ -272,11 +273,15 @@ public class Server : IDisposable
         }
     }
 
+    [Obsolete(
+        "Pass your own HttpClient instance to Server(string uri, HttpClient httpClient) instead. Otherwise call Server(string uri). Will be removed in the next major version.")]
     public static HttpClient CreateHttpClient()
     {
         return CreateHttpClient(new HttpClientHandler());
     }
 
+    [Obsolete(
+        "Pass your own HttpClient instance to Server(string uri, HttpClient httpClient) instead. Otherwise call Server(string uri). Will be removed in the next major version.")]
     public static HttpClient CreateHttpClient(HttpMessageHandler handler)
     {
         var httpClient = new HttpClient(handler);
@@ -286,6 +291,18 @@ public class Server : IDisposable
         return httpClient;
     }
 
+    /// <summary>
+    ///     Constructs a new instance that will interact with the provided URL.
+    /// </summary>
+    /// <param name="uri">URL of the Horizon server.</param>
+    /// <param name="bearerToken">Bearer token in case the server requires it.</param>
+    public Server(string uri, string? bearerToken = null)
+    {
+        _serverUri = new Uri(uri);
+        _httpClient = new DefaultStellarSdkHttpClient(bearerToken);
+        _internalHttpClient = true;
+    }
+    
     private Transaction GetTransactionToCheck(TransactionBase transaction)
     {
         switch (transaction)
