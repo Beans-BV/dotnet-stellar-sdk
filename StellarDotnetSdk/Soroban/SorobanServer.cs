@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,13 +49,7 @@ public class SorobanServer : IDisposable
     public SorobanServer(string uri, string? bearerToken = null)
     {
         _serverUri = new Uri(uri);
-        var httpClientHandler = new HttpClientHandler();
-        var httpClient = new HttpClient(httpClientHandler);
-        if (!string.IsNullOrEmpty(bearerToken))
-        {
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
-        }
-        _httpClient = httpClient;
+        _httpClient = new DefaultHttpClient(bearerToken);
         _internalHttpClient = true;
     }
 
@@ -69,14 +62,14 @@ public class SorobanServer : IDisposable
     }
 
     [Obsolete(
-        "Pass your own HttpClient instance to SorobanServer(string uri, HttpClient httpClient) instead. Will be removed in the next major version.")]
+        "Pass your own HttpClient instance to SorobanServer(string uri, HttpClient httpClient) instead. Otherwise call SorobanServer(string uri). Will be removed in the next major version.")]
     public static HttpClient CreateHttpClient()
     {
         return CreateHttpClient(new HttpClientHandler());
     }
 
     [Obsolete(
-        "Pass your own HttpClient instance to SorobanServer(string uri, HttpClient httpClient) instead. Will be removed in the next major version.")]
+        "Pass your own HttpClient instance to SorobanServer(string uri, HttpClient httpClient) instead. Otherwise call SorobanServer(string uri). Will be removed in the next major version.")]
     public static HttpClient CreateHttpClient(HttpMessageHandler handler)
     {
         var httpClient = new HttpClient(handler);
