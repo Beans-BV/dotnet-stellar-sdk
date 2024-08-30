@@ -49,7 +49,7 @@ public class SorobanServer : IDisposable
     public SorobanServer(string uri, string? bearerToken = null)
     {
         _serverUri = new Uri(uri);
-        _httpClient = new DefaultHttpClient(bearerToken);
+        _httpClient = new DefaultStellarSdkHttpClient(bearerToken);
         _internalHttpClient = true;
     }
 
