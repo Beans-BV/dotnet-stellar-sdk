@@ -49,7 +49,7 @@ public class ChangeTrustOperation : Operation
     /// </summary>
     /// <param name="assetA">Asset A.</param>
     /// <param name="assetB">Asset B.</param>
-    /// <param name="liquidityPoolFee">The fee for the liquidity pool</param>
+    /// <param name="feeBP">The fee in base points.</param>
     /// <param name="limit">
     ///     The limit of the trustline.
     ///     <p>Leave empty to default to the max int64.</p>
@@ -57,10 +57,10 @@ public class ChangeTrustOperation : Operation
     /// </param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     [Obsolete("Use the constructor with the ChangeTrustAsset parameter instead.")]
-    public ChangeTrustOperation(Asset assetA, Asset assetB, int? liquidityPoolFee = null, string? limit = null, IAccountId? sourceAccount = null) :
+    public ChangeTrustOperation(Asset assetA, Asset assetB, int? feeBP = null, string? limit = null, IAccountId? sourceAccount = null) :
         base(sourceAccount)
     {
-        Asset = ChangeTrustAsset.Create(assetA, assetB, liquidityPoolFee ?? LiquidityPoolParameters.Fee);
+        Asset = ChangeTrustAsset.Create(assetA, assetB, feeBP ?? LiquidityPoolParameters.Fee);
         Limit = limit ?? MaxLimit;
     }
 
