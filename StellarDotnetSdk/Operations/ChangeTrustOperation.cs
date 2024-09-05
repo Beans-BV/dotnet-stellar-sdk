@@ -49,15 +49,35 @@ public class ChangeTrustOperation : Operation
     /// </summary>
     /// <param name="assetA">Asset A.</param>
     /// <param name="assetB">Asset B.</param>
+    /// <param name="liquidityPoolFee">The fee for the liquidity pool</param>
     /// <param name="limit">
     ///     The limit of the trustline.
     ///     <p>Leave empty to default to the max int64.</p>
     ///     <p>Set to 0 to remove the trust line.</p>
     /// </param>
-    public ChangeTrustOperation(Asset assetA, Asset assetB, string? limit = null, IAccountId? sourceAccount = null) :
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
+    [Obsolete("Use the constructor with the ChangeTrustAsset parameter instead.")]
+    public ChangeTrustOperation(Asset assetA, Asset assetB, int? liquidityPoolFee = null, string? limit = null, IAccountId? sourceAccount = null) :
         base(sourceAccount)
     {
-        Asset = ChangeTrustAsset.Create(assetA, assetB, LiquidityPoolParameters.Fee);
+        Asset = ChangeTrustAsset.Create(assetA, assetB, liquidityPoolFee ?? LiquidityPoolParameters.Fee);
+        Limit = limit ?? MaxLimit;
+    }
+
+    /// <summary>
+    ///   Constructs a new <c>ChangeTrustOperation</c> for Liquidity pool shares type with the default fee.
+    /// </summary>
+    /// <param name="changeTrustAsset">The Change Trust Asset</param>
+    /// <param name="limit">
+    ///     The limit of the trustline.
+    ///     <p>Leave empty to default to the max int64.</p>
+    ///     <p>Set to 0 to remove the trust line.</p>
+    /// </param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
+    public ChangeTrustOperation(ChangeTrustAsset changeTrustAsset, string? limit = null, IAccountId? sourceAccount = null) :
+        base(sourceAccount)
+    {
+        Asset = changeTrustAsset;
         Limit = limit ?? MaxLimit;
     }
 
@@ -99,7 +119,7 @@ public class ChangeTrustOperation : Operation
                 var parameters =
                     (LiquidityPoolConstantProductParameters)liquidityPoolShareChangeTrustAsset.Parameters;
                 return new ChangeTrustOperation(
-                    parameters.AssetA, parameters.AssetB, Amount.FromXdr(changeTrustOp.Limit.InnerValue)
+                    parameters.AssetA, parameters.AssetB, parameters.Fee, Amount.FromXdr(changeTrustOp.Limit.InnerValue)
                 );
             default:
                 throw new ArgumentOutOfRangeException();
