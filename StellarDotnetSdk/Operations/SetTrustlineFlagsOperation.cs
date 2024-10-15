@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Operations;
 ///     Allows issuing account to configure authorization and trustline flags to an asset.
 ///     See:
 ///     <a
-///         href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#set-trustline-flags">
+///         href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#set-trustline-flags">
 ///         Set trustline flags
 ///     </a>
 /// </summary>

@@ -8,7 +8,10 @@ namespace StellarDotnetSdk.Xdr;
 //  union SCEnvMetaEntry switch (SCEnvMetaKind kind)
 //  {
 //  case SC_ENV_META_KIND_INTERFACE_VERSION:
-//      uint64 interfaceVersion;
+//      struct {
+//          uint32 protocol;
+//          uint32 preRelease;
+//      } interfaceVersion;
 //  };
 
 //  ===========================================================================
@@ -16,7 +19,7 @@ public class SCEnvMetaEntry
 {
     public SCEnvMetaKind Discriminant { get; set; } = new();
 
-    public Uint64 InterfaceVersion { get; set; }
+    public SCEnvMetaEntryInterfaceVersion InterfaceVersion { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SCEnvMetaEntry encodedSCEnvMetaEntry)
     {
@@ -24,7 +27,7 @@ public class SCEnvMetaEntry
         switch (encodedSCEnvMetaEntry.Discriminant.InnerValue)
         {
             case SCEnvMetaKind.SCEnvMetaKindEnum.SC_ENV_META_KIND_INTERFACE_VERSION:
-                Uint64.Encode(stream, encodedSCEnvMetaEntry.InterfaceVersion);
+                SCEnvMetaEntryInterfaceVersion.Encode(stream, encodedSCEnvMetaEntry.InterfaceVersion);
                 break;
         }
     }
@@ -37,10 +40,30 @@ public class SCEnvMetaEntry
         switch (decodedSCEnvMetaEntry.Discriminant.InnerValue)
         {
             case SCEnvMetaKind.SCEnvMetaKindEnum.SC_ENV_META_KIND_INTERFACE_VERSION:
-                decodedSCEnvMetaEntry.InterfaceVersion = Uint64.Decode(stream);
+                decodedSCEnvMetaEntry.InterfaceVersion = SCEnvMetaEntryInterfaceVersion.Decode(stream);
                 break;
         }
-
         return decodedSCEnvMetaEntry;
+    }
+
+    public class SCEnvMetaEntryInterfaceVersion
+    {
+        public Uint32 Protocol { get; set; }
+        public Uint32 PreRelease { get; set; }
+
+        public static void Encode(XdrDataOutputStream stream,
+            SCEnvMetaEntryInterfaceVersion encodedSCEnvMetaEntryInterfaceVersion)
+        {
+            Uint32.Encode(stream, encodedSCEnvMetaEntryInterfaceVersion.Protocol);
+            Uint32.Encode(stream, encodedSCEnvMetaEntryInterfaceVersion.PreRelease);
+        }
+
+        public static SCEnvMetaEntryInterfaceVersion Decode(XdrDataInputStream stream)
+        {
+            var decodedSCEnvMetaEntryInterfaceVersion = new SCEnvMetaEntryInterfaceVersion();
+            decodedSCEnvMetaEntryInterfaceVersion.Protocol = Uint32.Decode(stream);
+            decodedSCEnvMetaEntryInterfaceVersion.PreRelease = Uint32.Decode(stream);
+            return decodedSCEnvMetaEntryInterfaceVersion;
+        }
     }
 }

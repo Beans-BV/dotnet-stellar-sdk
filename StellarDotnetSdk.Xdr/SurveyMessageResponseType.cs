@@ -10,7 +10,8 @@ namespace StellarDotnetSdk.Xdr;
 //  enum SurveyMessageResponseType
 //  {
 //      SURVEY_TOPOLOGY_RESPONSE_V0 = 0,
-//      SURVEY_TOPOLOGY_RESPONSE_V1 = 1
+//      SURVEY_TOPOLOGY_RESPONSE_V1 = 1,
+//      SURVEY_TOPOLOGY_RESPONSE_V2 = 2
 //  };
 
 //  ===========================================================================
@@ -20,6 +21,7 @@ public class SurveyMessageResponseType
     {
         SURVEY_TOPOLOGY_RESPONSE_V0 = 0,
         SURVEY_TOPOLOGY_RESPONSE_V1 = 1,
+        SURVEY_TOPOLOGY_RESPONSE_V2 = 2,
     }
 
     public SurveyMessageResponseTypeEnum InnerValue { get; set; }
@@ -39,6 +41,7 @@ public class SurveyMessageResponseType
         {
             case 0: return Create(SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V0);
             case 1: return Create(SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V1);
+            case 2: return Create(SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V2);
             default:
                 throw new Exception("Unknown enum value: " + value);
         }

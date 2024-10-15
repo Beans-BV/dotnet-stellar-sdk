@@ -22,16 +22,6 @@ public class OperationsRequestBuilderTest
     }
 
     [TestMethod]
-    public void TestOperationDetails()
-    {
-        var server = new Server("https://horizon-testnet.stellar.org");
-        var uri = server.Operations
-            .Operation(77309415424)
-            .BuildUri();
-        Assert.AreEqual("https://horizon-testnet.stellar.org/operations/77309415424", uri.ToString());
-    }
-
-    [TestMethod]
     public void TestForAccount()
     {
         var server = new Server("https://horizon-testnet.stellar.org");

@@ -8,7 +8,8 @@ namespace StellarDotnetSdk.Operations;
 ///     Claims a ClaimableBalanceEntry that corresponds to the BalanceID and adds the amount of an asset on the entry to
 ///     the source account.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#claim-claimable-balance">
+///     <a
+///         href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#claim-claimable-balance">
 ///         Claim claimable balance
 ///     </a>
 /// </summary>

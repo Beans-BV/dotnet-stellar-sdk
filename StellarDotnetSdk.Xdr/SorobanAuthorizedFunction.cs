@@ -9,8 +9,18 @@ namespace StellarDotnetSdk.Xdr;
 //  {
 //  case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN:
 //      InvokeContractArgs contractFn;
+//  // This variant of auth payload for creating new contract instances
+//  // doesn't allow specifying the constructor arguments, creating contracts
+//  // with constructors that take arguments is only possible by authorizing
+//  // `SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN` 
+//  // (protocol 22+).
 //  case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN:
 //      CreateContractArgs createContractHostFn;
+//  // This variant of auth payload for creating new contract instances
+//  // is only accepted in and after protocol 22. It allows authorizing the
+//  // contract constructor arguments.
+//  case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN:
+//      CreateContractArgsV2 createContractV2HostFn;
 //  };
 
 //  ===========================================================================
@@ -20,6 +30,7 @@ public class SorobanAuthorizedFunction
 
     public InvokeContractArgs ContractFn { get; set; }
     public CreateContractArgs CreateContractHostFn { get; set; }
+    public CreateContractArgsV2 CreateContractV2HostFn { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SorobanAuthorizedFunction encodedSorobanAuthorizedFunction)
     {
@@ -33,6 +44,10 @@ public class SorobanAuthorizedFunction
             case SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum
                 .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN:
                 CreateContractArgs.Encode(stream, encodedSorobanAuthorizedFunction.CreateContractHostFn);
+                break;
+            case SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum
+                .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN:
+                CreateContractArgsV2.Encode(stream, encodedSorobanAuthorizedFunction.CreateContractV2HostFn);
                 break;
         }
     }
@@ -52,8 +67,11 @@ public class SorobanAuthorizedFunction
                 .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN:
                 decodedSorobanAuthorizedFunction.CreateContractHostFn = CreateContractArgs.Decode(stream);
                 break;
+            case SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum
+                .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN:
+                decodedSorobanAuthorizedFunction.CreateContractV2HostFn = CreateContractArgsV2.Decode(stream);
+                break;
         }
-
         return decodedSorobanAuthorizedFunction;
     }
 }

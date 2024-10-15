@@ -4,7 +4,7 @@
 ///     Transaction status and network state. The result will include if the transaction was successfully enqueued, and
 ///     information about the current ledger.
 /// </summary>
-/// <seealso href="https://soroban.stellar.org/api/methods/sendTransaction" />
+/// <seealso href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction" />
 public class SendTransactionResponse
 {
     public enum SendTransactionStatus
@@ -15,8 +15,13 @@ public class SendTransactionResponse
         ERROR,
     }
 
-    public SendTransactionResponse(string? errorResultXdr, string hash, long? latestLedger,
-        long? latestLedgerCloseTime, SendTransactionStatus status)
+    public SendTransactionResponse(
+        string? errorResultXdr,
+        string hash,
+        long? latestLedger,
+        long? latestLedgerCloseTime,
+        SendTransactionStatus status
+    )
     {
         ErrorResultXdr = errorResultXdr;
         Hash = hash;

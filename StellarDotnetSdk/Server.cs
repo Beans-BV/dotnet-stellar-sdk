@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
 using stellar_dotnet_sdk;
@@ -41,6 +40,18 @@ public class Server : IDisposable
         _internalHttpClient = true;
     }
 
+    /// <summary>
+    ///     Constructs a new instance that will interact with the provided URL.
+    /// </summary>
+    /// <param name="uri">URL of the Horizon server.</param>
+    /// <param name="bearerToken">Bearer token in case the server requires it.</param>
+    public Server(string uri, string? bearerToken = null)
+    {
+        _serverUri = new Uri(uri);
+        _httpClient = new DefaultStellarSdkHttpClient(bearerToken);
+        _internalHttpClient = true;
+    }
+
     public AccountsRequestBuilder Accounts => new(_serverUri, _httpClient);
 
     public AssetsRequestBuilder Assets => new(_serverUri, _httpClient);
@@ -59,9 +70,6 @@ public class Server : IDisposable
     public OrderBookRequestBuilder OrderBook => new(_serverUri, _httpClient);
 
     public TradesRequestBuilder Trades => new(_serverUri, _httpClient);
-
-    [Obsolete("Paths is deprecated in Horizon v1.0.0. Use PathStrictReceive.")]
-    public PathsRequestBuilder Paths => new(_serverUri, _httpClient);
 
     public PathStrictSendRequestBuilder PathStrictSend => new(_serverUri, _httpClient);
 
@@ -101,6 +109,7 @@ public class Server : IDisposable
     ///     Submit a transaction to the network.
     ///     This method will check if any of the destination accounts require a memo.
     /// </summary>
+    /// <param name="transaction">A signed transaction object.</param>
     public Task<SubmitTransactionResponse?> SubmitTransaction(Transaction transaction)
     {
         var options = new SubmitTransactionOptions { SkipMemoRequiredCheck = false };
@@ -133,8 +142,10 @@ public class Server : IDisposable
         return SubmitTransaction(feeBump.ToEnvelopeXdrBase64(), options);
     }
 
-    public Task<SubmitTransactionResponse?> SubmitTransaction(FeeBumpTransaction feeBump,
-        SubmitTransactionOptions options)
+    public Task<SubmitTransactionResponse?> SubmitTransaction(
+        FeeBumpTransaction feeBump,
+        SubmitTransactionOptions options
+    )
     {
         options.FeeBumpTransaction = true;
         return SubmitTransaction(feeBump.ToEnvelopeXdrBase64(), options);
@@ -147,7 +158,45 @@ public class Server : IDisposable
     /// </summary>
     public async Task<SubmitTransactionResponse?> SubmitTransaction(
         string transactionEnvelopeBase64,
-        SubmitTransactionOptions options)
+        SubmitTransactionOptions options
+    )
+    {
+        return await SubmitTransaction<SubmitTransactionResponse>(
+            transactionEnvelopeBase64,
+            options,
+            "transactions"
+        );
+    }
+
+    /// <summary>
+    ///     This endpoint submits transactions to the Stellar network asynchronously.
+    ///     It is designed to allow users to submit transactions without blocking them while waiting for a response from
+    ///     Horizon. At the same time, it also provides clear response status codes from stellar-core to help understand the
+    ///     status of the submitted transaction.
+    /// </summary>
+    /// <param name="transactionEnvelopeBase64"></param>
+    /// <returns></returns>
+    /// <exception cref="ServiceUnavailableException"></exception>
+    /// <exception cref="TooManyRequestsException"></exception>
+    /// <exception cref="SubmitTransactionTimeoutResponseException"></exception>
+    /// <exception cref="SubmitTransactionUnknownResponseException"></exception>
+    public async Task<SubmitTransactionAsyncResponse?> SubmitTransactionAsync(
+        string transactionEnvelopeBase64,
+        SubmitTransactionOptions options
+    )
+    {
+        return await SubmitTransaction<SubmitTransactionAsyncResponse>(
+            transactionEnvelopeBase64,
+            options,
+            "transactions_async"
+        );
+    }
+
+    private async Task<T?> SubmitTransaction<T>(
+        string transactionEnvelopeBase64,
+        SubmitTransactionOptions options,
+        string endpoint
+    ) where T : class
     {
         if (!options.SkipMemoRequiredCheck)
         {
@@ -161,22 +210,19 @@ public class Server : IDisposable
             {
                 tx = Transaction.FromEnvelopeXdr(transactionEnvelopeBase64);
             }
-
             await CheckMemoRequired(tx);
         }
-
         var transactionUriBuilder = new UriBuilder(_serverUri);
 
         var path = _serverUri.AbsolutePath.TrimEnd('/');
-        transactionUriBuilder.SetPath($"{path}/transactions");
+        transactionUriBuilder.SetPath($"{path}/{endpoint}");
 
         var paramsPairs = new List<KeyValuePair<string, string>>
         {
             new("tx", transactionEnvelopeBase64),
         };
 
-        var response =
-            await _httpClient.PostAsync(transactionUriBuilder.Uri, new FormUrlEncodedContent(paramsPairs.ToArray()));
+        var response = await _httpClient.PostAsync(transactionUriBuilder.Uri, new FormUrlEncodedContent(paramsPairs));
         var responseString = await response.Content.ReadAsStringAsync();
 
         if (options.EnsureSuccess && !response.IsSuccessStatusCode)
@@ -184,31 +230,85 @@ public class Server : IDisposable
             throw new ConnectionErrorException(
                 $"Status code ({response.StatusCode}) is not success.{(!string.IsNullOrEmpty(responseString) ? " Content: " + responseString : "")}");
         }
+        return HandleResponse<T>(response, responseString);
+    }
 
+    /// <summary>
+    ///     Submit a transaction asynchronously to the network.
+    ///     This method will check if any of the destination accounts require a memo.
+    /// </summary>
+    /// <param name="transaction">A signed transaction object.</param>
+    public Task<SubmitTransactionAsyncResponse?> SubmitTransactionAsync(Transaction transaction)
+    {
+        var options = new SubmitTransactionOptions { SkipMemoRequiredCheck = false };
+        return SubmitTransactionAsync(transaction.ToEnvelopeXdrBase64(), options);
+    }
+
+    /// <summary>
+    ///     Submit a transaction asynchronously to the network.
+    ///     This method will check if any of the destination accounts require a memo.  Change the SkipMemoRequiredCheck
+    ///     options to change this behaviour.
+    /// </summary>
+    public Task<SubmitTransactionAsyncResponse?> SubmitTransactionAsync(
+        Transaction transaction,
+        SubmitTransactionOptions options
+    )
+    {
+        return SubmitTransactionAsync(transaction.ToEnvelopeXdrBase64(), options);
+    }
+
+    /// <summary>
+    ///     Submit a transaction asynchronously to the network.
+    ///     This method will check if any of the destination accounts require a memo.
+    /// </summary>
+    public Task<SubmitTransactionAsyncResponse?> SubmitTransactionAsync(string transactionEnvelopeBase64)
+    {
+        var options = new SubmitTransactionOptions { SkipMemoRequiredCheck = false };
+        return SubmitTransactionAsync(transactionEnvelopeBase64, options);
+    }
+
+    public Task<SubmitTransactionAsyncResponse?> SubmitTransactionAsync(FeeBumpTransaction feeBump)
+    {
+        var options = new SubmitTransactionOptions { FeeBumpTransaction = true };
+        return SubmitTransactionAsync(feeBump.ToEnvelopeXdrBase64(), options);
+    }
+
+    public Task<SubmitTransactionAsyncResponse?> SubmitTransactionAsync(
+        FeeBumpTransaction feeBump,
+        SubmitTransactionOptions options
+    )
+    {
+        options.FeeBumpTransaction = true;
+        return SubmitTransactionAsync(feeBump.ToEnvelopeXdrBase64(), options);
+    }
+
+    private T? HandleResponse<T>(HttpResponseMessage response, string responseString) where T : class
+    {
         switch (response.StatusCode)
         {
             case HttpStatusCode.OK:
             case HttpStatusCode.BadRequest:
-                var submitTransactionResponse = JsonSingleton.GetInstance<SubmitTransactionResponse>(
-                    responseString);
-                return submitTransactionResponse;
+                return JsonSingleton.GetInstance<T>(responseString);
             case HttpStatusCode.ServiceUnavailable:
-                throw new ServiceUnavailableException(
-                    response.Headers.Contains("Retry-After")
-                        ? response.Headers.GetValues("Retry-After").First()
-                        : null
-                );
             case HttpStatusCode.TooManyRequests:
-                throw new TooManyRequestsException(
-                    response.Headers.Contains("Retry-After")
-                        ? response.Headers.GetValues("Retry-After").First()
-                        : null
-                );
+                throw CreateExceptionWithRetryInfo(response);
             case HttpStatusCode.GatewayTimeout:
                 throw new SubmitTransactionTimeoutResponseException();
             default:
                 throw new SubmitTransactionUnknownResponseException(response.StatusCode, responseString);
         }
+    }
+
+    private static Exception CreateExceptionWithRetryInfo(HttpResponseMessage response)
+    {
+        const string retryAfterHeader = "Retry-After";
+        var retryAfter = response.Headers.Contains(retryAfterHeader)
+            ? response.Headers.GetValues(retryAfterHeader).First()
+            : null;
+
+        return response.StatusCode == HttpStatusCode.ServiceUnavailable
+            ? new ServiceUnavailableException(retryAfter)
+            : new TooManyRequestsException(retryAfter);
     }
 
     /// <summary>
@@ -291,18 +391,6 @@ public class Server : IDisposable
         return httpClient;
     }
 
-    /// <summary>
-    ///     Constructs a new instance that will interact with the provided URL.
-    /// </summary>
-    /// <param name="uri">URL of the Horizon server.</param>
-    /// <param name="bearerToken">Bearer token in case the server requires it.</param>
-    public Server(string uri, string? bearerToken = null)
-    {
-        _serverUri = new Uri(uri);
-        _httpClient = new DefaultStellarSdkHttpClient(bearerToken);
-        _internalHttpClient = true;
-    }
-    
     private Transaction GetTransactionToCheck(TransactionBase transaction)
     {
         switch (transaction)

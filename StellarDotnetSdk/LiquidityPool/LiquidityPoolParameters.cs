@@ -34,5 +34,5 @@ public abstract class LiquidityPoolParameters
 
     public abstract Xdr.LiquidityPoolParameters ToXdr();
 
-    public abstract LiquidityPoolID GetID();
+    public abstract LiquidityPoolId GetID();
 }

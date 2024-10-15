@@ -55,14 +55,14 @@ public class InvokeHostFunctionOperationTest
     {
         var salt = new byte[32];
         RandomNumberGenerator.Create().GetBytes(salt);
-        var operation = CreateContractOperation.FromAddress(WasmHash, _accountAddress.InnerValue, salt);
+        var operation = CreateContractOperation.FromAddress(WasmHash, _accountAddress.InnerValue, [], salt);
 
         // Act
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
 
-        var contractIdPreimage = (ContractIDAddressPreimage)operation.HostFunction.ContractIDPreimage;
-        var decodedContractIdPreimage = (ContractIDAddressPreimage)decodedOperation.HostFunction.ContractIDPreimage;
+        var contractIdPreimage = (ContractIdAddressPreimage)operation.HostFunction.ContractIdPreimage;
+        var decodedContractIdPreimage = (ContractIdAddressPreimage)decodedOperation.HostFunction.ContractIdPreimage;
 
         var address = (SCAccountId)contractIdPreimage.Address;
         var decodedAddress = (SCAccountId)decodedContractIdPreimage.Address;
@@ -83,14 +83,15 @@ public class InvokeHostFunctionOperationTest
     {
         var salt = new byte[32];
         RandomNumberGenerator.Create().GetBytes(salt);
-        var operation = CreateContractOperation.FromAddress(WasmHash, _accountAddress.InnerValue, salt, _sourceAccount);
+        var operation =
+            CreateContractOperation.FromAddress(WasmHash, _accountAddress.InnerValue, [], salt, _sourceAccount);
 
         // Act
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
 
-        var contractIdPreimage = (ContractIDAddressPreimage)operation.HostFunction.ContractIDPreimage;
-        var decodedContractIdPreimage = (ContractIDAddressPreimage)decodedOperation.HostFunction.ContractIDPreimage;
+        var contractIdPreimage = (ContractIdAddressPreimage)operation.HostFunction.ContractIdPreimage;
+        var decodedContractIdPreimage = (ContractIdAddressPreimage)decodedOperation.HostFunction.ContractIdPreimage;
 
         var address = (SCAccountId)contractIdPreimage.Address;
         var decodedAddress = (SCAccountId)decodedContractIdPreimage.Address;
@@ -117,15 +118,16 @@ public class InvokeHostFunctionOperationTest
     {
         var salt = new byte[32];
         RandomNumberGenerator.Create().GetBytes(salt);
-        var operation = CreateContractOperation.FromAddress(WasmHash, _accountAddress.InnerValue, salt, _sourceAccount);
+        var operation =
+            CreateContractOperation.FromAddress(WasmHash, _accountAddress.InnerValue, [], salt, _sourceAccount);
         operation.Auth = [InitAuthEntry()];
 
         // Act
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
 
-        var contractIdPreimage = (ContractIDAddressPreimage)operation.HostFunction.ContractIDPreimage;
-        var decodedContractIdPreimage = (ContractIDAddressPreimage)decodedOperation.HostFunction.ContractIDPreimage;
+        var contractIdPreimage = (ContractIdAddressPreimage)operation.HostFunction.ContractIdPreimage;
+        var decodedContractIdPreimage = (ContractIdAddressPreimage)decodedOperation.HostFunction.ContractIdPreimage;
 
         var address = (SCAccountId)contractIdPreimage.Address;
         var decodedAddress = (SCAccountId)decodedContractIdPreimage.Address;
@@ -176,15 +178,19 @@ public class InvokeHostFunctionOperationTest
     [TestMethod]
     public void TestCreateContractOperationWithStellarAssetExecutable()
     {
-        var operation = CreateContractOperation.FromAsset(new AssetTypeCreditAlphaNum4("VNDC",
-            "GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP"), _sourceAccount);
+        var operation = CreateContractOperation.FromAsset(
+            new AssetTypeCreditAlphaNum4(
+                "VNDC",
+                "GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP"),
+            [],
+            _sourceAccount);
 
         // Act
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
 
-        var contractIdPreimage = (ContractIDAssetPreimage)operation.HostFunction.ContractIDPreimage;
-        var decodedContractIdPreimage = (ContractIDAssetPreimage)decodedOperation.HostFunction.ContractIDPreimage;
+        var contractIdPreimage = (ContractIdAssetPreimage)operation.HostFunction.ContractIdPreimage;
+        var decodedContractIdPreimage = (ContractIdAssetPreimage)decodedOperation.HostFunction.ContractIdPreimage;
 
         var asset = (AssetTypeCreditAlphaNum4)contractIdPreimage.Asset;
         var decodedAsset = (AssetTypeCreditAlphaNum4)decodedContractIdPreimage.Asset;

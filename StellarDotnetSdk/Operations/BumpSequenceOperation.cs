@@ -11,7 +11,10 @@ namespace StellarDotnetSdk.Operations;
 ///     with a smaller sequence number.
 ///     <p>
 ///         See:
-///         <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#bump-sequence">Bump sequence</a>
+///         <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#bump-sequence">
+///             Bump
+///             sequence
+///         </a>
 ///     </p>
 /// </summary>
 public class BumpSequenceOperation : Operation

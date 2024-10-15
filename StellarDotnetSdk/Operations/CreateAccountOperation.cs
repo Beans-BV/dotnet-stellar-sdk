@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Operations;
 /// <summary>
 ///     Creates and funds a new account with the specified starting balance.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#create-account">
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-account">
 ///         Create account
 ///     </a>
 /// </summary>

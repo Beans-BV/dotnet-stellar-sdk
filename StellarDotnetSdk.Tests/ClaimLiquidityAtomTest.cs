@@ -22,7 +22,7 @@ public class ClaimLiquidityAtomTest
         claimLiquidityAtomXdr.AssetBought = asset1.ToXdr();
         claimLiquidityAtomXdr.AssetSold = asset2.ToXdr();
 
-        var liquidityPool = new LiquidityPoolID(LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+        var liquidityPool = new LiquidityPoolId(LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
             asset1, asset2, 100);
         claimLiquidityAtomXdr.LiquidityPoolID = liquidityPool.ToXdr();
         var claimAtom = new StellarDotnetSdk.Xdr.ClaimAtom

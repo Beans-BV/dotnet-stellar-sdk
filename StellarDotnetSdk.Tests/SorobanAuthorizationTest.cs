@@ -124,7 +124,7 @@ public class SorobanAuthorizationTest
         var salt = new byte[32];
         RandomNumberGenerator.Create().GetBytes(salt);
 
-        var preimage = new ContractIDAddressPreimage(_accountAddress.InnerValue, salt);
+        var preimage = new ContractIdAddressPreimage(_accountAddress.InnerValue, salt);
         var rootInvocation = new SorobanAuthorizedInvocation(
             new SorobanAuthorizedCreateContractFunction(
                 new CreateContractHostFunction(preimage, _contractExecutableWasm)),
@@ -149,14 +149,13 @@ public class SorobanAuthorizationTest
         var decodedRootFunction =
             ((SorobanAuthorizedCreateContractFunction)decodedAuth.RootInvocation.Function).HostFunction;
         Assert.IsNotNull(decodedRootFunction);
-        Assert.IsInstanceOfType(decodedRootFunction.ContractIDPreimage, typeof(ContractIDAddressPreimage));
-        var decodedPreimage = (ContractIDAddressPreimage)decodedRootFunction.ContractIDPreimage;
+        Assert.IsInstanceOfType(decodedRootFunction.ContractIdPreimage, typeof(ContractIdAddressPreimage));
+        var decodedPreimage = (ContractIdAddressPreimage)decodedRootFunction.ContractIdPreimage;
         Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
         CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
         Assert.IsInstanceOfType(decodedRootFunction.Executable, typeof(ContractExecutableWasm));
         var decodedExecutable = (ContractExecutableWasm)decodedRootFunction.Executable;
         Assert.AreEqual(_contractExecutableWasm.WasmHash, decodedExecutable.WasmHash);
-
         var decodedSubInvocations = decodedAuth.RootInvocation.SubInvocations;
         Assert.AreEqual(0, decodedSubInvocations.Length);
     }
@@ -192,10 +191,10 @@ public class SorobanAuthorizationTest
         var decodedRootFunction =
             ((SorobanAuthorizedCreateContractFunction)decodedAuth.RootInvocation.Function).HostFunction;
         Assert.IsNotNull(decodedRootFunction);
-        Assert.IsInstanceOfType(decodedRootFunction.ContractIDPreimage, typeof(ContractIDAddressPreimage));
-        var decodedPreimage = (ContractIDAddressPreimage)decodedRootFunction.ContractIDPreimage;
+        Assert.IsInstanceOfType(decodedRootFunction.ContractIdPreimage, typeof(ContractIdAddressPreimage));
+        var decodedPreimage = (ContractIdAddressPreimage)decodedRootFunction.ContractIdPreimage;
         Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
-        var salt = ((ContractIDAddressPreimage)hostFunction.ContractIDPreimage).Salt;
+        var salt = ((ContractIdAddressPreimage)hostFunction.ContractIdPreimage).Salt;
         CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
         Assert.IsInstanceOfType(decodedRootFunction.Executable, typeof(ContractExecutableWasm));
         var decodedExecutable = (ContractExecutableWasm)decodedRootFunction.Executable;
@@ -208,13 +207,75 @@ public class SorobanAuthorizationTest
         var decodedSubFunction =
             ((SorobanAuthorizedCreateContractFunction)decodedSubInvocations[0].Function).HostFunction;
         Assert.IsNotNull(decodedSubFunction);
-        Assert.IsInstanceOfType(decodedSubFunction.ContractIDPreimage, typeof(ContractIDAddressPreimage));
-        decodedPreimage = (ContractIDAddressPreimage)decodedSubFunction.ContractIDPreimage;
+        Assert.IsInstanceOfType(decodedSubFunction.ContractIdPreimage, typeof(ContractIdAddressPreimage));
+        decodedPreimage = (ContractIdAddressPreimage)decodedSubFunction.ContractIdPreimage;
         Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
         CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
         Assert.IsInstanceOfType(decodedSubFunction.Executable, typeof(ContractExecutableWasm));
         decodedExecutable = (ContractExecutableWasm)decodedSubFunction.Executable;
         Assert.AreEqual(_contractExecutableWasm.WasmHash, decodedExecutable.WasmHash);
+    }
+
+    [TestMethod]
+    public void TestSorobanAuthorizationEntryContainingAuthorizedCreateContractV2Function()
+    {
+        var arguments = new SCVal[] { new SCString("Test") };
+        var hostFunction =
+            new CreateContractV2HostFunction(WasmHash, _accountAddress.InnerValue, arguments);
+        var authorizedCreateContractFn = new SorobanAuthorizedCreateContractV2Function(hostFunction);
+
+        var rootInvocation = new SorobanAuthorizedInvocation(
+            authorizedCreateContractFn,
+            [
+                new SorobanAuthorizedInvocation(authorizedCreateContractFn, []),
+            ]
+        );
+
+        var credentials = InitSorobanAddressCredentials();
+        var authEntry = new SorobanAuthorizationEntry(credentials, rootInvocation);
+
+        var xdrAuth = authEntry.ToXdr();
+        var decodedAuth = SorobanAuthorizationEntry.FromXdr(xdrAuth);
+
+        Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
+        var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
+        Assert.AreEqual(((SCAccountId)credentials.Address).InnerValue,
+            ((SCAccountId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(credentials.Nonce, decodedCredentials.Nonce);
+        Assert.AreEqual(credentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
+        Assert.AreEqual(((SCString)credentials.Signature).InnerValue,
+            ((SCString)decodedCredentials.Signature).InnerValue);
+
+        Assert.IsInstanceOfType(decodedAuth.RootInvocation.Function, typeof(SorobanAuthorizedCreateContractV2Function));
+        var decodedRootFunction =
+            ((SorobanAuthorizedCreateContractV2Function)decodedAuth.RootInvocation.Function).HostFunction;
+        Assert.IsNotNull(decodedRootFunction);
+        Assert.IsInstanceOfType(decodedRootFunction.ContractIdPreimage, typeof(ContractIdAddressPreimage));
+        var decodedPreimage = (ContractIdAddressPreimage)decodedRootFunction.ContractIdPreimage;
+        Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
+        var salt = ((ContractIdAddressPreimage)hostFunction.ContractIdPreimage).Salt;
+        CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
+        Assert.IsInstanceOfType(decodedRootFunction.Executable, typeof(ContractExecutableWasm));
+        var decodedExecutable = (ContractExecutableWasm)decodedRootFunction.Executable;
+        Assert.AreEqual(_contractExecutableWasm.WasmHash, decodedExecutable.WasmHash);
+
+        var decodedSubInvocations = decodedAuth.RootInvocation.SubInvocations;
+        Assert.AreEqual(1, decodedSubInvocations.Length);
+        Assert.AreEqual(0, decodedSubInvocations[0].SubInvocations.Length);
+
+        var decodedSubFunction =
+            ((SorobanAuthorizedCreateContractV2Function)decodedSubInvocations[0].Function).HostFunction;
+        Assert.IsNotNull(decodedSubFunction);
+        Assert.IsInstanceOfType(decodedSubFunction.ContractIdPreimage, typeof(ContractIdAddressPreimage));
+        decodedPreimage = (ContractIdAddressPreimage)decodedSubFunction.ContractIdPreimage;
+        Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
+        CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
+        Assert.IsInstanceOfType(decodedSubFunction.Executable, typeof(ContractExecutableWasm));
+        decodedExecutable = (ContractExecutableWasm)decodedSubFunction.Executable;
+        Assert.AreEqual(_contractExecutableWasm.WasmHash, decodedExecutable.WasmHash);
+        var decodedArguments = decodedRootFunction.Arguments;
+        Assert.AreEqual(arguments.Length, decodedArguments.Length);
+        Assert.AreEqual(((SCString)arguments[0]).InnerValue, ((SCString)decodedArguments[0]).InnerValue);
     }
 
     [TestMethod]

@@ -10,7 +10,8 @@ namespace StellarDotnetSdk.Xdr;
 //  enum SorobanAuthorizedFunctionType
 //  {
 //      SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN = 0,
-//      SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN = 1
+//      SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN = 1,
+//      SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN = 2
 //  };
 
 //  ===========================================================================
@@ -20,6 +21,7 @@ public class SorobanAuthorizedFunctionType
     {
         SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN = 0,
         SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN = 1,
+        SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN = 2,
     }
 
     public SorobanAuthorizedFunctionTypeEnum InnerValue { get; set; }
@@ -41,6 +43,9 @@ public class SorobanAuthorizedFunctionType
             case 1:
                 return Create(
                     SorobanAuthorizedFunctionTypeEnum.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN);
+            case 2:
+                return Create(SorobanAuthorizedFunctionTypeEnum
+                    .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN);
             default:
                 throw new Exception("Unknown enum value: " + value);
         }

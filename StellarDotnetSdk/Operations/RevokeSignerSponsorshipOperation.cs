@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Operations;
 ///     Sponsoring account can remove or transfer sponsorships of existing signers; the logic of this operation depends on
 ///     the state of the source account.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#revoke-sponsorship">
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#revoke-sponsorship">
 ///         Revoke sponsorship
 ///     </a>
 /// </summary>

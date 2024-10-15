@@ -68,8 +68,6 @@ public class AssetPageDeserializerTest
         Assert.AreEqual("0.0000000", assetsPage.Records[0].Balances.Unauthorized);
         Assert.AreEqual(0, assetsPage.Records[0].NumClaimableBalances);
         Assert.AreEqual("0.0000000", assetsPage.Records[0].ClaimableBalancesAmount);
-        Assert.AreEqual("1200000000.0000000", assetsPage.Records[0].Amount);
-        Assert.AreEqual(1, assetsPage.Records[0].NumAccounts);
         Assert.AreEqual("", assetsPage.Records[0].Links.Toml.Href);
         Assert.AreEqual(false, assetsPage.Records[0].Flags.AuthRequired);
         Assert.AreEqual(false, assetsPage.Records[0].Flags.AuthRevocable);

@@ -7,7 +7,8 @@ namespace StellarDotnetSdk.Operations;
 /// <summary>
 ///     Claws back an unclaimed ClaimableBalanceEntry, burning the pending amount of the asset.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#clawback-claimable-balance">
+///     <a
+///         href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#clawback-claimable-balance">
 ///         Clawback claimable balance
 ///     </a>
 /// </summary>

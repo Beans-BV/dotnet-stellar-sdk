@@ -15,6 +15,8 @@ namespace StellarDotnetSdk.Xdr;
 //      {
 //      case 0:
 //          void;
+//      case 1:
+//          BucketListType bucketListType;
 //      }
 //      ext;
 //  };
@@ -43,12 +45,17 @@ public class BucketMetadata
     {
         public int Discriminant { get; set; }
 
+        public BucketListType BucketListType { get; set; }
+
         public static void Encode(XdrDataOutputStream stream, BucketMetadataExt encodedBucketMetadataExt)
         {
             stream.WriteInt(encodedBucketMetadataExt.Discriminant);
             switch (encodedBucketMetadataExt.Discriminant)
             {
                 case 0:
+                    break;
+                case 1:
+                    BucketListType.Encode(stream, encodedBucketMetadataExt.BucketListType);
                     break;
             }
         }
@@ -62,8 +69,10 @@ public class BucketMetadata
             {
                 case 0:
                     break;
+                case 1:
+                    decodedBucketMetadataExt.BucketListType = BucketListType.Decode(stream);
+                    break;
             }
-
             return decodedBucketMetadataExt;
         }
     }

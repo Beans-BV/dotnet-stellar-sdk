@@ -7,7 +7,8 @@ namespace StellarDotnetSdk.Operations;
 
 /// <summary>
 ///     Burns an amount in a specific asset from a receiving account.
-///     See: <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#clawback">Clawback</a>
+///     See:
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#clawback">Clawback</a>
 /// </summary>
 public class ClawbackOperation : Operation
 {

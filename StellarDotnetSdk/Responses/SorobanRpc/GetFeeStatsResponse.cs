@@ -38,8 +38,9 @@ public class InclusionFee
         string p10, string p20, string p30,
         string p40, string p50, string p60,
         string p70, string p80, string p90,
-        string p99, string transactionCount,
-        int ledgerCount)
+        string p95, string p99, string transactionCount,
+        int ledgerCount
+    )
     {
         Max = max;
         Min = min;
@@ -53,6 +54,7 @@ public class InclusionFee
         P70 = p70;
         P80 = p80;
         P90 = p90;
+        P95 = p95;
         P99 = p99;
         TransactionCount = transactionCount;
         LedgerCount = ledgerCount;
@@ -94,10 +96,8 @@ public class InclusionFee
     /// 90th nearest-rank fee percentile
     public string P90 { get; }
 
-    // TODO: Re-check if the result contains this property
-    // See https://github.com/stellar/stellar-docs/issues/892
     /// 95th nearest-rank fee percentile
-    // public string P95 { get; }
+    public string P95 { get; }
 
     /// 99th nearest-rank fee percentile
     public string P99 { get; }

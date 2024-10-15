@@ -11,7 +11,8 @@ namespace StellarDotnetSdk.Xdr;
 //  {
 //      HOST_FUNCTION_TYPE_INVOKE_CONTRACT = 0,
 //      HOST_FUNCTION_TYPE_CREATE_CONTRACT = 1,
-//      HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM = 2
+//      HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM = 2,
+//      HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2 = 3
 //  };
 
 //  ===========================================================================
@@ -22,6 +23,7 @@ public class HostFunctionType
         HOST_FUNCTION_TYPE_INVOKE_CONTRACT = 0,
         HOST_FUNCTION_TYPE_CREATE_CONTRACT = 1,
         HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM = 2,
+        HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2 = 3,
     }
 
     public HostFunctionTypeEnum InnerValue { get; set; }
@@ -42,6 +44,7 @@ public class HostFunctionType
             case 0: return Create(HostFunctionTypeEnum.HOST_FUNCTION_TYPE_INVOKE_CONTRACT);
             case 1: return Create(HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT);
             case 2: return Create(HostFunctionTypeEnum.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM);
+            case 3: return Create(HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2);
             default:
                 throw new Exception("Unknown enum value: " + value);
         }

@@ -10,7 +10,7 @@ namespace StellarDotnetSdk.Operations;
 /// <summary>
 ///     Sends an amount in a specific asset to a destination account
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#payment">Payment</a>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#payment">Payment</a>
 /// </summary>
 public class PaymentOperation : Operation
 {

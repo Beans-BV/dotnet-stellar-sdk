@@ -11,7 +11,8 @@ namespace StellarDotnetSdk.Operations;
 /// <summary>
 ///     Creates an offer to sell one asset for another without taking a reverse offer of equal price.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#create-passive-sell-offer">
+///     <a
+///         href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-passive-sell-offer">
 ///         Create passive sell offer
 ///     </a>
 /// </summary>

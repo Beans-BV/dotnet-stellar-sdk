@@ -10,7 +10,7 @@ namespace StellarDotnetSdk.Operations;
 ///     operation.
 ///     This operation restores the archived entries specified in the readWrite footprint.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#restore-footprint">
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#restore-footprint">
 ///         Restore
 ///         footprint
 ///     </a>

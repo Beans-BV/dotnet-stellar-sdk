@@ -133,7 +133,8 @@ public abstract class Operation
                 {
                     HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_INVOKE_CONTRACT =>
                         InvokeContractOperation.FromXdr(body.InvokeHostFunctionOp),
-                    HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT =>
+                    HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT or
+                        HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2 =>
                         CreateContractOperation.FromXdr(body.InvokeHostFunctionOp),
                     HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM =>
                         UploadContractOperation.FromXdr(body.InvokeHostFunctionOp),

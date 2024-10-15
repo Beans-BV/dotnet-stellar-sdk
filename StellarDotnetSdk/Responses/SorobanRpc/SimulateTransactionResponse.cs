@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Newtonsoft.Json;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Soroban;
@@ -11,19 +10,25 @@ namespace StellarDotnetSdk.Responses.SorobanRpc;
 ///         The response will include the anticipated affects the given transaction will have on the network. Additionally,
 ///         information needed to build, sign, and actually submit the transaction will be provided.
 ///     </para>
-///     See https://soroban.stellar.org/api/methods/simulateTransaction/
+///     See https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction/
 /// </summary>
 public class SimulateTransactionResponse
 {
     private readonly string? _transactionData;
 
-    public SimulateTransactionResponse(string? transactionData, string? error, SimulateTransactionCost? cost,
-        string[]? events, long? latestLedger, uint? minResourceFee, RestorePreamble? restorePreambleInfo,
-        SimulateInvokeHostFunctionResult[]? results, LedgerEntryChange[] stateChanges)
+    public SimulateTransactionResponse(
+        string? transactionData,
+        string? error,
+        string[]? events,
+        long? latestLedger,
+        uint? minResourceFee,
+        RestorePreamble? restorePreambleInfo,
+        SimulateInvokeHostFunctionResult[]? results,
+        LedgerEntryChange[] stateChanges
+    )
     {
         _transactionData = transactionData;
         Error = error;
-        Cost = cost;
         Events = events;
         LatestLedger = latestLedger;
         MinResourceFee = minResourceFee;
@@ -31,10 +36,6 @@ public class SimulateTransactionResponse
         Results = results;
         StateChanges = stateChanges;
     }
-
-    [Obsolete(
-        "The cost object is legacy, inaccurate, and will be deprecated in future RPC releases. Please use SorobanTransactionData to retrieve the correct resources.")]
-    public SimulateTransactionCost? Cost { get; }
 
     /// <summary>
     ///     This field will include details about why the invoke host function call failed.
@@ -163,7 +164,7 @@ public class SimulateTransactionResponse
 
     /// <summary>
     ///     Used as a part of simulate transaction.
-    ///     See https://soroban.stellar.org/api/methods/simulateTransaction
+    ///     See https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction
     /// </summary>
     public class SimulateInvokeHostFunctionResult
     {

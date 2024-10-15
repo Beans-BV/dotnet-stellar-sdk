@@ -7,9 +7,9 @@ using Asset = StellarDotnetSdk.Assets.Asset;
 namespace StellarDotnetSdk.LiquidityPool;
 
 [JsonConverter(typeof(LiquidityPoolIdJsonConverter))]
-public class LiquidityPoolID
+public class LiquidityPoolId
 {
-    public LiquidityPoolID(LiquidityPoolType.LiquidityPoolTypeEnum type, Asset assetA, Asset assetB, int fee)
+    public LiquidityPoolId(LiquidityPoolType.LiquidityPoolTypeEnum type, Asset assetA, Asset assetB, int fee)
     {
         var xdrDataOutputStream = new XdrDataOutputStream();
 
@@ -27,21 +27,21 @@ public class LiquidityPoolID
     }
 
     [JsonConstructor]
-    public LiquidityPoolID(string hex)
+    public LiquidityPoolId(string hex)
     {
         Hash = Util.HexToBytes(hex);
     }
 
-    public LiquidityPoolID(byte[] hash)
+    public LiquidityPoolId(byte[] hash)
     {
         Hash = hash;
     }
 
     public byte[] Hash { get; }
 
-    public static LiquidityPoolID FromXdr(PoolID poolIdXdr)
+    public static LiquidityPoolId FromXdr(PoolID poolIdXdr)
     {
-        return new LiquidityPoolID(poolIdXdr.InnerValue.InnerValue);
+        return new LiquidityPoolId(poolIdXdr.InnerValue.InnerValue);
     }
 
     public override string ToString()
@@ -56,7 +56,7 @@ public class LiquidityPoolID
 
     public override bool Equals(object? obj)
     {
-        return obj is LiquidityPoolID other && Equals(ToString(), other.ToString());
+        return obj is LiquidityPoolId other && Equals(ToString(), other.ToString());
     }
 
     public override int GetHashCode()

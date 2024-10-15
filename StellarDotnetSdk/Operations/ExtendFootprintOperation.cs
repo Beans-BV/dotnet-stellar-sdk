@@ -8,7 +8,8 @@ namespace StellarDotnetSdk.Operations;
 /// <summary>
 ///     Extend the time to live (TTL) of entries for Soroban smart contracts.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#extend-footprint-ttl">
+///     <a
+///         href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#extend-footprint-ttl">
 ///         Extend footprint TTL
 ///     </a>
 /// </summary>
