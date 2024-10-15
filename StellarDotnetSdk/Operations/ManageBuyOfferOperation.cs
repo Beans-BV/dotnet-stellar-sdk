@@ -10,7 +10,7 @@ namespace StellarDotnetSdk.Operations;
 /// <summary>
 ///     Creates, updates, or deletes an offer to buy a specific amount of an asset for another.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-buy-offer">
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#manage-buy-offer">
 ///         Manage buy offer
 ///     </a>
 /// </summary>

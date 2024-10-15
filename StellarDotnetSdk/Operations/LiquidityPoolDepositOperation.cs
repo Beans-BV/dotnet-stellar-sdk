@@ -11,7 +11,8 @@ namespace StellarDotnetSdk.Operations;
 /// <summary>
 ///     Deposits assets into a liquidity pool, increasing the reserves of a liquidity pool in exchange for pool shares.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#liquidity-pool-deposit">
+///     <a
+///         href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#liquidity-pool-deposit">
 ///         Liquidity pool deposit
 ///     </a>
 /// </summary>
@@ -27,7 +28,7 @@ public class LiquidityPoolDepositOperation : Operation
     /// <param name="maxPrice">Maximum depositA/depositB.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public LiquidityPoolDepositOperation(
-        LiquidityPoolID liquidityPoolId,
+        LiquidityPoolId liquidityPoolId,
         string maxAmountA,
         string maxAmountB,
         Price minPrice,
@@ -46,7 +47,7 @@ public class LiquidityPoolDepositOperation : Operation
         Price minPrice,
         Price maxPrice,
         IAccountId? sourceAccount = null)
-        : this(new LiquidityPoolID(
+        : this(new LiquidityPoolId(
                 LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetAmountA.Asset,
                 assetAmountB.Asset,
@@ -62,7 +63,7 @@ public class LiquidityPoolDepositOperation : Operation
     /// <summary>
     ///     The PoolID for the Liquidity Pool to deposit into.
     /// </summary>
-    public LiquidityPoolID LiquidityPoolID { get; }
+    public LiquidityPoolId LiquidityPoolID { get; }
 
     /// <summary>
     ///     Maximum amount of first asset to deposit.
@@ -103,7 +104,7 @@ public class LiquidityPoolDepositOperation : Operation
     public static LiquidityPoolDepositOperation FromXdr(LiquidityPoolDepositOp liquidityPoolDepositOp)
     {
         return new LiquidityPoolDepositOperation(
-            LiquidityPoolID.FromXdr(liquidityPoolDepositOp.LiquidityPoolID),
+            LiquidityPoolId.FromXdr(liquidityPoolDepositOp.LiquidityPoolID),
             FromXdrAmount(liquidityPoolDepositOp.MaxAmountA.InnerValue),
             FromXdrAmount(liquidityPoolDepositOp.MaxAmountB.InnerValue),
             Price.FromXdr(liquidityPoolDepositOp.MinPrice),

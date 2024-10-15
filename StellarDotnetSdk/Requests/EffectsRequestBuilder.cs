@@ -59,7 +59,7 @@ public class EffectsRequestBuilder : RequestBuilderStreamable<EffectsRequestBuil
         return this;
     }
 
-    public EffectsRequestBuilder ForLiquidityPool(LiquidityPoolID liquidityPoolID)
+    public EffectsRequestBuilder ForLiquidityPool(LiquidityPoolId liquidityPoolID)
     {
         return ForLiquidityPool(liquidityPoolID.ToString());
     }

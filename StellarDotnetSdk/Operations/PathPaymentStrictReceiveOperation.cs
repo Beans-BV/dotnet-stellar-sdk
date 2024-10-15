@@ -14,7 +14,8 @@ namespace StellarDotnetSdk.Operations;
 ///     A payment where the asset received can be different from the asset sent; allows the user to specify the amount of
 ///     the asset received.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#path-payment-strict-receive">
+///     <a
+///         href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#path-payment-strict-receive">
 ///         Path payment strict receive
 ///     </a>
 /// </summary>

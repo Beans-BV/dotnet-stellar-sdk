@@ -6,9 +6,13 @@ namespace StellarDotnetSdk.LedgerEntries;
 
 public class LiquidityPoolConstantProduct : LiquidityPoolEntryBody
 {
-    private LiquidityPoolConstantProduct(LiquidityPoolConstantProductParameters parameters, long reserveA,
+    private LiquidityPoolConstantProduct(
+        LiquidityPoolConstantProductParameters parameters,
+        long reserveA,
         long reserveB,
-        long totalPoolShares, long poolSharesTrustLineCount)
+        long totalPoolShares,
+        long poolSharesTrustLineCount
+    )
     {
         Parameters = parameters;
         ReserveA = reserveA;

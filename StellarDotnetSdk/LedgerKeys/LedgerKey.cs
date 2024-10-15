@@ -37,7 +37,7 @@ public abstract class LedgerKey
         return new LedgerKeyTrustline(account, asset);
     }
 
-    public static LedgerKey LiquidityPool(LiquidityPoolID poolId)
+    public static LedgerKey LiquidityPool(LiquidityPoolId poolId)
     {
         return new LedgerKeyLiquidityPool(poolId);
     }

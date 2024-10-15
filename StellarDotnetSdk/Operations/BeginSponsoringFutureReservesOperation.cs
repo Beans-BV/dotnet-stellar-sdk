@@ -13,7 +13,7 @@ namespace StellarDotnetSdk.Operations;
 ///     <p>
 ///         See:
 ///         <a
-///             href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#begin-sponsoring-future-reserves">
+///             href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#begin-sponsoring-future-reserves">
 ///             Begin sponsoring future reserves
 ///         </a>
 ///     </p>

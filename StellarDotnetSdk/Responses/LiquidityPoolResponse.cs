@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Responses;
 
 public class LiquidityPoolResponse : Response, IPagingToken
 {
-    [JsonProperty(PropertyName = "id")] public LiquidityPoolID Id { get; init; }
+    [JsonProperty(PropertyName = "id")] public LiquidityPoolId Id { get; init; }
 
     [JsonProperty(PropertyName = "fee_bp")]
     public int FeeBp { get; init; }

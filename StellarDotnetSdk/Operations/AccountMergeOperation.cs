@@ -10,7 +10,10 @@ namespace StellarDotnetSdk.Operations;
 ///     Transfers the XLM balance of an account to another account and removes the source account from the ledger.
 ///     <p>
 ///         See:
-///         <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#account-merge">Account merge</a>
+///         <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#account-merge">
+///             Account
+///             merge
+///         </a>
 ///     </p>
 /// </summary>
 public class AccountMergeOperation : Operation

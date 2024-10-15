@@ -23,13 +23,11 @@ public class TransactionResponse : Response, IPagingToken
     [JsonProperty(PropertyName = "source_account")]
     public string SourceAccount { get; init; }
 
-
     [JsonProperty(PropertyName = "fee_account")]
     public string FeeAccount { get; set; }
 
     [JsonProperty(PropertyName = "fee_account_muxed")]
     public string FeeAccountMuxed { get; set; }
-
 
     [DefaultValue(true)]
     [JsonProperty(PropertyName = "successful", DefaultValueHandling = DefaultValueHandling.Populate)]

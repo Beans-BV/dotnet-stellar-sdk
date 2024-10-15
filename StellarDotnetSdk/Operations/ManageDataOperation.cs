@@ -9,7 +9,10 @@ namespace StellarDotnetSdk.Operations;
 /// <summary>
 ///     Sets, modifies, or deletes a data entry (name/value pair) that is attached to an account.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#manage-data">Manage data</a>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#manage-data">
+///         Manage
+///         data
+///     </a>
 /// </summary>
 public class ManageDataOperation : Operation
 {

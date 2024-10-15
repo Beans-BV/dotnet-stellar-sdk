@@ -9,7 +9,8 @@ namespace StellarDotnetSdk.Operations;
 /// <summary>
 ///     Moves an amount of asset from the operation source account into a new ClaimableBalanceEntry.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#create-claimable-balance">
+///     <a
+///         href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-claimable-balance">
 ///         Create claimable balance
 ///     </a>
 /// </summary>

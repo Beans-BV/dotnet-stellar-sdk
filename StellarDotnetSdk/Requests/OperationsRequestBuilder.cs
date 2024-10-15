@@ -35,15 +35,15 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
     ///     Requests GET /operations/{operationId}
     ///     See: https://www.stellar.org/developers/horizon/reference/operations-single.html
     /// </summary>
-    /// <param name="operationId">Operation to fetch</param>
+    /// <param name="operationId">Operation ID to fetch</param>
     /// <returns>
-    ///     <see cref="OperationsRequestBuilder" />
+    ///     <see cref="OperationResponse" />
     /// </returns>
     /// <exception cref="HttpRequestException"></exception>
-    public OperationsRequestBuilder Operation(long operationId)
+    public async Task<OperationResponse> Operation(long operationId)
     {
         SetSegments("operations", operationId.ToString());
-        return this;
+        return await Operation(BuildUri());
     }
 
     /// <summary>

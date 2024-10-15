@@ -15,7 +15,10 @@ namespace StellarDotnetSdk.Operations;
 ///     Creates, updates, or deletes a trustline.
 ///     <p>
 ///         See:
-///         <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#change-trust">Change trust</a>
+///         <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#change-trust">
+///             Change
+///             trust
+///         </a>
 ///     </p>
 /// </summary>
 public class ChangeTrustOperation : Operation
@@ -35,8 +38,10 @@ public class ChangeTrustOperation : Operation
     ///     <p>Set to 0 to remove the trust line.</p>
     /// </param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
-    public ChangeTrustOperation(Asset asset, string? limit = null, IAccountId? sourceAccount = null) : base(
-        sourceAccount)
+    public ChangeTrustOperation(
+        Asset asset,
+        string? limit = null,
+        IAccountId? sourceAccount = null) : base(sourceAccount)
     {
         Asset = asset == null
             ? throw new ArgumentNullException(nameof(asset), "asset cannot be null")
@@ -57,15 +62,19 @@ public class ChangeTrustOperation : Operation
     /// </param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     [Obsolete("Use the constructor with the ChangeTrustAsset parameter instead.")]
-    public ChangeTrustOperation(Asset assetA, Asset assetB, int? feeBP = null, string? limit = null, IAccountId? sourceAccount = null) :
-        base(sourceAccount)
+    public ChangeTrustOperation(
+        Asset assetA,
+        Asset assetB,
+        int? feeBP = null,
+        string? limit = null,
+        IAccountId? sourceAccount = null) : base(sourceAccount)
     {
         Asset = ChangeTrustAsset.Create(assetA, assetB, feeBP ?? LiquidityPoolParameters.Fee);
         Limit = limit ?? MaxLimit;
     }
 
     /// <summary>
-    ///   Constructs a new <c>ChangeTrustOperation</c> for Liquidity pool shares type with the default fee.
+    ///     Constructs a new <c>ChangeTrustOperation</c> for Liquidity pool shares type with the default fee.
     /// </summary>
     /// <param name="changeTrustAsset">The Change Trust Asset</param>
     /// <param name="limit">
@@ -74,8 +83,10 @@ public class ChangeTrustOperation : Operation
     ///     <p>Set to 0 to remove the trust line.</p>
     /// </param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
-    public ChangeTrustOperation(ChangeTrustAsset changeTrustAsset, string? limit = null, IAccountId? sourceAccount = null) :
-        base(sourceAccount)
+    public ChangeTrustOperation(
+        ChangeTrustAsset changeTrustAsset,
+        string? limit = null,
+        IAccountId? sourceAccount = null) : base(sourceAccount)
     {
         Asset = changeTrustAsset;
         Limit = limit ?? MaxLimit;

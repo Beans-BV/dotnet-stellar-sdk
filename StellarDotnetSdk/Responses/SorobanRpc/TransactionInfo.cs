@@ -16,9 +16,17 @@ public class TransactionInfo
         FAILED,
     }
 
-    public TransactionInfo(TransactionStatus status, long? ledger, long? createdAt, int? applicationOrder,
-        bool? feeBump, string? envelopeXdr, string? resultXdr, string? resultMetaXdr,
-        string[]? diagnosticEventsXdr = null)
+    public TransactionInfo(TransactionStatus status,
+        long? ledger,
+        string? createdAt,
+        int? applicationOrder,
+        bool? feeBump,
+        string? envelopeXdr,
+        string? resultXdr,
+        string? resultMetaXdr,
+        string? txHash,
+        string[]? diagnosticEventsXdr = null
+    )
     {
         Status = status;
         Ledger = ledger;
@@ -28,6 +36,7 @@ public class TransactionInfo
         EnvelopeXdr = envelopeXdr;
         ResultXdr = resultXdr;
         ResultMetaXdr = resultMetaXdr;
+        TxHash = txHash;
         DiagnosticEventsXdr = diagnosticEventsXdr;
     }
 
@@ -46,7 +55,7 @@ public class TransactionInfo
     ///     (optional) The unix timestamp of when the transaction was included in the ledger. This field is only present if
     ///     status is SUCCESS or FAILED.
     /// </summary>
-    public long? CreatedAt { get; }
+    public string? CreatedAt { get; }
 
     /// <summary>
     ///     (optional) The index of the transaction among all transactions included in the ledger. This field is only present
@@ -81,6 +90,11 @@ public class TransactionInfo
     ///     ENABLE_SOROBAN_DIAGNOSTIC_EVENTS has been enabled in the stellar-core config.
     /// </summary>
     public string[]? DiagnosticEventsXdr { get; }
+
+    /// <summary>
+    ///     (optional) Hex-encoded transaction hash string.
+    /// </summary>
+    public string? TxHash { get; }
 
     public SCVal? ResultValue
     {

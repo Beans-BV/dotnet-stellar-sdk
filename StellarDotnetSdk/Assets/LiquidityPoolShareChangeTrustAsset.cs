@@ -30,7 +30,7 @@ public class LiquidityPoolShareChangeTrustAsset : ChangeTrustAsset
 
     public override string Type => RestApiType;
 
-    public LiquidityPoolID GetLiquidityPoolID()
+    public LiquidityPoolId GetLiquidityPoolID()
     {
         return Parameters.GetID();
     }

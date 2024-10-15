@@ -12,6 +12,7 @@ using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Federation;
 using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Results;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
@@ -371,5 +372,151 @@ public class ServerTest
                 new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
 
         Assert.IsTrue(exception.RetryAfter is >= 7 and <= 10, "The RetryAfter value is outside the expected range.");
+    }
+
+    [TestMethod]
+    public async Task TestSubmitTransactionAsyncPending()
+    {
+        const string json =
+            """
+            {
+              "tx_status": "PENDING",
+              "hash": "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b21"
+            }
+            """;
+        using var server = Utils.CreateTestServerWithContent(json);
+        var response = await server.SubmitTransactionAsync(
+            BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
+        Assert.IsNotNull(response);
+        Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.PENDING, response.TxStatus);
+        Assert.AreEqual(response.Hash, "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b21");
+    }
+
+    [TestMethod]
+    public async Task TestSubmitTransactionAsyncDuplicate()
+    {
+        const string json =
+            """
+            {
+              "tx_status": "DUPLICATE",
+              "hash": "ded59eecb33c1c36c05e681744b923377e2358af4b6f66b7471753379fb049ac"
+            }
+            """;
+        using var server = Utils.CreateTestServerWithContent(json);
+        var response = await server.SubmitTransactionAsync(
+            BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
+        Assert.IsNotNull(response);
+        Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.DUPLICATE, response.TxStatus);
+        Assert.AreEqual(response.Hash, "ded59eecb33c1c36c05e681744b923377e2358af4b6f66b7471753379fb049ac");
+    }
+
+    [TestMethod]
+    public async Task TestSubmitTransactionAsyncTryAgainLater()
+    {
+        const string json =
+            """
+            {
+              "tx_status": "TRY_AGAIN_LATER",
+              "hash": "bf170746f990a53e73dc249a75028cbacadf7248e080e3e30b5c9b8a8e397894"
+            }
+            """;
+        using var server = Utils.CreateTestServerWithContent(json);
+        var response = await server.SubmitTransactionAsync(
+            BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
+        Assert.IsNotNull(response);
+        Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.TRY_AGAIN_LATER, response.TxStatus);
+        Assert.AreEqual(response.Hash, "bf170746f990a53e73dc249a75028cbacadf7248e080e3e30b5c9b8a8e397894");
+    }
+
+    [TestMethod]
+    public async Task TestSubmitTransactionAsyncError()
+    {
+        const string json =
+            """
+            {
+              "tx_status": "ERROR",
+              "hash": "9f8e7d6c5b4a3210fedcba9876543210abcdef0123456789abcdef0123456789",
+              "error_result_xdr": "AAAAAAAAAGT////7AAAAAA=="
+            }
+            """;
+        using var server = Utils.CreateTestServerWithContent(json);
+        var response = await server.SubmitTransactionAsync(
+            BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
+        Assert.IsNotNull(response);
+        Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.ERROR, response.TxStatus);
+        Assert.AreEqual(response.Hash, "9f8e7d6c5b4a3210fedcba9876543210abcdef0123456789abcdef0123456789");
+        Assert.IsNotNull(response.ErrorResult);
+    }
+
+    [TestMethod]
+    public async Task TestSubmitTransactionAsyncObjectNoSkipMemoRequiredCheck()
+    {
+        const string json =
+            """
+            {
+              "tx_status": "PENDING",
+              "hash": "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b22"
+            }
+            """;
+        using var server = Utils.CreateTestServerWithContent(json);
+        var response = await server.SubmitTransactionAsync(BuildTransaction());
+        Assert.IsNotNull(response);
+        Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.PENDING, response.TxStatus);
+        Assert.AreEqual(response.Hash, "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b22");
+    }
+
+    [TestMethod]
+    public async Task TestSubmitTransactionAsyncBase64()
+    {
+        const string json =
+            """
+            {
+              "tx_status": "PENDING",
+              "hash": "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b23"
+            }
+            """;
+        using var server = Utils.CreateTestServerWithContent(json);
+        var response = await server.SubmitTransactionAsync(
+            "AAAAAgAAAADe1PMFZDEm2ZIvr5IO8uM4QU4HZW4USgDlPjIeJqY2QwAAAGQAAGFLAAAABQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAJPSwAAAAAAAQAAAAAAAAABAAAAALtJgdGXASRLp/M5ZpckEa10nJPtYvrgX6M5wTPacDUYAAAAAAAAAAAAmJaAAAAAAAAAAAEmpjZDAAAAQBYm/5Z7kfwwt9HvOamKuF50118xXu3tKl49yUjHBZ5GVKwlvXJf4HajFZH1XaKXlhQl9YDBdIlPKHEa4PQ+RQI=\n");
+        Assert.IsNotNull(response);
+        Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.PENDING, response.TxStatus);
+        Assert.AreEqual(response.Hash, "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b23");
+    }
+
+    [TestMethod]
+    public async Task TestSubmitTransactionAsyncFeeBump()
+    {
+        const string json =
+            """
+            {
+              "tx_status": "PENDING",
+              "hash": "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b24"
+            }
+            """;
+        using var server = Utils.CreateTestServerWithContent(json);
+        var response = await server.SubmitTransactionAsync(BuildFeeBumpTransaction());
+        Assert.IsNotNull(response);
+        Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.PENDING, response.TxStatus);
+        Assert.AreEqual(response.Hash, "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b24");
+    }
+
+    [TestMethod]
+    public async Task TestSubmitTransactionAsyncFeeBumpEnsureSuccess()
+    {
+        const string json =
+            """
+            {
+              "tx_status": "PENDING",
+              "hash": "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b25"
+            }
+            """;
+        using var server = Utils.CreateTestServerWithContent(json);
+        var response = await server.SubmitTransactionAsync(
+            BuildFeeBumpTransaction(),
+            new SubmitTransactionOptions { EnsureSuccess = true }
+        );
+        Assert.IsNotNull(response);
+        Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.PENDING, response.TxStatus);
+        Assert.AreEqual(response.Hash, "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b25");
     }
 }

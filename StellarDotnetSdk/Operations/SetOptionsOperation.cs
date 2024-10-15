@@ -9,7 +9,10 @@ namespace StellarDotnetSdk.Operations;
 /// <summary>
 ///     Set options for an account such as flags, inflation destination, signers, home domain, and master key weight.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#set-options">Set options</a>
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#set-options">
+///         Set
+///         options
+///     </a>
 /// </summary>
 public class SetOptionsOperation : Operation
 {

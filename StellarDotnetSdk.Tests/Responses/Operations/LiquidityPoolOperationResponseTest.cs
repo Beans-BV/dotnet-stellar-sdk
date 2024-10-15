@@ -22,7 +22,7 @@ public class LiquidityPoolOperationResponseTest
         Assert.IsTrue(back is LiquidityPoolDepositOperationResponse);
         Assert.IsNotNull(instance);
         var response = (LiquidityPoolDepositOperationResponse)instance;
-        Assert.AreEqual(new LiquidityPoolID("b26c0d6545349ad7f44ba758b7c705459537201583f2e524635be04aff84bc69"),
+        Assert.AreEqual(new LiquidityPoolId("b26c0d6545349ad7f44ba758b7c705459537201583f2e524635be04aff84bc69"),
             response.LiquidityPoolID);
         Assert.AreEqual("1508315204960257", response.PagingToken);
 
@@ -58,7 +58,7 @@ public class LiquidityPoolOperationResponseTest
         Assert.IsTrue(back is LiquidityPoolWithdrawOperationResponse);
         Assert.IsNotNull(instance);
         var response = (LiquidityPoolWithdrawOperationResponse)instance;
-        Assert.AreEqual(new LiquidityPoolID("b26c0d6545349ad7f44ba758b7c705459537201583f2e524635be04aff84bc69"),
+        Assert.AreEqual(new LiquidityPoolId("b26c0d6545349ad7f44ba758b7c705459537201583f2e524635be04aff84bc69"),
             response.LiquidityPoolID);
         Assert.AreEqual("1508641622462465", response.PagingToken);
 
