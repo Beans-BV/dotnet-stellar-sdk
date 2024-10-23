@@ -160,7 +160,7 @@ public class CreateContractOperation : InvokeHostFunctionOperation
     {
         return new CreateContractOperation(
             new CreateContractV2HostFunction(
-                new ContractIdAddressPreimage(accountId, salt),
+                new ContractIDAddressPreimage(accountId, salt),
                 new ContractExecutableWasm(wasmHash),
                 arguments ?? []
             ),
@@ -184,7 +184,7 @@ public class CreateContractOperation : InvokeHostFunctionOperation
     {
         return new CreateContractOperation(
             new CreateContractV2HostFunction(
-                new ContractIdAssetPreimage(asset),
+                new ContractIDAssetPreimage(asset),
                 new ContractExecutableStellarAsset(),
                 arguments ?? []
             ),
@@ -216,7 +216,7 @@ public class CreateContractOperation : InvokeHostFunctionOperation
         var createContractArgs = invokeHostFunctionOp.HostFunction.CreateContractV2;
         return new CreateContractOperation(
             new CreateContractV2HostFunction(
-                ContractIdPreimage.FromXdr(createContractArgs.ContractIDPreimage),
+                ContractIDPreimage.FromXdr(createContractArgs.ContractIDPreimage),
                 ContractExecutable.FromXdr(createContractArgs.Executable),
                 createContractArgs.ConstructorArgs.Select(SCVal.FromXdr).ToArray()
             )
@@ -320,11 +320,11 @@ public class InvokeContractHostFunction : HostFunction
 public class CreateContractHostFunction : HostFunction
 {
     public CreateContractHostFunction(
-        ContractIdPreimage contractIdPreimage,
+        ContractIDPreimage contractIDPreimage,
         ContractExecutable executable
     )
     {
-        ContractIdPreimage = contractIdPreimage;
+        ContractIDPreimage = contractIDPreimage;
         Executable = executable;
     }
 
@@ -336,17 +336,17 @@ public class CreateContractHostFunction : HostFunction
     /// <param name="salt">(Optional) A salt. Will be randomly generated if not provided.</param>
     public CreateContractHostFunction(string wasmHash, string address, byte[]? salt = null)
     {
-        ContractIdPreimage = new ContractIdAddressPreimage(address, salt);
+        ContractIDPreimage = new ContractIDAddressPreimage(address, salt);
         Executable = new ContractExecutableWasm(wasmHash);
     }
 
-    public ContractIdPreimage ContractIdPreimage { get; }
+    public ContractIDPreimage ContractIDPreimage { get; }
     public ContractExecutable Executable { get; }
 
     public static CreateContractHostFunction FromXdr(CreateContractArgs xdrCreateContractArgs)
     {
         return new CreateContractHostFunction(
-            ContractIdPreimage.FromXdr(xdrCreateContractArgs.ContractIDPreimage),
+            ContractIDPreimage.FromXdr(xdrCreateContractArgs.ContractIDPreimage),
             ContractExecutable.FromXdr(xdrCreateContractArgs.Executable)
         );
     }
@@ -355,7 +355,7 @@ public class CreateContractHostFunction : HostFunction
     {
         return new CreateContractArgs
         {
-            ContractIDPreimage = ContractIdPreimage.ToXdr(),
+            ContractIDPreimage = ContractIDPreimage.ToXdr(),
             Executable = Executable.ToXdr(),
         };
     }
@@ -367,7 +367,7 @@ public class CreateContractHostFunction : HostFunction
 public class CreateContractV2HostFunction : HostFunction
 {
     public CreateContractV2HostFunction(
-        ContractIdPreimage contractIdPreimage,
+        ContractIDPreimage contractIdPreimage,
         ContractExecutable executable,
         SCVal[] arguments
     )
@@ -390,19 +390,19 @@ public class CreateContractV2HostFunction : HostFunction
         byte[]? salt = null
     )
     {
-        ContractIdPreimage = new ContractIdAddressPreimage(address, salt);
+        ContractIdPreimage = new ContractIDAddressPreimage(address, salt);
         Executable = new ContractExecutableWasm(wasmHash);
         Arguments = arguments;
     }
 
-    public ContractIdPreimage ContractIdPreimage { get; }
+    public ContractIDPreimage ContractIdPreimage { get; }
     public ContractExecutable Executable { get; }
     public SCVal[] Arguments { get; }
 
     public static CreateContractV2HostFunction FromXdr(CreateContractArgsV2 xdrCreateContractArgs)
     {
         return new CreateContractV2HostFunction(
-            ContractIdPreimage.FromXdr(xdrCreateContractArgs.ContractIDPreimage),
+            ContractIDPreimage.FromXdr(xdrCreateContractArgs.ContractIDPreimage),
             ContractExecutable.FromXdr(xdrCreateContractArgs.Executable),
             xdrCreateContractArgs.ConstructorArgs.Select(SCVal.FromXdr).ToArray()
         );
@@ -760,34 +760,34 @@ public class SorobanAuthorizedCreateContractV2Function : SorobanAuthorizedFuncti
     }
 }
 
-public abstract class ContractIdPreimage
+public abstract class ContractIDPreimage
 {
-    public ContractIDPreimage ToXdr()
+    public Xdr.ContractIDPreimage ToXdr()
     {
         return this switch
         {
-            ContractIdAddressPreimage fromAddress => fromAddress.ToContractIdPreimageXdr(),
-            ContractIdAssetPreimage fromAsset => fromAsset.ToContractIdPreimageXdr(),
+            ContractIDAddressPreimage fromAddress => fromAddress.ToContractIDPreimageXdr(),
+            ContractIDAssetPreimage fromAsset => fromAsset.ToContractIDPreimageXdr(),
             _ => throw new InvalidOperationException("Unknown ContractIDPreimage type"),
         };
     }
 
-    public static ContractIdPreimage FromXdr(ContractIDPreimage xdrContractIdPreimage)
+    public static ContractIDPreimage FromXdr(Xdr.ContractIDPreimage xdrContractIDPreimage)
     {
-        return xdrContractIdPreimage.Discriminant.InnerValue switch
+        return xdrContractIDPreimage.Discriminant.InnerValue switch
         {
             PreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS =>
-                ContractIdAddressPreimage.FromContractIdPreimageXdr(xdrContractIdPreimage),
+                ContractIDAddressPreimage.FromContractIDPreimageXdr(xdrContractIDPreimage),
             PreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET =>
-                ContractIdAssetPreimage.FromContractIdPreimageXdr(xdrContractIdPreimage),
+                ContractIDAssetPreimage.FromContractIDPreimageXdr(xdrContractIDPreimage),
             _ => throw new InvalidOperationException("Unknown ContractIDPreimage type"),
         };
     }
 }
 
-public class ContractIdAddressPreimage : ContractIdPreimage
+public class ContractIDAddressPreimage : ContractIDPreimage
 {
-    public ContractIdAddressPreimage(string address, byte[]? salt = null)
+    public ContractIDAddressPreimage(string address, byte[]? salt = null)
     {
         Address = new SCAccountId(address);
 
@@ -810,28 +810,28 @@ public class ContractIdAddressPreimage : ContractIdPreimage
     public SCAddress Address { get; }
     public byte[] Salt { get; }
 
-    public static ContractIdPreimage FromContractIdPreimageXdr(ContractIDPreimage xdrContractIdPreimage)
+    public static ContractIDPreimage FromContractIDPreimageXdr(Xdr.ContractIDPreimage xdrContractIDPreimage)
     {
-        if (xdrContractIdPreimage.Discriminant.InnerValue != PreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
+        if (xdrContractIDPreimage.Discriminant.InnerValue != PreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
         {
             throw new InvalidOperationException("Invalid ContractIdPreimage type");
         }
 
-        return new ContractIdAddressPreimage(
-            KeyPair.FromXdrPublicKey(xdrContractIdPreimage.FromAddress.Address.AccountId.InnerValue).AccountId,
-            xdrContractIdPreimage.FromAddress.Salt.InnerValue
+        return new ContractIDAddressPreimage(
+            KeyPair.FromXdrPublicKey(xdrContractIDPreimage.FromAddress.Address.AccountId.InnerValue).AccountId,
+            xdrContractIDPreimage.FromAddress.Salt.InnerValue
         );
     }
 
-    public ContractIDPreimage ToContractIdPreimageXdr()
+    public Xdr.ContractIDPreimage ToContractIDPreimageXdr()
     {
-        return new ContractIDPreimage
+        return new Xdr.ContractIDPreimage
         {
             Discriminant = new ContractIDPreimageType
             {
                 InnerValue = PreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS,
             },
-            FromAddress = new ContractIDPreimage.ContractIDPreimageFromAddress
+            FromAddress = new Xdr.ContractIDPreimage.ContractIDPreimageFromAddress
             {
                 Address = Address.ToXdr(),
                 Salt = new Uint256(Salt),
@@ -840,28 +840,28 @@ public class ContractIdAddressPreimage : ContractIdPreimage
     }
 }
 
-public class ContractIdAssetPreimage : ContractIdPreimage
+public class ContractIDAssetPreimage : ContractIDPreimage
 {
-    public ContractIdAssetPreimage(Asset asset)
+    public ContractIDAssetPreimage(Asset asset)
     {
         Asset = asset;
     }
 
     public Asset Asset { get; }
 
-    public static ContractIdPreimage FromContractIdPreimageXdr(ContractIDPreimage xdrContractIdPreimage)
+    public static ContractIDPreimage FromContractIDPreimageXdr(Xdr.ContractIDPreimage xdrContractIDPreimage)
     {
-        if (xdrContractIdPreimage.Discriminant.InnerValue != PreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET)
+        if (xdrContractIDPreimage.Discriminant.InnerValue != PreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET)
         {
             throw new InvalidOperationException("Invalid ContractIDPreimage type");
         }
 
-        return new ContractIdAssetPreimage(Asset.FromXdr(xdrContractIdPreimage.FromAsset));
+        return new ContractIDAssetPreimage(Asset.FromXdr(xdrContractIDPreimage.FromAsset));
     }
 
-    public ContractIDPreimage ToContractIdPreimageXdr()
+    public Xdr.ContractIDPreimage ToContractIDPreimageXdr()
     {
-        return new ContractIDPreimage
+        return new Xdr.ContractIDPreimage
         {
             Discriminant = new ContractIDPreimageType
             {

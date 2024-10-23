@@ -61,8 +61,8 @@ public class InvokeHostFunctionOperationTest
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
 
-        var contractIdPreimage = (ContractIdAddressPreimage)operation.HostFunction.ContractIdPreimage;
-        var decodedContractIdPreimage = (ContractIdAddressPreimage)decodedOperation.HostFunction.ContractIdPreimage;
+        var contractIdPreimage = (ContractIDAddressPreimage)operation.HostFunction.ContractIdPreimage;
+        var decodedContractIdPreimage = (ContractIDAddressPreimage)decodedOperation.HostFunction.ContractIdPreimage;
 
         var address = (SCAccountId)contractIdPreimage.Address;
         var decodedAddress = (SCAccountId)decodedContractIdPreimage.Address;
@@ -90,8 +90,8 @@ public class InvokeHostFunctionOperationTest
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
 
-        var contractIdPreimage = (ContractIdAddressPreimage)operation.HostFunction.ContractIdPreimage;
-        var decodedContractIdPreimage = (ContractIdAddressPreimage)decodedOperation.HostFunction.ContractIdPreimage;
+        var contractIdPreimage = (ContractIDAddressPreimage)operation.HostFunction.ContractIdPreimage;
+        var decodedContractIdPreimage = (ContractIDAddressPreimage)decodedOperation.HostFunction.ContractIdPreimage;
 
         var address = (SCAccountId)contractIdPreimage.Address;
         var decodedAddress = (SCAccountId)decodedContractIdPreimage.Address;
@@ -126,8 +126,8 @@ public class InvokeHostFunctionOperationTest
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
 
-        var contractIdPreimage = (ContractIdAddressPreimage)operation.HostFunction.ContractIdPreimage;
-        var decodedContractIdPreimage = (ContractIdAddressPreimage)decodedOperation.HostFunction.ContractIdPreimage;
+        var contractIdPreimage = (ContractIDAddressPreimage)operation.HostFunction.ContractIdPreimage;
+        var decodedContractIdPreimage = (ContractIDAddressPreimage)decodedOperation.HostFunction.ContractIdPreimage;
 
         var address = (SCAccountId)contractIdPreimage.Address;
         var decodedAddress = (SCAccountId)decodedContractIdPreimage.Address;
@@ -189,8 +189,8 @@ public class InvokeHostFunctionOperationTest
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
 
-        var contractIdPreimage = (ContractIdAssetPreimage)operation.HostFunction.ContractIdPreimage;
-        var decodedContractIdPreimage = (ContractIdAssetPreimage)decodedOperation.HostFunction.ContractIdPreimage;
+        var contractIdPreimage = (ContractIDAssetPreimage)operation.HostFunction.ContractIdPreimage;
+        var decodedContractIdPreimage = (ContractIDAssetPreimage)decodedOperation.HostFunction.ContractIdPreimage;
 
         var asset = (AssetTypeCreditAlphaNum4)contractIdPreimage.Asset;
         var decodedAsset = (AssetTypeCreditAlphaNum4)decodedContractIdPreimage.Asset;
