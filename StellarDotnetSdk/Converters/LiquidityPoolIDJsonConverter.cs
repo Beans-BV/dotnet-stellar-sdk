@@ -4,15 +4,15 @@ using StellarDotnetSdk.LiquidityPool;
 
 namespace StellarDotnetSdk.Converters;
 
-public class LiquidityPoolIdJsonConverter : JsonConverter<LiquidityPoolId>
+public class LiquidityPoolIdJsonConverter : JsonConverter<LiquidityPoolID>
 {
-    public override LiquidityPoolId? ReadJson(JsonReader reader, Type objectType, LiquidityPoolId? existingValue,
+    public override LiquidityPoolID? ReadJson(JsonReader reader, Type objectType, LiquidityPoolID? existingValue,
         bool hasExistingValue, JsonSerializer serializer)
     {
-        return reader.Value != null ? new LiquidityPoolId((string)reader.Value) : null;
+        return reader.Value != null ? new LiquidityPoolID((string)reader.Value) : null;
     }
 
-    public override void WriteJson(JsonWriter writer, LiquidityPoolId? value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, LiquidityPoolID? value, JsonSerializer serializer)
     {
         writer.WriteValue(value?.ToString());
     }

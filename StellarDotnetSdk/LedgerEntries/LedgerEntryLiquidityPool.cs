@@ -6,13 +6,13 @@ namespace StellarDotnetSdk.LedgerEntries;
 
 public class LedgerEntryLiquidityPool : LedgerEntry
 {
-    private LedgerEntryLiquidityPool(LiquidityPoolId liquidityPoolId, LiquidityPoolEntryBody liquidityPoolBody)
+    private LedgerEntryLiquidityPool(LiquidityPoolID liquidityPoolId, LiquidityPoolEntryBody liquidityPoolBody)
     {
         LiquidityPoolId = liquidityPoolId;
         LiquidityPoolBody = liquidityPoolBody;
     }
 
-    public LiquidityPoolId LiquidityPoolId { get; }
+    public LiquidityPoolID LiquidityPoolId { get; }
     public LiquidityPoolEntryBody LiquidityPoolBody { get; }
 
     /// <summary>
@@ -37,7 +37,7 @@ public class LedgerEntryLiquidityPool : LedgerEntry
         var xdrLiquidityPoolEntry = xdrLedgerEntryData.LiquidityPool;
 
         var ledgerEntryLiquidityPool = new LedgerEntryLiquidityPool(
-            LiquidityPoolId.FromXdr(xdrLiquidityPoolEntry.LiquidityPoolID),
+            LiquidityPoolID.FromXdr(xdrLiquidityPoolEntry.LiquidityPoolID),
             LiquidityPoolEntryBody.FromXdr(xdrLiquidityPoolEntry.Body));
 
         return ledgerEntryLiquidityPool;

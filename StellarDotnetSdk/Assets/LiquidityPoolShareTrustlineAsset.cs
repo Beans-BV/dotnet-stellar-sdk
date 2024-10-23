@@ -14,12 +14,12 @@ public class LiquidityPoolShareTrustlineAsset : TrustlineAsset
         ID = parameters.GetID() ?? throw new ArgumentNullException(nameof(parameters), "parameters cannot be null");
     }
 
-    public LiquidityPoolShareTrustlineAsset(LiquidityPoolId id)
+    public LiquidityPoolShareTrustlineAsset(LiquidityPoolID id)
     {
         ID = id ?? throw new ArgumentNullException(nameof(id), "id cannot be null");
     }
 
-    public LiquidityPoolId ID { get; }
+    public LiquidityPoolID ID { get; }
 
     public override string Type => RestApiType;
 

@@ -12,8 +12,7 @@ namespace StellarDotnetSdk.Operations;
 ///     Withdraw assets from a liquidity pool, reducing the number of pool shares in exchange for reserves of a liquidity
 ///     pool.
 ///     See:
-///     <a
-///         href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#liquidity-pool-withdraw">
+///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#liquidity-pool-withdraw">
 ///         Liquidity
 ///         pool withdraw
 ///     </a>
@@ -29,7 +28,7 @@ public class LiquidityPoolWithdrawOperation : Operation
     /// <param name="minAmountB">Minimum amount of the second asset to withdraw.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public LiquidityPoolWithdrawOperation(
-        LiquidityPoolId liquidityPoolId,
+        LiquidityPoolID liquidityPoolId,
         string amount,
         string minAmountA,
         string minAmountB,
@@ -48,7 +47,7 @@ public class LiquidityPoolWithdrawOperation : Operation
         AssetAmount assetB,
         string amount,
         IAccountId? sourceAccount = null)
-        : this(new LiquidityPoolId(
+        : this(new LiquidityPoolID(
                 LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA.Asset,
                 assetB.Asset,
@@ -63,7 +62,7 @@ public class LiquidityPoolWithdrawOperation : Operation
     /// <summary>
     ///     The PoolID for the Liquidity Pool to withdraw from.
     /// </summary>
-    public LiquidityPoolId LiquidityPoolId { get; }
+    public LiquidityPoolID LiquidityPoolId { get; }
 
     /// <summary>
     ///     Amount of pool shares to withdraw.
@@ -99,7 +98,7 @@ public class LiquidityPoolWithdrawOperation : Operation
     public static LiquidityPoolWithdrawOperation FromXdr(LiquidityPoolWithdrawOp liquidityPoolWithdrawOp)
     {
         return new LiquidityPoolWithdrawOperation(
-            LiquidityPoolId.FromXdr(liquidityPoolWithdrawOp.LiquidityPoolID),
+            LiquidityPoolID.FromXdr(liquidityPoolWithdrawOp.LiquidityPoolID),
             StellarDotnetSdk.Amount.FromXdr(liquidityPoolWithdrawOp.Amount.InnerValue),
             StellarDotnetSdk.Amount.FromXdr(liquidityPoolWithdrawOp.MinAmountA.InnerValue),
             StellarDotnetSdk.Amount.FromXdr(liquidityPoolWithdrawOp.MinAmountB.InnerValue)

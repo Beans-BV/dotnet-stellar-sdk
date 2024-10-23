@@ -105,14 +105,14 @@ public class LedgerKeyTest
     {
         var hash = new byte[]
             { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2 };
-        var ledgerKey = LedgerKey.LiquidityPool(new LiquidityPoolId(hash));
+        var ledgerKey = LedgerKey.LiquidityPool(new LiquidityPoolID(hash));
 
         // Act
         var ledgerKeyXdrBase64 = ledgerKey.ToXdrBase64();
         var decodedLedgerKey = (LedgerKeyLiquidityPool)LedgerKey.FromXdrBase64(ledgerKeyXdrBase64);
 
         // Assert
-        CollectionAssert.AreEqual(hash, decodedLedgerKey.LiquidityPoolId.Hash);
+        CollectionAssert.AreEqual(hash, decodedLedgerKey.LiquidityPoolID.Hash);
     }
 
     [TestMethod]

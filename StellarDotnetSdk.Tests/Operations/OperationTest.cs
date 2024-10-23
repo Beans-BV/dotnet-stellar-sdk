@@ -894,7 +894,7 @@ public class OperationTest
         var assetA = Asset.Create($"EUR:{keypairAssetA.AccountId}");
         var assetB = Asset.Create($"USD:{keypairAssetB.AccountId}");
 
-        var liquidityPoolId = new LiquidityPoolId(
+        var liquidityPoolId = new LiquidityPoolID(
             xdrSDK.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
             assetA,
             assetB,
@@ -981,7 +981,7 @@ public class OperationTest
         var assetA = Asset.Create($"EUR:{keypairAssetA.AccountId}");
         var assetB = Asset.Create($"USD:{keypairAssetB.AccountId}");
 
-        var liquidityPoolId = new LiquidityPoolId(
+        var liquidityPoolId = new LiquidityPoolID(
             xdrSDK.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
             assetA,
             assetB,

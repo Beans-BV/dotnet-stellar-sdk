@@ -15,7 +15,7 @@ public class LiquidityPoolIdTest
         var assetA = Asset.Create("native");
         var assetB = Asset.CreateNonNativeAsset("ABC", "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
 
-        var liquidityPoolId = new LiquidityPoolId(
+        var liquidityPoolId = new LiquidityPoolID(
             XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT, assetA, assetB,
             LiquidityPoolParameters.Fee);
         Assert.AreEqual("cc22414997d7e3d9a9ac3b1d65ca9cc3e5f35ce33e0bd6a885648b11aaa3b72d", liquidityPoolId.ToString());
@@ -28,7 +28,7 @@ public class LiquidityPoolIdTest
         var assetB = Asset.CreateNonNativeAsset("ABC", "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
 
         Assert.ThrowsException<ArgumentException>(
-            () => new LiquidityPoolId(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+            () => new LiquidityPoolID(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetB, assetA,
                 LiquidityPoolParameters.Fee), "Asset A must be < Asset B (Lexicographic Order)");
     }
@@ -39,7 +39,7 @@ public class LiquidityPoolIdTest
         var assetA = Asset.Create("native");
         var assetB = Asset.CreateNonNativeAsset("ABC", "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
 
-        var pool1 = new LiquidityPoolId(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+        var pool1 = new LiquidityPoolID(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
             assetA,
             assetB, LiquidityPoolParameters.Fee);
         Assert.AreEqual(pool1, pool1);
@@ -52,10 +52,10 @@ public class LiquidityPoolIdTest
         var assetB = Asset.CreateNonNativeAsset("ABC", "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
         var assetC = Asset.CreateNonNativeAsset("ABCD", "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
 
-        var pool1 = new LiquidityPoolId(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+        var pool1 = new LiquidityPoolID(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
             assetA,
             assetB, LiquidityPoolParameters.Fee);
-        var pool2 = new LiquidityPoolId(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
+        var pool2 = new LiquidityPoolID(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
             assetB,
             assetC, LiquidityPoolParameters.Fee);
         Assert.AreNotEqual(pool1, pool2);

@@ -18,7 +18,7 @@ public class LiquidityPoolDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<LiquidityPoolResponse>(json);
         Assert.IsNotNull(instance);
-        Assert.AreEqual(new LiquidityPoolId("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"),
+        Assert.AreEqual(new LiquidityPoolID("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"),
             instance.Id);
         Assert.AreEqual("113725249324879873", instance.PagingToken);
         Assert.AreEqual(30, instance.FeeBp);
@@ -56,7 +56,7 @@ public class LiquidityPoolDeserializerTest
         var serialized = JsonConvert.SerializeObject(instance);
         var parsed = JsonConvert.DeserializeObject<LiquidityPoolResponse>(serialized);
         Assert.IsNotNull(parsed);
-        Assert.AreEqual(new LiquidityPoolId("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"),
+        Assert.AreEqual(new LiquidityPoolID("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"),
             parsed.Id);
         Assert.AreEqual("113725249324879873", parsed.PagingToken);
         Assert.AreEqual(30, parsed.FeeBp);

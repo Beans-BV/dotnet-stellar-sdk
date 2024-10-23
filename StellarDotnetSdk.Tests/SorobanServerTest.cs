@@ -812,7 +812,7 @@ public class SorobanServerTest
         Assert.IsNotNull(ledgerKey);
         Assert.AreEqual(457976U, ledgerEntry.LastModifiedLedgerSeq);
         Assert.AreEqual("fd498c395920d57156e86b2d52acd2bbbfc164836a204c73d3b64bec33874d38",
-            ledgerKey.LiquidityPoolId.ToString());
+            ledgerKey.LiquidityPoolID.ToString());
         Assert.AreEqual("fd498c395920d57156e86b2d52acd2bbbfc164836a204c73d3b64bec33874d38",
             ledgerEntry.LiquidityPoolId.ToString());
         Assert.IsInstanceOfType(ledgerEntry.LiquidityPoolBody, typeof(LiquidityPoolConstantProduct));

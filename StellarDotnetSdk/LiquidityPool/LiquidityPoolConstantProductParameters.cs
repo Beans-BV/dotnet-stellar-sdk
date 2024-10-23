@@ -72,9 +72,9 @@ public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
             liquidityPoolConstantProductParametersXdr.Fee.InnerValue);
     }
 
-    public override LiquidityPoolId GetID()
+    public override LiquidityPoolID GetID()
     {
-        return new LiquidityPoolId(LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT, AssetA,
+        return new LiquidityPoolID(LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT, AssetA,
             AssetB, Fee);
     }
 }

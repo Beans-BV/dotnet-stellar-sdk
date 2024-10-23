@@ -26,7 +26,7 @@ public class TradeResponse : Response, IPagingToken
     public string BaseAccount { get; init; }
 
     [JsonProperty(PropertyName = "base_liquidity_pool_id")]
-    public LiquidityPoolId BaseLiquidityPoolId { get; set; }
+    public LiquidityPoolID BaseLiquidityPoolId { get; set; }
 
     [JsonProperty(PropertyName = "base_offer_id")]
     public string BaseOfferId { get; init; }
@@ -47,7 +47,7 @@ public class TradeResponse : Response, IPagingToken
     public string CounterAccount { get; init; }
 
     [JsonProperty(PropertyName = "counter_liquidity_pool_id")]
-    public LiquidityPoolId CounterLiquidityPoolId { get; init; }
+    public LiquidityPoolID CounterLiquidityPoolId { get; init; }
 
     [JsonProperty(PropertyName = "counter_offer_id")]
     public string CounterOfferId { get; init; }

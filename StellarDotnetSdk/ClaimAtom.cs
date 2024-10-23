@@ -115,7 +115,7 @@ public class ClaimAtomV0 : ClaimAtom
 public class ClaimAtomLiquidityPool : ClaimAtom
 {
     private ClaimAtomLiquidityPool(
-        LiquidityPoolId liquidityPoolId,
+        LiquidityPoolID liquidityPoolId,
         Asset assetSold,
         string amountSold,
         Asset assetBought,
@@ -127,7 +127,7 @@ public class ClaimAtomLiquidityPool : ClaimAtom
     /// <summary>
     ///     The Liquidity Pool ID
     /// </summary>
-    public LiquidityPoolId LiquidityPoolId { get; }
+    public LiquidityPoolID LiquidityPoolId { get; }
 
     /// <summary>
     ///     Get new ClaimLiquidityAtom object parsed from an XDR ClaimLiquidityAtom.
@@ -138,7 +138,7 @@ public class ClaimAtomLiquidityPool : ClaimAtom
     {
         var claimLiquidityAtomXdr = xdrClaimAtom.LiquidityPool;
         return new ClaimAtomLiquidityPool(
-            LiquidityPoolId.FromXdr(claimLiquidityAtomXdr.LiquidityPoolID),
+            LiquidityPoolID.FromXdr(claimLiquidityAtomXdr.LiquidityPoolID),
             Asset.FromXdr(claimLiquidityAtomXdr.AssetSold),
             Amount.FromXdr(claimLiquidityAtomXdr.AmountSold.InnerValue),
             Asset.FromXdr(claimLiquidityAtomXdr.AssetBought),
