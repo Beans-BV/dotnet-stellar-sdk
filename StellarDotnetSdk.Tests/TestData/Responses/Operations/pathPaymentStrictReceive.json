@@ -18,9 +18,7 @@
     }
   },
   "amount": "10.0",
-  "asset_code": "EUR",
-  "asset_issuer": "GCQPYGH4K57XBDENKKX55KDTWOTK5WDWRQOH2LHEDX3EKVIQRLMESGBG",
-  "asset_type": "credit_alphanum4",
+  "asset_type": "native",
   "from": "GCXKG6RN4ONIEPCMNFB732A436Z5PNDSRLGWK7GBLCMQLIFO4S7EYWVU",
   "id": "25769807873",
   "paging_token": "25769807873",
