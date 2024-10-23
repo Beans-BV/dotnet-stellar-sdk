@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Newtonsoft.Json;
 using StellarDotnetSdk.Converters;
 
@@ -56,7 +55,7 @@ public abstract class OperationResponse : Response, IPagingToken
     /// <summary>
     /// </summary>
     [JsonProperty(PropertyName = "created_at")]
-    public DateTime CreatedAt { get; private set; }
+    public string CreatedAt { get; private set; }
 
     /// <summary>
     ///     Returns transaction hash of transaction this operation belongs to.

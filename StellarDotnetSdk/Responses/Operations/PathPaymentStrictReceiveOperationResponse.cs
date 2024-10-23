@@ -89,10 +89,10 @@ public class PathPaymentStrictReceiveOperationResponse : OperationResponse
     /// <summary>
     ///     Destination Asset
     /// </summary>
-    public Asset DestinationAsset => Asset.Create(AssetType, AssetCode, AssetIssuer);
+    public AssetTypeCreditAlphaNum DestinationAsset => Asset.CreateNonNativeAsset(AssetCode, AssetIssuer);
 
     /// <summary>
     ///     Source Asset
     /// </summary>
-    public Asset SourceAsset => Asset.Create(SourceAssetType, SourceAssetCode, SourceAssetIssuer);
+    public AssetTypeCreditAlphaNum SourceAsset => Asset.CreateNonNativeAsset(SourceAssetCode, SourceAssetIssuer);
 }
