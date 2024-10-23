@@ -72,7 +72,8 @@ public class TransactionDeserializerTest
     {
         Assert.AreEqual("5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b", transaction.Hash);
         Assert.AreEqual(915744L, transaction.Ledger);
-        Assert.AreEqual("2015-11-20T17:01:28Z", transaction.CreatedAt);
+        Assert.AreEqual(DateTime.Parse("2015-11-20T17:01:28Z").ToUniversalTime(),
+            transaction.CreatedAt.ToUniversalTime());
         Assert.AreEqual("3933090531512320", transaction.PagingToken);
         Assert.AreEqual("GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK", transaction.SourceAccount);
         Assert.AreEqual(2373051035426646L, transaction.SourceAccountSequence);

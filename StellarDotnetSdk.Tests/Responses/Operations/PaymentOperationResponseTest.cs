@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using StellarDotnetSdk.Assets;
@@ -39,6 +40,8 @@ public class PaymentOperationResponseTest
         Assert.AreEqual(operation.SourceAccount, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
         Assert.IsNull(operation.SourceAccountMuxed);
         Assert.IsNull(operation.SourceAccountMuxedId);
+        Assert.AreEqual(DateTime.Parse("2024-10-23T02:12:22Z").ToUniversalTime(),
+            operation.CreatedAt.ToUniversalTime());
 
         Assert.AreEqual(operation.Id, 3940808587743233L);
 
@@ -56,8 +59,8 @@ public class PaymentOperationResponseTest
         Assert.IsNotNull(transaction);
         Assert.AreEqual("5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b", transaction.Hash);
         Assert.AreEqual(915744L, transaction.Ledger);
-        // TODO: check why this is failing
-        // Assert.AreEqual("2015-11-20T17:01:28Z", transaction.CreatedAt);
+        Assert.AreEqual(DateTime.Parse("2015-11-20T17:01:28Z").ToUniversalTime(),
+            transaction.CreatedAt.ToUniversalTime());
         Assert.AreEqual("3933090531512320", transaction.PagingToken);
         Assert.AreEqual("GCUB7JL4APK7LKJ6MZF7Q2JTLHAGNBIUA7XIXD5SQTG52GQ2DAT6XZMK", transaction.SourceAccount);
         Assert.AreEqual(2373051035426646L, transaction.SourceAccountSequence);

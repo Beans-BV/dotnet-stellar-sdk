@@ -18,7 +18,7 @@ public class TransactionResponse : Response, IPagingToken
     public uint Ledger { get; init; }
 
     [JsonProperty(PropertyName = "created_at")]
-    public string CreatedAt { get; init; }
+    public DateTime CreatedAt { get; init; }
 
     [JsonProperty(PropertyName = "source_account")]
     public string SourceAccount { get; init; }
