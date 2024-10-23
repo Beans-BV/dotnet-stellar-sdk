@@ -13,6 +13,8 @@ namespace StellarDotnetSdk.Xdr;
 //      CreateContractArgs createContract;
 //  case HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM:
 //      opaque wasm<>;
+//  case HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2:
+//      CreateContractArgsV2 createContractV2;
 //  };
 
 //  ===========================================================================
@@ -23,6 +25,7 @@ public class HostFunction
     public InvokeContractArgs InvokeContract { get; set; }
     public CreateContractArgs CreateContract { get; set; }
     public byte[] Wasm { get; set; }
+    public CreateContractArgsV2 CreateContractV2 { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, HostFunction encodedHostFunction)
     {
@@ -39,6 +42,9 @@ public class HostFunction
                 var wasmsize = encodedHostFunction.Wasm.Length;
                 stream.WriteInt(wasmsize);
                 stream.Write(encodedHostFunction.Wasm, 0, wasmsize);
+                break;
+            case HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2:
+                CreateContractArgsV2.Encode(stream, encodedHostFunction.CreateContractV2);
                 break;
         }
     }
@@ -61,8 +67,10 @@ public class HostFunction
                 decodedHostFunction.Wasm = new byte[wasmsize];
                 stream.Read(decodedHostFunction.Wasm, 0, wasmsize);
                 break;
+            case HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2:
+                decodedHostFunction.CreateContractV2 = CreateContractArgsV2.Decode(stream);
+                break;
         }
-
         return decodedHostFunction;
     }
 }

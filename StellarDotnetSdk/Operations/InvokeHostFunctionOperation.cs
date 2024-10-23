@@ -10,13 +10,17 @@ using Int64 = StellarDotnetSdk.Xdr.Int64;
 using SCAddress = StellarDotnetSdk.Soroban.SCAddress;
 using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
+using FunctionType = StellarDotnetSdk.Xdr.SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum;
+using PreimageType = StellarDotnetSdk.Xdr.ContractIDPreimageType.ContractIDPreimageTypeEnum;
+using CredentialsType = StellarDotnetSdk.Xdr.SorobanCredentialsType.SorobanCredentialsTypeEnum;
 
 namespace StellarDotnetSdk.Operations;
 
 /// <summary>
 ///     Base class for operations that invoke host functions.
 ///     See:
-///     <a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#invoke-host-function">
+///     <a
+///         href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#invoke-host-function">
 ///         Invoke
 ///         host function
 ///     </a>
@@ -30,7 +34,7 @@ public abstract class InvokeHostFunctionOperation : Operation
     /// <summary>
     ///     Contains authorization data for the contract invocations.
     /// </summary>
-    public SorobanAuthorizationEntry[] Auth { get; set; } = Array.Empty<SorobanAuthorizationEntry>();
+    public SorobanAuthorizationEntry[] Auth { get; set; } = [];
 }
 
 /// <summary>
@@ -46,7 +50,8 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
         SCAddress contractAddress,
         SCSymbol functionName,
         SCVal[]? args,
-        IAccountId? sourceAccount = null) : base(sourceAccount)
+        IAccountId? sourceAccount = null
+    ) : base(sourceAccount)
     {
         if (contractAddress == null)
         {
@@ -56,8 +61,32 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
         {
             throw new ArgumentException("Function name cannot be null", nameof(functionName));
         }
-        args ??= Array.Empty<SCVal>();
+        args ??= [];
         HostFunction = new InvokeContractHostFunction(contractAddress, functionName, args);
+    }
+
+    /// <summary>
+    ///     Constructs a new <c>InvokeContractOperation</c>.
+    /// </summary>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
+    public InvokeContractOperation(
+        string contractAddress,
+        string functionName,
+        SCVal[]? args,
+        IAccountId? sourceAccount = null
+    ) : base(sourceAccount)
+    {
+        if (contractAddress == null)
+        {
+            throw new ArgumentException("Contract address cannot be null", nameof(contractAddress));
+        }
+        if (functionName == null)
+        {
+            throw new ArgumentException("Function name cannot be null", nameof(functionName));
+        }
+        args ??= [];
+        HostFunction = new InvokeContractHostFunction(
+            new SCContractId(contractAddress), new SCSymbol(functionName), args);
     }
 
     public InvokeContractHostFunction HostFunction { get; }
@@ -98,8 +127,10 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
 
 public class CreateContractOperation : InvokeHostFunctionOperation
 {
-    private CreateContractOperation(CreateContractHostFunction hostFunction, IAccountId? sourceAccount = null) :
-        base(sourceAccount)
+    private CreateContractOperation(
+        CreateContractV2HostFunction hostFunction,
+        IAccountId? sourceAccount = null
+    ) : base(sourceAccount)
     {
         HostFunction = hostFunction;
     }
@@ -107,7 +138,7 @@ public class CreateContractOperation : InvokeHostFunctionOperation
     /// <summary>
     ///     The host function to invoke.
     /// </summary>
-    public CreateContractHostFunction HostFunction { get; }
+    public CreateContractV2HostFunction HostFunction { get; }
 
     /// <summary>
     ///     Creates a new <c>CreateContractOperation</c> using the provided address and salt.
@@ -115,16 +146,24 @@ public class CreateContractOperation : InvokeHostFunctionOperation
     /// <param name="wasmHash">
     ///     A hex-encoded string of the Wasm bytes of a compiled smart contract.
     /// </param>
-    /// <param name="accountId"></param>
+    /// <param name="accountId">The address to use to derive the contract ID.</param>
+    /// <param name="arguments">The optional parameters to pass to the constructor of this contract.</param>
     /// <param name="salt">(Optional) Custom salt 32-byte salt for the token ID. It will be randomly generated if omitted.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
-    public static CreateContractOperation FromAddress(string wasmHash, string accountId, byte[]? salt = null,
-        IAccountId? sourceAccount = null)
+    public static CreateContractOperation FromAddress(
+        string wasmHash,
+        string accountId,
+        SCVal[]? arguments = null,
+        byte[]? salt = null,
+        IAccountId? sourceAccount = null
+    )
     {
         return new CreateContractOperation(
-            new CreateContractHostFunction(
+            new CreateContractV2HostFunction(
                 new ContractIDAddressPreimage(accountId, salt),
-                new ContractExecutableWasm(wasmHash)),
+                new ContractExecutableWasm(wasmHash),
+                arguments ?? []
+            ),
             sourceAccount);
     }
 
@@ -137,12 +176,18 @@ public class CreateContractOperation : InvokeHostFunctionOperation
     ///     Note, that the asset doesn't need to exist when this is applied, however the issuer of the asset will be the
     ///     initial token administrator. Anyone can deploy asset contracts.
     /// </remarks>
-    public static CreateContractOperation FromAsset(Asset asset, IAccountId? sourceAccount = null)
+    public static CreateContractOperation FromAsset(
+        Asset asset,
+        SCVal[]? arguments = null,
+        IAccountId? sourceAccount = null
+    )
     {
         return new CreateContractOperation(
-            new CreateContractHostFunction(
+            new CreateContractV2HostFunction(
                 new ContractIDAssetPreimage(asset),
-                new ContractExecutableStellarAsset()),
+                new ContractExecutableStellarAsset(),
+                arguments ?? []
+            ),
             sourceAccount);
     }
 
@@ -157,9 +202,9 @@ public class CreateContractOperation : InvokeHostFunctionOperation
                 {
                     Discriminant = new HostFunctionType
                     {
-                        InnerValue = HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT,
+                        InnerValue = HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2,
                     },
-                    CreateContract = HostFunction.ToXdr(),
+                    CreateContractV2 = HostFunction.ToXdr(),
                 },
                 Auth = Auth.Select(a => a.ToXdr()).ToArray(),
             },
@@ -168,10 +213,14 @@ public class CreateContractOperation : InvokeHostFunctionOperation
 
     public static CreateContractOperation FromXdr(InvokeHostFunctionOp invokeHostFunctionOp)
     {
-        var createContractArgs = invokeHostFunctionOp.HostFunction.CreateContract;
+        var createContractArgs = invokeHostFunctionOp.HostFunction.CreateContractV2;
         return new CreateContractOperation(
-            new CreateContractHostFunction(ContractIDPreimage.FromXdr(createContractArgs.ContractIDPreimage),
-                ContractExecutable.FromXdr(createContractArgs.Executable)))
+            new CreateContractV2HostFunction(
+                ContractIDPreimage.FromXdr(createContractArgs.ContractIDPreimage),
+                ContractExecutable.FromXdr(createContractArgs.Executable),
+                createContractArgs.ConstructorArgs.Select(SCVal.FromXdr).ToArray()
+            )
+        )
         {
             Auth = invokeHostFunctionOp.Auth.Select(SorobanAuthorizationEntry.FromXdr).ToArray(),
         };
@@ -233,7 +282,8 @@ public class InvokeContractHostFunction : HostFunction
     public InvokeContractHostFunction(
         SCAddress contractAddress,
         SCSymbol functionName,
-        SCVal[] args)
+        SCVal[] args
+    )
     {
         ContractAddress = contractAddress;
         FunctionName = functionName;
@@ -271,7 +321,8 @@ public class CreateContractHostFunction : HostFunction
 {
     public CreateContractHostFunction(
         ContractIDPreimage contractIDPreimage,
-        ContractExecutable executable)
+        ContractExecutable executable
+    )
     {
         ContractIDPreimage = contractIDPreimage;
         Executable = executable;
@@ -306,6 +357,64 @@ public class CreateContractHostFunction : HostFunction
         {
             ContractIDPreimage = ContractIDPreimage.ToXdr(),
             Executable = Executable.ToXdr(),
+        };
+    }
+}
+
+/// <summary>
+///     Represents a create contract V2 host function.
+/// </summary>
+public class CreateContractV2HostFunction : HostFunction
+{
+    public CreateContractV2HostFunction(
+        ContractIDPreimage contractIdPreimage,
+        ContractExecutable executable,
+        SCVal[] arguments
+    )
+    {
+        ContractIDPreimage = contractIdPreimage;
+        Executable = executable;
+        Arguments = arguments;
+    }
+
+    /// <summary>
+    ///     Constructs a create contract V2 host function.
+    /// </summary>
+    /// <param name="wasmHash">A hex-encoded string of previously uploaded Wasm bytes of a compiled smart contract.</param>
+    /// <param name="address">An account address.</param>
+    /// <param name="salt">(Optional) A salt. Will be randomly generated if not provided.</param>
+    public CreateContractV2HostFunction(
+        string wasmHash,
+        string address,
+        SCVal[] arguments,
+        byte[]? salt = null
+    )
+    {
+        ContractIDPreimage = new ContractIDAddressPreimage(address, salt);
+        Executable = new ContractExecutableWasm(wasmHash);
+        Arguments = arguments;
+    }
+
+    public ContractIDPreimage ContractIDPreimage { get; }
+    public ContractExecutable Executable { get; }
+    public SCVal[] Arguments { get; }
+
+    public static CreateContractV2HostFunction FromXdr(CreateContractArgsV2 xdrCreateContractArgs)
+    {
+        return new CreateContractV2HostFunction(
+            ContractIDPreimage.FromXdr(xdrCreateContractArgs.ContractIDPreimage),
+            ContractExecutable.FromXdr(xdrCreateContractArgs.Executable),
+            xdrCreateContractArgs.ConstructorArgs.Select(SCVal.FromXdr).ToArray()
+        );
+    }
+
+    public CreateContractArgsV2 ToXdr()
+    {
+        return new CreateContractArgsV2
+        {
+            ContractIDPreimage = ContractIDPreimage.ToXdr(),
+            Executable = Executable.ToXdr(),
+            ConstructorArgs = Arguments.Select(a => a.ToXdr()).ToArray(),
         };
     }
 }
@@ -353,7 +462,8 @@ public class SorobanAuthorizationEntry
     {
         return new SorobanAuthorizationEntry(
             SorobanCredentials.FromXdr(xdr.Credentials),
-            SorobanAuthorizedInvocation.FromXdr(xdr.RootInvocation));
+            SorobanAuthorizedInvocation.FromXdr(xdr.RootInvocation)
+        );
     }
 
     /// <summary>
@@ -384,9 +494,9 @@ public abstract class SorobanCredentials
     {
         return xdrSorobanCredentials.Discriminant.InnerValue switch
         {
-            SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT =>
+            CredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT =>
                 new SorobanSourceAccountCredentials(),
-            SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS =>
+            CredentialsType.SOROBAN_CREDENTIALS_ADDRESS =>
                 SorobanAddressCredentials.FromSorobanCredentialsXdr(xdrSorobanCredentials),
             _ => throw new InvalidOperationException("Unknown SorobanCredentials type"),
         };
@@ -405,7 +515,7 @@ public class SorobanSourceAccountCredentials : SorobanCredentials
         {
             Discriminant = new SorobanCredentialsType
             {
-                InnerValue = SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT,
+                InnerValue = CredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT,
             },
         };
     }
@@ -419,7 +529,6 @@ public class SorobanAddressCredentials : SorobanCredentials
         Nonce = nonce;
         SignatureExpirationLedger = signatureExpirationLedger;
         Signature = signature ?? throw new ArgumentNullException(nameof(signature), "Signature cannot be null.");
-        ;
     }
 
     /// <summary>
@@ -442,16 +551,17 @@ public class SorobanAddressCredentials : SorobanCredentials
 
     public static SorobanAddressCredentials FromSorobanCredentialsXdr(Xdr.SorobanCredentials xdrSorobanCredentials)
     {
-        if (xdrSorobanCredentials.Discriminant.InnerValue !=
-            SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS)
+        if (xdrSorobanCredentials.Discriminant.InnerValue != CredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
         {
             throw new InvalidOperationException("Invalid SorobanCredentials type");
         }
 
-        return new SorobanAddressCredentials(SCAddress.FromXdr(xdrSorobanCredentials.Address.Address),
+        return new SorobanAddressCredentials(
+            SCAddress.FromXdr(xdrSorobanCredentials.Address.Address),
             xdrSorobanCredentials.Address.Nonce.InnerValue,
             xdrSorobanCredentials.Address.SignatureExpirationLedger.InnerValue,
-            SCVal.FromXdr(xdrSorobanCredentials.Address.Signature));
+            SCVal.FromXdr(xdrSorobanCredentials.Address.Signature)
+        );
     }
 
     public Xdr.SorobanCredentials ToSorobanCredentialsXdr()
@@ -460,7 +570,7 @@ public class SorobanAddressCredentials : SorobanCredentials
         {
             Discriminant = new SorobanCredentialsType
             {
-                InnerValue = SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS,
+                InnerValue = CredentialsType.SOROBAN_CREDENTIALS_ADDRESS,
             },
             Address = new Xdr.SorobanAddressCredentials
             {
@@ -475,7 +585,10 @@ public class SorobanAddressCredentials : SorobanCredentials
 
 public class SorobanAuthorizedInvocation
 {
-    public SorobanAuthorizedInvocation(SorobanAuthorizedFunction function, SorobanAuthorizedInvocation[] subInvocations)
+    public SorobanAuthorizedInvocation(
+        SorobanAuthorizedFunction function,
+        SorobanAuthorizedInvocation[] subInvocations
+    )
     {
         Function = function;
         SubInvocations = subInvocations;
@@ -497,7 +610,8 @@ public class SorobanAuthorizedInvocation
     {
         return new SorobanAuthorizedInvocation(
             SorobanAuthorizedFunction.FromXdr(xdr.Function),
-            xdr.SubInvocations.Select(FromXdr).ToArray());
+            xdr.SubInvocations.Select(FromXdr).ToArray()
+        );
     }
 }
 
@@ -507,9 +621,12 @@ public abstract class SorobanAuthorizedFunction
     {
         return this switch
         {
-            SorobanAuthorizedContractFunction contractFn => contractFn.ToSorobanAuthorizedFunctionXdr(),
-            SorobanAuthorizedCreateContractFunction createContractHostFn => createContractHostFn
-                .ToSorobanAuthorizedFunctionXdr(),
+            SorobanAuthorizedContractFunction contractFn
+                => contractFn.ToSorobanAuthorizedFunctionXdr(),
+            SorobanAuthorizedCreateContractFunction createContractHostFn
+                => createContractHostFn.ToSorobanAuthorizedFunctionXdr(),
+            SorobanAuthorizedCreateContractV2Function createContractHostV2Fn
+                => createContractHostV2Fn.ToSorobanAuthorizedFunctionXdr(),
             _ => throw new InvalidOperationException("Unknown SorobanAuthorizedFunction type"),
         };
     }
@@ -518,12 +635,15 @@ public abstract class SorobanAuthorizedFunction
     {
         return xdrSorobanAuthorizedFunction.Discriminant.InnerValue switch
         {
-            SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum
-                .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN => SorobanAuthorizedContractFunction
-                .FromSorobanAuthorizedFunctionXdr(xdrSorobanAuthorizedFunction),
-            SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum
-                .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN => SorobanAuthorizedCreateContractFunction
-                .FromSorobanAuthorizedFunctionXdr(xdrSorobanAuthorizedFunction),
+            FunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN
+                => SorobanAuthorizedContractFunction
+                    .FromSorobanAuthorizedFunctionXdr(xdrSorobanAuthorizedFunction),
+            FunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN
+                => SorobanAuthorizedCreateContractFunction
+                    .FromSorobanAuthorizedFunctionXdr(xdrSorobanAuthorizedFunction),
+            FunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN
+                => SorobanAuthorizedCreateContractV2Function
+                    .FromSorobanAuthorizedFunctionXdr(xdrSorobanAuthorizedFunction),
             _ => throw new InvalidOperationException("Unknown SorobanAuthorizedFunction type"),
         };
     }
@@ -539,16 +659,18 @@ public class SorobanAuthorizedContractFunction : SorobanAuthorizedFunction
     public InvokeContractHostFunction HostFunction { get; }
 
     public static SorobanAuthorizedFunction FromSorobanAuthorizedFunctionXdr(
-        Xdr.SorobanAuthorizedFunction xdrSorobanAuthorizedFunction)
+        Xdr.SorobanAuthorizedFunction xdrSorobanAuthorizedFunction
+    )
     {
-        if (xdrSorobanAuthorizedFunction.Discriminant.InnerValue != SorobanAuthorizedFunctionType
-                .SorobanAuthorizedFunctionTypeEnum.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
+        if (xdrSorobanAuthorizedFunction.Discriminant.InnerValue !=
+            FunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
         {
             throw new InvalidOperationException("Invalid SorobanAuthorizedFunction type");
         }
 
         return new SorobanAuthorizedContractFunction(
-            InvokeContractHostFunction.FromXdr(xdrSorobanAuthorizedFunction.ContractFn));
+            InvokeContractHostFunction.FromXdr(xdrSorobanAuthorizedFunction.ContractFn)
+        );
     }
 
     public Xdr.SorobanAuthorizedFunction ToSorobanAuthorizedFunctionXdr()
@@ -557,8 +679,7 @@ public class SorobanAuthorizedContractFunction : SorobanAuthorizedFunction
         {
             Discriminant = new SorobanAuthorizedFunctionType
             {
-                InnerValue = SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum
-                    .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN,
+                InnerValue = FunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN,
             },
             ContractFn = HostFunction.ToXdr(),
         };
@@ -575,16 +696,18 @@ public class SorobanAuthorizedCreateContractFunction : SorobanAuthorizedFunction
     public CreateContractHostFunction HostFunction { get; }
 
     public static SorobanAuthorizedFunction FromSorobanAuthorizedFunctionXdr(
-        Xdr.SorobanAuthorizedFunction xdrSorobanAuthorizedFunction)
+        Xdr.SorobanAuthorizedFunction xdrSorobanAuthorizedFunction
+    )
     {
-        if (xdrSorobanAuthorizedFunction.Discriminant.InnerValue != SorobanAuthorizedFunctionType
-                .SorobanAuthorizedFunctionTypeEnum.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN)
+        if (xdrSorobanAuthorizedFunction.Discriminant.InnerValue !=
+            FunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN)
         {
             throw new InvalidOperationException("Invalid SorobanAuthorizedFunction type");
         }
 
         return new SorobanAuthorizedCreateContractFunction(
-            CreateContractHostFunction.FromXdr(xdrSorobanAuthorizedFunction.CreateContractHostFn));
+            CreateContractHostFunction.FromXdr(xdrSorobanAuthorizedFunction.CreateContractHostFn)
+        );
     }
 
     public Xdr.SorobanAuthorizedFunction ToSorobanAuthorizedFunctionXdr()
@@ -593,10 +716,46 @@ public class SorobanAuthorizedCreateContractFunction : SorobanAuthorizedFunction
         {
             Discriminant = new SorobanAuthorizedFunctionType
             {
-                InnerValue = SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum
-                    .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN,
+                InnerValue = FunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN,
             },
             CreateContractHostFn = HostFunction.ToXdr(),
+        };
+    }
+}
+
+public class SorobanAuthorizedCreateContractV2Function : SorobanAuthorizedFunction
+{
+    public SorobanAuthorizedCreateContractV2Function(CreateContractV2HostFunction hostFunction)
+    {
+        HostFunction = hostFunction;
+    }
+
+    public CreateContractV2HostFunction HostFunction { get; }
+
+    public static SorobanAuthorizedFunction FromSorobanAuthorizedFunctionXdr(
+        Xdr.SorobanAuthorizedFunction xdrSorobanAuthorizedFunction
+    )
+    {
+        if (xdrSorobanAuthorizedFunction.Discriminant.InnerValue !=
+            FunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN)
+        {
+            throw new InvalidOperationException("Invalid SorobanAuthorizedFunction type");
+        }
+
+        return new SorobanAuthorizedCreateContractV2Function(
+            CreateContractV2HostFunction.FromXdr(xdrSorobanAuthorizedFunction.CreateContractV2HostFn)
+        );
+    }
+
+    public Xdr.SorobanAuthorizedFunction ToSorobanAuthorizedFunctionXdr()
+    {
+        return new Xdr.SorobanAuthorizedFunction
+        {
+            Discriminant = new SorobanAuthorizedFunctionType
+            {
+                InnerValue = FunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN,
+            },
+            CreateContractV2HostFn = HostFunction.ToXdr(),
         };
     }
 }
@@ -617,9 +776,9 @@ public abstract class ContractIDPreimage
     {
         return xdrContractIDPreimage.Discriminant.InnerValue switch
         {
-            ContractIDPreimageType.ContractIDPreimageTypeEnum.CONTRACT_ID_PREIMAGE_FROM_ADDRESS =>
+            PreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS =>
                 ContractIDAddressPreimage.FromContractIDPreimageXdr(xdrContractIDPreimage),
-            ContractIDPreimageType.ContractIDPreimageTypeEnum.CONTRACT_ID_PREIMAGE_FROM_ASSET =>
+            PreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET =>
                 ContractIDAssetPreimage.FromContractIDPreimageXdr(xdrContractIDPreimage),
             _ => throw new InvalidOperationException("Unknown ContractIDPreimage type"),
         };
@@ -653,15 +812,15 @@ public class ContractIDAddressPreimage : ContractIDPreimage
 
     public static ContractIDPreimage FromContractIDPreimageXdr(Xdr.ContractIDPreimage xdrContractIDPreimage)
     {
-        if (xdrContractIDPreimage.Discriminant.InnerValue !=
-            ContractIDPreimageType.ContractIDPreimageTypeEnum.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
+        if (xdrContractIDPreimage.Discriminant.InnerValue != PreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
         {
-            throw new InvalidOperationException("Invalid ContractIDPreimage type");
+            throw new InvalidOperationException("Invalid ContractIdPreimage type");
         }
 
         return new ContractIDAddressPreimage(
             KeyPair.FromXdrPublicKey(xdrContractIDPreimage.FromAddress.Address.AccountId.InnerValue).AccountId,
-            xdrContractIDPreimage.FromAddress.Salt.InnerValue);
+            xdrContractIDPreimage.FromAddress.Salt.InnerValue
+        );
     }
 
     public Xdr.ContractIDPreimage ToContractIDPreimageXdr()
@@ -670,7 +829,7 @@ public class ContractIDAddressPreimage : ContractIDPreimage
         {
             Discriminant = new ContractIDPreimageType
             {
-                InnerValue = ContractIDPreimageType.ContractIDPreimageTypeEnum.CONTRACT_ID_PREIMAGE_FROM_ADDRESS,
+                InnerValue = PreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS,
             },
             FromAddress = new Xdr.ContractIDPreimage.ContractIDPreimageFromAddress
             {
@@ -692,8 +851,7 @@ public class ContractIDAssetPreimage : ContractIDPreimage
 
     public static ContractIDPreimage FromContractIDPreimageXdr(Xdr.ContractIDPreimage xdrContractIDPreimage)
     {
-        if (xdrContractIDPreimage.Discriminant.InnerValue !=
-            ContractIDPreimageType.ContractIDPreimageTypeEnum.CONTRACT_ID_PREIMAGE_FROM_ASSET)
+        if (xdrContractIDPreimage.Discriminant.InnerValue != PreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET)
         {
             throw new InvalidOperationException("Invalid ContractIDPreimage type");
         }
@@ -707,7 +865,7 @@ public class ContractIDAssetPreimage : ContractIDPreimage
         {
             Discriminant = new ContractIDPreimageType
             {
-                InnerValue = ContractIDPreimageType.ContractIDPreimageTypeEnum.CONTRACT_ID_PREIMAGE_FROM_ASSET,
+                InnerValue = PreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET,
             },
             FromAsset = Asset.ToXdr(),
         };

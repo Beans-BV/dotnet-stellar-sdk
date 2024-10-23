@@ -3,7 +3,7 @@
 /// <summary>
 ///     General information about the currently configured network. This response will contain all the information needed
 ///     to successfully submit transactions to the network this node serves.
-///     See https://soroban.stellar.org/api/methods/getNetwork
+///     See https://developers.stellar.org/docs/data/rpc/api-reference/methods/getNetwork
 /// </summary>
 public class GetNetworkResponse
 {

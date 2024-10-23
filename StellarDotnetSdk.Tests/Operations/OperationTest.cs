@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
@@ -7,6 +9,7 @@ using StellarDotnetSdk.Claimants;
 using StellarDotnetSdk.LedgerKeys;
 using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
 using xdrSDK = StellarDotnetSdk.Xdr;
 using Asset = StellarDotnetSdk.Assets.Asset;
@@ -1017,5 +1020,148 @@ public class OperationTest
         var ex = Assert.ThrowsException<ArgumentException>(() =>
             new LiquidityPoolWithdrawOperation(assetAmountB, assetAmountA, "100", source));
         Assert.AreEqual("Invalid Liquidity Pool ID", ex.Message);
+    }
+
+    [TestMethod]
+    public async Task TestUploadContractOperation()
+    {
+        // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
+        var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
+        var helloWasmPath = Path.GetFullPath("TestData/Wasm/soroban_hello_world_contract.wasm");
+        var wasm = await File.ReadAllBytesAsync(helloWasmPath);
+
+        var operation = new UploadContractOperation(wasm, source);
+
+        var xdrOperation = operation.ToXdr();
+
+        var decodedOperation = (UploadContractOperation)Operation.FromXdr(xdrOperation);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(decodedOperation.SourceAccount);
+        Assert.AreEqual(operation.SourceAccount.AccountId, decodedOperation.SourceAccount.AccountId);
+        CollectionAssert.AreEqual(operation.Wasm, decodedOperation.Wasm);
+    }
+
+    [TestMethod]
+    public void TestCreateContractOperation()
+    {
+        // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
+        var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
+        const string wasmHash = "c1a650506f7c20c8f4d16aae73f894f302cd011d7ef33adef572f20b34f7653e";
+        var arguments = new SCVal[] { new SCString("test"), new SCInt64(100) };
+        var operation = CreateContractOperation.FromAddress(wasmHash, source.AccountId, arguments, null, source);
+
+        var xdrOperation = operation.ToXdr();
+
+        var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(decodedOperation.SourceAccount);
+        Assert.AreEqual(operation.SourceAccount.AccountId, decodedOperation.SourceAccount.AccountId);
+        var hostFunction = operation.HostFunction;
+        var decodedHostFunction = decodedOperation.HostFunction;
+
+        var executable = (ContractExecutableWasm)hostFunction.Executable;
+        var decodedExecutable = (ContractExecutableWasm)decodedHostFunction.Executable;
+        Assert.AreEqual(executable.WasmHash.ToLower(), decodedExecutable.WasmHash.ToLower());
+
+        var preimage = (ContractIDAddressPreimage)hostFunction.ContractIDPreimage;
+        var decodedPreimage = (ContractIDAddressPreimage)decodedHostFunction.ContractIDPreimage;
+        Assert.AreEqual(((SCAccountId)preimage.Address).InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
+        CollectionAssert.AreEqual(preimage.Salt, decodedPreimage.Salt);
+
+        var decodedArguments = decodedHostFunction.Arguments;
+        Assert.AreEqual(arguments.Length, decodedArguments.Length);
+        Assert.AreEqual(((SCString)arguments[0]).InnerValue, ((SCString)decodedArguments[0]).InnerValue);
+        Assert.AreEqual(((SCInt64)arguments[1]).InnerValue, ((SCInt64)decodedArguments[1]).InnerValue);
+    }
+
+    [TestMethod]
+    public void TestInvokeContractOperationConstructor1()
+    {
+        var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
+        var operation = new InvokeContractOperation(
+            new SCContractId("CDSUR2JFKSUORJLUA2FISW7P6ALDTS2PDK6AYQZ7G4CSY5WZS5QVSM47"),
+            new SCSymbol("init"),
+            [new SCString("test"), new SCBool(true)],
+            source);
+
+
+        var xdrOperation = operation.ToXdr();
+
+        var decodedOperation = (InvokeContractOperation)Operation.FromXdr(xdrOperation);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(decodedOperation.SourceAccount);
+        Assert.AreEqual(operation.SourceAccount.AccountId, decodedOperation.SourceAccount.AccountId);
+        var hostFunction = operation.HostFunction;
+        var decodedHostFunction = decodedOperation.HostFunction;
+
+        var address = (SCContractId)hostFunction.ContractAddress;
+        var decodedAddress = (SCContractId)decodedHostFunction.ContractAddress;
+        Assert.AreEqual(address.InnerValue, decodedAddress.InnerValue);
+        Assert.AreEqual(hostFunction.FunctionName.InnerValue, decodedHostFunction.FunctionName.InnerValue);
+
+        var arguments = hostFunction.Args;
+        var decodedArguments = decodedHostFunction.Args;
+        Assert.AreEqual(arguments.Length, decodedArguments.Length);
+        Assert.AreEqual(((SCString)arguments[0]).InnerValue, ((SCString)decodedArguments[0]).InnerValue);
+        Assert.AreEqual(((SCBool)arguments[1]).InnerValue, ((SCBool)decodedArguments[1]).InnerValue);
+    }
+
+    [TestMethod]
+    public void TestInvokeContractOperationConstructor2()
+    {
+        var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
+        var operation = new InvokeContractOperation(
+            "CDSUR2JFKSUORJLUA2FISW7P6ALDTS2PDK6AYQZ7G4CSY5WZS5QVSM47",
+            "init",
+            [new SCString("test"), new SCBool(true)],
+            source);
+
+
+        var xdrOperation = operation.ToXdr();
+
+        var decodedOperation = (InvokeContractOperation)Operation.FromXdr(xdrOperation);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(decodedOperation.SourceAccount);
+        Assert.AreEqual(operation.SourceAccount.AccountId, decodedOperation.SourceAccount.AccountId);
+        var hostFunction = operation.HostFunction;
+        var decodedHostFunction = decodedOperation.HostFunction;
+
+        var address = (SCContractId)hostFunction.ContractAddress;
+        var decodedAddress = (SCContractId)decodedHostFunction.ContractAddress;
+        Assert.AreEqual(address.InnerValue, decodedAddress.InnerValue);
+        Assert.AreEqual(hostFunction.FunctionName.InnerValue, decodedHostFunction.FunctionName.InnerValue);
+
+        var arguments = hostFunction.Args;
+        var decodedArguments = decodedHostFunction.Args;
+        Assert.AreEqual(arguments.Length, decodedArguments.Length);
+        Assert.AreEqual(((SCString)arguments[0]).InnerValue, ((SCString)decodedArguments[0]).InnerValue);
+        Assert.AreEqual(((SCBool)arguments[1]).InnerValue, ((SCBool)decodedArguments[1]).InnerValue);
+    }
+
+    [TestMethod]
+    public void TestDeploySacOperation()
+    {
+        var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
+        Asset asset = new AssetTypeCreditAlphaNum4("VNDT", source.AccountId);
+        var operation = CreateContractOperation.FromAsset(asset, null, source);
+
+        var xdrOperation = operation.ToXdr();
+
+        var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
+        Assert.IsNotNull(operation.SourceAccount);
+        Assert.IsNotNull(decodedOperation.SourceAccount);
+        Assert.AreEqual(operation.SourceAccount.AccountId, decodedOperation.SourceAccount.AccountId);
+        var hostFunction = operation.HostFunction;
+        var decodedHostFunction = decodedOperation.HostFunction;
+
+        Assert.IsInstanceOfType(hostFunction.Executable, typeof(ContractExecutableStellarAsset));
+        Assert.IsInstanceOfType(decodedHostFunction.Executable, typeof(ContractExecutableStellarAsset));
+
+        Assert.IsInstanceOfType(hostFunction.ContractIDPreimage, typeof(ContractIDAssetPreimage));
+        Assert.IsInstanceOfType(decodedHostFunction.ContractIDPreimage, typeof(ContractIDAssetPreimage));
+
+        var decodedAsset = ((ContractIDAssetPreimage)decodedHostFunction.ContractIDPreimage).Asset;
+        Assert.AreEqual(((AssetTypeCreditAlphaNum4)asset).Code, ((AssetTypeCreditAlphaNum4)decodedAsset).Code);
+        Assert.AreEqual(((AssetTypeCreditAlphaNum4)asset).Issuer, ((AssetTypeCreditAlphaNum4)decodedAsset).Issuer);
     }
 }
