@@ -372,7 +372,7 @@ public class CreateContractV2HostFunction : HostFunction
         SCVal[] arguments
     )
     {
-        ContractIdPreimage = contractIdPreimage;
+        ContractIDPreimage = contractIdPreimage;
         Executable = executable;
         Arguments = arguments;
     }
@@ -390,12 +390,12 @@ public class CreateContractV2HostFunction : HostFunction
         byte[]? salt = null
     )
     {
-        ContractIdPreimage = new ContractIDAddressPreimage(address, salt);
+        ContractIDPreimage = new ContractIDAddressPreimage(address, salt);
         Executable = new ContractExecutableWasm(wasmHash);
         Arguments = arguments;
     }
 
-    public ContractIDPreimage ContractIdPreimage { get; }
+    public ContractIDPreimage ContractIDPreimage { get; }
     public ContractExecutable Executable { get; }
     public SCVal[] Arguments { get; }
 
@@ -412,7 +412,7 @@ public class CreateContractV2HostFunction : HostFunction
     {
         return new CreateContractArgsV2
         {
-            ContractIDPreimage = ContractIdPreimage.ToXdr(),
+            ContractIDPreimage = ContractIDPreimage.ToXdr(),
             Executable = Executable.ToXdr(),
             ConstructorArgs = Arguments.Select(a => a.ToXdr()).ToArray(),
         };

@@ -1063,8 +1063,8 @@ public class OperationTest
         var decodedExecutable = (ContractExecutableWasm)decodedHostFunction.Executable;
         Assert.AreEqual(executable.WasmHash.ToLower(), decodedExecutable.WasmHash.ToLower());
 
-        var preimage = (ContractIDAddressPreimage)hostFunction.ContractIdPreimage;
-        var decodedPreimage = (ContractIDAddressPreimage)decodedHostFunction.ContractIdPreimage;
+        var preimage = (ContractIDAddressPreimage)hostFunction.ContractIDPreimage;
+        var decodedPreimage = (ContractIDAddressPreimage)decodedHostFunction.ContractIDPreimage;
         Assert.AreEqual(((SCAccountId)preimage.Address).InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
         CollectionAssert.AreEqual(preimage.Salt, decodedPreimage.Salt);
 
@@ -1157,10 +1157,10 @@ public class OperationTest
         Assert.IsInstanceOfType(hostFunction.Executable, typeof(ContractExecutableStellarAsset));
         Assert.IsInstanceOfType(decodedHostFunction.Executable, typeof(ContractExecutableStellarAsset));
 
-        Assert.IsInstanceOfType(hostFunction.ContractIdPreimage, typeof(ContractIDAssetPreimage));
-        Assert.IsInstanceOfType(decodedHostFunction.ContractIdPreimage, typeof(ContractIDAssetPreimage));
+        Assert.IsInstanceOfType(hostFunction.ContractIDPreimage, typeof(ContractIDAssetPreimage));
+        Assert.IsInstanceOfType(decodedHostFunction.ContractIDPreimage, typeof(ContractIDAssetPreimage));
 
-        var decodedAsset = ((ContractIDAssetPreimage)decodedHostFunction.ContractIdPreimage).Asset;
+        var decodedAsset = ((ContractIDAssetPreimage)decodedHostFunction.ContractIDPreimage).Asset;
         Assert.AreEqual(((AssetTypeCreditAlphaNum4)asset).Code, ((AssetTypeCreditAlphaNum4)decodedAsset).Code);
         Assert.AreEqual(((AssetTypeCreditAlphaNum4)asset).Issuer, ((AssetTypeCreditAlphaNum4)decodedAsset).Issuer);
     }

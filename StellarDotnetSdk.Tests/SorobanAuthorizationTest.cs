@@ -250,10 +250,10 @@ public class SorobanAuthorizationTest
         var decodedRootFunction =
             ((SorobanAuthorizedCreateContractV2Function)decodedAuth.RootInvocation.Function).HostFunction;
         Assert.IsNotNull(decodedRootFunction);
-        Assert.IsInstanceOfType(decodedRootFunction.ContractIdPreimage, typeof(ContractIDAddressPreimage));
-        var decodedPreimage = (ContractIDAddressPreimage)decodedRootFunction.ContractIdPreimage;
+        Assert.IsInstanceOfType(decodedRootFunction.ContractIDPreimage, typeof(ContractIDAddressPreimage));
+        var decodedPreimage = (ContractIDAddressPreimage)decodedRootFunction.ContractIDPreimage;
         Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
-        var salt = ((ContractIDAddressPreimage)hostFunction.ContractIdPreimage).Salt;
+        var salt = ((ContractIDAddressPreimage)hostFunction.ContractIDPreimage).Salt;
         CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
         Assert.IsInstanceOfType(decodedRootFunction.Executable, typeof(ContractExecutableWasm));
         var decodedExecutable = (ContractExecutableWasm)decodedRootFunction.Executable;
@@ -266,8 +266,8 @@ public class SorobanAuthorizationTest
         var decodedSubFunction =
             ((SorobanAuthorizedCreateContractV2Function)decodedSubInvocations[0].Function).HostFunction;
         Assert.IsNotNull(decodedSubFunction);
-        Assert.IsInstanceOfType(decodedSubFunction.ContractIdPreimage, typeof(ContractIDAddressPreimage));
-        decodedPreimage = (ContractIDAddressPreimage)decodedSubFunction.ContractIdPreimage;
+        Assert.IsInstanceOfType(decodedSubFunction.ContractIDPreimage, typeof(ContractIDAddressPreimage));
+        decodedPreimage = (ContractIDAddressPreimage)decodedSubFunction.ContractIDPreimage;
         Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
         CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
         Assert.IsInstanceOfType(decodedSubFunction.Executable, typeof(ContractExecutableWasm));
