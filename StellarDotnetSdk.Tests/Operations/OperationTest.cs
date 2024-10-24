@@ -733,14 +733,14 @@ public class OperationTest
     {
         var operation =
             RevokeLedgerEntrySponsorshipOperation.ForClaimableBalance(
-                "c8789370cda62cdb5be83642f5af61829c0c77afde7d0fb7577a8f320467563f");
+                "00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780");
 
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (RevokeLedgerEntrySponsorshipOperation)Operation.FromXdr(xdrOperation);
 
         Assert.IsNull(decodedOperation.SourceAccount);
-        CollectionAssert.AreEqual(((LedgerKeyClaimableBalance)operation.LedgerKey).BalanceId,
-            ((LedgerKeyClaimableBalance)decodedOperation.LedgerKey).BalanceId);
+        Assert.AreEqual(((LedgerKeyClaimableBalance)operation.LedgerKey).BalanceId,
+            ((LedgerKeyClaimableBalance)decodedOperation.LedgerKey).BalanceId.ToLower());
     }
 
     [TestMethod]
@@ -873,7 +873,7 @@ public class OperationTest
         var parsedOperation = (LiquidityPoolDepositOperation)Operation.FromXdr(xdr);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
-        Assert.AreEqual(operation.LiquidityPoolID, parsedOperation.LiquidityPoolID);
+        Assert.AreEqual(operation.LiquidityPoolId, parsedOperation.LiquidityPoolId);
         Assert.AreEqual(operation.MaxAmountA, parsedOperation.MaxAmountA);
         Assert.AreEqual(operation.MaxAmountB, parsedOperation.MaxAmountB);
         Assert.AreEqual(operation.MinPrice, parsedOperation.MinPrice);
@@ -894,7 +894,7 @@ public class OperationTest
         var assetA = Asset.Create($"EUR:{keypairAssetA.AccountId}");
         var assetB = Asset.Create($"USD:{keypairAssetB.AccountId}");
 
-        var liquidityPoolId = new LiquidityPoolID(
+        var liquidityPoolId = new LiquidityPoolId(
             xdrSDK.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
             assetA,
             assetB,
@@ -910,7 +910,7 @@ public class OperationTest
         var parsedOperation = (LiquidityPoolDepositOperation)Operation.FromXdr(xdr);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
-        Assert.AreEqual(operation.LiquidityPoolID, parsedOperation.LiquidityPoolID);
+        Assert.AreEqual(operation.LiquidityPoolId, parsedOperation.LiquidityPoolId);
         Assert.AreEqual(operation.MaxAmountA, parsedOperation.MaxAmountA);
         Assert.AreEqual(operation.MaxAmountB, parsedOperation.MaxAmountB);
         Assert.AreEqual(operation.MinPrice, parsedOperation.MinPrice);
@@ -981,7 +981,7 @@ public class OperationTest
         var assetA = Asset.Create($"EUR:{keypairAssetA.AccountId}");
         var assetB = Asset.Create($"USD:{keypairAssetB.AccountId}");
 
-        var liquidityPoolId = new LiquidityPoolID(
+        var liquidityPoolId = new LiquidityPoolId(
             xdrSDK.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
             assetA,
             assetB,
@@ -1063,8 +1063,8 @@ public class OperationTest
         var decodedExecutable = (ContractExecutableWasm)decodedHostFunction.Executable;
         Assert.AreEqual(executable.WasmHash.ToLower(), decodedExecutable.WasmHash.ToLower());
 
-        var preimage = (ContractIDAddressPreimage)hostFunction.ContractIDPreimage;
-        var decodedPreimage = (ContractIDAddressPreimage)decodedHostFunction.ContractIDPreimage;
+        var preimage = (ContractIdAddressPreimage)hostFunction.ContractIdPreimage;
+        var decodedPreimage = (ContractIdAddressPreimage)decodedHostFunction.ContractIdPreimage;
         Assert.AreEqual(((SCAccountId)preimage.Address).InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
         CollectionAssert.AreEqual(preimage.Salt, decodedPreimage.Salt);
 
@@ -1157,10 +1157,10 @@ public class OperationTest
         Assert.IsInstanceOfType(hostFunction.Executable, typeof(ContractExecutableStellarAsset));
         Assert.IsInstanceOfType(decodedHostFunction.Executable, typeof(ContractExecutableStellarAsset));
 
-        Assert.IsInstanceOfType(hostFunction.ContractIDPreimage, typeof(ContractIDAssetPreimage));
-        Assert.IsInstanceOfType(decodedHostFunction.ContractIDPreimage, typeof(ContractIDAssetPreimage));
+        Assert.IsInstanceOfType(hostFunction.ContractIdPreimage, typeof(ContractIdAssetPreimage));
+        Assert.IsInstanceOfType(decodedHostFunction.ContractIdPreimage, typeof(ContractIdAssetPreimage));
 
-        var decodedAsset = ((ContractIDAssetPreimage)decodedHostFunction.ContractIDPreimage).Asset;
+        var decodedAsset = ((ContractIdAssetPreimage)decodedHostFunction.ContractIdPreimage).Asset;
         Assert.AreEqual(((AssetTypeCreditAlphaNum4)asset).Code, ((AssetTypeCreditAlphaNum4)decodedAsset).Code);
         Assert.AreEqual(((AssetTypeCreditAlphaNum4)asset).Issuer, ((AssetTypeCreditAlphaNum4)decodedAsset).Issuer);
     }

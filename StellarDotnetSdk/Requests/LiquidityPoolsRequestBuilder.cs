@@ -30,9 +30,9 @@ public class
         return await LiquidityPool(BuildUri());
     }
 
-    public async Task<LiquidityPoolResponse> LiquidityPool(LiquidityPoolID liquidityPoolID)
+    public async Task<LiquidityPoolResponse> LiquidityPool(LiquidityPoolId liquidityPoolId)
     {
-        return await LiquidityPool(liquidityPoolID.ToString());
+        return await LiquidityPool(liquidityPoolId.ToString());
     }
 
     public LiquidityPoolsRequestBuilder ForReserves(params string[] reserves)

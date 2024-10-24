@@ -29,11 +29,11 @@ public class AssetTypeCreditAlphaNum12 : AssetTypeCreditAlphaNum
         {
             AssetCode = new AssetCode12(Util.PaddedByteArray(Code, 12)),
         };
-        var accountID = new AccountID
+        var accountId = new AccountID
         {
             InnerValue = KeyPair.FromAccountId(Issuer).XdrPublicKey,
         };
-        credit.Issuer = accountID;
+        credit.Issuer = accountId;
         thisXdr.AlphaNum12 = credit;
         return thisXdr;
     }

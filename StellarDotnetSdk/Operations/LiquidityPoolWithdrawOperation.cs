@@ -22,20 +22,20 @@ public class LiquidityPoolWithdrawOperation : Operation
     /// <summary>
     ///     Constructs a new <c>LiquidityPoolWithdrawOperation</c>.
     /// </summary>
-    /// <param name="liquidityPoolId">The PoolID for the Liquidity Pool to withdraw from.</param>
+    /// <param name="liquidityPoolId">The Pool ID for the Liquidity Pool to withdraw from.</param>
     /// <param name="amount">Amount of pool shares to withdraw.</param>
     /// <param name="minAmountA">Minimum amount of the first asset to withdraw.</param>
     /// <param name="minAmountB">Minimum amount of the second asset to withdraw.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public LiquidityPoolWithdrawOperation(
-        LiquidityPoolID liquidityPoolId,
+        LiquidityPoolId liquidityPoolId,
         string amount,
         string minAmountA,
         string minAmountB,
         IAccountId? sourceAccount = null) : base(sourceAccount)
     {
         LiquidityPoolId = liquidityPoolId ??
-                          throw new ArgumentNullException(nameof(liquidityPoolId), "liquidityPoolID cannot be null");
+                          throw new ArgumentNullException(nameof(liquidityPoolId), "liquidityPoolId cannot be null");
         Amount = amount ?? throw new ArgumentNullException(nameof(amount), "amount cannot be null");
         MinAmountA = minAmountA ?? throw new ArgumentNullException(nameof(minAmountA), "minAmountA cannot be null");
         MinAmountB = minAmountB ?? throw new ArgumentNullException(nameof(minAmountB), "minAmountB cannot be null");
@@ -47,7 +47,7 @@ public class LiquidityPoolWithdrawOperation : Operation
         AssetAmount assetB,
         string amount,
         IAccountId? sourceAccount = null)
-        : this(new LiquidityPoolID(
+        : this(new LiquidityPoolId(
                 LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA.Asset,
                 assetB.Asset,
@@ -60,9 +60,9 @@ public class LiquidityPoolWithdrawOperation : Operation
     }
 
     /// <summary>
-    ///     The PoolID for the Liquidity Pool to withdraw from.
+    ///     The Pool ID for the Liquidity Pool to withdraw from.
     /// </summary>
-    public LiquidityPoolID LiquidityPoolId { get; }
+    public LiquidityPoolId LiquidityPoolId { get; }
 
     /// <summary>
     ///     Amount of pool shares to withdraw.
@@ -98,7 +98,7 @@ public class LiquidityPoolWithdrawOperation : Operation
     public static LiquidityPoolWithdrawOperation FromXdr(LiquidityPoolWithdrawOp liquidityPoolWithdrawOp)
     {
         return new LiquidityPoolWithdrawOperation(
-            LiquidityPoolID.FromXdr(liquidityPoolWithdrawOp.LiquidityPoolID),
+            LiquidityPoolId.FromXdr(liquidityPoolWithdrawOp.LiquidityPoolID),
             StellarDotnetSdk.Amount.FromXdr(liquidityPoolWithdrawOp.Amount.InnerValue),
             StellarDotnetSdk.Amount.FromXdr(liquidityPoolWithdrawOp.MinAmountA.InnerValue),
             StellarDotnetSdk.Amount.FromXdr(liquidityPoolWithdrawOp.MinAmountB.InnerValue)

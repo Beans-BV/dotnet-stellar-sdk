@@ -765,7 +765,7 @@ public class SorobanServerTest
         Assert.IsNotNull(ledgerEntry);
         Assert.IsNotNull(ledgerKey);
         Assert.AreEqual("299a32106238f3b2d84d4142783fe320253bcda775d1bfb7accdb533021ddccf",
-            Convert.ToHexString(ledgerKey.BalanceId).ToLower());
+            ledgerKey.BalanceId.ToLower());
         Assert.AreEqual(457593U, ledgerEntry.LastModifiedLedgerSeq);
         Assert.AreEqual("native", ledgerEntry.Asset.Type);
         Assert.AreEqual(200000000L, ledgerEntry.Amount);
@@ -812,7 +812,7 @@ public class SorobanServerTest
         Assert.IsNotNull(ledgerKey);
         Assert.AreEqual(457976U, ledgerEntry.LastModifiedLedgerSeq);
         Assert.AreEqual("fd498c395920d57156e86b2d52acd2bbbfc164836a204c73d3b64bec33874d38",
-            ledgerKey.LiquidityPoolID.ToString());
+            ledgerKey.LiquidityPoolId.ToString());
         Assert.AreEqual("fd498c395920d57156e86b2d52acd2bbbfc164836a204c73d3b64bec33874d38",
             ledgerEntry.LiquidityPoolId.ToString());
         Assert.IsInstanceOfType(ledgerEntry.LiquidityPoolBody, typeof(LiquidityPoolConstantProduct));
@@ -1659,9 +1659,9 @@ public class SorobanServerTest
 
         var entry10 = entries[10] as StateArchivalSettings;
         Assert.IsNotNull(entry10);
-        Assert.AreEqual(3110400U, entry10.MaxEntryTTL);
-        Assert.AreEqual(17280U, entry10.MinTemporaryTTL);
-        Assert.AreEqual(2073600U, entry10.MinPersistentTTL);
+        Assert.AreEqual(3110400U, entry10.MaxEntryTtl);
+        Assert.AreEqual(17280U, entry10.MinTemporaryTtl);
+        Assert.AreEqual(2073600U, entry10.MinPersistentTtl);
         Assert.AreEqual(2103L, entry10.PersistentRentRateDenominator);
         Assert.AreEqual(4206L, entry10.TempRentRateDenominator);
         Assert.AreEqual(1000U, entry10.MaxEntriesToArchive);
@@ -1705,7 +1705,7 @@ public class SorobanServerTest
 
         var ledgerKeyTtl = new LedgerKey[]
         {
-            new LedgerKeyTTL("fsh67B45yRcC/gKPI2ky8EPbFMtc8y0fnjUDaI36OKc="),
+            new LedgerKeyTtl("fsh67B45yRcC/gKPI2ky8EPbFMtc8y0fnjUDaI36OKc="),
         };
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 

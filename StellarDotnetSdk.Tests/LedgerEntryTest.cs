@@ -1343,9 +1343,9 @@ public class LedgerEntryTest
         var decodedConfigSetting = (StateArchivalSettings)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrConfigSetting.MaxEntryTTL.InnerValue, decodedConfigSetting.MaxEntryTTL);
-        Assert.AreEqual(xdrConfigSetting.MinTemporaryTTL.InnerValue, decodedConfigSetting.MinTemporaryTTL);
-        Assert.AreEqual(xdrConfigSetting.MinPersistentTTL.InnerValue, decodedConfigSetting.MinPersistentTTL);
+        Assert.AreEqual(xdrConfigSetting.MaxEntryTTL.InnerValue, decodedConfigSetting.MaxEntryTtl);
+        Assert.AreEqual(xdrConfigSetting.MinTemporaryTTL.InnerValue, decodedConfigSetting.MinTemporaryTtl);
+        Assert.AreEqual(xdrConfigSetting.MinPersistentTTL.InnerValue, decodedConfigSetting.MinPersistentTtl);
         Assert.AreEqual(xdrConfigSetting.PersistentRentRateDenominator.InnerValue,
             decodedConfigSetting.PersistentRentRateDenominator);
         Assert.AreEqual(xdrConfigSetting.TempRentRateDenominator.InnerValue,
@@ -1508,7 +1508,7 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
-        var decodedLedgerEntry = (LedgerEntryTTL)LedgerEntry.FromXdrBase64(entryXdrBase64);
+        var decodedLedgerEntry = (LedgerEntryTtl)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
         CollectionAssert.AreEqual(xdrTtlEntry.KeyHash.InnerValue, decodedLedgerEntry.KeyHash);

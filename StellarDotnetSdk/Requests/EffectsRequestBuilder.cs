@@ -59,14 +59,14 @@ public class EffectsRequestBuilder : RequestBuilderStreamable<EffectsRequestBuil
         return this;
     }
 
-    public EffectsRequestBuilder ForLiquidityPool(LiquidityPoolID liquidityPoolID)
+    public EffectsRequestBuilder ForLiquidityPool(LiquidityPoolId liquidityPoolId)
     {
-        return ForLiquidityPool(liquidityPoolID.ToString());
+        return ForLiquidityPool(liquidityPoolId.ToString());
     }
 
-    public EffectsRequestBuilder ForLiquidityPool(string liquidityPoolID)
+    public EffectsRequestBuilder ForLiquidityPool(string liquidityPoolId)
     {
-        SetSegments("liquidity_pools", liquidityPoolID, "effects");
+        SetSegments("liquidity_pools", liquidityPoolId, "effects");
         return this;
     }
 }

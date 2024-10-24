@@ -47,7 +47,7 @@ public class PaymentOperationResponseTest
 
         Assert.AreEqual(operation.From, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
         Assert.IsNull(operation.FromMuxed);
-        Assert.IsNull(operation.FromMuxedID);
+        Assert.IsNull(operation.FromMuxedId);
         Assert.AreEqual(operation.To, "GDWNY2POLGK65VVKIH5KQSH7VWLKRTQ5M6ADLJAYC2UEHEBEARCZJWWI");
         Assert.AreEqual(operation.Amount, "100.0");
         Assert.AreEqual(operation.Asset, new AssetTypeNative());
@@ -166,7 +166,7 @@ public class PaymentOperationResponseTest
 
         Assert.AreEqual(operation.From, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
         Assert.AreEqual(operation.FromMuxed, "MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24");
-        Assert.AreEqual(operation.FromMuxedID, 5123456789UL);
+        Assert.AreEqual(operation.FromMuxedId, 5123456789UL);
         Assert.AreEqual(operation.To, "GDWNY2POLGK65VVKIH5KQSH7VWLKRTQ5M6ADLJAYC2UEHEBEARCZJWWI");
         Assert.AreEqual(operation.Amount, "100.0");
         Assert.AreEqual(operation.Asset, new AssetTypeNative());

@@ -53,7 +53,7 @@ public abstract class LedgerEntry
             LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING =>
                 LedgerEntryConfigSetting.FromXdrLedgerEntryData(xdrLedgerEntryData),
             LedgerEntryType.LedgerEntryTypeEnum.TTL =>
-                LedgerEntryTTL.FromXdrLedgerEntryData(xdrLedgerEntryData),
+                LedgerEntryTtl.FromXdrLedgerEntryData(xdrLedgerEntryData),
             _ => throw new InvalidOperationException("Unknown LedgerEntry type"),
         };
     }

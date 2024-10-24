@@ -51,11 +51,11 @@ public class ExtendFootprintOperation : Operation
         };
     }
 
-    public static ExtendFootprintOperation FromXdr(ExtendFootprintTTLOp extendFootprintTTLOp)
+    public static ExtendFootprintOperation FromXdr(ExtendFootprintTTLOp extendFootprintTtlOp)
     {
         return new ExtendFootprintOperation(
-            extendFootprintTTLOp.ExtendTo.InnerValue,
-            ExtensionPoint.FromXdr(extendFootprintTTLOp.Ext)
+            extendFootprintTtlOp.ExtendTo.InnerValue,
+            ExtensionPoint.FromXdr(extendFootprintTtlOp.Ext)
         );
     }
 }

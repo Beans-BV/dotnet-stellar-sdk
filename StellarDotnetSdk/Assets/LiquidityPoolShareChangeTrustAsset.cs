@@ -20,24 +20,24 @@ public class LiquidityPoolShareChangeTrustAsset : ChangeTrustAsset
     /// </summary>
     /// <param name="assetA"></param>
     /// <param name="assetB"></param>
-    /// <param name="feeBP"></param>
-    public LiquidityPoolShareChangeTrustAsset(Asset assetA, Asset assetB, int feeBP)
+    /// <param name="feeBp"></param>
+    public LiquidityPoolShareChangeTrustAsset(Asset assetA, Asset assetB, int feeBp)
     {
-        Parameters = new LiquidityPoolConstantProductParameters(assetA, assetB, feeBP);
+        Parameters = new LiquidityPoolConstantProductParameters(assetA, assetB, feeBp);
     }
 
     public LiquidityPoolParameters Parameters { get; set; }
 
     public override string Type => RestApiType;
 
-    public LiquidityPoolID GetLiquidityPoolID()
+    public LiquidityPoolId GetLiquidityPoolId()
     {
-        return Parameters.GetID();
+        return Parameters.GetId();
     }
 
     public override string ToString()
     {
-        return GetLiquidityPoolID().ToString();
+        return GetLiquidityPoolId().ToString();
     }
 
     public override int GetHashCode()

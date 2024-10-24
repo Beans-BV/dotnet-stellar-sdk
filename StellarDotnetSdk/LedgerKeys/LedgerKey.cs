@@ -22,6 +22,19 @@ public abstract class LedgerKey
         return new LedgerKeyClaimableBalance(balanceId);
     }
 
+    /// <summary>Constructs a new <c>LedgerKeyClaimableBalance</c> from the given hex-encoded claimable balance ID.</summary>
+    /// <param name="balanceId">
+    ///     Hex-encoded ID of the claimable balance entry.
+    ///     For example:
+    ///     Either <c>00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c>
+    ///     or
+    ///     <c>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c> is accepted.
+    /// </param>
+    public static LedgerKey ClaimableBalance(string balanceId)
+    {
+        return new LedgerKeyClaimableBalance(balanceId);
+    }
+
     public static LedgerKey Data(KeyPair account, string dataName)
     {
         return new LedgerKeyData(account, dataName);
@@ -37,7 +50,7 @@ public abstract class LedgerKey
         return new LedgerKeyTrustline(account, asset);
     }
 
-    public static LedgerKey LiquidityPool(LiquidityPoolID poolId)
+    public static LedgerKey LiquidityPool(LiquidityPoolId poolId)
     {
         return new LedgerKeyLiquidityPool(poolId);
     }
@@ -57,9 +70,9 @@ public abstract class LedgerKey
         return new LedgerKeyConfigSetting(settingId);
     }
 
-    public static LedgerKey TTL(string key)
+    public static LedgerKey Ttl(string key)
     {
-        return new LedgerKeyTTL(key);
+        return new LedgerKeyTtl(key);
     }
 
     public static LedgerKey FromXdr(Xdr.LedgerKey xdr)
@@ -76,7 +89,7 @@ public abstract class LedgerKey
             LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_DATA => LedgerKeyContractData.FromXdr(xdr.ContractData),
             LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE => LedgerKeyContractCode.FromXdr(xdr.ContractCode),
             LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING => LedgerKeyConfigSetting.FromXdr(xdr.ConfigSetting),
-            LedgerEntryType.LedgerEntryTypeEnum.TTL => LedgerKeyTTL.FromXdr(xdr.Ttl),
+            LedgerEntryType.LedgerEntryTypeEnum.TTL => LedgerKeyTtl.FromXdr(xdr.Ttl),
             _ => throw new Exception("Unknown ledger key " + xdr.Discriminant.InnerValue),
         };
     }

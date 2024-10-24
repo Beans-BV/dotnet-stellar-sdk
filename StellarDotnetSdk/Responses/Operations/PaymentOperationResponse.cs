@@ -46,7 +46,7 @@ public class PaymentOperationResponse : OperationResponse
     public string FromMuxed { get; init; }
 
     [JsonProperty(PropertyName = "from_muxed_id")]
-    public ulong? FromMuxedID { get; init; }
+    public ulong? FromMuxedId { get; init; }
 
     /// <summary>
     /// </summary>
@@ -57,7 +57,7 @@ public class PaymentOperationResponse : OperationResponse
     public string ToMuxed { get; init; }
 
     [JsonProperty(PropertyName = "to_muxed_id")]
-    public ulong? ToMuxedID { get; init; }
+    public ulong? ToMuxedId { get; init; }
 
     /// <summary>
     ///     Account address that receives the payment.

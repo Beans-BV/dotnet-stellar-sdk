@@ -27,13 +27,13 @@ public class LiquidityPoolDepositOperation : Operation
     /// <param name="maxPrice">Maximum depositA/depositB.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public LiquidityPoolDepositOperation(
-        LiquidityPoolID liquidityPoolId,
+        LiquidityPoolId liquidityPoolId,
         string maxAmountA,
         string maxAmountB,
         Price minPrice,
         Price maxPrice, IAccountId? sourceAccount = null) : base(sourceAccount)
     {
-        LiquidityPoolID = liquidityPoolId ??
+        LiquidityPoolId = liquidityPoolId ??
                           throw new ArgumentNullException(nameof(liquidityPoolId), "liquidityPoolID cannot be null");
         MaxAmountA = maxAmountA ?? throw new ArgumentNullException(nameof(maxAmountA), "maxAmountA cannot be null");
         MaxAmountB = maxAmountB ?? throw new ArgumentNullException(nameof(maxAmountB), "maxAmountB cannot be null");
@@ -46,7 +46,7 @@ public class LiquidityPoolDepositOperation : Operation
         Price minPrice,
         Price maxPrice,
         IAccountId? sourceAccount = null)
-        : this(new LiquidityPoolID(
+        : this(new LiquidityPoolId(
                 LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetAmountA.Asset,
                 assetAmountB.Asset,
@@ -62,7 +62,7 @@ public class LiquidityPoolDepositOperation : Operation
     /// <summary>
     ///     The PoolID for the Liquidity Pool to deposit into.
     /// </summary>
-    public LiquidityPoolID LiquidityPoolID { get; }
+    public LiquidityPoolId LiquidityPoolId { get; }
 
     /// <summary>
     ///     Maximum amount of first asset to deposit.
@@ -91,7 +91,7 @@ public class LiquidityPoolDepositOperation : Operation
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.LIQUIDITY_POOL_DEPOSIT),
             LiquidityPoolDepositOp = new LiquidityPoolDepositOp
             {
-                LiquidityPoolID = LiquidityPoolID.ToXdr(),
+                LiquidityPoolID = LiquidityPoolId.ToXdr(),
                 MaxAmountA = new xdr_Int64(ToXdrAmount(MaxAmountA)),
                 MaxAmountB = new xdr_Int64(ToXdrAmount(MaxAmountB)),
                 MinPrice = MinPrice.ToXdr(),
@@ -103,7 +103,7 @@ public class LiquidityPoolDepositOperation : Operation
     public static LiquidityPoolDepositOperation FromXdr(LiquidityPoolDepositOp liquidityPoolDepositOp)
     {
         return new LiquidityPoolDepositOperation(
-            LiquidityPoolID.FromXdr(liquidityPoolDepositOp.LiquidityPoolID),
+            LiquidityPoolId.FromXdr(liquidityPoolDepositOp.LiquidityPoolID),
             FromXdrAmount(liquidityPoolDepositOp.MaxAmountA.InnerValue),
             FromXdrAmount(liquidityPoolDepositOp.MaxAmountB.InnerValue),
             Price.FromXdr(liquidityPoolDepositOp.MinPrice),

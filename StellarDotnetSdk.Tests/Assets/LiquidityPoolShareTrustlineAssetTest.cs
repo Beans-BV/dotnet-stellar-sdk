@@ -22,7 +22,7 @@ public class LiquidityPoolShareTrustlineAssetTest
         var trustlineAsset = (LiquidityPoolShareTrustlineAsset)TrustlineAsset.Create(
             LiquidityPoolParameters.Create(LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetB, 30));
-        var trustlineAsset2 = new LiquidityPoolShareTrustlineAsset(trustlineAsset.ID);
+        var trustlineAsset2 = new LiquidityPoolShareTrustlineAsset(trustlineAsset.Id);
         Assert.IsTrue(trustlineAsset.Equals(trustlineAsset2));
     }
 

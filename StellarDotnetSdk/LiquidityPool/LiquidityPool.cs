@@ -7,25 +7,25 @@ namespace StellarDotnetSdk.LiquidityPool;
 
 public class LiquidityPool
 {
-    public LiquidityPool(LiquidityPoolID id,
+    public LiquidityPool(LiquidityPoolId id,
         int feeBp,
         LiquidityPoolType.LiquidityPoolTypeEnum type,
         int totalTrustlines,
         string totalShares,
         AssetAmount[] reserves)
     {
-        ID = id;
-        FeeBP = feeBp;
+        Id = id;
+        FeeBp = feeBp;
         Type = type;
         TotalTrustlines = totalTrustlines;
         TotalShares = totalShares;
         Reserves = reserves;
     }
 
-    [JsonProperty(PropertyName = "id")] public LiquidityPoolID ID { get; }
+    [JsonProperty(PropertyName = "id")] public LiquidityPoolId Id { get; }
 
     [JsonProperty(PropertyName = "fee_bp")]
-    public int FeeBP { get; }
+    public int FeeBp { get; }
 
     [JsonConverter(typeof(LiquidityPoolTypeEnumJsonConverter))]
     [JsonProperty(PropertyName = "type")]

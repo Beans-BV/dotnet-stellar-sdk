@@ -2,14 +2,14 @@
 
 public class StateArchivalSettings : LedgerEntryConfigSetting
 {
-    private StateArchivalSettings(uint maxEntryTTL, uint minTemporaryTTL, uint minPersistentTTL,
+    private StateArchivalSettings(uint maxEntryTtl, uint minTemporaryTtl, uint minPersistentTtl,
         long persistentRentRateDenominator, long tempRentRateDenominator, uint maxEntriesToArchive,
         uint bucketListSizeWindowSampleSize, uint bucketListWindowSamplePeriod, uint evictionScanSize,
         uint startingEvictionScanLevel)
     {
-        MaxEntryTTL = maxEntryTTL;
-        MinTemporaryTTL = minTemporaryTTL;
-        MinPersistentTTL = minPersistentTTL;
+        MaxEntryTtl = maxEntryTtl;
+        MinTemporaryTtl = minTemporaryTtl;
+        MinPersistentTtl = minPersistentTtl;
         PersistentRentRateDenominator = persistentRentRateDenominator;
         TempRentRateDenominator = tempRentRateDenominator;
         MaxEntriesToArchive = maxEntriesToArchive;
@@ -19,9 +19,9 @@ public class StateArchivalSettings : LedgerEntryConfigSetting
         StartingEvictionScanLevel = startingEvictionScanLevel;
     }
 
-    public uint MaxEntryTTL { get; }
-    public uint MinTemporaryTTL { get; }
-    public uint MinPersistentTTL { get; }
+    public uint MaxEntryTtl { get; }
+    public uint MinTemporaryTtl { get; }
+    public uint MinPersistentTtl { get; }
     public long PersistentRentRateDenominator { get; }
     public long TempRentRateDenominator { get; }
     public uint MaxEntriesToArchive { get; }
