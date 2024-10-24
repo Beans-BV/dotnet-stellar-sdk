@@ -71,13 +71,13 @@ public class TransactionResponse : Response, IPagingToken
 #nullable restore
 
     [JsonProperty(PropertyName = "account_muxed_id")]
-    public ulong? AccountMuxedID { get; init; }
+    public ulong? AccountMuxedId { get; init; }
 
     [JsonProperty(PropertyName = "account_muxed")]
     public string? AccountMuxed { get; init; }
 
     [JsonProperty(PropertyName = "fee_account_muxed_id")]
-    public ulong? FeeAccountMuxedID { get; set; }
+    public ulong? FeeAccountMuxedId { get; set; }
 
     [JsonProperty(PropertyName = "memo")] public string? MemoValue { get; init; }
 

@@ -1739,10 +1739,10 @@ public class EffectDeserializerTest
 
         Assert.AreEqual(effect.AccountMuxedId, 1278881UL);
 
-        Assert.AreEqual(effect.LiquidityPool.ID.ToString(),
+        Assert.AreEqual(effect.LiquidityPool.Id.ToString(),
             "4f7f29db33ead1a38c2edf17aa0416c369c207ca081de5c686c050c1ad320385");
 
-        Assert.AreEqual(effect.LiquidityPool.FeeBP, 30);
+        Assert.AreEqual(effect.LiquidityPool.FeeBp, 30);
         Assert.AreEqual(effect.LiquidityPool.TotalTrustlines, 1);
         Assert.AreEqual(effect.LiquidityPool.TotalShares, "0.0000000");
 
@@ -1768,10 +1768,10 @@ public class EffectDeserializerTest
 
         Assert.AreEqual(effect.AccountMuxedId, 1278881UL);
 
-        Assert.AreEqual(effect.LiquidityPool.ID.ToString(),
+        Assert.AreEqual(effect.LiquidityPool.Id.ToString(),
             "4f7f29db33ead1a38c2edf17aa0416c369c207ca081de5c686c050c1ad320385");
 
-        Assert.AreEqual(effect.LiquidityPool.FeeBP, 30);
+        Assert.AreEqual(effect.LiquidityPool.FeeBp, 30);
         Assert.AreEqual(effect.LiquidityPool.TotalTrustlines, 1);
         Assert.AreEqual(effect.LiquidityPool.TotalShares, "1500.0000000");
 
@@ -1816,10 +1816,10 @@ public class EffectDeserializerTest
 
         Assert.AreEqual(effect.AccountMuxedId, 1278881UL);
 
-        Assert.AreEqual(effect.LiquidityPool.ID.ToString(),
+        Assert.AreEqual(effect.LiquidityPool.Id.ToString(),
             "4f7f29db33ead1a38c2edf17aa0416c369c207ca081de5c686c050c1ad320385");
 
-        Assert.AreEqual(effect.LiquidityPool.FeeBP, 30);
+        Assert.AreEqual(effect.LiquidityPool.FeeBp, 30);
         Assert.AreEqual(effect.LiquidityPool.TotalTrustlines, 1);
         Assert.AreEqual(effect.LiquidityPool.TotalShares, "0.0000000");
 
@@ -1851,7 +1851,7 @@ public class EffectDeserializerTest
         Assert.IsTrue(back is LiquidityPoolTradeEffectResponse);
         var effect = (LiquidityPoolTradeEffectResponse)back;
 
-        Assert.AreEqual(effect.LiquidityPool.ID.ToString(),
+        Assert.AreEqual(effect.LiquidityPool.Id.ToString(),
             "4f7f29db33ead1a38c2edf17aa0416c369c207ca081de5c686c050c1ad320385");
 
         Assert.AreEqual(effect.Sold.Asset.CanonicalName(),

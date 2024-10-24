@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace stellar_dotnet_sdk;
+namespace StellarDotnetSdk.Exceptions;
 
 public class SubmitTransactionUnknownResponseException : Exception
 {

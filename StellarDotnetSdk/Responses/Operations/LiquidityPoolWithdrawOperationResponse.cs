@@ -9,7 +9,7 @@ public class LiquidityPoolWithdrawOperationResponse : OperationResponse
 {
     public override int TypeId => 23;
 
-    [JsonProperty("liquidity_pool_id")] public LiquidityPoolID LiquidityPoolID { get; init; }
+    [JsonProperty("liquidity_pool_id")] public LiquidityPoolId LiquidityPoolId { get; init; }
 
     [JsonProperty("reserves_min")] public List<Reserve> ReservesMin { get; init; }
 

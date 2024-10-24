@@ -30,7 +30,7 @@ public abstract class TrustlineAsset
         return new LiquidityPoolShareTrustlineAsset(parameters);
     }
 
-    public static TrustlineAsset Create(LiquidityPoolID id)
+    public static TrustlineAsset Create(LiquidityPoolId id)
     {
         return new LiquidityPoolShareTrustlineAsset(id);
     }
@@ -64,7 +64,7 @@ public abstract class TrustlineAsset
                     Util.PaddedByteArrayToString(trustLineAssetXdr.AlphaNum12.AssetCode.InnerValue),
                     KeyPair.FromXdrPublicKey(trustLineAssetXdr.AlphaNum12.Issuer.InnerValue).AccountId)),
             AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE
-                => new LiquidityPoolShareTrustlineAsset(LiquidityPoolID.FromXdr(trustLineAssetXdr.LiquidityPoolID)),
+                => new LiquidityPoolShareTrustlineAsset(LiquidityPoolId.FromXdr(trustLineAssetXdr.LiquidityPoolID)),
             _ => throw new ArgumentException($"Unknown asset type {trustLineAssetXdr.Discriminant.InnerValue}"),
         };
     }

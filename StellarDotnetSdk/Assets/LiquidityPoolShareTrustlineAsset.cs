@@ -11,26 +11,26 @@ public class LiquidityPoolShareTrustlineAsset : TrustlineAsset
 
     public LiquidityPoolShareTrustlineAsset(LiquidityPoolParameters parameters)
     {
-        ID = parameters.GetID() ?? throw new ArgumentNullException(nameof(parameters), "parameters cannot be null");
+        Id = parameters.GetId() ?? throw new ArgumentNullException(nameof(parameters), "parameters cannot be null");
     }
 
-    public LiquidityPoolShareTrustlineAsset(LiquidityPoolID id)
+    public LiquidityPoolShareTrustlineAsset(LiquidityPoolId id)
     {
-        ID = id ?? throw new ArgumentNullException(nameof(id), "id cannot be null");
+        Id = id ?? throw new ArgumentNullException(nameof(id), "id cannot be null");
     }
 
-    public LiquidityPoolID ID { get; }
+    public LiquidityPoolId Id { get; }
 
     public override string Type => RestApiType;
 
     public override string ToString()
     {
-        return ID.ToString();
+        return Id.ToString();
     }
 
     public override int GetHashCode()
     {
-        return ID.GetHashCode();
+        return Id.GetHashCode();
     }
 
     public override bool Equals(object? obj)
@@ -56,7 +56,7 @@ public class LiquidityPoolShareTrustlineAsset : TrustlineAsset
         var xdr = new TrustLineAsset
         {
             Discriminant = AssetType.Create(AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE),
-            LiquidityPoolID = ID.ToXdr(),
+            LiquidityPoolID = Id.ToXdr(),
         };
         return xdr;
     }

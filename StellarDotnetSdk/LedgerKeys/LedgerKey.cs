@@ -37,7 +37,7 @@ public abstract class LedgerKey
         return new LedgerKeyTrustline(account, asset);
     }
 
-    public static LedgerKey LiquidityPool(LiquidityPoolID poolId)
+    public static LedgerKey LiquidityPool(LiquidityPoolId poolId)
     {
         return new LedgerKeyLiquidityPool(poolId);
     }
@@ -57,9 +57,9 @@ public abstract class LedgerKey
         return new LedgerKeyConfigSetting(settingId);
     }
 
-    public static LedgerKey TTL(string key)
+    public static LedgerKey Ttl(string key)
     {
-        return new LedgerKeyTTL(key);
+        return new LedgerKeyTtl(key);
     }
 
     public static LedgerKey FromXdr(Xdr.LedgerKey xdr)
@@ -76,7 +76,7 @@ public abstract class LedgerKey
             LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_DATA => LedgerKeyContractData.FromXdr(xdr.ContractData),
             LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_CODE => LedgerKeyContractCode.FromXdr(xdr.ContractCode),
             LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING => LedgerKeyConfigSetting.FromXdr(xdr.ConfigSetting),
-            LedgerEntryType.LedgerEntryTypeEnum.TTL => LedgerKeyTTL.FromXdr(xdr.Ttl),
+            LedgerEntryType.LedgerEntryTypeEnum.TTL => LedgerKeyTtl.FromXdr(xdr.Ttl),
             _ => throw new Exception("Unknown ledger key " + xdr.Discriminant.InnerValue),
         };
     }

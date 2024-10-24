@@ -6,10 +6,10 @@ public class LedgerKeyConfigSetting : LedgerKey
 {
     public LedgerKeyConfigSetting(ConfigSettingID settingId)
     {
-        ConfigSettingID = settingId;
+        ConfigSettingId = settingId;
     }
 
-    public ConfigSettingID ConfigSettingID { get; }
+    public ConfigSettingID ConfigSettingId { get; }
 
     public override Xdr.LedgerKey ToXdr()
     {
@@ -19,7 +19,7 @@ public class LedgerKeyConfigSetting : LedgerKey
                 new LedgerEntryType { InnerValue = LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING },
             ConfigSetting = new Xdr.LedgerKey.LedgerKeyConfigSetting
             {
-                ConfigSettingID = ConfigSettingID,
+                ConfigSettingID = ConfigSettingId,
             },
         };
     }

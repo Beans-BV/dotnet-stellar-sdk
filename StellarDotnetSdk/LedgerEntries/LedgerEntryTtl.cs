@@ -3,9 +3,9 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
-public class LedgerEntryTTL : LedgerEntry
+public class LedgerEntryTtl : LedgerEntry
 {
-    private LedgerEntryTTL(byte[] keyHash, uint liveUntilLedgerSequence)
+    private LedgerEntryTtl(byte[] keyHash, uint liveUntilLedgerSequence)
     {
         KeyHash = keyHash;
         LiveUntilLedgerSequence = liveUntilLedgerSequence;
@@ -20,7 +20,7 @@ public class LedgerEntryTTL : LedgerEntry
     /// <param name="xdrLedgerEntryData">A <see cref="Xdr.LedgerEntry.LedgerEntryData" /> object.</param>
     /// <returns>A LedgerEntryTTL object.</returns>
     /// <exception cref="ArgumentException">Throws when the parameter is not a valid TTLEntry.</exception>
-    public static LedgerEntryTTL FromXdrLedgerEntryData(Xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
+    public static LedgerEntryTtl FromXdrLedgerEntryData(Xdr.LedgerEntry.LedgerEntryData xdrLedgerEntryData)
     {
         if (xdrLedgerEntryData.Discriminant.InnerValue != LedgerEntryType.LedgerEntryTypeEnum.TTL)
         {
@@ -30,9 +30,9 @@ public class LedgerEntryTTL : LedgerEntry
         return FromXdr(xdrLedgerEntryData.Ttl);
     }
 
-    private static LedgerEntryTTL FromXdr(TTLEntry xdrTtlEntry)
+    private static LedgerEntryTtl FromXdr(TTLEntry xdrTtlEntry)
     {
-        return new LedgerEntryTTL(
+        return new LedgerEntryTtl(
             xdrTtlEntry.KeyHash.InnerValue,
             xdrTtlEntry.LiveUntilLedgerSeq.InnerValue);
     }

@@ -9,7 +9,7 @@ public class LiquidityPoolDepositOperationResponse : OperationResponse
 {
     public override int TypeId => 22;
 
-    [JsonProperty("liquidity_pool_id")] public LiquidityPoolID LiquidityPoolID { get; init; }
+    [JsonProperty("liquidity_pool_id")] public LiquidityPoolId LiquidityPoolId { get; init; }
 
     [JsonProperty("reserves_max")] public List<Reserve> ReservesMax { get; init; }
 

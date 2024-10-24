@@ -29,9 +29,9 @@ public abstract class ChangeTrustAsset
         return new LiquidityPoolShareChangeTrustAsset(parameters);
     }
 
-    public static ChangeTrustAsset Create(Asset assetA, Asset assetB, int feeBP)
+    public static ChangeTrustAsset Create(Asset assetA, Asset assetB, int feeBp)
     {
-        return new LiquidityPoolShareChangeTrustAsset(assetA, assetB, feeBP);
+        return new LiquidityPoolShareChangeTrustAsset(assetA, assetB, feeBp);
     }
 
     public static ChangeTrustAsset Create(TrustlineAsset.Wrapper wrapper)
@@ -46,7 +46,7 @@ public abstract class ChangeTrustAsset
 
     public static ChangeTrustAsset FromXdr(Xdr.ChangeTrustAsset changeTrustXdr)
     {
-        string accountID;
+        string accountId;
         string assetCode;
 
         switch (changeTrustXdr.Discriminant.InnerValue)
@@ -56,13 +56,13 @@ public abstract class ChangeTrustAsset
 
             case AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM4:
                 assetCode = Util.PaddedByteArrayToString(changeTrustXdr.AlphaNum4.AssetCode.InnerValue);
-                accountID = KeyPair.FromXdrPublicKey(changeTrustXdr.AlphaNum4.Issuer.InnerValue).AccountId;
-                return Create(new AssetTypeCreditAlphaNum4(assetCode, accountID));
+                accountId = KeyPair.FromXdrPublicKey(changeTrustXdr.AlphaNum4.Issuer.InnerValue).AccountId;
+                return Create(new AssetTypeCreditAlphaNum4(assetCode, accountId));
 
             case AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM12:
                 assetCode = Util.PaddedByteArrayToString(changeTrustXdr.AlphaNum12.AssetCode.InnerValue);
-                accountID = KeyPair.FromXdrPublicKey(changeTrustXdr.AlphaNum12.Issuer.InnerValue).AccountId;
-                return Create(new AssetTypeCreditAlphaNum12(assetCode, accountID));
+                accountId = KeyPair.FromXdrPublicKey(changeTrustXdr.AlphaNum12.Issuer.InnerValue).AccountId;
+                return Create(new AssetTypeCreditAlphaNum12(assetCode, accountId));
 
             case AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE:
                 return new LiquidityPoolShareChangeTrustAsset(

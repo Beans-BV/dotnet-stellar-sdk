@@ -50,7 +50,7 @@ public class PathPaymentStrictReceiveOperation : Operation
         DestAsset = destAsset ?? throw new ArgumentNullException(nameof(destAsset), "destAsset cannot be null");
         DestAmount = destAmount ?? throw new ArgumentNullException(nameof(destAmount), "destAmount cannot be null");
 
-        path ??= Array.Empty<Asset>();
+        path ??= [];
         if (path.Length > 5)
         {
             throw new ArgumentException("The maximum number of assets in the path is 5.", nameof(path));

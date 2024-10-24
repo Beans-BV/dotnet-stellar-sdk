@@ -30,11 +30,11 @@ public class AssetTypeCreditAlphaNum4 : AssetTypeCreditAlphaNum
         {
             AssetCode = new AssetCode4(Util.PaddedByteArray(Code, 4)),
         };
-        var accountID = new AccountID
+        var accountId = new AccountID
         {
             InnerValue = KeyPair.FromAccountId(Issuer).XdrPublicKey,
         };
-        credit.Issuer = accountID;
+        credit.Issuer = accountId;
         thisXdr.AlphaNum4 = credit;
         return thisXdr;
     }

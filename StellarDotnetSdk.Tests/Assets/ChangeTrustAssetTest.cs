@@ -35,8 +35,8 @@ public class ChangeTrustAssetTest
         var liquidityPoolShareChangeTrustAsset2 =
             (LiquidityPoolShareChangeTrustAsset)ChangeTrustAsset.FromXdr(liquidityPoolShareChangeTrustAsset.ToXdr());
 
-        Assert.AreEqual(liquidityPoolShareChangeTrustAsset.Parameters.GetID(),
-            liquidityPoolShareChangeTrustAsset2.Parameters.GetID());
+        Assert.AreEqual(liquidityPoolShareChangeTrustAsset.Parameters.GetId(),
+            liquidityPoolShareChangeTrustAsset2.Parameters.GetId());
     }
 
     [TestMethod]

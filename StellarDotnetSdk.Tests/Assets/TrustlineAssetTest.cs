@@ -37,8 +37,8 @@ public class TrustlineAssetTest
         var trustlineAsset = (LiquidityPoolShareTrustlineAsset)TrustlineAsset.Create(
             LiquidityPoolParameters.Create(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetB, 30));
-        var trustlineAsset2 = new LiquidityPoolShareTrustlineAsset(trustlineAsset.ID);
-        Assert.AreEqual(trustlineAsset.ID, trustlineAsset2.ID);
+        var trustlineAsset2 = new LiquidityPoolShareTrustlineAsset(trustlineAsset.Id);
+        Assert.AreEqual(trustlineAsset.Id, trustlineAsset2.Id);
     }
 
     [TestMethod]
@@ -56,8 +56,8 @@ public class TrustlineAssetTest
         var trustlineAsset =
             (LiquidityPoolShareTrustlineAsset)TrustlineAsset.Create(
                 new LiquidityPoolShareChangeTrustAsset(liquidityPoolParameters));
-        var trustlineAsset2 = new LiquidityPoolShareTrustlineAsset(trustlineAsset.ID);
-        Assert.AreEqual(trustlineAsset.ID, trustlineAsset2.ID);
+        var trustlineAsset2 = new LiquidityPoolShareTrustlineAsset(trustlineAsset.Id);
+        Assert.AreEqual(trustlineAsset.Id, trustlineAsset2.Id);
     }
 
     [TestMethod]
@@ -75,8 +75,8 @@ public class TrustlineAssetTest
         var trustlineAsset =
             (LiquidityPoolShareTrustlineAsset)TrustlineAsset.Create(
                 new LiquidityPoolShareChangeTrustAsset(liquidityPoolParameters));
-        var trustlineAsset2 = (LiquidityPoolShareTrustlineAsset)TrustlineAsset.Create(trustlineAsset.ID);
-        Assert.AreEqual(trustlineAsset.ID, trustlineAsset2.ID);
+        var trustlineAsset2 = (LiquidityPoolShareTrustlineAsset)TrustlineAsset.Create(trustlineAsset.Id);
+        Assert.AreEqual(trustlineAsset.Id, trustlineAsset2.Id);
     }
 
     [TestMethod]
@@ -132,6 +132,6 @@ public class TrustlineAssetTest
                 1000));
         var xdrAsset = asset.ToXdr();
         var decodedAsset = (LiquidityPoolShareTrustlineAsset)TrustlineAsset.FromXdr(xdrAsset);
-        CollectionAssert.AreEqual(asset.ID.Hash, decodedAsset.ID.Hash);
+        CollectionAssert.AreEqual(asset.Id.Hash, decodedAsset.Id.Hash);
     }
 }

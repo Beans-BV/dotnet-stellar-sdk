@@ -7,7 +7,7 @@ namespace StellarDotnetSdk.Requests;
 
 /// <summary>
 ///     Partial implement of the Uri Template Spec (RFC 6570).
-///     In particular it implements:
+///     In particular, it implements:
 ///     * Query component expressions ( {?var1,var2,...,varn} )
 ///     * Simple variables ( {var} )
 /// </summary>

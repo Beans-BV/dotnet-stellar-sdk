@@ -16,7 +16,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 public abstract class OperationResponse : Response, IPagingToken
 {
     /// <summary>
-    ///     Id of the operation
+    ///     ID of the operation
     /// </summary>
     [JsonProperty(PropertyName = "id")]
     public long Id { get; private set; }

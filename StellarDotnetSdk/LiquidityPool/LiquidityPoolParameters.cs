@@ -8,8 +8,11 @@ public abstract class LiquidityPoolParameters
 {
     public const int Fee = 30;
 
-    public static LiquidityPoolParameters Create(LiquidityPoolType.LiquidityPoolTypeEnum type, Asset assetA,
-        Asset assetB, int feeBp)
+    public static LiquidityPoolParameters Create(
+        LiquidityPoolType.LiquidityPoolTypeEnum type,
+        Asset assetA,
+        Asset assetB,
+        int feeBp)
     {
         if (type != LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT)
         {
@@ -34,5 +37,5 @@ public abstract class LiquidityPoolParameters
 
     public abstract Xdr.LiquidityPoolParameters ToXdr();
 
-    public abstract LiquidityPoolID GetID();
+    public abstract LiquidityPoolId GetId();
 }

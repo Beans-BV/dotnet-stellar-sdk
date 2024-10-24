@@ -3,17 +3,17 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerKeys;
 
-public class LedgerKeyTTL : LedgerKey
+public class LedgerKeyTtl : LedgerKey
 {
     /// <summary>
     ///     Constructs a <c>LedgerKeyTTL</c> object from a base-64 encoded string of the hash of the ledger entry.
     /// </summary>
     /// <param name="base64String">A base-64 encoded string.</param>
-    public LedgerKeyTTL(string base64String) : this(Convert.FromBase64String(base64String))
+    public LedgerKeyTtl(string base64String) : this(Convert.FromBase64String(base64String))
     {
     }
 
-    private LedgerKeyTTL(byte[] key)
+    private LedgerKeyTtl(byte[] key)
     {
         if (key.Length != 32)
         {
@@ -37,8 +37,8 @@ public class LedgerKeyTTL : LedgerKey
         };
     }
 
-    public static LedgerKeyTTL FromXdr(Xdr.LedgerKey.LedgerKeyTtl xdr)
+    public static LedgerKeyTtl FromXdr(Xdr.LedgerKey.LedgerKeyTtl xdr)
     {
-        return new LedgerKeyTTL(Convert.ToBase64String(xdr.KeyHash.InnerValue));
+        return new LedgerKeyTtl(Convert.ToBase64String(xdr.KeyHash.InnerValue));
     }
 }
