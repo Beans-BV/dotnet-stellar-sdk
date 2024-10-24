@@ -8,30 +8,23 @@ public class LedgerKeyClaimableBalance : LedgerKey
     /// <summary>
     ///     Constructs a <c>LedgerKeyClaimableBalance</c> object from a byte array.
     /// </summary>
-    /// <param name="balanceId">Byte array representation of the claimable balance entry.</param>
+    /// <param name="balanceId"></param>
     public LedgerKeyClaimableBalance(byte[] balanceId)
     {
-        BalanceId = Convert.ToHexString(balanceId);
-    }
-
-    /// <summary>
-    ///     Constructs a <c>LedgerKeyClaimableBalance</c> from given hex-encoded claimable balance ID.
-    /// </summary>
-    /// <param name="balanceId">
-    ///     Hex-encoded ID of the claimable balance entry.
-    ///     For example:
-    ///     Either <c>00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c>
-    ///     or
-    ///     <c>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c> is accepted.
-    /// </param>
-    public LedgerKeyClaimableBalance(string balanceId)
-    {
-        // No idea why the balanceId is prefixed with 8 zeros in the Stellar Lab, but we need to remove them
-        balanceId = balanceId.Length == 72 && balanceId.StartsWith("00000000") ? balanceId[8..] : balanceId;
         BalanceId = balanceId;
     }
 
-    public string BalanceId { get; }
+    /// <summary>
+    ///     Constructs a <c>LedgerKeyClaimableBalance</c> object from a hex-encoded string.
+    /// </summary>
+    /// <param name="balanceId">Hex-encoded string of a claimable balance ID.</param>
+    public LedgerKeyClaimableBalance(string balanceId)
+    {
+        BalanceId = Convert.FromHexString(balanceId);
+    }
+
+    // TODO: Considering changing this to string
+    public byte[] BalanceId { get; }
 
     public override Xdr.LedgerKey ToXdr()
     {
@@ -47,7 +40,7 @@ public class LedgerKeyClaimableBalance : LedgerKey
                     {
                         InnerValue = ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum.CLAIMABLE_BALANCE_ID_TYPE_V0,
                     },
-                    V0 = new Hash(Convert.FromHexString(BalanceId)),
+                    V0 = new Hash(BalanceId),
                 },
             },
         };
