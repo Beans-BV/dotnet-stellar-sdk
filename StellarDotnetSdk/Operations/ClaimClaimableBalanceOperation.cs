@@ -18,10 +18,10 @@ public class ClaimClaimableBalanceOperation : Operation
     /// <summary>
     ///     Constructs a new <c>ClaimClaimableBalanceOperation</c>.
     /// </summary>
-    /// <param name="balanceId">The hex-encoded ID of the ClaimableBalanceEntry to be claimed.</param>
+    /// <param name="balanceIdHexString">The hex-encoded ID of the ClaimableBalanceEntry to be claimed.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
-    public ClaimClaimableBalanceOperation(string balanceId, IAccountId? sourceAccount = null) : this(
-        Util.HexToBytes(balanceId), sourceAccount)
+    public ClaimClaimableBalanceOperation(string balanceIdHexString, IAccountId? sourceAccount = null)
+        : this(Util.HexToBytes(balanceIdHexString), sourceAccount)
     {
     }
 

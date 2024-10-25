@@ -6,25 +6,35 @@ namespace StellarDotnetSdk.LedgerKeys;
 public class LedgerKeyClaimableBalance : LedgerKey
 {
     /// <summary>
-    ///     Constructs a <c>LedgerKeyClaimableBalance</c> object from a byte array.
+    ///     Constructs a <c>LedgerKeyClaimableBalance</c> object from a 32-byte array.
     /// </summary>
-    /// <param name="balanceId"></param>
-    public LedgerKeyClaimableBalance(byte[] balanceId)
+    /// <param name="balanceIdByteArray">Byte array representation of the claimable balance entry.</param>
+    public LedgerKeyClaimableBalance(byte[] balanceIdByteArray)
     {
-        BalanceId = balanceId;
+        if (balanceIdByteArray.Length != 32)
+        {
+            throw new ArgumentException("Claimable balance ID byte array must have exactly 32 bytes.", nameof(balanceIdByteArray));
+        }
+        BalanceId = Convert.ToHexString(balanceIdByteArray);
     }
 
     /// <summary>
-    ///     Constructs a <c>LedgerKeyClaimableBalance</c> object from a hex-encoded string.
+    ///     Constructs a <c>LedgerKeyClaimableBalance</c> from given hex-encoded claimable balance ID.
     /// </summary>
-    /// <param name="balanceId">Hex-encoded string of a claimable balance ID.</param>
-    public LedgerKeyClaimableBalance(string balanceId)
+    /// <param name="balanceIdHexString">
+    ///     Hex-encoded ID of the claimable balance entry.
+    ///     For example: <c>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c>.
+    /// </param>
+    public LedgerKeyClaimableBalance(string balanceIdHexString)
     {
-        BalanceId = Convert.FromHexString(balanceId);
+        if (balanceIdHexString.Length > 64)
+        {
+            throw new ArgumentException("Claimable balance ID cannot exceed 64 characters.", nameof(balanceIdHexString));
+        }
+        BalanceId = balanceIdHexString;
     }
 
-    // TODO: Considering changing this to string
-    public byte[] BalanceId { get; }
+    public string BalanceId { get; }
 
     public override Xdr.LedgerKey ToXdr()
     {
@@ -40,7 +50,7 @@ public class LedgerKeyClaimableBalance : LedgerKey
                     {
                         InnerValue = ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum.CLAIMABLE_BALANCE_ID_TYPE_V0,
                     },
-                    V0 = new Hash(BalanceId),
+                    V0 = new Hash(Convert.FromHexString(BalanceId)),
                 },
             },
         };
