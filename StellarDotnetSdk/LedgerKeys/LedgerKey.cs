@@ -25,10 +25,7 @@ public abstract class LedgerKey
     /// <summary>Constructs a new <c>LedgerKeyClaimableBalance</c> from the given hex-encoded claimable balance ID.</summary>
     /// <param name="balanceId">
     ///     Hex-encoded ID of the claimable balance entry.
-    ///     For example:
-    ///     Either <c>00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c>
-    ///     or
-    ///     <c>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c> is accepted.
+    ///     For example: <c>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c>.
     /// </param>
     public static LedgerKey ClaimableBalance(string balanceId)
     {

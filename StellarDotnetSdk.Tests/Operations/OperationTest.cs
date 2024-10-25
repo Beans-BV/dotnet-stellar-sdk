@@ -733,7 +733,7 @@ public class OperationTest
     {
         var operation =
             RevokeLedgerEntrySponsorshipOperation.ForClaimableBalance(
-                "00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780");
+                "d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780");
 
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (RevokeLedgerEntrySponsorshipOperation)Operation.FromXdr(xdrOperation);

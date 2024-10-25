@@ -6,11 +6,15 @@ namespace StellarDotnetSdk.LedgerKeys;
 public class LedgerKeyClaimableBalance : LedgerKey
 {
     /// <summary>
-    ///     Constructs a <c>LedgerKeyClaimableBalance</c> object from a byte array.
+    ///     Constructs a <c>LedgerKeyClaimableBalance</c> object from a 32-byte array.
     /// </summary>
     /// <param name="balanceId">Byte array representation of the claimable balance entry.</param>
     public LedgerKeyClaimableBalance(byte[] balanceId)
     {
+        if (balanceId.Length != 32)
+        {
+            throw new ArgumentException("balanceId must have exactly 32 bytes.", nameof(balanceId));
+        }
         BalanceId = Convert.ToHexString(balanceId);
     }
 
@@ -19,15 +23,14 @@ public class LedgerKeyClaimableBalance : LedgerKey
     /// </summary>
     /// <param name="balanceId">
     ///     Hex-encoded ID of the claimable balance entry.
-    ///     For example:
-    ///     Either <c>00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c>
-    ///     or
-    ///     <c>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c> is accepted.
+    ///     For example: <c>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c>.
     /// </param>
     public LedgerKeyClaimableBalance(string balanceId)
     {
-        // No idea why the balanceId is prefixed with 8 zeros in the Stellar Lab, but we need to remove them
-        balanceId = balanceId.Length == 72 && balanceId.StartsWith("00000000") ? balanceId[8..] : balanceId;
+        if (balanceId.Length > 64)
+        {
+            throw new ArgumentException("balanceId cannot exceed 64 characters.", nameof(balanceId));
+        }
         BalanceId = balanceId;
     }
 
