@@ -87,10 +87,9 @@ public class LedgerKeyTest
 
 
     [TestMethod]
-    public void TestLedgerKeyClaimableBalance()
+    public void TestLedgerKeyClaimableBalanceStringConstructor1()
     {
-        var balanceId = Util.HexToBytes("c582697b67cbec7f9ce64f4dc67bfb2bfd26318bb9f964f4d70e3f41f650b1e6");
-
+        const string balanceId = "00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780";
         var ledgerKey = LedgerKey.ClaimableBalance(balanceId);
 
         // Act
@@ -98,9 +97,25 @@ public class LedgerKeyTest
         var decodedLedgerKey = (LedgerKeyClaimableBalance)LedgerKey.FromXdrBase64(ledgerKeyXdrBase64);
 
         // Assert
-        CollectionAssert.AreEqual(balanceId, decodedLedgerKey.BalanceId);
+        Assert.AreEqual("d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780",
+            decodedLedgerKey.BalanceId.ToLower());
     }
 
+    
+    [TestMethod]
+    public void TestLedgerKeyClaimableBalanceByteArrayConstructor()
+    {
+        const string balanceId = "d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780";
+        var ledgerKey = LedgerKey.ClaimableBalance(Convert.FromHexString(balanceId));
+
+        // Act
+        var ledgerKeyXdrBase64 = ledgerKey.ToXdrBase64();
+        var decodedLedgerKey = (LedgerKeyClaimableBalance)LedgerKey.FromXdrBase64(ledgerKeyXdrBase64);
+
+        // Assert
+        Assert.AreEqual(balanceId, decodedLedgerKey.BalanceId.ToLower());
+    }
+    
     [TestMethod]
     public void TestLedgerKeyLiquidityPool()
     {
