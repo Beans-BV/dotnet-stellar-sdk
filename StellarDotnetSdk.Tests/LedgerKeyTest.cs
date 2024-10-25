@@ -101,6 +101,20 @@ public class LedgerKeyTest
             decodedLedgerKey.BalanceId.ToLower());
     }
 
+    [TestMethod]
+    public void TestLedgerKeyClaimableBalanceStringConstructor2()
+    {
+        const string balanceId = "d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780";
+        var ledgerKey = LedgerKey.ClaimableBalance(balanceId);
+
+        // Act
+        var ledgerKeyXdrBase64 = ledgerKey.ToXdrBase64();
+        var decodedLedgerKey = (LedgerKeyClaimableBalance)LedgerKey.FromXdrBase64(ledgerKeyXdrBase64);
+
+        // Assert
+        Assert.AreEqual("d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780",
+            decodedLedgerKey.BalanceId.ToLower());
+    }
     
     [TestMethod]
     public void TestLedgerKeyClaimableBalanceByteArrayConstructor()
