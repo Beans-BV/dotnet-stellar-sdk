@@ -8,30 +8,30 @@ public class LedgerKeyClaimableBalance : LedgerKey
     /// <summary>
     ///     Constructs a <c>LedgerKeyClaimableBalance</c> object from a 32-byte array.
     /// </summary>
-    /// <param name="balanceId">Byte array representation of the claimable balance entry.</param>
-    public LedgerKeyClaimableBalance(byte[] balanceId)
+    /// <param name="balanceIdByteArray">Byte array representation of the claimable balance entry.</param>
+    public LedgerKeyClaimableBalance(byte[] balanceIdByteArray)
     {
-        if (balanceId.Length != 32)
+        if (balanceIdByteArray.Length != 32)
         {
-            throw new ArgumentException("balanceId must have exactly 32 bytes.", nameof(balanceId));
+            throw new ArgumentException("Claimable balance ID byte array must have exactly 32 bytes.", nameof(balanceIdByteArray));
         }
-        BalanceId = Convert.ToHexString(balanceId);
+        BalanceId = Convert.ToHexString(balanceIdByteArray);
     }
 
     /// <summary>
     ///     Constructs a <c>LedgerKeyClaimableBalance</c> from given hex-encoded claimable balance ID.
     /// </summary>
-    /// <param name="balanceId">
+    /// <param name="balanceIdHexString">
     ///     Hex-encoded ID of the claimable balance entry.
     ///     For example: <c>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c>.
     /// </param>
-    public LedgerKeyClaimableBalance(string balanceId)
+    public LedgerKeyClaimableBalance(string balanceIdHexString)
     {
-        if (balanceId.Length > 64)
+        if (balanceIdHexString.Length > 64)
         {
-            throw new ArgumentException("balanceId cannot exceed 64 characters.", nameof(balanceId));
+            throw new ArgumentException("Claimable balance ID cannot exceed 64 characters.", nameof(balanceIdHexString));
         }
-        BalanceId = balanceId;
+        BalanceId = balanceIdHexString;
     }
 
     public string BalanceId { get; }

@@ -106,7 +106,7 @@ public class LedgerKeyTest
         const string balanceId = "00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780";
         var ex = Assert.ThrowsException<ArgumentException>(() =>
             LedgerKey.ClaimableBalance(balanceId));
-        Assert.IsTrue(ex.Message.Contains("balanceId cannot exceed 64 characters."));
+        Assert.IsTrue(ex.Message.Contains("Claimable balance ID cannot exceed 64 characters."));
     }
     
     [TestMethod]
@@ -129,7 +129,7 @@ public class LedgerKeyTest
         const string balanceId = "00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780";
         var ex = Assert.ThrowsException<ArgumentException>(() =>
             LedgerKey.ClaimableBalance(Convert.FromHexString(balanceId)));
-        Assert.IsTrue(ex.Message.Contains("balanceId must have exactly 32 bytes."));
+        Assert.IsTrue(ex.Message.Contains("Claimable balance ID byte array must have exactly 32 bytes."));
     }
     
     [TestMethod]
