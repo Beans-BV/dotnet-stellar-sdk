@@ -429,7 +429,7 @@ public class ServerTest
     }
 
     [TestMethod]
-    public async Task TestSubmitTransactionAsyncError()
+    public async Task TestSubmitTransactionAsyncErrorPriorToProtocol22()
     {
         const string json =
             """
@@ -437,6 +437,27 @@ public class ServerTest
               "tx_status": "ERROR",
               "hash": "9f8e7d6c5b4a3210fedcba9876543210abcdef0123456789abcdef0123456789",
               "errorResultXdr": "AAAAAAAAAGT////7AAAAAA=="
+            }
+            """;
+        using var server = Utils.CreateTestServerWithContent(json);
+        var response = await server.SubmitTransactionAsync(
+            BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
+        Assert.IsNotNull(response);
+        Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.ERROR, response.TxStatus);
+        Assert.AreEqual(response.Hash, "9f8e7d6c5b4a3210fedcba9876543210abcdef0123456789abcdef0123456789");
+        Assert.IsNotNull(response.ErrorResult);
+    }
+    
+    [TestMethod]
+    public async Task TestSubmitTransactionAsyncErrorProtocol22()
+    {
+        const string json =
+            """
+            {
+              "tx_status": "ERROR",
+              "hash": "9f8e7d6c5b4a3210fedcba9876543210abcdef0123456789abcdef0123456789",
+              "errorResultXdr": "AAAAAAAAAGT////7AAAAAA==",
+              "error_result_xdr": "AAAAAAAAAGT////7AAAAAA=="
             }
             """;
         using var server = Utils.CreateTestServerWithContent(json);
