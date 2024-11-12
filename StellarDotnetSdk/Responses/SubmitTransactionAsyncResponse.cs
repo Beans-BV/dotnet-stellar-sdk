@@ -13,7 +13,8 @@ public class SubmitTransactionAsyncResponse : Response
         ERROR,
     }
 
-    [JsonProperty(PropertyName = "error_result_xdr")]
+    // TODO: Change to "error_result_xdr" when Horizon is updated to v22.0.0
+    [JsonProperty(PropertyName = "errorResultXdr")]
     private string? _errorResultXdr;
 
     [JsonProperty(PropertyName = "hash")] public string? Hash { get; init; }

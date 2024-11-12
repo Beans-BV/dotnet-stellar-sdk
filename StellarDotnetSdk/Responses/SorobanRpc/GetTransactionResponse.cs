@@ -9,7 +9,7 @@ public class GetTransactionResponse : TransactionInfo
         long oldestLedger,
         long oldestLedgerCloseTime,
         long ledger,
-        string createdAt,
+        long createdAt,
         int applicationOrder,
         bool feeBump,
         string? envelopeXdr,

@@ -16,9 +16,10 @@ public class TransactionInfo
         FAILED,
     }
 
-    public TransactionInfo(TransactionStatus status,
+    public TransactionInfo(
+        TransactionStatus status,
         long? ledger,
-        string? createdAt,
+        long? createdAt,
         int? applicationOrder,
         bool? feeBump,
         string? envelopeXdr,
@@ -55,7 +56,7 @@ public class TransactionInfo
     ///     (optional) The unix timestamp of when the transaction was included in the ledger. This field is only present if
     ///     status is SUCCESS or FAILED.
     /// </summary>
-    public string? CreatedAt { get; }
+    public long? CreatedAt { get; }
 
     /// <summary>
     ///     (optional) The index of the transaction among all transactions included in the ledger. This field is only present
