@@ -436,7 +436,7 @@ public class ServerTest
             {
               "tx_status": "ERROR",
               "hash": "9f8e7d6c5b4a3210fedcba9876543210abcdef0123456789abcdef0123456789",
-              "error_result_xdr": "AAAAAAAAAGT////7AAAAAA=="
+              "errorResultXdr": "AAAAAAAAAGT////7AAAAAA=="
             }
             """;
         using var server = Utils.CreateTestServerWithContent(json);
@@ -447,7 +447,7 @@ public class ServerTest
         Assert.AreEqual(response.Hash, "9f8e7d6c5b4a3210fedcba9876543210abcdef0123456789abcdef0123456789");
         Assert.IsNotNull(response.ErrorResult);
     }
-
+    
     [TestMethod]
     public async Task TestSubmitTransactionAsyncObjectNoSkipMemoRequiredCheck()
     {

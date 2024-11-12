@@ -115,7 +115,9 @@ public static class Utils
         }
     }
 
-    public static Server CreateTestServerWithContent(string? content, HttpStatusCode statusCode = HttpStatusCode.OK,
+    public static Server CreateTestServerWithContent(
+        string? content,
+        HttpStatusCode statusCode = HttpStatusCode.OK,
         string uri = "https://horizon-testnet.stellar.org")
     {
         Network.UseTestNetwork();
@@ -123,7 +125,8 @@ public static class Utils
         return new Server(uri, httpClient);
     }
 
-    public static SorobanServer CreateTestSorobanServerWithContent(string? content,
+    public static SorobanServer CreateTestSorobanServerWithContent(
+        string? content,
         HttpStatusCode statusCode = HttpStatusCode.OK,
         string uri = "https://soroban-testnet.stellar.org")
     {
@@ -132,7 +135,8 @@ public static class Utils
         return new SorobanServer(uri, httpClient);
     }
 
-    public static Server CreateTestServerWithHeaders(Dictionary<string, IEnumerable<string>> headers,
+    public static Server CreateTestServerWithHeaders(
+        Dictionary<string, IEnumerable<string>> headers,
         HttpStatusCode statusCode = HttpStatusCode.OK,
         string uri = "https://horizon-testnet.stellar.org")
     {
@@ -141,15 +145,19 @@ public static class Utils
         return new Server(uri, httpClient);
     }
 
-    public static async Task<Server> CreateTestServerWithJson(string pathToJson,
-        HttpStatusCode statusCode = HttpStatusCode.OK, string uri = "https://horizon-testnet.stellar.org")
+    public static async Task<Server> CreateTestServerWithJson(
+        string pathToJson,
+        HttpStatusCode statusCode = HttpStatusCode.OK,
+        string uri = "https://horizon-testnet.stellar.org")
     {
         var jsonPath = GetTestDataPath(pathToJson);
         var content = await File.ReadAllTextAsync(jsonPath);
         return CreateTestServerWithContent(content, statusCode, uri);
     }
 
-    public static HttpClient CreateFakeHttpClient(string? content, HttpStatusCode statusCode = HttpStatusCode.OK,
+    public static HttpClient CreateFakeHttpClient(
+        string? content,
+        HttpStatusCode statusCode = HttpStatusCode.OK,
         IDictionary<string, IEnumerable<string>>? headers = null)
     {
         var mockFakeHttpMessageHandler = new Mock<FakeHttpMessageHandler> { CallBase = true };

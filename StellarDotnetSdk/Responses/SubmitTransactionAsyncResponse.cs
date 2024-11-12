@@ -13,7 +13,7 @@ public class SubmitTransactionAsyncResponse : Response
         ERROR,
     }
 
-    [JsonProperty(PropertyName = "error_result_xdr")]
+    [JsonProperty(PropertyName = "errorResultXdr")]
     private string? _errorResultXdr;
 
     [JsonProperty(PropertyName = "hash")] public string? Hash { get; init; }

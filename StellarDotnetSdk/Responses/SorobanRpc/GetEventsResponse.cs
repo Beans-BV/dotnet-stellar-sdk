@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using StellarDotnetSdk.Soroban;
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;
@@ -35,6 +36,7 @@ public class GetEventsResponse
             bool inSuccessfulContractCall,
             int ledger,
             string ledgerClosedAt,
+            string pagingToken,
             string[] topics,
             string type,
             string value,
@@ -45,6 +47,7 @@ public class GetEventsResponse
             InSuccessfulContractCall = inSuccessfulContractCall;
             Ledger = ledger;
             LedgerClosedAt = ledgerClosedAt;
+            PagingToken = pagingToken;
             Topics = topics;
             Type = type;
             Value = value;
@@ -76,6 +79,12 @@ public class GetEventsResponse
         ///     See https://www.iso.org/iso-8601-date-and-time-format.html.
         /// </summary>
         public string LedgerClosedAt { get; }
+
+        /// <summary>
+        ///     Duplicate of <c>id</c> field, but in the standard place for pagination tokens.
+        /// </summary>
+        [Obsolete("Use Cursor instead. It will be removed in the next version of the protocol.")]
+        public string PagingToken { get; }
 
         /// <summary>
         ///     A list containing the topics, each is a base-64 encoded XDR string of an <see cref="Xdr.SCVal">xdr.SCVal</see>
