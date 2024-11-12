@@ -82,8 +82,9 @@ public class GetEventsResponse
 
         /// <summary>
         ///     Duplicate of <c>id</c> field, but in the standard place for pagination tokens.
+        /// Use <see cref="GetEventsResponse.Cursor"/> instead.
         /// </summary>
-        [Obsolete("This property is deprecated, use Cursor instead. In a future release of this SDK this field can be removed.")]
+        [Obsolete("This property is deprecated, use GetEventsResponse.Cursor instead. In a future release of this SDK this field can be removed.")]
         public string PagingToken { get; }
 
         /// <summary>
