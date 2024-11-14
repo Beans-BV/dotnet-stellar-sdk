@@ -1179,7 +1179,7 @@ public class SorobanServerTest
               "result": {
                 "version": "21.1.0",
                 "commit_hash": "fcd2f0523f04279bae4502f3e3fa00ca627e6f6a",
-                "build_timestamp": "2024-05-10T11:18:38",
+                "build_time_stamp": "2024-05-10T11:18:38",
                 "captive_core_version": "stellar-core 21.0.0.rc2 (c6f474133738ae5f6d11b07963ca841909210273)",
                 "protocol_version": 21
               }
