@@ -25,7 +25,7 @@ public class GetVersionInfoResponse
     /// <summary>
     ///     The build timestamp of the RPC server.
     /// </summary>
-    [JsonProperty(PropertyName = "build_timestamp")]
+    [JsonProperty(PropertyName = "build_time_stamp")]
     public string BuildTimeStamp { get; }
 
     /// <summary>
