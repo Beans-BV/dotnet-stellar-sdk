@@ -1,0 +1,28 @@
+﻿{
+  "_links": {
+    "operation": {
+      "href": "http://horizon-testnet.stellar.org/operations/33788507721730"
+    },
+    "succeeds": {
+      "href": "http://horizon-testnet.stellar.org/effects?order=desc&cursor=33788507721730-2"
+    },
+    "precedes": {
+      "href": "http://horizon-testnet.stellar.org/effects?order=asc&cursor=33788507721730-2"
+    }
+  },
+  "id": "0000033788507721730-0000000002",
+  "paging_token": "33788507721730-2",
+  "account": "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO",
+  "type": "trade",
+  "type_i": 33,
+  "seller": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
+  "seller_muxed": "MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24",
+  "seller_muxed_id": 5123456789,
+  "offer_id": "1",
+  "sold_amount": "1000.0",
+  "sold_asset_type": "native",
+  "bought_amount": "60.0",
+  "bought_asset_type": "credit_alphanum4",
+  "bought_asset_code": "DOGX",
+  "bought_asset_issuer": "GAOI7QQAXO37FH64LLGRFQIYTYUTMSMZKBBDIGNEDOMSW7SLGA4LDOGX"
+}
