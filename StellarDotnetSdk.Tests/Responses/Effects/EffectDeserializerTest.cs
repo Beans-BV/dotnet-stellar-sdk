@@ -776,25 +776,31 @@ public class EffectDeserializerTest
     }
 
     [TestMethod]
-    public void TestDeserializeTradeEffect()
+    public void TestAlphaNum12NativeTradeEffect()
     {
-        var jsonPath = Utils.GetTestDataPath("effectTrade.json");
+        var jsonPath = Utils.GetTestDataPath("effectTradeAlphaNum12Native.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSingleton.GetInstance<EffectResponse>(json);
         Assert.IsNotNull(instance);
-        AssertTradeData(instance);
-    }
-
-    [TestMethod]
-    public void TestSerializeDeserializeTradeEffect()
-    {
-        var jsonPath = Utils.GetTestDataPath("effectTrade.json");
-        var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<EffectResponse>(json);
+        AssertAlphaNum12NativeTradeData(instance);
         var serialized = JsonConvert.SerializeObject(instance);
         var back = JsonConvert.DeserializeObject<EffectResponse>(serialized);
         Assert.IsNotNull(back);
-        AssertTradeData(back);
+        AssertAlphaNum12NativeTradeData(back);
+    }
+
+    [TestMethod]
+    public void TestNativeAlphaNum4TradeEffect()
+    {
+        var jsonPath = Utils.GetTestDataPath("effectTradeNativeAphaNum4.json");
+        var json = File.ReadAllText(jsonPath);
+        var instance = JsonSingleton.GetInstance<EffectResponse>(json);
+        Assert.IsNotNull(instance);
+        AssertNativeAphaNum4TradeData(instance);
+        var serialized = JsonConvert.SerializeObject(instance);
+        var back = JsonConvert.DeserializeObject<EffectResponse>(serialized);
+        Assert.IsNotNull(back);
+        AssertNativeAphaNum4TradeData(back);
     }
 
     //Before Horizon 1.0.0 the OfferID in the json was a long.
@@ -859,7 +865,7 @@ public class EffectDeserializerTest
         Assert.IsNotNull(back);
     }
 
-    private static void AssertTradeData(EffectResponse instance)
+    private static void AssertOtherTradeData(EffectResponse instance)
     {
         //There is a JsonConverter called OperationDeserializer that instantiates the type based on the json type_i element...
         Assert.IsTrue(instance is TradeEffectResponse);
@@ -870,12 +876,6 @@ public class EffectDeserializerTest
         Assert.AreEqual(effect.SellerMuxed, "MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24");
         Assert.AreEqual(effect.SellerMuxedId, 5123456789);
         Assert.AreEqual(effect.OfferId, "1");
-        Assert.AreEqual(effect.SoldAmount, "1000.0");
-        Assert.AreEqual(effect.SoldAsset,
-            Asset.CreateNonNativeAsset("EUR", "GCWVFBJ24754I5GXG4JOEB72GJCL3MKWC7VAEYWKGQHPVH3ENPNBSKWS"));
-        Assert.AreEqual(effect.BoughtAmount, "60.0");
-        Assert.AreEqual(effect.BoughtAsset,
-            Asset.CreateNonNativeAsset("TESTTEST", "GAHXPUDP3AK6F2QQM4FIRBGPNGKLRDDSTQCVKEXXKKRHJZUUQ23D5BU7"));
 
         Assert.AreEqual(effect.Links.Operation.Href, "http://horizon-testnet.stellar.org/operations/33788507721730");
         Assert.AreEqual(effect.Links.Succeeds.Href,
@@ -897,6 +897,33 @@ public class EffectDeserializerTest
             BoughtAssetIssuer = effect.BoughtAssetType,
         };
         Assert.IsNotNull(back);
+    }
+
+    private static void AssertAlphaNum12NativeTradeData(EffectResponse instance)
+    {
+        Assert.IsTrue(instance is TradeEffectResponse);
+        var effect = (TradeEffectResponse)instance;
+        Assert.AreEqual(effect.SoldAmount, "1000.0");
+        Assert.AreEqual(effect.SoldAsset,
+            Asset.CreateNonNativeAsset("TESTTEST", "GAHXPUDP3AK6F2QQM4FIRBGPNGKLRDDSTQCVKEXXKKRHJZUUQ23D5BU7"));
+        Assert.AreEqual(effect.BoughtAmount, "60.0");
+        Assert.AreEqual(effect.BoughtAsset, new AssetTypeNative());
+
+        AssertOtherTradeData(instance);
+    }
+
+    private static void AssertNativeAphaNum4TradeData(EffectResponse instance)
+    {
+        Assert.IsTrue(instance is TradeEffectResponse);
+        var effect = (TradeEffectResponse)instance;
+        Assert.AreEqual(effect.SoldAmount, "1000.0");
+        Assert.AreEqual(effect.SoldAsset, new AssetTypeNative());
+
+        Assert.AreEqual(effect.BoughtAsset,
+            Asset.CreateNonNativeAsset("DOGX", "GAOI7QQAXO37FH64LLGRFQIYTYUTMSMZKBBDIGNEDOMSW7SLGA4LDOGX"));
+        Assert.AreEqual(effect.BoughtAmount, "60.0");
+
+        AssertOtherTradeData(instance);
     }
 
     [TestMethod]
