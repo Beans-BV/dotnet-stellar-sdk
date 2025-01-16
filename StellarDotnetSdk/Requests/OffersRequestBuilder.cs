@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Responses;
 
@@ -13,6 +14,17 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
     {
     }
 
+    /// <summary>
+    ///     Requests specific uri and returns OfferResponse
+    /// </summary>
+    public async Task<OfferResponse> Offer(Uri uri)
+    {
+        var responseHandler = new ResponseHandler<OfferResponse>();
+
+        var response = await HttpClient.GetAsync(uri);
+        return await responseHandler.HandleResponse(response);
+    }
+    
     /// <summary>
     ///     Builds request to GET /accounts/{account}/offers
     ///     See: https://www.stellar.org/developers/horizon/reference/offers-for-account.html
@@ -34,10 +46,7 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
     /// <exception cref="ArgumentNullException"></exception>
     public OffersRequestBuilder Offers(OffersRequestOptions options)
     {
-        if (options == null)
-        {
-            throw new ArgumentNullException(nameof(options));
-        }
+        ArgumentNullException.ThrowIfNull(options);
 
         if (options.Seller != null)
         {
@@ -102,6 +111,17 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
         return Offers(options => options.Buying = buying);
     }
 
+    /// <summary>
+    ///     Requests <code>GET /offers/{offerId}</code>
+    ///     <a href="https://developers.stellar.org/docs/data/horizon/api-reference/get-offer-by-offer-id">Retrieve an Offer</a>
+    /// </summary>
+    /// <param name="offerId">ID of the offer to fetch.</param>
+    public async Task<OfferResponse> Offer(string offerId)
+    {
+        SetSegments("offers", offerId);
+        return await Offer(BuildUri());
+    }
+    
     private void AddAssetFilterQueryParam(string side, Asset asset)
     {
         UriBuilder.SetQueryParam($"{side}_asset_type", asset.Type);

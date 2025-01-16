@@ -1,0 +1,29 @@
+﻿{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/offers/1"
+    },
+    "offer_maker": {
+      "href": "https://horizon-testnet.stellar.org/accounts/GAHEAZQD6K7QBBPGLQZQOHCA5L3Z7ZNFBDU5XCCEI7QYVEFIRUF3IW27"
+    }
+  },
+  "id": "1",
+  "paging_token": "1",
+  "seller": "GAHEAZQD6K7QBBPGLQZQOHCA5L3Z7ZNFBDU5XCCEI7QYVEFIRUF3IW27",
+  "selling": {
+    "asset_type": "credit_alphanum4",
+    "asset_code": "IOM",
+    "asset_issuer": "GBL37ZFYU3FRBKTFO4YPIAELTO2PN6YEIF3ZS6FKOEAM5SOWALX5IP44"
+  },
+  "buying": {
+    "asset_type": "native"
+  },
+  "amount": "100.0000000",
+  "price_r": {
+    "n": 1,
+    "d": 2
+  },
+  "price": "0.5000000",
+  "last_modified_ledger": 380,
+  "last_modified_time": "2024-12-10T17:50:08Z"
+}
