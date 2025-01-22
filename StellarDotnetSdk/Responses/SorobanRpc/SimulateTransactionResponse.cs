@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Text.Json.Serialization;
-using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Soroban;
 
@@ -15,28 +14,8 @@ namespace StellarDotnetSdk.Responses.SorobanRpc;
 /// </summary>
 public class SimulateTransactionResponse
 {
-    private readonly string? _transactionData;
-
-    public SimulateTransactionResponse(
-        string? transactionData,
-        string? error,
-        string[]? events,
-        long? latestLedger,
-        uint? minResourceFee,
-        RestorePreamble? restorePreambleInfo,
-        SimulateInvokeHostFunctionResult[]? results,
-        LedgerEntryChange[] stateChanges
-    )
-    {
-        _transactionData = transactionData;
-        Error = error;
-        Events = events;
-        LatestLedger = latestLedger;
-        MinResourceFee = minResourceFee;
-        RestorePreambleInfo = restorePreambleInfo;
-        Results = results;
-        StateChanges = stateChanges;
-    }
+    [JsonInclude]
+    private string? TransactionData { get; init; }
 
     /// <summary>
     ///     This field will include details about why the invoke host function call failed.
@@ -98,7 +77,7 @@ public class SimulateTransactionResponse
     /// </summary>
     [JsonIgnore]
     public SorobanTransactionData? SorobanTransactionData =>
-        _transactionData != null ? SorobanTransactionData.FromXdrBase64(_transactionData) : null;
+        TransactionData != null ? SorobanTransactionData.FromXdrBase64(TransactionData) : null;
 
 
     public SorobanAuthorizationEntry[]? SorobanAuthorization

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.LiquidityPool;
 
@@ -10,7 +9,7 @@ public class LiquidityPoolWithdrawOperationResponse : OperationResponse
 {
     public override int TypeId => 23;
 
-    [JsonProperty("liquidity_pool_id")] public LiquidityPoolId LiquidityPoolId { get; init; }
+    [JsonPropertyName("liquidity_pool_id")] public LiquidityPoolId LiquidityPoolId { get; init; }
 
     [JsonPropertyName("reserves_min")] public List<Reserve> ReservesMin { get; init; }
 

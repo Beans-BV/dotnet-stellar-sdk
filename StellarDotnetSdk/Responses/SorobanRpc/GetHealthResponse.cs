@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace StellarDotnetSdk.Responses.SorobanRpc;
+﻿namespace StellarDotnetSdk.Responses.SorobanRpc;
 
 public class GetHealthResponse
 {

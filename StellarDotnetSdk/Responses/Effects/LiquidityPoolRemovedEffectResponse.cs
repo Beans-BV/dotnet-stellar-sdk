@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.LiquidityPool;
 
 namespace StellarDotnetSdk.Responses.Effects;
@@ -10,5 +9,5 @@ public class LiquidityPoolRemovedEffectResponse : EffectResponse
     public override int TypeId => 94;
 
     [JsonPropertyName("liquidity_pool_id")]
-    public LiquidityPoolId LiquidityPoolId { get; private set; }
+    public LiquidityPoolId LiquidityPoolId { get; init; }
 }

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using System.Text.Json;
 using StellarDotnetSdk.Accounts;
-using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Effects;
 using StellarDotnetSdk.Responses.Operations;
 

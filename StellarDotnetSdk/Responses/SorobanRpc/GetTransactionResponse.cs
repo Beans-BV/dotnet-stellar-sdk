@@ -2,47 +2,24 @@
 
 public class GetTransactionResponse : TransactionInfo
 {
-    public GetTransactionResponse(
-        TransactionStatus status,
-        long latestLedger,
-        long latestLedgerCloseTime,
-        long oldestLedger,
-        long oldestLedgerCloseTime,
-        long ledger,
-        long createdAt,
-        int applicationOrder,
-        bool feeBump,
-        string? envelopeXdr,
-        string? resultXdr,
-        string? resultMetaXdr,
-        string? txHash
-    )
-        : base(status, ledger, createdAt, applicationOrder, feeBump, envelopeXdr, resultXdr, resultMetaXdr, txHash)
-    {
-        LatestLedger = latestLedger;
-        LatestLedgerCloseTime = latestLedgerCloseTime;
-        OldestLedger = oldestLedger;
-        OldestLedgerCloseTime = oldestLedgerCloseTime;
-    }
-
     /// <summary>
     ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.
     /// </summary>
-    public long LatestLedger { get; }
+    public long LatestLedger { get; init; }
 
     /// <summary>
     ///     The unix timestamp of the close time of the latest ledger known to Soroban RPC at the time it handled the request.
     /// </summary>
-    public long LatestLedgerCloseTime { get; }
+    public long LatestLedgerCloseTime { get; init; }
 
     /// <summary>
     ///     The sequence number of the oldest ledger ingested by Soroban RPC at the time it handled the request.
     /// </summary>
-    public long OldestLedger { get; }
+    public long OldestLedger { get; init; }
 
     /// <summary>
     ///     The unix timestamp of the close time of the oldest ledger ingested by Soroban RPC at the time it handled the
     ///     request.
     /// </summary>
-    public long OldestLedgerCloseTime { get; }
+    public long OldestLedgerCloseTime { get; init; }
 }

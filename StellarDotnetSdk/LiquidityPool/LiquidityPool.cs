@@ -22,13 +22,12 @@ public class LiquidityPool
         Reserves = reserves;
     }
 
-    [JsonProperty(PropertyName = "id")] public LiquidityPoolId Id { get; }
+    [JsonPropertyName("id")] public LiquidityPoolId Id { get; }
 
-    [JsonProperty(PropertyName = "fee_bp")]
+    [JsonPropertyName("fee_bp")]
     public int FeeBp { get; }
 
     [JsonConverter(typeof(LiquidityPoolTypeEnumJsonConverter))]
-    [JsonPropertyName("type")]
     public LiquidityPoolType.LiquidityPoolTypeEnum Type { get; }
 
     [JsonPropertyName("total_trustlines")]

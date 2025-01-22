@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace StellarDotnetSdk.Responses.Operations;
+﻿namespace StellarDotnetSdk.Responses.Operations;
 
 #nullable disable
 /// <summary>

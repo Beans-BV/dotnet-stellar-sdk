@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json.Serialization;
+using Int32 = StellarDotnetSdk.Xdr.Int32;
 
 namespace StellarDotnetSdk;
 
@@ -81,8 +82,8 @@ public class Price
     {
         return new xdr_Price
         {
-            D = new Xdr.Int32(Denominator),
-            N = new Xdr.Int32(Numerator)
+            D = new Int32(Denominator),
+            N = new Int32(Numerator)
         };
     }
 

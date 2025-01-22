@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace StellarDotnetSdk.Responses.SorobanRpc;
+﻿namespace StellarDotnetSdk.Responses.SorobanRpc;
 
 /// <summary>
 ///     General information about the currently configured network. This response will contain all the information needed

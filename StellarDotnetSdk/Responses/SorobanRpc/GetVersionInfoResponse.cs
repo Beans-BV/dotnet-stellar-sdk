@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;
 
@@ -8,46 +8,32 @@ namespace StellarDotnetSdk.Responses.SorobanRpc;
 /// </summary>
 public class GetVersionInfoResponse
 {
-    public GetVersionInfoResponse(
-        string buildTimeStamp,
-        string captiveCoreVersion,
-        string commitHash,
-        int protocolVersion,
-        string version)
-    {
-        BuildTimeStamp = buildTimeStamp;
-        CaptiveCoreVersion = captiveCoreVersion;
-        CommitHash = commitHash;
-        ProtocolVersion = protocolVersion;
-        Version = version;
-    }
-
     /// <summary>
     ///     The build timestamp of the RPC server.
     /// </summary>
-    [JsonProperty(PropertyName = "build_time_stamp")]
-    public string BuildTimeStamp { get; }
+    [JsonPropertyName("build_time_stamp")]
+    public string BuildTimeStamp { get; init; }
 
     /// <summary>
     ///     The version of the Captive Core.
     /// </summary>
-    [JsonProperty(PropertyName = "captive_core_version")]
-    public string CaptiveCoreVersion { get; }
+    [JsonPropertyName("captive_core_version")]
+    public string CaptiveCoreVersion { get; init; }
 
     /// <summary>
     ///     The commit hash of the RPC server.
     /// </summary>
-    [JsonProperty(PropertyName = "commit_hash")]
-    public string CommitHash { get; }
+    [JsonPropertyName("commit_hash")]
+    public string CommitHash { get; init; }
 
     /// <summary>
     ///     The protocol version.
     /// </summary>
-    [JsonProperty(PropertyName = "protocol_version")]
-    public int ProtocolVersion { get; }
+    [JsonPropertyName("protocol_version")]
+    public int ProtocolVersion { get; init; }
 
     /// <summary>
     ///     The version of the RPC server.
     /// </summary>
-    public string Version { get; }
+    public string Version { get; init; }
 }

@@ -289,9 +289,7 @@ public class Server : IDisposable
         {
             case HttpStatusCode.OK:
             case HttpStatusCode.BadRequest:
-                var submitTransactionResponse = JsonSerializer.Deserialize<SubmitTransactionResponse>(
-                    responseString, JsonOptions.DefaultOptions);
-                return submitTransactionResponse;
+                return JsonSerializer.Deserialize<T>(responseString, JsonOptions.DefaultOptions);
             case HttpStatusCode.ServiceUnavailable:
             case HttpStatusCode.TooManyRequests:
                 throw CreateExceptionWithRetryInfo(response);

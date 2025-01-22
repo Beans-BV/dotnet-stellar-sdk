@@ -23,10 +23,10 @@ public class AssetResponse : Response, IPagingToken
     [JsonPropertyName("balances")]
     public AssetBalances Balances { get; init; }
 
-    [JsonProperty(PropertyName = "claimable_balances_amount")]
+    [JsonPropertyName("claimable_balances_amount")]
     public string ClaimableBalancesAmount { get; init; }
 
-    [JsonProperty(PropertyName = "num_claimable_balances")]
+    [JsonPropertyName("num_claimable_balances")]
     public int NumClaimableBalances { get; init; }
 
     [JsonPropertyName("flags")] public AssetResponseFlags Flags { get; init; }

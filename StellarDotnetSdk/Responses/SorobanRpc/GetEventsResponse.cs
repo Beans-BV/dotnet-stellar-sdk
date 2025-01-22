@@ -1,5 +1,4 @@
 ﻿using System;
-using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Soroban;
 
@@ -10,13 +9,6 @@ namespace StellarDotnetSdk.Responses.SorobanRpc;
 /// </summary>
 public class GetEventsResponse
 {
-    public GetEventsResponse(EventInfo[]? events, long? latestLedger, string? cursor)
-    {
-        Events = events;
-        LatestLedger = latestLedger;
-        Cursor = cursor;
-    }
-
     /// <summary>
     ///     If error is present then results will not be in the response
     /// </summary>
@@ -27,34 +19,10 @@ public class GetEventsResponse
     /// </summary>
     public long? LatestLedger { get; init; }
 
-    public string? Cursor { get; }
+    public string? Cursor { get; init; }
 
     public class EventInfo
     {
-        public EventInfo(
-            string contractId,
-            string id,
-            bool inSuccessfulContractCall,
-            int ledger,
-            string ledgerClosedAt,
-            string pagingToken,
-            string[] topics,
-            string type,
-            string value,
-            string transactionHash)
-        {
-            ContractId = contractId;
-            Id = id;
-            InSuccessfulContractCall = inSuccessfulContractCall;
-            Ledger = ledger;
-            LedgerClosedAt = ledgerClosedAt;
-            PagingToken = pagingToken;
-            Topics = topics;
-            Type = type;
-            Value = value;
-            TransactionHash = transactionHash;
-        }
-
         /// <summary>
         ///     StrKey representation of the contract address that emitted this event.
         /// </summary>
@@ -85,8 +53,9 @@ public class GetEventsResponse
         ///     Duplicate of <c>id</c> field, but in the standard place for pagination tokens.
         /// Use <see cref="GetEventsResponse.Cursor"/> instead.
         /// </summary>
-        [Obsolete("This property is deprecated, use GetEventsResponse.Cursor instead. In a future release of this SDK this field can be removed.")]
-        public string PagingToken { get; }
+        [Obsolete(
+            "This property is deprecated, use GetEventsResponse.Cursor instead. In a future release of this SDK this field can be removed.")]
+        public string PagingToken { get; init; }
 
         /// <summary>
         ///     A list containing the topics, each is a base-64 encoded XDR string of an <see cref="Xdr.SCVal">xdr.SCVal</see>
