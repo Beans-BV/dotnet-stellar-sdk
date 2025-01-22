@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -44,7 +45,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "status": "healthy",
                 "latestLedger": 453892,
@@ -70,7 +71,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "friendbotUrl": "https://friendbot.stellar.org/",
                 "passphrase": "Test SDF Network ; September 2015",
@@ -94,7 +95,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "id": "6bdb3e5cd5dcbf53df4b67dd56f892d0134c5abfb659234a83778af0b85620fe",
                 "protocolVersion": 21,
@@ -344,7 +345,7 @@ public class SorobanServerTest
                   }
                 ],
                 "latestLedger": 913609,
-                "cursor": "0003920046715838464-0000000001",
+                "cursor": "0003920046715838464-0000000001"
               }
             }
             """;
@@ -431,7 +432,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "entries": [],
                 "latestLedger": 458234
@@ -450,7 +451,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "entries": [
                   {
@@ -476,7 +477,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "entries": [
                   {
@@ -530,7 +531,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "entries": [
                   {
@@ -653,7 +654,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "entries": [
                   {
@@ -697,7 +698,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "entries": [
                   {
@@ -746,7 +747,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "entries": [
                   {
@@ -792,7 +793,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "entries": [
                   {
@@ -845,7 +846,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "entries": [
                   {
@@ -890,7 +891,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "status": "NOT_FOUND",
                 "latestLedger": 456220,
@@ -1051,7 +1052,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "inclusionFee": {
                   "max": "210",
@@ -1146,24 +1147,28 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
-                "version": "21.1.0",
-                "commitHash": "fcd2f0523f04279bae4502f3e3fa00ca627e6f6a",
-                "buildTimestamp": "2024-05-10T11:18:38",
-                "captiveCoreVersion": "stellar-core 21.0.0.rc2 (c6f474133738ae5f6d11b07963ca841909210273)",
-                "protocolVersion": 22
-              }
+                  "version": "22.1.0-c7e9737b54913f5a33f29decdb0c9f6101dc1cfc",
+                  "commitHash": "c7e9737b54913f5a33f29decdb0c9f6101dc1cfc",
+                  "buildTimestamp": "2024-11-13T21:20:45",
+                  "captiveCoreVersion": "stellar-core 22.0.0 (721fd0a654d5e82d38c748a91053e530a475193d)",
+                  "protocolVersion": 22,
+                  "commit_hash": "c7e9737b54913f5a33f29decdb0c9f6101dc1cfc",
+                  "build_time_stamp": "2024-11-13T21:20:45",
+                  "captive_core_version": "stellar-core 22.0.0 (721fd0a654d5e82d38c748a91053e530a475193d)",
+                  "protocol_version": 22
+                }
             }
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
         var response = await sorobanServer.GetVersionInfo();
 
         Assert.IsNotNull(response);
-        Assert.AreEqual("21.1.0", response.Version);
-        Assert.AreEqual("fcd2f0523f04279bae4502f3e3fa00ca627e6f6a", response.CommitHash);
-        Assert.AreEqual("2024-05-10T11:18:38", response.BuildTimeStamp);
-        Assert.AreEqual("stellar-core 21.0.0.rc2 (c6f474133738ae5f6d11b07963ca841909210273)",
+        Assert.AreEqual("22.1.0-c7e9737b54913f5a33f29decdb0c9f6101dc1cfc", response.Version);
+        Assert.AreEqual("c7e9737b54913f5a33f29decdb0c9f6101dc1cfc", response.CommitHash);
+        Assert.AreEqual("2024-11-13T21:20:45", response.BuildTimeStamp);
+        Assert.AreEqual("stellar-core 22.0.0 (721fd0a654d5e82d38c748a91053e530a475193d)",
             response.CaptiveCoreVersion);
         Assert.AreEqual(22, response.ProtocolVersion);
     }
@@ -1175,7 +1180,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "version": "21.1.0",
                 "commit_hash": "fcd2f0523f04279bae4502f3e3fa00ca627e6f6a",
@@ -1204,7 +1209,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "status": "SUCCESS",
                 "txHash": "89ed109b74a65e28f6771b78ca70c6aa937792eea16506eb359cb58cc94e5db0",
@@ -1251,7 +1256,7 @@ public class SorobanServerTest
             """
             {
               "jsonrpc": "2.0",
-              "id": 8675309,
+              "id": "8675309",
               "result": {
                 "transactions": [
                   {

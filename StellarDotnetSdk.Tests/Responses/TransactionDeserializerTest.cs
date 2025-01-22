@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Responses;
 
@@ -16,7 +17,7 @@ public class TransactionDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("transactionTransaction.json");
         var json = File.ReadAllText(jsonPath);
-        var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
+        var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
 
         Assert.IsNotNull(transaction);
         AssertTestData(transaction);
@@ -29,7 +30,7 @@ public class TransactionDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("transactionTransactionPre020.json");
         var json = File.ReadAllText(jsonPath);
-        var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
+        var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
 
         Assert.IsNotNull(transaction);
         AssertTestData(transaction);
@@ -42,7 +43,7 @@ public class TransactionDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("transactionTransactionTextMemo.json");
         var json = File.ReadAllText(jsonPath);
-        var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
+        var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
 
         Assert.IsNotNull(transaction);
         var memo = (MemoText)transaction.Memo;
@@ -56,9 +57,9 @@ public class TransactionDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("transactionTransaction.json");
         var json = File.ReadAllText(jsonPath);
-        var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
-        var serialized = JsonConvert.SerializeObject(transaction);
-        var back = JsonConvert.DeserializeObject<TransactionResponse>(serialized);
+        var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(transaction);
+        var back = JsonSerializer.Deserialize<TransactionResponse>(serialized);
         Assert.IsNotNull(back);
         Assert.IsTrue(back.Successful);
         AssertTestData(back);
@@ -110,7 +111,7 @@ public class TransactionDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("transactionTransactionWithoutMemo.json");
         var json = File.ReadAllText(jsonPath);
-        var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
+        var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
 
         Assert.IsNotNull(transaction);
         Assert.IsFalse(transaction.Successful);
@@ -122,7 +123,7 @@ public class TransactionDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("transactionTransactionWithMemo.json");
         var json = File.ReadAllText(jsonPath);
-        var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
+        var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(transaction);
         var copyTransaction = new TransactionResponse
         {
@@ -156,7 +157,7 @@ public class TransactionDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("transactionTransaction.json");
         var json = File.ReadAllText(jsonPath);
-        var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
+        var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
 
         Assert.IsNotNull(transaction);
 
@@ -193,7 +194,7 @@ public class TransactionDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("transactionFeeBump.json");
         var json = File.ReadAllText(jsonPath);
-        var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
+        var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(transaction);
         var transaction2 = new TransactionResponse
         {
@@ -245,7 +246,7 @@ public class TransactionDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("transactionMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var transaction = JsonSingleton.GetInstance<TransactionResponse>(json);
+        var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
 
         Assert.IsNotNull(transaction);
         Assert.AreEqual("GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2", transaction.SourceAccount);

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text.Json;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.EventSources;
 using StellarDotnetSdk.Responses;
 
@@ -51,7 +53,7 @@ public class RequestBuilderStreamable<T, TResponse>
 
         EventSource.Message += (_, e) =>
         {
-            var responseObject = JsonSingleton.GetInstance<TResponse>(e.Data) ??
+            var responseObject = JsonSerializer.Deserialize<TResponse>(e.Data, JsonOptions.DefaultOptions) ??
                                  throw new NotSupportedException("Unknown response type");
 
             if (responseObject is IPagingToken page)

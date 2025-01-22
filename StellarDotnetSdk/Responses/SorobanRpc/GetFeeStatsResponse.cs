@@ -8,103 +8,69 @@
 /// </summary>
 public class GetFeeStatsResponse
 {
-    public GetFeeStatsResponse(InclusionFee? sorobanInclusionFee, InclusionFee? inclusionFee, long latestLedger)
-    {
-        SorobanInclusionFee = sorobanInclusionFee;
-        InclusionFee = inclusionFee;
-        LatestLedger = latestLedger;
-    }
-
     /// <summary>
     ///     Inclusion fee distribution statistics for Soroban transactions
     /// </summary>
-    public InclusionFee? SorobanInclusionFee { get; }
+    public InclusionFee? SorobanInclusionFee { get; init; }
 
     /// <summary>
     ///     Fee distribution statistics for Stellar (i.e. non-Soroban) transactions. Statistics are normalized per operation.
     /// </summary>
-    public InclusionFee? InclusionFee { get; }
+    public InclusionFee? InclusionFee { get; init; }
 
     /// <summary>
     ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.
     /// </summary>
-    public long LatestLedger { get; }
+    public long LatestLedger { get; init; }
 }
 
 public class InclusionFee
 {
-    public InclusionFee(
-        string max, string min, string mode,
-        string p10, string p20, string p30,
-        string p40, string p50, string p60,
-        string p70, string p80, string p90,
-        string p95, string p99, string transactionCount,
-        int ledgerCount
-    )
-    {
-        Max = max;
-        Min = min;
-        Mode = mode;
-        P10 = p10;
-        P20 = p20;
-        P30 = p30;
-        P40 = p40;
-        P50 = p50;
-        P60 = p60;
-        P70 = p70;
-        P80 = p80;
-        P90 = p90;
-        P95 = p95;
-        P99 = p99;
-        TransactionCount = transactionCount;
-        LedgerCount = ledgerCount;
-    }
-
     /// Maximum fee
-    public string Max { get; }
+    public string Max { get; init; }
 
     /// Minimum fee
-    public string Min { get; }
+    public string Min { get; init; }
 
     /// Fee value which occurs the most often
-    public string Mode { get; }
+    public string Mode { get; init; }
 
     /// 10th nearest-rank fee percentile
-    public string P10 { get; }
+    public string P10 { get; init; }
 
     /// 20th nearest-rank fee percentile
-    public string P20 { get; }
+    public string P20 { get; init; }
 
     /// 30th nearest-rank fee percentile
-    public string P30 { get; }
+    public string P30 { get; init; }
 
     /// 40th nearest-rank fee percentile
-    public string P40 { get; }
+    public string P40 { get; init; }
 
     /// 50th nearest-rank fee percentile
-    public string P50 { get; }
+    public string P50 { get; init; }
 
     /// 60th nearest-rank fee percentile
-    public string P60 { get; }
+    public string P60 { get; init; }
 
     /// 70th nearest-rank fee percentile
-    public string P70 { get; }
+    public string P70 { get; init; }
 
     /// 80th nearest-rank fee percentile
-    public string P80 { get; }
+    public string P80 { get; init; }
 
     /// 90th nearest-rank fee percentile
-    public string P90 { get; }
+    public string P90 { get; init; }
 
     /// 95th nearest-rank fee percentile
-    public string P95 { get; }
+    public string P95 { get; init; }
 
     /// 99th nearest-rank fee percentile
-    public string P99 { get; }
+    public string P99 { get; init; }
 
     /// How many transactions are part of the distribution
-    public string TransactionCount { get; }
+    public string TransactionCount { get; init; }
 
     /// How many consecutive ledgers form the distribution
-    public int LedgerCount { get; }
+    public int LedgerCount { get; init; }
 }

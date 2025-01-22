@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
@@ -6,25 +6,24 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// <summary>
 ///     Represents AccountMerge operation response.
 /// </summary>
-[JsonObject]
 public class AccountMergeOperationResponse : OperationResponse
 {
     public override int TypeId => 8;
 
-    [JsonProperty(PropertyName = "account")]
+    [JsonPropertyName("account")]
     public string Account { get; init; }
 
-    [JsonProperty(PropertyName = "account_muxed")]
+    [JsonPropertyName("account_muxed")]
     public string AccountMuxed { get; init; }
 
-    [JsonProperty(PropertyName = "account_muxed_id")]
+    [JsonPropertyName("account_muxed_id")]
     public ulong? AccountMuxedID { get; init; }
 
-    [JsonProperty(PropertyName = "into")] public string Into { get; init; }
+    [JsonPropertyName("into")] public string Into { get; init; }
 
-    [JsonProperty(PropertyName = "into_muxed")]
+    [JsonPropertyName("into_muxed")]
     public string IntoMuxed { get; init; }
 
-    [JsonProperty(PropertyName = "into_muxed_id")]
+    [JsonPropertyName("into_muxed_id")]
     public ulong? IntoMuxedID { get; init; }
 }

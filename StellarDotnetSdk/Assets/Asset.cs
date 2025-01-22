@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Xdr;
 
@@ -10,6 +12,7 @@ namespace StellarDotnetSdk.Assets;
 ///     An asset code describes an asset code and issuer pair. In the case of the native asset XLM, the issuer will be
 ///     null.
 /// </summary>
+[JsonConverter(typeof(AssetJsonConverter))]
 public abstract class Asset
 {
     /// <summary>

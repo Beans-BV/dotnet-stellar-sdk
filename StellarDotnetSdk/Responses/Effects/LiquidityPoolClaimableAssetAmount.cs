@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
 
@@ -8,11 +8,11 @@ namespace StellarDotnetSdk.Responses.Effects;
 [JsonConverter(typeof(LiquidityPoolClaimableAssetAmountJsonConverter))]
 public class LiquidityPoolClaimableAssetAmount
 {
-    [JsonProperty(PropertyName = "asset")] public Asset Asset { get; init; }
+    [JsonPropertyName("asset")] public Asset Asset { get; init; }
 
-    [JsonProperty(PropertyName = "amount")]
+    [JsonPropertyName("amount")]
     public string Amount { get; init; }
 
-    [JsonProperty(PropertyName = "claimable_balance_id")]
+    [JsonPropertyName("claimable_balance_id")]
     public string ClaimableBalanceId { get; init; } // TODO: Check if nullable
 }

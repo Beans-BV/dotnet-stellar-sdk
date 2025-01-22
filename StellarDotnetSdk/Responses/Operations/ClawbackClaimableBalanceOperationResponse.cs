@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Operations;
 #nullable disable
@@ -14,6 +14,6 @@ public class ClawbackClaimableBalanceOperationResponse : OperationResponse
     /// <summary>
     ///     Claimable balance identifier of the claimable balance to be clawed back.
     /// </summary>
-    [JsonProperty(PropertyName = "balance_id")]
+    [JsonPropertyName("balance_id")]
     public string BalanceId { get; init; }
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
@@ -11,28 +11,28 @@ public class ChangeTrustOperationResponse : OperationResponse
 {
     public override int TypeId => 6;
 
-    [JsonProperty(PropertyName = "asset_code")]
+    [JsonPropertyName("asset_code")]
     public string AssetCode { get; init; }
 
-    [JsonProperty(PropertyName = "asset_issuer")]
+    [JsonPropertyName("asset_issuer")]
     public string AssetIssuer { get; init; }
 
-    [JsonProperty(PropertyName = "asset_type")]
+    [JsonPropertyName("asset_type")]
     public string AssetType { get; init; }
 
-    [JsonProperty(PropertyName = "limit")] public string Limit { get; init; }
+    [JsonPropertyName("limit")] public string Limit { get; init; }
 
-    [JsonProperty(PropertyName = "trustee")]
+    [JsonPropertyName("trustee")]
     public string Trustee { get; init; }
 
-    [JsonProperty(PropertyName = "trustor")]
+    [JsonPropertyName("trustor")]
     public string Trustor { get; init; }
 
-    [JsonProperty(PropertyName = "trustor_muxed")]
+    [JsonPropertyName("trustor_muxed")]
     public string TrustorMuxed { get; init; }
 
-    [JsonProperty(PropertyName = "trustor_muxed_id")]
-    public ulong? TrustorMuxedID { get; init; }
+    [JsonPropertyName("trustor_muxed_id")]
+    public string? TrustorMuxedID { get; init; }
 
     public AssetTypeCreditAlphaNum Asset => Assets.Asset.CreateNonNativeAsset(AssetCode, AssetIssuer);
 }

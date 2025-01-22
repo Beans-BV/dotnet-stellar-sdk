@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
@@ -17,73 +17,73 @@ public class PathPaymentStrictReceiveOperationResponse : OperationResponse
     /// <summary>
     ///     Account address that is sending the payment.
     /// </summary>
-    [JsonProperty(PropertyName = "from")]
+    [JsonPropertyName("from")]
     public string From { get; init; }
 
     /// <summary>
     ///     Account address that receives the payment.
     /// </summary>
-    [JsonProperty(PropertyName = "to")]
+    [JsonPropertyName("to")]
     public string To { get; init; }
 
     /// <summary>
     ///     The destination asset code (Alpha4, Alpha12, etc.)
     /// </summary>
-    [JsonProperty(PropertyName = "asset_code")]
+    [JsonPropertyName("asset_code")]
     public string AssetCode { get; init; }
 
     /// <summary>
     ///     The destination asset issuer account.
     /// </summary>
-    [JsonProperty(PropertyName = "asset_issuer")]
+    [JsonPropertyName("asset_issuer")]
     public string AssetIssuer { get; init; }
 
     /// <summary>
     ///     The destination asset type. (Alpha4, Alpha12, etc.)
     /// </summary>
-    [JsonProperty(PropertyName = "asset_type")]
+    [JsonPropertyName("asset_type")]
     public string AssetType { get; init; }
 
     /// <summary>
     ///     The amount of destination asset the destination account receives.
     /// </summary>
-    [JsonProperty(PropertyName = "amount")]
+    [JsonPropertyName("amount")]
     public string Amount { get; init; }
 
     /// <summary>
     ///     The source asset code.
     /// </summary>
-    [JsonProperty(PropertyName = "source_asset_code")]
+    [JsonPropertyName("source_asset_code")]
     public string SourceAssetCode { get; init; }
 
     /// <summary>
     ///     The source asset issuer account.
     /// </summary>
-    [JsonProperty(PropertyName = "source_asset_issuer")]
+    [JsonPropertyName("source_asset_issuer")]
     public string SourceAssetIssuer { get; init; }
 
     /// <summary>
     ///     The source asset type. (Alpha4, Alpha12, etc.)
     /// </summary>
-    [JsonProperty(PropertyName = "source_asset_type")]
+    [JsonPropertyName("source_asset_type")]
     public string SourceAssetType { get; init; }
 
     /// <summary>
     ///     The maximum send amount.
     /// </summary>
-    [JsonProperty(PropertyName = "source_max")]
+    [JsonPropertyName("source_max")]
     public string SourceMax { get; init; }
 
     /// <summary>
     ///     The amount sent.
     /// </summary>
-    [JsonProperty(PropertyName = "source_amount")]
+    [JsonPropertyName("source_amount")]
     public string SourceAmount { get; init; }
 
     /// <summary>
     ///     Additional hops the operation went through to get to the destination asset
     /// </summary>
-    [JsonProperty(PropertyName = "path")]
+    [JsonPropertyName("path")]
     public IEnumerable<Asset> Path { get; init; }
 
     /// <summary>

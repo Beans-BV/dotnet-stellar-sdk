@@ -1,37 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Requests;
 
 namespace StellarDotnetSdk.Responses;
 
 public class Link
 {
-    public Link(string href)
-    {
-        Href = href;
-    }
-
-    [JsonProperty(PropertyName = "href")] public string Href { get; init; }
+    [JsonPropertyName("href")] public string Href { get; init; }
 
     [JsonIgnore] public virtual Uri Uri => new(Href);
 
     public virtual bool Templated => false;
 }
 
-[JsonConverter(typeof(LinkJsonConverter))]
-public class Link<TResponse> : Link where TResponse : Response
+public class Link<TResponse> : Link where TResponse : Response  
 {
-    public Link(string href) : base(href)
-    {
-    }
-
     public static Link<TResponse> Create(string href, bool templated)
     {
-        return templated ? new TemplatedLink<TResponse>(href) : new Link<TResponse>(href);
+        return templated
+            ? new TemplatedLink<TResponse> { Href = href }
+            : new Link<TResponse> { Href = href };
     }
 
     /// <summary>
@@ -105,15 +96,9 @@ public class Link<TResponse> : Link where TResponse : Response
     }
 }
 
-public class TemplatedLink<TResponse> : Link<TResponse>
-    where TResponse : Response
+public class TemplatedLink<TResponse> : Link<TResponse> where TResponse : Response
 {
     private UriTemplate? _uriTemplate;
-
-    public TemplatedLink(string href) : base(href)
-    {
-        _uriTemplate = null;
-    }
 
     public override Uri Uri => ParseUri().Resolve();
 

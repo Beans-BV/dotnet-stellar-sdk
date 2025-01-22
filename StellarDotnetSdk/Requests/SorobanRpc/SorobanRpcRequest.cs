@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Requests.SorobanRpc;
 
@@ -11,14 +11,14 @@ public class SorobanRpcRequest<T>
         Params = parameters;
     }
 
-    [JsonProperty(PropertyName = "jsonrpc")]
+    [JsonPropertyName("jsonrpc")]
     public string JsonRpc { get; private set; } = "2.0";
 
-    [JsonProperty(PropertyName = "id")] public string Id { get; private set; }
+    [JsonPropertyName("id")] public string Id { get; private set; }
 
-    [JsonProperty(PropertyName = "method")]
+    [JsonPropertyName("method")]
     public string Method { get; private set; }
 
-    [JsonProperty(PropertyName = "params")]
+    [JsonPropertyName("params")]
     public T? Params { get; private set; }
 }

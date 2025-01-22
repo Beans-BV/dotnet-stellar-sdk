@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses.Effects;
 
 namespace StellarDotnetSdk.Responses.Operations;
@@ -18,30 +18,30 @@ public class OperationResponseLinks
     /// <summary>
     ///     This endpoint represents effects that occurred as a result of a given operation.
     /// </summary>
-    [JsonProperty(PropertyName = "effects")]
+    [JsonPropertyName("effects")]
     public Link<Page<EffectResponse>> Effects { get; init; }
 
     /// <summary>
     ///     This endpoint represents precedes that occurred as a result of a given operation.
     /// </summary>
-    [JsonProperty(PropertyName = "precedes")]
+    [JsonPropertyName("precedes")]
     public Link<OperationResponse> Precedes { get; init; }
 
     /// <summary>
     ///     This endpoint represents self that occurred as a result of a given operation.
     /// </summary>
-    [JsonProperty(PropertyName = "self")]
+    [JsonPropertyName("self")]
     public Link<OperationResponse> Self { get; init; }
 
     /// <summary>
     ///     This endpoint represents succeeds that occurred as a result of a given operation.
     /// </summary>
-    [JsonProperty(PropertyName = "succeeds")]
+    [JsonPropertyName("succeeds")]
     public Link<OperationResponse> Succeeds { get; init; }
 
     /// <summary>
     ///     This endpoint represents transaction that occurred as a result of a given operation.
     /// </summary>
-    [JsonProperty(PropertyName = "transaction")]
+    [JsonPropertyName("transaction")]
     public Link<TransactionResponse> Transaction { get; init; }
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
@@ -10,14 +10,14 @@ public class CreateClaimableBalanceOperationResponse : OperationResponse
 {
     public override int TypeId => 14;
 
-    [JsonProperty(PropertyName = "sponsor")]
+    [JsonPropertyName("sponsor")]
     public string Sponsor { get; init; }
 
-    [JsonProperty(PropertyName = "asset")] public string Asset { get; init; }
+    [JsonPropertyName("asset")] public string Asset { get; init; }
 
-    [JsonProperty(PropertyName = "amount")]
+    [JsonPropertyName("amount")]
     public string Amount { get; init; }
 
-    [JsonProperty(PropertyName = "claimants")]
+    [JsonPropertyName("claimants")]
     public Claimant[] Claimants { get; init; }
 }

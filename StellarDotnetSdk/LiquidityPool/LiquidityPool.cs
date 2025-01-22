@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Xdr;
@@ -22,21 +22,20 @@ public class LiquidityPool
         Reserves = reserves;
     }
 
-    [JsonProperty(PropertyName = "id")] public LiquidityPoolId Id { get; }
+    [JsonPropertyName("id")] public LiquidityPoolId Id { get; }
 
-    [JsonProperty(PropertyName = "fee_bp")]
+    [JsonPropertyName("fee_bp")]
     public int FeeBp { get; }
 
     [JsonConverter(typeof(LiquidityPoolTypeEnumJsonConverter))]
-    [JsonProperty(PropertyName = "type")]
     public LiquidityPoolType.LiquidityPoolTypeEnum Type { get; }
 
-    [JsonProperty(PropertyName = "total_trustlines")]
+    [JsonPropertyName("total_trustlines")]
     public int TotalTrustlines { get; }
 
-    [JsonProperty(PropertyName = "total_shares")]
+    [JsonPropertyName("total_shares")]
     public string TotalShares { get; }
 
-    [JsonProperty(PropertyName = "reserves")]
+    [JsonPropertyName("reserves")]
     public AssetAmount[] Reserves { get; }
 }

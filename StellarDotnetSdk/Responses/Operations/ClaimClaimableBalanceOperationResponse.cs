@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
@@ -10,15 +10,15 @@ public class ClaimClaimableBalanceOperationResponse : OperationResponse
 {
     public override int TypeId => 15;
 
-    [JsonProperty(PropertyName = "balance_id")]
+    [JsonPropertyName("balance_id")]
     public string BalanceID { get; init; }
 
-    [JsonProperty(PropertyName = "claimant")]
+    [JsonPropertyName("claimant")]
     public string Claimant { get; init; }
 
-    [JsonProperty(PropertyName = "claimant_muxed")]
+    [JsonPropertyName("claimant_muxed")]
     public string ClaimantMuxed { get; init; }
 
-    [JsonProperty(PropertyName = "claimant_muxed_id")]
+    [JsonPropertyName("claimant_muxed_id")]
     public ulong? ClaimantMuxedID { get; init; }
 }

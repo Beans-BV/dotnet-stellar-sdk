@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Effects;
@@ -6,15 +6,15 @@ namespace StellarDotnetSdk.Responses.Effects;
 
 public abstract class TrustlineEffectResponse : EffectResponse
 {
-    [JsonProperty(PropertyName = "limit")] public string Limit { get; init; }
+    [JsonPropertyName("limit")] public string Limit { get; init; }
 
-    [JsonProperty(PropertyName = "asset_type")]
+    [JsonPropertyName("asset_type")]
     public string AssetType { get; init; }
 
-    [JsonProperty(PropertyName = "asset_code")]
+    [JsonPropertyName("asset_code")]
     public string AssetCode { get; init; }
 
-    [JsonProperty(PropertyName = "asset_issuer")]
+    [JsonPropertyName("asset_issuer")]
     public string AssetIssuer { get; init; }
 
     public AssetTypeCreditAlphaNum Asset => Assets.Asset.CreateNonNativeAsset(AssetCode, AssetIssuer);

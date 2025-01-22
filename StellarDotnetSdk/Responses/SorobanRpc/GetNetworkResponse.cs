@@ -7,25 +7,18 @@
 /// </summary>
 public class GetNetworkResponse
 {
-    public GetNetworkResponse(string friendbotUrl, string passphrase, int protocolVersion)
-    {
-        FriendbotUrl = friendbotUrl;
-        Passphrase = passphrase;
-        ProtocolVersion = protocolVersion;
-    }
-
     /// <summary>
     ///     (optional) The URL of this network's "friendbot" faucet.
     /// </summary>
-    public string FriendbotUrl { get; }
+    public string FriendbotUrl { get; init; }
 
     /// <summary>
     ///     Network passphrase configured for this Soroban RPC node.
     /// </summary>
-    public string Passphrase { get; }
+    public string Passphrase { get; init; }
 
     /// <summary>
     ///     Stellar Core protocol version associated with the latest ledger.
     /// </summary>
-    public int ProtocolVersion { get; }
+    public int ProtocolVersion { get; init; }
 }

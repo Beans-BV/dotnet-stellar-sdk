@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
@@ -15,25 +15,25 @@ public class SetTrustlineFlagsOperationResponse : OperationResponse
     /// <summary>
     ///     Asset type (native / alphanum4 / alphanum12)
     /// </summary>
-    [JsonProperty(PropertyName = "asset_type")]
+    [JsonPropertyName("asset_type")]
     public string AssetType { get; init; }
 
     /// <summary>
     ///     Asset code.
     /// </summary>
-    [JsonProperty(PropertyName = "asset_code")]
+    [JsonPropertyName("asset_code")]
     public string AssetCode { get; init; }
 
     /// <summary>
     ///     Asset issuer.
     /// </summary>
-    [JsonProperty(PropertyName = "asset_issuer")]
+    [JsonPropertyName("asset_issuer")]
     public string AssetIssuer { get; init; }
 
     /// <summary>
     ///     Trustor account.
     /// </summary>
-    [JsonProperty(PropertyName = "trustor")]
+    [JsonPropertyName("trustor")]
     public string Trustor { get; init; }
 
     /// <summary>
@@ -41,7 +41,7 @@ public class SetTrustlineFlagsOperationResponse : OperationResponse
     ///     adds onto the
     ///     existing flags of the account. This allows for setting specific bits without knowledge of existing flags.
     /// </summary>
-    [JsonProperty(PropertyName = "clear_flags_s")]
+    [JsonPropertyName("clear_flags_s")]
     public string[] ClearFlags { get; init; }
 
     /// <summary>
@@ -49,7 +49,7 @@ public class SetTrustlineFlagsOperationResponse : OperationResponse
     ///     adds onto the
     ///     existing flags of the account. This allows for setting specific bits without knowledge of existing flags.
     /// </summary>
-    [JsonProperty(PropertyName = "set_flags_s")]
+    [JsonPropertyName("set_flags_s")]
     public string[] SetFlags { get; init; }
 
     /// <summary>

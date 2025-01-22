@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
 #nullable disable
@@ -10,24 +10,24 @@ public class TrustlineFlagsUpdatedEffectResponse : EffectResponse
 {
     public override int TypeId => 26;
 
-    [JsonProperty(PropertyName = "asset_type")]
+    [JsonPropertyName("asset_type")]
     public string AssetType { get; init; }
 
-    [JsonProperty(PropertyName = "asset_code")]
+    [JsonPropertyName("asset_code")]
     public string AssetCode { get; init; }
 
-    [JsonProperty(PropertyName = "asset_issuer")]
+    [JsonPropertyName("asset_issuer")]
     public string AssetIssuer { get; init; }
 
-    [JsonProperty(PropertyName = "trustor")]
+    [JsonPropertyName("trustor")]
     public string Trustor { get; init; }
 
-    [JsonProperty(PropertyName = "authorized_flag")]
+    [JsonPropertyName("authorized_flag")]
     public bool AuthorizedFlag { get; init; }
 
-    [JsonProperty(PropertyName = "authorized_to_maintain_liabilities")]
+    [JsonPropertyName("authorized_to_maintain_liabilities")]
     public bool AuthorizedToMaintainLiabilities { get; init; }
 
-    [JsonProperty(PropertyName = "clawback_enabled_flag")]
+    [JsonPropertyName("clawback_enabled_flag")]
     public bool ClawbackEnabledFlag { get; init; }
 }

@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Newtonsoft.Json;
-using sdkxdr = StellarDotnetSdk.Xdr;
+using System.Text.Json.Serialization;
+using Int32 = StellarDotnetSdk.Xdr.Int32;
 
 namespace StellarDotnetSdk;
 
-using xdr_Price = sdkxdr.Price;
+using xdr_Price = Xdr.Price;
 
 public class Price
 {
     /// <summary>
     ///     Create a new price. Price in Stellar is represented as a fraction.
     /// </summary>
-    /// <param name="n">Numerator</param>
-    /// <param name="d">Denominator</param>
-    public Price(int n, int d)
+    /// <param name="numerator">Numerator</param>
+    /// <param name="denominator">Denominator</param>
+    public Price(int numerator, int denominator)
     {
-        Numerator = n;
-        Denominator = d;
+        Numerator = numerator;
+        Denominator = denominator;
     }
 
-    [JsonProperty(PropertyName = "n")] public int Numerator { get; }
+    [JsonPropertyName("n")] public int Numerator { get; }
 
-    [JsonProperty(PropertyName = "d")] public int Denominator { get; }
+    [JsonPropertyName("d")] public int Denominator { get; }
 
     /// <summary>
     ///     Approximates<code> price</code> to a fraction.
@@ -82,8 +82,8 @@ public class Price
     {
         return new xdr_Price
         {
-            D = new sdkxdr.Int32(Denominator),
-            N = new sdkxdr.Int32(Numerator),
+            D = new Int32(Denominator),
+            N = new Int32(Numerator)
         };
     }
 

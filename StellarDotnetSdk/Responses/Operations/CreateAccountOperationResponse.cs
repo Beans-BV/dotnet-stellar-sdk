@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
@@ -6,22 +6,23 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// <summary>
 ///     Represents CreateAccount operation response.
 /// </summary>
+
 public class CreateAccountOperationResponse : OperationResponse
 {
     public override int TypeId => 0;
 
-    [JsonProperty(PropertyName = "account")]
+    [JsonPropertyName("account")]
     public string Account { get; init; }
 
-    [JsonProperty(PropertyName = "funder")]
+    [JsonPropertyName("funder")]
     public string Funder { get; init; }
 
-    [JsonProperty(PropertyName = "funder_muxed")]
+    [JsonPropertyName("funder_muxed")]
     public string FunderMuxed { get; init; }
 
-    [JsonProperty(PropertyName = "funder_muxed_id")]
+    [JsonPropertyName("funder_muxed_id")]
     public ulong? FunderMuxedId { get; init; }
 
-    [JsonProperty(PropertyName = "starting_balance")]
+    [JsonPropertyName("starting_balance")]
     public string StartingBalance { get; init; }
 }

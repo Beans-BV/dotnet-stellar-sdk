@@ -1,14 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
 #nullable disable
 
 public class SignerEffectResponse : EffectResponse
 {
-    [JsonProperty(PropertyName = "weight")]
+    [JsonPropertyName("weight")]
     public int Weight { get; init; }
 
-    [JsonProperty(PropertyName = "public_key")]
+    [JsonPropertyName("public_key")]
     public string PublicKey { get; init; }
 }
 

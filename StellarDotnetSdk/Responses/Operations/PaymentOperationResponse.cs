@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
@@ -16,47 +16,47 @@ public class PaymentOperationResponse : OperationResponse
     /// <summary>
     ///     Amount of the aforementioned asset to send.
     /// </summary>
-    [JsonProperty(PropertyName = "amount")]
+    [JsonPropertyName("amount")]
     public string Amount { get; init; }
 
     /// <summary>
     ///     The asset type (USD, BTC, etc.)
     /// </summary>
-    [JsonProperty(PropertyName = "asset_type")]
+    [JsonPropertyName("asset_type")]
     public string AssetType { get; init; }
 
     /// <summary>
     ///     The asset code (Alpha4, Alpha12, etc.)
     /// </summary>
-    [JsonProperty(PropertyName = "asset_code")]
+    [JsonPropertyName("asset_code")]
     public string AssetCode { get; init; }
 
     /// <summary>
     /// </summary>
-    [JsonProperty(PropertyName = "asset_issuer")]
+    [JsonPropertyName("asset_issuer")]
     public string AssetIssuer { get; init; }
 
     /// <summary>
     ///     Account address that is sending the payment.
     /// </summary>
-    [JsonProperty(PropertyName = "from")]
+    [JsonPropertyName("from")]
     public string From { get; init; }
 
-    [JsonProperty(PropertyName = "from_muxed")]
+    [JsonPropertyName("from_muxed")]
     public string FromMuxed { get; init; }
 
-    [JsonProperty(PropertyName = "from_muxed_id")]
+    [JsonPropertyName("from_muxed_id")]
     public ulong? FromMuxedId { get; init; }
 
     /// <summary>
     /// </summary>
-    [JsonProperty(PropertyName = "to")]
+    [JsonPropertyName("to")]
     public string To { get; init; }
 
-    [JsonProperty(PropertyName = "to_muxed")]
+    [JsonPropertyName("to_muxed")]
     public string ToMuxed { get; init; }
 
-    [JsonProperty(PropertyName = "to_muxed_id")]
+    [JsonPropertyName("to_muxed_id")]
     public ulong? ToMuxedId { get; init; }
 
     /// <summary>

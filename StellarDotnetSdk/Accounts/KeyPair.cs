@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text.Json.Serialization;
 using dotnetstandard_bip32;
 using NSec.Cryptography;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Xdr;
 using PublicKey = NSec.Cryptography.PublicKey;
 using xdr_PublicKey = StellarDotnetSdk.Xdr.PublicKey;
@@ -14,6 +16,7 @@ namespace StellarDotnetSdk.Accounts;
 ///     Currently <see cref="KeyPair" /> only supports ed25519 but in a future this class can be abstraction layer for
 ///     other public-key signature systems.
 /// </summary>
+[JsonConverter(typeof(KeyPairJsonConverter))]
 public class KeyPair : IAccountId, IEquatable<KeyPair>
 {
     private readonly PublicKey _publicKey;
@@ -153,6 +156,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <summary>
     ///     The signing key.
     /// </summary>
+    [JsonIgnore]
     public KeyPair SigningKey => this;
 
     /// <summary>

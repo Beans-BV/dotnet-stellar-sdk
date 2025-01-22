@@ -1,8 +1,8 @@
 ﻿using System.IO;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Responses;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
@@ -16,7 +16,7 @@ public class ChangeTrustOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("changeTrust.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertChangeTrustData(instance);
     }
@@ -26,9 +26,9 @@ public class ChangeTrustOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("changeTrust.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
         Assert.IsNotNull(back);
         AssertChangeTrustData(back);
     }
@@ -53,7 +53,7 @@ public class ChangeTrustOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("changeTrustMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertChangeTrustDataMuxed(instance);
     }
@@ -63,9 +63,9 @@ public class ChangeTrustOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("changeTrustMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertChangeTrustDataMuxed(back);
     }
@@ -79,7 +79,7 @@ public class ChangeTrustOperationResponseTest
         Assert.AreEqual(operation.Trustor, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
         Assert.AreEqual(operation.TrustorMuxed,
             "MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24");
-        Assert.AreEqual(operation.TrustorMuxedID, 5123456789UL);
+        Assert.AreEqual(operation.TrustorMuxedID, "5123456789");
         Assert.AreEqual(operation.Limit, "922337203685.4775807");
         Assert.AreEqual(operation.Asset,
             Asset.CreateNonNativeAsset("EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"));

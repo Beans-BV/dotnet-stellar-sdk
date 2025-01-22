@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Newtonsoft.Json;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Exceptions;
@@ -222,7 +222,7 @@ public class ServerCheckMemoRequiredTest
             AccountId = accountId,
             SequenceNumber = 3298702387052545,
         };
-        return JsonConvert.SerializeObject(response);
+        return JsonSerializer.Serialize(response);
     }
 
     private Transaction BuildTransaction(string destination)

@@ -1,66 +1,59 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses.Operations;
+using JsonException = System.Text.Json.JsonException;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace StellarDotnetSdk.Converters;
 
 public class OperationResponseJsonConverter : JsonConverter<OperationResponse>
 {
-    public override bool CanWrite => false;
-
-    public override void WriteJson(JsonWriter writer, OperationResponse? value, JsonSerializer serializer)
+    public override bool CanConvert(Type typeToConvert) =>
+        typeToConvert.IsAssignableFrom(typeof(OperationResponse)) && typeToConvert.IsAbstract;
+    
+    public override OperationResponse? Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
-        throw new NotImplementedException();
-    }
-
-    public override OperationResponse ReadJson(JsonReader reader, Type objectType, OperationResponse? existingValue,
-        bool hasExistingValue,
-        JsonSerializer serializer)
-    {
-        var jsonObject = JObject.Load(reader);
-        var type = jsonObject.GetValue("type_i");
-        if (type == null)
-        {
-            throw new ArgumentException("JSON value for type_i is missing.", nameof(type));
-        }
-        var response = CreateResponse(type.ToObject<int>());
-        serializer.Populate(jsonObject.CreateReader(), response);
-        return response;
-    }
-
-    private static OperationResponse CreateResponse(int type)
-    {
+        using var document = JsonDocument.ParseValue(ref reader);
+        var root = document.RootElement;
+        var type = root.GetProperty("type_i").GetInt32();
+        var rawText = root.GetRawText();
         return type switch
         {
-            0 => new CreateAccountOperationResponse(),
-            1 => new PaymentOperationResponse(),
-            2 => new PathPaymentStrictReceiveOperationResponse(),
-            3 => new ManageSellOfferOperationResponse(),
-            4 => new CreatePassiveOfferOperationResponse(),
-            5 => new SetOptionsOperationResponse(),
-            6 => new ChangeTrustOperationResponse(),
-            7 => new AllowTrustOperationResponse(),
-            8 => new AccountMergeOperationResponse(),
-            9 => new InflationOperationResponse(),
-            10 => new ManageDataOperationResponse(),
-            11 => new BumpSequenceOperationResponse(),
-            12 => new ManageBuyOfferOperationResponse(),
-            13 => new PathPaymentStrictSendOperationResponse(),
-            14 => new CreateClaimableBalanceOperationResponse(),
-            15 => new ClaimClaimableBalanceOperationResponse(),
-            16 => new BeginSponsoringFutureReservesOperationResponse(),
-            17 => new EndSponsoringFutureReservesOperationResponse(),
-            18 => new RevokeSponsorshipOperationResponse(),
-            19 => new ClawbackOperationResponse(),
-            20 => new ClawbackClaimableBalanceOperationResponse(),
-            21 => new SetTrustlineFlagsOperationResponse(),
-            22 => new LiquidityPoolDepositOperationResponse(),
-            23 => new LiquidityPoolWithdrawOperationResponse(),
-            24 => new InvokeHostFunctionOperationResponse(),
-            25 => new ExtendFootprintOperationResponse(),
-            26 => new RestoreFootprintOperationResponse(),
-            _ => throw new JsonSerializationException($"Invalid operation 'type_i'='{type}'"),
+            0 => JsonSerializer.Deserialize<CreateAccountOperationResponse>(rawText, options),
+            1 => JsonSerializer.Deserialize<PaymentOperationResponse>(rawText, options),
+            2 => JsonSerializer.Deserialize<PathPaymentStrictReceiveOperationResponse>(rawText, options),
+            3 => JsonSerializer.Deserialize<ManageSellOfferOperationResponse>(rawText, options),
+            4 => JsonSerializer.Deserialize<CreatePassiveOfferOperationResponse>(rawText, options),
+            5 => JsonSerializer.Deserialize<SetOptionsOperationResponse>(rawText, options),
+            6 => JsonSerializer.Deserialize<ChangeTrustOperationResponse>(rawText, options),
+            7 => JsonSerializer.Deserialize<AllowTrustOperationResponse>(rawText, options),
+            8 => JsonSerializer.Deserialize<AccountMergeOperationResponse>(rawText, options),
+            9 => JsonSerializer.Deserialize<InflationOperationResponse>(rawText, options),
+            10 => JsonSerializer.Deserialize<ManageDataOperationResponse>(rawText, options),
+            11 => JsonSerializer.Deserialize<BumpSequenceOperationResponse>(rawText, options),
+            12 => JsonSerializer.Deserialize<ManageBuyOfferOperationResponse>(rawText, options),
+            13 => JsonSerializer.Deserialize<PathPaymentStrictSendOperationResponse>(rawText, options),
+            14 => JsonSerializer.Deserialize<CreateClaimableBalanceOperationResponse>(rawText, options),
+            15 => JsonSerializer.Deserialize<ClaimClaimableBalanceOperationResponse>(rawText, options),
+            16 => JsonSerializer.Deserialize<BeginSponsoringFutureReservesOperationResponse>(rawText, options),
+            17 => JsonSerializer.Deserialize<EndSponsoringFutureReservesOperationResponse>(rawText, options),
+            18 => JsonSerializer.Deserialize<RevokeSponsorshipOperationResponse>(rawText, options),
+            19 => JsonSerializer.Deserialize<ClawbackOperationResponse>(rawText, options),
+            20 => JsonSerializer.Deserialize<ClawbackClaimableBalanceOperationResponse>(rawText, options),
+            21 => JsonSerializer.Deserialize<SetTrustlineFlagsOperationResponse>(rawText, options),
+            22 => JsonSerializer.Deserialize<LiquidityPoolDepositOperationResponse>(rawText, options),
+            23 => JsonSerializer.Deserialize<LiquidityPoolWithdrawOperationResponse>(rawText, options),
+            24 => JsonSerializer.Deserialize<InvokeHostFunctionOperationResponse>(rawText, options),
+            25 => JsonSerializer.Deserialize<ExtendFootprintOperationResponse>(rawText, options),
+            26 => JsonSerializer.Deserialize<RestoreFootprintOperationResponse>(rawText, options),
+            _ => throw new JsonException("Unknown type.")
         };
+    }
+    
+    public override void Write(Utf8JsonWriter writer, OperationResponse value, JsonSerializerOptions options)
+    {
+        JsonSerializer.Serialize(writer, value, value.GetType(), options);
     }
 }

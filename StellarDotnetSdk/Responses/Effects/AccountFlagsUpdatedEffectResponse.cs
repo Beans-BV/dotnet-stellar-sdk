@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
 
@@ -9,9 +9,9 @@ public class AccountFlagsUpdatedEffectResponse : EffectResponse
 {
     public override int TypeId => 6;
 
-    [JsonProperty(PropertyName = "auth_required_flag")]
+    [JsonPropertyName("auth_required_flag")]
     public bool AuthRequiredFlag { get; init; }
 
-    [JsonProperty(PropertyName = "auth_revocable_flag")]
+    [JsonPropertyName("auth_revocable_flag")]
     public bool AuthRevocableFlag { get; init; }
 }

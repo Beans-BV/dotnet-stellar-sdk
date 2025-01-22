@@ -1,63 +1,63 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses;
 #nullable disable
 public class AssetResponse : Response, IPagingToken
 {
-    [JsonProperty(PropertyName = "_links")]
+    [JsonPropertyName("_links")]
     public AssetResponseLinks Links { get; init; }
 
-    [JsonProperty(PropertyName = "asset_type")]
+    [JsonPropertyName("asset_type")]
     public string AssetType { get; init; }
 
-    [JsonProperty(PropertyName = "asset_code")]
+    [JsonPropertyName("asset_code")]
     public string AssetCode { get; init; }
 
-    [JsonProperty(PropertyName = "asset_issuer")]
+    [JsonPropertyName("asset_issuer")]
     public string AssetIssuer { get; init; }
 
-    [JsonProperty(PropertyName = "accounts")]
+    [JsonPropertyName("accounts")]
     public AssetAccounts Accounts { get; init; }
 
-    [JsonProperty(PropertyName = "balances")]
+    [JsonPropertyName("balances")]
     public AssetBalances Balances { get; init; }
 
-    [JsonProperty(PropertyName = "claimable_balances_amount")]
+    [JsonPropertyName("claimable_balances_amount")]
     public string ClaimableBalancesAmount { get; init; }
 
-    [JsonProperty(PropertyName = "num_claimable_balances")]
+    [JsonPropertyName("num_claimable_balances")]
     public int NumClaimableBalances { get; init; }
 
-    [JsonProperty(PropertyName = "flags")] public AssetResponseFlags Flags { get; init; }
+    [JsonPropertyName("flags")] public AssetResponseFlags Flags { get; init; }
 
     /// <summary>
     ///     The number of liquidity pools trading this asset
     /// </summary>
-    [JsonProperty(PropertyName = "num_liquidity_pools")]
+    [JsonPropertyName("num_liquidity_pools")]
     public int NumLiquidityPools { get; init; }
 
     /// <summary>
     ///     The amount of this asset held in liquidity pools
     /// </summary>
-    [JsonProperty(PropertyName = "liquidity_pools_amount")]
+    [JsonPropertyName("liquidity_pools_amount")]
     public string LiquidityPoolsAmount { get; init; }
 
     /// <summary>
     ///     The quantity of contracts that hold this asset
     /// </summary>
-    [JsonProperty(PropertyName = "num_contracts")]
+    [JsonPropertyName("num_contracts")]
     public uint ContractsQuantity { get; init; }
 
     /// <summary>
     ///     The total units of this asset held by contracts
     /// </summary>
-    [JsonProperty(PropertyName = "contracts_amount")]
+    [JsonPropertyName("contracts_amount")]
     public double ContractsTotalAmount { get; init; }
 
     public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
 
-    [JsonProperty(PropertyName = "paging_token")]
+    [JsonPropertyName("paging_token")]
     public string PagingToken { get; init; }
 
     /// <summary>
@@ -72,13 +72,13 @@ public class AssetResponse : Response, IPagingToken
             Unauthorized = unauthorized;
         }
 
-        [JsonProperty(PropertyName = "authorized")]
+        [JsonPropertyName("authorized")]
         public int Authorized { get; init; }
 
-        [JsonProperty(PropertyName = "authorized_to_maintain_liabilities")]
+        [JsonPropertyName("authorized_to_maintain_liabilities")]
         public int AuthorizedToMaintainLiabilities { get; init; }
 
-        [JsonProperty(PropertyName = "unauthorized")]
+        [JsonPropertyName("unauthorized")]
         public int Unauthorized { get; init; }
     }
 
@@ -94,19 +94,19 @@ public class AssetResponse : Response, IPagingToken
             Unauthorized = unauthorized;
         }
 
-        [JsonProperty(PropertyName = "authorized")]
+        [JsonPropertyName("authorized")]
         public string Authorized { get; init; }
 
-        [JsonProperty(PropertyName = "authorized_to_maintain_liabilities")]
+        [JsonPropertyName("authorized_to_maintain_liabilities")]
         public string AuthorizedToMaintainLiabilities { get; init; }
 
-        [JsonProperty(PropertyName = "unauthorized")]
+        [JsonPropertyName("unauthorized")]
         public string Unauthorized { get; init; }
     }
 
     public class AssetResponseLinks
     {
-        [JsonProperty(PropertyName = "toml")] public Link Toml { get; init; }
+        [JsonPropertyName("toml")] public Link Toml { get; init; }
     }
 
     public class AssetResponseFlags
@@ -114,19 +114,19 @@ public class AssetResponse : Response, IPagingToken
         /// <summary>
         ///     The anchor must approve anyone who wants to hold this asset.
         /// </summary>
-        [JsonProperty(PropertyName = "auth_required")]
+        [JsonPropertyName("auth_required")]
         public bool AuthRequired { get; init; }
 
         /// <summary>
         ///     The anchor can freeze the asset.
         /// </summary>
-        [JsonProperty(PropertyName = "auth_revocable")]
+        [JsonPropertyName("auth_revocable")]
         public bool AuthRevocable { get; init; }
 
         /// <summary>
         ///     None of the authorization flags can be init and the issuing account can never be deleted.
         /// </summary>
-        [JsonProperty(PropertyName = "auth_immutable")]
+        [JsonPropertyName("auth_immutable")]
         public bool AuthImmutable { get; init; }
     }
 }
