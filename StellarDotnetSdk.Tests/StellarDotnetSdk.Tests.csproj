@@ -464,6 +464,9 @@
         <None Update="TestData\Responses\transactionFeeBump.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="TestData\Responses\offer.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
         <Compile Remove="KeyPairBIP39Tests.cs"/>
