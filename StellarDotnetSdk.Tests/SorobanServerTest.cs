@@ -20,6 +20,7 @@ using EvictionIterator = StellarDotnetSdk.LedgerEntries.EvictionIterator;
 using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
 using SCContractInstance = StellarDotnetSdk.Soroban.SCContractInstance;
 using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
+using SCVal = StellarDotnetSdk.Soroban.SCVal;
 using SCVec = StellarDotnetSdk.Soroban.SCVec;
 using StateArchivalSettings = StellarDotnetSdk.LedgerEntries.StateArchivalSettings;
 using Transaction = StellarDotnetSdk.Transactions.Transaction;
@@ -1196,7 +1197,7 @@ public class SorobanServerTest
             response.CaptiveCoreVersion);
         Assert.AreEqual(21, response.ProtocolVersion);
     }
-    
+
     [TestMethod]
     public async Task TestGetTransactionSuccess()
     {
@@ -1761,5 +1762,37 @@ public class SorobanServerTest
             transaction.Sign(_account);
         }
         return transaction;
+    }
+
+    [TestMethod]
+    public async Task TestSimulateTransaction()
+    {
+        var server = new Server("https://horizon-testnet.stellar.org");
+
+        var sorobanServer = new SorobanServer("https://soroban-testnet.stellar.org/");
+        var contractAddress = new SCContractId("CARDT45FED2I3FKESPMHDFV3ZMR6VH5ZHCFIOPH6TPSU35GPB6QBBCSU");
+        var keypair = KeyPair.FromSecretSeed("SC4NWRMSMK6CY4ZUYOLVWSL76GZQVK5FLKRT6JUZQKV224BK3SCFHBC4");
+        var account = await server.Accounts.Account(keypair.AccountId);
+        var address = new SCAccountId("GCH6YKNJ3KPESGSAIGBNHRNCIYXXXSRVU7OC552RDGQFHZ4SYRI26DQE");
+        var methodSymbol = new SCSymbol("balance");
+        var scTxArgs = new SCVal[] { address };
+
+        var invokeContractOperation = new InvokeContractOperation(contractAddress, methodSymbol, scTxArgs);
+        var transaction = new TransactionBuilder(account)
+            .AddOperation(invokeContractOperation)
+            .Build();
+
+        var simulatedRes = await sorobanServer.SimulateTransaction(transaction);
+        Assert.IsNull(simulatedRes.Error);
+        Assert.IsNotNull(simulatedRes.Results);
+        Assert.AreEqual(1, simulatedRes.Results.Length);
+        var invokeHostFunctionResult = simulatedRes.Results[0];
+        Assert.IsNotNull(invokeHostFunctionResult.Xdr);
+        var decodedVal = SCVal.FromXdrBase64(invokeHostFunctionResult.Xdr);
+        Assert.IsNotNull(decodedVal);
+        Assert.IsInstanceOfType(decodedVal, typeof(SCInt128));
+        var decodedInt = (SCInt128)decodedVal;
+        Assert.AreEqual(0L, decodedInt.Hi);
+        Assert.IsTrue(decodedInt.Lo > 0);
     }
 }
