@@ -44,6 +44,9 @@
             "asset_code": "PLN",
             "asset_issuer": "GACWIA2XGDFWWN3WKPX63JTK4S2J5NDPNOIVYMZY6RVTS7LWF2VHZLV3",
             "asset_type": "credit_alphanum4"
+          },
+          {
+            "asset_type": "native"
           }
         ],
         "source_amount": "300.0000000",

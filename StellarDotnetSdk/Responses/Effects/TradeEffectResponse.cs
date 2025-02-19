@@ -47,7 +47,7 @@ public class TradeEffectResponse : EffectResponse
     [JsonProperty(PropertyName = "bought_asset_issuer")]
     public string BoughtAssetIssuer { get; init; }
 
-    public AssetTypeCreditAlphaNum BoughtAsset => Asset.CreateNonNativeAsset(BoughtAssetCode, BoughtAssetIssuer);
+    public Asset BoughtAsset => Asset.Create(BoughtAssetType, BoughtAssetCode, BoughtAssetIssuer);
 
-    public AssetTypeCreditAlphaNum SoldAsset => Asset.CreateNonNativeAsset(SoldAssetCode, SoldAssetIssuer);
+    public Asset SoldAsset => Asset.Create(SoldAssetType, SoldAssetCode, SoldAssetIssuer);
 }
