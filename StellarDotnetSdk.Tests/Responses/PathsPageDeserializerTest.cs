@@ -10,21 +10,13 @@ namespace StellarDotnetSdk.Tests.Responses;
 public class PathsPageDeserializerTest
 {
     [TestMethod]
-    public void TestDeserialize()
+    public void TestSerializeDeserialize()
     {
         var jsonPath = Utils.GetTestDataPath("pathPage.json");
         var json = File.ReadAllText(jsonPath);
         var pathsPage = JsonSingleton.GetInstance<Page<PathResponse>>(json);
         Assert.IsNotNull(pathsPage);
         AssertTestData(pathsPage);
-    }
-
-    [TestMethod]
-    public void TestSerializeDeserialize()
-    {
-        var jsonPath = Utils.GetTestDataPath("pathPage.json");
-        var json = File.ReadAllText(jsonPath);
-        var pathsPage = JsonSingleton.GetInstance<Page<PathResponse>>(json);
         var serialized = JsonConvert.SerializeObject(pathsPage);
         var back = JsonConvert.DeserializeObject<Page<PathResponse>>(serialized);
         Assert.IsNotNull(back);
@@ -57,11 +49,12 @@ public class PathsPageDeserializerTest
         Assert.AreEqual(pathsPage.Records[2].DestinationAmount, "200.0000000");
         Assert.AreEqual(pathsPage.Records[2].DestinationAsset,
             Asset.CreateNonNativeAsset("EUR", "GBRCOBK7C7UE72PB5JCPQU3ZI45ZCEM7HKQ3KYV3YD3XB7EBOPBEDN2G"));
-        Assert.AreEqual(pathsPage.Records[2].Path.Count, 2);
+        Assert.AreEqual(pathsPage.Records[2].Path.Count, 3);
         Assert.AreEqual(pathsPage.Records[2].Path[0],
             Asset.CreateNonNativeAsset("GBP", "GAX7B3ZT3EOZW5POAMV4NGPPKCYUOYW2QQDIAF23JAXF72NMGRYPYOPM"));
         Assert.AreEqual(pathsPage.Records[2].Path[1],
             Asset.CreateNonNativeAsset("PLN", "GACWIA2XGDFWWN3WKPX63JTK4S2J5NDPNOIVYMZY6RVTS7LWF2VHZLV3"));
+        Assert.AreEqual(pathsPage.Records[2].Path[2], new AssetTypeNative());
         Assert.AreEqual(pathsPage.Records[2].SourceAmount, "300.0000000");
         Assert.AreEqual(pathsPage.Records[2].SourceAsset,
             Asset.CreateNonNativeAsset("USD", "GC7J5IHS3GABSX7AZLRINXWLHFTL3WWXLU4QX2UGSDEAIAQW2Q72U3KH"));

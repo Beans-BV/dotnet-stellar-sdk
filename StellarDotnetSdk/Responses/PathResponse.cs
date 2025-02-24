@@ -38,10 +38,9 @@ public class PathResponse : Response
     [JsonProperty(PropertyName = "_links")]
     public PathResponseLinks Links { get; init; }
 
-    public AssetTypeCreditAlphaNum DestinationAsset =>
-        Asset.CreateNonNativeAsset(DestinationAssetCode, DestinationAssetIssuer);
+    public Asset DestinationAsset => Asset.Create(DestinationAssetType, DestinationAssetCode, DestinationAssetIssuer);
 
-    public AssetTypeCreditAlphaNum SourceAsset => Asset.CreateNonNativeAsset(SourceAssetCode, SourceAssetIssuer);
+    public Asset SourceAsset => Asset.Create(SourceAssetType, SourceAssetCode, SourceAssetIssuer);
 
     public class PathResponseLinks
     {

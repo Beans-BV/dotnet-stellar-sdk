@@ -338,7 +338,7 @@
         <None Update="TestData\Responses\Effects\effectSignerUpdated.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="TestData\Responses\Effects\effectTrade.json">
+        <None Update="TestData\Responses\Effects\effectTradeAlphaNum12Native.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="TestData\Responses\Effects\effectTradePre100.json">
@@ -463,6 +463,9 @@
         </None>
         <None Update="TestData\Responses\transactionFeeBump.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\Effects\effectTradeNativeAphaNum4.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="TestData\Responses\offer.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
