@@ -2,7 +2,7 @@
 	"metadata": [{
 		"src": [{
 			"files": ["**/*.csproj"],
-			"src": "../stellar-dotnet-sdk"
+			"src": "../StellarDotnetSdk"
 		}],
 		"dest": "api",
 		"filter": "filterConfig.yml",
@@ -45,7 +45,7 @@
 			"_appLogoPath" : "images/logo.svg",
 			"_appFaviconPath" : "favicon",
 			"_gitContribute": {
-				"repo": "https://github.com/elucidsoft/dotnet-stellar-sdk",
+				"repo": "https://github.com/Beans-BV/dotnet-stellar-sdk",
 				"branch": "master"
 			}
 		},
