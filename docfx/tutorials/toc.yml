@@ -1,5 +1,4 @@
 - name: Examples
-  href: index.html
   items:
   - href: examples/generate_account_keypair.md
     name: Generate Account Keypair

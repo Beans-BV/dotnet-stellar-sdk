@@ -42,6 +42,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IssueTemplate", "IssueTempl
 		.github\ISSUE_TEMPLATE\Bug_report.md = .github\ISSUE_TEMPLATE\Bug_report.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StellarDotnetSdk.Examples.Horizon", "Examples\Horizon\StellarDotnetSdk.Examples.Horizon.csproj", "{710E6910-5C20-4F53-AF7A-48CDCF403AEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StellarDotnetSdk.Examples.Soroban", "Examples\Soroban\StellarDotnetSdk.Examples.Soroban.csproj", "{18FC119D-3D92-47F0-B0F5-F0E87B9D3FD4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +68,14 @@ Global
 		{DB19EF41-BF22-41D0-B856-858C6FC17068}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB19EF41-BF22-41D0-B856-858C6FC17068}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB19EF41-BF22-41D0-B856-858C6FC17068}.Release|Any CPU.Build.0 = Release|Any CPU
+		{710E6910-5C20-4F53-AF7A-48CDCF403AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{710E6910-5C20-4F53-AF7A-48CDCF403AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{710E6910-5C20-4F53-AF7A-48CDCF403AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{710E6910-5C20-4F53-AF7A-48CDCF403AEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18FC119D-3D92-47F0-B0F5-F0E87B9D3FD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18FC119D-3D92-47F0-B0F5-F0E87B9D3FD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18FC119D-3D92-47F0-B0F5-F0E87B9D3FD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18FC119D-3D92-47F0-B0F5-F0E87B9D3FD4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

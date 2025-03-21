@@ -15,6 +15,7 @@ using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
 using StellarDotnetSdk.Xdr;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using Asset = StellarDotnetSdk.Assets.Asset;
 using CollectionAssert = NUnit.Framework.CollectionAssert;
 using EvictionIterator = StellarDotnetSdk.LedgerEntries.EvictionIterator;
 using FeeBumpTransaction = StellarDotnetSdk.Transactions.FeeBumpTransaction;
