@@ -7,6 +7,8 @@ namespace StellarDotnetSdk.Operations;
 
 /// <summary>
 ///     Extend the time to live (TTL) of entries for Soroban smart contracts.
+///     This operation extends the TTL of the entries specified in the readOnly footprint of
+///     the transaction so that they will live at least until the extendTo ledger sequence number is reached.
 ///     See:
 ///     <a
 ///         href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#extend-footprint-ttl">
