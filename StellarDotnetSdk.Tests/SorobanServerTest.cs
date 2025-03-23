@@ -772,7 +772,7 @@ public class SorobanServerTest
         var ledgerKey = response.LedgerKeys[0] as LedgerKeyClaimableBalance;
         Assert.IsNotNull(ledgerEntry);
         Assert.IsNotNull(ledgerKey);
-        Assert.AreEqual("299a32106238f3b2d84d4142783fe320253bcda775d1bfb7accdb533021ddccf",
+        Assert.AreEqual("00000000299a32106238f3b2d84d4142783fe320253bcda775d1bfb7accdb533021ddccf",
             ledgerKey.BalanceId.ToLower());
         Assert.AreEqual(457593U, ledgerEntry.LastModifiedLedgerSeq);
         Assert.AreEqual("native", ledgerEntry.Asset.Type);
