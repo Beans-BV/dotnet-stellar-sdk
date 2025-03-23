@@ -35,7 +35,7 @@ internal static class SorobanExamples
         Console.WriteLine("\nCreate a child account");
         var (childKeyPair, _) = await HorizonExamples.CreateChildAccountWithSponsorship(keyPair);
 
-        await HorizonExamples.SendNativeAssets(sourceKeypair: keyPair, destinationAccountId: childKeyPair.AccountId);
+        await HorizonExamples.SendNativeAssets(keyPair, childKeyPair.AccountId);
 
         Console.WriteLine("\nCreate an issue account");
         var (issuerKeyPair, _) = await HorizonExamples.CreateChildAccountWithSponsorship(keyPair);
@@ -51,6 +51,12 @@ internal static class SorobanExamples
 
         Console.WriteLine("\nGet latest ledger");
         await GetLatestLedger();
+
+        Console.WriteLine("\nCreate claimable balance");
+        var balanceId = await HorizonExamples.CreateClaimableBalance(keyPair, childKeyPair);
+
+        Console.WriteLine($"\nGet ledger entry claimable balance for created balance {balanceId}");
+        await GetLedgerEntryClaimableBalance(balanceId);
 
         Console.WriteLine("\nUpload hello contract");
         var wasmId = await UploadContract(keyPair);
@@ -257,15 +263,47 @@ internal static class SorobanExamples
         Console.WriteLine($"Entry account signing key ID: {entryAccount.Account.SigningKey.AccountId}");
         Console.WriteLine($"Entry account balance: {entryAccount.Balance}");
         var v1 = entryAccount.AccountExtensionV1;
-        if (v1 == null) return;
+        if (v1 == null)
+        {
+            return;
+        }
 
         Console.WriteLine($"Entry account balance buying liabilities: {v1.Liabilities.Buying}");
         Console.WriteLine($"Entry account balance selling liabilities: {v1.Liabilities.Selling}");
         var v2 = v1.ExtensionV2;
-        if (v2 == null) return;
+        if (v2 == null)
+        {
+            return;
+        }
         Console.WriteLine($"Entry account number of sponsored: {v2.NumberSponsored}");
         Console.WriteLine($"Entry account number of sponsoring: {v2.NumberSponsoring}");
     }
+
+    private static async Task GetLedgerEntryClaimableBalance(string balanceId)
+    {
+        SorobanServer server = new(TestNetSorobanUrl);
+
+        var ledgerKeyClaimableBalance = new LedgerKeyClaimableBalance(balanceId);
+        Console.WriteLine($"Get ledger entry details for claimable balance {balanceId}");
+        var ledgerEntriesResponse = await server.GetLedgerEntries([ledgerKeyClaimableBalance]);
+        var ledgerEntries = ledgerEntriesResponse.LedgerEntries;
+        if (ledgerEntries == null || ledgerEntries.Length == 0)
+        {
+            Console.WriteLine($"Failed to get ledger entry for claimable balance {balanceId}");
+            return;
+        }
+        var entryClaimableBalance = (LedgerEntryClaimableBalance)ledgerEntries[0];
+        Console.WriteLine($"ID: {entryClaimableBalance.BalanceId}");
+        Console.WriteLine($"Amount: {entryClaimableBalance.Amount}");
+        var claimants = entryClaimableBalance.Claimants;
+        Console.WriteLine($"Claimant count: {claimants.Length}");
+        for (var i = 0; i < claimants.Length; i++)
+        {
+            Console.WriteLine($"Claimant {i + 1} address: {claimants[i].Destination.AccountId}");
+            Console.WriteLine($"Claimant {i + 1} predicate: {claimants[i].Predicate.GetType()}");
+        }
+    }
+
 
     private static async Task<string> UploadContract(IAccountId sourceKeyPair)
     {
@@ -334,7 +372,7 @@ internal static class SorobanExamples
                 Console.WriteLine($"Transaction {transactionHash} was successful");
                 return transactionResponse;
             }
-            Console.WriteLine($"Transaction not updated on-chain. Waiting for a moment before retrying..");
+            Console.WriteLine("Transaction not updated on-chain. Waiting for a moment before retrying..");
         }
 
         ArgumentNullException.ThrowIfNull(transactionResponse);

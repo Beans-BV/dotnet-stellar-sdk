@@ -1,8 +1,12 @@
 ﻿using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.Claimants;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
+using StellarDotnetSdk.Responses.Results;
 using StellarDotnetSdk.Transactions;
+using Claimant = StellarDotnetSdk.Claimants.Claimant;
 
 namespace StellarDotnetSdk.Examples.Horizon;
 
@@ -23,14 +27,15 @@ public static class HorizonExamples
         await GetAccountBalances(keyPair.AccountId);
 
         await CreateChildAccountWithPositiveStartingBalance(keyPair, "0.5");
-        
+
         Console.WriteLine("\nPrepare to send native assets");
         Console.WriteLine("Create new child account to receive the native assets");
         var (childKeyPair, txHash) = await CreateChildAccountWithSponsorship(keyPair);
+        ArgumentNullException.ThrowIfNull(txHash);
         Console.WriteLine($"Get child account {childKeyPair.AccountId} balances");
         await GetAccountBalances(childKeyPair.AccountId);
         Console.WriteLine("Send native assets");
-        await SendNativeAssets(sourceKeypair: keyPair, destinationAccountId: childKeyPair.AccountId);
+        await SendNativeAssets(keyPair, childKeyPair.AccountId);
         Console.WriteLine("Get child account balances after receiving the assets");
         await GetAccountBalances(childKeyPair.AccountId);
         Console.WriteLine("Get parent account balances after sending the assets");
@@ -43,7 +48,7 @@ public static class HorizonExamples
         Console.WriteLine("\nPrepare to send non-native assets");
         Console.WriteLine("Create new child issuer account with positive starting balance");
         var (issuerKeyPair, _) = await CreateChildAccountWithPositiveStartingBalance(keyPair);
-        var assetCode = "USDT";
+        const string assetCode = "USDT";
         Console.WriteLine(
             $"Parent sponsors ChangeTrustAssetOperation to {assetCode}:{issuerKeyPair.AccountId} for child account {childKeyPair.AccountId}");
         await TrustAssetWithSponsorship(keyPair, childKeyPair, issuerKeyPair.AccountId, assetCode);
@@ -60,6 +65,12 @@ public static class HorizonExamples
         Console.WriteLine(
             $"Issuer {anotherIssuerKeyPair.AccountId} sends {assetCode} assets to child account {childKeyPair.AccountId}");
         await SendNonNativeAssetsWithFeeBump(keyPair, anotherIssuerKeyPair, childKeyPair.AccountId, assetCode);
+
+        Console.WriteLine($"\nParent account creates claimable balance for child account {childKeyPair.AccountId}");
+        var balanceId = await CreateClaimableBalance(keyPair, childKeyPair);
+
+        Console.WriteLine("\nGet created claimable balance details");
+        await GetClaimableBalanceDetails(balanceId);
     }
 
     public static KeyPair CreateKeyPair()
@@ -133,7 +144,7 @@ public static class HorizonExamples
         await SubmitTransaction(transaction);
     }
 
-    public static async Task<(KeyPair, string)> CreateChildAccountWithPositiveStartingBalance(
+    public static async Task<(KeyPair, string?)> CreateChildAccountWithPositiveStartingBalance(
         KeyPair parentAccountKeyPair,
         string startingBalance = "10")
     {
@@ -152,12 +163,54 @@ public static class HorizonExamples
 
         transaction.Sign(parentAccountKeyPair);
 
-        var txHash = await SubmitTransaction(transaction);
+        var response = await SubmitTransaction(transaction);
 
-        return (childKeyPair, txHash);
+        return (childKeyPair, response?.Hash);
     }
 
-    public static async Task<(KeyPair, string)> CreateChildAccountWithSponsorship(KeyPair parentAccountKeyPair)
+    public static async Task GetClaimableBalanceDetails(string balanceId)
+    {
+        var server = new Server(TestNetUrl);
+
+        Console.WriteLine($"Get claimable balance {balanceId} details");
+        var response = await server.ClaimableBalances.ClaimableBalance(balanceId);
+        Console.WriteLine($"Amount: {response.Amount}");
+        Console.WriteLine($"Claimant count: {response.Claimants.Length}");
+        Console.WriteLine($"Asset: {response.Asset}");
+        Console.WriteLine($"Sponsor: {response.Sponsor}");
+    }
+
+    public static async Task<string> CreateClaimableBalance(
+        IAccountId keyPair,
+        IAccountId claimantAccount)
+    {
+        var server = new Server(TestNetUrl);
+        var claimant = new Claimant(claimantAccount.AccountId, new ClaimPredicateUnconditional());
+        var operation = new CreateClaimableBalanceOperation(
+            new AssetTypeNative(),
+            "100", [claimant]
+        );
+        var account = await server.Accounts.Account(keyPair.AccountId);
+        var tx = new TransactionBuilder(account).AddOperation(operation).Build();
+        tx.Sign(keyPair);
+        var txResponse = await SubmitTransaction(tx);
+        ArgumentNullException.ThrowIfNull(txResponse);
+        Console.WriteLine($"Create claimable balance transaction hash: {txResponse.Hash}");
+        var resultXdr = txResponse.ResultXdr;
+        ArgumentNullException.ThrowIfNull(resultXdr);
+        Console.WriteLine($"TransactionResult XDR: {resultXdr}");
+        var transactionResult = TransactionResult.FromXdrBase64(resultXdr);
+        if (!transactionResult.IsSuccess)
+        {
+            throw new Exception("Create claimable balance transaction failed.");
+        }
+        var results = ((TransactionResultSuccess)transactionResult).Results;
+        var operationResult = (CreateClaimableBalanceSuccess)results.First();
+
+        return operationResult.BalanceId;
+    }
+
+    public static async Task<(KeyPair, string?)> CreateChildAccountWithSponsorship(KeyPair parentAccountKeyPair)
     {
         // Create server
         var server = new Server(TestNetUrl);
@@ -183,16 +236,15 @@ public static class HorizonExamples
         transaction.Sign(parentAccountKeyPair);
         transaction.Sign(childKeyPair);
 
-        var txHash = await SubmitTransaction(transaction);
+        var response = await SubmitTransaction(transaction);
 
-        return (childKeyPair, txHash);
+        return (childKeyPair, response?.Hash);
     }
 
-    public static async Task<string> SubmitTransaction(Transaction transaction)
+    public static async Task<SubmitTransactionResponse?> SubmitTransaction(Transaction transaction)
     {
         // Create server
         var server = new Server(TestNetUrl);
-        var txHash = "";
         // Submit the transaction
         try
         {
@@ -205,15 +257,15 @@ public static class HorizonExamples
                 return null;
             }
             Console.WriteLine("Success!");
-            txHash = response.Hash;
-            Console.WriteLine($"Transaction hash: {txHash}");
+            Console.WriteLine($"Transaction hash: {response.Hash}");
+            return response;
         }
         catch (Exception exception)
         {
             Console.WriteLine("Failed to submit transaction");
             Console.WriteLine("Exception: " + exception.Message);
         }
-        return txHash;
+        return null;
     }
 
     public static async Task SendNativeAssets(KeyPair sourceKeypair, string destinationAccountId)
