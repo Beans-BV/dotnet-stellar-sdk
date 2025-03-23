@@ -26,7 +26,7 @@ public static class HorizonExamples
         Console.WriteLine("\nGet account balances");
         await GetAccountBalances(keyPair.AccountId);
 
-        await CreateChildAccountWithPositiveStartingBalance(keyPair, "0.5");
+        await CreateChildAccountWithPositiveStartingBalance(keyPair, "1");
 
         Console.WriteLine("\nPrepare to send native assets");
         Console.WriteLine("Create new child account to receive the native assets");
@@ -70,7 +70,8 @@ public static class HorizonExamples
         var balanceId = await CreateClaimableBalance(keyPair, childKeyPair);
 
         Console.WriteLine("\nGet created claimable balance details");
-        await GetClaimableBalanceDetails(balanceId);
+        // TODO Temporary fix until the other PR is merged
+        await GetClaimableBalanceDetails("00000000" + balanceId);
     }
 
     public static KeyPair CreateKeyPair()
