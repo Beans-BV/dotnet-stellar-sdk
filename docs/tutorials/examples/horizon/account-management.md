@@ -60,7 +60,7 @@ This will return all assets held by the account, including native XLM and any ot
 
 ## Creating a Child Account with Starting Balance
 
-To create a new account on the Stellar network, an existing account must fund it with the minimum reserve:
+To create a new account on the Stellar network, an existing account can fund it with the minimum reserve:
 
 ```csharp
 // Create server connection
@@ -128,6 +128,6 @@ This technique is particularly useful when creating accounts for users without r
 
 ## Additional Resources
 
-- [Stellar Account Concepts](https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-network-overview/accounts)
-- [Reserve Requirements](https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-network-overview/minimum-balance)
-- [Sponsorship Documentation](https://developers.stellar.org/docs/encyclopedia/sponsored-reserves)
+- [Stellar Account Concepts](https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts)
+- [Reserve Requirements](https://developers.stellar.org/docs/learn/fundamentals/lumens#base-reserves)
+- [Sponsored Reserves](https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/sponsored-reserves)

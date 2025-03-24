@@ -20,18 +20,6 @@
     </p>
 </p>
 
-## Table of Contents
--   [About the Project](#about-the-project)
--   [Installation](#installation)
-    -   [Visual Studio](#visual-studio)
-    -   [JetBrains Rider](#jetbrains-rider)
-    -   [Other](#other)
--   [Examples](#examples)
--   [Documentation](#documentation)
--   [Community & Support](#community--support)
--   [Contributing](#contributing)
--   [License](#license)
-
 ## About The Project
 `dotnet-stellar-sdk` is a .NET library for communicating with a [Stellar Horizon server](https://github.com/stellar/go/tree/master/services/horizon) or [Stellar RPC server](https://developers.stellar.org/docs/data/rpc).
 <br />
