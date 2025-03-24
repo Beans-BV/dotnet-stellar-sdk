@@ -26,17 +26,21 @@
     -   [Visual Studio](#visual-studio)
     -   [JetBrains Rider](#jetbrains-rider)
     -   [Other](#other)
--   [Usage](#usage)
+-   [Examples](#examples)
 -   [Documentation](#documentation)
+-   [Community & Support](#community--support)
 -   [Contributing](#contributing)
 -   [License](#license)
 
 ## About The Project
-`dotnet-stellar-sdk` is a **Net Core/Standard** library for communicating with a [Stellar Horizon server](https://github.com/stellar/go/tree/master/services/horizon) or [Stellar RPC server](https://developers.stellar.org/docs/data/rpc). It is used for building Stellar apps.
-_This project originated as a full port of the official [Java SDK API](https://github.com/lightsail-network/java-stellar-sdk)_
+`dotnet-stellar-sdk` is a .NET library for communicating with a [Stellar Horizon server](https://github.com/stellar/go/tree/master/services/horizon) or [Stellar RPC server](https://developers.stellar.org/docs/data/rpc).
+<br />
+It is used for building Stellar apps.
+<br />
+_This project originated as a full port of the official [Java SDK API](https://github.com/lightsail-network/java-stellar-sdk)._
 
 ## Installation
-The `stellar-dotnet-sdk` library is bundled in a NuGet Package.
+The `stellar-dotnet-sdk` library is bundled in a NuGet package.
 -   [NuGet Package](https://www.nuget.org/packages/stellar-dotnet-sdk)
 
 ### Visual Studio
@@ -50,13 +54,15 @@ The `stellar-dotnet-sdk` library is bundled in a NuGet Package.
 ### Other
 -   [Ways to install a NuGet package](https://docs.microsoft.com/en-us/nuget/consume-packages/overview-and-workflow#ways-to-install-a-nuget-package)
 
-## Usage
-Check the [Examples](https://github.com/Beans-BV/dotnet-stellar-sdk/tree/master/examples/) to get started.
+### Examples
+The SDK includes numerous example applications showcasing its features. Explore these standalone projects:
+- [Horizon Examples](https://github.com/Beans-BV/dotnet-stellar-sdk/tree/master/Examples/Horizon/Program.cs)
+- [Soroban Examples](https://github.com/Beans-BV/dotnet-stellar-sdk/tree/master/Examples/Soroban/Program.cs)
 
 ## Documentation
-Documentation is available at <https://beans-bv.github.io/dotnet-stellar-sdk/>
+Documentation is available [here](https://beans-bv.github.io/dotnet-stellar-sdk/).
 
-**In case of doubts or issues, you can ask for help here:**
+## Community & Support
 -   [Stellar Stack Exchange](https://stellar.stackexchange.com/)
 -   [Keybase Team](https://keybase.io/team/stellar_dotnet)
 -   [Stellar Developers on Discord](https://discord.com/invite/stellardev)
