@@ -17,6 +17,7 @@ using StellarDotnetSdk.Xdr;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using CollectionAssert = NUnit.Framework.CollectionAssert;
 using EvictionIterator = StellarDotnetSdk.LedgerEntries.EvictionIterator;
+using FeeBumpTransaction = StellarDotnetSdk.Transactions.FeeBumpTransaction;
 using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
 using SCContractInstance = StellarDotnetSdk.Soroban.SCContractInstance;
 using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
@@ -214,6 +215,119 @@ public class SorobanServerTest
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
         var response = await sorobanServer.SendTransaction(CreateDummyTransaction());
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.DUPLICATE, response.Status);
+        Assert.IsNull(response.ErrorResultXdr);
+        Assert.AreEqual("198d834b53c4f0d44119f400c092bf3b3225ddce302cb060c7917445f57e237e", response.Hash);
+        Assert.AreEqual(453756L, response.LatestLedger);
+        Assert.AreEqual(1728978088L, response.LatestLedgerCloseTime);
+    }
+    
+    [TestMethod]
+    public async Task TestSendFeeBumpTransactionPending()
+    {
+        const string sendTransactionResponseJson =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "d3fe7352-21c6-440f-b911-a7236100a41a",
+              "result": {
+                "status": "PENDING",
+                "hash": "8b8c40fb49f4fb2880884ddeba30253e5b63e02a8da4bac40878bac66a08bbf0",
+                "latestLedger": 453130,
+                "latestLedgerCloseTime": "1728974496"
+              }
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+        var response = await sorobanServer.SendTransaction(CreateDummyFeeBumpTransaction());
+
+        Assert.IsNotNull(response);
+        Assert.IsNull(response.ErrorResultXdr);
+        Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.PENDING, response.Status);
+        Assert.AreEqual("8b8c40fb49f4fb2880884ddeba30253e5b63e02a8da4bac40878bac66a08bbf0", response.Hash);
+        Assert.AreEqual(453130L, response.LatestLedger);
+        Assert.AreEqual(1728974496L, response.LatestLedgerCloseTime);
+    }
+    
+    [TestMethod]
+    public async Task TestSendFeeBumpTransactionTryAgainLater()
+    {
+        const string sendTransactionResponseJson =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "8675309",
+              "result": {
+                "status": "TRY_AGAIN_LATER",
+                "hash": "1744683ce7f874586990b3b70c4beab249a714b2679cf1dd76d80ade60e46a6e",
+                "latestLedger": 453745,
+                "latestLedgerCloseTime": "1728977723"
+              }
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+        var response = await sorobanServer.SendTransaction(CreateDummyFeeBumpTransaction());
+
+        Assert.IsNotNull(response);
+        Assert.IsNull(response.ErrorResultXdr);
+        Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.TRY_AGAIN_LATER, response.Status);
+        Assert.AreEqual("1744683ce7f874586990b3b70c4beab249a714b2679cf1dd76d80ade60e46a6e", response.Hash);
+        Assert.AreEqual(453745L, response.LatestLedger);
+        Assert.AreEqual(1728977723L, response.LatestLedgerCloseTime);
+    }
+    
+    [TestMethod]
+    public async Task TestSendFeeBumpTransactionError()
+    {
+        const string sendTransactionResponseJson =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "8675309",
+              "result": {
+                "errorResultXdr": "AAAAAAAAAGT////7AAAAAA==",
+                "status": "ERROR",
+                "hash": "1744683ce7f874586990b3b70c4beab249a714b2679cf1dd76d80ade60e46a6e",
+                "latestLedger": 453756,
+                "latestLedgerCloseTime": "1728977779"
+              }
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+        var response = await sorobanServer.SendTransaction(CreateDummyFeeBumpTransaction());
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.ERROR, response.Status);
+        Assert.AreEqual("AAAAAAAAAGT////7AAAAAA==", response.ErrorResultXdr);
+        Assert.AreEqual("1744683ce7f874586990b3b70c4beab249a714b2679cf1dd76d80ade60e46a6e", response.Hash);
+        Assert.AreEqual(453756L, response.LatestLedger);
+        Assert.AreEqual(1728977779L, response.LatestLedgerCloseTime);
+    }
+    
+    [TestMethod]
+    public async Task TestSendFeeBumpTransactionDuplicate()
+    {
+        const string sendTransactionResponseJson =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "8675309",
+              "result": {
+                "status": "DUPLICATE",
+                "hash": "198d834b53c4f0d44119f400c092bf3b3225ddce302cb060c7917445f57e237e",
+                "latestLedger": 453756,
+                "latestLedgerCloseTime": "1728978088"
+              }
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+        var response = await sorobanServer.SendTransaction(CreateDummyFeeBumpTransaction());
 
         Assert.IsNotNull(response);
         Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.DUPLICATE, response.Status);
@@ -1761,5 +1875,24 @@ public class SorobanServerTest
             transaction.Sign(_account);
         }
         return transaction;
+    }
+    
+    private FeeBumpTransaction CreateDummyFeeBumpTransaction(bool sign = true)
+    {
+        var innerTransaction = CreateDummyTransaction();
+        const long maxFee = 10000;
+
+        var feeBumpTransaction = TransactionBuilder.BuildFeeBumpTransaction(
+            _account,       
+            innerTransaction,
+            maxFee
+        );
+        
+        if (sign)
+        {
+            feeBumpTransaction.Sign(_account);
+        }
+
+        return feeBumpTransaction;
     }
 }
