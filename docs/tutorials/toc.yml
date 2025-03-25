@@ -4,27 +4,19 @@
     name: Account management
   - href: examples/horizon/assets.md
     name: Assets
-  - href: examples/horizon/encode-transaction-to-base64-xdr.md
-    name: Encode transaction to base-64 encoded XDR string
-  - href: examples/horizon/decode-transaction-from-base64-xdr.md
-    name: Decode transaction from base-64 encoded XDR string
+  - href: examples/horizon/xdr-encoding.md
+    name: XDR Encoding
   - href: examples/horizon/transactions.md
     name: Transactions
-  - href: examples/horizon/claimable-balances.md
-    name: Claimable balances
   - href: examples/horizon/sponsored-reserves.md
     name: Sponsored Reserves
   - href: examples/horizon/fee-bump.md
     name: Fee-bump transactions
-  - href: examples/horizon/send-native-assets.md
-    name: Send native assets (XLM)
 - name: Soroban examples
   items:
   - href: examples/soroban/soroban-server-info.md
     name: Server Information
-  - href: examples/soroban/contract-basics.md
+  - href: examples/soroban/smart-contracts.md
     name: Contract basics
-  - href: examples/soroban/contract-invocation.md
-    name: Contract invocation
   - href: examples/soroban/ledger-entries.md
     name: Ledger entries
