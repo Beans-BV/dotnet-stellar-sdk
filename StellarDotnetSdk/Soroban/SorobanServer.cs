@@ -275,6 +275,21 @@ public class SorobanServer : IDisposable
             new { transaction = transaction.ToEnvelopeXdrBase64() });
     }
 
+    /// <summary>
+    ///     Submit a FeeBump transaction to the Stellar network. This is the only way to make changes “on-chain”.
+    ///     Unlike Horizon, this does not wait for transaction completion. It simply validates and enqueues the transaction.
+    ///     Clients should call getTransactionStatus to learn about transaction success/failure.
+    ///     This supports all transactions, not only smart contract-related transactions.
+    ///     See https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction.
+    /// </summary>
+    /// <param name="feeBumpTransaction">The FeeBumpTransaction object to be submitted.</param>
+    /// <returns>A <see cref="T:StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse" /> response.</returns>
+    public Task<SendTransactionResponse> SendTransaction(FeeBumpTransaction feeBumpTransaction)
+    {
+        return SendRequest<object, SendTransactionResponse>("sendTransaction",
+            new { transaction = feeBumpTransaction.ToEnvelopeXdrBase64() });
+    }
+
     private async Task<TR> SendRequest<T, TR>(string method, T? parameters)
     {
         var responseHandler = new ResponseHandler<SorobanRpcResponse<TR>>();
