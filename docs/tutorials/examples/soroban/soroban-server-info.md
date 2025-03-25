@@ -287,7 +287,6 @@ This function:
 
 ## Additional Resources
 
-- [Soroban Documentation](https://soroban.stellar.org/docs)
-- [Soroban RPC API Reference](https://soroban.stellar.org/api/methods)
-- [Stellar .NET SDK Documentation](https://elucidsoft.github.io/dotnet-stellar-sdk/)
-- [Stellar Developers Guide](https://developers.stellar.org/docs)
+- [RPC Introduction](https://developers.stellar.org/docs/data/apis/rpc)
+- [Soroban RPC API Reference](https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods)
+- [Stellar Developers Docs](https://developers.stellar.org/docs)

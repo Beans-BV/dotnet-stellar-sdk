@@ -247,6 +247,5 @@ Console.WriteLine($"Created claimable balance with ID: {balanceId}");
 ## Additional Resources
 
 - [Stellar Assets Concepts](https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/assets)
-- [Asset Issuance Guide](https://developers.stellar.org/docs/learn/encyclopedia/issuing-assets-on-stellar-overview)
-- [Trust Lines](https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/trust-lines)
+- [Asset Issuance Guide](https://developers.stellar.org/docs/tokens/how-to-issue-an-asset)
 - [Claimable Balances](https://developers.stellar.org/docs/learn/encyclopedia/claimable-balances)
