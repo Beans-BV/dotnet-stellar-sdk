@@ -12,21 +12,18 @@ Examples for working with Stellar's core network functionality:
 
 - [**Account Management**](examples/horizon/account-management.md) - Creating, funding accounts and checking balances
 - [**Assets**](examples/horizon/assets.md) - Managing trust lines and transferring assets
+- [**XDR Encoding**](examples/horizon/xdr-encoding.md) - Encoding to and from base-64 encoded XDR
 - [**Transactions**](examples/horizon/transactions.md) - Building, submitting, and managing transactions
-- [**Claimable Balances**](examples/horizon/claimable-balances.md) - Creating and querying claimable balances
 - [**Sponsored Reserves**](examples/horizon/sponsored-reserves.md) - Working with Stellar's sponsorship features
-- [**Fee-bump transactions**](examples/horizon/fee-bump.md) - Working with Stellar's fee-bump transactions
+- [**Fee-bump Transactions**](examples/horizon/fee-bump.md) - Working with Stellar's fee-bump transactions
 
 ### Soroban RPC Examples
 
 Examples for working with Stellar's smart contract platform:
 
 - [**Server Information**](examples/soroban/soroban-server-info.md) - Connecting to and querying Soroban server information
-- [**Contracts**](examples/soroban/contract-basics.md) - Uploading and creating contract instances
-- [**Invocation**](examples/soroban/contract-invocation.md) - Calling functions on smart contracts
+- [**Smart Contracts**](examples/soroban/smart-contracts.md) - Uploading, creating and invoking contract instances
 - [**Ledger Entries**](examples/soroban/ledger-entries.md) - Retrieving data from the Stellar ledger
-- [**Transaction Handling**](examples/soroban/transaction-handling.md) - Simulating and processing transactions
-- [**Contract Lifecycle**] - Managing contract data and TTL
 
 ## How to Use These Examples
 

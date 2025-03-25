@@ -262,6 +262,4 @@ private static async Task<GetTransactionResponse> PollTransaction(string transac
 
 ## Additional Resources
 
-- [Soroban Documentation](https://soroban.stellar.org/)
-- [WebAssembly Smart Contracts](https://developers.stellar.org/docs/smart-contracts/developing-contracts)
-- [Contract Lifecycle Management](https://developers.stellar.org/docs/glossary/time-bounds)
+- [Smart Contracts](https://developers.stellar.org/docs/build/smart-contracts/overview)
