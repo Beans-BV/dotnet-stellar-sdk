@@ -19,7 +19,7 @@ public class ManageOfferOperationResponse : OperationResponse
     ///     The ask/bid price as a ratio.
     /// </summary>
     [JsonProperty(PropertyName = "price_r")]
-    public Price PriceRatio { get; init; }
+    public StellarDotnetSdk.Price PriceRatio { get; init; }
 
     /// <summary>
     ///     The ask/bid price.

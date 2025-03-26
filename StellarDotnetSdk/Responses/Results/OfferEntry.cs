@@ -25,7 +25,7 @@ public class OfferEntry
         Asset selling,
         Asset buying,
         string amount,
-        Price price,
+        StellarDotnetSdk.Price price,
         OfferEntryFlags flags)
     {
         Seller = seller;
@@ -67,7 +67,7 @@ public class OfferEntry
     ///     Price of Selling in terms of Buying.
     ///     Price = AmountBuying / AmountSelling
     /// </summary>
-    public Price Price { get; }
+    public StellarDotnetSdk.Price Price { get; }
 
     /// <summary>
     ///     Flags for offer.
@@ -82,7 +82,7 @@ public class OfferEntry
             Asset.FromXdr(entry.Selling),
             Asset.FromXdr(entry.Buying),
             StellarDotnetSdk.Amount.FromXdr(entry.Amount.InnerValue),
-            Price.FromXdr(entry.Price),
+            StellarDotnetSdk.Price.FromXdr(entry.Price),
             FlagsFromXdr(entry.Flags.InnerValue));
     }
 
