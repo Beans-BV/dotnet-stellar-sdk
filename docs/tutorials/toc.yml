@@ -1,0 +1,22 @@
+- name: Horizon examples
+  items:
+  - href: examples/horizon/account-management.md
+    name: Account management
+  - href: examples/horizon/assets.md
+    name: Assets
+  - href: examples/horizon/xdr-encoding.md
+    name: XDR Encoding
+  - href: examples/horizon/transactions.md
+    name: Transactions
+  - href: examples/horizon/sponsored-reserves.md
+    name: Sponsored Reserves
+  - href: examples/horizon/fee-bump.md
+    name: Fee-bump transactions
+- name: Soroban examples
+  items:
+  - href: examples/soroban/soroban-server-info.md
+    name: Server Information
+  - href: examples/soroban/smart-contracts.md
+    name: Contract basics
+  - href: examples/soroban/ledger-entries.md
+    name: Ledger entries

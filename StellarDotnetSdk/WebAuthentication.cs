@@ -89,7 +89,7 @@ public static class WebAuthentication
     /// <param name="validFor">The transaction lifespan</param>
     /// <param name="network">The network the transaction will be submitted to</param>
     /// <param name="clientDomain">Optional Client Domain</param>
-    /// <param name="clientDomain">Client Signing Key (Used with Client Domain)</param>
+    /// <param name="clientSigningKey">Client Signing Key (Used with Client Domain)</param>
     /// <returns>The challenge transaction</returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="ArgumentException"></exception>
