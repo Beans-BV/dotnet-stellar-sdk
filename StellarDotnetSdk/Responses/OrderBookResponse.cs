@@ -35,6 +35,6 @@ public class OrderBookResponse
         ///     The ask/bid price as a ratio.
         /// </summary>
         [JsonProperty(PropertyName = "price_r")]
-        public StellarDotnetSdk.Price PriceR { get; init; }
+        public Price PriceR { get; init; }
     }
 }

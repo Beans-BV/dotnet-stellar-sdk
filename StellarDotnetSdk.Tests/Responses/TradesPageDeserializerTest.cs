@@ -60,9 +60,9 @@ public class TradesPageDeserializerTest
         Assert.AreEqual(tradesPage.Records[0].BaseIsSeller, true);
 
         tradesPage.Records[0].Price.Numerator
-            .Should().Be("10");
+            .Should().Be(10);
 
         tradesPage.Records[0].Price.Denominator
-            .Should().Be("61");
+            .Should().Be(61);
     }
 }

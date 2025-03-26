@@ -21,7 +21,7 @@ public class CreatePassiveOfferOperationResponse : OperationResponse
     ///     The ask price as a ratio.
     /// </summary>
     [JsonProperty(PropertyName = "price_r")]
-    public StellarDotnetSdk.Price PriceRatio { get; init; }
+    public Price PriceRatio { get; init; }
 
     /// <summary>
     ///     The ask price.
