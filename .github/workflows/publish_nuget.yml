@@ -14,7 +14,7 @@ jobs:
   create_nuget:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
       - name: Set version
@@ -36,7 +36,7 @@ jobs:
           }
           echo "VERSION=$version" >> $env:GITHUB_ENV
       - run: dotnet pack --configuration Release --output ${{env.NuGetDirectory}} -p:PackageVersion=${{env.VERSION}}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: nuget
           if-no-files-found: error
@@ -49,7 +49,7 @@ jobs:
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: nuget
           path: ${{env.NuGetDirectory}}
@@ -64,7 +64,7 @@ jobs:
     steps:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v4
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: nuget
           path: ${{env.NuGetDirectory}}
