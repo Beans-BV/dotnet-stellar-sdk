@@ -17,16 +17,26 @@ public abstract class LedgerKey
         return new LedgerKeyAccount(account);
     }
 
-    public static LedgerKey ClaimableBalance(byte[] balanceId)
+    [Obsolete("Deprecated. Use ClaimableBalance(string balanceIdHexString) instead.")]
+    /// <summary>
+    ///     Constructs a <c>LedgerKeyClaimableBalance</c> object from a 32-byte array representation of a Claimable balance ID v0.
+    /// </summary>
+    /// <param name="balanceIdV0ByteArray">Byte array representation of the claimable balance ID v0.</param>
+    public static LedgerKey ClaimableBalance(byte[] balanceIdV0ByteArray)
     {
-        return new LedgerKeyClaimableBalance(balanceId);
+        return new LedgerKeyClaimableBalance(balanceIdV0ByteArray);
     }
 
     /// <summary>Constructs a new <c>LedgerKeyClaimableBalance</c> from the given hex-encoded claimable balance ID.</summary>
     /// <param name="balanceIdHexString">
     ///     Hex-encoded ID of the claimable balance entry.
-    ///     For example: <c>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c>.
+    ///     For example: <c>00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c>.
     /// </param>
+    /// <remarks>
+    ///     Balance ID and Balance ID v0 are not the same. The v0 values don't have 8 leading zeros.
+    ///     For example, if balance ID is 00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780,
+    ///     then balance ID v0 is d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780.
+    /// </remarks>
     public static LedgerKey ClaimableBalance(string balanceIdHexString)
     {
         return new LedgerKeyClaimableBalance(balanceIdHexString);

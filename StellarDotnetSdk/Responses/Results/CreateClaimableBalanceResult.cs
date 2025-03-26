@@ -1,4 +1,5 @@
 ﻿using System;
+using StellarDotnetSdk.Xdr;
 using ResultCodeEnum = StellarDotnetSdk.Xdr.CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum;
 
 namespace StellarDotnetSdk.Responses.Results;
@@ -18,7 +19,7 @@ public class CreateClaimableBalanceResult : OperationResult
             ResultCodeEnum.CREATE_CLAIMABLE_BALANCE_NO_TRUST
                 => new CreateClaimableBalanceNoTrust(),
             ResultCodeEnum.CREATE_CLAIMABLE_BALANCE_SUCCESS
-                => new CreateClaimableBalanceSuccess(result.BalanceID.V0.InnerValue),
+                => new CreateClaimableBalanceSuccess(result.BalanceID),
             ResultCodeEnum.CREATE_CLAIMABLE_BALANCE_UNDERFUNDED
                 => new CreateClaimableBalanceUnderfunded(),
             _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown CreateClaimableBalanceResult type."),
@@ -28,12 +29,31 @@ public class CreateClaimableBalanceResult : OperationResult
 
 public class CreateClaimableBalanceSuccess : CreateClaimableBalanceResult
 {
-    public CreateClaimableBalanceSuccess(byte[] balanceId)
+    public CreateClaimableBalanceSuccess(ClaimableBalanceID xdrBalanceId)
     {
-        BalanceId = Convert.ToHexString(balanceId);
+        var os = new XdrDataOutputStream();
+        ClaimableBalanceID.Encode(os, xdrBalanceId);
+        BalanceId = Convert.ToHexString(os.ToArray());
+    }
+
+    public CreateClaimableBalanceSuccess(byte[] balanceIdV0)
+        : this(
+            new ClaimableBalanceID
+            {
+                Discriminant = ClaimableBalanceIDType.Create(
+                    ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum.CLAIMABLE_BALANCE_ID_TYPE_V0),
+                V0 = new Hash(balanceIdV0),
+            })
+    {
     }
 
     public override bool IsSuccess => true;
+
+    /// <summary>
+    ///     Hex-encoded ID of the claimable balance entry.
+    ///     Can be passed as a parameter to the <c>/claimable_balances/</c> endpoint.
+    ///     For example: <c>00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c>.
+    /// </summary>
     public string BalanceId { get; }
 }
 
