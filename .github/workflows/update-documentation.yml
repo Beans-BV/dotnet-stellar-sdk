@@ -18,6 +18,11 @@ jobs:
         ref: gh-pages
         path: docs/_site
 
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
     - name: Build Documentation Metadata
       uses: nunit/docfx-action@v4.0.0
       with:
