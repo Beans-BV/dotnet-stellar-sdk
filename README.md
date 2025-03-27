@@ -44,8 +44,8 @@ The `stellar-dotnet-sdk` library is bundled in a NuGet package.
 
 ### Examples
 The SDK includes numerous example applications showcasing its features. Explore these standalone projects:
-- [Horizon Examples](https://github.com/Beans-BV/dotnet-stellar-sdk/tree/master/Examples/Horizon/Program.cs)
-- [Soroban Examples](https://github.com/Beans-BV/dotnet-stellar-sdk/tree/master/Examples/Soroban/Program.cs)
+- [Horizon Examples](https://github.com/Beans-BV/dotnet-stellar-sdk/tree/master/Examples/Horizon/HorizonExamples.cs)
+- [Soroban Examples](https://github.com/Beans-BV/dotnet-stellar-sdk/tree/master/Examples/Soroban/SorobanExamples.cs)
 
 ## Documentation
 Documentation is available [here](https://beans-bv.github.io/dotnet-stellar-sdk/).
