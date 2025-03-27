@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Account Management </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Account Management ">
+      
+      
+      <link rel="icon" href="../../../favicon">
+      <link rel="stylesheet" href="../../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../../public/main.css">
+      <meta name="docfx:navrel" content="../../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../../index.html">
+            <img id="logo" class="svg" src="../../../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="account-management">Account Management</h1>
+
+<p>This guide demonstrates how to perform account management operations using the Stellar .NET SDK.</p>
+<h2 id="creating-a-key-pair">Creating a Key Pair</h2>
+<p>Before interacting with the Stellar network, you need to create a key pair. A key pair consists of a public key (account ID) and a private key (secret seed).</p>
+<pre><code class="lang-csharp">// Create a completely new and unique pair of keys
+var keyPair = KeyPair.Random();
+
+// The public key is used as the account ID
+Console.WriteLine(&quot;Account ID: &quot; + keyPair.AccountId);
+
+// The secret seed should be kept secure and never shared
+Console.WriteLine(&quot;Secret: &quot; + keyPair.SecretSeed);
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>Security Warning</strong>: Never hardcode secret seeds in your application code or store them in plain text. In production, use secure storage solutions and ensure secrets are properly encrypted at rest.</p>
+</blockquote>
+<h2 id="funding-an-account-using-friendbot-testnet-only">Funding an Account Using FriendBot (Testnet Only)</h2>
+<p>New accounts on Stellar need to be funded with an initial balance. On the testnet, you can use FriendBot to fund your account for testing.</p>
+<pre><code class="lang-csharp">// Define the testnet URL
+private const string TestNetUrl = &quot;https://horizon-testnet.stellar.org&quot;;
+
+// Use the FriendBot to get test funds (10,000 XLM)
+var server = new Server(TestNetUrl);
+await server.TestNetFriendBot.FundAccount(keyPair.AccountId).Execute();
+</code></pre>
+<blockquote>
+<p>📝 <strong>Note</strong>: FriendBot is only available on the testnet and should never be relied upon for production applications.</p>
+</blockquote>
+<h2 id="checking-account-balances">Checking Account Balances</h2>
+<p>Once an account is created and funded, you can query its balances to see available assets:</p>
+<pre><code class="lang-csharp">// Create server connection
+var server = new Server(TestNetUrl);
+
+// Load the account information
+var accountResponse = await server.Accounts.Account(accountId);
+
+// Get all balances for the account
+var balances = accountResponse.Balances;
+
+// Display balance information
+foreach (var balance in balances)
+{
+    Console.WriteLine(&quot;Asset: &quot; + balance.Asset?.CanonicalName());
+    Console.WriteLine(&quot;Asset amount: &quot; + balance.BalanceString);
+}
+</code></pre>
+<p>This will return all assets held by the account, including native XLM and any other assets the account has trust lines for.</p>
+<h2 id="creating-a-child-account-with-starting-balance">Creating a Child Account with Starting Balance</h2>
+<p>To create a new account on the Stellar network, an existing account can fund it with the minimum reserve:</p>
+<pre><code class="lang-csharp">// Create server connection
+var server = new Server(TestNetUrl);
+
+// Generate new key pair for the child account
+var childKeyPair = KeyPair.Random();
+
+// Load the parent account to get the current sequence number
+var accountResponse = await server.Accounts.Account(parentAccountKeyPair.AccountId);
+
+// Create a &quot;create account&quot; operation with a starting balance
+var operation = new CreateAccountOperation(childKeyPair, &quot;10&quot;);  // 10 XLM starting balance
+
+// Build and submit the transaction
+var transaction = new TransactionBuilder(accountResponse)
+    .AddOperation(operation)
+    .Build();
+
+transaction.Sign(parentAccountKeyPair);
+var response = await SubmitTransaction(transaction);
+</code></pre>
+<p>The minimum balance for a new account is 1 XLM, but it's recommended to provide additional XLM to allow the new account to perform operations.</p>
+<h2 id="creating-child-accounts-with-sponsorship">Creating Child Accounts with Sponsorship</h2>
+<p>Sponsorship allows one account to pay the reserves for another account. This is useful when creating accounts that might not immediately have the funds for the base reserve:</p>
+<pre><code class="lang-csharp">// Create server connection
+var server = new Server(TestNetUrl);
+
+// Generate new key pair for the child account
+var childKeyPair = KeyPair.Random();
+
+// Load the parent account
+var accountResponse = await server.Accounts.Account(parentAccountKeyPair.AccountId);
+
+// Begin sponsoring future reserves
+var beginSponsoringOperation = new BeginSponsoringFutureReservesOperation(childKeyPair.AccountId);
+
+// Create the account with zero balance
+var createAccountOperation = new CreateAccountOperation(childKeyPair, &quot;0&quot;);
+
+// End the sponsorship
+var endSponsoringOperation = new EndSponsoringFutureReservesOperation(childKeyPair);
+
+// Build the transaction with all three operations
+var transaction = new TransactionBuilder(accountResponse)
+    .AddOperation(beginSponsoringOperation)
+    .AddOperation(createAccountOperation)
+    .AddOperation(endSponsoringOperation)
+    .Build();
+
+// Both accounts must sign: the sponsor and the sponsored
+transaction.Sign(parentAccountKeyPair);
+transaction.Sign(childKeyPair);
+
+// Submit the transaction
+var response = await SubmitTransaction(transaction);
+</code></pre>
+<p>This technique is particularly useful when creating accounts for users without requiring them to purchase XLM first.</p>
+<h2 id="additional-resources">Additional Resources</h2>
+<ul>
+<li><a href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts">Stellar Account Concepts</a></li>
+<li><a href="https://developers.stellar.org/docs/learn/fundamentals/lumens#base-reserves">Reserve Requirements</a></li>
+<li><a href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/sponsored-reserves">Sponsored Reserves</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

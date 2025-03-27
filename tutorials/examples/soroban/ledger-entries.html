@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Querying Different Types of Ledger Entries </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Querying Different Types of Ledger Entries ">
+      
+      
+      <link rel="icon" href="../../../favicon">
+      <link rel="stylesheet" href="../../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../../public/main.css">
+      <meta name="docfx:navrel" content="../../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../../index.html">
+            <img id="logo" class="svg" src="../../../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="querying-different-types-of-ledger-entries">Querying Different Types of Ledger Entries</h1>
+
+<p>This guide demonstrates how to query different types of ledger entries using the Stellar .NET SDK.</p>
+<h2 id="understanding-stellar-ledger-entries">Understanding Stellar Ledger Entries</h2>
+<p>The Stellar ledger stores different types of data entries that represent various objects in the Stellar network:</p>
+<ul>
+<li><strong>Account</strong>: Information about accounts on the network</li>
+<li><strong>Trustline</strong>: Trust relationships between accounts and assets</li>
+<li><strong>Offer</strong>: Asset exchange offers made on the decentralized exchange</li>
+<li><strong>Claimable Balance</strong>: Funds that can be claimed by specific accounts</li>
+<li><strong>Contract Code</strong>: Smart contract code uploaded to the Soroban platform</li>
+<li><strong>Contract Data</strong>: Data associated with deployed smart contracts</li>
+</ul>
+<p>The Soroban RPC server provides specialized endpoints to query these ledger entries directly.</p>
+<h2 id="setting-up-the-connection">Setting Up the Connection</h2>
+<p>First, establish a connection to the Soroban RPC server:</p>
+<pre><code class="lang-csharp">// Define the Soroban testnet URL
+private const string TestNetSorobanUrl = &quot;https://soroban-testnet.stellar.org&quot;;
+
+// Create a new Soroban server instance
+SorobanServer server = new(TestNetSorobanUrl);
+</code></pre>
+<blockquote>
+<p>📝 <strong>Note</strong>: For Horizon-related ledger entries, you can also use a Horizon server connection, but Soroban RPC provides more comprehensive ledger entry access.</p>
+</blockquote>
+<h2 id="querying-account-entries">Querying Account Entries</h2>
+<p>Account entries contain fundamental information about accounts on the Stellar network, including balances, signers, and more:</p>
+<pre><code class="lang-csharp">private static async Task GetLedgerEntryAccount(string accountId)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+
+    var ledgerKeyAccount = new LedgerKeyAccount(accountId);
+    var ledgerEntriesResponse = await server.GetLedgerEntries([ledgerKeyAccount]);
+    var ledgerEntries = ledgerEntriesResponse.LedgerEntries;
+    if (ledgerEntries == null || ledgerEntries.Length == 0)
+    {
+        Console.WriteLine($&quot;Failed to get ledger entry for account {accountId}&quot;);
+        return;
+    }
+    var entryAccount = (LedgerEntryAccount)ledgerEntries[0];
+    Console.WriteLine($&quot;Entry account ID: {entryAccount.Account.AccountId}&quot;);
+    Console.WriteLine($&quot;Entry account signing key ID: {entryAccount.Account.SigningKey.AccountId}&quot;);
+    Console.WriteLine($&quot;Entry account balance: {entryAccount.Balance}&quot;);
+    var v1 = entryAccount.AccountExtensionV1;
+    if (v1 == null)
+    {
+        return;
+    }
+
+    Console.WriteLine($&quot;Entry account balance buying liabilities: {v1.Liabilities.Buying}&quot;);
+    Console.WriteLine($&quot;Entry account balance selling liabilities: {v1.Liabilities.Selling}&quot;);
+    var v2 = v1.ExtensionV2;
+    if (v2 == null)
+    {
+        return;
+    }
+    Console.WriteLine($&quot;Entry account number of sponsored: {v2.NumberSponsored}&quot;);
+    Console.WriteLine($&quot;Entry account number of sponsoring: {v2.NumberSponsoring}&quot;);
+}
+</code></pre>
+<p>The account entry provides detailed information including:</p>
+<ul>
+<li>The account ID and signing key</li>
+<li>The account's XLM balance</li>
+<li>Buying and selling liabilities (used for offers)</li>
+<li>Sponsorship information</li>
+</ul>
+<h2 id="querying-claimable-balance-entries">Querying Claimable Balance Entries</h2>
+<p>Claimable balances are funds set aside for specific claimants to claim under certain conditions:</p>
+<pre><code class="lang-csharp">private static async Task GetLedgerEntryClaimableBalance(string balanceId)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+
+    var ledgerKeyClaimableBalance = new LedgerKeyClaimableBalance(balanceId);
+    Console.WriteLine($&quot;Get ledger entry details for claimable balance {balanceId}&quot;);
+    var ledgerEntriesResponse = await server.GetLedgerEntries([ledgerKeyClaimableBalance]);
+    var ledgerEntries = ledgerEntriesResponse.LedgerEntries;
+    if (ledgerEntries == null || ledgerEntries.Length == 0)
+    {
+        Console.WriteLine($&quot;Failed to get ledger entry for claimable balance {balanceId}&quot;);
+        return;
+    }
+    var entryClaimableBalance = (LedgerEntryClaimableBalance)ledgerEntries[0];
+    Console.WriteLine($&quot;ID: {entryClaimableBalance.BalanceId}&quot;);
+    Console.WriteLine($&quot;Amount: {entryClaimableBalance.Amount}&quot;);
+    var claimants = entryClaimableBalance.Claimants;
+    Console.WriteLine($&quot;Claimant count: {claimants.Length}&quot;);
+    for (var i = 0; i &lt; claimants.Length; i++)
+    {
+        Console.WriteLine($&quot;Claimant {i + 1} address: {claimants[i].Destination.AccountId}&quot;);
+        Console.WriteLine($&quot;Claimant {i + 1} predicate: {claimants[i].Predicate.GetType()}&quot;);
+    }
+}
+</code></pre>
+<p>This retrieves information about a claimable balance, including:</p>
+<ul>
+<li>The unique balance ID</li>
+<li>The amount of the asset available to claim</li>
+<li>The list of claimants and their claim predicates (conditions)</li>
+</ul>
+<blockquote>
+<p>⚠️ <strong>Important</strong>: The balance ID format from transaction results may need to be normalized. In some cases, you might need to prepend &quot;00000000&quot; to the balance ID as shown in the example code.</p>
+</blockquote>
+<h2 id="querying-smart-contract-code-entries">Querying Smart Contract Code Entries</h2>
+<p>Contract code entries contain the WebAssembly (WASM) code of uploaded smart contracts:</p>
+<pre><code class="lang-csharp">private static async Task GetLedgerEntryContractCode(string contractWasmId)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+
+    var ledgerKeyContractCodes = new LedgerKey[]
+    {
+        new LedgerKeyContractCode(contractWasmId),
+    };
+    var contractCodeResponse = await server.GetLedgerEntries(ledgerKeyContractCodes);
+    var ledgerEntries = contractCodeResponse.LedgerEntries;
+    if (ledgerEntries == null || ledgerEntries.Length == 0)
+    {
+        Console.WriteLine($&quot;Failed to get ledger entries for contractWasmId {contractWasmId}&quot;);
+        return;
+    }
+    Console.WriteLine($&quot;Contract code count: {ledgerEntries.Length}&quot;);
+    var entry = (LedgerEntryContractCode)ledgerEntries[0];
+    Console.WriteLine($&quot;Contract code hash in base64: {Convert.ToBase64String(entry.Hash)}&quot;);
+    Console.WriteLine($&quot;Contract code hash in hex: {Convert.ToHexString(entry.Hash)}&quot;);
+    Console.WriteLine($&quot;Contract code TTL: {entry.LiveUntilLedger}&quot;);
+}
+</code></pre>
+<p>This provides information about the uploaded contract code, including:</p>
+<ul>
+<li>The contract's hash (in both base64 and hex formats)</li>
+<li>The contract's time-to-live (TTL), indicating when it will expire</li>
+</ul>
+<h2 id="querying-smart-contract-data-entries">Querying Smart Contract Data Entries</h2>
+<p>Contract data entries store the state data of deployed smart contract instances:</p>
+<pre><code class="lang-csharp">private static async Task GetLedgerEntryContractData(string contractId)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+
+    var ledgerKeyContractData = CreateLedgerKeyContractData(contractId);
+    var contractCodeResponse = await server.GetLedgerEntries([ledgerKeyContractData]);
+    var ledgerEntries = contractCodeResponse.LedgerEntries;
+    if (ledgerEntries == null || ledgerEntries.Length == 0)
+    {
+        Console.WriteLine($&quot;Failed to get ledger entries for contract ID {contractId}&quot;);
+    }
+    Console.WriteLine($&quot;Contract data count: {ledgerEntries!.Length}&quot;);
+    var entry = (LedgerEntryContractData)ledgerEntries[0];
+    Console.WriteLine($&quot;Contract data ledger sequence: {entry.LastModifiedLedgerSeq}&quot;);
+    Console.WriteLine($&quot;Contract data TTL: {entry.LiveUntilLedger}&quot;);
+}
+
+// Helper method to create a contract data ledger key
+private static LedgerKey CreateLedgerKeyContractData(string contractId)
+{
+    var scContractId = new SCContractId(contractId);
+
+    var contractDataDurability =
+        ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT);
+    var ledgerKeyContractData = new LedgerKeyContractData(
+        scContractId,
+        new SCLedgerKeyContractInstance(),
+        contractDataDurability
+    );
+    return ledgerKeyContractData;
+}
+</code></pre>
+<p>This returns information about the contract instance data, including:</p>
+<ul>
+<li>The ledger sequence when it was last modified</li>
+<li>The time-to-live (TTL) for the contract instance</li>
+</ul>
+<h2 id="querying-trustline-entries">Querying Trustline Entries</h2>
+<p>Trustlines represent relationships between accounts and assets they trust. Here's how to query trustline entries:</p>
+<pre><code class="lang-csharp">private static async Task GetLedgerEntryTrustline(string accountId, string assetCode, string issuerAccountId)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+
+    // Create a non-native asset object
+    var asset = Asset.CreateNonNativeAsset(assetCode, issuerAccountId);
+    
+    // Create a trustline ledger key
+    var ledgerKeyTrustline = new LedgerKeyTrustLine(accountId, asset);
+    
+    // Query the ledger entry
+    var trustlineResponse = await server.GetLedgerEntries([ledgerKeyTrustline]);
+    var ledgerEntries = trustlineResponse.LedgerEntries;
+    
+    if (ledgerEntries == null || ledgerEntries.Length == 0)
+    {
+        Console.WriteLine($&quot;Failed to get trustline entry for account {accountId} and asset {assetCode}&quot;);
+        return;
+    }
+    
+    var entryTrustline = (LedgerEntryTrustLine)ledgerEntries[0];
+    Console.WriteLine($&quot;Account ID: {entryTrustline.AccountID.AccountId}&quot;);
+    var asset = (AssetTypeCreditAlphaNum4)((TrustlineAsset.Wrapper)ledgerEntry.Asset).Asset;
+    Console.WriteLine($&quot;Asset: {asset.Code}:{asset.Issuer}&quot;);
+    Console.WriteLine($&quot;Balance: {entryTrustline.Balance}&quot;);
+    Console.WriteLine($&quot;Limit: {entryTrustline.Limit}&quot;);
+    Console.WriteLine($&quot;Flags: {entryTrustline.Flags}&quot;);
+    var trustLineExtensionV1 = entryTrustline.TrustlineExtensionV1;
+    // Check for trustline extension v1 data if available
+    if (trustLineExtensionV1 != null)
+    {
+        Console.WriteLine($&quot;Buying liabilities: {trustLineExtensionV1.Liabilities.Buying}&quot;);
+        Console.WriteLine($&quot;Selling liabilities: {trustLineExtensionV1.Liabilities.Selling}&quot;);
+    }
+    var trustLineExtensionV2 = trustLineExtensionV1.TrustlineExtensionV2;
+    // Check for trustline extension v2 data if available
+    if (trustLineExtensionV2 != null)
+    {
+        Console.WriteLine($&quot;LiquidityPoolUseCount: {trustLineExtensionV2.LiquidityPoolUseCount}&quot;);
+    }
+}
+</code></pre>
+<p>This code retrieves trustline information including:</p>
+<ul>
+<li>Account ID and asset details</li>
+<li>Current balance of the asset</li>
+<li>Trust limit (maximum amount the account can hold)</li>
+<li>Flags indicating special properties (e.g., authorized status)</li>
+<li>Liabilities (if extension data is available)</li>
+</ul>
+<h2 id="querying-offer-entries">Querying Offer Entries</h2>
+<p>Offers represent orders on Stellar's decentralized exchange. Here's how to query offer entries:</p>
+<pre><code class="lang-csharp">private static async Task GetLedgerEntryOffer(string sellerAccountId, string offerId)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+
+    
+    // Create an offer ledger key
+    var ledgerKeyOffer = new LedgerKeyOffer(sellerAccountId, offerId);
+    
+    // Query the ledger entry
+    var offerResponse = await server.GetLedgerEntries([ledgerKeyOffer]);
+    var ledgerEntries = offerResponse.LedgerEntries;
+    
+    if (ledgerEntries == null || ledgerEntries.Length == 0)
+    {
+        Console.WriteLine($&quot;Failed to get offer entry for offer ID {offerId}&quot;);
+        return;
+    }
+    
+    var entryOffer = (LedgerEntryOffer)ledgerEntries[0];
+    Console.WriteLine($&quot;Offer ID: {entryOffer.OfferId}&quot;);
+    Console.WriteLine($&quot;Seller: {entryOffer.SellerId.AccountId}&quot;);
+    Console.WriteLine($&quot;Selling asset: {entryOffer.Selling.CanonicalName()}&quot;);
+    Console.WriteLine($&quot;Buying asset: {entryOffer.Buying.CanonicalName()}&quot;);
+    Console.WriteLine($&quot;Amount: {entryOffer.Amount}&quot;);
+    Console.WriteLine($&quot;Price: {entryOffer.Price.Numerator}/{entryOffer.Price.Denominator}&quot;);
+    Console.WriteLine($&quot;Flags: {entryOffer.Flags}&quot;);
+}
+</code></pre>
+<p>This retrieves offer information including:</p>
+<ul>
+<li>Offer ID and seller account</li>
+<li>Selling and buying assets</li>
+<li>Amount and price</li>
+<li>Offer flags</li>
+</ul>
+<h2 id="batch-querying-multiple-ledger-entries">Batch Querying Multiple Ledger Entries</h2>
+<p>You can also query multiple ledger entries of different types in a single request:</p>
+<pre><code class="lang-csharp">private static async Task GetMultipleLedgerEntries(string accountId, string contractId, string balanceId)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+
+    // Create multiple ledger keys of different types
+    var ledgerKeys = new LedgerKey[]
+    {
+        new LedgerKeyAccount(accountId),
+        CreateLedgerKeyContractData(contractId),
+        new LedgerKeyClaimableBalance(balanceId)
+    };
+    
+    // Query all ledger entries in a single request
+    var response = await server.GetLedgerEntries(ledgerKeys);
+    var ledgerEntries = response.LedgerEntries;
+    
+    if (ledgerEntries == null || ledgerEntries.Length == 0)
+    {
+        Console.WriteLine(&quot;Failed to get any ledger entries&quot;);
+        return;
+    }
+    
+    Console.WriteLine($&quot;Retrieved {ledgerEntries.Length} ledger entries&quot;);
+    
+    // Process each entry based on its type
+    foreach (var entry in ledgerEntries)
+    {
+        Console.WriteLine($&quot;Entry type: {entry.GetType().Name}&quot;);
+        
+        if (entry is LedgerEntryAccount accountEntry)
+        {
+            Console.WriteLine($&quot;Account ID: {accountEntry.Account.AccountId}&quot;);
+            Console.WriteLine($&quot;Balance: {accountEntry.Balance}&quot;);
+        }
+        else if (entry is LedgerEntryContractData contractDataEntry)
+        {
+            Console.WriteLine($&quot;Contract data TTL: {contractDataEntry.LiveUntilLedger}&quot;);
+        }
+        else if (entry is LedgerEntryClaimableBalance claimableBalanceEntry)
+        {
+            Console.WriteLine($&quot;Claimable balance amount: {claimableBalanceEntry.Amount}&quot;);
+        }
+    }
+}
+</code></pre>
+<p>This powerful approach allows you to efficiently retrieve multiple ledger entries in a single network request.</p>
+<h2 id="additional-resources">Additional Resources</h2>
+<ul>
+<li><a href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/ledgers">Stellar Ledger Documentation</a></li>
+<li><a href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods">Soroban RPC API Reference</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

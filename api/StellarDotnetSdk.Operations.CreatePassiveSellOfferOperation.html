@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class CreatePassiveSellOfferOperation </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class CreatePassiveSellOfferOperation ">
+      
+      <meta name="description" content="Creates an offer to sell one asset for another without taking a reverse offer of equal price. See:  Create passive sell offer">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation">
+
+
+
+  <h1 id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation" class="text-break">
+Class CreatePassiveSellOfferOperation  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<a class="xref" href="StellarDotnetSdk.Operations.html">Operations</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Creates an offer to sell one asset for another without taking a reverse offer of equal price.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-passive-sell-offer">
+Create passive sell offer
+</a></p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class CreatePassiveSellOfferOperation : Operation</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Operations.Operation.html">Operation</a></div>
+      <div><span class="xref">CreatePassiveSellOfferOperation</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Operations.Operation.html#StellarDotnetSdk_Operations_Operation_SourceAccount">Operation.SourceAccount</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Operations.Operation.html#StellarDotnetSdk_Operations_Operation_Threshold">Operation.Threshold</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Operations.Operation.html#StellarDotnetSdk_Operations_Operation_ToXdrAmount_System_String_">Operation.ToXdrAmount(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Operations.Operation.html#StellarDotnetSdk_Operations_Operation_FromXdrAmount_System_Int64_">Operation.FromXdrAmount(long)</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Operations.Operation.html#StellarDotnetSdk_Operations_Operation_ToXdr">Operation.ToXdr()</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Operations.Operation.html#StellarDotnetSdk_Operations_Operation_ToXdrBase64">Operation.ToXdrBase64()</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Operations.Operation.html#StellarDotnetSdk_Operations_Operation_FromXdr_StellarDotnetSdk_Xdr_Operation_">Operation.FromXdr(Operation)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation__ctor_" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation__ctor_StellarDotnetSdk_Assets_Asset_StellarDotnetSdk_Assets_Asset_System_String_System_String_StellarDotnetSdk_Accounts_IAccountId_" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.#ctor(StellarDotnetSdk.Assets.Asset,StellarDotnetSdk.Assets.Asset,System.String,System.String,StellarDotnetSdk.Accounts.IAccountId)">
+  CreatePassiveSellOfferOperation(Asset, Asset, string, string, IAccountId?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Constructs a new <code>CreatePassiveSellOfferOperation</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CreatePassiveSellOfferOperation(Asset selling, Asset buying, string amount, string price, IAccountId? sourceAccount = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>selling</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
+    <dd><p>Asset the offer creator is selling.</p>
+</dd>
+    <dt><code>buying</code> <a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
+    <dd><p>Asset the offer creator is buying.</p>
+</dd>
+    <dt><code>amount</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Amount of <code>Selling</code> being sold.</p>
+</dd>
+    <dt><code>price</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Price of 1 unit of selling in terms of buying.</p>
+</dd>
+    <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
+    <dd><p>(Optional) Source account of the operation.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation_Amount_" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.Amount*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation_Amount" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.Amount">
+  Amount
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Amount of <code>Selling</code> being sold.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Amount { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation_Buying_" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.Buying*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation_Buying" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.Buying">
+  Buying
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Asset the offer creator is buying.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Asset Buying { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation_Price_" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.Price*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation_Price" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.Price">
+  Price
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Price of 1 unit of selling in terms of buying. For example, if you wanted to sell 30 XLM and buy 5 BTC, the price
+would be {5,30}.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Price { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation_Selling_" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.Selling*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation_Selling" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.Selling">
+  Selling
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Asset the offer creator is selling.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Asset Selling { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Assets.Asset.html">Asset</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation_FromXdr_" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.FromXdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation_FromXdr_StellarDotnetSdk_Xdr_CreatePassiveSellOfferOp_" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.FromXdr(StellarDotnetSdk.Xdr.CreatePassiveSellOfferOp)">
+  FromXdr(CreatePassiveSellOfferOp)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static CreatePassiveSellOfferOperation FromXdr(CreatePassiveSellOfferOp createPassiveSellOfferOp)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>createPassiveSellOfferOp</code> <span class="xref">CreatePassiveSellOfferOp</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.html">CreatePassiveSellOfferOperation</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation_ToOperationBody_" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.ToOperationBody*"></a>
+
+  <h3 id="StellarDotnetSdk_Operations_CreatePassiveSellOfferOperation_ToOperationBody" data-uid="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.ToOperationBody">
+  ToOperationBody()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Generates <code>Xdr.OperationBody</code> object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Operation.OperationBody ToOperationBody()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Operation</span>.<span class="xref">OperationBody</span></dt>
+    <dd><p>OperationBody XDR object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

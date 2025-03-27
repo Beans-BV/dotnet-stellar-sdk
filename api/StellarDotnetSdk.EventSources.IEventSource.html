@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Interface IEventSource </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Interface IEventSource ">
+      
+      
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.EventSources.IEventSource">
+
+
+
+  <h1 id="StellarDotnetSdk_EventSources_IEventSource" data-uid="StellarDotnetSdk.EventSources.IEventSource" class="text-break">
+Interface IEventSource  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<a class="xref" href="StellarDotnetSdk.EventSources.html">EventSources</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IEventSource</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_EventSources_IEventSource_Headers_" data-uid="StellarDotnetSdk.EventSources.IEventSource.Headers*"></a>
+
+  <h3 id="StellarDotnetSdk_EventSources_IEventSource_Headers" data-uid="StellarDotnetSdk.EventSources.IEventSource.Headers">
+  Headers
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">NameValueCollection Headers { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.specialized.namevaluecollection">NameValueCollection</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_EventSources_IEventSource_LastEventId_" data-uid="StellarDotnetSdk.EventSources.IEventSource.LastEventId*"></a>
+
+  <h3 id="StellarDotnetSdk_EventSources_IEventSource_LastEventId" data-uid="StellarDotnetSdk.EventSources.IEventSource.LastEventId">
+  LastEventId
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string LastEventId { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_EventSources_IEventSource_MessageTypes_" data-uid="StellarDotnetSdk.EventSources.IEventSource.MessageTypes*"></a>
+
+  <h3 id="StellarDotnetSdk_EventSources_IEventSource_MessageTypes" data-uid="StellarDotnetSdk.EventSources.IEventSource.MessageTypes">
+  MessageTypes
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string[] MessageTypes { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_EventSources_IEventSource_ReadyState_" data-uid="StellarDotnetSdk.EventSources.IEventSource.ReadyState*"></a>
+
+  <h3 id="StellarDotnetSdk_EventSources_IEventSource_ReadyState" data-uid="StellarDotnetSdk.EventSources.IEventSource.ReadyState">
+  ReadyState
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">EventSource.EventSourceState ReadyState { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.EventSources.EventSource.html">EventSource</a>.<a class="xref" href="StellarDotnetSdk.EventSources.EventSource.EventSourceState.html">EventSourceState</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_EventSources_IEventSource_Timeout_" data-uid="StellarDotnetSdk.EventSources.IEventSource.Timeout*"></a>
+
+  <h3 id="StellarDotnetSdk_EventSources_IEventSource_Timeout" data-uid="StellarDotnetSdk.EventSources.IEventSource.Timeout">
+  Timeout
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int Timeout { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_EventSources_IEventSource_Url_" data-uid="StellarDotnetSdk.EventSources.IEventSource.Url*"></a>
+
+  <h3 id="StellarDotnetSdk_EventSources_IEventSource_Url" data-uid="StellarDotnetSdk.EventSources.IEventSource.Url">
+  Url
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Uri Url { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_EventSources_IEventSource_Connect_" data-uid="StellarDotnetSdk.EventSources.IEventSource.Connect*"></a>
+
+  <h3 id="StellarDotnetSdk_EventSources_IEventSource_Connect" data-uid="StellarDotnetSdk.EventSources.IEventSource.Connect">
+  Connect()
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task Connect()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_EventSources_IEventSource_Dispose_" data-uid="StellarDotnetSdk.EventSources.IEventSource.Dispose*"></a>
+
+  <h3 id="StellarDotnetSdk_EventSources_IEventSource_Dispose" data-uid="StellarDotnetSdk.EventSources.IEventSource.Dispose">
+  Dispose()
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Dispose()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_EventSources_IEventSource_Shutdown_" data-uid="StellarDotnetSdk.EventSources.IEventSource.Shutdown*"></a>
+
+  <h3 id="StellarDotnetSdk_EventSources_IEventSource_Shutdown" data-uid="StellarDotnetSdk.EventSources.IEventSource.Shutdown">
+  Shutdown()
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Shutdown()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="events">Events
+</h2>
+
+
+
+  <h3 id="StellarDotnetSdk_EventSources_IEventSource_Error" data-uid="StellarDotnetSdk.EventSources.IEventSource.Error">
+  Error
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;EventSource.ServerSentErrorEventArgs&gt; Error</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="StellarDotnetSdk.EventSources.EventSource.html">EventSource</a>.<a class="xref" href="StellarDotnetSdk.EventSources.EventSource.ServerSentErrorEventArgs.html">ServerSentErrorEventArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_EventSources_IEventSource_Message" data-uid="StellarDotnetSdk.EventSources.IEventSource.Message">
+  Message
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;EventSource.ServerSentEventArgs&gt; Message</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="StellarDotnetSdk.EventSources.EventSource.html">EventSource</a>.<a class="xref" href="StellarDotnetSdk.EventSources.EventSource.ServerSentEventArgs.html">ServerSentEventArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="StellarDotnetSdk_EventSources_IEventSource_StateChange" data-uid="StellarDotnetSdk.EventSources.IEventSource.StateChange">
+  StateChange
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event EventHandler&lt;EventSource.StateChangeEventArgs&gt; StateChange</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="StellarDotnetSdk.EventSources.EventSource.html">EventSource</a>.<a class="xref" href="StellarDotnetSdk.EventSources.EventSource.StateChangeEventArgs.html">StateChangeEventArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

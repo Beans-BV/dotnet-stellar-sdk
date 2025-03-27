@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Connecting to and Querying Soroban Server Information </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Connecting to and Querying Soroban Server Information ">
+      
+      
+      <link rel="icon" href="../../../favicon">
+      <link rel="stylesheet" href="../../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../../public/main.css">
+      <meta name="docfx:navrel" content="../../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../../index.html">
+            <img id="logo" class="svg" src="../../../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="connecting-to-and-querying-soroban-server-information">Connecting to and Querying Soroban Server Information</h1>
+
+<p>This guide demonstrates how to connect to the Soroban RPC server and query basic information using the Stellar .NET SDK.</p>
+<h2 id="understanding-soroban-servers">Understanding Soroban Servers</h2>
+<p>Soroban is Stellar's smart contract platform. To interact with Soroban, you need to connect to a Soroban RPC server, which provides specialized endpoints for smart contract operations beyond what Horizon offers.</p>
+<h2 id="setting-up-a-soroban-server-connection">Setting Up a Soroban Server Connection</h2>
+<p>To start interacting with Soroban, you first need to define the server URL and create a server instance:</p>
+<pre><code class="lang-csharp">// Define the Soroban testnet URL
+private const string TestNetSorobanUrl = &quot;https://soroban-testnet.stellar.org&quot;;
+
+// Create a new Soroban server instance
+SorobanServer server = new(TestNetSorobanUrl);
+</code></pre>
+<blockquote>
+<p>📝 <strong>Note</strong>: For development purposes, the Soroban testnet is recommended. In production, you would connect to the mainnet or a private Soroban-enabled network.</p>
+</blockquote>
+<h2 id="checking-server-health">Checking Server Health</h2>
+<p>Before performing any operations, it's a good practice to check if the Soroban server is operational:</p>
+<pre><code class="lang-csharp">private static async Task GetHealth()
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+    var response = await server.GetHealth();
+    Console.WriteLine($&quot;Server health: {response.Status}&quot;);
+}
+</code></pre>
+<p>A healthy server will return a status of &quot;healthy&quot;. If the server is experiencing issues, you might receive an error or a different status.</p>
+<h2 id="getting-network-information">Getting Network Information</h2>
+<p>You can retrieve information about the Soroban network you're connected to:</p>
+<pre><code class="lang-csharp">private static async Task GetNetwork()
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+    var response = await server.GetNetwork();
+    Console.WriteLine($&quot;Server passphrase: {response.Passphrase}&quot;);
+    Console.WriteLine($&quot;Server Friend Bot URL: {response.FriendbotUrl}&quot;);
+}
+</code></pre>
+<p>The network information includes:</p>
+<ul>
+<li>The network passphrase (which identifies the specific Stellar network)</li>
+<li>The FriendBot URL (for testnet only, used to fund test accounts)</li>
+</ul>
+<h2 id="retrieving-latest-ledger-information">Retrieving Latest Ledger Information</h2>
+<p>Getting the latest ledger information helps you understand the current state of the blockchain:</p>
+<pre><code class="lang-csharp">private static async Task GetLatestLedger()
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+    var response = await server.GetLatestLedger();
+    Console.WriteLine($&quot;Server protocol version: {response.ProtocolVersion}&quot;);
+    Console.WriteLine($&quot;Server latest ledger: {response.Sequence}&quot;);
+}
+</code></pre>
+<p>This provides:</p>
+<ul>
+<li>The current protocol version running on the server</li>
+<li>The sequence number of the latest ledger processed by the server</li>
+</ul>
+<h2 id="retrieving-account-information">Retrieving Account Information</h2>
+<p>You can get account details from the Soroban server, which is particularly useful when building transactions:</p>
+<pre><code class="lang-csharp">// Load account data from the Soroban server
+var account = await server.GetAccount(keyPair.AccountId);
+
+// The account object contains sequence number and other details needed for transactions
+Console.WriteLine($&quot;Account sequence number: {account.SequenceNumber}&quot;);
+</code></pre>
+<p>The account information retrieved from Soroban will have the current sequence number needed to build valid transactions.</p>
+<h2 id="querying-ledger-entries">Querying Ledger Entries</h2>
+<p>Soroban provides specific methods to query different types of ledger entries. Here's how to query account data:</p>
+<pre><code class="lang-csharp">private static async Task GetLedgerEntryAccount(string accountId)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+
+    var ledgerKeyAccount = new LedgerKeyAccount(accountId);
+    var ledgerEntriesResponse = await server.GetLedgerEntries([ledgerKeyAccount]);
+    var ledgerEntries = ledgerEntriesResponse.LedgerEntries;
+    if (ledgerEntries == null || ledgerEntries.Length == 0)
+    {
+        Console.WriteLine($&quot;Failed to get ledger entry for account {accountId}&quot;);
+        return;
+    }
+    var entryAccount = (LedgerEntryAccount)ledgerEntries[0];
+    Console.WriteLine($&quot;Entry account ID: {entryAccount.Account.AccountId}&quot;);
+    Console.WriteLine($&quot;Entry account signing key ID: {entryAccount.Account.SigningKey.AccountId}&quot;);
+    Console.WriteLine($&quot;Entry account balance: {entryAccount.Balance}&quot;);
+    
+    // Check for extended account data
+    var v1 = entryAccount.AccountExtensionV1;
+    if (v1 != null)
+    {
+        Console.WriteLine($&quot;Entry account balance buying liabilities: {v1.Liabilities.Buying}&quot;);
+        Console.WriteLine($&quot;Entry account balance selling liabilities: {v1.Liabilities.Selling}&quot;);
+        
+        var v2 = v1.ExtensionV2;
+        if (v2 != null)
+        {
+            Console.WriteLine($&quot;Entry account number of sponsored: {v2.NumberSponsored}&quot;);
+            Console.WriteLine($&quot;Entry account number of sponsoring: {v2.NumberSponsoring}&quot;);
+        }
+    }
+}
+</code></pre>
+<p>This code retrieves detailed account information from the ledger, including:</p>
+<ul>
+<li>Basic account details (ID, signing key, balance)</li>
+<li>Liabilities information (if available)</li>
+<li>Sponsorship information (if available)</li>
+</ul>
+<h2 id="querying-claimable-balance-information">Querying Claimable Balance Information</h2>
+<p>You can also query information about claimable balances:</p>
+<pre><code class="lang-csharp">private static async Task GetLedgerEntryClaimableBalance(string balanceId)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+
+    var ledgerKeyClaimableBalance = new LedgerKeyClaimableBalance(balanceId);
+    Console.WriteLine($&quot;Get ledger entry details for claimable balance {balanceId}&quot;);
+    var ledgerEntriesResponse = await server.GetLedgerEntries([ledgerKeyClaimableBalance]);
+    var ledgerEntries = ledgerEntriesResponse.LedgerEntries;
+    if (ledgerEntries == null || ledgerEntries.Length == 0)
+    {
+        Console.WriteLine($&quot;Failed to get ledger entry for claimable balance {balanceId}&quot;);
+        return;
+    }
+    var entryClaimableBalance = (LedgerEntryClaimableBalance)ledgerEntries[0];
+    Console.WriteLine($&quot;ID: {entryClaimableBalance.BalanceId}&quot;);
+    Console.WriteLine($&quot;Amount: {entryClaimableBalance.Amount}&quot;);
+    var claimants = entryClaimableBalance.Claimants;
+    Console.WriteLine($&quot;Claimant count: {claimants.Length}&quot;);
+    for (var i = 0; i &lt; claimants.Length; i++)
+    {
+        Console.WriteLine($&quot;Claimant {i + 1} address: {claimants[i].Destination.AccountId}&quot;);
+        Console.WriteLine($&quot;Claimant {i + 1} predicate: {claimants[i].Predicate.GetType()}&quot;);
+    }
+}
+</code></pre>
+<p>This retrieves information about a claimable balance, including:</p>
+<ul>
+<li>Balance ID</li>
+<li>Amount</li>
+<li>Claimants and their predicates (conditions under which they can claim)</li>
+</ul>
+<h2 id="querying-smart-contract-code">Querying Smart Contract Code</h2>
+<p>Once a smart contract is uploaded to the Soroban network, you can query information about its code:</p>
+<pre><code class="lang-csharp">private static async Task GetLedgerEntryContractCode(string contractWasmId)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+
+    var ledgerKeyContractCodes = new LedgerKey[]
+    {
+        new LedgerKeyContractCode(contractWasmId),
+    };
+    var contractCodeResponse = await server.GetLedgerEntries(ledgerKeyContractCodes);
+    var ledgerEntries = contractCodeResponse.LedgerEntries;
+    if (ledgerEntries == null || ledgerEntries.Length == 0)
+    {
+        Console.WriteLine($&quot;Failed to get ledger entries for contractWasmId {contractWasmId}&quot;);
+        return;
+    }
+    Console.WriteLine($&quot;Contract code count: {ledgerEntries.Length}&quot;);
+    var entry = (LedgerEntryContractCode)ledgerEntries[0];
+    Console.WriteLine($&quot;Contract code hash in base64: {Convert.ToBase64String(entry.Hash)}&quot;);
+    Console.WriteLine($&quot;Contract code hash in hex: {Convert.ToHexString(entry.Hash)}&quot;);
+    Console.WriteLine($&quot;Contract code TTL: {entry.LiveUntilLedger}&quot;);
+}
+</code></pre>
+<p>This code retrieves:</p>
+<ul>
+<li>The contract's code hash in different formats</li>
+<li>The contract's time-to-live (TTL) expressed as a ledger sequence number</li>
+</ul>
+<h2 id="querying-smart-contract-data">Querying Smart Contract Data</h2>
+<p>You can also query data associated with a deployed smart contract:</p>
+<pre><code class="lang-csharp">private static async Task&lt;(uint ledgerSeq, uint ttl)&gt; GetLedgerEntryContractData(string contractId)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+
+    var ledgerKeyContractData = CreateLedgerKeyContractData(contractId);
+    var contractCodeResponse = await server.GetLedgerEntries([ledgerKeyContractData]);
+    var ledgerEntries = contractCodeResponse.LedgerEntries;
+    if (ledgerEntries == null || ledgerEntries.Length == 0)
+    {
+        Console.WriteLine($&quot;Failed to get ledger entries for contract ID {contractId}&quot;);
+    }
+    Console.WriteLine($&quot;Contract data count: {ledgerEntries!.Length}&quot;);
+    var entry = (LedgerEntryContractData)ledgerEntries[0];
+    var ledgerSeq = entry.LastModifiedLedgerSeq;
+    var ttl = entry.LiveUntilLedger;
+    ArgumentNullException.ThrowIfNull(ttl);
+    Console.WriteLine($&quot;Contract data ledger sequence: {ledgerSeq}&quot;);
+    Console.WriteLine($&quot;Contract data TTL: {ttl}&quot;);
+    return (ledgerSeq, ttl.Value);
+}
+
+// Helper method to create a contract data ledger key
+private static LedgerKey CreateLedgerKeyContractData(string contractId)
+{
+    var scContractId = new SCContractId(contractId);
+
+    var contractDataDurability =
+        ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT);
+    var ledgerKeyContractData = new LedgerKeyContractData(
+        scContractId,
+        new SCLedgerKeyContractInstance(),
+        contractDataDurability
+    );
+    return ledgerKeyContractData;
+}
+</code></pre>
+<p>This retrieves contract instance data, including:</p>
+<ul>
+<li>The ledger sequence when it was last modified</li>
+<li>The contract's time-to-live (when it will expire if not extended)</li>
+</ul>
+<h2 id="polling-for-transaction-results">Polling for Transaction Results</h2>
+<p>When submitting transactions to Soroban, you may need to continuously check for transaction completion:</p>
+<pre><code class="lang-csharp">// Keep querying for the transaction using `GetTransaction` endpoint until success or error
+private static async Task&lt;GetTransactionResponse&gt; PollTransaction(string transactionHash)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+    var status = TransactionInfo.TransactionStatus.NOT_FOUND;
+    GetTransactionResponse? transactionResponse = null;
+    while (status == TransactionInfo.TransactionStatus.NOT_FOUND)
+    {
+        await Task.Delay(3000);
+        Console.WriteLine($&quot;Fetching details for transaction {transactionHash}&quot;);
+        transactionResponse = await server.GetTransaction(transactionHash);
+
+        status = transactionResponse.Status;
+        if (status == TransactionInfo.TransactionStatus.FAILED)
+        {
+            Console.WriteLine($&quot;Transaction {transactionHash} failed&quot;);
+            break;
+        }
+        if (status == TransactionInfo.TransactionStatus.SUCCESS)
+        {
+            ArgumentNullException.ThrowIfNull(transactionResponse.ResultXdr);
+            Console.WriteLine($&quot;Transaction {transactionHash} was successful&quot;);
+            return transactionResponse;
+        }
+        Console.WriteLine(&quot;Transaction not updated on-chain. Waiting for a moment before retrying..&quot;);
+    }
+
+    ArgumentNullException.ThrowIfNull(transactionResponse);
+    return transactionResponse;
+}
+</code></pre>
+<p>This function:</p>
+<ul>
+<li>Checks the transaction status every few seconds</li>
+<li>Waits until the transaction succeeds or fails</li>
+<li>Returns the final transaction response</li>
+</ul>
+<h2 id="additional-resources">Additional Resources</h2>
+<ul>
+<li><a href="https://developers.stellar.org/docs/data/apis/rpc">RPC Introduction</a></li>
+<li><a href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods">Soroban RPC API Reference</a></li>
+<li><a href="https://developers.stellar.org/docs">Stellar Developers Docs</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class SorobanServer </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class SorobanServer ">
+      
+      <meta name="description" content="This class helps you to connect to a local or remote Soroban RPC server and send requests to the server. It parses the results and provides corresponding response objects.">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Soroban.SorobanServer">
+
+
+
+  <h1 id="StellarDotnetSdk_Soroban_SorobanServer" data-uid="StellarDotnetSdk.Soroban.SorobanServer" class="text-break">
+Class SorobanServer  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<a class="xref" href="StellarDotnetSdk.Soroban.html">Soroban</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>This class helps you to connect to a local or remote Soroban RPC server
+and send requests to the server. It parses the results and provides
+corresponding response objects.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class SorobanServer : IDisposable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">SorobanServer</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer__ctor_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer__ctor_System_String_System_Net_Http_HttpClient_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.#ctor(System.String,System.Net.Http.HttpClient)">
+  SorobanServer(string, HttpClient)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Constructs a new instance that will interact with the provided URL.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SorobanServer(string uri, HttpClient httpClient)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>URL of the Soroban RPC server.</p>
+</dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd><p>HttpClient instance to use for requests.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer__ctor_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer__ctor_System_String_System_String_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.#ctor(System.String,System.String)">
+  SorobanServer(string, string?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Constructs a new instance that will interact with the provided URL.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SorobanServer(string uri, string? bearerToken = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>URL of the Soroban RPC server.</p>
+</dd>
+    <dt><code>bearerToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Bearer token in case the server requires it.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_CreateHttpClient_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.CreateHttpClient*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_CreateHttpClient" data-uid="StellarDotnetSdk.Soroban.SorobanServer.CreateHttpClient">
+  CreateHttpClient()
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Pass your own HttpClient instance to SorobanServer(string uri, HttpClient httpClient) instead. Otherwise call SorobanServer(string uri). Will be removed in the next major version.&quot;)]
+public static HttpClient CreateHttpClient()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_CreateHttpClient_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.CreateHttpClient*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_CreateHttpClient_System_Net_Http_HttpMessageHandler_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.CreateHttpClient(System.Net.Http.HttpMessageHandler)">
+  CreateHttpClient(HttpMessageHandler)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Pass your own HttpClient instance to SorobanServer(string uri, HttpClient httpClient) instead. Otherwise call SorobanServer(string uri). Will be removed in the next major version.&quot;)]
+public static HttpClient CreateHttpClient(HttpMessageHandler handler)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>handler</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpmessagehandler">HttpMessageHandler</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_Dispose_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.Dispose*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_Dispose" data-uid="StellarDotnetSdk.Soroban.SorobanServer.Dispose">
+  Dispose()
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_GetAccount_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetAccount*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_GetAccount_System_String_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetAccount(System.String)">
+  GetAccount(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Fetch a minimal set of current info about a Stellar account. Needed to get the current sequence
+number for the account, so you can build a successful transaction with TransactionBuilder.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;Account&gt; GetAccount(string accountId)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>accountId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The public address of the account to load.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Accounts.Account.html">Account</a>&gt;</dt>
+    <dd><p>An Account object containing the sequence number and current state of the account.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_GetEvents_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetEvents*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_GetEvents_StellarDotnetSdk_Requests_SorobanRpc_GetEventsRequest_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetEvents(StellarDotnetSdk.Requests.SorobanRpc.GetEventsRequest)">
+  GetEvents(GetEventsRequest)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Get a filtered list of events emitted by a given ledger range.
+See: <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getEvents">https://developers.stellar.org/docs/data/rpc/api-reference/methods/getEvents</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;GetEventsResponse&gt; GetEvents(GetEventsRequest request)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.GetEventsRequest.html">GetEventsRequest</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.html">GetEventsResponse</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_GetFeeStats_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetFeeStats*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_GetFeeStats" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetFeeStats">
+  GetFeeStats()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Statistics for charged inclusion fees. The inclusion fee statistics are calculated from the inclusion fees that
+were paid for the transactions to be included onto the ledger. For Soroban transactions and Stellar transactions,
+they each have their own inclusion fees and own surge pricing. Inclusion fees are used to prevent spam and
+prioritize transactions during network traffic surge.
+See: <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getFeeStats">https://developers.stellar.org/docs/data/rpc/api-reference/methods/getFeeStats</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;GetFeeStatsResponse&gt; GetFeeStats()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetFeeStatsResponse.html">GetFeeStatsResponse</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_GetHealth_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetHealth*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_GetHealth" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetHealth">
+  GetHealth()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>General node health check.
+See: <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getHealth">https://developers.stellar.org/docs/data/rpc/api-reference/methods/getHealth</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;GetHealthResponse&gt; GetHealth()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetHealthResponse.html">GetHealthResponse</a>&gt;</dt>
+    <dd><p>The <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetHealthResponse.html">GetHealthResponse</a> object containing the health check result.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_GetLatestLedger_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetLatestLedger*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_GetLatestLedger" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetLatestLedger">
+  GetLatestLedger()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>For finding out the current latest known ledger of this node. This is a subset of the ledger info from Horizon.
+See: <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLatestLedger">https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLatestLedger</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;GetLatestLedgerResponse&gt; GetLatestLedger()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetLatestLedgerResponse.html">GetLatestLedgerResponse</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_GetLedgerEntries_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetLedgerEntries*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_GetLedgerEntries_StellarDotnetSdk_LedgerKeys_LedgerKey___" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetLedgerEntries(StellarDotnetSdk.LedgerKeys.LedgerKey[])">
+  GetLedgerEntries(LedgerKey[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reads the current value of ledger entries directly.
+Allows you to directly inspect the current state of contracts, contract's code, or any other ledger entries.</p>
+<p>
+    This is a backup way to access your contract data which may
+    not be available via events or simulateTransaction.
+    To fetch contract wasm byte-code, use the ContractCode ledger entry key.
+</p>
+See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgerEntries
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;GetLedgerEntriesResponse&gt; GetLedgerEntries(LedgerKey[] keys)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>keys</code> <a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKey.html">LedgerKey</a>[]</dt>
+    <dd><p>Array of <a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKey.html">LedgerKey</a> containing the keys of the ledger entries you wish to retrieve, at
+least one key must be provided.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.html">GetLedgerEntriesResponse</a>&gt;</dt>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.html">GetLedgerEntriesResponse</a> object containing the current values.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_GetLedgerEntry_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetLedgerEntry*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_GetLedgerEntry_StellarDotnetSdk_LedgerKeys_LedgerKey_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetLedgerEntry(StellarDotnetSdk.LedgerKeys.LedgerKey)">
+  GetLedgerEntry(LedgerKey)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;GetLedgerEntriesResponse&gt; GetLedgerEntry(LedgerKey key)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>key</code> <a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKey.html">LedgerKey</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetLedgerEntriesResponse.html">GetLedgerEntriesResponse</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_GetNetwork_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetNetwork*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_GetNetwork" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetNetwork">
+  GetNetwork()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>General information about the currently configured network. This response will contain all the information needed
+to successfully submit transactions to the network this node serves.
+See: <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getNetwork">https://developers.stellar.org/docs/data/rpc/api-reference/methods/getNetwork</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;GetNetworkResponse&gt; GetNetwork()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetNetworkResponse.html">GetNetworkResponse</a>&gt;</dt>
+    <dd><p>The <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetNetworkResponse.html">GetNetworkResponse</a> object containing the network metadata.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_GetTransaction_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetTransaction*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_GetTransaction_System_String_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetTransaction(System.String)">
+  GetTransaction(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Fetch the details of a submitted transaction.
+When submitting a transaction, client should poll this to tell when the transaction has
+completed.
+See: <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransaction">https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransaction</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;GetTransactionResponse&gt; GetTransaction(string txHash)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>txHash</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetTransactionResponse.html">GetTransactionResponse</a>&gt;</dt>
+    <dd><p>A GetTransactionResponse object containing the transaction status, result, and
+other details.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_GetTransactions_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetTransactions*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_GetTransactions_StellarDotnetSdk_Requests_SorobanRpc_GetTransactionsRequest_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetTransactions(StellarDotnetSdk.Requests.SorobanRpc.GetTransactionsRequest)">
+  GetTransactions(GetTransactionsRequest)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The <code>getTransactions</code> method return a detailed list of transactions starting from the user specified starting
+point that you can paginate as long as the pages fall within the history retention of their corresponding RPC
+provider.
+See: <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransactions">https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransactions</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;GetTransactionsResponse&gt; GetTransactions(GetTransactionsRequest request)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>request</code> <a class="xref" href="StellarDotnetSdk.Requests.SorobanRpc.GetTransactionsRequest.html">GetTransactionsRequest</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetTransactionsResponse.html">GetTransactionsResponse</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_GetVersionInfo_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetVersionInfo*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_GetVersionInfo" data-uid="StellarDotnetSdk.Soroban.SorobanServer.GetVersionInfo">
+  GetVersionInfo()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Version information about the RPC and Captive core. RPC manages its own, pared-down version of Stellar Core
+optimized for its own subset of needs. we'll refer to this as a &quot;Captive Core&quot; instance.
+See: <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getVersionInfo">https://developers.stellar.org/docs/data/rpc/api-reference/methods/getVersionInfo</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;GetVersionInfoResponse&gt; GetVersionInfo()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetVersionInfoResponse.html">GetVersionInfoResponse</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_SendTransaction_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.SendTransaction*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_SendTransaction_StellarDotnetSdk_Transactions_FeeBumpTransaction_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.SendTransaction(StellarDotnetSdk.Transactions.FeeBumpTransaction)">
+  SendTransaction(FeeBumpTransaction)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Submit a FeeBump transaction to the Stellar network. This is the only way to make changes “on-chain”.
+Unlike Horizon, this does not wait for transaction completion. It simply validates and enqueues the transaction.
+Clients should call getTransactionStatus to learn about transaction success/failure.
+This supports all transactions, not only smart contract-related transactions.
+See <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction">https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;SendTransactionResponse&gt; SendTransaction(FeeBumpTransaction feeBumpTransaction)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>feeBumpTransaction</code> <a class="xref" href="StellarDotnetSdk.Transactions.FeeBumpTransaction.html">FeeBumpTransaction</a></dt>
+    <dd><p>The FeeBumpTransaction object to be submitted.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse.html">SendTransactionResponse</a>&gt;</dt>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse.html">SendTransactionResponse</a> response.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_SendTransaction_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.SendTransaction*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_SendTransaction_StellarDotnetSdk_Transactions_Transaction_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.SendTransaction(StellarDotnetSdk.Transactions.Transaction)">
+  SendTransaction(Transaction)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Submit a real transaction to the stellar network. This is the only way to make changes “on-chain”. Unlike Horizon,
+this does not wait for transaction completion. It simply validates and enqueues the transaction. Clients should
+call getTransactionStatus to learn about transaction success/failure. This supports all transactions, not only
+smart contract-related transactions.
+See <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction">https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;SendTransactionResponse&gt; SendTransaction(Transaction transaction)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>transaction</code> <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
+    <dd><p>The transaction object to be submitted.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse.html">SendTransactionResponse</a>&gt;</dt>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse.html">SendTransactionResponse</a> response.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanServer_SimulateTransaction_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.SimulateTransaction*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_SimulateTransaction_StellarDotnetSdk_Transactions_Transaction_System_Nullable_System_UInt32__" data-uid="StellarDotnetSdk.Soroban.SorobanServer.SimulateTransaction(StellarDotnetSdk.Transactions.Transaction,System.Nullable{System.UInt32})">
+  SimulateTransaction(Transaction, uint?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Submit a trial contract invocation to simulate how it would be executed by the network. This endpoint calculates
+the effective transaction data, required authorizations, and minimal resource fee. It provides a way to test and
+analyze the potential outcomes of a transaction without actually submitting it to the network.
+See: <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction">https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;SimulateTransactionResponse&gt; SimulateTransaction(Transaction transaction, uint? resourceConfig = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>transaction</code> <a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
+    <dd><p>The transaction object to be simulated.
+<remarks>
+In order for the RPC server to successfully simulate a Stellar transaction, the provided transaction must
+contain only a single operation of the type <code>invokeHostFunction</code>.
+</remarks></p>
+</dd>
+    <dt><code>resourceConfig</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a>?</dt>
+    <dd><p>Contains configuration for how resources will be calculated when simulating transactions.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html">SimulateTransactionResponse</a>&gt;</dt>
+    <dd><p>A <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.SimulateTransactionResponse.html">SimulateTransactionResponse</a> object.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

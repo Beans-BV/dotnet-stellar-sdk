@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class OperationResponse </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class OperationResponse ">
+      
+      <meta name="description" content="Abstract class for operation responses. See: https://www.stellar.org/developers/horizon/reference/resources/operation.html">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse">
+
+
+
+  <h1 id="StellarDotnetSdk_Responses_Operations_OperationResponse" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse" class="text-break">
+Class OperationResponse  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<a class="xref" href="StellarDotnetSdk.Responses.html">Responses</a>.<a class="xref" href="StellarDotnetSdk.Responses.Operations.html">Operations</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Abstract class for operation responses.
+See: <a href="https://www.stellar.org/developers/horizon/reference/resources/operation.html">https://www.stellar.org/developers/horizon/reference/resources/operation.html</a>
+<a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a><a class="xref" href="StellarDotnetSdk.Server.html">Server</a></p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(OperationResponseJsonConverter))]
+public abstract class OperationResponse : Response, IPagingToken</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Response.html">Response</a></div>
+      <div><span class="xref">OperationResponse</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.IPagingToken.html">IPagingToken</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.AccountMergeOperationResponse.html">AccountMergeOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.AllowTrustOperationResponse.html">AllowTrustOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.BeginSponsoringFutureReservesOperationResponse.html">BeginSponsoringFutureReservesOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.BumpSequenceOperationResponse.html">BumpSequenceOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.ChangeTrustOperationResponse.html">ChangeTrustOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.ClaimClaimableBalanceOperationResponse.html">ClaimClaimableBalanceOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.ClawbackClaimableBalanceOperationResponse.html">ClawbackClaimableBalanceOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.ClawbackOperationResponse.html">ClawbackOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.CreateAccountOperationResponse.html">CreateAccountOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.CreateClaimableBalanceOperationResponse.html">CreateClaimableBalanceOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.CreatePassiveOfferOperationResponse.html">CreatePassiveOfferOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.EndSponsoringFutureReservesOperationResponse.html">EndSponsoringFutureReservesOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.ExtendFootprintOperationResponse.html">ExtendFootprintOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.InflationOperationResponse.html">InflationOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.InvokeHostFunctionOperationResponse.html">InvokeHostFunctionOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.LiquidityPoolDepositOperationResponse.html">LiquidityPoolDepositOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.LiquidityPoolWithdrawOperationResponse.html">LiquidityPoolWithdrawOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.ManageDataOperationResponse.html">ManageDataOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.ManageOfferOperationResponse.html">ManageOfferOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.PathPaymentStrictReceiveOperationResponse.html">PathPaymentStrictReceiveOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.PathPaymentStrictSendOperationResponse.html">PathPaymentStrictSendOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.PaymentOperationResponse.html">PaymentOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.RestoreFootprintOperationResponse.html">RestoreFootprintOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.RevokeSponsorshipOperationResponse.html">RevokeSponsorshipOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.SetOptionsOperationResponse.html">SetOptionsOperationResponse</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Operations.SetTrustlineFlagsOperationResponse.html">SetTrustlineFlagsOperationResponse</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_OperationResponse_CreatedAt_" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.CreatedAt*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_OperationResponse_CreatedAt" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.CreatedAt">
+  CreatedAt
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;created_at&quot;)]
+public DateTime CreatedAt { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_OperationResponse_Id_" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.Id*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_OperationResponse_Id" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.Id">
+  Id
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>ID of the operation</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;id&quot;)]
+public long Id { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_OperationResponse_Links_" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.Links*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_OperationResponse_Links" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.Links">
+  Links
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Links of Paging</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;_links&quot;)]
+public OperationResponseLinks Links { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.Operations.OperationResponseLinks.html">OperationResponseLinks</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_OperationResponse_PagingToken_" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.PagingToken*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_OperationResponse_PagingToken" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.PagingToken">
+  PagingToken
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Paging Token of Paging</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;paging_token&quot;)]
+public string PagingToken { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_OperationResponse_SourceAccount_" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.SourceAccount*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_OperationResponse_SourceAccount" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.SourceAccount">
+  SourceAccount
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Source Account of Operation</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_account&quot;)]
+public string SourceAccount { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_OperationResponse_SourceAccountMuxed_" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.SourceAccountMuxed*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_OperationResponse_SourceAccountMuxed" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.SourceAccountMuxed">
+  SourceAccountMuxed
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_account_muxed&quot;)]
+public string SourceAccountMuxed { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_OperationResponse_SourceAccountMuxedId_" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.SourceAccountMuxedId*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_OperationResponse_SourceAccountMuxedId" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.SourceAccountMuxedId">
+  SourceAccountMuxedId
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_account_muxed_id&quot;)]
+public ulong? SourceAccountMuxedId { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_OperationResponse_Transaction_" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.Transaction*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_OperationResponse_Transaction" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.Transaction">
+  Transaction
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the transaction this operation belongs to.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;transaction&quot;)]
+public TransactionResponse? Transaction { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.html">TransactionResponse</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_OperationResponse_TransactionHash_" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.TransactionHash*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_OperationResponse_TransactionHash" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.TransactionHash">
+  TransactionHash
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns transaction hash of transaction this operation belongs to.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;transaction_hash&quot;)]
+public string TransactionHash { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_OperationResponse_TransactionSuccessful_" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.TransactionSuccessful*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_OperationResponse_TransactionSuccessful" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.TransactionSuccessful">
+  TransactionSuccessful
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns whether the operation transaction was successful.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;transaction_successful&quot;, DefaultValueHandling = DefaultValueHandling.Populate)]
+public bool TransactionSuccessful { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_OperationResponse_Type_" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.Type*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_OperationResponse_Type" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.Type">
+  Type
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns operation type. Possible types:
+crete_account
+payment
+allow_trust
+change_trust
+set_options
+account_merge
+manage_offer
+path_payments
+create_passive_offer
+inflation
+manage_data</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;type&quot;)]
+public string Type { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_Operations_OperationResponse_TypeId_" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.TypeId*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_Operations_OperationResponse_TypeId" data-uid="StellarDotnetSdk.Responses.Operations.OperationResponse.TypeId">
+  TypeId
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;type_i&quot;)]
+public virtual int TypeId { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

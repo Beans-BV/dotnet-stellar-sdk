@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class TransactionsRequestBuilder </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class TransactionsRequestBuilder ">
+      
+      
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder">
+
+
+
+  <h1 id="StellarDotnetSdk_Requests_TransactionsRequestBuilder" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder" class="text-break">
+Class TransactionsRequestBuilder  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<a class="xref" href="StellarDotnetSdk.Requests.html">Requests</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class TransactionsRequestBuilder : RequestBuilderStreamable&lt;TransactionsRequestBuilder, TransactionResponse&gt;, IRequestBuilderExecutePageable&lt;TransactionsRequestBuilder, TransactionResponse&gt;, IRequestBuilder&lt;TransactionsRequestBuilder&gt;, IRequestBuilderStreamable&lt;TransactionResponse&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Requests.RequestBuilder-1.html">RequestBuilder</a>&lt;<a class="xref" href="StellarDotnetSdk.Requests.TransactionsRequestBuilder.html">TransactionsRequestBuilder</a>&gt;</div>
+      <div><a class="xref" href="StellarDotnetSdk.Requests.RequestBuilderExecutePageable-2.html">RequestBuilderExecutePageable</a>&lt;<a class="xref" href="StellarDotnetSdk.Requests.TransactionsRequestBuilder.html">TransactionsRequestBuilder</a>, <a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.html">TransactionResponse</a>&gt;</div>
+      <div><a class="xref" href="StellarDotnetSdk.Requests.RequestBuilderStreamable-2.html">RequestBuilderStreamable</a>&lt;<a class="xref" href="StellarDotnetSdk.Requests.TransactionsRequestBuilder.html">TransactionsRequestBuilder</a>, <a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.html">TransactionResponse</a>&gt;</div>
+      <div><span class="xref">TransactionsRequestBuilder</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="StellarDotnetSdk.Requests.IRequestBuilderExecutePageable-2.html">IRequestBuilderExecutePageable</a>&lt;<a class="xref" href="StellarDotnetSdk.Requests.TransactionsRequestBuilder.html">TransactionsRequestBuilder</a>, <a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.html">TransactionResponse</a>&gt;</div>
+      <div><a class="xref" href="StellarDotnetSdk.Requests.IRequestBuilder-1.html">IRequestBuilder</a>&lt;<a class="xref" href="StellarDotnetSdk.Requests.TransactionsRequestBuilder.html">TransactionsRequestBuilder</a>&gt;</div>
+      <div><a class="xref" href="StellarDotnetSdk.Requests.IRequestBuilderStreamable-1.html">IRequestBuilderStreamable</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.html">TransactionResponse</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilderStreamable-2.html#StellarDotnetSdk_Requests_RequestBuilderStreamable_2_EventSource">RequestBuilderStreamable&lt;TransactionsRequestBuilder, TransactionResponse&gt;.EventSource</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilderStreamable-2.html#StellarDotnetSdk_Requests_RequestBuilderStreamable_2_Stream_System_EventHandler__1__">RequestBuilderStreamable&lt;TransactionsRequestBuilder, TransactionResponse&gt;.Stream(EventHandler&lt;TransactionResponse&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilderExecutePageable-2.html#StellarDotnetSdk_Requests_RequestBuilderExecutePageable_2_Execute">RequestBuilderExecutePageable&lt;TransactionsRequestBuilder, TransactionResponse&gt;.Execute()</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilder-1.html#StellarDotnetSdk_Requests_RequestBuilder_1_UriBuilder">RequestBuilder&lt;TransactionsRequestBuilder&gt;.UriBuilder</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilder-1.html#StellarDotnetSdk_Requests_RequestBuilder_1_HttpClient">RequestBuilder&lt;TransactionsRequestBuilder&gt;.HttpClient</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilder-1.html#StellarDotnetSdk_Requests_RequestBuilder_1_Execute__1_System_Uri_">RequestBuilder&lt;TransactionsRequestBuilder&gt;.Execute&lt;TZ&gt;(Uri)</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilder-1.html#StellarDotnetSdk_Requests_RequestBuilder_1_Uri">RequestBuilder&lt;TransactionsRequestBuilder&gt;.Uri</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilder-1.html#StellarDotnetSdk_Requests_RequestBuilder_1_Cursor_System_String_">RequestBuilder&lt;TransactionsRequestBuilder&gt;.Cursor(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilder-1.html#StellarDotnetSdk_Requests_RequestBuilder_1_Limit_System_Int32_">RequestBuilder&lt;TransactionsRequestBuilder&gt;.Limit(int)</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilder-1.html#StellarDotnetSdk_Requests_RequestBuilder_1_Order_StellarDotnetSdk_Requests_OrderDirection_">RequestBuilder&lt;TransactionsRequestBuilder&gt;.Order(OrderDirection)</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilder-1.html#StellarDotnetSdk_Requests_RequestBuilder_1_BuildUri">RequestBuilder&lt;TransactionsRequestBuilder&gt;.BuildUri()</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Requests.RequestBuilder-1.html#StellarDotnetSdk_Requests_RequestBuilder_1_SetSegments_System_String___">RequestBuilder&lt;TransactionsRequestBuilder&gt;.SetSegments(params string[])</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="StellarDotnetSdk_Requests_TransactionsRequestBuilder__ctor_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_TransactionsRequestBuilder__ctor_System_Uri_System_Net_Http_HttpClient_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.#ctor(System.Uri,System.Net.Http.HttpClient)">
+  TransactionsRequestBuilder(Uri, HttpClient)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransactionsRequestBuilder(Uri serverUri, HttpClient httpClient)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>serverUri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
+    <dd></dd>
+    <dt><code>httpClient</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httpclient">HttpClient</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Requests_TransactionsRequestBuilder_ForAccount_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.ForAccount*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_TransactionsRequestBuilder_ForAccount_System_String_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.ForAccount(System.String)">
+  ForAccount(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransactionsRequestBuilder ForAccount(string account)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>account</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Account for which to get transactions</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Requests.TransactionsRequestBuilder.html">TransactionsRequestBuilder</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Requests_TransactionsRequestBuilder_ForClaimableBalance_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.ForClaimableBalance*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_TransactionsRequestBuilder_ForClaimableBalance_System_String_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.ForClaimableBalance(System.String)">
+  ForClaimableBalance(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds request to <pre><code class="lang-csharp">GET /claimable_balances/{claimable_balance_id}/transactions</code></pre>
+See:
+<a href="https://developers.stellar.org/network/horizon/resources/cb-retrieve-related-transactions">
+Retrieve
+related transactions
+</a>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransactionsRequestBuilder ForClaimableBalance(string claimableBalance)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>claimableBalance</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Claimable Balance for which to get transactions</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Requests.TransactionsRequestBuilder.html">TransactionsRequestBuilder</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Requests_TransactionsRequestBuilder_ForLedger_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.ForLedger*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_TransactionsRequestBuilder_ForLedger_System_Int64_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.ForLedger(System.Int64)">
+  ForLedger(long)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Builds request to <pre><code class="lang-csharp">GET /ledgers/{ledgerSeq}/transactions</code></pre><a href="https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-transactions">
+Retrieve a
+Ledger's Transactions
+</a>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransactionsRequestBuilder ForLedger(long ledgerSeq)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>ledgerSeq</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd><p>Ledger for which to get transactions</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Requests.TransactionsRequestBuilder.html">TransactionsRequestBuilder</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Requests_TransactionsRequestBuilder_IncludeFailed_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.IncludeFailed*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_TransactionsRequestBuilder_IncludeFailed_System_Boolean_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.IncludeFailed(System.Boolean)">
+  IncludeFailed(bool)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Set <pre><code class="lang-csharp">include_failed</code></pre> flag to include failed transactions.
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransactionsRequestBuilder IncludeFailed(bool includeFailed)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>includeFailed</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Set to true to include failed transactions in results</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Requests.TransactionsRequestBuilder.html">TransactionsRequestBuilder</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Requests_TransactionsRequestBuilder_Transaction_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.Transaction*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_TransactionsRequestBuilder_Transaction_System_String_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.Transaction(System.String)">
+  Transaction(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Requests <pre><code class="lang-csharp">GET /transactions/{transactionId}</code></pre><a href="https://developers.stellar.org/network/horizon/resources/retrieve-a-transaction">Retrieve a Transaction</a>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;TransactionResponse&gt; Transaction(string transactionId)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>transactionId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>ID of the transaction to fetch.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.html">TransactionResponse</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Requests_TransactionsRequestBuilder_Transaction_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.Transaction*"></a>
+
+  <h3 id="StellarDotnetSdk_Requests_TransactionsRequestBuilder_Transaction_System_Uri_" data-uid="StellarDotnetSdk.Requests.TransactionsRequestBuilder.Transaction(System.Uri)">
+  Transaction(Uri)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Requests specific uri and returns LedgerResponse.
+This method is helpful for getting the links.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;TransactionResponse&gt; Transaction(Uri uri)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>uri</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uri">Uri</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.html">TransactionResponse</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

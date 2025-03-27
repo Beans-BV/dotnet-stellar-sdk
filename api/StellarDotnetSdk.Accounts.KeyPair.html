@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class KeyPair </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class KeyPair ">
+      
+      <meta name="description" content="represents public (and secret) keys of the account. Currently  only supports ed25519 but in a future this class can be abstraction layer for other public-key signature systems.">
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Accounts.KeyPair">
+
+
+
+  <h1 id="StellarDotnetSdk_Accounts_KeyPair" data-uid="StellarDotnetSdk.Accounts.KeyPair" class="text-break">
+Class KeyPair  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<a class="xref" href="StellarDotnetSdk.Accounts.html">Accounts</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> represents public (and secret) keys of the account.
+Currently <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a> only supports ed25519 but in a future this class can be abstraction layer for
+other public-key signature systems.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class KeyPair : IAccountId, IEquatable&lt;KeyPair&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">KeyPair</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair__ctor_" data-uid="StellarDotnetSdk.Accounts.KeyPair.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair__ctor_System_Byte___" data-uid="StellarDotnetSdk.Accounts.KeyPair.#ctor(System.Byte[])">
+  KeyPair(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new Keypair object from public key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public KeyPair(byte[] publicKey)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair__ctor_" data-uid="StellarDotnetSdk.Accounts.KeyPair.#ctor*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair__ctor_System_Byte___System_Byte___System_Byte___" data-uid="StellarDotnetSdk.Accounts.KeyPair.#ctor(System.Byte[],System.Byte[],System.Byte[])">
+  KeyPair(byte[], byte[]?, byte[]?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new Keypair instance from secret. This can either be secret key or secret seed depending on underlying
+public-key signature system. Currently Keypair only supports ed25519.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public KeyPair(byte[] publicKey, byte[]? privateKey, byte[]? seed)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+    <dt><code>privateKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+    <dt><code>seed</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_AccountId_" data-uid="StellarDotnetSdk.Accounts.KeyPair.AccountId*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_AccountId" data-uid="StellarDotnetSdk.Accounts.KeyPair.AccountId">
+  AccountId
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>AccountId</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string AccountId { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_Address_" data-uid="StellarDotnetSdk.Accounts.KeyPair.Address*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_Address" data-uid="StellarDotnetSdk.Accounts.KeyPair.Address">
+  Address
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Address</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Address { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_IsMuxedAccount_" data-uid="StellarDotnetSdk.Accounts.KeyPair.IsMuxedAccount*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_IsMuxedAccount" data-uid="StellarDotnetSdk.Accounts.KeyPair.IsMuxedAccount">
+  IsMuxedAccount
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsMuxedAccount { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_MuxedAccount_" data-uid="StellarDotnetSdk.Accounts.KeyPair.MuxedAccount*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_MuxedAccount" data-uid="StellarDotnetSdk.Accounts.KeyPair.MuxedAccount">
+  MuxedAccount
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>XDR MuxedAccount</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MuxedAccount MuxedAccount { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">MuxedAccount</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_PrivateKey_" data-uid="StellarDotnetSdk.Accounts.KeyPair.PrivateKey*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_PrivateKey" data-uid="StellarDotnetSdk.Accounts.KeyPair.PrivateKey">
+  PrivateKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The private key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[]? PrivateKey { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_PublicKey_" data-uid="StellarDotnetSdk.Accounts.KeyPair.PublicKey*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_PublicKey" data-uid="StellarDotnetSdk.Accounts.KeyPair.PublicKey">
+  PublicKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The public key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[] PublicKey { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_SecretSeed_" data-uid="StellarDotnetSdk.Accounts.KeyPair.SecretSeed*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_SecretSeed" data-uid="StellarDotnetSdk.Accounts.KeyPair.SecretSeed">
+  SecretSeed
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>SecretSeed</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string? SecretSeed { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_SeedBytes_" data-uid="StellarDotnetSdk.Accounts.KeyPair.SeedBytes*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_SeedBytes" data-uid="StellarDotnetSdk.Accounts.KeyPair.SeedBytes">
+  SeedBytes
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The bytes of the Secret Seed</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[]? SeedBytes { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_SignatureHint_" data-uid="StellarDotnetSdk.Accounts.KeyPair.SignatureHint*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_SignatureHint" data-uid="StellarDotnetSdk.Accounts.KeyPair.SignatureHint">
+  SignatureHint
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>XDR Signature Hint</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SignatureHint SignatureHint { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">SignatureHint</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_SigningKey_" data-uid="StellarDotnetSdk.Accounts.KeyPair.SigningKey*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_SigningKey" data-uid="StellarDotnetSdk.Accounts.KeyPair.SigningKey">
+  SigningKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>The signing key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public KeyPair SigningKey { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_XdrPublicKey_" data-uid="StellarDotnetSdk.Accounts.KeyPair.XdrPublicKey*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_XdrPublicKey" data-uid="StellarDotnetSdk.Accounts.KeyPair.XdrPublicKey">
+  XdrPublicKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>XDR Public Key</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PublicKey XdrPublicKey { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">PublicKey</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_XdrSignerKey_" data-uid="StellarDotnetSdk.Accounts.KeyPair.XdrSignerKey*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_XdrSignerKey" data-uid="StellarDotnetSdk.Accounts.KeyPair.XdrSignerKey">
+  XdrSignerKey
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>XDR Signer Key</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SignerKey XdrSignerKey { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><span class="xref">SignerKey</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_CanSign_" data-uid="StellarDotnetSdk.Accounts.KeyPair.CanSign*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_CanSign" data-uid="StellarDotnetSdk.Accounts.KeyPair.CanSign">
+  CanSign()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns true if this Keypair is capable of signing</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool CanSign()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_Equals_" data-uid="StellarDotnetSdk.Accounts.KeyPair.Equals*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_Equals_StellarDotnetSdk_Accounts_KeyPair_" data-uid="StellarDotnetSdk.Accounts.KeyPair.Equals(StellarDotnetSdk.Accounts.KeyPair)">
+  Equals(KeyPair?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(KeyPair? other)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>other</code> <a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_FromAccountId_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromAccountId*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_FromAccountId_System_String_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromAccountId(System.String)">
+  FromAccountId(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new Stellar KeyPair from a StrKey encoded Stellar account ID.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static KeyPair FromAccountId(string accountId)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>accountId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>accountId The StrKey encoded Stellar account ID.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_FromBIP39Seed_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromBIP39Seed*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_FromBIP39Seed_System_Byte___System_UInt32_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromBIP39Seed(System.Byte[],System.UInt32)">
+  FromBIP39Seed(byte[], uint)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static KeyPair FromBIP39Seed(byte[] seedBytes, uint accountIndex)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>seedBytes</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+    <dt><code>accountIndex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_FromBIP39Seed_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromBIP39Seed*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_FromBIP39Seed_System_String_System_UInt32_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromBIP39Seed(System.String,System.UInt32)">
+  FromBIP39Seed(string, uint)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static KeyPair FromBIP39Seed(string seed, uint accountIndex)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>seed</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>accountIndex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_FromPublicKey_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromPublicKey*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_FromPublicKey_System_Byte___" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromPublicKey(System.Byte[])">
+  FromPublicKey(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new Stellar keypair from a 32 byte address.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static KeyPair FromPublicKey(byte[] publicKey)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>publicKey The 32 byte public key.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_FromSecretSeed_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromSecretSeed*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_FromSecretSeed_System_Byte___" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromSecretSeed(System.Byte[])">
+  FromSecretSeed(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new Stellar keypair from a raw 32 byte secret seed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static KeyPair FromSecretSeed(byte[] seed)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>seed</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>seed The 32 byte secret seed.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_FromSecretSeed_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromSecretSeed*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_FromSecretSeed_System_String_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromSecretSeed(System.String)">
+  FromSecretSeed(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new Stellar KeyPair from a StrKey encoded Stellar secret seed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static KeyPair FromSecretSeed(string seed)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>seed</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>eed Char array containing StrKey encoded Stellar secret seed.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_FromXdrPublicKey_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromXdrPublicKey*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_FromXdrPublicKey_StellarDotnetSdk_Xdr_PublicKey_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromXdrPublicKey(StellarDotnetSdk.Xdr.PublicKey)">
+  FromXdrPublicKey(PublicKey)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a KeyPair from a Public Key</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static KeyPair FromXdrPublicKey(PublicKey publicKey)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>publicKey</code> <span class="xref">PublicKey</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_FromXdrSignerKey_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromXdrSignerKey*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_FromXdrSignerKey_StellarDotnetSdk_Xdr_SignerKey_" data-uid="StellarDotnetSdk.Accounts.KeyPair.FromXdrSignerKey(StellarDotnetSdk.Xdr.SignerKey)">
+  FromXdrSignerKey(SignerKey)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a KeyPair from an XDR SignerKey</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static KeyPair FromXdrSignerKey(SignerKey signerKey)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>signerKey</code> <span class="xref">SignerKey</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_Random_" data-uid="StellarDotnetSdk.Accounts.KeyPair.Random*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_Random" data-uid="StellarDotnetSdk.Accounts.KeyPair.Random">
+  Random()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Generates a random Stellar keypair.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static KeyPair Random()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Accounts.KeyPair.html">KeyPair</a></dt>
+    <dd><p>a random Stellar keypair</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_Sign_" data-uid="StellarDotnetSdk.Accounts.KeyPair.Sign*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_Sign_System_Byte___" data-uid="StellarDotnetSdk.Accounts.KeyPair.Sign(System.Byte[])">
+  Sign(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sign the provided data with the key pair's private key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte[] Sign(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The data to sign.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>signed bytes, null if the private key for this keypair is null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_SignDecorated_" data-uid="StellarDotnetSdk.Accounts.KeyPair.SignDecorated*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_SignDecorated_System_Byte___" data-uid="StellarDotnetSdk.Accounts.KeyPair.SignDecorated(System.Byte[])">
+  SignDecorated(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sign a message and return an XDR Decorated Signature</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DecoratedSignature SignDecorated(byte[] message)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">DecoratedSignature</span></dt>
+    <dd><p><span class="xref">StellarDotnetSdk.Xdr.DecoratedSignature</span></p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_SignPayloadDecorated_" data-uid="StellarDotnetSdk.Accounts.KeyPair.SignPayloadDecorated*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_SignPayloadDecorated_System_Byte___" data-uid="StellarDotnetSdk.Accounts.KeyPair.SignPayloadDecorated(System.Byte[])">
+  SignPayloadDecorated(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sign the provided payload data for payload signer where the input is the data being signed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DecoratedSignature SignPayloadDecorated(byte[] signerPayload)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>signerPayload</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">DecoratedSignature</span></dt>
+    <dd><p><span class="xref">StellarDotnetSdk.Xdr.DecoratedSignature</span></p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_Verify_" data-uid="StellarDotnetSdk.Accounts.KeyPair.Verify*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_Verify_System_Byte___StellarDotnetSdk_Xdr_Signature_" data-uid="StellarDotnetSdk.Accounts.KeyPair.Verify(System.Byte[],StellarDotnetSdk.Xdr.Signature)">
+  Verify(byte[], Signature)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Verify the provided data and signature match this key pair's public key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Verify(byte[] data, Signature signature)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The data that was signed.</p>
+</dd>
+    <dt><code>signature</code> <span class="xref">Signature</span></dt>
+    <dd><p>The signature.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>True if they match, false otherwise.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Accounts_KeyPair_Verify_" data-uid="StellarDotnetSdk.Accounts.KeyPair.Verify*"></a>
+
+  <h3 id="StellarDotnetSdk_Accounts_KeyPair_Verify_System_Byte___System_Byte___" data-uid="StellarDotnetSdk.Accounts.KeyPair.Verify(System.Byte[],System.Byte[])">
+  Verify(byte[], byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Verify the provided data and signature match this key pair's public key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Verify(byte[] data, byte[] signature)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The data that was signed.</p>
+</dd>
+    <dt><code>signature</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>The signature.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>True if they match, false otherwise.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

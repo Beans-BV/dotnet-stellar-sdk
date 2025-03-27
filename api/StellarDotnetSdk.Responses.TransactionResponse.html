@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class TransactionResponse </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class TransactionResponse ">
+      
+      
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Responses.TransactionResponse">
+
+
+
+  <h1 id="StellarDotnetSdk_Responses_TransactionResponse" data-uid="StellarDotnetSdk.Responses.TransactionResponse" class="text-break">
+Class TransactionResponse  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<a class="xref" href="StellarDotnetSdk.Responses.html">Responses</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class TransactionResponse : Response, IPagingToken</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.Response.html">Response</a></div>
+      <div><span class="xref">TransactionResponse</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="StellarDotnetSdk.Responses.IPagingToken.html">IPagingToken</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitLimit">Response.RateLimitLimit</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitRemaining">Response.RateLimitRemaining</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_RateLimitReset">Response.RateLimitReset</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Responses.Response.html#StellarDotnetSdk_Responses_Response_SetHeaders_System_Net_Http_Headers_HttpResponseHeaders_">Response.SetHeaders(HttpResponseHeaders)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_AccountMuxed_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.AccountMuxed*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_AccountMuxed" data-uid="StellarDotnetSdk.Responses.TransactionResponse.AccountMuxed">
+  AccountMuxed
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;account_muxed&quot;)]
+public string? AccountMuxed { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_AccountMuxedId_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.AccountMuxedId*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_AccountMuxedId" data-uid="StellarDotnetSdk.Responses.TransactionResponse.AccountMuxedId">
+  AccountMuxedId
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;account_muxed_id&quot;)]
+public ulong? AccountMuxedId { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_CreatedAt_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.CreatedAt*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_CreatedAt" data-uid="StellarDotnetSdk.Responses.TransactionResponse.CreatedAt">
+  CreatedAt
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;created_at&quot;)]
+public DateTime CreatedAt { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetime">DateTime</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_EnvelopeXdr_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.EnvelopeXdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_EnvelopeXdr" data-uid="StellarDotnetSdk.Responses.TransactionResponse.EnvelopeXdr">
+  EnvelopeXdr
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;envelope_xdr&quot;)]
+public string EnvelopeXdr { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_FeeAccount_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.FeeAccount*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_FeeAccount" data-uid="StellarDotnetSdk.Responses.TransactionResponse.FeeAccount">
+  FeeAccount
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;fee_account&quot;)]
+public string FeeAccount { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_FeeAccountMuxed_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.FeeAccountMuxed*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_FeeAccountMuxed" data-uid="StellarDotnetSdk.Responses.TransactionResponse.FeeAccountMuxed">
+  FeeAccountMuxed
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;fee_account_muxed&quot;)]
+public string FeeAccountMuxed { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_FeeAccountMuxedId_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.FeeAccountMuxedId*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_FeeAccountMuxedId" data-uid="StellarDotnetSdk.Responses.TransactionResponse.FeeAccountMuxedId">
+  FeeAccountMuxedId
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;fee_account_muxed_id&quot;)]
+public ulong? FeeAccountMuxedId { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a>?</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_FeeBumpTx_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.FeeBumpTx*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_FeeBumpTx" data-uid="StellarDotnetSdk.Responses.TransactionResponse.FeeBumpTx">
+  FeeBumpTx
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;fee_bump_transaction&quot;)]
+public TransactionResponse.FeeBumpTransaction FeeBumpTx { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.html">TransactionResponse</a>.<a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.FeeBumpTransaction.html">FeeBumpTransaction</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_FeeCharged_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.FeeCharged*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_FeeCharged" data-uid="StellarDotnetSdk.Responses.TransactionResponse.FeeCharged">
+  FeeCharged
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;fee_charged&quot;)]
+public long FeeCharged { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_Hash_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Hash*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_Hash" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Hash">
+  Hash
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;hash&quot;)]
+public string Hash { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_InnerTx_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.InnerTx*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_InnerTx" data-uid="StellarDotnetSdk.Responses.TransactionResponse.InnerTx">
+  InnerTx
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;inner_transaction&quot;)]
+public TransactionResponse.InnerTransaction InnerTx { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.html">TransactionResponse</a>.<a class="xref" href="StellarDotnetSdk.Responses.TransactionResponse.InnerTransaction.html">InnerTransaction</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_Ledger_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Ledger*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_Ledger" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Ledger">
+  Ledger
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;ledger&quot;)]
+public uint Ledger { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_Links_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Links*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_Links" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Links">
+  Links
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;_links&quot;)]
+public TransactionResponseLinks Links { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.TransactionResponseLinks.html">TransactionResponseLinks</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_MaxFee_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.MaxFee*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_MaxFee" data-uid="StellarDotnetSdk.Responses.TransactionResponse.MaxFee">
+  MaxFee
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;max_fee&quot;)]
+public long MaxFee { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_Memo_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Memo*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_Memo" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Memo">
+  Memo
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Memo Memo { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Memos.Memo.html">Memo</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_MemoBytes_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.MemoBytes*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_MemoBytes" data-uid="StellarDotnetSdk.Responses.TransactionResponse.MemoBytes">
+  MemoBytes
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;memo_bytes&quot;)]
+public string? MemoBytes { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_MemoType_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.MemoType*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_MemoType" data-uid="StellarDotnetSdk.Responses.TransactionResponse.MemoType">
+  MemoType
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;memo_type&quot;)]
+public string MemoType { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_MemoValue_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.MemoValue*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_MemoValue" data-uid="StellarDotnetSdk.Responses.TransactionResponse.MemoValue">
+  MemoValue
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;memo&quot;)]
+public string? MemoValue { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_OperationCount_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.OperationCount*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_OperationCount" data-uid="StellarDotnetSdk.Responses.TransactionResponse.OperationCount">
+  OperationCount
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;operation_count&quot;)]
+public int OperationCount { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_PagingToken_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.PagingToken*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_PagingToken" data-uid="StellarDotnetSdk.Responses.TransactionResponse.PagingToken">
+  PagingToken
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;paging_token&quot;)]
+public string PagingToken { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_Result_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Result*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_Result" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Result">
+  Result
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransactionResult Result { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Responses.Results.TransactionResult.html">TransactionResult</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_ResultMetaXdr_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.ResultMetaXdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_ResultMetaXdr" data-uid="StellarDotnetSdk.Responses.TransactionResponse.ResultMetaXdr">
+  ResultMetaXdr
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;result_meta_xdr&quot;)]
+public string ResultMetaXdr { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_ResultXdr_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.ResultXdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_ResultXdr" data-uid="StellarDotnetSdk.Responses.TransactionResponse.ResultXdr">
+  ResultXdr
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;result_xdr&quot;)]
+public string ResultXdr { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_Signatures_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Signatures*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_Signatures" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Signatures">
+  Signatures
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;signatures&quot;)]
+public List&lt;string&gt; Signatures { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_SourceAccount_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.SourceAccount*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_SourceAccount" data-uid="StellarDotnetSdk.Responses.TransactionResponse.SourceAccount">
+  SourceAccount
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_account&quot;)]
+public string SourceAccount { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_SourceAccountSequence_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.SourceAccountSequence*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_SourceAccountSequence" data-uid="StellarDotnetSdk.Responses.TransactionResponse.SourceAccountSequence">
+  SourceAccountSequence
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;source_account_sequence&quot;)]
+public long SourceAccountSequence { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Responses_TransactionResponse_Successful_" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Successful*"></a>
+
+  <h3 id="StellarDotnetSdk_Responses_TransactionResponse_Successful" data-uid="StellarDotnetSdk.Responses.TransactionResponse.Successful">
+  Successful
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(PropertyName = &quot;successful&quot;, DefaultValueHandling = DefaultValueHandling.Populate)]
+public bool Successful { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

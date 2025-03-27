@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Building, Submitting, and Managing Transactions </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Building, Submitting, and Managing Transactions ">
+      
+      
+      <link rel="icon" href="../../../favicon">
+      <link rel="stylesheet" href="../../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../../public/main.css">
+      <meta name="docfx:navrel" content="../../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../../index.html">
+            <img id="logo" class="svg" src="../../../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="building-submitting-and-managing-transactions">Building, Submitting, and Managing Transactions</h1>
+
+<p>This guide demonstrates how to build, submit, and manage transactions using the Stellar .NET SDK.</p>
+<h2 id="understanding-stellar-transactions">Understanding Stellar Transactions</h2>
+<p>In Stellar, a transaction is a unit of work that modifies the ledger. Transactions contain one or more operations (like payments, account creation, etc.) and are atomic - either all operations succeed, or none do. Each transaction includes:</p>
+<ul>
+<li><strong>Source Account</strong>: The account initiating the transaction</li>
+<li><strong>Sequence Number</strong>: Ensuring transactions are processed in order</li>
+<li><strong>Operations</strong>: The actual work to be performed</li>
+<li><strong>Fee</strong>: The cost of processing the transaction</li>
+<li><strong>Signatures</strong>: Cryptographic proofs authorizing the transaction</li>
+</ul>
+<h2 id="building-a-simple-transaction">Building a Simple Transaction</h2>
+<p>The <code>TransactionBuilder</code> class simplifies the process of creating transactions:</p>
+<pre><code class="lang-csharp">// Create server connection
+var server = new Server(TestNetUrl);
+
+// Load source account data with the latest sequence number
+var sourceAccountResponse = await server.Accounts.Account(sourceKeypair.AccountId);
+
+// Create an operation (in this case, a payment)
+var operation = new PaymentOperation(destinationKeyPair, asset, amount, sourceKeypair);
+
+// Create transaction and add the operation
+var transaction = new TransactionBuilder(sourceAccountResponse)
+    .AddOperation(operation)
+    .Build();
+</code></pre>
+<p>This code creates a transaction with a single payment operation. The <code>TransactionBuilder</code> automatically sets the appropriate sequence number based on the account information.</p>
+<h2 id="adding-multiple-operations">Adding Multiple Operations</h2>
+<p>Transactions can contain up to 100 operations. Here's how to create a transaction with multiple operations:</p>
+<pre><code class="lang-csharp">// Create server connection
+var server = new Server(TestNetUrl);
+
+// Load account data
+var accountResponse = await server.Accounts.Account(parentAccountKeyPair.AccountId);
+
+// Create multiple operations
+var beginSponsoringOperation = new BeginSponsoringFutureReservesOperation(childKeyPair.AccountId);
+var createAccountOperation = new CreateAccountOperation(childKeyPair, &quot;0&quot;);
+var endSponsoringOperation = new EndSponsoringFutureReservesOperation(childKeyPair);
+
+// Create transaction and add all operations
+var transaction = new TransactionBuilder(accountResponse)
+    .AddOperation(beginSponsoringOperation)
+    .AddOperation(createAccountOperation)
+    .AddOperation(endSponsoringOperation)
+    .Build();
+</code></pre>
+<p>This example shows a transaction with three operations that work together to create a sponsored account.</p>
+<blockquote>
+<p>📝 <strong>Note</strong>: Operations in a transaction execute in sequence, so order matters when the outcome of one operation affects another.</p>
+</blockquote>
+<h2 id="setting-transaction-options">Setting Transaction Options</h2>
+<p>You can customize various transaction parameters:</p>
+<pre><code class="lang-csharp">// Create a transaction with custom options
+var transaction = new TransactionBuilder(accountResponse)
+    .AddOperation(operation)
+    .AddTimeBounds(new TimeBounds(minTime, maxTime))   // Set time bounds
+    .AddMemo(Memo.Text(&quot;Payment for services&quot;))        // Add a memo
+    .SetFee(200000)                                    // Set a custom fee
+    .Build();
+</code></pre>
+<p>Common options include:</p>
+<ul>
+<li><strong>Time Bounds</strong>: Specify when the transaction is valid</li>
+<li><strong>Memo</strong>: Add a note to the transaction</li>
+<li><strong>Fee</strong>: Set a custom transaction fee</li>
+</ul>
+<h2 id="signing-transactions">Signing Transactions</h2>
+<p>Before submission, transactions must be signed by the appropriate private keys:</p>
+<pre><code class="lang-csharp">// Sign the transaction with the source account's key pair
+transaction.Sign(sourceKeypair);
+</code></pre>
+<p>For transactions requiring multiple signatures:</p>
+<pre><code class="lang-csharp">// Sign with multiple keys
+transaction.Sign(parentAccountKeyPair);
+transaction.Sign(childKeyPair);
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>Security Warning</strong>: Never share or expose your secret seed. Sign transactions in a secure environment.</p>
+</blockquote>
+<h2 id="submitting-transactions">Submitting Transactions</h2>
+<p>Once built and signed, you can submit transactions to the network:</p>
+<pre><code class="lang-csharp">public static async Task&lt;SubmitTransactionResponse?&gt; SubmitTransaction(Transaction transaction)
+{
+    // Create server
+    var server = new Server(TestNetUrl);
+    // Submit the transaction
+    try
+    {
+        Console.WriteLine($&quot;Submitting transaction {transaction.ToEnvelopeXdrBase64()}&quot;);
+        var response = await server.SubmitTransaction(transaction);
+        if (response is not { IsSuccess: true })
+        {
+            Console.WriteLine(&quot;Fail!&quot;);
+            Console.WriteLine($&quot;Result XDR: {response?.ResultXdr}&quot;);
+            return null;
+        }
+        Console.WriteLine(&quot;Success!&quot;);
+        Console.WriteLine($&quot;Transaction hash: {response.Hash}&quot;);
+        return response;
+    }
+    catch (Exception exception)
+    {
+        Console.WriteLine(&quot;Failed to submit transaction&quot;);
+        Console.WriteLine(&quot;Exception: &quot; + exception.Message);
+    }
+    return null;
+}
+</code></pre>
+<p>This method submits the transaction and handles potential errors or failures.</p>
+<h2 id="error-handling-and-transaction-results">Error Handling and Transaction Results</h2>
+<p>Proper error handling is crucial when working with transactions:</p>
+<pre><code class="lang-csharp">try {
+    var response = await server.SubmitTransaction(transaction);
+    
+    if (response.IsSuccess)
+    {
+        // Transaction succeeded
+        Console.WriteLine($&quot;Transaction successful! Hash: {response.Hash}&quot;);
+    }
+    else
+    {
+        // Transaction failed - get detailed error information
+        var resultXdr = response.ResultXdr;
+        Console.WriteLine($&quot;Transaction failed: {resultXdr}&quot;);
+        
+        // Parse the XDR to get structured error information
+        var transactionResult = TransactionResult.FromXdrBase64(resultXdr);
+        
+        // Handle specific error cases
+        if (!transactionResult.IsSuccess)
+        {
+            // Look at the result code to understand what went wrong
+            Console.WriteLine($&quot;Transaction result code: {transactionResult.GetType().Name}&quot;);
+        }
+    }
+}
+catch (Exception ex)
+{
+    // Handle exceptions (network issues, etc.)
+    Console.WriteLine($&quot;Error: {ex.Message}&quot;);
+}
+</code></pre>
+<p>Common error scenarios include:</p>
+<ul>
+<li>Insufficient funds</li>
+<li>Invalid sequence number</li>
+<li>Missing or invalid signatures</li>
+<li>Failed operations (e.g., sending to a non-existent account)</li>
+</ul>
+<h2 id="retrieving-transaction-information">Retrieving Transaction Information</h2>
+<p>After submission, you can retrieve transaction details:</p>
+<pre><code class="lang-csharp">private static async Task GetTransaction(string txHash)
+{
+    var server = new Server(TestNetUrl);
+    // Get Transaction details from Horizon testnet
+    var transactionResponse = await server.Transactions.Transaction(txHash);
+
+    Console.WriteLine($&quot;Operation count: {transactionResponse.OperationCount}&quot;);
+    Console.WriteLine($&quot;Transaction envelope xdr: {transactionResponse.EnvelopeXdr}&quot;);
+}
+</code></pre>
+<h2 id="retrieving-transaction-operations">Retrieving Transaction Operations</h2>
+<p>You can also get detailed information about the operations in a transaction:</p>
+<pre><code class="lang-csharp">private static async Task&lt;List&lt;OperationResponse&gt;&gt; GetTransactionOperations(string txHash)
+{
+    var server = new Server(TestNetUrl);
+    // Get transaction operation details from Horizon testnet
+    var operations = await server.Operations.ForTransaction(txHash).Execute();
+    Console.WriteLine($&quot;Operation count: {operations.Records.Count}&quot;);
+    Console.WriteLine($&quot;Link to operations: {operations.Links}&quot;);
+    // Get other information if needed
+    return operations.Records;
+}
+</code></pre>
+<p>This retrieves all operations contained in a specific transaction, allowing you to analyze what actions were performed.</p>
+<h2 id="working-with-soroban-transactions">Working with Soroban Transactions</h2>
+<p>For Soroban smart contract interactions, additional steps are needed:</p>
+<pre><code class="lang-csharp">private static async Task&lt;SimulateTransactionResponse&gt; SimulateAndUpdateTransaction(
+    Transaction tx,
+    IAccountId signer)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+    var simulateResponse = await server.SimulateTransaction(tx);
+
+    if (simulateResponse.SorobanTransactionData != null)
+    {
+        tx.SetSorobanTransactionData(simulateResponse.SorobanTransactionData);
+    }
+    if (simulateResponse.SorobanAuthorization != null)
+    {
+        tx.SetSorobanAuthorization(simulateResponse.SorobanAuthorization);
+    }
+
+    tx.AddResourceFee((simulateResponse.MinResourceFee ?? 0) + 100000);
+    tx.Sign(signer);
+
+    return simulateResponse;
+}
+</code></pre>
+<p>This method simulates a Soroban transaction before submission, then updates it with the required resource information.</p>
+<h2 id="polling-for-transaction-completion">Polling for Transaction Completion</h2>
+<p>For Soroban transactions especially, you may need to poll for completion:</p>
+<pre><code class="lang-csharp">// Keep querying for the transaction using `GetTransaction` endpoint until success or error
+private static async Task&lt;GetTransactionResponse&gt; PollTransaction(string transactionHash)
+{
+    SorobanServer server = new(TestNetSorobanUrl);
+    var status = TransactionInfo.TransactionStatus.NOT_FOUND;
+    GetTransactionResponse? transactionResponse = null;
+    while (status == TransactionInfo.TransactionStatus.NOT_FOUND)
+    {
+        await Task.Delay(3000);
+        Console.WriteLine($&quot;Fetching details for transaction {transactionHash}&quot;);
+        transactionResponse = await server.GetTransaction(transactionHash);
+
+        status = transactionResponse.Status;
+        if (status == TransactionInfo.TransactionStatus.FAILED)
+        {
+            Console.WriteLine($&quot;Transaction {transactionHash} failed&quot;);
+            break;
+        }
+        if (status == TransactionInfo.TransactionStatus.SUCCESS)
+        {
+            ArgumentNullException.ThrowIfNull(transactionResponse.ResultXdr);
+            Console.WriteLine($&quot;Transaction {transactionHash} was successful&quot;);
+            return transactionResponse;
+        }
+        Console.WriteLine(&quot;Transaction not updated on-chain. Waiting for a moment before retrying..&quot;);
+    }
+
+    ArgumentNullException.ThrowIfNull(transactionResponse);
+    return transactionResponse;
+}
+</code></pre>
+<p>This function continuously checks the status of a transaction until it succeeds or fails, with a delay between checks.</p>
+<h2 id="best-practices-for-transaction-management">Best Practices for Transaction Management</h2>
+<p>Here are some recommended practices when working with Stellar transactions:</p>
+<ol>
+<li><p><strong>Always check sequence numbers</strong>: Ensure you're using the latest account information before building transactions.</p>
+</li>
+<li><p><strong>Set appropriate fees</strong>: During network congestion, higher fees can help ensure your transaction is processed.</p>
+</li>
+<li><p><strong>Use time bounds</strong>: For security-sensitive operations, set time bounds to limit how long the transaction is valid.</p>
+</li>
+<li><p><strong>Handle errors gracefully</strong>: Parse transaction results to provide meaningful feedback to users.</p>
+</li>
+<li><p><strong>Consider transaction sponsorship</strong>: For accounts with low XLM balances, consider using sponsored operations.</p>
+</li>
+<li><p><strong>Use appropriate memos</strong>: When sending to exchanges or services, always include any required memo.</p>
+</li>
+</ol>
+<h2 id="additional-resources">Additional Resources</h2>
+<ul>
+<li><a href="https://developers.stellar.org/docs/learn/fundamentals/transactions">Stellar Transactions Overview</a></li>
+<li><a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations">List of Operations</a></li>
+<li><a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/errors/result-codes/transactions">Transaction Result Codes</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

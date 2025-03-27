@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class Transaction </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class Transaction ">
+      
+      
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Transactions.Transaction">
+
+
+
+  <h1 id="StellarDotnetSdk_Transactions_Transaction" data-uid="StellarDotnetSdk.Transactions.Transaction" class="text-break">
+Class Transaction  
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="StellarDotnetSdk.html">StellarDotnetSdk</a>.<a class="xref" href="StellarDotnetSdk.Transactions.html">Transactions</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>StellarDotnetSdk.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Transaction : TransactionBase</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html">TransactionBase</a></div>
+      <div><span class="xref">Transaction</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html#StellarDotnetSdk_Transactions_TransactionBase_Signatures">TransactionBase.Signatures</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html#StellarDotnetSdk_Transactions_TransactionBase_SignatureBase">TransactionBase.SignatureBase()</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html#StellarDotnetSdk_Transactions_TransactionBase_Sign_StellarDotnetSdk_Accounts_IAccountId_">TransactionBase.Sign(IAccountId)</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html#StellarDotnetSdk_Transactions_TransactionBase_Sign_StellarDotnetSdk_Accounts_IAccountId_StellarDotnetSdk_Network_">TransactionBase.Sign(IAccountId, Network)</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html#StellarDotnetSdk_Transactions_TransactionBase_Sign_System_Byte___">TransactionBase.Sign(byte[])</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html#StellarDotnetSdk_Transactions_TransactionBase_Sign_System_String_System_String_">TransactionBase.Sign(string, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html#StellarDotnetSdk_Transactions_TransactionBase_Hash">TransactionBase.Hash()</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html#StellarDotnetSdk_Transactions_TransactionBase_Hash_StellarDotnetSdk_Network_">TransactionBase.Hash(Network)</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html#StellarDotnetSdk_Transactions_TransactionBase_ToUnsignedEnvelopeXdrBase64_StellarDotnetSdk_Transactions_TransactionBase_TransactionXdrVersion_">TransactionBase.ToUnsignedEnvelopeXdrBase64(TransactionBase.TransactionXdrVersion)</a>
+    </div>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html#StellarDotnetSdk_Transactions_TransactionBase_ToEnvelopeXdrBase64_StellarDotnetSdk_Transactions_TransactionBase_TransactionXdrVersion_">TransactionBase.ToEnvelopeXdrBase64(TransactionBase.TransactionXdrVersion)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_Fee_" data-uid="StellarDotnetSdk.Transactions.Transaction.Fee*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_Fee" data-uid="StellarDotnetSdk.Transactions.Transaction.Fee">
+  Fee
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public uint Fee { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_Memo_" data-uid="StellarDotnetSdk.Transactions.Transaction.Memo*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_Memo" data-uid="StellarDotnetSdk.Transactions.Transaction.Memo">
+  Memo
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Memo Memo { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Memos.Memo.html">Memo</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_Operations_" data-uid="StellarDotnetSdk.Transactions.Transaction.Operations*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_Operations" data-uid="StellarDotnetSdk.Transactions.Transaction.Operations">
+  Operations
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Operation[] Operations { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Operations.Operation.html">Operation</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_Preconditions_" data-uid="StellarDotnetSdk.Transactions.Transaction.Preconditions*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_Preconditions" data-uid="StellarDotnetSdk.Transactions.Transaction.Preconditions">
+  Preconditions
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransactionPreconditions? Preconditions { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Transactions.TransactionPreconditions.html">TransactionPreconditions</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_SequenceNumber_" data-uid="StellarDotnetSdk.Transactions.Transaction.SequenceNumber*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_SequenceNumber" data-uid="StellarDotnetSdk.Transactions.Transaction.SequenceNumber">
+  SequenceNumber
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public long SequenceNumber { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_SorobanTransactionData_" data-uid="StellarDotnetSdk.Transactions.Transaction.SorobanTransactionData*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_SorobanTransactionData" data-uid="StellarDotnetSdk.Transactions.Transaction.SorobanTransactionData">
+  SorobanTransactionData
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SorobanTransactionData? SorobanTransactionData { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Soroban.SorobanTransactionData.html">SorobanTransactionData</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_SourceAccount_" data-uid="StellarDotnetSdk.Transactions.Transaction.SourceAccount*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_SourceAccount" data-uid="StellarDotnetSdk.Transactions.Transaction.SourceAccount">
+  SourceAccount
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IAccountId SourceAccount { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_TimeBounds_" data-uid="StellarDotnetSdk.Transactions.Transaction.TimeBounds*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_TimeBounds" data-uid="StellarDotnetSdk.Transactions.Transaction.TimeBounds">
+  TimeBounds
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeBounds? TimeBounds { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Transactions.TimeBounds.html">TimeBounds</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_AddResourceFee_" data-uid="StellarDotnetSdk.Transactions.Transaction.AddResourceFee*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_AddResourceFee_System_UInt32_" data-uid="StellarDotnetSdk.Transactions.Transaction.AddResourceFee(System.UInt32)">
+  AddResourceFee(uint)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddResourceFee(uint resourceFee)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>resourceFee</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_FromEnvelopeXdr_" data-uid="StellarDotnetSdk.Transactions.Transaction.FromEnvelopeXdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_FromEnvelopeXdr_StellarDotnetSdk_Xdr_TransactionEnvelope_" data-uid="StellarDotnetSdk.Transactions.Transaction.FromEnvelopeXdr(StellarDotnetSdk.Xdr.TransactionEnvelope)">
+  FromEnvelopeXdr(TransactionEnvelope)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Transaction FromEnvelopeXdr(TransactionEnvelope envelope)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>envelope</code> <span class="xref">TransactionEnvelope</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_FromEnvelopeXdr_" data-uid="StellarDotnetSdk.Transactions.Transaction.FromEnvelopeXdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_FromEnvelopeXdr_System_String_" data-uid="StellarDotnetSdk.Transactions.Transaction.FromEnvelopeXdr(System.String)">
+  FromEnvelopeXdr(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Transaction FromEnvelopeXdr(string envelope)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>envelope</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_FromEnvelopeXdrV0_" data-uid="StellarDotnetSdk.Transactions.Transaction.FromEnvelopeXdrV0*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_FromEnvelopeXdrV0_StellarDotnetSdk_Xdr_TransactionV0Envelope_" data-uid="StellarDotnetSdk.Transactions.Transaction.FromEnvelopeXdrV0(StellarDotnetSdk.Xdr.TransactionV0Envelope)">
+  FromEnvelopeXdrV0(TransactionV0Envelope)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Transaction FromEnvelopeXdrV0(TransactionV0Envelope envelope)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>envelope</code> <span class="xref">TransactionV0Envelope</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_FromEnvelopeXdrV1_" data-uid="StellarDotnetSdk.Transactions.Transaction.FromEnvelopeXdrV1*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_FromEnvelopeXdrV1_StellarDotnetSdk_Xdr_TransactionV1Envelope_" data-uid="StellarDotnetSdk.Transactions.Transaction.FromEnvelopeXdrV1(StellarDotnetSdk.Xdr.TransactionV1Envelope)">
+  FromEnvelopeXdrV1(TransactionV1Envelope)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Transaction FromEnvelopeXdrV1(TransactionV1Envelope envelope)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>envelope</code> <span class="xref">TransactionV1Envelope</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.Transactions.Transaction.html">Transaction</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_SetSorobanAuthorization_" data-uid="StellarDotnetSdk.Transactions.Transaction.SetSorobanAuthorization*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_SetSorobanAuthorization_StellarDotnetSdk_Operations_SorobanAuthorizationEntry___" data-uid="StellarDotnetSdk.Transactions.Transaction.SetSorobanAuthorization(StellarDotnetSdk.Operations.SorobanAuthorizationEntry[])">
+  SetSorobanAuthorization(SorobanAuthorizationEntry[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetSorobanAuthorization(SorobanAuthorizationEntry[] auth)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>auth</code> <a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_SetSorobanTransactionData_" data-uid="StellarDotnetSdk.Transactions.Transaction.SetSorobanTransactionData*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_SetSorobanTransactionData_StellarDotnetSdk_Soroban_SorobanTransactionData_" data-uid="StellarDotnetSdk.Transactions.Transaction.SetSorobanTransactionData(StellarDotnetSdk.Soroban.SorobanTransactionData)">
+  SetSorobanTransactionData(SorobanTransactionData)
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetSorobanTransactionData(SorobanTransactionData sorobanTransactionData)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>sorobanTransactionData</code> <a class="xref" href="StellarDotnetSdk.Soroban.SorobanTransactionData.html">SorobanTransactionData</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_SignatureBase_" data-uid="StellarDotnetSdk.Transactions.Transaction.SignatureBase*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_SignatureBase_StellarDotnetSdk_Network_" data-uid="StellarDotnetSdk.Transactions.Transaction.SignatureBase(StellarDotnetSdk.Network)">
+  SignatureBase(Network?)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns signature base for the given network.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override byte[] SignatureBase(Network? network)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>network</code> <a class="xref" href="StellarDotnetSdk.Network.html">Network</a></dt>
+    <dd><p>The network <a class="xref" href="StellarDotnetSdk.Network.html">Network</a> the transaction will be sent to.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_ToEnvelopeXdr_" data-uid="StellarDotnetSdk.Transactions.Transaction.ToEnvelopeXdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_ToEnvelopeXdr_StellarDotnetSdk_Transactions_TransactionBase_TransactionXdrVersion_" data-uid="StellarDotnetSdk.Transactions.Transaction.ToEnvelopeXdr(StellarDotnetSdk.Transactions.TransactionBase.TransactionXdrVersion)">
+  ToEnvelopeXdr(TransactionXdrVersion)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Generates TransactionEnvelope XDR object. Transaction need to have at least one signature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override TransactionEnvelope ToEnvelopeXdr(TransactionBase.TransactionXdrVersion version = TransactionXdrVersion.V1)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>version</code> <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html">TransactionBase</a>.<a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.TransactionXdrVersion.html">TransactionXdrVersion</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TransactionEnvelope</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_ToUnsignedEnvelopeXdr_" data-uid="StellarDotnetSdk.Transactions.Transaction.ToUnsignedEnvelopeXdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_ToUnsignedEnvelopeXdr_StellarDotnetSdk_Transactions_TransactionBase_TransactionXdrVersion_" data-uid="StellarDotnetSdk.Transactions.Transaction.ToUnsignedEnvelopeXdr(StellarDotnetSdk.Transactions.TransactionBase.TransactionXdrVersion)">
+  ToUnsignedEnvelopeXdr(TransactionXdrVersion)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Generates TransactionEnvelope XDR object. This transaction MUST be signed before being useful</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override TransactionEnvelope ToUnsignedEnvelopeXdr(TransactionBase.TransactionXdrVersion version = TransactionXdrVersion.V1)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>version</code> <a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.html">TransactionBase</a>.<a class="xref" href="StellarDotnetSdk.Transactions.TransactionBase.TransactionXdrVersion.html">TransactionXdrVersion</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TransactionEnvelope</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_ToXdr_" data-uid="StellarDotnetSdk.Transactions.Transaction.ToXdr*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_ToXdr" data-uid="StellarDotnetSdk.Transactions.Transaction.ToXdr">
+  ToXdr()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Generates Transaction XDR object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransactionV0 ToXdr()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TransactionV0</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_ToXdrV0_" data-uid="StellarDotnetSdk.Transactions.Transaction.ToXdrV0*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_ToXdrV0" data-uid="StellarDotnetSdk.Transactions.Transaction.ToXdrV0">
+  ToXdrV0()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Generates Transaction XDR object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransactionV0 ToXdrV0()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TransactionV0</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_Transactions_Transaction_ToXdrV1_" data-uid="StellarDotnetSdk.Transactions.Transaction.ToXdrV1*"></a>
+
+  <h3 id="StellarDotnetSdk_Transactions_Transaction_ToXdrV1" data-uid="StellarDotnetSdk.Transactions.Transaction.ToXdrV1">
+  ToXdrV1()
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Generates Transaction XDR object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Transaction ToXdrV1()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Transaction</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

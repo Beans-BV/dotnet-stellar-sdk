@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace StellarDotnetSdk.Operations </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace StellarDotnetSdk.Operations ">
+      
+      
+      <link rel="icon" href="../favicon">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="StellarDotnetSdk.Operations">
+
+  <h1 id="StellarDotnetSdk_Operations" data-uid="StellarDotnetSdk.Operations" class="text-break">Namespace StellarDotnetSdk.Operations</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.AccountMergeOperation.html">AccountMergeOperation</a></dt>
+      <dd><p>Transfers the XLM balance of an account to another account and removes the source account from the ledger.</p>
+<p>
+    See:
+    <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#account-merge">
+        Account
+        merge
+    </a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.BeginSponsoringFutureReservesOperation.html">BeginSponsoringFutureReservesOperation</a></dt>
+      <dd><p>
+        Allows an account to pay the base reserves for another account; sponsoring account establishes the
+        is-sponsoring-future-reserves relationship.
+    </p>
+<p>There must also be an <a class="xref" href="StellarDotnetSdk.Operations.EndSponsoringFutureReservesOperation.html">EndSponsoringFutureReservesOperation</a> in the same transaction.</p>
+<p>
+        See:
+        <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#begin-sponsoring-future-reserves">
+            Begin sponsoring future reserves
+        </a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.BumpSequenceOperation.html">BumpSequenceOperation</a></dt>
+      <dd><p>Bumps forward the sequence number of the source account to the given sequence number, invalidating any transaction
+with a smaller sequence number.</p>
+<p>
+    See:
+    <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#bump-sequence">
+        Bump
+        sequence
+    </a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.ChangeTrustOperation.html">ChangeTrustOperation</a></dt>
+      <dd><p>Creates, updates, or deletes a trustline.</p>
+<p>
+    See:
+    <a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#change-trust">
+        Change
+        trust
+    </a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.ClaimClaimableBalanceOperation.html">ClaimClaimableBalanceOperation</a></dt>
+      <dd><p>Claims a ClaimableBalanceEntry that corresponds to the BalanceID and adds the amount of an asset on the entry to
+the source account.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#claim-claimable-balance">
+Claim claimable balance
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.ClawbackClaimableBalanceOperation.html">ClawbackClaimableBalanceOperation</a></dt>
+      <dd><p>Claws back an unclaimed ClaimableBalanceEntry, burning the pending amount of the asset.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#clawback-claimable-balance">
+Clawback claimable balance
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.ClawbackOperation.html">ClawbackOperation</a></dt>
+      <dd><p>Burns an amount in a specific asset from a receiving account.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#clawback">Clawback</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.ContractIdAddressPreimage.html">ContractIdAddressPreimage</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.ContractIdAssetPreimage.html">ContractIdAssetPreimage</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.ContractIdPreimage.html">ContractIdPreimage</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.CreateAccountOperation.html">CreateAccountOperation</a></dt>
+      <dd><p>Creates and funds a new account with the specified starting balance.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-account">
+Create account
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.CreateClaimableBalanceOperation.html">CreateClaimableBalanceOperation</a></dt>
+      <dd><p>Moves an amount of asset from the operation source account into a new ClaimableBalanceEntry.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-claimable-balance">
+Create claimable balance
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.CreateContractHostFunction.html">CreateContractHostFunction</a></dt>
+      <dd><p>Represents a create contract host function.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.CreateContractOperation.html">CreateContractOperation</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.CreateContractV2HostFunction.html">CreateContractV2HostFunction</a></dt>
+      <dd><p>Represents a create contract V2 host function.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.CreatePassiveSellOfferOperation.html">CreatePassiveSellOfferOperation</a></dt>
+      <dd><p>Creates an offer to sell one asset for another without taking a reverse offer of equal price.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#create-passive-sell-offer">
+Create passive sell offer
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.EndSponsoringFutureReservesOperation.html">EndSponsoringFutureReservesOperation</a></dt>
+      <dd><p>Terminates the current is-sponsoring-future-reserves relationship in which the source account is sponsored.
+See:
+<a href="https://developers.stellar.org/docs/encyclopedia/sponsored-reserves#begin-and-end-sponsorships">
+Begin and end sponsorships
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.ExtendFootprintOperation.html">ExtendFootprintOperation</a></dt>
+      <dd><p>Extend the time to live (TTL) of entries for Soroban smart contracts.
+This operation extends the TTL of the entries specified in the readOnly footprint of
+the transaction so that they will live at least until the extendTo ledger sequence number is reached.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#extend-footprint-ttl">
+Extend footprint TTL
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.HostFunction.html">HostFunction</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.InvokeContractHostFunction.html">InvokeContractHostFunction</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.InvokeContractOperation.html">InvokeContractOperation</a></dt>
+      <dd><p>Operation that invokes a Soroban host function to invoke a contract.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.InvokeHostFunctionOperation.html">InvokeHostFunctionOperation</a></dt>
+      <dd><p>Base class for operations that invoke host functions.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#invoke-host-function">
+Invoke
+host function
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.LiquidityPoolDepositOperation.html">LiquidityPoolDepositOperation</a></dt>
+      <dd><p>Deposits assets into a liquidity pool, increasing the reserves of a liquidity pool in exchange for pool shares.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#liquidity-pool-deposit">
+Liquidity pool deposit
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.LiquidityPoolWithdrawOperation.html">LiquidityPoolWithdrawOperation</a></dt>
+      <dd><p>Withdraw assets from a liquidity pool, reducing the number of pool shares in exchange for reserves of a liquidity
+pool.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/list-of-operations#liquidity-pool-withdraw">
+Liquidity
+pool withdraw
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.ManageBuyOfferOperation.html">ManageBuyOfferOperation</a></dt>
+      <dd><p>Creates, updates, or deletes an offer to buy a specific amount of an asset for another.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#manage-buy-offer">
+Manage buy offer
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.ManageDataOperation.html">ManageDataOperation</a></dt>
+      <dd><p>Sets, modifies, or deletes a data entry (name/value pair) that is attached to an account.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#manage-data">
+Manage
+data
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.ManageSellOfferOperation.html">ManageSellOfferOperation</a></dt>
+      <dd><p>Creates, updates, or deletes an offer to sell a specific amount of an asset for another.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#manage-sell-offer">
+Manage sell offer
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.Operation.html">Operation</a></dt>
+      <dd><p>An individual command that modifies the ledger. Operations are used to send payments, enter orders into the
+decentralized exchange,
+change settings on accounts, and authorize accounts to hold assets.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.PathPaymentStrictReceiveOperation.html">PathPaymentStrictReceiveOperation</a></dt>
+      <dd><p>A payment where the asset received can be different from the asset sent; allows the user to specify the amount of
+the asset received.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#path-payment-strict-receive">
+Path payment strict receive
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.PathPaymentStrictSendOperation.html">PathPaymentStrictSendOperation</a></dt>
+      <dd><p>A payment where the asset sent can be different than the asset received; allows the user to specify the amount of
+the asset to send.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#path-payment-strict-send">
+Path payment strict send
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.PaymentOperation.html">PaymentOperation</a></dt>
+      <dd><p>Sends an amount in a specific asset to a destination account
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#payment">Payment</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.RestoreFootprintOperation.html">RestoreFootprintOperation</a></dt>
+      <dd><p>Make archived Soroban smart contract entries accessible again by restoring them with this restore footprint
+operation.
+This operation restores the archived entries specified in the readWrite footprint.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#restore-footprint">
+Restore
+footprint
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.RevokeLedgerEntrySponsorshipOperation.html">RevokeLedgerEntrySponsorshipOperation</a></dt>
+      <dd><p>Sponsoring account can remove or transfer sponsorships of existing ledgerEntries; the logic of this operation
+depends on the state of the source account.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#revoke-sponsorship">
+Revoke sponsorship
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.RevokeSignerSponsorshipOperation.html">RevokeSignerSponsorshipOperation</a></dt>
+      <dd><p>Sponsoring account can remove or transfer sponsorships of existing signers; the logic of this operation depends on
+the state of the source account.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#revoke-sponsorship">
+Revoke sponsorship
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SetOptionsOperation.html">SetOptionsOperation</a></dt>
+      <dd><p>Set options for an account such as flags, inflation destination, signers, home domain, and master key weight.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#set-options">
+Set
+options
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SetTrustlineFlagsOperation.html">SetTrustlineFlagsOperation</a></dt>
+      <dd><p>Allows issuing account to configure authorization and trustline flags to an asset.
+See:
+<a href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#set-trustline-flags">
+Set trustline flags
+</a></p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAddressCredentials.html">SorobanAddressCredentials</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizationEntry.html">SorobanAuthorizationEntry</a></dt>
+      <dd><p>Contains a tree of invocations with <code>rootInvocation</code> as a root.
+Building SorobanAuthorizedInvocation trees may be simplified by using the recording auth mode in Soroban's
+<a class="xref" href="StellarDotnetSdk.Soroban.SorobanServer.html#StellarDotnetSdk_Soroban_SorobanServer_SimulateTransaction_StellarDotnetSdk_Transactions_Transaction_System_Nullable_System_UInt32__">SimulateTransaction(Transaction, uint?)</a> mechanism.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedContractFunction.html">SorobanAuthorizedContractFunction</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedCreateContractFunction.html">SorobanAuthorizedCreateContractFunction</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedCreateContractV2Function.html">SorobanAuthorizedCreateContractV2Function</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedFunction.html">SorobanAuthorizedFunction</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanAuthorizedInvocation.html">SorobanAuthorizedInvocation</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanCredentials.html">SorobanCredentials</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.SorobanSourceAccountCredentials.html">SorobanSourceAccountCredentials</a></dt>
+      <dd><p>This simply uses the signature of the transaction (or operation, if any) source account and hence doesn't require
+any additional payload.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.UploadContractHostFunction.html">UploadContractHostFunction</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="StellarDotnetSdk.Operations.UploadContractOperation.html">UploadContractOperation</a></dt>
+      <dd></dd>
+    </dl>
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,36 +1,55 @@
-﻿
+
 <div id="sidetoggle">
   <div>
     <div class="sidefilter">
       <form class="toc-filter">
         <span class="glyphicon glyphicon-filter filter-icon"></span>
         <span class="glyphicon glyphicon-remove clear-icon" id="toc_filter_clear"></span>
-        <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+        <input type="text" id="toc_filter_input" placeholder="Filter by title" onkeypress="if(event.keyCode==13) {return false;}">
       </form>
     </div>
     <div class="sidetoc">
       <div class="toc" id="toc">
-          
+
           <ul class="nav level1">
                 <li>
                     <span class="expand-stub"></span>
-                    <a href="index.html" name="" title="Examples">Examples</a>
-                    
+                    <a>Horizon examples</a>
+
                     <ul class="nav level2">
                           <li>
-                              <a href="examples/generate_account_keypair.html" name="" title="Generate Account Keypair">Generate Account Keypair</a>
+                              <a href="examples/horizon/account-management.html" name="" title="Account management">Account management</a>
                           </li>
                           <li>
-                              <a href="examples/get_account_balance.html" name="" title="Get Account Balance">Get Account Balance</a>
+                              <a href="examples/horizon/assets.html" name="" title="Assets">Assets</a>
                           </li>
                           <li>
-                              <a href="examples/send_native_assets.html" name="" title="Send Native Assets (XLM)">Send Native Assets (XLM)</a>
+                              <a href="examples/horizon/xdr-encoding.html" name="" title="XDR Encoding">XDR Encoding</a>
                           </li>
                           <li>
-                              <a href="examples/export_transaction_to_xdr_base64.html" name="" title="Export Transaction to XDR (Base64)">Export Transaction to XDR (Base64)</a>
+                              <a href="examples/horizon/transactions.html" name="" title="Transactions">Transactions</a>
                           </li>
                           <li>
-                              <a href="examples/import_xdr_to_transaction_base64.html" name="" title="Import XDR to Transaction (Base64)">Import XDR to Transaction (Base64)</a>
+                              <a href="examples/horizon/sponsored-reserves.html" name="" title="Sponsored Reserves">Sponsored Reserves</a>
+                          </li>
+                          <li>
+                              <a href="examples/horizon/fee-bump.html" name="" title="Fee-bump transactions">Fee-bump transactions</a>
+                          </li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="expand-stub"></span>
+                    <a>Soroban examples</a>
+
+                    <ul class="nav level2">
+                          <li>
+                              <a href="examples/soroban/soroban-server-info.html" name="" title="Server Information">Server Information</a>
+                          </li>
+                          <li>
+                              <a href="examples/soroban/smart-contracts.html" name="" title="Contract basics">Contract basics</a>
+                          </li>
+                          <li>
+                              <a href="examples/soroban/ledger-entries.html" name="" title="Ledger entries">Ledger entries</a>
                           </li>
                     </ul>
                 </li>
