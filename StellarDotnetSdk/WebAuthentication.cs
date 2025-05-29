@@ -23,6 +23,7 @@ public static class WebAuthentication
     private const string WebAuthDataKey = "web_auth_domain";
     private const string ClientDomainDataKey = "client_domain";
     private const string AuthSuffix = " auth";
+    private const int ChallengeNonceLength = 48;
 
     /// <summary>
     ///     Give a small grace period for the transaction time to account for clock drift.
@@ -121,10 +122,10 @@ public static class WebAuthentication
         if (nonce is null)
         {
             using var rng = RandomNumberGenerator.Create();
-            nonce = new byte[48];
+            nonce = new byte[ChallengeNonceLength];
             rng.GetBytes(nonce);
         }
-        else if (nonce.Length != 48)
+        else if (nonce.Length != ChallengeNonceLength)
         {
             throw new ArgumentException("nonce must be 48 bytes long");
         }
