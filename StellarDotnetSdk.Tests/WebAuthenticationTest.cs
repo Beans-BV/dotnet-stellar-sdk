@@ -967,7 +967,7 @@ public class WebAuthenticationTest
         }
         catch (Exception exception)
         {
-            Assert.IsTrue(exception.Message.Contains("signers must be non-empty"));
+            Assert.IsTrue(exception.Message.Contains("Signers must be non-empty"));
         }
     }
 
@@ -1551,7 +1551,7 @@ public class WebAuthenticationTest
         }
         catch (Exception exception)
         {
-            Assert.IsTrue(exception.Message.Contains("signers must be non-empty"));
+            Assert.IsTrue(exception.Message.Contains("Signers must be non-empty"));
         }
     }
 
