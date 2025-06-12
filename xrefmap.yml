@@ -38206,15 +38206,15 @@ references:
   isSpec: "True"
   fullName: StellarDotnetSdk.WebAuthentication.VerifyChallengeTransactionSigners
   nameWithType: WebAuthentication.VerifyChallengeTransactionSigners
-- uid: StellarDotnetSdk.WebAuthentication.VerifyChallengeTransactionThreshold(StellarDotnetSdk.Transactions.Transaction,System.String,System.Int32,System.Collections.Generic.Dictionary{System.String,System.Int32},System.String,System.String,StellarDotnetSdk.Network,System.Nullable{System.DateTimeOffset})
-  name: VerifyChallengeTransactionThreshold(Transaction, string, int, Dictionary<string, int>, string, string, Network?, DateTimeOffset?)
-  href: api/StellarDotnetSdk.WebAuthentication.html#StellarDotnetSdk_WebAuthentication_VerifyChallengeTransactionThreshold_StellarDotnetSdk_Transactions_Transaction_System_String_System_Int32_System_Collections_Generic_Dictionary_System_String_System_Int32__System_String_System_String_StellarDotnetSdk_Network_System_Nullable_System_DateTimeOffset__
-  commentId: M:StellarDotnetSdk.WebAuthentication.VerifyChallengeTransactionThreshold(StellarDotnetSdk.Transactions.Transaction,System.String,System.Int32,System.Collections.Generic.Dictionary{System.String,System.Int32},System.String,System.String,StellarDotnetSdk.Network,System.Nullable{System.DateTimeOffset})
-  name.vb: VerifyChallengeTransactionThreshold(Transaction, String, Integer, Dictionary(Of String, Integer), String, String, Network, DateTimeOffset?)
-  fullName: StellarDotnetSdk.WebAuthentication.VerifyChallengeTransactionThreshold(StellarDotnetSdk.Transactions.Transaction, string, int, System.Collections.Generic.Dictionary<string, int>, string, string, StellarDotnetSdk.Network?, System.DateTimeOffset?)
-  fullName.vb: StellarDotnetSdk.WebAuthentication.VerifyChallengeTransactionThreshold(StellarDotnetSdk.Transactions.Transaction, String, Integer, System.Collections.Generic.Dictionary(Of String, Integer), String, String, StellarDotnetSdk.Network, System.DateTimeOffset?)
-  nameWithType: WebAuthentication.VerifyChallengeTransactionThreshold(Transaction, string, int, Dictionary<string, int>, string, string, Network?, DateTimeOffset?)
-  nameWithType.vb: WebAuthentication.VerifyChallengeTransactionThreshold(Transaction, String, Integer, Dictionary(Of String, Integer), String, String, Network, DateTimeOffset?)
+- uid: StellarDotnetSdk.WebAuthentication.VerifyChallengeTransactionThreshold(StellarDotnetSdk.Transactions.Transaction,System.String,System.Int32,System.Collections.Generic.IDictionary{System.String,System.Int32},System.String,System.String,StellarDotnetSdk.Network,System.Nullable{System.DateTimeOffset})
+  name: VerifyChallengeTransactionThreshold(Transaction, string, int, IDictionary<string, int>, string, string, Network?, DateTimeOffset?)
+  href: api/StellarDotnetSdk.WebAuthentication.html#StellarDotnetSdk_WebAuthentication_VerifyChallengeTransactionThreshold_StellarDotnetSdk_Transactions_Transaction_System_String_System_Int32_System_Collections_Generic_IDictionary_System_String_System_Int32__System_String_System_String_StellarDotnetSdk_Network_System_Nullable_System_DateTimeOffset__
+  commentId: M:StellarDotnetSdk.WebAuthentication.VerifyChallengeTransactionThreshold(StellarDotnetSdk.Transactions.Transaction,System.String,System.Int32,System.Collections.Generic.IDictionary{System.String,System.Int32},System.String,System.String,StellarDotnetSdk.Network,System.Nullable{System.DateTimeOffset})
+  name.vb: VerifyChallengeTransactionThreshold(Transaction, String, Integer, IDictionary(Of String, Integer), String, String, Network, DateTimeOffset?)
+  fullName: StellarDotnetSdk.WebAuthentication.VerifyChallengeTransactionThreshold(StellarDotnetSdk.Transactions.Transaction, string, int, System.Collections.Generic.IDictionary<string, int>, string, string, StellarDotnetSdk.Network?, System.DateTimeOffset?)
+  fullName.vb: StellarDotnetSdk.WebAuthentication.VerifyChallengeTransactionThreshold(StellarDotnetSdk.Transactions.Transaction, String, Integer, System.Collections.Generic.IDictionary(Of String, Integer), String, String, StellarDotnetSdk.Network, System.DateTimeOffset?)
+  nameWithType: WebAuthentication.VerifyChallengeTransactionThreshold(Transaction, string, int, IDictionary<string, int>, string, string, Network?, DateTimeOffset?)
+  nameWithType.vb: WebAuthentication.VerifyChallengeTransactionThreshold(Transaction, String, Integer, IDictionary(Of String, Integer), String, String, Network, DateTimeOffset?)
 - uid: StellarDotnetSdk.WebAuthentication.VerifyChallengeTransactionThreshold*
   name: VerifyChallengeTransactionThreshold
   href: api/StellarDotnetSdk.WebAuthentication.html#StellarDotnetSdk_WebAuthentication_VerifyChallengeTransactionThreshold_
