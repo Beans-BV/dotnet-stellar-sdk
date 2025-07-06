@@ -15,6 +15,8 @@ namespace StellarDotnetSdk.Xdr;
 //      TransactionMetaV2 v2;
 //  case 3:
 //      TransactionMetaV3 v3;
+//  case 4:
+//      TransactionMetaV4 v4;
 //  };
 
 //  ===========================================================================
@@ -26,6 +28,7 @@ public class TransactionMeta
     public TransactionMetaV1 V1 { get; set; }
     public TransactionMetaV2 V2 { get; set; }
     public TransactionMetaV3 V3 { get; set; }
+    public TransactionMetaV4 V4 { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, TransactionMeta encodedTransactionMeta)
     {
@@ -48,6 +51,9 @@ public class TransactionMeta
                 break;
             case 3:
                 TransactionMetaV3.Encode(stream, encodedTransactionMeta.V3);
+                break;
+            case 4:
+                TransactionMetaV4.Encode(stream, encodedTransactionMeta.V4);
                 break;
         }
     }
@@ -76,8 +82,10 @@ public class TransactionMeta
             case 3:
                 decodedTransactionMeta.V3 = TransactionMetaV3.Decode(stream);
                 break;
+            case 4:
+                decodedTransactionMeta.V4 = TransactionMetaV4.Decode(stream);
+                break;
         }
-
         return decodedTransactionMeta;
     }
 }

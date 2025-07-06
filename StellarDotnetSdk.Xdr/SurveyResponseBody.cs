@@ -7,10 +7,6 @@ namespace StellarDotnetSdk.Xdr;
 
 //  union SurveyResponseBody switch (SurveyMessageResponseType type)
 //  {
-//  case SURVEY_TOPOLOGY_RESPONSE_V0:
-//      TopologyResponseBodyV0 topologyResponseBodyV0;
-//  case SURVEY_TOPOLOGY_RESPONSE_V1:
-//      TopologyResponseBodyV1 topologyResponseBodyV1;
 //  case SURVEY_TOPOLOGY_RESPONSE_V2:
 //      TopologyResponseBodyV2 topologyResponseBodyV2;
 //  };
@@ -20,8 +16,6 @@ public class SurveyResponseBody
 {
     public SurveyMessageResponseType Discriminant { get; set; } = new();
 
-    public TopologyResponseBodyV0 TopologyResponseBodyV0 { get; set; }
-    public TopologyResponseBodyV1 TopologyResponseBodyV1 { get; set; }
     public TopologyResponseBodyV2 TopologyResponseBodyV2 { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SurveyResponseBody encodedSurveyResponseBody)
@@ -29,12 +23,6 @@ public class SurveyResponseBody
         stream.WriteInt((int)encodedSurveyResponseBody.Discriminant.InnerValue);
         switch (encodedSurveyResponseBody.Discriminant.InnerValue)
         {
-            case SurveyMessageResponseType.SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V0:
-                TopologyResponseBodyV0.Encode(stream, encodedSurveyResponseBody.TopologyResponseBodyV0);
-                break;
-            case SurveyMessageResponseType.SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V1:
-                TopologyResponseBodyV1.Encode(stream, encodedSurveyResponseBody.TopologyResponseBodyV1);
-                break;
             case SurveyMessageResponseType.SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V2:
                 TopologyResponseBodyV2.Encode(stream, encodedSurveyResponseBody.TopologyResponseBodyV2);
                 break;
@@ -48,12 +36,6 @@ public class SurveyResponseBody
         decodedSurveyResponseBody.Discriminant = discriminant;
         switch (decodedSurveyResponseBody.Discriminant.InnerValue)
         {
-            case SurveyMessageResponseType.SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V0:
-                decodedSurveyResponseBody.TopologyResponseBodyV0 = TopologyResponseBodyV0.Decode(stream);
-                break;
-            case SurveyMessageResponseType.SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V1:
-                decodedSurveyResponseBody.TopologyResponseBodyV1 = TopologyResponseBodyV1.Decode(stream);
-                break;
             case SurveyMessageResponseType.SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V2:
                 decodedSurveyResponseBody.TopologyResponseBodyV2 = TopologyResponseBodyV2.Decode(stream);
                 break;

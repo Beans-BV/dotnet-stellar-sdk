@@ -12,8 +12,8 @@ namespace StellarDotnetSdk.Xdr;
 //      ERROR_MSG = 0,
 //      AUTH = 2,
 //      DONT_HAVE = 3,
+//      // GET_PEERS (4) is deprecated
 //  
-//      GET_PEERS = 4, // gets a list of peers this guy knows about
 //      PEERS = 5,
 //  
 //      GET_TX_SET = 6, // gets a particular txset by hash
@@ -31,8 +31,8 @@ namespace StellarDotnetSdk.Xdr;
 //      // new messages
 //      HELLO = 13,
 //  
-//      SURVEY_REQUEST = 14,
-//      SURVEY_RESPONSE = 15,
+//      // SURVEY_REQUEST (14) removed and replaced by TIME_SLICED_SURVEY_REQUEST
+//      // SURVEY_RESPONSE (15) removed and replaced by TIME_SLICED_SURVEY_RESPONSE
 //  
 //      SEND_MORE = 16,
 //      SEND_MORE_EXTENDED = 20,
@@ -54,7 +54,6 @@ public class MessageType
         ERROR_MSG = 0,
         AUTH = 2,
         DONT_HAVE = 3,
-        GET_PEERS = 4,
         PEERS = 5,
         GET_TX_SET = 6,
         TX_SET = 7,
@@ -65,8 +64,6 @@ public class MessageType
         SCP_MESSAGE = 11,
         GET_SCP_STATE = 12,
         HELLO = 13,
-        SURVEY_REQUEST = 14,
-        SURVEY_RESPONSE = 15,
         SEND_MORE = 16,
         SEND_MORE_EXTENDED = 20,
         FLOOD_ADVERT = 18,
@@ -95,7 +92,6 @@ public class MessageType
             case 0: return Create(MessageTypeEnum.ERROR_MSG);
             case 2: return Create(MessageTypeEnum.AUTH);
             case 3: return Create(MessageTypeEnum.DONT_HAVE);
-            case 4: return Create(MessageTypeEnum.GET_PEERS);
             case 5: return Create(MessageTypeEnum.PEERS);
             case 6: return Create(MessageTypeEnum.GET_TX_SET);
             case 7: return Create(MessageTypeEnum.TX_SET);
@@ -106,8 +102,6 @@ public class MessageType
             case 11: return Create(MessageTypeEnum.SCP_MESSAGE);
             case 12: return Create(MessageTypeEnum.GET_SCP_STATE);
             case 13: return Create(MessageTypeEnum.HELLO);
-            case 14: return Create(MessageTypeEnum.SURVEY_REQUEST);
-            case 15: return Create(MessageTypeEnum.SURVEY_RESPONSE);
             case 16: return Create(MessageTypeEnum.SEND_MORE);
             case 20: return Create(MessageTypeEnum.SEND_MORE_EXTENDED);
             case 18: return Create(MessageTypeEnum.FLOOD_ADVERT);

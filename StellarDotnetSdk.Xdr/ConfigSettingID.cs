@@ -21,8 +21,11 @@ namespace StellarDotnetSdk.Xdr;
 //      CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES = 9,
 //      CONFIG_SETTING_STATE_ARCHIVAL = 10,
 //      CONFIG_SETTING_CONTRACT_EXECUTION_LANES = 11,
-//      CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW = 12,
-//      CONFIG_SETTING_EVICTION_ITERATOR = 13
+//      CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW = 12,
+//      CONFIG_SETTING_EVICTION_ITERATOR = 13,
+//      CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0 = 14,
+//      CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0 = 15,
+//      CONFIG_SETTING_SCP_TIMING = 16
 //  };
 
 //  ===========================================================================
@@ -42,8 +45,11 @@ public class ConfigSettingID
         CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES = 9,
         CONFIG_SETTING_STATE_ARCHIVAL = 10,
         CONFIG_SETTING_CONTRACT_EXECUTION_LANES = 11,
-        CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW = 12,
+        CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW = 12,
         CONFIG_SETTING_EVICTION_ITERATOR = 13,
+        CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0 = 14,
+        CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0 = 15,
+        CONFIG_SETTING_SCP_TIMING = 16,
     }
 
     public ConfigSettingIDEnum InnerValue { get; set; }
@@ -73,8 +79,11 @@ public class ConfigSettingID
             case 9: return Create(ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES);
             case 10: return Create(ConfigSettingIDEnum.CONFIG_SETTING_STATE_ARCHIVAL);
             case 11: return Create(ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_EXECUTION_LANES);
-            case 12: return Create(ConfigSettingIDEnum.CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW);
+            case 12: return Create(ConfigSettingIDEnum.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW);
             case 13: return Create(ConfigSettingIDEnum.CONFIG_SETTING_EVICTION_ITERATOR);
+            case 14: return Create(ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0);
+            case 15: return Create(ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0);
+            case 16: return Create(ConfigSettingIDEnum.CONFIG_SETTING_SCP_TIMING);
             default:
                 throw new Exception("Unknown enum value: " + value);
         }

@@ -11,7 +11,7 @@ namespace StellarDotnetSdk.Xdr;
 //      // is first, to change ContractEvent into a union.
 //      ExtensionPoint ext;
 //  
-//      Hash* contractID;
+//      ContractID* contractID;
 //      ContractEventType type;
 //  
 //      union switch (int v)
@@ -30,7 +30,7 @@ namespace StellarDotnetSdk.Xdr;
 public class ContractEvent
 {
     public ExtensionPoint Ext { get; set; }
-    public Hash? ContractID { get; set; }
+    public ContractID ContractID { get; set; }
     public ContractEventType Type { get; set; }
     public ContractEventBody Body { get; set; }
 
@@ -40,13 +40,12 @@ public class ContractEvent
         if (encodedContractEvent.ContractID != null)
         {
             stream.WriteInt(1);
-            Hash.Encode(stream, encodedContractEvent.ContractID);
+            ContractID.Encode(stream, encodedContractEvent.ContractID);
         }
         else
         {
             stream.WriteInt(0);
         }
-
         ContractEventType.Encode(stream, encodedContractEvent.Type);
         ContractEventBody.Encode(stream, encodedContractEvent.Body);
     }
@@ -58,7 +57,7 @@ public class ContractEvent
         var ContractIDPresent = stream.ReadInt();
         if (ContractIDPresent != 0)
         {
-            decodedContractEvent.ContractID = Hash.Decode(stream);
+            decodedContractEvent.ContractID = ContractID.Decode(stream);
         }
         decodedContractEvent.Type = ContractEventType.Decode(stream);
         decodedContractEvent.Body = ContractEventBody.Decode(stream);
@@ -93,7 +92,6 @@ public class ContractEvent
                     decodedContractEventBody.V0 = ContractEventV0.Decode(stream);
                     break;
             }
-
             return decodedContractEventBody;
         }
 

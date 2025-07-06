@@ -15,6 +15,8 @@ namespace StellarDotnetSdk.Xdr;
 //      LedgerKey removed;
 //  case LEDGER_ENTRY_STATE:
 //      LedgerEntry state;
+//  case LEDGER_ENTRY_RESTORED:
+//      LedgerEntry restored;
 //  };
 
 //  ===========================================================================
@@ -26,6 +28,7 @@ public class LedgerEntryChange
     public LedgerEntry Updated { get; set; }
     public LedgerKey Removed { get; set; }
     public LedgerEntry State { get; set; }
+    public LedgerEntry Restored { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, LedgerEntryChange encodedLedgerEntryChange)
     {
@@ -43,6 +46,9 @@ public class LedgerEntryChange
                 break;
             case LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_STATE:
                 LedgerEntry.Encode(stream, encodedLedgerEntryChange.State);
+                break;
+            case LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_RESTORED:
+                LedgerEntry.Encode(stream, encodedLedgerEntryChange.Restored);
                 break;
         }
     }
@@ -66,8 +72,10 @@ public class LedgerEntryChange
             case LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_STATE:
                 decodedLedgerEntryChange.State = LedgerEntry.Decode(stream);
                 break;
+            case LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_RESTORED:
+                decodedLedgerEntryChange.Restored = LedgerEntry.Decode(stream);
+                break;
         }
-
         return decodedLedgerEntryChange;
     }
 }
