@@ -1074,7 +1074,7 @@ public class SorobanServerTest
         var sorobanResources = sorobanData.Resources;
         Assert.IsNotNull(sorobanResources);
         Assert.AreEqual(1976262U, sorobanResources.Instructions);
-        Assert.AreEqual(1428U, sorobanResources.ReadBytes);
+        Assert.AreEqual(1428U, sorobanResources.DiskReadBytes);
         Assert.AreEqual(136U, sorobanResources.WriteBytes);
         var footprint = sorobanResources.Footprint;
         Assert.IsNotNull(footprint);
