@@ -384,7 +384,7 @@ public class ServerTest
               "hash": "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b21"
             }
             """;
-        using var server = Utils.CreateTestServerWithContent(json);
+        using var server = Utils.CreateTestServerWithContent(json, HttpStatusCode.Created);
         var response = await server.SubmitTransactionAsync(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
         Assert.IsNotNull(response);
