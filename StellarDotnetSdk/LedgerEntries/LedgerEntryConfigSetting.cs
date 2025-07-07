@@ -53,8 +53,14 @@ public class LedgerEntryConfigSetting : LedgerEntry
                 ConfigSettingContractDataKeySizeBytes.FromXdr(xdrConfigSetting.ContractDataKeySizeBytes),
             CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES =>
                 ConfigSettingContractDataEntrySizeBytes.FromXdr(xdrConfigSetting.ContractDataEntrySizeBytes),
-            CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW =>
-                ConfigSettingBucketListSizeWindow.FromXdr(xdrConfigSetting.BucketListSizeWindow),
+            CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW =>
+                ConfigSettingLiveSorobanStateSizeWindow.FromXdr(xdrConfigSetting.LiveSorobanStateSizeWindow),
+            CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0 =>
+                ConfigSettingContractParallelComputeV0.FromXdr(xdrConfigSetting.ContractParallelCompute),
+            CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0 =>
+                ConfigSettingContractLedgerCostExtV0.FromXdr(xdrConfigSetting.ContractLedgerCostExt),
+            CONFIG_SETTING_SCP_TIMING =>
+                ConfigSettingScpTiming.FromXdr(xdrConfigSetting.ContractSCPTiming),
             _ => throw new InvalidOperationException("Unknown ConfigSetting type."),
         };
         return ledgerEntryConfigSetting;
