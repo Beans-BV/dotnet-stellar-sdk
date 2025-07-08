@@ -436,7 +436,7 @@ public class ServerTest
             {
               "tx_status": "ERROR",
               "hash": "9f8e7d6c5b4a3210fedcba9876543210abcdef0123456789abcdef0123456789",
-              "errorResultXdr": "AAAAAAAAAGT////7AAAAAA=="
+              "error_result_xdr": "AAAAAAAAAGT////7AAAAAA=="
             }
             """;
         using var server = Utils.CreateTestServerWithContent(json);
