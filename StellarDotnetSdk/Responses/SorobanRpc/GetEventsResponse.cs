@@ -52,8 +52,8 @@ public class GetEventsResponse
             string[] topics,
             string type,
             string value,
-            long transactionIndex,
-            long operationIndex,
+            uint transactionIndex,
+            uint operationIndex,
             string transactionHash)
         {
             ContractId = contractId;
@@ -123,8 +123,8 @@ public class GetEventsResponse
         /// </remarks>
         public string Value { get; }
 
-        public long TransactionIndex { get; }
-        public long OperationIndex { get; }
+        public uint TransactionIndex { get; }
+        public uint OperationIndex { get; }
         [JsonProperty("txHash")] public string TransactionHash { get; }
     }
 }
