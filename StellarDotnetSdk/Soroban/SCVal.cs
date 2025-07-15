@@ -1278,7 +1278,7 @@ public class SCContractId : SCAddress
 
     public static SCContractId FromXdr(Xdr.SCAddress xdr)
     {
-        var value = StrKey.EncodeContractId(xdr.ContractId.InnerValue);
+        var value = StrKey.EncodeContractId(xdr.ContractId.InnerValue.InnerValue);
 
         if (!StrKey.IsValidContractId(value))
         {
@@ -1301,7 +1301,7 @@ public class SCContractId : SCAddress
             {
                 InnerValue = SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CONTRACT,
             },
-            ContractId = new Hash(StrKey.DecodeContractId(InnerValue)),
+            ContractId = new ContractID { InnerValue = new Hash(StrKey.DecodeContractId(InnerValue)) },
         };
     }
 }

@@ -23,7 +23,7 @@ public class SorobanResources
         {
             Footprint = Footprint.ToXdr(),
             Instructions = new Uint32(Instructions),
-            ReadBytes = new Uint32(ReadBytes),
+            DiskReadBytes = new Uint32(ReadBytes),
             WriteBytes = new Uint32(WriteBytes),
         };
     }
@@ -31,6 +31,6 @@ public class SorobanResources
     public static SorobanResources FromXdr(Xdr.SorobanResources xdr)
     {
         return new SorobanResources(LedgerFootprint.FromXdr(xdr.Footprint), xdr.Instructions.InnerValue,
-            xdr.ReadBytes.InnerValue, xdr.WriteBytes.InnerValue);
+            xdr.DiskReadBytes.InnerValue, xdr.WriteBytes.InnerValue);
     }
 }

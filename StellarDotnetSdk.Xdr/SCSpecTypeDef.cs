@@ -25,6 +25,7 @@ namespace StellarDotnetSdk.Xdr;
 //  case SC_SPEC_TYPE_STRING:
 //  case SC_SPEC_TYPE_SYMBOL:
 //  case SC_SPEC_TYPE_ADDRESS:
+//  case SC_SPEC_TYPE_MUXED_ADDRESS:
 //      void;
 //  case SC_SPEC_TYPE_OPTION:
 //      SCSpecTypeOption option;
@@ -78,6 +79,7 @@ public class SCSpecTypeDef
             case SCSpecType.SCSpecTypeEnum.SC_SPEC_TYPE_STRING:
             case SCSpecType.SCSpecTypeEnum.SC_SPEC_TYPE_SYMBOL:
             case SCSpecType.SCSpecTypeEnum.SC_SPEC_TYPE_ADDRESS:
+            case SCSpecType.SCSpecTypeEnum.SC_SPEC_TYPE_MUXED_ADDRESS:
                 break;
             case SCSpecType.SCSpecTypeEnum.SC_SPEC_TYPE_OPTION:
                 SCSpecTypeOption.Encode(stream, encodedSCSpecTypeDef.Option);
@@ -128,6 +130,7 @@ public class SCSpecTypeDef
             case SCSpecType.SCSpecTypeEnum.SC_SPEC_TYPE_STRING:
             case SCSpecType.SCSpecTypeEnum.SC_SPEC_TYPE_SYMBOL:
             case SCSpecType.SCSpecTypeEnum.SC_SPEC_TYPE_ADDRESS:
+            case SCSpecType.SCSpecTypeEnum.SC_SPEC_TYPE_MUXED_ADDRESS:
                 break;
             case SCSpecType.SCSpecTypeEnum.SC_SPEC_TYPE_OPTION:
                 decodedSCSpecTypeDef.Option = SCSpecTypeOption.Decode(stream);
@@ -151,7 +154,6 @@ public class SCSpecTypeDef
                 decodedSCSpecTypeDef.Udt = SCSpecTypeUDT.Decode(stream);
                 break;
         }
-
         return decodedSCSpecTypeDef;
     }
 }

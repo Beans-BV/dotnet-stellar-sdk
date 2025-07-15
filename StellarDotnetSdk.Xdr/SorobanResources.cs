@@ -12,8 +12,8 @@ namespace StellarDotnetSdk.Xdr;
 //      // The maximum number of instructions this transaction can use
 //      uint32 instructions; 
 //  
-//      // The maximum number of bytes this transaction can read from ledger
-//      uint32 readBytes;
+//      // The maximum number of bytes this transaction can read from disk backed entries
+//      uint32 diskReadBytes;
 //      // The maximum number of bytes this transaction can write to ledger
 //      uint32 writeBytes;
 //  };
@@ -23,14 +23,14 @@ public class SorobanResources
 {
     public LedgerFootprint Footprint { get; set; }
     public Uint32 Instructions { get; set; }
-    public Uint32 ReadBytes { get; set; }
+    public Uint32 DiskReadBytes { get; set; }
     public Uint32 WriteBytes { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SorobanResources encodedSorobanResources)
     {
         LedgerFootprint.Encode(stream, encodedSorobanResources.Footprint);
         Uint32.Encode(stream, encodedSorobanResources.Instructions);
-        Uint32.Encode(stream, encodedSorobanResources.ReadBytes);
+        Uint32.Encode(stream, encodedSorobanResources.DiskReadBytes);
         Uint32.Encode(stream, encodedSorobanResources.WriteBytes);
     }
 
@@ -39,7 +39,7 @@ public class SorobanResources
         var decodedSorobanResources = new SorobanResources();
         decodedSorobanResources.Footprint = LedgerFootprint.Decode(stream);
         decodedSorobanResources.Instructions = Uint32.Decode(stream);
-        decodedSorobanResources.ReadBytes = Uint32.Decode(stream);
+        decodedSorobanResources.DiskReadBytes = Uint32.Decode(stream);
         decodedSorobanResources.WriteBytes = Uint32.Decode(stream);
         return decodedSorobanResources;
     }

@@ -39,8 +39,8 @@ public class StateArchivalSettings : LedgerEntryConfigSetting
             xdrConfig.PersistentRentRateDenominator.InnerValue,
             xdrConfig.TempRentRateDenominator.InnerValue,
             xdrConfig.MaxEntriesToArchive.InnerValue,
-            xdrConfig.BucketListSizeWindowSampleSize.InnerValue,
-            xdrConfig.BucketListWindowSamplePeriod.InnerValue,
+            xdrConfig.LiveSorobanStateSizeWindowSampleSize.InnerValue,
+            xdrConfig.LiveSorobanStateSizeWindowSamplePeriod.InnerValue,
             xdrConfig.EvictionScanSize.InnerValue,
             xdrConfig.StartingEvictionScanLevel.InnerValue);
     }

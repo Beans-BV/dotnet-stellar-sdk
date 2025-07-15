@@ -17,6 +17,8 @@ namespace StellarDotnetSdk.Xdr;
 //      SCSpecUDTEnumV0 udtEnumV0;
 //  case SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0:
 //      SCSpecUDTErrorEnumV0 udtErrorEnumV0;
+//  case SC_SPEC_ENTRY_EVENT_V0:
+//      SCSpecEventV0 eventV0;
 //  };
 
 //  ===========================================================================
@@ -29,6 +31,7 @@ public class SCSpecEntry
     public SCSpecUDTUnionV0 UdtUnionV0 { get; set; }
     public SCSpecUDTEnumV0 UdtEnumV0 { get; set; }
     public SCSpecUDTErrorEnumV0 UdtErrorEnumV0 { get; set; }
+    public SCSpecEventV0 EventV0 { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SCSpecEntry encodedSCSpecEntry)
     {
@@ -49,6 +52,9 @@ public class SCSpecEntry
                 break;
             case SCSpecEntryKind.SCSpecEntryKindEnum.SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0:
                 SCSpecUDTErrorEnumV0.Encode(stream, encodedSCSpecEntry.UdtErrorEnumV0);
+                break;
+            case SCSpecEntryKind.SCSpecEntryKindEnum.SC_SPEC_ENTRY_EVENT_V0:
+                SCSpecEventV0.Encode(stream, encodedSCSpecEntry.EventV0);
                 break;
         }
     }
@@ -75,8 +81,10 @@ public class SCSpecEntry
             case SCSpecEntryKind.SCSpecEntryKindEnum.SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0:
                 decodedSCSpecEntry.UdtErrorEnumV0 = SCSpecUDTErrorEnumV0.Decode(stream);
                 break;
+            case SCSpecEntryKind.SCSpecEntryKindEnum.SC_SPEC_ENTRY_EVENT_V0:
+                decodedSCSpecEntry.EventV0 = SCSpecEventV0.Decode(stream);
+                break;
         }
-
         return decodedSCSpecEntry;
     }
 }
