@@ -1194,13 +1194,19 @@ public class SCMapEntry
 
 public abstract class SCAddress : SCVal
 {
-    public static SCAddress FromXdr(Xdr.SCAddress xdrSCAddress)
+    public static SCAddress FromXdr(Xdr.SCAddress xdrScAddress)
     {
-        return xdrSCAddress.Discriminant.InnerValue switch
+        return xdrScAddress.Discriminant.InnerValue switch
         {
-            SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_ACCOUNT => SCAccountId.FromXdr(xdrSCAddress),
-            SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CONTRACT => SCContractId.FromXdr(xdrSCAddress),
-            _ => throw new ArgumentOutOfRangeException(nameof(xdrSCAddress), "Invalid address type."),
+            SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_ACCOUNT => SCAccountId.FromXdr(xdrScAddress),
+            SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CONTRACT => SCContractId.FromXdr(xdrScAddress),
+            SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_MUXED_ACCOUNT =>
+                ScMuxedAccountId.FromXdr(xdrScAddress),
+            SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CLAIMABLE_BALANCE =>
+                ScClaimableBalanceId.FromXdr(xdrScAddress),
+            SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_LIQUIDITY_POOL =>
+                ScLiquidityPoolId.FromXdr(xdrScAddress),
+            _ => throw new ArgumentOutOfRangeException(nameof(xdrScAddress), "Invalid address type."),
         };
     }
 
@@ -1246,7 +1252,8 @@ public class SCAccountId : SCAddress
     public static SCAccountId FromXdr(Xdr.SCAddress xdr)
     {
         return new SCAccountId(
-            KeyPair.FromXdrPublicKey(xdr.AccountId.InnerValue).AccountId);
+            KeyPair.FromXdrPublicKey(xdr.AccountId.InnerValue).AccountId
+        );
     }
 
     public override Xdr.SCAddress ToXdr()
@@ -1262,13 +1269,73 @@ public class SCAccountId : SCAddress
     }
 }
 
+public class ScClaimableBalanceId : SCAddress
+{
+    public ScClaimableBalanceId(string value)
+    {
+        if (!StrKey.IsValidClaimableBalanceId(value))
+        {
+            throw new ArgumentException("Invalid claimable balance ID.", nameof(value));
+        }
+
+        InnerValue = value;
+    }
+
+    public string InnerValue { get; }
+
+    public static ScClaimableBalanceId FromXdr(Xdr.SCAddress xdr)
+    {
+        var version = (byte)xdr.ClaimableBalanceId.Discriminant.InnerValue;
+        // The actual ID contains the version as the first byte
+        var id = xdr.ClaimableBalanceId.V0.InnerValue.Prepend(version).ToArray();
+        if (xdr.ClaimableBalanceId.Discriminant.InnerValue !=
+            ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum.CLAIMABLE_BALANCE_ID_TYPE_V0)
+        {
+            throw new ArgumentException("Only CLAIMABLE_BALANCE_ID_TYPE_V0 is supported.");
+        }
+        return new ScClaimableBalanceId(
+            StrKey.EncodeClaimableBalanceId(id)
+        );
+    }
+
+    public override Xdr.SCAddress ToXdr()
+    {
+        var decoded = StrKey.DecodeClaimableBalanceId(InnerValue);
+        // The first byte should be the claimable version
+        var version = decoded[0];
+
+        // So, the actual ID should not contain the first byte
+        var id = decoded[1..];
+
+        return new Xdr.SCAddress
+        {
+            Discriminant = SCAddressType.Create(SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CLAIMABLE_BALANCE),
+            ClaimableBalanceId = CreateXdrClaimableBalanceId(version, id),
+        };
+    }
+
+    private static ClaimableBalanceID CreateXdrClaimableBalanceId(byte version, byte[] id)
+    {
+        return version switch
+        {
+            0 => new ClaimableBalanceID
+            {
+                Discriminant = ClaimableBalanceIDType.Create(ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum
+                    .CLAIMABLE_BALANCE_ID_TYPE_V0),
+                V0 = new Hash(id),
+            },
+            _ => throw new NotSupportedException($"Claimable balance ID version {version} is not supported")
+        };
+    }
+}
+
 public class SCContractId : SCAddress
 {
     public SCContractId(string value)
     {
         if (!StrKey.IsValidContractId(value))
         {
-            throw new ArgumentException("Invalid contract id", nameof(value));
+            throw new ArgumentException("Invalid contract ID.", nameof(value));
         }
 
         InnerValue = value;
@@ -1278,30 +1345,100 @@ public class SCContractId : SCAddress
 
     public static SCContractId FromXdr(Xdr.SCAddress xdr)
     {
-        var value = StrKey.EncodeContractId(xdr.ContractId.InnerValue.InnerValue);
-
-        if (!StrKey.IsValidContractId(value))
-        {
-            throw new InvalidOperationException("Invalid contract id");
-        }
-
-        return new SCContractId(value);
+        return new SCContractId(
+            StrKey.EncodeContractId(xdr.ContractId.InnerValue.InnerValue)
+        );
     }
 
     public override Xdr.SCAddress ToXdr()
     {
-        if (!StrKey.IsValidContractId(InnerValue))
-        {
-            throw new InvalidOperationException("Invalid contract id");
-        }
-
         return new Xdr.SCAddress
         {
             Discriminant = new SCAddressType
             {
                 InnerValue = SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CONTRACT,
             },
-            ContractId = new ContractID { InnerValue = new Hash(StrKey.DecodeContractId(InnerValue)) },
+            ContractId = new ContractID(new Hash(StrKey.DecodeContractId(InnerValue))),
+        };
+    }
+}
+
+public class ScLiquidityPoolId : SCAddress
+{
+    /// <summary>
+    ///  Creates an SCLiquidityPool instance from a base32 liquidity pool ID (L...).
+    /// </summary>
+    /// <param name="value">A base32 liquidity pool ID (L...).</param>
+    /// <exception cref="ArgumentException"></exception>
+    public ScLiquidityPoolId(string value)
+    {
+        if (!StrKey.IsValidLiquidityPoolId(value))
+        {
+            throw new ArgumentException("Invalid liquidity pool ID.", nameof(value));
+        }
+        InnerValue = value;
+    }
+
+    public string InnerValue { get; }
+
+    public static ScLiquidityPoolId FromXdr(Xdr.SCAddress xdr)
+    {
+        return new ScLiquidityPoolId(
+            StrKey.EncodeLiquidityPoolId(xdr.LiquidityPoolId.InnerValue.InnerValue)
+        );
+    }
+
+    public override Xdr.SCAddress ToXdr()
+    {
+        return new Xdr.SCAddress
+        {
+            Discriminant = new SCAddressType
+            {
+                InnerValue = SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_LIQUIDITY_POOL,
+            },
+            LiquidityPoolId = new PoolID
+            {
+                InnerValue = new Hash(StrKey.DecodeLiquidityPoolId(InnerValue)),
+            },
+        };
+    }
+}
+
+public class ScMuxedAccountId : SCAddress
+{
+    public ScMuxedAccountId(string value)
+    {
+        if (!StrKey.IsValidMuxedAccount(value))
+        {
+            throw new ArgumentException("Invalid muxed account ID.", nameof(value));
+        }
+
+        InnerValue = value;
+    }
+
+    public string InnerValue { get; set; }
+
+    public static ScMuxedAccountId FromXdr(Xdr.SCAddress xdr)
+    {
+        var writer = new XdrDataOutputStream();
+        MuxedEd25519Account.Encode(writer, xdr.MuxedAccount);
+        var bytes = writer.ToArray();
+        return new ScMuxedAccountId(
+            StrKey.EncodeMed25519PublicKey(bytes)
+        );
+    }
+
+    public override Xdr.SCAddress ToXdr()
+    {
+        var decoded = StrKey.DecodeMed25519PublicKey(InnerValue);
+        var muxedEd25519Account = MuxedEd25519Account.Decode(new XdrDataInputStream(decoded));
+        return new Xdr.SCAddress
+        {
+            Discriminant = new SCAddressType
+            {
+                InnerValue = SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_MUXED_ACCOUNT,
+            },
+            MuxedAccount = muxedEd25519Account,
         };
     }
 }
