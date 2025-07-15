@@ -92,7 +92,7 @@ public class WebAuthenticationTest
     [TestMethod]
     public void TestBuildChallengeTransactionFailsWithMuxedAccount()
     {
-        var clientAccountId = MuxedAccountMed25519.FromMuxedAccountId(
+        var clientAccountId = MuxedAccount.FromMuxedAccountId(
             "MAAAAAAAAAAAJURAAB2X52XFQP6FBXLGT6LWOOWMEXWHEWBDVRZ7V5WH34Y22MPFBHUHY");
 
         var nonce = new byte[48];

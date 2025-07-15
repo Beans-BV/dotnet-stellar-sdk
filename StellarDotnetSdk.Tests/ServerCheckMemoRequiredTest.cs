@@ -162,7 +162,7 @@ public class ServerCheckMemoRequiredTest
     {
         var accountId = "GAYHAAKPAQLMGIJYMIWPDWCGUCQ5LAWY4Q7Q3IKSP57O7GUPD3NEOSEA";
 
-        var muxed = MuxedAccountMed25519.FromMuxedAccountId(
+        var muxed = MuxedAccount.FromMuxedAccountId(
             "MAAAAAAAAAAAJURAAB2X52XFQP6FBXLGT6LWOOWMEXWHEWBDVRZ7V5WH34Y22MPFBHUHY");
 
         var payment = new PaymentOperation(muxed, new AssetTypeNative(), "100.500");

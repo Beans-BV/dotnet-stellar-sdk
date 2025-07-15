@@ -15,16 +15,12 @@ public class Account : ITransactionBuilderAccount
     ///     Current sequence number of the account (can be obtained using dotnet-stellar-sdk or
     ///     horizon server)
     /// </param>
-    public Account(string accountId, long? sequenceNumber)
+    public Account(string accountId, long sequenceNumber)
     {
-        if (accountId is null)
-        {
-            throw new ArgumentNullException(nameof(accountId), "accountId cannot be null");
-        }
-
-        MuxedAccount = KeyPair.FromAccountId(accountId);
-        SequenceNumber = sequenceNumber ??
-                         throw new ArgumentNullException(nameof(sequenceNumber), "sequenceNumber cannot be null");
+        ArgumentException.ThrowIfNullOrEmpty(accountId);
+        ArgumentNullException.ThrowIfNull(sequenceNumber);
+        AccountId = accountId;
+        SequenceNumber = sequenceNumber;
     }
 
     /// <summary>
@@ -35,18 +31,17 @@ public class Account : ITransactionBuilderAccount
     ///     Current sequence number of the account (can be obtained using dotnet-stellar-sdk or
     ///     horizon server)
     /// </param>
-    public Account(IAccountId muxedAccount, long? sequenceNumber)
+    public Account(MuxedAccount muxedAccount, long sequenceNumber)
     {
-        MuxedAccount = muxedAccount ??
-                       throw new ArgumentNullException(nameof(muxedAccount), "muxedAccount cannot be null");
-        SequenceNumber = sequenceNumber ??
-                         throw new ArgumentNullException(nameof(sequenceNumber), "sequenceNumber cannot be null");
+        ArgumentNullException.ThrowIfNull(sequenceNumber);
+        AccountId = muxedAccount.Address;
+        SequenceNumber = sequenceNumber;
     }
 
     /// <summary>
     ///     Returns the AccountID of the account.
     /// </summary>
-    public string AccountId => MuxedAccount.AccountId;
+    public string AccountId { get; init; }
 
     /// <summary>
     ///     Returns the KeyPair of the account.
@@ -59,15 +54,13 @@ public class Account : ITransactionBuilderAccount
             {
                 case KeyPair kp:
                     return kp;
-                case MuxedAccountMed25519 ma:
+                case MuxedAccount ma:
                     return ma.Key;
                 default:
                     throw new Exception("Invalid Account MuxedAccount type");
             }
         }
     }
-
-    public IAccountId MuxedAccount { get; }
 
     /// <summary>
     ///     The sequence number

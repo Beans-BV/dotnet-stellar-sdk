@@ -2,8 +2,8 @@
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Xdr;
 using Asset = StellarDotnetSdk.Assets.Asset;
-using MuxedAccount = StellarDotnetSdk.Accounts.MuxedAccount;
 using Int64 = StellarDotnetSdk.Xdr.Int64;
+using MuxedAccount = StellarDotnetSdk.Accounts.MuxedAccount;
 
 namespace StellarDotnetSdk.Operations;
 
@@ -51,7 +51,7 @@ public class PaymentOperation : Operation
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.PAYMENT),
             PaymentOp = new PaymentOp
             {
-                Destination = Destination.MuxedAccount,
+                Destination = Destination.ToXdrMuxedAccount(),
                 Asset = Asset.ToXdr(),
                 Amount = new Int64 { InnerValue = ToXdrAmount(Amount) },
             },
@@ -61,7 +61,7 @@ public class PaymentOperation : Operation
     public static PaymentOperation FromXdr(PaymentOp paymentOp)
     {
         return new PaymentOperation(
-            MuxedAccount.FromXdrMuxedAccount(paymentOp.Destination),
+            MuxedAccount.FromXdr(paymentOp.Destination),
             Asset.FromXdr(paymentOp.Asset),
             FromXdrAmount(paymentOp.Amount.InnerValue));
     }

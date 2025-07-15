@@ -140,15 +140,14 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// </summary>
     public byte[] PublicKey => _publicKey.Export(KeyBlobFormat.RawPublicKey);
 
-    /// <summary>
-    ///     AccountId
-    /// </summary>
+    ///  <inheritdoc />
+    [Obsolete("Deprecated. Use Address instead.")]
     public string AccountId => StrKey.EncodeStellarAccountId(PublicKey);
 
     /// <summary>
     ///     Address
     /// </summary>
-    public string Address => StrKey.EncodeCheck(StrKey.VersionByte.ACCOUNT_ID, PublicKey);
+    public string Address => StrKey.EncodeStellarAccountId(PublicKey);
 
     /// <summary>
     ///     The signing key.
@@ -158,18 +157,15 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <summary>
     ///     XDR MuxedAccount
     /// </summary>
-    public Xdr.MuxedAccount MuxedAccount
+    public Xdr.MuxedAccount ToXdrMuxedAccount()
     {
-        get
+        var uint256 = new Uint256(PublicKey);
+        var muxedAccount = new Xdr.MuxedAccount
         {
-            var uint256 = new Uint256(PublicKey);
-            var muxedAccount = new Xdr.MuxedAccount
-            {
-                Discriminant = new CryptoKeyType { InnerValue = CryptoKeyType.CryptoKeyTypeEnum.KEY_TYPE_ED25519 },
-                Ed25519 = uint256,
-            };
-            return muxedAccount;
-        }
+            Discriminant = CryptoKeyType.Create(CryptoKeyType.CryptoKeyTypeEnum.KEY_TYPE_ED25519),
+            Ed25519 = uint256,
+        };
+        return muxedAccount;
     }
 
     public bool IsMuxedAccount => false;

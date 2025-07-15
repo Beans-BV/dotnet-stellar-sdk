@@ -5,18 +5,23 @@ using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Xdr;
 using Memo = StellarDotnetSdk.Memos.Memo;
-using MuxedAccount = StellarDotnetSdk.Accounts.MuxedAccount;
 using Operation = StellarDotnetSdk.Operations.Operation;
 using SorobanAuthorizationEntry = StellarDotnetSdk.Operations.SorobanAuthorizationEntry;
 using SorobanTransactionData = StellarDotnetSdk.Soroban.SorobanTransactionData;
 using Int64 = StellarDotnetSdk.Xdr.Int64;
+using MuxedAccount = StellarDotnetSdk.Accounts.MuxedAccount;
 
 namespace StellarDotnetSdk.Transactions;
 
 public class Transaction : TransactionBase
 {
-    internal Transaction(IAccountId sourceAccount, uint fee, long sequenceNumber,
-        Operation[] operations, Memo? memo, TransactionPreconditions? preconditions)
+    internal Transaction(
+        string sourceAccount,
+        uint fee,
+        long sequenceNumber,
+        Operation[] operations,
+        Memo? memo,
+        TransactionPreconditions? preconditions)
     {
         SourceAccount = sourceAccount ??
                         throw new ArgumentNullException(nameof(sourceAccount), "sourceAccount cannot be null");
@@ -33,8 +38,14 @@ public class Transaction : TransactionBase
         Preconditions = preconditions;
     }
 
-    internal Transaction(IAccountId sourceAccount, uint fee, long sequenceNumber, Operation[] operations,
-        Memo? memo, TransactionPreconditions? preconditions, SorobanTransactionData? sorobanData)
+    internal Transaction(
+        string sourceAccount,
+        uint fee,
+        long sequenceNumber,
+        Operation[] operations,
+        Memo? memo,
+        TransactionPreconditions? preconditions,
+        SorobanTransactionData? sorobanData)
         : this(sourceAccount, fee, sequenceNumber, operations, memo, preconditions)
     {
         SorobanTransactionData = sorobanData;
@@ -42,7 +53,7 @@ public class Transaction : TransactionBase
 
     public uint Fee { get; private set; }
 
-    public IAccountId SourceAccount { get; }
+    public string SourceAccount { get; }
 
     public long SequenceNumber { get; }
 
@@ -121,7 +132,7 @@ public class Transaction : TransactionBase
     /// </summary>
     public TransactionV0 ToXdrV0()
     {
-        if (SourceAccount is not KeyPair)
+        if (!StrKey.TryDecodeEd25519PublicKey(SourceAccount, out var decoded))
         {
             throw new Exception("TransactionEnvelope V0 expects a KeyPair source account");
         }
@@ -130,7 +141,7 @@ public class Transaction : TransactionBase
         {
             Fee = new Uint32(Fee),
             SeqNum = new SequenceNumber(new Int64(SequenceNumber)),
-            SourceAccountEd25519 = new Uint256(SourceAccount.PublicKey),
+            SourceAccountEd25519 = new Uint256(decoded),
             Operations = Operations.Select(x => x.ToXdr()).ToArray(),
             Memo = Memo.ToXdr(),
             TimeBounds = TimeBounds?.ToXdr(),
@@ -155,7 +166,7 @@ public class Transaction : TransactionBase
         {
             Fee = new Uint32(Fee),
             SeqNum = new SequenceNumber(new Int64(SequenceNumber)),
-            SourceAccount = SourceAccount.MuxedAccount,
+            SourceAccount = MuxedAccount.FromMuxedAccountId(SourceAccount).ToXdrMuxedAccount(),
             Operations = Operations.Select(x => x.ToXdr()).ToArray(),
             Memo = Memo.ToXdr(),
             Cond = Preconditions?.ToXdr() ?? new Preconditions(),
@@ -234,7 +245,7 @@ public class Transaction : TransactionBase
     {
         var transactionXdr = envelope.Tx;
         var fee = transactionXdr.Fee.InnerValue;
-        var sourceAccount = KeyPair.FromPublicKey(transactionXdr.SourceAccountEd25519.InnerValue);
+        var sourceAccount = StrKey.EncodeStellarAccountId(transactionXdr.SourceAccountEd25519.InnerValue);
         var sequenceNumber = transactionXdr.SeqNum.InnerValue.InnerValue;
         var memo = Memo.FromXdr(transactionXdr.Memo);
         var preconditions = transactionXdr.TimeBounds != null
@@ -261,7 +272,7 @@ public class Transaction : TransactionBase
     {
         var transactionXdr = envelope.Tx;
         var fee = transactionXdr.Fee.InnerValue;
-        var sourceAccount = MuxedAccount.FromXdrMuxedAccount(transactionXdr.SourceAccount);
+        var sourceAccount = MuxedAccount.FromXdr(transactionXdr.SourceAccount).Address;
         var sequenceNumber = transactionXdr.SeqNum.InnerValue.InnerValue;
         var memo = Memo.FromXdr(transactionXdr.Memo);
         var preconditions = TransactionPreconditions.FromXdr(transactionXdr.Cond);

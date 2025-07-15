@@ -15,10 +15,13 @@ using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
 using StellarDotnetSdk.Xdr;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-using Asset = StellarDotnetSdk.Assets.Asset;
 using CollectionAssert = NUnit.Framework.CollectionAssert;
+using ConfigSettingContractLedgerCostExtV0 = StellarDotnetSdk.LedgerEntries.ConfigSettingContractLedgerCostExtV0;
+using ConfigSettingContractParallelComputeV0 = StellarDotnetSdk.LedgerEntries.ConfigSettingContractParallelComputeV0;
 using EvictionIterator = StellarDotnetSdk.LedgerEntries.EvictionIterator;
 using FeeBumpTransaction = StellarDotnetSdk.Transactions.FeeBumpTransaction;
+using Int64 = StellarDotnetSdk.Xdr.Int64;
+using LedgerEntry = StellarDotnetSdk.Xdr.LedgerEntry;
 using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
 using SCContractInstance = StellarDotnetSdk.Soroban.SCContractInstance;
 using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
@@ -224,7 +227,7 @@ public class SorobanServerTest
         Assert.AreEqual(453756L, response.LatestLedger);
         Assert.AreEqual(1728978088L, response.LatestLedgerCloseTime);
     }
-    
+
     [TestMethod]
     public async Task TestSendFeeBumpTransactionPending()
     {
@@ -252,7 +255,7 @@ public class SorobanServerTest
         Assert.AreEqual(453130L, response.LatestLedger);
         Assert.AreEqual(1728974496L, response.LatestLedgerCloseTime);
     }
-    
+
     [TestMethod]
     public async Task TestSendFeeBumpTransactionTryAgainLater()
     {
@@ -280,7 +283,7 @@ public class SorobanServerTest
         Assert.AreEqual(453745L, response.LatestLedger);
         Assert.AreEqual(1728977723L, response.LatestLedgerCloseTime);
     }
-    
+
     [TestMethod]
     public async Task TestSendFeeBumpTransactionError()
     {
@@ -309,7 +312,7 @@ public class SorobanServerTest
         Assert.AreEqual(453756L, response.LatestLedger);
         Assert.AreEqual(1728977779L, response.LatestLedgerCloseTime);
     }
-    
+
     [TestMethod]
     public async Task TestSendFeeBumpTransactionDuplicate()
     {
@@ -343,7 +346,7 @@ public class SorobanServerTest
     {
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent("");
         await Assert.ThrowsExceptionAsync<TooManySignaturesException>(() =>
-            sorobanServer.SimulateTransaction(CreateDummyTransaction(sign: true)));
+            sorobanServer.SimulateTransaction(CreateDummyTransaction(true)));
     }
 
     [TestMethod]
@@ -482,8 +485,8 @@ public class SorobanServerTest
         Assert.AreEqual(1751853705L, eventsResponse.OldestLedgerCloseTime);
         Assert.AreEqual("0003920046715838464-0000000001", eventsResponse.Cursor);
         Assert.AreEqual(4, eventsResponse.Events.Length);
-        var event1 = eventsResponse.Events[0];
 
+        var event1 = eventsResponse.Events[0];
         Assert.IsNotNull(event1);
         Assert.AreEqual("contract", event1.Type);
         Assert.AreEqual(912707, event1.Ledger);
@@ -497,8 +500,8 @@ public class SorobanServerTest
             "AAAAEQAAAAEAAAADAAAADwAAAARoYXNoAAAADgAAAEAzYjdkODUxYjVjNmMyMTNmNzUyYzdmNzJhNDA0Yjg5NGFiZGU2NDY2NDhjMzU0MmQ3MDRlMjI4OTMwNmU1MTFhAAAADwAAAAZwYXJlbnQAAAAAAA4AAAAAAAAADwAAAAd2ZXJzaW9uAAAAAAMAAAAA",
             event1.Value);
         Assert.IsTrue(event1.InSuccessfulContractCall);
-        Assert.AreEqual(1, event1.TransactionIndex);
-        Assert.AreEqual(2, event1.OperationIndex);
+        Assert.AreEqual(2U, event1.TransactionIndex);
+        Assert.AreEqual(1U, event1.OperationIndex);
         Assert.AreEqual("9f6cf2cf2d1dd41af039325503ba98daf3cfa10d0079cd2c50a28355fb1b4af2", event1.TransactionHash);
 
         var event2 = eventsResponse.Events[1];
@@ -514,8 +517,8 @@ public class SorobanServerTest
         Assert.AreEqual("AAAAEgAAAAAAAAAAoM2uDbnOXB4fd/4Y3ZRlbiis4zPp1sdQNyQHWQuvzq4=", event2.Topics[2]);
         Assert.AreEqual("AAAACgAAAAAAAAAAAAAJGE5yoAA=", event2.Value);
         Assert.IsTrue(event2.InSuccessfulContractCall);
-        Assert.AreEqual(3, event1.TransactionIndex);
-        Assert.AreEqual(4, event1.OperationIndex);
+        Assert.AreEqual(4U, event2.TransactionIndex);
+        Assert.AreEqual(3U, event2.OperationIndex);
         Assert.AreEqual("318915004f904a36fddcefa8d4935ab21db7848a5a5e528815672968125a79a8", event2.TransactionHash);
 
         var event3 = eventsResponse.Events[2];
@@ -531,8 +534,8 @@ public class SorobanServerTest
         Assert.AreEqual("AAAAEgAAAAAAAAAAdT55ljEK4qTy1Y7Fw9KtdAAZIBkrd2p7IX0ZByhSO2k=", event3.Topics[2]);
         Assert.AreEqual("AAAACgAAAAAAAAAAAAAJGE5yoAA=", event3.Value);
         Assert.IsTrue(event3.InSuccessfulContractCall);
-        Assert.AreEqual(5, event1.TransactionIndex);
-        Assert.AreEqual(6, event1.OperationIndex);
+        Assert.AreEqual(6U, event3.TransactionIndex);
+        Assert.AreEqual(5U, event3.OperationIndex);
         Assert.AreEqual("944d99fd572b8541f5c0ce95881b844d79144fe9a5cef2aea1cf94fb7c91f1f7", event3.TransactionHash);
 
         var event4 = eventsResponse.Events[3];
@@ -548,8 +551,8 @@ public class SorobanServerTest
         Assert.AreEqual("AAAAEgAAAAGPj5dVA0lfIe7VhCeJwcQ68vhwUcgQjj7XNcpMoUn7Hw==", event4.Topics[2]);
         Assert.AreEqual("AAAAEAAAAAEAAAACAAAACgAAAAAAAAAAAAQdH3d3yKkAAAADABD7yA==", event4.Value);
         Assert.IsTrue(event4.InSuccessfulContractCall);
-        Assert.AreEqual(7, event1.TransactionIndex);
-        Assert.AreEqual(8, event1.OperationIndex);
+        Assert.AreEqual(8U, event4.TransactionIndex);
+        Assert.AreEqual(7U, event4.OperationIndex);
 
         Assert.AreEqual("64bd9d003dbc4c9f766206dee34d57285322eeee6c5acb6d2a31d2668d88c2fd", event4.TransactionHash);
     }
@@ -1077,9 +1080,9 @@ public class SorobanServerTest
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
         var response = await sorobanServer.SimulateTransaction(
-            CreateDummyTransaction(sign: false),
-            resourceConfig: null,
-            authMode: AuthMode.RECORD_ALLOW_NONROOT
+            CreateDummyTransaction(false),
+            null,
+            AuthMode.RECORD_ALLOW_NONROOT
         );
 
         Assert.IsNotNull(response);
@@ -1088,7 +1091,7 @@ public class SorobanServerTest
         var sorobanData = response.SorobanTransactionData;
 
         Assert.IsNotNull(sorobanData);
-        Assert.IsInstanceOfType(sorobanData.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.IsNull(sorobanData.Extension);
         Assert.AreEqual(2L, sorobanData.ResourceFee);
         var sorobanResources = sorobanData.Resources;
         Assert.IsNotNull(sorobanResources);
@@ -1176,6 +1179,64 @@ public class SorobanServerTest
         Assert.AreEqual(
             "AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
             stateChanges.After);
+    }
+
+    [TestMethod]
+    // This test only focuses on testing the SorobanTransactionDataExt
+    public async Task TestSimulateTransactionProtocol23Success()
+    {
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "transactionData": "AAAAAQAAAAIAAACGAAACKgAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAABZQAAAAAAAAAbw==",
+                    "minResourceFee": "58181",
+                    "events": [
+                        "AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=",
+                        "AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ="
+                    ],
+                    "results": [
+                        {
+                            "auth": [
+                                "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA"
+                            ],
+                            "xdr": "AAAAAwAAABQ="
+                        }
+                    ],
+                    "stateChanges": [
+                        {
+                            "type": "created",
+                            "key": "AAAAAAAAAABuaCbVXZ2DlXWarV6UxwbW3GNJgpn3ASChIFp5bxSIWg==",
+                            "before": null,
+                            "after": "AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+                        }
+                    ],
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        var response = await sorobanServer.SimulateTransaction(
+            CreateDummyTransaction(false),
+            null,
+            AuthMode.RECORD_ALLOW_NONROOT
+        );
+
+        Assert.IsNotNull(response);
+
+        // SorobanTransactionData
+        var sorobanData = response.SorobanTransactionData;
+
+        Assert.IsNotNull(sorobanData);
+
+        var extension = sorobanData.Extension;
+        Assert.IsNotNull(extension);
+        Assert.AreEqual(2, extension.ArchivedSorobanEntries.Length);
+        Assert.AreEqual(134U, extension.ArchivedSorobanEntries[0]);
+        Assert.AreEqual(554U, extension.ArchivedSorobanEntries[1]);
     }
 
     [TestMethod]
@@ -1330,7 +1391,7 @@ public class SorobanServerTest
             response.CaptiveCoreVersion);
         Assert.AreEqual(21, response.ProtocolVersion);
     }
-    
+
     [TestMethod]
     public async Task TestGetTransactionSuccess()
     {
@@ -1392,8 +1453,9 @@ public class SorobanServerTest
             response.ResultMetaXdr);
         Assert.AreEqual(2540064L, response.Ledger);
         Assert.AreEqual(1700086268, response.CreatedAt);
-        
+
         #region Events
+
         var events = response.Events;
         Assert.IsNotNull(events);
         var transactionEventsXdr = events.TransactionEventsXdr;
@@ -1424,10 +1486,10 @@ public class SorobanServerTest
         Assert.AreEqual(1, contractEventsXdr.Length);
         Assert.AreEqual(1, contractEventsXdr[0].Length);
         Assert.AreEqual(
-            "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAE21heF9lbWl0X2V2ZW50X2J5dGUAAAAABQAAAAAAAAEE",
+            "AAAAAAAAAAHf65G24dyt1q+Xu3xFX5fzdHcKf3j2lXO5n11b+EnOfAAAAAEAAAAAAAAAAQAAAA8AAAAEaW5pdAAAABAAAAABAAAABQAAAAUAAAAAAAaRmQAAABIAAAAAAAAAACcMY2GvjF3igK326WyiU8hv107p9YxvAS29gt1fml2WAAAAEgAAAAAAAAAAyewwXk7lqpxiQNYP3VlZ1EEprNK+dSBV4KQ9iluwbx8AAAASAAAAAAAAAAAY2Rm1IXXndEI0rYg2bt1/rw2mi1SYOUT2qeKPvf56cgAAABIAAAABusKzizgXRsUWKJQRrpWHAWG/yujQ6LBT/pMDljEiAeg=",
             contractEventsXdr[0][0]);
-        #endregion
 
+        #endregion
     }
 
     [TestMethod]
@@ -1615,10 +1677,11 @@ public class SorobanServerTest
             tx4.ResultMetaXdr);
 
         #region Tx4DiagnosticEvents
+
         var tx4DiagnosticEventsXdr = tx4.DiagnosticEventsXdr;
         Assert.IsNotNull(tx4DiagnosticEventsXdr);
         Assert.AreEqual(19, tx4DiagnosticEventsXdr.Length);
-        
+
         Assert.AreEqual(
             "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAACnJlYWRfZW50cnkAAAAAAAUAAAAAAAAAAg==",
             tx4DiagnosticEventsXdr[0]);
@@ -1680,6 +1743,7 @@ public class SorobanServerTest
         #endregion
 
         #region Tx4Events
+
         var tx4Events = tx4.Events;
         Assert.IsNotNull(tx4Events);
         var tx4TransactionEvents = tx4Events.TransactionEventsXdr;
@@ -1710,8 +1774,9 @@ public class SorobanServerTest
         Assert.AreEqual(1, tx4ContractEvents.Length);
         Assert.AreEqual(1, tx4ContractEvents[0].Length);
         Assert.AreEqual(
-            "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAE21heF9lbWl0X2V2ZW50X2J5dGUAAAAABQAAAAAAAAEE",
+            "AAAAAAAAAAHf65G24dyt1q+Xu3xFX5fzdHcKf3j2lXO5n11b+EnOfAAAAAEAAAAAAAAAAQAAAA8AAAAEaW5pdAAAABAAAAABAAAABQAAAAUAAAAAAAaRmQAAABIAAAAAAAAAACcMY2GvjF3igK326WyiU8hv107p9YxvAS29gt1fml2WAAAAEgAAAAAAAAAAyewwXk7lqpxiQNYP3VlZ1EEprNK+dSBV4KQ9iluwbx8AAAASAAAAAAAAAAAY2Rm1IXXndEI0rYg2bt1/rw2mi1SYOUT2qeKPvf56cgAAABIAAAABusKzizgXRsUWKJQRrpWHAWG/yujQ6LBT/pMDljEiAeg=",
             tx4ContractEvents[0][0]);
+
         #endregion
 
         var tx5 = transactions[4];
@@ -1809,7 +1874,23 @@ public class SorobanServerTest
                     "key": "AAAACAAAAA0=",
                     "xdr": "AAAACAAAAA0AAAAGAAAAAQAAAAAAAAAA",
                     "lastModifiedLedgerSeq": 575
-                  }
+                  },
+                  {
+                    "key": "AAAACAAAAA4=", // CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0
+                    "xdr": "AAAACAAAAA4AAAAL",
+                    "lastModifiedLedgerSeq": 575
+                  },
+                  {
+                    "key": "AAAACAAAAA8=",
+                    "xdr": "AAAACAAAAA8AAAAMAAAAAAAAEBs=", // CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0
+                    "lastModifiedLedgerSeq": 175
+                  },
+                  {
+                    "key": "AAAACAAAABA=",
+                    "xdr": "AAAACAAAABAAAAG8AAABuQAAADcAAAB7AAAADQ==", // CONFIG_SETTING_SCP_TIMING
+                    "lastModifiedLedgerSeq": 175
+                  },
+                  
                 ],
                 "latestLedger": 1172233
               }
@@ -1822,7 +1903,7 @@ public class SorobanServerTest
         var entries = response.LedgerEntries;
         Assert.IsNotNull(entries);
         Assert.AreEqual(1172233U, response.LatestLedger);
-        Assert.AreEqual(14, entries.Length);
+        Assert.AreEqual(17, entries.Length);
 
         var entry0 = entries[0] as ConfigSettingContractMaxSizeBytes;
         Assert.IsNotNull(entry0);
@@ -1837,21 +1918,21 @@ public class SorobanServerTest
 
         var entry2 = entries[2] as ConfigSettingContractLedgerCost;
         Assert.IsNotNull(entry2);
-        Assert.AreEqual(200U, entry2.LedgerMaxReadLedgerEntries);
-        Assert.AreEqual(500000U, entry2.LedgerMaxReadBytes);
+        Assert.AreEqual(200U, entry2.LedgerMaxDiskReadEntries);
+        Assert.AreEqual(500000U, entry2.LedgerMaxDiskReadBytes);
         Assert.AreEqual(125U, entry2.LedgerMaxWriteLedgerEntries);
         Assert.AreEqual(70000U, entry2.LedgerMaxWriteBytes);
-        Assert.AreEqual(40U, entry2.TxMaxReadLedgerEntries);
-        Assert.AreEqual(200000U, entry2.TxMaxReadBytes);
+        Assert.AreEqual(40U, entry2.TxMaxDiskReadEntries);
+        Assert.AreEqual(200000U, entry2.TxMaxDiskReadBytes);
         Assert.AreEqual(25U, entry2.TxMaxWriteLedgerEntries);
         Assert.AreEqual(66560U, entry2.TxMaxWriteBytes);
-        Assert.AreEqual(6250L, entry2.FeeReadLedgerEntry);
+        Assert.AreEqual(6250L, entry2.FeeDiskReadLedgerEntry);
         Assert.AreEqual(10000L, entry2.FeeWriteLedgerEntry);
-        Assert.AreEqual(1786L, entry2.FeeRead1Kb);
-        Assert.AreEqual(300000000L, entry2.BucketListTargetSizeBytes);
-        Assert.AreEqual(9836L, entry2.WriteFee1KbBucketListLow);
-        Assert.AreEqual(12116L, entry2.WriteFee1KbBucketListHigh);
-        Assert.AreEqual(5000U, entry2.BucketListWriteFeeGrowthFactor);
+        Assert.AreEqual(1786L, entry2.FeeDiskRead1Kb);
+        Assert.AreEqual(300000000L, entry2.SorobanStateTargetSizeBytes);
+        Assert.AreEqual(9836L, entry2.RentFee1KbSorobanStateSizeLow);
+        Assert.AreEqual(12116L, entry2.RentFee1KbSorobanStateSizeHigh);
+        Assert.AreEqual(5000U, entry2.SorobanStateRentFeeGrowthFactor);
 
         var entry3 = entries[3] as ConfigSettingContractHistoricalData;
         Assert.IsNotNull(entry3);
@@ -1944,8 +2025,8 @@ public class SorobanServerTest
         Assert.AreEqual(2103L, entry10.PersistentRentRateDenominator);
         Assert.AreEqual(4206L, entry10.TempRentRateDenominator);
         Assert.AreEqual(1000U, entry10.MaxEntriesToArchive);
-        Assert.AreEqual(30U, entry10.BucketListSizeWindowSampleSize);
-        Assert.AreEqual(64U, entry10.BucketListWindowSamplePeriod);
+        Assert.AreEqual(30U, entry10.LiveSorobanStateSizeWindowSampleSize);
+        Assert.AreEqual(64U, entry10.LiveSorobanStateSizeWindowSamplePeriod);
         Assert.AreEqual(100000U, entry10.EvictionScanSize);
         Assert.AreEqual(7U, entry10.StartingEvictionScanLevel);
 
@@ -1953,7 +2034,7 @@ public class SorobanServerTest
         Assert.IsNotNull(entry11);
         Assert.AreEqual(100U, entry11.LedgerMaxTxCount);
 
-        var entry12 = entries[12] as ConfigSettingBucketListSizeWindow;
+        var entry12 = entries[12] as ConfigSettingLiveSorobanStateSizeWindow;
         Assert.IsNotNull(entry12);
         Assert.AreEqual(30, entry12.InnerValue.Length);
         Assert.AreEqual(100UL, entry12.InnerValue[0]);
@@ -1965,6 +2046,23 @@ public class SorobanServerTest
         Assert.AreEqual(6U, entry13.BucketListLevel);
         Assert.AreEqual(true, entry13.IsCurrBucket);
         Assert.AreEqual(0UL, entry13.BucketFileOffset);
+
+        var entry14 = entries[14] as ConfigSettingContractParallelComputeV0;
+        Assert.IsNotNull(entry14);
+        Assert.AreEqual(11U, entry14.LedgerMaxDependentTxClusters);
+
+        var entry15 = entries[15] as ConfigSettingContractLedgerCostExtV0;
+        Assert.IsNotNull(entry15);
+        Assert.AreEqual(4123L, entry15.FeeWrite1Kb);
+        Assert.AreEqual(12U, entry15.TxMaxFootprintEntries);
+        
+        var entry16 = entries[16] as ConfigSettingScpTiming;
+        Assert.IsNotNull(entry16);
+        Assert.AreEqual(444U, entry16.LedgerTargetCloseTimeMilliseconds);
+        Assert.AreEqual(441U, entry16.NominationTimeoutInitialMilliseconds);
+        Assert.AreEqual(55U, entry16.NominationTimeoutIncrementMilliseconds);
+        Assert.AreEqual(123U, entry16.BallotTimeoutInitialMilliseconds);
+        Assert.AreEqual(13U, entry16.BallotTimeoutIncrementMilliseconds);
     }
 
     [TestMethod]
@@ -2004,18 +2102,18 @@ public class SorobanServerTest
         }
         return transaction;
     }
-    
+
     private FeeBumpTransaction CreateDummyFeeBumpTransaction(bool sign = true)
     {
         var innerTransaction = CreateDummyTransaction();
         const long maxFee = 10000;
 
         var feeBumpTransaction = TransactionBuilder.BuildFeeBumpTransaction(
-            _account,       
+            _account,
             innerTransaction,
             maxFee
         );
-        
+
         if (sign)
         {
             feeBumpTransaction.Sign(_account);

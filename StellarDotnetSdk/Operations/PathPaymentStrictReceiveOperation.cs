@@ -100,7 +100,7 @@ public class PathPaymentStrictReceiveOperation : Operation
             {
                 SendAsset = SendAsset.ToXdr(),
                 SendMax = new Int64 { InnerValue = ToXdrAmount(SendMax) },
-                Destination = Destination.MuxedAccount,
+                Destination = Destination.ToXdrMuxedAccount(),
                 DestAsset = DestAsset.ToXdr(),
                 DestAmount = new Int64 { InnerValue = ToXdrAmount(DestAmount) },
                 Path = Path.Select(a => a.ToXdr()).ToArray(),
@@ -113,7 +113,7 @@ public class PathPaymentStrictReceiveOperation : Operation
         return new PathPaymentStrictReceiveOperation(
             Asset.FromXdr(paymentStrictReceiveOp.SendAsset),
             Amount.FromXdr(paymentStrictReceiveOp.SendMax.InnerValue),
-            MuxedAccount.FromXdrMuxedAccount(paymentStrictReceiveOp.Destination),
+            MuxedAccount.FromXdr(paymentStrictReceiveOp.Destination),
             Asset.FromXdr(paymentStrictReceiveOp.DestAsset),
             Amount.FromXdr(paymentStrictReceiveOp.DestAmount.InnerValue),
             paymentStrictReceiveOp.Path.Select(Asset.FromXdr).ToArray()

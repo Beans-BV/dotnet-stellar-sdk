@@ -51,7 +51,7 @@ public class ClawbackOperation : Operation
             {
                 Amount = new Int64(ToXdrAmount(Amount)),
                 Asset = Asset.ToXdr(),
-                From = From.MuxedAccount,
+                From = From.ToXdrMuxedAccount(),
             },
         };
     }
@@ -61,7 +61,7 @@ public class ClawbackOperation : Operation
         return new ClawbackOperation(
             Asset.FromXdr(clawbackOp.Asset),
             StellarDotnetSdk.Amount.FromXdr(clawbackOp.Amount.InnerValue),
-            MuxedAccount.FromXdrMuxedAccount(clawbackOp.From)
+            MuxedAccount.FromXdr(clawbackOp.From)
         );
     }
 }

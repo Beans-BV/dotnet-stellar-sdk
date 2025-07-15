@@ -2,7 +2,10 @@
 
 public class EvictionIterator : LedgerEntryConfigSetting
 {
-    private EvictionIterator(uint bucketListLevel, bool isCurrBucket, ulong bucketFileOffset)
+    private EvictionIterator(
+        uint bucketListLevel,
+        bool isCurrBucket,
+        ulong bucketFileOffset)
     {
         BucketListLevel = bucketListLevel;
         IsCurrBucket = isCurrBucket;
@@ -15,7 +18,9 @@ public class EvictionIterator : LedgerEntryConfigSetting
 
     public static EvictionIterator FromXdr(Xdr.EvictionIterator xdrConfig)
     {
-        return new EvictionIterator(xdrConfig.BucketListLevel.InnerValue,
-            xdrConfig.IsCurrBucket, xdrConfig.BucketFileOffset.InnerValue);
+        return new EvictionIterator(
+            xdrConfig.BucketListLevel.InnerValue,
+            xdrConfig.IsCurrBucket,
+            xdrConfig.BucketFileOffset.InnerValue);
     }
 }

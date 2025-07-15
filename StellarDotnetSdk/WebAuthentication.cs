@@ -58,10 +58,7 @@ public static class WebAuthentication
         string? clientDomain = null,
         KeyPair? clientKeypair = null)
     {
-        if (string.IsNullOrEmpty(clientAccountId))
-        {
-            throw new ArgumentNullException(nameof(clientAccountId));
-        }
+        ArgumentNullException.ThrowIfNull(clientAccountId);
         if (StrKey.DecodeVersionByte(clientAccountId) != StrKey.VersionByte.ACCOUNT_ID)
         {
             throw new InvalidWebAuthenticationException($"{nameof(clientAccountId)} is not a valid account id");
@@ -135,7 +132,7 @@ public static class WebAuthentication
         validFor ??= TimeSpan.FromMinutes(5.0);
 
         // Sequence number is incremented by 1 before building the transaction, set it to -1 to have 0
-        var serverAccount = new Account(serverKeypair, -1);
+        var serverAccount = new Account(serverKeypair.AccountId, -1);
 
         var manageDataKey = $"{homeDomain} auth";
         var manageDataValue = Encoding.UTF8.GetBytes(Convert.ToBase64String(nonce));

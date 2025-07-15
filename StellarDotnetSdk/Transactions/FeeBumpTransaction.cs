@@ -9,7 +9,7 @@ namespace StellarDotnetSdk.Transactions;
 
 public class FeeBumpTransaction : TransactionBase
 {
-    internal FeeBumpTransaction(IAccountId feeSource, Transaction innerTx, long fee)
+    internal FeeBumpTransaction(MuxedAccount feeSource, Transaction innerTx, long fee)
     {
         FeeSource = feeSource;
         InnerTransaction = innerTx;
@@ -18,7 +18,7 @@ public class FeeBumpTransaction : TransactionBase
 
     public long Fee { get; }
 
-    public IAccountId FeeSource { get; }
+    public MuxedAccount FeeSource { get; }
 
     public Transaction InnerTransaction { get; }
 
@@ -51,7 +51,7 @@ public class FeeBumpTransaction : TransactionBase
     public Xdr.FeeBumpTransaction ToXdr()
     {
         var fee = new xdr_Int64(Fee);
-        var feeSource = FeeSource.MuxedAccount;
+        var feeSource = FeeSource.ToXdrMuxedAccount();
 
         var inner = new Xdr.FeeBumpTransaction.FeeBumpTransactionInnerTx
         {
@@ -119,7 +119,7 @@ public class FeeBumpTransaction : TransactionBase
                 case EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_FEE_BUMP:
                     var tx = envelope.FeeBump.Tx;
                     var fee = tx.Fee.InnerValue;
-                    var feeSource = MuxedAccount.FromXdrMuxedAccount(tx.FeeSource);
+                    var feeSource = MuxedAccount.FromXdr(tx.FeeSource);
                     var innerTx = Transaction.FromEnvelopeXdrV1(tx.InnerTx.V1);
 
                     var transaction = new FeeBumpTransaction(feeSource, innerTx, fee);

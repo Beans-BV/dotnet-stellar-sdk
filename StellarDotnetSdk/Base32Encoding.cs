@@ -7,10 +7,7 @@ public static class Base32Encoding
 {
     public static byte[] ToBytes(string input)
     {
-        if (string.IsNullOrEmpty(input))
-        {
-            throw new ArgumentNullException("input");
-        }
+        ArgumentException.ThrowIfNullOrEmpty(input);
 
         input = input.TrimEnd('='); //remove padding characters
         var byteCount = input.Length * 5 / 8; //this must be TRUNCATED
@@ -105,23 +102,23 @@ public static class Base32Encoding
     {
         int value = c;
 
-        //65-90 == uppercase letters
-        if (value < 91 && value > 64)
+        // 65-90 == uppercase letters
+        if (value is < 91 and > 64)
         {
             return value - 65;
         }
-        //50-55 == numbers 2-7
-        if (value < 56 && value > 49)
+        // 50-55 == numbers 2-7
+        if (value is < 56 and > 49)
         {
             return value - 24;
         }
-        //97-122 == lowercase letters
-        if (value < 123 && value > 96)
+        // 97-122 == lowercase letters
+        if (value is < 123 and > 96)
         {
             return value - 97;
         }
 
-        throw new ArgumentException("Character is not a Base32 character.", "c");
+        throw new ArgumentException($"'{c}' is not a Base32 character.");
     }
 
     private static char ValueToChar(byte b)

@@ -449,7 +449,7 @@ public class TransactionTest
     {
         var network = new Network("Standalone Network ; February 2017");
         var source = KeyPair.FromSecretSeed(network.NetworkId);
-        var txSource = new MuxedAccountMed25519(source, 0);
+        var txSource = new MuxedAccount(source, 0);
         var account = new Account(txSource, 7);
         var destination = KeyPair.FromAccountId("GDQERENWDDSQZS7R7WKHZI3BSOYMV3FSWR7TFUYFTKQ447PIX6NREOJM");
         var amount = "2000";
@@ -472,7 +472,7 @@ public class TransactionTest
     {
         var network = new Network("Standalone Network ; February 2017");
         var source = KeyPair.FromSecretSeed(network.NetworkId);
-        var txSource = new MuxedAccountMed25519(source, 0);
+        var txSource = new MuxedAccount(source, 0);
         var account = new Account(txSource, 7);
         var destination = KeyPair.FromAccountId("GDQERENWDDSQZS7R7WKHZI3BSOYMV3FSWR7TFUYFTKQ447PIX6NREOJM");
         var amount = "2000";
@@ -493,7 +493,7 @@ public class TransactionTest
     {
         var network = new Network("Standalone Network ; February 2017");
         var source = KeyPair.FromSecretSeed(network.NetworkId);
-        var txSource = new MuxedAccountMed25519(source, 0);
+        var txSource = new MuxedAccount(source, 0);
         var account = new Account(txSource, 7);
         var destination = KeyPair.FromAccountId("GDQERENWDDSQZS7R7WKHZI3BSOYMV3FSWR7TFUYFTKQ447PIX6NREOJM");
         var amount = "2000";
@@ -514,7 +514,7 @@ public class TransactionTest
     public void TestToUnsignedEnvelopeXdrWithSignatures()
     {
         var txSource = KeyPair.Random();
-        var account = new Account(txSource, 7);
+        var account = new Account(txSource.AccountId, 7);
         var destination = KeyPair.FromAccountId("GDQERENWDDSQZS7R7WKHZI3BSOYMV3FSWR7TFUYFTKQ447PIX6NREOJM");
         var amount = "2000";
         var asset = new AssetTypeNative();
@@ -536,7 +536,7 @@ public class TransactionTest
     public void TestTransactionFeeOverflow()
     {
         var source = KeyPair.Random();
-        var txSource = new MuxedAccountMed25519(source, 0);
+        var txSource = new MuxedAccount(source, 0);
         var account = new Account(txSource, 7);
         var destination = KeyPair.FromAccountId("GDQERENWDDSQZS7R7WKHZI3BSOYMV3FSWR7TFUYFTKQ447PIX6NREOJM");
         var amount = "2000";
@@ -559,7 +559,7 @@ public class TransactionTest
     {
         var network = new Network("Standalone Network ; February 2017");
         var source = KeyPair.FromSecretSeed(network.NetworkId);
-        var txSource = new MuxedAccountMed25519(source, 0);
+        var txSource = new MuxedAccount(source, 0);
         var account = new Account(txSource, 7);
         var destination = KeyPair.FromAccountId("GDQERENWDDSQZS7R7WKHZI3BSOYMV3FSWR7TFUYFTKQ447PIX6NREOJM");
         var amount = "2000";

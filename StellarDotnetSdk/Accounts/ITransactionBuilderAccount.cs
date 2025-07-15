@@ -4,8 +4,6 @@ public interface ITransactionBuilderAccount
 {
     string AccountId { get; }
 
-    KeyPair KeyPair { get; }
-    IAccountId MuxedAccount { get; }
     long SequenceNumber { get; }
 
     /// <summary>

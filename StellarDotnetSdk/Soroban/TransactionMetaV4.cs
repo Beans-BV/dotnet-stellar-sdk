@@ -3,13 +3,10 @@ using System.Linq;
 using StellarDotnetSdk.Xdr;
 using LedgerEntryChange = StellarDotnetSdk.LedgerEntries.LedgerEntryChange;
 
-// using StellarDotnetSdk.Xdr;
-
 namespace StellarDotnetSdk.Soroban;
 
 /// <summary>
-///     Transaction metadata V3.
-///     See: <a href="https://soroban.stellar.org/docs/soroban-internals/events#transactionmetav3">TransactionMetaV3</a>
+///     Transaction metadata V4.
 /// </summary>
 public class TransactionMetaV4
 {

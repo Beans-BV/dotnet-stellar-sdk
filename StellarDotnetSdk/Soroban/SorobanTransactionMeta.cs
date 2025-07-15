@@ -15,13 +15,13 @@ public class SorobanTransactionMeta
     /// <summary>
     ///     Custom events populated by the contracts themselves. One list per operation.
     /// </summary>
-    public ContractEvent[] Events { get; private init; } = Array.Empty<ContractEvent>(); // TODO Unit test
+    public ContractEvent[] Events { get; private init; } = []; // TODO Unit test
 
     /// <summary>
     ///     Diagnostics events that are not hashed. One list per operation.
     ///     This will contain all contract and diagnostic events. Even ones that were emitted in a failed contract call.
     /// </summary>
-    public DiagnosticEvent[] DiagnosticEvents { get; private init; } = Array.Empty<DiagnosticEvent>();
+    public DiagnosticEvent[] DiagnosticEvents { get; private init; } = [];
 
     /// <summary>
     ///     Creates the corresponding <c>SorobanTransactionMeta</c> object from an <c>xdr.SorobanTransactionMeta</c> object.

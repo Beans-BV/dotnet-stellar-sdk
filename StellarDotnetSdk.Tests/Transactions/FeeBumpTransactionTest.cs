@@ -89,10 +89,10 @@ public class FeeBumpTransactionTest
     [TestMethod]
     public void TestMuxedAccounts()
     {
-        var muxed = new MuxedAccountMed25519(FeeSource, 0);
+        var muxed = new MuxedAccount(FeeSource, 0);
         var tx = TransactionBuilder.BuildFeeBumpTransaction(muxed, InnerTransaction, 100);
         var xdr = tx.ToUnsignedEnvelopeXdr();
-        var txMuxed = MuxedAccount.FromXdrMuxedAccount(xdr.FeeBump.Tx.FeeSource);
+        var txMuxed = MuxedAccount.FromXdr(xdr.FeeBump.Tx.FeeSource);
         Assert.AreEqual(muxed.Address, txMuxed.Address);
     }
 
@@ -128,7 +128,7 @@ public class FeeBumpTransactionTest
     {
         var source = KeyPair.FromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
         var destination = KeyPair.FromAccountId("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ");
-        var account = new Account(source, 2908908335136768L);
+        var account = new Account(source.AccountId, 2908908335136768L);
         var innerTx = new TransactionBuilder(account)
             .AddOperation(new PaymentOperation(destination, new AssetTypeNative(), "200.0"))
             .SetFee(fee)

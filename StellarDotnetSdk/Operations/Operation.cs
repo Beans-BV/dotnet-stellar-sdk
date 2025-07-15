@@ -47,7 +47,7 @@ public abstract class Operation
         var thisXdr = new Xdr.Operation();
         if (SourceAccount != null)
         {
-            thisXdr.SourceAccount = SourceAccount.MuxedAccount;
+            thisXdr.SourceAccount = SourceAccount.ToXdrMuxedAccount();
         }
 
         thisXdr.Body = ToOperationBody();
@@ -149,7 +149,7 @@ public abstract class Operation
 
         if (thisXdr.SourceAccount != null)
         {
-            operation.SourceAccount = MuxedAccount.FromXdrMuxedAccount(thisXdr.SourceAccount);
+            operation.SourceAccount = MuxedAccount.FromXdr(thisXdr.SourceAccount);
         }
 
         return operation;

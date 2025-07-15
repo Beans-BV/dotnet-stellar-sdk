@@ -48,10 +48,6 @@ public class AccountResponse : Response, ITransactionBuilderAccount
 
     public long IncrementedSequenceNumber => SequenceNumber + 1;
 
-    public KeyPair KeyPair => KeyPair.FromAccountId(AccountId);
-
-    public IAccountId MuxedAccount => KeyPair;
-
     public void IncrementSequenceNumber()
     {
         SequenceNumber++;

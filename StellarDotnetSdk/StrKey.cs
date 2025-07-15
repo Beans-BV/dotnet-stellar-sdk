@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using FormatException = StellarDotnetSdk.Exceptions.FormatException;
 using xdrSDK = StellarDotnetSdk.Xdr;
 
@@ -10,20 +11,34 @@ using MuxedAccount = xdrSDK.MuxedAccount;
 
 public class StrKey
 {
+    private static readonly byte[] Base32LookupTable = DecodingTable();
+
     public enum VersionByte : byte
     {
         ACCOUNT_ID = 6 << 3,
-        MUXED_ACCOUNT = 12 << 3,
+        MUXED_ED25519 = 12 << 3,
         SEED = 18 << 3,
         PRE_AUTH_TX = 19 << 3,
         SHA256_HASH = 23 << 3,
         SIGNED_PAYLOAD = 15 << 3,
         CONTRACT = 2 << 3,
+        LIQUIDITY_POOL = 11 << 3,
+        CLAIMABLE_BALANCE = 1 << 3,
     }
 
     public static string EncodeStellarAccountId(byte[] data)
     {
         return EncodeCheck(VersionByte.ACCOUNT_ID, data);
+    }
+
+    public static string EncodeClaimableBalanceId(byte[] data)
+    {
+        return EncodeCheck(VersionByte.CLAIMABLE_BALANCE, data);
+    }
+
+    public static string EncodeLiquidityPool(byte[] data)
+    {
+        return EncodeCheck(VersionByte.LIQUIDITY_POOL, data);
     }
 
     public static string EncodeSignedPayload(SignedPayloadSigner signedPayloadSigner)
@@ -47,14 +62,16 @@ public class StrKey
         }
     }
 
+    [Obsolete("Deprecated. Use EncodeMuxedEd25519PublicKey instead.")]
     public static string EncodeStellarMuxedAccount(MuxedAccount muxedAccount)
     {
         switch (muxedAccount.Discriminant.InnerValue)
         {
             case xdrSDK.CryptoKeyType.CryptoKeyTypeEnum.KEY_TYPE_MUXED_ED25519:
                 var bytes = muxedAccount.Med25519.Ed25519.InnerValue
-                    .Concat(Util.ToByteArray(muxedAccount.Med25519.Id.InnerValue)).ToArray();
-                return EncodeCheck(VersionByte.MUXED_ACCOUNT, bytes);
+                    .Concat(Util.ToByteArray(muxedAccount.Med25519.Id.InnerValue))
+                    .ToArray();
+                return EncodeCheck(VersionByte.MUXED_ED25519, bytes);
 
             case xdrSDK.CryptoKeyType.CryptoKeyTypeEnum.KEY_TYPE_ED25519:
                 return EncodeCheck(VersionByte.ACCOUNT_ID, muxedAccount.Ed25519.InnerValue);
@@ -72,6 +89,26 @@ public class StrKey
     public static string EncodeContractId(byte[] data)
     {
         return EncodeCheck(VersionByte.CONTRACT, data);
+    }
+
+    public static string EncodeMuxedEd25519PublicKey(byte[] data)
+    {
+        return EncodeCheck(VersionByte.MUXED_ED25519, data);
+    }
+
+    public static byte[] DecodeMuxedEd25519PublicKey(string data)
+    {
+        return DecodeCheck(VersionByte.MUXED_ED25519, data);
+    }
+
+    public static bool TryDecodeMuxedEd25519PublicKey(string publicKey, out byte[] decoded)
+    {
+        return TryDecode(VersionByte.MUXED_ED25519, publicKey, out decoded);
+    }
+
+    public static bool IsValidMuxedEd25519PublicKey(string publicKey)
+    {
+        return IsValid(VersionByte.MUXED_ED25519, publicKey);
     }
 
     public static byte[] DecodeStellarAccountId(string data)
@@ -96,6 +133,7 @@ public class StrKey
         }
     }
 
+    [Obsolete("Deprecated. Use DecodeMuxedEd25519PublicKey instead.")]
     public static MuxedAccount DecodeStellarMuxedAccount(string data)
     {
         var muxed = new MuxedAccount();
@@ -121,8 +159,8 @@ public class StrKey
 
                 break;
 
-            case VersionByte.MUXED_ACCOUNT:
-                var input = new xdrSDK.XdrDataInputStream(DecodeCheck(VersionByte.MUXED_ACCOUNT, data));
+            case VersionByte.MUXED_ED25519:
+                var input = new xdrSDK.XdrDataInputStream(DecodeCheck(VersionByte.MUXED_ED25519, data));
                 muxed.Discriminant.InnerValue = xdrSDK.CryptoKeyType.CryptoKeyTypeEnum.KEY_TYPE_MUXED_ED25519;
                 var med = new MuxedAccount.MuxedAccountMed25519();
 
@@ -155,9 +193,24 @@ public class StrKey
         return DecodeCheck(VersionByte.CONTRACT, data);
     }
 
+    public static byte[] DecodeClaimableBalanceId(string data)
+    {
+        return DecodeCheck(VersionByte.CLAIMABLE_BALANCE, data);
+    }
+
+    /// <summary>
+    /// Decodes liquidity pool ID to raw bytes. 
+    /// </summary>
+    /// <param name="data">A base32 liquidity pool ID (L...).</param>
+    /// <returns>Raw bytes of the provided liquidity pool ID.</returns>
+    public static byte[] DecodeLiquidityPool(string data)
+    {
+        return DecodeCheck(VersionByte.LIQUIDITY_POOL, data);
+    }
+
     public static VersionByte DecodeVersionByte(string encoded)
     {
-        var decoded = CheckedBase32Decode(encoded);
+        var decoded = Base32Encoding.ToBytes(encoded);
         var versionByte = decoded[0];
         if (!Enum.IsDefined(typeof(VersionByte), versionByte))
         {
@@ -181,34 +234,106 @@ public class StrKey
 
     public static byte[] DecodeCheck(VersionByte versionByte, string encoded)
     {
-        var decoded = CheckedBase32Decode(encoded);
-        var decodedVersionByte = decoded[0];
-
-        var payload = new byte[decoded.Length - 2];
-        Array.Copy(decoded, 0, payload, 0, payload.Length);
-
-        var data = new byte[payload.Length - 1];
-        Array.Copy(payload, 1, data, 0, data.Length);
-
-        var checksum = new byte[2];
-        Array.Copy(decoded, decoded.Length - 2, checksum, 0, checksum.Length);
-
-        if (decodedVersionByte != (byte)versionByte)
+        // The minimal length is 3 bytes (version byte and 2-byte CRC) which,
+        // in unpadded base32 (since each character provides 5 bits) corresponds to ceiling(8*3/5) = 5
+        if (encoded.Length < 5)
         {
-            throw new FormatException("Version byte is invalid");
+            throw new ArgumentException("Encoded string must have a length of at least 5.");
         }
+
+        var leftoverBits = encoded.Length * 5 % 8;
+        switch (leftoverBits)
+        {
+            // Make sure there is no full unused leftover byte at the end
+            // (i.e. there shouldn't be 5 or more leftover bits)
+            case >= 5:
+                throw new ArgumentException("Encoded string has leftover characters.");
+            case > 0:
+            {
+                var lastChar = encoded[^1];
+                var decodedLastChar = Base32LookupTable[lastChar];
+
+                var leftoverBitsMask = (byte)(0x0f >> (4 - leftoverBits));
+                if ((decodedLastChar & leftoverBitsMask) != 0)
+                {
+                    throw new ArgumentException("Unused bits should be set to 0.");
+                }
+                break;
+            }
+        }
+
+        var decoded = Base32Encoding.ToBytes(encoded);
+
+        var decodedVersionByte = decoded[0];
+        if (!Enum.IsDefined(typeof(VersionByte), decodedVersionByte))
+        {
+            throw new ArgumentException("Version byte is invalid");
+        }
+        var decodedVersionByteEnum = (VersionByte)decodedVersionByte;
+
+        if (decodedVersionByteEnum != versionByte)
+        {
+            throw new ArgumentException("Version byte mismatch");
+        }
+
+        ReadOnlySpan<byte> decodedSpan = decoded;
+        var payload = decodedSpan[..^2].ToArray(); // All except last 2 bytes for checksum  
+        var data = decodedSpan[1..^2].ToArray(); // All except first 1 for version byte and last 2 for checksum
+        var checksum = decodedSpan[^2..].ToArray(); // Last 2 bytes
+
+        ValidateDataLength(decodedVersionByteEnum, data);
 
         var expectedChecksum = CalculateChecksum(payload);
 
         if (!expectedChecksum.SequenceEqual(checksum))
         {
-            throw new FormatException("Checksum invalid");
+            throw new ArgumentException("Checksum invalid");
         }
 
         return data;
     }
 
-    protected static byte[] CalculateChecksum(byte[] bytes)
+    private static void ValidateDataLength(VersionByte decodedVersionByteEnum, byte[] data)
+    {
+        switch (decodedVersionByteEnum)
+        {
+            case VersionByte.SIGNED_PAYLOAD:
+                if (data.Length is < 32 + 4 + 4 or > 32 + 4 + 64)
+                {
+                    throw new ArgumentException(
+                        "Invalid data length, the length should be between 40 and 100 bytes, got "
+                        + data.Length);
+                }
+                break;
+            case VersionByte.MUXED_ED25519:
+                if (data.Length != 32 + 8)
+                {
+                    throw new ArgumentException(
+                        "Invalid data length, expected 40 bytes, got " + data.Length);
+                }
+                break;
+            case VersionByte.CLAIMABLE_BALANCE:
+                if (data.Length != 32 + 1)
+                {
+                    // If we are encoding a claimable balance, the binary bytes of the key has a length of
+                    // 33-bytes:
+                    // 1-byte value indicating the type of claimable balance, where 0x00 maps to V0, and a
+                    // 32-byte SHA256 hash.
+                    throw new ArgumentException(
+                        "Invalid data length, expected 33 bytes, got " + data.Length);
+                }
+                break;
+            default:
+                if (data.Length != 32)
+                {
+                    throw new ArgumentException(
+                        "Invalid data length, expected 32 bytes, got " + data.Length);
+                }
+                break;
+        }
+    }
+
+    private static byte[] CalculateChecksum(byte[] bytes)
     {
         // This code calculates CRC16-XModem checksum
         // Ported from https://github.com/alexgorbatchev/node-crc
@@ -232,26 +357,33 @@ public class StrKey
         }
 
         // little-endian
-        return new[]
-        {
+        return
+        [
             (byte)crc,
             (byte)((uint)crc >> 8),
-        };
+        ];
     }
 
-    public static bool IsValid(VersionByte versionByte, string encoded)
+    private static bool IsValid(VersionByte versionByte, string encoded)
     {
         try
         {
-            var decoded = DecodeCheck(versionByte, encoded);
-            // Muxed accounts are encoded as a 64 bit ulong wih 32 bytes of data
-            if (versionByte == VersionByte.MUXED_ACCOUNT)
-            {
-                return decoded.Length == 40;
-            }
+            DecodeCheck(versionByte, encoded);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 
-            // All other types have 32 bytes of data
-            return decoded.Length == 32;
+    public static bool TryDecode(VersionByte versionByte, string publicKey, out byte[] decoded)
+    {
+        decoded = null;
+        try
+        {
+            decoded = DecodeCheck(versionByte, publicKey);
+            return true;
         }
         catch
         {
@@ -264,9 +396,14 @@ public class StrKey
         return IsValid(VersionByte.ACCOUNT_ID, publicKey);
     }
 
+    public static bool TryDecodeEd25519PublicKey(string publicKey, out byte[] decoded)
+    {
+        return TryDecode(VersionByte.ACCOUNT_ID, publicKey, out decoded);
+    }
+
     public static bool IsValidMuxedAccount(string publicKey)
     {
-        return IsValid(VersionByte.MUXED_ACCOUNT, publicKey);
+        return IsValid(VersionByte.MUXED_ED25519, publicKey);
     }
 
     public static bool IsValidEd25519SecretSeed(string seed)
@@ -274,26 +411,30 @@ public class StrKey
         return IsValid(VersionByte.SEED, seed);
     }
 
-    public static bool IsValidContractId(string contract)
+    public static bool IsValidContractId(string contractId)
     {
-        return IsValid(VersionByte.CONTRACT, contract);
+        return IsValid(VersionByte.CONTRACT, contractId);
     }
 
-    private static byte[] CheckedBase32Decode(string encoded)
+    public static bool IsValidClaimableBalanceId(string claimableBalanceId)
     {
-        if (encoded.Length == 0)
-        {
-            throw new ArgumentException("Encoded string is empty");
-        }
+        return IsValid(VersionByte.CLAIMABLE_BALANCE, claimableBalanceId);
+    }
 
-        foreach (var t in encoded)
-        {
-            if (t > 127)
-            {
-                throw new ArgumentException("Illegal characters in encoded string.");
-            }
-        }
+    public static bool IsValidLiquidityPoolId(string liquidityPoolId)
+    {
+        return IsValid(VersionByte.LIQUIDITY_POOL, liquidityPoolId);
+    }
 
-        return Base32Encoding.ToBytes(encoded);
+    private static byte[] DecodingTable()
+    {
+        var table = new byte[128];
+        Array.Fill(table, (byte)0xff);
+        const string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        for (var i = 0; i < alphabet.Length; i++)
+        {
+            table[alphabet[i]] = (byte)i;
+        }
+        return table;
     }
 }

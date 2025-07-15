@@ -24,15 +24,6 @@ public class AccountDeserializerTest
     }
 
     [TestMethod]
-    public void TestMuxedAccountException()
-    {
-        var account = new Account(new UnknownAccountId(), 128);
-
-        var ex = Assert.ThrowsException<Exception>(() => account.KeyPair);
-        Assert.AreEqual("Invalid Account MuxedAccount type", ex.Message);
-    }
-
-    [TestMethod]
     public void TestSerializeDeserializeAccountResponse()
     {
         var jsonPath = Utils.GetTestDataPath("account.json");
@@ -135,20 +126,5 @@ public class AccountDeserializerTest
             "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
         Assert.AreEqual(account.Links.Transactions.Href,
             "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/transactions{?cursor,limit,order}");
-    }
-
-    private class UnknownAccountId : IAccountId
-    {
-        public MuxedAccount MuxedAccount => throw new NotImplementedException();
-
-        public byte[] PublicKey => throw new NotImplementedException();
-
-        public string Address => throw new NotImplementedException();
-
-        public string AccountId => throw new NotImplementedException();
-
-        public bool IsMuxedAccount => throw new NotImplementedException();
-
-        public KeyPair SigningKey => throw new NotImplementedException();
     }
 }

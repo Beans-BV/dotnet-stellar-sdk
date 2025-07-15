@@ -5,7 +5,11 @@ namespace StellarDotnetSdk.Soroban;
 
 public class ContractEvent
 {
-    private ContractEvent(ExtensionPoint extensionPoint, string? contractId, SCVal[] topics, SCVal data,
+    private ContractEvent(
+        ExtensionPoint extensionPoint,
+        string? contractId,
+        SCVal[] topics,
+        SCVal data,
         ContractEventType type)
     {
         ExtensionPoint = extensionPoint;
@@ -23,8 +27,9 @@ public class ContractEvent
 
     public static ContractEvent FromXdr(Xdr.ContractEvent xdrEvent)
     {
-        return new ContractEvent(ExtensionPoint.FromXdr(xdrEvent.Ext),
-            xdrEvent.ContractID != null ? StrKey.EncodeContractId(xdrEvent.ContractID.InnerValue) : null,
+        return new ContractEvent(
+            ExtensionPoint.FromXdr(xdrEvent.Ext),
+            xdrEvent.ContractID != null ? StrKey.EncodeContractId(xdrEvent.ContractID.InnerValue.InnerValue) : null,
             type: xdrEvent.Type, topics: xdrEvent.Body.V0.Topics.Select(SCVal.FromXdr).ToArray(),
             data: SCVal.FromXdr(xdrEvent.Body.V0.Data));
     }

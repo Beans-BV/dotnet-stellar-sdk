@@ -34,7 +34,7 @@ public class AccountMergeOperation : Operation
     /// <param name="muxedAccount">An <c>Xdr.MuxedAccount</c> object representing the destination.</param>
     public AccountMergeOperation(Xdr.MuxedAccount muxedAccount) : base(null)
     {
-        Destination = MuxedAccount.FromXdrMuxedAccount(muxedAccount);
+        Destination = MuxedAccount.FromXdr(muxedAccount);
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ public class AccountMergeOperation : Operation
         return new Xdr.Operation.OperationBody
         {
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.ACCOUNT_MERGE),
-            Destination = Destination.MuxedAccount,
+            Destination = Destination.ToXdrMuxedAccount(),
         };
     }
 }

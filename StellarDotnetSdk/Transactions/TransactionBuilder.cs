@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Xdr;
 using memos_Memo = StellarDotnetSdk.Memos.Memo;
+using MuxedAccount = StellarDotnetSdk.Accounts.MuxedAccount;
 using Operations_Operation = StellarDotnetSdk.Operations.Operation;
 using Soroban_SorobanTransactionData = StellarDotnetSdk.Soroban.SorobanTransactionData;
 
@@ -50,7 +51,7 @@ public class TransactionBuilder
         return new FeeBumpTransaction(feeSource, inner, feeBumpFee);
     }
 
-    public static FeeBumpTransaction BuildFeeBumpTransaction(IAccountId feeSource, Transaction inner, long fee)
+    public static FeeBumpTransaction BuildFeeBumpTransaction(MuxedAccount feeSource, Transaction inner, long fee)
     {
         if (inner.Operations.Length == 0)
         {
@@ -176,8 +177,14 @@ public class TransactionBuilder
         //var totalFee = operations.Length * _fee;
         var opsCount = Convert.ToUInt32(operations.Length);
         var totalFee = checked(opsCount * _fee);
-        var transaction = new Transaction(_sourceAccount.MuxedAccount, totalFee,
-            _sourceAccount.IncrementedSequenceNumber, operations, _memo, _preconditions, _sorobanData);
+        var transaction = new Transaction(
+            _sourceAccount.AccountId,
+            totalFee,
+            _sourceAccount.IncrementedSequenceNumber,
+            operations,
+            _memo,
+            _preconditions,
+            _sorobanData);
         // Increment sequence number when there were no exceptions when creating a transaction
         _sourceAccount.IncrementSequenceNumber();
         return transaction;

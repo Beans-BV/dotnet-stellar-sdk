@@ -9,11 +9,11 @@ public class ConfigSettingContractLedgerCost : LedgerEntryConfigSetting
         uint ledgerMaxDiskReadBytes,
         uint ledgerMaxWriteLedgerEntries,
         uint ledgerMaxWriteBytes,
-        uint txMaxReadLedgerEntries,
+        uint txMaxDiskReadEntries,
         uint txMaxDiskReadBytes,
         uint txMaxWriteLedgerEntries,
         uint txMaxWriteBytes,
-        long feeReadLedgerEntry,
+        long feeDiskReadLedgerEntry,
         long feeWriteLedgerEntry,
         long feeDiskRead1Kb,
         long sorobanStateTargetSizeBytes,
@@ -26,11 +26,11 @@ public class ConfigSettingContractLedgerCost : LedgerEntryConfigSetting
         LedgerMaxDiskReadBytes = ledgerMaxDiskReadBytes;
         LedgerMaxWriteLedgerEntries = ledgerMaxWriteLedgerEntries;
         LedgerMaxWriteBytes = ledgerMaxWriteBytes;
-        TxMaxReadLedgerEntries = txMaxReadLedgerEntries;
+        TxMaxDiskReadEntries = txMaxDiskReadEntries;
         TxMaxDiskReadBytes = txMaxDiskReadBytes;
         TxMaxWriteLedgerEntries = txMaxWriteLedgerEntries;
         TxMaxWriteBytes = txMaxWriteBytes;
-        FeeReadLedgerEntry = feeReadLedgerEntry;
+        FeeDiskReadLedgerEntry = feeDiskReadLedgerEntry;
         FeeWriteLedgerEntry = feeWriteLedgerEntry;
         FeeDiskRead1Kb = feeDiskRead1Kb;
         SorobanStateTargetSizeBytes = sorobanStateTargetSizeBytes;
@@ -43,11 +43,11 @@ public class ConfigSettingContractLedgerCost : LedgerEntryConfigSetting
     public uint LedgerMaxDiskReadBytes { get; }
     public uint LedgerMaxWriteLedgerEntries { get; }
     public uint LedgerMaxWriteBytes { get; }
-    public uint TxMaxReadLedgerEntries { get; }
+    public uint TxMaxDiskReadEntries { get; }
     public uint TxMaxDiskReadBytes { get; }
     public uint TxMaxWriteLedgerEntries { get; }
     public uint TxMaxWriteBytes { get; }
-    public long FeeReadLedgerEntry { get; }
+    public long FeeDiskReadLedgerEntry { get; }
     public long FeeWriteLedgerEntry { get; }
     public long FeeDiskRead1Kb { get; }
     public long SorobanStateTargetSizeBytes { get; }
