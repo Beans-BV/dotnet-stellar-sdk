@@ -10,8 +10,7 @@ namespace StellarDotnetSdk.Xdr;
 //  enum BucketListType
 //  {
 //      LIVE = 0,
-//      HOT_ARCHIVE = 1,
-//      COLD_ARCHIVE = 2
+//      HOT_ARCHIVE = 1
 //  };
 
 //  ===========================================================================
@@ -21,7 +20,6 @@ public class BucketListType
     {
         LIVE = 0,
         HOT_ARCHIVE = 1,
-        COLD_ARCHIVE = 2,
     }
 
     public BucketListTypeEnum InnerValue { get; set; }
@@ -41,7 +39,6 @@ public class BucketListType
         {
             case 0: return Create(BucketListTypeEnum.LIVE);
             case 1: return Create(BucketListTypeEnum.HOT_ARCHIVE);
-            case 2: return Create(BucketListTypeEnum.COLD_ARCHIVE);
             default:
                 throw new Exception("Unknown enum value: " + value);
         }

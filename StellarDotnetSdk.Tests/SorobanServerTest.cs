@@ -1069,7 +1069,7 @@ public class SorobanServerTest
         var sorobanData = response.SorobanTransactionData;
 
         Assert.IsNotNull(sorobanData);
-        Assert.IsInstanceOfType(sorobanData.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.IsNull(sorobanData.Extension);
         Assert.AreEqual(2L, sorobanData.ResourceFee);
         var sorobanResources = sorobanData.Resources;
         Assert.IsNotNull(sorobanResources);

@@ -46,20 +46,20 @@ public class ConfigSettingContractLedgerCost : LedgerEntryConfigSetting
     public static ConfigSettingContractLedgerCost FromXdr(ConfigSettingContractLedgerCostV0 xdrConfig)
     {
         return new ConfigSettingContractLedgerCost(
-            xdrConfig.LedgerMaxReadLedgerEntries.InnerValue,
-            xdrConfig.LedgerMaxReadBytes.InnerValue,
+            xdrConfig.LedgerMaxDiskReadEntries.InnerValue,
+            xdrConfig.LedgerMaxDiskReadBytes.InnerValue,
             xdrConfig.LedgerMaxWriteLedgerEntries.InnerValue,
             xdrConfig.LedgerMaxWriteBytes.InnerValue,
-            xdrConfig.TxMaxReadLedgerEntries.InnerValue,
-            xdrConfig.TxMaxReadBytes.InnerValue,
+            xdrConfig.TxMaxDiskReadEntries.InnerValue,
+            xdrConfig.TxMaxDiskReadBytes.InnerValue,
             xdrConfig.TxMaxWriteLedgerEntries.InnerValue,
             xdrConfig.TxMaxWriteBytes.InnerValue,
-            xdrConfig.FeeReadLedgerEntry.InnerValue,
+            xdrConfig.FeeDiskReadLedgerEntry.InnerValue,
             xdrConfig.FeeWriteLedgerEntry.InnerValue,
-            xdrConfig.FeeRead1KB.InnerValue,
-            xdrConfig.BucketListTargetSizeBytes.InnerValue,
-            xdrConfig.WriteFee1KBBucketListLow.InnerValue,
-            xdrConfig.WriteFee1KBBucketListHigh.InnerValue,
-            xdrConfig.BucketListWriteFeeGrowthFactor.InnerValue);
+            xdrConfig.FeeDiskRead1KB.InnerValue,
+            xdrConfig.SorobanStateTargetSizeBytes.InnerValue,
+            xdrConfig.RentFee1KBSorobanStateSizeLow.InnerValue,
+            xdrConfig.RentFee1KBSorobanStateSizeHigh.InnerValue,
+            xdrConfig.SorobanStateRentFeeGrowthFactor.InnerValue);
     }
 }

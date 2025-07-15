@@ -24,7 +24,7 @@ public class ContractEvent
     public static ContractEvent FromXdr(Xdr.ContractEvent xdrEvent)
     {
         return new ContractEvent(ExtensionPoint.FromXdr(xdrEvent.Ext),
-            xdrEvent.ContractID != null ? StrKey.EncodeContractId(xdrEvent.ContractID.InnerValue) : null,
+            xdrEvent.ContractID != null ? StrKey.EncodeContractId(xdrEvent.ContractID.InnerValue.InnerValue) : null,
             type: xdrEvent.Type, topics: xdrEvent.Body.V0.Topics.Select(SCVal.FromXdr).ToArray(),
             data: SCVal.FromXdr(xdrEvent.Body.V0.Data));
     }

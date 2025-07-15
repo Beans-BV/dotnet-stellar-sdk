@@ -15,8 +15,6 @@ namespace StellarDotnetSdk.Xdr;
 //      Auth auth;
 //  case DONT_HAVE:
 //      DontHave dontHave;
-//  case GET_PEERS:
-//      void;
 //  case PEERS:
 //      PeerAddress peers<100>;
 //  
@@ -29,12 +27,6 @@ namespace StellarDotnetSdk.Xdr;
 //  
 //  case TRANSACTION:
 //      TransactionEnvelope transaction;
-//  
-//  case SURVEY_REQUEST:
-//      SignedSurveyRequestMessage signedSurveyRequestMessage;
-//  
-//  case SURVEY_RESPONSE:
-//      SignedSurveyResponseMessage signedSurveyResponseMessage;
 //  
 //  case TIME_SLICED_SURVEY_REQUEST:
 //      SignedTimeSlicedSurveyRequestMessage signedTimeSlicedSurveyRequestMessage;
@@ -84,8 +76,6 @@ public class StellarMessage
     public TransactionSet TxSet { get; set; }
     public GeneralizedTransactionSet GeneralizedTxSet { get; set; }
     public TransactionEnvelope Transaction { get; set; }
-    public SignedSurveyRequestMessage SignedSurveyRequestMessage { get; set; }
-    public SignedSurveyResponseMessage SignedSurveyResponseMessage { get; set; }
     public SignedTimeSlicedSurveyRequestMessage SignedTimeSlicedSurveyRequestMessage { get; set; }
     public SignedTimeSlicedSurveyResponseMessage SignedTimeSlicedSurveyResponseMessage { get; set; }
     public SignedTimeSlicedSurveyStartCollectingMessage SignedTimeSlicedSurveyStartCollectingMessage { get; set; }
@@ -116,8 +106,6 @@ public class StellarMessage
             case MessageType.MessageTypeEnum.DONT_HAVE:
                 DontHave.Encode(stream, encodedStellarMessage.DontHave);
                 break;
-            case MessageType.MessageTypeEnum.GET_PEERS:
-                break;
             case MessageType.MessageTypeEnum.PEERS:
                 var peerssize = encodedStellarMessage.Peers.Length;
                 stream.WriteInt(peerssize);
@@ -137,12 +125,6 @@ public class StellarMessage
                 break;
             case MessageType.MessageTypeEnum.TRANSACTION:
                 TransactionEnvelope.Encode(stream, encodedStellarMessage.Transaction);
-                break;
-            case MessageType.MessageTypeEnum.SURVEY_REQUEST:
-                SignedSurveyRequestMessage.Encode(stream, encodedStellarMessage.SignedSurveyRequestMessage);
-                break;
-            case MessageType.MessageTypeEnum.SURVEY_RESPONSE:
-                SignedSurveyResponseMessage.Encode(stream, encodedStellarMessage.SignedSurveyResponseMessage);
                 break;
             case MessageType.MessageTypeEnum.TIME_SLICED_SURVEY_REQUEST:
                 SignedTimeSlicedSurveyRequestMessage.Encode(stream,
@@ -206,8 +188,6 @@ public class StellarMessage
             case MessageType.MessageTypeEnum.DONT_HAVE:
                 decodedStellarMessage.DontHave = DontHave.Decode(stream);
                 break;
-            case MessageType.MessageTypeEnum.GET_PEERS:
-                break;
             case MessageType.MessageTypeEnum.PEERS:
                 var peerssize = stream.ReadInt();
                 decodedStellarMessage.Peers = new PeerAddress[peerssize];
@@ -227,12 +207,6 @@ public class StellarMessage
                 break;
             case MessageType.MessageTypeEnum.TRANSACTION:
                 decodedStellarMessage.Transaction = TransactionEnvelope.Decode(stream);
-                break;
-            case MessageType.MessageTypeEnum.SURVEY_REQUEST:
-                decodedStellarMessage.SignedSurveyRequestMessage = SignedSurveyRequestMessage.Decode(stream);
-                break;
-            case MessageType.MessageTypeEnum.SURVEY_RESPONSE:
-                decodedStellarMessage.SignedSurveyResponseMessage = SignedSurveyResponseMessage.Decode(stream);
                 break;
             case MessageType.MessageTypeEnum.TIME_SLICED_SURVEY_REQUEST:
                 decodedStellarMessage.SignedTimeSlicedSurveyRequestMessage =

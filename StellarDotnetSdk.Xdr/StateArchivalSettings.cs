@@ -17,11 +17,11 @@ namespace StellarDotnetSdk.Xdr;
 //      // max number of entries that emit archival meta in a single ledger
 //      uint32 maxEntriesToArchive;
 //  
-//      // Number of snapshots to use when calculating average BucketList size
-//      uint32 bucketListSizeWindowSampleSize;
+//      // Number of snapshots to use when calculating average live Soroban State size
+//      uint32 liveSorobanStateSizeWindowSampleSize;
 //  
-//      // How often to sample the BucketList size for the average, in ledgers
-//      uint32 bucketListWindowSamplePeriod;
+//      // How often to sample the live Soroban State size for the average, in ledgers
+//      uint32 liveSorobanStateSizeWindowSamplePeriod;
 //  
 //      // Maximum number of bytes that we scan for eviction per ledger
 //      uint32 evictionScanSize;
@@ -39,8 +39,8 @@ public class StateArchivalSettings
     public Int64 PersistentRentRateDenominator { get; set; }
     public Int64 TempRentRateDenominator { get; set; }
     public Uint32 MaxEntriesToArchive { get; set; }
-    public Uint32 BucketListSizeWindowSampleSize { get; set; }
-    public Uint32 BucketListWindowSamplePeriod { get; set; }
+    public Uint32 LiveSorobanStateSizeWindowSampleSize { get; set; }
+    public Uint32 LiveSorobanStateSizeWindowSamplePeriod { get; set; }
     public Uint32 EvictionScanSize { get; set; }
     public Uint32 StartingEvictionScanLevel { get; set; }
 
@@ -52,8 +52,8 @@ public class StateArchivalSettings
         Int64.Encode(stream, encodedStateArchivalSettings.PersistentRentRateDenominator);
         Int64.Encode(stream, encodedStateArchivalSettings.TempRentRateDenominator);
         Uint32.Encode(stream, encodedStateArchivalSettings.MaxEntriesToArchive);
-        Uint32.Encode(stream, encodedStateArchivalSettings.BucketListSizeWindowSampleSize);
-        Uint32.Encode(stream, encodedStateArchivalSettings.BucketListWindowSamplePeriod);
+        Uint32.Encode(stream, encodedStateArchivalSettings.LiveSorobanStateSizeWindowSampleSize);
+        Uint32.Encode(stream, encodedStateArchivalSettings.LiveSorobanStateSizeWindowSamplePeriod);
         Uint32.Encode(stream, encodedStateArchivalSettings.EvictionScanSize);
         Uint32.Encode(stream, encodedStateArchivalSettings.StartingEvictionScanLevel);
     }
@@ -67,8 +67,8 @@ public class StateArchivalSettings
         decodedStateArchivalSettings.PersistentRentRateDenominator = Int64.Decode(stream);
         decodedStateArchivalSettings.TempRentRateDenominator = Int64.Decode(stream);
         decodedStateArchivalSettings.MaxEntriesToArchive = Uint32.Decode(stream);
-        decodedStateArchivalSettings.BucketListSizeWindowSampleSize = Uint32.Decode(stream);
-        decodedStateArchivalSettings.BucketListWindowSamplePeriod = Uint32.Decode(stream);
+        decodedStateArchivalSettings.LiveSorobanStateSizeWindowSampleSize = Uint32.Decode(stream);
+        decodedStateArchivalSettings.LiveSorobanStateSizeWindowSamplePeriod = Uint32.Decode(stream);
         decodedStateArchivalSettings.EvictionScanSize = Uint32.Decode(stream);
         decodedStateArchivalSettings.StartingEvictionScanLevel = Uint32.Decode(stream);
         return decodedStateArchivalSettings;
