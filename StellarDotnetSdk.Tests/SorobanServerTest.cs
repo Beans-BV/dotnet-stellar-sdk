@@ -17,6 +17,8 @@ using StellarDotnetSdk.Xdr;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using Asset = StellarDotnetSdk.Assets.Asset;
 using CollectionAssert = NUnit.Framework.CollectionAssert;
+using ConfigSettingContractLedgerCostExtV0 = StellarDotnetSdk.LedgerEntries.ConfigSettingContractLedgerCostExtV0;
+using ConfigSettingContractParallelComputeV0 = StellarDotnetSdk.LedgerEntries.ConfigSettingContractParallelComputeV0;
 using EvictionIterator = StellarDotnetSdk.LedgerEntries.EvictionIterator;
 using FeeBumpTransaction = StellarDotnetSdk.Transactions.FeeBumpTransaction;
 using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
@@ -1790,7 +1792,23 @@ public class SorobanServerTest
                     "key": "AAAACAAAAA0=",
                     "xdr": "AAAACAAAAA0AAAAGAAAAAQAAAAAAAAAA",
                     "lastModifiedLedgerSeq": 575
-                  }
+                  },
+                  {
+                    "key": "AAAACAAAAA4=", // CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0
+                    "xdr": "AAAACAAAAA4AAAAL",
+                    "lastModifiedLedgerSeq": 575
+                  },
+                  {
+                    "key": "AAAACAAAAA8=",
+                    "xdr": "AAAACAAAAA8AAAAMAAAAAAAAEBs=", // CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0
+                    "lastModifiedLedgerSeq": 175
+                  },
+                  {
+                    "key": "AAAACAAAABA=",
+                    "xdr": "AAAACAAAABAAAAG8AAABuQAAADcAAAB7AAAADQ==", // CONFIG_SETTING_SCP_TIMING
+                    "lastModifiedLedgerSeq": 175
+                  },
+                  
                 ],
                 "latestLedger": 1172233
               }
@@ -1803,7 +1821,7 @@ public class SorobanServerTest
         var entries = response.LedgerEntries;
         Assert.IsNotNull(entries);
         Assert.AreEqual(1172233U, response.LatestLedger);
-        Assert.AreEqual(14, entries.Length);
+        Assert.AreEqual(17, entries.Length);
 
         var entry0 = entries[0] as ConfigSettingContractMaxSizeBytes;
         Assert.IsNotNull(entry0);
@@ -1818,21 +1836,21 @@ public class SorobanServerTest
 
         var entry2 = entries[2] as ConfigSettingContractLedgerCost;
         Assert.IsNotNull(entry2);
-        Assert.AreEqual(200U, entry2.LedgerMaxReadLedgerEntries);
-        Assert.AreEqual(500000U, entry2.LedgerMaxReadBytes);
+        Assert.AreEqual(200U, entry2.LedgerMaxDiskReadEntries);
+        Assert.AreEqual(500000U, entry2.LedgerMaxDiskReadBytes);
         Assert.AreEqual(125U, entry2.LedgerMaxWriteLedgerEntries);
         Assert.AreEqual(70000U, entry2.LedgerMaxWriteBytes);
-        Assert.AreEqual(40U, entry2.TxMaxReadLedgerEntries);
-        Assert.AreEqual(200000U, entry2.TxMaxReadBytes);
+        Assert.AreEqual(40U, entry2.TxMaxDiskReadEntries);
+        Assert.AreEqual(200000U, entry2.TxMaxDiskReadBytes);
         Assert.AreEqual(25U, entry2.TxMaxWriteLedgerEntries);
         Assert.AreEqual(66560U, entry2.TxMaxWriteBytes);
-        Assert.AreEqual(6250L, entry2.FeeReadLedgerEntry);
+        Assert.AreEqual(6250L, entry2.FeeDiskReadLedgerEntry);
         Assert.AreEqual(10000L, entry2.FeeWriteLedgerEntry);
-        Assert.AreEqual(1786L, entry2.FeeRead1Kb);
-        Assert.AreEqual(300000000L, entry2.BucketListTargetSizeBytes);
-        Assert.AreEqual(9836L, entry2.WriteFee1KbBucketListLow);
-        Assert.AreEqual(12116L, entry2.WriteFee1KbBucketListHigh);
-        Assert.AreEqual(5000U, entry2.BucketListWriteFeeGrowthFactor);
+        Assert.AreEqual(1786L, entry2.FeeDiskRead1Kb);
+        Assert.AreEqual(300000000L, entry2.SorobanStateTargetSizeBytes);
+        Assert.AreEqual(9836L, entry2.RentFee1KbSorobanStateSizeLow);
+        Assert.AreEqual(12116L, entry2.RentFee1KbSorobanStateSizeHigh);
+        Assert.AreEqual(5000U, entry2.SorobanStateRentFeeGrowthFactor);
 
         var entry3 = entries[3] as ConfigSettingContractHistoricalData;
         Assert.IsNotNull(entry3);
@@ -1925,8 +1943,8 @@ public class SorobanServerTest
         Assert.AreEqual(2103L, entry10.PersistentRentRateDenominator);
         Assert.AreEqual(4206L, entry10.TempRentRateDenominator);
         Assert.AreEqual(1000U, entry10.MaxEntriesToArchive);
-        Assert.AreEqual(30U, entry10.BucketListSizeWindowSampleSize);
-        Assert.AreEqual(64U, entry10.BucketListWindowSamplePeriod);
+        Assert.AreEqual(30U, entry10.LiveSorobanStateSizeWindowSampleSize);
+        Assert.AreEqual(64U, entry10.LiveSorobanStateSizeWindowSamplePeriod);
         Assert.AreEqual(100000U, entry10.EvictionScanSize);
         Assert.AreEqual(7U, entry10.StartingEvictionScanLevel);
 
@@ -1934,7 +1952,7 @@ public class SorobanServerTest
         Assert.IsNotNull(entry11);
         Assert.AreEqual(100U, entry11.LedgerMaxTxCount);
 
-        var entry12 = entries[12] as ConfigSettingBucketListSizeWindow;
+        var entry12 = entries[12] as ConfigSettingLiveSorobanStateSizeWindow;
         Assert.IsNotNull(entry12);
         Assert.AreEqual(30, entry12.InnerValue.Length);
         Assert.AreEqual(100UL, entry12.InnerValue[0]);
@@ -1946,6 +1964,23 @@ public class SorobanServerTest
         Assert.AreEqual(6U, entry13.BucketListLevel);
         Assert.AreEqual(true, entry13.IsCurrBucket);
         Assert.AreEqual(0UL, entry13.BucketFileOffset);
+
+        var entry14 = entries[14] as ConfigSettingContractParallelComputeV0;
+        Assert.IsNotNull(entry14);
+        Assert.AreEqual(11U, entry14.LedgerMaxDependentTxClusters);
+
+        var entry15 = entries[15] as ConfigSettingContractLedgerCostExtV0;
+        Assert.IsNotNull(entry15);
+        Assert.AreEqual(4123L, entry15.FeeWrite1Kb);
+        Assert.AreEqual(12U, entry15.TxMaxFootprintEntries);
+        
+        var entry16 = entries[16] as ConfigSettingScpTiming;
+        Assert.IsNotNull(entry16);
+        Assert.AreEqual(444U, entry16.LedgerTargetCloseTimeMilliseconds);
+        Assert.AreEqual(441U, entry16.NominationTimeoutInitialMilliseconds);
+        Assert.AreEqual(55U, entry16.NominationTimeoutIncrementMilliseconds);
+        Assert.AreEqual(123U, entry16.BallotTimeoutInitialMilliseconds);
+        Assert.AreEqual(13U, entry16.BallotTimeoutIncrementMilliseconds);
     }
 
     [TestMethod]

@@ -2,9 +2,16 @@
 
 public class StateArchivalSettings : LedgerEntryConfigSetting
 {
-    private StateArchivalSettings(uint maxEntryTtl, uint minTemporaryTtl, uint minPersistentTtl,
-        long persistentRentRateDenominator, long tempRentRateDenominator, uint maxEntriesToArchive,
-        uint bucketListSizeWindowSampleSize, uint bucketListWindowSamplePeriod, uint evictionScanSize,
+    private StateArchivalSettings(
+        uint maxEntryTtl,
+        uint minTemporaryTtl,
+        uint minPersistentTtl,
+        long persistentRentRateDenominator,
+        long tempRentRateDenominator,
+        uint maxEntriesToArchive,
+        uint liveSorobanStateSizeWindowSampleSize,
+        uint liveSorobanStateSizeWindowSamplePeriod,
+        uint evictionScanSize,
         uint startingEvictionScanLevel)
     {
         MaxEntryTtl = maxEntryTtl;
@@ -13,8 +20,8 @@ public class StateArchivalSettings : LedgerEntryConfigSetting
         PersistentRentRateDenominator = persistentRentRateDenominator;
         TempRentRateDenominator = tempRentRateDenominator;
         MaxEntriesToArchive = maxEntriesToArchive;
-        BucketListSizeWindowSampleSize = bucketListSizeWindowSampleSize;
-        BucketListWindowSamplePeriod = bucketListWindowSamplePeriod;
+        LiveSorobanStateSizeWindowSampleSize = liveSorobanStateSizeWindowSampleSize;
+        LiveSorobanStateSizeWindowSamplePeriod = liveSorobanStateSizeWindowSamplePeriod;
         EvictionScanSize = evictionScanSize;
         StartingEvictionScanLevel = startingEvictionScanLevel;
     }
@@ -25,8 +32,8 @@ public class StateArchivalSettings : LedgerEntryConfigSetting
     public long PersistentRentRateDenominator { get; }
     public long TempRentRateDenominator { get; }
     public uint MaxEntriesToArchive { get; }
-    public uint BucketListSizeWindowSampleSize { get; }
-    public uint BucketListWindowSamplePeriod { get; }
+    public uint LiveSorobanStateSizeWindowSampleSize { get; }
+    public uint LiveSorobanStateSizeWindowSamplePeriod { get; }
     public uint EvictionScanSize { get; }
     public uint StartingEvictionScanLevel { get; }
 
@@ -42,6 +49,7 @@ public class StateArchivalSettings : LedgerEntryConfigSetting
             xdrConfig.LiveSorobanStateSizeWindowSampleSize.InnerValue,
             xdrConfig.LiveSorobanStateSizeWindowSamplePeriod.InnerValue,
             xdrConfig.EvictionScanSize.InnerValue,
-            xdrConfig.StartingEvictionScanLevel.InnerValue);
+            xdrConfig.StartingEvictionScanLevel.InnerValue
+        );
     }
 }
