@@ -176,7 +176,7 @@ public class SetOptionsOperationTest
 
 
         var payload = Util.HexToBytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20");
-        var signedPayloadSigner = new SignedPayloadSigner(StrKey.DecodeStellarAccountId(payloadSignerStrKey), payload);
+        var signedPayloadSigner = new SignedPayloadSigner(StrKey.DecodeEd25519PublicKey(payloadSignerStrKey), payload);
         var signerKey = SignerUtil.SignedPayload(signedPayloadSigner);
         var operation = new SetOptionsOperation(_source)
             .SetSigner(signerKey, 1);
