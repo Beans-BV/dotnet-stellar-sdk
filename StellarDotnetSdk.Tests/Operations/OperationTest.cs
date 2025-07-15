@@ -1065,7 +1065,7 @@ public class OperationTest
 
         var preimage = (ContractIdAddressPreimage)hostFunction.ContractIdPreimage;
         var decodedPreimage = (ContractIdAddressPreimage)decodedHostFunction.ContractIdPreimage;
-        Assert.AreEqual(((SCAccountId)preimage.Address).InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
+        Assert.AreEqual(((ScAccountId)preimage.Address).InnerValue, ((ScAccountId)decodedPreimage.Address).InnerValue);
         CollectionAssert.AreEqual(preimage.Salt, decodedPreimage.Salt);
 
         var decodedArguments = decodedHostFunction.Arguments;
@@ -1079,7 +1079,7 @@ public class OperationTest
     {
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
         var operation = new InvokeContractOperation(
-            new SCContractId("CDSUR2JFKSUORJLUA2FISW7P6ALDTS2PDK6AYQZ7G4CSY5WZS5QVSM47"),
+            new ScContractId("CDSUR2JFKSUORJLUA2FISW7P6ALDTS2PDK6AYQZ7G4CSY5WZS5QVSM47"),
             new SCSymbol("init"),
             [new SCString("test"), new SCBool(true)],
             source);
@@ -1094,8 +1094,8 @@ public class OperationTest
         var hostFunction = operation.HostFunction;
         var decodedHostFunction = decodedOperation.HostFunction;
 
-        var address = (SCContractId)hostFunction.ContractAddress;
-        var decodedAddress = (SCContractId)decodedHostFunction.ContractAddress;
+        var address = (ScContractId)hostFunction.ContractAddress;
+        var decodedAddress = (ScContractId)decodedHostFunction.ContractAddress;
         Assert.AreEqual(address.InnerValue, decodedAddress.InnerValue);
         Assert.AreEqual(hostFunction.FunctionName.InnerValue, decodedHostFunction.FunctionName.InnerValue);
 
@@ -1126,8 +1126,8 @@ public class OperationTest
         var hostFunction = operation.HostFunction;
         var decodedHostFunction = decodedOperation.HostFunction;
 
-        var address = (SCContractId)hostFunction.ContractAddress;
-        var decodedAddress = (SCContractId)decodedHostFunction.ContractAddress;
+        var address = (ScContractId)hostFunction.ContractAddress;
+        var decodedAddress = (ScContractId)decodedHostFunction.ContractAddress;
         Assert.AreEqual(address.InnerValue, decodedAddress.InnerValue);
         Assert.AreEqual(hostFunction.FunctionName.InnerValue, decodedHostFunction.FunctionName.InnerValue);
 

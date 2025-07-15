@@ -7,7 +7,6 @@ using StellarDotnetSdk.Xdr;
 using Asset = StellarDotnetSdk.Assets.Asset;
 using ContractExecutable = StellarDotnetSdk.Soroban.ContractExecutable;
 using Int64 = StellarDotnetSdk.Xdr.Int64;
-using SCAddress = StellarDotnetSdk.Soroban.SCAddress;
 using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 using FunctionType = StellarDotnetSdk.Xdr.SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum;
@@ -47,7 +46,7 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
     /// </summary>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public InvokeContractOperation(
-        SCAddress contractAddress,
+        ScAddress contractAddress,
         SCSymbol functionName,
         SCVal[]? args,
         IAccountId? sourceAccount = null
@@ -86,7 +85,7 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
         }
         args ??= [];
         HostFunction = new InvokeContractHostFunction(
-            new SCContractId(contractAddress), new SCSymbol(functionName), args);
+            new ScContractId(contractAddress), new SCSymbol(functionName), args);
     }
 
     public InvokeContractHostFunction HostFunction { get; }
@@ -115,7 +114,7 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
     {
         var invokeContractArgs = invokeHostFunctionOp.HostFunction.InvokeContract;
         return new InvokeContractOperation(
-            SCAddress.FromXdr(invokeContractArgs.ContractAddress),
+            ScAddress.FromXdr(invokeContractArgs.ContractAddress),
             SCSymbol.FromXdr(invokeContractArgs.FunctionName),
             invokeContractArgs.Args.Select(SCVal.FromXdr).ToArray()
         )
@@ -280,7 +279,7 @@ public abstract class HostFunction;
 public class InvokeContractHostFunction : HostFunction
 {
     public InvokeContractHostFunction(
-        SCAddress contractAddress,
+        ScAddress contractAddress,
         SCSymbol functionName,
         SCVal[] args
     )
@@ -295,14 +294,14 @@ public class InvokeContractHostFunction : HostFunction
         Args = args;
     }
 
-    public SCAddress ContractAddress { get; }
+    public ScAddress ContractAddress { get; }
     public SCSymbol FunctionName { get; }
     public SCVal[] Args { get; }
 
     public static InvokeContractHostFunction FromXdr(InvokeContractArgs xdrInvokeContractArgs)
     {
         return new InvokeContractHostFunction(
-            SCAddress.FromXdr(xdrInvokeContractArgs.ContractAddress),
+            ScAddress.FromXdr(xdrInvokeContractArgs.ContractAddress),
             SCSymbol.FromXdr(xdrInvokeContractArgs.FunctionName),
             xdrInvokeContractArgs.Args.Select(SCVal.FromXdr).ToArray()
         );
@@ -528,7 +527,7 @@ public class SorobanSourceAccountCredentials : SorobanCredentials
 
 public class SorobanAddressCredentials : SorobanCredentials
 {
-    public SorobanAddressCredentials(SCAddress address, long nonce, uint signatureExpirationLedger, SCVal signature)
+    public SorobanAddressCredentials(ScAddress address, long nonce, uint signatureExpirationLedger, SCVal signature)
     {
         Address = address ?? throw new ArgumentNullException(nameof(address), "Address cannot be null.");
         Nonce = nonce;
@@ -539,7 +538,7 @@ public class SorobanAddressCredentials : SorobanCredentials
     /// <summary>
     ///     The address that authorizes invocation.
     /// </summary>
-    public SCAddress Address { get; }
+    public ScAddress Address { get; }
 
     /// <summary>
     ///     Is an arbitrary value that is unique for all the signatures performed by <c>address</c> until
@@ -562,7 +561,7 @@ public class SorobanAddressCredentials : SorobanCredentials
         }
 
         return new SorobanAddressCredentials(
-            SCAddress.FromXdr(xdrSorobanCredentials.Address.Address),
+            ScAddress.FromXdr(xdrSorobanCredentials.Address.Address),
             xdrSorobanCredentials.Address.Nonce.InnerValue,
             xdrSorobanCredentials.Address.SignatureExpirationLedger.InnerValue,
             SCVal.FromXdr(xdrSorobanCredentials.Address.Signature)
@@ -794,7 +793,7 @@ public class ContractIdAddressPreimage : ContractIdPreimage
 {
     public ContractIdAddressPreimage(string address, byte[]? salt = null)
     {
-        Address = new SCAccountId(address);
+        Address = new ScAccountId(address);
 
         if (salt != null)
         {
@@ -812,7 +811,7 @@ public class ContractIdAddressPreimage : ContractIdPreimage
         Salt = salt;
     }
 
-    public SCAddress Address { get; }
+    public ScAddress Address { get; }
     public byte[] Salt { get; }
 
     public static ContractIdPreimage FromContractIdPreimageXdr(ContractIDPreimage xdrContractIdPreimage)

@@ -117,7 +117,7 @@ public class LedgerEntryTest
         return new ContractDataEntry
         {
             Ext = new ExtensionPoint(),
-            Contract = new SCContractId(ContractId).ToXdr(),
+            Contract = new ScContractId(ContractId).ToXdr(),
             Key = new SCVal
             {
                 Discriminant = SCValType.Create(SCValType.SCValTypeEnum.SCV_STRING),
@@ -925,7 +925,7 @@ public class LedgerEntryTest
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
         var decodedLedgerEntry = (LedgerEntryContractData)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
-        var decodedAccountId = (SCAccountId)decodedLedgerEntry.Contract;
+        var decodedAccountId = (ScAccountId)decodedLedgerEntry.Contract;
         // Assert
         Assert.IsInstanceOfType(decodedLedgerEntry.ExtensionPoint, typeof(ExtensionPointZero));
         CollectionAssert.AreEqual(xdrContractDataEntry.Contract.AccountId.InnerValue.Ed25519.InnerValue,

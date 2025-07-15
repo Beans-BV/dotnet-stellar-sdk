@@ -18,7 +18,7 @@ public class SorobanAuthorizationTest
 
     private const string WasmHash = "6416281094F721A3CC324DC5A119A71101E80F17B03D92FE528AFEC56238B882";
 
-    private readonly SCAccountId _accountAddress = new("GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP");
+    private readonly ScAccountId _accountAddress = new("GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP");
 
     private readonly ContractExecutableWasm _contractExecutableWasm = new(WasmHash);
 
@@ -39,8 +39,8 @@ public class SorobanAuthorizationTest
         var decodedCredentials = (SorobanAddressCredentials)SorobanCredentials.FromXdr(xdrCredentials);
 
         // Assert
-        Assert.AreEqual(((SCAccountId)sorobanCredentials.Address).InnerValue,
-            ((SCAccountId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(((ScAccountId)sorobanCredentials.Address).InnerValue,
+            ((ScAccountId)decodedCredentials.Address).InnerValue);
         Assert.AreEqual(sorobanCredentials.Nonce, decodedCredentials.Nonce);
         Assert.AreEqual(((SCString)sorobanCredentials.Signature).InnerValue,
             ((SCString)decodedCredentials.Signature).InnerValue);
@@ -58,7 +58,7 @@ public class SorobanAuthorizationTest
     [TestMethod]
     public void TestSorobanAddressCredentialsWithAddressBeingAContractAddress()
     {
-        var contractAddress = new SCContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
+        var contractAddress = new ScContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
         var sorobanCredentials =
             new SorobanAddressCredentials(contractAddress, Nonce, SignatureExpirationLedger, _signature);
 
@@ -67,7 +67,7 @@ public class SorobanAuthorizationTest
         var decodedCredentials = (SorobanAddressCredentials)SorobanCredentials.FromXdr(xdrCredentials);
 
         // Assert
-        Assert.AreEqual(contractAddress.InnerValue, ((SCContractId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(contractAddress.InnerValue, ((ScContractId)decodedCredentials.Address).InnerValue);
         Assert.AreEqual(sorobanCredentials.Nonce, decodedCredentials.Nonce);
         Assert.AreEqual(((SCString)sorobanCredentials.Signature).InnerValue,
             ((SCString)decodedCredentials.Signature).InnerValue);
@@ -92,8 +92,8 @@ public class SorobanAuthorizationTest
         var decodedCredentials = (SorobanAddressCredentials)SorobanCredentials.FromXdr(xdrCredentials);
 
         // Assert
-        Assert.AreEqual(((SCAccountId)sorobanCredentials.Address).InnerValue,
-            ((SCAccountId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(((ScAccountId)sorobanCredentials.Address).InnerValue,
+            ((ScAccountId)decodedCredentials.Address).InnerValue);
         Assert.AreEqual(sorobanCredentials.Nonce, decodedCredentials.Nonce);
         Assert.AreEqual(((SCString)sorobanCredentials.Signature).InnerValue,
             ((SCString)decodedCredentials.Signature).InnerValue);
@@ -110,8 +110,8 @@ public class SorobanAuthorizationTest
         var decodedCredentials = (SorobanAddressCredentials)SorobanCredentials.FromXdr(xdrCredentials);
 
         // Assert
-        Assert.AreEqual(((SCAccountId)sorobanCredentials.Address).InnerValue,
-            ((SCAccountId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(((ScAccountId)sorobanCredentials.Address).InnerValue,
+            ((ScAccountId)decodedCredentials.Address).InnerValue);
         Assert.AreEqual(sorobanCredentials.Nonce, decodedCredentials.Nonce);
         Assert.AreEqual(((SCString)sorobanCredentials.Signature).InnerValue,
             ((SCString)decodedCredentials.Signature).InnerValue);
@@ -138,8 +138,8 @@ public class SorobanAuthorizationTest
 
         Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
         var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
-        Assert.AreEqual(((SCAccountId)credentials.Address).InnerValue,
-            ((SCAccountId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(((ScAccountId)credentials.Address).InnerValue,
+            ((ScAccountId)decodedCredentials.Address).InnerValue);
         Assert.AreEqual(credentials.Nonce, decodedCredentials.Nonce);
         Assert.AreEqual(credentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
         Assert.AreEqual(((SCString)credentials.Signature).InnerValue,
@@ -151,7 +151,7 @@ public class SorobanAuthorizationTest
         Assert.IsNotNull(decodedRootFunction);
         Assert.IsInstanceOfType(decodedRootFunction.ContractIdPreimage, typeof(ContractIdAddressPreimage));
         var decodedPreimage = (ContractIdAddressPreimage)decodedRootFunction.ContractIdPreimage;
-        Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
+        Assert.AreEqual(_accountAddress.InnerValue, ((ScAccountId)decodedPreimage.Address).InnerValue);
         CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
         Assert.IsInstanceOfType(decodedRootFunction.Executable, typeof(ContractExecutableWasm));
         var decodedExecutable = (ContractExecutableWasm)decodedRootFunction.Executable;
@@ -180,8 +180,8 @@ public class SorobanAuthorizationTest
 
         Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
         var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
-        Assert.AreEqual(((SCAccountId)credentials.Address).InnerValue,
-            ((SCAccountId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(((ScAccountId)credentials.Address).InnerValue,
+            ((ScAccountId)decodedCredentials.Address).InnerValue);
         Assert.AreEqual(credentials.Nonce, decodedCredentials.Nonce);
         Assert.AreEqual(credentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
         Assert.AreEqual(((SCString)credentials.Signature).InnerValue,
@@ -193,7 +193,7 @@ public class SorobanAuthorizationTest
         Assert.IsNotNull(decodedRootFunction);
         Assert.IsInstanceOfType(decodedRootFunction.ContractIdPreimage, typeof(ContractIdAddressPreimage));
         var decodedPreimage = (ContractIdAddressPreimage)decodedRootFunction.ContractIdPreimage;
-        Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
+        Assert.AreEqual(_accountAddress.InnerValue, ((ScAccountId)decodedPreimage.Address).InnerValue);
         var salt = ((ContractIdAddressPreimage)hostFunction.ContractIdPreimage).Salt;
         CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
         Assert.IsInstanceOfType(decodedRootFunction.Executable, typeof(ContractExecutableWasm));
@@ -209,7 +209,7 @@ public class SorobanAuthorizationTest
         Assert.IsNotNull(decodedSubFunction);
         Assert.IsInstanceOfType(decodedSubFunction.ContractIdPreimage, typeof(ContractIdAddressPreimage));
         decodedPreimage = (ContractIdAddressPreimage)decodedSubFunction.ContractIdPreimage;
-        Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
+        Assert.AreEqual(_accountAddress.InnerValue, ((ScAccountId)decodedPreimage.Address).InnerValue);
         CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
         Assert.IsInstanceOfType(decodedSubFunction.Executable, typeof(ContractExecutableWasm));
         decodedExecutable = (ContractExecutableWasm)decodedSubFunction.Executable;
@@ -239,8 +239,8 @@ public class SorobanAuthorizationTest
 
         Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
         var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
-        Assert.AreEqual(((SCAccountId)credentials.Address).InnerValue,
-            ((SCAccountId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(((ScAccountId)credentials.Address).InnerValue,
+            ((ScAccountId)decodedCredentials.Address).InnerValue);
         Assert.AreEqual(credentials.Nonce, decodedCredentials.Nonce);
         Assert.AreEqual(credentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
         Assert.AreEqual(((SCString)credentials.Signature).InnerValue,
@@ -252,7 +252,7 @@ public class SorobanAuthorizationTest
         Assert.IsNotNull(decodedRootFunction);
         Assert.IsInstanceOfType(decodedRootFunction.ContractIdPreimage, typeof(ContractIdAddressPreimage));
         var decodedPreimage = (ContractIdAddressPreimage)decodedRootFunction.ContractIdPreimage;
-        Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
+        Assert.AreEqual(_accountAddress.InnerValue, ((ScAccountId)decodedPreimage.Address).InnerValue);
         var salt = ((ContractIdAddressPreimage)hostFunction.ContractIdPreimage).Salt;
         CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
         Assert.IsInstanceOfType(decodedRootFunction.Executable, typeof(ContractExecutableWasm));
@@ -268,7 +268,7 @@ public class SorobanAuthorizationTest
         Assert.IsNotNull(decodedSubFunction);
         Assert.IsInstanceOfType(decodedSubFunction.ContractIdPreimage, typeof(ContractIdAddressPreimage));
         decodedPreimage = (ContractIdAddressPreimage)decodedSubFunction.ContractIdPreimage;
-        Assert.AreEqual(_accountAddress.InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
+        Assert.AreEqual(_accountAddress.InnerValue, ((ScAccountId)decodedPreimage.Address).InnerValue);
         CollectionAssert.AreEqual(salt, decodedPreimage.Salt);
         Assert.IsInstanceOfType(decodedSubFunction.Executable, typeof(ContractExecutableWasm));
         decodedExecutable = (ContractExecutableWasm)decodedSubFunction.Executable;
@@ -281,7 +281,7 @@ public class SorobanAuthorizationTest
     [TestMethod]
     public void TestSorobanAuthorizationEntryContainingAuthorizedContractFunction()
     {
-        var contractAddress = new SCContractId("CDJ4RICANSXXZ275W2OY2U7RO73HYURBGBRHVW2UUXZNGEBIVBNRKEF7");
+        var contractAddress = new ScContractId("CDJ4RICANSXXZ275W2OY2U7RO73HYURBGBRHVW2UUXZNGEBIVBNRKEF7");
         var functionName = "hello";
         var argName = "world";
         var args = new SCVal[] { new SCBool(false), new SCString(argName) };
@@ -302,8 +302,8 @@ public class SorobanAuthorizationTest
 
         Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
         var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
-        Assert.AreEqual(((SCAccountId)credentials.Address).InnerValue,
-            ((SCAccountId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(((ScAccountId)credentials.Address).InnerValue,
+            ((ScAccountId)decodedCredentials.Address).InnerValue);
         Assert.AreEqual(credentials.Nonce, decodedCredentials.Nonce);
         Assert.AreEqual(credentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
         Assert.AreEqual(((SCString)credentials.Signature).InnerValue,

@@ -122,9 +122,9 @@ public class TransactionMetaTest
         Assert.IsInstanceOfType(eventData.InnerValue[0], typeof(SCString));
         Assert.AreEqual("trying to access an archived contract data entry",
             ((SCString)eventData.InnerValue[0]).InnerValue);
-        Assert.IsInstanceOfType(eventData.InnerValue[1], typeof(SCContractId));
+        Assert.IsInstanceOfType(eventData.InnerValue[1], typeof(ScContractId));
         Assert.AreEqual("CDMTUCYPBMWUFESK2EZA6ZZMSEX3NNOMZEXZD2VVJGZ332DYTKCEBFI5",
-            ((SCContractId)eventData.InnerValue[1]).InnerValue);
+            ((ScContractId)eventData.InnerValue[1]).InnerValue);
         Assert.IsInstanceOfType(eventData.InnerValue[2], typeof(SCLedgerKeyContractInstance));
         var topics = @event.Topics;
         Assert.AreEqual(2, topics.Length);

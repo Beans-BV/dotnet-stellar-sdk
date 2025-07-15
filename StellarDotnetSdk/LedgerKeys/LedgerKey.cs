@@ -2,8 +2,8 @@ using System;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.LiquidityPool;
+using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
-using SCAddress = StellarDotnetSdk.Soroban.SCAddress;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 
 namespace StellarDotnetSdk.LedgerKeys;
@@ -52,7 +52,7 @@ public abstract class LedgerKey
         return new LedgerKeyLiquidityPool(poolId);
     }
 
-    public static LedgerKey ContractData(SCAddress contractId, SCVal key, ContractDataDurability durability)
+    public static LedgerKey ContractData(ScAddress contractId, SCVal key, ContractDataDurability durability)
     {
         return new LedgerKeyContractData(contractId, key, durability);
     }
