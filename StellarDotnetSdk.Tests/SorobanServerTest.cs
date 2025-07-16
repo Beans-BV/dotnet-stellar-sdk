@@ -640,9 +640,9 @@ public class SorobanServerTest
 
         Assert.IsInstanceOfType(ledgerEntry.Key, typeof(SCLedgerKeyContractInstance));
         Assert.AreEqual("CDSUR2JFKSUORJLUA2FISW7P6ALDTS2PDK6AYQZ7G4CSY5WZS5QVSM47",
-            ((SCContractId)ledgerKey.Contract).InnerValue);
+            ((ScContractId)ledgerKey.Contract).InnerValue);
         Assert.AreEqual("CDSUR2JFKSUORJLUA2FISW7P6ALDTS2PDK6AYQZ7G4CSY5WZS5QVSM47",
-            ((SCContractId)ledgerEntry.Contract).InnerValue);
+            ((ScContractId)ledgerEntry.Contract).InnerValue);
         Assert.IsNull(ledgerEntry.LedgerExtensionV1);
         Assert.AreEqual(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT, ledgerKey.Durability.InnerValue);
         Assert.AreEqual(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT,
@@ -1106,7 +1106,7 @@ public class SorobanServerTest
         if (readOnly0
             is LedgerKeyContractData
             {
-                Contract: SCContractId contractId,
+                Contract: ScContractId contractId,
                 Key: SCLedgerKeyContractInstance,
             } contractData)
         {
@@ -1129,12 +1129,12 @@ public class SorobanServerTest
             Assert.Fail();
         }
 
-        if (readWrite is LedgerKeyContractData { Contract: SCContractId contractId1, Key: SCVec vec } contractData1)
+        if (readWrite is LedgerKeyContractData { Contract: ScContractId contractId1, Key: SCVec vec } contractData1)
         {
             Assert.AreEqual("CDU3PZ4LXVETIFVLS33RDXLD63JZ5GXS7PCV2DJ7BBT6EBPA2AB7YR5H", contractId1.InnerValue);
             Assert.AreEqual(2, vec.InnerValue.Length);
             Assert.IsTrue(vec.InnerValue[0] is SCSymbol { InnerValue: "Counter" });
-            Assert.IsTrue(vec.InnerValue[1] is SCAccountId
+            Assert.IsTrue(vec.InnerValue[1] is ScAccountId
             {
                 InnerValue: "GBMLPRFCZDZJPKUPHUSHCKA737GOZL7ERZLGGMJ6YGHBFJZ6ZKMKCZTM",
             });

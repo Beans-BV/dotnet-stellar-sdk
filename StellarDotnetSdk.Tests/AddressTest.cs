@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Soroban;
-using StellarDotnetSdk.Xdr;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 
 namespace StellarDotnetSdk.Tests;
@@ -18,7 +17,7 @@ public class AddressTest
     [ExpectedException(typeof(ArgumentException))]
     public void TestAccountIdWithInvalidArgument(string id)
     {
-        _ = new SCAccountId(id);
+        _ = new ScAccountId(id);
     }
 
     [TestMethod]
@@ -32,7 +31,7 @@ public class AddressTest
     [ExpectedException(typeof(ArgumentException))]
     public void TestContractIdWithInvalidArgument(string id)
     {
-        _ = new SCContractId(id);
+        _ = new ScContractId(id);
     }
 
 
@@ -80,11 +79,11 @@ public class AddressTest
     [TestMethod]
     public void TestAccountIdWithValidArgument()
     {
-        var scAccountId = new SCAccountId("GCZFMH32MF5EAWETZTKF3ZV5SEVJPI53UEMDNSW55WBR75GMZJU4U573");
+        var scAccountId = new ScAccountId("GCZFMH32MF5EAWETZTKF3ZV5SEVJPI53UEMDNSW55WBR75GMZJU4U573");
 
         // Act
         var xdrBase64 = scAccountId.ToXdrBase64();
-        var decodedAccountId = (SCAccountId)SCVal.FromXdrBase64(xdrBase64);
+        var decodedAccountId = (ScAccountId)SCVal.FromXdrBase64(xdrBase64);
 
         // Assert
         Assert.AreEqual(scAccountId.InnerValue, decodedAccountId.InnerValue);
@@ -93,11 +92,11 @@ public class AddressTest
     [TestMethod]
     public void TestContractIdWithValidArgument()
     {
-        var scContractId = new SCContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
+        var scContractId = new ScContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
 
         // Act
         var xdrBase64 = scContractId.ToXdrBase64();
-        var decodedContractId = (SCContractId)SCVal.FromXdrBase64(xdrBase64);
+        var decodedContractId = (ScContractId)SCVal.FromXdrBase64(xdrBase64);
 
         // Assert
         Assert.AreEqual(scContractId.InnerValue, decodedContractId.InnerValue);
@@ -130,7 +129,7 @@ public class AddressTest
         var decodedLiquidityPoolId = (ScLiquidityPoolId)SCVal.FromXdrBase64(xdrBase64);
 
         // Assert
-        Assert.AreEqual(liquidityPoolId.InnerValue, decodedLiquidityPoolId.InnerValue);
+        Assert.AreEqual(liquidityPoolId.InnerLiquidityPoolId, decodedLiquidityPoolId.InnerLiquidityPoolId);
     }
 
     [TestMethod]

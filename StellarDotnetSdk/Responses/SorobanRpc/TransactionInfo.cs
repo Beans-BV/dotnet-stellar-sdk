@@ -157,7 +157,7 @@ public class TransactionInfo
     {
         get
         {
-            if (ResultValue is SCContractId contract)
+            if (ResultValue is ScContractId contract)
             {
                 return contract.InnerValue;
             }

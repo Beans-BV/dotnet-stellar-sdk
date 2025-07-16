@@ -403,7 +403,7 @@ internal static class SorobanExamples
 
     private static LedgerKey CreateLedgerKeyContractData(string contractId)
     {
-        var scContractId = new SCContractId(contractId);
+        var scContractId = new ScContractId(contractId);
 
         var contractDataDurability =
             ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT);

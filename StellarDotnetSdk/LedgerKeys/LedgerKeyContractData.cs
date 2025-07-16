@@ -1,19 +1,19 @@
-﻿using StellarDotnetSdk.Xdr;
-using SCAddress = StellarDotnetSdk.Soroban.SCAddress;
+﻿using StellarDotnetSdk.Soroban;
+using StellarDotnetSdk.Xdr;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 
 namespace StellarDotnetSdk.LedgerKeys;
 
 public class LedgerKeyContractData : LedgerKey
 {
-    public LedgerKeyContractData(SCAddress contractId, SCVal key, ContractDataDurability durability)
+    public LedgerKeyContractData(ScAddress contractId, SCVal key, ContractDataDurability durability)
     {
         Contract = contractId;
         Key = key;
         Durability = durability;
     }
 
-    public SCAddress Contract { get; }
+    public ScAddress Contract { get; }
     public SCVal Key { get; }
     public ContractDataDurability Durability { get; }
 
@@ -34,7 +34,7 @@ public class LedgerKeyContractData : LedgerKey
 
     public static LedgerKeyContractData FromXdr(Xdr.LedgerKey.LedgerKeyContractData xdr)
     {
-        return new LedgerKeyContractData(SCAddress.FromXdr(xdr.Contract), SCVal.FromXdr(xdr.Key),
+        return new LedgerKeyContractData(ScAddress.FromXdr(xdr.Contract), SCVal.FromXdr(xdr.Key),
             xdr.Durability);
     }
 }

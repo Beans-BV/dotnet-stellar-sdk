@@ -292,7 +292,7 @@ public class ServerTest
         var hostFunction = invokeContractOperation.HostFunction;
         var sourceAccount = tx.SourceAccount;
         Assert.AreEqual(sourceAccount.AccountId, "GCHTCLFS6ZRK27BHMNEZ4THVIAHBWLBH6BGOZEIGP4WFT7VXW735KJW2");
-        Assert.AreEqual(((SCContractId)hostFunction.ContractAddress).InnerValue,
+        Assert.AreEqual(((ScContractId)hostFunction.ContractAddress).InnerValue,
             StrKey.EncodeContractId(
                 Convert.FromHexString("FE029A87B8C39972F484AF442C6965AACD65B2FCEFE20B0641F5063BF8A8E5C1")));
         Assert.AreEqual(hostFunction.FunctionName.InnerValue, "submit");

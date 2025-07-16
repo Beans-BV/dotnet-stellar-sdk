@@ -150,7 +150,7 @@ public class LedgerKeyTest
     [TestMethod]
     public void TestLedgerKeyContractDataWithContractBeingContractId()
     {
-        var contractId = new SCContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
+        var contractId = new ScContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
         var key = new SCSymbol("kk");
 
         var durability = ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT);
@@ -161,7 +161,7 @@ public class LedgerKeyTest
         var decodedLedgerKey = (LedgerKeyContractData)LedgerKey.FromXdrBase64(ledgerKeyXdrBase64);
 
         // Assert
-        Assert.AreEqual(contractId.InnerValue, ((SCContractId)decodedLedgerKey.Contract).InnerValue);
+        Assert.AreEqual(contractId.InnerValue, ((ScContractId)decodedLedgerKey.Contract).InnerValue);
         Assert.AreEqual(key.InnerValue, ((SCSymbol)decodedLedgerKey.Key).InnerValue);
         Assert.AreEqual(ledgerKey.Durability.InnerValue, decodedLedgerKey.Durability.InnerValue);
     }
@@ -169,7 +169,7 @@ public class LedgerKeyTest
     [TestMethod]
     public void TestLedgerKeyContractDataWithWithContractBeingAccountId()
     {
-        var accountId = new SCAccountId("GCZFMH32MF5EAWETZTKF3ZV5SEVJPI53UEMDNSW55WBR75GMZJU4U573");
+        var accountId = new ScAccountId("GCZFMH32MF5EAWETZTKF3ZV5SEVJPI53UEMDNSW55WBR75GMZJU4U573");
         var key = new SCInt64(122);
 
         var durability = ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.TEMPORARY);
@@ -180,7 +180,7 @@ public class LedgerKeyTest
         var decodedLedgerKey = (LedgerKeyContractData)LedgerKey.FromXdrBase64(ledgerKeyXdrBase64);
 
         // Assert
-        Assert.AreEqual(accountId.InnerValue, ((SCAccountId)decodedLedgerKey.Contract).InnerValue);
+        Assert.AreEqual(accountId.InnerValue, ((ScAccountId)decodedLedgerKey.Contract).InnerValue);
         Assert.AreEqual(key.InnerValue, ((SCInt64)decodedLedgerKey.Key).InnerValue);
         Assert.AreEqual(ledgerKey.Durability.InnerValue, decodedLedgerKey.Durability.InnerValue);
     }
