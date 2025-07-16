@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
@@ -42,11 +43,25 @@ public class InvokeHostFunctionOperationResponse : OperationResponse
 
         [JsonProperty(PropertyName = "asset_type")]
         public string AssetType { get; init; }
+        public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
+        
+        [JsonProperty(PropertyName = "destination_muxed_id")]
+        public string DestinationMuxedId { get; private set; }
+
+        [JsonProperty(PropertyName = "destination_muxed_id_type")]
+        public MuxedIdType? DestinationMuxedIdType { get; private set; }
 
         [JsonProperty(PropertyName = "from")] public string From { get; init; }
 
         [JsonProperty(PropertyName = "to")] public string To { get; init; }
 
         [JsonProperty(PropertyName = "type")] public string Type { get; init; }
+
+        public enum MuxedIdType
+        {
+            STRING,
+            UINT64,
+            BYTES,
+        }
     }
 }
