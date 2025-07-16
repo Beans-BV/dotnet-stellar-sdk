@@ -25,7 +25,17 @@ public abstract class LedgerEntryChange
                 new LedgerEntryRemoved(xdrLedgerEntryChange.Removed),
             LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_STATE =>
                 new LedgerEntryState(xdrLedgerEntryChange.State),
+            LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_RESTORED =>
+                new LedgerEntryRestored(xdrLedgerEntryChange.Restored),
             _ => throw new InvalidOperationException("Unknown LedgerEntryChange type."),
         };
+    }
+    
+    public static LedgerEntryChange FromXdrBase64(string xdrBase64)
+    {
+        var bytes = Convert.FromBase64String(xdrBase64);
+        var reader = new XdrDataInputStream(bytes);
+        var thisXdr = Xdr.LedgerEntryChange.Decode(reader);
+        return FromXdr(thisXdr);
     }
 }
