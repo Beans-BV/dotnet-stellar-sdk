@@ -343,7 +343,7 @@ public class SorobanServerTest
     {
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent("");
         await Assert.ThrowsExceptionAsync<TooManySignaturesException>(() =>
-            sorobanServer.SimulateTransaction(CreateDummyTransaction()));
+            sorobanServer.SimulateTransaction(CreateDummyTransaction(sign: true)));
     }
 
     [TestMethod]
@@ -1061,7 +1061,11 @@ public class SorobanServerTest
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
-        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+        var response = await sorobanServer.SimulateTransaction(
+            CreateDummyTransaction(sign: false),
+            resourceConfig: null,
+            authMode: AuthMode.RECORD_ALLOW_NONROOT
+        );
 
         Assert.IsNotNull(response);
 
