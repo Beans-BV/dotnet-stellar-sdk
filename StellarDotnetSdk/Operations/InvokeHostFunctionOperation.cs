@@ -285,6 +285,11 @@ public class InvokeContractHostFunction : HostFunction
         SCVal[] args
     )
     {
+        if (contractAddress is ScClaimableBalanceId or ScLiquidityPoolId)
+        {
+            throw new InvalidOperationException(
+                "Claimable balances and liquidity pools cannot be arguments to invokeHostFunction.");
+        }
         ContractAddress = contractAddress;
         FunctionName = functionName;
         Args = args;
