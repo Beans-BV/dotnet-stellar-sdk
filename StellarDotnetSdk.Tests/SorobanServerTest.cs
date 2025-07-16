@@ -27,6 +27,7 @@ using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
 using SCVec = StellarDotnetSdk.Soroban.SCVec;
 using StateArchivalSettings = StellarDotnetSdk.LedgerEntries.StateArchivalSettings;
 using Transaction = StellarDotnetSdk.Transactions.Transaction;
+using TransactionMetaV3 = StellarDotnetSdk.Soroban.TransactionMetaV3;
 
 namespace StellarDotnetSdk.Tests;
 
@@ -1450,6 +1451,10 @@ public class SorobanServerTest
             response.ResultMetaXdr);
         Assert.AreEqual(2540064L, response.Ledger);
         Assert.AreEqual(1700086268, response.CreatedAt);
+
+        var meta = response.TransactionMeta;
+        Assert.IsNotNull(meta);
+        Assert.IsInstanceOfType(meta, typeof(TransactionMetaV3));
         
         #region Events
         var events = response.Events;

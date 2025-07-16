@@ -3,7 +3,7 @@ using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
 using SCBytes = StellarDotnetSdk.Soroban.SCBytes;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
-using Soroban_TransactionMetaV3 = StellarDotnetSdk.Soroban.TransactionMetaV3;
+using TransactionMeta = StellarDotnetSdk.Soroban.TransactionMeta;
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;
 
@@ -119,9 +119,9 @@ public class TransactionInfo
     }
 
     /// <summary>
-    ///     Holds the diagnostic information, useful for debugging purpose when the transaction fails.
+    ///     Holds the transaction metadata.
     /// </summary>
-    public Soroban_TransactionMetaV3? TransactionMeta
+    public TransactionMeta? TransactionMeta
     {
         get
         {
@@ -131,7 +131,7 @@ public class TransactionInfo
             }
             try
             {
-                return Soroban_TransactionMetaV3.FromXdrBase64(ResultMetaXdr);
+                return TransactionMeta.FromXdrBase64(ResultMetaXdr);
             }
             catch
             {
