@@ -70,7 +70,7 @@ public class GetEventsResponse
         }
 
         /// <summary>
-        ///     StrKey representation of the contract address that emitted this event.
+        ///     StrKey representation of the contract address (C...) that emitted this event.
         /// </summary>
         public string ContractId { get; }
 
@@ -123,8 +123,16 @@ public class GetEventsResponse
         /// </remarks>
         public string Value { get; }
 
+        /// <summary>
+        ///     Representing the transaction index at which the event occurred.
+        /// </summary>
         public uint TransactionIndex { get; }
+
+        /// <summary>
+        ///     Representing the operation index at which the event occurred.
+        /// </summary>
         public uint OperationIndex { get; }
+
         [JsonProperty("txHash")] public string TransactionHash { get; }
     }
 }
