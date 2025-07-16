@@ -402,13 +402,14 @@ public class SorobanServerTest
                     "ledgerClosedAt": "2024-08-06T10:09:22Z",
                     "contractId": "CASCLAHV7E7H3BOGQIW5HIC3H6WVDOTOQRTRMXYSTKJHXOORP3DNATY2",
                     "id": "0003920046715838464-0000000001",
-                    "pagingToken": "0003920046715838464-0000000001",
                     "topic": [
                       "AAAADwAAAAhTVFJfQ0VSVA\u003d\u003d",
                       "AAAADwAAAAhzdHJfY2VydA\u003d\u003d"
                     ],
                     "value": "AAAAEQAAAAEAAAADAAAADwAAAARoYXNoAAAADgAAAEAzYjdkODUxYjVjNmMyMTNmNzUyYzdmNzJhNDA0Yjg5NGFiZGU2NDY2NDhjMzU0MmQ3MDRlMjI4OTMwNmU1MTFhAAAADwAAAAZwYXJlbnQAAAAAAA4AAAAAAAAADwAAAAd2ZXJzaW9uAAAAAAMAAAAA",
                     "inSuccessfulContractCall": true,
+                    "operationIndex": 1,
+                    "transactionIndex": 2,
                     "txHash": "9f6cf2cf2d1dd41af039325503ba98daf3cfa10d0079cd2c50a28355fb1b4af2"
                   },
                   {
@@ -417,7 +418,6 @@ public class SorobanServerTest
                     "ledgerClosedAt": "2024-08-06T10:10:47Z",
                     "contractId": "CDTJALOV4KLSPEMNFHKYSG4WOTN7FCN4A2JOKRPVCQYEHLUEH2YUJF5R",
                     "id": "0003920115435319296-0000000001",
-                    "pagingToken": "0003920115435319296-0000000001",
                     "topic": [
                       "AAAADwAAAARtaW50",
                       "AAAAEgAAAAAAAAAAdWnjmUMJ9zn2dIq1d6OhQ7XzqNT2ppF+9OgDmID0yhQ\u003d",
@@ -425,6 +425,8 @@ public class SorobanServerTest
                     ],
                     "value": "AAAACgAAAAAAAAAAAAAJGE5yoAA\u003d",
                     "inSuccessfulContractCall": true,
+                    "operationIndex": 3,
+                    "transactionIndex": 4,
                     "txHash": "318915004f904a36fddcefa8d4935ab21db7848a5a5e528815672968125a79a8"
                   },
                   {
@@ -433,7 +435,6 @@ public class SorobanServerTest
                     "ledgerClosedAt": "2024-08-06T10:10:58Z",
                     "contractId": "CDYTK2FLRHT3KJ6RVAAABI4A7Y2XERCWN3FT5II7FHONDKPQVEAZ33YI",
                     "id": "0003920124025257984-0000000001",
-                    "pagingToken": "0003920124025257984-0000000001",
                     "topic": [
                       "AAAADwAAAARtaW50",
                       "AAAAEgAAAAAAAAAAdWnjmUMJ9zn2dIq1d6OhQ7XzqNT2ppF+9OgDmID0yhQ\u003d",
@@ -441,6 +442,8 @@ public class SorobanServerTest
                     ],
                     "value": "AAAACgAAAAAAAAAAAAAJGE5yoAA\u003d",
                     "inSuccessfulContractCall": true,
+                    "operationIndex": 5,
+                    "transactionIndex": 6,
                     "txHash": "944d99fd572b8541f5c0ce95881b844d79144fe9a5cef2aea1cf94fb7c91f1f7"
                   },
                   {
@@ -449,7 +452,6 @@ public class SorobanServerTest
                     "ledgerClosedAt": "2024-08-06T10:38:23Z",
                     "contractId": "CDV6IIE2DFFGB3GKAG7YYSKBO4PFDAZ76GRHXKSOBBIG64NNHMMRCRXH",
                     "id": "0003921464055050240-0000000001",
-                    "pagingToken": "0003921464055050240-0000000001",
                     "topic": [
                       "AAAADwAAAAdhcHByb3ZlAA\u003d\u003d",
                       "AAAAEgAAAAAAAAAAWoM+w+i/0MLTSydKU896zcL4/EhYLVMHlSxIzY+ucJs\u003d",
@@ -457,10 +459,15 @@ public class SorobanServerTest
                     ],
                     "value": "AAAAEAAAAAEAAAACAAAACgAAAAAAAAAAAAQdH3d3yKkAAAADABD7yA\u003d\u003d",
                     "inSuccessfulContractCall": true,
+                    "operationIndex": 7,
+                    "transactionIndex": 8,
                     "txHash": "64bd9d003dbc4c9f766206dee34d57285322eeee6c5acb6d2a31d2668d88c2fd"
                   }
                 ],
                 "latestLedger": 913609,
+                "oldestLedger": 2175664,
+                "latestLedgerCloseTime": "1751862824",
+                "oldestLedgerCloseTime": "1751853705",
                 "cursor": "0003920046715838464-0000000001",
               }
             }
@@ -472,6 +479,9 @@ public class SorobanServerTest
         Assert.IsNotNull(eventsResponse);
         Assert.IsNotNull(eventsResponse.Events);
         Assert.AreEqual(913609L, eventsResponse.LatestLedger);
+        Assert.AreEqual(2175664L, eventsResponse.OldestLedger);
+        Assert.AreEqual(1751862824L, eventsResponse.LatestLedgerCloseTime);
+        Assert.AreEqual(1751853705L, eventsResponse.OldestLedgerCloseTime);
         Assert.AreEqual("0003920046715838464-0000000001", eventsResponse.Cursor);
         Assert.AreEqual(4, eventsResponse.Events.Length);
         var event1 = eventsResponse.Events[0];
@@ -482,7 +492,6 @@ public class SorobanServerTest
         Assert.AreEqual("2024-08-06T10:09:22Z", event1.LedgerClosedAt);
         Assert.AreEqual("CASCLAHV7E7H3BOGQIW5HIC3H6WVDOTOQRTRMXYSTKJHXOORP3DNATY2", event1.ContractId);
         Assert.AreEqual("0003920046715838464-0000000001", event1.Id);
-        Assert.AreEqual("0003920046715838464-0000000001", event1.PagingToken);
         Assert.AreEqual(2, event1.Topics.Length);
         Assert.AreEqual("AAAADwAAAAhTVFJfQ0VSVA==", event1.Topics[0]);
         Assert.AreEqual("AAAADwAAAAhzdHJfY2VydA==", event1.Topics[1]);
@@ -490,6 +499,8 @@ public class SorobanServerTest
             "AAAAEQAAAAEAAAADAAAADwAAAARoYXNoAAAADgAAAEAzYjdkODUxYjVjNmMyMTNmNzUyYzdmNzJhNDA0Yjg5NGFiZGU2NDY2NDhjMzU0MmQ3MDRlMjI4OTMwNmU1MTFhAAAADwAAAAZwYXJlbnQAAAAAAA4AAAAAAAAADwAAAAd2ZXJzaW9uAAAAAAMAAAAA",
             event1.Value);
         Assert.IsTrue(event1.InSuccessfulContractCall);
+        Assert.AreEqual(2U, event1.TransactionIndex);
+        Assert.AreEqual(1U, event1.OperationIndex);
         Assert.AreEqual("9f6cf2cf2d1dd41af039325503ba98daf3cfa10d0079cd2c50a28355fb1b4af2", event1.TransactionHash);
 
         var event2 = eventsResponse.Events[1];
@@ -499,13 +510,14 @@ public class SorobanServerTest
         Assert.AreEqual("2024-08-06T10:10:47Z", event2.LedgerClosedAt);
         Assert.AreEqual("CDTJALOV4KLSPEMNFHKYSG4WOTN7FCN4A2JOKRPVCQYEHLUEH2YUJF5R", event2.ContractId);
         Assert.AreEqual("0003920115435319296-0000000001", event2.Id);
-        Assert.AreEqual("0003920115435319296-0000000001", event2.PagingToken);
         Assert.AreEqual(3, event2.Topics.Length);
         Assert.AreEqual("AAAADwAAAARtaW50", event2.Topics[0]);
         Assert.AreEqual("AAAAEgAAAAAAAAAAdWnjmUMJ9zn2dIq1d6OhQ7XzqNT2ppF+9OgDmID0yhQ=", event2.Topics[1]);
         Assert.AreEqual("AAAAEgAAAAAAAAAAoM2uDbnOXB4fd/4Y3ZRlbiis4zPp1sdQNyQHWQuvzq4=", event2.Topics[2]);
         Assert.AreEqual("AAAACgAAAAAAAAAAAAAJGE5yoAA=", event2.Value);
         Assert.IsTrue(event2.InSuccessfulContractCall);
+        Assert.AreEqual(4U, event2.TransactionIndex);
+        Assert.AreEqual(3U, event2.OperationIndex);
         Assert.AreEqual("318915004f904a36fddcefa8d4935ab21db7848a5a5e528815672968125a79a8", event2.TransactionHash);
 
         var event3 = eventsResponse.Events[2];
@@ -515,13 +527,14 @@ public class SorobanServerTest
         Assert.AreEqual("2024-08-06T10:10:58Z", event3.LedgerClosedAt);
         Assert.AreEqual("CDYTK2FLRHT3KJ6RVAAABI4A7Y2XERCWN3FT5II7FHONDKPQVEAZ33YI", event3.ContractId);
         Assert.AreEqual("0003920124025257984-0000000001", event3.Id);
-        Assert.AreEqual("0003920124025257984-0000000001", event3.PagingToken);
         Assert.AreEqual(3, event3.Topics.Length);
         Assert.AreEqual("AAAADwAAAARtaW50", event3.Topics[0]);
         Assert.AreEqual("AAAAEgAAAAAAAAAAdWnjmUMJ9zn2dIq1d6OhQ7XzqNT2ppF+9OgDmID0yhQ=", event3.Topics[1]);
         Assert.AreEqual("AAAAEgAAAAAAAAAAdT55ljEK4qTy1Y7Fw9KtdAAZIBkrd2p7IX0ZByhSO2k=", event3.Topics[2]);
         Assert.AreEqual("AAAACgAAAAAAAAAAAAAJGE5yoAA=", event3.Value);
         Assert.IsTrue(event3.InSuccessfulContractCall);
+        Assert.AreEqual(6U, event3.TransactionIndex);
+        Assert.AreEqual(5U, event3.OperationIndex);
         Assert.AreEqual("944d99fd572b8541f5c0ce95881b844d79144fe9a5cef2aea1cf94fb7c91f1f7", event3.TransactionHash);
 
         var event4 = eventsResponse.Events[3];
@@ -531,13 +544,15 @@ public class SorobanServerTest
         Assert.AreEqual("2024-08-06T10:38:23Z", event4.LedgerClosedAt);
         Assert.AreEqual("CDV6IIE2DFFGB3GKAG7YYSKBO4PFDAZ76GRHXKSOBBIG64NNHMMRCRXH", event4.ContractId);
         Assert.AreEqual("0003921464055050240-0000000001", event4.Id);
-        Assert.AreEqual("0003921464055050240-0000000001", event4.PagingToken);
         Assert.AreEqual(3, event4.Topics.Length);
         Assert.AreEqual("AAAADwAAAAdhcHByb3ZlAA==", event4.Topics[0]);
         Assert.AreEqual("AAAAEgAAAAAAAAAAWoM+w+i/0MLTSydKU896zcL4/EhYLVMHlSxIzY+ucJs=", event4.Topics[1]);
         Assert.AreEqual("AAAAEgAAAAGPj5dVA0lfIe7VhCeJwcQ68vhwUcgQjj7XNcpMoUn7Hw==", event4.Topics[2]);
         Assert.AreEqual("AAAAEAAAAAEAAAACAAAACgAAAAAAAAAAAAQdH3d3yKkAAAADABD7yA==", event4.Value);
         Assert.IsTrue(event4.InSuccessfulContractCall);
+        Assert.AreEqual(8U, event4.TransactionIndex);
+        Assert.AreEqual(7U, event4.OperationIndex);
+
         Assert.AreEqual("64bd9d003dbc4c9f766206dee34d57285322eeee6c5acb6d2a31d2668d88c2fd", event4.TransactionHash);
     }
 
