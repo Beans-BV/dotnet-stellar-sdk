@@ -26,6 +26,7 @@ public class TransactionInfo
         string? resultXdr,
         string? resultMetaXdr,
         string? txHash,
+        Events? events = null,
         string[]? diagnosticEventsXdr = null
     )
     {
@@ -38,6 +39,7 @@ public class TransactionInfo
         ResultXdr = resultXdr;
         ResultMetaXdr = resultMetaXdr;
         TxHash = txHash;
+        Events = events;
         DiagnosticEventsXdr = diagnosticEventsXdr;
     }
 
@@ -90,7 +92,10 @@ public class TransactionInfo
     ///     (optional) A base64 encoded slice of xdr.DiagnosticEvent. This is only present if the
     ///     ENABLE_SOROBAN_DIAGNOSTIC_EVENTS has been enabled in the stellar-core config.
     /// </summary>
+    [Obsolete("Deprecated in favor of Events.DiagnosticEventsXdr. Will be removed in the next version.")]
     public string[]? DiagnosticEventsXdr { get; }
+
+    public Events? Events { get; }
 
     /// <summary>
     ///     (optional) Hex-encoded transaction hash string.
