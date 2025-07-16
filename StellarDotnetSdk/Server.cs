@@ -286,6 +286,7 @@ public class Server : IDisposable
         switch (response.StatusCode)
         {
             case HttpStatusCode.OK:
+            case HttpStatusCode.Created:
             case HttpStatusCode.BadRequest:
                 return JsonSingleton.GetInstance<T>(responseString);
             case HttpStatusCode.ServiceUnavailable:
