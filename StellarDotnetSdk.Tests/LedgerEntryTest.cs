@@ -896,7 +896,7 @@ public class LedgerEntryTest
         // Assert
         Assert.IsInstanceOfType(decodedLedgerEntry.ExtensionPoint, typeof(ExtensionPointZero));
         Assert.AreEqual(StrKey.EncodeContractId(xdrContractDataEntry.Contract.ContractId.InnerValue.InnerValue),
-            ((SCContractId)decodedLedgerEntry.Contract).InnerValue);
+            ((ScContractId)decodedLedgerEntry.Contract).InnerValue);
         Assert.AreEqual(xdrContractDataEntry.Durability.InnerValue,
             decodedLedgerEntry.Durability.InnerValue);
         Assert.AreEqual(xdrContractDataEntry.Key.Str.InnerValue,
