@@ -1164,6 +1164,62 @@ public class SorobanServerTest
     }
 
     [TestMethod]
+    // This test only focuses on testing the SorobanTransactionDataExt
+    public async Task TestSimulateTransactionProtocol23Success()
+    {
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "transactionData": "AAAAAQAAAAIAAACGAAACKgAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAABZQAAAAAAAAAbw==",
+                    "minResourceFee": "58181",
+                    "events": [
+                        "AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=",
+                        "AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ="
+                    ],
+                    "results": [
+                        {
+                            "auth": [
+                                "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA"
+                            ],
+                            "xdr": "AAAAAwAAABQ="
+                        }
+                    ],
+                    "stateChanges": [
+                        {
+                            "type": "created",
+                            "key": "AAAAAAAAAABuaCbVXZ2DlXWarV6UxwbW3GNJgpn3ASChIFp5bxSIWg==",
+                            "before": null,
+                            "after": "AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+                        }
+                    ],
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        var response = await sorobanServer.SimulateTransaction(
+            CreateDummyTransaction(false)
+        );
+
+        Assert.IsNotNull(response);
+
+        // SorobanTransactionData
+        var sorobanData = response.SorobanTransactionData;
+
+        Assert.IsNotNull(sorobanData);
+
+        var extension = sorobanData.Extension;
+        Assert.IsNotNull(extension);
+        Assert.AreEqual(2, extension.ArchivedSorobanEntries.Length);
+        Assert.AreEqual(134U, extension.ArchivedSorobanEntries[0]);
+        Assert.AreEqual(554U, extension.ArchivedSorobanEntries[1]);
+    }
+
+    [TestMethod]
     public async Task TestGetFeeStats()
     {
         const string json =
