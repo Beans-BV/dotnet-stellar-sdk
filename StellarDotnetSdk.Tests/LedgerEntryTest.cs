@@ -13,6 +13,8 @@ using Asset = StellarDotnetSdk.Assets.Asset;
 using ClaimableBalanceEntryExtensionV1 = StellarDotnetSdk.Xdr.ClaimableBalanceEntryExtensionV1;
 using Claimant = StellarDotnetSdk.Xdr.Claimant;
 using ClaimPredicate = StellarDotnetSdk.Xdr.ClaimPredicate;
+using ConfigSettingContractLedgerCostExtV0 = StellarDotnetSdk.Xdr.ConfigSettingContractLedgerCostExtV0;
+using ConfigSettingContractParallelComputeV0 = StellarDotnetSdk.LedgerEntries.ConfigSettingContractParallelComputeV0;
 using ContractCodeCostInputs = StellarDotnetSdk.Xdr.ContractCodeCostInputs;
 using EvictionIterator = StellarDotnetSdk.LedgerEntries.EvictionIterator;
 using ExtensionPoint = StellarDotnetSdk.Xdr.ExtensionPoint;
@@ -139,8 +141,7 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntry);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
-        var ex = Assert.ThrowsException<ArgumentException>(
-            () => LedgerEntry.FromXdrBase64(entryXdrBase64));
+        var ex = Assert.ThrowsException<ArgumentException>(() => LedgerEntry.FromXdrBase64(entryXdrBase64));
         Assert.IsTrue(ex.Message.Contains("Home domain cannot exceed 32 characters"));
     }
 
@@ -256,14 +257,18 @@ public class LedgerEntryTest
         var decodedExtensionV2 = decodedExtensionV1.ExtensionV2;
 
         Assert.IsNotNull(decodedExtensionV2);
-        Assert.AreEqual(xdrExtensionV2.NumSponsored.InnerValue, decodedExtensionV2.NumberSponsored);
-        Assert.AreEqual(xdrExtensionV2.NumSponsoring.InnerValue, decodedExtensionV2.NumberSponsoring);
-        Assert.AreEqual(xdrExtensionV2.SignerSponsoringIDs.Length, decodedExtensionV2.SignerSponsoringIDs.Length);
+        Assert.AreEqual(xdrExtensionV2.NumSponsored.InnerValue,
+            decodedExtensionV2.NumberSponsored);
+        Assert.AreEqual(xdrExtensionV2.NumSponsoring.InnerValue,
+            decodedExtensionV2.NumberSponsoring);
+        Assert.AreEqual(xdrExtensionV2.SignerSponsoringIDs.Length,
+            decodedExtensionV2.SignerSponsoringIDs.Length);
         for (var i = 0; i < xdrExtensionV2.SignerSponsoringIDs.Length; i++)
         {
             var decodedId = decodedExtensionV2.SignerSponsoringIDs[i];
             Assert.IsNotNull(decodedId);
-            CollectionAssert.AreEqual(xdrExtensionV2.SignerSponsoringIDs[i].InnerValue.InnerValue.Ed25519.InnerValue,
+            CollectionAssert.AreEqual(
+                xdrExtensionV2.SignerSponsoringIDs[i].InnerValue.InnerValue.Ed25519.InnerValue,
                 decodedId.XdrPublicKey.Ed25519.InnerValue);
         }
 
@@ -330,9 +335,12 @@ public class LedgerEntryTest
         var decodedExtensionV2 = decodedExtensionV1.ExtensionV2;
 
         Assert.IsNotNull(decodedExtensionV2);
-        Assert.AreEqual(xdrExtensionV2.NumSponsored.InnerValue, decodedExtensionV2.NumberSponsored);
-        Assert.AreEqual(xdrExtensionV2.NumSponsoring.InnerValue, decodedExtensionV2.NumberSponsoring);
-        Assert.AreEqual(xdrExtensionV2.SignerSponsoringIDs.Length, decodedExtensionV2.SignerSponsoringIDs.Length);
+        Assert.AreEqual(xdrExtensionV2.NumSponsored.InnerValue,
+            decodedExtensionV2.NumberSponsored);
+        Assert.AreEqual(xdrExtensionV2.NumSponsoring.InnerValue,
+            decodedExtensionV2.NumberSponsoring);
+        Assert.AreEqual(xdrExtensionV2.SignerSponsoringIDs.Length,
+            decodedExtensionV2.SignerSponsoringIDs.Length);
         for (var i = 0; i < xdrExtensionV2.SignerSponsoringIDs.Length; i++)
         {
             var decodedId = decodedExtensionV2.SignerSponsoringIDs[i];
@@ -342,13 +350,14 @@ public class LedgerEntryTest
                 decodedId.XdrPublicKey.Ed25519.InnerValue);
         }
 
-
         // V3
         var decodedExtensionV3 = decodedExtensionV2.ExtensionV3;
         Assert.IsNotNull(decodedExtensionV3);
         Assert.IsInstanceOfType(decodedExtensionV3.ExtensionPoint, typeof(ExtensionPointZero));
-        Assert.AreEqual(xdrExtensionV3.SeqLedger.InnerValue, decodedExtensionV3.SequenceLedger);
-        Assert.AreEqual(xdrExtensionV3.SeqTime.InnerValue.InnerValue, decodedExtensionV3.SequenceTime);
+        Assert.AreEqual(xdrExtensionV3.SeqLedger.InnerValue,
+            decodedExtensionV3.SequenceLedger);
+        Assert.AreEqual(xdrExtensionV3.SeqTime.InnerValue.InnerValue,
+            decodedExtensionV3.SequenceTime);
     }
 
     [TestMethod]
@@ -373,21 +382,30 @@ public class LedgerEntryTest
         var decodedLedgerEntry = (LedgerEntryAccount)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrAccountEntry.Balance.InnerValue, decodedLedgerEntry.Balance);
-        Assert.AreEqual(xdrAccountEntry.NumSubEntries.InnerValue, decodedLedgerEntry.NumberSubEntries);
-        Assert.AreEqual(xdrAccountEntry.SeqNum.InnerValue.InnerValue, decodedLedgerEntry.SequenceNumber);
-        Assert.AreEqual(xdrAccountEntry.Flags.InnerValue, decodedLedgerEntry.Flags);
-        CollectionAssert.AreEqual(xdrAccountEntry.Thresholds.InnerValue, decodedLedgerEntry.Thresholds);
-        Assert.AreEqual(xdrAccountEntry.HomeDomain.InnerValue, decodedLedgerEntry.HomeDomain);
+        Assert.AreEqual(xdrAccountEntry.Balance.InnerValue,
+            decodedLedgerEntry.Balance);
+        Assert.AreEqual(xdrAccountEntry.NumSubEntries.InnerValue,
+            decodedLedgerEntry.NumberSubEntries);
+        Assert.AreEqual(xdrAccountEntry.SeqNum.InnerValue.InnerValue,
+            decodedLedgerEntry.SequenceNumber);
+        Assert.AreEqual(xdrAccountEntry.Flags.InnerValue,
+            decodedLedgerEntry.Flags);
+        CollectionAssert.AreEqual(xdrAccountEntry.Thresholds.InnerValue,
+            decodedLedgerEntry.Thresholds);
+        Assert.AreEqual(xdrAccountEntry.HomeDomain.InnerValue,
+            decodedLedgerEntry.HomeDomain);
         CollectionAssert.AreEqual(xdrAccountEntry.AccountID.InnerValue.Ed25519.InnerValue,
             decodedLedgerEntry.Account.XdrPublicKey.Ed25519.InnerValue);
-        Assert.AreEqual(xdrAccountEntry.Signers.Length, decodedLedgerEntry.Signers.Length);
+        Assert.AreEqual(xdrAccountEntry.Signers.Length,
+            decodedLedgerEntry.Signers.Length);
         for (var i = 0; i < xdrAccountEntry.Signers.Length; i++)
         {
             var signer = xdrAccountEntry.Signers[i];
             var decodedSigner = decodedLedgerEntry.Signers[i];
-            CollectionAssert.AreEqual(signer.Key.Ed25519.InnerValue, decodedSigner.Key.Ed25519.InnerValue);
-            Assert.AreEqual(signer.Weight.InnerValue, decodedSigner.Weight);
+            CollectionAssert.AreEqual(signer.Key.Ed25519.InnerValue,
+                decodedSigner.Key.Ed25519.InnerValue);
+            Assert.AreEqual(signer.Weight.InnerValue,
+                decodedSigner.Weight);
         }
 
         var decodedInflationDest = decodedLedgerEntry.InflationDest;
@@ -441,12 +459,16 @@ public class LedgerEntryTest
         CollectionAssert.AreEqual(buyingAsset.AssetCode.InnerValue, Util.PaddedByteArray(decodedBuyingAsset.Code, 12));
         CollectionAssert.AreEqual(buyingAsset.Issuer.InnerValue.Ed25519.InnerValue,
             KeyPair.FromAccountId(decodedBuyingAsset.Issuer).XdrPublicKey.Ed25519.InnerValue);
-        Assert.AreEqual(xdrOfferEntry.Price.N.InnerValue, decodedLedgerEntry.Price.Numerator);
-        Assert.AreEqual(xdrOfferEntry.Price.D.InnerValue, decodedLedgerEntry.Price.Denominator);
-        Assert.AreEqual(xdrOfferEntry.Amount.InnerValue, decodedLedgerEntry.Amount);
+        Assert.AreEqual(xdrOfferEntry.Price.N.InnerValue,
+            decodedLedgerEntry.Price.Numerator);
+        Assert.AreEqual(xdrOfferEntry.Price.D.InnerValue,
+            decodedLedgerEntry.Price.Denominator);
+        Assert.AreEqual(xdrOfferEntry.Amount.InnerValue,
+            decodedLedgerEntry.Amount);
         CollectionAssert.AreEqual(xdrOfferEntry.SellerID.InnerValue.Ed25519.InnerValue,
             decodedLedgerEntry.SellerId.XdrPublicKey.Ed25519.InnerValue);
-        Assert.AreEqual(xdrOfferEntry.Flags.InnerValue, decodedLedgerEntry.Flags);
+        Assert.AreEqual(xdrOfferEntry.Flags.InnerValue,
+            decodedLedgerEntry.Flags);
         Assert.IsNull(decodedLedgerEntry.OfferExtension); // Currently, no offer entry extension is available
     }
 
@@ -494,12 +516,16 @@ public class LedgerEntryTest
             decodedLedgerEntry.Account.XdrPublicKey.Ed25519.InnerValue);
         var asset = xdrTrustlineEntry.Asset.AlphaNum4;
         var decodedAsset = (AssetTypeCreditAlphaNum4)((TrustlineAsset.Wrapper)decodedLedgerEntry.Asset).Asset;
-        CollectionAssert.AreEqual(asset.AssetCode.InnerValue, Util.PaddedByteArray(decodedAsset.Code, 4));
+        CollectionAssert.AreEqual(asset.AssetCode.InnerValue,
+            Util.PaddedByteArray(decodedAsset.Code, 4));
         CollectionAssert.AreEqual(asset.Issuer.InnerValue.Ed25519.InnerValue,
             KeyPair.FromAccountId(decodedAsset.Issuer).XdrPublicKey.Ed25519.InnerValue);
-        Assert.AreEqual(xdrTrustlineEntry.Flags.InnerValue, decodedLedgerEntry.Flags);
-        Assert.AreEqual(xdrTrustlineEntry.Balance.InnerValue, decodedLedgerEntry.Balance);
-        Assert.AreEqual(xdrTrustlineEntry.Limit.InnerValue, decodedLedgerEntry.Limit);
+        Assert.AreEqual(xdrTrustlineEntry.Flags.InnerValue,
+            decodedLedgerEntry.Flags);
+        Assert.AreEqual(xdrTrustlineEntry.Balance.InnerValue,
+            decodedLedgerEntry.Balance);
+        Assert.AreEqual(xdrTrustlineEntry.Limit.InnerValue,
+            decodedLedgerEntry.Limit);
 
         // Trustline extensions
         // V1
@@ -507,8 +533,10 @@ public class LedgerEntryTest
         var decodedTrustlineExtensionV1 = decodedLedgerEntry.TrustlineExtensionV1;
         Assert.IsNotNull(decodedTrustlineExtensionV1);
         var decodedLiabilities = decodedTrustlineExtensionV1.Liabilities;
-        Assert.AreEqual(liabilities.Buying.InnerValue, decodedLiabilities.Buying);
-        Assert.AreEqual(liabilities.Selling.InnerValue, decodedLiabilities.Selling);
+        Assert.AreEqual(liabilities.Buying.InnerValue,
+            decodedLiabilities.Buying);
+        Assert.AreEqual(liabilities.Selling.InnerValue,
+            decodedLiabilities.Selling);
 
         Assert.IsNull(decodedTrustlineExtensionV1.TrustlineExtensionV2);
     }
@@ -566,12 +594,16 @@ public class LedgerEntryTest
             decodedLedgerEntry.Account.XdrPublicKey.Ed25519.InnerValue);
         var asset = xdrTrustlineEntry.Asset.AlphaNum4;
         var decodedAsset = (AssetTypeCreditAlphaNum4)((TrustlineAsset.Wrapper)decodedLedgerEntry.Asset).Asset;
-        CollectionAssert.AreEqual(asset.AssetCode.InnerValue, Util.PaddedByteArray(decodedAsset.Code, 4));
+        CollectionAssert.AreEqual(asset.AssetCode.InnerValue,
+            Util.PaddedByteArray(decodedAsset.Code, 4));
         CollectionAssert.AreEqual(asset.Issuer.InnerValue.Ed25519.InnerValue,
             KeyPair.FromAccountId(decodedAsset.Issuer).XdrPublicKey.Ed25519.InnerValue);
-        Assert.AreEqual(xdrTrustlineEntry.Flags.InnerValue, decodedLedgerEntry.Flags);
-        Assert.AreEqual(xdrTrustlineEntry.Balance.InnerValue, decodedLedgerEntry.Balance);
-        Assert.AreEqual(xdrTrustlineEntry.Limit.InnerValue, decodedLedgerEntry.Limit);
+        Assert.AreEqual(xdrTrustlineEntry.Flags.InnerValue,
+            decodedLedgerEntry.Flags);
+        Assert.AreEqual(xdrTrustlineEntry.Balance.InnerValue,
+            decodedLedgerEntry.Balance);
+        Assert.AreEqual(xdrTrustlineEntry.Limit.InnerValue,
+            decodedLedgerEntry.Limit);
 
         // Trustline extensions
         // V1
@@ -579,12 +611,15 @@ public class LedgerEntryTest
         var decodedTrustlineExtensionV1 = decodedLedgerEntry.TrustlineExtensionV1;
         Assert.IsNotNull(decodedTrustlineExtensionV1);
         var decodedLiabilities = decodedTrustlineExtensionV1.Liabilities;
-        Assert.AreEqual(liabilities.Buying.InnerValue, decodedLiabilities.Buying);
-        Assert.AreEqual(liabilities.Selling.InnerValue, decodedLiabilities.Selling);
+        Assert.AreEqual(liabilities.Buying.InnerValue,
+            decodedLiabilities.Buying);
+        Assert.AreEqual(liabilities.Selling.InnerValue,
+            decodedLiabilities.Selling);
 
         var decodedExtensionV2 = decodedTrustlineExtensionV1.TrustlineExtensionV2;
         Assert.IsNotNull(decodedExtensionV2);
-        Assert.AreEqual(xdrExtensionV2.LiquidityPoolUseCount.InnerValue, decodedExtensionV2.LiquidityPoolUseCount);
+        Assert.AreEqual(xdrExtensionV2.LiquidityPoolUseCount.InnerValue,
+            decodedExtensionV2.LiquidityPoolUseCount);
     }
 
     [TestMethod]
@@ -616,8 +651,10 @@ public class LedgerEntryTest
         // Assert
         CollectionAssert.AreEqual(xdrDataEntry.AccountID.InnerValue.Ed25519.InnerValue,
             decodedLedgerEntry.Account.XdrPublicKey.Ed25519.InnerValue);
-        CollectionAssert.AreEqual(xdrDataEntry.DataValue.InnerValue, decodedLedgerEntry.DataValue);
-        Assert.AreEqual(xdrDataEntry.DataName.InnerValue, decodedLedgerEntry.DataName);
+        CollectionAssert.AreEqual(xdrDataEntry.DataValue.InnerValue,
+            decodedLedgerEntry.DataValue);
+        Assert.AreEqual(xdrDataEntry.DataName.InnerValue,
+            decodedLedgerEntry.DataName);
         Assert.IsNull(decodedLedgerEntry.DataExtension); // Currently, no data entry extension is available
     }
 
@@ -688,7 +725,8 @@ public class LedgerEntryTest
         var decodedLedgerEntry = (LedgerEntryClaimableBalance)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrClaimableBalanceEntry.Claimants.Length, decodedLedgerEntry.Claimants.Length);
+        Assert.AreEqual(xdrClaimableBalanceEntry.Claimants.Length,
+            decodedLedgerEntry.Claimants.Length);
         for (var i = 0; i < xdrClaimableBalanceEntry.Claimants.Length; i++)
         {
             var xdrClaimant = xdrClaimableBalanceEntry.Claimants[i].V0;
@@ -697,13 +735,15 @@ public class LedgerEntryTest
                 decodedClaimant.Destination.XdrPublicKey.Ed25519.InnerValue);
             var predicate = xdrClaimant.Predicate;
             var decodedPredicate = (ClaimPredicateBeforeRelativeTime)decodedClaimant.Predicate;
-            Assert.AreEqual(predicate.RelBefore.InnerValue, decodedPredicate.Duration);
+            Assert.AreEqual(predicate.RelBefore.InnerValue,
+                decodedPredicate.Duration);
         }
 
         CollectionAssert.AreEqual(xdrClaimableBalanceEntry.BalanceID.V0.InnerValue,
             decodedLedgerEntry.BalanceId);
 
-        Assert.AreEqual(xdrClaimableBalanceEntry.Amount.InnerValue, decodedLedgerEntry.Amount);
+        Assert.AreEqual(xdrClaimableBalanceEntry.Amount.InnerValue,
+            decodedLedgerEntry.Amount);
 
         var decodedAsset = (AssetTypeCreditAlphaNum12)decodedLedgerEntry.Asset;
         CollectionAssert.AreEqual(xdrClaimableBalanceEntry.Asset.AlphaNum12.AssetCode.InnerValue,
@@ -741,22 +781,24 @@ public class LedgerEntryTest
         var decodedLedgerEntry = (LedgerEntryClaimableBalance)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrClaimableBalanceEntry.Claimants.Length, decodedLedgerEntry.Claimants.Length);
+        Assert.AreEqual(xdrClaimableBalanceEntry.Claimants.Length,
+            decodedLedgerEntry.Claimants.Length);
         for (var i = 0; i < xdrClaimableBalanceEntry.Claimants.Length; i++)
         {
             var xdrClaimant = xdrClaimableBalanceEntry.Claimants[i].V0;
             var decodedClaimant = decodedLedgerEntry.Claimants[i];
             CollectionAssert.AreEqual(xdrClaimant.Destination.InnerValue.Ed25519.InnerValue,
                 decodedClaimant.Destination.XdrPublicKey.Ed25519.InnerValue);
-            var predicate = xdrClaimant.Predicate;
             var decodedPredicate = (ClaimPredicateBeforeRelativeTime)decodedClaimant.Predicate;
-            Assert.AreEqual(predicate.RelBefore.InnerValue, decodedPredicate.Duration);
+            Assert.AreEqual(xdrClaimant.Predicate.RelBefore.InnerValue,
+                decodedPredicate.Duration);
         }
 
         CollectionAssert.AreEqual(xdrClaimableBalanceEntry.BalanceID.V0.InnerValue,
             decodedLedgerEntry.BalanceId);
 
-        Assert.AreEqual(xdrClaimableBalanceEntry.Amount.InnerValue, decodedLedgerEntry.Amount);
+        Assert.AreEqual(xdrClaimableBalanceEntry.Amount.InnerValue,
+            decodedLedgerEntry.Amount);
 
         var decodedAsset = (AssetTypeCreditAlphaNum12)decodedLedgerEntry.Asset;
         CollectionAssert.AreEqual(xdrClaimableBalanceEntry.Asset.AlphaNum12.AssetCode.InnerValue,
@@ -764,9 +806,9 @@ public class LedgerEntryTest
 
         var decodedExtension = decodedLedgerEntry.ClaimableBalanceEntryExtensionV1;
         Assert.IsNotNull(decodedExtension);
-        Assert.AreEqual(xdrExtension.Flags.InnerValue, decodedExtension.Flags);
+        Assert.AreEqual(xdrExtension.Flags.InnerValue,
+            decodedExtension.Flags);
     }
-
 
     [TestMethod]
     public void TestLedgerEntryLiquidityPoolWithAllPropertiesPopulated()
@@ -815,15 +857,23 @@ public class LedgerEntryTest
 
         var product = xdrLiquidityPoolEntry.Body.ConstantProduct;
         var decodedProduct = (LiquidityPoolConstantProduct)decodedLedgerEntry.LiquidityPoolBody;
-        Assert.AreEqual(product.ReserveA.InnerValue, decodedProduct.ReserveA);
-        Assert.AreEqual(product.ReserveB.InnerValue, decodedProduct.ReserveB);
-        Assert.AreEqual(product.TotalPoolShares.InnerValue, decodedProduct.TotalPoolShares);
-        Assert.AreEqual(product.PoolSharesTrustLineCount.InnerValue, decodedProduct.PoolSharesTrustLineCount);
+        Assert.AreEqual(product.ReserveA.InnerValue,
+            decodedProduct.ReserveA);
+        Assert.AreEqual(product.ReserveB.InnerValue,
+            decodedProduct.ReserveB);
+        Assert.AreEqual(product.TotalPoolShares.InnerValue,
+            decodedProduct.TotalPoolShares);
+        Assert.AreEqual(product.PoolSharesTrustLineCount.InnerValue,
+            decodedProduct.PoolSharesTrustLineCount);
         var assetB = product.Params.AssetB.AlphaNum4;
         var decodedAssetB = (AssetTypeCreditAlphaNum4)decodedProduct.Parameters.AssetB;
-        Assert.AreEqual(product.Params.Fee.InnerValue, decodedProduct.Parameters.Fee);
-        Assert.AreEqual("native", decodedProduct.Parameters.AssetA.Type);
-        CollectionAssert.AreEqual(assetB.AssetCode.InnerValue, Util.PaddedByteArray(decodedAssetB.Code, 4));
+
+        Assert.AreEqual(product.Params.Fee.InnerValue,
+            decodedProduct.Parameters.Fee);
+        Assert.AreEqual("native",
+            decodedProduct.Parameters.AssetA.Type);
+        CollectionAssert.AreEqual(assetB.AssetCode.InnerValue,
+            Util.PaddedByteArray(decodedAssetB.Code, 4));
         CollectionAssert.AreEqual(assetB.Issuer.InnerValue.Ed25519.InnerValue,
             KeyPair.FromAccountId(decodedAssetB.Issuer).XdrPublicKey.Ed25519.InnerValue);
     }
@@ -847,7 +897,8 @@ public class LedgerEntryTest
         Assert.IsInstanceOfType(decodedLedgerEntry.ExtensionPoint, typeof(ExtensionPointZero));
         Assert.AreEqual(StrKey.EncodeContractId(xdrContractDataEntry.Contract.ContractId.InnerValue.InnerValue),
             ((SCContractId)decodedLedgerEntry.Contract).InnerValue);
-        Assert.AreEqual(xdrContractDataEntry.Durability.InnerValue, decodedLedgerEntry.Durability.InnerValue);
+        Assert.AreEqual(xdrContractDataEntry.Durability.InnerValue,
+            decodedLedgerEntry.Durability.InnerValue);
         Assert.AreEqual(xdrContractDataEntry.Key.Str.InnerValue,
             ((SCString)decodedLedgerEntry.Key).InnerValue);
         Assert.AreEqual(xdrContractDataEntry.Val.U64.InnerValue,
@@ -879,7 +930,8 @@ public class LedgerEntryTest
         Assert.IsInstanceOfType(decodedLedgerEntry.ExtensionPoint, typeof(ExtensionPointZero));
         CollectionAssert.AreEqual(xdrContractDataEntry.Contract.AccountId.InnerValue.Ed25519.InnerValue,
             KeyPair.FromAccountId(decodedAccountId.InnerValue).XdrPublicKey.Ed25519.InnerValue);
-        Assert.AreEqual(xdrContractDataEntry.Durability.InnerValue, decodedLedgerEntry.Durability.InnerValue);
+        Assert.AreEqual(xdrContractDataEntry.Durability.InnerValue,
+            decodedLedgerEntry.Durability.InnerValue);
         Assert.AreEqual(xdrContractDataEntry.Key.Str.InnerValue,
             ((SCString)decodedLedgerEntry.Key).InnerValue);
         Assert.AreEqual(xdrContractDataEntry.Val.U64.InnerValue,
@@ -915,8 +967,10 @@ public class LedgerEntryTest
         var decodedLedgerEntry = (LedgerEntryContractCode)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        CollectionAssert.AreEqual(xdrContractCodeEntry.Code, decodedLedgerEntry.Code);
-        CollectionAssert.AreEqual(xdrContractCodeEntry.Hash.InnerValue, decodedLedgerEntry.Hash);
+        CollectionAssert.AreEqual(xdrContractCodeEntry.Code,
+            decodedLedgerEntry.Code);
+        CollectionAssert.AreEqual(xdrContractCodeEntry.Hash.InnerValue,
+            decodedLedgerEntry.Hash);
         Assert.IsNull(decodedLedgerEntry.ContractCodeExtensionV1);
     }
 
@@ -973,26 +1027,40 @@ public class LedgerEntryTest
         var decodedLedgerEntry = (LedgerEntryContractCode)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        CollectionAssert.AreEqual(xdrContractCodeEntry.Code, decodedLedgerEntry.Code);
-        CollectionAssert.AreEqual(xdrContractCodeEntry.Hash.InnerValue, decodedLedgerEntry.Hash);
+        CollectionAssert.AreEqual(xdrContractCodeEntry.Code,
+            decodedLedgerEntry.Code);
+        CollectionAssert.AreEqual(xdrContractCodeEntry.Hash.InnerValue,
+            decodedLedgerEntry.Hash);
         Assert.IsNotNull(decodedLedgerEntry.ContractCodeExtensionV1);
         var xdrCostInputs = xdrContractCodeEntry.Ext.V1.CostInputs;
         var decodedCostInputs = decodedLedgerEntry.ContractCodeExtensionV1.CostInputs;
         Assert.IsNotNull(decodedCostInputs);
 
-        Assert.AreEqual(xdrCostInputs.NInstructions.InnerValue, decodedCostInputs.NInstructions);
-        Assert.AreEqual(xdrCostInputs.NFunctions.InnerValue, decodedCostInputs.NFunctions);
-        Assert.AreEqual(xdrCostInputs.NGlobals.InnerValue, decodedCostInputs.NGlobals);
-        Assert.AreEqual(xdrCostInputs.NTableEntries.InnerValue, decodedCostInputs.NTableEntries);
-        Assert.AreEqual(xdrCostInputs.NTypes.InnerValue, decodedCostInputs.NTypes);
-        Assert.AreEqual(xdrCostInputs.NDataSegments.InnerValue, decodedCostInputs.NDataSegments);
-        Assert.AreEqual(xdrCostInputs.NElemSegments.InnerValue, decodedCostInputs.NElemSegments);
-        Assert.AreEqual(xdrCostInputs.NImports.InnerValue, decodedCostInputs.NImports);
-        Assert.AreEqual(xdrCostInputs.NExports.InnerValue, decodedCostInputs.NExports);
-        Assert.AreEqual(xdrCostInputs.NDataSegmentBytes.InnerValue, decodedCostInputs.NDataSegmentBytes);
+        Assert.AreEqual(xdrCostInputs.NInstructions.InnerValue,
+            decodedCostInputs.NInstructions);
+        Assert.AreEqual(xdrCostInputs.NFunctions.InnerValue,
+            decodedCostInputs.NFunctions);
+        Assert.AreEqual(xdrCostInputs.NGlobals.InnerValue,
+            decodedCostInputs.NGlobals);
+        Assert.AreEqual(xdrCostInputs.NTableEntries.InnerValue,
+            decodedCostInputs.NTableEntries);
+        Assert.AreEqual(xdrCostInputs.NTypes.InnerValue,
+            decodedCostInputs.NTypes);
+        Assert.AreEqual(xdrCostInputs.NDataSegments.InnerValue,
+            decodedCostInputs.NDataSegments);
+        Assert.AreEqual(xdrCostInputs.NElemSegments.InnerValue,
+            decodedCostInputs.NElemSegments);
+        Assert.AreEqual(xdrCostInputs.NImports.InnerValue,
+            decodedCostInputs.NImports);
+        Assert.AreEqual(xdrCostInputs.NExports.InnerValue,
+            decodedCostInputs.NExports);
+        Assert.AreEqual(xdrCostInputs.NDataSegmentBytes.InnerValue,
+            decodedCostInputs.NDataSegmentBytes);
 
-        Assert.IsInstanceOfType(decodedLedgerEntry.ContractCodeExtensionV1.ExtensionPoint, typeof(ExtensionPointZero));
-        Assert.IsInstanceOfType(decodedCostInputs.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.IsInstanceOfType(decodedLedgerEntry.ContractCodeExtensionV1.ExtensionPoint,
+            typeof(ExtensionPointZero));
+        Assert.IsInstanceOfType(decodedCostInputs.ExtensionPoint,
+            typeof(ExtensionPointZero));
     }
 
     [TestMethod]
@@ -1021,9 +1089,12 @@ public class LedgerEntryTest
         var decodedConfigSetting = (ConfigSettingContractBandwidth)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrConfigSetting.TxMaxSizeBytes.InnerValue, decodedConfigSetting.TxMaxSizeBytes);
-        Assert.AreEqual(xdrConfigSetting.FeeTxSize1KB.InnerValue, decodedConfigSetting.FeeTxSize1Kb);
-        Assert.AreEqual(xdrConfigSetting.LedgerMaxTxsSizeBytes.InnerValue, decodedConfigSetting.LedgerMaxTxsSizeBytes);
+        Assert.AreEqual(xdrConfigSetting.TxMaxSizeBytes.InnerValue,
+            decodedConfigSetting.TxMaxSizeBytes);
+        Assert.AreEqual(xdrConfigSetting.FeeTxSize1KB.InnerValue,
+            decodedConfigSetting.FeeTxSize1Kb);
+        Assert.AreEqual(xdrConfigSetting.LedgerMaxTxsSizeBytes.InnerValue,
+            decodedConfigSetting.LedgerMaxTxsSizeBytes);
     }
 
     [TestMethod]
@@ -1071,9 +1142,12 @@ public class LedgerEntryTest
         {
             var xdrParamEntry = xdrConfigSetting.InnerValue[i];
             var decodedParamEntry = decodedConfigSetting.ParamEntries[i];
-            Assert.AreEqual(xdrParamEntry.LinearTerm.InnerValue, decodedParamEntry.LinearTerm);
-            Assert.AreEqual(xdrParamEntry.ConstTerm.InnerValue, decodedParamEntry.ConstTerm);
-            Assert.IsInstanceOfType(decodedParamEntry.ExtensionPoint, typeof(ExtensionPointZero));
+            Assert.AreEqual(xdrParamEntry.LinearTerm.InnerValue,
+                decodedParamEntry.LinearTerm);
+            Assert.AreEqual(xdrParamEntry.ConstTerm.InnerValue,
+                decodedParamEntry.ConstTerm);
+            Assert.IsInstanceOfType(decodedParamEntry.ExtensionPoint,
+                typeof(ExtensionPointZero));
         }
     }
 
@@ -1122,9 +1196,12 @@ public class LedgerEntryTest
         {
             var xdrParamEntry = xdrConfigSetting.InnerValue[i];
             var decodedParamEntry = decodedConfigSetting.ParamEntries[i];
-            Assert.AreEqual(xdrParamEntry.LinearTerm.InnerValue, decodedParamEntry.LinearTerm);
-            Assert.AreEqual(xdrParamEntry.ConstTerm.InnerValue, decodedParamEntry.ConstTerm);
-            Assert.IsInstanceOfType(decodedParamEntry.ExtensionPoint, typeof(ExtensionPointZero));
+            Assert.AreEqual(xdrParamEntry.LinearTerm.InnerValue,
+                decodedParamEntry.LinearTerm);
+            Assert.AreEqual(xdrParamEntry.ConstTerm.InnerValue,
+                decodedParamEntry.ConstTerm);
+            Assert.IsInstanceOfType(decodedParamEntry.ExtensionPoint,
+                typeof(ExtensionPointZero));
         }
     }
 
@@ -1155,11 +1232,14 @@ public class LedgerEntryTest
         var decodedConfigSetting = (ConfigSettingContractCompute)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrConfigSetting.LedgerMaxInstructions.InnerValue, decodedConfigSetting.LedgerMaxInstructions);
+        Assert.AreEqual(xdrConfigSetting.LedgerMaxInstructions.InnerValue,
+            decodedConfigSetting.LedgerMaxInstructions);
         Assert.AreEqual(xdrConfigSetting.FeeRatePerInstructionsIncrement.InnerValue,
             decodedConfigSetting.FeeRatePerInstructionsIncrement);
-        Assert.AreEqual(xdrConfigSetting.TxMaxInstructions.InnerValue, decodedConfigSetting.TxMaxInstructions);
-        Assert.AreEqual(xdrConfigSetting.TxMemoryLimit.InnerValue, decodedConfigSetting.TxMemoryLimit);
+        Assert.AreEqual(xdrConfigSetting.TxMaxInstructions.InnerValue,
+            decodedConfigSetting.TxMaxInstructions);
+        Assert.AreEqual(xdrConfigSetting.TxMemoryLimit.InnerValue,
+            decodedConfigSetting.TxMemoryLimit);
     }
 
     [TestMethod]
@@ -1187,7 +1267,8 @@ public class LedgerEntryTest
         var decodedConfigSetting = (ConfigSettingContractEvents)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrConfigSetting.FeeContractEvents1KB.InnerValue, decodedConfigSetting.FeeContractEvents1Kb);
+        Assert.AreEqual(xdrConfigSetting.FeeContractEvents1KB.InnerValue,
+            decodedConfigSetting.FeeContractEvents1Kb);
         Assert.AreEqual(xdrConfigSetting.TxMaxContractEventsSizeBytes.InnerValue,
             decodedConfigSetting.TxMaxContractEventsSizeBytes);
     }
@@ -1216,7 +1297,8 @@ public class LedgerEntryTest
         var decodedConfigSetting = (ConfigSettingContractExecutionLanes)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrConfigSetting.LedgerMaxTxCount.InnerValue, decodedConfigSetting.LedgerMaxTxCount);
+        Assert.AreEqual(xdrConfigSetting.LedgerMaxTxCount.InnerValue,
+            decodedConfigSetting.LedgerMaxTxCount);
     }
 
     [TestMethod]
@@ -1244,7 +1326,8 @@ public class LedgerEntryTest
         var decodedConfigSetting = (ConfigSettingContractHistoricalData)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrConfigSetting.FeeHistorical1KB.InnerValue, decodedConfigSetting.FeeHistorical1Kb);
+        Assert.AreEqual(xdrConfigSetting.FeeHistorical1KB.InnerValue,
+            decodedConfigSetting.FeeHistorical1Kb);
     }
 
     [TestMethod]
@@ -1286,28 +1369,35 @@ public class LedgerEntryTest
 
         // Assert
         Assert.AreEqual(xdrConfigSetting.LedgerMaxDiskReadEntries.InnerValue,
-            decodedConfigSetting.LedgerMaxReadLedgerEntries);
-        Assert.AreEqual(xdrConfigSetting.LedgerMaxDiskReadBytes.InnerValue, decodedConfigSetting.LedgerMaxReadBytes);
+            decodedConfigSetting.LedgerMaxDiskReadEntries);
+        Assert.AreEqual(xdrConfigSetting.LedgerMaxDiskReadBytes.InnerValue,
+            decodedConfigSetting.LedgerMaxDiskReadBytes);
         Assert.AreEqual(xdrConfigSetting.LedgerMaxWriteLedgerEntries.InnerValue,
             decodedConfigSetting.LedgerMaxWriteLedgerEntries);
-        Assert.AreEqual(xdrConfigSetting.LedgerMaxWriteBytes.InnerValue, decodedConfigSetting.LedgerMaxWriteBytes);
+        Assert.AreEqual(xdrConfigSetting.LedgerMaxWriteBytes.InnerValue,
+            decodedConfigSetting.LedgerMaxWriteBytes);
         Assert.AreEqual(xdrConfigSetting.TxMaxDiskReadEntries.InnerValue,
-            decodedConfigSetting.TxMaxReadLedgerEntries);
-        Assert.AreEqual(xdrConfigSetting.TxMaxDiskReadEntries.InnerValue, decodedConfigSetting.TxMaxReadBytes);
+            decodedConfigSetting.TxMaxDiskReadEntries);
+        Assert.AreEqual(xdrConfigSetting.TxMaxDiskReadBytes.InnerValue,
+            decodedConfigSetting.TxMaxDiskReadBytes);
         Assert.AreEqual(xdrConfigSetting.TxMaxWriteLedgerEntries.InnerValue,
             decodedConfigSetting.TxMaxWriteLedgerEntries);
-        Assert.AreEqual(xdrConfigSetting.TxMaxWriteBytes.InnerValue, decodedConfigSetting.TxMaxWriteBytes);
-        Assert.AreEqual(xdrConfigSetting.FeeDiskReadLedgerEntry.InnerValue, decodedConfigSetting.FeeReadLedgerEntry);
-        Assert.AreEqual(xdrConfigSetting.FeeWriteLedgerEntry.InnerValue, decodedConfigSetting.FeeWriteLedgerEntry);
-        Assert.AreEqual(xdrConfigSetting.FeeDiskRead1KB.InnerValue, decodedConfigSetting.FeeRead1Kb);
+        Assert.AreEqual(xdrConfigSetting.TxMaxWriteBytes.InnerValue,
+            decodedConfigSetting.TxMaxWriteBytes);
+        Assert.AreEqual(xdrConfigSetting.FeeDiskReadLedgerEntry.InnerValue,
+            decodedConfigSetting.FeeDiskReadLedgerEntry);
+        Assert.AreEqual(xdrConfigSetting.FeeWriteLedgerEntry.InnerValue,
+            decodedConfigSetting.FeeWriteLedgerEntry);
+        Assert.AreEqual(xdrConfigSetting.FeeDiskRead1KB.InnerValue,
+            decodedConfigSetting.FeeDiskRead1Kb);
         Assert.AreEqual(xdrConfigSetting.SorobanStateTargetSizeBytes.InnerValue,
-            decodedConfigSetting.BucketListTargetSizeBytes);
+            decodedConfigSetting.SorobanStateTargetSizeBytes);
         Assert.AreEqual(xdrConfigSetting.RentFee1KBSorobanStateSizeLow.InnerValue,
-            decodedConfigSetting.WriteFee1KbBucketListLow);
+            decodedConfigSetting.RentFee1KbSorobanStateSizeLow);
         Assert.AreEqual(xdrConfigSetting.RentFee1KBSorobanStateSizeHigh.InnerValue,
-            decodedConfigSetting.WriteFee1KbBucketListHigh);
+            decodedConfigSetting.RentFee1KbSorobanStateSizeHigh);
         Assert.AreEqual(xdrConfigSetting.SorobanStateRentFeeGrowthFactor.InnerValue,
-            decodedConfigSetting.BucketListWriteFeeGrowthFactor);
+            decodedConfigSetting.SorobanStateRentFeeGrowthFactor);
     }
 
     [TestMethod]
@@ -1343,19 +1433,24 @@ public class LedgerEntryTest
         var decodedConfigSetting = (StateArchivalSettings)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrConfigSetting.MaxEntryTTL.InnerValue, decodedConfigSetting.MaxEntryTtl);
-        Assert.AreEqual(xdrConfigSetting.MinTemporaryTTL.InnerValue, decodedConfigSetting.MinTemporaryTtl);
-        Assert.AreEqual(xdrConfigSetting.MinPersistentTTL.InnerValue, decodedConfigSetting.MinPersistentTtl);
+        Assert.AreEqual(xdrConfigSetting.MaxEntryTTL.InnerValue,
+            decodedConfigSetting.MaxEntryTtl);
+        Assert.AreEqual(xdrConfigSetting.MinTemporaryTTL.InnerValue,
+            decodedConfigSetting.MinTemporaryTtl);
+        Assert.AreEqual(xdrConfigSetting.MinPersistentTTL.InnerValue,
+            decodedConfigSetting.MinPersistentTtl);
         Assert.AreEqual(xdrConfigSetting.PersistentRentRateDenominator.InnerValue,
             decodedConfigSetting.PersistentRentRateDenominator);
         Assert.AreEqual(xdrConfigSetting.TempRentRateDenominator.InnerValue,
             decodedConfigSetting.TempRentRateDenominator);
-        Assert.AreEqual(xdrConfigSetting.MaxEntriesToArchive.InnerValue, decodedConfigSetting.MaxEntriesToArchive);
+        Assert.AreEqual(xdrConfigSetting.MaxEntriesToArchive.InnerValue,
+            decodedConfigSetting.MaxEntriesToArchive);
         Assert.AreEqual(xdrConfigSetting.LiveSorobanStateSizeWindowSampleSize.InnerValue,
-            decodedConfigSetting.BucketListSizeWindowSampleSize);
+            decodedConfigSetting.LiveSorobanStateSizeWindowSampleSize);
         Assert.AreEqual(xdrConfigSetting.LiveSorobanStateSizeWindowSamplePeriod.InnerValue,
-            decodedConfigSetting.BucketListWindowSamplePeriod);
-        Assert.AreEqual(xdrConfigSetting.EvictionScanSize.InnerValue, decodedConfigSetting.EvictionScanSize);
+            decodedConfigSetting.LiveSorobanStateSizeWindowSamplePeriod);
+        Assert.AreEqual(xdrConfigSetting.EvictionScanSize.InnerValue,
+            decodedConfigSetting.EvictionScanSize);
         Assert.AreEqual(xdrConfigSetting.StartingEvictionScanLevel.InnerValue,
             decodedConfigSetting.StartingEvictionScanLevel);
     }
@@ -1386,23 +1481,27 @@ public class LedgerEntryTest
         var decodedConfigSetting = (EvictionIterator)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrConfigSetting.IsCurrBucket, decodedConfigSetting.IsCurrBucket);
-        Assert.AreEqual(xdrConfigSetting.BucketListLevel.InnerValue, decodedConfigSetting.BucketListLevel);
-        Assert.AreEqual(xdrConfigSetting.BucketFileOffset.InnerValue, decodedConfigSetting.BucketFileOffset);
+        Assert.AreEqual(xdrConfigSetting.IsCurrBucket,
+            decodedConfigSetting.IsCurrBucket);
+        Assert.AreEqual(xdrConfigSetting.BucketListLevel.InnerValue,
+            decodedConfigSetting.BucketListLevel);
+        Assert.AreEqual(xdrConfigSetting.BucketFileOffset.InnerValue,
+            decodedConfigSetting.BucketFileOffset);
     }
 
     [TestMethod]
     public void TestConfigSettingContractMaxSizeBytes()
     {
+        var xdrConfigSetting = new ConfigSettingEntry
+        {
+            Discriminant =
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES),
+            ContractMaxSizeBytes = new Uint32(10),
+        };
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING),
-            ConfigSetting = new ConfigSettingEntry
-            {
-                Discriminant =
-                    ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES),
-                ContractMaxSizeBytes = new Uint32(10),
-            },
+            ConfigSetting = xdrConfigSetting,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1410,23 +1509,24 @@ public class LedgerEntryTest
         var decodedConfigSetting = (ConfigSettingContractMaxSizeBytes)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrLedgerEntryData.ConfigSetting.ContractMaxSizeBytes.InnerValue,
+        Assert.AreEqual(xdrConfigSetting.ContractMaxSizeBytes.InnerValue,
             decodedConfigSetting.InnerValue);
     }
 
     [TestMethod]
     public void TestConfigSettingContractDataKeySizeBytes()
     {
+        var xdrConfigSetting = new ConfigSettingEntry
+        {
+            Discriminant =
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
+                    .CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES),
+            ContractDataKeySizeBytes = new Uint32(10),
+        };
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING),
-            ConfigSetting = new ConfigSettingEntry
-            {
-                Discriminant =
-                    ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
-                        .CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES),
-                ContractDataKeySizeBytes = new Uint32(10),
-            },
+            ConfigSetting = xdrConfigSetting,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1434,22 +1534,23 @@ public class LedgerEntryTest
         var decodedConfigSetting = (ConfigSettingContractDataKeySizeBytes)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrLedgerEntryData.ConfigSetting.ContractDataKeySizeBytes.InnerValue,
+        Assert.AreEqual(xdrConfigSetting.ContractDataKeySizeBytes.InnerValue,
             decodedConfigSetting.InnerValue);
     }
 
     [TestMethod]
     public void TestConfigSettingContractDataEntrySizeBytes()
     {
+        var xdrConfigSetting = new ConfigSettingEntry
+        {
+            Discriminant = ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
+                .CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES),
+            ContractDataEntrySizeBytes = new Uint32(10),
+        };
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING),
-            ConfigSetting = new ConfigSettingEntry
-            {
-                Discriminant = ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
-                    .CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES),
-                ContractDataEntrySizeBytes = new Uint32(10),
-            },
+            ConfigSetting = xdrConfigSetting,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
@@ -1457,38 +1558,142 @@ public class LedgerEntryTest
         var decodedConfigSetting = (ConfigSettingContractDataEntrySizeBytes)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrLedgerEntryData.ConfigSetting.ContractDataEntrySizeBytes.InnerValue,
+        Assert.AreEqual(xdrConfigSetting.ContractDataEntrySizeBytes.InnerValue,
             decodedConfigSetting.InnerValue);
     }
 
     [TestMethod]
-    public void TestConfigSettingBucketListSizeWindow()
+    public void TestConfigSettingLiveSorobanStateSizeWindow()
     {
+        var xdrConfigSetting = new ConfigSettingEntry
+        {
+            Discriminant =
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
+                    .CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW),
+            LiveSorobanStateSizeWindow = new Uint64[] { new(100), new(200) },
+        };
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
         {
             Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING),
-            ConfigSetting = new ConfigSettingEntry
-            {
-                Discriminant =
-                    ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW),
-                LiveSorobanStateSizeWindow = new Uint64[] { new(100), new(200) },
-            },
+            ConfigSetting = xdrConfigSetting,
         };
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
-        var decodedConfigSetting = (ConfigSettingBucketListSizeWindow)LedgerEntry.FromXdrBase64(entryXdrBase64);
+        var decodedConfigSetting = (ConfigSettingLiveSorobanStateSizeWindow)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        Assert.AreEqual(xdrLedgerEntryData.ConfigSetting.LiveSorobanStateSizeWindow.Length,
+        Assert.AreEqual(xdrConfigSetting.LiveSorobanStateSizeWindow.Length,
             decodedConfigSetting.InnerValue.Length);
         for (var i = 0; i < decodedConfigSetting.InnerValue.Length; i++)
         {
-            Assert.AreEqual(xdrLedgerEntryData.ConfigSetting.LiveSorobanStateSizeWindow[i].InnerValue,
+            Assert.AreEqual(xdrConfigSetting.LiveSorobanStateSizeWindow[i].InnerValue,
                 decodedConfigSetting.InnerValue[i]);
         }
     }
 
+    [TestMethod]
+    public void TestConfigSettingContractParallelComputeV0()
+    {
+        var xdrConfigSetting = new ConfigSettingEntry
+        {
+            Discriminant =
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
+                    .CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0),
+            ContractParallelCompute = new StellarDotnetSdk.Xdr.ConfigSettingContractParallelComputeV0
+            {
+                LedgerMaxDependentTxClusters = new Uint32(1234),
+            },
+        };
+        var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
+        {
+            Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING),
+            ConfigSetting = xdrConfigSetting,
+        };
+        var os = new XdrDataOutputStream();
+        StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
+        var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+        var decodedConfigSetting = (ConfigSettingContractParallelComputeV0)LedgerEntry.FromXdrBase64(entryXdrBase64);
+
+        // Assert
+        Assert.AreEqual(xdrConfigSetting.ContractParallelCompute.LedgerMaxDependentTxClusters.InnerValue,
+            decodedConfigSetting.LedgerMaxDependentTxClusters);
+    }
+
+    [TestMethod]
+    public void TestConfigSettingContractLedgerCostExtV0()
+    {
+        var xdrConfigSetting = new ConfigSettingEntry
+        {
+            Discriminant =
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
+                    .CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0),
+            ContractLedgerCostExt = new ConfigSettingContractLedgerCostExtV0
+            {
+                TxMaxFootprintEntries = new Uint32(233),
+                FeeWrite1KB = new Int64(1555),
+            },
+        };
+        var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
+        {
+            Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING),
+            ConfigSetting = xdrConfigSetting,
+        };
+        var os = new XdrDataOutputStream();
+        StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
+        var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+        var decodedConfigSetting =
+            (LedgerEntries.ConfigSettingContractLedgerCostExtV0)LedgerEntry.FromXdrBase64(
+                entryXdrBase64);
+
+        // Assert
+        Assert.AreEqual(xdrConfigSetting.ContractLedgerCostExt.TxMaxFootprintEntries.InnerValue,
+            decodedConfigSetting.TxMaxFootprintEntries);
+        Assert.AreEqual(xdrConfigSetting.ContractLedgerCostExt.FeeWrite1KB.InnerValue,
+            decodedConfigSetting.FeeWrite1Kb);
+    }
+
+    [TestMethod]
+    public void TestConfigSettingScpTiming()
+    {
+        var xdrConfigSetting = new ConfigSettingEntry
+        {
+            Discriminant =
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
+                    .CONFIG_SETTING_SCP_TIMING),
+            ContractSCPTiming = new ConfigSettingSCPTiming
+            {
+                LedgerTargetCloseTimeMilliseconds = new Uint32(1000),
+                BallotTimeoutInitialMilliseconds = new Uint32(200),
+                BallotTimeoutIncrementMilliseconds = new Uint32(100),
+                NominationTimeoutInitialMilliseconds = new Uint32(500),
+                NominationTimeoutIncrementMilliseconds = new Uint32(250),
+            },
+        };
+        var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
+        {
+            Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING),
+            ConfigSetting = xdrConfigSetting,
+        };
+        var os = new XdrDataOutputStream();
+        StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
+        var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+        var decodedConfigSetting =
+            (ConfigSettingScpTiming)LedgerEntry.FromXdrBase64(
+                entryXdrBase64);
+
+        // Assert
+        Assert.AreEqual(xdrConfigSetting.ContractSCPTiming.LedgerTargetCloseTimeMilliseconds.InnerValue,
+            decodedConfigSetting.LedgerTargetCloseTimeMilliseconds);
+        Assert.AreEqual(xdrConfigSetting.ContractSCPTiming.NominationTimeoutInitialMilliseconds.InnerValue,
+            decodedConfigSetting.NominationTimeoutInitialMilliseconds);
+        Assert.AreEqual(xdrConfigSetting.ContractSCPTiming.NominationTimeoutIncrementMilliseconds.InnerValue,
+            decodedConfigSetting.NominationTimeoutIncrementMilliseconds);
+        Assert.AreEqual(xdrConfigSetting.ContractSCPTiming.BallotTimeoutInitialMilliseconds.InnerValue,
+            decodedConfigSetting.BallotTimeoutInitialMilliseconds);
+        Assert.AreEqual(xdrConfigSetting.ContractSCPTiming.BallotTimeoutIncrementMilliseconds.InnerValue,
+            decodedConfigSetting.BallotTimeoutIncrementMilliseconds);
+    }
 
     [TestMethod]
     public void TestLedgerEntryTtlWithAllPropertiesPopulated()
@@ -1511,7 +1716,9 @@ public class LedgerEntryTest
         var decodedLedgerEntry = (LedgerEntryTtl)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
-        CollectionAssert.AreEqual(xdrTtlEntry.KeyHash.InnerValue, decodedLedgerEntry.KeyHash);
-        Assert.AreEqual(xdrTtlEntry.LiveUntilLedgerSeq.InnerValue, decodedLedgerEntry.LiveUntilLedgerSequence);
+        CollectionAssert.AreEqual(xdrTtlEntry.KeyHash.InnerValue,
+            decodedLedgerEntry.KeyHash);
+        Assert.AreEqual(xdrTtlEntry.LiveUntilLedgerSeq.InnerValue,
+            decodedLedgerEntry.LiveUntilLedgerSequence);
     }
 }

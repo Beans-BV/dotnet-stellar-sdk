@@ -108,7 +108,7 @@ public class LedgerKeyTest
             LedgerKey.ClaimableBalance(balanceId));
         Assert.IsTrue(ex.Message.Contains("Claimable balance ID cannot exceed 64 characters."));
     }
-    
+
     [TestMethod]
     public void TestLedgerKeyClaimableBalanceByteArrayConstructorValid()
     {
@@ -122,7 +122,7 @@ public class LedgerKeyTest
         // Assert
         Assert.AreEqual(balanceId, decodedLedgerKey.BalanceId.ToLower());
     }
-    
+
     [TestMethod]
     public void TestLedgerKeyClaimableBalanceByteArrayConstructorInvalid()
     {
@@ -131,7 +131,7 @@ public class LedgerKeyTest
             LedgerKey.ClaimableBalance(Convert.FromHexString(balanceId)));
         Assert.IsTrue(ex.Message.Contains("Claimable balance ID byte array must have exactly 32 bytes."));
     }
-    
+
     [TestMethod]
     public void TestLedgerKeyLiquidityPool()
     {
@@ -209,11 +209,28 @@ public class LedgerKeyTest
     }
 
     [TestMethod]
-    public void TestLedgerKeyConfigSetting()
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_COMPUTE_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_EVENTS_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_BANDWIDTH_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_COST_PARAMS_CPU_INSTRUCTIONS)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_COST_PARAMS_MEMORY_BYTES)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_STATE_ARCHIVAL)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_EXECUTION_LANES)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_EVICTION_ITERATOR)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_SCP_TIMING)]
+    public void TestLedgerKeyConfigSetting(ConfigSettingID.ConfigSettingIDEnum configSettingId)
     {
         var ledgerKey = (LedgerKeyConfigSetting)LedgerKey.ConfigSetting(new ConfigSettingID
         {
-            InnerValue = ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_STATE_ARCHIVAL,
+            InnerValue = configSettingId,
         });
 
         // Act
