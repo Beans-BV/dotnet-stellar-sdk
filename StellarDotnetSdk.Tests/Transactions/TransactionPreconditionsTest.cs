@@ -93,7 +93,7 @@ public class TransactionPreconditionsTest
             Ed25519SignedPayload = new xdrSDK.SignerKey.SignerKeyEd25519SignedPayload
             {
                 Ed25519 = new xdrSDK.Uint256(
-                    StrKey.DecodeStellarAccountId("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR")),
+                    StrKey.DecodeEd25519PublicKey("GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR")),
                 Payload = payload,
             },
         };
