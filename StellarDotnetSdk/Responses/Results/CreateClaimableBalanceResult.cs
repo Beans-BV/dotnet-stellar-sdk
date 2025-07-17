@@ -18,7 +18,7 @@ public class CreateClaimableBalanceResult : OperationResult
             ResultCodeEnum.CREATE_CLAIMABLE_BALANCE_NO_TRUST
                 => new CreateClaimableBalanceNoTrust(),
             ResultCodeEnum.CREATE_CLAIMABLE_BALANCE_SUCCESS
-                => new CreateClaimableBalanceSuccess(result.BalanceID.V0.InnerValue),
+                => new CreateClaimableBalanceSuccess(ClaimableBalanceUtils.ToHexString(result.BalanceID)),
             ResultCodeEnum.CREATE_CLAIMABLE_BALANCE_UNDERFUNDED
                 => new CreateClaimableBalanceUnderfunded(),
             _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown CreateClaimableBalanceResult type."),
@@ -28,12 +28,24 @@ public class CreateClaimableBalanceResult : OperationResult
 
 public class CreateClaimableBalanceSuccess : CreateClaimableBalanceResult
 {
-    public CreateClaimableBalanceSuccess(byte[] balanceId)
+    /// <summary>
+    ///     Constructs a new <c>CreateClaimableBalanceSuccess</c> result.
+    /// </summary>
+    /// <param name="balanceId">A hex-encoded claimable balance ID (0000...).</param>
+    public CreateClaimableBalanceSuccess(string balanceId)
     {
-        BalanceId = Convert.ToHexString(balanceId);
+        if (!StrKey.IsValidClaimableBalanceId(ClaimableBalanceUtils.ToBase32String(balanceId)))
+        {
+            throw new ArgumentException($"Invalid claimable balance ID {balanceId}");
+        }
+        BalanceId = balanceId;
     }
 
     public override bool IsSuccess => true;
+
+    /// <summary>
+    ///     Hex-encoded claimable balance ID (0000...).
+    /// </summary>
     public string BalanceId { get; }
 }
 

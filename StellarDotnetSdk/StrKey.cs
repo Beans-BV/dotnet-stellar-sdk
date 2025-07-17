@@ -8,7 +8,7 @@ namespace StellarDotnetSdk;
 
 using MuxedAccount = xdrSDK.MuxedAccount;
 
-public class StrKey
+public static class StrKey
 {
     public enum VersionByte : byte
     {

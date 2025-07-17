@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.LedgerEntries;
+using StellarDotnetSdk.LedgerKeys;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
 using ContractEvent = StellarDotnetSdk.Xdr.ContractEvent;
@@ -368,7 +369,8 @@ public class TransactionMetaTest
         Assert.IsNotNull(createdEntry);
         Assert.IsNull(createdEntry.ClaimableBalanceEntryExtensionV1);
         Assert.AreEqual(xdrCreatedEntry.Amount.InnerValue, createdEntry.Amount);
-        CollectionAssert.AreEqual(xdrCreatedEntry.BalanceID.V0.InnerValue, createdEntry.BalanceId);
+        Assert.AreEqual(ClaimableBalanceUtils.FromXdr(xdrCreatedEntry.BalanceID),
+            createdEntry.BalanceId);
         Assert.AreEqual(xdrCreatedEntry.Claimants.Length, createdEntry.Claimants.Length);
         for (var l = 0; l < createdEntry.Claimants.Length; l++)
         {

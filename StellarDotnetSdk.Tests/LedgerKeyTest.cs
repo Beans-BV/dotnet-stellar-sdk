@@ -86,50 +86,27 @@ public class LedgerKeyTest
     }
 
     [TestMethod]
-    public void TestLedgerKeyClaimableBalanceStringConstructorValid()
+    [DataRow("BAAKEZMZYI3VFSJMHZ2PMC3SBANQWP2LDKBVH42XQSHWTSBOH7TDOPHPFA")]
+    public void TestLedgerKeyClaimableBalanceStringConstructorValid(string id)
     {
-        const string balanceId = "d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780";
-        var ledgerKey = LedgerKey.ClaimableBalance(balanceId);
+        var ledgerKey = LedgerKey.ClaimableBalance(id);
 
         // Act
         var ledgerKeyXdrBase64 = ledgerKey.ToXdrBase64();
         var decodedLedgerKey = (LedgerKeyClaimableBalance)LedgerKey.FromXdrBase64(ledgerKeyXdrBase64);
 
         // Assert
-        Assert.AreEqual("d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780",
-            decodedLedgerKey.BalanceId.ToLower());
+        Assert.AreEqual(id, decodedLedgerKey.BalanceId);
     }
 
     [TestMethod]
-    public void TestLedgerKeyClaimableBalanceStringConstructorInvalid()
+    [ExpectedException(typeof(ArgumentException))]
+    [DataRow("00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780")]
+    [DataRow("d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780")]
+    [DataRow("00d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780")]
+    public void TestLedgerKeyClaimableBalanceStringConstructorInvalid(string id)
     {
-        const string balanceId = "00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780";
-        var ex = Assert.ThrowsException<ArgumentException>(() =>
-            LedgerKey.ClaimableBalance(balanceId));
-        Assert.IsTrue(ex.Message.Contains("Claimable balance ID cannot exceed 64 characters."));
-    }
-
-    [TestMethod]
-    public void TestLedgerKeyClaimableBalanceByteArrayConstructorValid()
-    {
-        const string balanceId = "d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780";
-        var ledgerKey = LedgerKey.ClaimableBalance(Convert.FromHexString(balanceId));
-
-        // Act
-        var ledgerKeyXdrBase64 = ledgerKey.ToXdrBase64();
-        var decodedLedgerKey = (LedgerKeyClaimableBalance)LedgerKey.FromXdrBase64(ledgerKeyXdrBase64);
-
-        // Assert
-        Assert.AreEqual(balanceId, decodedLedgerKey.BalanceId.ToLower());
-    }
-
-    [TestMethod]
-    public void TestLedgerKeyClaimableBalanceByteArrayConstructorInvalid()
-    {
-        const string balanceId = "00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780";
-        var ex = Assert.ThrowsException<ArgumentException>(() =>
-            LedgerKey.ClaimableBalance(Convert.FromHexString(balanceId)));
-        Assert.IsTrue(ex.Message.Contains("Claimable balance ID byte array must have exactly 32 bytes."));
+        _ = LedgerKey.ClaimableBalance(id);
     }
 
     [TestMethod]

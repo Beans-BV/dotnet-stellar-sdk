@@ -8,16 +8,24 @@ namespace StellarDotnetSdk.LedgerEntries;
 
 public class LedgerEntryClaimableBalance : LedgerEntry
 {
-    private LedgerEntryClaimableBalance(byte[] balanceId, claimant_Claimant[] claimants, Assets_Asset asset,
-        long amount)
+    private LedgerEntryClaimableBalance(
+        string balanceId,
+        claimant_Claimant[] claimants,
+        Assets_Asset asset,
+        long amount
+    )
     {
+        if (!StrKey.IsValidClaimableBalanceId(balanceId))
+        {
+            throw new ArgumentException($"Invalid claimable balance ID {balanceId}.");
+        }
         BalanceId = balanceId;
         Claimants = claimants;
         Asset = asset;
         Amount = amount;
     }
 
-    public byte[] BalanceId { get; }
+    public string BalanceId { get; }
     public claimant_Claimant[] Claimants { get; }
     public Assets_Asset Asset { get; }
     public long Amount { get; }
@@ -40,18 +48,18 @@ public class LedgerEntryClaimableBalance : LedgerEntry
         return FromXdr(xdrLedgerEntryData.ClaimableBalance);
     }
 
-    private static LedgerEntryClaimableBalance FromXdr(ClaimableBalanceEntry xdrClaimableBalanceEntry)
+    private static LedgerEntryClaimableBalance FromXdr(ClaimableBalanceEntry xdrEntry)
     {
         var ledgerEntryClaimableBalance = new LedgerEntryClaimableBalance(
-            xdrClaimableBalanceEntry.BalanceID.V0.InnerValue,
-            xdrClaimableBalanceEntry.Claimants.Select(claimant_Claimant.FromXdr).ToArray(),
-            Assets_Asset.FromXdr(xdrClaimableBalanceEntry.Asset),
-            xdrClaimableBalanceEntry.Amount.InnerValue);
+            ClaimableBalanceUtils.FromXdr(xdrEntry.BalanceID),
+            xdrEntry.Claimants.Select(claimant_Claimant.FromXdr).ToArray(),
+            Assets_Asset.FromXdr(xdrEntry.Asset),
+            xdrEntry.Amount.InnerValue);
 
-        if (xdrClaimableBalanceEntry.Ext.Discriminant == 1)
+        if (xdrEntry.Ext.Discriminant == 1)
         {
             ledgerEntryClaimableBalance.ClaimableBalanceEntryExtensionV1 =
-                ClaimableBalanceEntryExtensionV1.FromXdr(xdrClaimableBalanceEntry.Ext.V1);
+                ClaimableBalanceEntryExtensionV1.FromXdr(xdrEntry.Ext.V1);
         }
 
         return ledgerEntryClaimableBalance;
