@@ -5,7 +5,7 @@ using StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Tests;
 
 [TestClass]
-public class ClaimableBalanceUtilsTest
+public class ClaimableBalanceIdUtilsTest
 {
     [TestMethod]
     [DataRow("299a32106238f3b2d84d4142783fe320253bcda775d1bfb7accdb533021ddccf",
@@ -19,7 +19,7 @@ public class ClaimableBalanceUtilsTest
                     .CLAIMABLE_BALANCE_ID_TYPE_V0),
             V0 = new Hash(Convert.FromHexString(hex)),
         };
-        var id = ClaimableBalanceUtils.FromXdr(xdrClaimableBalanceId);
+        var id = ClaimableBalanceIdUtils.FromXdr(xdrClaimableBalanceId);
         Assert.AreEqual(id, base32);
     }
 
@@ -28,7 +28,7 @@ public class ClaimableBalanceUtilsTest
         "00000000299a32106238f3b2d84d4142783fe320253bcda775d1bfb7accdb533021ddccf")]
     public void TestToHexString(string input, string output)
     {
-        var hex = ClaimableBalanceUtils.ToHexString(input).ToLower();
+        var hex = ClaimableBalanceIdUtils.ToHexString(input).ToLower();
         Assert.AreEqual(output, hex);
     }
 
@@ -37,7 +37,7 @@ public class ClaimableBalanceUtilsTest
         "BAACTGRSCBRDR45S3BGUCQTYH7RSAJJ3ZWTXLUN7W6WM3NJTAIO5ZT2U6I")]
     public void TestToBase32String(string input, string output)
     {
-        var base32 = ClaimableBalanceUtils.ToBase32String(input);
+        var base32 = ClaimableBalanceIdUtils.ToBase32String(input);
         Assert.AreEqual(output, base32);
     }
 }

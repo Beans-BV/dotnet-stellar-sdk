@@ -116,7 +116,7 @@ public class ScClaimableBalanceId : ScAddress
     public static ScClaimableBalanceId FromXdr(SCAddress xdr)
     {
         return new ScClaimableBalanceId(
-            ClaimableBalanceUtils.FromXdr(xdr.ClaimableBalanceId)
+            ClaimableBalanceIdUtils.FromXdr(xdr.ClaimableBalanceId)
         );
     }
 
@@ -125,7 +125,7 @@ public class ScClaimableBalanceId : ScAddress
         return new SCAddress
         {
             Discriminant = SCAddressType.Create(SCAddressTypeEnum.SC_ADDRESS_TYPE_CLAIMABLE_BALANCE),
-            ClaimableBalanceId = ClaimableBalanceUtils.ToXdr(InnerValue),
+            ClaimableBalanceId = ClaimableBalanceIdUtils.ToXdr(InnerValue),
         };
     }
 }

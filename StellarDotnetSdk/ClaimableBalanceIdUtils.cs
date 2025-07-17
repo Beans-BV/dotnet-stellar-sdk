@@ -4,7 +4,7 @@ using ClaimableVersion = StellarDotnetSdk.Xdr.ClaimableBalanceIDType.ClaimableBa
 
 namespace StellarDotnetSdk;
 
-public static class ClaimableBalanceUtils
+public static class ClaimableBalanceIdUtils
 {
     internal static ClaimableBalanceID ToXdr(string claimableBalanceId)
     {

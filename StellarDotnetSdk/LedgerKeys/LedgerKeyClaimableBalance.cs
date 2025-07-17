@@ -12,7 +12,7 @@ public class LedgerKeyClaimableBalance : LedgerKey
     /// <param name="balanceId">A hex-encoded claimable balance ID (0000...).</param>
     public LedgerKeyClaimableBalance(string balanceId)
     {
-        if (!StrKey.IsValidClaimableBalanceId(ClaimableBalanceUtils.ToBase32String(balanceId)))
+        if (!StrKey.IsValidClaimableBalanceId(ClaimableBalanceIdUtils.ToBase32String(balanceId)))
         {
             throw new ArgumentException($"Invalid claimable balance ID {balanceId}.");
         }
@@ -32,7 +32,7 @@ public class LedgerKeyClaimableBalance : LedgerKey
                 new LedgerEntryType { InnerValue = LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE },
             ClaimableBalance = new Xdr.LedgerKey.LedgerKeyClaimableBalance
             {
-                BalanceID = ClaimableBalanceUtils.FromHexString(BalanceId),
+                BalanceID = ClaimableBalanceIdUtils.FromHexString(BalanceId),
             },
         };
     }
@@ -40,7 +40,7 @@ public class LedgerKeyClaimableBalance : LedgerKey
     public static LedgerKeyClaimableBalance FromXdr(Xdr.LedgerKey.LedgerKeyClaimableBalance xdr)
     {
         return new LedgerKeyClaimableBalance(
-            ClaimableBalanceUtils.ToHexString(xdr.BalanceID)
+            ClaimableBalanceIdUtils.ToHexString(xdr.BalanceID)
         );
     }
 }

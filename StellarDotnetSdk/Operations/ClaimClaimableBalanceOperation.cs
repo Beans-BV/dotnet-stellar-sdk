@@ -23,7 +23,7 @@ public class ClaimClaimableBalanceOperation : Operation
     public ClaimClaimableBalanceOperation(string balanceId, IAccountId? sourceAccount = null)
         : base(sourceAccount)
     {
-        if (!StrKey.IsValidClaimableBalanceId(ClaimableBalanceUtils.ToBase32String(balanceId)))
+        if (!StrKey.IsValidClaimableBalanceId(ClaimableBalanceIdUtils.ToBase32String(balanceId)))
         {
             throw new ArgumentException($"Invalid claimable balance ID {balanceId}");
         }
@@ -42,7 +42,7 @@ public class ClaimClaimableBalanceOperation : Operation
             Discriminant = OperationType.Create(OperationType.OperationTypeEnum.CLAIM_CLAIMABLE_BALANCE),
             ClaimClaimableBalanceOp = new ClaimClaimableBalanceOp
             {
-                BalanceID = ClaimableBalanceUtils.FromHexString(BalanceId),
+                BalanceID = ClaimableBalanceIdUtils.FromHexString(BalanceId),
             },
         };
     }

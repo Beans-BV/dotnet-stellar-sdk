@@ -688,7 +688,7 @@ public class LedgerEntryTest
                 decodedPredicate.Duration);
         }
 
-        Assert.AreEqual(ClaimableBalanceUtils.FromXdr(xdrClaimableBalanceEntry.BalanceID),
+        Assert.AreEqual(ClaimableBalanceIdUtils.FromXdr(xdrClaimableBalanceEntry.BalanceID),
             decodedLedgerEntry.BalanceId);
 
         Assert.AreEqual(xdrClaimableBalanceEntry.Amount.InnerValue,
@@ -742,7 +742,7 @@ public class LedgerEntryTest
             Assert.AreEqual(xdrClaimant.Predicate.RelBefore.InnerValue,
                 decodedPredicate.Duration);
         }
-        Assert.AreEqual(ClaimableBalanceUtils.FromXdr(xdrClaimableBalanceEntry.BalanceID),
+        Assert.AreEqual(ClaimableBalanceIdUtils.FromXdr(xdrClaimableBalanceEntry.BalanceID),
             decodedLedgerEntry.BalanceId);
 
         Assert.AreEqual(xdrClaimableBalanceEntry.Amount.InnerValue,

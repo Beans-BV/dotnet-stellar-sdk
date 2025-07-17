@@ -51,7 +51,7 @@ public class LedgerEntryClaimableBalance : LedgerEntry
     private static LedgerEntryClaimableBalance FromXdr(ClaimableBalanceEntry xdrEntry)
     {
         var ledgerEntryClaimableBalance = new LedgerEntryClaimableBalance(
-            ClaimableBalanceUtils.FromXdr(xdrEntry.BalanceID),
+            ClaimableBalanceIdUtils.FromXdr(xdrEntry.BalanceID),
             xdrEntry.Claimants.Select(claimant_Claimant.FromXdr).ToArray(),
             Assets_Asset.FromXdr(xdrEntry.Asset),
             xdrEntry.Amount.InnerValue);
