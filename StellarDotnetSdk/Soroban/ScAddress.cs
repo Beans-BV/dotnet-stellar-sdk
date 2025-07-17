@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Xdr;
 using SCAddressTypeEnum = StellarDotnetSdk.Xdr.SCAddressType.SCAddressTypeEnum;
-using ClaimableBalanceIDTypeEnum = StellarDotnetSdk.Xdr.ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum;
 
 namespace StellarDotnetSdk.Soroban;
 
@@ -100,7 +98,7 @@ public class ScAccountId : ScAddress
 public class ScClaimableBalanceId : ScAddress
 {
     /// <summary>
-    ///     Creates an ScClaimableBalanceId instance from a claimable balance ID (B...).
+    ///     Creates an <c>ScClaimableBalanceId</c> instance from a claimable balance ID (B...).
     /// </summary>
     /// <param name="claimableBalanceId">A base32-encoded claimable balance ID (B...).</param>
     public ScClaimableBalanceId(string claimableBalanceId)
@@ -117,46 +115,17 @@ public class ScClaimableBalanceId : ScAddress
 
     public static ScClaimableBalanceId FromXdr(SCAddress xdr)
     {
-        var version = (byte)xdr.ClaimableBalanceId.Discriminant.InnerValue;
-        // The actual ID contains the version as the first byte
-        var id = xdr.ClaimableBalanceId.V0.InnerValue.Prepend(version).ToArray();
-        if (xdr.ClaimableBalanceId.Discriminant.InnerValue !=
-            ClaimableBalanceIDTypeEnum.CLAIMABLE_BALANCE_ID_TYPE_V0)
-        {
-            throw new ArgumentException("Only CLAIMABLE_BALANCE_ID_TYPE_V0 is supported.");
-        }
         return new ScClaimableBalanceId(
-            StrKey.EncodeClaimableBalanceId(id)
+            ClaimableBalanceIdUtils.FromXdr(xdr.ClaimableBalanceId)
         );
     }
 
     public override SCAddress ToXdr()
     {
-        var decoded = StrKey.DecodeClaimableBalanceId(InnerValue);
-        // The first byte should be the claimable version
-        var version = decoded[0];
-
-        // So, the actual ID should not contain the first byte
-        var id = decoded[1..];
-
         return new SCAddress
         {
             Discriminant = SCAddressType.Create(SCAddressTypeEnum.SC_ADDRESS_TYPE_CLAIMABLE_BALANCE),
-            ClaimableBalanceId = CreateXdrClaimableBalanceId(version, id),
-        };
-    }
-
-    private static ClaimableBalanceID CreateXdrClaimableBalanceId(byte version, byte[] id)
-    {
-        return version switch
-        {
-            0 => new ClaimableBalanceID
-            {
-                Discriminant = ClaimableBalanceIDType.Create(
-                    ClaimableBalanceIDTypeEnum.CLAIMABLE_BALANCE_ID_TYPE_V0),
-                V0 = new Hash(id),
-            },
-            _ => throw new NotSupportedException($"Claimable balance ID version {version} is not supported."),
+            ClaimableBalanceId = ClaimableBalanceIdUtils.ToXdr(InnerValue),
         };
     }
 }

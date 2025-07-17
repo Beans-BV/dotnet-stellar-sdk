@@ -104,7 +104,6 @@ public class AddressTest
 
     [TestMethod]
     [DataRow("BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU")]
-    [DataRow("BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU")]
     public void TestClaimableBalanceWithValidArgument(string id)
     {
         var claimableBalanceId = new ScClaimableBalanceId(id);

@@ -659,57 +659,6 @@ public class LedgerEntryTest
     }
 
     [TestMethod]
-    public void TestLedgerEntryClaimableBalanceWithTooLongBalanceId()
-    {
-        var xdrClaimableBalanceEntry = InitBasicXdrClaimableBalanceEntry();
-        xdrClaimableBalanceEntry.BalanceID = new ClaimableBalanceID
-        {
-            Discriminant =
-                ClaimableBalanceIDType.Create(ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum
-                    .CLAIMABLE_BALANCE_ID_TYPE_V0),
-            V0 = new Hash(new byte[]
-                { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3 }),
-        };
-        var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
-        {
-            Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE),
-            ClaimableBalance = xdrClaimableBalanceEntry,
-        };
-        var os = new XdrDataOutputStream();
-        StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
-        var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
-        Assert.ThrowsException<Exception>(() => LedgerEntry.FromXdrBase64(entryXdrBase64));
-    }
-
-    [TestMethod]
-    public void TestLedgerEntryClaimableBalanceWithTooShortBalanceId()
-    {
-        var xdrClaimableBalanceEntry = InitBasicXdrClaimableBalanceEntry();
-        xdrClaimableBalanceEntry.BalanceID = new ClaimableBalanceID
-        {
-            Discriminant =
-                ClaimableBalanceIDType.Create(ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum
-                    .CLAIMABLE_BALANCE_ID_TYPE_V0),
-            V0 = new Hash(new byte[]
-                { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1 }),
-        };
-        var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
-        {
-            Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CLAIMABLE_BALANCE),
-            ClaimableBalance = xdrClaimableBalanceEntry,
-        };
-        var os = new XdrDataOutputStream();
-        StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
-        var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
-        var decodedLedgerEntry = (LedgerEntryClaimableBalance)LedgerEntry.FromXdrBase64(entryXdrBase64);
-        Assert.AreEqual(31, xdrClaimableBalanceEntry.BalanceID.V0.InnerValue.Length);
-        // Decoded BalanceId always has 32 bytes
-        Assert.AreEqual(32, decodedLedgerEntry.BalanceId.Length);
-        CollectionAssert.AreEqual(Util.PaddedByteArray(xdrClaimableBalanceEntry.BalanceID.V0.InnerValue, 32),
-            decodedLedgerEntry.BalanceId);
-    }
-
-    [TestMethod]
     public void TestLedgerEntryClaimableBalanceWithMissingClaimableBalanceExtension()
     {
         var xdrClaimableBalanceEntry = InitBasicXdrClaimableBalanceEntry();
@@ -739,7 +688,7 @@ public class LedgerEntryTest
                 decodedPredicate.Duration);
         }
 
-        CollectionAssert.AreEqual(xdrClaimableBalanceEntry.BalanceID.V0.InnerValue,
+        Assert.AreEqual(ClaimableBalanceIdUtils.FromXdr(xdrClaimableBalanceEntry.BalanceID),
             decodedLedgerEntry.BalanceId);
 
         Assert.AreEqual(xdrClaimableBalanceEntry.Amount.InnerValue,
@@ -793,8 +742,7 @@ public class LedgerEntryTest
             Assert.AreEqual(xdrClaimant.Predicate.RelBefore.InnerValue,
                 decodedPredicate.Duration);
         }
-
-        CollectionAssert.AreEqual(xdrClaimableBalanceEntry.BalanceID.V0.InnerValue,
+        Assert.AreEqual(ClaimableBalanceIdUtils.FromXdr(xdrClaimableBalanceEntry.BalanceID),
             decodedLedgerEntry.BalanceId);
 
         Assert.AreEqual(xdrClaimableBalanceEntry.Amount.InnerValue,

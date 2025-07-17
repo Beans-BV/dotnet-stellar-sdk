@@ -72,19 +72,19 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
     ///     Builds request to GET /claimable_balances/{claimable_balance_id}/operations
     ///     See: https://www.stellar.org/developers/horizon/reference/operations-for-claimable-balance.html
     /// </summary>
-    /// <param name="claimableBalance">Claimable Balance for which to get operations</param>
+    /// <param name="claimableBalanceId">Base32-encoded claimable balance ID for which to get operations.</param>
     /// <returns>
     ///     <see cref="OperationsRequestBuilder" />
     /// </returns>
     /// <exception cref="HttpRequestException"></exception>
-    public OperationsRequestBuilder ForClaimableBalance(string claimableBalance)
+    public OperationsRequestBuilder ForClaimableBalance(string claimableBalanceId)
     {
-        if (string.IsNullOrWhiteSpace(claimableBalance))
+        if (string.IsNullOrWhiteSpace(claimableBalanceId))
         {
-            throw new ArgumentNullException(nameof(claimableBalance), "claimableBalance cannot be null");
+            throw new ArgumentNullException(nameof(claimableBalanceId), "claimableBalance cannot be null");
         }
 
-        SetSegments("claimable_balances", claimableBalance, "operations");
+        SetSegments("claimable_balances", claimableBalanceId, "operations");
 
         return this;
     }
