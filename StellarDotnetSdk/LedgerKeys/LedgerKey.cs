@@ -17,8 +17,8 @@ public abstract class LedgerKey
         return new LedgerKeyAccount(account);
     }
 
-    /// <summary>Constructs a new <c>LedgerKeyClaimableBalance</c> from a claimable balance ID (B...).</summary>
-    /// <param name="balanceId">A base32-encoded claimable balance ID (B...).</param>
+    /// <summary>Constructs a new <c>LedgerKeyClaimableBalance</c> from a claimable balance ID.</summary>
+    /// <param name="balanceId">A hex-encoded claimable balance ID (0000...).</param>
     public static LedgerKey ClaimableBalance(string balanceId)
     {
         return new LedgerKeyClaimableBalance(balanceId);

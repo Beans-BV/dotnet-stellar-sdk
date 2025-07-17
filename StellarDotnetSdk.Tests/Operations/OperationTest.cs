@@ -726,8 +726,8 @@ public class OperationTest
         var decodedOperation = (RevokeLedgerEntrySponsorshipOperation)Operation.FromXdr(xdrOperation);
 
         Assert.IsNull(decodedOperation.SourceAccount);
-        Assert.AreEqual(((LedgerKeyClaimableBalance)operation.LedgerKey).BalanceId,
-            ((LedgerKeyClaimableBalance)decodedOperation.LedgerKey).BalanceId);
+        Assert.AreEqual(((LedgerKeyClaimableBalance)operation.LedgerKey).BalanceId.ToUpper(),
+            ((LedgerKeyClaimableBalance)decodedOperation.LedgerKey).BalanceId.ToUpper());
     }
 
     [TestMethod]

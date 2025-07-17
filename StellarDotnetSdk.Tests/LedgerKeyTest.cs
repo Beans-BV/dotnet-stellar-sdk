@@ -86,7 +86,7 @@ public class LedgerKeyTest
     }
 
     [TestMethod]
-    [DataRow("BAAKEZMZYI3VFSJMHZ2PMC3SBANQWP2LDKBVH42XQSHWTSBOH7TDOPHPFA")]
+    [DataRow("00000000c582697b67cbec7f9ce64f4dc67bfb2bfd26318bb9f964f4d70e3f41f650b1e6")]
     public void TestLedgerKeyClaimableBalanceStringConstructorValid(string id)
     {
         var ledgerKey = LedgerKey.ClaimableBalance(id);
@@ -96,12 +96,12 @@ public class LedgerKeyTest
         var decodedLedgerKey = (LedgerKeyClaimableBalance)LedgerKey.FromXdrBase64(ledgerKeyXdrBase64);
 
         // Assert
-        Assert.AreEqual(id, decodedLedgerKey.BalanceId);
+        Assert.AreEqual(id, decodedLedgerKey.BalanceId.ToLower());
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    [DataRow("00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780")]
+    [DataRow("BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU")]
     [DataRow("d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780")]
     [DataRow("00d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780")]
     public void TestLedgerKeyClaimableBalanceStringConstructorInvalid(string id)

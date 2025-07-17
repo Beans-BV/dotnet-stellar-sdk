@@ -56,9 +56,8 @@ public class RevokeLedgerEntrySponsorshipOperation : Operation
         string balanceId,
         IAccountId? sourceAccount = null)
     {
-        var base32Id = ClaimableBalanceUtils.ToBase32String(balanceId);
         return new RevokeLedgerEntrySponsorshipOperation(
-            new LedgerKeyClaimableBalance(base32Id),
+            new LedgerKeyClaimableBalance(balanceId),
             sourceAccount
         );
     }
