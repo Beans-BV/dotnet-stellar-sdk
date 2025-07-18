@@ -36,7 +36,7 @@ public abstract class SCVal
             SCSymbol scSymbol => scSymbol.ToSCValXdr(),
             SCVec scVec => scVec.ToSCValXdr(),
             SCMap scMap => scMap.ToSCValXdr(),
-            SCAddress scAddress => scAddress.ToSCValXdr(),
+            ScAddress scAddress => scAddress.ToSCValXdr(),
             SCContractInstance scContractInstance => scContractInstance.ToSCValXdr(),
             SCLedgerKeyContractInstance scLedgerKeyContractInstance => scLedgerKeyContractInstance.ToSCValXdr(),
             SCNonceKey scNonceKey => scNonceKey.ToSCValXdr(),
@@ -66,7 +66,7 @@ public abstract class SCVal
             SCValType.SCValTypeEnum.SCV_SYMBOL => SCSymbol.FromSCValXdr(xdrVal),
             SCValType.SCValTypeEnum.SCV_VEC => SCVec.FromSCValXdr(xdrVal),
             SCValType.SCValTypeEnum.SCV_MAP => SCMap.FromSCValXdr(xdrVal),
-            SCValType.SCValTypeEnum.SCV_ADDRESS => SCAddress.FromSCValXdr(xdrVal),
+            SCValType.SCValTypeEnum.SCV_ADDRESS => ScAddress.FromSCValXdr(xdrVal),
             SCValType.SCValTypeEnum.SCV_CONTRACT_INSTANCE => SCContractInstance.FromSCValXdr(xdrVal),
             SCValType.SCValTypeEnum.SCV_LEDGER_KEY_CONTRACT_INSTANCE =>
                 SCLedgerKeyContractInstance.FromSCValXdr(xdrVal),
@@ -1188,120 +1188,6 @@ public class SCMapEntry
         {
             Key = Key.ToXdr(),
             Val = Value.ToXdr(),
-        };
-    }
-}
-
-public abstract class SCAddress : SCVal
-{
-    public static SCAddress FromXdr(Xdr.SCAddress xdrSCAddress)
-    {
-        return xdrSCAddress.Discriminant.InnerValue switch
-        {
-            SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_ACCOUNT => SCAccountId.FromXdr(xdrSCAddress),
-            SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CONTRACT => SCContractId.FromXdr(xdrSCAddress),
-            _ => throw new ArgumentOutOfRangeException(nameof(xdrSCAddress), "Invalid address type."),
-        };
-    }
-
-    public static SCAddress FromSCValXdr(Xdr.SCVal xdrVal)
-    {
-        if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_ADDRESS)
-        {
-            throw new ArgumentException("Not an SCAddress", nameof(xdrVal));
-        }
-
-        return FromXdr(xdrVal.Address);
-    }
-
-    public Xdr.SCVal ToSCValXdr()
-    {
-        return new Xdr.SCVal
-        {
-            Discriminant = new SCValType
-            {
-                InnerValue = SCValType.SCValTypeEnum.SCV_ADDRESS,
-            },
-            Address = ToXdr(),
-        };
-    }
-
-    public abstract Xdr.SCAddress ToXdr();
-}
-
-public class SCAccountId : SCAddress
-{
-    public SCAccountId(string value)
-    {
-        if (!StrKey.IsValidEd25519PublicKey(value))
-        {
-            throw new ArgumentException("Invalid account ID.", nameof(value));
-        }
-
-        InnerValue = value;
-    }
-
-    public string InnerValue { get; set; }
-
-    public static SCAccountId FromXdr(Xdr.SCAddress xdr)
-    {
-        return new SCAccountId(
-            KeyPair.FromXdrPublicKey(xdr.AccountId.InnerValue).AccountId);
-    }
-
-    public override Xdr.SCAddress ToXdr()
-    {
-        return new Xdr.SCAddress
-        {
-            Discriminant = new SCAddressType
-            {
-                InnerValue = SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_ACCOUNT,
-            },
-            AccountId = new AccountID(KeyPair.FromAccountId(InnerValue).XdrPublicKey),
-        };
-    }
-}
-
-public class SCContractId : SCAddress
-{
-    public SCContractId(string value)
-    {
-        if (!StrKey.IsValidContractId(value))
-        {
-            throw new ArgumentException("Invalid contract id", nameof(value));
-        }
-
-        InnerValue = value;
-    }
-
-    public string InnerValue { get; }
-
-    public static SCContractId FromXdr(Xdr.SCAddress xdr)
-    {
-        var value = StrKey.EncodeContractId(xdr.ContractId.InnerValue);
-
-        if (!StrKey.IsValidContractId(value))
-        {
-            throw new InvalidOperationException("Invalid contract id");
-        }
-
-        return new SCContractId(value);
-    }
-
-    public override Xdr.SCAddress ToXdr()
-    {
-        if (!StrKey.IsValidContractId(InnerValue))
-        {
-            throw new InvalidOperationException("Invalid contract id");
-        }
-
-        return new Xdr.SCAddress
-        {
-            Discriminant = new SCAddressType
-            {
-                InnerValue = SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CONTRACT,
-            },
-            ContractId = new Hash(StrKey.DecodeContractId(InnerValue)),
         };
     }
 }

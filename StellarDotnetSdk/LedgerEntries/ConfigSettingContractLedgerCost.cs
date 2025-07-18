@@ -4,62 +4,75 @@ namespace StellarDotnetSdk.LedgerEntries;
 
 public class ConfigSettingContractLedgerCost : LedgerEntryConfigSetting
 {
-    private ConfigSettingContractLedgerCost(uint ledgerMaxReadLedgerEntries, uint ledgerMaxReadBytes,
-        uint ledgerMaxWriteLedgerEntries, uint ledgerMaxWriteBytes, uint txMaxReadLedgerEntries, uint txMaxReadBytes,
-        uint txMaxWriteLedgerEntries, uint txMaxWriteBytes, long feeReadLedgerEntry, long feeWriteLedgerEntry,
-        long feeRead1Kb, long bucketListTargetSizeBytes, long writeFee1KbBucketListLow, long writeFee1KbBucketListHigh,
-        uint bucketListWriteFeeGrowthFactor)
+    private ConfigSettingContractLedgerCost(
+        uint ledgerMaxDiskReadEntries,
+        uint ledgerMaxDiskReadBytes,
+        uint ledgerMaxWriteLedgerEntries,
+        uint ledgerMaxWriteBytes,
+        uint txMaxDiskReadEntries,
+        uint txMaxDiskReadBytes,
+        uint txMaxWriteLedgerEntries,
+        uint txMaxWriteBytes,
+        long feeDiskReadLedgerEntry,
+        long feeWriteLedgerEntry,
+        long feeDiskRead1Kb,
+        long sorobanStateTargetSizeBytes,
+        long rentFee1KbSorobanStateSizeLow,
+        long rentFee1KbSorobanStateSizeHigh,
+        uint sorobanStateRentFeeGrowthFactor
+    )
     {
-        LedgerMaxReadLedgerEntries = ledgerMaxReadLedgerEntries;
-        LedgerMaxReadBytes = ledgerMaxReadBytes;
+        LedgerMaxDiskReadEntries = ledgerMaxDiskReadEntries;
+        LedgerMaxDiskReadBytes = ledgerMaxDiskReadBytes;
         LedgerMaxWriteLedgerEntries = ledgerMaxWriteLedgerEntries;
         LedgerMaxWriteBytes = ledgerMaxWriteBytes;
-        TxMaxReadLedgerEntries = txMaxReadLedgerEntries;
-        TxMaxReadBytes = txMaxReadBytes;
+        TxMaxDiskReadEntries = txMaxDiskReadEntries;
+        TxMaxDiskReadBytes = txMaxDiskReadBytes;
         TxMaxWriteLedgerEntries = txMaxWriteLedgerEntries;
         TxMaxWriteBytes = txMaxWriteBytes;
-        FeeReadLedgerEntry = feeReadLedgerEntry;
+        FeeDiskReadLedgerEntry = feeDiskReadLedgerEntry;
         FeeWriteLedgerEntry = feeWriteLedgerEntry;
-        FeeRead1Kb = feeRead1Kb;
-        BucketListTargetSizeBytes = bucketListTargetSizeBytes;
-        WriteFee1KbBucketListLow = writeFee1KbBucketListLow;
-        WriteFee1KbBucketListHigh = writeFee1KbBucketListHigh;
-        BucketListWriteFeeGrowthFactor = bucketListWriteFeeGrowthFactor;
+        FeeDiskRead1Kb = feeDiskRead1Kb;
+        SorobanStateTargetSizeBytes = sorobanStateTargetSizeBytes;
+        RentFee1KbSorobanStateSizeLow = rentFee1KbSorobanStateSizeLow;
+        RentFee1KbSorobanStateSizeHigh = rentFee1KbSorobanStateSizeHigh;
+        SorobanStateRentFeeGrowthFactor = sorobanStateRentFeeGrowthFactor;
     }
 
-    public uint LedgerMaxReadLedgerEntries { get; }
-    public uint LedgerMaxReadBytes { get; }
+    public uint LedgerMaxDiskReadEntries { get; }
+    public uint LedgerMaxDiskReadBytes { get; }
     public uint LedgerMaxWriteLedgerEntries { get; }
     public uint LedgerMaxWriteBytes { get; }
-    public uint TxMaxReadLedgerEntries { get; }
-    public uint TxMaxReadBytes { get; }
+    public uint TxMaxDiskReadEntries { get; }
+    public uint TxMaxDiskReadBytes { get; }
     public uint TxMaxWriteLedgerEntries { get; }
     public uint TxMaxWriteBytes { get; }
-    public long FeeReadLedgerEntry { get; }
+    public long FeeDiskReadLedgerEntry { get; }
     public long FeeWriteLedgerEntry { get; }
-    public long FeeRead1Kb { get; }
-    public long BucketListTargetSizeBytes { get; }
-    public long WriteFee1KbBucketListLow { get; }
-    public long WriteFee1KbBucketListHigh { get; }
-    public uint BucketListWriteFeeGrowthFactor { get; }
+    public long FeeDiskRead1Kb { get; }
+    public long SorobanStateTargetSizeBytes { get; }
+    public long RentFee1KbSorobanStateSizeLow { get; }
+    public long RentFee1KbSorobanStateSizeHigh { get; }
+    public uint SorobanStateRentFeeGrowthFactor { get; }
 
     public static ConfigSettingContractLedgerCost FromXdr(ConfigSettingContractLedgerCostV0 xdrConfig)
     {
         return new ConfigSettingContractLedgerCost(
-            xdrConfig.LedgerMaxReadLedgerEntries.InnerValue,
-            xdrConfig.LedgerMaxReadBytes.InnerValue,
+            xdrConfig.LedgerMaxDiskReadEntries.InnerValue,
+            xdrConfig.LedgerMaxDiskReadBytes.InnerValue,
             xdrConfig.LedgerMaxWriteLedgerEntries.InnerValue,
             xdrConfig.LedgerMaxWriteBytes.InnerValue,
-            xdrConfig.TxMaxReadLedgerEntries.InnerValue,
-            xdrConfig.TxMaxReadBytes.InnerValue,
+            xdrConfig.TxMaxDiskReadEntries.InnerValue,
+            xdrConfig.TxMaxDiskReadBytes.InnerValue,
             xdrConfig.TxMaxWriteLedgerEntries.InnerValue,
             xdrConfig.TxMaxWriteBytes.InnerValue,
-            xdrConfig.FeeReadLedgerEntry.InnerValue,
+            xdrConfig.FeeDiskReadLedgerEntry.InnerValue,
             xdrConfig.FeeWriteLedgerEntry.InnerValue,
-            xdrConfig.FeeRead1KB.InnerValue,
-            xdrConfig.BucketListTargetSizeBytes.InnerValue,
-            xdrConfig.WriteFee1KBBucketListLow.InnerValue,
-            xdrConfig.WriteFee1KBBucketListHigh.InnerValue,
-            xdrConfig.BucketListWriteFeeGrowthFactor.InnerValue);
+            xdrConfig.FeeDiskRead1KB.InnerValue,
+            xdrConfig.SorobanStateTargetSizeBytes.InnerValue,
+            xdrConfig.RentFee1KBSorobanStateSizeLow.InnerValue,
+            xdrConfig.RentFee1KBSorobanStateSizeHigh.InnerValue,
+            xdrConfig.SorobanStateRentFeeGrowthFactor.InnerValue
+        );
     }
 }

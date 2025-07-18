@@ -49,17 +49,17 @@ public class RevokeLedgerEntrySponsorshipOperation : Operation
     /// <summary>
     ///     Constructs new revoke balance entry sponsorship operation.
     /// </summary>
-    /// <param name="balanceIdHexString">
-    ///     Hex-encoded ID of the claimable balance entry to be revoked.
-    ///     For example: <c>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c>.
+    /// <param name="balanceId">
+    ///     Hex-encoded ID (0000...) of the claimable balance entry to be revoked.
     /// </param>
     public static RevokeLedgerEntrySponsorshipOperation ForClaimableBalance(
-        string balanceIdHexString,
+        string balanceId,
         IAccountId? sourceAccount = null)
     {
         return new RevokeLedgerEntrySponsorshipOperation(
-            new LedgerKeyClaimableBalance(balanceIdHexString),
-            sourceAccount);
+            new LedgerKeyClaimableBalance(balanceId),
+            sourceAccount
+        );
     }
 
     /// <summary>

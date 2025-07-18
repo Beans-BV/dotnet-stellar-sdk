@@ -11,7 +11,6 @@ namespace StellarDotnetSdk.Xdr;
 //      LedgerEntry archivedEntry;
 //  
 //  case HOT_ARCHIVE_LIVE:
-//  case HOT_ARCHIVE_DELETED:
 //      LedgerKey key;
 //  case HOT_ARCHIVE_METAENTRY:
 //      BucketMetadata metaEntry;
@@ -35,7 +34,6 @@ public class HotArchiveBucketEntry
                 LedgerEntry.Encode(stream, encodedHotArchiveBucketEntry.ArchivedEntry);
                 break;
             case HotArchiveBucketEntryType.HotArchiveBucketEntryTypeEnum.HOT_ARCHIVE_LIVE:
-            case HotArchiveBucketEntryType.HotArchiveBucketEntryTypeEnum.HOT_ARCHIVE_DELETED:
                 LedgerKey.Encode(stream, encodedHotArchiveBucketEntry.Key);
                 break;
             case HotArchiveBucketEntryType.HotArchiveBucketEntryTypeEnum.HOT_ARCHIVE_METAENTRY:
@@ -55,7 +53,6 @@ public class HotArchiveBucketEntry
                 decodedHotArchiveBucketEntry.ArchivedEntry = LedgerEntry.Decode(stream);
                 break;
             case HotArchiveBucketEntryType.HotArchiveBucketEntryTypeEnum.HOT_ARCHIVE_LIVE:
-            case HotArchiveBucketEntryType.HotArchiveBucketEntryTypeEnum.HOT_ARCHIVE_DELETED:
                 decodedHotArchiveBucketEntry.Key = LedgerKey.Decode(stream);
                 break;
             case HotArchiveBucketEntryType.HotArchiveBucketEntryTypeEnum.HOT_ARCHIVE_METAENTRY:

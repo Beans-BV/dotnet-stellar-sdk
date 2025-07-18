@@ -20,6 +20,6 @@ public class SignedPayloadSignerTest
         var payload = Util.HexToBytes(
             "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f200102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2001");
         Assert.ThrowsException<ArgumentException>(() =>
-            new SignedPayloadSigner(StrKey.DecodeStellarAccountId(accountStrKey), payload));
+            new SignedPayloadSigner(StrKey.DecodeEd25519PublicKey(accountStrKey), payload));
     }
 }

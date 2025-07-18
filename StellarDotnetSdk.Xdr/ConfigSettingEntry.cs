@@ -31,10 +31,16 @@ namespace StellarDotnetSdk.Xdr;
 //      StateArchivalSettings stateArchivalSettings;
 //  case CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
 //      ConfigSettingContractExecutionLanesV0 contractExecutionLanes;
-//  case CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
-//      uint64 bucketListSizeWindow<>;
+//  case CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW:
+//      uint64 liveSorobanStateSizeWindow<>;
 //  case CONFIG_SETTING_EVICTION_ITERATOR:
 //      EvictionIterator evictionIterator;
+//  case CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0:
+//      ConfigSettingContractParallelComputeV0 contractParallelCompute;
+//  case CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0:
+//      ConfigSettingContractLedgerCostExtV0 contractLedgerCostExt;
+//  case CONFIG_SETTING_SCP_TIMING:
+//      ConfigSettingSCPTiming contractSCPTiming;
 //  };
 
 //  ===========================================================================
@@ -54,8 +60,11 @@ public class ConfigSettingEntry
     public Uint32 ContractDataEntrySizeBytes { get; set; }
     public StateArchivalSettings StateArchivalSettings { get; set; }
     public ConfigSettingContractExecutionLanesV0 ContractExecutionLanes { get; set; }
-    public Uint64[] BucketListSizeWindow { get; set; }
+    public Uint64[] LiveSorobanStateSizeWindow { get; set; }
     public EvictionIterator EvictionIterator { get; set; }
+    public ConfigSettingContractParallelComputeV0 ContractParallelCompute { get; set; }
+    public ConfigSettingContractLedgerCostExtV0 ContractLedgerCostExt { get; set; }
+    public ConfigSettingSCPTiming ContractSCPTiming { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, ConfigSettingEntry encodedConfigSettingEntry)
     {
@@ -98,16 +107,26 @@ public class ConfigSettingEntry
             case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
                 ConfigSettingContractExecutionLanesV0.Encode(stream, encodedConfigSettingEntry.ContractExecutionLanes);
                 break;
-            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
-                var bucketListSizeWindowsize = encodedConfigSettingEntry.BucketListSizeWindow.Length;
-                stream.WriteInt(bucketListSizeWindowsize);
-                for (var i = 0; i < bucketListSizeWindowsize; i++)
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW:
+                var liveSorobanStateSizeWindowsize = encodedConfigSettingEntry.LiveSorobanStateSizeWindow.Length;
+                stream.WriteInt(liveSorobanStateSizeWindowsize);
+                for (var i = 0; i < liveSorobanStateSizeWindowsize; i++)
                 {
-                    Uint64.Encode(stream, encodedConfigSettingEntry.BucketListSizeWindow[i]);
+                    Uint64.Encode(stream, encodedConfigSettingEntry.LiveSorobanStateSizeWindow[i]);
                 }
                 break;
             case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_EVICTION_ITERATOR:
                 EvictionIterator.Encode(stream, encodedConfigSettingEntry.EvictionIterator);
+                break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0:
+                ConfigSettingContractParallelComputeV0.Encode(stream,
+                    encodedConfigSettingEntry.ContractParallelCompute);
+                break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0:
+                ConfigSettingContractLedgerCostExtV0.Encode(stream, encodedConfigSettingEntry.ContractLedgerCostExt);
+                break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_SCP_TIMING:
+                ConfigSettingSCPTiming.Encode(stream, encodedConfigSettingEntry.ContractSCPTiming);
                 break;
         }
     }
@@ -155,19 +174,28 @@ public class ConfigSettingEntry
             case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
                 decodedConfigSettingEntry.ContractExecutionLanes = ConfigSettingContractExecutionLanesV0.Decode(stream);
                 break;
-            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
-                var bucketListSizeWindowsize = stream.ReadInt();
-                decodedConfigSettingEntry.BucketListSizeWindow = new Uint64[bucketListSizeWindowsize];
-                for (var i = 0; i < bucketListSizeWindowsize; i++)
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW:
+                var liveSorobanStateSizeWindowsize = stream.ReadInt();
+                decodedConfigSettingEntry.LiveSorobanStateSizeWindow = new Uint64[liveSorobanStateSizeWindowsize];
+                for (var i = 0; i < liveSorobanStateSizeWindowsize; i++)
                 {
-                    decodedConfigSettingEntry.BucketListSizeWindow[i] = Uint64.Decode(stream);
+                    decodedConfigSettingEntry.LiveSorobanStateSizeWindow[i] = Uint64.Decode(stream);
                 }
                 break;
             case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_EVICTION_ITERATOR:
                 decodedConfigSettingEntry.EvictionIterator = EvictionIterator.Decode(stream);
                 break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0:
+                decodedConfigSettingEntry.ContractParallelCompute =
+                    ConfigSettingContractParallelComputeV0.Decode(stream);
+                break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0:
+                decodedConfigSettingEntry.ContractLedgerCostExt = ConfigSettingContractLedgerCostExtV0.Decode(stream);
+                break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_SCP_TIMING:
+                decodedConfigSettingEntry.ContractSCPTiming = ConfigSettingSCPTiming.Decode(stream);
+                break;
         }
-
         return decodedConfigSettingEntry;
     }
 }

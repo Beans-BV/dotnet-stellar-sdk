@@ -6,26 +6,26 @@ namespace StellarDotnetSdk.Xdr;
 // === xdr source ============================================================
 
 //  struct ConfigUpgradeSetKey {
-//      Hash contractID;
+//      ContractID contractID;
 //      Hash contentHash;
 //  };
 
 //  ===========================================================================
 public class ConfigUpgradeSetKey
 {
-    public Hash ContractID { get; set; }
+    public ContractID ContractID { get; set; }
     public Hash ContentHash { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, ConfigUpgradeSetKey encodedConfigUpgradeSetKey)
     {
-        Hash.Encode(stream, encodedConfigUpgradeSetKey.ContractID);
+        ContractID.Encode(stream, encodedConfigUpgradeSetKey.ContractID);
         Hash.Encode(stream, encodedConfigUpgradeSetKey.ContentHash);
     }
 
     public static ConfigUpgradeSetKey Decode(XdrDataInputStream stream)
     {
         var decodedConfigUpgradeSetKey = new ConfigUpgradeSetKey();
-        decodedConfigUpgradeSetKey.ContractID = Hash.Decode(stream);
+        decodedConfigUpgradeSetKey.ContractID = ContractID.Decode(stream);
         decodedConfigUpgradeSetKey.ContentHash = Hash.Decode(stream);
         return decodedConfigUpgradeSetKey;
     }

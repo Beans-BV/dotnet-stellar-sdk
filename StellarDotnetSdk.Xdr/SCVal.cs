@@ -58,13 +58,12 @@ namespace StellarDotnetSdk.Xdr;
 //  
 //  // Special SCVals reserved for system-constructed contract-data
 //  // ledger keys, not generally usable elsewhere.
+//  case SCV_CONTRACT_INSTANCE:
+//      SCContractInstance instance;
 //  case SCV_LEDGER_KEY_CONTRACT_INSTANCE:
 //      void;
 //  case SCV_LEDGER_KEY_NONCE:
 //      SCNonceKey nonce_key;
-//  
-//  case SCV_CONTRACT_INSTANCE:
-//      SCContractInstance instance;
 //  };
 
 //  ===========================================================================
@@ -90,8 +89,8 @@ public class SCVal
     public SCVec Vec { get; set; }
     public SCMap Map { get; set; }
     public SCAddress Address { get; set; }
-    public SCNonceKey NonceKey { get; set; }
     public SCContractInstance Instance { get; set; }
+    public SCNonceKey NonceKey { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SCVal encodedSCVal)
     {
@@ -155,7 +154,6 @@ public class SCVal
                 {
                     stream.WriteInt(0);
                 }
-
                 break;
             case SCValType.SCValTypeEnum.SCV_MAP:
                 if (encodedSCVal.Map != null)
@@ -167,18 +165,17 @@ public class SCVal
                 {
                     stream.WriteInt(0);
                 }
-
                 break;
             case SCValType.SCValTypeEnum.SCV_ADDRESS:
                 SCAddress.Encode(stream, encodedSCVal.Address);
+                break;
+            case SCValType.SCValTypeEnum.SCV_CONTRACT_INSTANCE:
+                SCContractInstance.Encode(stream, encodedSCVal.Instance);
                 break;
             case SCValType.SCValTypeEnum.SCV_LEDGER_KEY_CONTRACT_INSTANCE:
                 break;
             case SCValType.SCValTypeEnum.SCV_LEDGER_KEY_NONCE:
                 SCNonceKey.Encode(stream, encodedSCVal.NonceKey);
-                break;
-            case SCValType.SCValTypeEnum.SCV_CONTRACT_INSTANCE:
-                SCContractInstance.Encode(stream, encodedSCVal.Instance);
                 break;
         }
     }
@@ -254,16 +251,15 @@ public class SCVal
             case SCValType.SCValTypeEnum.SCV_ADDRESS:
                 decodedSCVal.Address = SCAddress.Decode(stream);
                 break;
+            case SCValType.SCValTypeEnum.SCV_CONTRACT_INSTANCE:
+                decodedSCVal.Instance = SCContractInstance.Decode(stream);
+                break;
             case SCValType.SCValTypeEnum.SCV_LEDGER_KEY_CONTRACT_INSTANCE:
                 break;
             case SCValType.SCValTypeEnum.SCV_LEDGER_KEY_NONCE:
                 decodedSCVal.NonceKey = SCNonceKey.Decode(stream);
                 break;
-            case SCValType.SCValTypeEnum.SCV_CONTRACT_INSTANCE:
-                decodedSCVal.Instance = SCContractInstance.Decode(stream);
-                break;
         }
-
         return decodedSCVal;
     }
 }

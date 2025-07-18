@@ -15,12 +15,12 @@ public class InvokeHostFunctionOperationTest
     private const long Nonce = -9223372036854775807;
     private const uint SignatureExpirationLedger = 1319013123;
 
-    private readonly SCAccountId _accountAddress = new("GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP");
+    private readonly ScAccountId _accountAddress = new("GAEBBKKHGCAD53X244CFGTVEKG7LWUQOAEW4STFHMGYHHFS5WOQZZTMP");
 
     private readonly SCVal[] _args = [new SCString("world"), new SCBytes([0x00, 0x01, 0x02])];
 
-    private readonly SCAddress _contractAddress =
-        new SCContractId("CDJ4RICANSXXZ275W2OY2U7RO73HYURBGBRHVW2UUXZNGEBIVBNRKEF7");
+    private readonly ScAddress _contractAddress =
+        new ScContractId("CDJ4RICANSXXZ275W2OY2U7RO73HYURBGBRHVW2UUXZNGEBIVBNRKEF7");
 
     private readonly SCSymbol _functionName = new("hello");
     private readonly SCString _signature = new("Signature");
@@ -64,8 +64,8 @@ public class InvokeHostFunctionOperationTest
         var contractIdPreimage = (ContractIdAddressPreimage)operation.HostFunction.ContractIdPreimage;
         var decodedContractIdPreimage = (ContractIdAddressPreimage)decodedOperation.HostFunction.ContractIdPreimage;
 
-        var address = (SCAccountId)contractIdPreimage.Address;
-        var decodedAddress = (SCAccountId)decodedContractIdPreimage.Address;
+        var address = (ScAccountId)contractIdPreimage.Address;
+        var decodedAddress = (ScAccountId)decodedContractIdPreimage.Address;
 
         var contractExecutable = (ContractExecutableWasm)operation.HostFunction.Executable;
         var decodedContractExecutable = (ContractExecutableWasm)decodedOperation.HostFunction.Executable;
@@ -93,8 +93,8 @@ public class InvokeHostFunctionOperationTest
         var contractIdPreimage = (ContractIdAddressPreimage)operation.HostFunction.ContractIdPreimage;
         var decodedContractIdPreimage = (ContractIdAddressPreimage)decodedOperation.HostFunction.ContractIdPreimage;
 
-        var address = (SCAccountId)contractIdPreimage.Address;
-        var decodedAddress = (SCAccountId)decodedContractIdPreimage.Address;
+        var address = (ScAccountId)contractIdPreimage.Address;
+        var decodedAddress = (ScAccountId)decodedContractIdPreimage.Address;
 
         var contractExecutable = (ContractExecutableWasm)operation.HostFunction.Executable;
         var decodedContractExecutable = (ContractExecutableWasm)decodedOperation.HostFunction.Executable;
@@ -129,8 +129,8 @@ public class InvokeHostFunctionOperationTest
         var contractIdPreimage = (ContractIdAddressPreimage)operation.HostFunction.ContractIdPreimage;
         var decodedContractIdPreimage = (ContractIdAddressPreimage)decodedOperation.HostFunction.ContractIdPreimage;
 
-        var address = (SCAccountId)contractIdPreimage.Address;
-        var decodedAddress = (SCAccountId)decodedContractIdPreimage.Address;
+        var address = (ScAccountId)contractIdPreimage.Address;
+        var decodedAddress = (ScAccountId)decodedContractIdPreimage.Address;
 
         var contractExecutable = (ContractExecutableWasm)operation.HostFunction.Executable;
         var decodedContractExecutable = (ContractExecutableWasm)decodedOperation.HostFunction.Executable;
@@ -145,8 +145,8 @@ public class InvokeHostFunctionOperationTest
         var decodedAuth = decodedOperation.Auth[0];
         Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
         var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
-        Assert.AreEqual(((SCAccountId)credentials.Address).InnerValue,
-            ((SCAccountId)decodedCredentials.Address).InnerValue);
+        Assert.AreEqual(((ScAccountId)credentials.Address).InnerValue,
+            ((ScAccountId)decodedCredentials.Address).InnerValue);
         Assert.AreEqual(credentials.Nonce, decodedCredentials.Nonce);
         Assert.AreEqual(credentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
         Assert.AreEqual(((SCString)credentials.Signature).InnerValue,
@@ -284,8 +284,8 @@ public class InvokeHostFunctionOperationTest
 
         var decodedOperation = (InvokeContractOperation)Operation.FromXdr(xdrOperation);
 
-        var address = (SCContractId)operation.HostFunction.ContractAddress;
-        var decodedAddress = (SCContractId)decodedOperation.HostFunction.ContractAddress;
+        var address = (ScContractId)operation.HostFunction.ContractAddress;
+        var decodedAddress = (ScContractId)decodedOperation.HostFunction.ContractAddress;
 
         var hostFunction = operation.HostFunction;
         var decodedFunction = decodedOperation.HostFunction;
@@ -332,8 +332,8 @@ public class InvokeHostFunctionOperationTest
 
         // Assert
         Assert.AreEqual(
-            ((SCContractId)_contractAddress).InnerValue,
-            ((SCContractId)decodedHostFunction.ContractAddress).InnerValue);
+            ((ScContractId)_contractAddress).InnerValue,
+            ((ScContractId)decodedHostFunction.ContractAddress).InnerValue);
         Assert.AreEqual(hostFunction.FunctionName.InnerValue, decodedHostFunction.FunctionName.InnerValue);
         Assert.AreEqual(hostFunction.Args.Length, decodedHostFunction.Args.Length);
 

@@ -74,7 +74,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <summary>
     ///     SecretSeed
     /// </summary>
-    public string? SecretSeed => SeedBytes != null ? StrKey.EncodeStellarSecretSeed(SeedBytes) : null;
+    public string? SecretSeed => SeedBytes != null ? StrKey.EncodeEd25519SecretSeed(SeedBytes) : null;
 
     /// <summary>
     ///     XDR Signature Hint
@@ -143,7 +143,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <summary>
     ///     AccountId
     /// </summary>
-    public string AccountId => StrKey.EncodeStellarAccountId(PublicKey);
+    public string AccountId => StrKey.EncodeEd25519PublicKey(PublicKey);
 
     /// <summary>
     ///     Address
@@ -233,7 +233,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// </returns>
     public static KeyPair FromSecretSeed(string seed)
     {
-        var bytes = StrKey.DecodeStellarSecretSeed(seed);
+        var bytes = StrKey.DecodeEd25519SecretSeed(seed);
         return FromSecretSeed(bytes);
     }
 
@@ -261,7 +261,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// </returns>
     public static KeyPair FromAccountId(string accountId)
     {
-        var decoded = StrKey.DecodeStellarAccountId(accountId);
+        var decoded = StrKey.DecodeEd25519PublicKey(accountId);
         return FromPublicKey(decoded);
     }
 

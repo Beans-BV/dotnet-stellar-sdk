@@ -7,7 +7,13 @@ namespace StellarDotnetSdk.Xdr;
 
 //  struct SorobanTransactionData
 //  {
-//      ExtensionPoint ext;
+//      union switch (int v)
+//      {
+//      case 0:
+//          void;
+//      case 1:
+//          SorobanResourcesExtV0 resourceExt;
+//      } ext;
 //      SorobanResources resources;
 //      // Amount of the transaction `fee` allocated to the Soroban resource fees.
 //      // The fraction of `resourceFee` corresponding to `resources` specified 
@@ -24,13 +30,13 @@ namespace StellarDotnetSdk.Xdr;
 //  ===========================================================================
 public class SorobanTransactionData
 {
-    public ExtensionPoint Ext { get; set; }
+    public SorobanTransactionDataExt Ext { get; set; }
     public SorobanResources Resources { get; set; }
     public Int64 ResourceFee { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SorobanTransactionData encodedSorobanTransactionData)
     {
-        ExtensionPoint.Encode(stream, encodedSorobanTransactionData.Ext);
+        SorobanTransactionDataExt.Encode(stream, encodedSorobanTransactionData.Ext);
         SorobanResources.Encode(stream, encodedSorobanTransactionData.Resources);
         Int64.Encode(stream, encodedSorobanTransactionData.ResourceFee);
     }
@@ -38,9 +44,46 @@ public class SorobanTransactionData
     public static SorobanTransactionData Decode(XdrDataInputStream stream)
     {
         var decodedSorobanTransactionData = new SorobanTransactionData();
-        decodedSorobanTransactionData.Ext = ExtensionPoint.Decode(stream);
+        decodedSorobanTransactionData.Ext = SorobanTransactionDataExt.Decode(stream);
         decodedSorobanTransactionData.Resources = SorobanResources.Decode(stream);
         decodedSorobanTransactionData.ResourceFee = Int64.Decode(stream);
         return decodedSorobanTransactionData;
+    }
+
+    public class SorobanTransactionDataExt
+    {
+        public int Discriminant { get; set; }
+
+        public SorobanResourcesExtV0 ResourceExt { get; set; }
+
+        public static void Encode(XdrDataOutputStream stream,
+            SorobanTransactionDataExt encodedSorobanTransactionDataExt)
+        {
+            stream.WriteInt(encodedSorobanTransactionDataExt.Discriminant);
+            switch (encodedSorobanTransactionDataExt.Discriminant)
+            {
+                case 0:
+                    break;
+                case 1:
+                    SorobanResourcesExtV0.Encode(stream, encodedSorobanTransactionDataExt.ResourceExt);
+                    break;
+            }
+        }
+
+        public static SorobanTransactionDataExt Decode(XdrDataInputStream stream)
+        {
+            var decodedSorobanTransactionDataExt = new SorobanTransactionDataExt();
+            var discriminant = stream.ReadInt();
+            decodedSorobanTransactionDataExt.Discriminant = discriminant;
+            switch (decodedSorobanTransactionDataExt.Discriminant)
+            {
+                case 0:
+                    break;
+                case 1:
+                    decodedSorobanTransactionDataExt.ResourceExt = SorobanResourcesExtV0.Decode(stream);
+                    break;
+            }
+            return decodedSorobanTransactionDataExt;
+        }
     }
 }

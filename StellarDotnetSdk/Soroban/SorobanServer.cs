@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -240,24 +241,45 @@ public class SorobanServer : IDisposable
     ///     </remarks>
     /// </param>
     /// <param name="resourceConfig">Contains configuration for how resources will be calculated when simulating transactions.</param>
+    /// <param name="authMode">Explicitly allows users to opt in to non-root authorization in recording mode.
+    /// <p>Leaving this field unset will default to <see cref="AuthMode.ENFORCE"/> if auth entries are present,
+    /// <see cref="AuthMode.RECORD"/> otherwise.</p>
+    /// </param>
     /// <returns>A <see cref="SimulateTransactionResponse" /> object.</returns>
-    public Task<SimulateTransactionResponse> SimulateTransaction(Transaction transaction, uint? resourceConfig = null)
+    public Task<SimulateTransactionResponse> SimulateTransaction(
+        Transaction transaction,
+        uint? resourceConfig = null,
+        AuthMode? authMode = null)
     {
+        var requestParams = BuildSimulateTransactionRequest(transaction, resourceConfig, authMode);
+
+        return SendRequest<object, SimulateTransactionResponse>(
+            "simulateTransaction",
+            requestParams
+        );
+    }
+
+    private static Dictionary<string, object> BuildSimulateTransactionRequest(
+        Transaction transaction,
+        uint? resourceConfig,
+        AuthMode? authMode)
+    {
+        var request = new Dictionary<string, object>
+        {
+            ["transaction"] = transaction.ToUnsignedEnvelopeXdrBase64()
+        };
+
         if (resourceConfig != null)
         {
-            return SendRequest<object, SimulateTransactionResponse>("simulateTransaction",
-                new
-                {
-                    transaction = transaction.ToUnsignedEnvelopeXdrBase64(),
-                    resourceConfig = new { instructionLeeway = resourceConfig },
-                });
+            request["resourceConfig"] = new { instructionLeeway = resourceConfig };
         }
 
-        return SendRequest<object, SimulateTransactionResponse>("simulateTransaction",
-            new
-            {
-                transaction = transaction.ToUnsignedEnvelopeXdrBase64(),
-            });
+        if (authMode != null)
+        {
+            request["authMode"] = authMode;
+        }
+
+        return request;
     }
 
     /// <summary>

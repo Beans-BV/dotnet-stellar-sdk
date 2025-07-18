@@ -13,7 +13,8 @@ namespace StellarDotnetSdk.Xdr;
 //      SC_SPEC_ENTRY_UDT_STRUCT_V0 = 1,
 //      SC_SPEC_ENTRY_UDT_UNION_V0 = 2,
 //      SC_SPEC_ENTRY_UDT_ENUM_V0 = 3,
-//      SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0 = 4
+//      SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0 = 4,
+//      SC_SPEC_ENTRY_EVENT_V0 = 5
 //  };
 
 //  ===========================================================================
@@ -26,6 +27,7 @@ public class SCSpecEntryKind
         SC_SPEC_ENTRY_UDT_UNION_V0 = 2,
         SC_SPEC_ENTRY_UDT_ENUM_V0 = 3,
         SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0 = 4,
+        SC_SPEC_ENTRY_EVENT_V0 = 5,
     }
 
     public SCSpecEntryKindEnum InnerValue { get; set; }
@@ -48,6 +50,7 @@ public class SCSpecEntryKind
             case 2: return Create(SCSpecEntryKindEnum.SC_SPEC_ENTRY_UDT_UNION_V0);
             case 3: return Create(SCSpecEntryKindEnum.SC_SPEC_ENTRY_UDT_ENUM_V0);
             case 4: return Create(SCSpecEntryKindEnum.SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0);
+            case 5: return Create(SCSpecEntryKindEnum.SC_SPEC_ENTRY_EVENT_V0);
             default:
                 throw new Exception("Unknown enum value: " + value);
         }
