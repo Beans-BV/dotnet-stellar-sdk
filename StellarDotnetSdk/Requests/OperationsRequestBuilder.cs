@@ -70,20 +70,20 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
 
     /// <summary>
     ///     Builds request to GET /claimable_balances/{claimable_balance_id}/operations
-    ///     See: https://www.stellar.org/developers/horizon/reference/operations-for-claimable-balance.html
+    ///     See: https://developers.stellar.org/docs/data/apis/horizon/api-reference/cb-retrieve-related-operations
     /// </summary>
-    /// <param name="claimableBalanceId">Base32-encoded claimable balance ID for which to get operations.</param>
+    /// <param name="claimableBalanceId">Hex-encoded claimable balance ID (0000...) for which to get operations.</param>
     /// <returns>
     ///     <see cref="OperationsRequestBuilder" />
     /// </returns>
     /// <exception cref="HttpRequestException"></exception>
     public OperationsRequestBuilder ForClaimableBalance(string claimableBalanceId)
     {
-        if (string.IsNullOrWhiteSpace(claimableBalanceId))
+        ArgumentException.ThrowIfNullOrEmpty(claimableBalanceId);
+        if (!StrKey.IsValidClaimableBalanceId(claimableBalanceId))
         {
-            throw new ArgumentNullException(nameof(claimableBalanceId), "claimableBalance cannot be null");
+            throw new ArgumentException($"Claimable balance ID {claimableBalanceId} is not valid.");
         }
-
         SetSegments("claimable_balances", claimableBalanceId, "operations");
 
         return this;
