@@ -33,13 +33,9 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
 
     /// <summary>
     ///     Requests GET /operations/{operationId}
-    ///     See: https://www.stellar.org/developers/horizon/reference/operations-single.html
+    ///     See: https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-an-operation
     /// </summary>
     /// <param name="operationId">Operation to fetch</param>
-    /// <returns>
-    ///     <see cref="OperationsRequestBuilder" />
-    /// </returns>
-    /// <exception cref="HttpRequestException"></exception>
     public OperationsRequestBuilder Operation(long operationId)
     {
         SetSegments("operations", operationId.ToString());
@@ -48,20 +44,17 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
 
     /// <summary>
     ///     Builds request to GET /accounts/{account}/operations
-    ///     See: https://www.stellar.org/developers/horizon/reference/operations-for-account.html
+    ///     See: https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-operations-by-account-id
     /// </summary>
     /// <param name="account">Account for which to get operations</param>
-    /// <returns>
-    ///     <see cref="OperationsRequestBuilder" />
-    /// </returns>
-    /// <exception cref="HttpRequestException"></exception>
     public OperationsRequestBuilder ForAccount(string account)
     {
-        if (account == null)
-        {
-            throw new ArgumentNullException(nameof(account), "account cannot be null");
-        }
+        ArgumentException.ThrowIfNullOrEmpty(account);
 
+        if (!StrKey.IsValidEd25519PublicKey(account))
+        {
+            throw new ArgumentException($"Invalid account ID {account}");
+        }
         SetSegments("accounts", account, "operations");
 
         return this;
@@ -70,20 +63,16 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
 
     /// <summary>
     ///     Builds request to GET /claimable_balances/{claimable_balance_id}/operations
-    ///     See: https://www.stellar.org/developers/horizon/reference/operations-for-claimable-balance.html
+    ///     See: https://developers.stellar.org/docs/data/apis/horizon/api-reference/cb-retrieve-related-operations
     /// </summary>
-    /// <param name="claimableBalanceId">Base32-encoded claimable balance ID for which to get operations.</param>
-    /// <returns>
-    ///     <see cref="OperationsRequestBuilder" />
-    /// </returns>
-    /// <exception cref="HttpRequestException"></exception>
+    /// <param name="claimableBalanceId">Hex-encoded claimable balance ID (0000...) for which to get operations.</param>
     public OperationsRequestBuilder ForClaimableBalance(string claimableBalanceId)
     {
-        if (string.IsNullOrWhiteSpace(claimableBalanceId))
+        ArgumentException.ThrowIfNullOrEmpty(claimableBalanceId);
+        if (!StrKey.IsValidClaimableBalanceId(ClaimableBalanceIdUtils.ToBase32String(claimableBalanceId)))
         {
-            throw new ArgumentNullException(nameof(claimableBalanceId), "claimableBalance cannot be null");
+            throw new ArgumentException($"Claimable balance ID {claimableBalanceId} is not valid.");
         }
-
         SetSegments("claimable_balances", claimableBalanceId, "operations");
 
         return this;
@@ -91,12 +80,9 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
 
     /// <summary>
     ///     Builds request to GET /ledgers/{ledgerSeq}/operations
-    ///     See: https://www.stellar.org/developers/horizon/reference/operations-for-ledger.html
+    ///     See: https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-ledgers-operations
     /// </summary>
     /// <param name="ledgerSeq">Ledger for which to get operations</param>
-    /// <returns>
-    ///     <see cref="OperationsRequestBuilder" />
-    /// </returns>
     public OperationsRequestBuilder ForLedger(long ledgerSeq)
     {
         SetSegments("ledgers", ledgerSeq.ToString(), "operations");
@@ -108,9 +94,6 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
     ///     Set <code>include_failed</code> flag to include operations of failed transactions.
     /// </summary>
     /// <param name="includeFailed">Set to true to include operations of failed transactions in results</param>
-    /// <returns>
-    ///     <see cref="OperationsRequestBuilder" />
-    /// </returns>
     public OperationsRequestBuilder IncludeFailed(bool includeFailed)
     {
         UriBuilder.SetQueryParam("include_failed", includeFailed.ToString().ToLowerInvariant());
@@ -119,20 +102,28 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
 
     /// <summary>
     ///     Builds request to GET /transactions/{transactionId}/operations
-    ///     See: https://www.stellar.org/developers/horizon/reference/operations-for-transaction.html
+    ///     See: https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-transactions-operations
     /// </summary>
     /// <param name="transactionId">Transaction ID for which to get operations</param>
-    /// <returns>
-    ///     <see cref="OperationsRequestBuilder" />
-    /// </returns>
     public OperationsRequestBuilder ForTransaction(string transactionId)
     {
-        if (string.IsNullOrWhiteSpace(transactionId))
-        {
-            throw new ArgumentNullException(nameof(transactionId), "transactionId cannot be null");
-        }
+        ArgumentException.ThrowIfNullOrEmpty(transactionId);
 
         SetSegments("transactions", transactionId, "operations");
+
+        return this;
+    }
+
+    /// <summary>
+    ///     Builds request to GET /liquidity_pools/{liquidityPoolId}/operations
+    ///     See: https://developers.stellar.org/docs/data/apis/horizon/api-reference/lp-retrieve-related-operations
+    /// </summary>
+    /// <param name="liquidityPoolId">Liquidity pool ID for which to get operations</param>
+    public OperationsRequestBuilder ForLiquidityPool(string liquidityPoolId)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(liquidityPoolId);
+
+        SetSegments("liquidity_pools", liquidityPoolId, "operations");
 
         return this;
     }
