@@ -159,7 +159,7 @@ Class SorobanResources
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SorobanResources(LedgerFootprint footprint, uint instructions, uint readBytes, uint writeBytes)</code></pre>
+    <pre><code class="lang-csharp hljs">public SorobanResources(LedgerFootprint footprint, uint instructions, uint diskReadBytes, uint writeBytes)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -168,7 +168,7 @@ Class SorobanResources
     <dd></dd>
     <dt><code>instructions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
     <dd></dd>
-    <dt><code>readBytes</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dt><code>diskReadBytes</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
     <dd></dd>
     <dt><code>writeBytes</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
     <dd></dd>
@@ -187,6 +187,37 @@ Class SorobanResources
 
   <h2 class="section" id="properties">Properties
 </h2>
+
+
+  <a id="StellarDotnetSdk_Soroban_SorobanResources_DiskReadBytes_" data-uid="StellarDotnetSdk.Soroban.SorobanResources.DiskReadBytes*"></a>
+
+  <h3 id="StellarDotnetSdk_Soroban_SorobanResources_DiskReadBytes" data-uid="StellarDotnetSdk.Soroban.SorobanResources.DiskReadBytes">
+  DiskReadBytes
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public uint DiskReadBytes { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
 
 
   <a id="StellarDotnetSdk_Soroban_SorobanResources_Footprint_" data-uid="StellarDotnetSdk.Soroban.SorobanResources.Footprint*"></a>
@@ -232,37 +263,6 @@ Class SorobanResources
 
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public uint Instructions { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="StellarDotnetSdk_Soroban_SorobanResources_ReadBytes_" data-uid="StellarDotnetSdk.Soroban.SorobanResources.ReadBytes*"></a>
-
-  <h3 id="StellarDotnetSdk_Soroban_SorobanResources_ReadBytes" data-uid="StellarDotnetSdk.Soroban.SorobanResources.ReadBytes">
-  ReadBytes
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint ReadBytes { get; }</code></pre>
   </div>
 
 

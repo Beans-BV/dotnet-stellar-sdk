@@ -294,6 +294,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.ClaimableBalanceIdUtils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.ClaimableBalanceIdUtils.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/StellarDotnetSdk.Claimants.ClaimPredicate.yml",
       "output": {
         ".html": {
@@ -864,16 +874,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/StellarDotnetSdk.LedgerEntries.ConfigSettingBucketListSizeWindow.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/StellarDotnetSdk.LedgerEntries.ConfigSettingBucketListSizeWindow.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/StellarDotnetSdk.LedgerEntries.ConfigSettingContractBandwidth.yml",
       "output": {
         ".html": {
@@ -984,10 +984,50 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.LedgerEntries.ConfigSettingContractLedgerCostExtV0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.LedgerEntries.ConfigSettingContractLedgerCostExtV0.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/StellarDotnetSdk.LedgerEntries.ConfigSettingContractMaxSizeBytes.yml",
       "output": {
         ".html": {
           "relative_path": "api/StellarDotnetSdk.LedgerEntries.ConfigSettingContractMaxSizeBytes.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.LedgerEntries.ConfigSettingContractParallelComputeV0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.LedgerEntries.ConfigSettingContractParallelComputeV0.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.LedgerEntries.ConfigSettingLiveSorobanStateSizeWindow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.LedgerEntries.ConfigSettingLiveSorobanStateSizeWindow.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.LedgerEntries.ConfigSettingScpTiming.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.LedgerEntries.ConfigSettingScpTiming.html"
         }
       },
       "version": ""
@@ -1158,6 +1198,16 @@
       "output": {
         ".html": {
           "relative_path": "api/StellarDotnetSdk.LedgerEntries.LedgerEntryRemoved.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.LedgerEntries.LedgerEntryRestored.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.LedgerEntries.LedgerEntryRestored.html"
         }
       },
       "version": ""
@@ -3438,6 +3488,16 @@
       "output": {
         ".html": {
           "relative_path": "api/StellarDotnetSdk.Responses.Operations.InflationOperationResponse.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Responses.Operations.InvokeHostFunctionOperationResponse.AssetContractBalanceChange.MuxedIdType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Responses.Operations.InvokeHostFunctionOperationResponse.AssetContractBalanceChange.MuxedIdType.html"
         }
       },
       "version": ""
@@ -6184,6 +6244,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Responses.SorobanRpc.Events.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Responses.SorobanRpc.Events.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo.yml",
       "output": {
         ".html": {
@@ -6604,10 +6674,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.AuthMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.AuthMode.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/StellarDotnetSdk.Soroban.ContractEvent.yml",
       "output": {
         ".html": {
           "relative_path": "api/StellarDotnetSdk.Soroban.ContractEvent.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.ContractEventV0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.ContractEventV0.html"
         }
       },
       "version": ""
@@ -6684,20 +6774,10 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/StellarDotnetSdk.Soroban.SCAccountId.yml",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.OperationMetaV2.yml",
       "output": {
         ".html": {
-          "relative_path": "api/StellarDotnetSdk.Soroban.SCAccountId.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/StellarDotnetSdk.Soroban.SCAddress.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/StellarDotnetSdk.Soroban.SCAddress.html"
+          "relative_path": "api/StellarDotnetSdk.Soroban.OperationMetaV2.html"
         }
       },
       "version": ""
@@ -6758,16 +6838,6 @@
       "output": {
         ".html": {
           "relative_path": "api/StellarDotnetSdk.Soroban.SCContractError.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/StellarDotnetSdk.Soroban.SCContractId.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/StellarDotnetSdk.Soroban.SCContractId.html"
         }
       },
       "version": ""
@@ -7044,6 +7114,76 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.ScAccountId.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.ScAccountId.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.ScAddress.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.ScAddress.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.ScClaimableBalanceId.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.ScClaimableBalanceId.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.ScContractId.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.ScContractId.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.ScLiquidityPoolId.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.ScLiquidityPoolId.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.ScMuxedAccountId.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.ScMuxedAccountId.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.SorobanResourceExtensionV0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.SorobanResourceExtensionV0.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/StellarDotnetSdk.Soroban.SorobanResources.yml",
       "output": {
         ".html": {
@@ -7094,10 +7234,50 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.SorobanTransactionMetaV2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.SorobanTransactionMetaV2.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.TransactionEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.TransactionEvent.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.TransactionMeta.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.TransactionMeta.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/StellarDotnetSdk.Soroban.TransactionMetaV3.yml",
       "output": {
         ".html": {
           "relative_path": "api/StellarDotnetSdk.Soroban.TransactionMetaV3.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/StellarDotnetSdk.Soroban.TransactionMetaV4.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/StellarDotnetSdk.Soroban.TransactionMetaV4.html"
         }
       },
       "version": ""

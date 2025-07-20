@@ -97,7 +97,7 @@ Class StrKey
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class StrKey</code></pre>
+    <pre><code class="lang-csharp hljs">public static class StrKey</code></pre>
   </div>
 
 
@@ -148,42 +148,6 @@ Class StrKey
 </h2>
 
 
-  <a id="StellarDotnetSdk_StrKey_CalculateChecksum_" data-uid="StellarDotnetSdk.StrKey.CalculateChecksum*"></a>
-
-  <h3 id="StellarDotnetSdk_StrKey_CalculateChecksum_System_Byte___" data-uid="StellarDotnetSdk.StrKey.CalculateChecksum(System.Byte[])">
-  CalculateChecksum(byte[])
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected static byte[] CalculateChecksum(byte[] bytes)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>bytes</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
   <a id="StellarDotnetSdk_StrKey_DecodeCheck_" data-uid="StellarDotnetSdk.StrKey.DecodeCheck*"></a>
 
   <h3 id="StellarDotnetSdk_StrKey_DecodeCheck_StellarDotnetSdk_StrKey_VersionByte_System_String_" data-uid="StellarDotnetSdk.StrKey.DecodeCheck(StellarDotnetSdk.StrKey.VersionByte,System.String)">
@@ -222,6 +186,45 @@ Class StrKey
 
 
 
+  <a id="StellarDotnetSdk_StrKey_DecodeClaimableBalanceId_" data-uid="StellarDotnetSdk.StrKey.DecodeClaimableBalanceId*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_DecodeClaimableBalanceId_System_String_" data-uid="StellarDotnetSdk.StrKey.DecodeClaimableBalanceId(System.String)">
+  DecodeClaimableBalanceId(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Decodes claimable balance ID to raw bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] DecodeClaimableBalanceId(string data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A base32-encoded claimable balance ID (B...).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Raw bytes of the provided claimable balance ID.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_StrKey_DecodeContractId_" data-uid="StellarDotnetSdk.StrKey.DecodeContractId*"></a>
 
   <h3 id="StellarDotnetSdk_StrKey_DecodeContractId_System_String_" data-uid="StellarDotnetSdk.StrKey.DecodeContractId(System.String)">
@@ -229,7 +232,8 @@ Class StrKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes contract ID to raw bytes.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -239,13 +243,249 @@ Class StrKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A base32-encoded contract ID (C...).</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>Raw bytes of the provided contract ID.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_DecodeEd25519PublicKey_" data-uid="StellarDotnetSdk.StrKey.DecodeEd25519PublicKey*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_DecodeEd25519PublicKey_System_String_" data-uid="StellarDotnetSdk.StrKey.DecodeEd25519PublicKey(System.String)">
+  DecodeEd25519PublicKey(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Decodes a Stellar Ed25519 public key to raw bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] DecodeEd25519PublicKey(string publicKey)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A base32-encoded Ed25519 public key (G...).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Raw bytes of the provided Ed25519 public key.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_DecodeEd25519SecretSeed_" data-uid="StellarDotnetSdk.StrKey.DecodeEd25519SecretSeed*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_DecodeEd25519SecretSeed_System_String_" data-uid="StellarDotnetSdk.StrKey.DecodeEd25519SecretSeed(System.String)">
+  DecodeEd25519SecretSeed(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Decodes an Ed25519 seed string to raw bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] DecodeEd25519SecretSeed(string data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A base32-encoded Ed25519 seed (S...).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Raw bytes of the provided Ed25519 seed.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_DecodeLiquidityPoolId_" data-uid="StellarDotnetSdk.StrKey.DecodeLiquidityPoolId*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_DecodeLiquidityPoolId_System_String_" data-uid="StellarDotnetSdk.StrKey.DecodeLiquidityPoolId(System.String)">
+  DecodeLiquidityPoolId(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Decodes liquidity pool ID to raw bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] DecodeLiquidityPoolId(string data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A base32-encoded liquidity pool ID (L...).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Raw bytes of the provided liquidity pool ID.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_DecodeMed25519PublicKey_" data-uid="StellarDotnetSdk.StrKey.DecodeMed25519PublicKey*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_DecodeMed25519PublicKey_System_String_" data-uid="StellarDotnetSdk.StrKey.DecodeMed25519PublicKey(System.String)">
+  DecodeMed25519PublicKey(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Decodes a Stellar Muxed_Ed25519 public key to raw bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] DecodeMed25519PublicKey(string publicKey)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A base32-encoded Muxed_Ed25519 public key (M...).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Raw bytes of the provided Muxed_Ed25519 public key.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_DecodePreAuthTx_" data-uid="StellarDotnetSdk.StrKey.DecodePreAuthTx*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_DecodePreAuthTx_System_String_" data-uid="StellarDotnetSdk.StrKey.DecodePreAuthTx(System.String)">
+  DecodePreAuthTx(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Decodes a PreAuthTx to raw bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] DecodePreAuthTx(string data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A base32-encoded PreAuthTx string (T...).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Raw bytes of the provided PreAuthTx string.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_DecodeSha256Hash_" data-uid="StellarDotnetSdk.StrKey.DecodeSha256Hash*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_DecodeSha256Hash_System_String_" data-uid="StellarDotnetSdk.StrKey.DecodeSha256Hash(System.String)">
+  DecodeSha256Hash(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Decodes an SHA256 hash to raw bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static byte[] DecodeSha256Hash(string data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A base32-encoded SHA-256 hash (X...).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>Raw bytes of the provided SHA-256 hash.</p>
+</dd>
   </dl>
 
 
@@ -265,7 +505,8 @@ Class StrKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Decodes a signed payload to raw bytes.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -275,13 +516,15 @@ Class StrKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>A base32-encoded signed payload (P...).</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.SignedPayloadSigner.html">SignedPayloadSigner</a></dt>
-    <dd></dd>
+    <dd><p>Raw bytes of the provided signed payload.</p>
+</dd>
   </dl>
 
 
@@ -305,7 +548,8 @@ Class StrKey
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static byte[] DecodeStellarAccountId(string data)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated. Use DecodeEd25519PublicKey instead.&quot;)]
+public static byte[] DecodeStellarAccountId(string data)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -341,7 +585,8 @@ Class StrKey
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static MuxedAccount DecodeStellarMuxedAccount(string data)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated. Use DecodeMuxedEd25519PublicKey instead.&quot;)]
+public static MuxedAccount DecodeStellarMuxedAccount(string data)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -377,7 +622,8 @@ Class StrKey
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static byte[] DecodeStellarSecretSeed(string data)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated. Use DecodeEd25519SecretSeed instead.&quot;)]
+public static byte[] DecodeStellarSecretSeed(string data)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -476,6 +722,45 @@ Class StrKey
 
 
 
+  <a id="StellarDotnetSdk_StrKey_EncodeClaimableBalanceId_" data-uid="StellarDotnetSdk.StrKey.EncodeClaimableBalanceId*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_EncodeClaimableBalanceId_System_Byte___" data-uid="StellarDotnetSdk.StrKey.EncodeClaimableBalanceId(System.Byte[])">
+  EncodeClaimableBalanceId(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Encodes raw bytes to a claimable balance ID.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string EncodeClaimableBalanceId(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>A raw byte array.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Base32-encoded representation (B...) of the provided key.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="StellarDotnetSdk_StrKey_EncodeContractId_" data-uid="StellarDotnetSdk.StrKey.EncodeContractId*"></a>
 
   <h3 id="StellarDotnetSdk_StrKey_EncodeContractId_System_Byte___" data-uid="StellarDotnetSdk.StrKey.EncodeContractId(System.Byte[])">
@@ -483,7 +768,8 @@ Class StrKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Encodes raw bytes to a contract ID.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -493,13 +779,249 @@ Class StrKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd></dd>
+    <dd><p>A raw byte array.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>Base32-encoded representation (C...) of the provided data.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_EncodeEd25519PublicKey_" data-uid="StellarDotnetSdk.StrKey.EncodeEd25519PublicKey*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_EncodeEd25519PublicKey_System_Byte___" data-uid="StellarDotnetSdk.StrKey.EncodeEd25519PublicKey(System.Byte[])">
+  EncodeEd25519PublicKey(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Encodes raw bytes to an Ed25519 public key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string EncodeEd25519PublicKey(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>A raw byte array.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Base32-encoded representation (G...) of the provided data.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_EncodeEd25519SecretSeed_" data-uid="StellarDotnetSdk.StrKey.EncodeEd25519SecretSeed*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_EncodeEd25519SecretSeed_System_Byte___" data-uid="StellarDotnetSdk.StrKey.EncodeEd25519SecretSeed(System.Byte[])">
+  EncodeEd25519SecretSeed(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Encodes raw bytes to an Ed25519 seed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string EncodeEd25519SecretSeed(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>A raw byte array.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Base32-encoded representation (S...) of the provided data.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_EncodeLiquidityPoolId_" data-uid="StellarDotnetSdk.StrKey.EncodeLiquidityPoolId*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_EncodeLiquidityPoolId_System_Byte___" data-uid="StellarDotnetSdk.StrKey.EncodeLiquidityPoolId(System.Byte[])">
+  EncodeLiquidityPoolId(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Encodes raw bytes to a liquidity pool ID.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string EncodeLiquidityPoolId(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>A raw byte array.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Base32-encoded representation (L...) of the provided key.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_EncodeMed25519PublicKey_" data-uid="StellarDotnetSdk.StrKey.EncodeMed25519PublicKey*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_EncodeMed25519PublicKey_System_Byte___" data-uid="StellarDotnetSdk.StrKey.EncodeMed25519PublicKey(System.Byte[])">
+  EncodeMed25519PublicKey(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Encodes raw bytes to a Muxed_Ed25519 public key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string EncodeMed25519PublicKey(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>A raw byte array.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Base32-encoded representation (M...) of the provided data.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_EncodePreAuthTx_" data-uid="StellarDotnetSdk.StrKey.EncodePreAuthTx*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_EncodePreAuthTx_System_Byte___" data-uid="StellarDotnetSdk.StrKey.EncodePreAuthTx(System.Byte[])">
+  EncodePreAuthTx(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Encodes raw bytes to a PreAuthTx string.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string EncodePreAuthTx(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>A raw byte array.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Base32-encoded representation (T...) of the provided data.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_EncodeSha256Hash_" data-uid="StellarDotnetSdk.StrKey.EncodeSha256Hash*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_EncodeSha256Hash_System_Byte___" data-uid="StellarDotnetSdk.StrKey.EncodeSha256Hash(System.Byte[])">
+  EncodeSha256Hash(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Encodes raw bytes to an SHA256 hash.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string EncodeSha256Hash(byte[] data)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>data</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>A raw byte array.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Base32-encoded representation (X...) of the provided data.</p>
+</dd>
   </dl>
 
 
@@ -519,7 +1041,8 @@ Class StrKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Encodes raw bytes to a signed payload.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -529,13 +1052,15 @@ Class StrKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>signedPayloadSigner</code> <a class="xref" href="StellarDotnetSdk.SignedPayloadSigner.html">SignedPayloadSigner</a></dt>
-    <dd></dd>
+    <dd><p>A signed payload.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>Base32-encoded representation (P...) of the provided payload.</p>
+</dd>
   </dl>
 
 
@@ -559,7 +1084,8 @@ Class StrKey
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static string EncodeStellarAccountId(byte[] data)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated. Use EncodeEd25519PublicKey instead.&quot;)]
+public static string EncodeStellarAccountId(byte[] data)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -595,7 +1121,8 @@ Class StrKey
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static string EncodeStellarMuxedAccount(MuxedAccount muxedAccount)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated. Use EncodeMed25519PublicKey instead.&quot;)]
+public static string EncodeStellarMuxedAccount(MuxedAccount muxedAccount)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -631,7 +1158,8 @@ Class StrKey
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static string EncodeStellarSecretSeed(byte[] data)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated. Use EncodeEd25519SecretSeed instead.&quot;)]
+public static string EncodeStellarSecretSeed(byte[] data)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -656,32 +1184,33 @@ Class StrKey
 
 
 
-  <a id="StellarDotnetSdk_StrKey_IsValid_" data-uid="StellarDotnetSdk.StrKey.IsValid*"></a>
+  <a id="StellarDotnetSdk_StrKey_IsValidClaimableBalanceId_" data-uid="StellarDotnetSdk.StrKey.IsValidClaimableBalanceId*"></a>
 
-  <h3 id="StellarDotnetSdk_StrKey_IsValid_StellarDotnetSdk_StrKey_VersionByte_System_String_" data-uid="StellarDotnetSdk.StrKey.IsValid(StellarDotnetSdk.StrKey.VersionByte,System.String)">
-  IsValid(VersionByte, string)
+  <h3 id="StellarDotnetSdk_StrKey_IsValidClaimableBalanceId_System_String_" data-uid="StellarDotnetSdk.StrKey.IsValidClaimableBalanceId(System.String)">
+  IsValidClaimableBalanceId(string)
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Checks validity of a claimable balance ID.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool IsValid(StrKey.VersionByte versionByte, string encoded)</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool IsValidClaimableBalanceId(string claimableBalanceId)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>versionByte</code> <a class="xref" href="StellarDotnetSdk.StrKey.html">StrKey</a>.<a class="xref" href="StellarDotnetSdk.StrKey.VersionByte.html">VersionByte</a></dt>
-    <dd></dd>
-    <dt><code>encoded</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dt><code>claimableBalanceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The claimable balance ID (B...) to check.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p>True if the given claimable balance ID is valid, false otherwise.</p>
+</dd>
   </dl>
 
 
@@ -701,23 +1230,26 @@ Class StrKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Checks validity of a contract ID.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool IsValidContractId(string contract)</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool IsValidContractId(string contractId)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>contract</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dt><code>contractId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The contract ID (C...) to check.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p>True if the given contract ID is valid, false otherwise.</p>
+</dd>
   </dl>
 
 
@@ -737,7 +1269,8 @@ Class StrKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Checks validity of an Ed25519 public key.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -747,13 +1280,15 @@ Class StrKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The public key (G...) to check.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p>True if the given public key is a valid Stellar account ID, false otherwise.</p>
+</dd>
   </dl>
 
 
@@ -773,7 +1308,8 @@ Class StrKey
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Checks validity of an Ed25519 seed.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -783,13 +1319,93 @@ Class StrKey
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>seed</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
+    <dd><p>The secret seed (S...) to check.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p>True if the given seed is a valid Stellar secret seed, false otherwise.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_IsValidLiquidityPoolId_" data-uid="StellarDotnetSdk.StrKey.IsValidLiquidityPoolId*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_IsValidLiquidityPoolId_System_String_" data-uid="StellarDotnetSdk.StrKey.IsValidLiquidityPoolId(System.String)">
+  IsValidLiquidityPoolId(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Checks validity of a liquidity pool ID.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsValidLiquidityPoolId(string liquidityPoolId)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>liquidityPoolId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The liquidity pool ID (L...) to check.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>True if the given liquidity pool ID is valid, false otherwise.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_IsValidMed25519PublicKey_" data-uid="StellarDotnetSdk.StrKey.IsValidMed25519PublicKey*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_IsValidMed25519PublicKey_System_String_" data-uid="StellarDotnetSdk.StrKey.IsValidMed25519PublicKey(System.String)">
+  IsValidMed25519PublicKey(string)
+  
+  </h3>
+
+  <div class="markdown level1 summary"><p>Checks validity of a Muxed_Ed25519 public key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsValidMed25519PublicKey(string publicKey)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The public key (M...) to check.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>True if the given public key is a valid Stellar muxed account ID, false otherwise.</p>
+</dd>
   </dl>
 
 
@@ -813,12 +1429,89 @@ Class StrKey
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool IsValidMuxedAccount(string publicKey)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated. Use IsValidMed25519PublicKey instead.&quot;)]
+public static bool IsValidMuxedAccount(string publicKey)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_TryDecodeEd25519PublicKey_" data-uid="StellarDotnetSdk.StrKey.TryDecodeEd25519PublicKey*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_TryDecodeEd25519PublicKey_System_String_System_Byte____" data-uid="StellarDotnetSdk.StrKey.TryDecodeEd25519PublicKey(System.String,System.Byte[]@)">
+  TryDecodeEd25519PublicKey(string, out byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool TryDecodeEd25519PublicKey(string publicKey, out byte[] decoded)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>decoded</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_StrKey_TryDecodeMed25519PublicKey_" data-uid="StellarDotnetSdk.StrKey.TryDecodeMed25519PublicKey*"></a>
+
+  <h3 id="StellarDotnetSdk_StrKey_TryDecodeMed25519PublicKey_System_String_System_Byte____" data-uid="StellarDotnetSdk.StrKey.TryDecodeMed25519PublicKey(System.String,System.Byte[]@)">
+  TryDecodeMed25519PublicKey(string, out byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool TryDecodeMed25519PublicKey(string publicKey, out byte[] decoded)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>publicKey</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>decoded</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
     <dd></dd>
   </dl>
 

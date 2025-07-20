@@ -94,12 +94,12 @@ Class TransactionMetaV3
   </div>
 
   <div class="markdown summary"><p>Transaction metadata V3.
-See: <a href="https://soroban.stellar.org/docs/soroban-internals/events#transactionmetav3">TransactionMetaV3</a></p>
+See: <a href="https://developers.stellar.org/docs/learn/fundamentals/contract-development/events#transactionmetav3">TransactionMetaV3</a></p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class TransactionMetaV3</code></pre>
+    <pre><code class="lang-csharp hljs">public class TransactionMetaV3 : TransactionMeta</code></pre>
   </div>
 
 
@@ -109,6 +109,7 @@ See: <a href="https://soroban.stellar.org/docs/soroban-internals/events#transact
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="StellarDotnetSdk.Soroban.TransactionMeta.html">TransactionMeta</a></div>
       <div><span class="xref">TransactionMetaV3</span></div>
     </dd>
   </dl>
@@ -118,6 +119,9 @@ See: <a href="https://soroban.stellar.org/docs/soroban-internals/events#transact
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
+    <div>
+      <a class="xref" href="StellarDotnetSdk.Soroban.TransactionMeta.html#StellarDotnetSdk_Soroban_TransactionMeta_FromXdrBase64_System_String_">TransactionMeta.FromXdrBase64(string)</a>
+    </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
     </div>
@@ -302,49 +306,6 @@ See: <a href="https://soroban.stellar.org/docs/soroban-internals/events#transact
     <dt><a class="xref" href="StellarDotnetSdk.LedgerEntries.LedgerEntryChange.html">LedgerEntryChange</a>[]</dt>
     <dd></dd>
   </dl>
-
-
-
-
-
-
-
-
-  <h2 class="section" id="methods">Methods
-</h2>
-
-
-  <a id="StellarDotnetSdk_Soroban_TransactionMetaV3_FromXdrBase64_" data-uid="StellarDotnetSdk.Soroban.TransactionMetaV3.FromXdrBase64*"></a>
-
-  <h3 id="StellarDotnetSdk_Soroban_TransactionMetaV3_FromXdrBase64_System_String_" data-uid="StellarDotnetSdk.Soroban.TransactionMetaV3.FromXdrBase64(System.String)">
-  FromXdrBase64(string)
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>Creates a new <code>TransactionMetaV3</code> object from the given
-<span class="xref">xdr.TransactionMetaV3</span> base-64 encoded XDR string.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static TransactionMetaV3 FromXdrBase64(string xdrBase64)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>xdrBase64</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Soroban.TransactionMetaV3.html">TransactionMetaV3</a></dt>
-    <dd><p>A <code>TransactionMetaV3</code> object decoded and deserialized from the provided string.</p>
-</dd>
-  </dl>
-
-
-
 
 
 

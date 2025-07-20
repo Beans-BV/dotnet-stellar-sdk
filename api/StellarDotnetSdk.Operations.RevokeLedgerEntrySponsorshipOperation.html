@@ -305,14 +305,13 @@ sponsorship modified.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static RevokeLedgerEntrySponsorshipOperation ForClaimableBalance(string balanceIdHexString, IAccountId? sourceAccount = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static RevokeLedgerEntrySponsorshipOperation ForClaimableBalance(string balanceId, IAccountId? sourceAccount = null)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>balanceIdHexString</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>Hex-encoded ID of the claimable balance entry to be revoked.
-For example: <code>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</code>.</p>
+    <dt><code>balanceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Hex-encoded ID (0000...) of the claimable balance entry to be revoked.</p>
 </dd>
     <dt><code>sourceAccount</code> <a class="xref" href="StellarDotnetSdk.Accounts.IAccountId.html">IAccountId</a></dt>
     <dd></dd>
