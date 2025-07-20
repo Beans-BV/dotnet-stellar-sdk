@@ -17,6 +17,8 @@ using StellarDotnetSdk.Xdr;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using Asset = StellarDotnetSdk.Assets.Asset;
 using CollectionAssert = NUnit.Framework.CollectionAssert;
+using ConfigSettingContractLedgerCostExtV0 = StellarDotnetSdk.LedgerEntries.ConfigSettingContractLedgerCostExtV0;
+using ConfigSettingContractParallelComputeV0 = StellarDotnetSdk.LedgerEntries.ConfigSettingContractParallelComputeV0;
 using EvictionIterator = StellarDotnetSdk.LedgerEntries.EvictionIterator;
 using FeeBumpTransaction = StellarDotnetSdk.Transactions.FeeBumpTransaction;
 using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
@@ -25,6 +27,7 @@ using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
 using SCVec = StellarDotnetSdk.Soroban.SCVec;
 using StateArchivalSettings = StellarDotnetSdk.LedgerEntries.StateArchivalSettings;
 using Transaction = StellarDotnetSdk.Transactions.Transaction;
+using TransactionMetaV3 = StellarDotnetSdk.Soroban.TransactionMetaV3;
 
 namespace StellarDotnetSdk.Tests;
 
@@ -343,7 +346,7 @@ public class SorobanServerTest
     {
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent("");
         await Assert.ThrowsExceptionAsync<TooManySignaturesException>(() =>
-            sorobanServer.SimulateTransaction(CreateDummyTransaction()));
+            sorobanServer.SimulateTransaction(CreateDummyTransaction(sign: true)));
     }
 
     [TestMethod]
@@ -400,13 +403,14 @@ public class SorobanServerTest
                     "ledgerClosedAt": "2024-08-06T10:09:22Z",
                     "contractId": "CASCLAHV7E7H3BOGQIW5HIC3H6WVDOTOQRTRMXYSTKJHXOORP3DNATY2",
                     "id": "0003920046715838464-0000000001",
-                    "pagingToken": "0003920046715838464-0000000001",
                     "topic": [
                       "AAAADwAAAAhTVFJfQ0VSVA\u003d\u003d",
                       "AAAADwAAAAhzdHJfY2VydA\u003d\u003d"
                     ],
                     "value": "AAAAEQAAAAEAAAADAAAADwAAAARoYXNoAAAADgAAAEAzYjdkODUxYjVjNmMyMTNmNzUyYzdmNzJhNDA0Yjg5NGFiZGU2NDY2NDhjMzU0MmQ3MDRlMjI4OTMwNmU1MTFhAAAADwAAAAZwYXJlbnQAAAAAAA4AAAAAAAAADwAAAAd2ZXJzaW9uAAAAAAMAAAAA",
                     "inSuccessfulContractCall": true,
+                    "operationIndex": 1,
+                    "transactionIndex": 2,
                     "txHash": "9f6cf2cf2d1dd41af039325503ba98daf3cfa10d0079cd2c50a28355fb1b4af2"
                   },
                   {
@@ -415,7 +419,6 @@ public class SorobanServerTest
                     "ledgerClosedAt": "2024-08-06T10:10:47Z",
                     "contractId": "CDTJALOV4KLSPEMNFHKYSG4WOTN7FCN4A2JOKRPVCQYEHLUEH2YUJF5R",
                     "id": "0003920115435319296-0000000001",
-                    "pagingToken": "0003920115435319296-0000000001",
                     "topic": [
                       "AAAADwAAAARtaW50",
                       "AAAAEgAAAAAAAAAAdWnjmUMJ9zn2dIq1d6OhQ7XzqNT2ppF+9OgDmID0yhQ\u003d",
@@ -423,6 +426,8 @@ public class SorobanServerTest
                     ],
                     "value": "AAAACgAAAAAAAAAAAAAJGE5yoAA\u003d",
                     "inSuccessfulContractCall": true,
+                    "operationIndex": 3,
+                    "transactionIndex": 4,
                     "txHash": "318915004f904a36fddcefa8d4935ab21db7848a5a5e528815672968125a79a8"
                   },
                   {
@@ -431,7 +436,6 @@ public class SorobanServerTest
                     "ledgerClosedAt": "2024-08-06T10:10:58Z",
                     "contractId": "CDYTK2FLRHT3KJ6RVAAABI4A7Y2XERCWN3FT5II7FHONDKPQVEAZ33YI",
                     "id": "0003920124025257984-0000000001",
-                    "pagingToken": "0003920124025257984-0000000001",
                     "topic": [
                       "AAAADwAAAARtaW50",
                       "AAAAEgAAAAAAAAAAdWnjmUMJ9zn2dIq1d6OhQ7XzqNT2ppF+9OgDmID0yhQ\u003d",
@@ -439,6 +443,8 @@ public class SorobanServerTest
                     ],
                     "value": "AAAACgAAAAAAAAAAAAAJGE5yoAA\u003d",
                     "inSuccessfulContractCall": true,
+                    "operationIndex": 5,
+                    "transactionIndex": 6,
                     "txHash": "944d99fd572b8541f5c0ce95881b844d79144fe9a5cef2aea1cf94fb7c91f1f7"
                   },
                   {
@@ -447,7 +453,6 @@ public class SorobanServerTest
                     "ledgerClosedAt": "2024-08-06T10:38:23Z",
                     "contractId": "CDV6IIE2DFFGB3GKAG7YYSKBO4PFDAZ76GRHXKSOBBIG64NNHMMRCRXH",
                     "id": "0003921464055050240-0000000001",
-                    "pagingToken": "0003921464055050240-0000000001",
                     "topic": [
                       "AAAADwAAAAdhcHByb3ZlAA\u003d\u003d",
                       "AAAAEgAAAAAAAAAAWoM+w+i/0MLTSydKU896zcL4/EhYLVMHlSxIzY+ucJs\u003d",
@@ -455,10 +460,15 @@ public class SorobanServerTest
                     ],
                     "value": "AAAAEAAAAAEAAAACAAAACgAAAAAAAAAAAAQdH3d3yKkAAAADABD7yA\u003d\u003d",
                     "inSuccessfulContractCall": true,
+                    "operationIndex": 7,
+                    "transactionIndex": 8,
                     "txHash": "64bd9d003dbc4c9f766206dee34d57285322eeee6c5acb6d2a31d2668d88c2fd"
                   }
                 ],
                 "latestLedger": 913609,
+                "oldestLedger": 2175664,
+                "latestLedgerCloseTime": "1751862824",
+                "oldestLedgerCloseTime": "1751853705",
                 "cursor": "0003920046715838464-0000000001",
               }
             }
@@ -470,6 +480,9 @@ public class SorobanServerTest
         Assert.IsNotNull(eventsResponse);
         Assert.IsNotNull(eventsResponse.Events);
         Assert.AreEqual(913609L, eventsResponse.LatestLedger);
+        Assert.AreEqual(2175664L, eventsResponse.OldestLedger);
+        Assert.AreEqual(1751862824L, eventsResponse.LatestLedgerCloseTime);
+        Assert.AreEqual(1751853705L, eventsResponse.OldestLedgerCloseTime);
         Assert.AreEqual("0003920046715838464-0000000001", eventsResponse.Cursor);
         Assert.AreEqual(4, eventsResponse.Events.Length);
         var event1 = eventsResponse.Events[0];
@@ -480,7 +493,6 @@ public class SorobanServerTest
         Assert.AreEqual("2024-08-06T10:09:22Z", event1.LedgerClosedAt);
         Assert.AreEqual("CASCLAHV7E7H3BOGQIW5HIC3H6WVDOTOQRTRMXYSTKJHXOORP3DNATY2", event1.ContractId);
         Assert.AreEqual("0003920046715838464-0000000001", event1.Id);
-        Assert.AreEqual("0003920046715838464-0000000001", event1.PagingToken);
         Assert.AreEqual(2, event1.Topics.Length);
         Assert.AreEqual("AAAADwAAAAhTVFJfQ0VSVA==", event1.Topics[0]);
         Assert.AreEqual("AAAADwAAAAhzdHJfY2VydA==", event1.Topics[1]);
@@ -488,6 +500,8 @@ public class SorobanServerTest
             "AAAAEQAAAAEAAAADAAAADwAAAARoYXNoAAAADgAAAEAzYjdkODUxYjVjNmMyMTNmNzUyYzdmNzJhNDA0Yjg5NGFiZGU2NDY2NDhjMzU0MmQ3MDRlMjI4OTMwNmU1MTFhAAAADwAAAAZwYXJlbnQAAAAAAA4AAAAAAAAADwAAAAd2ZXJzaW9uAAAAAAMAAAAA",
             event1.Value);
         Assert.IsTrue(event1.InSuccessfulContractCall);
+        Assert.AreEqual(2U, event1.TransactionIndex);
+        Assert.AreEqual(1U, event1.OperationIndex);
         Assert.AreEqual("9f6cf2cf2d1dd41af039325503ba98daf3cfa10d0079cd2c50a28355fb1b4af2", event1.TransactionHash);
 
         var event2 = eventsResponse.Events[1];
@@ -497,13 +511,14 @@ public class SorobanServerTest
         Assert.AreEqual("2024-08-06T10:10:47Z", event2.LedgerClosedAt);
         Assert.AreEqual("CDTJALOV4KLSPEMNFHKYSG4WOTN7FCN4A2JOKRPVCQYEHLUEH2YUJF5R", event2.ContractId);
         Assert.AreEqual("0003920115435319296-0000000001", event2.Id);
-        Assert.AreEqual("0003920115435319296-0000000001", event2.PagingToken);
         Assert.AreEqual(3, event2.Topics.Length);
         Assert.AreEqual("AAAADwAAAARtaW50", event2.Topics[0]);
         Assert.AreEqual("AAAAEgAAAAAAAAAAdWnjmUMJ9zn2dIq1d6OhQ7XzqNT2ppF+9OgDmID0yhQ=", event2.Topics[1]);
         Assert.AreEqual("AAAAEgAAAAAAAAAAoM2uDbnOXB4fd/4Y3ZRlbiis4zPp1sdQNyQHWQuvzq4=", event2.Topics[2]);
         Assert.AreEqual("AAAACgAAAAAAAAAAAAAJGE5yoAA=", event2.Value);
         Assert.IsTrue(event2.InSuccessfulContractCall);
+        Assert.AreEqual(4U, event2.TransactionIndex);
+        Assert.AreEqual(3U, event2.OperationIndex);
         Assert.AreEqual("318915004f904a36fddcefa8d4935ab21db7848a5a5e528815672968125a79a8", event2.TransactionHash);
 
         var event3 = eventsResponse.Events[2];
@@ -513,13 +528,14 @@ public class SorobanServerTest
         Assert.AreEqual("2024-08-06T10:10:58Z", event3.LedgerClosedAt);
         Assert.AreEqual("CDYTK2FLRHT3KJ6RVAAABI4A7Y2XERCWN3FT5II7FHONDKPQVEAZ33YI", event3.ContractId);
         Assert.AreEqual("0003920124025257984-0000000001", event3.Id);
-        Assert.AreEqual("0003920124025257984-0000000001", event3.PagingToken);
         Assert.AreEqual(3, event3.Topics.Length);
         Assert.AreEqual("AAAADwAAAARtaW50", event3.Topics[0]);
         Assert.AreEqual("AAAAEgAAAAAAAAAAdWnjmUMJ9zn2dIq1d6OhQ7XzqNT2ppF+9OgDmID0yhQ=", event3.Topics[1]);
         Assert.AreEqual("AAAAEgAAAAAAAAAAdT55ljEK4qTy1Y7Fw9KtdAAZIBkrd2p7IX0ZByhSO2k=", event3.Topics[2]);
         Assert.AreEqual("AAAACgAAAAAAAAAAAAAJGE5yoAA=", event3.Value);
         Assert.IsTrue(event3.InSuccessfulContractCall);
+        Assert.AreEqual(6U, event3.TransactionIndex);
+        Assert.AreEqual(5U, event3.OperationIndex);
         Assert.AreEqual("944d99fd572b8541f5c0ce95881b844d79144fe9a5cef2aea1cf94fb7c91f1f7", event3.TransactionHash);
 
         var event4 = eventsResponse.Events[3];
@@ -529,13 +545,15 @@ public class SorobanServerTest
         Assert.AreEqual("2024-08-06T10:38:23Z", event4.LedgerClosedAt);
         Assert.AreEqual("CDV6IIE2DFFGB3GKAG7YYSKBO4PFDAZ76GRHXKSOBBIG64NNHMMRCRXH", event4.ContractId);
         Assert.AreEqual("0003921464055050240-0000000001", event4.Id);
-        Assert.AreEqual("0003921464055050240-0000000001", event4.PagingToken);
         Assert.AreEqual(3, event4.Topics.Length);
         Assert.AreEqual("AAAADwAAAAdhcHByb3ZlAA==", event4.Topics[0]);
         Assert.AreEqual("AAAAEgAAAAAAAAAAWoM+w+i/0MLTSydKU896zcL4/EhYLVMHlSxIzY+ucJs=", event4.Topics[1]);
         Assert.AreEqual("AAAAEgAAAAGPj5dVA0lfIe7VhCeJwcQ68vhwUcgQjj7XNcpMoUn7Hw==", event4.Topics[2]);
         Assert.AreEqual("AAAAEAAAAAEAAAACAAAACgAAAAAAAAAAAAQdH3d3yKkAAAADABD7yA==", event4.Value);
         Assert.IsTrue(event4.InSuccessfulContractCall);
+        Assert.AreEqual(8U, event4.TransactionIndex);
+        Assert.AreEqual(7U, event4.OperationIndex);
+
         Assert.AreEqual("64bd9d003dbc4c9f766206dee34d57285322eeee6c5acb6d2a31d2668d88c2fd", event4.TransactionHash);
     }
 
@@ -623,9 +641,9 @@ public class SorobanServerTest
 
         Assert.IsInstanceOfType(ledgerEntry.Key, typeof(SCLedgerKeyContractInstance));
         Assert.AreEqual("CDSUR2JFKSUORJLUA2FISW7P6ALDTS2PDK6AYQZ7G4CSY5WZS5QVSM47",
-            ((SCContractId)ledgerKey.Contract).InnerValue);
+            ((ScContractId)ledgerKey.Contract).InnerValue);
         Assert.AreEqual("CDSUR2JFKSUORJLUA2FISW7P6ALDTS2PDK6AYQZ7G4CSY5WZS5QVSM47",
-            ((SCContractId)ledgerEntry.Contract).InnerValue);
+            ((ScContractId)ledgerEntry.Contract).InnerValue);
         Assert.IsNull(ledgerEntry.LedgerExtensionV1);
         Assert.AreEqual(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT, ledgerKey.Durability.InnerValue);
         Assert.AreEqual(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT,
@@ -887,8 +905,8 @@ public class SorobanServerTest
         var ledgerKey = response.LedgerKeys[0] as LedgerKeyClaimableBalance;
         Assert.IsNotNull(ledgerEntry);
         Assert.IsNotNull(ledgerKey);
-        Assert.AreEqual("299a32106238f3b2d84d4142783fe320253bcda775d1bfb7accdb533021ddccf",
-            ledgerKey.BalanceId.ToLower());
+        Assert.AreEqual("00000000299A32106238F3B2D84D4142783FE320253BCDA775D1BFB7ACCDB533021DDCCF",
+            ledgerKey.BalanceId.ToUpper());
         Assert.AreEqual(457593U, ledgerEntry.LastModifiedLedgerSeq);
         Assert.AreEqual("native", ledgerEntry.Asset.Type);
         Assert.AreEqual(200000000L, ledgerEntry.Amount);
@@ -1061,7 +1079,11 @@ public class SorobanServerTest
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
-        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+        var response = await sorobanServer.SimulateTransaction(
+            CreateDummyTransaction(sign: false),
+            resourceConfig: null,
+            authMode: AuthMode.RECORD_ALLOW_NONROOT
+        );
 
         Assert.IsNotNull(response);
 
@@ -1069,12 +1091,12 @@ public class SorobanServerTest
         var sorobanData = response.SorobanTransactionData;
 
         Assert.IsNotNull(sorobanData);
-        Assert.IsInstanceOfType(sorobanData.ExtensionPoint, typeof(ExtensionPointZero));
+        Assert.IsNull(sorobanData.Extension);
         Assert.AreEqual(2L, sorobanData.ResourceFee);
         var sorobanResources = sorobanData.Resources;
         Assert.IsNotNull(sorobanResources);
         Assert.AreEqual(1976262U, sorobanResources.Instructions);
-        Assert.AreEqual(1428U, sorobanResources.ReadBytes);
+        Assert.AreEqual(1428U, sorobanResources.DiskReadBytes);
         Assert.AreEqual(136U, sorobanResources.WriteBytes);
         var footprint = sorobanResources.Footprint;
         Assert.IsNotNull(footprint);
@@ -1085,7 +1107,7 @@ public class SorobanServerTest
         if (readOnly0
             is LedgerKeyContractData
             {
-                Contract: SCContractId contractId,
+                Contract: ScContractId contractId,
                 Key: SCLedgerKeyContractInstance,
             } contractData)
         {
@@ -1108,12 +1130,12 @@ public class SorobanServerTest
             Assert.Fail();
         }
 
-        if (readWrite is LedgerKeyContractData { Contract: SCContractId contractId1, Key: SCVec vec } contractData1)
+        if (readWrite is LedgerKeyContractData { Contract: ScContractId contractId1, Key: SCVec vec } contractData1)
         {
             Assert.AreEqual("CDU3PZ4LXVETIFVLS33RDXLD63JZ5GXS7PCV2DJ7BBT6EBPA2AB7YR5H", contractId1.InnerValue);
             Assert.AreEqual(2, vec.InnerValue.Length);
             Assert.IsTrue(vec.InnerValue[0] is SCSymbol { InnerValue: "Counter" });
-            Assert.IsTrue(vec.InnerValue[1] is SCAccountId
+            Assert.IsTrue(vec.InnerValue[1] is ScAccountId
             {
                 InnerValue: "GBMLPRFCZDZJPKUPHUSHCKA737GOZL7ERZLGGMJ6YGHBFJZ6ZKMKCZTM",
             });
@@ -1157,6 +1179,62 @@ public class SorobanServerTest
         Assert.AreEqual(
             "AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
             stateChanges.After);
+    }
+
+    [TestMethod]
+    // This test only focuses on testing the SorobanTransactionDataExt
+    public async Task TestSimulateTransactionProtocol23Success()
+    {
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "transactionData": "AAAAAQAAAAIAAACGAAACKgAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAABZQAAAAAAAAAbw==",
+                    "minResourceFee": "58181",
+                    "events": [
+                        "AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=",
+                        "AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ="
+                    ],
+                    "results": [
+                        {
+                            "auth": [
+                                "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA"
+                            ],
+                            "xdr": "AAAAAwAAABQ="
+                        }
+                    ],
+                    "stateChanges": [
+                        {
+                            "type": "created",
+                            "key": "AAAAAAAAAABuaCbVXZ2DlXWarV6UxwbW3GNJgpn3ASChIFp5bxSIWg==",
+                            "before": null,
+                            "after": "AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+                        }
+                    ],
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        var response = await sorobanServer.SimulateTransaction(
+            CreateDummyTransaction(false)
+        );
+
+        Assert.IsNotNull(response);
+
+        // SorobanTransactionData
+        var sorobanData = response.SorobanTransactionData;
+
+        Assert.IsNotNull(sorobanData);
+
+        var extension = sorobanData.Extension;
+        Assert.IsNotNull(extension);
+        Assert.AreEqual(2, extension.ArchivedSorobanEntries.Length);
+        Assert.AreEqual(134U, extension.ArchivedSorobanEntries[0]);
+        Assert.AreEqual(554U, extension.ArchivedSorobanEntries[1]);
     }
 
     [TestMethod]
@@ -1332,7 +1410,23 @@ public class SorobanServerTest
                 "resultXdr": "AAAAAAARFy8AAAAAAAAAAQAAAAAAAAAYAAAAAMu8SHUN67hTUJOz3q+IrH9M/4dCVXaljeK6x1Ss20YWAAAAAA==",
                 "resultMetaXdr": "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",
                 "ledger": 2540064,
-                "createdAt": 1700086268
+                "createdAt": 1700086268,
+                "events": {
+                    "diagnosticEventsXdr": [
+                        "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAACGNwdV9pbnNuAAAABQAAAAAAM2BC",
+                        "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAD21heF9yd19rZXlfYnl0ZQAAAAAFAAAAAAAAAFQ=",
+                        "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAEG1heF9yd19jb2RlX2J5dGUAAAAFAAAAAAAAQEw="
+                    ],
+                    "transactionEventsXdr": [
+                        "AAAAAAAAAAAAAAAB15KLcsJwPM/q9+uf9O9NUEpVqLl5/JtFDqLIQrTRzmEAAAABAAAAAAAAAAIAAAAPAAAAA2ZlZQAAAAASAAAAAAAAAADte5nJrehJq/pu3qlV/bASRSOiJVXdNC+gQW/nxVNWuQAAAAoAAAAAAAAAAAAAAAAAWOuO",
+                        "AAAAAQAAAAAAAAAB15KLcsJwPM/q9+uf9O9NUEpVqLl5/JtFDqLIQrTRzmEAAAABAAAAAAAAAAIAAAAPAAAAA2ZlZQAAAAASAAAAAAAAAADte5nJrehJq/pu3qlV/bASRSOiJVXdNC+gQW/nxVNWuQAAAAr/////////////////8/qT"
+                    ],
+                    "contractEventsXdr": [
+                        [
+                            "AAAAAAAAAAHf65G24dyt1q+Xu3xFX5fzdHcKf3j2lXO5n11b+EnOfAAAAAEAAAAAAAAAAQAAAA8AAAAEaW5pdAAAABAAAAABAAAABQAAAAUAAAAAAAaRmQAAABIAAAAAAAAAACcMY2GvjF3igK326WyiU8hv107p9YxvAS29gt1fml2WAAAAEgAAAAAAAAAAyewwXk7lqpxiQNYP3VlZ1EEprNK+dSBV4KQ9iluwbx8AAAASAAAAAAAAAAAY2Rm1IXXndEI0rYg2bt1/rw2mi1SYOUT2qeKPvf56cgAAABIAAAABusKzizgXRsUWKJQRrpWHAWG/yujQ6LBT/pMDljEiAeg="
+                        ]
+                    ]
+                }
               }
             }
             """;
@@ -1357,6 +1451,46 @@ public class SorobanServerTest
             response.ResultMetaXdr);
         Assert.AreEqual(2540064L, response.Ledger);
         Assert.AreEqual(1700086268, response.CreatedAt);
+
+        var meta = response.TransactionMeta;
+        Assert.IsNotNull(meta);
+        Assert.IsInstanceOfType(meta, typeof(TransactionMetaV3));
+        
+        #region Events
+        var events = response.Events;
+        Assert.IsNotNull(events);
+        var transactionEventsXdr = events.TransactionEventsXdr;
+        Assert.IsNotNull(transactionEventsXdr);
+        Assert.AreEqual(2, transactionEventsXdr.Length);
+        Assert.AreEqual(
+            "AAAAAAAAAAAAAAAB15KLcsJwPM/q9+uf9O9NUEpVqLl5/JtFDqLIQrTRzmEAAAABAAAAAAAAAAIAAAAPAAAAA2ZlZQAAAAASAAAAAAAAAADte5nJrehJq/pu3qlV/bASRSOiJVXdNC+gQW/nxVNWuQAAAAoAAAAAAAAAAAAAAAAAWOuO",
+            transactionEventsXdr[0]);
+        Assert.AreEqual(
+            "AAAAAQAAAAAAAAAB15KLcsJwPM/q9+uf9O9NUEpVqLl5/JtFDqLIQrTRzmEAAAABAAAAAAAAAAIAAAAPAAAAA2ZlZQAAAAASAAAAAAAAAADte5nJrehJq/pu3qlV/bASRSOiJVXdNC+gQW/nxVNWuQAAAAr/////////////////8/qT",
+            transactionEventsXdr[1]);
+
+        var diagnosticEventsXdr = events.DiagnosticEventsXdr;
+        Assert.IsNotNull(diagnosticEventsXdr);
+        Assert.AreEqual(3, diagnosticEventsXdr.Length);
+        Assert.AreEqual(
+            "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAACGNwdV9pbnNuAAAABQAAAAAAM2BC",
+            diagnosticEventsXdr[0]);
+        Assert.AreEqual(
+            "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAD21heF9yd19rZXlfYnl0ZQAAAAAFAAAAAAAAAFQ=",
+            diagnosticEventsXdr[1]);
+        Assert.AreEqual(
+            "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAEG1heF9yd19jb2RlX2J5dGUAAAAFAAAAAAAAQEw=",
+            diagnosticEventsXdr[2]);
+
+        var contractEventsXdr = events.ContractEventsXdr;
+        Assert.IsNotNull(contractEventsXdr);
+        Assert.AreEqual(1, contractEventsXdr.Length);
+        Assert.AreEqual(1, contractEventsXdr[0].Length);
+        Assert.AreEqual(
+            "AAAAAAAAAAHf65G24dyt1q+Xu3xFX5fzdHcKf3j2lXO5n11b+EnOfAAAAAEAAAAAAAAAAQAAAA8AAAAEaW5pdAAAABAAAAABAAAABQAAAAUAAAAAAAaRmQAAABIAAAAAAAAAACcMY2GvjF3igK326WyiU8hv107p9YxvAS29gt1fml2WAAAAEgAAAAAAAAAAyewwXk7lqpxiQNYP3VlZ1EEprNK+dSBV4KQ9iluwbx8AAAASAAAAAAAAAAAY2Rm1IXXndEI0rYg2bt1/rw2mi1SYOUT2qeKPvf56cgAAABIAAAABusKzizgXRsUWKJQRrpWHAWG/yujQ6LBT/pMDljEiAeg=",
+            contractEventsXdr[0][0]);
+        #endregion
+
     }
 
     [TestMethod]
@@ -1432,7 +1566,23 @@ public class SorobanServerTest
                       "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAE21heF9lbWl0X2V2ZW50X2J5dGUAAAAABQAAAAAAAAAA"
                     ],
                     "ledger": 1888539,
-                    "createdAt": 1717166042
+                    "createdAt": 1717166042,
+                    "events": {
+                        "diagnosticEventsXdr": [
+                            "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAEG1heF9yd19kYXRhX2J5dGUAAAAFAAAAAAAAAbg=",
+                            "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAEG1heF9yd19jb2RlX2J5dGUAAAAFAAAAAAAAQEw=",
+                            "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAE21heF9lbWl0X2V2ZW50X2J5dGUAAAAABQAAAAAAAAEE"
+                        ],
+                        "transactionEventsXdr": [
+                            "AAAAAAAAAAAAAAAB15KLcsJwPM/q9+uf9O9NUEpVqLl5/JtFDqLIQrTRzmEAAAABAAAAAAAAAAIAAAAPAAAAA2ZlZQAAAAASAAAAAAAAAADte5nJrehJq/pu3qlV/bASRSOiJVXdNC+gQW/nxVNWuQAAAAoAAAAAAAAAAAAAAAAAWOuO",
+                            "AAAAAQAAAAAAAAAB15KLcsJwPM/q9+uf9O9NUEpVqLl5/JtFDqLIQrTRzmEAAAABAAAAAAAAAAIAAAAPAAAAA2ZlZQAAAAASAAAAAAAAAADte5nJrehJq/pu3qlV/bASRSOiJVXdNC+gQW/nxVNWuQAAAAr/////////////////8/qT"
+                        ],
+                        "contractEventsXdr": [
+                            [
+                                "AAAAAAAAAAHf65G24dyt1q+Xu3xFX5fzdHcKf3j2lXO5n11b+EnOfAAAAAEAAAAAAAAAAQAAAA8AAAAEaW5pdAAAABAAAAABAAAABQAAAAUAAAAAAAaRmQAAABIAAAAAAAAAACcMY2GvjF3igK326WyiU8hv107p9YxvAS29gt1fml2WAAAAEgAAAAAAAAAAyewwXk7lqpxiQNYP3VlZ1EEprNK+dSBV4KQ9iluwbx8AAAASAAAAAAAAAAAY2Rm1IXXndEI0rYg2bt1/rw2mi1SYOUT2qeKPvf56cgAAABIAAAABusKzizgXRsUWKJQRrpWHAWG/yujQ6LBT/pMDljEiAeg="
+                            ]
+                        ]
+                    }
                   },
                   {
                     "status": "FAILED",
@@ -1526,9 +1676,12 @@ public class SorobanServerTest
         Assert.AreEqual(
             "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",
             tx4.ResultMetaXdr);
+
+        #region Tx4DiagnosticEvents
         var tx4DiagnosticEventsXdr = tx4.DiagnosticEventsXdr;
         Assert.IsNotNull(tx4DiagnosticEventsXdr);
         Assert.AreEqual(19, tx4DiagnosticEventsXdr.Length);
+        
         Assert.AreEqual(
             "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAACnJlYWRfZW50cnkAAAAAAAUAAAAAAAAAAg==",
             tx4DiagnosticEventsXdr[0]);
@@ -1586,6 +1739,43 @@ public class SorobanServerTest
         Assert.AreEqual(
             "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAE21heF9lbWl0X2V2ZW50X2J5dGUAAAAABQAAAAAAAAAA",
             tx4DiagnosticEventsXdr[18]);
+
+        #endregion
+
+        #region Tx4Events
+        var tx4Events = tx4.Events;
+        Assert.IsNotNull(tx4Events);
+        var tx4TransactionEvents = tx4Events.TransactionEventsXdr;
+        Assert.IsNotNull(tx4TransactionEvents);
+        Assert.AreEqual(2, tx4TransactionEvents.Length);
+        Assert.AreEqual(
+            "AAAAAAAAAAAAAAAB15KLcsJwPM/q9+uf9O9NUEpVqLl5/JtFDqLIQrTRzmEAAAABAAAAAAAAAAIAAAAPAAAAA2ZlZQAAAAASAAAAAAAAAADte5nJrehJq/pu3qlV/bASRSOiJVXdNC+gQW/nxVNWuQAAAAoAAAAAAAAAAAAAAAAAWOuO",
+            tx4TransactionEvents[0]);
+        Assert.AreEqual(
+            "AAAAAQAAAAAAAAAB15KLcsJwPM/q9+uf9O9NUEpVqLl5/JtFDqLIQrTRzmEAAAABAAAAAAAAAAIAAAAPAAAAA2ZlZQAAAAASAAAAAAAAAADte5nJrehJq/pu3qlV/bASRSOiJVXdNC+gQW/nxVNWuQAAAAr/////////////////8/qT",
+            tx4TransactionEvents[1]);
+
+        var tx4DiagnosticEvents = tx4Events.DiagnosticEventsXdr;
+        Assert.IsNotNull(tx4DiagnosticEvents);
+        Assert.AreEqual(3, tx4DiagnosticEvents.Length);
+        Assert.AreEqual(
+            "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAEG1heF9yd19kYXRhX2J5dGUAAAAFAAAAAAAAAbg=",
+            tx4DiagnosticEvents[0]);
+        Assert.AreEqual(
+            "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAEG1heF9yd19jb2RlX2J5dGUAAAAFAAAAAAAAQEw=",
+            tx4DiagnosticEvents[1]);
+        Assert.AreEqual(
+            "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAAE21heF9lbWl0X2V2ZW50X2J5dGUAAAAABQAAAAAAAAEE",
+            tx4DiagnosticEvents[2]);
+
+        var tx4ContractEvents = tx4Events.ContractEventsXdr;
+        Assert.IsNotNull(tx4ContractEvents);
+        Assert.AreEqual(1, tx4ContractEvents.Length);
+        Assert.AreEqual(1, tx4ContractEvents[0].Length);
+        Assert.AreEqual(
+            "AAAAAAAAAAHf65G24dyt1q+Xu3xFX5fzdHcKf3j2lXO5n11b+EnOfAAAAAEAAAAAAAAAAQAAAA8AAAAEaW5pdAAAABAAAAABAAAABQAAAAUAAAAAAAaRmQAAABIAAAAAAAAAACcMY2GvjF3igK326WyiU8hv107p9YxvAS29gt1fml2WAAAAEgAAAAAAAAAAyewwXk7lqpxiQNYP3VlZ1EEprNK+dSBV4KQ9iluwbx8AAAASAAAAAAAAAAAY2Rm1IXXndEI0rYg2bt1/rw2mi1SYOUT2qeKPvf56cgAAABIAAAABusKzizgXRsUWKJQRrpWHAWG/yujQ6LBT/pMDljEiAeg=",
+            tx4ContractEvents[0][0]);
+        #endregion
 
         var tx5 = transactions[4];
         Assert.AreEqual(TransactionInfo.TransactionStatus.FAILED, tx5.Status);
@@ -1682,7 +1872,23 @@ public class SorobanServerTest
                     "key": "AAAACAAAAA0=",
                     "xdr": "AAAACAAAAA0AAAAGAAAAAQAAAAAAAAAA",
                     "lastModifiedLedgerSeq": 575
-                  }
+                  },
+                  {
+                    "key": "AAAACAAAAA4=", // CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0
+                    "xdr": "AAAACAAAAA4AAAAL",
+                    "lastModifiedLedgerSeq": 575
+                  },
+                  {
+                    "key": "AAAACAAAAA8=",
+                    "xdr": "AAAACAAAAA8AAAAMAAAAAAAAEBs=", // CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0
+                    "lastModifiedLedgerSeq": 175
+                  },
+                  {
+                    "key": "AAAACAAAABA=",
+                    "xdr": "AAAACAAAABAAAAG8AAABuQAAADcAAAB7AAAADQ==", // CONFIG_SETTING_SCP_TIMING
+                    "lastModifiedLedgerSeq": 175
+                  },
+                  
                 ],
                 "latestLedger": 1172233
               }
@@ -1695,7 +1901,7 @@ public class SorobanServerTest
         var entries = response.LedgerEntries;
         Assert.IsNotNull(entries);
         Assert.AreEqual(1172233U, response.LatestLedger);
-        Assert.AreEqual(14, entries.Length);
+        Assert.AreEqual(17, entries.Length);
 
         var entry0 = entries[0] as ConfigSettingContractMaxSizeBytes;
         Assert.IsNotNull(entry0);
@@ -1710,21 +1916,21 @@ public class SorobanServerTest
 
         var entry2 = entries[2] as ConfigSettingContractLedgerCost;
         Assert.IsNotNull(entry2);
-        Assert.AreEqual(200U, entry2.LedgerMaxReadLedgerEntries);
-        Assert.AreEqual(500000U, entry2.LedgerMaxReadBytes);
+        Assert.AreEqual(200U, entry2.LedgerMaxDiskReadEntries);
+        Assert.AreEqual(500000U, entry2.LedgerMaxDiskReadBytes);
         Assert.AreEqual(125U, entry2.LedgerMaxWriteLedgerEntries);
         Assert.AreEqual(70000U, entry2.LedgerMaxWriteBytes);
-        Assert.AreEqual(40U, entry2.TxMaxReadLedgerEntries);
-        Assert.AreEqual(200000U, entry2.TxMaxReadBytes);
+        Assert.AreEqual(40U, entry2.TxMaxDiskReadEntries);
+        Assert.AreEqual(200000U, entry2.TxMaxDiskReadBytes);
         Assert.AreEqual(25U, entry2.TxMaxWriteLedgerEntries);
         Assert.AreEqual(66560U, entry2.TxMaxWriteBytes);
-        Assert.AreEqual(6250L, entry2.FeeReadLedgerEntry);
+        Assert.AreEqual(6250L, entry2.FeeDiskReadLedgerEntry);
         Assert.AreEqual(10000L, entry2.FeeWriteLedgerEntry);
-        Assert.AreEqual(1786L, entry2.FeeRead1Kb);
-        Assert.AreEqual(300000000L, entry2.BucketListTargetSizeBytes);
-        Assert.AreEqual(9836L, entry2.WriteFee1KbBucketListLow);
-        Assert.AreEqual(12116L, entry2.WriteFee1KbBucketListHigh);
-        Assert.AreEqual(5000U, entry2.BucketListWriteFeeGrowthFactor);
+        Assert.AreEqual(1786L, entry2.FeeDiskRead1Kb);
+        Assert.AreEqual(300000000L, entry2.SorobanStateTargetSizeBytes);
+        Assert.AreEqual(9836L, entry2.RentFee1KbSorobanStateSizeLow);
+        Assert.AreEqual(12116L, entry2.RentFee1KbSorobanStateSizeHigh);
+        Assert.AreEqual(5000U, entry2.SorobanStateRentFeeGrowthFactor);
 
         var entry3 = entries[3] as ConfigSettingContractHistoricalData;
         Assert.IsNotNull(entry3);
@@ -1817,8 +2023,8 @@ public class SorobanServerTest
         Assert.AreEqual(2103L, entry10.PersistentRentRateDenominator);
         Assert.AreEqual(4206L, entry10.TempRentRateDenominator);
         Assert.AreEqual(1000U, entry10.MaxEntriesToArchive);
-        Assert.AreEqual(30U, entry10.BucketListSizeWindowSampleSize);
-        Assert.AreEqual(64U, entry10.BucketListWindowSamplePeriod);
+        Assert.AreEqual(30U, entry10.LiveSorobanStateSizeWindowSampleSize);
+        Assert.AreEqual(64U, entry10.LiveSorobanStateSizeWindowSamplePeriod);
         Assert.AreEqual(100000U, entry10.EvictionScanSize);
         Assert.AreEqual(7U, entry10.StartingEvictionScanLevel);
 
@@ -1826,7 +2032,7 @@ public class SorobanServerTest
         Assert.IsNotNull(entry11);
         Assert.AreEqual(100U, entry11.LedgerMaxTxCount);
 
-        var entry12 = entries[12] as ConfigSettingBucketListSizeWindow;
+        var entry12 = entries[12] as ConfigSettingLiveSorobanStateSizeWindow;
         Assert.IsNotNull(entry12);
         Assert.AreEqual(30, entry12.InnerValue.Length);
         Assert.AreEqual(100UL, entry12.InnerValue[0]);
@@ -1838,6 +2044,23 @@ public class SorobanServerTest
         Assert.AreEqual(6U, entry13.BucketListLevel);
         Assert.AreEqual(true, entry13.IsCurrBucket);
         Assert.AreEqual(0UL, entry13.BucketFileOffset);
+
+        var entry14 = entries[14] as ConfigSettingContractParallelComputeV0;
+        Assert.IsNotNull(entry14);
+        Assert.AreEqual(11U, entry14.LedgerMaxDependentTxClusters);
+
+        var entry15 = entries[15] as ConfigSettingContractLedgerCostExtV0;
+        Assert.IsNotNull(entry15);
+        Assert.AreEqual(4123L, entry15.FeeWrite1Kb);
+        Assert.AreEqual(12U, entry15.TxMaxFootprintEntries);
+        
+        var entry16 = entries[16] as ConfigSettingScpTiming;
+        Assert.IsNotNull(entry16);
+        Assert.AreEqual(444U, entry16.LedgerTargetCloseTimeMilliseconds);
+        Assert.AreEqual(441U, entry16.NominationTimeoutInitialMilliseconds);
+        Assert.AreEqual(55U, entry16.NominationTimeoutIncrementMilliseconds);
+        Assert.AreEqual(123U, entry16.BallotTimeoutInitialMilliseconds);
+        Assert.AreEqual(13U, entry16.BallotTimeoutIncrementMilliseconds);
     }
 
     [TestMethod]

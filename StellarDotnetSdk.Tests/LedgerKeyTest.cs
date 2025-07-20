@@ -86,52 +86,29 @@ public class LedgerKeyTest
     }
 
     [TestMethod]
-    public void TestLedgerKeyClaimableBalanceStringConstructorValid()
+    [DataRow("00000000c582697b67cbec7f9ce64f4dc67bfb2bfd26318bb9f964f4d70e3f41f650b1e6")]
+    public void TestLedgerKeyClaimableBalanceStringConstructorValid(string id)
     {
-        const string balanceId = "d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780";
-        var ledgerKey = LedgerKey.ClaimableBalance(balanceId);
+        var ledgerKey = LedgerKey.ClaimableBalance(id);
 
         // Act
         var ledgerKeyXdrBase64 = ledgerKey.ToXdrBase64();
         var decodedLedgerKey = (LedgerKeyClaimableBalance)LedgerKey.FromXdrBase64(ledgerKeyXdrBase64);
 
         // Assert
-        Assert.AreEqual("d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780",
-            decodedLedgerKey.BalanceId.ToLower());
+        Assert.AreEqual(id, decodedLedgerKey.BalanceId.ToLower());
     }
 
     [TestMethod]
-    public void TestLedgerKeyClaimableBalanceStringConstructorInvalid()
+    [ExpectedException(typeof(ArgumentException))]
+    [DataRow("BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU")]
+    [DataRow("d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780")]
+    [DataRow("00d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780")]
+    public void TestLedgerKeyClaimableBalanceStringConstructorInvalid(string id)
     {
-        const string balanceId = "00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780";
-        var ex = Assert.ThrowsException<ArgumentException>(() =>
-            LedgerKey.ClaimableBalance(balanceId));
-        Assert.IsTrue(ex.Message.Contains("Claimable balance ID cannot exceed 64 characters."));
+        _ = LedgerKey.ClaimableBalance(id);
     }
-    
-    [TestMethod]
-    public void TestLedgerKeyClaimableBalanceByteArrayConstructorValid()
-    {
-        const string balanceId = "d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780";
-        var ledgerKey = LedgerKey.ClaimableBalance(Convert.FromHexString(balanceId));
 
-        // Act
-        var ledgerKeyXdrBase64 = ledgerKey.ToXdrBase64();
-        var decodedLedgerKey = (LedgerKeyClaimableBalance)LedgerKey.FromXdrBase64(ledgerKeyXdrBase64);
-
-        // Assert
-        Assert.AreEqual(balanceId, decodedLedgerKey.BalanceId.ToLower());
-    }
-    
-    [TestMethod]
-    public void TestLedgerKeyClaimableBalanceByteArrayConstructorInvalid()
-    {
-        const string balanceId = "00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780";
-        var ex = Assert.ThrowsException<ArgumentException>(() =>
-            LedgerKey.ClaimableBalance(Convert.FromHexString(balanceId)));
-        Assert.IsTrue(ex.Message.Contains("Claimable balance ID byte array must have exactly 32 bytes."));
-    }
-    
     [TestMethod]
     public void TestLedgerKeyLiquidityPool()
     {
@@ -150,7 +127,7 @@ public class LedgerKeyTest
     [TestMethod]
     public void TestLedgerKeyContractDataWithContractBeingContractId()
     {
-        var contractId = new SCContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
+        var contractId = new ScContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
         var key = new SCSymbol("kk");
 
         var durability = ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT);
@@ -161,7 +138,7 @@ public class LedgerKeyTest
         var decodedLedgerKey = (LedgerKeyContractData)LedgerKey.FromXdrBase64(ledgerKeyXdrBase64);
 
         // Assert
-        Assert.AreEqual(contractId.InnerValue, ((SCContractId)decodedLedgerKey.Contract).InnerValue);
+        Assert.AreEqual(contractId.InnerValue, ((ScContractId)decodedLedgerKey.Contract).InnerValue);
         Assert.AreEqual(key.InnerValue, ((SCSymbol)decodedLedgerKey.Key).InnerValue);
         Assert.AreEqual(ledgerKey.Durability.InnerValue, decodedLedgerKey.Durability.InnerValue);
     }
@@ -169,7 +146,7 @@ public class LedgerKeyTest
     [TestMethod]
     public void TestLedgerKeyContractDataWithWithContractBeingAccountId()
     {
-        var accountId = new SCAccountId("GCZFMH32MF5EAWETZTKF3ZV5SEVJPI53UEMDNSW55WBR75GMZJU4U573");
+        var accountId = new ScAccountId("GCZFMH32MF5EAWETZTKF3ZV5SEVJPI53UEMDNSW55WBR75GMZJU4U573");
         var key = new SCInt64(122);
 
         var durability = ContractDataDurability.Create(ContractDataDurability.ContractDataDurabilityEnum.TEMPORARY);
@@ -180,7 +157,7 @@ public class LedgerKeyTest
         var decodedLedgerKey = (LedgerKeyContractData)LedgerKey.FromXdrBase64(ledgerKeyXdrBase64);
 
         // Assert
-        Assert.AreEqual(accountId.InnerValue, ((SCAccountId)decodedLedgerKey.Contract).InnerValue);
+        Assert.AreEqual(accountId.InnerValue, ((ScAccountId)decodedLedgerKey.Contract).InnerValue);
         Assert.AreEqual(key.InnerValue, ((SCInt64)decodedLedgerKey.Key).InnerValue);
         Assert.AreEqual(ledgerKey.Durability.InnerValue, decodedLedgerKey.Durability.InnerValue);
     }
@@ -209,11 +186,28 @@ public class LedgerKeyTest
     }
 
     [TestMethod]
-    public void TestLedgerKeyConfigSetting()
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_COMPUTE_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_EVENTS_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_BANDWIDTH_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_COST_PARAMS_CPU_INSTRUCTIONS)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_COST_PARAMS_MEMORY_BYTES)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_STATE_ARCHIVAL)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_EXECUTION_LANES)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_EVICTION_ITERATOR)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0)]
+    [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_SCP_TIMING)]
+    public void TestLedgerKeyConfigSetting(ConfigSettingID.ConfigSettingIDEnum configSettingId)
     {
         var ledgerKey = (LedgerKeyConfigSetting)LedgerKey.ConfigSetting(new ConfigSettingID
         {
-            InnerValue = ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_STATE_ARCHIVAL,
+            InnerValue = configSettingId,
         });
 
         // Act

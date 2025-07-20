@@ -23,39 +23,59 @@ public class SorobanTransactionData
         Resources = new SorobanResources(footprint, 0, 0, 0);
     }
 
-    public SorobanTransactionData(SorobanResources resources, long resourceFee, ExtensionPoint? extensionPoint = null)
+    public SorobanTransactionData(
+        SorobanResources resources,
+        long resourceFee,
+        SorobanResourceExtensionV0? extension = null
+    )
     {
         Resources = resources;
         ResourceFee = resourceFee;
-        if (extensionPoint != null)
-        {
-            ExtensionPoint = extensionPoint;
-        }
+        Extension = extension;
     }
 
-    public ExtensionPoint ExtensionPoint { get; } = new ExtensionPointZero();
+    public SorobanResourceExtensionV0? Extension { get; private set; }
     public SorobanResources Resources { get; }
     public long ResourceFee { get; }
 
     public Xdr.SorobanTransactionData ToXdr()
     {
-        return new Xdr.SorobanTransactionData
+        var data = new Xdr.SorobanTransactionData
         {
-            Ext = ExtensionPoint.ToXdr(),
+            Ext = new Xdr.SorobanTransactionData.SorobanTransactionDataExt
+            {
+                Discriminant = 0,
+            },
             Resources = Resources.ToXdr(),
             ResourceFee = new Int64(ResourceFee),
         };
+        if (Extension != null)
+        {
+            data.Ext = new Xdr.SorobanTransactionData.SorobanTransactionDataExt
+            {
+                Discriminant = 1,
+                ResourceExt = Extension.ToXdr(),
+            };
+        }
+        return data;
     }
 
     /// <summary>
     ///     Converts an <c>xdr.SorobanTransactionData</c> object to a <c>SorobanTransactionData</c> object.
     /// </summary>
-    /// <param name="xdrSorobanTransactionData">The <c>xdr.SorobanTransactionData</c> to be converted.</param>
+    /// <param name="xdrData">The <c>xdr.SorobanTransactionData</c> to be converted.</param>
     /// <returns>A <c>SorobanTransactionData</c> object equivalent to the specified <c>xdr.SorobanTransactionData</c> object.</returns>
-    public static SorobanTransactionData FromXdr(Xdr.SorobanTransactionData xdrSorobanTransactionData)
+    public static SorobanTransactionData FromXdr(Xdr.SorobanTransactionData xdrData)
     {
-        return new SorobanTransactionData(SorobanResources.FromXdr(xdrSorobanTransactionData.Resources),
-            xdrSorobanTransactionData.ResourceFee.InnerValue, ExtensionPoint.FromXdr(xdrSorobanTransactionData.Ext));
+        var data = new SorobanTransactionData(
+            SorobanResources.FromXdr(xdrData.Resources),
+            xdrData.ResourceFee.InnerValue
+        );
+        if (xdrData.Ext.Discriminant == 1)
+        {
+            data.Extension = SorobanResourceExtensionV0.FromXdr(xdrData.Ext.ResourceExt);
+        }
+        return data;
     }
 
     /// <summary>

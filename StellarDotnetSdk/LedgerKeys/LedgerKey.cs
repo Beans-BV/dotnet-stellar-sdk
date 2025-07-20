@@ -2,8 +2,8 @@ using System;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.LiquidityPool;
+using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
-using SCAddress = StellarDotnetSdk.Soroban.SCAddress;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 
 namespace StellarDotnetSdk.LedgerKeys;
@@ -17,19 +17,11 @@ public abstract class LedgerKey
         return new LedgerKeyAccount(account);
     }
 
-    public static LedgerKey ClaimableBalance(byte[] balanceId)
+    /// <summary>Constructs a new <c>LedgerKeyClaimableBalance</c> from a claimable balance ID.</summary>
+    /// <param name="balanceId">A hex-encoded claimable balance ID (0000...).</param>
+    public static LedgerKey ClaimableBalance(string balanceId)
     {
         return new LedgerKeyClaimableBalance(balanceId);
-    }
-
-    /// <summary>Constructs a new <c>LedgerKeyClaimableBalance</c> from the given hex-encoded claimable balance ID.</summary>
-    /// <param name="balanceIdHexString">
-    ///     Hex-encoded ID of the claimable balance entry.
-    ///     For example: <c>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</c>.
-    /// </param>
-    public static LedgerKey ClaimableBalance(string balanceIdHexString)
-    {
-        return new LedgerKeyClaimableBalance(balanceIdHexString);
     }
 
     public static LedgerKey Data(KeyPair account, string dataName)
@@ -52,7 +44,7 @@ public abstract class LedgerKey
         return new LedgerKeyLiquidityPool(poolId);
     }
 
-    public static LedgerKey ContractData(SCAddress contractId, SCVal key, ContractDataDurability durability)
+    public static LedgerKey ContractData(ScAddress contractId, SCVal key, ContractDataDurability durability)
     {
         return new LedgerKeyContractData(contractId, key, durability);
     }

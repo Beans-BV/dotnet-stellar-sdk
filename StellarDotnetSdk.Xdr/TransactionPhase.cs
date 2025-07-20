@@ -9,6 +9,8 @@ namespace StellarDotnetSdk.Xdr;
 //  {
 //  case 0:
 //      TxSetComponent v0Components<>;
+//  case 1:
+//      ParallelTxsComponent parallelTxsComponent;
 //  };
 
 //  ===========================================================================
@@ -17,6 +19,7 @@ public class TransactionPhase
     public int Discriminant { get; set; }
 
     public TxSetComponent[] V0Components { get; set; }
+    public ParallelTxsComponent ParallelTxsComponent { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, TransactionPhase encodedTransactionPhase)
     {
@@ -30,6 +33,9 @@ public class TransactionPhase
                 {
                     TxSetComponent.Encode(stream, encodedTransactionPhase.V0Components[i]);
                 }
+                break;
+            case 1:
+                ParallelTxsComponent.Encode(stream, encodedTransactionPhase.ParallelTxsComponent);
                 break;
         }
     }
@@ -49,8 +55,10 @@ public class TransactionPhase
                     decodedTransactionPhase.V0Components[i] = TxSetComponent.Decode(stream);
                 }
                 break;
+            case 1:
+                decodedTransactionPhase.ParallelTxsComponent = ParallelTxsComponent.Decode(stream);
+                break;
         }
-
         return decodedTransactionPhase;
     }
 }

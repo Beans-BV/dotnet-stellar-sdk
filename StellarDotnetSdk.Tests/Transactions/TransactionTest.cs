@@ -590,7 +590,7 @@ public class TransactionTest
         Assert.IsNotNull(decodedSorobanData);
         Assert.AreEqual(sorobanData.ResourceFee, decodedSorobanData.ResourceFee);
         Assert.AreEqual(sorobanData.Resources.Instructions, decodedSorobanData.Resources.Instructions);
-        Assert.AreEqual(sorobanData.Resources.ReadBytes, decodedSorobanData.Resources.ReadBytes);
+        Assert.AreEqual(sorobanData.Resources.DiskReadBytes, decodedSorobanData.Resources.DiskReadBytes);
         Assert.AreEqual(sorobanData.Resources.WriteBytes, decodedSorobanData.Resources.WriteBytes);
 
         var decodedFootprint = decodedSorobanData.Resources.Footprint;

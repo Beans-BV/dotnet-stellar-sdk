@@ -10,7 +10,13 @@ namespace StellarDotnetSdk.Xdr;
 //  case SC_ADDRESS_TYPE_ACCOUNT:
 //      AccountID accountId;
 //  case SC_ADDRESS_TYPE_CONTRACT:
-//      Hash contractId;
+//      ContractID contractId;
+//  case SC_ADDRESS_TYPE_MUXED_ACCOUNT:
+//      MuxedEd25519Account muxedAccount;
+//  case SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
+//      ClaimableBalanceID claimableBalanceId;
+//  case SC_ADDRESS_TYPE_LIQUIDITY_POOL:
+//      PoolID liquidityPoolId;
 //  };
 
 //  ===========================================================================
@@ -19,7 +25,10 @@ public class SCAddress
     public SCAddressType Discriminant { get; set; } = new();
 
     public AccountID AccountId { get; set; }
-    public Hash ContractId { get; set; }
+    public ContractID ContractId { get; set; }
+    public MuxedEd25519Account MuxedAccount { get; set; }
+    public ClaimableBalanceID ClaimableBalanceId { get; set; }
+    public PoolID LiquidityPoolId { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SCAddress encodedSCAddress)
     {
@@ -30,7 +39,16 @@ public class SCAddress
                 AccountID.Encode(stream, encodedSCAddress.AccountId);
                 break;
             case SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CONTRACT:
-                Hash.Encode(stream, encodedSCAddress.ContractId);
+                ContractID.Encode(stream, encodedSCAddress.ContractId);
+                break;
+            case SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_MUXED_ACCOUNT:
+                MuxedEd25519Account.Encode(stream, encodedSCAddress.MuxedAccount);
+                break;
+            case SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
+                ClaimableBalanceID.Encode(stream, encodedSCAddress.ClaimableBalanceId);
+                break;
+            case SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_LIQUIDITY_POOL:
+                PoolID.Encode(stream, encodedSCAddress.LiquidityPoolId);
                 break;
         }
     }
@@ -46,10 +64,18 @@ public class SCAddress
                 decodedSCAddress.AccountId = AccountID.Decode(stream);
                 break;
             case SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CONTRACT:
-                decodedSCAddress.ContractId = Hash.Decode(stream);
+                decodedSCAddress.ContractId = ContractID.Decode(stream);
+                break;
+            case SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_MUXED_ACCOUNT:
+                decodedSCAddress.MuxedAccount = MuxedEd25519Account.Decode(stream);
+                break;
+            case SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
+                decodedSCAddress.ClaimableBalanceId = ClaimableBalanceID.Decode(stream);
+                break;
+            case SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_LIQUIDITY_POOL:
+                decodedSCAddress.LiquidityPoolId = PoolID.Decode(stream);
                 break;
         }
-
         return decodedSCAddress;
     }
 }

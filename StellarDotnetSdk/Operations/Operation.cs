@@ -101,7 +101,7 @@ public abstract class Operation
             OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE => CreateClaimableBalanceOperation.FromXdr(
                 body.CreateClaimableBalanceOp),
             OperationType.OperationTypeEnum.CLAIM_CLAIMABLE_BALANCE => new ClaimClaimableBalanceOperation(
-                Util.BytesToHex(body.ClaimClaimableBalanceOp.BalanceID.V0.InnerValue)),
+                ClaimableBalanceIdUtils.ToHexString(body.ClaimClaimableBalanceOp.BalanceID)),
             OperationType.OperationTypeEnum.BEGIN_SPONSORING_FUTURE_RESERVES =>
                 new BeginSponsoringFutureReservesOperation(
                     KeyPair.FromXdrPublicKey(body.BeginSponsoringFutureReservesOp.SponsoredID.InnerValue)),
@@ -121,7 +121,7 @@ public abstract class Operation
             OperationType.OperationTypeEnum.CLAWBACK => ClawbackOperation.FromXdr(body.ClawbackOp),
             OperationType.OperationTypeEnum.CLAWBACK_CLAIMABLE_BALANCE =>
                 new ClawbackClaimableBalanceOperation(
-                    Util.BytesToHex(body.ClawbackClaimableBalanceOp.BalanceID.V0.InnerValue)),
+                    ClaimableBalanceIdUtils.ToHexString(body.ClawbackClaimableBalanceOp.BalanceID)),
             OperationType.OperationTypeEnum.SET_TRUST_LINE_FLAGS => SetTrustlineFlagsOperation.FromXdr(
                 body.SetTrustLineFlagsOp),
             OperationType.OperationTypeEnum.LIQUIDITY_POOL_DEPOSIT => LiquidityPoolDepositOperation.FromXdr(

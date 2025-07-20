@@ -3,7 +3,7 @@ using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
 using SCBytes = StellarDotnetSdk.Soroban.SCBytes;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
-using Soroban_TransactionMetaV3 = StellarDotnetSdk.Soroban.TransactionMetaV3;
+using TransactionMeta = StellarDotnetSdk.Soroban.TransactionMeta;
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;
 
@@ -26,6 +26,7 @@ public class TransactionInfo
         string? resultXdr,
         string? resultMetaXdr,
         string? txHash,
+        Events? events = null,
         string[]? diagnosticEventsXdr = null
     )
     {
@@ -38,6 +39,7 @@ public class TransactionInfo
         ResultXdr = resultXdr;
         ResultMetaXdr = resultMetaXdr;
         TxHash = txHash;
+        Events = events;
         DiagnosticEventsXdr = diagnosticEventsXdr;
     }
 
@@ -90,7 +92,10 @@ public class TransactionInfo
     ///     (optional) A base64 encoded slice of xdr.DiagnosticEvent. This is only present if the
     ///     ENABLE_SOROBAN_DIAGNOSTIC_EVENTS has been enabled in the stellar-core config.
     /// </summary>
+    [Obsolete("Deprecated in favor of Events.DiagnosticEventsXdr. Will be removed in the next version.")]
     public string[]? DiagnosticEventsXdr { get; }
+
+    public Events? Events { get; }
 
     /// <summary>
     ///     (optional) Hex-encoded transaction hash string.
@@ -114,9 +119,9 @@ public class TransactionInfo
     }
 
     /// <summary>
-    ///     Holds the diagnostic information, useful for debugging purpose when the transaction fails.
+    ///     Holds the transaction metadata.
     /// </summary>
-    public Soroban_TransactionMetaV3? TransactionMeta
+    public TransactionMeta? TransactionMeta
     {
         get
         {
@@ -126,7 +131,7 @@ public class TransactionInfo
             }
             try
             {
-                return Soroban_TransactionMetaV3.FromXdrBase64(ResultMetaXdr);
+                return TransactionMeta.FromXdrBase64(ResultMetaXdr);
             }
             catch
             {
@@ -152,7 +157,7 @@ public class TransactionInfo
     {
         get
         {
-            if (ResultValue is SCContractId contract)
+            if (ResultValue is ScContractId contract)
             {
                 return contract.InnerValue;
             }

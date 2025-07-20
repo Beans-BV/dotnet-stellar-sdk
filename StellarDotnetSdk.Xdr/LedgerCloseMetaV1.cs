@@ -24,16 +24,15 @@ namespace StellarDotnetSdk.Xdr;
 //      // other misc information attached to the ledger close
 //      SCPHistoryEntry scpInfo<>;
 //  
-//      // Size in bytes of BucketList, to support downstream
+//      // Size in bytes of live Soroban state, to support downstream
 //      // systems calculating storage fees correctly.
-//      uint64 totalByteSizeOfBucketList;
+//      uint64 totalByteSizeOfLiveSorobanState;
 //  
-//      // Temp keys that are being evicted at this ledger.
-//      LedgerKey evictedTemporaryLedgerKeys<>;
+//      // TTL and data/code keys that have been evicted at this ledger.
+//      LedgerKey evictedKeys<>;
 //  
-//      // Archived restorable ledger entries that are being
-//      // evicted at this ledger.
-//      LedgerEntry evictedPersistentLedgerEntries<>;
+//      // Maintained for backwards compatibility, should never be populated.
+//      LedgerEntry unused<>;
 //  };
 
 //  ===========================================================================
@@ -45,9 +44,9 @@ public class LedgerCloseMetaV1
     public TransactionResultMeta[] TxProcessing { get; set; }
     public UpgradeEntryMeta[] UpgradesProcessing { get; set; }
     public SCPHistoryEntry[] ScpInfo { get; set; }
-    public Uint64 TotalByteSizeOfBucketList { get; set; }
-    public LedgerKey[] EvictedTemporaryLedgerKeys { get; set; }
-    public LedgerEntry[] EvictedPersistentLedgerEntries { get; set; }
+    public Uint64 TotalByteSizeOfLiveSorobanState { get; set; }
+    public LedgerKey[] EvictedKeys { get; set; }
+    public LedgerEntry[] Unused { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, LedgerCloseMetaV1 encodedLedgerCloseMetaV1)
     {
@@ -72,18 +71,18 @@ public class LedgerCloseMetaV1
         {
             SCPHistoryEntry.Encode(stream, encodedLedgerCloseMetaV1.ScpInfo[i]);
         }
-        Uint64.Encode(stream, encodedLedgerCloseMetaV1.TotalByteSizeOfBucketList);
-        var evictedTemporaryLedgerKeyssize = encodedLedgerCloseMetaV1.EvictedTemporaryLedgerKeys.Length;
-        stream.WriteInt(evictedTemporaryLedgerKeyssize);
-        for (var i = 0; i < evictedTemporaryLedgerKeyssize; i++)
+        Uint64.Encode(stream, encodedLedgerCloseMetaV1.TotalByteSizeOfLiveSorobanState);
+        var evictedKeyssize = encodedLedgerCloseMetaV1.EvictedKeys.Length;
+        stream.WriteInt(evictedKeyssize);
+        for (var i = 0; i < evictedKeyssize; i++)
         {
-            LedgerKey.Encode(stream, encodedLedgerCloseMetaV1.EvictedTemporaryLedgerKeys[i]);
+            LedgerKey.Encode(stream, encodedLedgerCloseMetaV1.EvictedKeys[i]);
         }
-        var evictedPersistentLedgerEntriessize = encodedLedgerCloseMetaV1.EvictedPersistentLedgerEntries.Length;
-        stream.WriteInt(evictedPersistentLedgerEntriessize);
-        for (var i = 0; i < evictedPersistentLedgerEntriessize; i++)
+        var unusedsize = encodedLedgerCloseMetaV1.Unused.Length;
+        stream.WriteInt(unusedsize);
+        for (var i = 0; i < unusedsize; i++)
         {
-            LedgerEntry.Encode(stream, encodedLedgerCloseMetaV1.EvictedPersistentLedgerEntries[i]);
+            LedgerEntry.Encode(stream, encodedLedgerCloseMetaV1.Unused[i]);
         }
     }
 
@@ -111,18 +110,18 @@ public class LedgerCloseMetaV1
         {
             decodedLedgerCloseMetaV1.ScpInfo[i] = SCPHistoryEntry.Decode(stream);
         }
-        decodedLedgerCloseMetaV1.TotalByteSizeOfBucketList = Uint64.Decode(stream);
-        var evictedTemporaryLedgerKeyssize = stream.ReadInt();
-        decodedLedgerCloseMetaV1.EvictedTemporaryLedgerKeys = new LedgerKey[evictedTemporaryLedgerKeyssize];
-        for (var i = 0; i < evictedTemporaryLedgerKeyssize; i++)
+        decodedLedgerCloseMetaV1.TotalByteSizeOfLiveSorobanState = Uint64.Decode(stream);
+        var evictedKeyssize = stream.ReadInt();
+        decodedLedgerCloseMetaV1.EvictedKeys = new LedgerKey[evictedKeyssize];
+        for (var i = 0; i < evictedKeyssize; i++)
         {
-            decodedLedgerCloseMetaV1.EvictedTemporaryLedgerKeys[i] = LedgerKey.Decode(stream);
+            decodedLedgerCloseMetaV1.EvictedKeys[i] = LedgerKey.Decode(stream);
         }
-        var evictedPersistentLedgerEntriessize = stream.ReadInt();
-        decodedLedgerCloseMetaV1.EvictedPersistentLedgerEntries = new LedgerEntry[evictedPersistentLedgerEntriessize];
-        for (var i = 0; i < evictedPersistentLedgerEntriessize; i++)
+        var unusedsize = stream.ReadInt();
+        decodedLedgerCloseMetaV1.Unused = new LedgerEntry[unusedsize];
+        for (var i = 0; i < unusedsize; i++)
         {
-            decodedLedgerCloseMetaV1.EvictedPersistentLedgerEntries[i] = LedgerEntry.Decode(stream);
+            decodedLedgerCloseMetaV1.Unused[i] = LedgerEntry.Decode(stream);
         }
         return decodedLedgerCloseMetaV1;
     }

@@ -15,9 +15,11 @@ public class GetTransactionResponse : TransactionInfo
         string? envelopeXdr,
         string? resultXdr,
         string? resultMetaXdr,
-        string? txHash
+        string? txHash,
+        Events? events
     )
-        : base(status, ledger, createdAt, applicationOrder, feeBump, envelopeXdr, resultXdr, resultMetaXdr, txHash)
+        : base(status, ledger, createdAt, applicationOrder, feeBump, envelopeXdr, resultXdr, resultMetaXdr, txHash,
+            events)
     {
         LatestLedger = latestLedger;
         LatestLedgerCloseTime = latestLedgerCloseTime;

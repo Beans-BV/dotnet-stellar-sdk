@@ -616,23 +616,19 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
-    /// <summary>
-    ///     Claim a claimable balance using the string representation of the balance id.
-    /// </summary>
     [TestMethod]
-    [Obsolete]
-    public void TestClaimClaimableBalanceWithStringIdOperationValid()
+    [DataRow("000000006d6a0c142516a9cc7885a85c5aba3a1f4af5181cf9e7a809ac7ae5e4a58c825f")]
+    public void TestClaimClaimableBalanceOperationConstructorWithValidArgument(string id)
     {
-        var balanceId = "000000006d6a0c142516a9cc7885a85c5aba3a1f4af5181cf9e7a809ac7ae5e4a58c825f";
         var accountId = KeyPair.FromAccountId("GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN");
-        var operation = new ClaimClaimableBalanceOperation(balanceId, accountId);
+        var operation = new ClaimClaimableBalanceOperation(id, accountId);
 
         var xdr = operation.ToXdr();
         var parsedOperation = (ClaimClaimableBalanceOperation)Operation.FromXdr(xdr);
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
-        Assert.AreEqual(operation.BalanceId, parsedOperation.BalanceId);
+        Assert.AreEqual(operation.BalanceId.ToUpper(), parsedOperation.BalanceId.ToUpper());
 
         Assert.AreEqual(
             "AAAAAQAAAAADOcvN4KfwUbxY/oKijIj6+TBW9Ca0QaQuRkR7MK0FBgAAAA8AAAAAbWoMFCUWqcx4hahcWro6H0r1GBz556gJrHrl5KWMgl8=",
@@ -640,24 +636,15 @@ public class OperationTest
     }
 
     [TestMethod]
-    public void TestClaimClaimableBalanceOperationInvalidEmptyBalanceId()
+    [ExpectedException(typeof(ArgumentException))]
+    [DataRow("")]
+    [DataRow("00000000")]
+    [DataRow("00846c047755e4a46912336f56096b48ece78ddb5fbf6d90f0eb4ecae5324fbddb")]
+    [DataRow("BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU")]
+    public void TestClaimClaimableBalanceOperationConstructorWithInvalidArgument(string id)
     {
-        var balanceId = "";
         var accountId = KeyPair.FromAccountId("GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN");
-
-        Assert.ThrowsException<ArgumentException>(() => new ClaimClaimableBalanceOperation(balanceId, accountId));
-    }
-
-    /// <summary>
-    ///     The last 32 bytes of the balance id are the balance id body, this is required.
-    /// </summary>
-    [TestMethod]
-    public void TestClaimClaimableBalanceOperationInvalidClaimableBalanceIdBodyMissing()
-    {
-        var balanceId = "00000000";
-        var accountId = KeyPair.FromAccountId("GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN");
-
-        Assert.ThrowsException<ArgumentException>(() => new ClaimClaimableBalanceOperation(balanceId, accountId));
+        _ = new ClaimClaimableBalanceOperation(id, accountId);
     }
 
     [TestMethod]
@@ -733,14 +720,14 @@ public class OperationTest
     {
         var operation =
             RevokeLedgerEntrySponsorshipOperation.ForClaimableBalance(
-                "d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780");
+                "00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780");
 
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (RevokeLedgerEntrySponsorshipOperation)Operation.FromXdr(xdrOperation);
 
         Assert.IsNull(decodedOperation.SourceAccount);
-        Assert.AreEqual(((LedgerKeyClaimableBalance)operation.LedgerKey).BalanceId,
-            ((LedgerKeyClaimableBalance)decodedOperation.LedgerKey).BalanceId.ToLower());
+        Assert.AreEqual(((LedgerKeyClaimableBalance)operation.LedgerKey).BalanceId.ToUpper(),
+            ((LedgerKeyClaimableBalance)decodedOperation.LedgerKey).BalanceId.ToUpper());
     }
 
     [TestMethod]
@@ -805,9 +792,7 @@ public class OperationTest
         Assert.AreEqual(operation.From.AccountId, parsedOperation.From.AccountId);
     }
 
-
     [TestMethod]
-    [Obsolete]
     public void TestClawbackClaimableBalanceOperation()
     {
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
@@ -822,7 +807,7 @@ public class OperationTest
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
-        Assert.AreEqual(operation.BalanceIdInBytes.Length, parsedOperation.BalanceIdInBytes.Length);
+        Assert.AreEqual(operation.BalanceId.ToUpper(), parsedOperation.BalanceId.ToUpper());
     }
 
     [TestMethod]
@@ -1065,7 +1050,7 @@ public class OperationTest
 
         var preimage = (ContractIdAddressPreimage)hostFunction.ContractIdPreimage;
         var decodedPreimage = (ContractIdAddressPreimage)decodedHostFunction.ContractIdPreimage;
-        Assert.AreEqual(((SCAccountId)preimage.Address).InnerValue, ((SCAccountId)decodedPreimage.Address).InnerValue);
+        Assert.AreEqual(((ScAccountId)preimage.Address).InnerValue, ((ScAccountId)decodedPreimage.Address).InnerValue);
         CollectionAssert.AreEqual(preimage.Salt, decodedPreimage.Salt);
 
         var decodedArguments = decodedHostFunction.Arguments;
@@ -1079,7 +1064,7 @@ public class OperationTest
     {
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
         var operation = new InvokeContractOperation(
-            new SCContractId("CDSUR2JFKSUORJLUA2FISW7P6ALDTS2PDK6AYQZ7G4CSY5WZS5QVSM47"),
+            new ScContractId("CDSUR2JFKSUORJLUA2FISW7P6ALDTS2PDK6AYQZ7G4CSY5WZS5QVSM47"),
             new SCSymbol("init"),
             [new SCString("test"), new SCBool(true)],
             source);
@@ -1094,8 +1079,8 @@ public class OperationTest
         var hostFunction = operation.HostFunction;
         var decodedHostFunction = decodedOperation.HostFunction;
 
-        var address = (SCContractId)hostFunction.ContractAddress;
-        var decodedAddress = (SCContractId)decodedHostFunction.ContractAddress;
+        var address = (ScContractId)hostFunction.ContractAddress;
+        var decodedAddress = (ScContractId)decodedHostFunction.ContractAddress;
         Assert.AreEqual(address.InnerValue, decodedAddress.InnerValue);
         Assert.AreEqual(hostFunction.FunctionName.InnerValue, decodedHostFunction.FunctionName.InnerValue);
 
@@ -1126,8 +1111,8 @@ public class OperationTest
         var hostFunction = operation.HostFunction;
         var decodedHostFunction = decodedOperation.HostFunction;
 
-        var address = (SCContractId)hostFunction.ContractAddress;
-        var decodedAddress = (SCContractId)decodedHostFunction.ContractAddress;
+        var address = (ScContractId)hostFunction.ContractAddress;
+        var decodedAddress = (ScContractId)decodedHostFunction.ContractAddress;
         Assert.AreEqual(address.InnerValue, decodedAddress.InnerValue);
         Assert.AreEqual(hostFunction.FunctionName.InnerValue, decodedHostFunction.FunctionName.InnerValue);
 

@@ -9,8 +9,6 @@ namespace StellarDotnetSdk.Xdr;
 
 //  enum SurveyMessageResponseType
 //  {
-//      SURVEY_TOPOLOGY_RESPONSE_V0 = 0,
-//      SURVEY_TOPOLOGY_RESPONSE_V1 = 1,
 //      SURVEY_TOPOLOGY_RESPONSE_V2 = 2
 //  };
 
@@ -19,8 +17,6 @@ public class SurveyMessageResponseType
 {
     public enum SurveyMessageResponseTypeEnum
     {
-        SURVEY_TOPOLOGY_RESPONSE_V0 = 0,
-        SURVEY_TOPOLOGY_RESPONSE_V1 = 1,
         SURVEY_TOPOLOGY_RESPONSE_V2 = 2,
     }
 
@@ -39,8 +35,6 @@ public class SurveyMessageResponseType
         var value = stream.ReadInt();
         switch (value)
         {
-            case 0: return Create(SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V0);
-            case 1: return Create(SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V1);
             case 2: return Create(SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V2);
             default:
                 throw new Exception("Unknown enum value: " + value);

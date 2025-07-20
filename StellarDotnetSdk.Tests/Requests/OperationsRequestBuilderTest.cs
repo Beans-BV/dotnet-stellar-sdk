@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Requests;
@@ -13,7 +14,7 @@ public class OperationsRequestBuilderTest
     [TestMethod]
     public void TestOperations()
     {
-        var server = new Server("https://horizon-testnet.stellar.org");
+        using var server = Utils.CreateTestServerWithContent("");
         var uri = server.Operations
             .Limit(200)
             .Order(OrderDirection.DESC)
@@ -22,9 +23,19 @@ public class OperationsRequestBuilderTest
     }
 
     [TestMethod]
+    public void TestForOperation()
+    {
+        using var server = Utils.CreateTestServerWithContent("");
+        var uri = server.Operations
+            .Operation(100000L)
+            .BuildUri();
+        Assert.AreEqual("https://horizon-testnet.stellar.org/operations/100000", uri.ToString());
+    }
+
+    [TestMethod]
     public void TestForAccount()
     {
-        var server = new Server("https://horizon-testnet.stellar.org");
+        using var server = Utils.CreateTestServerWithContent("");
         var uri = server.Operations
             .ForAccount("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H")
             .Limit(200)
@@ -36,9 +47,9 @@ public class OperationsRequestBuilderTest
     }
 
     [TestMethod]
-    public void TestForClaimableBalance()
+    public void TestForClaimableBalanceWithValidArgument()
     {
-        var server = new Server("https://horizon-testnet.stellar.org");
+        using var server = Utils.CreateTestServerWithContent("");
         var uri = server.Operations
             .ForClaimableBalance("00000000846c047755e4a46912336f56096b48ece78ddb5fbf6d90f0eb4ecae5324fbddb")
             .Limit(200)
@@ -50,9 +61,18 @@ public class OperationsRequestBuilderTest
     }
 
     [TestMethod]
+    [DataRow("")]
+    [ExpectedException(typeof(ArgumentException))]
+    public void TestForClaimableBalanceWithInvalidArgument(string invalidId)
+    {
+        using var server = Utils.CreateTestServerWithContent("");
+        _ = server.Operations.ForClaimableBalance(invalidId);
+    }
+
+    [TestMethod]
     public void TestLedger()
     {
-        var server = new Server("https://horizon-testnet.stellar.org");
+        using var server = Utils.CreateTestServerWithContent("");
         var uri = server.Operations
             .ForLedger(200000000000L)
             .Limit(50)
@@ -65,7 +85,7 @@ public class OperationsRequestBuilderTest
     [TestMethod]
     public void TestTransaction()
     {
-        var server = new Server("https://horizon-testnet.stellar.org");
+        using var server = Utils.CreateTestServerWithContent("");
         var uri = server.Operations
             .ForTransaction("991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3")
             .BuildUri();
@@ -77,7 +97,7 @@ public class OperationsRequestBuilderTest
     [TestMethod]
     public void TestIncludeFailed()
     {
-        var server = new Server("https://horizon-testnet.stellar.org");
+        using var server = Utils.CreateTestServerWithContent("");
         var uri = server.Operations
             .ForLedger(200000000000L)
             .IncludeFailed(true)

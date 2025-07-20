@@ -8,24 +8,90 @@ namespace StellarDotnetSdk;
 
 using MuxedAccount = xdrSDK.MuxedAccount;
 
-public class StrKey
+public static class StrKey
 {
     public enum VersionByte : byte
     {
         ACCOUNT_ID = 6 << 3,
-        MUXED_ACCOUNT = 12 << 3,
+        MUXED_ED25519 = 12 << 3,
         SEED = 18 << 3,
         PRE_AUTH_TX = 19 << 3,
         SHA256_HASH = 23 << 3,
         SIGNED_PAYLOAD = 15 << 3,
         CONTRACT = 2 << 3,
+        LIQUIDITY_POOL = 11 << 3,
+        CLAIMABLE_BALANCE = 1 << 3,
     }
 
+    private static readonly byte[] Base32LookupTable = DecodingTable();
+
+    /// <summary>
+    ///     Encodes raw bytes to an Ed25519 public key.
+    /// </summary>
+    /// <param name="data">A raw byte array.</param>
+    /// <returns>Base32-encoded representation (G...) of the provided data.</returns>
+    public static string EncodeEd25519PublicKey(byte[] data)
+    {
+        return EncodeCheck(VersionByte.ACCOUNT_ID, data);
+    }
+
+    [Obsolete("Deprecated. Use EncodeEd25519PublicKey instead.")]
     public static string EncodeStellarAccountId(byte[] data)
     {
         return EncodeCheck(VersionByte.ACCOUNT_ID, data);
     }
 
+    /// <summary>
+    ///     Encodes raw bytes to a Muxed_Ed25519 public key.
+    /// </summary>
+    /// <param name="data">A raw byte array.</param>
+    /// <returns>Base32-encoded representation (M...) of the provided data.</returns>
+    public static string EncodeMed25519PublicKey(byte[] data)
+    {
+        return EncodeCheck(VersionByte.MUXED_ED25519, data);
+    }
+
+    /// <summary>
+    ///     Encodes raw bytes to an Ed25519 seed.
+    /// </summary>
+    /// <param name="data">A raw byte array.</param>
+    /// <returns>Base32-encoded representation (S...) of the provided data.</returns>
+    public static string EncodeEd25519SecretSeed(byte[] data)
+    {
+        return EncodeCheck(VersionByte.SEED, data);
+    }
+
+    /// <summary>
+    ///     Encodes raw bytes to a PreAuthTx string.
+    /// </summary>
+    /// <param name="data">A raw byte array.</param>
+    /// <returns>Base32-encoded representation (T...) of the provided data.</returns>
+    public static string EncodePreAuthTx(byte[] data)
+    {
+        return EncodeCheck(VersionByte.PRE_AUTH_TX, data);
+    }
+
+    /// <summary>
+    ///     Encodes raw bytes to an SHA256 hash.
+    /// </summary>
+    /// <param name="data">A raw byte array.</param>
+    /// <returns>Base32-encoded representation (X...) of the provided data.</returns>
+    public static string EncodeSha256Hash(byte[] data)
+    {
+        return EncodeCheck(VersionByte.SHA256_HASH, data);
+    }
+
+    [Obsolete("Deprecated. Use EncodeEd25519SecretSeed instead.")]
+    public static string EncodeStellarSecretSeed(byte[] data)
+    {
+        return EncodeCheck(VersionByte.SEED, data);
+    }
+
+    /// <summary>
+    ///     Encodes raw bytes to a signed payload.
+    /// </summary>
+    /// <param name="signedPayloadSigner">A signed payload.</param>
+    /// <returns>Base32-encoded representation (P...) of the provided payload.</returns>
     public static string EncodeSignedPayload(SignedPayloadSigner signedPayloadSigner)
     {
         try
@@ -47,38 +113,143 @@ public class StrKey
         }
     }
 
+    /// <summary>
+    ///     Encodes raw bytes to a contract ID.
+    /// </summary>
+    /// <param name="data">A raw byte array.</param>
+    /// <returns>Base32-encoded representation (C...) of the provided data.</returns>
+    public static string EncodeContractId(byte[] data)
+    {
+        return EncodeCheck(VersionByte.CONTRACT, data);
+    }
+
+    /// <summary>
+    ///     Encodes raw bytes to a liquidity pool ID.
+    /// </summary>
+    /// <param name="data">A raw byte array.</param>
+    /// <returns>Base32-encoded representation (L...) of the provided key.</returns>
+    public static string EncodeLiquidityPoolId(byte[] data)
+    {
+        return EncodeCheck(VersionByte.LIQUIDITY_POOL, data);
+    }
+
+    /// <summary>
+    ///     Encodes raw bytes to a claimable balance ID.
+    /// </summary>
+    /// <param name="data">A raw byte array.</param>
+    /// <returns>Base32-encoded representation (B...) of the provided key.</returns>
+    public static string EncodeClaimableBalanceId(byte[] data)
+    {
+        return EncodeCheck(VersionByte.CLAIMABLE_BALANCE, data);
+    }
+
+    [Obsolete("Deprecated. Use EncodeMed25519PublicKey instead.")]
     public static string EncodeStellarMuxedAccount(MuxedAccount muxedAccount)
     {
         switch (muxedAccount.Discriminant.InnerValue)
         {
             case xdrSDK.CryptoKeyType.CryptoKeyTypeEnum.KEY_TYPE_MUXED_ED25519:
                 var bytes = muxedAccount.Med25519.Ed25519.InnerValue
-                    .Concat(Util.ToByteArray(muxedAccount.Med25519.Id.InnerValue)).ToArray();
-                return EncodeCheck(VersionByte.MUXED_ACCOUNT, bytes);
+                    .Concat(Util.ToByteArray(muxedAccount.Med25519.Id.InnerValue))
+                    .ToArray();
+                return EncodeCheck(VersionByte.MUXED_ED25519, bytes);
 
             case xdrSDK.CryptoKeyType.CryptoKeyTypeEnum.KEY_TYPE_ED25519:
                 return EncodeCheck(VersionByte.ACCOUNT_ID, muxedAccount.Ed25519.InnerValue);
 
             default:
-                throw new ArgumentException("invalid discriminant");
+                throw new ArgumentException("Invalid discriminant");
         }
     }
 
-    public static string EncodeStellarSecretSeed(byte[] data)
+    public static bool TryDecodeEd25519PublicKey(string publicKey, out byte[] decoded)
     {
-        return EncodeCheck(VersionByte.SEED, data);
+        return TryDecode(VersionByte.ACCOUNT_ID, publicKey, out decoded);
     }
 
-    public static string EncodeContractId(byte[] data)
+    public static bool TryDecodeMed25519PublicKey(string publicKey, out byte[] decoded)
     {
-        return EncodeCheck(VersionByte.CONTRACT, data);
+        return TryDecode(VersionByte.MUXED_ED25519, publicKey, out decoded);
     }
 
+    public static VersionByte DecodeVersionByte(string encoded)
+    {
+        var decoded = Base32Encoding.ToBytes(encoded);
+        var versionByte = decoded[0];
+        if (!Enum.IsDefined(typeof(VersionByte), versionByte))
+        {
+            throw new FormatException("Version byte is invalid");
+        }
+        return (VersionByte)versionByte;
+    }
+
+    /// <summary>
+    ///     Decodes a Stellar Ed25519 public key to raw bytes.
+    /// </summary>
+    /// <param name="publicKey">A base32-encoded Ed25519 public key (G...).</param>
+    /// <returns>Raw bytes of the provided Ed25519 public key.</returns>
+    public static byte[] DecodeEd25519PublicKey(string publicKey)
+    {
+        return DecodeCheck(VersionByte.ACCOUNT_ID, publicKey);
+    }
+
+    [Obsolete("Deprecated. Use DecodeEd25519PublicKey instead.")]
     public static byte[] DecodeStellarAccountId(string data)
     {
         return DecodeCheck(VersionByte.ACCOUNT_ID, data);
     }
 
+    /// <summary>
+    ///     Decodes a Stellar Muxed_Ed25519 public key to raw bytes.
+    /// </summary>
+    /// <param name="publicKey">A base32-encoded Muxed_Ed25519 public key (M...).</param>
+    /// <returns>Raw bytes of the provided Muxed_Ed25519 public key.</returns>
+    public static byte[] DecodeMed25519PublicKey(string publicKey)
+    {
+        return DecodeCheck(VersionByte.MUXED_ED25519, publicKey);
+    }
+
+    /// <summary>
+    ///     Decodes an Ed25519 seed string to raw bytes.
+    /// </summary>
+    /// <param name="data">A base32-encoded Ed25519 seed (S...).</param>
+    /// <returns>Raw bytes of the provided Ed25519 seed.</returns>
+    public static byte[] DecodeEd25519SecretSeed(string data)
+    {
+        return DecodeCheck(VersionByte.SEED, data);
+    }
+
+    [Obsolete("Deprecated. Use DecodeEd25519SecretSeed instead.")]
+    public static byte[] DecodeStellarSecretSeed(string data)
+    {
+        return DecodeCheck(VersionByte.SEED, data);
+    }
+
+    /// <summary>
+    ///     Decodes a PreAuthTx to raw bytes.
+    /// </summary>
+    /// <param name="data">A base32-encoded PreAuthTx string (T...).</param>
+    /// <returns>Raw bytes of the provided PreAuthTx string.</returns>
+    public static byte[] DecodePreAuthTx(string data)
+    {
+        return DecodeCheck(VersionByte.PRE_AUTH_TX, data);
+    }
+
+    /// <summary>
+    ///     Decodes an SHA256 hash to raw bytes.
+    /// </summary>
+    /// <param name="data">A base32-encoded SHA-256 hash (X...).</param>
+    /// <returns>Raw bytes of the provided SHA-256 hash.</returns>
+    public static byte[] DecodeSha256Hash(string data)
+    {
+        return DecodeCheck(VersionByte.SHA256_HASH, data);
+    }
+
+    /// <summary>
+    ///     Decodes a signed payload to raw bytes.
+    /// </summary>
+    /// <param name="data">A base32-encoded signed payload (P...).</param>
+    /// <returns>Raw bytes of the provided signed payload.</returns>
     public static SignedPayloadSigner DecodeSignedPayload(string data)
     {
         try
@@ -96,6 +267,37 @@ public class StrKey
         }
     }
 
+    /// <summary>
+    ///     Decodes contract ID to raw bytes.
+    /// </summary>
+    /// <param name="data">A base32-encoded contract ID (C...).</param>
+    /// <returns>Raw bytes of the provided contract ID.</returns>
+    public static byte[] DecodeContractId(string data)
+    {
+        return DecodeCheck(VersionByte.CONTRACT, data);
+    }
+
+    /// <summary>
+    ///     Decodes liquidity pool ID to raw bytes.
+    /// </summary>
+    /// <param name="data">A base32-encoded liquidity pool ID (L...).</param>
+    /// <returns>Raw bytes of the provided liquidity pool ID.</returns>
+    public static byte[] DecodeLiquidityPoolId(string data)
+    {
+        return DecodeCheck(VersionByte.LIQUIDITY_POOL, data);
+    }
+
+    /// <summary>
+    ///     Decodes claimable balance ID to raw bytes.
+    /// </summary>
+    /// <param name="data">A base32-encoded claimable balance ID (B...).</param>
+    /// <returns>Raw bytes of the provided claimable balance ID.</returns>
+    public static byte[] DecodeClaimableBalanceId(string data)
+    {
+        return DecodeCheck(VersionByte.CLAIMABLE_BALANCE, data);
+    }
+
+    [Obsolete("Deprecated. Use DecodeMuxedEd25519PublicKey instead.")]
     public static MuxedAccount DecodeStellarMuxedAccount(string data)
     {
         var muxed = new MuxedAccount();
@@ -112,7 +314,7 @@ public class StrKey
 
                 try
                 {
-                    muxed.Ed25519 = xdrSDK.Uint256.Decode(new xdrSDK.XdrDataInputStream(DecodeStellarAccountId(data)));
+                    muxed.Ed25519 = xdrSDK.Uint256.Decode(new xdrSDK.XdrDataInputStream(DecodeEd25519PublicKey(data)));
                 }
                 catch (InvalidOperationException e)
                 {
@@ -121,8 +323,8 @@ public class StrKey
 
                 break;
 
-            case VersionByte.MUXED_ACCOUNT:
-                var input = new xdrSDK.XdrDataInputStream(DecodeCheck(VersionByte.MUXED_ACCOUNT, data));
+            case VersionByte.MUXED_ED25519:
+                var input = new xdrSDK.XdrDataInputStream(DecodeCheck(VersionByte.MUXED_ED25519, data));
                 muxed.Discriminant.InnerValue = xdrSDK.CryptoKeyType.CryptoKeyTypeEnum.KEY_TYPE_MUXED_ED25519;
                 var med = new MuxedAccount.MuxedAccountMed25519();
 
@@ -145,25 +347,70 @@ public class StrKey
         return muxed;
     }
 
-    public static byte[] DecodeStellarSecretSeed(string data)
+    /// <summary>
+    ///     Checks validity of an Ed25519 public key.
+    /// </summary>
+    /// <param name="publicKey">The public key (G...) to check.</param>
+    /// <returns>True if the given public key is a valid Stellar account ID, false otherwise.</returns>
+    public static bool IsValidEd25519PublicKey(string publicKey)
     {
-        return DecodeCheck(VersionByte.SEED, data);
+        return IsValid(VersionByte.ACCOUNT_ID, publicKey);
     }
 
-    public static byte[] DecodeContractId(string data)
+    /// <summary>
+    ///     Checks validity of a Muxed_Ed25519 public key.
+    /// </summary>
+    /// <param name="publicKey">The public key (M...) to check.</param>
+    /// <returns>True if the given public key is a valid Stellar muxed account ID, false otherwise.</returns>
+    public static bool IsValidMed25519PublicKey(string publicKey)
     {
-        return DecodeCheck(VersionByte.CONTRACT, data);
+        return IsValid(VersionByte.MUXED_ED25519, publicKey);
     }
 
-    public static VersionByte DecodeVersionByte(string encoded)
+    /// <summary>
+    ///     Checks validity of an Ed25519 seed.
+    /// </summary>
+    /// <param name="seed">The secret seed (S...) to check.</param>
+    /// <returns>True if the given seed is a valid Stellar secret seed, false otherwise.</returns>
+    public static bool IsValidEd25519SecretSeed(string seed)
     {
-        var decoded = CheckedBase32Decode(encoded);
-        var versionByte = decoded[0];
-        if (!Enum.IsDefined(typeof(VersionByte), versionByte))
-        {
-            throw new FormatException("Version byte is invalid");
-        }
-        return (VersionByte)versionByte;
+        return IsValid(VersionByte.SEED, seed);
+    }
+
+    /// <summary>
+    ///     Checks validity of a contract ID.
+    /// </summary>
+    /// <param name="contractId">The contract ID (C...) to check.</param>
+    /// <returns>True if the given contract ID is valid, false otherwise.</returns>
+    public static bool IsValidContractId(string contractId)
+    {
+        return IsValid(VersionByte.CONTRACT, contractId);
+    }
+
+    /// <summary>
+    ///     Checks validity of a liquidity pool ID.
+    /// </summary>
+    /// <param name="liquidityPoolId">The liquidity pool ID (L...) to check.</param>
+    /// <returns>True if the given liquidity pool ID is valid, false otherwise.</returns>
+    public static bool IsValidLiquidityPoolId(string liquidityPoolId)
+    {
+        return IsValid(VersionByte.LIQUIDITY_POOL, liquidityPoolId);
+    }
+
+    /// <summary>
+    ///     Checks validity of a claimable balance ID.
+    /// </summary>
+    /// <param name="claimableBalanceId">The claimable balance ID (B...) to check.</param>
+    /// <returns>True if the given claimable balance ID is valid, false otherwise.</returns>
+    public static bool IsValidClaimableBalanceId(string claimableBalanceId)
+    {
+        return IsValid(VersionByte.CLAIMABLE_BALANCE, claimableBalanceId);
+    }
+
+    [Obsolete("Deprecated. Use IsValidMed25519PublicKey instead.")]
+    public static bool IsValidMuxedAccount(string publicKey)
+    {
+        return IsValid(VersionByte.MUXED_ED25519, publicKey);
     }
 
     public static string EncodeCheck(VersionByte versionByte, byte[] data)
@@ -181,34 +428,106 @@ public class StrKey
 
     public static byte[] DecodeCheck(VersionByte versionByte, string encoded)
     {
-        var decoded = CheckedBase32Decode(encoded);
-        var decodedVersionByte = decoded[0];
-
-        var payload = new byte[decoded.Length - 2];
-        Array.Copy(decoded, 0, payload, 0, payload.Length);
-
-        var data = new byte[payload.Length - 1];
-        Array.Copy(payload, 1, data, 0, data.Length);
-
-        var checksum = new byte[2];
-        Array.Copy(decoded, decoded.Length - 2, checksum, 0, checksum.Length);
-
-        if (decodedVersionByte != (byte)versionByte)
+        // The minimal length is 3 bytes (version byte and 2-byte CRC) which,
+        // in unpadded base32 (since each character provides 5 bits) corresponds to ceiling(8*3/5) = 5
+        if (encoded.Length < 5)
         {
-            throw new FormatException("Version byte is invalid");
+            throw new ArgumentException("Encoded string must have a length of at least 5.");
         }
+
+        var leftoverBits = encoded.Length * 5 % 8;
+        switch (leftoverBits)
+        {
+            // Make sure there is no full unused leftover byte at the end
+            // (i.e. there shouldn't be 5 or more leftover bits)
+            case >= 5:
+                throw new ArgumentException("Encoded string has leftover characters.");
+            case > 0:
+            {
+                var lastChar = encoded[^1];
+                var decodedLastChar = Base32LookupTable[lastChar];
+
+                var leftoverBitsMask = (byte)(0x0f >> (4 - leftoverBits));
+                if ((decodedLastChar & leftoverBitsMask) != 0)
+                {
+                    throw new ArgumentException("Unused bits should be set to 0.");
+                }
+                break;
+            }
+        }
+
+        var decoded = Base32Encoding.ToBytes(encoded);
+
+        var decodedVersionByte = decoded[0];
+        if (!Enum.IsDefined(typeof(VersionByte), decodedVersionByte))
+        {
+            throw new ArgumentException("Version byte is invalid");
+        }
+        var decodedVersionByteEnum = (VersionByte)decodedVersionByte;
+
+        if (decodedVersionByteEnum != versionByte)
+        {
+            throw new ArgumentException("Version byte mismatch");
+        }
+
+        ReadOnlySpan<byte> decodedSpan = decoded;
+        var payload = decodedSpan[..^2].ToArray(); // All except last 2 bytes for checksum  
+        var data = decodedSpan[1..^2].ToArray(); // All except first 1 for version byte and last 2 for checksum
+        var checksum = decodedSpan[^2..].ToArray(); // Last 2 bytes
+
+        ValidateDataLength(decodedVersionByteEnum, data);
 
         var expectedChecksum = CalculateChecksum(payload);
 
         if (!expectedChecksum.SequenceEqual(checksum))
         {
-            throw new FormatException("Checksum invalid");
+            throw new ArgumentException("Checksum invalid");
         }
 
         return data;
     }
 
-    protected static byte[] CalculateChecksum(byte[] bytes)
+    private static void ValidateDataLength(VersionByte decodedVersionByteEnum, byte[] data)
+    {
+        switch (decodedVersionByteEnum)
+        {
+            case VersionByte.SIGNED_PAYLOAD:
+                if (data.Length is < 32 + 4 + 4 or > 32 + 4 + 64)
+                {
+                    throw new ArgumentException(
+                        "Invalid data length, the length should be between 40 and 100 bytes, got "
+                        + data.Length);
+                }
+                break;
+            case VersionByte.MUXED_ED25519:
+                if (data.Length != 32 + 8)
+                {
+                    throw new ArgumentException(
+                        "Invalid data length, expected 40 bytes, got " + data.Length);
+                }
+                break;
+            case VersionByte.CLAIMABLE_BALANCE:
+                if (data.Length != 32 + 1)
+                {
+                    // If we are encoding a claimable balance, the binary bytes of the key has a length of
+                    // 33-bytes:
+                    // 1-byte value indicating the type of claimable balance, where 0x00 maps to V0, and a
+                    // 32-byte SHA256 hash.
+                    throw new ArgumentException(
+                        "Invalid data length, expected 33 bytes, got " + data.Length);
+                }
+                break;
+            default:
+                if (data.Length != 32)
+                {
+                    throw new ArgumentException(
+                        "Invalid data length, expected 32 bytes, got " + data.Length);
+                }
+                break;
+        }
+    }
+
+    private static byte[] CalculateChecksum(byte[] bytes)
     {
         // This code calculates CRC16-XModem checksum
         // Ported from https://github.com/alexgorbatchev/node-crc
@@ -232,26 +551,19 @@ public class StrKey
         }
 
         // little-endian
-        return new[]
-        {
+        return
+        [
             (byte)crc,
             (byte)((uint)crc >> 8),
-        };
+        ];
     }
 
-    public static bool IsValid(VersionByte versionByte, string encoded)
+    private static bool IsValid(VersionByte versionByte, string encoded)
     {
         try
         {
-            var decoded = DecodeCheck(versionByte, encoded);
-            // Muxed accounts are encoded as a 64 bit ulong wih 32 bytes of data
-            if (versionByte == VersionByte.MUXED_ACCOUNT)
-            {
-                return decoded.Length == 40;
-            }
-
-            // All other types have 32 bytes of data
-            return decoded.Length == 32;
+            DecodeCheck(versionByte, encoded);
+            return true;
         }
         catch
         {
@@ -259,41 +571,29 @@ public class StrKey
         }
     }
 
-    public static bool IsValidEd25519PublicKey(string publicKey)
+    private static bool TryDecode(VersionByte versionByte, string publicKey, out byte[] decoded)
     {
-        return IsValid(VersionByte.ACCOUNT_ID, publicKey);
-    }
-
-    public static bool IsValidMuxedAccount(string publicKey)
-    {
-        return IsValid(VersionByte.MUXED_ACCOUNT, publicKey);
-    }
-
-    public static bool IsValidEd25519SecretSeed(string seed)
-    {
-        return IsValid(VersionByte.SEED, seed);
-    }
-
-    public static bool IsValidContractId(string contract)
-    {
-        return IsValid(VersionByte.CONTRACT, contract);
-    }
-
-    private static byte[] CheckedBase32Decode(string encoded)
-    {
-        if (encoded.Length == 0)
+        decoded = null;
+        try
         {
-            throw new ArgumentException("Encoded string is empty");
+            decoded = DecodeCheck(versionByte, publicKey);
+            return true;
         }
-
-        foreach (var t in encoded)
+        catch
         {
-            if (t > 127)
-            {
-                throw new ArgumentException("Illegal characters in encoded string.");
-            }
+            return false;
         }
+    }
 
-        return Base32Encoding.ToBytes(encoded);
+    private static byte[] DecodingTable()
+    {
+        var table = new byte[128];
+        Array.Fill(table, (byte)0xff);
+        const string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        for (var i = 0; i < alphabet.Length; i++)
+        {
+            table[alphabet[i]] = (byte)i;
+        }
+        return table;
     }
 }

@@ -2,7 +2,11 @@
 
 public class EvictionIterator : LedgerEntryConfigSetting
 {
-    private EvictionIterator(uint bucketListLevel, bool isCurrBucket, ulong bucketFileOffset)
+    private EvictionIterator(
+        uint bucketListLevel,
+        bool isCurrBucket,
+        ulong bucketFileOffset
+    )
     {
         BucketListLevel = bucketListLevel;
         IsCurrBucket = isCurrBucket;
