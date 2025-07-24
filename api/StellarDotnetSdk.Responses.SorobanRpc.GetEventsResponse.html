@@ -151,8 +151,8 @@ Class GetEventsResponse
 
   <a id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.#ctor*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse__ctor_StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_EventInfo___System_Nullable_System_Int64__System_Nullable_System_Int64__System_Nullable_System_Int64__System_Nullable_System_Int64__System_String_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.#ctor(StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo[],System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int64},System.String)">
-  GetEventsResponse(EventInfo[]?, long?, long?, long?, long?, string?)
+  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse__ctor_StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_EventInfo___System_Nullable_System_Int64__System_String_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.#ctor(StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo[],System.Nullable{System.Int64},System.String)">
+  GetEventsResponse(EventInfo[]?, long?, string?)
   
   </h3>
 
@@ -160,7 +160,7 @@ Class GetEventsResponse
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GetEventsResponse(GetEventsResponse.EventInfo[]? events, long? latestLedger, long? oldestLedger, long? latestLedgerCloseTime, long? oldestLedgerCloseTime, string? cursor)</code></pre>
+    <pre><code class="lang-csharp hljs">public GetEventsResponse(GetEventsResponse.EventInfo[]? events, long? latestLedger, string? cursor)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -168,12 +168,6 @@ Class GetEventsResponse
     <dt><code>events</code> <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo.html">EventInfo</a>[]</dt>
     <dd></dd>
     <dt><code>latestLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
-    <dd></dd>
-    <dt><code>oldestLedger</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
-    <dd></dd>
-    <dt><code>latestLedgerCloseTime</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
-    <dd></dd>
-    <dt><code>oldestLedgerCloseTime</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
     <dd></dd>
     <dt><code>cursor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
@@ -270,99 +264,6 @@ Class GetEventsResponse
 
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public long? LatestLedger { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_LatestLedgerCloseTime_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.LatestLedgerCloseTime*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_LatestLedgerCloseTime" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.LatestLedgerCloseTime">
-  LatestLedgerCloseTime
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long? LatestLedgerCloseTime { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_OldestLedger_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.OldestLedger*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_OldestLedger" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.OldestLedger">
-  OldestLedger
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long? OldestLedger { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a>?</dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_OldestLedgerCloseTime_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.OldestLedgerCloseTime*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_OldestLedgerCloseTime" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.OldestLedgerCloseTime">
-  OldestLedgerCloseTime
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long? OldestLedgerCloseTime { get; }</code></pre>
   </div>
 
 

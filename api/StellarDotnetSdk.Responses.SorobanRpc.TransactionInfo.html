@@ -156,8 +156,8 @@ Class TransactionInfo
 
   <a id="StellarDotnetSdk_Responses_SorobanRpc_TransactionInfo__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.TransactionInfo.#ctor*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_TransactionInfo__ctor_StellarDotnetSdk_Responses_SorobanRpc_TransactionInfo_TransactionStatus_System_Nullable_System_Int64__System_Nullable_System_Int64__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_String_System_String_System_String_System_String_StellarDotnetSdk_Responses_SorobanRpc_Events_System_String___" data-uid="StellarDotnetSdk.Responses.SorobanRpc.TransactionInfo.#ctor(StellarDotnetSdk.Responses.SorobanRpc.TransactionInfo.TransactionStatus,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.String,System.String,System.String,StellarDotnetSdk.Responses.SorobanRpc.Events,System.String[])">
-  TransactionInfo(TransactionStatus, long?, long?, int?, bool?, string?, string?, string?, string?, Events?, string[]?)
+  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_TransactionInfo__ctor_StellarDotnetSdk_Responses_SorobanRpc_TransactionInfo_TransactionStatus_System_Nullable_System_Int64__System_Nullable_System_Int64__System_Nullable_System_Int32__System_Nullable_System_Boolean__System_String_System_String_System_String_System_String_System_String___" data-uid="StellarDotnetSdk.Responses.SorobanRpc.TransactionInfo.#ctor(StellarDotnetSdk.Responses.SorobanRpc.TransactionInfo.TransactionStatus,System.Nullable{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.String,System.String,System.String,System.String[])">
+  TransactionInfo(TransactionStatus, long?, long?, int?, bool?, string?, string?, string?, string?, string[]?)
   
   </h3>
 
@@ -165,7 +165,7 @@ Class TransactionInfo
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TransactionInfo(TransactionInfo.TransactionStatus status, long? ledger, long? createdAt, int? applicationOrder, bool? feeBump, string? envelopeXdr, string? resultXdr, string? resultMetaXdr, string? txHash, Events? events = null, string[]? diagnosticEventsXdr = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public TransactionInfo(TransactionInfo.TransactionStatus status, long? ledger, long? createdAt, int? applicationOrder, bool? feeBump, string? envelopeXdr, string? resultXdr, string? resultMetaXdr, string? txHash, string[]? diagnosticEventsXdr = null)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -187,8 +187,6 @@ Class TransactionInfo
     <dt><code>resultMetaXdr</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
     <dt><code>txHash</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>events</code> <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.Events.html">Events</a></dt>
     <dd></dd>
     <dt><code>diagnosticEventsXdr</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
     <dd></dd>
@@ -319,8 +317,7 @@ ENABLE_SOROBAN_DIAGNOSTIC_EVENTS has been enabled in the stellar-core config.</p
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated in favor of Events.DiagnosticEventsXdr. Will be removed in the next version.&quot;)]
-public string[]? DiagnosticEventsXdr { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string[]? DiagnosticEventsXdr { get; }</code></pre>
   </div>
 
 
@@ -362,37 +359,6 @@ public string[]? DiagnosticEventsXdr { get; }</code></pre>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_TransactionInfo_Events_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.TransactionInfo.Events*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_TransactionInfo_Events" data-uid="StellarDotnetSdk.Responses.SorobanRpc.TransactionInfo.Events">
-  Events
-  
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Events? Events { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.Events.html">Events</a></dt>
     <dd></dd>
   </dl>
 
@@ -604,12 +570,12 @@ present if status is SUCCESS or FAILED.</p>
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Holds the transaction metadata.</p>
+  <div class="markdown level1 summary"><p>Holds the diagnostic information, useful for debugging purpose when the transaction fails.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TransactionMeta? TransactionMeta { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public TransactionMetaV3? TransactionMeta { get; }</code></pre>
   </div>
 
 
@@ -618,7 +584,7 @@ present if status is SUCCESS or FAILED.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Soroban.TransactionMeta.html">TransactionMeta</a></dt>
+    <dt><a class="xref" href="StellarDotnetSdk.Soroban.TransactionMetaV3.html">TransactionMetaV3</a></dt>
     <dd></dd>
   </dl>
 

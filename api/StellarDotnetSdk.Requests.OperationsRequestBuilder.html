@@ -241,7 +241,7 @@ Class OperationsRequestBuilder
   </h3>
 
   <div class="markdown level1 summary"><p>Builds request to GET /accounts/{account}/operations
-See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-operations-by-account-id">https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-operations-by-account-id</a></p>
+See: <a href="https://www.stellar.org/developers/horizon/reference/operations-for-account.html">https://www.stellar.org/developers/horizon/reference/operations-for-account.html</a></p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -259,7 +259,8 @@ See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-referenc
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></p>
+</dd>
   </dl>
 
 
@@ -269,6 +270,11 @@ See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-referenc
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a></dt>
+    <dd></dd>
+  </dl>
 
 
 
@@ -280,25 +286,26 @@ See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-referenc
   </h3>
 
   <div class="markdown level1 summary"><p>Builds request to GET /claimable_balances/{claimable_balance_id}/operations
-See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/cb-retrieve-related-operations">https://developers.stellar.org/docs/data/apis/horizon/api-reference/cb-retrieve-related-operations</a></p>
+See: <a href="https://www.stellar.org/developers/horizon/reference/operations-for-claimable-balance.html">https://www.stellar.org/developers/horizon/reference/operations-for-claimable-balance.html</a></p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public OperationsRequestBuilder ForClaimableBalance(string claimableBalanceId)</code></pre>
+    <pre><code class="lang-csharp hljs">public OperationsRequestBuilder ForClaimableBalance(string claimableBalance)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>claimableBalanceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>Hex-encoded claimable balance ID (0000...) for which to get operations.</p>
+    <dt><code>claimableBalance</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Claimable Balance for which to get operations</p>
 </dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></p>
+</dd>
   </dl>
 
 
@@ -308,6 +315,11 @@ See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-referenc
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a></dt>
+    <dd></dd>
+  </dl>
 
 
 
@@ -319,7 +331,7 @@ See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-referenc
   </h3>
 
   <div class="markdown level1 summary"><p>Builds request to GET /ledgers/{ledgerSeq}/operations
-See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-ledgers-operations">https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-ledgers-operations</a></p>
+See: <a href="https://www.stellar.org/developers/horizon/reference/operations-for-ledger.html">https://www.stellar.org/developers/horizon/reference/operations-for-ledger.html</a></p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -337,46 +349,8 @@ See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-referenc
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="StellarDotnetSdk_Requests_OperationsRequestBuilder_ForLiquidityPool_" data-uid="StellarDotnetSdk.Requests.OperationsRequestBuilder.ForLiquidityPool*"></a>
-
-  <h3 id="StellarDotnetSdk_Requests_OperationsRequestBuilder_ForLiquidityPool_System_String_" data-uid="StellarDotnetSdk.Requests.OperationsRequestBuilder.ForLiquidityPool(System.String)">
-  ForLiquidityPool(string)
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>Builds request to GET /liquidity_pools/{liquidityPoolId}/operations
-See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/lp-retrieve-related-operations">https://developers.stellar.org/docs/data/apis/horizon/api-reference/lp-retrieve-related-operations</a></p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public OperationsRequestBuilder ForLiquidityPool(string liquidityPoolId)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>liquidityPoolId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>Liquidity pool ID for which to get operations</p>
+    <dd><p><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></p>
 </dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></dt>
-    <dd></dd>
   </dl>
 
 
@@ -397,7 +371,7 @@ See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-referenc
   </h3>
 
   <div class="markdown level1 summary"><p>Builds request to GET /transactions/{transactionId}/operations
-See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-transactions-operations">https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-transactions-operations</a></p>
+See: <a href="https://www.stellar.org/developers/horizon/reference/operations-for-transaction.html">https://www.stellar.org/developers/horizon/reference/operations-for-transaction.html</a></p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -415,7 +389,8 @@ See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-referenc
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></p>
+</dd>
   </dl>
 
 
@@ -453,7 +428,8 @@ See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-referenc
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></p>
+</dd>
   </dl>
 
 
@@ -474,7 +450,7 @@ See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-referenc
   </h3>
 
   <div class="markdown level1 summary"><p>Requests GET /operations/{operationId}
-See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-an-operation">https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-an-operation</a></p>
+See: <a href="https://www.stellar.org/developers/horizon/reference/operations-single.html">https://www.stellar.org/developers/horizon/reference/operations-single.html</a></p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -492,7 +468,8 @@ See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-referenc
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></dt>
-    <dd></dd>
+    <dd><p><a class="xref" href="StellarDotnetSdk.Requests.OperationsRequestBuilder.html">OperationsRequestBuilder</a></p>
+</dd>
   </dl>
 
 
@@ -502,6 +479,11 @@ See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-referenc
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.net.http.httprequestexception">HttpRequestException</a></dt>
+    <dd></dd>
+  </dl>
 
 
 

@@ -201,23 +201,60 @@ Class LedgerKey
 
   <a id="StellarDotnetSdk_LedgerKeys_LedgerKey_ClaimableBalance_" data-uid="StellarDotnetSdk.LedgerKeys.LedgerKey.ClaimableBalance*"></a>
 
+  <h3 id="StellarDotnetSdk_LedgerKeys_LedgerKey_ClaimableBalance_System_Byte___" data-uid="StellarDotnetSdk.LedgerKeys.LedgerKey.ClaimableBalance(System.Byte[])">
+  ClaimableBalance(byte[])
+  
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static LedgerKey ClaimableBalance(byte[] balanceId)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>balanceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKey.html">LedgerKey</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="StellarDotnetSdk_LedgerKeys_LedgerKey_ClaimableBalance_" data-uid="StellarDotnetSdk.LedgerKeys.LedgerKey.ClaimableBalance*"></a>
+
   <h3 id="StellarDotnetSdk_LedgerKeys_LedgerKey_ClaimableBalance_System_String_" data-uid="StellarDotnetSdk.LedgerKeys.LedgerKey.ClaimableBalance(System.String)">
   ClaimableBalance(string)
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Constructs a new <code>LedgerKeyClaimableBalance</code> from a claimable balance ID.</p>
+  <div class="markdown level1 summary"><p>Constructs a new <code>LedgerKeyClaimableBalance</code> from the given hex-encoded claimable balance ID.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static LedgerKey ClaimableBalance(string balanceId)</code></pre>
+    <pre><code class="lang-csharp hljs">public static LedgerKey ClaimableBalance(string balanceIdHexString)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>balanceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>A hex-encoded claimable balance ID (0000...).</p>
+    <dt><code>balanceIdHexString</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>Hex-encoded ID of the claimable balance entry.
+For example: <code>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</code>.</p>
 </dd>
   </dl>
 
@@ -311,8 +348,8 @@ Class LedgerKey
 
   <a id="StellarDotnetSdk_LedgerKeys_LedgerKey_ContractData_" data-uid="StellarDotnetSdk.LedgerKeys.LedgerKey.ContractData*"></a>
 
-  <h3 id="StellarDotnetSdk_LedgerKeys_LedgerKey_ContractData_StellarDotnetSdk_Soroban_ScAddress_StellarDotnetSdk_Soroban_SCVal_StellarDotnetSdk_Xdr_ContractDataDurability_" data-uid="StellarDotnetSdk.LedgerKeys.LedgerKey.ContractData(StellarDotnetSdk.Soroban.ScAddress,StellarDotnetSdk.Soroban.SCVal,StellarDotnetSdk.Xdr.ContractDataDurability)">
-  ContractData(ScAddress, SCVal, ContractDataDurability)
+  <h3 id="StellarDotnetSdk_LedgerKeys_LedgerKey_ContractData_StellarDotnetSdk_Soroban_SCAddress_StellarDotnetSdk_Soroban_SCVal_StellarDotnetSdk_Xdr_ContractDataDurability_" data-uid="StellarDotnetSdk.LedgerKeys.LedgerKey.ContractData(StellarDotnetSdk.Soroban.SCAddress,StellarDotnetSdk.Soroban.SCVal,StellarDotnetSdk.Xdr.ContractDataDurability)">
+  ContractData(SCAddress, SCVal, ContractDataDurability)
   
   </h3>
 
@@ -320,12 +357,12 @@ Class LedgerKey
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static LedgerKey ContractData(ScAddress contractId, SCVal key, ContractDataDurability durability)</code></pre>
+    <pre><code class="lang-csharp hljs">public static LedgerKey ContractData(SCAddress contractId, SCVal key, ContractDataDurability durability)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>contractId</code> <a class="xref" href="StellarDotnetSdk.Soroban.ScAddress.html">ScAddress</a></dt>
+    <dt><code>contractId</code> <a class="xref" href="StellarDotnetSdk.Soroban.SCAddress.html">SCAddress</a></dt>
     <dd></dd>
     <dt><code>key</code> <a class="xref" href="StellarDotnetSdk.Soroban.SCVal.html">SCVal</a></dt>
     <dd></dd>

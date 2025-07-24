@@ -150,8 +150,8 @@ Class GetEventsResponse.EventInfo
 
   <a id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_EventInfo__ctor_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo.#ctor*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_EventInfo__ctor_System_String_System_String_System_Boolean_System_Int32_System_String_System_String___System_String_System_String_System_UInt32_System_UInt32_System_String_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo.#ctor(System.String,System.String,System.Boolean,System.Int32,System.String,System.String[],System.String,System.String,System.UInt32,System.UInt32,System.String)">
-  EventInfo(string, string, bool, int, string, string[], string, string, uint, uint, string)
+  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_EventInfo__ctor_System_String_System_String_System_Boolean_System_Int32_System_String_System_String_System_String___System_String_System_String_System_String_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo.#ctor(System.String,System.String,System.Boolean,System.Int32,System.String,System.String,System.String[],System.String,System.String,System.String)">
+  EventInfo(string, string, bool, int, string, string, string[], string, string, string)
   
   </h3>
 
@@ -159,7 +159,7 @@ Class GetEventsResponse.EventInfo
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EventInfo(string contractId, string id, bool inSuccessfulContractCall, int ledger, string ledgerClosedAt, string[] topics, string type, string value, uint transactionIndex, uint operationIndex, string transactionHash)</code></pre>
+    <pre><code class="lang-csharp hljs">public EventInfo(string contractId, string id, bool inSuccessfulContractCall, int ledger, string ledgerClosedAt, string pagingToken, string[] topics, string type, string value, string transactionHash)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -174,15 +174,13 @@ Class GetEventsResponse.EventInfo
     <dd></dd>
     <dt><code>ledgerClosedAt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
+    <dt><code>pagingToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
     <dt><code>topics</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</dt>
     <dd></dd>
     <dt><code>type</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
     <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-    <dt><code>transactionIndex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
-    <dd></dd>
-    <dt><code>operationIndex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
     <dd></dd>
     <dt><code>transactionHash</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
@@ -210,7 +208,7 @@ Class GetEventsResponse.EventInfo
   
   </h3>
 
-  <div class="markdown level1 summary"><p>StrKey representation of the contract address (C...) that emitted this event.</p>
+  <div class="markdown level1 summary"><p>StrKey representation of the contract address that emitted this event.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -279,8 +277,7 @@ Class GetEventsResponse.EventInfo
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated. Will be removed in the next version.&quot;)]
-public bool InSuccessfulContractCall { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool InSuccessfulContractCall { get; }</code></pre>
   </div>
 
 
@@ -365,19 +362,22 @@ See <a href="https://www.iso.org/iso-8601-date-and-time-format.html">https://www
 
 
 
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_EventInfo_OperationIndex_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo.OperationIndex*"></a>
+  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_EventInfo_PagingToken_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo.PagingToken*"></a>
 
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_EventInfo_OperationIndex" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo.OperationIndex">
-  OperationIndex
+  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_EventInfo_PagingToken" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo.PagingToken">
+  PagingToken
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Representing the operation index at which the event occurred.</p>
+  <div class="markdown level1 summary"><pre><code>Duplicate of &lt;code&gt;id&lt;/code&gt; field, but in the standard place for pagination tokens.
+</code></pre>
+<p>Use <a class="xref" href="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.html#StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_Cursor">Cursor</a> instead.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint OperationIndex { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;This property is deprecated, use GetEventsResponse.Cursor instead. In a future release of this SDK this field can be removed.&quot;)]
+public string PagingToken { get; }</code></pre>
   </div>
 
 
@@ -386,7 +386,7 @@ See <a href="https://www.iso.org/iso-8601-date-and-time-format.html">https://www
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
 
@@ -457,38 +457,6 @@ public string TransactionHash { get; }</code></pre>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_EventInfo_TransactionIndex_" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo.TransactionIndex*"></a>
-
-  <h3 id="StellarDotnetSdk_Responses_SorobanRpc_GetEventsResponse_EventInfo_TransactionIndex" data-uid="StellarDotnetSdk.Responses.SorobanRpc.GetEventsResponse.EventInfo.TransactionIndex">
-  TransactionIndex
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>Representing the transaction index at which the event occurred.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint TransactionIndex { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
     <dd></dd>
   </dl>
 

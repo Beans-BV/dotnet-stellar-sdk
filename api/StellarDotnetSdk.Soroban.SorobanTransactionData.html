@@ -186,8 +186,8 @@ restored.
 
   <a id="StellarDotnetSdk_Soroban_SorobanTransactionData__ctor_" data-uid="StellarDotnetSdk.Soroban.SorobanTransactionData.#ctor*"></a>
 
-  <h3 id="StellarDotnetSdk_Soroban_SorobanTransactionData__ctor_StellarDotnetSdk_Soroban_SorobanResources_System_Int64_StellarDotnetSdk_Soroban_SorobanResourceExtensionV0_" data-uid="StellarDotnetSdk.Soroban.SorobanTransactionData.#ctor(StellarDotnetSdk.Soroban.SorobanResources,System.Int64,StellarDotnetSdk.Soroban.SorobanResourceExtensionV0)">
-  SorobanTransactionData(SorobanResources, long, SorobanResourceExtensionV0?)
+  <h3 id="StellarDotnetSdk_Soroban_SorobanTransactionData__ctor_StellarDotnetSdk_Soroban_SorobanResources_System_Int64_StellarDotnetSdk_Soroban_ExtensionPoint_" data-uid="StellarDotnetSdk.Soroban.SorobanTransactionData.#ctor(StellarDotnetSdk.Soroban.SorobanResources,System.Int64,StellarDotnetSdk.Soroban.ExtensionPoint)">
+  SorobanTransactionData(SorobanResources, long, ExtensionPoint?)
   
   </h3>
 
@@ -195,7 +195,7 @@ restored.
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SorobanTransactionData(SorobanResources resources, long resourceFee, SorobanResourceExtensionV0? extension = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public SorobanTransactionData(SorobanResources resources, long resourceFee, ExtensionPoint? extensionPoint = null)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -204,7 +204,7 @@ restored.
     <dd></dd>
     <dt><code>resourceFee</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
     <dd></dd>
-    <dt><code>extension</code> <a class="xref" href="StellarDotnetSdk.Soroban.SorobanResourceExtensionV0.html">SorobanResourceExtensionV0</a></dt>
+    <dt><code>extensionPoint</code> <a class="xref" href="StellarDotnetSdk.Soroban.ExtensionPoint.html">ExtensionPoint</a></dt>
     <dd></dd>
   </dl>
 
@@ -223,10 +223,10 @@ restored.
 </h2>
 
 
-  <a id="StellarDotnetSdk_Soroban_SorobanTransactionData_Extension_" data-uid="StellarDotnetSdk.Soroban.SorobanTransactionData.Extension*"></a>
+  <a id="StellarDotnetSdk_Soroban_SorobanTransactionData_ExtensionPoint_" data-uid="StellarDotnetSdk.Soroban.SorobanTransactionData.ExtensionPoint*"></a>
 
-  <h3 id="StellarDotnetSdk_Soroban_SorobanTransactionData_Extension" data-uid="StellarDotnetSdk.Soroban.SorobanTransactionData.Extension">
-  Extension
+  <h3 id="StellarDotnetSdk_Soroban_SorobanTransactionData_ExtensionPoint" data-uid="StellarDotnetSdk.Soroban.SorobanTransactionData.ExtensionPoint">
+  ExtensionPoint
   
   </h3>
 
@@ -234,7 +234,7 @@ restored.
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SorobanResourceExtensionV0? Extension { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public ExtensionPoint ExtensionPoint { get; }</code></pre>
   </div>
 
 
@@ -243,7 +243,7 @@ restored.
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="StellarDotnetSdk.Soroban.SorobanResourceExtensionV0.html">SorobanResourceExtensionV0</a></dt>
+    <dt><a class="xref" href="StellarDotnetSdk.Soroban.ExtensionPoint.html">ExtensionPoint</a></dt>
     <dd></dd>
   </dl>
 
@@ -332,12 +332,12 @@ restored.
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static SorobanTransactionData FromXdr(SorobanTransactionData xdrData)</code></pre>
+    <pre><code class="lang-csharp hljs">public static SorobanTransactionData FromXdr(SorobanTransactionData xdrSorobanTransactionData)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>xdrData</code> <span class="xref">SorobanTransactionData</span></dt>
+    <dt><code>xdrSorobanTransactionData</code> <span class="xref">SorobanTransactionData</span></dt>
     <dd><p>The <code>xdr.SorobanTransactionData</code> to be converted.</p>
 </dd>
   </dl>
