@@ -114,7 +114,7 @@ public class TransactionInfo
             var bytes = Convert.FromBase64String(ResultMetaXdr);
             var reader = new XdrDataInputStream(bytes);
             var meta = Xdr.TransactionMeta.Decode(reader);
-            return meta.V3?.SorobanMeta?.ReturnValue == null ? null : SCVal.FromXdr(meta.V3.SorobanMeta.ReturnValue);
+            return meta.V4?.SorobanMeta?.ReturnValue == null ? null : SCVal.FromXdr(meta.V4.SorobanMeta.ReturnValue);
         }
     }
 

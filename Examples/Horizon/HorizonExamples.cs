@@ -70,8 +70,7 @@ public static class HorizonExamples
         var balanceId = await CreateClaimableBalance(keyPair, childKeyPair);
 
         Console.WriteLine("\nGet created claimable balance details");
-        // TODO Temporary fix until the other PR is merged
-        await GetClaimableBalanceDetails("00000000" + balanceId);
+        await GetClaimableBalanceDetails(balanceId.ToLower());
     }
 
     public static KeyPair CreateKeyPair()
