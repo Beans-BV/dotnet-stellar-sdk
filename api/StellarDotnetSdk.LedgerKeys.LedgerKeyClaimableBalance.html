@@ -121,9 +121,6 @@ Class LedgerKeyClaimableBalance
       <a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKey.html#StellarDotnetSdk_LedgerKeys_LedgerKey_Account_StellarDotnetSdk_Accounts_KeyPair_">LedgerKey.Account(KeyPair)</a>
     </div>
     <div>
-      <a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKey.html#StellarDotnetSdk_LedgerKeys_LedgerKey_ClaimableBalance_System_Byte___">LedgerKey.ClaimableBalance(byte[])</a>
-    </div>
-    <div>
       <a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKey.html#StellarDotnetSdk_LedgerKeys_LedgerKey_ClaimableBalance_System_String_">LedgerKey.ClaimableBalance(string)</a>
     </div>
     <div>
@@ -139,7 +136,7 @@ Class LedgerKeyClaimableBalance
       <a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKey.html#StellarDotnetSdk_LedgerKeys_LedgerKey_LiquidityPool_StellarDotnetSdk_LiquidityPool_LiquidityPoolId_">LedgerKey.LiquidityPool(LiquidityPoolId)</a>
     </div>
     <div>
-      <a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKey.html#StellarDotnetSdk_LedgerKeys_LedgerKey_ContractData_StellarDotnetSdk_Soroban_SCAddress_StellarDotnetSdk_Soroban_SCVal_StellarDotnetSdk_Xdr_ContractDataDurability_">LedgerKey.ContractData(SCAddress, SCVal, ContractDataDurability)</a>
+      <a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKey.html#StellarDotnetSdk_LedgerKeys_LedgerKey_ContractData_StellarDotnetSdk_Soroban_ScAddress_StellarDotnetSdk_Soroban_SCVal_StellarDotnetSdk_Xdr_ContractDataDurability_">LedgerKey.ContractData(ScAddress, SCVal, ContractDataDurability)</a>
     </div>
     <div>
       <a class="xref" href="StellarDotnetSdk.LedgerKeys.LedgerKey.html#StellarDotnetSdk_LedgerKeys_LedgerKey_ContractCode_System_String_">LedgerKey.ContractCode(string)</a>
@@ -193,57 +190,23 @@ Class LedgerKeyClaimableBalance
 
   <a id="StellarDotnetSdk_LedgerKeys_LedgerKeyClaimableBalance__ctor_" data-uid="StellarDotnetSdk.LedgerKeys.LedgerKeyClaimableBalance.#ctor*"></a>
 
-  <h3 id="StellarDotnetSdk_LedgerKeys_LedgerKeyClaimableBalance__ctor_System_Byte___" data-uid="StellarDotnetSdk.LedgerKeys.LedgerKeyClaimableBalance.#ctor(System.Byte[])">
-  LedgerKeyClaimableBalance(byte[])
-  
-  </h3>
-
-  <div class="markdown level1 summary"><p>Constructs a <code>LedgerKeyClaimableBalance</code> object from a 32-byte array.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LedgerKeyClaimableBalance(byte[] balanceIdByteArray)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>balanceIdByteArray</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
-    <dd><p>Byte array representation of the claimable balance entry.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-  <a id="StellarDotnetSdk_LedgerKeys_LedgerKeyClaimableBalance__ctor_" data-uid="StellarDotnetSdk.LedgerKeys.LedgerKeyClaimableBalance.#ctor*"></a>
-
   <h3 id="StellarDotnetSdk_LedgerKeys_LedgerKeyClaimableBalance__ctor_System_String_" data-uid="StellarDotnetSdk.LedgerKeys.LedgerKeyClaimableBalance.#ctor(System.String)">
   LedgerKeyClaimableBalance(string)
   
   </h3>
 
-  <div class="markdown level1 summary"><p>Constructs a <code>LedgerKeyClaimableBalance</code> from given hex-encoded claimable balance ID.</p>
+  <div class="markdown level1 summary"><p>Constructs a <code>LedgerKeyClaimableBalance</code> from a claimable balance ID.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public LedgerKeyClaimableBalance(string balanceIdHexString)</code></pre>
+    <pre><code class="lang-csharp hljs">public LedgerKeyClaimableBalance(string balanceId)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>balanceIdHexString</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>Hex-encoded ID of the claimable balance entry.
-For example: <code>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780</code>.</p>
+    <dt><code>balanceId</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A hex-encoded claimable balance ID (0000...).</p>
 </dd>
   </dl>
 
@@ -269,7 +232,8 @@ For example: <code>d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b
   
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Hex-encoded claimable balance ID (0000...).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">

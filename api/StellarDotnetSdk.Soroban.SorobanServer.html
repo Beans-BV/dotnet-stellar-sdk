@@ -831,8 +831,8 @@ See <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/
 
   <a id="StellarDotnetSdk_Soroban_SorobanServer_SimulateTransaction_" data-uid="StellarDotnetSdk.Soroban.SorobanServer.SimulateTransaction*"></a>
 
-  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_SimulateTransaction_StellarDotnetSdk_Transactions_Transaction_System_Nullable_System_UInt32__" data-uid="StellarDotnetSdk.Soroban.SorobanServer.SimulateTransaction(StellarDotnetSdk.Transactions.Transaction,System.Nullable{System.UInt32})">
-  SimulateTransaction(Transaction, uint?)
+  <h3 id="StellarDotnetSdk_Soroban_SorobanServer_SimulateTransaction_StellarDotnetSdk_Transactions_Transaction_System_Nullable_System_UInt32__System_Nullable_StellarDotnetSdk_Soroban_AuthMode__" data-uid="StellarDotnetSdk.Soroban.SorobanServer.SimulateTransaction(StellarDotnetSdk.Transactions.Transaction,System.Nullable{System.UInt32},System.Nullable{StellarDotnetSdk.Soroban.AuthMode})">
+  SimulateTransaction(Transaction, uint?, AuthMode?)
   
   </h3>
 
@@ -844,7 +844,7 @@ See: <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task&lt;SimulateTransactionResponse&gt; SimulateTransaction(Transaction transaction, uint? resourceConfig = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;SimulateTransactionResponse&gt; SimulateTransaction(Transaction transaction, uint? resourceConfig = null, AuthMode? authMode = null)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -858,6 +858,11 @@ contain only a single operation of the type <code>invokeHostFunction</code>.
 </dd>
     <dt><code>resourceConfig</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a>?</dt>
     <dd><p>Contains configuration for how resources will be calculated when simulating transactions.</p>
+</dd>
+    <dt><code>authMode</code> <a class="xref" href="StellarDotnetSdk.Soroban.AuthMode.html">AuthMode</a>?</dt>
+    <dd><p>Explicitly allows users to opt in to non-root authorization in recording mode.
+<p>Leaving this field unset will default to <a class="xref" href="StellarDotnetSdk.Soroban.AuthMode.html#StellarDotnetSdk_Soroban_AuthMode_ENFORCE">ENFORCE</a> if auth entries are present,
+<a class="xref" href="StellarDotnetSdk.Soroban.AuthMode.html#StellarDotnetSdk_Soroban_AuthMode_RECORD">RECORD</a> otherwise.</p>
 </dd>
   </dl>
 
