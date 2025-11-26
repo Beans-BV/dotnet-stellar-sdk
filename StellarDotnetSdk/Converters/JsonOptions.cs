@@ -45,6 +45,7 @@ public static class JsonOptions
             // Domain type converters
             new AssetJsonConverter(),
             new KeyPairJsonConverter(),
+            new LiquidityPoolTypeEnumJsonConverter(),
 
             // HATEOAS link converters
             new LinkJsonConverter<EffectResponse>(),

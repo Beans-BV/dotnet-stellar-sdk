@@ -24,31 +24,44 @@ public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<Liqu
             );
         }
 
-        using (var jsonDocument = JsonDocument.ParseValue(ref reader))
+        using var jsonDocument = JsonDocument.ParseValue(ref reader);
+        var jsonObject = jsonDocument.RootElement;
+
+        if (!jsonObject.TryGetProperty("asset", out var assetElement))
         {
-            var jsonObject = jsonDocument.RootElement;
-            var assetName = jsonObject.GetProperty("asset").GetString();
-            var asset = string.IsNullOrEmpty(assetName) ? null : Asset.Create(assetName);
-
-            var amount = jsonObject.GetProperty("amount").GetString();
-            var claimableBalanceId = jsonObject.GetProperty("claimable_balance_id").GetString();
-
-            if (asset == null)
-            {
-                throw new ArgumentException("JSON value for asset is missing.", nameof(asset));
-            }
-            if (amount == null)
-            {
-                throw new ArgumentException("JSON value for amount is missing.", nameof(amount));
-            }
-
-            return new LiquidityPoolClaimableAssetAmount
-            {
-                Asset = asset,
-                Amount = amount,
-                ClaimableBalanceId = claimableBalanceId,
-            };
+            throw new ArgumentException("JSON value for asset is missing.", nameof(assetElement));
         }
+        var assetName = assetElement.GetString();
+        var asset = string.IsNullOrEmpty(assetName) ? null : Asset.Create(assetName);
+
+        if (!jsonObject.TryGetProperty("amount", out var amountElement))
+        {
+            throw new ArgumentException("JSON value for amount is missing.", nameof(amountElement));
+        }
+        var amount = amountElement.GetString();
+
+        // claimable_balance_id is optional
+        string? claimableBalanceId = null;
+        if (jsonObject.TryGetProperty("claimable_balance_id", out var claimableBalanceIdElement))
+        {
+            claimableBalanceId = claimableBalanceIdElement.GetString();
+        }
+
+        if (asset == null)
+        {
+            throw new ArgumentException("JSON value for asset is missing.", nameof(asset));
+        }
+        if (amount == null)
+        {
+            throw new ArgumentException("JSON value for amount is missing.", nameof(amount));
+        }
+
+        return new LiquidityPoolClaimableAssetAmount
+        {
+            Asset = asset,
+            Amount = amount,
+            ClaimableBalanceId = claimableBalanceId,
+        };
     }
 
     public override void Write(Utf8JsonWriter writer, LiquidityPoolClaimableAssetAmount value,
