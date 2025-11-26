@@ -6,14 +6,22 @@ using StellarDotnetSdk.Responses.Effects;
 
 namespace StellarDotnetSdk.Converters;
 
+/// <summary>
+///     JSON converter for LiquidityPoolClaimableAssetAmount.
+///     Handles conversion between JSON objects and LiquidityPoolClaimableAssetAmount instances.
+/// </summary>
 public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<LiquidityPoolClaimableAssetAmount>
 {
     public override LiquidityPoolClaimableAssetAmount Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
+        // LiquidityPoolClaimableAssetAmount is non-nullable, only check for expected token type
         if (reader.TokenType != JsonTokenType.StartObject)
         {
-            throw new JsonException();
+            throw new JsonException(
+                $"Expected StartObject for {nameof(LiquidityPoolClaimableAssetAmount)} but found {reader.TokenType}. " +
+                "LiquidityPoolClaimableAssetAmount must be a JSON object with 'asset', 'amount', and 'claimable_balance_id' properties."
+            );
         }
 
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
@@ -60,10 +68,5 @@ public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<Liqu
             writer.WriteString("claimable_balance_id", value.ClaimableBalanceId);
         }
         writer.WriteEndObject();
-    }
-
-    public override bool CanConvert(Type typeToConvert)
-    {
-        return typeToConvert == typeof(LiquidityPoolClaimableAssetAmount);
     }
 }

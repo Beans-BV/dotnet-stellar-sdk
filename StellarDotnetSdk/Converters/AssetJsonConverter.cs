@@ -5,6 +5,10 @@ using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Converters;
 
+/// <summary>
+///     JSON converter for Asset.
+///     Handles conversion between JSON objects and Asset instances (native or credit assets).
+/// </summary>
 public class AssetJsonConverter : JsonConverter<Asset>
 {
     public override void Write(Utf8JsonWriter writer, Asset value, JsonSerializerOptions options)
@@ -22,9 +26,13 @@ public class AssetJsonConverter : JsonConverter<Asset>
 
     public override Asset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
+        // Asset is non-nullable, only check for expected token type
         if (reader.TokenType != JsonTokenType.StartObject)
         {
-            throw new JsonException();
+            throw new JsonException(
+                $"Expected StartObject for {nameof(Asset)} but found {reader.TokenType}. " +
+                "Asset must be a JSON object with 'asset_type', and optionally 'asset_code' and 'asset_issuer'."
+            );
         }
 
         string? type = null;

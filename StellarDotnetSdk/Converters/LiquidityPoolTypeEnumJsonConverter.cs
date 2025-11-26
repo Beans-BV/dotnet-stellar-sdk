@@ -5,6 +5,10 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Converters;
 
+/// <summary>
+///     JSON converter for LiquidityPoolType enum.
+///     Handles conversion between JSON string representations and LiquidityPoolTypeEnum values.
+/// </summary>
 public class LiquidityPoolTypeEnumJsonConverter : JsonConverter<LiquidityPoolType.LiquidityPoolTypeEnum>
 {
     public override LiquidityPoolType.LiquidityPoolTypeEnum Read(ref Utf8JsonReader reader, Type typeToConvert,
@@ -12,14 +16,20 @@ public class LiquidityPoolTypeEnumJsonConverter : JsonConverter<LiquidityPoolTyp
     {
         if (reader.TokenType != JsonTokenType.String)
         {
-            throw new JsonException();
+            throw new JsonException(
+                $"Expected String for LiquidityPoolType but found {reader.TokenType}. " +
+                "LiquidityPoolType must be a string value."
+            );
         }
 
         var type = reader.GetString();
         return type switch
         {
             "constant_product" => LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
-            _ => throw new Exception("Type is not readable"),
+            _ => throw new JsonException(
+                $"Unknown liquidity pool type: '{type}'. Expected 'constant_product'. " +
+                "This may indicate a new pool type not supported by this SDK version."
+            ),
         };
     }
 
@@ -33,7 +43,10 @@ public class LiquidityPoolTypeEnumJsonConverter : JsonConverter<LiquidityPoolTyp
                 break;
 
             default:
-                throw new Exception("Type is not readable");
+                throw new JsonException(
+                    $"Unknown LiquidityPoolType enum value: {value}. " +
+                    "Cannot serialize unknown liquidity pool type."
+                );
         }
     }
 }

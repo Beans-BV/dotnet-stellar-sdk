@@ -5,13 +5,21 @@ using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Converters;
 
+/// <summary>
+///     JSON converter for AssetAmount.
+///     Handles conversion between JSON objects and AssetAmount instances.
+/// </summary>
 public class AssetAmountJsonConverter : JsonConverter<AssetAmount>
 {
     public override AssetAmount Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
+        // AssetAmount is non-nullable, only check for expected token type
         if (reader.TokenType != JsonTokenType.StartObject)
         {
-            throw new JsonException();
+            throw new JsonException(
+                $"Expected StartObject for {nameof(AssetAmount)} but found {reader.TokenType}. " +
+                "AssetAmount must be a JSON object with 'asset' and 'amount' properties."
+            );
         }
 
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
@@ -47,10 +55,5 @@ public class AssetAmountJsonConverter : JsonConverter<AssetAmount>
             writer.WriteString("amount", value.Amount);
         }
         writer.WriteEndObject();
-    }
-
-    public override bool CanConvert(Type typeToConvert)
-    {
-        return typeToConvert == typeof(AssetAmount);
     }
 }

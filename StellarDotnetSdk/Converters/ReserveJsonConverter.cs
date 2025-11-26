@@ -6,13 +6,21 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Converters;
 
+/// <summary>
+///     JSON converter for Reserve.
+///     Handles conversion between JSON objects and Reserve instances.
+/// </summary>
 public class ReserveJsonConverter : JsonConverter<Reserve>
 {
     public override Reserve Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
+        // Reserve is non-nullable, only check for expected token type
         if (reader.TokenType != JsonTokenType.StartObject)
         {
-            throw new JsonException();
+            throw new JsonException(
+                $"Expected StartObject for {nameof(Reserve)} but found {reader.TokenType}. " +
+                "Reserve must be a JSON object with 'asset' and 'amount' properties."
+            );
         }
 
         string? assetName = null;
