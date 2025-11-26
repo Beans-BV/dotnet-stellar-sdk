@@ -7,8 +7,12 @@ project.lock.json
 # Visual Studio Code
 .vscode
 
-#Rider
-#.idea
+# Cursor
+# .cursor
+.cursor/mcp.json
+
+# Rider
+# .idea
 
 # User-specific files
 *.suo
@@ -34,6 +38,8 @@ msbuild.wrn
 package/lib/
 packages/
 
+TestResults/
+
 
 # Visual Studio 2015
 .vs/
@@ -41,3 +47,4 @@ packages/
 stellar-dotnet-sdk.sln.DotSettings.user
 .idea/.idea.stellar-dotnetcore-sdk/.idea/workspace.xml
 stellar-dotnet-sdk-test/coverage.opencover.xml
+
