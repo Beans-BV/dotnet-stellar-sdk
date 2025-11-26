@@ -18,7 +18,7 @@ public class SendTransactionStatusEnumJsonConverter : JsonConverter<SendTransact
             "DUPLICATE" => SendTransactionResponse.SendTransactionStatus.DUPLICATE,
             "ERROR" => SendTransactionResponse.SendTransactionStatus.ERROR,
             _ => throw new JsonException(
-                $"Value '{value}' cannot be converted to type {nameof(SendTransactionResponse.SendTransactionStatus)}.")
+                $"Value '{value}' cannot be converted to type {nameof(SendTransactionResponse.SendTransactionStatus)}."),
         };
     }
 

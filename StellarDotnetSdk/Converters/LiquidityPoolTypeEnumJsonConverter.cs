@@ -19,7 +19,7 @@ public class LiquidityPoolTypeEnumJsonConverter : JsonConverter<LiquidityPoolTyp
         return type switch
         {
             "constant_product" => LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
-            _ => throw new Exception("Type is not readable")
+            _ => throw new Exception("Type is not readable"),
         };
     }
 

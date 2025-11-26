@@ -17,4 +17,4 @@ public class KeyPairJsonConverter : JsonConverter<KeyPair>
     {
         writer.WriteStringValue(value?.AccountId);
     }
-}   
+}
