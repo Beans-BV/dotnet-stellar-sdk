@@ -59,7 +59,7 @@ public class TransactionDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(transaction);
-        var back = JsonSerializer.Deserialize<TransactionResponse>(serialized);
+        var back = JsonSerializer.Deserialize<TransactionResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         Assert.IsTrue(back.Successful);
         AssertTestData(back);

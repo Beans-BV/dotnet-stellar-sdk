@@ -24,10 +24,10 @@ public class ClaimableBalanceDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("claimableBalance.json");
         var json = File.ReadAllText(jsonPath);
-        var claimableBalance = JsonSerializer.Deserialize<ClaimableBalanceResponse>(json);
+        var claimableBalance = JsonSerializer.Deserialize<ClaimableBalanceResponse>(json, JsonOptions.DefaultOptions);
 
         var serialized = JsonSerializer.Serialize(claimableBalance);
-        var back = JsonSerializer.Deserialize<ClaimableBalanceResponse>(serialized);
+        var back = JsonSerializer.Deserialize<ClaimableBalanceResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         Assert.IsNotNull(claimableBalance);
         Assert.AreEqual(claimableBalance.LastModifiedLedger, back.LastModifiedLedger);

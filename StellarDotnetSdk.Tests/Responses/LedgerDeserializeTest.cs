@@ -26,7 +26,7 @@ public class LedgerDeserializeTest
         var json = File.ReadAllText(jsonPath);
         var ledger = JsonSerializer.Deserialize<LedgerResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(ledger);
-        var back = JsonSerializer.Deserialize<LedgerResponse>(serialized);
+        var back = JsonSerializer.Deserialize<LedgerResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

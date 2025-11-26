@@ -38,9 +38,9 @@ public class AccountDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("account.json");
         var json = File.ReadAllText(jsonPath);
-        var account = JsonSerializer.Deserialize<AccountResponse>(json);
+        var account = JsonSerializer.Deserialize<AccountResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(account);
-        var back = JsonSerializer.Deserialize<AccountResponse>(serialized);
+        var back = JsonSerializer.Deserialize<AccountResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

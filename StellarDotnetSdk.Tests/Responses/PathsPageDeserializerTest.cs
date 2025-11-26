@@ -27,7 +27,7 @@ public class PathsPageDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var pathsPage = JsonSerializer.Deserialize<Page<PathResponse>>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(pathsPage);
-        var back = JsonSerializer.Deserialize<Page<PathResponse>>(serialized);
+        var back = JsonSerializer.Deserialize<Page<PathResponse>>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

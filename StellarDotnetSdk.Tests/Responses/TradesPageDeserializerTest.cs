@@ -27,7 +27,7 @@ public class TradesPageDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var tradesPage = JsonSerializer.Deserialize<Page<TradeResponse>>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(tradesPage);
-        var back = JsonSerializer.Deserialize<Page<TradeResponse>>(serialized);
+        var back = JsonSerializer.Deserialize<Page<TradeResponse>>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

@@ -27,7 +27,7 @@ public class OrderBookDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var orderBook = JsonSerializer.Deserialize<OrderBookResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(orderBook);
-        var back = JsonSerializer.Deserialize<OrderBookResponse>(serialized);
+        var back = JsonSerializer.Deserialize<OrderBookResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

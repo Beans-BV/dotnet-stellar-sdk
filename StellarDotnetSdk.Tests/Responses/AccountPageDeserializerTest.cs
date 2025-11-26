@@ -26,7 +26,7 @@ public class AccountPageDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var accountsPage = JsonSerializer.Deserialize<Page<AccountResponse>>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(accountsPage);
-        var back = JsonSerializer.Deserialize<Page<AccountResponse>>(serialized);
+        var back = JsonSerializer.Deserialize<Page<AccountResponse>>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

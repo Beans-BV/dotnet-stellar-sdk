@@ -28,7 +28,7 @@ public class OperationPageDeserializerTest
         var json = File.ReadAllText(_getTestDataPath);
         var operationsPage = JsonSerializer.Deserialize<Page<OperationResponse>>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(operationsPage);
-        var back = JsonSerializer.Deserialize<Page<OperationResponse>>(serialized);
+        var back = JsonSerializer.Deserialize<Page<OperationResponse>>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

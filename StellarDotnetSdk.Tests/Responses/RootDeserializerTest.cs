@@ -26,7 +26,7 @@ public class RootDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var root = JsonSerializer.Deserialize<RootResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(root);
-        var back = JsonSerializer.Deserialize<RootResponse>(serialized);
+        var back = JsonSerializer.Deserialize<RootResponse>(serialized, JsonOptions.DefaultOptions);
 
         Assert.IsNotNull(back);
         AssertTestData(back);

@@ -28,7 +28,7 @@ public class OfferPageDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var offerResponsePage = JsonSerializer.Deserialize<Page<OfferResponse>>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(offerResponsePage);
-        var back = JsonSerializer.Deserialize<Page<OfferResponse>>(serialized);
+        var back = JsonSerializer.Deserialize<Page<OfferResponse>>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

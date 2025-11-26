@@ -26,7 +26,7 @@ public class FriendBotResponseTest
         var json = File.ReadAllText(jsonPath);
         var friendBotResponse = JsonSerializer.Deserialize<FriendBotResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(friendBotResponse);
-        var back = JsonSerializer.Deserialize<FriendBotResponse>(serialized);
+        var back = JsonSerializer.Deserialize<FriendBotResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertFriendBotResponseFailureData(back);
     }
@@ -63,7 +63,7 @@ public class FriendBotResponseTest
         var json = File.ReadAllText(jsonPath);
         var friendBotResponse = JsonSerializer.Deserialize<FriendBotResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(friendBotResponse);
-        var back = JsonSerializer.Deserialize<FriendBotResponse>(serialized);
+        var back = JsonSerializer.Deserialize<FriendBotResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertSuccessTestData(back);
     }

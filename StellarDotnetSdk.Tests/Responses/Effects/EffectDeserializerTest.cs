@@ -28,7 +28,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertAccountCreatedData(back);
     }
@@ -76,7 +76,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertAccountRemovedData(back);
     }
@@ -114,7 +114,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertAccountCreditedData(back);
     }
@@ -163,7 +163,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertAccountDebitedData(back);
     }
@@ -212,7 +212,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertAccountThresholdsUpdatedData(back);
     }
@@ -261,7 +261,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertAccountHomeDomainUpdatedData(back);
     }
@@ -304,7 +304,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertAccountFlagsUpdatedData(back);
     }
@@ -351,7 +351,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertSignerCreatedData(back);
     }
@@ -398,7 +398,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertSignerRemoveData(back);
     }
@@ -445,7 +445,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertSignerUpdatedData(back);
     }
@@ -492,7 +492,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTrustlineCreatedData(back);
     }
@@ -542,7 +542,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTrustlineRemovedData(back);
     }
@@ -592,7 +592,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTrustlineUpdatedData(back);
     }
@@ -655,7 +655,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTrustlineAuthorizedData(back);
     }
@@ -742,7 +742,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTrustlineDeauthorizedData(back);
     }
@@ -784,7 +784,7 @@ public class EffectDeserializerTest
         Assert.IsNotNull(instance);
         AssertAlphaNum12NativeTradeData(instance);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertAlphaNum12NativeTradeData(back);
     }
@@ -798,7 +798,7 @@ public class EffectDeserializerTest
         Assert.IsNotNull(instance);
         AssertNativeAphaNum4TradeData(instance);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertNativeAphaNum4TradeData(back);
     }
@@ -919,7 +919,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertAccountInflationUpdated(back);
     }
@@ -951,7 +951,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertDataCreatedData(back);
     }
@@ -983,7 +983,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertDataRemovedData(back);
     }
@@ -1015,7 +1015,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertDataUpdatedData(back);
     }
@@ -1056,7 +1056,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertSequenceBumpedData(back);
     }
@@ -1088,7 +1088,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertOfferCreatedData(back);
     }
@@ -1119,7 +1119,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertOfferRemovedData(back);
     }
@@ -1150,7 +1150,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertOfferUpdatedData(back);
     }
@@ -1172,7 +1172,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertAccountSponsorshipCreatedData(back);
     }
@@ -1196,7 +1196,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertAccountSponsorshipRemovedData(back);
     }
@@ -1221,7 +1221,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertAccountSponsorshipUpdatedData(back);
     }
@@ -1247,7 +1247,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertClaimableBalanceClaimantCreatedEffect(back);
     }
@@ -1281,7 +1281,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertClaimableBalanceClaimedEffect(back);
     }
@@ -1312,7 +1312,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertClaimableBalanceCreatedEffect(back);
     }
@@ -1343,7 +1343,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertClaimableBalanceSponsorshipCreatedEffect(back);
     }
@@ -1372,7 +1372,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertClaimableBalanceSponsorshipRemovedEffect(back);
     }
@@ -1401,7 +1401,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertClaimableBalanceSponsorshipUpdatedEffect(back);
     }
@@ -1430,7 +1430,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertSignerSponsorshipCreatedEffect(back);
     }
@@ -1455,7 +1455,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertSignerSponsorshipRemovedEffect(back);
     }
@@ -1481,7 +1481,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertSignerSponsorshipUpdatedEffect(back);
     }
@@ -1508,7 +1508,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTrustlineSponsorshipCreatedEffect(back);
     }
@@ -1533,7 +1533,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTrustlineSponsorshipRemovedEffect(back);
     }
@@ -1559,7 +1559,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTrustlineSponsorshipUpdatedEffect(back);
     }
@@ -1590,7 +1590,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertDataSponsorshipCreatedData(back);
     }
@@ -1615,7 +1615,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertDataSponsorshipRemovedData(back);
     }
@@ -1642,7 +1642,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertDataSponsorshipUpdatedData(back);
     }
@@ -1670,7 +1670,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTrustlineFlagsUpdatedEffect(back);
     }
@@ -1709,7 +1709,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertClaimableBalanceClawedBackEffect(back);
     }
@@ -1735,7 +1735,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
 
         Assert.IsTrue(back is LiquidityPoolCreatedEffectResponse);
@@ -1765,7 +1765,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolDepositedEffectResponse);
         var effect = (LiquidityPoolDepositedEffectResponse)back;
@@ -1796,7 +1796,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolRemovedEffectResponse);
         var effect = (LiquidityPoolRemovedEffectResponse)back;
@@ -1813,7 +1813,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolRevokedEffectResponse);
         var effect = (LiquidityPoolRevokedEffectResponse)back;
@@ -1850,7 +1850,7 @@ public class EffectDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<EffectResponse>(serialized);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolTradeEffectResponse);
         var effect = (LiquidityPoolTradeEffectResponse)back;

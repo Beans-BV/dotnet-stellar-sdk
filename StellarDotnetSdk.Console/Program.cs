@@ -105,7 +105,7 @@ public static class Program
                          """;
 
         var worker = JsonSerializer.Deserialize<Person>(workerJson, options);
-        var farmer = JsonSerializer.Deserialize<Person>(farmerJson);
+        var farmer = JsonSerializer.Deserialize<Person>(farmerJson, JsonOptions.DefaultOptions);
     }
 
     private static async Task CreateAccount(Server server)

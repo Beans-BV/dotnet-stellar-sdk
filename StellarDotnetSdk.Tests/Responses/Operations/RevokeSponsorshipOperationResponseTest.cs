@@ -17,7 +17,7 @@ public class RevokeSponsorshipOperationResponseTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertRevokeSponsorshipAccountIdData(back);
     }
@@ -39,7 +39,7 @@ public class RevokeSponsorshipOperationResponseTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertRevokeSponsorshipClaimableBalanceData(back);
     }
@@ -62,7 +62,7 @@ public class RevokeSponsorshipOperationResponseTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertRevokeSponsorshipDataData(back);
     }
@@ -85,7 +85,7 @@ public class RevokeSponsorshipOperationResponseTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertRevokeSponsorshipOfferData(back);
     }
@@ -107,7 +107,7 @@ public class RevokeSponsorshipOperationResponseTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertRevokeSponsorshipSignerKeyData(back);
     }
@@ -130,7 +130,7 @@ public class RevokeSponsorshipOperationResponseTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertRevokeSponsorshipTrustlineData(back);
     }

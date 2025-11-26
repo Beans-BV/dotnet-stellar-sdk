@@ -17,7 +17,7 @@ public class ClaimClaimableBalanceOperationResponseTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertClaimClaimableBalanceData(back);
     }
@@ -50,7 +50,7 @@ public class ClaimClaimableBalanceOperationResponseTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var back = JsonSerializer.Deserialize<OperationResponse>(serialized);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertClaimClaimableBalanceDataMuxed(back);
     }

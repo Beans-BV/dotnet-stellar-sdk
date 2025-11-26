@@ -55,7 +55,7 @@ public class LiquidityPoolDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<LiquidityPoolResponse>(json, JsonOptions.DefaultOptions);
         var serialized = JsonSerializer.Serialize(instance);
-        var parsed = JsonSerializer.Deserialize<LiquidityPoolResponse>(serialized);
+        var parsed = JsonSerializer.Deserialize<LiquidityPoolResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(parsed);
         Assert.AreEqual(new LiquidityPoolId("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"),
             parsed.Id);
