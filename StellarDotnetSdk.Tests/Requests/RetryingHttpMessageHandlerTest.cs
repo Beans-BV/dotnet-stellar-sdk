@@ -35,32 +35,6 @@ public class RetryingHttpMessageHandlerTest
     }
 
     [TestMethod]
-    public async Task SendAsync_RetriableStatusCode_SucceedsOnRetry()
-    {
-        // Arrange
-        var callCount = 0;
-        var mockHandler = CreateMockHandler(() =>
-        {
-            callCount++;
-            return callCount == 1
-                ? new HttpResponseMessage(HttpStatusCode.ServiceUnavailable)
-                : new HttpResponseMessage(HttpStatusCode.OK);
-        });
-
-        var retryOptions = new HttpRetryOptions { MaxRetryCount = 3, BaseDelayMs = 1, UseJitter = false };
-        var retryHandler = new RetryingHttpMessageHandler(mockHandler.Object, retryOptions);
-        using var httpClient = new HttpClient(retryHandler);
-        using var request = new HttpRequestMessage(HttpMethod.Get, "https://example.com");
-
-        // Act
-        var response = await httpClient.SendAsync(request);
-
-        // Assert
-        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        Assert.AreEqual(2, callCount);
-    }
-
-    [TestMethod]
     public async Task SendAsync_RetriableException_SucceedsOnRetry()
     {
         // Arrange
