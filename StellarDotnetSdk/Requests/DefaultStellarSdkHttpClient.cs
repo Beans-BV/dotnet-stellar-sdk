@@ -7,15 +7,29 @@ namespace StellarDotnetSdk.Requests;
 public class DefaultStellarSdkHttpClient : HttpClient
 {
     /// <summary>
-    ///     Creates an HTTP client with some default request headers and the given bearer token.
+    ///     Creates an HTTP client with some default request headers, retry mechanism, and the given bearer token.
+    ///     <para>
+    ///         The client includes automatic retry logic for transient failures:
+    ///         <list type="bullet">
+    ///             <item>Retries up to 3 times by default for transient HTTP errors (408, 425, 429, 500, 502, 503, 504)</item>
+    ///             <item>Retries on network exceptions (HttpRequestException, TimeoutException, TaskCanceledException)</item>
+    ///             <item>Uses exponential backoff with jitter (default: 200ms base delay, max 5000ms)</item>
+    ///             <item>Honors Retry-After headers when present</item>
+    ///         </list>
+    ///         To customize retry behavior, pass a custom <see cref="HttpRetryOptions" /> instance.
+    ///         To disable retries, pass <c>new HttpRetryOptions { MaxRetryCount = 0 }</c>.
+    ///     </para>
     /// </summary>
     /// <param name="bearerToken">Bearer token in case the server requires it.</param>
     /// <param name="clientName">Name of the client.</param>
     /// <param name="clientVersion">Version of the client.</param>
+    /// <param name="retryOptions">Retry options. If null, default retry configuration is used.</param>
     public DefaultStellarSdkHttpClient(
         string? bearerToken = null,
         string? clientName = null,
-        string? clientVersion = null)
+        string? clientVersion = null,
+        HttpRetryOptions? retryOptions = null)
+        : base(CreateHandlerPipeline(retryOptions))
     {
         var assembly = Assembly.GetAssembly(GetType())!.GetName();
         DefaultRequestHeaders.Add("X-Client-Name", clientName ?? "stellar-dotnet-sdk");
@@ -24,5 +38,11 @@ public class DefaultStellarSdkHttpClient : HttpClient
         {
             DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
         }
+    }
+
+    private static HttpMessageHandler CreateHandlerPipeline(HttpRetryOptions? retryOptions)
+    {
+        var innerHandler = new SocketsHttpHandler();
+        return new RetryingHttpMessageHandler(innerHandler, retryOptions);
     }
 }
