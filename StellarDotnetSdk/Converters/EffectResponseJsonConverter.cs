@@ -10,12 +10,33 @@ namespace StellarDotnetSdk.Converters;
 ///     Uses the 'type_i' discriminator field to determine the concrete effect type.
 /// </summary>
 /// <remarks>
-///     This converter handles 31+ effect types with non-sequential discriminators:
-///     0-7 = Account effects, 10-12 = Signer effects, 20-26 = Trustline effects,
-///     30-33 = Offer/Trade effects, 40-43 = Data effects, 50-52 = Claimable balance,
-///     60-74 = Sponsorship effects, 80 = Clawback, 90-95 = Liquidity pool effects.
-///     Performance: Parses JSON once into JsonDocument, then deserializes from JsonElement
-///     to avoid double-parsing overhead.
+///     <p>
+///         This converter handles 31+ effect types with non-sequential discriminators:
+///         0-7 = Account effects
+///         10-12 = Signer effects
+///         20-26 = Trustline effects,
+///         30-33 = Offer/Trade effects
+///         40-43 = Data effects
+///         50-52 = Claimable balance,
+///         60-74 = Sponsorship effects
+///         80 = Clawback
+///         90-95 = Liquidity pool effects.
+///         Performance: Parses JSON once into JsonDocument, then deserializes from JsonElement
+///         to avoid double-parsing overhead.
+///         <br />
+///     </p>
+/// </remarks>
+/// <remarks>
+///     <p>
+///         Designed for deserializing collections or properties typed as <see cref="EffectResponse" />.
+///         Direct deserialization to concrete subclasses bypasses this converter intentionally.
+///         <example>
+///             Use with base type: <c>JsonSerializer.Deserialize&lt;EffectResponse&gt;(json)</c> - converter is invoked.
+///             <br />
+///             Not with subclass: <c>JsonSerializer.Deserialize&lt;AccountCreatedEffectResponse&gt;(json)</c> -
+///             converter is bypassed.
+///         </example>
+///     </p>
 /// </remarks>
 public class EffectResponseJsonConverter : JsonConverter<EffectResponse>
 {

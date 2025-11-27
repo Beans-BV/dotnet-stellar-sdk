@@ -11,9 +11,24 @@ namespace StellarDotnetSdk.Converters;
 /// </summary>
 /// <remarks>
 ///     This converter handles 27 operation types (type_i: 0-26):
-///     0 = CreateAccount, 1 = Payment, 2 = PathPaymentStrictReceive, etc.
+///     0 = CreateAccount
+///     1 = Payment
+///     2 = PathPaymentStrictReceive
+///     etc.
 ///     Performance: Parses JSON once into JsonDocument, then deserializes from JsonElement
 ///     to avoid double-parsing overhead.
+/// </remarks>
+/// <remarks>
+///     <p>
+///         Designed for deserializing collections or properties typed as <see cref="OperationResponse" />.
+///         Direct deserialization to concrete subclasses bypasses this converter intentionally.
+///         <example>
+///             Use with base type: <c>JsonSerializer.Deserialize&lt;OperationResponse&gt;(json)</c> - converter is invoked.
+///             <br />
+///             Not with subclass: <c>JsonSerializer.Deserialize&lt;CreateAccountOperationResponse&gt;(json)</c> -
+///             converter is bypassed.
+///         </example>
+///     </p>
 /// </remarks>
 public class OperationResponseJsonConverter : JsonConverter<OperationResponse>
 {
