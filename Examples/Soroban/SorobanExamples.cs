@@ -3,6 +3,7 @@ using StellarDotnetSdk.Examples.Horizon;
 using StellarDotnetSdk.LedgerEntries;
 using StellarDotnetSdk.LedgerKeys;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses.SorobanRpc;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
@@ -26,6 +27,10 @@ internal static class SorobanExamples
     private static async Task Main(string[] args)
     {
         Network.UseTestNetwork();
+
+        // Demonstrate retry configuration for Soroban
+        Console.WriteLine("Soroban HTTP Retry Configuration Examples");
+        await DemonstrateSorobanRetryConfiguration();
 
         Console.WriteLine("Create a key pair");
         var keyPair = HorizonExamples.CreateKeyPair();
@@ -414,4 +419,122 @@ internal static class SorobanExamples
         );
         return ledgerKeyContractData;
     }
+
+    #region Retry Configuration Examples
+
+    /// <summary>
+    ///     Demonstrates HTTP retry configuration for SorobanServer.
+    /// </summary>
+    private static async Task DemonstrateSorobanRetryConfiguration()
+    {
+        // Example 1: Default retry configuration
+        Console.WriteLine("1. Default Soroban retry configuration:");
+        await UseSorobanDefaultRetry();
+
+        // Example 2: Custom retry for smart contract operations
+        Console.WriteLine("\n2. Custom retry for contract operations:");
+        await UseSorobanCustomRetry();
+
+        // Example 3: High-reliability configuration for production
+        Console.WriteLine("\n3. Production-ready retry configuration:");
+        await UseSorobanProductionRetry();
+    }
+
+    /// <summary>
+    ///     Uses default retry settings with SorobanServer.
+    /// </summary>
+    private static async Task UseSorobanDefaultRetry()
+    {
+        // Default constructor includes automatic retry
+        var server = new SorobanServer(TestNetSorobanUrl);
+
+        Console.WriteLine("   Using default retry: 3 retries, 200ms base delay");
+
+        try
+        {
+            var health = await server.GetHealth();
+            Console.WriteLine($"   Server status: {health.Status}");
+
+            var network = await server.GetNetwork();
+            Console.WriteLine($"   Network passphrase: {network.Passphrase}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"   Request failed: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    ///     Uses custom retry settings optimized for smart contract operations.
+    /// </summary>
+    private static async Task UseSorobanCustomRetry()
+    {
+        // Smart contract operations may need more retries due to
+        // simulation and transaction complexity
+        var retryOptions = new HttpRetryOptions
+        {
+            MaxRetryCount = 5,
+            BaseDelayMs = 300,
+            MaxDelayMs = 8000,
+            UseJitter = true,
+            HonorRetryAfterHeader = true
+        };
+
+        var httpClient = new DefaultStellarSdkHttpClient(retryOptions: retryOptions);
+        var server = new SorobanServer(TestNetSorobanUrl, httpClient);
+
+        Console.WriteLine("   Using custom retry: 5 retries, 300ms base delay, 8s max");
+
+        try
+        {
+            var latestLedger = await server.GetLatestLedger();
+            Console.WriteLine($"   Latest ledger: {latestLedger.Sequence}");
+            Console.WriteLine($"   Protocol version: {latestLedger.ProtocolVersion}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"   Request failed: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    ///     Production-ready configuration with comprehensive retry settings.
+    /// </summary>
+    private static async Task UseSorobanProductionRetry()
+    {
+        // Production configuration with bearer token and robust retry
+        var retryOptions = new HttpRetryOptions
+        {
+            MaxRetryCount = 5,
+            BaseDelayMs = 500,
+            MaxDelayMs = 15000,
+            UseJitter = true,
+            HonorRetryAfterHeader = true
+        };
+
+        // Add additional retriable exceptions for network issues
+        retryOptions.AdditionalRetriableExceptionTypes.Add(typeof(System.Net.Sockets.SocketException));
+
+        // Create client with optional bearer token for authenticated endpoints
+        var httpClient = new DefaultStellarSdkHttpClient(
+            bearerToken: null, // Set your API token here if required
+            retryOptions: retryOptions
+        );
+
+        var server = new SorobanServer(TestNetSorobanUrl, httpClient);
+
+        Console.WriteLine("   Production config: 5 retries, 500ms base, 15s max, socket exceptions retriable");
+
+        try
+        {
+            var health = await server.GetHealth();
+            Console.WriteLine($"   Server health: {health.Status}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"   Request failed after all retries: {ex.Message}");
+        }
+    }
+
+    #endregion
 }

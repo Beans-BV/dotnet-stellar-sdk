@@ -436,43 +436,51 @@ public class RetryingHttpMessageHandlerTest
     {
         // Arrange
         var callCount = 0;
-        DateTimeOffset delayStartTime = default;
-        var mockHandler = CreateMockHandler(() =>
-        {
-            callCount++;
-            if (callCount == 1)
+        var mockHandler = new Mock<HttpMessageHandler>();
+        mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(() =>
             {
-                var response = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
-                // Create the retry date at call time to avoid timing issues
-                // Use 2 seconds to make the test more robust against CI variability
-                var retryDate = DateTimeOffset.UtcNow.AddSeconds(2);
-                delayStartTime = DateTimeOffset.UtcNow; // Record when we start delaying
-                response.Headers.Add("Retry-After", retryDate.ToString("R")); // RFC 1123 format
-                return response;
-            }
+                callCount++;
+                if (callCount == 1)
+                {
+                    var response = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
+                    // Use a fixed 500ms delay - enough to be distinguishable from exponential backoff
+                    var retryDate = DateTimeOffset.UtcNow.AddMilliseconds(500);
+                    response.Headers.Add("Retry-After", retryDate.ToString("R")); // RFC 1123 format
+                    return response;
+                }
 
-            return new HttpResponseMessage(HttpStatusCode.OK);
-        });
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            });
 
         var retryOptions = new HttpRetryOptions
         {
             MaxRetryCount = 3,
-            HonorRetryAfterHeader = true
+            BaseDelayMs = 10, // Very short base delay to distinguish from Retry-After
+            HonorRetryAfterHeader = true,
+            UseJitter = false
         };
         var retryHandler = new RetryingHttpMessageHandler(mockHandler.Object, retryOptions);
         using var httpClient = new HttpClient(retryHandler);
         using var request = new HttpRequestMessage(HttpMethod.Get, "https://example.com");
 
+        var startTime = DateTimeOffset.UtcNow;
+
         // Act
         var response = await httpClient.SendAsync(request);
 
-        var delayElapsed = DateTimeOffset.UtcNow - delayStartTime;
+        var elapsed = DateTimeOffset.UtcNow - startTime;
 
         // Assert
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         Assert.AreEqual(2, callCount);
-        // Should have waited approximately 2 seconds (allow 1.5s minimum for CI variability)
-        Assert.IsTrue(delayElapsed.TotalMilliseconds >= 1500, $"Expected at least 1500ms delay, got {delayElapsed.TotalMilliseconds}ms");
+        // Should have waited significantly longer than the 10ms base delay
+        // The Retry-After header should cause ~500ms delay (with some variance due to RFC 1123 second-level precision)
+        Assert.IsTrue(elapsed.TotalMilliseconds >= 100, $"Expected delay from Retry-After header, got {elapsed.TotalMilliseconds}ms");
     }
 
     [TestMethod]

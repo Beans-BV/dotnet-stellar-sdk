@@ -2,6 +2,7 @@
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Claimants;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
 using StellarDotnetSdk.Responses.Results;
@@ -17,6 +18,10 @@ public static class HorizonExamples
     public static async Task Main(string[] args)
     {
         Network.UseTestNetwork();
+
+        // Demonstrate retry configuration options
+        Console.WriteLine("HTTP Retry Configuration Examples");
+        await DemonstrateRetryConfiguration();
 
         Console.WriteLine("Create a key pair");
         var keyPair = CreateKeyPair();
@@ -404,4 +409,145 @@ public static class HorizonExamples
 
         return operations.Records;
     }
+
+    #region Retry Configuration Examples
+
+    /// <summary>
+    ///     Demonstrates various HTTP retry configuration options.
+    /// </summary>
+    public static async Task DemonstrateRetryConfiguration()
+    {
+        // Example 1: Using default retry settings (recommended for most cases)
+        Console.WriteLine("1. Default retry configuration:");
+        await UseDefaultRetryConfiguration();
+
+        // Example 2: Custom retry settings for high-reliability scenarios
+        Console.WriteLine("\n2. Custom retry configuration:");
+        await UseCustomRetryConfiguration();
+
+        // Example 3: Disable retries for testing or specific scenarios
+        Console.WriteLine("\n3. Disabled retry configuration:");
+        await UseNoRetryConfiguration();
+
+        // Example 4: Add custom retriable status codes
+        Console.WriteLine("\n4. Custom retriable status codes:");
+        await UseCustomRetriableStatusCodes();
+    }
+
+    /// <summary>
+    ///     Uses the default retry configuration (3 retries, 200ms base delay, jitter enabled).
+    /// </summary>
+    private static async Task UseDefaultRetryConfiguration()
+    {
+        // The default Server constructor uses DefaultStellarSdkHttpClient with built-in retry
+        var server = new Server(TestNetUrl);
+
+        Console.WriteLine("   Using default retry: 3 retries, 200ms base delay, jitter enabled");
+        Console.WriteLine("   Retriable status codes: 408, 425, 429, 500, 502, 503, 504");
+
+        try
+        {
+            // This request will automatically retry on transient failures
+            var response = await server.RootAsync();
+            Console.WriteLine($"   Server version: {response.HorizonVersion}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"   Request failed after all retries: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    ///     Uses custom retry settings for high-reliability scenarios.
+    /// </summary>
+    private static async Task UseCustomRetryConfiguration()
+    {
+        // Create custom retry options
+        var retryOptions = new HttpRetryOptions
+        {
+            MaxRetryCount = 5,           // More retries for critical operations
+            BaseDelayMs = 500,           // Start with longer delay
+            MaxDelayMs = 10000,          // Allow up to 10 second delays
+            UseJitter = true,            // Prevent thundering herd
+            HonorRetryAfterHeader = true // Respect rate limit headers
+        };
+
+        // Create HTTP client with custom retry options
+        var httpClient = new DefaultStellarSdkHttpClient(retryOptions: retryOptions);
+
+        // Create server with custom HTTP client
+        var server = new Server(TestNetUrl, httpClient);
+
+        Console.WriteLine("   Using custom retry: 5 retries, 500ms base delay, 10s max delay");
+
+        try
+        {
+            var response = await server.RootAsync();
+            Console.WriteLine($"   Server version: {response.HorizonVersion}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"   Request failed after all retries: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    ///     Disables retries entirely (useful for testing or when you want full control).
+    /// </summary>
+    private static async Task UseNoRetryConfiguration()
+    {
+        // Disable retries by setting MaxRetryCount to 0
+        var noRetryOptions = new HttpRetryOptions
+        {
+            MaxRetryCount = 0
+        };
+
+        var httpClient = new DefaultStellarSdkHttpClient(retryOptions: noRetryOptions);
+        var server = new Server(TestNetUrl, httpClient);
+
+        Console.WriteLine("   Retries disabled - requests will fail immediately on error");
+
+        try
+        {
+            var response = await server.RootAsync();
+            Console.WriteLine($"   Server version: {response.HorizonVersion}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"   Request failed (no retry): {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    ///     Demonstrates adding custom retriable status codes.
+    /// </summary>
+    private static async Task UseCustomRetriableStatusCodes()
+    {
+        var retryOptions = new HttpRetryOptions
+        {
+            MaxRetryCount = 3,
+            BaseDelayMs = 100,
+            UseJitter = false // Disable jitter for predictable timing in examples
+        };
+
+        // Add custom status codes that should trigger retries
+        retryOptions.AdditionalRetriableStatusCodes.Add(System.Net.HttpStatusCode.Conflict); // 409
+
+        var httpClient = new DefaultStellarSdkHttpClient(retryOptions: retryOptions);
+        var server = new Server(TestNetUrl, httpClient);
+
+        Console.WriteLine("   Added HTTP 409 (Conflict) as retriable status code");
+
+        try
+        {
+            var response = await server.RootAsync();
+            Console.WriteLine($"   Server version: {response.HorizonVersion}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"   Request failed: {ex.Message}");
+        }
+    }
+
+    #endregion
 }

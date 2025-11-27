@@ -113,6 +113,10 @@ public static class Program
         var farmer = JsonSerializer.Deserialize<Person>(farmerJson, JsonOptions.DefaultOptions);
     }
 
+#if DEBUG
+    
+#endif
+    
     private static async Task CreateAccount(Server server)
     {
         var source = KeyPair.FromSecretSeed("SDR4PTKMR5TAQQCL3RI2MLXXSXQDIR7DCAONQNQP6UCDZCD4OVRWXUHI");
