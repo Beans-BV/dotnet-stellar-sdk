@@ -132,7 +132,6 @@ public static class Program
     }
 }
 
-
 [JsonConverter(typeof(PersonConverter))]
 internal abstract class Person
 {
