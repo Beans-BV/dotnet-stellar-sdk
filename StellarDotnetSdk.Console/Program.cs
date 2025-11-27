@@ -13,69 +13,12 @@ using SysConsole = System.Console;
 
 namespace StellarDotnetSdk.Console;
 
-[JsonConverter(typeof(PersonConverter))]
-internal abstract class Person
-{
-    [JsonPropertyName("name")] public string Name { get; set; }
-    [JsonPropertyName("type")] public string Type { get; set; }
-    [JsonPropertyName("gender")] public string Gender { get; set; }
-
-    [JsonPropertyName("disabled")] public bool IsDisabled { get; init; } = true;
-}
-
-internal class Worker : Person
-{
-    [JsonPropertyName("company")] public string Company { get; set; }
-
-    [JsonPropertyName("salary")]
-    [JsonInclude]
-    public long Salary { get; set; }
-}
-
-internal class Farmer : Person
-{
-    [JsonInclude] [JsonPropertyName("ranch")]
-    // [JsonPropertyName("ranch")] 
-    private string _ranch;
-
-    [JsonPropertyName("farm")] public string Farm { get; set; }
-}
-
-internal class PersonConverter : JsonConverter<Person>
-{
-    public override Person Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        using (var document = JsonDocument.ParseValue(ref reader))
-        {
-            var root = document.RootElement;
-            var type = root.GetProperty("type").GetString();
-            switch (type)
-            {
-                case "Worker":
-                    return JsonSerializer.Deserialize<Worker>(root.GetRawText(), options);
-                case "Farmer":
-                    return JsonSerializer.Deserialize<Farmer>(root.GetRawText(), options);
-                default:
-                    throw new JsonException("Unknown type.");
-            }
-        }
-    }
-
-    public override void Write(Utf8JsonWriter writer, Person value, JsonSerializerOptions options)
-    {
-        throw new NotImplementedException();
-    }
-}
-
 public static class Program
 {
     private const int DefaultFee = 1000000;
 
     public static async Task Main(string[] args)
     {
-        Network.UseTestNetwork();
-        using var server = new Server("https://horizon-testnet.stellar.org");
-
         var json = """
                    {
                      "href": "/ledgers/898826/effects{?cursor,limit,order}",
@@ -111,11 +54,11 @@ public static class Program
 
         var worker = JsonSerializer.Deserialize<Person>(workerJson, options);
         var farmer = JsonSerializer.Deserialize<Person>(farmerJson, JsonOptions.DefaultOptions);
+        
+        // Network.UseTestNetwork();
+        // using var server = new Server("https://horizon-testnet.stellar.org");
+        // await CreateAccount(server);
     }
-
-#if DEBUG
-    
-#endif
     
     private static async Task CreateAccount(Server server)
     {
@@ -186,5 +129,60 @@ public static class Program
             SysConsole.WriteLine("TransactionResultCodeOperations: " + string.Join(", ",
                 response.SubmitTransactionResponseExtras?.ExtrasResultCodes?.OperationsResultCodes ?? new List<string>()));
         }
+    }
+}
+
+
+[JsonConverter(typeof(PersonConverter))]
+internal abstract class Person
+{
+    [JsonPropertyName("name")] public string Name { get; set; }
+    [JsonPropertyName("type")] public string Type { get; set; }
+    [JsonPropertyName("gender")] public string Gender { get; set; }
+
+    [JsonPropertyName("disabled")] public bool IsDisabled { get; init; } = true;
+}
+
+internal class Worker : Person
+{
+    [JsonPropertyName("company")] public string Company { get; set; }
+
+    [JsonPropertyName("salary")]
+    [JsonInclude]
+    public long Salary { get; set; }
+}
+
+internal class Farmer : Person
+{
+    [JsonInclude] [JsonPropertyName("ranch")]
+    // [JsonPropertyName("ranch")] 
+    private string _ranch;
+
+    [JsonPropertyName("farm")] public string Farm { get; set; }
+}
+
+internal class PersonConverter : JsonConverter<Person>
+{
+    public override Person Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        using (var document = JsonDocument.ParseValue(ref reader))
+        {
+            var root = document.RootElement;
+            var type = root.GetProperty("type").GetString();
+            switch (type)
+            {
+                case "Worker":
+                    return JsonSerializer.Deserialize<Worker>(root.GetRawText(), options);
+                case "Farmer":
+                    return JsonSerializer.Deserialize<Farmer>(root.GetRawText(), options);
+                default:
+                    throw new JsonException("Unknown type.");
+            }
+        }
+    }
+
+    public override void Write(Utf8JsonWriter writer, Person value, JsonSerializerOptions options)
+    {
+        throw new NotImplementedException();
     }
 }
