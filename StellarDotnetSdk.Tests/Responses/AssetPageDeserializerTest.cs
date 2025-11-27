@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text.Json;
-using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses;
 
@@ -33,21 +32,6 @@ public class AssetPageDeserializerTest
         AssertTestData(back);
     }
 
-    [TestMethod]
-    [Obsolete]
-    public void TestAssetResponseFlagDefaultsToNotImmutable()
-    {
-        var assetResponseFlags = new AssetResponse.AssetResponseFlags
-        {
-            AuthRequired = true,
-            AuthRevocable = true,
-            AuthImmutable = false,
-        };
-        Assert.IsTrue(assetResponseFlags.AuthRequired);
-        Assert.IsTrue(assetResponseFlags.AuthRevocable);
-        Assert.IsFalse(assetResponseFlags.AuthImmutable);
-    }
-
     public static void AssertTestData(Page<AssetResponse> assetsPage)
     {
         Assert.AreEqual("https://horizon-testnet.stellar.org/assets?cursor=&limit=200&order=desc",
@@ -55,29 +39,50 @@ public class AssetPageDeserializerTest
         Assert.AreEqual(
             "https://horizon-testnet.stellar.org/assets?cursor=XYZ_GBHLV3AOWIUIHECHYPO5YAVCFJVJS3EKVH5F744VJBIQQQ6NZCFBJJEL_credit_alphanum4&limit=200&order=desc",
             assetsPage.Links.Next.Href);
-
-        Assert.AreEqual("credit_alphanum4", assetsPage.Records[0].AssetType);
-        Assert.AreEqual("ZZZ", assetsPage.Records[0].AssetCode);
-        Assert.AreEqual("GCWMJP3GFA2V3M2GSTJUC7H3NM27XG6GDGWJZVM3S536JWYIS6BIWS35", assetsPage.Records[0].AssetIssuer);
+        var record = assetsPage.Records[0];
+        Assert.AreEqual("credit_alphanum4", record.AssetType);
+        Assert.AreEqual("ZZZ", record.AssetCode);
+        Assert.AreEqual("GCWMJP3GFA2V3M2GSTJUC7H3NM27XG6GDGWJZVM3S536JWYIS6BIWS35", record.AssetIssuer);
+        Assert.AreEqual(Asset.Create("ZZZ:GCWMJP3GFA2V3M2GSTJUC7H3NM27XG6GDGWJZVM3S536JWYIS6BIWS35"), record.Asset);
         Assert.AreEqual("ZZZ_GCWMJP3GFA2V3M2GSTJUC7H3NM27XG6GDGWJZVM3S536JWYIS6BIWS35_credit_alphanum4",
-            assetsPage.Records[0].PagingToken);
-        Assert.AreEqual(1, assetsPage.Records[0].Accounts.Authorized);
-        Assert.AreEqual(0, assetsPage.Records[0].Accounts.AuthorizedToMaintainLiabilities);
-        Assert.AreEqual(0, assetsPage.Records[0].Accounts.Unauthorized);
-        Assert.AreEqual("1200000000.0000000", assetsPage.Records[0].Balances.Authorized);
-        Assert.AreEqual("0.0000000", assetsPage.Records[0].Balances.AuthorizedToMaintainLiabilities);
-        Assert.AreEqual("0.0000000", assetsPage.Records[0].Balances.Unauthorized);
-        Assert.AreEqual(0, assetsPage.Records[0].NumClaimableBalances);
-        Assert.AreEqual("0.0000000", assetsPage.Records[0].ClaimableBalancesAmount);
-        Assert.AreEqual("", assetsPage.Records[0].Links.Toml.Href);
-        Assert.AreEqual(false, assetsPage.Records[0].Flags.AuthRequired);
-        Assert.AreEqual(false, assetsPage.Records[0].Flags.AuthRevocable);
-        Assert.AreEqual(true, assetsPage.Records[0].Flags.AuthImmutable);
+            record.PagingToken);
+        Assert.AreEqual(1, record.Accounts.Authorized);
+        Assert.AreEqual(0, record.Accounts.AuthorizedToMaintainLiabilities);
+        Assert.AreEqual(0, record.Accounts.Unauthorized);
+        Assert.AreEqual("1200000000.0000000", record.Balances.Authorized);
+        Assert.AreEqual("0.0000000", record.Balances.AuthorizedToMaintainLiabilities);
+        Assert.AreEqual("0.0000000", record.Balances.Unauthorized);
+        Assert.AreEqual(0, record.NumClaimableBalances);
+        Assert.AreEqual(0, record.ContractsQuantity);
+        Assert.AreEqual("0.0000000", record.ContractsTotalAmount);
+        Assert.AreEqual("0.0000000", record.ClaimableBalancesAmount);
+        Assert.AreEqual("", record.Links.Toml.Href);
+        Assert.AreEqual(false, record.Flags.AuthRequired);
+        Assert.AreEqual(false, record.Flags.AuthRevocable);
+        Assert.AreEqual(true, record.Flags.AuthImmutable);
+        Assert.AreEqual(false, record.Flags.AuthRevocable);
+        Assert.AreEqual("", record.Links.Toml.Href);
+        Assert.AreEqual(1, record.NumLiquidityPools);
+        Assert.AreEqual("70000000.0000000", record.LiquidityPoolsAmount);
+    }
 
-        assetsPage.Records[0].NumLiquidityPools
-            .Should().Be(1);
-
-        assetsPage.Records[0].LiquidityPoolsAmount
-            .Should().Be("70000000.0000000");
+    [TestMethod]
+    public void TestDeserializeEmptyAssetPage()
+    {
+        var jsonPath = Utils.GetTestDataPath("assetPageEmpty.json");
+        var json = File.ReadAllText(jsonPath);
+        var assetsPage = JsonSerializer.Deserialize<Page<AssetResponse>>(json, JsonOptions.DefaultOptions);
+        Assert.IsNotNull(assetsPage);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/assets?asset_code=01&asset_issuer=GBGN64KCMODLTB6GCPNGNKPTZAZA4CBGRWMWTINEPBTUVQL2X35HPZSB&cursor=&limit=10&order=asc",
+            assetsPage.Links.Self.Href);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/assets?asset_code=01&asset_issuer=GBGN64KCMODLTB6GCPNGNKPTZAZA4CBGRWMWTINEPBTUVQL2X35HPZSB&cursor=&limit=10&order=asc",
+            assetsPage.Links.Next.Href);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/assets?asset_code=01&asset_issuer=GBGN64KCMODLTB6GCPNGNKPTZAZA4CBGRWMWTINEPBTUVQL2X35HPZSB&cursor=&limit=10&order=desc",
+            assetsPage.Links.Prev.Href);
+        Assert.IsNotNull(assetsPage.Records);
+        Assert.AreEqual(0, assetsPage.Records.Count);
     }
 }

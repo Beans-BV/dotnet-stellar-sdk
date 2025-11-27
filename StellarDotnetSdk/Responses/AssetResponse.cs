@@ -2,133 +2,162 @@
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses;
-#nullable disable
-public class AssetResponse : Response, IPagingToken
+
+/// <summary>
+///     Represents asset information from the Horizon API.
+///     Contains statistics about the asset including holder counts, balances, and authorization flags.
+/// </summary>
+public sealed class AssetResponse : Response, IPagingToken
 {
+    /// <summary>
+    ///     Links related to this asset.
+    /// </summary>
     [JsonPropertyName("_links")]
-    public AssetResponseLinks Links { get; init; }
-
-    [JsonPropertyName("asset_type")]
-    public string AssetType { get; init; }
-
-    [JsonPropertyName("asset_code")]
-    public string AssetCode { get; init; }
-
-    [JsonPropertyName("asset_issuer")]
-    public string AssetIssuer { get; init; }
-
-    [JsonPropertyName("accounts")]
-    public AssetAccounts Accounts { get; init; }
-
-    [JsonPropertyName("balances")]
-    public AssetBalances Balances { get; init; }
-
-    [JsonPropertyName("claimable_balances_amount")]
-    public string ClaimableBalancesAmount { get; init; }
-
-    [JsonPropertyName("num_claimable_balances")]
-    public int NumClaimableBalances { get; init; }
-
-    [JsonPropertyName("flags")]
-    public AssetResponseFlags Flags { get; init; }
+    public required AssetResponseLinks Links { get; init; }
 
     /// <summary>
-    ///     The number of liquidity pools trading this asset
+    ///     The type of asset: "native", "credit_alphanum4", or "credit_alphanum12".
+    /// </summary>
+    [JsonPropertyName("asset_type")]
+    public required string AssetType { get; init; }
+
+    /// <summary>
+    ///     The 4 or 12 character asset code. Empty for native XLM.
+    /// </summary>
+    [JsonPropertyName("asset_code")]
+    public string? AssetCode { get; init; }
+
+    /// <summary>
+    ///     The account ID of the asset issuer. Empty for native XLM.
+    /// </summary>
+    [JsonPropertyName("asset_issuer")]
+    public string? AssetIssuer { get; init; }
+
+    /// <summary>
+    ///     Statistics about accounts holding this asset, categorized by authorization status.
+    /// </summary>
+    [JsonPropertyName("accounts")]
+    public required AssetAccounts Accounts { get; init; }
+
+    /// <summary>
+    ///     Total balances of this asset, categorized by authorization status.
+    /// </summary>
+    [JsonPropertyName("balances")]
+    public required AssetBalances Balances { get; init; }
+
+    /// <summary>
+    ///     The total amount of this asset in claimable balances.
+    ///     Represented as a string to preserve precision.
+    /// </summary>
+    [JsonPropertyName("claimable_balances_amount")]
+    public required string ClaimableBalancesAmount { get; init; }
+
+    /// <summary>
+    ///     The number of claimable balances containing this asset.
+    /// </summary>
+    [JsonPropertyName("num_claimable_balances")]
+    public required int NumClaimableBalances { get; init; }
+
+    /// <summary>
+    ///     The authorization flags set on this asset's issuing account.
+    /// </summary>
+    [JsonPropertyName("flags")]
+    public required Flags Flags { get; init; }
+
+    /// <summary>
+    ///     The number of liquidity pools trading this asset.
     /// </summary>
     [JsonPropertyName("num_liquidity_pools")]
-    public int NumLiquidityPools { get; init; }
+    public required int NumLiquidityPools { get; init; }
 
     /// <summary>
-    ///     The amount of this asset held in liquidity pools
+    ///     The amount of this asset held in liquidity pools.
+    ///     Represented as a string to preserve precision.
     /// </summary>
     [JsonPropertyName("liquidity_pools_amount")]
-    public string LiquidityPoolsAmount { get; init; }
+    public required string LiquidityPoolsAmount { get; init; }
 
     /// <summary>
-    ///     The quantity of contracts that hold this asset
+    ///     The number of Soroban contracts that hold this asset.
     /// </summary>
     [JsonPropertyName("num_contracts")]
-    public uint ContractsQuantity { get; init; }
+    public required int ContractsQuantity { get; init; }
 
     /// <summary>
-    ///     The total units of this asset held by contracts
+    ///     The number of units for this asset held by all Soroban contracts.
     /// </summary>
     [JsonPropertyName("contracts_amount")]
-    public double ContractsTotalAmount { get; init; }
+    public required string ContractsTotalAmount { get; init; }
 
+    /// <summary>
+    ///     The asset object representing this response.
+    /// </summary>
     public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
 
+    /// <inheritdoc />
     [JsonPropertyName("paging_token")]
-    public string PagingToken { get; init; }
+    public required string PagingToken { get; init; }
 
     /// <summary>
-    ///     Describe asset accounts
+    ///     Statistics about accounts holding the asset, categorized by authorization status.
     /// </summary>
-    public class AssetAccounts
+    public sealed class AssetAccounts
     {
-        public AssetAccounts(int authorized, int authorizedToMaintainLiabilities, int unauthorized)
-        {
-            Authorized = authorized;
-            AuthorizedToMaintainLiabilities = authorizedToMaintainLiabilities;
-            Unauthorized = unauthorized;
-        }
-
+        /// <summary>
+        ///     The number of accounts fully authorized to hold and transact with this asset.
+        /// </summary>
         [JsonPropertyName("authorized")]
-        public int Authorized { get; init; }
+        public required int Authorized { get; init; }
 
+        /// <summary>
+        ///     The number of accounts authorized only to maintain liabilities (can hold but not transact).
+        /// </summary>
         [JsonPropertyName("authorized_to_maintain_liabilities")]
-        public int AuthorizedToMaintainLiabilities { get; init; }
+        public required int AuthorizedToMaintainLiabilities { get; init; }
 
+        /// <summary>
+        ///     The number of unauthorized accounts with a trustline to this asset.
+        /// </summary>
         [JsonPropertyName("unauthorized")]
-        public int Unauthorized { get; init; }
+        public required int Unauthorized { get; init; }
     }
 
     /// <summary>
-    ///     Describe asset balances
+    ///     Total balances of the asset, categorized by authorization status.
     /// </summary>
-    public class AssetBalances
+    public sealed class AssetBalances
     {
-        public AssetBalances(string authorized, string authorizedToMaintainLiabilities, string unauthorized)
-        {
-            Authorized = authorized;
-            AuthorizedToMaintainLiabilities = authorizedToMaintainLiabilities;
-            Unauthorized = unauthorized;
-        }
-
+        /// <summary>
+        ///     The total balance held by fully authorized accounts.
+        ///     Represented as a string to preserve precision.
+        /// </summary>
         [JsonPropertyName("authorized")]
-        public string Authorized { get; init; }
+        public required string Authorized { get; init; }
 
+        /// <summary>
+        ///     The total balance held by accounts authorized only to maintain liabilities.
+        ///     Represented as a string to preserve precision.
+        /// </summary>
         [JsonPropertyName("authorized_to_maintain_liabilities")]
-        public string AuthorizedToMaintainLiabilities { get; init; }
+        public required string AuthorizedToMaintainLiabilities { get; init; }
 
+        /// <summary>
+        ///     The total balance held by unauthorized accounts.
+        ///     Represented as a string to preserve precision.
+        /// </summary>
         [JsonPropertyName("unauthorized")]
-        public string Unauthorized { get; init; }
+        public required string Unauthorized { get; init; }
     }
 
-    public class AssetResponseLinks
+    /// <summary>
+    ///     Links associated with the asset response.
+    /// </summary>
+    public sealed class AssetResponseLinks
     {
+        /// <summary>
+        ///     Link to the stellar.toml file for this asset's home domain.
+        /// </summary>
         [JsonPropertyName("toml")]
-        public Link Toml { get; init; }
-    }
-
-    public class AssetResponseFlags
-    {
-        /// <summary>
-        ///     The anchor must approve anyone who wants to hold this asset.
-        /// </summary>
-        [JsonPropertyName("auth_required")]
-        public bool AuthRequired { get; init; }
-
-        /// <summary>
-        ///     The anchor can freeze the asset.
-        /// </summary>
-        [JsonPropertyName("auth_revocable")]
-        public bool AuthRevocable { get; init; }
-
-        /// <summary>
-        ///     None of the authorization flags can be init and the issuing account can never be deleted.
-        /// </summary>
-        [JsonPropertyName("auth_immutable")]
-        public bool AuthImmutable { get; init; }
+        public required Link Toml { get; init; }
     }
 }

@@ -1,9 +1,11 @@
-﻿namespace StellarDotnetSdk.Responses.Effects;
+namespace StellarDotnetSdk.Responses.Effects;
 
 /// <summary>
-///     Represents offer_updated effect response.
+///     Represents the offer_updated effect response.
+///     This effect occurs when an offer is updated on the DEX.
 /// </summary>
-public class OfferUpdatedEffectResponse : EffectResponse
+public sealed class OfferUpdatedEffectResponse : EffectResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 32;
 }

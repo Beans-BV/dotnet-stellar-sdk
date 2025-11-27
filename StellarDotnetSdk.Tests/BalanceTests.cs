@@ -31,6 +31,7 @@ public class BalanceTests
             IsAuthorized = expectedIsAuthorized,
             IsAuthorizedToMaintainLiabilities = expectedIsAuthorizedToMaintainLiabilities,
             LiquidityPoolId = expectedLiquidityPoolId,
+            LastModifiedLedger = 100,
         };
 
         // expected
@@ -93,6 +94,7 @@ public class BalanceTests
             SellingLiabilities = expectedSellingLiabilities,
             IsAuthorized = expectedIsAuthorized,
             IsAuthorizedToMaintainLiabilities = expectedIsAuthorizedToMaintainLiabilities,
+            LastModifiedLedger = 1200,
         };
 
         // expected
@@ -133,6 +135,7 @@ public class BalanceTests
             SellingLiabilities = A.Dummy<string>(),
             IsAuthorized = A.Dummy<bool>(),
             IsAuthorizedToMaintainLiabilities = A.Dummy<bool>(),
+            LastModifiedLedger = 500,
         };
 
         return (Sut.Asset is AssetTypeCreditAlphaNum4).ToProperty();
@@ -152,6 +155,7 @@ public class BalanceTests
             SellingLiabilities = A.Dummy<string>(),
             IsAuthorized = A.Dummy<bool>(),
             IsAuthorizedToMaintainLiabilities = A.Dummy<bool>(),
+            LastModifiedLedger = 1500,
         };
 
         return (Sut.Asset is AssetTypeCreditAlphaNum12).ToProperty();
@@ -171,6 +175,7 @@ public class BalanceTests
             SellingLiabilities = A.Dummy<string>(),
             IsAuthorized = A.Dummy<bool>(),
             IsAuthorizedToMaintainLiabilities = A.Dummy<bool>(),
+            LastModifiedLedger = 1500,
         };
 
         // actual 
@@ -197,6 +202,7 @@ public class BalanceTests
             IsAuthorized = A.Dummy<bool>(),
             IsAuthorizedToMaintainLiabilities = A.Dummy<bool>(),
             LiquidityPoolId = expectedLiquidityPoolId,
+            LastModifiedLedger = 1500,
         };
 
         // actual 

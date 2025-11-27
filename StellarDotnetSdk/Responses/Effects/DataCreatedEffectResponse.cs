@@ -1,9 +1,11 @@
 namespace StellarDotnetSdk.Responses.Effects;
 
 /// <summary>
-///     Represents data_created effect response.
+///     Represents the data_created effect response.
+///     This effect occurs when a data entry is created on an account.
 /// </summary>
-public class DataCreatedEffectResponse : EffectResponse
+public sealed class DataCreatedEffectResponse : EffectResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 40;
 }

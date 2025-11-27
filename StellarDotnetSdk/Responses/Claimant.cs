@@ -2,7 +2,6 @@ using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses.Predicates;
 
 namespace StellarDotnetSdk.Responses;
-#nullable disable
 
 /// <summary>
 ///     Represents a claimant in Horizon API responses.
@@ -15,15 +14,21 @@ namespace StellarDotnetSdk.Responses;
 ///     <para>
 ///         <strong>For building transactions</strong>, use <see cref="Claimants.Claimant" /> instead.
 ///         You can convert the <see cref="Predicate" /> to a transaction predicate using
-///         <see cref="Predicate.ToClaimPredicate" />.
+///         <see cref="Predicates.Predicate.ToClaimPredicate" />.
 ///     </para>
 /// </remarks>
 /// <seealso cref="Claimants.Claimant" />
 public class Claimant
 {
+    /// <summary>
+    ///     The account ID that can claim this balance when the predicate conditions are met.
+    /// </summary>
     [JsonPropertyName("destination")]
-    public string Destination { get; init; }
+    public required string Destination { get; init; }
 
+    /// <summary>
+    ///     The conditions that must be satisfied for this claimant to claim the balance.
+    /// </summary>
     [JsonPropertyName("predicate")]
-    public Predicate Predicate { get; init; }
+    public required Predicate Predicate { get; init; }
 }

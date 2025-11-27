@@ -4,15 +4,27 @@ using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
 
 namespace StellarDotnetSdk.Responses;
-#nullable disable
 
+/// <summary>
+///     Represents a reserve in a liquidity pool, containing an asset and its amount.
+/// </summary>
 [JsonConverter(typeof(ReserveJsonConverter))]
-public class Reserve
+public sealed class Reserve
 {
-    public string Amount { get; init; }
+    /// <summary>
+    ///     The amount of this asset held in reserve.
+    ///     Represented as a string to preserve precision (up to 7 decimal places).
+    /// </summary>
+    [JsonPropertyName("amount")]
+    public required string Amount { get; init; }
 
-    public Asset Asset { get; init; }
-#nullable restore
+    /// <summary>
+    ///     The asset held in this reserve.
+    /// </summary>
+    [JsonPropertyName("asset")]
+    public required Asset Asset { get; init; }
+
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (obj is not Reserve other)
@@ -23,6 +35,7 @@ public class Reserve
         return Equals(Asset, other.Asset) && Equals(Amount, other.Amount);
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         var hashCode = 1588693772;

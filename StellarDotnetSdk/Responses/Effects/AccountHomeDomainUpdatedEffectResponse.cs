@@ -1,15 +1,20 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
-#nullable disable
 
 /// <summary>
-///     Represents account_home_domain_updated effect response.
+///     Represents the account_home_domain_updated effect response.
+///     This effect occurs when an account's home domain is changed.
 /// </summary>
-public class AccountHomeDomainUpdatedEffectResponse : EffectResponse
+public sealed class AccountHomeDomainUpdatedEffectResponse : EffectResponse
 {
-    [JsonPropertyName("home_domain")]
-    public string HomeDomain { get; init; }
-
+    /// <inheritdoc />
     public override int TypeId => 5;
+
+    /// <summary>
+    ///     The new home domain set on the account.
+    ///     The home domain is where the stellar.toml file can be found.
+    /// </summary>
+    [JsonPropertyName("home_domain")]
+    public string? HomeDomain { get; init; }
 }

@@ -2,7 +2,6 @@ using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Claimants;
 using StellarDotnetSdk.Converters;
-using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Predicates;
 
 namespace StellarDotnetSdk.Tests.Responses;

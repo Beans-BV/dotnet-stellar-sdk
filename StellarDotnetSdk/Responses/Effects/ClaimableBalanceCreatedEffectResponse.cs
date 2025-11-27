@@ -1,21 +1,31 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
-#nullable disable
 
 /// <summary>
-///     Represents claimable_balance_created effect response.
+///     Represents the claimable_balance_created effect response.
+///     This effect occurs when a new claimable balance is created.
 /// </summary>
-public class ClaimableBalanceCreatedEffectResponse : EffectResponse
+public sealed class ClaimableBalanceCreatedEffectResponse : EffectResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 50;
 
+    /// <summary>
+    ///     The asset in the claimable balance (in canonical form: "code:issuer" or "native").
+    /// </summary>
     [JsonPropertyName("asset")]
-    public string Asset { get; init; }
+    public string? Asset { get; init; }
 
+    /// <summary>
+    ///     The unique identifier of the claimable balance.
+    /// </summary>
     [JsonPropertyName("balance_id")]
-    public string BalanceId { get; init; }
+    public string? BalanceId { get; init; }
 
+    /// <summary>
+    ///     The amount of the asset in the claimable balance.
+    /// </summary>
     [JsonPropertyName("amount")]
-    public string Amount { get; init; }
+    public string? Amount { get; init; }
 }

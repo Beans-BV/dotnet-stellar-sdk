@@ -1,18 +1,25 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
-#nullable disable
 
 /// <summary>
-///     Represents data_sponsorship_created effect response.
+///     Represents the data_sponsorship_created effect response.
+///     This effect occurs when a data entry becomes sponsored.
 /// </summary>
-public class DataSponsorshipCreatedEffectResponse : EffectResponse
+public sealed class DataSponsorshipCreatedEffectResponse : EffectResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 66;
 
+    /// <summary>
+    ///     The account ID of the sponsor.
+    /// </summary>
     [JsonPropertyName("sponsor")]
-    public string Sponsor { get; init; }
+    public string? Sponsor { get; init; }
 
+    /// <summary>
+    ///     The name of the sponsored data entry.
+    /// </summary>
     [JsonPropertyName("data_name")]
-    public string DataName { get; init; }
+    public string? DataName { get; init; }
 }

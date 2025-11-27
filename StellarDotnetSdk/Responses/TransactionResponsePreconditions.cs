@@ -20,19 +20,22 @@ public sealed class TransactionResponsePreconditions
     public LedgerBounds? LedgerBounds { get; init; }
 
     /// <summary>
-    ///     Containing a positive, signed 64-bit integer representing the lowest source account sequence number for which the transaction is valid.
+    ///     Containing a positive, signed 64-bit integer representing the lowest source account sequence number for which the
+    ///     transaction is valid.
     /// </summary>
     [JsonPropertyName("min_account_sequence")]
     public long? MinAccountSequence { get; init; }
 
     /// <summary>
-    ///     The minimum duration of time (in seconds as an unsigned 64-bit integer) that must have passed since the source account's sequence number changed for the transaction to be valid.
+    ///     The minimum duration of time (in seconds as an unsigned 64-bit integer) that must have passed since the source
+    ///     account's sequence number changed for the transaction to be valid.
     /// </summary>
     [JsonPropertyName("min_account_sequence_age")]
     public ulong? MinAccountSequenceAge { get; init; }
 
     /// <summary>
-    ///     An unsigned 32-bit integer representing the minimum number of ledgers that must have closed since the source account's sequence number changed for the transaction to be valid.
+    ///     An unsigned 32-bit integer representing the minimum number of ledgers that must have closed since the source
+    ///     account's sequence number changed for the transaction to be valid.
     /// </summary>
     [JsonPropertyName("min_account_sequence_ledger_gap")]
     public uint? MinAccountSequenceLedgerGap { get; init; }

@@ -6,57 +6,101 @@ using StellarDotnetSdk.Converters;
 namespace StellarDotnetSdk.Responses;
 
 /// <summary>
-///     Represents offer response.
+///     Represents an offer on the Stellar decentralized exchange.
+///     An offer is a bid or ask to exchange one asset for another at a specified price.
 /// </summary>
-public class OfferResponse : Response, IPagingToken
+public sealed class OfferResponse : Response, IPagingToken
 {
+    /// <summary>
+    ///     The unique identifier for this offer.
+    /// </summary>
     [JsonPropertyName("id")]
-    public string Id { get; init; }
+    public required string Id { get; init; }
 
+    /// <summary>
+    ///     The account ID of the offer creator.
+    /// </summary>
     [JsonPropertyName("seller")]
-    public string Seller { get; init; }
+    public required string Seller { get; init; }
 
+    /// <summary>
+    ///     The asset being sold.
+    /// </summary>
     [JsonPropertyName("selling")]
     [JsonConverter(typeof(AssetJsonConverter))]
-    public Asset Selling { get; init; }
+    public required Asset Selling { get; init; }
 
+    /// <summary>
+    ///     The asset being bought.
+    /// </summary>
     [JsonPropertyName("buying")]
     [JsonConverter(typeof(AssetJsonConverter))]
-    public Asset Buying { get; init; }
-
-    [JsonPropertyName("amount")]
-    public string Amount { get; init; }
+    public required Asset Buying { get; init; }
 
     /// <summary>
-    ///     The ask/bid price as a ratio.
+    ///     The amount of the selling asset available for trade.
+    ///     Represented as a string to preserve precision.
+    /// </summary>
+    [JsonPropertyName("amount")]
+    public required string Amount { get; init; }
+
+    /// <summary>
+    ///     The ask/bid price as a ratio (numerator/denominator).
+    ///     Represents how much of the buying asset is required for 1 unit of the selling asset.
     /// </summary>
     [JsonPropertyName("price_r")]
-    public Price PriceRatio { get; init; }
+    public required Price PriceRatio { get; init; }
 
     /// <summary>
-    ///     The ask/bid price.
+    ///     The ask/bid price as a decimal string.
+    ///     Represents how much of the buying asset is required for 1 unit of the selling asset.
     /// </summary>
     [JsonPropertyName("price")]
-    public string Price { get; init; }
+    public required string Price { get; init; }
 
+    /// <summary>
+    ///     The sequence number of the last ledger in which this offer was modified.
+    /// </summary>
     [JsonPropertyName("last_modified_ledger")]
-    public int LastModifiedLedger { get; init; }
+    public required int LastModifiedLedger { get; init; }
 
+    /// <summary>
+    ///     An ISO 8601 formatted string of when this offer was last modified.
+    /// </summary>
     [JsonPropertyName("last_modified_time")]
-    public DateTimeOffset? LastModifiedTime { get; init; }
+    public required DateTimeOffset? LastModifiedTime { get; init; }
 
+    /// <summary>
+    ///     The account id of the sponsor who is paying the reserves for this offer.
+    /// </summary>
+    [JsonPropertyName("sponsor")]
+    public string? Sponsor { get; init; }
+
+    /// <summary>
+    ///     Links to related resources for this offer.
+    /// </summary>
     [JsonPropertyName("_links")]
-    public OfferResponseLinks Links { get; init; }
+    public required OfferResponseLinks Links { get; init; }
 
+    /// <inheritdoc />
     [JsonPropertyName("paging_token")]
-    public string PagingToken { get; init; }
+    public required string PagingToken { get; init; }
 
-    public class OfferResponseLinks
+    /// <summary>
+    ///     Links to related resources for an offer.
+    /// </summary>
+    public sealed class OfferResponseLinks
     {
+        /// <summary>
+        ///     Link to this offer resource.
+        /// </summary>
         [JsonPropertyName("self")]
-        public Link<OfferResponse> Self { get; init; }
+        public required Link<OfferResponse> Self { get; init; }
 
+        /// <summary>
+        ///     Link to the account that created this offer.
+        /// </summary>
         [JsonPropertyName("offer_maker")]
-        public Link<AccountResponse> OfferMaker { get; init; }
+        public required Link<AccountResponse> OfferMaker { get; init; }
     }
 }

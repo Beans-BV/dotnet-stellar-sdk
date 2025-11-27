@@ -1,7 +1,6 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Predicates;
 
 namespace StellarDotnetSdk.Converters;

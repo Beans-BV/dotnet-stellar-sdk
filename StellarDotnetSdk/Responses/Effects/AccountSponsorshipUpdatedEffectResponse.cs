@@ -1,18 +1,25 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
-#nullable disable
+
 /// <summary>
-///     Represents account_sponsorship_updated effect response.
+///     Represents the account_sponsorship_updated effect response.
+///     This effect occurs when an account's sponsor changes.
 /// </summary>
-public class AccountSponsorshipUpdatedEffectResponse : EffectResponse
+public sealed class AccountSponsorshipUpdatedEffectResponse : EffectResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 61;
 
-
+    /// <summary>
+    ///     The account ID of the former sponsor.
+    /// </summary>
     [JsonPropertyName("former_sponsor")]
-    public string FormerSponsor { get; init; }
+    public string? FormerSponsor { get; init; }
 
+    /// <summary>
+    ///     The account ID of the new sponsor.
+    /// </summary>
     [JsonPropertyName("new_sponsor")]
-    public string NewSponsor { get; init; }
+    public string? NewSponsor { get; init; }
 }
