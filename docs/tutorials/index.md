@@ -25,6 +25,12 @@ Examples for working with Stellar's smart contract platform:
 - [**Smart Contracts**](examples/soroban/smart-contracts.md) - Uploading, creating and invoking contract instances
 - [**Ledger Entries**](examples/soroban/ledger-entries.md) - Retrieving data from the Stellar ledger
 
+### Configuration Examples
+
+Examples for configuring SDK behavior:
+
+- [**HTTP Retry Configuration**](examples/http-retry.md) - Configuring automatic retry behavior for transient failures
+
 ## How to Use These Examples
 
 Each example page follows a consistent format:
