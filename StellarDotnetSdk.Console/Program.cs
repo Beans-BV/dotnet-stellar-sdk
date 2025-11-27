@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Transactions;
 using SysConsole = System.Console;
@@ -71,6 +73,9 @@ public static class Program
 
     public static async Task Main(string[] args)
     {
+        Network.UseTestNetwork();
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
         var json = """
                    {
                      "href": "/ledgers/898826/effects{?cursor,limit,order}",
@@ -111,11 +116,22 @@ public static class Program
     private static async Task CreateAccount(Server server)
     {
         var source = KeyPair.FromSecretSeed("SDR4PTKMR5TAQQCL3RI2MLXXSXQDIR7DCAONQNQP6UCDZCD4OVRWXUHI");
-        SysConsole.WriteLine("Source account: {TO_BE_CONFIGURED}");
+        SysConsole.WriteLine($"Source account: {source.AccountId}");
         var destination = KeyPair.Random();
-        SysConsole.WriteLine("Destination account: " + destination.AccountId);
+        SysConsole.WriteLine($"Destination account: {destination.AccountId}");
 
-        var sourceAccount = await server.Accounts.Account(source.AccountId).ConfigureAwait(false);
+        AccountResponse sourceAccount;
+        try
+        {
+            sourceAccount = await server.Accounts.Account(source.AccountId).ConfigureAwait(false);
+        }
+        catch (HttpResponseException ex) when (ex.StatusCode == 404)
+        {
+            SysConsole.WriteLine("Source account not found. Funding with FriendBot...");
+            await server.TestNetFriendBot.FundAccount(source.AccountId).Execute().ConfigureAwait(false);
+            SysConsole.WriteLine("Account funded successfully!");
+            sourceAccount = await server.Accounts.Account(source.AccountId).ConfigureAwait(false);
+        }
         var transaction = new TransactionBuilder(sourceAccount)
             .SetFee(DefaultFee)
             .AddOperation(new CreateAccountOperation(destination, "1"))
@@ -124,18 +140,18 @@ public static class Program
         transaction.Sign(source);
 
         var response = await server.SubmitTransaction(transaction).ConfigureAwait(false);
-        if (response.IsSuccess)
+        if (response.IsSuccess && response.Hash != null)
         {
-            SysConsole.WriteLine("Create account response: " + response.Hash);
+            SysConsole.WriteLine("Create account response: " + response.Hash!);
             await DeleteAccount(server, destination, source).ConfigureAwait(false);
         }
         else
         {
             SysConsole.WriteLine("Create account failed.");
             SysConsole.WriteLine("TransactionResultCode: " +
-                response.SubmitTransactionResponseExtras.ExtrasResultCodes.TransactionResultCode ?? "null");
+                (response.SubmitTransactionResponseExtras?.ExtrasResultCodes?.TransactionResultCode ?? "null"));
             SysConsole.WriteLine("TransactionResultCodeOperations: " + string.Join(", ",
-                response.SubmitTransactionResponseExtras.ExtrasResultCodes.OperationsResultCodes));
+                response.SubmitTransactionResponseExtras?.ExtrasResultCodes?.OperationsResultCodes ?? new List<string>()));
         }
     }
 
@@ -154,17 +170,17 @@ public static class Program
         feeBumpTransaction.Sign(destination);
 
         var response = await server.SubmitTransaction(feeBumpTransaction).ConfigureAwait(false);
-        if (response.IsSuccess)
+        if (response.IsSuccess && response.Hash != null)
         {
-            SysConsole.WriteLine("Delete account response: " + response.Hash);
+            SysConsole.WriteLine("Delete account response: " + response.Hash!);
         }
         else
         {
             SysConsole.WriteLine("Delete account failed.");
             SysConsole.WriteLine("TransactionResultCode: " +
-                                 response.SubmitTransactionResponseExtras.ExtrasResultCodes.TransactionResultCode);
+                                 (response.SubmitTransactionResponseExtras?.ExtrasResultCodes?.TransactionResultCode ?? "null"));
             SysConsole.WriteLine("TransactionResultCodeOperations: " + string.Join(", ",
-                response.SubmitTransactionResponseExtras.ExtrasResultCodes.OperationsResultCodes));
+                response.SubmitTransactionResponseExtras?.ExtrasResultCodes?.OperationsResultCodes ?? new List<string>()));
         }
     }
 }
