@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses;
@@ -10,19 +10,19 @@ public class Balance
 {
     private const string LiquidityPoolSharesAssetType = "liquidity_pool_shares";
 
-    [JsonProperty(PropertyName = "asset_type")]
+    [JsonPropertyName("asset_type")]
     public string AssetType { get; init; }
 
-    [JsonProperty(PropertyName = "limit")] public string Limit { get; init; }
+    [JsonPropertyName("limit")] public string Limit { get; init; }
 
-    [JsonProperty(PropertyName = "balance")]
+    [JsonPropertyName("balance")]
     public string BalanceString { get; init; }
 #nullable restore
 
-    [JsonProperty(PropertyName = "asset_code")]
+    [JsonPropertyName("asset_code")]
     public string? AssetCode { get; init; }
 
-    [JsonProperty(PropertyName = "asset_issuer")]
+    [JsonPropertyName("asset_issuer")]
     public string? AssetIssuer { get; init; }
 
     [JsonIgnore]
@@ -31,18 +31,18 @@ public class Balance
         : null;
 
 
-    [JsonProperty(PropertyName = "buying_liabilities")]
+    [JsonPropertyName("buying_liabilities")]
     public string? BuyingLiabilities { get; init; }
 
-    [JsonProperty(PropertyName = "selling_liabilities")]
+    [JsonPropertyName("selling_liabilities")]
     public string? SellingLiabilities { get; init; }
 
-    [JsonProperty(PropertyName = "is_authorized")]
+    [JsonPropertyName("is_authorized")]
     public bool IsAuthorized { get; init; }
 
-    [JsonProperty(PropertyName = "is_authorized_to_maintain_liabilities")]
+    [JsonPropertyName("is_authorized_to_maintain_liabilities")]
     public bool IsAuthorizedToMaintainLiabilities { get; init; }
 
-    [JsonProperty(PropertyName = "liquidity_pool_id")]
+    [JsonPropertyName("liquidity_pool_id")]
     public string? LiquidityPoolId { get; init; }
 }

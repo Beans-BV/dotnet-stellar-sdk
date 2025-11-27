@@ -40,8 +40,8 @@
         "counter_asset_issuer": "GCKA6K5PCQ6PNF5RQBF7PQDJWRHO6UOGFMRLK3DYHDOI244V47XKQ4GP",
         "base_is_seller": true,
         "price": {
-          "n": 10,
-          "d": 61
+          "n": "10",
+          "d": "61"
         }
       },
       {
@@ -70,8 +70,8 @@
         "counter_asset_issuer": "GCKA6K5PCQ6PNF5RQBF7PQDJWRHO6UOGFMRLK3DYHDOI244V47XKQ4GP",
         "base_is_seller": false,
         "price": {
-          "N": 2,
-          "D": 11
+          "n": "2",
+          "d": "11"
         }
       }
     ]

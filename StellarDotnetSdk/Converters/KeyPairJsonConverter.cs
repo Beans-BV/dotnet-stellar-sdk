@@ -1,20 +1,20 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Accounts;
 
 namespace StellarDotnetSdk.Converters;
 
 public class KeyPairJsonConverter : JsonConverter<KeyPair>
 {
-    public override void WriteJson(JsonWriter writer, KeyPair? value, JsonSerializer serializer)
+    public override KeyPair? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        writer.WriteValue(value?.AccountId);
+        var accountId = reader.GetString();
+        return accountId is null ? null : KeyPair.FromAccountId(accountId);
     }
 
-    public override KeyPair? ReadJson(JsonReader reader, Type objectType, KeyPair? existingValue,
-        bool hasExistingValue, JsonSerializer serializer)
+    public override void Write(Utf8JsonWriter writer, KeyPair value, JsonSerializerOptions options)
     {
-        var accountId = reader.Value?.ToString();
-        return accountId is null ? null : KeyPair.FromAccountId(accountId);
+        writer.WriteStringValue(value?.AccountId);
     }
 }

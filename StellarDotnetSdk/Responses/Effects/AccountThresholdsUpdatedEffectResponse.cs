@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
 
@@ -9,12 +9,12 @@ public class AccountThresholdsUpdatedEffectResponse : EffectResponse
 {
     public override int TypeId => 4;
 
-    [JsonProperty(PropertyName = "low_threshold")]
+    [JsonPropertyName("low_threshold")]
     public int LowThreshold { get; init; }
 
-    [JsonProperty(PropertyName = "med_threshold")]
+    [JsonPropertyName("med_threshold")]
     public int MedThreshold { get; init; }
 
-    [JsonProperty(PropertyName = "high_threshold")]
+    [JsonPropertyName("high_threshold")]
     public int HighThreshold { get; init; }
 }

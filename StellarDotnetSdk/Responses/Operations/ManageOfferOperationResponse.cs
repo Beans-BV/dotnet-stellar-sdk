@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
@@ -9,40 +9,40 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class ManageOfferOperationResponse : OperationResponse
 {
-    [JsonProperty(PropertyName = "offer_id")]
+    [JsonPropertyName("offer_id")]
     public string OfferId { get; init; }
 
-    [JsonProperty(PropertyName = "amount")]
+    [JsonPropertyName("amount")]
     public string Amount { get; init; }
 
     /// <summary>
     ///     The ask/bid price as a ratio.
     /// </summary>
-    [JsonProperty(PropertyName = "price_r")]
+    [JsonPropertyName("price_r")]
     public StellarDotnetSdk.Price PriceRatio { get; init; }
 
     /// <summary>
     ///     The ask/bid price.
     /// </summary>
-    [JsonProperty(PropertyName = "price")]
+    [JsonPropertyName("price")]
     public string Price { get; init; }
 
-    [JsonProperty(PropertyName = "buying_asset_type")]
+    [JsonPropertyName("buying_asset_type")]
     public string BuyingAssetType { get; init; }
 
-    [JsonProperty(PropertyName = "buying_asset_code")]
+    [JsonPropertyName("buying_asset_code")]
     public string BuyingAssetCode { get; init; }
 
-    [JsonProperty(PropertyName = "buying_asset_issuer")]
+    [JsonPropertyName("buying_asset_issuer")]
     public string BuyingAssetIssuer { get; init; }
 
-    [JsonProperty(PropertyName = "selling_asset_type")]
+    [JsonPropertyName("selling_asset_type")]
     public string SellingAssetType { get; init; }
 
-    [JsonProperty(PropertyName = "selling_asset_code")]
+    [JsonPropertyName("selling_asset_code")]
     public string SellingAssetCode { get; init; }
 
-    [JsonProperty(PropertyName = "selling_asset_issuer")]
+    [JsonPropertyName("selling_asset_issuer")]
     public string SellingAssetIssuer { get; init; }
 
     public Asset BuyingAsset => Asset.Create(BuyingAssetType, BuyingAssetCode, BuyingAssetIssuer);

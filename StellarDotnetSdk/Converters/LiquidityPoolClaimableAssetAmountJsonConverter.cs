@@ -1,30 +1,56 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Responses.Effects;
 
 namespace StellarDotnetSdk.Converters;
 
+/// <summary>
+///     JSON converter for LiquidityPoolClaimableAssetAmount.
+///     Handles conversion between JSON objects and LiquidityPoolClaimableAssetAmount instances.
+/// </summary>
 public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<LiquidityPoolClaimableAssetAmount>
 {
-    public override LiquidityPoolClaimableAssetAmount ReadJson(JsonReader reader, Type objectType,
-        LiquidityPoolClaimableAssetAmount? existingValue, bool hasExistingValue, JsonSerializer serializer)
+    public override LiquidityPoolClaimableAssetAmount Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
-        var jt = JToken.ReadFrom(reader);
+        // LiquidityPoolClaimableAssetAmount is non-nullable, only check for expected token type
+        if (reader.TokenType != JsonTokenType.StartObject)
+        {
+            throw new JsonException(
+                $"Expected StartObject for {nameof(LiquidityPoolClaimableAssetAmount)} but found {reader.TokenType}. " +
+                "LiquidityPoolClaimableAssetAmount must be a JSON object with 'asset', 'amount', and 'claimable_balance_id' properties."
+            );
+        }
 
-        var assetName = jt.Value<string>("asset");
+        using var jsonDocument = JsonDocument.ParseValue(ref reader);
+        var jsonObject = jsonDocument.RootElement;
+
+        if (!jsonObject.TryGetProperty("asset", out var assetElement))
+        {
+            throw new ArgumentException("JSON value for asset is missing.", nameof(assetElement));
+        }
+        var assetName = assetElement.GetString();
         var asset = string.IsNullOrEmpty(assetName) ? null : Asset.Create(assetName);
 
-        var amount = jt.Value<string>("amount");
+        if (!jsonObject.TryGetProperty("amount", out var amountElement))
+        {
+            throw new ArgumentException("JSON value for amount is missing.", nameof(amountElement));
+        }
+        var amount = amountElement.GetString();
 
-        var claimableBalanceId = jt.Value<string>("claimable_balance_id");
+        // claimable_balance_id is optional
+        string? claimableBalanceId = null;
+        if (jsonObject.TryGetProperty("claimable_balance_id", out var claimableBalanceIdElement))
+        {
+            claimableBalanceId = claimableBalanceIdElement.GetString();
+        }
 
         if (asset == null)
         {
             throw new ArgumentException("JSON value for asset is missing.", nameof(asset));
         }
-
         if (amount == null)
         {
             throw new ArgumentException("JSON value for amount is missing.", nameof(amount));
@@ -38,22 +64,22 @@ public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<Liqu
         };
     }
 
-    public override void WriteJson(JsonWriter writer, LiquidityPoolClaimableAssetAmount? value,
-        JsonSerializer serializer)
+    public override void Write(Utf8JsonWriter writer, LiquidityPoolClaimableAssetAmount value,
+        JsonSerializerOptions options)
     {
-        var jo = new JObject();
-        if (value?.Asset != null)
+        writer.WriteStartObject();
+        if (value.Asset != null)
         {
-            jo.Add("asset", value.Asset.CanonicalName());
+            writer.WriteString("asset", value.Asset.CanonicalName());
         }
-        if (value?.Amount != null)
+        if (value.Amount != null)
         {
-            jo.Add("amount", value.Amount);
+            writer.WriteString("amount", value.Amount);
         }
-        if (value?.ClaimableBalanceId != null)
+        if (value.ClaimableBalanceId != null)
         {
-            jo.Add("claimable_balance_id", value.ClaimableBalanceId);
+            writer.WriteString("claimable_balance_id", value.ClaimableBalanceId);
         }
-        jo.WriteTo(writer);
+        writer.WriteEndObject();
     }
 }

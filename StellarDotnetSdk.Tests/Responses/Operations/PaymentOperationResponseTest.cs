@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Memos;
-using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
@@ -18,7 +18,7 @@ public class PaymentOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("payment.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<PaymentOperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<PaymentOperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertPaymentOperationTestData(instance);
     }
@@ -28,9 +28,9 @@ public class PaymentOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("payment.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<PaymentOperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<PaymentOperationResponse>(serialized);
+        var instance = JsonSerializer.Deserialize<PaymentOperationResponse>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<PaymentOperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertPaymentOperationTestData(back);
     }
@@ -100,7 +100,7 @@ public class PaymentOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("paymentNonNative.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertNonNativePaymentData(instance);
     }
@@ -110,9 +110,9 @@ public class PaymentOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("paymentNonNative.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertNonNativePaymentData(back);
     }
@@ -135,7 +135,7 @@ public class PaymentOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("paymentMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertPaymentOperationTestDataMuxed(instance);
     }
@@ -145,9 +145,9 @@ public class PaymentOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("paymentMuxed.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertPaymentOperationTestDataMuxed(back);
     }

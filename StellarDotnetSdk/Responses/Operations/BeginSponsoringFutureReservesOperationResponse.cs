@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
@@ -10,6 +10,5 @@ public class BeginSponsoringFutureReservesOperationResponse : OperationResponse
 {
     public override int TypeId => 16;
 
-    [JsonProperty(PropertyName = "sponsored_id")]
-    public string SponsoredId { get; init; }
+    [JsonPropertyName("sponsored_id")] public string SponsoredId { get; init; }
 }

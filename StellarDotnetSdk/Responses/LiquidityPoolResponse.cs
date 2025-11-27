@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Xdr;
@@ -8,41 +8,41 @@ namespace StellarDotnetSdk.Responses;
 
 public class LiquidityPoolResponse : Response, IPagingToken
 {
-    [JsonProperty(PropertyName = "id")] public LiquidityPoolId Id { get; init; }
+    [JsonPropertyName("id")] public LiquidityPoolId Id { get; init; }
 
-    [JsonProperty(PropertyName = "fee_bp")]
+    [JsonPropertyName("fee_bp")]
     public int FeeBp { get; init; }
 
     [JsonConverter(typeof(LiquidityPoolTypeEnumJsonConverter))]
-    [JsonProperty(PropertyName = "type")]
+    [JsonPropertyName("type")]
     public LiquidityPoolType.LiquidityPoolTypeEnum Type { get; init; }
 
-    [JsonProperty(PropertyName = "total_trustlines")]
+    [JsonPropertyName("total_trustlines")]
     public string TotalTrustlines { get; init; }
 
-    [JsonProperty(PropertyName = "total_shares")]
+    [JsonPropertyName("total_shares")]
     public string TotalShares { get; init; }
 
-    [JsonProperty(PropertyName = "reserves")]
+    [JsonPropertyName("reserves")]
     public Reserve[] Reserves { get; init; }
 
-    [JsonProperty(PropertyName = "_links")]
+    [JsonPropertyName("_links")]
     public LiquidityPoolResponseLinks Links { get; init; }
 
-    [JsonProperty(PropertyName = "paging_token")]
+    [JsonPropertyName("paging_token")]
     public string PagingToken { get; init; }
 
     public class LiquidityPoolResponseLinks
     {
-        [JsonProperty(PropertyName = "effects")]
+        [JsonPropertyName("effects")]
         public Link Effects { get; init; }
 
-        [JsonProperty(PropertyName = "operations")]
+        [JsonPropertyName("operations")]
         public Link Operations { get; init; }
 
-        [JsonProperty(PropertyName = "self")] public Link Self { get; init; }
+        [JsonPropertyName("self")] public Link Self { get; init; }
 
-        [JsonProperty(PropertyName = "transactions")]
+        [JsonPropertyName("transactions")]
         public Link Transactions { get; init; }
     }
 }

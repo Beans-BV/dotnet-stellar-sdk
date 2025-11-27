@@ -1,7 +1,7 @@
 ﻿using System.IO;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
-using StellarDotnetSdk.Responses;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
@@ -14,7 +14,7 @@ public class BumpSequenceOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("bumpSequence.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertBumpSequenceData(instance);
     }
@@ -24,9 +24,9 @@ public class BumpSequenceOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("bumpSequence.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertBumpSequenceData(back);
     }
@@ -37,6 +37,6 @@ public class BumpSequenceOperationResponseTest
         var operation = (BumpSequenceOperationResponse)instance;
 
         Assert.AreEqual(12884914177L, operation.Id);
-        Assert.AreEqual(79473726952833048L, operation.BumpTo);
+        Assert.AreEqual("79473726952833048", operation.BumpTo);
     }
 }

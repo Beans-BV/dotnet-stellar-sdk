@@ -1,5 +1,5 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Xdr;
 using claimant_ClaimPredicate = StellarDotnetSdk.Claimants.ClaimPredicate;
 
@@ -7,19 +7,19 @@ namespace StellarDotnetSdk.Responses;
 
 public class Predicate
 {
-    [JsonProperty(PropertyName = "and")] public Predicate[]? And { get; init; }
+    [JsonPropertyName("and")] public Predicate[]? And { get; init; }
 
-    [JsonProperty(PropertyName = "or")] public Predicate[]? Or { get; init; }
+    [JsonPropertyName("or")] public Predicate[]? Or { get; init; }
 
-    [JsonProperty(PropertyName = "not")] public Predicate? Not { get; init; }
+    [JsonPropertyName("not")] public Predicate? Not { get; init; }
 
-    [JsonProperty(PropertyName = "unconditional")]
+    [JsonPropertyName("unconditional")]
     public bool Unconditional { get; init; }
 
-    [JsonProperty(PropertyName = "abs_before")]
+    [JsonPropertyName("abs_before")]
     public string? AbsBefore { get; init; }
 
-    [JsonProperty(PropertyName = "rel_before")]
+    [JsonPropertyName("rel_before")]
     public long? RelBefore { get; init; }
 
     public claimant_ClaimPredicate ToClaimPredicate()

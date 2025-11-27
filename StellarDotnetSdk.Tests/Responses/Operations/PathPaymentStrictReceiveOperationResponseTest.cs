@@ -1,8 +1,8 @@
 ﻿using System.IO;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Responses;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
@@ -15,7 +15,7 @@ public class PathPaymentStrictReceiveOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("pathPaymentStrictReceive.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertPathPaymentStrictReceiveData(instance);
     }
@@ -25,9 +25,9 @@ public class PathPaymentStrictReceiveOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("pathPaymentStrictReceive.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertPathPaymentStrictReceiveData(back);
     }

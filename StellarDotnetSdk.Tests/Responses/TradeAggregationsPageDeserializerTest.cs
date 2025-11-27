@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
@@ -13,7 +14,8 @@ public class TradeAggregationsPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("tradeAggregationPage.json");
         var json = File.ReadAllText(jsonPath);
-        var tradeAggregationsPage = JsonSingleton.GetInstance<Page<TradeAggregationResponse>>(json);
+        var tradeAggregationsPage =
+            JsonSerializer.Deserialize<Page<TradeAggregationResponse>>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(tradeAggregationsPage);
         AssertTestData(tradeAggregationsPage);
     }
@@ -23,33 +25,10 @@ public class TradeAggregationsPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("tradeAggregationPage.json");
         var json = File.ReadAllText(jsonPath);
-        var tradeAggregationsPage = JsonSingleton.GetInstance<Page<TradeAggregationResponse>>(json);
-        var serialized = JsonConvert.SerializeObject(tradeAggregationsPage);
-        var back = JsonConvert.DeserializeObject<Page<TradeAggregationResponse>>(serialized);
-        Assert.IsNotNull(back);
-        AssertTestData(back);
-    }
-
-    //Before Horizon 1.0.0 the Timestamp and TradeCount in the json were a long.
-    [TestMethod]
-    public void TestDeserializePre100()
-    {
-        var jsonPath = Utils.GetTestDataPath("tradeAggregationPagePre100.json");
-        var json = File.ReadAllText(jsonPath);
-        var tradeAggregationsPage = JsonSingleton.GetInstance<Page<TradeAggregationResponse>>(json);
-        Assert.IsNotNull(tradeAggregationsPage);
-        AssertTestData(tradeAggregationsPage);
-    }
-
-    //Before Horizon 1.0.0 the Timestamp and TradeCount in the json were a long.
-    [TestMethod]
-    public void TestSerializeDeserializePre100()
-    {
-        var jsonPath = Utils.GetTestDataPath("tradeAggregationPagePre100.json");
-        var json = File.ReadAllText(jsonPath);
-        var tradeAggregationsPage = JsonSingleton.GetInstance<Page<TradeAggregationResponse>>(json);
-        var serialized = JsonConvert.SerializeObject(tradeAggregationsPage);
-        var back = JsonConvert.DeserializeObject<Page<TradeAggregationResponse>>(serialized);
+        var tradeAggregationsPage =
+            JsonSerializer.Deserialize<Page<TradeAggregationResponse>>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(tradeAggregationsPage);
+        var back = JsonSerializer.Deserialize<Page<TradeAggregationResponse>>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

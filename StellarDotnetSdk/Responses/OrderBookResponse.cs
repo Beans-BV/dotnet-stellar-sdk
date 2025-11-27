@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
 
@@ -7,34 +7,36 @@ namespace StellarDotnetSdk.Responses;
 
 public class OrderBookResponse
 {
-    [JsonProperty(PropertyName = "base")]
+    [JsonPropertyName("base")]
     [JsonConverter(typeof(AssetJsonConverter))]
     public Asset OrderBookBase { get; init; }
 
-    [JsonProperty(PropertyName = "counter")]
+    [JsonPropertyName("counter")]
     [JsonConverter(typeof(AssetJsonConverter))]
     public Asset Counter { get; init; }
 
-    [JsonProperty(PropertyName = "asks")] public Row[] Asks { get; init; }
+    [JsonPropertyName("asks")]
+    public Row[] Asks { get; init; }
 
-    [JsonProperty(PropertyName = "bids")] public Row[] Bids { get; init; }
+    [JsonPropertyName("bids")]
+    public Row[] Bids { get; init; }
 
     /// Represents order book row.
     public class Row
     {
-        [JsonProperty(PropertyName = "amount")]
+        [JsonPropertyName("amount")]
         public string Amount { get; init; }
 
         /// <summary>
         ///     The ask/bid price.
         /// </summary>
-        [JsonProperty(PropertyName = "price")]
+        [JsonPropertyName("price")]
         public string Price { get; init; }
 
         /// <summary>
         ///     The ask/bid price as a ratio.
         /// </summary>
-        [JsonProperty(PropertyName = "price_r")]
+        [JsonPropertyName("price_r")]
         public StellarDotnetSdk.Price PriceR { get; init; }
     }
 }

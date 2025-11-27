@@ -1,31 +1,31 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses;
 #nullable disable
 
 public class RootResponse : Response
 {
-    [JsonProperty(PropertyName = "horizon_version")]
+    [JsonPropertyName("horizon_version")]
     public string HorizonVersion { get; init; }
 
-    [JsonProperty(PropertyName = "core_version")]
+    [JsonPropertyName("core_version")]
     public string StellarCoreVersion { get; init; }
 
-    [JsonProperty(PropertyName = "history_latest_ledger")]
+    [JsonPropertyName("history_latest_ledger")]
     public int HistoryLatestLedger { get; init; }
 
-    [JsonProperty(PropertyName = "history_elder_ledger")]
+    [JsonPropertyName("history_elder_ledger")]
     public int HistoryElderLedger { get; init; }
 
-    [JsonProperty(PropertyName = "core_latest_ledger")]
+    [JsonPropertyName("core_latest_ledger")]
     public int CoreLatestLedger { get; init; }
 
-    [JsonProperty(PropertyName = "network_passphrase")]
+    [JsonPropertyName("network_passphrase")]
     public string NetworkPassphrase { get; init; }
 
-    [JsonProperty(PropertyName = "current_protocol_version")]
+    [JsonPropertyName("current_protocol_version")]
     public int CurrentProtocolVersion { get; init; }
 
-    [JsonProperty(PropertyName = "core_supported_protocol_version")]
+    [JsonPropertyName("core_supported_protocol_version")]
     public int CoreSupportedProtocolVersion { get; init; }
 }

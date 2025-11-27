@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
 
@@ -9,10 +9,9 @@ namespace StellarDotnetSdk.Responses;
 [JsonConverter(typeof(ReserveJsonConverter))]
 public class Reserve
 {
-    [JsonProperty(PropertyName = "amount")]
     public string Amount { get; init; }
 
-    [JsonProperty(PropertyName = "asset")] public Asset Asset { get; init; }
+    public Asset Asset { get; init; }
 #nullable restore
     public override bool Equals(object? obj)
     {

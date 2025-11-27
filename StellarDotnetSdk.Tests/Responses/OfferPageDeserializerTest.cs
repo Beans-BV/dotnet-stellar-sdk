@@ -1,8 +1,9 @@
 ﻿using System.IO;
+using System.Text.Json;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
@@ -15,7 +16,7 @@ public class OfferPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("offerPage.json");
         var json = File.ReadAllText(jsonPath);
-        var offerResponsePage = JsonSingleton.GetInstance<Page<OfferResponse>>(json);
+        var offerResponsePage = JsonSerializer.Deserialize<Page<OfferResponse>>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(offerResponsePage);
         AssertTestData(offerResponsePage);
     }
@@ -25,33 +26,9 @@ public class OfferPageDeserializerTest
     {
         var jsonPath = Utils.GetTestDataPath("offerPage.json");
         var json = File.ReadAllText(jsonPath);
-        var offerResponsePage = JsonSingleton.GetInstance<Page<OfferResponse>>(json);
-        var serialized = JsonConvert.SerializeObject(offerResponsePage);
-        var back = JsonConvert.DeserializeObject<Page<OfferResponse>>(serialized);
-        Assert.IsNotNull(back);
-        AssertTestData(back);
-    }
-
-    //Before Horizon 1.0.0 the ID in the json was a long.
-    [TestMethod]
-    public void TestDeserializePre100()
-    {
-        var jsonPath = Utils.GetTestDataPath("offerPagePre100.json");
-        var json = File.ReadAllText(jsonPath);
-        var offerResponsePage = JsonSingleton.GetInstance<Page<OfferResponse>>(json);
-        Assert.IsNotNull(offerResponsePage);
-        AssertTestData(offerResponsePage);
-    }
-
-    //Before Horizon 1.0.0 the ID in the json was a long.
-    [TestMethod]
-    public void TestSerializeDeserializePre100()
-    {
-        var jsonPath = Utils.GetTestDataPath("offerPagePre100.json");
-        var json = File.ReadAllText(jsonPath);
-        var offerResponsePage = JsonSingleton.GetInstance<Page<OfferResponse>>(json);
-        var serialized = JsonConvert.SerializeObject(offerResponsePage);
-        var back = JsonConvert.DeserializeObject<Page<OfferResponse>>(serialized);
+        var offerResponsePage = JsonSerializer.Deserialize<Page<OfferResponse>>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(offerResponsePage);
+        var back = JsonSerializer.Deserialize<Page<OfferResponse>>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

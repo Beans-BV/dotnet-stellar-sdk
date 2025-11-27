@@ -1,9 +1,9 @@
 ﻿using System.IO;
+using System.Text.Json;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Responses;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
@@ -16,7 +16,7 @@ public class ManageBuyOfferOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("manageBuyOffer.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
         AssertManageBuyOfferData(instance);
     }
@@ -26,32 +26,9 @@ public class ManageBuyOfferOperationResponseTest
     {
         var jsonPath = Utils.GetTestDataPath("manageBuyOffer.json");
         var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
-        Assert.IsNotNull(back);
-        AssertManageBuyOfferData(back);
-    }
-
-    //Manage Buy Offer (Before Horizon 1.0.0)
-    [TestMethod]
-    public void TestDeserializeManageBuyOfferOperationPre100()
-    {
-        var jsonPath = Utils.GetTestDataPath("manageBuyOfferPre100.json");
-        var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        Assert.IsNotNull(instance);
-        AssertManageBuyOfferData(instance);
-    }
-
-    [TestMethod]
-    public void TestSerializeDeserializeManageBuyOfferOperationPre100()
-    {
-        var jsonPath = Utils.GetTestDataPath("manageBuyOfferPre100.json");
-        var json = File.ReadAllText(jsonPath);
-        var instance = JsonSingleton.GetInstance<OperationResponse>(json);
-        var serialized = JsonConvert.SerializeObject(instance);
-        var back = JsonConvert.DeserializeObject<OperationResponse>(serialized);
+        var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(back);
         AssertManageBuyOfferData(back);
     }

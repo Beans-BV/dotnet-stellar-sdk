@@ -1,41 +1,40 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Converters;
 
 namespace StellarDotnetSdk.Responses;
 #nullable disable
 
 public class PathResponse : Response
 {
-    [JsonProperty(PropertyName = "destination_amount")]
+    [JsonPropertyName("destination_amount")]
     public string DestinationAmount { get; init; }
 
-    [JsonProperty(PropertyName = "destination_asset_type")]
+    [JsonPropertyName("destination_asset_type")]
     public string DestinationAssetType { get; init; }
 
-    [JsonProperty(PropertyName = "destination_asset_code")]
+    [JsonPropertyName("destination_asset_code")]
     public string DestinationAssetCode { get; init; }
 
-    [JsonProperty(PropertyName = "destination_asset_issuer")]
+    [JsonPropertyName("destination_asset_issuer")]
     public string DestinationAssetIssuer { get; init; }
 
-    [JsonProperty(PropertyName = "source_amount")]
+    [JsonPropertyName("source_amount")]
     public string SourceAmount { get; init; }
 
-    [JsonProperty(PropertyName = "source_asset_type")]
+    [JsonPropertyName("source_asset_type")]
     public string SourceAssetType { get; init; }
 
-    [JsonProperty(PropertyName = "source_asset_code")]
+    [JsonPropertyName("source_asset_code")]
     public string SourceAssetCode { get; init; }
 
-    [JsonProperty(PropertyName = "source_asset_issuer")]
+    [JsonPropertyName("source_asset_issuer")]
     public string SourceAssetIssuer { get; init; }
 
-    [JsonProperty(PropertyName = "path", ItemConverterType = typeof(AssetJsonConverter))]
+    [JsonPropertyName("path")]
     public List<Asset> Path { get; init; }
 
-    [JsonProperty(PropertyName = "_links")]
+    [JsonPropertyName("_links")]
     public PathResponseLinks Links { get; init; }
 
     public Asset DestinationAsset => Asset.Create(DestinationAssetType, DestinationAssetCode, DestinationAssetIssuer);
@@ -44,6 +43,6 @@ public class PathResponse : Response
 
     public class PathResponseLinks
     {
-        [JsonProperty(PropertyName = "self")] public Link<PathResponse> Self { get; init; }
+        [JsonPropertyName("self")] public Link<PathResponse> Self { get; init; }
     }
 }

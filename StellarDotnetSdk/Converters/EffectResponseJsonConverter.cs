@@ -1,98 +1,132 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses.Effects;
 
 namespace StellarDotnetSdk.Converters;
 
+/// <summary>
+///     JSON converter for polymorphic EffectResponse deserialization.
+///     Uses the 'type_i' discriminator field to determine the concrete effect type.
+/// </summary>
+/// <remarks>
+///     <p>
+///         This converter handles 31+ effect types with non-sequential discriminators:
+///         0-7 = Account effects
+///         10-12 = Signer effects
+///         20-26 = Trustline effects,
+///         30-33 = Offer/Trade effects
+///         40-43 = Data effects
+///         50-52 = Claimable balance,
+///         60-74 = Sponsorship effects
+///         80 = Clawback
+///         90-95 = Liquidity pool effects.
+///         Performance: Parses JSON once into JsonDocument, then deserializes from JsonElement
+///         to avoid double-parsing overhead.
+///         <br />
+///     </p>
+/// </remarks>
+/// <remarks>
+///     <p>
+///         Designed for deserializing collections or properties typed as <see cref="EffectResponse" />.
+///         Direct deserialization to concrete subclasses bypasses this converter intentionally.
+///         <example>
+///             Use with base type: <c>JsonSerializer.Deserialize&lt;EffectResponse&gt;(json)</c> - converter is invoked.
+///             <br />
+///             Not with subclass: <c>JsonSerializer.Deserialize&lt;AccountCreatedEffectResponse&gt;(json)</c> -
+///             converter is bypassed.
+///         </example>
+///     </p>
+/// </remarks>
 public class EffectResponseJsonConverter : JsonConverter<EffectResponse>
 {
-    public override bool CanWrite => false;
-
-    public override void WriteJson(JsonWriter writer, EffectResponse? value, JsonSerializer serializer)
+    public override bool CanConvert(Type typeToConvert)
     {
-        throw new NotImplementedException();
+        // Only handle the base type, not concrete subclasses
+        return typeToConvert == typeof(EffectResponse);
     }
 
-    public override EffectResponse ReadJson(JsonReader reader, Type objectType, EffectResponse? existingValue,
-        bool hasExistingValue,
-        JsonSerializer serializer)
+    public override EffectResponse? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var jsonObject = JObject.Load(reader);
-        var type = jsonObject.GetValue("type_i");
-        if (type == null)
+        // Parse JSON once into document
+        using var document = JsonDocument.ParseValue(ref reader);
+        var root = document.RootElement;
+
+        // Extract discriminator from parsed document
+        if (!root.TryGetProperty("type_i", out var typeProperty))
         {
-            throw new ArgumentException("JSON value for type_i is missing.", nameof(type));
+            throw new JsonException(
+                "Property 'type_i' not found in JSON. " +
+                "This property is required for determining the effect type."
+            );
         }
-        var response = CreateResponse(type.ToObject<int>());
-        serializer.Populate(jsonObject.CreateReader(), response);
-        return response;
-    }
 
-    private static EffectResponse CreateResponse(int type)
-    {
+        var type = typeProperty.GetInt32();
+
+        // Deserialize from already-parsed JsonElement (no double-parsing)
         return type switch
         {
-            // Account
-            0 => new AccountCreatedEffectResponse(),
-            1 => new AccountRemovedEffectResponse(),
-            2 => new AccountCreditedEffectResponse(),
-            3 => new AccountDebitedEffectResponse(),
-            4 => new AccountThresholdsUpdatedEffectResponse(),
-            5 => new AccountHomeDomainUpdatedEffectResponse(),
-            6 => new AccountFlagsUpdatedEffectResponse(),
-            7 => new AccountInflationDestinationUpdatedEffectResponse(),
-            // Signer
-            10 => new SignerCreatedEffectResponse(),
-            11 => new SignerRemovedEffectResponse(),
-            12 => new SignerUpdatedEffectResponse(),
-            // Trustline
-            20 => new TrustlineCreatedEffectResponse(),
-            21 => new TrustlineRemovedEffectResponse(),
-            22 => new TrustlineUpdatedEffectResponse(),
-            23 => new TrustlineAuthorizedEffectResponse(),
-            24 => new TrustlineDeauthorizedEffectResponse(),
-            25 => new TrustlineAuthorizedToMaintainLiabilitiesEffectResponse(),
-            26 => new TrustlineFlagsUpdatedEffectResponse(),
-            // Offer
-            30 => new OfferCreatedEffectResponse(),
-            31 => new OfferRemovedEffectResponse(),
-            32 => new OfferUpdatedEffectResponse(),
-            33 => new TradeEffectResponse(),
-            // Data
-            40 => new DataCreatedEffectResponse(),
-            41 => new DataRemovedEffectResponse(),
-            42 => new DataUpdatedEffectResponse(),
-            43 => new SequenceBumpedEffectResponse(),
-            // Claimable Balances
-            50 => new ClaimableBalanceCreatedEffectResponse(),
-            51 => new ClaimableBalanceClaimantCreatedEffectResponse(),
-            52 => new ClaimableBalanceClaimedEffectResponse(),
-            // Sponsorship
-            60 => new AccountSponsorshipCreatedEffectResponse(),
-            61 => new AccountSponsorshipUpdatedEffectResponse(),
-            62 => new AccountSponsorshipRemovedEffectResponse(),
-            63 => new TrustlineSponsorshipCreatedEffectResponse(),
-            64 => new TrustlineSponsorshipUpdatedEffectResponse(),
-            65 => new TrustlineSponsorshipRemovedEffectResponse(),
-            66 => new DataSponsorshipCreatedEffectResponse(),
-            67 => new DataSponsorshipUpdatedEffectResponse(),
-            68 => new DataSponsorshipRemovedEffectResponse(),
-            69 => new ClaimableBalanceSponsorshipCreatedEffectResponse(),
-            70 => new ClaimableBalanceSponsorshipUpdatedEffectResponse(),
-            71 => new ClaimableBalanceSponsorshipRemovedEffectResponse(),
-            72 => new SignerSponsorshipCreatedEffectResponse(),
-            73 => new SignerSponsorshipUpdatedEffectResponse(),
-            74 => new SignerSponsorshipRemovedEffectResponse(),
-            80 => new ClaimableBalanceClawedBackEffectResponse(),
-            //Liquidity Pools
-            90 => new LiquidityPoolDepositedEffectResponse(),
-            91 => new LiquidityPoolWithdrewEffectResponse(),
-            92 => new LiquidityPoolTradeEffectResponse(),
-            93 => new LiquidityPoolCreatedEffectResponse(),
-            94 => new LiquidityPoolRemovedEffectResponse(),
-            95 => new LiquidityPoolRevokedEffectResponse(),
-            _ => throw new JsonSerializationException($"Unknown 'type_i'='{type}'"),
+            0 => root.Deserialize<AccountCreatedEffectResponse>(options),
+            1 => root.Deserialize<AccountRemovedEffectResponse>(options),
+            2 => root.Deserialize<AccountCreditedEffectResponse>(options),
+            3 => root.Deserialize<AccountDebitedEffectResponse>(options),
+            4 => root.Deserialize<AccountThresholdsUpdatedEffectResponse>(options),
+            5 => root.Deserialize<AccountHomeDomainUpdatedEffectResponse>(options),
+            6 => root.Deserialize<AccountFlagsUpdatedEffectResponse>(options),
+            7 => root.Deserialize<AccountInflationDestinationUpdatedEffectResponse>(options),
+            10 => root.Deserialize<SignerCreatedEffectResponse>(options),
+            11 => root.Deserialize<SignerRemovedEffectResponse>(options),
+            12 => root.Deserialize<SignerUpdatedEffectResponse>(options),
+            20 => root.Deserialize<TrustlineCreatedEffectResponse>(options),
+            21 => root.Deserialize<TrustlineRemovedEffectResponse>(options),
+            22 => root.Deserialize<TrustlineUpdatedEffectResponse>(options),
+            23 => root.Deserialize<TrustlineAuthorizedEffectResponse>(options),
+            24 => root.Deserialize<TrustlineDeauthorizedEffectResponse>(options),
+            25 => root.Deserialize<TrustlineAuthorizedToMaintainLiabilitiesEffectResponse>(options),
+            26 => root.Deserialize<TrustlineFlagsUpdatedEffectResponse>(options),
+            30 => root.Deserialize<OfferCreatedEffectResponse>(options),
+            31 => root.Deserialize<OfferRemovedEffectResponse>(options),
+            32 => root.Deserialize<OfferUpdatedEffectResponse>(options),
+            33 => root.Deserialize<TradeEffectResponse>(options),
+            40 => root.Deserialize<DataCreatedEffectResponse>(options),
+            41 => root.Deserialize<DataRemovedEffectResponse>(options),
+            42 => root.Deserialize<DataUpdatedEffectResponse>(options),
+            43 => root.Deserialize<SequenceBumpedEffectResponse>(options),
+            50 => root.Deserialize<ClaimableBalanceCreatedEffectResponse>(options),
+            51 => root.Deserialize<ClaimableBalanceClaimantCreatedEffectResponse>(options),
+            52 => root.Deserialize<ClaimableBalanceClaimedEffectResponse>(options),
+            60 => root.Deserialize<AccountSponsorshipCreatedEffectResponse>(options),
+            61 => root.Deserialize<AccountSponsorshipUpdatedEffectResponse>(options),
+            62 => root.Deserialize<AccountSponsorshipRemovedEffectResponse>(options),
+            63 => root.Deserialize<TrustlineSponsorshipCreatedEffectResponse>(options),
+            64 => root.Deserialize<TrustlineSponsorshipUpdatedEffectResponse>(options),
+            65 => root.Deserialize<TrustlineSponsorshipRemovedEffectResponse>(options),
+            66 => root.Deserialize<DataSponsorshipCreatedEffectResponse>(options),
+            67 => root.Deserialize<DataSponsorshipUpdatedEffectResponse>(options),
+            68 => root.Deserialize<DataSponsorshipRemovedEffectResponse>(options),
+            69 => root.Deserialize<ClaimableBalanceSponsorshipCreatedEffectResponse>(options),
+            70 => root.Deserialize<ClaimableBalanceSponsorshipUpdatedEffectResponse>(options),
+            71 => root.Deserialize<ClaimableBalanceSponsorshipRemovedEffectResponse>(options),
+            72 => root.Deserialize<SignerSponsorshipCreatedEffectResponse>(options),
+            73 => root.Deserialize<SignerSponsorshipUpdatedEffectResponse>(options),
+            74 => root.Deserialize<SignerSponsorshipRemovedEffectResponse>(options),
+            80 => root.Deserialize<ClaimableBalanceClawedBackEffectResponse>(options),
+            90 => root.Deserialize<LiquidityPoolDepositedEffectResponse>(options),
+            91 => root.Deserialize<LiquidityPoolWithdrewEffectResponse>(options),
+            92 => root.Deserialize<LiquidityPoolTradeEffectResponse>(options),
+            93 => root.Deserialize<LiquidityPoolCreatedEffectResponse>(options),
+            94 => root.Deserialize<LiquidityPoolRemovedEffectResponse>(options),
+            95 => root.Deserialize<LiquidityPoolRevokedEffectResponse>(options),
+            _ => throw new JsonException(
+                $"Unknown effect type_i: {type}. " +
+                $"Expected value in ranges 0-7, 10-12, 20-26, 30-33, 40-43, 50-52, 60-74, 80, or 90-95. " +
+                $"This may indicate an API version mismatch or a new effect type. Check if your SDK version supports this effect type."
+            ),
         };
+    }
+
+    public override void Write(Utf8JsonWriter writer, EffectResponse value, JsonSerializerOptions options)
+    {
+        JsonSerializer.Serialize(writer, value, value.GetType(), options);
     }
 }

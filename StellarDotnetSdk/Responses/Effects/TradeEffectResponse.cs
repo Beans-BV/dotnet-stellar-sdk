@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Effects;
@@ -11,40 +11,40 @@ public class TradeEffectResponse : EffectResponse
 {
     public override int TypeId => 33;
 
-    [JsonProperty(PropertyName = "seller")]
+    [JsonPropertyName("seller")]
     public string Seller { get; init; }
 
-    [JsonProperty(PropertyName = "seller_muxed")]
+    [JsonPropertyName("seller_muxed")]
     public string SellerMuxed { get; init; }
 
-    [JsonProperty(PropertyName = "seller_muxed_id")]
+    [JsonPropertyName("seller_muxed_id")]
     public long? SellerMuxedId { get; init; }
 
-    [JsonProperty(PropertyName = "offer_id")]
+    [JsonPropertyName("offer_id")]
     public string OfferId { get; init; }
 
-    [JsonProperty(PropertyName = "sold_amount")]
+    [JsonPropertyName("sold_amount")]
     public string SoldAmount { get; init; }
 
-    [JsonProperty(PropertyName = "sold_asset_type")]
+    [JsonPropertyName("sold_asset_type")]
     public string SoldAssetType { get; init; }
 
-    [JsonProperty(PropertyName = "sold_asset_code")]
+    [JsonPropertyName("sold_asset_code")]
     public string SoldAssetCode { get; init; }
 
-    [JsonProperty(PropertyName = "sold_asset_issuer")]
+    [JsonPropertyName("sold_asset_issuer")]
     public string SoldAssetIssuer { get; init; }
 
-    [JsonProperty(PropertyName = "bought_amount")]
+    [JsonPropertyName("bought_amount")]
     public string BoughtAmount { get; init; }
 
-    [JsonProperty(PropertyName = "bought_asset_type")]
+    [JsonPropertyName("bought_asset_type")]
     public string BoughtAssetType { get; init; }
 
-    [JsonProperty(PropertyName = "bought_asset_code")]
+    [JsonPropertyName("bought_asset_code")]
     public string BoughtAssetCode { get; init; }
 
-    [JsonProperty(PropertyName = "bought_asset_issuer")]
+    [JsonPropertyName("bought_asset_issuer")]
     public string BoughtAssetIssuer { get; init; }
 
     public Asset BoughtAsset => Asset.Create(BoughtAssetType, BoughtAssetCode, BoughtAssetIssuer);
