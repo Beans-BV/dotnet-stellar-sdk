@@ -30,9 +30,6 @@ public static class JsonOptions
         // Allow deserializing numbers from strings (API sometimes returns "123" instead of 123)
         NumberHandling = JsonNumberHandling.AllowReadingFromString,
 
-        // Pretty-print for better debugging
-        WriteIndented = true,
-
         // Case-insensitive property matching
         PropertyNameCaseInsensitive = true,
 
