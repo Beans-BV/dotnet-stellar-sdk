@@ -25,7 +25,6 @@ public class RetryingHttpMessageHandler : DelegatingHandler
     };
 
     private readonly HttpRetryOptions _options;
-    private readonly Random _random;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="RetryingHttpMessageHandler" /> class.
@@ -34,18 +33,9 @@ public class RetryingHttpMessageHandler : DelegatingHandler
     /// <param name="options">The retry options. If null, default options are used.</param>
     /// <exception cref="ArgumentNullException">Thrown when innerHandler is null.</exception>
     public RetryingHttpMessageHandler(HttpMessageHandler innerHandler, HttpRetryOptions? options = null)
-        : this(innerHandler, options, new Random())
-    {
-    }
-
-    /// <summary>
-    ///     Initializes a new instance for testing with injectable random.
-    /// </summary>
-    internal RetryingHttpMessageHandler(HttpMessageHandler innerHandler, HttpRetryOptions? options, Random random)
         : base(innerHandler ?? throw new ArgumentNullException(nameof(innerHandler)))
     {
         _options = options ?? new HttpRetryOptions();
-        _random = random ?? throw new ArgumentNullException(nameof(random));
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(
@@ -208,7 +198,7 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         // Apply jitter if enabled (random value between 0.8 and 1.2 of the delay)
         if (_options.UseJitter)
         {
-            var jitterFactor = 0.8 + (_random.NextDouble() * 0.4); // 0.8 to 1.2
+            var jitterFactor = 0.8 + (Random.Shared.NextDouble() * 0.4); // 0.8 to 1.2
             delay = (int)(delay * jitterFactor);
         }
 
@@ -275,9 +265,9 @@ public class RetryingHttpMessageHandler : DelegatingHandler
 
         // Copy options (replaces deprecated Properties in .NET 5+)
         // Use IDictionary interface for compatibility
-        if (original.Options.Count > 0)
+        var originalOptions = (IDictionary<string, object?>)original.Options;
+        if (originalOptions.Count > 0)
         {
-            var originalOptions = (IDictionary<string, object?>)original.Options;
             var cloneOptions = (IDictionary<string, object?>)clone.Options;
             foreach (var option in originalOptions)
             {
