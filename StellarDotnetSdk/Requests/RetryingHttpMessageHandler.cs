@@ -275,11 +275,14 @@ public class RetryingHttpMessageHandler : DelegatingHandler
 
         // Copy options (replaces deprecated Properties in .NET 5+)
         // Use IDictionary interface for compatibility
-        var originalOptions = (IDictionary<string, object?>)original.Options;
-        var cloneOptions = (IDictionary<string, object?>)clone.Options;
-        foreach (var option in originalOptions)
+        if (original.Options.Count > 0)
         {
-            cloneOptions[option.Key] = option.Value;
+            var originalOptions = (IDictionary<string, object?>)original.Options;
+            var cloneOptions = (IDictionary<string, object?>)clone.Options;
+            foreach (var option in originalOptions)
+            {
+                cloneOptions[option.Key] = option.Value;
+            }
         }
 
         return clone;
