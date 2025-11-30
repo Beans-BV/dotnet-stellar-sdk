@@ -202,7 +202,7 @@ public class RetryingHttpMessageHandler : DelegatingHandler
 
         // Exponential backoff: baseDelay * 2^attempt
         // Use Math.Min to prevent overflow before multiplication
-        var exponentialDelay = Math.Min(_options.BaseDelayMs * Math.Pow(2, attempt), _options.MaxDelayMs);
+        var exponentialDelay = Math.Min(_options.BaseDelayMs * (1 << attempt), _options.MaxDelayMs);
         var delay = (int)exponentialDelay;
 
         // Apply jitter if enabled (random value between 0.8 and 1.2 of the delay)
