@@ -49,6 +49,7 @@ When generating or reviewing code in this repo, Copilot should assume:
   - Respect nullable reference types and avoid suppressing nullability unless clearly justified.
   - Prefer pure functions and immutable data where practical; allow mutability when it materially improves clarity.
   - Avoid unnecessary global mutable state and static singletons.
+  - Avoid overengineering or micro-optimizing simple, correct code; do not churn between equivalent implementations (e.g., `Math.Pow` vs. bit shifting for small retry counts) without a concrete bug, measurable perf issue, or clarity benefit.
 
 - **Architecture**
   - Maintain a clear separation between:
@@ -124,6 +125,7 @@ Key expectations:
   - Copilot code review should:
     - Compare code changes in the resilience layer with these docs.
     - Call out mismatches (e.g., defaults, presets, or retry policy descriptions that no longer match the code).
+    - Prefer straightforward, well-clamped implementations for backoff and delay logic over complex rewrites aimed at hypothetical edge cases when simpler code is already correct.
 
 For resilience-related PRs, Copilot reviews should pay extra attention to:
 

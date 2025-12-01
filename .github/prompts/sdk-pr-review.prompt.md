@@ -31,6 +31,7 @@ When reviewing a PR in this repo, follow this process:
      - Uses async/await correctly and does not block on async operations,
      - Avoids unnecessary global mutable state.
    - Suggest clearer or more idiomatic C# patterns when code is overly clever or hard to follow.
+   - Avoid overengineering or proposing complex rewrites for simple, correct code; prefer small, targeted suggestions over wholesale refactors unless there is a clear bug or design issue.
 
 4. **HTTP resilience & networking (when relevant)**
    - For changes in `Requests/` or HTTP-related code:
