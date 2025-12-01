@@ -135,29 +135,38 @@ public static class Program
 [JsonConverter(typeof(PersonConverter))]
 internal abstract class Person
 {
-    [JsonPropertyName("name")] public string Name { get; set; }
-    [JsonPropertyName("type")] public string Type { get; set; }
-    [JsonPropertyName("gender")] public string Gender { get; set; }
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
 
-    [JsonPropertyName("disabled")] public bool IsDisabled { get; init; } = true;
+    [JsonPropertyName("type")]
+    public required string Type { get; set; }
+
+    [JsonPropertyName("gender")]
+    public required string Gender { get; set; }
+
+    [JsonPropertyName("disabled")]
+    public bool IsDisabled { get; init; } = true;
 }
 
 internal class Worker : Person
 {
-    [JsonPropertyName("company")] public string Company { get; set; }
+    [JsonPropertyName("company")]
+    public required string Company { get; set; }
 
     [JsonPropertyName("salary")]
     [JsonInclude]
-    public long Salary { get; set; }
+    public required long Salary { get; set; }
 }
 
 internal class Farmer : Person
 {
-    [JsonInclude] [JsonPropertyName("ranch")]
+    [JsonPropertyName("ranch")]
+    [JsonInclude]
     // [JsonPropertyName("ranch")] 
-    private string _ranch;
+    private required string _ranch;
 
-    [JsonPropertyName("farm")] public string Farm { get; set; }
+    [JsonPropertyName("farm")]
+    public required string Farm { get; set; }
 }
 
 internal class PersonConverter : JsonConverter<Person>
