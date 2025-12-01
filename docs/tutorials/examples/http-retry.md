@@ -1,14 +1,16 @@
-# HTTP Retry Configuration
+# HTTP Resilience Configuration
 
-This guide explains how to configure the SDK's built-in HTTP retry mechanism for handling transient network failures.
+This guide explains how to configure the SDK's built-in HTTP resilience mechanism for handling transient network failures.
+
+> **v12.0.0 Breaking Change:** Retries are now enabled by default (3 attempts with exponential backoff). To restore pre-v12 behavior, use `HttpResilienceOptionsPresets.NoRetry()`. See [Disabling Retries](#disabling-retries) for details.
 
 ## Overview
 
-The SDK includes automatic retry logic for transient HTTP failures. By default, both `Server` (Horizon) and `SorobanServer` use `DefaultStellarSdkHttpClient`, which includes retry capabilities out of the box.
+The SDK includes automatic retry logic for transient HTTP failures. By default, both `Server` (Horizon) and `SorobanServer` use `DefaultStellarSdkHttpClient`, which includes resilience capabilities out of the box.
 
 ### Default Behavior
 
-When using the SDK without any configuration, the following retry behavior is applied:
+When using the SDK without any configuration, the following behavior is applied:
 
 | Setting           | Default Value  |
 |-------------------|----------------|
@@ -17,6 +19,8 @@ When using the SDK without any configuration, the following retry behavior is ap
 | Max Delay         | 5000ms         |
 | Jitter            | Enabled (±20%) |
 | Honor Retry-After | Yes            |
+| Circuit Breaker   | Disabled       |
+| Request Timeout   | None           |
 
 ### Retriable Status Codes
 
@@ -37,6 +41,35 @@ The following exceptions trigger automatic retries:
 - `HttpRequestException` - Network errors
 - `TimeoutException` - Request timeouts
 - `TaskCanceledException` - HTTP client timeouts (not user-initiated cancellation)
+
+## Quick Start with Presets
+
+The SDK provides preset configurations for common use cases:
+
+```csharp
+using StellarDotnetSdk.Requests;
+
+// Default: 3 retries, 200ms base delay (same as new HttpResilienceOptions())
+var defaultOptions = HttpResilienceOptionsPresets.Default();
+
+// No retries: restore pre-v12 behavior
+var noRetryOptions = HttpResilienceOptionsPresets.NoRetry();
+
+// Soroban polling: more retries, longer delays for tx finalization
+var sorobanOptions = HttpResilienceOptionsPresets.ForSorobanPolling();
+
+// Low latency: fast failure for trading bots
+var tradingOptions = HttpResilienceOptionsPresets.LowLatency();
+```
+
+### Preset Details
+
+| Preset                | MaxRetryCount | BaseDelay | MaxDelay | HonorRetryAfter |
+|-----------------------|---------------|-----------|----------|-----------------|
+| `Default()`           | 3             | 200ms     | 5s       | Yes             |
+| `NoRetry()`           | 0             | -         | -        | -               |
+| `ForSorobanPolling()` | 5             | 500ms     | 15s      | Yes             |
+| `LowLatency()`        | 1             | 50ms      | 200ms    | No              |
 
 ## Using Default Retry Configuration
 
@@ -83,7 +116,15 @@ var sorobanServer = new SorobanServer("https://soroban-testnet.stellar.org", htt
 
 ### Disabling Retries
 
-To disable retries entirely, set `MaxRetryCount` to 0:
+To disable retries entirely (restore pre-v12 behavior), use the `NoRetry()` preset:
+
+```csharp
+var httpClient = new DefaultStellarSdkHttpClient(
+    resilienceOptions: HttpResilienceOptionsPresets.NoRetry());
+var server = new Server("https://horizon-testnet.stellar.org", httpClient);
+```
+
+Or set `MaxRetryCount` to 0 manually:
 
 ```csharp
 var noRetryOptions = new HttpResilienceOptions
@@ -118,7 +159,71 @@ resilienceOptions.AdditionalRetriableExceptionTypes.Add(typeof(SocketException))
 var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 ```
 
-### Using a Custom Inner Handler
+## Circuit Breaker (Advanced)
+
+The circuit breaker pattern prevents cascading failures by temporarily blocking requests to an unhealthy service. It's **disabled by default** and should only be enabled if you understand the implications.
+
+> **Warning:** When the circuit is open, requests throw `BrokenCircuitException` instead of the underlying HTTP error. This changes your error handling requirements.
+
+### Enabling Circuit Breaker
+
+```csharp
+var resilienceOptions = new HttpResilienceOptions
+{
+    EnableCircuitBreaker = true,
+    FailureRatio = 0.5,           // Open circuit when 50% of requests fail
+    MinimumThroughput = 10,       // Require at least 10 requests before evaluating
+    SamplingDuration = TimeSpan.FromSeconds(30),  // Evaluate over 30-second windows
+    BreakDuration = TimeSpan.FromSeconds(30)      // Stay open for 30 seconds
+};
+
+var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+```
+
+### Circuit Breaker Settings
+
+| Setting                | Default | Description                                                   |
+|------------------------|---------|---------------------------------------------------------------|
+| `EnableCircuitBreaker` | `false` | Whether to enable circuit breaker                             |
+| `FailureRatio`         | `0.5`   | Percentage of failures (0.0-1.0) that triggers circuit open   |
+| `MinimumThroughput`    | `10`    | Minimum requests in sampling window before circuit can open   |
+| `SamplingDuration`     | `30s`   | Time window for evaluating failure ratio                      |
+| `BreakDuration`        | `30s`   | How long the circuit stays open before allowing test requests |
+
+### Circuit Breaker States
+
+1. **Closed** - Normal operation; requests flow through
+2. **Open** - Circuit tripped; requests fail immediately with `BrokenCircuitException`
+3. **Half-Open** - After break duration, allows one test request to check if service recovered
+
+### When to Use Circuit Breaker
+
+- ✅ High-volume applications where you need to protect against cascading failures
+- ✅ Services with known availability patterns
+- ✅ Applications that can gracefully degrade when circuit is open
+
+- ❌ Low-volume applications (may not reach minimum throughput)
+- ❌ Applications that can't handle `BrokenCircuitException`
+- ❌ When you need every request attempt to reach the server
+
+## Request Timeout (Advanced)
+
+You can set a per-request timeout that applies to each attempt:
+
+```csharp
+var resilienceOptions = new HttpResilienceOptions
+{
+    RequestTimeout = TimeSpan.FromSeconds(10)  // Each request times out after 10s
+};
+
+var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+```
+
+> **Note:** This timeout applies to each individual request attempt. With retries, the total operation time can be `RequestTimeout × (MaxRetryCount + 1)` plus backoff delays.
+
+When a request times out, it throws `TimeoutRejectedException` (from Polly). If retries are enabled, the request will be retried.
+
+## Using a Custom Inner Handler
 
 By default, `DefaultStellarSdkHttpClient` uses `SocketsHttpHandler` as the underlying HTTP handler. You can provide a custom `HttpMessageHandler` for scenarios such as:
 
@@ -196,19 +301,33 @@ var userOptions = new HttpResilienceOptions { MaxRetryCount = 2, BaseDelay = Tim
 var jobOptions = new HttpResilienceOptions { MaxRetryCount = 10, BaseDelay = TimeSpan.FromMilliseconds(500) };
 ```
 
-### 2. Enable Jitter
+### 2. Use Presets When Possible
+
+The built-in presets are tuned for common scenarios:
+
+```csharp
+// For Soroban transaction polling
+var sorobanClient = new DefaultStellarSdkHttpClient(
+    resilienceOptions: HttpResilienceOptionsPresets.ForSorobanPolling());
+
+// For trading applications
+var tradingClient = new DefaultStellarSdkHttpClient(
+    resilienceOptions: HttpResilienceOptionsPresets.LowLatency());
+```
+
+### 3. Enable Jitter
 
 Always keep jitter enabled to prevent synchronized retries from multiple clients overwhelming the server (thundering herd problem).
 
-### 3. Honor Retry-After
+### 4. Honor Retry-After
 
 Keep `HonorRetryAfterHeader` enabled to respect rate limits and avoid being blocked by the server.
 
-### 4. Set Reasonable Max Delays
+### 5. Set Reasonable Max Delays
 
 For interactive applications, cap delays at a few seconds. For batch processing, longer delays may be acceptable.
 
-### 5. Use CancellationTokens
+### 6. Use CancellationTokens
 
 Always pass cancellation tokens to allow users to cancel long-running operations:
 
@@ -225,9 +344,16 @@ catch (OperationCanceledException)
 }
 ```
 
+### 7. Leave Circuit Breaker Disabled Unless Needed
+
+Circuit breaker is powerful but changes error semantics. Only enable it if you:
+- Have high request volume
+- Can handle `BrokenCircuitException`
+- Want fail-fast behavior during outages
+
 ## Complete Example
 
-Here's a complete example showing custom retry configuration:
+Here's a complete example showing custom resilience configuration:
 
 ```csharp
 using StellarDotnetSdk;
@@ -255,7 +381,8 @@ var httpClient = new DefaultStellarSdkHttpClient(
 var horizonServer = new Server("https://horizon.stellar.org", httpClient);
 
 // Use with Soroban (create a separate client if different settings needed)
-var sorobanClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+var sorobanClient = new DefaultStellarSdkHttpClient(
+    resilienceOptions: HttpResilienceOptionsPresets.ForSorobanPolling());
 var sorobanServer = new SorobanServer("https://soroban.stellar.org", sorobanClient);
 
 // Make requests - retries are handled automatically
@@ -295,13 +422,22 @@ If you're being rate limited frequently:
 
 If operations are timing out:
 
-1. Increase `HttpClient.Timeout`
+1. Increase `HttpClient.Timeout` or `RequestTimeout`
 2. Check network latency
 3. Consider using a closer server endpoint
+
+### BrokenCircuitException
+
+If you're getting `BrokenCircuitException`:
+
+1. The circuit breaker has tripped due to too many failures
+2. Wait for the `BreakDuration` to pass
+3. Check if the underlying service is healthy
+4. Consider disabling circuit breaker if this behavior is unexpected
 
 ## Additional Resources
 
 - [Stellar Network Status](https://status.stellar.org/)
 - [Horizon API Documentation](https://developers.stellar.org/api/horizon)
 - [Soroban RPC Documentation](https://developers.stellar.org/docs/data/rpc)
-
+- [Polly Documentation](https://www.thepollyproject.org/) (used internally for resilience)

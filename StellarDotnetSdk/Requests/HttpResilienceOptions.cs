@@ -181,3 +181,43 @@ public sealed class HttpResilienceOptions
     public ISet<Type> AdditionalRetriableExceptionTypes { get; } = new HashSet<Type>();
 }
 
+/// <summary>
+///     Provides preset configurations for common HTTP resilience scenarios.
+/// </summary>
+public static class HttpResilienceOptionsPresets
+{
+    /// <summary>
+    ///     Creates default options with retries enabled (3 attempts, 200ms base delay).
+    ///     This is the same as using <c>new HttpResilienceOptions()</c>.
+    /// </summary>
+    public static HttpResilienceOptions Default() => new();
+
+    /// <summary>
+    ///     Creates options with retries disabled.
+    ///     Use this to restore pre-v12 behavior where requests fail immediately without retrying.
+    /// </summary>
+    public static HttpResilienceOptions NoRetry() => new() { MaxRetryCount = 0 };
+
+    /// <summary>
+    ///     Creates options tuned for Soroban RPC polling workflows.
+    ///     Uses more retries and longer delays to accommodate ledger timing and transaction finalization.
+    /// </summary>
+    public static HttpResilienceOptions ForSorobanPolling() => new()
+    {
+        MaxRetryCount = 5,
+        BaseDelay = TimeSpan.FromMilliseconds(500),
+        MaxDelay = TimeSpan.FromSeconds(15)
+    };
+
+    /// <summary>
+    ///     Creates options for high-frequency, latency-sensitive use cases (e.g., trading bots).
+    ///     Uses fewer retries and shorter delays for fast failure.
+    /// </summary>
+    public static HttpResilienceOptions LowLatency() => new()
+    {
+        MaxRetryCount = 1,
+        BaseDelay = TimeSpan.FromMilliseconds(50),
+        MaxDelay = TimeSpan.FromMilliseconds(200),
+        HonorRetryAfterHeader = false // Don't wait for server hint in latency-sensitive scenarios
+    };
+}
