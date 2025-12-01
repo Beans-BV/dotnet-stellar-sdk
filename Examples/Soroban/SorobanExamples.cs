@@ -471,16 +471,16 @@ internal static class SorobanExamples
     {
         // Smart contract operations may need more retries due to
         // simulation and transaction complexity
-        var retryOptions = new HttpRetryOptions
+        var resilienceOptions = new HttpResilienceOptions
         {
             MaxRetryCount = 5,
-            BaseDelayMs = 300,
-            MaxDelayMs = 8000,
+            BaseDelay = TimeSpan.FromMilliseconds(300),
+            MaxDelay = TimeSpan.FromMilliseconds(8000),
             UseJitter = true,
             HonorRetryAfterHeader = true
         };
 
-        var httpClient = new DefaultStellarSdkHttpClient(retryOptions: retryOptions);
+        var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
         var server = new SorobanServer(TestNetSorobanUrl, httpClient);
 
         Console.WriteLine("   Using custom retry: 5 retries, 300ms base delay, 8s max");
@@ -503,22 +503,22 @@ internal static class SorobanExamples
     private static async Task UseSorobanProductionRetry()
     {
         // Production configuration with bearer token and robust retry
-        var retryOptions = new HttpRetryOptions
+        var resilienceOptions = new HttpResilienceOptions
         {
             MaxRetryCount = 5,
-            BaseDelayMs = 500,
-            MaxDelayMs = 15000,
+            BaseDelay = TimeSpan.FromMilliseconds(500),
+            MaxDelay = TimeSpan.FromMilliseconds(15000),
             UseJitter = true,
             HonorRetryAfterHeader = true
         };
 
         // Add additional retriable exceptions for network issues
-        retryOptions.AdditionalRetriableExceptionTypes.Add(typeof(System.Net.Sockets.SocketException));
+        resilienceOptions.AdditionalRetriableExceptionTypes.Add(typeof(System.Net.Sockets.SocketException));
 
         // Create client with optional bearer token for authenticated endpoints
         var httpClient = new DefaultStellarSdkHttpClient(
             bearerToken: null, // Set your API token here if required
-            retryOptions: retryOptions
+            resilienceOptions: resilienceOptions
         );
 
         var server = new SorobanServer(TestNetSorobanUrl, httpClient);

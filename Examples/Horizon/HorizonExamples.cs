@@ -462,18 +462,18 @@ public static class HorizonExamples
     /// </summary>
     private static async Task UseCustomRetryConfiguration()
     {
-        // Create custom retry options
-        var retryOptions = new HttpRetryOptions
+        // Create custom resilience options
+        var resilienceOptions = new HttpResilienceOptions
         {
             MaxRetryCount = 5,           // More retries for critical operations
-            BaseDelayMs = 500,           // Start with longer delay
-            MaxDelayMs = 10000,          // Allow up to 10 second delays
+            BaseDelay = TimeSpan.FromMilliseconds(500),           // Start with longer delay
+            MaxDelay = TimeSpan.FromMilliseconds(10000),          // Allow up to 10 second delays
             UseJitter = true,            // Prevent thundering herd
             HonorRetryAfterHeader = true // Respect rate limit headers
         };
 
-        // Create HTTP client with custom retry options
-        var httpClient = new DefaultStellarSdkHttpClient(retryOptions: retryOptions);
+        // Create HTTP client with custom resilience options
+        var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 
         // Create server with custom HTTP client
         var server = new Server(TestNetUrl, httpClient);
@@ -497,12 +497,12 @@ public static class HorizonExamples
     private static async Task UseNoRetryConfiguration()
     {
         // Disable retries by setting MaxRetryCount to 0
-        var noRetryOptions = new HttpRetryOptions
+        var noRetryOptions = new HttpResilienceOptions
         {
             MaxRetryCount = 0
         };
 
-        var httpClient = new DefaultStellarSdkHttpClient(retryOptions: noRetryOptions);
+        var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: noRetryOptions);
         var server = new Server(TestNetUrl, httpClient);
 
         Console.WriteLine("   Retries disabled - requests will fail immediately on error");
@@ -523,17 +523,17 @@ public static class HorizonExamples
     /// </summary>
     private static async Task UseCustomRetriableStatusCodes()
     {
-        var retryOptions = new HttpRetryOptions
+        var resilienceOptions = new HttpResilienceOptions
         {
             MaxRetryCount = 3,
-            BaseDelayMs = 100,
+            BaseDelay = TimeSpan.FromMilliseconds(100),
             UseJitter = false // Disable jitter for predictable timing in examples
         };
 
         // Add custom status codes that should trigger retries
-        retryOptions.AdditionalRetriableStatusCodes.Add(System.Net.HttpStatusCode.Conflict); // 409
+        resilienceOptions.AdditionalRetriableStatusCodes.Add(System.Net.HttpStatusCode.Conflict); // 409
 
-        var httpClient = new DefaultStellarSdkHttpClient(retryOptions: retryOptions);
+        var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
         var server = new Server(TestNetUrl, httpClient);
 
         Console.WriteLine("   Added HTTP 409 (Conflict) as retriable status code");

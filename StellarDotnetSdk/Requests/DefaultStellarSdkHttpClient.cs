@@ -16,20 +16,25 @@ public class DefaultStellarSdkHttpClient : HttpClient
     ///             <item>Uses exponential backoff with jitter (default: 200ms base delay, max 5000ms)</item>
     ///             <item>Honors Retry-After headers when present</item>
     ///         </list>
-    ///         To customize retry behavior, pass a custom <see cref="HttpRetryOptions" /> instance.
-    ///         To disable retries, pass <c>new HttpRetryOptions { MaxRetryCount = 0 }</c>.
+    ///         To customize resilience behavior, pass a custom <see cref="HttpResilienceOptions" /> instance.
+    ///         To disable retries, pass <c>new HttpResilienceOptions { MaxRetryCount = 0 }</c>.
     ///     </para>
     /// </summary>
     /// <param name="bearerToken">Bearer token in case the server requires it.</param>
     /// <param name="clientName">Name of the client.</param>
     /// <param name="clientVersion">Version of the client.</param>
-    /// <param name="retryOptions">Retry options. If null, default retry configuration is used.</param>
+    /// <param name="resilienceOptions">Resilience options. If null, default retry configuration is used.</param>
     public DefaultStellarSdkHttpClient(
         string? bearerToken = null,
         string? clientName = null,
         string? clientVersion = null,
-        HttpRetryOptions? retryOptions = null)
-        : base(CreateHandlerPipeline(retryOptions))
+        HttpResilienceOptions? resilienceOptions = null)
+        : base(CreateHandlerPipeline(resilienceOptions))
+    {
+        InitializeHeaders(bearerToken, clientName, clientVersion);
+    }
+
+    private void InitializeHeaders(string? bearerToken, string? clientName, string? clientVersion)
     {
         var assembly = Assembly.GetAssembly(GetType())!.GetName();
         DefaultRequestHeaders.Add("X-Client-Name", clientName ?? "stellar-dotnet-sdk");
@@ -40,9 +45,9 @@ public class DefaultStellarSdkHttpClient : HttpClient
         }
     }
 
-    private static HttpMessageHandler CreateHandlerPipeline(HttpRetryOptions? retryOptions)
+    private static HttpMessageHandler CreateHandlerPipeline(HttpResilienceOptions? resilienceOptions)
     {
         var innerHandler = new SocketsHttpHandler();
-        return new RetryingHttpMessageHandler(innerHandler, retryOptions);
+        return new RetryingHttpMessageHandler(innerHandler, resilienceOptions);
     }
 }

@@ -5,11 +5,15 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Polly;
+using Polly.CircuitBreaker;
+using Polly.Retry;
+using Polly.Timeout;
 
 namespace StellarDotnetSdk.Requests;
 
 /// <summary>
-///     HTTP message handler that implements retry logic with exponential backoff for transient failures.
+///     HTTP message handler that implements retry logic with exponential backoff for transient failures using Polly.
 /// </summary>
 public class RetryingHttpMessageHandler : DelegatingHandler
 {
@@ -24,128 +28,213 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         HttpStatusCode.GatewayTimeout // 504
     };
 
-    private readonly HttpRetryOptions _options;
+    private readonly ResiliencePipeline<HttpResponseMessage> _pipeline;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="RetryingHttpMessageHandler" /> class.
     /// </summary>
     /// <param name="innerHandler">The inner handler to delegate to.</param>
-    /// <param name="options">The retry options. If null, default options are used.</param>
+    /// <param name="options">The resilience options. If null, default options are used.</param>
     /// <exception cref="ArgumentNullException">Thrown when innerHandler is null.</exception>
-    public RetryingHttpMessageHandler(HttpMessageHandler innerHandler, HttpRetryOptions? options = null)
+    public RetryingHttpMessageHandler(HttpMessageHandler innerHandler, HttpResilienceOptions? options = null)
         : base(innerHandler ?? throw new ArgumentNullException(nameof(innerHandler)))
     {
-        _options = options ?? new HttpRetryOptions();
+        var opts = options ?? new HttpResilienceOptions();
+        _pipeline = BuildPipeline(opts);
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
-        // Buffer the original request content so we can clone it for retries
-        byte[]? contentBytes = null;
-        if (request.Content != null)
-        {
-            contentBytes = await request.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
-        }
-
-        var attempt = 0;
-        Exception? lastException = null;
-        HttpResponseMessage? lastResponse = null;
-
-        while (attempt <= _options.MaxRetryCount)
-        {
-            HttpRequestMessage? requestToSend = null;
-            try
+        return await _pipeline.ExecuteAsync(
+            async ct =>
             {
-                // Clone the request for this attempt
-                requestToSend = CloneRequest(request, contentBytes);
-
-                var response = await base.SendAsync(requestToSend, cancellationToken).ConfigureAwait(false);
-
-                // If successful or non-retriable status code, return immediately
-                if (response.IsSuccessStatusCode || !IsRetriableStatusCode(response.StatusCode))
-                {
-                    lastResponse?.Dispose();
-                    return response;
-                }
-
-                // Store the response for potential return
-                lastResponse?.Dispose();
-                lastResponse = response;
-
-                // If we've exhausted retries, return the last response
-                if (attempt >= _options.MaxRetryCount)
-                {
-                    return lastResponse;
-                }
-
-                // Calculate delay and wait
-                var delay = CalculateDelay(attempt, response);
-                await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
-            }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-            {
-                // User cancellation - don't retry, propagate immediately
-                lastResponse?.Dispose();
-                throw;
-            }
-            catch (Exception ex) when (IsRetriableException(ex, cancellationToken) && attempt < _options.MaxRetryCount)
-            {
-                lastException = ex;
-                var delay = CalculateDelay(attempt, null);
-                try
-                {
-                    await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
-                }
-                catch (OperationCanceledException)
-                {
-                    // User cancellation during delay
-                    lastResponse?.Dispose();
-                    throw;
-                }
-            }
-            finally
-            {
-                // Always dispose the cloned request after each attempt
-                requestToSend?.Dispose();
-            }
-
-            attempt++;
-        }
-
-        // If we get here, all retries failed with exceptions
-        if (lastException != null)
-        {
-            lastResponse?.Dispose();
-            throw lastException;
-        }
-
-        // This path means we exhausted retries with retriable status codes
-        if (lastResponse != null)
-        {
-            return lastResponse;
-        }
-
-        // This should not happen, but handle it gracefully
-        throw new HttpRequestException("Request failed after all retry attempts.");
+                var response = await base.SendAsync(request, ct).ConfigureAwait(false);
+                return response;
+            },
+            cancellationToken).ConfigureAwait(false);
     }
 
-    private bool IsRetriableStatusCode(HttpStatusCode statusCode)
+    private static ResiliencePipeline<HttpResponseMessage> BuildPipeline(HttpResilienceOptions options)
+    {
+        var builder = new ResiliencePipelineBuilder<HttpResponseMessage>();
+
+        // Timeout (outermost - applies to entire operation)
+        if (options.RequestTimeout.HasValue)
+        {
+            builder.AddTimeout(new TimeoutStrategyOptions
+            {
+                Timeout = options.RequestTimeout.Value
+            });
+        }
+
+        // Circuit Breaker (middle layer)
+        if (options.EnableCircuitBreaker)
+        {
+            builder.AddCircuitBreaker(new CircuitBreakerStrategyOptions<HttpResponseMessage>
+            {
+                FailureRatio = options.FailureRatio,
+                MinimumThroughput = options.MinimumThroughput,
+                SamplingDuration = options.SamplingDuration,
+                BreakDuration = options.BreakDuration,
+                ShouldHandle = CreateCircuitBreakerShouldHandle(options)
+            });
+        }
+
+        // Retry (innermost - executes first)
+        if (options.MaxRetryCount > 0)
+        {
+            var retryOptions = new RetryStrategyOptions<HttpResponseMessage>
+            {
+                MaxRetryAttempts = options.MaxRetryCount,
+                BackoffType = DelayBackoffType.Exponential,
+                UseJitter = options.UseJitter,
+                ShouldHandle = CreateRetryShouldHandle(options)
+            };
+
+            // Custom delay generator to honor Retry-After header
+            if (options.HonorRetryAfterHeader)
+            {
+                retryOptions.DelayGenerator = CreateDelayGenerator(options);
+            }
+            else
+            {
+                retryOptions.Delay = options.BaseDelay;
+                retryOptions.MaxDelay = options.MaxDelay;
+            }
+
+            builder.AddRetry(retryOptions);
+        }
+
+        return builder.Build();
+    }
+
+    private static Func<CircuitBreakerPredicateArguments<HttpResponseMessage>, ValueTask<bool>> CreateCircuitBreakerShouldHandle(
+        HttpResilienceOptions options)
+    {
+        return args =>
+        {
+            var cancellationRequested = args.Context.CancellationToken.IsCancellationRequested;
+            return new ValueTask<bool>(ShouldHandleOutcome(args.Outcome, options, cancellationRequested));
+        };
+    }
+
+    private static Func<RetryPredicateArguments<HttpResponseMessage>, ValueTask<bool>> CreateRetryShouldHandle(
+        HttpResilienceOptions options)
+    {
+        return args =>
+        {
+            var cancellationRequested = args.Context.CancellationToken.IsCancellationRequested;
+            return new ValueTask<bool>(ShouldHandleOutcome(args.Outcome, options, cancellationRequested));
+        };
+    }
+
+    private static bool ShouldHandleOutcome(
+        Outcome<HttpResponseMessage> outcome,
+        HttpResilienceOptions options,
+        bool cancellationRequested)
+    {
+        if (outcome.Exception != null)
+        {
+            return IsRetriableException(outcome.Exception, options, cancellationRequested);
+        }
+
+        if (outcome.Result != null)
+        {
+            return IsRetriableStatusCode(outcome.Result.StatusCode, options);
+        }
+
+        return false;
+    }
+
+    private static Func<RetryDelayGeneratorArguments<HttpResponseMessage>, ValueTask<TimeSpan?>> CreateDelayGenerator(
+        HttpResilienceOptions options)
+    {
+        return args =>
+        {
+            // Check for Retry-After header in the response
+            if (args.Outcome.Result != null)
+            {
+                var retryAfterDelay = ParseRetryAfterHeader(args.Outcome.Result, options);
+                if (retryAfterDelay.HasValue)
+                {
+                    return new ValueTask<TimeSpan?>(retryAfterDelay.Value);
+                }
+            }
+
+            // Fall back to exponential backoff
+            var exponentialDelay = CalculateExponentialDelay(args.AttemptNumber, options);
+            return new ValueTask<TimeSpan?>(exponentialDelay);
+        };
+    }
+
+    private static TimeSpan? ParseRetryAfterHeader(HttpResponseMessage response, HttpResilienceOptions options)
+    {
+        if (!response.Headers.TryGetValues("Retry-After", out var retryAfterValues))
+        {
+            return null;
+        }
+
+        var retryAfterValue = retryAfterValues.FirstOrDefault();
+        if (string.IsNullOrEmpty(retryAfterValue))
+        {
+            return null;
+        }
+
+        // Try parsing as integer (seconds)
+        if (int.TryParse(retryAfterValue, out var seconds))
+        {
+            var delay = TimeSpan.FromSeconds(seconds);
+            return TimeSpan.FromMilliseconds(Math.Min((int)delay.TotalMilliseconds, (int)options.MaxDelay.TotalMilliseconds));
+        }
+
+        // Try parsing as DateTime (RFC 7231 / HTTP-date format)
+        if (DateTimeOffset.TryParse(retryAfterValue, out var retryDate))
+        {
+            var retryDelay = retryDate - DateTimeOffset.UtcNow;
+            var delayMs = Math.Min((int)retryDelay.TotalMilliseconds, (int)options.MaxDelay.TotalMilliseconds);
+            return TimeSpan.FromMilliseconds(Math.Max(0, delayMs));
+        }
+
+        return null;
+    }
+
+    private static TimeSpan CalculateExponentialDelay(int attemptNumber, HttpResilienceOptions options)
+    {
+        // Exponential backoff: baseDelay * 2^attempt
+        // Use Math.Min to prevent overflow before multiplication
+        var exponentialDelayMs = Math.Min(
+            options.BaseDelay.TotalMilliseconds * Math.Pow(2, attemptNumber),
+            options.MaxDelay.TotalMilliseconds);
+
+        var delay = TimeSpan.FromMilliseconds(exponentialDelayMs);
+
+        // Apply jitter if enabled (random value between 0.8 and 1.2 of the delay)
+        if (options.UseJitter)
+        {
+            var jitterFactor = 0.8 + (Random.Shared.NextDouble() * 0.4); // 0.8 to 1.2
+            delay = TimeSpan.FromMilliseconds(delay.TotalMilliseconds * jitterFactor);
+        }
+
+        return TimeSpan.FromMilliseconds(Math.Min(delay.TotalMilliseconds, options.MaxDelay.TotalMilliseconds));
+    }
+
+    private static bool IsRetriableStatusCode(HttpStatusCode statusCode, HttpResilienceOptions options)
     {
         if (Array.IndexOf(DefaultRetriableStatusCodes, statusCode) >= 0)
         {
             return true;
         }
 
-        return _options.AdditionalRetriableStatusCodes.Contains(statusCode);
+        return options.AdditionalRetriableStatusCodes.Contains(statusCode);
     }
 
-    private bool IsRetriableException(Exception exception, CancellationToken cancellationToken)
+    private static bool IsRetriableException(Exception exception, HttpResilienceOptions options, bool cancellationRequested)
     {
         // Check additional retriable exception types first
         var exceptionType = exception.GetType();
-        if (_options.AdditionalRetriableExceptionTypes.Any(t => t.IsAssignableFrom(exceptionType)))
+        if (options.AdditionalRetriableExceptionTypes.Any(t => t.IsAssignableFrom(exceptionType)))
         {
             return true;
         }
@@ -165,116 +254,10 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         // TaskCanceledException - only retriable if it's a timeout, not user cancellation
         if (exception is TaskCanceledException)
         {
-            // If cancellation was requested by user, don't retry
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return false;
-            }
-
-            // Otherwise, it's likely a timeout (HttpClient.Timeout), so retry
-            return true;
+            // Retry if cancellation token not signaled (likely timeout), otherwise propagate
+            return !cancellationRequested;
         }
 
         return false;
-    }
-
-    private int CalculateDelay(int attempt, HttpResponseMessage? response)
-    {
-        // Honor Retry-After header if present and enabled
-        if (_options.HonorRetryAfterHeader && response != null)
-        {
-            var retryAfterDelay = ParseRetryAfterHeader(response);
-            if (retryAfterDelay.HasValue)
-            {
-                return retryAfterDelay.Value;
-            }
-        }
-
-        // Exponential backoff: baseDelay * 2^attempt
-        // Use Math.Min to prevent overflow before multiplication
-        var exponentialDelay = Math.Min(_options.BaseDelayMs * (1 << attempt), _options.MaxDelayMs);
-        var delay = (int)exponentialDelay;
-
-        // Apply jitter if enabled (random value between 0.8 and 1.2 of the delay)
-        if (_options.UseJitter)
-        {
-            var jitterFactor = 0.8 + (Random.Shared.NextDouble() * 0.4); // 0.8 to 1.2
-            delay = (int)(delay * jitterFactor);
-        }
-
-        return Math.Min(delay, _options.MaxDelayMs);
-    }
-
-    private int? ParseRetryAfterHeader(HttpResponseMessage response)
-    {
-        if (!response.Headers.TryGetValues("Retry-After", out var retryAfterValues))
-        {
-            return null;
-        }
-
-        var retryAfterValue = retryAfterValues.FirstOrDefault();
-        if (string.IsNullOrEmpty(retryAfterValue))
-        {
-            return null;
-        }
-
-        // Try parsing as integer (seconds)
-        if (int.TryParse(retryAfterValue, out var seconds))
-        {
-            return Math.Max(0, Math.Min(seconds * 1000, _options.MaxDelayMs));
-        }
-
-        // Try parsing as DateTime (RFC 7231 / HTTP-date format)
-        if (DateTimeOffset.TryParse(retryAfterValue, out var retryDate))
-        {
-            var retryDelayMs = (int)(retryDate - DateTimeOffset.UtcNow).TotalMilliseconds;
-            return Math.Max(0, Math.Min(retryDelayMs, _options.MaxDelayMs));
-        }
-
-        return null;
-    }
-
-    private static HttpRequestMessage CloneRequest(HttpRequestMessage original, byte[]? contentBytes)
-    {
-        var clone = new HttpRequestMessage(original.Method, original.RequestUri)
-        {
-            Version = original.Version,
-            VersionPolicy = original.VersionPolicy
-        };
-
-        // Copy headers
-        foreach (var header in original.Headers)
-        {
-            clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
-        }
-
-        // Copy content if present
-        if (contentBytes != null)
-        {
-            clone.Content = new ByteArrayContent(contentBytes);
-
-            // Copy content headers from original
-            if (original.Content != null)
-            {
-                foreach (var header in original.Content.Headers)
-                {
-                    clone.Content.Headers.TryAddWithoutValidation(header.Key, header.Value);
-                }
-            }
-        }
-
-        // Copy options (replaces deprecated Properties in .NET 5+)
-        // Use IDictionary interface for compatibility
-        var originalOptions = (IDictionary<string, object?>)original.Options;
-        if (originalOptions.Count > 0)
-        {
-            var cloneOptions = (IDictionary<string, object?>)clone.Options;
-            foreach (var option in originalOptions)
-            {
-                cloneOptions[option.Key] = option.Value;
-            }
-        }
-
-        return clone;
     }
 }

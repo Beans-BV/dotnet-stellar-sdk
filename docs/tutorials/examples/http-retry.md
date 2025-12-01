@@ -54,25 +54,25 @@ No additional configuration is needed - retries are enabled by default.
 
 ## Customizing Retry Behavior
 
-### Using HttpRetryOptions
+### Using HttpResilienceOptions
 
-You can customize retry behavior by creating an `HttpRetryOptions` instance:
+You can customize retry behavior by creating an `HttpResilienceOptions` instance:
 
 ```csharp
 using StellarDotnetSdk.Requests;
 
-// Create custom retry options
-var retryOptions = new HttpRetryOptions
+// Create custom resilience options
+var resilienceOptions = new HttpResilienceOptions
 {
     MaxRetryCount = 5,           // Retry up to 5 times
-    BaseDelayMs = 500,           // Start with 500ms delay
-    MaxDelayMs = 10000,          // Cap delay at 10 seconds
+    BaseDelay = TimeSpan.FromMilliseconds(500),           // Start with 500ms delay
+    MaxDelay = TimeSpan.FromMilliseconds(10000),          // Cap delay at 10 seconds
     UseJitter = true,            // Add randomness to prevent thundering herd
     HonorRetryAfterHeader = true // Respect server's Retry-After header
 };
 
-// Create HTTP client with custom retry options
-var httpClient = new DefaultStellarSdkHttpClient(retryOptions: retryOptions);
+// Create HTTP client with custom resilience options
+var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 
 // Use with Horizon server
 var server = new Server("https://horizon-testnet.stellar.org", httpClient);
@@ -86,12 +86,12 @@ var sorobanServer = new SorobanServer("https://soroban-testnet.stellar.org", htt
 To disable retries entirely, set `MaxRetryCount` to 0:
 
 ```csharp
-var noRetryOptions = new HttpRetryOptions
+var noRetryOptions = new HttpResilienceOptions
 {
     MaxRetryCount = 0  // Disable retries
 };
 
-var httpClient = new DefaultStellarSdkHttpClient(retryOptions: noRetryOptions);
+var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: noRetryOptions);
 var server = new Server("https://horizon-testnet.stellar.org", httpClient);
 ```
 
@@ -100,11 +100,11 @@ var server = new Server("https://horizon-testnet.stellar.org", httpClient);
 You can add additional status codes that should trigger retries:
 
 ```csharp
-var retryOptions = new HttpRetryOptions();
-retryOptions.AdditionalRetriableStatusCodes.Add(HttpStatusCode.Conflict);  // 409
-retryOptions.AdditionalRetriableStatusCodes.Add(HttpStatusCode.Gone);      // 410
+var resilienceOptions = new HttpResilienceOptions();
+resilienceOptions.AdditionalRetriableStatusCodes.Add(HttpStatusCode.Conflict);  // 409
+resilienceOptions.AdditionalRetriableStatusCodes.Add(HttpStatusCode.Gone);      // 410
 
-var httpClient = new DefaultStellarSdkHttpClient(retryOptions: retryOptions);
+var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 ```
 
 ### Adding Custom Retriable Exception Types
@@ -112,10 +112,10 @@ var httpClient = new DefaultStellarSdkHttpClient(retryOptions: retryOptions);
 You can add additional exception types that should trigger retries:
 
 ```csharp
-var retryOptions = new HttpRetryOptions();
-retryOptions.AdditionalRetriableExceptionTypes.Add(typeof(SocketException));
+var resilienceOptions = new HttpResilienceOptions();
+resilienceOptions.AdditionalRetriableExceptionTypes.Add(typeof(SocketException));
 
-var httpClient = new DefaultStellarSdkHttpClient(retryOptions: retryOptions);
+var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 ```
 
 ## Exponential Backoff
@@ -123,7 +123,7 @@ var httpClient = new DefaultStellarSdkHttpClient(retryOptions: retryOptions);
 The retry mechanism uses exponential backoff to calculate delays between retries:
 
 ```
-delay = min(BaseDelayMs * 2^attempt, MaxDelayMs)
+delay = min(BaseDelay * 2^attempt, MaxDelay)
 ```
 
 With jitter enabled (default), the actual delay varies by ±20%:
@@ -147,7 +147,7 @@ When `HonorRetryAfterHeader` is enabled (default), the SDK respects the `Retry-A
 1. **Delay in seconds**: `Retry-After: 60`
 2. **HTTP date**: `Retry-After: Wed, 21 Oct 2024 07:28:00 GMT`
 
-The delay from `Retry-After` is capped at `MaxDelayMs` to prevent excessive waits.
+The delay from `Retry-After` is capped at `MaxDelay` to prevent excessive waits.
 
 ## Best Practices
 
@@ -157,10 +157,10 @@ For user-facing applications, keep retry counts low (2-3) to avoid long waits. F
 
 ```csharp
 // User-facing: quick feedback
-var userOptions = new HttpRetryOptions { MaxRetryCount = 2, BaseDelayMs = 100 };
+var userOptions = new HttpResilienceOptions { MaxRetryCount = 2, BaseDelay = TimeSpan.FromMilliseconds(100) };
 
 // Background job: more resilient
-var jobOptions = new HttpRetryOptions { MaxRetryCount = 10, BaseDelayMs = 500 };
+var jobOptions = new HttpResilienceOptions { MaxRetryCount = 10, BaseDelay = TimeSpan.FromMilliseconds(500) };
 ```
 
 ### 2. Enable Jitter
@@ -201,27 +201,27 @@ using StellarDotnetSdk;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Soroban;
 
-// Configure retry options for production use
-var retryOptions = new HttpRetryOptions
+// Configure resilience options for production use
+var resilienceOptions = new HttpResilienceOptions
 {
     MaxRetryCount = 5,
-    BaseDelayMs = 300,
-    MaxDelayMs = 8000,
+    BaseDelay = TimeSpan.FromMilliseconds(300),
+    MaxDelay = TimeSpan.FromMilliseconds(8000),
     UseJitter = true,
     HonorRetryAfterHeader = true
 };
 
-// Create HTTP client with bearer token and retry options
+// Create HTTP client with bearer token and resilience options
 var httpClient = new DefaultStellarSdkHttpClient(
     bearerToken: "your-api-token",  // Optional
-    retryOptions: retryOptions
+    resilienceOptions: resilienceOptions
 );
 
 // Use with Horizon
 var horizonServer = new Server("https://horizon.stellar.org", httpClient);
 
 // Use with Soroban (create a separate client if different settings needed)
-var sorobanClient = new DefaultStellarSdkHttpClient(retryOptions: retryOptions);
+var sorobanClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 var sorobanServer = new SorobanServer("https://soroban.stellar.org", sorobanClient);
 
 // Make requests - retries are handled automatically
@@ -255,7 +255,7 @@ If you're being rate limited frequently:
 1. Reduce request frequency
 2. Implement request batching where possible
 3. Consider using a dedicated API key with higher limits
-4. Increase `MaxDelayMs` to allow longer waits
+4. Increase `MaxDelay` to allow longer waits
 
 ### Timeouts
 
