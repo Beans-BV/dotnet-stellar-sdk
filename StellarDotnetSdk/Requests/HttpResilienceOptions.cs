@@ -172,6 +172,13 @@ public sealed class HttpResilienceOptions
     public TimeSpan? RequestTimeout { get; set; } = null;
 
     /// <summary>
+    ///     Gets whether any resilience feature is enabled (retries, circuit breaker, or timeout).
+    ///     Returns true if MaxRetryCount is greater than 0, EnableCircuitBreaker is true, or RequestTimeout has a value.
+    /// </summary>
+    public bool HasAnyResilienceFeatureEnabled =>
+        MaxRetryCount > 0 || EnableCircuitBreaker || RequestTimeout.HasValue;
+
+    /// <summary>
     ///     Gets additional exception types to consider as retriable.
     ///     By default, HttpRequestException, TimeoutException, and TaskCanceledException (from timeouts) are retriable.
     ///     Note: HTTP status codes are never retried automatically. Only connection-level failures (exceptions) are retried.

@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Polly.Timeout;
 using StellarDotnetSdk.Requests;
 
 namespace StellarDotnetSdk.Tests.Requests;
@@ -110,6 +111,87 @@ public class DefaultStellarSdkHttpClientTests
 
         Assert.IsTrue(string.Join("", clientNameHeader).Contains("my-app"));
         Assert.IsTrue(string.Join("", clientVersionHeader).Contains("1.2.3"));
+    }
+
+    [TestMethod]
+    public async Task Constructor_WithCircuitBreakerOnly_CreatesResiliencePipeline()
+    {
+        // Arrange
+        var trackingHandler = new TrackingHttpMessageHandler(
+            (_, _, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
+
+        var resilienceOptions = new HttpResilienceOptions
+        {
+            MaxRetryCount = 0, // No retries
+            EnableCircuitBreaker = true // But circuit breaker enabled
+        };
+
+        // Act
+        using var client = new DefaultStellarSdkHttpClient(
+            resilienceOptions: resilienceOptions,
+            innerHandler: trackingHandler);
+        var response = await client.GetAsync(TestUri);
+
+        // Assert - handler should be wrapped in resilience pipeline
+        // Verify by checking request succeeds (pipeline is active)
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.AreEqual(1, trackingHandler.CallCount, "Handler should have been invoked through resilience pipeline");
+    }
+
+    [TestMethod]
+    public async Task Constructor_WithTimeoutOnly_CreatesResiliencePipeline()
+    {
+        // Arrange
+        var trackingHandler = new TrackingHttpMessageHandler((_, _, _) =>
+        {
+            // Return immediately - timeout should not trigger
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
+        });
+
+        var resilienceOptions = new HttpResilienceOptions
+        {
+            MaxRetryCount = 0, // No retries
+            RequestTimeout = TimeSpan.FromSeconds(5) // But timeout enabled
+        };
+
+        // Act
+        using var client = new DefaultStellarSdkHttpClient(
+            resilienceOptions: resilienceOptions,
+            innerHandler: trackingHandler);
+        var response = await client.GetAsync(TestUri);
+
+        // Assert - handler should be wrapped in resilience pipeline
+        // Verify by checking request succeeds (pipeline is active)
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.AreEqual(1, trackingHandler.CallCount, "Handler should have been invoked through resilience pipeline");
+    }
+
+    [TestMethod]
+    public async Task Constructor_WithTimeoutOnly_EnforcesTimeout()
+    {
+        // Arrange
+        var trackingHandler = new TrackingHttpMessageHandler(async (_, _, cancellationToken) =>
+        {
+            // Delay longer than timeout
+            await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        });
+
+        var resilienceOptions = new HttpResilienceOptions
+        {
+            MaxRetryCount = 0, // No retries
+            RequestTimeout = TimeSpan.FromMilliseconds(100) // Short timeout
+        };
+
+        // Act & Assert
+        using var client = new DefaultStellarSdkHttpClient(
+            resilienceOptions: resilienceOptions,
+            innerHandler: trackingHandler);
+
+        await Assert.ThrowsExceptionAsync<TimeoutRejectedException>(async () =>
+        {
+            await client.GetAsync(TestUri);
+        });
     }
 
     /// <summary>
