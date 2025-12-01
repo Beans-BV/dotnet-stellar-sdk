@@ -283,7 +283,7 @@ actual_delay = delay * random(0.8, 1.2)
 When `HonorRetryAfterHeader` is enabled (default), the SDK respects the `Retry-After` header sent by servers. This header can specify:
 
 1. **Delay in seconds**: `Retry-After: 60`
-2. **HTTP date**: `Retry-After: Wed, 21 Oct 2024 07:28:00 GMT`
+2. **HTTP date (RFC 7231 HTTP-date, RFC 1123-style)**: `Retry-After: Wed, 21 Oct 2024 07:28:00 GMT`
 
 The delay from `Retry-After` is capped at `MaxDelay` to prevent excessive waits.
 
