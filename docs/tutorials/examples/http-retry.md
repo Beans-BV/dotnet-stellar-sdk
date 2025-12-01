@@ -118,6 +118,39 @@ resilienceOptions.AdditionalRetriableExceptionTypes.Add(typeof(SocketException))
 var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 ```
 
+### Using a Custom Inner Handler
+
+By default, `DefaultStellarSdkHttpClient` uses `SocketsHttpHandler` as the underlying HTTP handler. You can provide a custom `HttpMessageHandler` for scenarios such as:
+
+- **Unit testing** - Inject a mock handler to simulate HTTP responses without network calls
+- **Proxy configuration** - Use a handler configured with specific proxy settings
+- **Custom certificate handling** - Implement custom SSL/TLS certificate validation
+- **Platform compatibility** - Use a different handler for platforms where `SocketsHttpHandler` isn't optimal (e.g., Blazor WebAssembly)
+
+```csharp
+// Example: Using a custom handler for testing
+var mockHandler = new MockHttpMessageHandler();
+mockHandler.When("*").Respond(HttpStatusCode.OK);
+
+var httpClient = new DefaultStellarSdkHttpClient(
+    resilienceOptions: resilienceOptions,
+    innerHandler: mockHandler
+);
+
+// Example: Using a handler with custom proxy settings
+var proxyHandler = new HttpClientHandler
+{
+    Proxy = new WebProxy("http://proxy.example.com:8080"),
+    UseProxy = true
+};
+
+var httpClientWithProxy = new DefaultStellarSdkHttpClient(
+    innerHandler: proxyHandler
+);
+```
+
+The custom handler is wrapped by `RetryingHttpMessageHandler`, so retry logic still applies regardless of which inner handler you provide.
+
 ## Exponential Backoff
 
 The retry mechanism uses exponential backoff to calculate delays between retries:
@@ -214,7 +247,8 @@ var resilienceOptions = new HttpResilienceOptions
 // Create HTTP client with bearer token and resilience options
 var httpClient = new DefaultStellarSdkHttpClient(
     bearerToken: "your-api-token",  // Optional
-    resilienceOptions: resilienceOptions
+    resilienceOptions: resilienceOptions,
+    innerHandler: null  // Optional: provide custom handler for testing or proxy configuration
 );
 
 // Use with Horizon

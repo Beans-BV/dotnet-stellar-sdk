@@ -24,12 +24,17 @@ public class DefaultStellarSdkHttpClient : HttpClient
     /// <param name="clientName">Name of the client.</param>
     /// <param name="clientVersion">Version of the client.</param>
     /// <param name="resilienceOptions">Resilience options. If null, default retry configuration is used.</param>
+    /// <param name="innerHandler">
+    ///     Optional inner HTTP message handler. If null, defaults to <see cref="SocketsHttpHandler" />.
+    ///     Use this to inject a custom handler for testing, proxies, or custom certificate handling.
+    /// </param>
     public DefaultStellarSdkHttpClient(
         string? bearerToken = null,
         string? clientName = null,
         string? clientVersion = null,
-        HttpResilienceOptions? resilienceOptions = null)
-        : base(CreateHandlerPipeline(resilienceOptions))
+        HttpResilienceOptions? resilienceOptions = null,
+        HttpMessageHandler? innerHandler = null)
+        : base(CreateHandlerPipeline(resilienceOptions, innerHandler))
     {
         InitializeHeaders(bearerToken, clientName, clientVersion);
     }
@@ -45,9 +50,11 @@ public class DefaultStellarSdkHttpClient : HttpClient
         }
     }
 
-    private static HttpMessageHandler CreateHandlerPipeline(HttpResilienceOptions? resilienceOptions)
+    private static HttpMessageHandler CreateHandlerPipeline(
+        HttpResilienceOptions? resilienceOptions,
+        HttpMessageHandler? innerHandler)
     {
-        var innerHandler = new SocketsHttpHandler();
-        return new RetryingHttpMessageHandler(innerHandler, resilienceOptions);
+        var handler = innerHandler ?? new SocketsHttpHandler();
+        return new RetryingHttpMessageHandler(handler, resilienceOptions);
     }
 }
