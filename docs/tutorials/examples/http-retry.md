@@ -96,10 +96,10 @@ You can customize retry behavior:
 ```csharp
 var resilienceOptions = new HttpResilienceOptions
 {
-    MaxRetryCount = 5,           // Retry up to 5 times
+    MaxRetryCount = 5,                           // Retry up to 5 times
     BaseDelay = TimeSpan.FromMilliseconds(500),  // Start with 500ms delay
     MaxDelay = TimeSpan.FromMilliseconds(10000), // Cap delay at 10 seconds
-    UseJitter = true             // Add randomness to prevent thundering herd
+    UseJitter = true                             // Add randomness to prevent thundering herd
 };
 
 var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);

@@ -100,7 +100,7 @@ When in doubt, Copilot should err on the side of **highlighting potential breaki
 
 ---
 
-## 5. HTTP resilience and retry behavior (v12+)
+## 5. HTTP resilience and retry behavior
 
 The HTTP resilience layer is a critical cross-cutting concern. It is implemented primarily in:
 
