@@ -111,8 +111,9 @@ The HTTP resilience layer is a critical cross-cutting concern. It is implemented
 Key expectations:
 
 - **Default behavior**
-  - Retries are enabled by default (3 attempts with exponential backoff, jitter, and `Retry-After` support).
-  - This is a **breaking change in v12** and must be preserved unless there is a compelling reason to change it.
+  - Retries are enabled by default (3 attempts with exponential backoff and jitter).
+  - `Retry-After` header can be honored if custom retry logic for HTTP status codes is implemented.
+  - Retries are **disabled by default** (`MaxRetryCount = 0`), matching the Java SDK. Users must explicitly enable retries via `HttpResilienceOptions` if desired.
 - **Configuration**
   - `HttpResilienceOptions` and `HttpResilienceOptionsPresets` provide a clear configuration surface; changes should keep this API:
     - Intuitive,
