@@ -441,14 +441,15 @@ internal static class SorobanExamples
     }
 
     /// <summary>
-    ///     Uses default retry settings with SorobanServer.
+    ///     Uses default settings with SorobanServer.
     /// </summary>
     private static async Task UseSorobanDefaultRetry()
     {
-        // Default constructor includes automatic retry
+        // Default constructor - no retries enabled
         var server = new SorobanServer(TestNetSorobanUrl);
 
-        Console.WriteLine("   Using default retry: 3 retries, 200ms base delay");
+        Console.WriteLine("   No retries enabled - requests fail immediately on connection errors");
+        Console.WriteLine("   HTTP status codes are never retried automatically");
 
         try
         {
@@ -469,21 +470,21 @@ internal static class SorobanExamples
     /// </summary>
     private static async Task UseSorobanCustomRetry()
     {
-        // Smart contract operations may need more retries due to
-        // simulation and transaction complexity
+        // Smart contract operations may need more retries for connection failures
+        // due to network instability during long-running operations
         var resilienceOptions = new HttpResilienceOptions
         {
             MaxRetryCount = 5,
             BaseDelay = TimeSpan.FromMilliseconds(300),
             MaxDelay = TimeSpan.FromMilliseconds(8000),
-            UseJitter = true,
-            HonorRetryAfterHeader = true
+            UseJitter = true
         };
 
         var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
         var server = new SorobanServer(TestNetSorobanUrl, httpClient);
 
         Console.WriteLine("   Using custom retry: 5 retries, 300ms base delay, 8s max");
+        Console.WriteLine("   Only connection failures are retried, not HTTP status codes");
 
         try
         {
@@ -498,18 +499,17 @@ internal static class SorobanExamples
     }
 
     /// <summary>
-    ///     Production-ready configuration with comprehensive retry settings.
+    ///     Production-ready configuration with comprehensive retry settings for connection failures.
     /// </summary>
     private static async Task UseSorobanProductionRetry()
     {
-        // Production configuration with bearer token and robust retry
+        // Production configuration with bearer token and robust connection retry
         var resilienceOptions = new HttpResilienceOptions
         {
             MaxRetryCount = 5,
             BaseDelay = TimeSpan.FromMilliseconds(500),
             MaxDelay = TimeSpan.FromMilliseconds(15000),
-            UseJitter = true,
-            HonorRetryAfterHeader = true
+            UseJitter = true
         };
 
         // Add additional retriable exceptions for network issues
@@ -523,7 +523,9 @@ internal static class SorobanExamples
 
         var server = new SorobanServer(TestNetSorobanUrl, httpClient);
 
-        Console.WriteLine("   Production config: 5 retries, 500ms base, 15s max, socket exceptions retriable");
+        Console.WriteLine("   Production config: 5 retries, 500ms base, 15s max");
+        Console.WriteLine("   Socket exceptions are retriable");
+        Console.WriteLine("   HTTP status codes are never retried automatically");
 
         try
         {

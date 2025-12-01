@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,21 +10,11 @@ using Polly.Timeout;
 namespace StellarDotnetSdk.Requests;
 
 /// <summary>
-///     HTTP message handler that implements retry logic with exponential backoff for transient failures using Polly.
+///     HTTP message handler that implements retry logic for connection failures (network errors, DNS failures, etc.).
+///     Similar to OkHttp's <c>retryOnConnectionFailure(true)</c> - only retries connection-level failures, not HTTP error status codes.
 /// </summary>
 public class RetryingHttpMessageHandler : DelegatingHandler
 {
-    private static readonly HttpStatusCode[] DefaultRetriableStatusCodes =
-    {
-        HttpStatusCode.RequestTimeout, // 408
-        (HttpStatusCode)425, // TooEarly - not available in all .NET versions
-        HttpStatusCode.TooManyRequests, // 429
-        HttpStatusCode.InternalServerError, // 500
-        HttpStatusCode.BadGateway, // 502
-        HttpStatusCode.ServiceUnavailable, // 503
-        HttpStatusCode.GatewayTimeout // 504
-    };
-
     private readonly ResiliencePipeline<HttpResponseMessage> _pipeline;
 
     /// <summary>
@@ -47,12 +34,9 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
+        // No cloning needed - connection failures happen before request is sent
         return await _pipeline.ExecuteAsync(
-            async ct =>
-            {
-                var response = await base.SendAsync(request, ct).ConfigureAwait(false);
-                return response;
-            },
+            async ct => await base.SendAsync(request, ct).ConfigureAwait(false),
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -78,11 +62,16 @@ public class RetryingHttpMessageHandler : DelegatingHandler
                 MinimumThroughput = options.MinimumThroughput,
                 SamplingDuration = options.SamplingDuration,
                 BreakDuration = options.BreakDuration,
-                ShouldHandle = CreateCircuitBreakerShouldHandle(options)
+                ShouldHandle = args =>
+                {
+                    var cancellationRequested = args.Context.CancellationToken.IsCancellationRequested;
+                    return new ValueTask<bool>(ShouldHandleOutcome(args.Outcome, options, cancellationRequested));
+                }
             });
         }
 
         // Retry (innermost - executes first)
+        // Retry only on connection failures (exceptions), not HTTP status codes
         if (options.MaxRetryCount > 0)
         {
             var retryOptions = new RetryStrategyOptions<HttpResponseMessage>
@@ -90,44 +79,19 @@ public class RetryingHttpMessageHandler : DelegatingHandler
                 MaxRetryAttempts = options.MaxRetryCount,
                 BackoffType = DelayBackoffType.Exponential,
                 UseJitter = options.UseJitter,
-                ShouldHandle = CreateRetryShouldHandle(options)
+                Delay = options.BaseDelay,
+                MaxDelay = options.MaxDelay,
+                ShouldHandle = args =>
+                {
+                    var cancellationRequested = args.Context.CancellationToken.IsCancellationRequested;
+                    return new ValueTask<bool>(ShouldHandleOutcome(args.Outcome, options, cancellationRequested));
+                }
             };
-
-            // Custom delay generator to honor Retry-After header
-            if (options.HonorRetryAfterHeader)
-            {
-                retryOptions.DelayGenerator = CreateDelayGenerator(options);
-            }
-            else
-            {
-                retryOptions.Delay = options.BaseDelay;
-                retryOptions.MaxDelay = options.MaxDelay;
-            }
 
             builder.AddRetry(retryOptions);
         }
 
         return builder.Build();
-    }
-
-    private static Func<CircuitBreakerPredicateArguments<HttpResponseMessage>, ValueTask<bool>> CreateCircuitBreakerShouldHandle(
-        HttpResilienceOptions options)
-    {
-        return args =>
-        {
-            var cancellationRequested = args.Context.CancellationToken.IsCancellationRequested;
-            return new ValueTask<bool>(ShouldHandleOutcome(args.Outcome, options, cancellationRequested));
-        };
-    }
-
-    private static Func<RetryPredicateArguments<HttpResponseMessage>, ValueTask<bool>> CreateRetryShouldHandle(
-        HttpResilienceOptions options)
-    {
-        return args =>
-        {
-            var cancellationRequested = args.Context.CancellationToken.IsCancellationRequested;
-            return new ValueTask<bool>(ShouldHandleOutcome(args.Outcome, options, cancellationRequested));
-        };
     }
 
     private static bool ShouldHandleOutcome(
@@ -140,105 +104,23 @@ public class RetryingHttpMessageHandler : DelegatingHandler
             return IsRetriableException(outcome.Exception, options, cancellationRequested);
         }
 
-        if (outcome.Result != null)
-        {
-            return IsRetriableStatusCode(outcome.Result.StatusCode, options);
-        }
-
+        // Don't retry HTTP status codes - let them propagate
         return false;
-    }
-
-    private static Func<RetryDelayGeneratorArguments<HttpResponseMessage>, ValueTask<TimeSpan?>> CreateDelayGenerator(
-        HttpResilienceOptions options)
-    {
-        return args =>
-        {
-            // Check for Retry-After header in the response
-            if (args.Outcome.Result != null)
-            {
-                var retryAfterDelay = ParseRetryAfterHeader(args.Outcome.Result, options);
-                if (retryAfterDelay.HasValue)
-                {
-                    return new ValueTask<TimeSpan?>(retryAfterDelay.Value);
-                }
-            }
-
-            // Fall back to exponential backoff
-            var exponentialDelay = CalculateExponentialDelay(args.AttemptNumber, options);
-            return new ValueTask<TimeSpan?>(exponentialDelay);
-        };
-    }
-
-    private static TimeSpan? ParseRetryAfterHeader(HttpResponseMessage response, HttpResilienceOptions options)
-    {
-        if (!response.Headers.TryGetValues("Retry-After", out var retryAfterValues))
-        {
-            return null;
-        }
-
-        var retryAfterValue = retryAfterValues.FirstOrDefault();
-        if (string.IsNullOrEmpty(retryAfterValue))
-        {
-            return null;
-        }
-
-        // Try parsing as integer (seconds)
-        if (int.TryParse(retryAfterValue, out var seconds))
-        {
-            var delay = TimeSpan.FromSeconds(seconds);
-            return TimeSpan.FromMilliseconds(Math.Min((int)delay.TotalMilliseconds, (int)options.MaxDelay.TotalMilliseconds));
-        }
-
-        // Try parsing as DateTime (RFC 7231 / HTTP-date format)
-        if (DateTimeOffset.TryParse(retryAfterValue, out var retryDate))
-        {
-            var retryDelay = retryDate - DateTimeOffset.UtcNow;
-            var delayMs = Math.Min((int)retryDelay.TotalMilliseconds, (int)options.MaxDelay.TotalMilliseconds);
-            return TimeSpan.FromMilliseconds(Math.Max(0, delayMs));
-        }
-
-        return null;
-    }
-
-    private static TimeSpan CalculateExponentialDelay(int attemptNumber, HttpResilienceOptions options)
-    {
-        // Exponential backoff: baseDelay * 2^attempt, capped at MaxDelay.
-        // Using Math.Pow(double, double) keeps the calculation simple and avoids integer overflow concerns.
-        var baseDelayMs = options.BaseDelay.TotalMilliseconds;
-        var maxDelayMs = options.MaxDelay.TotalMilliseconds;
-
-        var delayMs = baseDelayMs * Math.Pow(2, attemptNumber);
-        delayMs = Math.Min(delayMs, maxDelayMs);
-
-        // Apply jitter if enabled (random value between 0.8 and 1.2 of the delay).
-        if (options.UseJitter)
-        {
-            var jitterFactor = 0.8 + Random.Shared.NextDouble() * 0.4; // 0.8 to 1.2
-            delayMs *= jitterFactor;
-        }
-
-        delayMs = Math.Min(delayMs, maxDelayMs);
-
-        return TimeSpan.FromMilliseconds(delayMs);
-    }
-
-    private static bool IsRetriableStatusCode(HttpStatusCode statusCode, HttpResilienceOptions options)
-    {
-        if (Array.IndexOf(DefaultRetriableStatusCodes, statusCode) >= 0)
-        {
-            return true;
-        }
-
-        return options.AdditionalRetriableStatusCodes.Contains(statusCode);
     }
 
     private static bool IsRetriableException(Exception exception, HttpResilienceOptions options, bool cancellationRequested)
     {
         // Check additional retriable exception types first
         var exceptionType = exception.GetType();
-        if (options.AdditionalRetriableExceptionTypes.Any(t => t.IsAssignableFrom(exceptionType)))
+        if (options.AdditionalRetriableExceptionTypes.Count > 0)
         {
-            return true;
+            foreach (var retriableType in options.AdditionalRetriableExceptionTypes)
+            {
+                if (retriableType.IsAssignableFrom(exceptionType))
+                {
+                    return true;
+                }
+            }
         }
 
         // HttpRequestException - network errors, always retriable

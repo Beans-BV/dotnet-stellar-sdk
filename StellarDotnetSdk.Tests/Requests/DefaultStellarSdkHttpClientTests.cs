@@ -36,9 +36,13 @@ public class DefaultStellarSdkHttpClientTests
         var trackingHandler = new TrackingHttpMessageHandler((attempt, _, _) =>
         {
             callCount++;
-            // Return 503 on first call to trigger retry, then OK
-            return Task.FromResult(new HttpResponseMessage(
-                attempt == 1 ? HttpStatusCode.ServiceUnavailable : HttpStatusCode.OK));
+            // Throw exception on first call to trigger retry (connection failure), then OK
+            if (attempt == 1)
+            {
+                throw new HttpRequestException("network error");
+            }
+
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
         });
 
         var resilienceOptions = new HttpResilienceOptions

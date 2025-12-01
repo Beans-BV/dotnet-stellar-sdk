@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -23,7 +21,10 @@ public class RetryingHttpMessageHandlerTests
     {
         var handler = new TrackingHttpMessageHandler((_, _, _) => Task.FromResult(CreateResponse(HttpStatusCode.OK)));
 
-        using var retryHandler = new RetryingHttpMessageHandler(handler, CreateDefaultOptions());
+        var options = CreateDefaultOptions();
+        options.MaxRetryCount = 3; // Enable retries
+
+        using var retryHandler = new RetryingHttpMessageHandler(handler, options);
         using var httpClient = new HttpClient(retryHandler);
 
         var response = await httpClient.GetAsync(TestUri);
@@ -33,8 +34,9 @@ public class RetryingHttpMessageHandlerTests
     }
 
     [TestMethod]
-    public async Task SendAsync_RetryableStatus_EventuallySucceeds()
+    public async Task SendAsync_HttpErrorStatus_DoesNotRetry()
     {
+        // HTTP status codes are never retried - only connection failures
         var handler = new TrackingHttpMessageHandler((attempt, _, _) =>
         {
             if (attempt == 1)
@@ -55,8 +57,9 @@ public class RetryingHttpMessageHandlerTests
 
         var response = await httpClient.GetAsync(TestUri);
 
-        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        Assert.AreEqual(2, handler.CallCount);
+        // Should return 503 immediately without retrying
+        Assert.AreEqual(HttpStatusCode.ServiceUnavailable, response.StatusCode);
+        Assert.AreEqual(1, handler.CallCount);
     }
 
     [TestMethod]
@@ -104,8 +107,52 @@ public class RetryingHttpMessageHandlerTests
     }
 
     [TestMethod]
-    public async Task SendAsync_AdditionalStatus_Retried()
+    public async Task SendAsync_ConnectionFailure_ReusesSameRequest()
     {
+        // Connection failures happen before request is sent, so same request can be reused
+        HttpRequestMessage? firstAttemptRequest = null;
+        HttpRequestMessage? secondAttemptRequest = null;
+
+        var handler = new TrackingHttpMessageHandler((attempt, message, _) =>
+        {
+            if (attempt == 1)
+            {
+                firstAttemptRequest = message;
+                throw new HttpRequestException("network error");
+            }
+
+            secondAttemptRequest = message;
+            return Task.FromResult(CreateResponse(HttpStatusCode.OK));
+        });
+
+        var options = CreateDefaultOptions();
+        options.MaxRetryCount = 1;
+        options.BaseDelay = TimeSpan.FromMilliseconds(5);
+        options.UseJitter = false;
+
+        using var retryHandler = new RetryingHttpMessageHandler(handler, options);
+        using var httpClient = new HttpClient(retryHandler);
+
+        using var originalRequest = new HttpRequestMessage(HttpMethod.Post, TestUri)
+        {
+            Content = new StringContent("payload")
+        };
+
+        var response = await httpClient.SendAsync(originalRequest);
+
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.AreEqual(2, handler.CallCount);
+        Assert.IsNotNull(firstAttemptRequest);
+        Assert.IsNotNull(secondAttemptRequest);
+        // Same request object can be reused for connection failures
+        Assert.AreSame(firstAttemptRequest, secondAttemptRequest);
+    }
+
+    [TestMethod]
+    public async Task SendAsync_HttpStatusCodes_NeverRetried()
+    {
+        // HTTP status codes are never retried, even if added to additional retriable codes
+        // (that property no longer exists, but this test confirms behavior)
         var handler = new TrackingHttpMessageHandler((attempt, _, _) =>
         {
             return Task.FromResult(CreateResponse(
@@ -114,15 +161,15 @@ public class RetryingHttpMessageHandlerTests
 
         var options = CreateDefaultOptions();
         options.MaxRetryCount = 2;
-        options.AdditionalRetriableStatusCodes.Add(HttpStatusCode.Conflict);
 
         using var retryHandler = new RetryingHttpMessageHandler(handler, options);
         using var httpClient = new HttpClient(retryHandler);
 
         var response = await httpClient.GetAsync(TestUri);
 
-        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        Assert.AreEqual(2, handler.CallCount);
+        // Should return 409 immediately without retrying
+        Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
+        Assert.AreEqual(1, handler.CallCount);
     }
 
     [TestMethod]
@@ -152,102 +199,16 @@ public class RetryingHttpMessageHandlerTests
     }
 
     [TestMethod]
-    public async Task SendAsync_RetryAfterSecondsHeader_Honored()
-    {
-        var handler = new TrackingHttpMessageHandler((attempt, _, _) =>
-        {
-            var response = CreateResponse(attempt == 1 ? HttpStatusCode.ServiceUnavailable : HttpStatusCode.OK);
-            if (attempt == 1)
-            {
-                response.Headers.Add("Retry-After", "5"); // seconds
-            }
-
-            return Task.FromResult(response);
-        });
-
-        var options = CreateDefaultOptions();
-        options.MaxRetryCount = 1;
-        options.UseJitter = false;
-        options.BaseDelay = TimeSpan.FromMilliseconds(10);
-        options.MaxDelay = TimeSpan.FromMilliseconds(180);
-
-        using var retryHandler = new RetryingHttpMessageHandler(handler, options);
-        using var httpClient = new HttpClient(retryHandler);
-
-        await httpClient.GetAsync(TestUri);
-
-        Assert.AreEqual(2, handler.CallCount);
-        var delay = handler.GetDelayBetweenCalls(0, 1);
-        Assert.IsTrue(delay >= TimeSpan.FromMilliseconds(150), $"Expected >=150ms delay, but was {delay.TotalMilliseconds}ms");
-    }
-
-    [TestMethod]
-    public async Task SendAsync_RetryAfterDateHeader_Honored()
-    {
-        var handler = new TrackingHttpMessageHandler((attempt, _, _) =>
-        {
-            var response = CreateResponse(attempt == 1 ? HttpStatusCode.ServiceUnavailable : HttpStatusCode.OK);
-            if (attempt == 1)
-            {
-                response.Headers.Add("Retry-After", DateTimeOffset.UtcNow.AddSeconds(1).ToString("R"));
-            }
-
-            return Task.FromResult(response);
-        });
-
-        var options = CreateDefaultOptions();
-        options.MaxRetryCount = 1;
-        options.UseJitter = false;
-        options.MaxDelay = TimeSpan.FromMilliseconds(150);
-
-        using var retryHandler = new RetryingHttpMessageHandler(handler, options);
-        using var httpClient = new HttpClient(retryHandler);
-
-        await httpClient.GetAsync(TestUri);
-
-        Assert.AreEqual(2, handler.CallCount);
-        var delay = handler.GetDelayBetweenCalls(0, 1);
-        Assert.IsTrue(delay >= TimeSpan.FromMilliseconds(120),
-            $"Expected >=120ms delay, but was {delay.TotalMilliseconds}ms");
-    }
-
-    [TestMethod]
-    public async Task SendAsync_RetryAfterDisabled_FallsBackToExponentialBackoff()
-    {
-        var handler = new TrackingHttpMessageHandler((attempt, _, _) =>
-        {
-            var response = CreateResponse(attempt == 1 ? HttpStatusCode.ServiceUnavailable : HttpStatusCode.OK);
-            if (attempt == 1)
-            {
-                response.Headers.Add("Retry-After", "5");
-            }
-
-            return Task.FromResult(response);
-        });
-
-        var options = CreateDefaultOptions();
-        options.HonorRetryAfterHeader = false;
-        options.MaxRetryCount = 1;
-        options.BaseDelay = TimeSpan.FromMilliseconds(60);
-        options.MaxDelay = TimeSpan.FromMilliseconds(100);
-        options.UseJitter = false;
-
-        using var retryHandler = new RetryingHttpMessageHandler(handler, options);
-        using var httpClient = new HttpClient(retryHandler);
-
-        await httpClient.GetAsync(TestUri);
-
-        var delay = handler.GetDelayBetweenCalls(0, 1);
-        Assert.IsTrue(delay >= TimeSpan.FromMilliseconds(50) && delay <= TimeSpan.FromMilliseconds(120),
-            $"Expected delay around base delay, actual: {delay.TotalMilliseconds}ms");
-    }
-
-    [TestMethod]
     public async Task SendAsync_ExponentialBackoffWithoutJitter_AddsUpDelays()
     {
         var handler = new TrackingHttpMessageHandler((attempt, _, _) =>
         {
-            return Task.FromResult(CreateResponse(attempt <= 2 ? HttpStatusCode.ServiceUnavailable : HttpStatusCode.OK));
+            if (attempt <= 2)
+            {
+                throw new HttpRequestException("network error");
+            }
+
+            return Task.FromResult(CreateResponse(HttpStatusCode.OK));
         });
 
         var options = CreateDefaultOptions();
@@ -269,7 +230,7 @@ public class RetryingHttpMessageHandlerTests
     [TestMethod]
     public async Task SendAsync_MaxRetryCount_IsRespected()
     {
-        var handler = new TrackingHttpMessageHandler((_, _, _) => Task.FromResult(CreateResponse(HttpStatusCode.ServiceUnavailable)));
+        var handler = new TrackingHttpMessageHandler((_, _, _) => throw new HttpRequestException("network error"));
 
         var options = CreateDefaultOptions();
         options.MaxRetryCount = 2;
@@ -279,10 +240,9 @@ public class RetryingHttpMessageHandlerTests
         using var retryHandler = new RetryingHttpMessageHandler(handler, options);
         using var httpClient = new HttpClient(retryHandler);
 
-        var response = await httpClient.GetAsync(TestUri);
+        await Assert.ThrowsExceptionAsync<HttpRequestException>(() => httpClient.GetAsync(TestUri));
 
-        Assert.AreEqual(HttpStatusCode.ServiceUnavailable, response.StatusCode);
-        Assert.AreEqual(3, handler.CallCount);
+        Assert.AreEqual(3, handler.CallCount); // Initial + 2 retries
     }
 
     [TestMethod]
@@ -335,7 +295,7 @@ public class RetryingHttpMessageHandlerTests
     [TestMethod]
     public async Task SendAsync_CircuitBreaker_OpensAfterThreshold()
     {
-        var handler = new TrackingHttpMessageHandler((_, _, _) => Task.FromResult(CreateResponse(HttpStatusCode.ServiceUnavailable)));
+        var handler = new TrackingHttpMessageHandler((_, _, _) => throw new HttpRequestException("network error"));
 
         var options = CreateDefaultOptions();
         options.MaxRetryCount = 0;
@@ -349,8 +309,8 @@ public class RetryingHttpMessageHandlerTests
         using var httpClient = new HttpClient(retryHandler);
 
         // First two calls should fail but not throw, third should hit open circuit
-        await httpClient.GetAsync(TestUri);
-        await httpClient.GetAsync(TestUri);
+        await Assert.ThrowsExceptionAsync<HttpRequestException>(() => httpClient.GetAsync(TestUri));
+        await Assert.ThrowsExceptionAsync<HttpRequestException>(() => httpClient.GetAsync(TestUri));
         await Assert.ThrowsExceptionAsync<BrokenCircuitException>(() => httpClient.GetAsync(TestUri));
     }
 
@@ -412,20 +372,19 @@ public class RetryingHttpMessageHandlerTests
     }
 
     [TestMethod]
-    public async Task OptionsInstancesAreIsolated()
+    public async Task SendAsync_RetriesDisabledByDefault()
     {
-        var handler = new TrackingHttpMessageHandler((_, _, _) => Task.FromResult(CreateResponse(HttpStatusCode.Conflict)));
+        var handler = new TrackingHttpMessageHandler((_, _, _) => throw new HttpRequestException("network error"));
 
-        var optionsA = CreateDefaultOptions();
-        optionsA.AdditionalRetriableStatusCodes.Add(HttpStatusCode.Conflict);
+        // Default options have MaxRetryCount = 0
+        var options = new HttpResilienceOptions();
 
-        var optionsB = CreateDefaultOptions();
-
-        using var retryHandler = new RetryingHttpMessageHandler(handler, optionsB);
+        using var retryHandler = new RetryingHttpMessageHandler(handler, options);
         using var httpClient = new HttpClient(retryHandler);
 
-        await httpClient.GetAsync(TestUri);
+        await Assert.ThrowsExceptionAsync<HttpRequestException>(() => httpClient.GetAsync(TestUri));
 
+        // Should fail immediately without retrying
         Assert.AreEqual(1, handler.CallCount);
     }
 
@@ -433,10 +392,10 @@ public class RetryingHttpMessageHandlerTests
     {
         return new HttpResilienceOptions
         {
+            MaxRetryCount = 3, // Enable retries for testing
             BaseDelay = TimeSpan.FromMilliseconds(20),
             MaxDelay = TimeSpan.FromMilliseconds(500),
-            UseJitter = false,
-            HonorRetryAfterHeader = true
+            UseJitter = false
         };
     }
 

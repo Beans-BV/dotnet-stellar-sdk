@@ -7,17 +7,12 @@ namespace StellarDotnetSdk.Requests;
 public class DefaultStellarSdkHttpClient : HttpClient
 {
     /// <summary>
-    ///     Creates an HTTP client with some default request headers, retry mechanism, and the given bearer token.
+    ///     Creates an HTTP client with some default request headers and the given bearer token.
     ///     <para>
-    ///         The client includes automatic retry logic for transient failures:
-    ///         <list type="bullet">
-    ///             <item>Retries up to 3 times by default for transient HTTP errors (408, 425, 429, 500, 502, 503, 504)</item>
-    ///             <item>Retries on network exceptions (HttpRequestException, TimeoutException, TaskCanceledException)</item>
-    ///             <item>Uses exponential backoff with jitter (default: 200ms base delay, max 5000ms)</item>
-    ///             <item>Honors Retry-After headers when present</item>
-    ///         </list>
-    ///         To customize resilience behavior, pass a custom <see cref="HttpResilienceOptions" /> instance.
-    ///         To disable retries, pass <c>new HttpResilienceOptions { MaxRetryCount = 0 }</c>.
+    ///         By default, no automatic retries are enabled.
+    ///         To enable retries for connection failures (network errors, DNS failures), pass a custom
+    ///         <see cref="HttpResilienceOptions" /> instance with <c>MaxRetryCount</c> set to a positive value.
+    ///         Note: HTTP error status codes (4xx/5xx) are never retried automatically.
     ///     </para>
     /// </summary>
     /// <param name="bearerToken">Bearer token in case the server requires it.</param>
@@ -55,6 +50,13 @@ public class DefaultStellarSdkHttpClient : HttpClient
         HttpMessageHandler? innerHandler)
     {
         var handler = innerHandler ?? new SocketsHttpHandler();
-        return new RetryingHttpMessageHandler(handler, resilienceOptions);
+        
+        // Only add retry handler if retries are enabled
+        if (resilienceOptions != null && resilienceOptions.MaxRetryCount > 0)
+        {
+            return new RetryingHttpMessageHandler(handler, resilienceOptions);
+        }
+        
+        return handler;
     }
 }

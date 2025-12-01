@@ -163,7 +163,7 @@ internal class Farmer : Person
     [JsonPropertyName("ranch")]
     [JsonInclude]
     // [JsonPropertyName("ranch")] 
-    private required string _ranch;
+    private string? _ranch;
 
     [JsonPropertyName("farm")]
     public required string Farm { get; set; }

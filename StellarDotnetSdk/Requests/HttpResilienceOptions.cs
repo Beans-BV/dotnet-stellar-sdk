@@ -9,7 +9,7 @@ namespace StellarDotnetSdk.Requests;
 /// </summary>
 public sealed class HttpResilienceOptions
 {
-    private int _maxRetryCount = 3;
+    private int _maxRetryCount = 0;
     private TimeSpan _baseDelay = TimeSpan.FromMilliseconds(200);
     private TimeSpan _maxDelay = TimeSpan.FromSeconds(5);
     private double _failureRatio = 0.5;
@@ -18,8 +18,9 @@ public sealed class HttpResilienceOptions
     private TimeSpan _breakDuration = TimeSpan.FromSeconds(30);
 
     /// <summary>
-    ///     Gets or sets the maximum number of retry attempts. Default is 3.
-    ///     Set to 0 to disable retries.
+    ///     Gets or sets the maximum number of retry attempts. Default is 0 (disabled).
+    ///     Set to a positive value to enable retries for connection failures only (network errors, DNS failures, etc.).
+    ///     HTTP error status codes (4xx/5xx) are never retried automatically.
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when value is negative.</exception>
     public int MaxRetryCount
@@ -79,6 +80,8 @@ public sealed class HttpResilienceOptions
 
     /// <summary>
     ///     Gets or sets whether to honor Retry-After headers. Default is true.
+    ///     Note: This is only relevant if you implement custom retry logic for HTTP status codes.
+    ///     Connection-level retries use exponential backoff.
     /// </summary>
     public bool HonorRetryAfterHeader { get; set; } = true;
 
@@ -169,14 +172,9 @@ public sealed class HttpResilienceOptions
     public TimeSpan? RequestTimeout { get; set; } = null;
 
     /// <summary>
-    ///     Gets additional HTTP status codes to consider as retriable.
-    ///     By default, the following are retriable: 408, 425, 429, 500, 502, 503, 504.
-    /// </summary>
-    public ISet<HttpStatusCode> AdditionalRetriableStatusCodes { get; } = new HashSet<HttpStatusCode>();
-
-    /// <summary>
     ///     Gets additional exception types to consider as retriable.
     ///     By default, HttpRequestException, TimeoutException, and TaskCanceledException (from timeouts) are retriable.
+    ///     Note: HTTP status codes are never retried automatically. Only connection-level failures (exceptions) are retried.
     /// </summary>
     public ISet<Type> AdditionalRetriableExceptionTypes { get; } = new HashSet<Type>();
 }
@@ -187,20 +185,32 @@ public sealed class HttpResilienceOptions
 public static class HttpResilienceOptionsPresets
 {
     /// <summary>
-    ///     Creates default options with retries enabled (3 attempts, 200ms base delay).
+    ///     Creates default options with retries disabled.
     ///     This is the same as using <c>new HttpResilienceOptions()</c>.
     /// </summary>
     public static HttpResilienceOptions Default() => new();
 
     /// <summary>
-    ///     Creates options with retries disabled.
-    ///     Use this to restore pre-v12 behavior where requests fail immediately without retrying.
+    ///     Creates options with connection retries enabled (similar to OkHttp's retryOnConnectionFailure).
+    ///     Retries connection failures (network errors, DNS failures) but not HTTP error status codes.
+    /// </summary>
+    public static HttpResilienceOptions WithConnectionRetries() => new()
+    {
+        MaxRetryCount = 3,
+        BaseDelay = TimeSpan.FromMilliseconds(200),
+        MaxDelay = TimeSpan.FromSeconds(5)
+    };
+
+    /// <summary>
+    ///     Creates options with retries disabled (default behavior).
+    ///     Requests fail immediately on connection failures without retrying.
     /// </summary>
     public static HttpResilienceOptions NoRetry() => new() { MaxRetryCount = 0 };
 
     /// <summary>
     ///     Creates options tuned for Soroban RPC polling workflows.
-    ///     Uses more retries and longer delays to accommodate ledger timing and transaction finalization.
+    ///     Uses more retries and longer delays for connection failures to accommodate network instability.
+    ///     Note: HTTP error status codes are still not retried automatically.
     /// </summary>
     public static HttpResilienceOptions ForSorobanPolling() => new()
     {
@@ -211,13 +221,12 @@ public static class HttpResilienceOptionsPresets
 
     /// <summary>
     ///     Creates options for high-frequency, latency-sensitive use cases (e.g., trading bots).
-    ///     Uses fewer retries and shorter delays for fast failure.
+    ///     Uses fewer retries and shorter delays for connection failures.
     /// </summary>
     public static HttpResilienceOptions LowLatency() => new()
     {
         MaxRetryCount = 1,
         BaseDelay = TimeSpan.FromMilliseconds(50),
-        MaxDelay = TimeSpan.FromMilliseconds(200),
-        HonorRetryAfterHeader = false // Don't wait for server hint in latency-sensitive scenarios
+        MaxDelay = TimeSpan.FromMilliseconds(200)
     };
 }
