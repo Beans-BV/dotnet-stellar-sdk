@@ -202,22 +202,24 @@ public class RetryingHttpMessageHandler : DelegatingHandler
 
     private static TimeSpan CalculateExponentialDelay(int attemptNumber, HttpResilienceOptions options)
     {
-        // Exponential backoff: baseDelay * 2^attempt
-        // Use Math.Min to prevent overflow before multiplication
-        var exponentialDelayMs = Math.Min(
-            options.BaseDelay.TotalMilliseconds * Math.Pow(2, attemptNumber),
-            options.MaxDelay.TotalMilliseconds);
+        // Exponential backoff: baseDelay * 2^attempt, capped at MaxDelay.
+        // Using Math.Pow(double, double) keeps the calculation simple and avoids integer overflow concerns.
+        var baseDelayMs = options.BaseDelay.TotalMilliseconds;
+        var maxDelayMs = options.MaxDelay.TotalMilliseconds;
 
-        var delay = TimeSpan.FromMilliseconds(exponentialDelayMs);
+        var delayMs = baseDelayMs * Math.Pow(2, attemptNumber);
+        delayMs = Math.Min(delayMs, maxDelayMs);
 
-        // Apply jitter if enabled (random value between 0.8 and 1.2 of the delay)
+        // Apply jitter if enabled (random value between 0.8 and 1.2 of the delay).
         if (options.UseJitter)
         {
-            var jitterFactor = 0.8 + (Random.Shared.NextDouble() * 0.4); // 0.8 to 1.2
-            delay = TimeSpan.FromMilliseconds(delay.TotalMilliseconds * jitterFactor);
+            var jitterFactor = 0.8 + Random.Shared.NextDouble() * 0.4; // 0.8 to 1.2
+            delayMs *= jitterFactor;
         }
 
-        return TimeSpan.FromMilliseconds(Math.Min(delay.TotalMilliseconds, options.MaxDelay.TotalMilliseconds));
+        delayMs = Math.Min(delayMs, maxDelayMs);
+
+        return TimeSpan.FromMilliseconds(delayMs);
     }
 
     private static bool IsRetriableStatusCode(HttpStatusCode statusCode, HttpResilienceOptions options)
