@@ -60,7 +60,8 @@
         "flags": {
           "auth_required": false,
           "auth_revocable": false,
-          "auth_immutable": false
+          "auth_immutable": false,
+          "auth_clawback_enabled": false
         },
         "balances": [
           {
@@ -108,7 +109,10 @@
         ],
         "data": {
           "best_friend": "c3Ryb29weQ=="
-        }
+        },
+        "num_sponsoring": 0,
+        "num_sponsored": 0,
+        "last_modified_time": "2025-08-14T19:44:19Z"
       }
     ]
   }

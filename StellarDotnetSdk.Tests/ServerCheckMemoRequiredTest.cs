@@ -169,6 +169,7 @@ public class ServerCheckMemoRequiredTest
         var accountData = data ?? new Dictionary<string, string>();
         var response = new AccountResponse
         {
+            Id = "1",
             SubentryCount = 1,
             SequenceUpdatedAtLedger = null,
             SequenceUpdatedAtTime = null,
@@ -198,6 +199,7 @@ public class ServerCheckMemoRequiredTest
                     IsAuthorized = false,
                     IsAuthorizedToMaintainLiabilities = true,
                     LiquidityPoolId = "1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469",
+                    BalanceString = "123",
                 },
             ],
             Signers =
@@ -209,10 +211,15 @@ public class ServerCheckMemoRequiredTest
                     Weight = 1,
                 },
             ],
-            Links = null,
+            Links = null!,
+            NumberSponsored = 0,
+            NumberSponsoring = 0,
             Data = accountData,
             AccountId = accountId,
             SequenceNumber = 3298702387052545,
+            LastModifiedLedger = 1,
+            LastModifiedTime = "2025-08-14T19:44:19Z",
+            PagingToken = "123",
         };
         return JsonSerializer.Serialize(response);
     }

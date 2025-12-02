@@ -33,10 +33,21 @@ public class AccountPageDeserializerTest
 
     private static void AssertTestData(Page<AccountResponse> accountsPage)
     {
-        Assert.AreEqual(accountsPage.Records[0].AccountId, "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
-        Assert.AreEqual(accountsPage.Records[9].AccountId, "GACFGMEV7A5H44O3K4EN6GRQ4SA543YJBZTKGNKPEMEQEAJFO4Q7ENG6");
-        Assert.AreEqual(accountsPage.Links.Next.Href, "/accounts?order=asc&limit=10&cursor=86861418598401");
-        Assert.AreEqual(accountsPage.Links.Prev.Href, "/accounts?order=desc&limit=10&cursor=1");
-        Assert.AreEqual(accountsPage.Links.Self.Href, "/accounts?order=asc&limit=10&cursor=");
+        Assert.IsNotNull(accountsPage.Links);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/accounts?asset=TEST%3AGB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST&cursor=&limit=10&order=asc",
+            accountsPage.Links.Self.Href);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/accounts?asset=TEST%3AGB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST&cursor=GA7N5VZ27ISU5QD2OGEVE554YHUON45VCQEZ4AIZTL7VUMPHB7BGXWRE&limit=10&order=desc",
+            accountsPage.Links.Prev.Href);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/accounts?asset=TEST%3AGB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST&cursor=GBLD7NSGWYT2KRFTYMRJGQ42SNTGDXMZYNQUE3H7N2VEMARIQYKBB4JJ&limit=10&order=asc",
+            accountsPage.Links.Next.Href);
+
+        // Skip checking the main properties as they have been tested in the AccountDeserializerTest
+        Assert.AreEqual(3, accountsPage.Records.Count);
+        Assert.AreEqual("GA7N5VZ27ISU5QD2OGEVE554YHUON45VCQEZ4AIZTL7VUMPHB7BGXWRE", accountsPage.Records[0].AccountId);
+        Assert.AreEqual("GAG3ZVX4564SWFE5YIEHVHNAOBH7XTPTYC6R7U6GCJ5RYATQIOPGTEST", accountsPage.Records[1].AccountId);
+        Assert.AreEqual("GBLD7NSGWYT2KRFTYMRJGQ42SNTGDXMZYNQUE3H7N2VEMARIQYKBB4JJ", accountsPage.Records[2].AccountId);
     }
 }

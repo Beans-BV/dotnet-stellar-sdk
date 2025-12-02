@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
-using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
@@ -47,95 +46,94 @@ public class AccountDeserializerTest
 
     public static void AssertTestData(AccountResponse account)
     {
-        Assert.AreEqual(account.AccountId, "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
-        Assert.AreEqual(account.SequenceNumber, 2319149195853854);
-        Assert.AreEqual(account.SubentryCount, 0);
-        Assert.AreEqual(account.SequenceUpdatedAtLedger, 1234L);
-        Assert.AreEqual(account.SequenceUpdatedAtTime, 4567L);
-        Assert.AreEqual(account.InflationDestination, "GAGRSA6QNQJN2OQYCBNQGMFLO4QLZFNEHIFXOMTQVSUTWVTWT66TOFSC");
-        Assert.AreEqual(account.HomeDomain, "stellar.org");
+        Assert.AreEqual("GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST", account.PagingToken);
+        Assert.AreEqual("GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7", account.AccountId);
+        Assert.AreEqual(6674379177987L, account.SequenceNumber);
+        Assert.AreEqual(0, account.SubentryCount);
+        Assert.AreEqual(1234L, account.SequenceUpdatedAtLedger);
+        Assert.AreEqual(1755199978L, account.SequenceUpdatedAtTime);
+        Assert.AreEqual("GAGRSA6QNQJN2OQYCBNQGMFLO4QLZFNEHIFXOMTQVSUTWVTWT66TOFSC", account.InflationDestination);
+        Assert.AreEqual("stellar.org", account.HomeDomain);
 
-        Assert.AreEqual(account.Thresholds.LowThreshold, 10);
-        Assert.AreEqual(account.Thresholds.MedThreshold, 20);
-        Assert.AreEqual(account.Thresholds.HighThreshold, 30);
+        Assert.AreEqual(10, account.Thresholds.LowThreshold);
+        Assert.AreEqual(20, account.Thresholds.MedThreshold);
+        Assert.AreEqual(30, account.Thresholds.HighThreshold);
 
-        Assert.AreEqual(account.Flags.AuthRequired, false);
-        Assert.AreEqual(account.Flags.AuthRevocable, true);
-        Assert.AreEqual(account.Flags.AuthImmutable, true);
-        Assert.AreEqual(account.Flags.AuthClawback, true);
+        Assert.AreEqual(false, account.Flags.AuthRequired);
+        Assert.AreEqual(true, account.Flags.AuthRevocable);
+        Assert.AreEqual(true, account.Flags.AuthImmutable);
+        Assert.AreEqual(true, account.Flags.AuthClawback);
 
-        account.Balances.Should().HaveCount(3);
-
-        Assert.AreEqual(account.Balances[0].AssetType, "credit_alphanum4");
-        Assert.AreEqual(account.Balances[0].AssetCode, "ABC");
-        Assert.AreEqual(account.Balances[0].AssetIssuer,
-            "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
-        var balance0 = account.Balances[0];
-        Assert.IsNotNull(balance0.Asset);
-        var asset = (AssetTypeCreditAlphaNum)balance0.Asset;
+        Assert.AreEqual(3, account.Balances.Length);
+        var balance1 = account.Balances[0];
+        Assert.AreEqual("credit_alphanum4", balance1.AssetType);
+        Assert.AreEqual("ABC", balance1.AssetCode);
+        Assert.AreEqual("GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU", balance1.AssetIssuer);
+        Assert.IsNotNull(balance1.Asset);
+        var asset = (AssetTypeCreditAlphaNum)balance1.Asset;
         Assert.IsInstanceOfType(asset, typeof(AssetTypeCreditAlphaNum));
-        Assert.AreEqual(asset.Code, "ABC");
-        Assert.AreEqual(asset.Issuer, "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
+        Assert.AreEqual("ABC", asset.Code);
+        Assert.AreEqual("GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU", asset.Issuer);
 
-        account.Balances
-            .Should().HaveCount(3);
+        Assert.AreEqual("1001.0000000", balance1.BalanceString);
+        Assert.AreEqual("12000.4775807", balance1.Limit);
+        Assert.AreEqual("100.1234567", balance1.BuyingLiabilities);
+        Assert.AreEqual("100.7654321", balance1.SellingLiabilities);
+        Assert.AreEqual("100.7654321", balance1.SellingLiabilities);
+        Assert.AreEqual(false, balance1.IsAuthorized);
+        Assert.AreEqual(true, balance1.IsAuthorizedToMaintainLiabilities);
 
-        Assert.AreEqual(account.Balances[0].BalanceString, "1001.0000000");
-        Assert.AreEqual(account.Balances[0].Limit, "12000.4775807");
-        Assert.AreEqual(account.Balances[0].BuyingLiabilities, "100.1234567");
-        Assert.AreEqual(account.Balances[0].SellingLiabilities, "100.7654321");
-        Assert.AreEqual(account.Balances[0].SellingLiabilities, "100.7654321");
-        Assert.AreEqual(account.Balances[0].IsAuthorized, false);
-        Assert.AreEqual(account.Balances[0].IsAuthorizedToMaintainLiabilities, true);
+        var balance2 = account.Balances[1];
+        Assert.AreEqual("native", balance2.AssetType);
+        Assert.IsInstanceOfType(balance2.Asset, typeof(AssetTypeNative));
+        Assert.AreEqual("20.0000300", balance2.BalanceString);
+        Assert.AreEqual("5.1234567", balance2.BuyingLiabilities);
+        Assert.AreEqual("1.7654321", balance2.SellingLiabilities);
+        Assert.IsNull(balance2.Limit);
 
-        Assert.AreEqual(account.Balances[1].AssetType, "native");
-        Assert.IsInstanceOfType(account.Balances[1].Asset, typeof(AssetTypeNative));
-        Assert.AreEqual(account.Balances[1].BalanceString, "20.0000300");
-        Assert.AreEqual(account.Balances[1].BuyingLiabilities, "5.1234567");
-        Assert.AreEqual(account.Balances[1].SellingLiabilities, "1.7654321");
-        Assert.AreEqual(account.Balances[1].Limit, null);
+        var balance3 = account.Balances[2];
+        Assert.IsNull(balance3.Asset);
+        Assert.AreEqual("liquidity_pool_shares", balance3.AssetType);
+        Assert.AreEqual("500.0000400", balance3.BalanceString);
+        Assert.AreEqual("922337203685.4775807", balance3.Limit);
+        Assert.AreEqual(false, balance3.IsAuthorized);
+        Assert.AreEqual(false, balance3.IsAuthorizedToMaintainLiabilities);
+        Assert.AreEqual("1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469", balance3.LiquidityPoolId);
 
-        // liquidity pool balance
-        account.Balances[2].Asset
-            .Should().BeNull();
+        Assert.AreEqual("GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7", account.Signers[0].Key);
+        Assert.AreEqual(0, account.Signers[0].Weight);
+        Assert.AreEqual("ed25519_public_key", account.Signers[0].Type);
+        Assert.AreEqual("GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2", account.Signers[1].Key);
+        Assert.AreEqual(1, account.Signers[1].Weight);
+        Assert.AreEqual("ed25519_public_key", account.Signers[1].Type);
 
-        account.Balances[2].AssetType
-            .Should().Be("liquidity_pool_shares");
+        Assert.AreEqual("VGVzdFZhbHVl", account.Data["TestKey"]);
+        Assert.AreEqual(0, account.NumberSponsoring);
+        Assert.AreEqual(0, account.NumberSponsored);
+        Assert.AreEqual(1558L, account.LastModifiedLedger);
+        Assert.AreEqual("2025-08-18T13:02:39Z", account.LastModifiedTime);
 
-        account.Balances[2].BalanceString
-            .Should().Be("500.0000400");
-
-        account.Balances[2].Limit
-            .Should().Be("922337203685.4775807");
-
-        account.Balances[2].IsAuthorized
-            .Should().BeFalse();
-
-        account.Balances[2].IsAuthorizedToMaintainLiabilities
-            .Should().BeFalse();
-
-        account.Balances[2].LiquidityPoolId
-            .Should().Be("1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469");
-
-        Assert.AreEqual(account.Signers[0].Key, "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
-        Assert.AreEqual(account.Signers[0].Weight, 0);
-        Assert.AreEqual(account.Signers[0].Type, "ed25519_public_key");
-        Assert.AreEqual(account.Signers[1].Key, "GCR2KBCIU6KQXSQY5F5GZYC4WLNHCHCKW4NEGXNEZRYWLTNZIRJJY7D2");
-        Assert.AreEqual(account.Signers[1].Weight, 1);
-        Assert.AreEqual(account.Signers[1].Type, "ed25519_public_key");
-
-        Assert.AreEqual(account.Data["TestKey"], "VGVzdFZhbHVl");
-
-        Assert.AreEqual(account.Links.Effects.Href,
-            "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/effects{?cursor,limit,order}");
-        Assert.AreEqual(account.Links.Offers.Href,
-            "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/offers{?cursor,limit,order}");
-        Assert.AreEqual(account.Links.Operations.Href,
-            "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/operations{?cursor,limit,order}");
-        Assert.AreEqual(account.Links.Self.Href,
-            "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7");
-        Assert.AreEqual(account.Links.Transactions.Href,
-            "/accounts/GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7/transactions{?cursor,limit,order}");
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/accounts/GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST",
+            account.Links.Self.Href);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/accounts/GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST/transactions{?cursor,limit,order}",
+            account.Links.Transactions.Href);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/accounts/GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST/operations{?cursor,limit,order}",
+            account.Links.Operations.Href);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/accounts/GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST/payments{?cursor,limit,order}",
+            account.Links.Payments.Href);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/accounts/GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST/effects{?cursor,limit,order}",
+            account.Links.Effects.Href);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/accounts/GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST/offers{?cursor,limit,order}",
+            account.Links.Offers.Href);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/accounts/GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST/trades{?cursor,limit,order}",
+            account.Links.Trades.Href);
     }
 
     private class UnknownAccountId : IAccountId
