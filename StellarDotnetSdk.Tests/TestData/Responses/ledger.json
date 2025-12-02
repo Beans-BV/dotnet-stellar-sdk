@@ -1,34 +1,40 @@
 ﻿{
   "_links": {
-    "effects": {
-      "href": "/ledgers/898826/effects{?cursor,limit,order}",
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/ledgers/1872448"
+    },
+    "transactions": {
+      "href": "https://horizon-testnet.stellar.org/ledgers/1872448/transactions{?cursor,limit,order}",
       "templated": true
     },
     "operations": {
-      "href": "/ledgers/898826/operations{?cursor,limit,order}",
+      "href": "https://horizon-testnet.stellar.org/ledgers/1872448/operations{?cursor,limit,order}",
       "templated": true
     },
-    "self": {
-      "href": "/ledgers/898826"
+    "payments": {
+      "href": "https://horizon-testnet.stellar.org/ledgers/1872448/payments{?cursor,limit,order}",
+      "templated": true
     },
-    "transactions": {
-      "href": "/ledgers/898826/transactions{?cursor,limit,order}",
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/ledgers/1872448/effects{?cursor,limit,order}",
       "templated": true
     }
   },
-  "id": "686bb246db89b099cd3963a4633eb5e4315d89dfd3c00594c80b41a483847bfa",
-  "paging_token": "3860428274794496",
-  "hash": "686bb246db89b099cd3963a4633eb5e4315d89dfd3c00594c80b41a483847bfa",
-  "prev_hash": "50c8695eb32171a19858413e397cc50b504ceacc819010bdf8ff873aff7858d7",
-  "sequence": 898826,
-  "successful_transaction_count": 3,
-  "failed_transaction_count": 2,
-  "operation_count": 10,
-  "closed_at": "2015-11-19T21:35:59Z",
-  "total_coins": "101343867604.8975480",
-  "fee_pool": "1908.2248818",
-  "base_fee": 100,
-  "base_reserve": "10.0000000",
-  "max_tx_set_size": 50,
-  "tx_set_operation_count": 5
+  "id": "1fb371bb8f393ff06b20ae7eac52a6df0d60e2f97e27c1fa1635784f6d3e1f57",
+  "paging_token": "8042102923460608",
+  "hash": "1fb371bb8f393ff06b20ae7eac52a6df0d60e2f97e27c1fa1635784f6d3e1f57",
+  "prev_hash": "e2e5e6406e2dab62e0e1d85f9893a5305ec300bea6f0aba6da23ed7a68f0c5a6",
+  "sequence": 1872448,
+  "successful_transaction_count": 0,
+  "failed_transaction_count": 0,
+  "operation_count": 0,
+  "tx_set_operation_count": 0,
+  "closed_at": "2025-12-01T06:13:55Z",
+  "total_coins": "100000000000.0000000",
+  "fee_pool": "110238.5552711",
+  "base_fee_in_stroops": 100,
+  "base_reserve_in_stroops": 5000000,
+  "max_tx_set_size": 200,
+  "protocol_version": 24,
+  "header_xdr": "AAAAGOLl5kBuLati4OHYX5iTpTBewwC+pvCrptoj7Xpo8MWmuOtF4mZ5W5FqRpP1uBpDcqSXo7AXH6VFEnCD+2MtqUkAAAAAaS0yIwAAAAAAAAABAAAAALVdELK7fShO1cA6R6XhtZDJD1eDVUccxFB7voIE0jyLAAAAQPETnBQa/pWDlgRok4B7iWG5kC4H44HxxgAjETE/PnaavellzXalaZEC/Hjal8xG9DxlxxksoQONg8CgM21tLQvfP2GYBKkv20BXGS3EPddI6neK3FK8SYzoBSTAFLgRGciQFjs4XdBP6iKUa2qDQv7d1sSKqx0QuUu8QurI+OgkABySQA3gtrOnZAAAAAABAKtMnUcAAAAAAAAAAAAAS8YAAABkAExLQAAAAMidHca46Awo/RV/e/e7ZZcoLDlRR05yivq6HB89Y6M0HHVLqz7SEzdtx/CcggGySkDPpv1fuDR/jmnvZU5p/S1NAF9hgG47QLS1NtgivFkn+gxsHrXuzqoxMYbCPjosfgOLkjDUqJCR9uLj3apU0+rlkVaMBK0QREEXiAUPVL81iAAAAAA="
 }
