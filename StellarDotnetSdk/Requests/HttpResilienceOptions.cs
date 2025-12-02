@@ -89,13 +89,6 @@ public sealed class HttpResilienceOptions
     public bool UseJitter { get; set; } = true;
 
     /// <summary>
-    ///     Gets or sets whether to honor Retry-After headers. Default is true.
-    ///     Note: This is only relevant if you implement custom retry logic for HTTP status codes.
-    ///     Connection-level retries use exponential backoff.
-    /// </summary>
-    public bool HonorRetryAfterHeader { get; set; } = true;
-
-    /// <summary>
     ///     Gets or sets whether to enable circuit breaker. Default is false.
     /// </summary>
     public bool EnableCircuitBreaker { get; set; } = false;
