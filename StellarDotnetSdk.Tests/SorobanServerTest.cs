@@ -10,6 +10,7 @@ using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.LedgerEntries;
 using StellarDotnetSdk.LedgerKeys;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Requests.SorobanRpc;
 using StellarDotnetSdk.Responses.SorobanRpc;
 using StellarDotnetSdk.Soroban;
@@ -2122,5 +2123,71 @@ public class SorobanServerTest
         }
 
         return feeBumpTransaction;
+    }
+
+    [TestMethod]
+    public void Constructor_WithHttpResilienceOptions_CreatesSorobanServerWithResilience()
+    {
+        // Arrange
+        var resilienceOptions = new HttpResilienceOptions
+        {
+            MaxRetryCount = 3,
+            BaseDelay = TimeSpan.FromMilliseconds(200),
+            MaxDelay = TimeSpan.FromSeconds(5)
+        };
+
+        // Act
+        using var server = new SorobanServer("https://soroban-testnet.stellar.org", resilienceOptions, null);
+
+        // Assert - Server should be created successfully
+        Assert.IsNotNull(server);
+    }
+
+    [TestMethod]
+    public void Constructor_WithBearerTokenAndHttpResilienceOptions_CreatesSorobanServerWithBoth()
+    {
+        // Arrange
+        var resilienceOptions = new HttpResilienceOptions
+        {
+            MaxRetryCount = 5,
+            BaseDelay = TimeSpan.FromMilliseconds(500),
+            MaxDelay = TimeSpan.FromSeconds(15)
+        };
+
+        // Act
+        using var server = new SorobanServer("https://soroban-testnet.stellar.org", resilienceOptions, "test-token");
+
+        // Assert - Server should be created successfully
+        Assert.IsNotNull(server);
+    }
+
+    [TestMethod]
+    public void Constructor_WithNullHttpResilienceOptions_CreatesSorobanServerWithDefaultResilience()
+    {
+        // Act
+        using var server = new SorobanServer("https://soroban-testnet.stellar.org", null, null);
+
+        // Assert - Server should be created successfully with default resilience (no retries)
+        Assert.IsNotNull(server);
+    }
+
+    [TestMethod]
+    public void Constructor_WithHttpResilienceOptions_UsesResilienceForRequests()
+    {
+        // Arrange
+        var resilienceOptions = new HttpResilienceOptions
+        {
+            MaxRetryCount = 1,
+            BaseDelay = TimeSpan.FromMilliseconds(10),
+            UseJitter = false
+        };
+
+        // Act
+        using var sorobanServer = new SorobanServer("https://soroban-testnet.stellar.org", resilienceOptions, null);
+        // Note: This test verifies the constructor accepts the parameter
+        // Actual resilience behavior is tested in DefaultStellarSdkHttpClientTests
+
+        // Assert - Server should be created successfully
+        Assert.IsNotNull(sorobanServer);
     }
 }

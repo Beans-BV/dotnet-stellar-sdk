@@ -20,3 +20,7 @@
     name: Contract basics
   - href: examples/soroban/ledger-entries.md
     name: Ledger entries
+- name: Configuration
+  items:
+  - href: examples/http-retry.md
+    name: HTTP Retry Configuration

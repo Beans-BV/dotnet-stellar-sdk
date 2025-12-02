@@ -2,6 +2,7 @@
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Claimants;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
 using StellarDotnetSdk.Responses.Results;
@@ -17,6 +18,10 @@ public static class HorizonExamples
     public static async Task Main(string[] args)
     {
         Network.UseTestNetwork();
+
+        // Demonstrate retry configuration options
+        Console.WriteLine("HTTP Retry Configuration Examples");
+        await DemonstrateRetryConfiguration();
 
         Console.WriteLine("Create a key pair");
         var keyPair = CreateKeyPair();
@@ -404,4 +409,144 @@ public static class HorizonExamples
 
         return operations.Records;
     }
+
+    #region Retry Configuration Examples
+
+    /// <summary>
+    ///     Demonstrates various HTTP retry configuration options.
+    /// </summary>
+    public static async Task DemonstrateRetryConfiguration()
+    {
+        // Example 1: Default behavior
+        Console.WriteLine("1. Default configuration (no retries):");
+        await UseDefaultRetryConfiguration();
+
+        // Example 2: Enable connection retries for network failures
+        Console.WriteLine("\n2. Enable connection retries:");
+        await UseConnectionRetriesConfiguration();
+
+        // Example 3: Custom retry settings for high-reliability scenarios
+        Console.WriteLine("\n3. Custom retry configuration:");
+        await UseCustomRetryConfiguration();
+
+        // Example 4: Add custom retriable exception types
+        Console.WriteLine("\n4. Custom retriable exception types:");
+        await UseCustomRetriableExceptions();
+    }
+
+    /// <summary>
+    ///     Uses the default configuration.
+    /// </summary>
+    private static async Task UseDefaultRetryConfiguration()
+    {
+        // Default constructor - no retries enabled
+        var server = new Server(TestNetUrl);
+
+        Console.WriteLine("   No retries enabled - requests fail immediately on connection errors");
+        Console.WriteLine("   HTTP status codes (4xx/5xx) are never retried automatically");
+
+        try
+        {
+            var response = await server.RootAsync();
+            Console.WriteLine($"   Server version: {response.HorizonVersion}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"   Request failed: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    ///     Enables connection retries for network failures (similar to OkHttp's retryOnConnectionFailure).
+    /// </summary>
+    private static async Task UseConnectionRetriesConfiguration()
+    {
+        // Enable connection retries using preset
+        var resilienceOptions = HttpResilienceOptionsPresets.WithConnectionRetries();
+
+        var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+        var server = new Server(TestNetUrl, httpClient);
+
+        Console.WriteLine("   Connection retries enabled: 3 retries, 200ms base delay");
+        Console.WriteLine("   Only connection failures (network errors) are retried");
+        Console.WriteLine("   HTTP status codes (4xx/5xx) are never retried");
+
+        try
+        {
+            var response = await server.RootAsync();
+            Console.WriteLine($"   Server version: {response.HorizonVersion}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"   Request failed after all retries: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    ///     Uses custom retry settings for high-reliability scenarios.
+    /// </summary>
+    private static async Task UseCustomRetryConfiguration()
+    {
+        // Create custom resilience options for connection failures
+        var resilienceOptions = new HttpResilienceOptions
+        {
+            MaxRetryCount = 5,           // More retries for critical operations
+            BaseDelay = TimeSpan.FromMilliseconds(500),  // Start with longer delay
+            MaxDelay = TimeSpan.FromMilliseconds(10000), // Allow up to 10 second delays
+            UseJitter = true             // Prevent thundering herd
+        };
+
+        // Create HTTP client with custom resilience options
+        var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+
+        // Create server with custom HTTP client
+        var server = new Server(TestNetUrl, httpClient);
+
+        Console.WriteLine("   Using custom retry: 5 retries, 500ms base delay, 10s max delay");
+        Console.WriteLine("   Only connection failures are retried, not HTTP status codes");
+
+        try
+        {
+            var response = await server.RootAsync();
+            Console.WriteLine($"   Server version: {response.HorizonVersion}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"   Request failed after all retries: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    ///     Demonstrates adding custom retriable exception types.
+    /// </summary>
+    private static async Task UseCustomRetriableExceptions()
+    {
+        var resilienceOptions = new HttpResilienceOptions
+        {
+            MaxRetryCount = 3,
+            BaseDelay = TimeSpan.FromMilliseconds(100),
+            UseJitter = false // Disable jitter for predictable timing in examples
+        };
+
+        // Add custom exception types that should trigger retries
+        resilienceOptions.AdditionalRetriableExceptionTypes.Add(typeof(System.Net.Sockets.SocketException));
+
+        var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+        var server = new Server(TestNetUrl, httpClient);
+
+        Console.WriteLine("   Added SocketException as retriable exception type");
+        Console.WriteLine("   Connection failures (including socket errors) will be retried");
+
+        try
+        {
+            var response = await server.RootAsync();
+            Console.WriteLine($"   Server version: {response.HorizonVersion}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"   Request failed: {ex.Message}");
+        }
+    }
+
+    #endregion
 }

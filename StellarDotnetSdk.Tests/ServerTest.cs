@@ -12,6 +12,7 @@ using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Federation;
 using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Results;
 using StellarDotnetSdk.Soroban;
@@ -539,5 +540,71 @@ public class ServerTest
         Assert.IsNotNull(response);
         Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.PENDING, response.TxStatus);
         Assert.AreEqual(response.Hash, "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b25");
+    }
+
+    [TestMethod]
+    public void Constructor_WithHttpResilienceOptions_CreatesServerWithResilience()
+    {
+        // Arrange
+        var resilienceOptions = new HttpResilienceOptions
+        {
+            MaxRetryCount = 3,
+            BaseDelay = TimeSpan.FromMilliseconds(200),
+            MaxDelay = TimeSpan.FromSeconds(5)
+        };
+
+        // Act
+        using var server = new Server("https://horizon-testnet.stellar.org", resilienceOptions, null);
+
+        // Assert - Server should be created successfully
+        Assert.IsNotNull(server);
+    }
+
+    [TestMethod]
+    public void Constructor_WithBearerTokenAndHttpResilienceOptions_CreatesServerWithBoth()
+    {
+        // Arrange
+        var resilienceOptions = new HttpResilienceOptions
+        {
+            MaxRetryCount = 5,
+            BaseDelay = TimeSpan.FromMilliseconds(500),
+            MaxDelay = TimeSpan.FromSeconds(15)
+        };
+
+        // Act
+        using var server = new Server("https://horizon-testnet.stellar.org", resilienceOptions, "test-token");
+
+        // Assert - Server should be created successfully
+        Assert.IsNotNull(server);
+    }
+
+    [TestMethod]
+    public void Constructor_WithNullHttpResilienceOptions_CreatesServerWithDefaultResilience()
+    {
+        // Act
+        using var server = new Server("https://horizon-testnet.stellar.org", null, null);
+
+        // Assert - Server should be created successfully with default resilience (no retries)
+        Assert.IsNotNull(server);
+    }
+
+    [TestMethod]
+    public void Constructor_WithHttpResilienceOptions_UsesResilienceForRequests()
+    {
+        // Arrange
+        var resilienceOptions = new HttpResilienceOptions
+        {
+            MaxRetryCount = 1,
+            BaseDelay = TimeSpan.FromMilliseconds(10),
+            UseJitter = false
+        };
+
+        // Act
+        using var server = new Server("https://horizon-testnet.stellar.org", resilienceOptions, null);
+        // Note: This test verifies the constructor accepts the parameter
+        // Actual resilience behavior is tested in DefaultStellarSdkHttpClientTests
+
+        // Assert - Server should be created successfully
+        Assert.IsNotNull(server);
     }
 }

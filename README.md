@@ -27,6 +27,11 @@ It is used for building Stellar apps.
 <br />
 _This project originated as a full port of the official [Java SDK API](https://github.com/lightsail-network/java-stellar-sdk)._
 
+## Features
+- **Optional Connection Retry** - Opt-in retry mechanism for connection failures (network errors, DNS failures)
+- **Configurable** - Customize retry count, delays, and jitter when retries are enabled
+- **Full Stellar Support** - Works with both Horizon API and Soroban RPC servers
+
 ## Installation
 The `stellar-dotnet-sdk` library is bundled in a NuGet package.
 -   [NuGet Package](https://www.nuget.org/packages/stellar-dotnet-sdk)
