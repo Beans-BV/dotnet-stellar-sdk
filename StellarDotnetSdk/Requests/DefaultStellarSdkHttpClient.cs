@@ -9,10 +9,20 @@ public class DefaultStellarSdkHttpClient : HttpClient
     /// <summary>
     ///     Creates an HTTP client with some default request headers and the given bearer token.
     ///     <para>
-    ///         By default, no automatic retries are enabled.
-    ///         To enable retries for connection failures (network errors, DNS failures), pass a custom
-    ///         <see cref="HttpResilienceOptions" /> instance with <c>MaxRetryCount</c> set to a positive value.
-    ///         Note: HTTP error status codes (4xx/5xx) are never retried automatically.
+    ///         This type is a convenience helper around <see cref="HttpClient" /> for non-DI scenarios. It is
+    ///         intended to be created once and reused for the lifetime of your application, just like a regular
+    ///         <see cref="HttpClient" /> instance.
+    ///     </para>
+    ///     <para>
+    ///         In applications using dependency injection and <c>IHttpClientFactory</c>, prefer configuring a
+    ///         regular <see cref="HttpClient" /> instance (potentially using <see cref="RetryingHttpMessageHandler" />
+    ///         and <see cref="HttpResilienceOptions" />) instead of relying on this type directly.
+    ///     </para>
+    ///     <para>
+    ///         By default, no automatic retries are enabled. To enable retries for connection failures
+    ///         (network errors, DNS failures), pass a custom <see cref="HttpResilienceOptions" /> instance with
+    ///         <c>MaxRetryCount</c> set to a positive value. HTTP error status codes (4xx/5xx) are never retried
+    ///         automatically.
     ///     </para>
     /// </summary>
     /// <param name="bearerToken">Bearer token in case the server requires it.</param>
