@@ -52,6 +52,11 @@ public sealed class HttpResilienceOptions
             }
 
             _baseDelay = value;
+            if (value > _maxDelay)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    $"BaseDelay ({value.TotalMilliseconds}ms) cannot exceed MaxDelay ({_maxDelay.TotalMilliseconds}ms).");
+            }
         }
     }
 
@@ -70,6 +75,11 @@ public sealed class HttpResilienceOptions
             }
 
             _maxDelay = value;
+            if (value < _baseDelay)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    $"MaxDelay ({value.TotalMilliseconds}ms) cannot be less than BaseDelay ({_baseDelay.TotalMilliseconds}ms).");
+            }
         }
     }
 

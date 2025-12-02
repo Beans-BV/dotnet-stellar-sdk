@@ -52,7 +52,7 @@ public class DefaultStellarSdkHttpClient : HttpClient
         var handler = innerHandler ?? new SocketsHttpHandler();
         
         // Add resilience handler if any resilience feature is enabled (retries, circuit breaker, or timeout)
-        if (resilienceOptions != null && resilienceOptions.HasAnyResilienceFeatureEnabled)
+        if (resilienceOptions?.HasAnyResilienceFeatureEnabled == true)
         {
             return new RetryingHttpMessageHandler(handler, resilienceOptions);
         }
