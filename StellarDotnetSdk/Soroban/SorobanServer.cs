@@ -46,11 +46,24 @@ public class SorobanServer : IDisposable
     ///     Constructs a new instance that will interact with the provided URL.
     /// </summary>
     /// <param name="uri">URL of the Soroban RPC server.</param>
-    /// <param name="bearerToken">Bearer token in case the server requires it.</param>
+    /// <param name="bearerToken">(Optional) Bearer token in case the server requires it.</param>
     public SorobanServer(string uri, string? bearerToken = null)
     {
         _serverUri = new Uri(uri);
         _httpClient = new DefaultStellarSdkHttpClient(bearerToken);
+        _internalHttpClient = true;
+    }
+
+    /// <summary>
+    ///     Constructs a new instance that will interact with the provided URL.
+    /// </summary>
+    /// <param name="uri">URL of the Soroban RPC server.</param>
+    /// <param name="resilienceOptions">Resilience options for HTTP requests. If null, default retry configuration is used.</param>
+    /// <param name="bearerToken">(Optional) Bearer token in case the server requires it.</param>
+    public SorobanServer(string uri, HttpResilienceOptions? resilienceOptions, string? bearerToken = null)
+    {
+        _serverUri = new Uri(uri);
+        _httpClient = new DefaultStellarSdkHttpClient(bearerToken, resilienceOptions: resilienceOptions);
         _internalHttpClient = true;
     }
 
