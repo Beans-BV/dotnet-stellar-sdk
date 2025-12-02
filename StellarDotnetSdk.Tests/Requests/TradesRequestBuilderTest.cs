@@ -36,7 +36,7 @@ public class TradesRequestBuilderTest
     [TestMethod]
     public async Task TestTradesExecute()
     {
-        using var server = await Utils.CreateTestServerWithJson("Responses/tradePage.json");
+        using var server = await Utils.CreateTestServerWithJson("Responses/tradePageOrderBook.json");
         var trades = await server.Trades
             .BaseAsset(new AssetTypeCreditAlphaNum4("EUR",
                 "GAUPA4HERNBDPVO4IUA3MJXBCRRK5W54EVXTDK6IIUTGDQRB6D5W242W"))
@@ -44,7 +44,7 @@ public class TradesRequestBuilderTest
                 "GDRRHSJMHXDTQBT4JTCILNGF5AS54FEMTXL7KOLMF6TFTHRK6SSUSUZZ"))
             .Execute();
 
-        TradesPageDeserializerTest.AssertTestData(trades);
+        TradesPageDeserializerTest.AssertOrderBookTrade(trades);
     }
 
     [TestMethod]
