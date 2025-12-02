@@ -1,0 +1,5 @@
+{
+  "setup-worktree": [
+    "dotnet restore stellar-dotnet-sdk.sln"
+  ]
+}
