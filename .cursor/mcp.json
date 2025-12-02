@@ -1,10 +1,7 @@
 {
   "mcpServers": {
-    "GitHub MCP Beans-BV": {
-      "url": "https://api.githubcopilot.com/mcp/",
-      "headers": {
-        "Authorization": "Bearer {GITHUB_TOKEN}"
-      }
+    "GitHub MCP": {
+      "url": "https://api.githubcopilot.com/mcp/"
     },
     "java-stellar-sdk Docs": {
       "url": "https://gitmcp.io/lightsail-network/java-stellar-sdk"
@@ -25,13 +22,7 @@
       "url": "https://gitmcp.io/stellar/stellar-xdr"
     },
     "stellar-xdr MCP": {
-      "command": "npx",
-      "args": [
-        "deno",
-        "run",
-        "--allow-read",
-        "https://github.com/stellar/mcp-stellar-xdr/raw/refs/heads/main/mcp-stellar-xdr.ts"
-      ]
+      "command": "npx deno run --allow-read https://github.com/stellar/mcp-stellar-xdr/raw/refs/heads/main/mcp-stellar-xdr.ts"
     }
   }
 }

@@ -8,8 +8,7 @@ project.lock.json
 .vscode
 
 # Cursor
-# .cursor
-.cursor/mcp.json
+# .cursor/
 
 # Rider
 # .idea
