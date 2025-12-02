@@ -1,21 +1,42 @@
 {
   "_links": {
     "self": {
-      "href": "https://horizon-protocol14.stellar.org/claimable_balances/00000000c582697b67cbec7f9ce64f4dc67bfb2bfd26318bb9f964f4d70e3f41f650b1e6"
+      "href": "https://horizon-testnet.stellar.org/claimable_balances/000000009832889118c5fcf2cfb3c082e079520c516300b5276b839cb934cf88ebc9244a"
+    },
+    "transactions": {
+      "href": "https://horizon-testnet.stellar.org/claimable_balances/000000009832889118c5fcf2cfb3c082e079520c516300b5276b839cb934cf88ebc9244a/transactions{?cursor,limit,order}",
+      "templated": true
+    },
+    "operations": {
+      "href": "https://horizon-testnet.stellar.org/claimable_balances/000000009832889118c5fcf2cfb3c082e079520c516300b5276b839cb934cf88ebc9244a/operations{?cursor,limit,order}",
+      "templated": true
     }
   },
-  "id": "00000000c582697b67cbec7f9ce64f4dc67bfb2bfd26318bb9f964f4d70e3f41f650b1e6",
-  "asset": "native",
-  "amount": "13.1200000",
-  "sponsor": "GB5N4275ETC6A77K4DTDL3EFAQMN66PC7UITDUZUBM7Y6LDJP7EYSGOB",
-  "last_modified_ledger": 66835,
+  "id": "000000009832889118c5fcf2cfb3c082e079520c516300b5276b839cb934cf88ebc9244a",
+  "asset": "govICE:GDERZDEWIYBPWFQLG7GV5BWC4BXSD5KCQ734D42P72IG5COAYIFB2DTB",
+  "amount": "16.6666667",
+  "sponsor": "GDERZDEWIYBPWFQLG7GV5BWC4BXSD5KCQ734D42P72IG5COAYIFB2DTB",
+  "last_modified_ledger": 65909,
+  "last_modified_time": "2025-08-18T13:02:39Z",
   "claimants": [
     {
-      "destination": "GD2I2F7SWUHBAD7XBIZTF7MBMWQYWJVEFMWTXK76NSYVOY52OJRYNTIY",
+      "destination": "GARAAT5FYX52DGIETDXV5IEM7ZX3S645DCZ67ZLUNKBSNSLYL3UQKNQ6",
+      "predicate": {
+        "not": {
+          "abs_before": "2025-08-18T12:55:42Z",
+          "abs_before_epoch": "1755521742"
+        }
+      }
+    },
+    {
+      "destination": "GCQ7BPXWUYUURVJMCCZDCQJOXPEW5HCDYEZD337GDGGOTBTW3N66PDHY",
       "predicate": {
         "unconditional": true
       }
     }
   ],
-  "paging_token": "66835-00000000c582697b67cbec7f9ce64f4dc67bfb2bfd26318bb9f964f4d70e3f41f650b1e6"
+  "flags": {
+    "clawback_enabled": true
+  },
+  "paging_token": "65909-000000009832889118c5fcf2cfb3c082e079520c516300b5276b839cb934cf88ebc9244a"
 }

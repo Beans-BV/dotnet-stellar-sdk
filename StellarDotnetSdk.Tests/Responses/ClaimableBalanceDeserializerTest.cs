@@ -37,17 +37,32 @@ public class ClaimableBalanceDeserializerTest
 
     public static void AssertTestData(ClaimableBalanceResponse claimableBalance)
     {
-        Assert.AreEqual("00000000c582697b67cbec7f9ce64f4dc67bfb2bfd26318bb9f964f4d70e3f41f650b1e6",
+        Assert.AreEqual("000000009832889118c5fcf2cfb3c082e079520c516300b5276b839cb934cf88ebc9244a",
             claimableBalance.Id);
-        Assert.AreEqual("native", claimableBalance.Asset);
-        Assert.AreEqual("GB5N4275ETC6A77K4DTDL3EFAQMN66PC7UITDUZUBM7Y6LDJP7EYSGOB", claimableBalance.Sponsor);
-        Assert.AreEqual(66835, claimableBalance.LastModifiedLedger);
-        Assert.AreEqual("66835-00000000c582697b67cbec7f9ce64f4dc67bfb2bfd26318bb9f964f4d70e3f41f650b1e6",
+        Assert.AreEqual("govICE:GDERZDEWIYBPWFQLG7GV5BWC4BXSD5KCQ734D42P72IG5COAYIFB2DTB", claimableBalance.Asset);
+        Assert.AreEqual("16.6666667", claimableBalance.Amount);
+        Assert.AreEqual("GDERZDEWIYBPWFQLG7GV5BWC4BXSD5KCQ734D42P72IG5COAYIFB2DTB", claimableBalance.Sponsor);
+        Assert.AreEqual(65909, claimableBalance.LastModifiedLedger);
+        Assert.AreEqual("2025-08-18T13:02:39Z", claimableBalance.LastModifiedTime);
+        Assert.AreEqual("65909-000000009832889118c5fcf2cfb3c082e079520c516300b5276b839cb934cf88ebc9244a",
             claimableBalance.PagingToken);
 
-        Assert.AreEqual(1, claimableBalance.Claimants.Length);
-        var claimant = claimableBalance.Claimants[0];
-        Assert.AreEqual("GD2I2F7SWUHBAD7XBIZTF7MBMWQYWJVEFMWTXK76NSYVOY52OJRYNTIY", claimant.Destination);
-        Assert.AreEqual(true, claimant.Predicate.Unconditional);
+        Assert.AreEqual(true, claimableBalance.Flags.ClawbackEnabled);
+        
+        Assert.AreEqual(2, claimableBalance.Claimants.Length);
+        var claimant1 = claimableBalance.Claimants[0];
+        Assert.AreEqual("GARAAT5FYX52DGIETDXV5IEM7ZX3S645DCZ67ZLUNKBSNSLYL3UQKNQ6", claimant1.Destination);
+        Assert.IsNotNull(claimant1.Predicate.Not);
+        Assert.AreEqual("2025-08-18T12:55:42Z", claimant1.Predicate.Not.AbsBefore);
+        Assert.AreEqual(1755521742, claimant1.Predicate.Not.AbsBeforeEpoch);
+        
+        var claimant2 = claimableBalance.Claimants[1];
+        Assert.AreEqual("GCQ7BPXWUYUURVJMCCZDCQJOXPEW5HCDYEZD337GDGGOTBTW3N66PDHY", claimant2.Destination);
+        Assert.AreEqual(true, claimant2.Predicate.Unconditional);
+        
+        Assert.IsNotNull(claimableBalance.Links);
+        Assert.AreEqual("https://horizon-testnet.stellar.org/claimable_balances/000000009832889118c5fcf2cfb3c082e079520c516300b5276b839cb934cf88ebc9244a", claimableBalance.Links.Self.Href);
+        Assert.AreEqual("https://horizon-testnet.stellar.org/claimable_balances/000000009832889118c5fcf2cfb3c082e079520c516300b5276b839cb934cf88ebc9244a/operations{?cursor,limit,order}", claimableBalance.Links.Operations.Href);
+        Assert.AreEqual("https://horizon-testnet.stellar.org/claimable_balances/000000009832889118c5fcf2cfb3c082e079520c516300b5276b839cb934cf88ebc9244a/transactions{?cursor,limit,order}", claimableBalance.Links.Transactions.Href);
     }
 }
