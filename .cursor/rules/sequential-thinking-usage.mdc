@@ -1,0 +1,140 @@
+---
+description: Guidelines for when to use Sequential Thinking MCP vs direct problem solving
+globs: "**/*"
+alwaysApply: true
+---
+# Sequential Thinking Usage Guidelines
+
+Strategic use of Sequential Thinking MCP to balance thoroughness with efficiency.
+
+<rule>
+name: sequential_thinking_usage
+description: Optimize when to use Sequential Thinking MCP tool
+filters:
+  - type: content
+    pattern: ".*"
+
+actions:
+  - type: enforce
+    message: |
+      SEQUENTIAL THINKING DECISION FRAMEWORK
+
+      Sequential Thinking is EXPENSIVE (tokens + time). Use strategically.
+
+      **✅ USE SEQUENTIAL THINKING FOR:**
+
+      1. **Architectural Decisions**
+         - Designing new subsystems or modules
+         - Evaluating multiple implementation approaches
+         - Planning major refactors affecting 5+ files
+         - API design decisions with long-term impact
+
+      2. **Complex Debugging**
+         - Bugs with unclear root cause after initial investigation
+         - Issues spanning multiple components/layers
+         - Race conditions or timing-related bugs
+         - Memory leaks or performance mysteries
+
+      3. **Multi-Step Analysis**
+         - Security vulnerability assessment
+         - Performance optimization planning
+         - Migration strategy planning
+         - Breaking change impact analysis
+
+      4. **Ambiguous Requirements**
+         - User request has multiple valid interpretations
+         - Trade-offs need explicit evaluation
+         - Requirements conflict with existing patterns
+
+      5. **Learning/Research Tasks**
+         - Understanding unfamiliar codebase areas
+         - Evaluating new libraries or approaches
+         - Reverse-engineering complex logic
+
+      **❌ DO NOT USE SEQUENTIAL THINKING FOR:**
+
+      1. **Simple Code Changes**
+         - Adding a property to a class
+         - Fixing typos or simple bugs
+         - Renaming variables/methods
+         - Adding straightforward tests
+         - Implementing well-defined patterns
+
+      2. **Direct Questions**
+         - "What does this method do?"
+         - "Where is X defined?"
+         - "How do I run tests?"
+         - Explaining existing code
+
+      3. **Routine Tasks**
+         - Following established patterns
+         - Copy-paste with modifications
+         - Standard CRUD operations
+         - Boilerplate generation
+
+      4. **When Answer Is Obvious**
+         - Clear single solution exists
+         - User specified exact requirements
+         - Similar code exists to follow
+         - Standard library usage
+
+      5. **Small Scope Work**
+         - Changes to 1-2 files
+         - Single method implementation
+         - Configuration changes
+         - Documentation updates
+
+      **DECISION FLOWCHART:**
+
+      ```
+      Is the task ambiguous or complex?
+      ├─ NO → Don't use Sequential Thinking
+      └─ YES → Does it involve architectural impact?
+               ├─ NO → Is debugging with unclear cause?
+               │       ├─ NO → Don't use Sequential Thinking
+               │       └─ YES → USE Sequential Thinking
+               └─ YES → USE Sequential Thinking
+      ```
+
+      **COST-BENEFIT QUICK CHECK:**
+      - Will thinking through this save multiple failed attempts? → Use it
+      - Is this a "figure it out as I go" task? → Don't use it
+      - Could wrong approach waste 30+ minutes? → Use it
+      - Is there an obvious first step? → Start without it, use if stuck
+
+      **ALTERNATIVE APPROACHES (cheaper):**
+      - Read relevant code files first
+      - Check existing patterns in codebase
+      - Search for similar implementations
+      - Ask user for clarification
+      - Use Java SDK MCP for reference
+
+examples:
+  - input: "Add a CreatedAt property to Account class"
+    output: "❌ Don't use Sequential Thinking - simple, well-defined task"
+
+  - input: "Design a caching layer for Horizon API responses"
+    output: "✅ Use Sequential Thinking - architectural decision with trade-offs"
+
+  - input: "Fix NullReferenceException in TransactionBuilder"
+    output: "❌ Start without - if cause unclear after investigation, then use it"
+
+  - input: "Refactor Operations to support async cancellation throughout"
+    output: "✅ Use Sequential Thinking - cross-cutting change, multiple approaches"
+
+  - input: "What's the difference between MuxedAccount and KeyPair?"
+    output: "❌ Don't use Sequential Thinking - direct question, read the code"
+
+  - input: "Should we use Result<T> pattern or exceptions for error handling?"
+    output: "✅ Use Sequential Thinking - architectural decision with trade-offs"
+
+  - input: "Implement FromXdr for new SorobanOperation"
+    output: "❌ Don't use - follow existing FromXdr patterns in other operations"
+
+  - input: "Why are integration tests failing intermittently?"
+    output: "✅ Use Sequential Thinking - complex debugging, unclear cause"
+
+metadata:
+  priority: high
+  version: 1.0
+</rule>

@@ -1,0 +1,89 @@
+---
+description: Maintain core files documentation in memory-bank for easy codebase navigation
+globs: "**/*"
+alwaysApply: true
+---
+# Core Files Documentation Rule
+
+Automatically maintain documentation of core source files in `memory-bank/coreFiles.md`.
+
+<rule>
+name: core_files_documentation
+description: Update core files documentation when source files change
+filters:
+  # Apply to all C# files under StellarDotnetSdk/ (excluding generated files)
+  - type: file_change
+    pattern: "StellarDotnetSdk/**/*.cs"
+  - type: file_create
+    pattern: "StellarDotnetSdk/**/*.cs"
+  # Apply when core files documentation is requested
+  - type: content
+    pattern: "(?i)(update|document|core files|coreFiles)"
+
+actions:
+  - type: enforce
+    message: |
+      CORE FILES DOCUMENTATION PROTOCOL
+
+      **REQUIRED**: Update `memory-bank/coreFiles.md` when core source files change
+
+      **TARGET FILES**: All .cs files under StellarDotnetSdk/ EXCEPT:
+      - Files in StellarDotnetSdk.Xdr/ (generated XDR code)
+      - Test files (StellarDotnetSdk.Tests/ directory)
+      - Example files (Examples/ directory)
+
+      **DOCUMENTATION FORMAT**:
+      ```
+      ## StellarDotnetSdk/path/to/FileName.cs
+      **Description**: Brief explanation of file purpose
+      **Classes**:
+        - ClassName (line X): What this class does
+        - AnotherClass (line Y): Purpose and responsibility
+      **Notable Methods**:
+        - MethodName() (line Z): Key functionality description
+        - ImportantMethod() (line W): What it accomplishes
+      **Important Notes**:
+        - Key implementation details
+        - Performance characteristics
+        - API patterns or special behaviors
+        - Known limitations or warnings
+      ```
+
+      **UPDATE TRIGGERS**:
+      - New core file created under StellarDotnetSdk/
+      - Existing core file modified (classes/methods added/changed)
+      - User requests "update core files" or similar
+      - Significant refactoring or architectural changes
+
+      **MAINTENANCE RULES**:
+      - Keep documentation under 20 lines per file
+      - Focus on classes, key methods, and important notes
+      - Include line numbers for easy navigation
+      - Update when file structure changes significantly
+      - Remove entries when files are deleted
+
+      **KEY DIRECTORIES TO DOCUMENT**:
+      - StellarDotnetSdk/Accounts/ - Account and KeyPair management
+      - StellarDotnetSdk/Assets/ - Asset types (Native, CreditAlphaNum)
+      - StellarDotnetSdk/Operations/ - Stellar operations
+      - StellarDotnetSdk/Transactions/ - Transaction building
+      - StellarDotnetSdk/Soroban/ - Smart contract support
+      - StellarDotnetSdk/Requests/ - Horizon API requests
+      - StellarDotnetSdk/Responses/ - API response models
+
+examples:
+  - input: "New file: StellarDotnetSdk/Operations/NewOperation.cs"
+    output: "Add documentation entry to memory-bank/coreFiles.md"
+
+  - input: "Modified: StellarDotnetSdk/Transactions/TransactionBuilder.cs"
+    output: "Update existing entry with new classes/methods"
+
+  - input: "update core files documentation"
+    output: "Review all StellarDotnetSdk/ files and update coreFiles.md"
+
+metadata:
+  priority: high
+  version: 1.0
+  enforcement: automatic
+  dependencies: ["memory-bank"]
+</rule>
