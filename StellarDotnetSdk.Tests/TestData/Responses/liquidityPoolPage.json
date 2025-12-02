@@ -1,4 +1,15 @@
 {
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/liquidity_pools?cursor=&limit=10&order=asc"
+    },
+    "next": {
+      "href": "https://horizon-testnet.stellar.org/liquidity_pools?cursor=02d93939463553487c1a427157ef413c27967168f9fff85380ac99b47e82e6da&limit=10&order=asc"
+    },
+    "prev": {
+      "href": "https://horizon-testnet.stellar.org/liquidity_pools?cursor=00378e16445a29800e0f9cb4de2c95cf12b2e02740234c527a589a3adc303bde&limit=10&order=desc"
+    }
+  },
   "_embedded": {
     "records": [
       {
