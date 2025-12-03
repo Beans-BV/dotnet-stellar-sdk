@@ -42,9 +42,9 @@ public class RootDeserializerTest
         Assert.AreEqual(53789041, root.HistoryElderLedger);
         Assert.AreEqual(18369117, root.CoreLatestLedger);
         Assert.AreEqual("Public Global Stellar Network ; September 2015", root.NetworkPassphrase);
-        Assert.AreEqual(24, root.CurrentProtocolVersion, 24);
-        Assert.AreEqual(24, root.CoreSupportedProtocolVersion, 24);
-        Assert.AreEqual(24, root.SupportedProtocolVersion, 24);
+        Assert.AreEqual(24, root.CurrentProtocolVersion);
+        Assert.AreEqual(24, root.CoreSupportedProtocolVersion);
+        Assert.AreEqual(24, root.SupportedProtocolVersion);
 
         // Assert links
         Assert.IsNotNull(root.Links);
