@@ -114,13 +114,13 @@ public class TransactionDeserializerTest
         Assert.AreEqual("GBZG3SMBL6FPLYYNQP6DMVZHDHCDIR4J4GYRGKE5BYRVLBYN364RBL5S", transaction.SourceAccount);
         Assert.AreEqual("MBZG3SMBL6FPLYYNQP6DMVZHDHCDIR4J4GYRGKE5BYRVLBYN364RAAAAAAAAAAAAAH52S",
             transaction.AccountMuxed);
-        Assert.AreEqual("1", transaction.AccountMuxedId);
+        Assert.AreEqual(1UL, transaction.AccountMuxedId);
         Assert.AreEqual(8052569758760961L, transaction.SourceAccountSequence);
         Assert.AreEqual(1, transaction.OperationCount);
         Assert.AreEqual("GBZG3SMBL6FPLYYNQP6DMVZHDHCDIR4J4GYRGKE5BYRVLBYN364RBL5S", transaction.FeeAccount);
         Assert.AreEqual("MBZG3SMBL6FPLYYNQP6DMVZHDHCDIR4J4GYRGKE5BYRVLBYN364RAAAAAAAAAAAAAH52S",
             transaction.FeeAccountMuxed);
-        Assert.AreEqual("1", transaction.FeeAccountMuxedId);
+        Assert.AreEqual(1UL, transaction.FeeAccountMuxedId);
         Assert.AreEqual(100L, transaction.FeeCharged);
         Assert.AreEqual(100L, transaction.MaxFee);
         Assert.AreEqual(

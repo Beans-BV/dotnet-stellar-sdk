@@ -144,7 +144,7 @@ public sealed class TransactionResponse : Response, IPagingToken
     ///     The muxed account ID of the source account, if applicable.
     /// </summary>
     [JsonPropertyName("account_muxed_id")]
-    public string? AccountMuxedId { get; init; }
+    public ulong? AccountMuxedId { get; init; }
 
     /// <summary>
     ///     The muxed account representation of the source account, if applicable.
@@ -156,7 +156,7 @@ public sealed class TransactionResponse : Response, IPagingToken
     ///     The muxed account ID of the fee account, if applicable.
     /// </summary>
     [JsonPropertyName("fee_account_muxed_id")]
-    public string? FeeAccountMuxedId { get; init; }
+    public ulong? FeeAccountMuxedId { get; init; }
 
     /// <summary>
     ///     The memo value attached to this transaction.
