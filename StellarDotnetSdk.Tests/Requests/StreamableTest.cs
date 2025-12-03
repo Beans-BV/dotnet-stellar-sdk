@@ -37,10 +37,24 @@ public class StreamableTest<T> where T : class
 
         _requestBuilder = new FakeStreamableRequestBuilder(new Uri("https://horizon-testnet.stellar.org"), "test",
             null, _eventSource);
+
+        Exception? handlerException = null;
+        var messageReceived = false;
         var handler = new EventHandler<T>((sender, e) =>
         {
-            _eventSource.Shutdown();
-            _testAction(e);
+            messageReceived = true;
+            try
+            {
+                _testAction(e);
+            }
+            catch (Exception ex)
+            {
+                handlerException = ex;
+            }
+            finally
+            {
+                _eventSource.Shutdown();
+            }
         });
         var task = _requestBuilder.Stream(handler).Connect();
         var timeoutTask = Task.Delay(TimeSpan.FromSeconds(5.0));
@@ -48,6 +62,16 @@ public class StreamableTest<T> where T : class
         if (completedTask != task)
         {
             throw new Exception("Task did not complete.");
+        }
+
+        if (!messageReceived)
+        {
+            throw new Exception("No message was received from the stream.");
+        }
+
+        if (handlerException != null)
+        {
+            throw handlerException;
         }
     }
 

@@ -69,7 +69,7 @@ public class LiquidityPoolDeserializerTest
     }
 
 
-    private static void AssertTestData(LiquidityPoolResponse instance)
+    internal static void AssertTestData(LiquidityPoolResponse instance)
     {
         Assert.IsNotNull(instance);
         Assert.AreEqual(new LiquidityPoolId("93f526d8bc7b38ac6d746c2d0a4bebb548ea31e1574cb146a6e6898030d05144"),
