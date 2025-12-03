@@ -162,7 +162,7 @@ public sealed class TradeResponse : Response, IPagingToken
         ///     Link to the base account information.
         /// </summary>
         /// <remarks>
-        ///     This can either be Link&lt;LiquidityPoolResponse&gt; or Link&lt;LiquidityPoolResponse&gt; depending on the trade
+        ///     This can either be Link&lt;LiquidityPoolResponse&gt; or Link&lt;AccountResponse&gt; depending on the trade
         ///     type.
         /// </remarks>
         [JsonPropertyName("base")]
@@ -172,7 +172,7 @@ public sealed class TradeResponse : Response, IPagingToken
         ///     Link to the counter account information.
         /// </summary>
         /// <remarks>
-        ///     This can either be Link&lt;LiquidityPoolResponse&gt; or Link&lt;LiquidityPoolResponse&gt; depending on the trade
+        ///     This can either be Link&lt;LiquidityPoolResponse&gt; or Link&lt;AccountResponse&gt; depending on the trade
         ///     type.
         /// </remarks>
         [JsonPropertyName("counter")]
