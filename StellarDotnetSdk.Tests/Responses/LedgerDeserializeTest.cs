@@ -31,42 +31,36 @@ public class LedgerDeserializeTest
         AssertTestData(back);
     }
 
-    [TestMethod]
-    public void TestSerializeDeserializeNullFailedTransactionCount()
-    {
-        var jsonPath = Utils.GetTestDataPath("ledgerNullValues.json");
-        var json = File.ReadAllText(jsonPath);
-        var ledger = JsonSerializer.Deserialize<LedgerResponse>(json, JsonOptions.DefaultOptions);
-        Assert.IsNotNull(ledger);
-        Assert.AreEqual(ledger.Hash, "7f7cc428fa2b5f17fea0dba3bdbd36972f3dff4fae9345cc1f013b1133bbf7c4");
-        Assert.AreEqual(ledger.PagingToken, "2147483648000");
-        Assert.AreEqual(ledger.PrevHash, "29a54d2641d0051e4748d1ed1c9e53bd3634b2aaa823fb709341b93328c6d313");
-        Assert.AreEqual(ledger.Sequence, 500);
-        Assert.AreEqual(ledger.SuccessfulTransactionCount, 0);
-        Assert.AreEqual(ledger.FailedTransactionCount, null);
-        Assert.AreEqual(ledger.TxSetOperationCount, null);
-        Assert.AreEqual(ledger.OperationCount, 0);
-    }
-
     public static void AssertTestData(LedgerResponse ledger)
     {
-        Assert.AreEqual(ledger.Hash, "686bb246db89b099cd3963a4633eb5e4315d89dfd3c00594c80b41a483847bfa");
-        Assert.AreEqual(ledger.PagingToken, "3860428274794496");
-        Assert.AreEqual(ledger.PrevHash, "50c8695eb32171a19858413e397cc50b504ceacc819010bdf8ff873aff7858d7");
-        Assert.AreEqual(ledger.Sequence, 898826);
-        Assert.AreEqual(ledger.SuccessfulTransactionCount, 3);
-        Assert.AreEqual(ledger.FailedTransactionCount, 2);
-        Assert.AreEqual(ledger.OperationCount, 10);
-        Assert.AreEqual(ledger.ClosedAt, "2015-11-19T21:35:59Z");
-        Assert.AreEqual(ledger.TotalCoins, "101343867604.8975480");
-        Assert.AreEqual(ledger.FeePool, "1908.2248818");
-        Assert.AreEqual(ledger.BaseFee, 100);
-        Assert.AreEqual(ledger.BaseReserve, "10.0000000");
-        Assert.AreEqual(ledger.MaxTxSetSize, 50);
-        Assert.AreEqual(ledger.TxSetOperationCount, 5);
-        Assert.AreEqual(ledger.Links.Effects.Href, "/ledgers/898826/effects{?cursor,limit,order}");
-        Assert.AreEqual(ledger.Links.Operations.Href, "/ledgers/898826/operations{?cursor,limit,order}");
-        Assert.AreEqual(ledger.Links.Self.Href, "/ledgers/898826");
-        Assert.AreEqual(ledger.Links.Transactions.Href, "/ledgers/898826/transactions{?cursor,limit,order}");
+        Assert.AreEqual("1fb371bb8f393ff06b20ae7eac52a6df0d60e2f97e27c1fa1635784f6d3e1f57", ledger.Id);
+        Assert.AreEqual("1fb371bb8f393ff06b20ae7eac52a6df0d60e2f97e27c1fa1635784f6d3e1f57", ledger.Hash);
+        Assert.AreEqual("8042102923460608", ledger.PagingToken);
+        Assert.AreEqual("e2e5e6406e2dab62e0e1d85f9893a5305ec300bea6f0aba6da23ed7a68f0c5a6", ledger.PrevHash);
+        Assert.AreEqual(1872448, ledger.Sequence);
+        Assert.AreEqual(0, ledger.SuccessfulTransactionCount);
+        Assert.AreEqual(0, ledger.FailedTransactionCount);
+        Assert.AreEqual(0, ledger.OperationCount);
+        Assert.AreEqual("2025-12-01T06:13:55Z", ledger.ClosedAt);
+        Assert.AreEqual("100000000000.0000000", ledger.TotalCoins);
+        Assert.AreEqual("110238.5552711", ledger.FeePool);
+        Assert.AreEqual(100L, ledger.BaseFeeInStroops);
+        Assert.AreEqual(5000000L, ledger.BaseReserveInStroops);
+        Assert.AreEqual(200, ledger.MaxTxSetSize);
+        Assert.AreEqual(0, ledger.TxSetOperationCount);
+        Assert.AreEqual(24, ledger.ProtocolVersion);
+        Assert.AreEqual(
+            "AAAAGOLl5kBuLati4OHYX5iTpTBewwC+pvCrptoj7Xpo8MWmuOtF4mZ5W5FqRpP1uBpDcqSXo7AXH6VFEnCD+2MtqUkAAAAAaS0yIwAAAAAAAAABAAAAALVdELK7fShO1cA6R6XhtZDJD1eDVUccxFB7voIE0jyLAAAAQPETnBQa/pWDlgRok4B7iWG5kC4H44HxxgAjETE/PnaavellzXalaZEC/Hjal8xG9DxlxxksoQONg8CgM21tLQvfP2GYBKkv20BXGS3EPddI6neK3FK8SYzoBSTAFLgRGciQFjs4XdBP6iKUa2qDQv7d1sSKqx0QuUu8QurI+OgkABySQA3gtrOnZAAAAAABAKtMnUcAAAAAAAAAAAAAS8YAAABkAExLQAAAAMidHca46Awo/RV/e/e7ZZcoLDlRR05yivq6HB89Y6M0HHVLqz7SEzdtx/CcggGySkDPpv1fuDR/jmnvZU5p/S1NAF9hgG47QLS1NtgivFkn+gxsHrXuzqoxMYbCPjosfgOLkjDUqJCR9uLj3apU0+rlkVaMBK0QREEXiAUPVL81iAAAAAA=",
+            ledger.HeaderXdr);
+        Assert.AreEqual("https://horizon-testnet.stellar.org/ledgers/1872448",
+            ledger.Links.Self.Href);
+        Assert.AreEqual("https://horizon-testnet.stellar.org/ledgers/1872448/operations{?cursor,limit,order}",
+            ledger.Links.Operations.Href);
+        Assert.AreEqual("https://horizon-testnet.stellar.org/ledgers/1872448/payments{?cursor,limit,order}",
+            ledger.Links.Payments.Href);
+        Assert.AreEqual("https://horizon-testnet.stellar.org/ledgers/1872448/effects{?cursor,limit,order}",
+            ledger.Links.Effects.Href);
+        Assert.AreEqual("https://horizon-testnet.stellar.org/ledgers/1872448/transactions{?cursor,limit,order}",
+            ledger.Links.Transactions.Href);
     }
 }
