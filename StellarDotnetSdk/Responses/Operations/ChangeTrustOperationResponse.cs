@@ -33,7 +33,7 @@ public class ChangeTrustOperationResponse : OperationResponse
     public string TrustorMuxed { get; init; }
 
     [JsonPropertyName("trustor_muxed_id")]
-    public string? TrustorMuxedID { get; init; }
+    public ulong? TrustorMuxedID { get; init; }
 
     public AssetTypeCreditAlphaNum Asset => Assets.Asset.CreateNonNativeAsset(AssetCode, AssetIssuer);
 }

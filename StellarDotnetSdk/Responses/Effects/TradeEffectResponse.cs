@@ -18,7 +18,7 @@ public class TradeEffectResponse : EffectResponse
     public string SellerMuxed { get; init; }
 
     [JsonPropertyName("seller_muxed_id")]
-    public long? SellerMuxedId { get; init; }
+    public ulong? SellerMuxedId { get; init; }
 
     [JsonPropertyName("offer_id")]
     public string OfferId { get; init; }
