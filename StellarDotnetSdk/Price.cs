@@ -8,22 +8,43 @@ namespace StellarDotnetSdk;
 
 using xdr_Price = Xdr.Price;
 
+/// <summary>
+///     Represents a price as a ratio of two 32-bit integers, used for building Stellar transactions.
+/// </summary>
+/// <remarks>
+///     <para>
+///         This class is used when constructing operations that require a price (e.g., manage offer,
+///         liquidity pool deposit). It uses <see cref="int"/> (32-bit) for numerator and denominator
+///         as required by the Stellar XDR protocol specification.
+///     </para>
+///     <para>
+///         <strong>For deserializing Horizon API responses</strong>, use <see cref="Responses.Price"/>
+///         instead, which uses <see cref="long"/> to handle values that may exceed the 32-bit range.
+///     </para>
+/// </remarks>
+/// <seealso cref="Responses.Price"/>
 public class Price
 {
     /// <summary>
-    ///     Create a new price. Price in Stellar is represented as a fraction.
+    ///     Creates a new price. Price in Stellar is represented as a fraction.
     /// </summary>
-    /// <param name="numerator">Numerator</param>
-    /// <param name="denominator">Denominator</param>
+    /// <param name="numerator">The numerator of the price ratio (32-bit integer).</param>
+    /// <param name="denominator">The denominator of the price ratio (32-bit integer).</param>
     public Price(int numerator, int denominator)
     {
         Numerator = numerator;
         Denominator = denominator;
     }
 
+    /// <summary>
+    ///     The numerator of the price ratio.
+    /// </summary>
     [JsonPropertyName("n")]
     public int Numerator { get; }
 
+    /// <summary>
+    ///     The denominator of the price ratio.
+    /// </summary>
     [JsonPropertyName("d")]
     public int Denominator { get; }
 
@@ -85,7 +106,7 @@ public class Price
         return new xdr_Price
         {
             D = new Int32(Denominator),
-            N = new Int32(Numerator),
+            N = new Int32(Numerator)
         };
     }
 
