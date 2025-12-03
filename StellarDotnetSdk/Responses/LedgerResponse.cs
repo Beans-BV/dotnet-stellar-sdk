@@ -141,7 +141,7 @@ public sealed class LedgerResponse : Response, IPagingToken
         ///     Link to the payments in this ledger.
         /// </summary>
         [JsonPropertyName("payments")]
-        public required Link<Page<PaymentOperationResponse>> Payments { get; init; }
+        public required Link<Page<OperationResponse>> Payments { get; init; }
 
         /// <summary>
         ///     Link to this ledger resource.
