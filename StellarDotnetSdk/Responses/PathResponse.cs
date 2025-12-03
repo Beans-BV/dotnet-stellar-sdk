@@ -66,7 +66,7 @@ public sealed class PathResponse : Response
     ///     Can be empty if this is a direct exchange.
     /// </summary>
     [JsonPropertyName("path")]
-    public required List<Asset> Path { get; init; } = [];
+    public required IReadOnlyList<Asset> Path { get; init; }
 
     /// <summary>
     ///     The destination asset object.
