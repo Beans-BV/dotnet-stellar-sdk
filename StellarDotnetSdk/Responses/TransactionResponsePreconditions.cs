@@ -16,7 +16,6 @@ public sealed class TransactionResponsePreconditions
     /// <summary>
     ///     The ledger range for which this transaction is valid, as unsigned 32-bit integers.
     /// </summary>
-    // TODO: Add tests when it's clear on how to add ledger bounds to transaction
     [JsonPropertyName("ledger_bounds")]
     public LedgerBounds? LedgerBounds { get; init; }
 
