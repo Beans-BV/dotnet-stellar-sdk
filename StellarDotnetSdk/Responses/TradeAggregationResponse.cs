@@ -28,13 +28,13 @@ public sealed class TradeAggregationResponse : Response
     public required string BaseVolume { get; init; }
 
     /// <summary>
-    ///     The volume of counter asset.
+    ///     The total volume of counter asset.
     /// </summary>
     [JsonPropertyName("counter_volume")]
     public required string CounterVolume { get; init; }
 
     /// <summary>
-    ///     The average price of counter asset in terms of base asset.
+    ///     The weighted average price of counter asset in terms of base asset.
     /// </summary>
     [JsonPropertyName("avg")]
     public required string Avg { get; init; }
