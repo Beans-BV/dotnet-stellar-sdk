@@ -50,6 +50,7 @@ When reviewing a PR in this repo, follow this process:
      - Verify that `README.md` and relevant docs under `docs/` are updated.
      - For changes impacting HTTP behavior, ensure `http-retry.md` remains accurate.
      - For new recommended usage patterns, suggest updating or adding examples in `Examples/Horizon` or `Examples/Soroban`.
+   - Special case – Horizon pagination links: When reviewing JSON examples or fixtures that mirror Horizon’s pagination responses, do **not** suggest changing a `prev.href` value of `""` to `null` when the empty string reflects the actual Horizon API response on the first page; other JSON-related suggestions remain valid when they improve correctness or alignment with the documented API.
 
 7. **Provide concise, actionable feedback**
    - Structure your review into sections such as:

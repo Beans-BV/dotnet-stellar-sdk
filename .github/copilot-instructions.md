@@ -157,7 +157,7 @@ During code review, Copilot should:
 
 ---
 
-## 7. Documentation and examples
+## 7. Documentation, examples, and external payloads
 
 Copilot should help keep docs and examples in sync with the code:
 
@@ -174,6 +174,9 @@ Copilot should help keep docs and examples in sync with the code:
     Copilot should:
     - Check whether relevant docs and examples are updated.
     - Call out documentation gaps explicitly.
+- **Special case – Horizon pagination links:**
+  - In JSON examples or fixtures that mirror Horizon’s pagination responses, do **not** suggest changing a `prev.href` value of `""` to `null` when the empty string reflects the actual Horizon API response on the first page.
+  - Other JSON shape or value suggestions are allowed when they improve correctness or alignment with the documented API.
 
 Docs should prefer **clear, production-ready guidance** over minimal examples.
 
