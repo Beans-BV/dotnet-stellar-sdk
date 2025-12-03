@@ -6,9 +6,24 @@ using claimant_ClaimPredicate = StellarDotnetSdk.Claimants.ClaimPredicate;
 namespace StellarDotnetSdk.Responses;
 
 /// <summary>
-///     Represents a claim predicate that defines conditions for claiming a claimable balance.
-///     Predicates can be combined using logical operators (AND, OR, NOT) or specify time-based conditions.
+///     Represents a claim predicate in Horizon API responses.
 /// </summary>
+/// <remarks>
+///     <para>
+///         This class is specifically designed for deserializing predicate data from Horizon API responses.
+///         It uses <see cref="long"/> for time-based fields to accommodate values returned by Horizon endpoints.
+///     </para>
+///     <para>
+///         The Horizon API may return numeric fields as strings in some cases. The SDK's
+///         <see cref="Converters.JsonOptions.DefaultOptions"/> handles both formats automatically
+///         via <c>JsonNumberHandling.AllowReadingFromString</c>.
+///     </para>
+///     <para>
+///         <strong>For building transactions</strong>, use <see cref="Claimants.ClaimPredicate"/> instead.
+///         You can convert this response predicate to a transaction predicate using <see cref="ToClaimPredicate"/>.
+///     </para>
+/// </remarks>
+/// <seealso cref="Claimants.ClaimPredicate"/>
 public sealed class Predicate
 {
     /// <summary>
