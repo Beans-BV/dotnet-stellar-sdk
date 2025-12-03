@@ -104,7 +104,7 @@ public sealed class AccountResponse : Response, ITransactionBuilderAccount, IPag
     public required long LastModifiedLedger { get; init; }
 
     /// <summary>
-    ///     An ISO 8601 formatted string of when this claimable account was last modified.
+    ///     An ISO 8601 formatted string of when this account was last modified.
     /// </summary>
     [JsonPropertyName("last_modified_time")]
     public required string LastModifiedTime { get; init; }

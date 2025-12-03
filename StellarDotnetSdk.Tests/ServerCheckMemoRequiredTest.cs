@@ -12,6 +12,8 @@ using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses;
+using StellarDotnetSdk.Responses.Effects;
+using StellarDotnetSdk.Responses.Operations;
 using StellarDotnetSdk.Transactions;
 
 namespace StellarDotnetSdk.Tests;
@@ -211,7 +213,23 @@ public class ServerCheckMemoRequiredTest
                     Weight = 1,
                 },
             ],
-            Links = null!,
+            Links = new AccountResponseLinks
+            {
+                Self = Link<AccountResponse>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1", false),
+                Transactions = Link<Page<TransactionResponse>>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1/transactions{?cursor,limit,order}", true),
+                Offers = Link<Page<OfferResponse>>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1/offers{?cursor,limit,order}", true),
+                Operations = Link<Page<OperationResponse>>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1/operations{?cursor,limit,order}", true),
+                Payments = Link<Page<PaymentOperationResponse>>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1/payments{?cursor,limit,order}", true),
+                Trades = Link<Page<TradeResponse>>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1/trades{?cursor,limit,order}", true),
+                Effects = Link<Page<EffectResponse>>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1/effects{?cursor,limit,order}", true),
+            },
             NumberSponsored = 0,
             NumberSponsoring = 0,
             Data = accountData,
