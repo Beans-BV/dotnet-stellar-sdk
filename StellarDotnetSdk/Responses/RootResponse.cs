@@ -30,7 +30,7 @@ public sealed class RootResponse : Response
     ///     The sequence number of the latest ledger stored in Horizon's history database.
     /// </summary>
     [JsonPropertyName("history_latest_ledger")]
-    public required int HistoryLatestLedger { get; init; }
+    public required long HistoryLatestLedger { get; init; }
 
     /// <summary>
     ///     An ISO 8601 formatted string of when the latest ledger was closed.
@@ -42,13 +42,13 @@ public sealed class RootResponse : Response
     ///     The sequence number of the oldest ledger stored in Horizon's history database.
     /// </summary>
     [JsonPropertyName("history_elder_ledger")]
-    public required int HistoryElderLedger { get; init; }
+    public required long HistoryElderLedger { get; init; }
 
     /// <summary>
     ///     The sequence number of the latest ledger known to Stellar Core.
     /// </summary>
     [JsonPropertyName("core_latest_ledger")]
-    public required int CoreLatestLedger { get; init; }
+    public required long CoreLatestLedger { get; init; }
 
     /// <summary>
     ///     The network passphrase that identifies which Stellar network this Horizon is connected to.

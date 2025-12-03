@@ -37,10 +37,10 @@ public class RootDeserializerTest
     {
         Assert.AreEqual("24.0.0-479385ffcbf959dad6463bb17917766f5cb4d43f", root.HorizonVersion);
         Assert.AreEqual("stellar-core 24.1.0 (5a7035d49201b88db95e024b343fb866c2185043)", root.StellarCoreVersion);
-        Assert.AreEqual(18369116, root.HistoryLatestLedger);
+        Assert.AreEqual(18369116L, root.HistoryLatestLedger);
         Assert.AreEqual("2025-12-01T04:30:48Z", root.HistoryLatestLedgerClosedAt);
-        Assert.AreEqual(53789041, root.HistoryElderLedger);
-        Assert.AreEqual(18369117, root.CoreLatestLedger);
+        Assert.AreEqual(53789041L, root.HistoryElderLedger);
+        Assert.AreEqual(18369117L, root.CoreLatestLedger);
         Assert.AreEqual("Public Global Stellar Network ; September 2015", root.NetworkPassphrase);
         Assert.AreEqual(24, root.CurrentProtocolVersion);
         Assert.AreEqual(24, root.CoreSupportedProtocolVersion);
