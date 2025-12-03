@@ -71,13 +71,13 @@ public sealed class TransactionResponse : Response, IPagingToken
     ///     The actual fee paid for the transaction in stroops.
     /// </summary>
     [JsonPropertyName("fee_charged")]
-    public required string FeeCharged { get; init; }
+    public required long FeeCharged { get; init; }
 
     /// <summary>
     ///     The maximum fee the source account was willing to pay in stroops.
     /// </summary>
     [JsonPropertyName("max_fee")]
-    public required string MaxFee { get; init; }
+    public required long MaxFee { get; init; }
 
     /// <summary>
     ///     The number of operations in this transaction.
