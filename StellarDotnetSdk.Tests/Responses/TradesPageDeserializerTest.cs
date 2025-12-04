@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -78,7 +79,8 @@ public class TradesPageDeserializerTest
 
         Assert.AreEqual("6816113102849-0", record.Id);
         Assert.AreEqual("6816113102849-0", record.PagingToken);
-        Assert.AreEqual("2025-08-14T19:35:23Z", record.LedgerCloseTime);
+        Assert.AreEqual(new DateTimeOffset(2025, 8, 14, 19, 35, 23, TimeSpan.Zero),
+            tradesPage.Records[0].LedgerCloseTime);
         Assert.AreEqual("orderbook", record.TradeType);
         Assert.AreEqual("24", record.BaseOfferId);
         Assert.AreEqual("GBLD7NSGWYT2KRFTYMRJGQ42SNTGDXMZYNQUE3H7N2VEMARIQYKBB4JJ", record.BaseAccount);
@@ -132,7 +134,8 @@ public class TradesPageDeserializerTest
 
         Assert.AreEqual("7202660159489-0", record1.Id);
         Assert.AreEqual("7202660159489-0", record1.PagingToken);
-        Assert.AreEqual("2025-08-14T19:42:53Z", record1.LedgerCloseTime);
+        Assert.AreEqual(new DateTimeOffset(2025, 8, 14, 19, 42, 53, TimeSpan.Zero),
+            record1.LedgerCloseTime);
         Assert.AreEqual("liquidity_pool", record1.TradeType);
         Assert.AreEqual("4611693221087547393", record1.BaseOfferId);
         Assert.AreEqual(30U, record1.LiquidityPoolFeeBp);
@@ -175,7 +178,8 @@ public class TradesPageDeserializerTest
 
         Assert.AreEqual("54593329328129-0", record2.Id);
         Assert.AreEqual("54593329328129-0", record2.PagingToken);
-        Assert.AreEqual("2025-08-15T11:03:36Z", record2.LedgerCloseTime);
+        Assert.AreEqual(new DateTimeOffset(2025, 8, 15, 11, 03, 36, TimeSpan.Zero),
+            record2.LedgerCloseTime);
         Assert.IsNotNull(record2.BaseLiquidityPoolId);
         Assert.AreEqual("b6564a56fbec0bf6d7c3894f34287339ab5d3d3012aa3180dfade15f9104bffd",
             record2.BaseLiquidityPoolId.ToString());
