@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses.Effects;
 using StellarDotnetSdk.Responses.Operations;
 
@@ -54,10 +55,10 @@ public sealed class LedgerResponse : Response, IPagingToken
     public required int OperationCount { get; init; }
 
     /// <summary>
-    ///     An ISO 8601 formatted string of when this ledger was closed.
+    ///     The time when this ledger was closed.
     /// </summary>
     [JsonPropertyName("closed_at")]
-    public required string ClosedAt { get; init; }
+    public required DateTimeOffset ClosedAt { get; init; }
 
     /// <summary>
     ///     The total number of lumens in circulation.

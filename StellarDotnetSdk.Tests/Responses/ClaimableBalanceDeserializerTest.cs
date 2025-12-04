@@ -45,7 +45,7 @@ public class ClaimableBalanceDeserializerTest
         Assert.AreEqual("16.6666667", claimableBalance.Amount);
         Assert.AreEqual("GDERZDEWIYBPWFQLG7GV5BWC4BXSD5KCQ734D42P72IG5COAYIFB2DTB", claimableBalance.Sponsor);
         Assert.AreEqual(65909, claimableBalance.LastModifiedLedger);
-        Assert.AreEqual(new DateTimeOffset(2025, 8, 18, 13, 02, 39, TimeSpan.Zero), claimableBalance.LastModifiedTime);
+        Assert.AreEqual(new DateTimeOffset(2025, 8, 18, 13, 2, 39, TimeSpan.Zero), claimableBalance.LastModifiedTime);
         Assert.AreEqual("65909-000000009832889118c5fcf2cfb3c082e079520c516300b5276b839cb934cf88ebc9244a",
             claimableBalance.PagingToken);
 

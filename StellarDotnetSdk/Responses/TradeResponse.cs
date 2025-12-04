@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Responses.Operations;
@@ -15,7 +16,7 @@ public class TradeResponse : Response, IPagingToken
     public string Id { get; init; }
 
     [JsonPropertyName("ledger_close_time")]
-    public string LedgerCloseTime { get; init; }
+    public DateTimeOffset LedgerCloseTime { get; init; }
 
     [JsonPropertyName("offer_id")]
     public string OfferId { get; init; }

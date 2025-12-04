@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -44,7 +45,8 @@ public class TradesPageDeserializerTest
         Assert.AreEqual(tradesPage.Records[0].Id, "68836918321750017-0");
         Assert.AreEqual(tradesPage.Records[0].PagingToken, "68836918321750017-0");
 
-        Assert.AreEqual(tradesPage.Records[0].LedgerCloseTime, "2018-02-02T00:20:10Z");
+        Assert.AreEqual(tradesPage.Records[0].LedgerCloseTime,
+            new DateTimeOffset(2018, 2, 2, 0, 20, 10, TimeSpan.Zero));
         Assert.AreEqual(tradesPage.Records[0].OfferId, "695254");
         Assert.AreEqual(tradesPage.Records[0].BaseOfferId, "10");
         Assert.AreEqual(tradesPage.Records[0].CounterOfferId, "11");

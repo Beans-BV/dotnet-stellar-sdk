@@ -61,11 +61,10 @@ public class GetEventsResponse
         public long Ledger { get; init; }
 
         /// <summary>
-        ///     ISO-8601 timestamp of the ledger closing time.
-        ///     See https://www.iso.org/iso-8601-date-and-time-format.html.
+        ///     The time when the ledger was closed.
         /// </summary>
         [JsonPropertyName("ledgerClosedAt")]
-        public string LedgerClosedAt { get; init; }
+        public DateTimeOffset LedgerClosedAt { get; init; }
 
         /// <summary>
         ///     A list containing the topics, each is a base-64 encoded XDR string of an <see cref="Xdr.SCVal">xdr.SCVal</see>
