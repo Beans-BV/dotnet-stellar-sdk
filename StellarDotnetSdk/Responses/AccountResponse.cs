@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Accounts;
 
@@ -104,10 +105,10 @@ public sealed class AccountResponse : Response, ITransactionBuilderAccount, IPag
     public required long LastModifiedLedger { get; init; }
 
     /// <summary>
-    ///     An ISO 8601 formatted string of when this account was last modified.
+    ///     The time this account was last modified.
     /// </summary>
     [JsonPropertyName("last_modified_time")]
-    public required string LastModifiedTime { get; init; }
+    public required DateTimeOffset LastModifiedTime { get; init; }
 
     /// <inheritdoc />
     [JsonPropertyName("paging_token")]

@@ -50,11 +50,4 @@ public sealed class AccountResponseLinks
     /// </summary>
     [JsonPropertyName("transactions")]
     public required Link<Page<TransactionResponse>> Transactions { get; init; }
-
-    /// <summary>
-    ///     Link to data involving this account.
-    /// </summary>
-    // [JsonPropertyName("data")]
-    // TODO: Add when more info available
-    // public required object Data { get; init; }
 }

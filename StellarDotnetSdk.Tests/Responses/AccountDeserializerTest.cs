@@ -111,7 +111,7 @@ public class AccountDeserializerTest
         Assert.AreEqual(0, account.NumberSponsoring);
         Assert.AreEqual(0, account.NumberSponsored);
         Assert.AreEqual(1558L, account.LastModifiedLedger);
-        Assert.AreEqual("2025-08-18T13:02:39Z", account.LastModifiedTime);
+        Assert.AreEqual(new DateTimeOffset(2025, 8, 18, 13, 02, 39, TimeSpan.Zero), account.LastModifiedTime);
 
         Assert.AreEqual(
             "https://horizon-testnet.stellar.org/accounts/GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST",

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -236,7 +237,7 @@ public class ServerCheckMemoRequiredTest
             AccountId = accountId,
             SequenceNumber = 3298702387052545,
             LastModifiedLedger = 1,
-            LastModifiedTime = "2025-08-14T19:44:19Z",
+            LastModifiedTime = new DateTimeOffset(2025, 8, 14, 19, 44, 19, TimeSpan.Zero),
             PagingToken = "123",
         };
         return JsonSerializer.Serialize(response);
