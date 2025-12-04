@@ -1,6 +1,6 @@
 using ClaimPredicate = StellarDotnetSdk.Claimants.ClaimPredicate;
 
-namespace StellarDotnetSdk.Responses;
+namespace StellarDotnetSdk.Responses.Predicates;
 
 /// <summary>
 ///     Represents a logical AND predicate that requires both child predicates to be true.

@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 using StellarDotnetSdk.Converters;
 using ClaimPredicate = StellarDotnetSdk.Claimants.ClaimPredicate;
 
-namespace StellarDotnetSdk.Responses;
+namespace StellarDotnetSdk.Responses.Predicates;
 
 /// <summary>
 ///     Base class for claim predicates in Horizon API responses.

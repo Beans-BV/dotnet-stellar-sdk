@@ -1,4 +1,5 @@
 using System;
+using StellarDotnetSdk.Responses.Predicates;
 using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Claimants;
@@ -21,11 +22,11 @@ namespace StellarDotnetSdk.Claimants;
 ///         </list>
 ///     </para>
 ///     <para>
-///         <strong>For deserializing Horizon API responses</strong>, use <see cref="Responses.Predicate"/> instead,
-///         which can be converted to this type using <see cref="Responses.Predicate.ToClaimPredicate"/>.
+///         <strong>For deserializing Horizon API responses</strong>, use <see cref="Predicate"/> instead,
+///         which can be converted to this type using <see cref="Predicate.ToClaimPredicate"/>.
 ///     </para>
 /// </remarks>
-/// <seealso cref="Responses.Predicate"/>
+/// <seealso cref="Predicate"/>
 public abstract class ClaimPredicate
 {
     public abstract Xdr.ClaimPredicate ToXdr();

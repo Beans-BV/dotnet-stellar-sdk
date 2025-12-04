@@ -1,6 +1,6 @@
 using ClaimPredicate = StellarDotnetSdk.Claimants.ClaimPredicate;
 
-namespace StellarDotnetSdk.Responses;
+namespace StellarDotnetSdk.Responses.Predicates;
 
 /// <summary>
 ///     Represents an unconditional predicate that is always satisfied.

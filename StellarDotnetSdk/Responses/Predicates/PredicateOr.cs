@@ -1,6 +1,6 @@
 using ClaimPredicate = StellarDotnetSdk.Claimants.ClaimPredicate;
 
-namespace StellarDotnetSdk.Responses;
+namespace StellarDotnetSdk.Responses.Predicates;
 
 /// <summary>
 ///     Represents a logical OR predicate that requires at least one child predicate to be true.

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using StellarDotnetSdk.Responses.Predicates;
 
 namespace StellarDotnetSdk.Responses;
 #nullable disable

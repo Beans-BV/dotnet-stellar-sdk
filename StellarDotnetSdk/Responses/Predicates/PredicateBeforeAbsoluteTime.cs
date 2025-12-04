@@ -1,7 +1,7 @@
 using System;
 using ClaimPredicate = StellarDotnetSdk.Claimants.ClaimPredicate;
 
-namespace StellarDotnetSdk.Responses;
+namespace StellarDotnetSdk.Responses.Predicates;
 
 /// <summary>
 ///     Represents a predicate that is satisfied when the current time is before an absolute deadline.

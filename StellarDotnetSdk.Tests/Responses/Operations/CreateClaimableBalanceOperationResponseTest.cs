@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
+using StellarDotnetSdk.Responses.Predicates;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
