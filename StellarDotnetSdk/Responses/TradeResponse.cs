@@ -19,10 +19,10 @@ public sealed class TradeResponse : Response, IPagingToken
     public required string Id { get; init; }
 
     /// <summary>
-    ///     An ISO 8601 formatted string of when the ledger containing this trade closed.
+    ///     The time the ledger containing this trade closed.
     /// </summary>
     [JsonPropertyName("ledger_close_time")]
-    public DateTimeOffset LedgerCloseTime { get; init; }
+    public required DateTimeOffset LedgerCloseTime { get; init; }
 
     /// <summary>
     ///     Type of this trade: liquidity_pool or orderbook

@@ -79,7 +79,8 @@ public class TradesPageDeserializerTest
 
         Assert.AreEqual("6816113102849-0", record.Id);
         Assert.AreEqual("6816113102849-0", record.PagingToken);
-        Assert.AreEqual("2025-08-14T19:35:23Z", record.LedgerCloseTime);
+        Assert.AreEqual(new DateTimeOffset(2025, 8, 14, 19, 35, 23, TimeSpan.Zero),
+            tradesPage.Records[0].LedgerCloseTime);
         Assert.AreEqual("orderbook", record.TradeType);
         Assert.AreEqual("24", record.BaseOfferId);
         Assert.AreEqual("GBLD7NSGWYT2KRFTYMRJGQ42SNTGDXMZYNQUE3H7N2VEMARIQYKBB4JJ", record.BaseAccount);
@@ -120,7 +121,7 @@ public class TradesPageDeserializerTest
         Assert.IsNotNull(tradesPage.Records);
         Assert.AreEqual(2, tradesPage.Records.Count);
 
-        // Record1: BaseOfferId <->  CounterLiquidityPoolId
+        // Record1: BaseOfferId <-> CounterLiquidityPoolId
         var record1 = tradesPage.Records[0];
         Assert.IsNotNull(record1.Links);
         Assert.AreEqual(
@@ -133,7 +134,8 @@ public class TradesPageDeserializerTest
 
         Assert.AreEqual("7202660159489-0", record1.Id);
         Assert.AreEqual("7202660159489-0", record1.PagingToken);
-        Assert.AreEqual("2025-08-14T19:42:53Z", record1.LedgerCloseTime);
+        Assert.AreEqual(new DateTimeOffset(2025, 8, 14, 19, 42, 53, TimeSpan.Zero),
+            record1.LedgerCloseTime);
         Assert.AreEqual("liquidity_pool", record1.TradeType);
         Assert.AreEqual("4611693221087547393", record1.BaseOfferId);
         Assert.AreEqual(30U, record1.LiquidityPoolFeeBp);
@@ -157,23 +159,6 @@ public class TradesPageDeserializerTest
             record1.CounterAsset);
         Assert.AreEqual(false, record1.BaseIsSeller);
 
-        Assert.AreEqual(tradesPage.Records[0].LedgerCloseTime,
-            new DateTimeOffset(2018, 2, 2, 0, 20, 10, TimeSpan.Zero));
-        Assert.AreEqual(tradesPage.Records[0].OfferId, "695254");
-        Assert.AreEqual(tradesPage.Records[0].BaseOfferId, "10");
-        Assert.AreEqual(tradesPage.Records[0].CounterOfferId, "11");
-        Assert.AreEqual(tradesPage.Records[0].BaseAccount, "GBZXCJIUEPDXGHMS64UBJHUVKV6ETWYOVHADLTBXJNJFUC7A7RU5B3GN");
-        Assert.AreEqual(tradesPage.Records[0].BaseAmount, "0.1217566");
-        Assert.AreEqual(tradesPage.Records[0].BaseAssetType, "native");
-        Assert.AreEqual(tradesPage.Records[0].CounterAccount,
-            "GBHKUQDYXGK5IEYORI7DZMMXANOIEHHOF364LNT4Q7EWPUL7FOO2SP6D");
-        Assert.AreEqual(tradesPage.Records[0].CounterAmount, "0.0199601");
-        Assert.AreEqual(tradesPage.Records[0].CounterAssetType, "credit_alphanum4");
-        Assert.AreEqual(tradesPage.Records[0].CounterAssetCode, "SLT");
-        Assert.AreEqual(tradesPage.Records[0].CounterAssetIssuer,
-            "GCKA6K5PCQ6PNF5RQBF7PQDJWRHO6UOGFMRLK3DYHDOI244V47XKQ4GP");
-        Assert.AreEqual(tradesPage.Records[0].BaseIsSeller, true);
-
         Assert.AreEqual("1055177194", record1.Price.Numerator);
         Assert.AreEqual("100000000", record1.Price.Denominator);
 
@@ -190,7 +175,8 @@ public class TradesPageDeserializerTest
 
         Assert.AreEqual("54593329328129-0", record2.Id);
         Assert.AreEqual("54593329328129-0", record2.PagingToken);
-        Assert.AreEqual("2025-08-15T11:03:36Z", record2.LedgerCloseTime);
+        Assert.AreEqual(new DateTimeOffset(2025, 8, 15, 11, 03, 36, TimeSpan.Zero),
+            record2.LedgerCloseTime);
         Assert.IsNotNull(record2.BaseLiquidityPoolId);
         Assert.AreEqual("b6564a56fbec0bf6d7c3894f34287339ab5d3d3012aa3180dfade15f9104bffd",
             record2.BaseLiquidityPoolId.ToString());
