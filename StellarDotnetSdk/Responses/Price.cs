@@ -13,7 +13,7 @@ namespace StellarDotnetSdk.Responses;
 ///     </para>
 ///     <para>
 ///         The Horizon API has inconsistencies in how it returns price data - sometimes as JSON numbers,
-///         sometimes as strings. The SDK's <see cref="Converters.JsonOptions.DefaultOptions" /> handles
+///         sometimes as strings. The SDK's <see cref="StellarDotnetSdk.Converters.JsonOptions.DefaultOptions" /> handles
 ///         both formats automatically via <c>JsonNumberHandling.AllowReadingFromString</c>.
 ///     </para>
 ///     <para>
