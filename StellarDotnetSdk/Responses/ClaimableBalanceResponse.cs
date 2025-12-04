@@ -59,13 +59,13 @@ public sealed class ClaimableBalanceResponse : Response
     /// </summary>
     [JsonPropertyName("claimants")]
     public required Claimant[] Claimants { get; init; }
-    
+
     /// <summary>
     ///     Links to related resources for this claimable balance.
     /// </summary>
     [JsonPropertyName("_links")]
     public required ClaimableBalanceResponseLinks Links { get; init; }
-    
+
     /// <summary>
     ///     Flags denote the enabling/disabling of certain claimable balance issuer privileges.
     /// </summary>
@@ -83,7 +83,7 @@ public sealed class ClaimableBalanceResponse : Response
         [JsonPropertyName("clawback_enabled")]
         public required bool ClawbackEnabled { get; init; }
     }
-    
+
     /// <summary>
     ///     Links to related resources for a claimable balance.
     /// </summary>
@@ -107,5 +107,4 @@ public sealed class ClaimableBalanceResponse : Response
         [JsonPropertyName("transactions")]
         public required Link<Page<TransactionResponse>> Transactions { get; init; }
     }
-    
 }

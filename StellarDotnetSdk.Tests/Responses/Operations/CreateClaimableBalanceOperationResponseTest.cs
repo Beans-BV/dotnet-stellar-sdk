@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
+using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
@@ -31,7 +32,9 @@ public class CreateClaimableBalanceOperationResponseTest
         Assert.IsTrue(instance is CreateClaimableBalanceOperationResponse);
         var operation = (CreateClaimableBalanceOperationResponse)instance;
 
-        Assert.IsNotNull(operation.Claimants[0].Predicate.AbsBefore);
+        Assert.IsInstanceOfType(operation.Claimants[0].Predicate, typeof(PredicateBeforeAbsoluteTime));
+        var absPredicate = (PredicateBeforeAbsoluteTime)operation.Claimants[0].Predicate;
+        Assert.IsNotNull(absPredicate.AbsBefore);
     }
 
     private static void AssertCreateClaimableBalanceData(OperationResponse instance)

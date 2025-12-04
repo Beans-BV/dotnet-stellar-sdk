@@ -22,10 +22,22 @@
     {
       "destination": "GARAAT5FYX52DGIETDXV5IEM7ZX3S645DCZ67ZLUNKBSNSLYL3UQKNQ6",
       "predicate": {
-        "not": {
-          "abs_before": "2025-08-18T12:55:42Z",
-          "abs_before_epoch": "1755521742"
-        }
+        "or": [
+          {
+            "unconditional": true
+          },
+          {
+            "and": [
+              {
+                "abs_before": "2032-04-06T00:26:36Z",
+                "abs_before_epoch": "1964823996"
+              },
+              {
+                "unconditional": true
+              }
+            ]
+          }
+        ]
       }
     },
     {

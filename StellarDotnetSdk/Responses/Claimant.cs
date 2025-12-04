@@ -12,12 +12,12 @@ namespace StellarDotnetSdk.Responses;
 ///         such as when querying claimable balances.
 ///     </para>
 ///     <para>
-///         <strong>For building transactions</strong>, use <see cref="Claimants.Claimant"/> instead.
-///         You can convert the <see cref="Predicate"/> to a transaction predicate using
-///         <see cref="Predicate.ToClaimPredicate"/>.
+///         <strong>For building transactions</strong>, use <see cref="Claimants.Claimant" /> instead.
+///         You can convert the <see cref="Predicate" /> to a transaction predicate using
+///         <see cref="Predicate.ToClaimPredicate" />.
 ///     </para>
 /// </remarks>
-/// <seealso cref="Claimants.Claimant"/>
+/// <seealso cref="Claimants.Claimant" />
 public class Claimant
 {
     [JsonPropertyName("destination")]
