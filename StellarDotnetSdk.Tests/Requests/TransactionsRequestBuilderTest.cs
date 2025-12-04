@@ -92,10 +92,11 @@ public class TransactionsRequestBuilderTest
     [TestMethod]
     public async Task TestStream()
     {
-        var jsonPath = Utils.GetTestDataPath("Responses/transactionTransaction.json");
+        var jsonPath = Utils.GetTestDataPath("Responses/transaction.json");
         var json = await File.ReadAllTextAsync(jsonPath);
 
-        var streamableTest = new StreamableTest<TransactionResponse>(json, TransactionDeserializerTest.AssertTestData);
+        var streamableTest =
+            new StreamableTest<TransactionResponse>(json, TransactionDeserializerTest.AssertTransaction);
         await streamableTest.Run();
     }
 }
