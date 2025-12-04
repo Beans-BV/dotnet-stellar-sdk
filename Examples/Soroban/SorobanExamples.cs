@@ -1,4 +1,5 @@
-﻿using StellarDotnetSdk.Accounts;
+﻿using System.Net.Sockets;
+using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Examples.Horizon;
 using StellarDotnetSdk.LedgerEntries;
 using StellarDotnetSdk.LedgerKeys;
@@ -477,7 +478,7 @@ internal static class SorobanExamples
             MaxRetryCount = 5,
             BaseDelay = TimeSpan.FromMilliseconds(300),
             MaxDelay = TimeSpan.FromMilliseconds(8000),
-            UseJitter = true
+            UseJitter = true,
         };
 
         var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
@@ -509,15 +510,15 @@ internal static class SorobanExamples
             MaxRetryCount = 5,
             BaseDelay = TimeSpan.FromMilliseconds(500),
             MaxDelay = TimeSpan.FromMilliseconds(15000),
-            UseJitter = true
+            UseJitter = true,
         };
 
         // Add additional retriable exceptions for network issues
-        resilienceOptions.AdditionalRetriableExceptionTypes.Add(typeof(System.Net.Sockets.SocketException));
+        resilienceOptions.AdditionalRetriableExceptionTypes.Add(typeof(SocketException));
 
         // Create client with optional bearer token for authenticated endpoints
         var httpClient = new DefaultStellarSdkHttpClient(
-            bearerToken: null, // Set your API token here if required
+            null, // Set your API token here if required
             resilienceOptions: resilienceOptions
         );
 

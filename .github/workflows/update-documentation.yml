@@ -1,44 +1,44 @@
 name: Update Documentation
 on:
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout SDK
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout SDK
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Checkout GH pages
-      uses: actions/checkout@v4
-      with:
-        ref: gh-pages
-        path: docs/_site
+      - name: Checkout GH pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: docs/_site
 
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
 
-    - name: Build Documentation Metadata
-      uses: nunit/docfx-action@v4.0.0
-      with:
-        args: metadata ./docs/docfx.json
+      - name: Build Documentation Metadata
+        uses: nunit/docfx-action@v4.0.0
+        with:
+          args: metadata ./docs/docfx.json
 
-    - name: Build Documentation
-      uses: nunit/docfx-action@v4.0.0
-      with:
-        args: build ./docs/docfx.json
+      - name: Build Documentation
+        uses: nunit/docfx-action@v4.0.0
+        with:
+          args: build ./docs/docfx.json
 
-    - name: Publish docs to GH Pages
-      run: |
-        TAG=`git describe --tags`
-        cd docs/_site/
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        git add .
-        git commit -m $TAG
-        git push origin gh-pages
+      - name: Publish docs to GH Pages
+        run: |
+          TAG=`git describe --tags`
+          cd docs/_site/
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m $TAG
+          git push origin gh-pages

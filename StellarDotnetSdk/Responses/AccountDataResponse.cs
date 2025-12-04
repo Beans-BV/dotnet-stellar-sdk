@@ -6,7 +6,8 @@ namespace StellarDotnetSdk.Responses;
 #nullable disable
 public class AccountDataResponse : Response
 {
-    [JsonPropertyName("value")] public string Value { get; init; }
+    [JsonPropertyName("value")]
+    public string Value { get; init; }
 
     public string ValueDecoded
     {

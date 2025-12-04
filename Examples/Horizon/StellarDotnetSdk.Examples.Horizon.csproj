@@ -12,7 +12,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\StellarDotnetSdk\StellarDotnetSdk.csproj" />
+        <ProjectReference Include="..\..\StellarDotnetSdk\StellarDotnetSdk.csproj"/>
     </ItemGroup>
 
 </Project>

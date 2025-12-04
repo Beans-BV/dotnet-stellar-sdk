@@ -50,7 +50,7 @@ public class DefaultStellarSdkHttpClientTests
         {
             MaxRetryCount = 1,
             BaseDelay = TimeSpan.FromMilliseconds(10),
-            UseJitter = false
+            UseJitter = false,
         };
 
         // Act
@@ -89,7 +89,7 @@ public class DefaultStellarSdkHttpClientTests
     public void Constructor_WithBearerToken_SetsAuthorizationHeader()
     {
         // Arrange & Act
-        using var client = new DefaultStellarSdkHttpClient(bearerToken: "test-token");
+        using var client = new DefaultStellarSdkHttpClient("test-token");
 
         // Assert
         Assert.IsNotNull(client.DefaultRequestHeaders.Authorization);
@@ -123,7 +123,7 @@ public class DefaultStellarSdkHttpClientTests
         var resilienceOptions = new HttpResilienceOptions
         {
             MaxRetryCount = 0, // No retries
-            EnableCircuitBreaker = true // But circuit breaker enabled
+            EnableCircuitBreaker = true, // But circuit breaker enabled
         };
 
         // Act
@@ -151,7 +151,7 @@ public class DefaultStellarSdkHttpClientTests
         var resilienceOptions = new HttpResilienceOptions
         {
             MaxRetryCount = 0, // No retries
-            RequestTimeout = TimeSpan.FromSeconds(5) // But timeout enabled
+            RequestTimeout = TimeSpan.FromSeconds(5), // But timeout enabled
         };
 
         // Act
@@ -180,7 +180,7 @@ public class DefaultStellarSdkHttpClientTests
         var resilienceOptions = new HttpResilienceOptions
         {
             MaxRetryCount = 0, // No retries
-            RequestTimeout = TimeSpan.FromMilliseconds(100) // Short timeout
+            RequestTimeout = TimeSpan.FromMilliseconds(100), // Short timeout
         };
 
         // Act & Assert
@@ -188,10 +188,7 @@ public class DefaultStellarSdkHttpClientTests
             resilienceOptions: resilienceOptions,
             innerHandler: trackingHandler);
 
-        await Assert.ThrowsExceptionAsync<TimeoutRejectedException>(async () =>
-        {
-            await client.GetAsync(TestUri);
-        });
+        await Assert.ThrowsExceptionAsync<TimeoutRejectedException>(async () => { await client.GetAsync(TestUri); });
     }
 
     /// <summary>
@@ -219,4 +216,3 @@ public class DefaultStellarSdkHttpClientTests
         }
     }
 }
-

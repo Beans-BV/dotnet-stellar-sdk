@@ -20,7 +20,8 @@ public class ChangeTrustOperationResponse : OperationResponse
     [JsonPropertyName("asset_type")]
     public string AssetType { get; init; }
 
-    [JsonPropertyName("limit")] public string Limit { get; init; }
+    [JsonPropertyName("limit")]
+    public string Limit { get; init; }
 
     [JsonPropertyName("trustee")]
     public string Trustee { get; init; }

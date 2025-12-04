@@ -43,6 +43,7 @@ public class PathResponse : Response
 
     public class PathResponseLinks
     {
-        [JsonPropertyName("self")] public Link<PathResponse> Self { get; init; }
+        [JsonPropertyName("self")]
+        public Link<PathResponse> Self { get; init; }
     }
 }

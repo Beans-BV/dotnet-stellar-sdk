@@ -19,5 +19,6 @@ public class FederationResponse
     [JsonPropertyName("memo_type")]
     public string MemoType { get; init; }
 
-    [JsonPropertyName("memo")] public string Memo { get; init; }
+    [JsonPropertyName("memo")]
+    public string Memo { get; init; }
 }

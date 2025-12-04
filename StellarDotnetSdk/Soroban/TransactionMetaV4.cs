@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using StellarDotnetSdk.Xdr;
+﻿using System.Linq;
 using LedgerEntryChange = StellarDotnetSdk.LedgerEntries.LedgerEntryChange;
 
 namespace StellarDotnetSdk.Soroban;

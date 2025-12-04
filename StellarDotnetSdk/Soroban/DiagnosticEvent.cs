@@ -33,7 +33,7 @@ public class DiagnosticEvent
     /// <returns>A string that contains the details of the diagnostic event.</returns>
     public string ToString()
     {
-        return $"InSuccessfulContractCall: {InSuccessfulContractCall.ToString()}\n{Event.ToString()}";
+        return $"InSuccessfulContractCall: {InSuccessfulContractCall.ToString()}\n{Event}";
     }
 
     /// <summary>

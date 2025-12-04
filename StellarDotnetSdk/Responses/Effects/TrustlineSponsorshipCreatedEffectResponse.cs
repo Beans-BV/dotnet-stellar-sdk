@@ -10,7 +10,8 @@ public class TrustlineSponsorshipCreatedEffectResponse : EffectResponse
 {
     public override int TypeId => 63;
 
-    [JsonPropertyName("asset")] public string Asset { get; init; }
+    [JsonPropertyName("asset")]
+    public string Asset { get; init; }
 
     [JsonPropertyName("sponsor")]
     public string Sponsor { get; init; }

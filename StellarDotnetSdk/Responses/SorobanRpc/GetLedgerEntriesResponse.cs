@@ -28,7 +28,8 @@ public class GetLedgerEntriesResponse
         /// <summary>
         ///     The base-64 encoded XDR string of the key of the ledger entry.
         /// </summary>
-        [JsonInclude] [JsonPropertyName("key")]
+        [JsonInclude]
+        [JsonPropertyName("key")]
         private string _key;
 
         /// <summary>

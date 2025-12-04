@@ -11,7 +11,8 @@ namespace StellarDotnetSdk.Responses;
 
 public class TransactionResponse : Response, IPagingToken
 {
-    [JsonPropertyName("hash")] public string Hash { get; init; }
+    [JsonPropertyName("hash")]
+    public string Hash { get; init; }
 
     [JsonPropertyName("ledger")]
     public long Ledger { get; init; }
@@ -78,7 +79,8 @@ public class TransactionResponse : Response, IPagingToken
     [JsonPropertyName("fee_account_muxed_id")]
     public ulong? FeeAccountMuxedId { get; set; }
 
-    [JsonPropertyName("memo")] public string? MemoValue { get; init; }
+    [JsonPropertyName("memo")]
+    public string? MemoValue { get; init; }
 
     [JsonPropertyName("memo_bytes")]
     public string? MemoBytes { get; init; }
@@ -148,7 +150,8 @@ public class TransactionResponse : Response, IPagingToken
             Signatures = signatures;
         }
 
-        [JsonPropertyName("hash")] public string Hash { get; init; }
+        [JsonPropertyName("hash")]
+        public string Hash { get; init; }
 
         [JsonPropertyName("signatures")]
         public List<string> Signatures { get; init; }
@@ -156,7 +159,8 @@ public class TransactionResponse : Response, IPagingToken
 
     public class InnerTransaction
     {
-        [JsonPropertyName("hash")] public string Hash { get; init; }
+        [JsonPropertyName("hash")]
+        public string Hash { get; init; }
 
         [JsonPropertyName("signatures")]
         public List<string> Signatures { get; init; }
@@ -184,7 +188,8 @@ public class TransactionResponseLinks
     [JsonPropertyName("precedes")]
     public Link<TransactionResponse> Precedes { get; init; }
 
-    [JsonPropertyName("self")] public Link<TransactionResponse> Self { get; init; }
+    [JsonPropertyName("self")]
+    public Link<TransactionResponse> Self { get; init; }
 
     [JsonPropertyName("succeeds")]
     public Link<TransactionResponse> Succeeds { get; init; }

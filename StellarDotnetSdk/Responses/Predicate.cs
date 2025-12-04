@@ -7,11 +7,14 @@ namespace StellarDotnetSdk.Responses;
 
 public class Predicate
 {
-    [JsonPropertyName("and")] public Predicate[]? And { get; init; }
+    [JsonPropertyName("and")]
+    public Predicate[]? And { get; init; }
 
-    [JsonPropertyName("or")] public Predicate[]? Or { get; init; }
+    [JsonPropertyName("or")]
+    public Predicate[]? Or { get; init; }
 
-    [JsonPropertyName("not")] public Predicate? Not { get; init; }
+    [JsonPropertyName("not")]
+    public Predicate? Not { get; init; }
 
     [JsonPropertyName("unconditional")]
     public bool Unconditional { get; init; }

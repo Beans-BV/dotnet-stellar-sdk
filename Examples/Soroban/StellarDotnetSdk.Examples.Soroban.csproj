@@ -12,14 +12,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\StellarDotnetSdk\StellarDotnetSdk.csproj" />
-      <ProjectReference Include="..\Horizon\StellarDotnetSdk.Examples.Horizon.csproj" />
+        <ProjectReference Include="..\..\StellarDotnetSdk\StellarDotnetSdk.csproj"/>
+        <ProjectReference Include="..\Horizon\StellarDotnetSdk.Examples.Horizon.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="wasm\hello_world_contract.wasm">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <None Update="wasm\hello_world_contract.wasm">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

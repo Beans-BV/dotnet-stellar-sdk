@@ -11,7 +11,8 @@ namespace StellarDotnetSdk.Requests;
 
 /// <summary>
 ///     HTTP message handler that implements retry logic for connection failures (network errors, DNS failures, etc.).
-///     Similar to OkHttp's <c>retryOnConnectionFailure(true)</c> - only retries connection-level failures, not HTTP error status codes.
+///     Similar to OkHttp's <c>retryOnConnectionFailure(true)</c> - only retries connection-level failures, not HTTP error
+///     status codes.
 /// </summary>
 public class RetryingHttpMessageHandler : DelegatingHandler
 {
@@ -49,7 +50,7 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         {
             builder.AddTimeout(new TimeoutStrategyOptions
             {
-                Timeout = options.RequestTimeout.Value
+                Timeout = options.RequestTimeout.Value,
             });
         }
 
@@ -66,7 +67,7 @@ public class RetryingHttpMessageHandler : DelegatingHandler
                 {
                     var cancellationRequested = args.Context.CancellationToken.IsCancellationRequested;
                     return new ValueTask<bool>(ShouldHandleOutcome(args.Outcome, options, cancellationRequested));
-                }
+                },
             });
         }
 
@@ -85,7 +86,7 @@ public class RetryingHttpMessageHandler : DelegatingHandler
                 {
                     var cancellationRequested = args.Context.CancellationToken.IsCancellationRequested;
                     return new ValueTask<bool>(ShouldHandleOutcome(args.Outcome, options, cancellationRequested));
-                }
+                },
             };
 
             builder.AddRetry(retryOptions);
@@ -108,7 +109,8 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         return false;
     }
 
-    private static bool IsRetriableException(Exception exception, HttpResilienceOptions options, bool cancellationRequested)
+    private static bool IsRetriableException(Exception exception, HttpResilienceOptions options,
+        bool cancellationRequested)
     {
         // Check additional retriable exception types first
         var exceptionType = exception.GetType();

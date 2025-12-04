@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace StellarDotnetSdk.Soroban;
+﻿namespace StellarDotnetSdk.Soroban;
 
 /// <summary>
 ///     Holds the Soroban transaction metadata.
@@ -13,7 +10,8 @@ public class SorobanTransactionMetaV2
     public SCVal? ReturnValue { get; private set; }
 
     /// <summary>
-    ///     Creates the corresponding <c>SorobanTransactionMetaV2</c> object from an <c>xdr.SorobanTransactionMetaV2</c> object.
+    ///     Creates the corresponding <c>SorobanTransactionMetaV2</c> object from an <c>xdr.SorobanTransactionMetaV2</c>
+    ///     object.
     /// </summary>
     /// <param name="xdrMeta">An <c>xdr.SorobanTransactionMetaV2</c> object to be converted.</param>
     /// <returns>A <c>SorobanTransactionMetaV2</c> object. Returns null if the provided object is null.</returns>

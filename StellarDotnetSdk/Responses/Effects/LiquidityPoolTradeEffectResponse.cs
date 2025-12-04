@@ -10,7 +10,8 @@ public class LiquidityPoolTradeEffectResponse : EffectResponse
     [JsonPropertyName("liquidity_pool")]
     public LiquidityPool.LiquidityPool LiquidityPool { get; init; }
 
-    [JsonPropertyName("sold")] public AssetAmount Sold { get; init; }
+    [JsonPropertyName("sold")]
+    public AssetAmount Sold { get; init; }
 
     [JsonPropertyName("bought")]
     public AssetAmount Bought { get; init; }

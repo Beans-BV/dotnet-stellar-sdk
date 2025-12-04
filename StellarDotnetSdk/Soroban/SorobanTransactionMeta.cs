@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace StellarDotnetSdk.Soroban;
 
@@ -60,7 +59,7 @@ public class SorobanTransactionMeta
         var value = "";
         for (var i = 0; i < Events.Length; i++)
         {
-            value += $"Event {i + 1}\n:{Events[i].ToString()}\n";
+            value += $"Event {i + 1}\n:{Events[i]}\n";
         }
         for (var i = 0; i < DiagnosticEvents.Length; i++)
         {

@@ -23,7 +23,8 @@ namespace StellarDotnetSdk.Converters;
 ///         Designed for deserializing collections or properties typed as <see cref="OperationResponse" />.
 ///         Direct deserialization to concrete subclasses bypasses this converter intentionally.
 ///         <example>
-///             Use with base type: <c>JsonSerializer.Deserialize&lt;OperationResponse&gt;(json)</c> - converter is invoked.
+///             Use with base type: <c>JsonSerializer.Deserialize&lt;OperationResponse&gt;(json)</c> - converter is
+///             invoked.
 ///             <br />
 ///             Not with subclass: <c>JsonSerializer.Deserialize&lt;CreateAccountOperationResponse&gt;(json)</c> -
 ///             converter is bypassed.

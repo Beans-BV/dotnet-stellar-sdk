@@ -24,11 +24,13 @@ public class SseEventSource : IEventSource, IDisposable
         _eventSource.MessageReceived += MessageReceivedEventHandler;
     }
 
-    [Obsolete] public NameValueCollection Headers { get; }
+    [Obsolete]
+    public NameValueCollection Headers { get; }
 
     public string LastEventId { get; private set; }
 
-    [Obsolete] public string[] MessageTypes { get; }
+    [Obsolete]
+    public string[] MessageTypes { get; }
 
     public EventSource.EventSourceState ReadyState { get; private set; }
 

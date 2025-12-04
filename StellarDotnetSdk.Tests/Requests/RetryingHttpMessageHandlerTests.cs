@@ -65,7 +65,8 @@ public class RetryingHttpMessageHandlerTests
     [TestMethod]
     public async Task SendAsync_NonRetryableStatus_DoesNotRetry()
     {
-        var handler = new TrackingHttpMessageHandler((_, _, _) => Task.FromResult(CreateResponse(HttpStatusCode.NotFound)));
+        var handler =
+            new TrackingHttpMessageHandler((_, _, _) => Task.FromResult(CreateResponse(HttpStatusCode.NotFound)));
 
         var options = CreateDefaultOptions();
         options.MaxRetryCount = 3;
@@ -135,7 +136,7 @@ public class RetryingHttpMessageHandlerTests
 
         using var originalRequest = new HttpRequestMessage(HttpMethod.Post, TestUri)
         {
-            Content = new StringContent("payload")
+            Content = new StringContent("payload"),
         };
 
         var response = await httpClient.SendAsync(originalRequest);
@@ -224,7 +225,8 @@ public class RetryingHttpMessageHandlerTests
 
         Assert.AreEqual(3, handler.CallCount);
         var totalDelay = handler.GetDelayBetweenCalls(0, 2);
-        Assert.IsTrue(totalDelay >= TimeSpan.FromMilliseconds(80), $"Expected cumulative delay >=80ms, actual {totalDelay.TotalMilliseconds}ms");
+        Assert.IsTrue(totalDelay >= TimeSpan.FromMilliseconds(80),
+            $"Expected cumulative delay >=80ms, actual {totalDelay.TotalMilliseconds}ms");
     }
 
     [TestMethod]
@@ -317,7 +319,8 @@ public class RetryingHttpMessageHandlerTests
     [TestMethod]
     public async Task SendAsync_CircuitBreakerDisabled_DoesNotThrow()
     {
-        var handler = new TrackingHttpMessageHandler((_, _, _) => Task.FromResult(CreateResponse(HttpStatusCode.ServiceUnavailable)));
+        var handler = new TrackingHttpMessageHandler((_, _, _) =>
+            Task.FromResult(CreateResponse(HttpStatusCode.ServiceUnavailable)));
 
         var options = CreateDefaultOptions();
         options.MaxRetryCount = 0;
@@ -359,7 +362,8 @@ public class RetryingHttpMessageHandlerTests
     [TestMethod]
     public async Task SendAsync_MaxRetryCountZero_DisablesRetries()
     {
-        var handler = new TrackingHttpMessageHandler((_, _, _) => Task.FromResult(CreateResponse(HttpStatusCode.ServiceUnavailable)));
+        var handler = new TrackingHttpMessageHandler((_, _, _) =>
+            Task.FromResult(CreateResponse(HttpStatusCode.ServiceUnavailable)));
         var options = CreateDefaultOptions();
         options.MaxRetryCount = 0;
 
@@ -395,7 +399,7 @@ public class RetryingHttpMessageHandlerTests
             MaxRetryCount = 3, // Enable retries for testing
             BaseDelay = TimeSpan.FromMilliseconds(20),
             MaxDelay = TimeSpan.FromMilliseconds(500),
-            UseJitter = false
+            UseJitter = false,
         };
     }
 
@@ -408,7 +412,8 @@ public class RetryingHttpMessageHandlerTests
     {
         private readonly Func<int, HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> _sendAsync;
 
-        public TrackingHttpMessageHandler(Func<int, HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> sendAsync)
+        public TrackingHttpMessageHandler(
+            Func<int, HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> sendAsync)
         {
             _sendAsync = sendAsync;
         }
@@ -427,7 +432,8 @@ public class RetryingHttpMessageHandlerTests
             return CallTimes[secondIndex] - CallTimes[firstIndex];
         }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+            CancellationToken cancellationToken)
         {
             CallCount++;
             CallTimes.Add(DateTimeOffset.UtcNow);
@@ -488,4 +494,3 @@ public class HttpResilienceOptionsTests
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.BreakDuration = TimeSpan.Zero);
     }
 }
-

@@ -448,7 +448,7 @@ public class ServerTest
         Assert.AreEqual(response.Hash, "9f8e7d6c5b4a3210fedcba9876543210abcdef0123456789abcdef0123456789");
         Assert.IsNotNull(response.ErrorResult);
     }
-    
+
     [TestMethod]
     public async Task TestSubmitTransactionAsyncErrorProtocol22()
     {
@@ -469,7 +469,7 @@ public class ServerTest
         Assert.AreEqual(response.Hash, "9f8e7d6c5b4a3210fedcba9876543210abcdef0123456789abcdef0123456789");
         Assert.IsNotNull(response.ErrorResult);
     }
-    
+
     [TestMethod]
     public async Task TestSubmitTransactionAsyncObjectNoSkipMemoRequiredCheck()
     {
@@ -550,7 +550,7 @@ public class ServerTest
         {
             MaxRetryCount = 3,
             BaseDelay = TimeSpan.FromMilliseconds(200),
-            MaxDelay = TimeSpan.FromSeconds(5)
+            MaxDelay = TimeSpan.FromSeconds(5),
         };
 
         // Act
@@ -568,7 +568,7 @@ public class ServerTest
         {
             MaxRetryCount = 5,
             BaseDelay = TimeSpan.FromMilliseconds(500),
-            MaxDelay = TimeSpan.FromSeconds(15)
+            MaxDelay = TimeSpan.FromSeconds(15),
         };
 
         // Act
@@ -596,7 +596,7 @@ public class ServerTest
         {
             MaxRetryCount = 1,
             BaseDelay = TimeSpan.FromMilliseconds(10),
-            UseJitter = false
+            UseJitter = false,
         };
 
         // Act

@@ -20,7 +20,7 @@ namespace StellarDotnetSdk.Tests;
 public class ServerCheckMemoRequiredTest
 {
     private const string AccountId = "GAYHAAKPAQLMGIJYMIWPDWCGUCQ5LAWY4Q7Q3IKSP57O7GUPD3NEOSEA";
-    
+
     [TestMethod]
     public async Task TestFailsIfMemoIsRequired()
     {

@@ -1,4 +1,4 @@
-﻿﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
@@ -35,6 +35,13 @@ public class InvokeHostFunctionOperationResponse : OperationResponse
 
     public class AssetContractBalanceChange
     {
+        public enum MuxedIdType
+        {
+            STRING,
+            UINT64,
+            BYTES,
+        }
+
         [JsonPropertyName("amount")]
         public string Amount { get; init; }
 
@@ -50,10 +57,10 @@ public class InvokeHostFunctionOperationResponse : OperationResponse
         public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
 
         [JsonPropertyName("destination_muxed_id")]
-        public string DestinationMuxedId { get; private set; }
+        public string DestinationMuxedId { get; }
 
         [JsonPropertyName("destination_muxed_id_type")]
-        public MuxedIdType? DestinationMuxedIdType { get; private set; }
+        public MuxedIdType? DestinationMuxedIdType { get; }
 
         [JsonPropertyName("from")]
         public string From { get; init; }
@@ -63,12 +70,5 @@ public class InvokeHostFunctionOperationResponse : OperationResponse
 
         [JsonPropertyName("type")]
         public string Type { get; init; }
-
-        public enum MuxedIdType
-        {
-            STRING,
-            UINT64,
-            BYTES,
-        }
     }
 }

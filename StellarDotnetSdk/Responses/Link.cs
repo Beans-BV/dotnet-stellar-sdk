@@ -9,14 +9,16 @@ namespace StellarDotnetSdk.Responses;
 
 public class Link
 {
-    [JsonPropertyName("href")] public string Href { get; init; }
+    [JsonPropertyName("href")]
+    public string Href { get; init; }
 
-    [JsonIgnore] public virtual Uri Uri => new(Href);
+    [JsonIgnore]
+    public virtual Uri Uri => new(Href);
 
     public virtual bool Templated => false;
 }
 
-public class Link<TResponse> : Link where TResponse : Response  
+public class Link<TResponse> : Link where TResponse : Response
 {
     public static Link<TResponse> Create(string href, bool templated)
     {

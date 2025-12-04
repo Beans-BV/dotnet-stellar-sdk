@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,7 +16,6 @@ using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
 using StellarDotnetSdk.Xdr;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-using Asset = StellarDotnetSdk.Assets.Asset;
 using CollectionAssert = NUnit.Framework.CollectionAssert;
 using ConfigSettingContractLedgerCostExtV0 = StellarDotnetSdk.LedgerEntries.ConfigSettingContractLedgerCostExtV0;
 using ConfigSettingContractParallelComputeV0 = StellarDotnetSdk.LedgerEntries.ConfigSettingContractParallelComputeV0;
@@ -229,7 +227,7 @@ public class SorobanServerTest
         Assert.AreEqual(453756L, response.LatestLedger);
         Assert.AreEqual(1728978088L, response.LatestLedgerCloseTime);
     }
-    
+
     [TestMethod]
     public async Task TestSendFeeBumpTransactionPending()
     {
@@ -257,7 +255,7 @@ public class SorobanServerTest
         Assert.AreEqual(453130L, response.LatestLedger);
         Assert.AreEqual(1728974496L, response.LatestLedgerCloseTime);
     }
-    
+
     [TestMethod]
     public async Task TestSendFeeBumpTransactionTryAgainLater()
     {
@@ -285,7 +283,7 @@ public class SorobanServerTest
         Assert.AreEqual(453745L, response.LatestLedger);
         Assert.AreEqual(1728977723L, response.LatestLedgerCloseTime);
     }
-    
+
     [TestMethod]
     public async Task TestSendFeeBumpTransactionError()
     {
@@ -314,7 +312,7 @@ public class SorobanServerTest
         Assert.AreEqual(453756L, response.LatestLedger);
         Assert.AreEqual(1728977779L, response.LatestLedgerCloseTime);
     }
-    
+
     [TestMethod]
     public async Task TestSendFeeBumpTransactionDuplicate()
     {
@@ -348,7 +346,7 @@ public class SorobanServerTest
     {
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent("");
         await Assert.ThrowsExceptionAsync<TooManySignaturesException>(() =>
-            sorobanServer.SimulateTransaction(CreateDummyTransaction(sign: true)));
+            sorobanServer.SimulateTransaction(CreateDummyTransaction(true)));
     }
 
     [TestMethod]
@@ -1082,9 +1080,9 @@ public class SorobanServerTest
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
         var response = await sorobanServer.SimulateTransaction(
-            CreateDummyTransaction(sign: false),
-            resourceConfig: null,
-            authMode: AuthMode.RECORD_ALLOW_NONROOT
+            CreateDummyTransaction(false),
+            null,
+            AuthMode.RECORD_ALLOW_NONROOT
         );
 
         Assert.IsNotNull(response);
@@ -1395,7 +1393,7 @@ public class SorobanServerTest
             response.CaptiveCoreVersion);
         Assert.AreEqual(21, response.ProtocolVersion);
     }
-    
+
     [TestMethod]
     public async Task TestGetTransactionSuccess()
     {
@@ -1461,8 +1459,9 @@ public class SorobanServerTest
         var meta = response.TransactionMeta;
         Assert.IsNotNull(meta);
         Assert.IsInstanceOfType(meta, typeof(TransactionMetaV3));
-        
+
         #region Events
+
         var events = response.Events;
         Assert.IsNotNull(events);
         var transactionEventsXdr = events.TransactionEventsXdr;
@@ -1495,8 +1494,8 @@ public class SorobanServerTest
         Assert.AreEqual(
             "AAAAAAAAAAHf65G24dyt1q+Xu3xFX5fzdHcKf3j2lXO5n11b+EnOfAAAAAEAAAAAAAAAAQAAAA8AAAAEaW5pdAAAABAAAAABAAAABQAAAAUAAAAAAAaRmQAAABIAAAAAAAAAACcMY2GvjF3igK326WyiU8hv107p9YxvAS29gt1fml2WAAAAEgAAAAAAAAAAyewwXk7lqpxiQNYP3VlZ1EEprNK+dSBV4KQ9iluwbx8AAAASAAAAAAAAAAAY2Rm1IXXndEI0rYg2bt1/rw2mi1SYOUT2qeKPvf56cgAAABIAAAABusKzizgXRsUWKJQRrpWHAWG/yujQ6LBT/pMDljEiAeg=",
             contractEventsXdr[0][0]);
-        #endregion
 
+        #endregion
     }
 
     [TestMethod]
@@ -1684,10 +1683,11 @@ public class SorobanServerTest
             tx4.ResultMetaXdr);
 
         #region Tx4DiagnosticEvents
+
         var tx4DiagnosticEventsXdr = tx4.DiagnosticEventsXdr;
         Assert.IsNotNull(tx4DiagnosticEventsXdr);
         Assert.AreEqual(19, tx4DiagnosticEventsXdr.Length);
-        
+
         Assert.AreEqual(
             "AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAACAAAADwAAAAxjb3JlX21ldHJpY3MAAAAPAAAACnJlYWRfZW50cnkAAAAAAAUAAAAAAAAAAg==",
             tx4DiagnosticEventsXdr[0]);
@@ -1749,6 +1749,7 @@ public class SorobanServerTest
         #endregion
 
         #region Tx4Events
+
         var tx4Events = tx4.Events;
         Assert.IsNotNull(tx4Events);
         var tx4TransactionEvents = tx4Events.TransactionEventsXdr;
@@ -1781,6 +1782,7 @@ public class SorobanServerTest
         Assert.AreEqual(
             "AAAAAAAAAAHf65G24dyt1q+Xu3xFX5fzdHcKf3j2lXO5n11b+EnOfAAAAAEAAAAAAAAAAQAAAA8AAAAEaW5pdAAAABAAAAABAAAABQAAAAUAAAAAAAaRmQAAABIAAAAAAAAAACcMY2GvjF3igK326WyiU8hv107p9YxvAS29gt1fml2WAAAAEgAAAAAAAAAAyewwXk7lqpxiQNYP3VlZ1EEprNK+dSBV4KQ9iluwbx8AAAASAAAAAAAAAAAY2Rm1IXXndEI0rYg2bt1/rw2mi1SYOUT2qeKPvf56cgAAABIAAAABusKzizgXRsUWKJQRrpWHAWG/yujQ6LBT/pMDljEiAeg=",
             tx4ContractEvents[0][0]);
+
         #endregion
 
         var tx5 = transactions[4];
@@ -2058,7 +2060,7 @@ public class SorobanServerTest
         Assert.IsNotNull(entry15);
         Assert.AreEqual(4123L, entry15.FeeWrite1Kb);
         Assert.AreEqual(12U, entry15.TxMaxFootprintEntries);
-        
+
         var entry16 = entries[16] as ConfigSettingScpTiming;
         Assert.IsNotNull(entry16);
         Assert.AreEqual(444U, entry16.LedgerTargetCloseTimeMilliseconds);
@@ -2105,18 +2107,18 @@ public class SorobanServerTest
         }
         return transaction;
     }
-    
+
     private FeeBumpTransaction CreateDummyFeeBumpTransaction(bool sign = true)
     {
         var innerTransaction = CreateDummyTransaction();
         const long maxFee = 10000;
 
         var feeBumpTransaction = TransactionBuilder.BuildFeeBumpTransaction(
-            _account,       
+            _account,
             innerTransaction,
             maxFee
         );
-        
+
         if (sign)
         {
             feeBumpTransaction.Sign(_account);
@@ -2133,11 +2135,11 @@ public class SorobanServerTest
         {
             MaxRetryCount = 3,
             BaseDelay = TimeSpan.FromMilliseconds(200),
-            MaxDelay = TimeSpan.FromSeconds(5)
+            MaxDelay = TimeSpan.FromSeconds(5),
         };
 
         // Act
-        using var server = new SorobanServer("https://soroban-testnet.stellar.org", resilienceOptions, null);
+        using var server = new SorobanServer("https://soroban-testnet.stellar.org", resilienceOptions);
 
         // Assert - Server should be created successfully
         Assert.IsNotNull(server);
@@ -2151,7 +2153,7 @@ public class SorobanServerTest
         {
             MaxRetryCount = 5,
             BaseDelay = TimeSpan.FromMilliseconds(500),
-            MaxDelay = TimeSpan.FromSeconds(15)
+            MaxDelay = TimeSpan.FromSeconds(15),
         };
 
         // Act
@@ -2179,11 +2181,11 @@ public class SorobanServerTest
         {
             MaxRetryCount = 1,
             BaseDelay = TimeSpan.FromMilliseconds(10),
-            UseJitter = false
+            UseJitter = false,
         };
 
         // Act
-        using var sorobanServer = new SorobanServer("https://soroban-testnet.stellar.org", resilienceOptions, null);
+        using var sorobanServer = new SorobanServer("https://soroban-testnet.stellar.org", resilienceOptions);
         // Note: This test verifies the constructor accepts the parameter
         // Actual resilience behavior is tested in DefaultStellarSdkHttpClientTests
 

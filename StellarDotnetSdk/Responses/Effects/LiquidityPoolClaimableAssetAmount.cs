@@ -8,7 +8,8 @@ namespace StellarDotnetSdk.Responses.Effects;
 [JsonConverter(typeof(LiquidityPoolClaimableAssetAmountJsonConverter))]
 public class LiquidityPoolClaimableAssetAmount
 {
-    [JsonPropertyName("asset")] public Asset Asset { get; init; }
+    [JsonPropertyName("asset")]
+    public Asset Asset { get; init; }
 
     [JsonPropertyName("amount")]
     public string Amount { get; init; }

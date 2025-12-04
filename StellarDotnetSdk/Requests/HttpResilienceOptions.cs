@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 
 namespace StellarDotnetSdk.Requests;
 
@@ -9,13 +8,13 @@ namespace StellarDotnetSdk.Requests;
 /// </summary>
 public sealed class HttpResilienceOptions
 {
-    private int _maxRetryCount = 0;
     private TimeSpan _baseDelay = TimeSpan.FromMilliseconds(200);
-    private TimeSpan _maxDelay = TimeSpan.FromSeconds(5);
+    private TimeSpan _breakDuration = TimeSpan.FromSeconds(30);
     private double _failureRatio = 0.5;
+    private TimeSpan _maxDelay = TimeSpan.FromSeconds(5);
+    private int _maxRetryCount;
     private int _minimumThroughput = 10;
     private TimeSpan _samplingDuration = TimeSpan.FromSeconds(30);
-    private TimeSpan _breakDuration = TimeSpan.FromSeconds(30);
 
     /// <summary>
     ///     Gets or sets the maximum number of retry attempts. Default is 0 (disabled).
@@ -198,45 +197,60 @@ public static class HttpResilienceOptionsPresets
     ///     Creates default options with retries disabled.
     ///     This is the same as using <c>new HttpResilienceOptions()</c>.
     /// </summary>
-    public static HttpResilienceOptions Default() => new();
+    public static HttpResilienceOptions Default()
+    {
+        return new HttpResilienceOptions();
+    }
 
     /// <summary>
     ///     Creates options with connection retries enabled (similar to OkHttp's retryOnConnectionFailure).
     ///     Retries connection failures (network errors, DNS failures) but not HTTP error status codes.
     /// </summary>
-    public static HttpResilienceOptions WithConnectionRetries() => new()
+    public static HttpResilienceOptions WithConnectionRetries()
     {
-        MaxRetryCount = 3,
-        BaseDelay = TimeSpan.FromMilliseconds(200),
-        MaxDelay = TimeSpan.FromSeconds(5)
-    };
+        return new HttpResilienceOptions
+        {
+            MaxRetryCount = 3,
+            BaseDelay = TimeSpan.FromMilliseconds(200),
+            MaxDelay = TimeSpan.FromSeconds(5),
+        };
+    }
 
     /// <summary>
     ///     Creates options with retries disabled (default behavior).
     ///     Requests fail immediately on connection failures without retrying.
     /// </summary>
-    public static HttpResilienceOptions NoRetry() => new() { MaxRetryCount = 0 };
+    public static HttpResilienceOptions NoRetry()
+    {
+        return new HttpResilienceOptions { MaxRetryCount = 0 };
+    }
 
     /// <summary>
     ///     Creates options tuned for Soroban RPC polling workflows.
     ///     Uses more retries and longer delays for connection failures to accommodate network instability.
     ///     Note: HTTP error status codes are still not retried automatically.
     /// </summary>
-    public static HttpResilienceOptions ForSorobanPolling() => new()
+    public static HttpResilienceOptions ForSorobanPolling()
     {
-        MaxRetryCount = 5,
-        BaseDelay = TimeSpan.FromMilliseconds(500),
-        MaxDelay = TimeSpan.FromSeconds(15)
-    };
+        return new HttpResilienceOptions
+        {
+            MaxRetryCount = 5,
+            BaseDelay = TimeSpan.FromMilliseconds(500),
+            MaxDelay = TimeSpan.FromSeconds(15),
+        };
+    }
 
     /// <summary>
     ///     Creates options for high-frequency, latency-sensitive use cases (e.g., trading bots).
     ///     Uses fewer retries and shorter delays for connection failures.
     /// </summary>
-    public static HttpResilienceOptions LowLatency() => new()
+    public static HttpResilienceOptions LowLatency()
     {
-        MaxRetryCount = 1,
-        BaseDelay = TimeSpan.FromMilliseconds(50),
-        MaxDelay = TimeSpan.FromMilliseconds(200)
-    };
+        return new HttpResilienceOptions
+        {
+            MaxRetryCount = 1,
+            BaseDelay = TimeSpan.FromMilliseconds(50),
+            MaxDelay = TimeSpan.FromMilliseconds(200),
+        };
+    }
 }

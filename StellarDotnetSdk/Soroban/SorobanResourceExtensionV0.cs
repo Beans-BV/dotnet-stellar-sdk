@@ -10,6 +10,8 @@ public class SorobanResourceExtensionV0
         ArchivedSorobanEntries = archivedSorobanEntries;
     }
 
+    public uint[] ArchivedSorobanEntries { get; }
+
     public SorobanResourcesExtV0 ToXdr()
     {
         return new SorobanResourcesExtV0
@@ -24,6 +26,4 @@ public class SorobanResourceExtensionV0
             xdr.ArchivedSorobanEntries.Select(x => x.InnerValue).ToArray()
         );
     }
-
-    public uint[] ArchivedSorobanEntries { get; }
 }

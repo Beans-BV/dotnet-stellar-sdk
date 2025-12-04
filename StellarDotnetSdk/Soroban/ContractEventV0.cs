@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Soroban;
 

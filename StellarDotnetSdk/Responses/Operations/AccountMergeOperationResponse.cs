@@ -19,7 +19,8 @@ public class AccountMergeOperationResponse : OperationResponse
     [JsonPropertyName("account_muxed_id")]
     public ulong? AccountMuxedID { get; init; }
 
-    [JsonPropertyName("into")] public string Into { get; init; }
+    [JsonPropertyName("into")]
+    public string Into { get; init; }
 
     [JsonPropertyName("into_muxed")]
     public string IntoMuxed { get; init; }

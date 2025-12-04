@@ -17,7 +17,8 @@ public class SubmitTransactionResponse : Response
     [JsonPropertyName("result_xdr")]
     private string _resultXdr;
 
-    [JsonPropertyName("hash")] public string Hash { get; init; }
+    [JsonPropertyName("hash")]
+    public string Hash { get; init; }
 
     [JsonPropertyName("ledger")]
     public long? Ledger { get; init; }

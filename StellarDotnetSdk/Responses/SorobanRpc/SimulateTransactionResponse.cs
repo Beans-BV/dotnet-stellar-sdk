@@ -61,7 +61,8 @@ public class SimulateTransactionResponse
     [JsonPropertyName("restorePreamble")]
     public RestorePreamble? RestorePreambleInfo { get; init; } // TODO Unit test
 
-    [JsonPropertyName("stateChanges")] public LedgerEntryChange[]? StateChanges { get; init; }
+    [JsonPropertyName("stateChanges")]
+    public LedgerEntryChange[]? StateChanges { get; init; }
 
     /// <summary>
     ///     An array of the individual host function call results.
@@ -103,7 +104,7 @@ public class SimulateTransactionResponse
     /// </summary>
     public class RestorePreamble
     {
-        private string TransactionData { get; init; }
+        private string TransactionData { get; }
 
         /// <summary>
         ///     Recommended minimum resource fee to add when submitting the <c>RestoreFootprint</c> operation. This fee is to be

@@ -13,7 +13,8 @@ public class CreateClaimableBalanceOperationResponse : OperationResponse
     [JsonPropertyName("sponsor")]
     public string Sponsor { get; init; }
 
-    [JsonPropertyName("asset")] public string Asset { get; init; }
+    [JsonPropertyName("asset")]
+    public string Asset { get; init; }
 
     [JsonPropertyName("amount")]
     public string Amount { get; init; }

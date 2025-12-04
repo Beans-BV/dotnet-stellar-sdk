@@ -1,4 +1,5 @@
-﻿using StellarDotnetSdk.Accounts;
+﻿using System.Net.Sockets;
+using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Claimants;
 using StellarDotnetSdk.Operations;
@@ -490,10 +491,10 @@ public static class HorizonExamples
         // Create custom resilience options for connection failures
         var resilienceOptions = new HttpResilienceOptions
         {
-            MaxRetryCount = 5,           // More retries for critical operations
-            BaseDelay = TimeSpan.FromMilliseconds(500),  // Start with longer delay
+            MaxRetryCount = 5, // More retries for critical operations
+            BaseDelay = TimeSpan.FromMilliseconds(500), // Start with longer delay
             MaxDelay = TimeSpan.FromMilliseconds(10000), // Allow up to 10 second delays
-            UseJitter = true             // Prevent thundering herd
+            UseJitter = true, // Prevent thundering herd
         };
 
         // Create HTTP client with custom resilience options
@@ -525,11 +526,11 @@ public static class HorizonExamples
         {
             MaxRetryCount = 3,
             BaseDelay = TimeSpan.FromMilliseconds(100),
-            UseJitter = false // Disable jitter for predictable timing in examples
+            UseJitter = false, // Disable jitter for predictable timing in examples
         };
 
         // Add custom exception types that should trigger retries
-        resilienceOptions.AdditionalRetriableExceptionTypes.Add(typeof(System.Net.Sockets.SocketException));
+        resilienceOptions.AdditionalRetriableExceptionTypes.Add(typeof(SocketException));
 
         var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
         var server = new Server(TestNetUrl, httpClient);

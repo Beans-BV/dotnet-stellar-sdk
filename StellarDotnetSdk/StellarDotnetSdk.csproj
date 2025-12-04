@@ -31,8 +31,8 @@
         <PackageReference Include="dotnetstandard-bip39" Version="1.0.2"/>
         <PackageReference Include="LaunchDarkly.EventSource" Version="3.3.2"/>
         <PackageReference Include="Nett" Version="0.10.0"/>
-        <PackageReference Include="NSec.Cryptography" Version="25.4.0" />
-        <PackageReference Include="Polly" Version="8.4.0" />
+        <PackageReference Include="NSec.Cryptography" Version="25.4.0"/>
+        <PackageReference Include="Polly" Version="8.4.0"/>
     </ItemGroup>
 
     <ItemGroup>

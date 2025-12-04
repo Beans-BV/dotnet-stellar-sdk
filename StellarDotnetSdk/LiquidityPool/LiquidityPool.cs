@@ -22,7 +22,8 @@ public class LiquidityPool
         Reserves = reserves;
     }
 
-    [JsonPropertyName("id")] public LiquidityPoolId Id { get; }
+    [JsonPropertyName("id")]
+    public LiquidityPoolId Id { get; }
 
     [JsonPropertyName("fee_bp")]
     public int FeeBp { get; }

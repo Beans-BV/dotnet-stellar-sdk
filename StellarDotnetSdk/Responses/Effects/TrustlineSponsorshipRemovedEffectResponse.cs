@@ -10,7 +10,8 @@ public class TrustlineSponsorshipRemovedEffectResponse : EffectResponse
 {
     public override int TypeId => 65;
 
-    [JsonPropertyName("asset")] public string Asset { get; init; }
+    [JsonPropertyName("asset")]
+    public string Asset { get; init; }
 
     [JsonPropertyName("former_sponsor")]
     public string FormerSponsor { get; init; }

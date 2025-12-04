@@ -10,5 +10,6 @@ public class BeginSponsoringFutureReservesOperationResponse : OperationResponse
 {
     public override int TypeId => 16;
 
-    [JsonPropertyName("sponsored_id")] public string SponsoredId { get; init; }
+    [JsonPropertyName("sponsored_id")]
+    public string SponsoredId { get; init; }
 }

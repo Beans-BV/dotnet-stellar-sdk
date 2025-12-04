@@ -3,7 +3,6 @@ using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
-using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Operations;
 using MuxedIdType =
     StellarDotnetSdk.Responses.Operations.InvokeHostFunctionOperationResponse.AssetContractBalanceChange.MuxedIdType;

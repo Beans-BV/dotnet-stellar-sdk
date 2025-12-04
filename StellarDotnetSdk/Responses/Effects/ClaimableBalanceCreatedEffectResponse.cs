@@ -10,7 +10,8 @@ public class ClaimableBalanceCreatedEffectResponse : EffectResponse
 {
     public override int TypeId => 50;
 
-    [JsonPropertyName("asset")] public string Asset { get; init; }
+    [JsonPropertyName("asset")]
+    public string Asset { get; init; }
 
     [JsonPropertyName("balance_id")]
     public string BalanceId { get; init; }

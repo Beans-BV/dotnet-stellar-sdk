@@ -11,7 +11,8 @@ namespace StellarDotnetSdk.Responses;
 /// </summary>
 public class TradeResponse : Response, IPagingToken
 {
-    [JsonPropertyName("id")] public string Id { get; init; }
+    [JsonPropertyName("id")]
+    public string Id { get; init; }
 
     [JsonPropertyName("ledger_close_time")]
     public string LedgerCloseTime { get; init; }
@@ -64,7 +65,8 @@ public class TradeResponse : Response, IPagingToken
     [JsonPropertyName("counter_asset_issuer")]
     public string CounterAssetIssuer { get; init; }
 
-    [JsonPropertyName("price")] public Price Price { get; init; }
+    [JsonPropertyName("price")]
+    public Price Price { get; init; }
 
     [JsonPropertyName("_links")]
     public TradeResponseLinks Links { get; init; }
@@ -84,7 +86,8 @@ public class TradeResponse : Response, IPagingToken
 
     public class TradeResponseLinks
     {
-        [JsonPropertyName("base")] public Link<AssetResponse> Base { get; init; }
+        [JsonPropertyName("base")]
+        public Link<AssetResponse> Base { get; init; }
 
         [JsonPropertyName("counter")]
         public Link<AssetResponse> Counter { get; init; }

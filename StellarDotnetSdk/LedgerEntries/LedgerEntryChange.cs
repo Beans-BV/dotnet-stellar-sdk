@@ -30,7 +30,7 @@ public abstract class LedgerEntryChange
             _ => throw new InvalidOperationException("Unknown LedgerEntryChange type."),
         };
     }
-    
+
     public static LedgerEntryChange FromXdrBase64(string xdrBase64)
     {
         var bytes = Convert.FromBase64String(xdrBase64);

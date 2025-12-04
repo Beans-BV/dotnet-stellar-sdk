@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Numerics;
-using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Xdr;
 using Int32 = StellarDotnetSdk.Xdr.Int32;
 using Int64 = StellarDotnetSdk.Xdr.Int64;

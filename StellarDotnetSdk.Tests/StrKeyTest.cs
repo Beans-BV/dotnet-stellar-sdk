@@ -123,7 +123,7 @@ public class StrKeyTest
 
         CollectionAssert.AreEqual(rawData, decoded);
     }
-    
+
     [TestMethod]
     [DataRow("TB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZM5K")]
     public void TestDecodeEncodePreAuthTx(string id)
@@ -132,7 +132,7 @@ public class StrKeyTest
         var encoded = StrKey.EncodePreAuthTx(decoded);
         Assert.AreEqual(id, encoded);
     }
-    
+
     [TestMethod]
     [DataRow("XB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLYIYT")]
     public void TestDecodeEncodeSha256Hash(string id)
@@ -150,7 +150,7 @@ public class StrKeyTest
         var encoded = StrKey.EncodeSignedPayload(decoded);
         Assert.AreEqual(id, encoded);
     }
-    
+
     [TestMethod]
     [DataRow("003F0C34BF93AD0D9971D04CCC90F705511C838AAD9734A4A2FB0D7A03FC7FE89A")]
     [DataRow("00a26599c23752c92c3e74f60b72081b0b3f4b1a8353f357848f69c82e3fe6373c")]

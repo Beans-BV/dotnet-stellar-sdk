@@ -19,7 +19,7 @@ public class ReserveJsonConverterTest
         var original = new Reserve
         {
             Asset = new AssetTypeNative(),
-            Amount = "100.50"
+            Amount = "100.50",
         };
 
         var json = JsonSerializer.Serialize(original, _options);
@@ -37,7 +37,7 @@ public class ReserveJsonConverterTest
         var original = new Reserve
         {
             Asset = Asset.CreateNonNativeAsset("USD", issuer.AccountId),
-            Amount = "500.0000000"
+            Amount = "500.0000000",
         };
 
         var json = JsonSerializer.Serialize(original, _options);
@@ -55,7 +55,7 @@ public class ReserveJsonConverterTest
         var original = new Reserve
         {
             Asset = Asset.CreateNonNativeAsset("LONGASSET123", issuer.AccountId),
-            Amount = "1000.00"
+            Amount = "1000.00",
         };
 
         var json = JsonSerializer.Serialize(original, _options);
@@ -150,7 +150,7 @@ public class ReserveJsonConverterTest
         var reserve = new Reserve
         {
             Asset = Asset.CreateNonNativeAsset("XLM", issuer.AccountId),
-            Amount = "100.50"
+            Amount = "100.50",
         };
 
         var json = JsonSerializer.Serialize(reserve, _options);

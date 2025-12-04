@@ -4,7 +4,7 @@ using StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Soroban;
 
 /// <summary>
-/// Abstract class for transaction meta.
+///     Abstract class for transaction meta.
 /// </summary>
 public abstract class TransactionMeta
 {

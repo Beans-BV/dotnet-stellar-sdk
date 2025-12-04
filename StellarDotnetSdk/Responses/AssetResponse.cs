@@ -29,7 +29,8 @@ public class AssetResponse : Response, IPagingToken
     [JsonPropertyName("num_claimable_balances")]
     public int NumClaimableBalances { get; init; }
 
-    [JsonPropertyName("flags")] public AssetResponseFlags Flags { get; init; }
+    [JsonPropertyName("flags")]
+    public AssetResponseFlags Flags { get; init; }
 
     /// <summary>
     ///     The number of liquidity pools trading this asset
@@ -106,7 +107,8 @@ public class AssetResponse : Response, IPagingToken
 
     public class AssetResponseLinks
     {
-        [JsonPropertyName("toml")] public Link Toml { get; init; }
+        [JsonPropertyName("toml")]
+        public Link Toml { get; init; }
     }
 
     public class AssetResponseFlags

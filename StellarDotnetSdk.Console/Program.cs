@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Converters;
@@ -54,12 +54,12 @@ public static class Program
 
         var worker = JsonSerializer.Deserialize<Person>(workerJson, options);
         var farmer = JsonSerializer.Deserialize<Person>(farmerJson, JsonOptions.DefaultOptions);
-        
+
         // Network.UseTestNetwork();
         // using var server = new Server("https://horizon-testnet.stellar.org");
         // await CreateAccount(server);
     }
-    
+
     private static async Task CreateAccount(Server server)
     {
         var source = KeyPair.FromSecretSeed("SDR4PTKMR5TAQQCL3RI2MLXXSXQDIR7DCAONQNQP6UCDZCD4OVRWXUHI");
@@ -96,9 +96,11 @@ public static class Program
         {
             SysConsole.WriteLine("Create account failed.");
             SysConsole.WriteLine("TransactionResultCode: " +
-                (response.SubmitTransactionResponseExtras?.ExtrasResultCodes?.TransactionResultCode ?? "null"));
+                                 (response.SubmitTransactionResponseExtras?.ExtrasResultCodes?.TransactionResultCode ??
+                                  "null"));
             SysConsole.WriteLine("TransactionResultCodeOperations: " + string.Join(", ",
-                response.SubmitTransactionResponseExtras?.ExtrasResultCodes?.OperationsResultCodes ?? new List<string>()));
+                response.SubmitTransactionResponseExtras?.ExtrasResultCodes?.OperationsResultCodes ??
+                new List<string>()));
         }
     }
 
@@ -125,9 +127,11 @@ public static class Program
         {
             SysConsole.WriteLine("Delete account failed.");
             SysConsole.WriteLine("TransactionResultCode: " +
-                                 (response.SubmitTransactionResponseExtras?.ExtrasResultCodes?.TransactionResultCode ?? "null"));
+                                 (response.SubmitTransactionResponseExtras?.ExtrasResultCodes?.TransactionResultCode ??
+                                  "null"));
             SysConsole.WriteLine("TransactionResultCodeOperations: " + string.Join(", ",
-                response.SubmitTransactionResponseExtras?.ExtrasResultCodes?.OperationsResultCodes ?? new List<string>()));
+                response.SubmitTransactionResponseExtras?.ExtrasResultCodes?.OperationsResultCodes ??
+                new List<string>()));
         }
     }
 }

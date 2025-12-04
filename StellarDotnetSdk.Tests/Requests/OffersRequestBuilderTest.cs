@@ -117,16 +117,20 @@ public class OffersRequestBuilderTest
         Assert.AreEqual("1", offer.PagingToken);
         Assert.AreEqual(0, offer.Buying.CompareTo(new AssetTypeNative()));
         Assert.AreEqual("GAHEAZQD6K7QBBPGLQZQOHCA5L3Z7ZNFBDU5XCCEI7QYVEFIRUF3IW27", offer.Seller);
-        Assert.AreEqual(0, offer.Selling.CompareTo(Asset.CreateNonNativeAsset("IOM", "GBL37ZFYU3FRBKTFO4YPIAELTO2PN6YEIF3ZS6FKOEAM5SOWALX5IP44")));
+        Assert.AreEqual(0,
+            offer.Selling.CompareTo(Asset.CreateNonNativeAsset("IOM",
+                "GBL37ZFYU3FRBKTFO4YPIAELTO2PN6YEIF3ZS6FKOEAM5SOWALX5IP44")));
         Assert.AreEqual("1", offer.Id);
         Assert.AreEqual("https://horizon-testnet.stellar.org/offers/1", offer.Links.Self.Href);
-        Assert.AreEqual("https://horizon-testnet.stellar.org/accounts/GAHEAZQD6K7QBBPGLQZQOHCA5L3Z7ZNFBDU5XCCEI7QYVEFIRUF3IW27", offer.Links.OfferMaker.Href);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/accounts/GAHEAZQD6K7QBBPGLQZQOHCA5L3Z7ZNFBDU5XCCEI7QYVEFIRUF3IW27",
+            offer.Links.OfferMaker.Href);
         Assert.AreEqual(new Price(1, 2), offer.PriceRatio);
         Assert.AreEqual("0.5000000", offer.Price);
         Assert.AreEqual(380, offer.LastModifiedLedger);
         Assert.AreEqual("2024-12-10T17:50:08Z", offer.LastModifiedTime);
-        
     }
+
     private async Task<Server> CreateServer()
     {
         return await Utils.CreateTestServerWithJson("Responses/offerPage.json");

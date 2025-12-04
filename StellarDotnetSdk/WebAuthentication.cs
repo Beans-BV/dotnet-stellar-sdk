@@ -615,11 +615,11 @@ public static class WebAuthentication
         Network network)
     {
         var signaturesUsed = VerifyTransactionSignatures(
-            transaction: transaction,
-            signers: [accountId],
-            serverKeypair: null,
-            clientSigningKey: null,
-            network: network
+            transaction,
+            [accountId],
+            null,
+            null,
+            network
         );
         return signaturesUsed.Count == 1;
     }

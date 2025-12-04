@@ -21,7 +21,7 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         {
             Asset = Asset.CreateNonNativeAsset("USD", issuer.AccountId),
             Amount = "100.50",
-            ClaimableBalanceId = "00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072"
+            ClaimableBalanceId = "00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072",
         };
 
         var json = JsonSerializer.Serialize(original, _options);
@@ -42,7 +42,7 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         {
             Asset = new AssetTypeNative(),
             Amount = "250.00",
-            ClaimableBalanceId = null
+            ClaimableBalanceId = null,
         };
 
         var json = JsonSerializer.Serialize(original, _options);
@@ -160,7 +160,7 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         {
             Asset = Asset.CreateNonNativeAsset("EUR", issuer.AccountId),
             Amount = "999.99",
-            ClaimableBalanceId = "00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072"
+            ClaimableBalanceId = "00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072",
         };
 
         var json = JsonSerializer.Serialize(obj, _options);

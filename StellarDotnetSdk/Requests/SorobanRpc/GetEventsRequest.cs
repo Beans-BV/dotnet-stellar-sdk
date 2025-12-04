@@ -28,7 +28,8 @@ public class GetEventsRequest
         ///     A comma separated list of event types (system, contract, or diagnostic) used to filter events. If omitted, all
         ///     event types are included.
         /// </summary>
-        [JsonPropertyName("type")] public string? Type { get; set; }
+        [JsonPropertyName("type")]
+        public string? Type { get; set; }
 
         /// <summary>
         ///     List of contract IDs to query for events. If omitted, return events for all contracts. Maximum 5 contract IDs are
@@ -50,6 +51,7 @@ public class GetEventsRequest
         [JsonPropertyName("cursor")]
         public string? Cursor;
 
-        [JsonPropertyName("limit")] public long? Limit;
+        [JsonPropertyName("limit")]
+        public long? Limit;
     }
 }

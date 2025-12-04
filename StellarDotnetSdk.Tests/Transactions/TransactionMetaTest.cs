@@ -4,9 +4,9 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.LedgerEntries;
-using StellarDotnetSdk.LedgerKeys;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
+using Asset = StellarDotnetSdk.Assets.Asset;
 using ContractEvent = StellarDotnetSdk.Xdr.ContractEvent;
 using ExtensionPoint = StellarDotnetSdk.Xdr.ExtensionPoint;
 using XdrSCVal = StellarDotnetSdk.Xdr.SCVal;
@@ -147,9 +147,9 @@ public class TransactionMetaTest
         Assert.IsInstanceOfType(eventBody.Data, typeof(SCVec));
         var eventData = (SCVec)eventBody.Data;
         Assert.AreEqual(3, eventData.InnerValue.Length);
-        Assert.IsInstanceOfType(eventData.InnerValue[0], typeof(StellarDotnetSdk.Soroban.SCString));
+        Assert.IsInstanceOfType(eventData.InnerValue[0], typeof(Soroban.SCString));
         Assert.AreEqual("trying to access an archived contract data entry",
-            ((StellarDotnetSdk.Soroban.SCString)eventData.InnerValue[0]).InnerValue);
+            ((Soroban.SCString)eventData.InnerValue[0]).InnerValue);
         Assert.IsInstanceOfType(eventData.InnerValue[1], typeof(ScContractId));
         Assert.AreEqual("CDMTUCYPBMWUFESK2EZA6ZZMSEX3NNOMZEXZD2VVJGZ332DYTKCEBFI5",
             ((ScContractId)eventData.InnerValue[1]).InnerValue);
@@ -249,7 +249,7 @@ public class TransactionMetaTest
                 ]
             ),
         };
-        var xdrMeta = new StellarDotnetSdk.Xdr.TransactionMeta()
+        var xdrMeta = new StellarDotnetSdk.Xdr.TransactionMeta
         {
             Discriminant = 4,
             V4 = metaV4,
@@ -377,7 +377,7 @@ public class TransactionMetaTest
             CollectionAssert.AreEqual(xdrCreatedEntry.Claimants[l].V0.Destination.InnerValue.Ed25519.InnerValue,
                 createdEntry.Claimants[l].Destination.XdrPublicKey.Ed25519.InnerValue);
         }
-        Assert.IsTrue(StellarDotnetSdk.Assets.Asset.FromXdr(xdrCreatedEntry.Asset).Equals(createdEntry.Asset));
+        Assert.IsTrue(Asset.FromXdr(xdrCreatedEntry.Asset).Equals(createdEntry.Asset));
     }
 
     private static void AssertEqualContractEvents(
@@ -486,7 +486,7 @@ public class TransactionMetaTest
                             Discriminant = 0,
                         },
                         Amount = CreateRandomInt64(),
-                        Asset = new Asset
+                        Asset = new StellarDotnetSdk.Xdr.Asset
                         {
                             Discriminant = AssetType.Create(AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM4),
                             AlphaNum4 = new AlphaNum4

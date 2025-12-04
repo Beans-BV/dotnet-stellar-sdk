@@ -21,9 +21,11 @@ public class Price
         Denominator = denominator;
     }
 
-    [JsonPropertyName("n")] public int Numerator { get; }
+    [JsonPropertyName("n")]
+    public int Numerator { get; }
 
-    [JsonPropertyName("d")] public int Denominator { get; }
+    [JsonPropertyName("d")]
+    public int Denominator { get; }
 
     /// <summary>
     ///     Approximates<code> price</code> to a fraction.
@@ -83,7 +85,7 @@ public class Price
         return new xdr_Price
         {
             D = new Int32(Denominator),
-            N = new Int32(Numerator)
+            N = new Int32(Numerator),
         };
     }
 

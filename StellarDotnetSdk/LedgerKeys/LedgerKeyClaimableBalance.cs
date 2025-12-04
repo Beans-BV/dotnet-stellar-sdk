@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerKeys;
@@ -20,7 +19,7 @@ public class LedgerKeyClaimableBalance : LedgerKey
     }
 
     /// <summary>
-    /// Hex-encoded claimable balance ID (0000...). 
+    ///     Hex-encoded claimable balance ID (0000...).
     /// </summary>
     public string BalanceId { get; }
 

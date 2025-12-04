@@ -50,7 +50,7 @@ public sealed class TradeAggregationResponse : Response
     /// </summary>
     [JsonPropertyName("high_r")]
     public required Price HighR { get; init; }
-    
+
     /// <summary>
     ///     The lowest price for this time period.
     /// </summary>
@@ -62,7 +62,7 @@ public sealed class TradeAggregationResponse : Response
     /// </summary>
     [JsonPropertyName("low_r")]
     public required Price LowR { get; init; }
-    
+
     /// <summary>
     ///     The price as seen on first trade aggregated.
     /// </summary>
@@ -74,13 +74,13 @@ public sealed class TradeAggregationResponse : Response
     /// </summary>
     [JsonPropertyName("open_r")]
     public required Price OpenR { get; init; }
-    
+
     /// <summary>
     ///     The price as seen on last trade aggregated.
     /// </summary>
     [JsonPropertyName("close")]
     public required string Close { get; init; }
-    
+
     /// <summary>
     ///     The price as seen on last trade aggregated as a rational number.
     /// </summary>

@@ -24,7 +24,7 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
         var response = await HttpClient.GetAsync(uri);
         return await responseHandler.HandleResponse(response);
     }
-    
+
     /// <summary>
     ///     Builds request to GET /accounts/{account}/offers
     ///     See: https://www.stellar.org/developers/horizon/reference/offers-for-account.html
@@ -121,7 +121,7 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
         SetSegments("offers", offerId);
         return await Offer(BuildUri());
     }
-    
+
     private void AddAssetFilterQueryParam(string side, Asset asset)
     {
         UriBuilder.SetQueryParam($"{side}_asset_type", asset.Type);

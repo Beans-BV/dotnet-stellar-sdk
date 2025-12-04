@@ -14,7 +14,8 @@ public class SorobanRpcRequest<T>
     [JsonPropertyName("jsonrpc")]
     public string JsonRpc { get; private set; } = "2.0";
 
-    [JsonPropertyName("id")] public string Id { get; private set; }
+    [JsonPropertyName("id")]
+    public string Id { get; private set; }
 
     [JsonPropertyName("method")]
     public string Method { get; private set; }

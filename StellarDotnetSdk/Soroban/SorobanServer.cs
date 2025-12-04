@@ -254,9 +254,12 @@ public class SorobanServer : IDisposable
     ///     </remarks>
     /// </param>
     /// <param name="resourceConfig">Contains configuration for how resources will be calculated when simulating transactions.</param>
-    /// <param name="authMode">Explicitly allows users to opt in to non-root authorization in recording mode.
-    /// <p>Leaving this field unset will default to <see cref="AuthMode.ENFORCE"/> if auth entries are present,
-    /// <see cref="AuthMode.RECORD"/> otherwise.</p>
+    /// <param name="authMode">
+    ///     Explicitly allows users to opt in to non-root authorization in recording mode.
+    ///     <p>
+    ///         Leaving this field unset will default to <see cref="AuthMode.ENFORCE" /> if auth entries are present,
+    ///         <see cref="AuthMode.RECORD" /> otherwise.
+    ///     </p>
     /// </param>
     /// <returns>A <see cref="SimulateTransactionResponse" /> object.</returns>
     public Task<SimulateTransactionResponse> SimulateTransaction(
@@ -279,7 +282,7 @@ public class SorobanServer : IDisposable
     {
         var request = new Dictionary<string, object>
         {
-            ["transaction"] = transaction.ToUnsignedEnvelopeXdrBase64()
+            ["transaction"] = transaction.ToUnsignedEnvelopeXdrBase64(),
         };
 
         if (resourceConfig != null)

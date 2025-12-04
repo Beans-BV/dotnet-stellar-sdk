@@ -15,7 +15,8 @@ namespace StellarDotnetSdk.Responses.Effects;
 [JsonConverter(typeof(EffectResponseJsonConverter))]
 public abstract class EffectResponse : Response, IPagingToken
 {
-    [JsonPropertyName("id")] public string Id { get; init; }
+    [JsonPropertyName("id")]
+    public string Id { get; init; }
 
     [JsonPropertyName("account")]
     public string Account { get; init; }
@@ -26,7 +27,8 @@ public abstract class EffectResponse : Response, IPagingToken
     [JsonPropertyName("account_muxed_id")]
     public ulong? AccountMuxedId { get; init; }
 
-    [JsonPropertyName("type")] public string Type { get; init; }
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
 
     [JsonPropertyName("type_i")]
     public virtual int TypeId { get; }

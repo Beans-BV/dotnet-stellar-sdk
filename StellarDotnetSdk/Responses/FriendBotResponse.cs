@@ -8,9 +8,11 @@ public class FriendBotResponse
     [JsonPropertyName("_links")]
     public FriendBotResponseLinks Links { get; init; }
 
-    [JsonPropertyName("type")] public string Type { get; init; }
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
 
-    [JsonPropertyName("title")] public string Title { get; init; }
+    [JsonPropertyName("title")]
+    public string Title { get; init; }
 
     [JsonPropertyName("status")]
     public int Status { get; init; }
@@ -21,7 +23,8 @@ public class FriendBotResponse
     [JsonPropertyName("detail")]
     public string Detail { get; init; }
 
-    [JsonPropertyName("hash")] public string Hash { get; init; }
+    [JsonPropertyName("hash")]
+    public string Hash { get; init; }
 
     [JsonPropertyName("ledger")]
     public long Ledger { get; init; }

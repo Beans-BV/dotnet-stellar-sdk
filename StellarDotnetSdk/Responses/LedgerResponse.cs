@@ -16,7 +16,7 @@ public sealed class LedgerResponse : Response, IPagingToken
     /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; init; }
-    
+
     /// <summary>
     ///     The sequence number of this ledger.
     /// </summary>
