@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -12,6 +13,8 @@ using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses;
+using StellarDotnetSdk.Responses.Effects;
+using StellarDotnetSdk.Responses.Operations;
 using StellarDotnetSdk.Transactions;
 
 namespace StellarDotnetSdk.Tests;
@@ -169,6 +172,7 @@ public class ServerCheckMemoRequiredTest
         var accountData = data ?? new Dictionary<string, string>();
         var response = new AccountResponse
         {
+            Id = "1",
             SubentryCount = 1,
             SequenceUpdatedAtLedger = null,
             SequenceUpdatedAtTime = null,
@@ -198,6 +202,7 @@ public class ServerCheckMemoRequiredTest
                     IsAuthorized = false,
                     IsAuthorizedToMaintainLiabilities = true,
                     LiquidityPoolId = "1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469",
+                    BalanceString = "123",
                 },
             ],
             Signers =
@@ -209,10 +214,31 @@ public class ServerCheckMemoRequiredTest
                     Weight = 1,
                 },
             ],
-            Links = null,
+            Links = new AccountResponseLinks
+            {
+                Self = Link<AccountResponse>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1", false),
+                Transactions = Link<Page<TransactionResponse>>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1/transactions{?cursor,limit,order}", true),
+                Offers = Link<Page<OfferResponse>>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1/offers{?cursor,limit,order}", true),
+                Operations = Link<Page<OperationResponse>>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1/operations{?cursor,limit,order}", true),
+                Payments = Link<Page<PaymentOperationResponse>>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1/payments{?cursor,limit,order}", true),
+                Trades = Link<Page<TradeResponse>>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1/trades{?cursor,limit,order}", true),
+                Effects = Link<Page<EffectResponse>>
+                    .Create("https://horizon-testnet.stellar.org/accounts/1/effects{?cursor,limit,order}", true),
+            },
+            NumberSponsored = 0,
+            NumberSponsoring = 0,
             Data = accountData,
             AccountId = accountId,
             SequenceNumber = 3298702387052545,
+            LastModifiedLedger = 1,
+            LastModifiedTime = new DateTimeOffset(2025, 8, 14, 19, 44, 19, TimeSpan.Zero),
+            PagingToken = "123",
         };
         return JsonSerializer.Serialize(response);
     }
