@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Requests;
@@ -128,7 +129,7 @@ public class OffersRequestBuilderTest
         Assert.AreEqual(new Price(1, 2), offer.PriceRatio);
         Assert.AreEqual("0.5000000", offer.Price);
         Assert.AreEqual(380, offer.LastModifiedLedger);
-        Assert.AreEqual("2024-12-10T17:50:08Z", offer.LastModifiedTime);
+        Assert.AreEqual(new DateTimeOffset(2024, 12, 10, 17, 50, 8, TimeSpan.Zero), offer.LastModifiedTime);
     }
 
     private async Task<Server> CreateServer()

@@ -490,7 +490,7 @@ public class SorobanServerTest
         Assert.IsNotNull(event1);
         Assert.AreEqual("contract", event1.Type);
         Assert.AreEqual(912707, event1.Ledger);
-        Assert.AreEqual("2024-08-06T10:09:22Z", event1.LedgerClosedAt);
+        Assert.AreEqual(new DateTimeOffset(2024, 8, 6, 10, 9, 22, TimeSpan.Zero), event1.LedgerClosedAt);
         Assert.AreEqual("CASCLAHV7E7H3BOGQIW5HIC3H6WVDOTOQRTRMXYSTKJHXOORP3DNATY2", event1.ContractId);
         Assert.AreEqual("0003920046715838464-0000000001", event1.Id);
         Assert.AreEqual(2, event1.Topics.Length);
@@ -508,7 +508,7 @@ public class SorobanServerTest
         Assert.IsNotNull(event2);
         Assert.AreEqual("contract", event2.Type);
         Assert.AreEqual(912723, event2.Ledger);
-        Assert.AreEqual("2024-08-06T10:10:47Z", event2.LedgerClosedAt);
+        Assert.AreEqual(new DateTimeOffset(2024, 8, 6, 10, 10, 47, TimeSpan.Zero), event2.LedgerClosedAt);
         Assert.AreEqual("CDTJALOV4KLSPEMNFHKYSG4WOTN7FCN4A2JOKRPVCQYEHLUEH2YUJF5R", event2.ContractId);
         Assert.AreEqual("0003920115435319296-0000000001", event2.Id);
         Assert.AreEqual(3, event2.Topics.Length);
@@ -525,7 +525,7 @@ public class SorobanServerTest
         Assert.IsNotNull(event3);
         Assert.AreEqual("contract", event3.Type);
         Assert.AreEqual(912725, event3.Ledger);
-        Assert.AreEqual("2024-08-06T10:10:58Z", event3.LedgerClosedAt);
+        Assert.AreEqual(new DateTimeOffset(2024, 8, 6, 10, 10, 58, TimeSpan.Zero), event3.LedgerClosedAt);
         Assert.AreEqual("CDYTK2FLRHT3KJ6RVAAABI4A7Y2XERCWN3FT5II7FHONDKPQVEAZ33YI", event3.ContractId);
         Assert.AreEqual("0003920124025257984-0000000001", event3.Id);
         Assert.AreEqual(3, event3.Topics.Length);
@@ -542,7 +542,7 @@ public class SorobanServerTest
         Assert.IsNotNull(event4);
         Assert.AreEqual("contract", event4.Type);
         Assert.AreEqual(913037, event4.Ledger);
-        Assert.AreEqual("2024-08-06T10:38:23Z", event4.LedgerClosedAt);
+        Assert.AreEqual(new DateTimeOffset(2024, 8, 6, 10, 38, 23, TimeSpan.Zero), event4.LedgerClosedAt);
         Assert.AreEqual("CDV6IIE2DFFGB3GKAG7YYSKBO4PFDAZ76GRHXKSOBBIG64NNHMMRCRXH", event4.ContractId);
         Assert.AreEqual("0003921464055050240-0000000001", event4.Id);
         Assert.AreEqual(3, event4.Topics.Length);

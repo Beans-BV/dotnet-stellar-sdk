@@ -53,9 +53,10 @@ public abstract class OperationResponse : Response, IPagingToken
     public virtual int TypeId { get; }
 
     /// <summary>
+    ///     The time this operation was created.
     /// </summary>
     [JsonPropertyName("created_at")]
-    public DateTime CreatedAt { get; init; }
+    public DateTimeOffset CreatedAt { get; init; }
 
     /// <summary>
     ///     Returns transaction hash of transaction this operation belongs to.

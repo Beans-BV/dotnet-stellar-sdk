@@ -37,7 +37,7 @@ public abstract class EffectResponse : Response, IPagingToken
     public EffectsResponseLinks Links { get; init; }
 
     [JsonPropertyName("created_at")]
-    public DateTime CreatedAt { get; init; }
+    public DateTimeOffset CreatedAt { get; init; }
 
     [JsonPropertyName("paging_token")]
     public string PagingToken { get; init; }

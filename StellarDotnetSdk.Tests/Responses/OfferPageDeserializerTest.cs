@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -55,7 +56,8 @@ public class OfferPageDeserializerTest
             .Should().Be(10);
 
         Assert.AreEqual(offerResponsePage.Records[0].LastModifiedLedger, 22200794);
-        Assert.AreEqual(offerResponsePage.Records[0].LastModifiedTime, "2019-01-28T12:30:38Z");
+        Assert.AreEqual(offerResponsePage.Records[0].LastModifiedTime,
+            new DateTimeOffset(2019, 1, 28, 12, 30, 38, TimeSpan.Zero));
 
         Assert.AreEqual(offerResponsePage.Links.Next.Href,
             "https://horizon-testnet.stellar.org/accounts/GA2IYMIZSAMDD6QQTTSIEL73H2BKDJQTA7ENDEEAHJ3LMVF7OYIZPXQD/offers?order=asc&limit=10&cursor=241");

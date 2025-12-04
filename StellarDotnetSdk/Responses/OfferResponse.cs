@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
 
@@ -42,7 +43,7 @@ public class OfferResponse : Response, IPagingToken
     public int LastModifiedLedger { get; init; }
 
     [JsonPropertyName("last_modified_time")]
-    public string LastModifiedTime { get; init; }
+    public DateTimeOffset? LastModifiedTime { get; init; }
 
     [JsonPropertyName("_links")]
     public OfferResponseLinks Links { get; init; }

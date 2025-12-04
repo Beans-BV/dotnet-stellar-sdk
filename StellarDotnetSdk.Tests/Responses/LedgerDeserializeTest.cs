@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -41,7 +42,7 @@ public class LedgerDeserializeTest
         Assert.AreEqual(0, ledger.SuccessfulTransactionCount);
         Assert.AreEqual(0, ledger.FailedTransactionCount);
         Assert.AreEqual(0, ledger.OperationCount);
-        Assert.AreEqual("2025-12-01T06:13:55Z", ledger.ClosedAt);
+        Assert.AreEqual(new DateTimeOffset(2025, 12, 1, 6, 13, 55, TimeSpan.Zero), ledger.ClosedAt);
         Assert.AreEqual("100000000000.0000000", ledger.TotalCoins);
         Assert.AreEqual("110238.5552711", ledger.FeePool);
         Assert.AreEqual(100L, ledger.BaseFeeInStroops);
