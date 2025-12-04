@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Responses.Operations;
@@ -63,10 +64,10 @@ public sealed class LiquidityPoolResponse : Response, IPagingToken
     public required long LastModifiedLedger { get; init; }
 
     /// <summary>
-    ///     An ISO 8601 formatted string of when this liquidity pool was last modified.
+    ///     The time this liquidity pool was last modified.
     /// </summary>
     [JsonPropertyName("last_modified_time")]
-    public required string LastModifiedTime { get; init; }
+    public required DateTimeOffset LastModifiedTime { get; init; }
 
     /// <inheritdoc />
     [JsonPropertyName("paging_token")]

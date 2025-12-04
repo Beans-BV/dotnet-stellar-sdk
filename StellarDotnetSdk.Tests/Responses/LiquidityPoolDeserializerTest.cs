@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -87,7 +88,7 @@ public class LiquidityPoolDeserializerTest
         Assert.AreEqual("TEST:GC6ZBHGJGGTPVLYALOKQNQSQUXHJUYDZ7VLMAPU2MERVTYMKVL2GTEST",
             instance.Reserves[1].Asset.CanonicalName());
         Assert.AreEqual(1694L, instance.LastModifiedLedger);
-        Assert.AreEqual("2025-08-14T19:44:19Z", instance.LastModifiedTime);
+        Assert.AreEqual(new DateTimeOffset(2025, 8, 14, 19, 44, 19, TimeSpan.Zero), instance.LastModifiedTime);
         Assert.AreEqual(
             "https://horizon-testnet.stellar.org/liquidity_pools/93f526d8bc7b38ac6d746c2d0a4bebb548ea31e1574cb146a6e6898030d05144/operations{?cursor,limit,order}",
             instance.Links.Operations.Href);
