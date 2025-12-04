@@ -14,15 +14,15 @@ using xdr_Price = Xdr.Price;
 /// <remarks>
 ///     <para>
 ///         This class is used when constructing operations that require a price (e.g., manage offer,
-///         liquidity pool deposit). It uses <see cref="int"/> (32-bit) for numerator and denominator
+///         liquidity pool deposit). It uses <see cref="int" /> (32-bit) for numerator and denominator
 ///         as required by the Stellar XDR protocol specification.
 ///     </para>
 ///     <para>
-///         <strong>For deserializing Horizon API responses</strong>, use <see cref="Responses.Price"/>
-///         instead, which uses <see cref="long"/> to handle values that may exceed the 32-bit range.
+///         <strong>For deserializing Horizon API responses</strong>, use <see cref="Responses.Price" />
+///         instead, which uses <see cref="long" /> to handle values that may exceed the 32-bit range.
 ///     </para>
 /// </remarks>
-/// <seealso cref="Responses.Price"/>
+/// <seealso cref="Responses.Price" />
 public class Price
 {
     /// <summary>
@@ -106,7 +106,7 @@ public class Price
         return new xdr_Price
         {
             D = new Int32(Denominator),
-            N = new Int32(Numerator)
+            N = new Int32(Numerator),
         };
     }
 

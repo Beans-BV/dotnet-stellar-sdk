@@ -312,10 +312,9 @@ public class ServerTest
             },
             HttpStatusCode.TooManyRequests);
 
-        var exception = await Assert.ThrowsExceptionAsync<TooManyRequestsException>(
-            () => server.SubmitTransaction(
-                BuildTransaction(),
-                new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
+        var exception = await Assert.ThrowsExceptionAsync<TooManyRequestsException>(() => server.SubmitTransaction(
+            BuildTransaction(),
+            new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
 
         Assert.AreEqual(10, exception.RetryAfter);
     }
@@ -330,11 +329,10 @@ public class ServerTest
             },
             HttpStatusCode.TooManyRequests);
 
-        var exception = await Assert.ThrowsExceptionAsync<TooManyRequestsException>(
-            () => server.SubmitTransaction(
-                BuildTransaction(),
-                new SubmitTransactionOptions { SkipMemoRequiredCheck = true }
-            ));
+        var exception = await Assert.ThrowsExceptionAsync<TooManyRequestsException>(() => server.SubmitTransaction(
+            BuildTransaction(),
+            new SubmitTransactionOptions { SkipMemoRequiredCheck = true }
+        ));
 
         Assert.IsTrue(exception.RetryAfter is >= 7 and <= 10, "The RetryAfter value is outside the expected range.");
     }
@@ -349,10 +347,9 @@ public class ServerTest
             },
             HttpStatusCode.ServiceUnavailable);
 
-        var exception = await Assert.ThrowsExceptionAsync<ServiceUnavailableException>(
-            () => server.SubmitTransaction(
-                BuildTransaction(),
-                new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
+        var exception = await Assert.ThrowsExceptionAsync<ServiceUnavailableException>(() => server.SubmitTransaction(
+            BuildTransaction(),
+            new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
 
         Assert.AreEqual(10, exception.RetryAfter);
     }
@@ -367,10 +364,9 @@ public class ServerTest
             },
             HttpStatusCode.ServiceUnavailable);
 
-        var exception = await Assert.ThrowsExceptionAsync<ServiceUnavailableException>(
-            () => server.SubmitTransaction(
-                BuildTransaction(),
-                new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
+        var exception = await Assert.ThrowsExceptionAsync<ServiceUnavailableException>(() => server.SubmitTransaction(
+            BuildTransaction(),
+            new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
 
         Assert.IsTrue(exception.RetryAfter is >= 7 and <= 10, "The RetryAfter value is outside the expected range.");
     }

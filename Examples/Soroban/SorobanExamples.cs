@@ -518,7 +518,6 @@ internal static class SorobanExamples
 
         // Create client with optional bearer token for authenticated endpoints
         var httpClient = new DefaultStellarSdkHttpClient(
-            null, // Set your API token here if required
             resilienceOptions: resilienceOptions
         );
 
