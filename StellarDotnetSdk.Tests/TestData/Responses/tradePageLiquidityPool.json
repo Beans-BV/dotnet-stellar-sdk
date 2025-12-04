@@ -1,0 +1,89 @@
+﻿{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/trades?cursor=&limit=10&order=asc"
+    },
+    "next": {
+      "href": "https://horizon-testnet.stellar.org/trades?cursor=10033043628036-0&limit=10&order=asc"
+    },
+    "prev": {
+      "href": "https://horizon-testnet.stellar.org/trades?cursor=6816113102849-0&limit=10&order=desc"
+    }
+  },
+  "_embedded": {
+    "records": [
+      {
+        "_links": {
+          "self": {
+            "href": ""
+          },
+          "base": {
+            "href": "https://horizon-testnet.stellar.org/accounts/GALMNOMXPF2FW6XOQ5SKX3T43WMYGRZMLCMZ6H4WGBE47JSNMZRWOEPJ"
+          },
+          "counter": {
+            "href": "https://horizon-testnet.stellar.org/liquidity_pools/93f526d8bc7b38ac6d746c2d0a4bebb548ea31e1574cb146a6e6898030d05144"
+          },
+          "operation": {
+            "href": "https://horizon-testnet.stellar.org/operations/7202660159489"
+          }
+        },
+        "id": "7202660159489-0",
+        "paging_token": "7202660159489-0",
+        "ledger_close_time": "2025-08-14T19:42:53Z",
+        "trade_type": "liquidity_pool",
+        "liquidity_pool_fee_bp": 30,
+        "base_offer_id": "4611693221087547393",
+        "base_account": "GALMNOMXPF2FW6XOQ5SKX3T43WMYGRZMLCMZ6H4WGBE47JSNMZRWOEPJ",
+        "base_amount": "10.0000000",
+        "base_asset_type": "native",
+        "counter_liquidity_pool_id": "93f526d8bc7b38ac6d746c2d0a4bebb548ea31e1574cb146a6e6898030d05144",
+        "counter_amount": "105.5177194",
+        "counter_asset_type": "credit_alphanum4",
+        "counter_asset_code": "TEST",
+        "counter_asset_issuer": "GC6ZBHGJGGTPVLYALOKQNQSQUXHJUYDZ7VLMAPU2MERVTYMKVL2GTEST",
+        "base_is_seller": false,
+        "price": {
+          "n": "1055177194",
+          "d": "100000000"
+        }
+      },
+      {
+        "_links": {
+          "self": {
+            "href": ""
+          },
+          "base": {
+            "href": "https://horizon-testnet.stellar.org/liquidity_pools/b6564a56fbec0bf6d7c3894f34287339ab5d3d3012aa3180dfade15f9104bffd"
+          },
+          "counter": {
+            "href": "https://horizon-testnet.stellar.org/accounts/GDOVNWOX5DKFMACQT2ZGHECTTIPSBZ4AT3SCP2RF5BKHNDBUDGNIAJXS"
+          },
+          "operation": {
+            "href": "https://horizon-testnet.stellar.org/operations/54593329328129"
+          }
+        },
+        "id": "54593329328129-0",
+        "paging_token": "54593329328129-0",
+        "ledger_close_time": "2025-08-15T11:03:36Z",
+        "trade_type": "liquidity_pool",
+        "liquidity_pool_fee_bp": 30,
+        "base_liquidity_pool_id": "b6564a56fbec0bf6d7c3894f34287339ab5d3d3012aa3180dfade15f9104bffd",
+        "base_amount": "9.3486278",
+        "base_asset_type": "credit_alphanum12",
+        "base_asset_code": "PHPSTAR",
+        "base_asset_issuer": "GBR5QBVY7IPWICDRNNKGYNCOTBSFQMXBMS5VHC26C6REEVTXHRQ5T4LM",
+        "counter_offer_id": "4611740611756716033",
+        "counter_account": "GDOVNWOX5DKFMACQT2ZGHECTTIPSBZ4AT3SCP2RF5BKHNDBUDGNIAJXS",
+        "counter_amount": "10.0000000",
+        "counter_asset_type": "credit_alphanum4",
+        "counter_asset_code": "SDK",
+        "counter_asset_issuer": "GDXKHDGM4X3YB6YH4UXG3NYDLFQSP5HUHYFX4AH4HYGIE5PEBGINWWEI",
+        "base_is_seller": true,
+        "price": {
+          "n": "100000000",
+          "d": "93486278"
+        }
+      }
+    ]
+  }
+}
