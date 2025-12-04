@@ -40,8 +40,8 @@ public class OrderBookDeserializerTest
 
         Assert.AreEqual(orderBook.Bids[0].Amount, "31.4007644");
         Assert.AreEqual(orderBook.Bids[0].Price, "0.0024224");
-        Assert.AreEqual(orderBook.Bids[0].PriceR.Numerator, 4638606);
-        Assert.AreEqual(orderBook.Bids[0].PriceR.Denominator, 1914900241);
+        Assert.AreEqual(orderBook.Bids[0].PriceRatio.Numerator, 4638606);
+        Assert.AreEqual(orderBook.Bids[0].PriceRatio.Denominator, 1914900241);
 
         Assert.AreEqual(orderBook.Bids[1].Amount, "5.9303650");
         Assert.AreEqual(orderBook.Bids[1].Price, "0.0024221");

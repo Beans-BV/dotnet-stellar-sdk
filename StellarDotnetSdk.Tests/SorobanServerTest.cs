@@ -346,7 +346,7 @@ public class SorobanServerTest
     {
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent("");
         await Assert.ThrowsExceptionAsync<TooManySignaturesException>(() =>
-            sorobanServer.SimulateTransaction(CreateDummyTransaction(true)));
+            sorobanServer.SimulateTransaction(CreateDummyTransaction()));
     }
 
     [TestMethod]

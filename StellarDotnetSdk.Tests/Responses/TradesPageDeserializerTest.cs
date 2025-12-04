@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
-using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses;
@@ -62,10 +61,7 @@ public class TradesPageDeserializerTest
             "GCKA6K5PCQ6PNF5RQBF7PQDJWRHO6UOGFMRLK3DYHDOI244V47XKQ4GP");
         Assert.AreEqual(tradesPage.Records[0].BaseIsSeller, true);
 
-        tradesPage.Records[0].Price.Numerator
-            .Should().Be("10");
-
-        tradesPage.Records[0].Price.Denominator
-            .Should().Be("61");
+        Assert.AreEqual(10L, tradesPage.Records[0].Price.Numerator);
+        Assert.AreEqual(61L, tradesPage.Records[0].Price.Denominator);
     }
 }
