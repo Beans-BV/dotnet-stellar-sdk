@@ -18,8 +18,8 @@ public class DefaultStellarSdkHttpClientTests
     public async Task Constructor_WithCustomInnerHandler_UsesProvidedHandler()
     {
         // Arrange
-        var trackingHandler = new TrackingHttpMessageHandler(
-            (_, _, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
+        var trackingHandler =
+            new TrackingHttpMessageHandler((_, _, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
         // Act
         using var client = new DefaultStellarSdkHttpClient(innerHandler: trackingHandler);
@@ -117,8 +117,8 @@ public class DefaultStellarSdkHttpClientTests
     public async Task Constructor_WithCircuitBreakerOnly_CreatesResiliencePipeline()
     {
         // Arrange
-        var trackingHandler = new TrackingHttpMessageHandler(
-            (_, _, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
+        var trackingHandler =
+            new TrackingHttpMessageHandler((_, _, _) => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
 
         var resilienceOptions = new HttpResilienceOptions
         {
