@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses.Operations;
 
@@ -49,10 +50,10 @@ public sealed class ClaimableBalanceResponse : Response
     public required long LastModifiedLedger { get; init; }
 
     /// <summary>
-    ///     An ISO 8601 formatted string of when this claimable balance was last modified.
+    ///     The time this claimable balance was last modified.
     /// </summary>
     [JsonPropertyName("last_modified_time")]
-    public required string LastModifiedTime { get; init; }
+    public required DateTimeOffset LastModifiedTime { get; init; }
 
     /// <summary>
     ///     The list of accounts that can claim this balance and the conditions under which they can do so.
