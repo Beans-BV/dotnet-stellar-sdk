@@ -850,7 +850,7 @@ public class EffectDeserializerTest
         Assert.AreEqual(effect.Account, "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO");
         Assert.AreEqual(effect.Seller, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
         Assert.AreEqual(effect.SellerMuxed, "MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24");
-        Assert.AreEqual(effect.SellerMuxedId, 5123456789);
+        Assert.AreEqual(effect.SellerMuxedId, 5123456789UL);
         Assert.AreEqual(effect.OfferId, "1");
 
         Assert.AreEqual(effect.Links.Operation.Href, "http://horizon-testnet.stellar.org/operations/33788507721730");
