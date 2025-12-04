@@ -55,10 +55,5 @@
         "source_asset_type": "credit_alphanum4"
       }
     ]
-  },
-  "_links": {
-    "self": {
-      "href": "/paths"
-    }
   }
 }
