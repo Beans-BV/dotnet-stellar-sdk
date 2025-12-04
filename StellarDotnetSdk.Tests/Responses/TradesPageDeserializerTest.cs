@@ -105,8 +105,8 @@ public class TradesPageDeserializerTest
         // Price
         Assert.IsNotNull(record.Price);
 
-        Assert.AreEqual("9", record.Price.Numerator);
-        Assert.AreEqual("100", record.Price.Denominator);
+        Assert.AreEqual(9L, record.Price.Numerator);
+        Assert.AreEqual(100L, record.Price.Denominator);
     }
 
     private static void AssertLiquidityPoolTrades(Page<TradeResponse> tradesPage)
@@ -159,8 +159,8 @@ public class TradesPageDeserializerTest
             record1.CounterAsset);
         Assert.AreEqual(false, record1.BaseIsSeller);
 
-        Assert.AreEqual("1055177194", record1.Price.Numerator);
-        Assert.AreEqual("100000000", record1.Price.Denominator);
+        Assert.AreEqual(1055177194L, record1.Price.Numerator);
+        Assert.AreEqual(100000000L, record1.Price.Denominator);
 
         // Record2: CounterLiquidityPoolId <->  BaseOfferId
         var record2 = tradesPage.Records[1];
@@ -205,7 +205,7 @@ public class TradesPageDeserializerTest
         // Price
         Assert.IsNotNull(record2.Price);
 
-        Assert.AreEqual("100000000", record2.Price.Numerator);
-        Assert.AreEqual("93486278", record2.Price.Denominator);
+        Assert.AreEqual(100000000L, record2.Price.Numerator);
+        Assert.AreEqual(93486278L, record2.Price.Denominator);
     }
 }
