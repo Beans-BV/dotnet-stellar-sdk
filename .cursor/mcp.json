@@ -3,6 +3,9 @@
     "GitHub MCP": {
       "url": "https://api.githubcopilot.com/mcp/"
     },
+    "sequential-thinking": {
+      "command": "npx -y @modelcontextprotocol/server-sequential-thinking"
+    },
     "java-stellar-sdk Docs": {
       "url": "https://gitmcp.io/lightsail-network/java-stellar-sdk"
     },
