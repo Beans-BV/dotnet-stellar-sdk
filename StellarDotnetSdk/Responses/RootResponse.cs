@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses;
 
@@ -33,10 +34,10 @@ public sealed class RootResponse : Response
     public required long HistoryLatestLedger { get; init; }
 
     /// <summary>
-    ///     An ISO 8601 formatted string of when the latest ledger was closed.
+    ///     The time the latest ledger was closed.
     /// </summary>
     [JsonPropertyName("history_latest_ledger_closed_at")]
-    public required string HistoryLatestLedgerClosedAt { get; init; }
+    public required DateTimeOffset HistoryLatestLedgerClosedAt { get; init; }
 
     /// <summary>
     ///     The sequence number of the oldest ledger stored in Horizon's history database.
