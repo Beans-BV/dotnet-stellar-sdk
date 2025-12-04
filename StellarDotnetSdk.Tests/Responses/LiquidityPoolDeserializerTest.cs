@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -19,34 +20,9 @@ public class LiquidityPoolDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<LiquidityPoolResponse>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(instance);
-        Assert.AreEqual(new LiquidityPoolId("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"),
-            instance.Id);
-        Assert.AreEqual("113725249324879873", instance.PagingToken);
-        Assert.AreEqual(30, instance.FeeBp);
-        Assert.AreEqual(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT, instance.Type);
-        Assert.AreEqual("300", instance.TotalTrustlines);
-        Assert.AreEqual("5000.0000000", instance.TotalShares);
-
-        Assert.AreEqual("1000.0000005", instance.Reserves[0].Amount);
-        Assert.AreEqual("EURT:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S",
-            instance.Reserves[0].Asset.CanonicalName());
-
-        Assert.AreEqual("2000.0000000", instance.Reserves[1].Amount);
-        Assert.AreEqual("PHP:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S",
-            instance.Reserves[1].Asset.CanonicalName());
-
-        Assert.AreEqual(
-            "/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/effects{?cursor,limit,order}",
-            instance.Links.Effects.Href);
-        Assert.AreEqual(
-            "/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/operations{?cursor,limit,order}",
-            instance.Links.Operations.Href);
-        Assert.AreEqual("/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9",
-            instance.Links.Self.Href);
-        Assert.AreEqual(
-            "/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/transactions{?cursor,limit,order}",
-            instance.Links.Transactions.Href);
+        AssertTestData(instance);
     }
+
 
     [TestMethod]
     public void TestSerializeDeserialize()
@@ -57,33 +33,7 @@ public class LiquidityPoolDeserializerTest
         var serialized = JsonSerializer.Serialize(instance);
         var parsed = JsonSerializer.Deserialize<LiquidityPoolResponse>(serialized, JsonOptions.DefaultOptions);
         Assert.IsNotNull(parsed);
-        Assert.AreEqual(new LiquidityPoolId("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9"),
-            parsed.Id);
-        Assert.AreEqual("113725249324879873", parsed.PagingToken);
-        Assert.AreEqual(30, parsed.FeeBp);
-        Assert.AreEqual(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT, parsed.Type);
-        Assert.AreEqual("300", parsed.TotalTrustlines);
-        Assert.AreEqual("5000.0000000", parsed.TotalShares);
-
-        Assert.AreEqual("1000.0000005", parsed.Reserves[0].Amount);
-        Assert.AreEqual("EURT:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S",
-            parsed.Reserves[0].Asset.CanonicalName());
-
-        Assert.AreEqual("2000.0000000", parsed.Reserves[1].Amount);
-        Assert.AreEqual("PHP:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S",
-            parsed.Reserves[1].Asset.CanonicalName());
-
-        Assert.AreEqual(
-            "/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/effects{?cursor,limit,order}",
-            parsed.Links.Effects.Href);
-        Assert.AreEqual(
-            "/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/operations{?cursor,limit,order}",
-            parsed.Links.Operations.Href);
-        Assert.AreEqual("/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9",
-            parsed.Links.Self.Href);
-        Assert.AreEqual(
-            "/liquidity_pools/67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9/transactions{?cursor,limit,order}",
-            parsed.Links.Transactions.Href);
+        AssertTestData(parsed);
     }
 
     [TestMethod]
@@ -117,5 +67,36 @@ public class LiquidityPoolDeserializerTest
         Assert.AreNotEqual(reserveA, reserveC);
         Assert.AreNotEqual(reserveA, reserveD);
         Assert.AreNotEqual(reserveC, reserveD);
+    }
+
+
+    internal static void AssertTestData(LiquidityPoolResponse instance)
+    {
+        Assert.IsNotNull(instance);
+        Assert.AreEqual(new LiquidityPoolId("93f526d8bc7b38ac6d746c2d0a4bebb548ea31e1574cb146a6e6898030d05144"),
+            instance.Id);
+        Assert.AreEqual("93f526d8bc7b38ac6d746c2d0a4bebb548ea31e1574cb146a6e6898030d05144", instance.PagingToken);
+        Assert.AreEqual(30, instance.FeeBp);
+        Assert.AreEqual(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT, instance.Type);
+        Assert.AreEqual("1", instance.TotalTrustlines);
+        Assert.AreEqual("666.6666664", instance.TotalShares);
+
+        Assert.AreEqual("310.0000000", instance.Reserves[0].Amount);
+        Assert.AreEqual("native", instance.Reserves[0].Asset.CanonicalName());
+
+        Assert.AreEqual("1435.2855840", instance.Reserves[1].Amount);
+        Assert.AreEqual("TEST:GC6ZBHGJGGTPVLYALOKQNQSQUXHJUYDZ7VLMAPU2MERVTYMKVL2GTEST",
+            instance.Reserves[1].Asset.CanonicalName());
+        Assert.AreEqual(1694L, instance.LastModifiedLedger);
+        Assert.AreEqual(new DateTimeOffset(2025, 8, 14, 19, 44, 19, TimeSpan.Zero), instance.LastModifiedTime);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/liquidity_pools/93f526d8bc7b38ac6d746c2d0a4bebb548ea31e1574cb146a6e6898030d05144/operations{?cursor,limit,order}",
+            instance.Links.Operations.Href);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/liquidity_pools/93f526d8bc7b38ac6d746c2d0a4bebb548ea31e1574cb146a6e6898030d05144",
+            instance.Links.Self.Href);
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/liquidity_pools/93f526d8bc7b38ac6d746c2d0a4bebb548ea31e1574cb146a6e6898030d05144/transactions{?cursor,limit,order}",
+            instance.Links.Transactions.Href);
     }
 }
