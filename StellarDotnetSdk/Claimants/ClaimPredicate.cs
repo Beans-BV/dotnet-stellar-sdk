@@ -1,8 +1,32 @@
 using System;
+using StellarDotnetSdk.Responses.Predicates;
 using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Claimants;
 
+/// <summary>
+///     Represents a claim predicate for building claimable balance operations in Stellar transactions.
+/// </summary>
+/// <remarks>
+///     <para>
+///         This abstract class and its implementations are used when constructing
+///         <see cref="StellarDotnetSdk.Operations.CreateClaimableBalanceOperation"/> to define
+///         conditions under which a claimable balance can be claimed.
+///     </para>
+///     <para>
+///         Predicates can be combined using logical operators:
+///         <list type="bullet">
+///             <item><see cref="And"/> - Both predicates must be true</item>
+///             <item><see cref="Or"/> - At least one predicate must be true</item>
+///             <item><see cref="Not"/> - The predicate must be false</item>
+///         </list>
+///     </para>
+///     <para>
+///         <strong>For deserializing Horizon API responses</strong>, use <see cref="Predicate"/> instead,
+///         which can be converted to this type using <see cref="Predicate.ToClaimPredicate"/>.
+///     </para>
+/// </remarks>
+/// <seealso cref="Predicate"/>
 public abstract class ClaimPredicate
 {
     public abstract Xdr.ClaimPredicate ToXdr();

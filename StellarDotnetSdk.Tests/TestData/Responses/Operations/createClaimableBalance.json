@@ -32,7 +32,7 @@
       "destination": "GAEJ2UF46PKAPJYED6SQ45CKEHSXV63UQEYHVUZSVJU6PK5Y4ZVA4ELU",
       "predicate": {
         "not": {
-          "relBefore": 604800
+          "rel_before": 604800
         }
       }
     }
