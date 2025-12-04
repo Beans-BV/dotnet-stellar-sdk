@@ -71,11 +71,11 @@ public sealed class LedgerBounds
     ///     The lower bound.
     /// </summary>
     [JsonPropertyName("min_ledger")]
-    public string? MinLedger { get; init; }
+    public long? MinLedger { get; init; }
 
     /// <summary>
     ///     The upper bound.
     /// </summary>
     [JsonPropertyName("max_ledger")]
-    public string? MaxLedger { get; init; }
+    public long? MaxLedger { get; init; }
 }
