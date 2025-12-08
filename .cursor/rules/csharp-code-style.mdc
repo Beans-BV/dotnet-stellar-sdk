@@ -1,0 +1,25 @@
+---
+description: C# code style and naming conventions
+globs: "**/*.cs"
+alwaysApply: false
+---
+# C# Code Style
+
+**Naming**: Files/classes = `PascalCase.cs` | Public members = `PascalCase` | Private fields = `_camelCase` | Parameters/local = `camelCase` | Constants = `PascalCase`
+
+**Functions**: Start with verbs (`Get`, `Create`, `Submit`) | Booleans use `Is`/`Has`/`Can` prefix
+
+**Types**: Always explicit, nullable reference types enabled (`string?`, `T?`). Use `object` for "any type".
+
+**Namespaces**: File-scoped (`namespace StellarDotnetSdk;`) preferred over block-scoped.
+
+**Style**:
+- Expression-bodied members for single-line (`=>`)
+- Early returns over nesting
+- `using` statements for `IDisposable`
+- Always `{}` braces for if/else
+- No blank lines inside method bodies
+- `async`/`await` with `CancellationToken` for long ops
+- `ConfigureAwait(false)` in library code
+
+**Enums**: Use enum type, add extension methods for helpers if needed.

@@ -1,122 +1,20 @@
 ---
-description: Ensure documentation, tests, and cursor rules stay synchronized during refactoring
-globs: "**/*"
-alwaysApply: true
+description: Keep artifacts in sync when refactoring
+globs: 
+alwaysApply: false
 ---
-# Refactoring Synchronization Rule
+# Refactoring Sync
 
-When refactoring code, ALL related artifacts must be updated to stay in sync.
+When refactoring, update ALL related artifacts:
 
-<rule>
-name: refactoring_sync
-description: Keep docs, tests, and cursor rules synchronized with code changes
-filters:
-  - type: content
-    pattern: "(?i)(refactor|rename|restructure|reorganize|migrate|deprecate|remove pattern|change pattern)"
-  - type: event
-    pattern: "code_change"
+**Checklist**:
+- [ ] Code implementation
+- [ ] Regenerate XDR if `.x` files changed
+- [ ] Update tests (names, logic, add/remove)
+- [ ] Update using statements across projects
+- [ ] Update `.cursor/rules/` if patterns changed
+- [ ] Run `dotnet build` + `dotnet test`
 
-actions:
-  - type: enforce
-    message: |
-      REFACTORING SYNCHRONIZATION PROTOCOL
+**For renames**: Search for string references in comments/docs too.
 
-      **CRITICAL**: When refactoring, ALL related artifacts MUST be updated:
-
-      1. **CODE CHANGES**:
-         - Make the actual code refactoring
-         - Ensure compilation succeeds
-
-      2. **UPDATE TESTS** (Required):
-         - Update test names if method/class names changed
-         - Update test logic to reflect new patterns
-         - Add tests for new abstractions
-         - Remove tests for deprecated patterns
-         - Run `dotnet test StellarDotnetSdk.Tests/` to verify
-
-      3. **UPDATE DOCUMENTATION** (Required):
-         - Update XML doc comments on changed code
-         - Update `memory-bank/` files if architecture changed
-         - Update `README.md` if public API changed
-         - Update `Examples/` if usage patterns changed
-
-      4. **UPDATE CURSOR RULES** (Required for pattern changes):
-         - If patterns/conventions change, update `.cursor/rules/` files
-         - Key file: `stellar-sdk-project.mdc` contains:
-           - KEY PATTERNS section
-           - KEY ABSTRACTIONS section
-           - DESIGN PRINCIPLES section
-         - Update examples in rules to reflect new patterns
-
-      **PATTERN CHANGE CHECKLIST**:
-      When changing architectural patterns (e.g., Builder → Factory):
-      
-      □ Update code implementation
-      □ Update/add tests for new pattern
-      □ Remove tests for old pattern
-      □ Update `stellar-sdk-project.mdc` KEY PATTERNS section
-      □ Update `memory-bank/systemPatterns.md`
-      □ Update any examples in cursor rules
-      □ Update `Examples/` folder if applicable
-      □ Search codebase for references to old pattern
-
-      **NAMING CHANGE CHECKLIST**:
-      When renaming classes/methods/namespaces:
-      
-      □ Rename in implementation
-      □ Rename in tests
-      □ Update cursor rules if mentioned by name
-      □ Update memory-bank docs
-      □ Search for string references (comments, docs)
-
-      **FILES TO CHECK**:
-      - `.cursor/rules/stellar-sdk-project.mdc` - patterns, abstractions
-      - `.cursor/rules/dotnet-commands.mdc` - command examples
-      - `.cursor/rules/xdr-generated-code.mdc` - XDR patterns
-      - `memory-bank/*.md` - all context files
-      - `README.md` - public documentation
-      - `Examples/` - usage examples
-
-examples:
-  - input: |
-      User: "Refactor TransactionBuilder to use factory methods instead"
-      
-      # Required updates:
-      1. Refactor TransactionBuilder code
-      2. Update all tests using TransactionBuilder
-      3. Update stellar-sdk-project.mdc:
-         - Change "Builder pattern: TransactionBuilder" to new pattern
-      4. Update memory-bank/systemPatterns.md
-      5. Update Examples/Horizon/HorizonExamples.cs
-      6. Update Examples/Soroban/SorobanExamples.cs
-    output: "Complete sync of code, tests, docs, and rules"
-
-  - input: |
-      User: "Rename KeyPair to AccountKeyPair"
-      
-      # Required updates:
-      1. Rename class and file
-      2. Update all test files referencing KeyPair
-      3. Update stellar-sdk-project.mdc KEY ABSTRACTIONS
-      4. Search cursor rules for "KeyPair" references
-      5. Update memory-bank files
-      6. Update examples
-    output: "Complete rename across all artifacts"
-
-  - input: |
-      User: "Remove deprecated ManageOfferOperation"
-      
-      # Required updates:
-      1. Remove/deprecate the class
-      2. Remove related tests
-      3. Update stellar-sdk-project.mdc if mentioned
-      4. Update memory-bank/coreFiles.md
-      5. Remove from examples if present
-    output: "Complete removal from all artifacts"
-
-metadata:
-  priority: critical
-  version: 1.0
-  enforcement: strict
-  dependencies: ["stellar-sdk-project", "memory-bank"]
-</rule>
+**For pattern changes**: Update examples in cursor rules.

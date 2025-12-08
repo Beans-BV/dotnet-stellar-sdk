@@ -1,0 +1,32 @@
+---
+description: Testing patterns and conventions
+globs: "**/Tests/**,**/*Test*.cs"
+alwaysApply: false
+---
+# Testing Patterns
+
+**Location**: `StellarDotnetSdk.Tests/`, mirror `StellarDotnetSdk/` structure. Name: `<Class>Test.cs`.
+
+**Frameworks**: MSTest (`[TestClass]`, `[TestMethod]`), Moq (`Mock<T>`), FluentAssertions.
+
+**AAA (unit tests)**:
+```csharp
+[TestMethod]
+public async Task SubmitTransaction_ValidTransaction_ReturnsSuccess() {
+    // Arrange
+    using var server = await Utils.CreateTestServerWithJson("Responses/serverSuccess.json");
+    // Act
+    var response = await server.SubmitTransaction(BuildTransaction(), options);
+    // Assert
+    Assert.IsNotNull(response);
+    Assert.IsTrue(response.IsSuccess);
+}
+```
+
+**Mocking**: `var mock = new Mock<IInterface>(); mock.Setup(x => x.Method()).ReturnsAsync(value);`. Use `It.IsAny<T>()` for flexible matching.
+
+**FluentAssertions**: `response.Should().NotBeNull(); response.IsSuccess.Should().BeTrue();`
+
+**Test data**: JSON files in `TestData/` folder, loaded via `Utils.CreateTestServerWithJson()`.
+
+**Commands**: `dotnet test` (all) | `dotnet test --filter "FullyQualifiedName~ClassName"` (specific).
