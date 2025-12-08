@@ -53,13 +53,13 @@ public sealed class TimeBounds
     ///     The lower bound.
     /// </summary>
     [JsonPropertyName("min_time")]
-    public required string MinTime { get; init; }
+    public required long MinTime { get; init; }
 
     /// <summary>
     ///     The upper bound.
     /// </summary>
     [JsonPropertyName("max_time")]
-    public string? MaxTime { get; init; }
+    public long? MaxTime { get; init; }
 }
 
 /// <summary>

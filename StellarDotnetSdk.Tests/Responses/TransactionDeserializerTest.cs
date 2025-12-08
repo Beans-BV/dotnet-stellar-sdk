@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -40,7 +41,7 @@ public class TransactionDeserializerTest
         Assert.AreEqual(true, transaction.Successful);
         Assert.AreEqual(220L, transaction.Ledger);
 
-        Assert.AreEqual("2025-08-14T17:41:19Z", transaction.CreatedAt);
+        Assert.AreEqual(new DateTimeOffset(2025, 8, 14, 17, 41, 19, TimeSpan.Zero), transaction.CreatedAt);
         Assert.AreEqual("944892809216", transaction.PagingToken);
         Assert.AreEqual("GAIH3ULLFQ4DGSECF2AR555KZ4KNDGEKN4AFI4SU2M7B43MGK3QJZNSR", transaction.SourceAccount);
         Assert.AreEqual(794568949761L, transaction.SourceAccountSequence);
@@ -93,8 +94,8 @@ public class TransactionDeserializerTest
             "j1qYwX38FLr5EukGEbb870cdz5CEH4l6cyyka5b9gZ76QKTFMjSMTNrrn+C/V5UlRLQDTPKM3VaTolKy5zgxAg==",
             transaction.Signatures[0]);
         Assert.IsNotNull(transaction.Preconditions);
-        Assert.AreEqual("0", transaction.Preconditions.TimeBounds.MinTime);
-        Assert.AreEqual("1755193576", transaction.Preconditions.TimeBounds.MaxTime);
+        Assert.AreEqual(0L, transaction.Preconditions.TimeBounds.MinTime);
+        Assert.AreEqual(1755193576L, transaction.Preconditions.TimeBounds.MaxTime);
 
         Assert.IsNull(transaction.Preconditions.ExtraSigners);
         Assert.IsNull(transaction.Preconditions.LedgerBounds);
@@ -109,7 +110,7 @@ public class TransactionDeserializerTest
         Assert.AreEqual("f08b48818071da17668aefe815597ea76aad825247ed077211d25b5a3699f26a", transaction.Hash);
         Assert.AreEqual(1874918L, transaction.Ledger);
         Assert.AreEqual(true, transaction.Successful);
-        Assert.AreEqual("2025-12-01T09:39:58Z", transaction.CreatedAt);
+        Assert.AreEqual(new DateTimeOffset(2025, 12, 1, 9, 39, 58, TimeSpan.Zero), transaction.CreatedAt);
         Assert.AreEqual("8052711492685824", transaction.PagingToken);
         Assert.AreEqual("GBZG3SMBL6FPLYYNQP6DMVZHDHCDIR4J4GYRGKE5BYRVLBYN364RBL5S", transaction.SourceAccount);
         Assert.AreEqual("MBZG3SMBL6FPLYYNQP6DMVZHDHCDIR4J4GYRGKE5BYRVLBYN364RAAAAAAAAAAAAAH52S",
@@ -160,7 +161,7 @@ public class TransactionDeserializerTest
             "VkD5DAbJVnlJqKmK0Ov9IOoZrPpUXP9ISWeptRP3ptUUE7g6In/kTly3L/yPtKptrdjcIqJEkMzRT+vy6FE5Dg==",
             transaction.Signatures[0]);
         Assert.IsNotNull(transaction.Preconditions);
-        Assert.AreEqual("0", transaction.Preconditions.TimeBounds.MinTime);
+        Assert.AreEqual(0L, transaction.Preconditions.TimeBounds.MinTime);
         Assert.IsNull(transaction.Preconditions.TimeBounds.MaxTime);
     }
 
