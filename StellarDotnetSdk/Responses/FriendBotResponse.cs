@@ -3,7 +3,7 @@
 namespace StellarDotnetSdk.Responses;
 #nullable disable
 
-public class FriendBotResponse
+public class FriendBotResponse : Response
 {
     [JsonPropertyName("_links")]
     public FriendBotResponseLinks Links { get; init; }
