@@ -388,9 +388,6 @@
         <None Update="TestData\Responses\tradeAggregationPage.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="TestData\Responses\tradePage.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
         <None Update="TestData\Responses\transactionPage.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
@@ -444,6 +441,12 @@
         </None>
         <None Update="TestData\Responses\offer.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\tradePageOrderBook.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestData\Responses\tradePageLiquidityPool.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="TestData\Responses\transactionWithTextMemo.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

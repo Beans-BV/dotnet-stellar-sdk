@@ -1,0 +1,52 @@
+﻿{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/trades?cursor=&limit=10&offer_id=24&order=asc"
+    },
+    "next": {
+      "href": "https://horizon-testnet.stellar.org/trades?cursor=6816113102849-0&limit=10&offer_id=24&order=asc"
+    },
+    "prev": {
+      "href": "https://horizon-testnet.stellar.org/trades?cursor=6816113102849-0&limit=10&offer_id=24&order=desc"
+    }
+  },
+  "_embedded": {
+    "records": [
+      {
+        "_links": {
+          "self": {
+            "href": ""
+          },
+          "base": {
+            "href": "https://horizon-testnet.stellar.org/accounts/GBLD7NSGWYT2KRFTYMRJGQ42SNTGDXMZYNQUE3H7N2VEMARIQYKBB4JJ"
+          },
+          "counter": {
+            "href": "https://horizon-testnet.stellar.org/accounts/GAG3ZVX4564SWFE5YIEHVHNAOBH7XTPTYC6R7U6GCJ5RYATQIOPGTEST"
+          },
+          "operation": {
+            "href": "https://horizon-testnet.stellar.org/operations/6816113102849"
+          }
+        },
+        "id": "6816113102849-0",
+        "paging_token": "6816113102849-0",
+        "ledger_close_time": "2025-08-14T19:35:23Z",
+        "trade_type": "orderbook",
+        "base_offer_id": "24",
+        "base_account": "GBLD7NSGWYT2KRFTYMRJGQ42SNTGDXMZYNQUE3H7N2VEMARIQYKBB4JJ",
+        "base_amount": "2222.2222211",
+        "base_asset_type": "credit_alphanum4",
+        "base_asset_code": "TEST",
+        "base_asset_issuer": "GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST",
+        "counter_offer_id": "4611692834540490753",
+        "counter_account": "GAG3ZVX4564SWFE5YIEHVHNAOBH7XTPTYC6R7U6GCJ5RYATQIOPGTEST",
+        "counter_amount": "199.9999999",
+        "counter_asset_type": "native",
+        "base_is_seller": true,
+        "price": {
+          "n": "9",
+          "d": "100"
+        }
+      }
+    ]
+  }
+}
