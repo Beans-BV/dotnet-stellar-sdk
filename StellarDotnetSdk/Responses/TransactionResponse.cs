@@ -2,89 +2,181 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Memos;
-using StellarDotnetSdk.Responses.Effects;
-using StellarDotnetSdk.Responses.Operations;
 using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Responses;
-#nullable disable
 
-public class TransactionResponse : Response, IPagingToken
+/// <summary>
+///     Represents a transaction on the Stellar network.
+///     Contains transaction metadata, results, and links to related resources.
+/// </summary>
+public sealed class TransactionResponse : Response, IPagingToken
 {
+    /// <summary>
+    ///     A unique identifier for this transaction.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; init; }
+
+    /// <summary>
+    ///     The hash of the transaction.
+    /// </summary>
     [JsonPropertyName("hash")]
-    public string Hash { get; init; }
+    public required string Hash { get; init; }
 
+    /// <summary>
+    ///     The ledger sequence number in which this transaction was included.
+    /// </summary>
     [JsonPropertyName("ledger")]
-    public long Ledger { get; init; }
+    public required long Ledger { get; init; }
 
+    /// <summary>
+    /// An ISO 8601 formatted string of when the transaction was created.
+    /// </summary>
     [JsonPropertyName("created_at")]
-    public DateTimeOffset CreatedAt { get; init; }
+    public required DateTimeOffset CreatedAt { get; init; }
 
+    /// <summary>
+    ///     The account that originated this transaction.
+    /// </summary>
     [JsonPropertyName("source_account")]
-    public string SourceAccount { get; init; }
+    public required string SourceAccount { get; init; }
 
-
+    /// <summary>
+    ///     The account that paid the transaction fee.
+    ///     For fee bump transactions, this differs from the source account.
+    /// </summary>
     [JsonPropertyName("fee_account")]
-    public string FeeAccount { get; set; }
+    public required string FeeAccount { get; init; }
 
+    /// <summary>
+    ///     The muxed account representation of the fee account, if applicable.
+    /// </summary>
     [JsonPropertyName("fee_account_muxed")]
-    public string FeeAccountMuxed { get; set; }
+    public string? FeeAccountMuxed { get; init; }
 
+    /// <summary>
+    ///     Whether the transaction was successful.
+    /// </summary>
     [JsonPropertyName("successful")]
-    public bool Successful { get; init; } = true;
+    public required bool Successful { get; init; }
 
+    /// <summary>
+    ///     The sequence number of the source account when the transaction was submitted.
+    /// </summary>
     [JsonPropertyName("source_account_sequence")]
-    public long SourceAccountSequence { get; init; }
+    public required long SourceAccountSequence { get; init; }
 
+    /// <summary>
+    ///     The actual fee paid for the transaction in stroops.
+    /// </summary>
     [JsonPropertyName("fee_charged")]
-    public long FeeCharged { get; set; }
+    public required long FeeCharged { get; init; }
 
+    /// <summary>
+    ///     The maximum fee the source account was willing to pay in stroops.
+    /// </summary>
     [JsonPropertyName("max_fee")]
-    public long MaxFee { get; init; }
+    public required long MaxFee { get; init; }
 
+    /// <summary>
+    ///     The number of operations in this transaction.
+    /// </summary>
     [JsonPropertyName("operation_count")]
-    public int OperationCount { get; init; }
+    public required int OperationCount { get; init; }
 
+    /// <summary>
+    ///     The XDR-encoded transaction envelope.
+    /// </summary>
     [JsonPropertyName("envelope_xdr")]
-    public string EnvelopeXdr { get; init; }
+    public required string EnvelopeXdr { get; init; }
 
+    /// <summary>
+    ///     The XDR-encoded transaction result.
+    /// </summary>
     [JsonPropertyName("result_xdr")]
-    public string ResultXdr { get; init; }
+    public required string ResultXdr { get; init; }
 
-    [JsonPropertyName("result_meta_xdr")]
-    public string ResultMetaXdr { get; init; }
+    /// <summary>
+    ///     A base64 encoded string of the raw LedgerEntryChanges XDR struct
+    /// produced by taking fees for this transaction.
+    /// </summary>
+    [JsonPropertyName("fee_meta_xdr")]
+    public required string FeeMetaXdr { get; init; }
 
+    /// <summary>
+    ///     The base64-encoded signatures applied to this transaction.
+    /// </summary>
     [JsonPropertyName("signatures")]
-    public List<string> Signatures { get; init; }
+    public required List<string> Signatures { get; init; }
 
+    /// <summary>
+    ///     A set of transaction preconditions affecting the validity of this transaction.
+    /// </summary>
+    [JsonPropertyName("preconditions")]
+    public TransactionResponsePreconditions? Preconditions { get; init; }
+
+    /// <summary>
+    ///     The fee bump transaction details, if this transaction was fee bumped.
+    /// </summary>
     [JsonPropertyName("fee_bump_transaction")]
-    public FeeBumpTransaction FeeBumpTx { get; set; }
+    public FeeBumpTransaction? FeeBumpTx { get; init; }
 
+    /// <summary>
+    ///     The inner transaction details, if this is a fee bump transaction.
+    /// </summary>
     [JsonPropertyName("inner_transaction")]
-    public InnerTransaction InnerTx { get; init; }
+    public InnerTransaction? InnerTx { get; init; }
 
+    /// <summary>
+    ///     Links to related resources for this transaction.
+    /// </summary>
     [JsonPropertyName("_links")]
-    public TransactionResponseLinks Links { get; init; }
+    public required TransactionResponseLinks Links { get; init; }
 
+    /// <summary>
+    ///     The type of memo attached to this transaction: "none", "text", "id", "hash", or "return".
+    /// </summary>
     [JsonPropertyName("memo_type")]
-    public string MemoType { get; init; }
-#nullable restore
+    public required string MemoType { get; init; }
 
+    /// <summary>
+    ///     The muxed account ID of the source account, if applicable.
+    /// </summary>
     [JsonPropertyName("account_muxed_id")]
     public ulong? AccountMuxedId { get; init; }
 
+    /// <summary>
+    ///     The muxed account representation of the source account, if applicable.
+    /// </summary>
     [JsonPropertyName("account_muxed")]
     public string? AccountMuxed { get; init; }
 
+    /// <summary>
+    ///     The muxed account ID of the fee account, if applicable.
+    /// </summary>
     [JsonPropertyName("fee_account_muxed_id")]
-    public ulong? FeeAccountMuxedId { get; set; }
+    public ulong? FeeAccountMuxedId { get; init; }
 
+    /// <summary>
+    ///     The memo value attached to this transaction.
+    ///     For text memos, this is the text content.
+    ///     For id memos, this is the numeric ID as a string.
+    ///     For hash/return memos, this is the base64-encoded hash.
+    /// </summary>
     [JsonPropertyName("memo")]
     public string? MemoValue { get; init; }
 
+    /// <summary>
+    ///     The raw bytes of the memo, base64-encoded.
+    ///     Present for text memos to preserve exact byte content.
+    /// </summary>
     [JsonPropertyName("memo_bytes")]
     public string? MemoBytes { get; init; }
 
+    /// <summary>
+    ///     The parsed memo object for this transaction.
+    /// </summary>
     [JsonIgnore]
     public Memo Memo
     {
@@ -94,24 +186,25 @@ public class TransactionResponse : Response, IPagingToken
             {
                 "none" => Memo.None(),
                 "text" => MemoBytes != null ? Memo.Text(Convert.FromBase64String(MemoBytes)) :
-                    MemoValue != null ? Memo.Text(MemoValue) : throw new ArgumentNullException(nameof(MemoValue)),
+                    MemoValue != null ? Memo.Text(MemoValue) :
+                    throw new InvalidOperationException("MemoValue is required for text memo"),
                 "id" => MemoValue != null
                     ? Memo.Id(ulong.Parse(MemoValue))
-                    : throw new ArgumentNullException(nameof(MemoValue)),
+                    : throw new InvalidOperationException("MemoValue is required for id memo"),
                 "hash" => MemoValue != null
                     ? Memo.Hash(Convert.FromBase64String(MemoValue))
-                    : throw new ArgumentNullException(nameof(MemoValue)),
+                    : throw new InvalidOperationException("MemoValue is required for hash memo"),
                 "return" => MemoValue != null
                     ? Memo.ReturnHash(Convert.FromBase64String(MemoValue))
-                    : throw new ArgumentNullException(nameof(MemoValue)),
-                _ => throw new ArgumentException(nameof(MemoType)),
+                    : throw new InvalidOperationException("MemoValue is required for return memo"),
+                _ => throw new InvalidOperationException($"Unknown memo type: {MemoType}"),
             };
         }
         init
         {
             switch (value)
             {
-                case MemoNone _:
+                case MemoNone:
                     MemoType = "none";
                     MemoValue = null;
                     return;
@@ -132,65 +225,61 @@ public class TransactionResponse : Response, IPagingToken
                     MemoValue = Convert.ToBase64String(r.MemoBytes);
                     return;
                 default:
-                    throw new ArgumentException(null, nameof(value));
+                    throw new ArgumentException("Unknown memo type", nameof(value));
             }
         }
     }
 
+    /// <summary>
+    ///     The parsed transaction result.
+    /// </summary>
     public TransactionResult Result => TransactionResult.FromXdrBase64(ResultXdr);
 
+    /// <summary>
+    ///     A cursor value for use in pagination.
+    /// </summary>
     [JsonPropertyName("paging_token")]
-    public string PagingToken { get; init; }
+    public required string PagingToken { get; init; }
 
-    public class FeeBumpTransaction
+    /// <summary>
+    ///     Represents the fee bump transaction wrapper for a fee-bumped transaction.
+    /// </summary>
+    public sealed class FeeBumpTransaction
     {
-        public FeeBumpTransaction(string hash, List<string> signatures)
-        {
-            Hash = hash;
-            Signatures = signatures;
-        }
-
+        /// <summary>
+        ///     The hash of the fee bump transaction.
+        /// </summary>
         [JsonPropertyName("hash")]
-        public string Hash { get; init; }
+        public required string Hash { get; init; }
 
+        /// <summary>
+        ///     The base64-encoded signatures on the fee bump transaction.
+        /// </summary>
         [JsonPropertyName("signatures")]
-        public List<string> Signatures { get; init; }
+        public required List<string> Signatures { get; init; }
     }
 
-    public class InnerTransaction
+    /// <summary>
+    ///     Represents the inner transaction within a fee bump transaction.
+    /// </summary>
+    public sealed class InnerTransaction
     {
+        /// <summary>
+        ///     The hash of the inner transaction.
+        /// </summary>
         [JsonPropertyName("hash")]
-        public string Hash { get; init; }
+        public required string Hash { get; init; }
 
+        /// <summary>
+        ///     The base64-encoded signatures on the inner transaction.
+        /// </summary>
         [JsonPropertyName("signatures")]
-        public List<string> Signatures { get; init; }
+        public required List<string> Signatures { get; init; }
 
+        /// <summary>
+        ///     The maximum fee of the inner transaction in stroops.
+        /// </summary>
         [JsonPropertyName("max_fee")]
-        public long MaxFee { get; init; }
+        public required long MaxFee { get; init; }
     }
-}
-
-/// Links connected to transaction.
-public class TransactionResponseLinks
-{
-    [JsonPropertyName("account")]
-    public Link<AccountResponse> Account { get; init; }
-
-    [JsonPropertyName("effects")]
-    public Link<Page<EffectResponse>> Effects { get; init; }
-
-    [JsonPropertyName("ledger")]
-    public Link<LedgerResponse> Ledger { get; init; }
-
-    [JsonPropertyName("operations")]
-    public Link<Page<OperationResponse>> Operations { get; init; }
-
-    [JsonPropertyName("precedes")]
-    public Link<TransactionResponse> Precedes { get; init; }
-
-    [JsonPropertyName("self")]
-    public Link<TransactionResponse> Self { get; init; }
-
-    [JsonPropertyName("succeeds")]
-    public Link<TransactionResponse> Succeeds { get; init; }
 }
