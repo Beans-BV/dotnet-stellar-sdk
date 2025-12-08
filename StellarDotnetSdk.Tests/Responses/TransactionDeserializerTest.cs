@@ -202,7 +202,7 @@ public class TransactionDeserializerTest
         Assert.AreEqual(1, transaction.InnerTx.Signatures.Count);
         Assert.AreEqual("FBQU", transaction.InnerTx.Signatures[0]);
         Assert.AreEqual("e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526", transaction.InnerTx.Hash);
-        Assert.AreEqual("99", transaction.InnerTx.MaxFee);
+        Assert.AreEqual(99L, transaction.InnerTx.MaxFee);
     }
 
     [TestMethod]

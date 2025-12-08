@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -29,7 +30,7 @@ public class TransactionPageDeserializeTest
         Assert.AreEqual(true, record1.Successful);
         Assert.AreEqual("b9d0b2292c4e09e8eb22d036171491e87b8d2086bf8b265874c8d182cb9c9020", record1.Hash);
         Assert.AreEqual(185L, record1.Ledger);
-        Assert.AreEqual("2025-08-14T17:38:24Z", record1.CreatedAt);
+        Assert.AreEqual(new DateTimeOffset(2025, 8, 14, 17, 38, 24, TimeSpan.Zero), record1.CreatedAt);
         Assert.AreEqual("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H", record1.SourceAccount);
         Assert.AreEqual(1L, record1.SourceAccountSequence);
         Assert.AreEqual("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H", record1.FeeAccount);
@@ -50,7 +51,7 @@ public class TransactionPageDeserializeTest
         Assert.AreEqual(true, record5.Successful);
         Assert.AreEqual("57075101b7272595f5ec1f1625e4be4c0cd9d774ae5f13bbd3295f1578420fbf", record5.Hash);
         Assert.AreEqual(223L, record5.Ledger);
-        Assert.AreEqual("2025-08-14T17:41:34Z", record5.CreatedAt);
+        Assert.AreEqual(new DateTimeOffset(2025, 8, 14, 17, 41, 34, TimeSpan.Zero), record5.CreatedAt);
         Assert.AreEqual("GAIH3ULLFQ4DGSECF2AR555KZ4KNDGEKN4AFI4SU2M7B43MGK3QJZNSR", record5.SourceAccount);
         Assert.AreEqual(794568949764L, record5.SourceAccountSequence);
         Assert.AreEqual("GAIH3ULLFQ4DGSECF2AR555KZ4KNDGEKN4AFI4SU2M7B43MGK3QJZNSR", record5.FeeAccount);

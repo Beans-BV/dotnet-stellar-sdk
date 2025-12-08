@@ -280,6 +280,6 @@ public sealed class TransactionResponse : Response, IPagingToken
         ///     The maximum fee of the inner transaction in stroops.
         /// </summary>
         [JsonPropertyName("max_fee")]
-        public required string MaxFee { get; init; }
+        public required long MaxFee { get; init; }
     }
 }
