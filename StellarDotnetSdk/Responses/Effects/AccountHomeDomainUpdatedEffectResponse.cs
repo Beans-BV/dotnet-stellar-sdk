@@ -16,5 +16,5 @@ public sealed class AccountHomeDomainUpdatedEffectResponse : EffectResponse
     ///     The home domain is where the stellar.toml file can be found.
     /// </summary>
     [JsonPropertyName("home_domain")]
-    public string? HomeDomain { get; init; }
+    public required string HomeDomain { get; init; }
 }

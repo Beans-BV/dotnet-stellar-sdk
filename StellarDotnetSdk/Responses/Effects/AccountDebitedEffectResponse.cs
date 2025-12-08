@@ -16,13 +16,13 @@ public sealed class AccountDebitedEffectResponse : EffectResponse
     ///     The amount debited from the account.
     /// </summary>
     [JsonPropertyName("amount")]
-    public string? Amount { get; init; }
+    public required string Amount { get; init; }
 
     /// <summary>
     ///     The type of asset debited: "native", "credit_alphanum4", or "credit_alphanum12".
     /// </summary>
     [JsonPropertyName("asset_type")]
-    public string? AssetType { get; init; }
+    public required string AssetType { get; init; }
 
     /// <summary>
     ///     The code of the debited asset. Null for native XLM.
@@ -39,5 +39,5 @@ public sealed class AccountDebitedEffectResponse : EffectResponse
     /// <summary>
     ///     The debited asset.
     /// </summary>
-    public Asset? Asset => AssetType != null ? Asset.Create(AssetType, AssetCode, AssetIssuer) : null;
+    public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
 }

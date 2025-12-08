@@ -15,5 +15,5 @@ public sealed class AccountSponsorshipCreatedEffectResponse : EffectResponse
     ///     The account ID of the sponsor.
     /// </summary>
     [JsonPropertyName("sponsor")]
-    public string? Sponsor { get; init; }
+    public required string Sponsor { get; init; }
 }

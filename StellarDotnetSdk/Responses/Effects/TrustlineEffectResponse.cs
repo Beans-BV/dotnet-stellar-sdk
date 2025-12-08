@@ -12,22 +12,22 @@ public abstract class TrustlineEffectResponse : EffectResponse
     ///     The trust limit for the asset.
     /// </summary>
     [JsonPropertyName("limit")]
-    public string? Limit { get; init; }
+    public required string Limit { get; init; }
 
     /// <summary>
     ///     The type of the trusted asset: "credit_alphanum4" or "credit_alphanum12".
     /// </summary>
     [JsonPropertyName("asset_type")]
-    public string? AssetType { get; init; }
+    public required string AssetType { get; init; }
 
     /// <summary>
-    ///     The code of the trusted asset.
+    ///     The code of the trusted asset. Null for native XLM.
     /// </summary>
     [JsonPropertyName("asset_code")]
     public string? AssetCode { get; init; }
 
     /// <summary>
-    ///     The issuer of the trusted asset.
+    ///     The issuer of the trusted asset. Null for native XLM.
     /// </summary>
     [JsonPropertyName("asset_issuer")]
     public string? AssetIssuer { get; init; }
@@ -35,10 +35,7 @@ public abstract class TrustlineEffectResponse : EffectResponse
     /// <summary>
     ///     The trusted asset.
     /// </summary>
-    public AssetTypeCreditAlphaNum? Asset =>
-        AssetCode != null && AssetIssuer != null
-            ? Assets.Asset.CreateNonNativeAsset(AssetCode, AssetIssuer)
-            : null;
+    public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
 }
 
 /// <summary>

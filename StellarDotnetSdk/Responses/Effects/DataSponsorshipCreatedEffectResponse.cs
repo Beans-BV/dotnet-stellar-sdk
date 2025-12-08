@@ -15,11 +15,11 @@ public sealed class DataSponsorshipCreatedEffectResponse : EffectResponse
     ///     The account ID of the sponsor.
     /// </summary>
     [JsonPropertyName("sponsor")]
-    public string? Sponsor { get; init; }
+    public required string Sponsor { get; init; }
 
     /// <summary>
     ///     The name of the sponsored data entry.
     /// </summary>
     [JsonPropertyName("data_name")]
-    public string? DataName { get; init; }
+    public required string DataName { get; init; }
 }

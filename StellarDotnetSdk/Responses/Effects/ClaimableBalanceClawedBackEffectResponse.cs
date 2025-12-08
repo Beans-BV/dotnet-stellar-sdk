@@ -15,5 +15,5 @@ public sealed class ClaimableBalanceClawedBackEffectResponse : EffectResponse
     ///     The unique identifier of the claimable balance that was clawed back.
     /// </summary>
     [JsonPropertyName("balance_id")]
-    public string? BalanceId { get; init; }
+    public required string BalanceId { get; init; }
 }

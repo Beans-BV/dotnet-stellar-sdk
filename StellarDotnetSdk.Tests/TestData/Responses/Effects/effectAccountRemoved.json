@@ -14,5 +14,6 @@
   "paging_token": "65571265847297-1",
   "account": "GCBQ6JRBPF3SXQBQ6SO5MRBE7WVV4UCHYOSHQGXSZNPZLFRYVYOWBZRQ",
   "type": "account_removed",
-  "type_i": 1
+  "type_i": 1,
+  "created_at": "2025-12-01T16:05:45Z"
 }

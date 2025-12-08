@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace StellarDotnetSdk.Responses.Effects;
 
 /// <summary>
@@ -8,4 +10,10 @@ public sealed class DataRemovedEffectResponse : EffectResponse
 {
     /// <inheritdoc />
     public override int TypeId => 41;
+
+    /// <summary>
+    ///     Name of the removed data entry.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public required string Name { get; init; }
 }

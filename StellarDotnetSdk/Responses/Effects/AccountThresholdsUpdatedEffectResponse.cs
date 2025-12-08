@@ -16,19 +16,19 @@ public sealed class AccountThresholdsUpdatedEffectResponse : EffectResponse
     ///     require signatures with weight equal to or greater than this value.
     /// </summary>
     [JsonPropertyName("low_threshold")]
-    public int LowThreshold { get; init; }
+    public required int LowThreshold { get; init; }
 
     /// <summary>
     ///     The new medium threshold value. Operations with this security level
     ///     require signatures with weight equal to or greater than this value.
     /// </summary>
     [JsonPropertyName("med_threshold")]
-    public int MedThreshold { get; init; }
+    public required int MedThreshold { get; init; }
 
     /// <summary>
     ///     The new high threshold value. Operations with this security level
     ///     require signatures with weight equal to or greater than this value.
     /// </summary>
     [JsonPropertyName("high_threshold")]
-    public int HighThreshold { get; init; }
+    public required int HighThreshold { get; init; }
 }

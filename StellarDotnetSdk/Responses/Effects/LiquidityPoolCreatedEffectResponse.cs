@@ -15,5 +15,5 @@ public sealed class LiquidityPoolCreatedEffectResponse : EffectResponse
     ///     The liquidity pool that was created.
     /// </summary>
     [JsonPropertyName("liquidity_pool")]
-    public LiquidityPool.LiquidityPool? LiquidityPool { get; init; }
+    public required LiquidityPool.LiquidityPool LiquidityPool { get; init; }
 }

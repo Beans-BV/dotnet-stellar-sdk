@@ -15,11 +15,11 @@ public sealed class TrustlineSponsorshipCreatedEffectResponse : EffectResponse
     ///     The sponsored asset (in canonical form: "code:issuer" or "native").
     /// </summary>
     [JsonPropertyName("asset")]
-    public string? Asset { get; init; }
+    public required string Asset { get; init; }
 
     /// <summary>
     ///     The account ID of the sponsor.
     /// </summary>
     [JsonPropertyName("sponsor")]
-    public string? Sponsor { get; init; }
+    public required string Sponsor { get; init; }
 }

@@ -15,11 +15,11 @@ public sealed class ClaimableBalanceSponsorshipRemovedEffectResponse : EffectRes
     ///     The unique identifier of the claimable balance.
     /// </summary>
     [JsonPropertyName("balance_id")]
-    public string? BalanceId { get; init; }
+    public required string BalanceId { get; init; }
 
     /// <summary>
     ///     The account ID of the former sponsor.
     /// </summary>
     [JsonPropertyName("former_sponsor")]
-    public string? FormerSponsor { get; init; }
+    public required string FormerSponsor { get; init; }
 }

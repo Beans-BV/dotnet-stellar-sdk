@@ -11,13 +11,13 @@ public abstract class SignerEffectResponse : EffectResponse
     ///     The weight of the signer (0-255).
     /// </summary>
     [JsonPropertyName("weight")]
-    public int Weight { get; init; }
+    public required int Weight { get; init; }
 
     /// <summary>
     ///     The public key of the signer.
     /// </summary>
     [JsonPropertyName("public_key")]
-    public string? PublicKey { get; init; }
+    public required string PublicKey { get; init; }
 }
 
 /// <summary>

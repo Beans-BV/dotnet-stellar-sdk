@@ -15,11 +15,11 @@ public sealed class SignerSponsorshipCreatedEffectResponse : EffectResponse
     ///     The public key of the sponsored signer.
     /// </summary>
     [JsonPropertyName("signer")]
-    public string? Signer { get; init; }
+    public required string Signer { get; init; }
 
     /// <summary>
     ///     The account ID of the sponsor.
     /// </summary>
     [JsonPropertyName("sponsor")]
-    public string? Sponsor { get; init; }
+    public required string Sponsor { get; init; }
 }

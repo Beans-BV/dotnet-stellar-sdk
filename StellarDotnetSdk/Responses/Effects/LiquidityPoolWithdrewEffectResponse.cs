@@ -16,7 +16,7 @@ public sealed class LiquidityPoolWithdrewEffectResponse : EffectResponse
     ///     The liquidity pool from which assets were withdrawn.
     /// </summary>
     [JsonPropertyName("liquidity_pool")]
-    public LiquidityPool.LiquidityPool? LiquidityPool { get; init; }
+    public required LiquidityPool.LiquidityPool LiquidityPool { get; init; }
 
     /// <summary>
     ///     The amounts of each reserve asset received.
@@ -28,5 +28,5 @@ public sealed class LiquidityPoolWithdrewEffectResponse : EffectResponse
     ///     The number of pool shares redeemed.
     /// </summary>
     [JsonPropertyName("shares_redeemed")]
-    public string? SharesRedeemed { get; init; }
+    public required string SharesRedeemed { get; init; }
 }

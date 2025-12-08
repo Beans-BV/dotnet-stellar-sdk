@@ -15,7 +15,7 @@ public sealed class TrustlineFlagsUpdatedEffectResponse : EffectResponse
     ///     The type of the trusted asset.
     /// </summary>
     [JsonPropertyName("asset_type")]
-    public string? AssetType { get; init; }
+    public required string AssetType { get; init; }
 
     /// <summary>
     ///     The code of the trusted asset.
@@ -33,7 +33,7 @@ public sealed class TrustlineFlagsUpdatedEffectResponse : EffectResponse
     ///     The account ID of the trustor whose trustline was modified.
     /// </summary>
     [JsonPropertyName("trustor")]
-    public string? Trustor { get; init; }
+    public required string Trustor { get; init; }
 
     /// <summary>
     ///     Whether the trustline is fully authorized.

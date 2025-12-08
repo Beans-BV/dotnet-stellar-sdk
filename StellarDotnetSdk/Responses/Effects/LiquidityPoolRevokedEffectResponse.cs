@@ -15,17 +15,17 @@ public sealed class LiquidityPoolRevokedEffectResponse : EffectResponse
     ///     The liquidity pool that had shares revoked.
     /// </summary>
     [JsonPropertyName("liquidity_pool")]
-    public LiquidityPool.LiquidityPool? LiquidityPool { get; init; }
+    public required LiquidityPool.LiquidityPool LiquidityPool { get; init; }
 
     /// <summary>
     ///     The amounts of each reserve asset revoked.
     /// </summary>
     [JsonPropertyName("reserves_revoked")]
-    public LiquidityPoolClaimableAssetAmount[]? ReservesRevoked { get; init; }
+    public required LiquidityPoolClaimableAssetAmount[] ReservesRevoked { get; init; }
 
     /// <summary>
     ///     The number of pool shares revoked.
     /// </summary>
     [JsonPropertyName("shares_revoked")]
-    public string? SharesRevoked { get; init; }
+    public required string SharesRevoked { get; init; }
 }

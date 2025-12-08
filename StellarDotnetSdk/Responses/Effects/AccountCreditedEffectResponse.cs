@@ -16,13 +16,13 @@ public sealed class AccountCreditedEffectResponse : EffectResponse
     ///     The amount credited to the account.
     /// </summary>
     [JsonPropertyName("amount")]
-    public string? Amount { get; init; }
+    public required string Amount { get; init; }
 
     /// <summary>
     ///     The type of asset credited: "native", "credit_alphanum4", or "credit_alphanum12".
     /// </summary>
     [JsonPropertyName("asset_type")]
-    public string? AssetType { get; init; }
+    public required string AssetType { get; init; }
 
     /// <summary>
     ///     The code of the credited asset. Null for native XLM.
@@ -39,5 +39,5 @@ public sealed class AccountCreditedEffectResponse : EffectResponse
     /// <summary>
     ///     The credited asset.
     /// </summary>
-    public Asset? Asset => AssetType != null ? Asset.Create(AssetType, AssetCode, AssetIssuer) : null;
+    public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
 }

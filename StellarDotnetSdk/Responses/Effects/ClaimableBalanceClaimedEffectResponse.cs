@@ -15,17 +15,17 @@ public sealed class ClaimableBalanceClaimedEffectResponse : EffectResponse
     ///     The asset that was claimed (in canonical form: "code:issuer" or "native").
     /// </summary>
     [JsonPropertyName("asset")]
-    public string? Asset { get; init; }
+    public required string Asset { get; init; }
 
     /// <summary>
     ///     The unique identifier of the claimable balance that was claimed.
     /// </summary>
     [JsonPropertyName("balance_id")]
-    public string? BalanceId { get; init; }
+    public required string BalanceId { get; init; }
 
     /// <summary>
     ///     The amount that was claimed.
     /// </summary>
     [JsonPropertyName("amount")]
-    public string? Amount { get; init; }
+    public required string Amount { get; init; }
 }

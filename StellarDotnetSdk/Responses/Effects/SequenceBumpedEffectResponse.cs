@@ -15,5 +15,5 @@ public sealed class SequenceBumpedEffectResponse : EffectResponse
     ///     The new sequence number of the account.
     /// </summary>
     [JsonPropertyName("new_seq")]
-    public long NewSequence { get; init; }
+    public required long NewSequence { get; init; }
 }

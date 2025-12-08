@@ -16,7 +16,7 @@ public sealed class TradeEffectResponse : EffectResponse
     ///     The account ID of the seller.
     /// </summary>
     [JsonPropertyName("seller")]
-    public string? Seller { get; init; }
+    public required string Seller { get; init; }
 
     /// <summary>
     ///     The muxed account representation of the seller, if applicable.
@@ -34,19 +34,19 @@ public sealed class TradeEffectResponse : EffectResponse
     ///     The offer ID that was matched.
     /// </summary>
     [JsonPropertyName("offer_id")]
-    public string? OfferId { get; init; }
+    public required string OfferId { get; init; }
 
     /// <summary>
     ///     The amount of the sold asset.
     /// </summary>
     [JsonPropertyName("sold_amount")]
-    public string? SoldAmount { get; init; }
+    public required string SoldAmount { get; init; }
 
     /// <summary>
     ///     The type of the sold asset: "native", "credit_alphanum4", or "credit_alphanum12".
     /// </summary>
     [JsonPropertyName("sold_asset_type")]
-    public string? SoldAssetType { get; init; }
+    public required string SoldAssetType { get; init; }
 
     /// <summary>
     ///     The code of the sold asset. Null for native XLM.
@@ -64,13 +64,13 @@ public sealed class TradeEffectResponse : EffectResponse
     ///     The amount of the bought asset.
     /// </summary>
     [JsonPropertyName("bought_amount")]
-    public string? BoughtAmount { get; init; }
+    public required string BoughtAmount { get; init; }
 
     /// <summary>
     ///     The type of the bought asset: "native", "credit_alphanum4", or "credit_alphanum12".
     /// </summary>
     [JsonPropertyName("bought_asset_type")]
-    public string? BoughtAssetType { get; init; }
+    public required string BoughtAssetType { get; init; }
 
     /// <summary>
     ///     The code of the bought asset. Null for native XLM.
@@ -87,14 +87,10 @@ public sealed class TradeEffectResponse : EffectResponse
     /// <summary>
     ///     The bought asset.
     /// </summary>
-    public Asset? BoughtAsset => BoughtAssetType != null
-        ? Asset.Create(BoughtAssetType, BoughtAssetCode, BoughtAssetIssuer)
-        : null;
+    public Asset BoughtAsset => Asset.Create(BoughtAssetType, BoughtAssetCode, BoughtAssetIssuer);
 
     /// <summary>
     ///     The sold asset.
     /// </summary>
-    public Asset? SoldAsset => SoldAssetType != null
-        ? Asset.Create(SoldAssetType, SoldAssetCode, SoldAssetIssuer)
-        : null;
+    public Asset SoldAsset => Asset.Create(SoldAssetType, SoldAssetCode, SoldAssetIssuer);
 }

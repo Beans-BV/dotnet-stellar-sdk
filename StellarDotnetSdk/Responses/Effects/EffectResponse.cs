@@ -19,13 +19,13 @@ public abstract class EffectResponse : Response, IPagingToken
     ///     The unique identifier of the effect.
     /// </summary>
     [JsonPropertyName("id")]
-    public string? Id { get; init; }
+    public required string Id { get; init; }
 
     /// <summary>
     ///     The account that was affected.
     /// </summary>
     [JsonPropertyName("account")]
-    public string? Account { get; init; }
+    public required string Account { get; init; }
 
     /// <summary>
     ///     The muxed account representation of the affected account, if applicable.
@@ -43,31 +43,31 @@ public abstract class EffectResponse : Response, IPagingToken
     ///     The type name of the effect (e.g., "account_created", "trade").
     /// </summary>
     [JsonPropertyName("type")]
-    public string? Type { get; init; }
+    public required string Type { get; init; }
 
     /// <summary>
     ///     The numeric type identifier of the effect.
     /// </summary>
     [JsonPropertyName("type_i")]
-    public virtual int TypeId { get; }
+    public abstract int TypeId { get; }
 
     /// <summary>
     ///     Links to related resources.
     /// </summary>
     [JsonPropertyName("_links")]
-    public EffectsResponseLinks? Links { get; init; }
+    public required EffectsResponseLinks Links { get; init; }
 
     /// <summary>
     ///     The time when the effect was created.
     /// </summary>
     [JsonPropertyName("created_at")]
-    public DateTimeOffset CreatedAt { get; init; }
+    public required DateTimeOffset CreatedAt { get; init; }
 
     /// <summary>
     ///     A cursor value for use in pagination.
     /// </summary>
     [JsonPropertyName("paging_token")]
-    public string PagingToken { get; init; } = string.Empty;
+    public required string PagingToken { get; init; }
 
     /// <summary>
     ///     Links to related resources for an effect.

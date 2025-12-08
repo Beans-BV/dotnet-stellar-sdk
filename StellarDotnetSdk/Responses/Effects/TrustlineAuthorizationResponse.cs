@@ -7,7 +7,7 @@ namespace StellarDotnetSdk.Responses.Effects;
 ///     Base class for trustline authorization effect responses.
 /// </summary>
 [Obsolete("Deprecated in favor of 'TrustlineFlagsUpdatedEffectResponse'")]
-public class TrustlineAuthorizationResponse : EffectResponse
+public abstract class TrustlineAuthorizationResponse : EffectResponse
 {
     /// <summary>
     ///     The account ID of the trustor whose trustline was modified.

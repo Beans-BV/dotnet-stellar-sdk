@@ -15,11 +15,11 @@ public sealed class DataSponsorshipRemovedEffectResponse : EffectResponse
     ///     The account ID of the former sponsor.
     /// </summary>
     [JsonPropertyName("former_sponsor")]
-    public string? FormerSponsor { get; init; }
+    public required string FormerSponsor { get; init; }
 
     /// <summary>
     ///     The name of the data entry.
     /// </summary>
     [JsonPropertyName("data_name")]
-    public string? DataName { get; init; }
+    public required string DataName { get; init; }
 }

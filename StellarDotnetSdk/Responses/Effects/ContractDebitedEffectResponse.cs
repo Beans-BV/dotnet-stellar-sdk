@@ -5,18 +5,21 @@ namespace StellarDotnetSdk.Responses.Effects;
 
 /// <summary>
 ///     Represents the contract_debited effect response.
-///     This effect occurs when a smart contract sends a payment.
+///     This effect occurs when a Soroban smart contract sends some currency
+///     from SAC events involving transfers, mints, and burns.
 /// </summary>
 public sealed class ContractDebitedEffectResponse : EffectResponse
 {
-    // TODO: Find out which TypeId and add tests
-    // public override int TypeId => ;
+    /// <summary>
+    ///     The numeric type identifier for the contract_debited effect.
+    /// </summary>
+    public override int TypeId => 97;
 
     /// <summary>
     ///     The amount debited from the contract.
     /// </summary>
     [JsonPropertyName("amount")]
-    public string? Amount { get; init; }
+    public required string Amount { get; init; }
 
     /// <summary>
     ///     The code of the debited asset. Null for native XLM.
@@ -34,16 +37,16 @@ public sealed class ContractDebitedEffectResponse : EffectResponse
     ///     The type of asset debited: "native", "credit_alphanum4", or "credit_alphanum12".
     /// </summary>
     [JsonPropertyName("asset_type")]
-    public string? AssetType { get; init; }
+    public required string AssetType { get; init; }
 
     /// <summary>
     ///     The contract address that was debited.
     /// </summary>
     [JsonPropertyName("contract")]
-    public string? Contract { get; init; }
+    public required string Contract { get; init; }
 
     /// <summary>
     ///     The debited asset.
     /// </summary>
-    public Asset? Asset => AssetType != null ? Asset.Create(AssetType, AssetCode, AssetIssuer) : null;
+    public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
 }

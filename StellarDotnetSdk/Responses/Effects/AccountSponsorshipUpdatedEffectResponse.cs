@@ -15,11 +15,11 @@ public sealed class AccountSponsorshipUpdatedEffectResponse : EffectResponse
     ///     The account ID of the former sponsor.
     /// </summary>
     [JsonPropertyName("former_sponsor")]
-    public string? FormerSponsor { get; init; }
+    public required string FormerSponsor { get; init; }
 
     /// <summary>
     ///     The account ID of the new sponsor.
     /// </summary>
     [JsonPropertyName("new_sponsor")]
-    public string? NewSponsor { get; init; }
+    public required string NewSponsor { get; init; }
 }

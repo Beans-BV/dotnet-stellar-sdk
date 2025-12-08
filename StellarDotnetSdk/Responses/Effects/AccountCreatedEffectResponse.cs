@@ -12,7 +12,7 @@ public sealed class AccountCreatedEffectResponse : EffectResponse
     ///     The starting balance of the newly created account in XLM.
     /// </summary>
     [JsonPropertyName("starting_balance")]
-    public string? StartingBalance { get; init; }
+    public required string StartingBalance { get; init; }
 
     /// <inheritdoc />
     public override int TypeId => 0;

@@ -16,5 +16,5 @@ public sealed class LiquidityPoolRemovedEffectResponse : EffectResponse
     ///     The ID of the liquidity pool that was removed.
     /// </summary>
     [JsonPropertyName("liquidity_pool_id")]
-    public LiquidityPoolId? LiquidityPoolId { get; init; }
+    public required LiquidityPoolId LiquidityPoolId { get; init; }
 }

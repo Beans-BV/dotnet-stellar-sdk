@@ -15,13 +15,13 @@ public sealed class LiquidityPoolClaimableAssetAmount
     ///     The asset.
     /// </summary>
     [JsonPropertyName("asset")]
-    public Asset? Asset { get; init; }
+    public required Asset Asset { get; init; }
 
     /// <summary>
     ///     The amount of the asset.
     /// </summary>
     [JsonPropertyName("amount")]
-    public string? Amount { get; init; }
+    public required string Amount { get; init; }
 
     /// <summary>
     ///     The claimable balance ID if the revoked amount was placed in a claimable balance.

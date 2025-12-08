@@ -23,14 +23,14 @@ public class EffectsPageDeserializerTest
     public static void AssertTestData(Page<EffectResponse> effectsPage)
     {
         var signerCreatedEffect = (SignerCreatedEffectResponse)effectsPage.Records[0];
-        Assert.AreEqual(signerCreatedEffect.PublicKey, "GAZHVTAM3NRJ6W643LOVA76T2W3TUKPF34ED5VNE4ZKJ2B5T2EUQHIQI");
-        Assert.AreEqual(signerCreatedEffect.PagingToken, "3964757325385729-3");
+        Assert.AreEqual("GAZHVTAM3NRJ6W643LOVA76T2W3TUKPF34ED5VNE4ZKJ2B5T2EUQHIQI", signerCreatedEffect.PublicKey);
+        Assert.AreEqual("3964757325385729-3", signerCreatedEffect.PagingToken);
 
         var accountCreatedEffect = (AccountCreatedEffectResponse)effectsPage.Records[8];
-        Assert.AreEqual(accountCreatedEffect.StartingBalance, "10000.0");
-        Assert.AreEqual(accountCreatedEffect.Account, "GDIQJ6G5AWSBRMHIZYWVWCFN64Q4BZ4TYEAQRO5GVR4EWR23RKBJ2A4R");
-
-        Assert.AreEqual(effectsPage.Links.Next.Href,
-            "http://horizon-testnet.stellar.org/effects?order=desc&limit=10&cursor=3962163165138945-3");
+        Assert.AreEqual("10000.0", accountCreatedEffect.StartingBalance);
+        Assert.AreEqual("GDIQJ6G5AWSBRMHIZYWVWCFN64Q4BZ4TYEAQRO5GVR4EWR23RKBJ2A4R", accountCreatedEffect.Account);
+        Assert.IsNotNull(effectsPage.Links);
+        Assert.AreEqual("http://horizon-testnet.stellar.org/effects?order=desc&limit=10&cursor=3962163165138945-3",
+            effectsPage.Links.Next.Href);
     }
 }
