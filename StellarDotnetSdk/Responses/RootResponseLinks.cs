@@ -52,7 +52,7 @@ public sealed class RootResponseLinks
     ///     Link to the friendbot (testnet only).
     /// </summary>
     [JsonPropertyName("friendbot")]
-    public Link? Friendbot { get; init; }
+    public Link<FriendBotResponse>? Friendbot { get; init; }
 
     /// <summary>
     ///     Link to fetch a ledger.
@@ -100,7 +100,7 @@ public sealed class RootResponseLinks
     ///     Link to fetch the order book.
     /// </summary>
     [JsonPropertyName("order_book")]
-    public required Link OrderBook { get; init; }
+    public required Link<OrderBookResponse> OrderBook { get; init; }
 
     /// <summary>
     ///     Link to fetch payments.

@@ -5,7 +5,7 @@ using StellarDotnetSdk.Converters;
 namespace StellarDotnetSdk.Responses;
 #nullable disable
 
-public class OrderBookResponse
+public class OrderBookResponse : Response
 {
     [JsonPropertyName("base")]
     [JsonConverter(typeof(AssetJsonConverter))]
