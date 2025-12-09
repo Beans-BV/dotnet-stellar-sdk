@@ -434,13 +434,57 @@ public class EffectDeserializerTest
         Assert.AreEqual("credit_alphanum4", effect.AssetType);
         Assert.AreEqual("EUR", effect.AssetCode);
         Assert.AreEqual("GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA", effect.AssetIssuer);
-        
+        Assert.IsNull(effect.LiquidityPoolId);
+
         Assert.AreEqual("1000.0", effect.Limit);
         Assert.IsNotNull(effect.Links);
         Assert.AreEqual("http://horizon-testnet.stellar.org/operations/33788507721730", effect.Links.Operation.Href);
         Assert.AreEqual("http://horizon-testnet.stellar.org/effects?order=desc&cursor=33788507721730-2",
             effect.Links.Succeeds.Href);
         Assert.AreEqual("http://horizon-testnet.stellar.org/effects?order=asc&cursor=33788507721730-2",
+            effect.Links.Precedes.Href);
+    }
+
+    [TestMethod]
+    public void TestDeserializeTrustlineCreatedLiquidityPoolSharesEffect()
+    {
+        var jsonPath = Utils.GetTestDataPath("trustlineCreatedLiquidityPoolShares.json");
+        var json = File.ReadAllText(jsonPath);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+        Assert.IsNotNull(instance);
+        AssertTrustlineCreatedLiquidityPoolSharesData(instance);
+    }
+
+    [TestMethod]
+    public void TestSerializeDeserializeTrustlineCreatedLiquidityPoolSharesEffect()
+    {
+        var jsonPath = Utils.GetTestDataPath("trustlineCreatedLiquidityPoolShares.json");
+        var json = File.ReadAllText(jsonPath);
+        var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+        var serialized = JsonSerializer.Serialize(instance);
+        var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+        Assert.IsNotNull(back);
+        AssertTrustlineCreatedLiquidityPoolSharesData(back);
+    }
+
+    private static void AssertTrustlineCreatedLiquidityPoolSharesData(EffectResponse instance)
+    {
+        Assert.IsTrue(instance is TrustlineCreatedEffectResponse);
+        var effect = (TrustlineCreatedEffectResponse)instance;
+
+        Assert.AreEqual("GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB", effect.Account);
+        Assert.AreEqual("liquidity_pool_shares", effect.AssetType);
+        Assert.IsNull(effect.Asset);
+        Assert.IsNull(effect.AssetCode);
+        Assert.IsNull(effect.AssetIssuer);
+        Assert.AreEqual("3cdf19b3d5d41f753e0f33ebf039f2733851732ab8fe679dcc5d6adafb4700e3", effect.LiquidityPoolId);
+
+        Assert.AreEqual("922337203685.4775807", effect.Limit);
+        Assert.IsNotNull(effect.Links);
+        Assert.AreEqual("https://horizon-testnet.stellar.org/operations/8622194091364353", effect.Links.Operation.Href);
+        Assert.AreEqual("https://horizon-testnet.stellar.org/effects?order=desc&cursor=8622194091364353-1",
+            effect.Links.Succeeds.Href);
+        Assert.AreEqual("https://horizon-testnet.stellar.org/effects?order=asc&cursor=8622194091364353-1",
             effect.Links.Precedes.Href);
     }
 

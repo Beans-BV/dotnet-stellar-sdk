@@ -48,5 +48,6 @@ public sealed class ContractDebitedEffectResponse : EffectResponse
     /// <summary>
     ///     The debited asset.
     /// </summary>
+    [JsonIgnore]
     public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
 }

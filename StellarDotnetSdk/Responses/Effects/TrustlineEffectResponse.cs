@@ -15,19 +15,26 @@ public abstract class TrustlineEffectResponse : EffectResponse
     public required string Limit { get; init; }
 
     /// <summary>
-    ///     The type of the trusted asset: "credit_alphanum4" or "credit_alphanum12".
+    ///     The type of the trusted asset: "credit_alphanum4", "credit_alphanum12" or "liquidity_pool_shares".
     /// </summary>
     [JsonPropertyName("asset_type")]
     public required string AssetType { get; init; }
 
     /// <summary>
-    ///     The code of the trusted asset. Null for native XLM.
+    ///     The code of the trusted asset. Null for native XLM or "liquidity_pool_shares".
     /// </summary>
     [JsonPropertyName("asset_code")]
     public string? AssetCode { get; init; }
 
     /// <summary>
-    ///     The issuer of the trusted asset. Null for native XLM.
+    ///     The unique identifier of the liquidity pool, if the asset type is "liquidity pool shares".
+    ///     Null for regular asset types.
+    /// </summary>
+    [JsonPropertyName("liquidity_pool_id")]
+    public string? LiquidityPoolId { get; init; }
+
+    /// <summary>
+    ///     The issuer of the trusted asset. Null for native XLM or "liquidity_pool_shares".
     /// </summary>
     [JsonPropertyName("asset_issuer")]
     public string? AssetIssuer { get; init; }
@@ -35,7 +42,10 @@ public abstract class TrustlineEffectResponse : EffectResponse
     /// <summary>
     ///     The trusted asset.
     /// </summary>
-    public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
+    [JsonIgnore]
+    public Asset? Asset => AssetType != "liquidity_pool_shares"
+        ? Asset.Create(AssetType, AssetCode, AssetIssuer)
+        : null;
 }
 
 /// <summary>

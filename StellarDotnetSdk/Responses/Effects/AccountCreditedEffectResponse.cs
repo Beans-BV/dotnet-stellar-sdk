@@ -39,5 +39,6 @@ public sealed class AccountCreditedEffectResponse : EffectResponse
     /// <summary>
     ///     The credited asset.
     /// </summary>
+    [JsonIgnore]
     public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
 }

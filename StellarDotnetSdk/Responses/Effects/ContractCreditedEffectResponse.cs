@@ -46,5 +46,6 @@ public sealed class ContractCreditedEffectResponse : EffectResponse
     /// <summary>
     ///     The credited asset.
     /// </summary>
+    [JsonIgnore]
     public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
 }

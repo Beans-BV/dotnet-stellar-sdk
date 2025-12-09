@@ -87,6 +87,7 @@ public sealed class TradeEffectResponse : EffectResponse
     /// <summary>
     ///     The bought asset.
     /// </summary>
+    [JsonIgnore]
     public Asset BoughtAsset => Asset.Create(BoughtAssetType, BoughtAssetCode, BoughtAssetIssuer);
 
     /// <summary>

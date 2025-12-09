@@ -448,6 +448,9 @@
         <None Update="TestData\Responses\assetPageEmpty.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="TestData\Responses\Effects\trustlineCreatedLiquidityPoolShares.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
         <Compile Remove="KeyPairBIP39Tests.cs"/>

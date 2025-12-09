@@ -34,6 +34,7 @@ public class AssetPageDeserializerTest
 
     public static void AssertTestData(Page<AssetResponse> assetsPage)
     {
+        Assert.IsNotNull(assetsPage.Links);
         Assert.AreEqual("https://horizon-testnet.stellar.org/assets?cursor=&limit=200&order=desc",
             assetsPage.Links.Self.Href);
         Assert.AreEqual(
@@ -73,6 +74,7 @@ public class AssetPageDeserializerTest
         var json = File.ReadAllText(jsonPath);
         var assetsPage = JsonSerializer.Deserialize<Page<AssetResponse>>(json, JsonOptions.DefaultOptions);
         Assert.IsNotNull(assetsPage);
+        Assert.IsNotNull(assetsPage.Links);
         Assert.AreEqual(
             "https://horizon-testnet.stellar.org/assets?asset_code=01&asset_issuer=GBGN64KCMODLTB6GCPNGNKPTZAZA4CBGRWMWTINEPBTUVQL2X35HPZSB&cursor=&limit=10&order=asc",
             assetsPage.Links.Self.Href);
