@@ -1,0 +1,40 @@
+﻿{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/operations/8630427543674881"
+    },
+    "transaction": {
+      "href": "https://horizon-testnet.stellar.org/transactions/fbfed8e03622e8f0f5a0905649c33e3eb566faef988e33f6ac60837cf83845bc"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/8630427543674881/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=8630427543674881"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=8630427543674881"
+    }
+  },
+  "id": "8630427543674881",
+  "paging_token": "8630427543674881",
+  "transaction_successful": true,
+  "source_account": "GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB",
+  "source_account_muxed": "MB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVUAAAAAAAAABRN3NWG",
+  "source_account_muxed_id": "12654",
+  "type": "manage_sell_offer",
+  "type_i": 3,
+  "created_at": "2025-12-09T04:41:24Z",
+  "transaction_hash": "fbfed8e03622e8f0f5a0905649c33e3eb566faef988e33f6ac60837cf83845bc",
+  "amount": "12.1621000",
+  "price": "0.1400000",
+  "price_r": {
+    "n": 7,
+    "d": 50
+  },
+  "buying_asset_type": "credit_alphanum4",
+  "buying_asset_code": "TEST",
+  "buying_asset_issuer": "GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST",
+  "selling_asset_type": "native",
+  "offer_id": "0"
+}

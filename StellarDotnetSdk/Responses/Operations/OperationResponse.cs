@@ -1,90 +1,96 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Converters;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
-#nullable disable
 /// <summary>
-///     Abstract class for operation responses.
-///     See: https://www.stellar.org/developers/horizon/reference/resources/operation.html
-///     <seealso cref="Requests.OperationsRequestBuilder" />
-///     <seealso cref="Server" />
+///     Base class for all operation responses.
+///     Operations are actions that mutate the ledger, such as creating accounts or making payments.
+///     See:
+///     <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/operations">Operations</a>
 /// </summary>
+/// <remarks>
+///     <para>
+///         <seealso cref="Requests.OperationsRequestBuilder" />
+///     </para>
+///     <para>
+///         <seealso cref="Server" />
+///     </para>
+/// </remarks>
 [JsonConverter(typeof(OperationResponseJsonConverter))]
 public abstract class OperationResponse : Response, IPagingToken
 {
     /// <summary>
-    ///     ID of the operation
+    ///     The unique identifier for this operation.
     /// </summary>
     [JsonPropertyName("id")]
-    public long Id { get; init; }
+    public required long Id { get; init; }
 
     /// <summary>
-    ///     Source Account of Operation
+    ///     The account that originates the operation.
     /// </summary>
     [JsonPropertyName("source_account")]
-    public string SourceAccount { get; init; }
+    public required string SourceAccount { get; init; }
 
+    /// <summary>
+    ///     The muxed account representation of the source account, if applicable.
+    /// </summary>
     [JsonPropertyName("source_account_muxed")]
-    public string SourceAccountMuxed { get; init; }
+    public string? SourceAccountMuxed { get; init; }
 
+    /// <summary>
+    ///     The muxed account ID of the source account, if applicable.
+    /// </summary>
     [JsonPropertyName("source_account_muxed_id")]
     public ulong? SourceAccountMuxedId { get; init; }
 
     /// <summary>
-    ///     Returns operation type. Possible types:
-    ///     create_account
-    ///     payment
-    ///     allow_trust
-    ///     change_trust
-    ///     set_options
-    ///     account_merge
-    ///     manage_offer
-    ///     path_payments
-    ///     create_passive_offer
-    ///     inflation
-    ///     manage_data
+    ///     The operation type name (e.g., "payment", "create_account", "manage_offer").
     /// </summary>
     [JsonPropertyName("type")]
-    public string Type { get; init; }
-
-    [JsonPropertyName("type_i")]
-    public virtual int TypeId { get; }
+    public required string Type { get; init; }
 
     /// <summary>
-    ///     The time this operation was created.
+    ///     The numeric identifier for the operation type.
+    /// </summary>
+    [JsonPropertyName("type_i")]
+    public abstract int TypeId { get; }
+
+    /// <summary>
+    ///     The date and time this operation was created.
     /// </summary>
     [JsonPropertyName("created_at")]
-    public DateTimeOffset CreatedAt { get; init; }
+    public required DateTimeOffset CreatedAt { get; init; }
 
     /// <summary>
-    ///     Returns transaction hash of transaction this operation belongs to.
+    ///     The hash of the transaction that contains this operation.
     /// </summary>
     [JsonPropertyName("transaction_hash")]
-    public string TransactionHash { get; init; }
+    public required string TransactionHash { get; init; }
 
     /// <summary>
-    ///     Returns whether the operation transaction was successful.
+    ///     Indicates whether the transaction containing this operation was successful.
     /// </summary>
     [JsonPropertyName("transaction_successful")]
     public bool TransactionSuccessful { get; init; } = true;
 
     /// <summary>
-    ///     Links of Paging
+    ///     Navigation links to related resources.
     /// </summary>
     [JsonPropertyName("_links")]
-    public OperationResponseLinks Links { get; init; }
-#nullable restore
+    public required OperationResponseLinks Links { get; init; }
+
     /// <summary>
-    ///     Returns the transaction this operation belongs to.
+    ///     The transaction that contains this operation.
+    ///     Only present when the operation is retrieved with the transaction included.
     /// </summary>
     [JsonPropertyName("transaction")]
     public TransactionResponse? Transaction { get; init; }
 
     /// <summary>
-    ///     Paging Token of Paging
+    ///     A cursor value for use in pagination.
     /// </summary>
     [JsonPropertyName("paging_token")]
-    public string PagingToken { get; init; }
+    public required string PagingToken { get; init; }
 }

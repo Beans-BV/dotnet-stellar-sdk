@@ -36,6 +36,6 @@ public class InflationOperationResponseTest
         Assert.IsTrue(instance is InflationOperationResponse);
         var operation = (InflationOperationResponse)instance;
 
-        Assert.AreEqual(operation.Id, 12884914177L);
+        Assert.AreEqual(12884914177L, operation.Id);
     }
 }

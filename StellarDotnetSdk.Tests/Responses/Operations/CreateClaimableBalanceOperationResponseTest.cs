@@ -11,7 +11,6 @@ namespace StellarDotnetSdk.Tests.Responses.Operations;
 [TestClass]
 public class CreateClaimableBalanceOperationResponseTest
 {
-    //Create Claimable Balance
     [TestMethod]
     public void TestSerializationCreateClaimableBalanceOperation()
     {
@@ -48,14 +47,5 @@ public class CreateClaimableBalanceOperationResponseTest
         Assert.AreEqual("native", operation.Asset);
         Assert.AreEqual("1.0000000", operation.Amount);
         Assert.AreEqual("GAEJ2UF46PKAPJYED6SQ45CKEHSXV63UQEYHVUZSVJU6PK5Y4ZVA4ELU", operation.Claimants[0].Destination);
-
-        var back = new CreateClaimableBalanceOperationResponse
-        {
-            Sponsor = operation.Sponsor,
-            Asset = operation.Asset,
-            Amount = operation.Amount,
-            Claimants = operation.Claimants,
-        };
-        Assert.IsNotNull(back);
     }
 }

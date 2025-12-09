@@ -1,99 +1,122 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
-#nullable disable
-
-/// <inheritdoc />
 /// <summary>
-///     A path payment strict send operation represents a payment from one account to another through a path. This type of
-///     payment starts as one type of asset and ends as another type of asset.
+///     Represents a path_payment_strict_send operation response.
+///     Sends an amount in a specific asset to a destination account through a path of offers.
+///     The send amount is specified, and the receive amount can vary.
 /// </summary>
 public class PathPaymentStrictSendOperationResponse : OperationResponse
 {
     public override int TypeId => 13;
 
     /// <summary>
-    ///     Account address that is sending the payment.
+    ///     The account address that sent the payment.
     /// </summary>
     [JsonPropertyName("from")]
-    public string From { get; init; }
+    public required string From { get; init; }
 
     /// <summary>
-    ///     Account address that receives the payment.
+    ///     The muxed account representation of the sender, if applicable.
+    /// </summary>
+    [JsonPropertyName("from_muxed")]
+    public string? FromMuxed { get; init; }
+
+    /// <summary>
+    ///     The muxed account ID of the sender, if applicable.
+    /// </summary>
+    [JsonPropertyName("from_muxed_id")]
+    public ulong? FromMuxedId { get; init; }
+
+    /// <summary>
+    ///     The account address that received the payment.
     /// </summary>
     [JsonPropertyName("to")]
-    public string To { get; init; }
+    public required string To { get; init; }
 
     /// <summary>
-    ///     The destination asset type. (Alpha4, Alpha12, etc.)
+    ///     The muxed account representation of the receiver, if applicable.
+    /// </summary>
+    [JsonPropertyName("to_muxed")]
+    public string? ToMuxed { get; init; }
+
+    /// <summary>
+    ///     The muxed account ID of the receiver, if applicable.
+    /// </summary>
+    [JsonPropertyName("to_muxed_id")]
+    public ulong? ToMuxedId { get; init; }
+
+    /// <summary>
+    ///     The type of destination asset (e.g., "native", "credit_alphanum4", "credit_alphanum12").
     /// </summary>
     [JsonPropertyName("asset_type")]
-    public string AssetType { get; init; }
+    public required string AssetType { get; init; }
 
     /// <summary>
-    ///     The destination asset code (Alpha4, Alpha12, etc.)
+    ///     The destination asset code. Only present for non-native assets.
     /// </summary>
     [JsonPropertyName("asset_code")]
-    public string AssetCode { get; init; }
+    public string? AssetCode { get; init; }
 
     /// <summary>
-    ///     The destination asset issuer account.
+    ///     The destination asset issuer account. Only present for non-native assets.
     /// </summary>
     [JsonPropertyName("asset_issuer")]
-    public string AssetIssuer { get; init; }
+    public string? AssetIssuer { get; init; }
 
     /// <summary>
-    ///     The amount of destination asset the destination account receives.
+    ///     The amount of destination asset the destination account received.
     /// </summary>
     [JsonPropertyName("amount")]
-    public string Amount { get; init; }
+    public required string Amount { get; init; }
 
     /// <summary>
-    ///     The source asset type. (Alpha4, Alpha12, etc.)
+    ///     The type of source asset (e.g., "native", "credit_alphanum4", "credit_alphanum12").
     /// </summary>
     [JsonPropertyName("source_asset_type")]
-    public string SourceAssetType { get; init; }
+    public required string SourceAssetType { get; init; }
 
     /// <summary>
-    ///     The source asset code.
+    ///     The source asset code. Only present for non-native assets.
     /// </summary>
     [JsonPropertyName("source_asset_code")]
-    public string SourceAssetCode { get; init; }
+    public string? SourceAssetCode { get; init; }
 
     /// <summary>
-    ///     The source asset issuer account.
+    ///     The source asset issuer account. Only present for non-native assets.
     /// </summary>
     [JsonPropertyName("source_asset_issuer")]
-    public string SourceAssetIssuer { get; init; }
+    public string? SourceAssetIssuer { get; init; }
 
     /// <summary>
-    ///     The amount sent.
+    ///     The amount of the source asset that was sent.
     /// </summary>
     [JsonPropertyName("source_amount")]
-    public string SourceAmount { get; init; }
+    public required string SourceAmount { get; init; }
 
     /// <summary>
-    ///     The maximum send amount.
+    ///     The minimum amount of the destination asset that can be received.
     /// </summary>
     [JsonPropertyName("destination_min")]
-    public string DestinationMin { get; init; }
+    public required string DestinationMin { get; init; }
 
     /// <summary>
-    ///     Additional hops the operation went through to get to the destination asset
+    ///     The assets (excluding source and destination) the payment path goes through.
     /// </summary>
     [JsonPropertyName("path")]
-    public IEnumerable<Asset> Path { get; init; }
+    public required Asset[] Path { get; init; }
 
     /// <summary>
-    ///     Destination Asset
+    ///     The destination asset.
     /// </summary>
+    [JsonIgnore]
     public Asset DestinationAsset => Asset.Create(AssetType, AssetCode, AssetIssuer);
 
     /// <summary>
-    ///     Source Asset
+    ///     The source asset.
     /// </summary>
+    [JsonIgnore]
     public Asset SourceAsset => Asset.Create(SourceAssetType, SourceAssetCode, SourceAssetIssuer);
 }

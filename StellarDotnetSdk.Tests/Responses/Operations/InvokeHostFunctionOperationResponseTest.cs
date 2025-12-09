@@ -9,6 +9,7 @@ using MuxedIdType =
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+[TestClass]
 public class InvokeHostFunctionOperationResponseTest
 {
     [TestMethod]
@@ -58,7 +59,7 @@ public class InvokeHostFunctionOperationResponseTest
         Assert.AreEqual("GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54", operation.SourceAccount);
         Assert.AreEqual("456", operation.Salt);
         Assert.AreEqual("123", operation.Address);
-        Assert.AreEqual("2224793063425", operation.Function);
+        Assert.AreEqual("HostFunctionTypeHostFunctionTypeInvokeContract", operation.Function);
         var balanceChanges = operation.AssetBalanceChanges;
         Assert.IsNotNull(balanceChanges);
         Assert.AreEqual(1, balanceChanges.Length);

@@ -9,7 +9,6 @@ namespace StellarDotnetSdk.Tests.Responses.Operations;
 [TestClass]
 public class BeginSponsoringFutureReservesOperationTest
 {
-    //Begin Sponsoring Future Reserves
     [TestMethod]
     public void TestSerializationBeginSponsoringFutureReservesOperation()
     {
@@ -29,11 +28,5 @@ public class BeginSponsoringFutureReservesOperationTest
 
         Assert.AreEqual(215542933753857, operation.Id);
         Assert.AreEqual("GAXHU2XHSMTZYAKFCVTULAYUL34BFPPLRVJYZMEOHP7IWPZJKSVY67RJ", operation.SponsoredId);
-
-        var back = new BeginSponsoringFutureReservesOperationResponse
-        {
-            SponsoredId = operation.SponsoredId,
-        };
-        Assert.IsNotNull(back);
     }
 }

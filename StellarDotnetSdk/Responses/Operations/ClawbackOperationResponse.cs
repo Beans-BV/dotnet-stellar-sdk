@@ -3,59 +3,62 @@ using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
-#nullable disable
-/// <inheritdoc />
 /// <summary>
-///     Represents Clawback operation response.
+///     Represents a clawback operation response.
+///     Claws back (burns) a specified amount of an asset from an account.
+///     This operation can only be performed by the asset issuer on assets that have the clawback-enabled flag set.
+///     The clawed back amount is permanently removed from circulation.
 /// </summary>
 public class ClawbackOperationResponse : OperationResponse
 {
     public override int TypeId => 19;
 
     /// <summary>
-    ///     Asset type (native / alphanum4 / alphanum12)
+    ///     The type of asset being clawed back (e.g., "credit_alphanum4", "credit_alphanum12").
+    ///     Note: Native XLM cannot be clawed back.
     /// </summary>
     [JsonPropertyName("asset_type")]
-    public string AssetType { get; init; }
+    public required string AssetType { get; init; }
 
     /// <summary>
-    ///     Asset code.
+    ///     The asset code of the asset being clawed back (e.g., "USD", "BTC").
     /// </summary>
     [JsonPropertyName("asset_code")]
-    public string AssetCode { get; init; }
+    public required string AssetCode { get; init; }
 
     /// <summary>
-    ///     Asset issuer.
+    ///     The account that issued the asset being clawed back.
     /// </summary>
     [JsonPropertyName("asset_issuer")]
-    public string AssetIssuer { get; init; }
+    public required string AssetIssuer { get; init; }
 
     /// <summary>
-    ///     Amount
+    ///     The amount of the asset being clawed back.
     /// </summary>
     [JsonPropertyName("amount")]
-    public string Amount { get; init; }
+    public required string Amount { get; init; }
 
     /// <summary>
-    ///     Account from which the asset is clawed back
+    ///     The account address from which the asset is being clawed back.
     /// </summary>
     [JsonPropertyName("from")]
-    public string From { get; init; }
+    public required string From { get; init; }
 
     /// <summary>
-    ///     Muxed Account from which the asset is clawed back
+    ///     The muxed account representation of the account from which the asset is being clawed back, if applicable.
     /// </summary>
     [JsonPropertyName("from_muxed")]
-    public string FromMuxed { get; init; }
+    public string? FromMuxed { get; init; }
 
     /// <summary>
-    ///     Muxed Account ID from which the asset is clawed back
+    ///     The muxed account ID of the account from which the asset is being clawed back, if applicable.
     /// </summary>
     [JsonPropertyName("from_muxed_id")]
-    public ulong? FromMuxedID { get; init; }
+    public ulong? FromMuxedId { get; init; }
 
     /// <summary>
-    ///     Asset representation (Using the values of the other fields)
+    ///     The asset being clawed back, constructed from the asset type, code, and issuer.
     /// </summary>
-    public AssetTypeCreditAlphaNum Asset => Assets.Asset.CreateNonNativeAsset(AssetCode, AssetIssuer);
+    [JsonIgnore]
+    public Asset Asset => Asset.CreateNonNativeAsset(AssetCode, AssetIssuer);
 }

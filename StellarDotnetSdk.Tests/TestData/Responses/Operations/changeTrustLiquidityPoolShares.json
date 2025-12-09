@@ -1,0 +1,31 @@
+﻿{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/operations/8622194091364353"
+    },
+    "transaction": {
+      "href": "https://horizon-testnet.stellar.org/transactions/813b8e87e25888d5202fc417433561967318326bd5d0e2b6c81454bc31eaafdf"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/8622194091364353/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=8622194091364353"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=8622194091364353"
+    }
+  },
+  "id": "8622194091364353",
+  "paging_token": "8622194091364353",
+  "transaction_successful": true,
+  "source_account": "GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB",
+  "type": "change_trust",
+  "type_i": 6,
+  "created_at": "2025-12-09T02:01:29Z",
+  "transaction_hash": "813b8e87e25888d5202fc417433561967318326bd5d0e2b6c81454bc31eaafdf",
+  "asset_type": "liquidity_pool_shares",
+  "liquidity_pool_id": "3cdf19b3d5d41f753e0f33ebf039f2733851732ab8fe679dcc5d6adafb4700e3",
+  "limit": "922337203685.4775807",
+  "trustor": "GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB"
+}

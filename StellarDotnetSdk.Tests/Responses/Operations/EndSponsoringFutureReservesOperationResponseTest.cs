@@ -9,7 +9,6 @@ namespace StellarDotnetSdk.Tests.Responses.Operations;
 [TestClass]
 public class EndSponsoringFutureReservesOperationResponseTest
 {
-    //End Sponsoring Future Reserves
     [TestMethod]
     public void TestSerializationEndSponsoringFutureReservesOperation()
     {
@@ -30,16 +29,9 @@ public class EndSponsoringFutureReservesOperationResponseTest
         Assert.AreEqual(215542933753859, operation.Id);
         Assert.AreEqual("GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2", operation.BeginSponsor);
         Assert.IsNull(operation.BeginSponsorMuxed);
-        Assert.IsNull(operation.BeginSponsorMuxedID);
-
-        var back = new EndSponsoringFutureReservesOperationResponse
-        {
-            BeginSponsor = operation.BeginSponsor,
-        };
-        Assert.IsNotNull(back);
+        Assert.IsNull(operation.BeginSponsorMuxedId);
     }
 
-    //End Sponsoring Future Reserves (Muxed)
     [TestMethod]
     public void TestSerializationEndSponsoringFutureReservesOperationMuxed()
     {
@@ -61,12 +53,6 @@ public class EndSponsoringFutureReservesOperationResponseTest
         Assert.AreEqual("GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2", operation.BeginSponsor);
         Assert.AreEqual("MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24",
             operation.BeginSponsorMuxed);
-        Assert.AreEqual(5123456789UL, operation.BeginSponsorMuxedID);
-
-        var back = new EndSponsoringFutureReservesOperationResponse
-        {
-            BeginSponsor = operation.BeginSponsor,
-        };
-        Assert.IsNotNull(back);
+        Assert.AreEqual(5123456789UL, operation.BeginSponsorMuxedId);
     }
 }

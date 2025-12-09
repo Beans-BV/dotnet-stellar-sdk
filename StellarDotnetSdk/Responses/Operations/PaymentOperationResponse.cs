@@ -3,64 +3,77 @@ using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
-#nullable disable
-
-/// <inheritdoc />
 /// <summary>
-///     Sends an amount in a specific asset to a destination account.
+///     Represents a payment operation response.
+///     Sends an amount in a specific asset from one account to another.
 /// </summary>
 public class PaymentOperationResponse : OperationResponse
 {
     public override int TypeId => 1;
 
     /// <summary>
-    ///     Amount of the aforementioned asset to send.
+    ///     The amount of the asset to send.
     /// </summary>
     [JsonPropertyName("amount")]
-    public string Amount { get; init; }
+    public required string Amount { get; init; }
 
     /// <summary>
-    ///     The asset type (USD, BTC, etc.)
+    ///     The type of asset being sent (e.g., "native", "credit_alphanum4", "credit_alphanum12").
     /// </summary>
     [JsonPropertyName("asset_type")]
-    public string AssetType { get; init; }
+    public required string AssetType { get; init; }
 
     /// <summary>
-    ///     The asset code (Alpha4, Alpha12, etc.)
+    ///     The asset code (e.g., "USD", "BTC"). Only present for non-native assets.
     /// </summary>
     [JsonPropertyName("asset_code")]
-    public string AssetCode { get; init; }
+    public string? AssetCode { get; init; }
 
     /// <summary>
+    ///     The account that issued the asset. Only present for non-native assets.
     /// </summary>
     [JsonPropertyName("asset_issuer")]
-    public string AssetIssuer { get; init; }
+    public string? AssetIssuer { get; init; }
 
     /// <summary>
-    ///     Account address that is sending the payment.
+    ///     The account address that sent the payment.
     /// </summary>
     [JsonPropertyName("from")]
-    public string From { get; init; }
+    public required string From { get; init; }
 
+    /// <summary>
+    ///     The muxed account representation of the sender, if applicable.
+    /// </summary>
     [JsonPropertyName("from_muxed")]
-    public string FromMuxed { get; init; }
+    public string? FromMuxed { get; init; }
 
+    /// <summary>
+    ///     The muxed account ID of the sender, if applicable.
+    /// </summary>
     [JsonPropertyName("from_muxed_id")]
     public ulong? FromMuxedId { get; init; }
 
     /// <summary>
+    ///     The account address that received the payment.
     /// </summary>
     [JsonPropertyName("to")]
-    public string To { get; init; }
+    public required string To { get; init; }
 
+    /// <summary>
+    ///     The muxed account representation of the receiver, if applicable.
+    /// </summary>
     [JsonPropertyName("to_muxed")]
-    public string ToMuxed { get; init; }
+    public string? ToMuxed { get; init; }
 
+    /// <summary>
+    ///     The muxed account ID of the receiver, if applicable.
+    /// </summary>
     [JsonPropertyName("to_muxed_id")]
     public ulong? ToMuxedId { get; init; }
 
     /// <summary>
-    ///     Account address that receives the payment.
+    ///     The asset that was sent in this payment.
     /// </summary>
+    [JsonIgnore]
     public Asset Asset => Asset.Create(AssetType, AssetCode, AssetIssuer);
 }

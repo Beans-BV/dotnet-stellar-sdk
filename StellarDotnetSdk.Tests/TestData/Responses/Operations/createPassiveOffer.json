@@ -1,35 +1,37 @@
 ﻿{
   "_links": {
-    "effects": {
-      "href": "/operations/1127729562914817/effects{?cursor,limit,order}",
-      "templated": true
-    },
-    "precedes": {
-      "href": "/operations?cursor=1127729562914817&order=asc"
-    },
     "self": {
-      "href": "/operations/1127729562914817"
-    },
-    "succeeds": {
-      "href": "/operations?cursor=1127729562914817&order=desc"
+      "href": "https://horizon-testnet.stellar.org/operations/8628340189581314"
     },
     "transaction": {
-      "href": "/transactions/1127729562914816"
+      "href": "https://horizon-testnet.stellar.org/transactions/a87313d04fe557a127348818abb05996829f72cd2f171e8121fd2a93c4237984"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/8628340189581314/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=8628340189581314"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=8628340189581314"
     }
   },
-  "amount": "11.27827",
-  "buying_asset_code": "USD",
-  "buying_asset_issuer": "GDS5JW5E6DRSSN5XK4LW7E6VUMFKKE2HU5WCOVFTO7P2RP7OXVCBLJ3Y",
-  "buying_asset_type": "credit_alphanum4",
-  "id": 1127729562914817,
-  "offer_id": 9,
-  "paging_token": "1127729562914817",
-  "price": "1.2",
-  "price_r": {
-    "d": 10,
-    "n": 11
-  },
-  "selling_asset_type": "native",
+  "id": "8628340189581314",
+  "paging_token": "8628340189581314",
+  "transaction_successful": true,
+  "source_account": "GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB",
+  "type": "create_passive_sell_offer",
   "type_i": 4,
-  "type": "create_passive_offer"
+  "created_at": "2025-12-09T04:00:51Z",
+  "transaction_hash": "a87313d04fe557a127348818abb05996829f72cd2f171e8121fd2a93c4237984",
+  "amount": "1.0000000",
+  "price": "10.1000000",
+  "price_r": {
+    "n": 101,
+    "d": 10
+  },
+  "buying_asset_type": "credit_alphanum4",
+  "buying_asset_code": "TEST",
+  "buying_asset_issuer": "GC6ZBHGJGGTPVLYALOKQNQSQUXHJUYDZ7VLMAPU2MERVTYMKVL2GTEST",
+  "selling_asset_type": "native"
 }

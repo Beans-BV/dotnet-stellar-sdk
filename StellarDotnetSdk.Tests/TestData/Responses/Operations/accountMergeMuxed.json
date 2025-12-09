@@ -1,28 +1,35 @@
 ﻿{
   "_links": {
     "self": {
-      "href": "http://horizon-testnet.stellar.org/operations/3424497684189185"
+      "href": "https://horizon-testnet.stellar.org/operations/8631058903863297"
     },
     "transaction": {
-      "href": "http://horizon-testnet.stellar.org/transactions/68f4d37780e2a85f5698b73977126a595dff99aed852f14a7eb39221ce1f96d5"
+      "href": "https://horizon-testnet.stellar.org/transactions/c953de9f4878224d97b030cd49f1b3bd9459602acfc8f7c65809a295fd40988c"
     },
     "effects": {
-      "href": "http://horizon-testnet.stellar.org/operations/3424497684189185/effects"
+      "href": "https://horizon-testnet.stellar.org/operations/8631058903863297/effects"
     },
     "succeeds": {
-      "href": "http://horizon-testnet.stellar.org/effects?order=desc&cursor=3424497684189185"
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=8631058903863297"
     },
     "precedes": {
-      "href": "http://horizon-testnet.stellar.org/effects?order=asc&cursor=3424497684189185"
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=8631058903863297"
     }
   },
-  "id": "3424497684189185",
-  "paging_token": "3424497684189185",
-  "source_account": "GD6GKRABNDVYDETEZJQEPS7IBQMERCN44R5RCI4LJNX6BMYQM2KPGGZ2",
+  "id": "8631058903863297",
+  "paging_token": "8631058903863297",
+  "transaction_successful": true,
+  "source_account": "GDI53A4VSMMYMVVTLO3X4SMZXWIPWN3ETEKTFVPOYO67A5FPLLK4T3YR",
+  "source_account_muxed": "MDI53A4VSMMYMVVTLO3X4SMZXWIPWN3ETEKTFVPOYO67A5FPLLK4SAAAAAAAAAJKERIZA",
+  "source_account_muxed_id": "76324",
   "type": "account_merge",
   "type_i": 8,
-  "account": "GD6GKRABNDVYDETEZJQEPS7IBQMERCN44R5RCI4LJNX6BMYQM2KPGGZ2",
-  "into": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
-  "into_muxed": "MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24",
-  "into_muxed_id": 5123456789
+  "created_at": "2025-12-09T04:53:39Z",
+  "transaction_hash": "c953de9f4878224d97b030cd49f1b3bd9459602acfc8f7c65809a295fd40988c",
+  "account": "GDI53A4VSMMYMVVTLO3X4SMZXWIPWN3ETEKTFVPOYO67A5FPLLK4T3YR",
+  "account_muxed": "MDI53A4VSMMYMVVTLO3X4SMZXWIPWN3ETEKTFVPOYO67A5FPLLK4SAAAAAAAAAJKERIZA",
+  "account_muxed_id": "76324",
+  "into": "GBZG3SMBL6FPLYYNQP6DMVZHDHCDIR4J4GYRGKE5BYRVLBYN364RBL5S",
+  "into_muxed": "MBZG3SMBL6FPLYYNQP6DMVZHDHCDIR4J4GYRGKE5BYRVLBYN364RAAAAAAAAAAICXIM64",
+  "into_muxed_id": "66234"
 }

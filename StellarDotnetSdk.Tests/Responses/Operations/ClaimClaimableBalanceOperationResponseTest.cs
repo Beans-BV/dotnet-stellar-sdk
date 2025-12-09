@@ -9,7 +9,6 @@ namespace StellarDotnetSdk.Tests.Responses.Operations;
 [TestClass]
 public class ClaimClaimableBalanceOperationResponseTest
 {
-    //Claim Claimable Balance
     [TestMethod]
     public void TestSerializationClaimClaimableBalanceOperation()
     {
@@ -29,20 +28,12 @@ public class ClaimClaimableBalanceOperationResponseTest
 
         Assert.AreEqual(214525026504705, operation.Id);
         Assert.AreEqual("00000000526674017c3cf392614b3f2f500230affd58c7c364625c350c61058fbeacbdf7",
-            operation.BalanceID);
+            operation.BalanceId);
         Assert.AreEqual("GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2", operation.Claimant);
         Assert.IsNull(operation.ClaimantMuxed);
-        Assert.IsNull(operation.ClaimantMuxedID);
-
-        var back = new ClaimClaimableBalanceOperationResponse
-        {
-            BalanceID = operation.BalanceID,
-            Claimant = operation.Claimant,
-        };
-        Assert.IsNotNull(back);
+        Assert.IsNull(operation.ClaimantMuxedId);
     }
 
-    //Claim Claimable Balance (Muxed)
     [TestMethod]
     public void TestSerializationClaimClaimableBalanceOperationMuxed()
     {
@@ -62,17 +53,10 @@ public class ClaimClaimableBalanceOperationResponseTest
 
         Assert.AreEqual(214525026504705, operation.Id);
         Assert.AreEqual("00000000526674017c3cf392614b3f2f500230affd58c7c364625c350c61058fbeacbdf7",
-            operation.BalanceID);
+            operation.BalanceId);
         Assert.AreEqual("GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2", operation.Claimant);
         Assert.AreEqual("MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24",
             operation.ClaimantMuxed);
-        Assert.AreEqual(5123456789UL, operation.ClaimantMuxedID);
-
-        var back = new ClaimClaimableBalanceOperationResponse
-        {
-            BalanceID = operation.BalanceID,
-            Claimant = operation.Claimant,
-        };
-        Assert.IsNotNull(back);
+        Assert.AreEqual(5123456789UL, operation.ClaimantMuxedId);
     }
 }

@@ -10,7 +10,6 @@ namespace StellarDotnetSdk.Tests.Responses.Operations;
 [TestClass]
 public class AllowTrustOperationResponseTest
 {
-    //Allow Trust
     [TestMethod]
     public void TestDeserializeAllowTrustOperation()
     {
@@ -38,17 +37,15 @@ public class AllowTrustOperationResponseTest
         Assert.IsTrue(instance is AllowTrustOperationResponse);
         var operation = (AllowTrustOperationResponse)instance;
 
-        Assert.AreEqual(operation.Trustor, "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
-        Assert.AreEqual(operation.Trustee, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
+        Assert.AreEqual("GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F", operation.Trustor);
+        Assert.AreEqual("GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2", operation.Trustee);
         Assert.IsNull(operation.TrusteeMuxed);
-        Assert.IsNull(operation.TrusteeMuxedID);
-        Assert.AreEqual(operation.Authorize, true);
-        Assert.AreEqual(operation.Asset,
-            Asset.CreateNonNativeAsset("EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"));
+        Assert.IsNull(operation.TrusteeMuxedId);
+        Assert.AreEqual(true, operation.Authorize);
+        Assert.AreEqual(Asset.CreateNonNativeAsset("EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"),
+            operation.Asset);
     }
 
-
-    //Allow Trust (Muxed)
     [TestMethod]
     public void TestDeserializeAllowTrustOperationMuxed()
     {
@@ -76,13 +73,13 @@ public class AllowTrustOperationResponseTest
         Assert.IsTrue(instance is AllowTrustOperationResponse);
         var operation = (AllowTrustOperationResponse)instance;
 
-        Assert.AreEqual(operation.Trustor, "GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F");
-        Assert.AreEqual(operation.Trustee, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
-        Assert.AreEqual(operation.TrusteeMuxed,
-            "MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24");
-        Assert.AreEqual(operation.TrusteeMuxedID, 5123456789UL);
-        Assert.AreEqual(operation.Authorize, true);
-        Assert.AreEqual(operation.Asset,
-            Asset.CreateNonNativeAsset("EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"));
+        Assert.AreEqual("GDZ55LVXECRTW4G36EZPTHI4XIYS5JUC33TUS22UOETVFVOQ77JXWY4F", operation.Trustor);
+        Assert.AreEqual("GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2", operation.Trustee);
+        Assert.AreEqual("MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24",
+            operation.TrusteeMuxed);
+        Assert.AreEqual(5123456789UL, operation.TrusteeMuxedId);
+        Assert.AreEqual(true, operation.Authorize);
+        Assert.AreEqual(Asset.CreateNonNativeAsset("EUR", "GDIROJW2YHMSFZJJ4R5XWWNUVND5I45YEWS5DSFKXCHMADZ5V374U2LM"),
+            operation.Asset);
     }
 }

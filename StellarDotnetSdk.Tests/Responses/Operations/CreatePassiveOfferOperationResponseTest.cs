@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Text.Json;
-using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
@@ -38,18 +37,18 @@ public class CreatePassiveOfferOperationResponseTest
 
     private static void AssertCreatePassiveOfferData(CreatePassiveOfferOperationResponse operation)
     {
-        Assert.AreEqual(operation.Amount, "11.27827");
-        Assert.AreEqual(operation.BuyingAsset,
-            Asset.CreateNonNativeAsset("USD", "GDS5JW5E6DRSSN5XK4LW7E6VUMFKKE2HU5WCOVFTO7P2RP7OXVCBLJ3Y"));
-        Assert.AreEqual(operation.SellingAsset, new AssetTypeNative());
-
-        operation.Price
-            .Should().Be("1.2");
-
-        operation.PriceRatio.Numerator
-            .Should().Be(11);
-
-        operation.PriceRatio.Denominator
-            .Should().Be(10);
+        Assert.AreEqual("1.0000000", operation.Amount);
+        Assert.AreEqual("credit_alphanum4", operation.BuyingAssetType);
+        Assert.AreEqual("TEST", operation.BuyingAssetCode);
+        Assert.AreEqual("GC6ZBHGJGGTPVLYALOKQNQSQUXHJUYDZ7VLMAPU2MERVTYMKVL2GTEST", operation.BuyingAssetIssuer);
+        Assert.AreEqual("native", operation.SellingAssetType);
+        Assert.IsNull(operation.SellingAssetCode);
+        Assert.IsNull(operation.SellingAssetIssuer);
+        Assert.AreEqual(Asset.CreateNonNativeAsset("TEST", "GC6ZBHGJGGTPVLYALOKQNQSQUXHJUYDZ7VLMAPU2MERVTYMKVL2GTEST"),
+            operation.BuyingAsset);
+        Assert.AreEqual(new AssetTypeNative(), operation.SellingAsset);
+        Assert.AreEqual("10.1000000", operation.Price);
+        Assert.AreEqual(101L, operation.PriceRatio.Numerator);
+        Assert.AreEqual(10L, operation.PriceRatio.Denominator);
     }
 }

@@ -1,0 +1,43 @@
+﻿{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/operations/8630079651319809"
+    },
+    "transaction": {
+      "href": "https://horizon-testnet.stellar.org/transactions/cc75c169619f2992dd9b40a9ecaf67aea022f8b161026c45f60d8b5cfb834a3c"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/8630079651319809/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=8630079651319809"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=8630079651319809"
+    }
+  },
+  "id": "8630079651319809",
+  "paging_token": "8630079651319809",
+  "transaction_successful": true,
+  "source_account": "GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB",
+  "source_account_muxed": "MB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVUAAAAAAAAABRN3NWG",
+  "source_account_muxed_id": "12654",
+  "type": "path_payment_strict_send",
+  "type_i": 13,
+  "created_at": "2025-12-09T04:34:38Z",
+  "transaction_hash": "cc75c169619f2992dd9b40a9ecaf67aea022f8b161026c45f60d8b5cfb834a3c",
+  "asset_type": "credit_alphanum4",
+  "asset_code": "TEST",
+  "asset_issuer": "GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST",
+  "from": "GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB",
+  "from_muxed": "MB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVUAAAAAAAAABRN3NWG",
+  "from_muxed_id": "12654",
+  "to": "GBZG3SMBL6FPLYYNQP6DMVZHDHCDIR4J4GYRGKE5BYRVLBYN364RBL5S",
+  "to_muxed": "MBZG3SMBL6FPLYYNQP6DMVZHDHCDIR4J4GYRGKE5BYRVLBYN364RAAAAAAAAAAICXIM64",
+  "to_muxed_id": "66234",
+  "amount": "6922.2222222",
+  "path": [],
+  "source_amount": "623.0000000",
+  "destination_min": "72.0000000",
+  "source_asset_type": "native"
+}

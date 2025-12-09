@@ -9,7 +9,6 @@ namespace StellarDotnetSdk.Tests.Responses.Operations;
 [TestClass]
 public class RevokeSponsorshipOperationResponseTest
 {
-    //Revoke Sponsorship Account ID
     [TestMethod]
     public void TestSerializationRevokeSponsorshipAccountIdOperation()
     {
@@ -31,7 +30,6 @@ public class RevokeSponsorshipOperationResponseTest
         Assert.AreEqual("GCLHBHJAYWFT6JA27KEPUQCCGIHUB33HURYAKNWIY4FB7IY3K24PRXET", operation.AccountId);
     }
 
-    //Revoke Sponsorship Claimable Balance
     [TestMethod]
     public void TestSerializationRevokeSponsorshipClaimableBalanceOperation()
     {
@@ -54,7 +52,6 @@ public class RevokeSponsorshipOperationResponseTest
             operation.ClaimableBalanceId);
     }
 
-    //Revoke Sponsorship Data
     [TestMethod]
     public void TestSerializationRevokeSponsorshipDataOperation()
     {
@@ -77,7 +74,6 @@ public class RevokeSponsorshipOperationResponseTest
         Assert.AreEqual("hello", operation.DataName);
     }
 
-    //Revoke Sponsorship Offer
     [TestMethod]
     public void TestSerializationRevokeSponsorshipOfferOperation()
     {
@@ -99,7 +95,6 @@ public class RevokeSponsorshipOperationResponseTest
         Assert.IsNull(operation.OfferId);
     }
 
-    //Revoke Sponsorship Signer Key
     [TestMethod]
     public void TestSerializationRevokeSponsorshipSignerKey()
     {
@@ -122,7 +117,6 @@ public class RevokeSponsorshipOperationResponseTest
         Assert.AreEqual("XAMF7DNTEJY74JPVMGTPZE4LFYTEGBXMGBHNUUMAA7IXMSBGHAMWSND6", operation.SignerKey);
     }
 
-    //Revoke Sponsorship Signer Key
     [TestMethod]
     public void TestSerializationRevokeSponsorshipTrustline()
     {
