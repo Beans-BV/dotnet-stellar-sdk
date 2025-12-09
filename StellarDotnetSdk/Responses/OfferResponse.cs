@@ -31,7 +31,7 @@ public class OfferResponse : Response, IPagingToken
     ///     The ask/bid price as a ratio.
     /// </summary>
     [JsonPropertyName("price_r")]
-    public StellarDotnetSdk.Price PriceRatio { get; init; }
+    public Price PriceRatio { get; init; }
 
     /// <summary>
     ///     The ask/bid price.

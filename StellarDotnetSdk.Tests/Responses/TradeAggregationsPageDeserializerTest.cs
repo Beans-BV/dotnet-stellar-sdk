@@ -47,16 +47,16 @@ public class TradeAggregationsPageDeserializerTest
         Assert.AreEqual("5085.6410385", record.CounterVolume);
         Assert.AreEqual("0.1844293", record.Avg);
         Assert.AreEqual("0.1915709", record.High);
-        Assert.AreEqual("50", record.HighR.Numerator);
-        Assert.AreEqual("261", record.HighR.Denominator);
+        Assert.AreEqual(50L, record.HighR.Numerator);
+        Assert.AreEqual(261L, record.HighR.Denominator);
         Assert.AreEqual("0.1506024", record.Low);
-        Assert.AreEqual("25", record.LowR.Numerator);
-        Assert.AreEqual("166", record.LowR.Denominator);
+        Assert.AreEqual(25L, record.LowR.Numerator);
+        Assert.AreEqual(166L, record.LowR.Denominator);
         Assert.AreEqual("0.1724138", record.Open);
-        Assert.AreEqual("5", record.OpenR.Numerator);
-        Assert.AreEqual("29", record.OpenR.Denominator);
+        Assert.AreEqual(5L, record.OpenR.Numerator);
+        Assert.AreEqual(29L, record.OpenR.Denominator);
         Assert.AreEqual("0.1506024", record.Close);
-        Assert.AreEqual("25", record.CloseR.Numerator);
-        Assert.AreEqual("166", record.CloseR.Denominator);
+        Assert.AreEqual(25L, record.CloseR.Numerator);
+        Assert.AreEqual(166L, record.CloseR.Denominator);
     }
 }

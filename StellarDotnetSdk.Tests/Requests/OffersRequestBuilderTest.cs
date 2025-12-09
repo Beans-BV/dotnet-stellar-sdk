@@ -126,7 +126,8 @@ public class OffersRequestBuilderTest
         Assert.AreEqual(
             "https://horizon-testnet.stellar.org/accounts/GAHEAZQD6K7QBBPGLQZQOHCA5L3Z7ZNFBDU5XCCEI7QYVEFIRUF3IW27",
             offer.Links.OfferMaker.Href);
-        Assert.AreEqual(new Price(1, 2), offer.PriceRatio);
+        Assert.AreEqual(1L, offer.PriceRatio.Numerator);
+        Assert.AreEqual(2L, offer.PriceRatio.Denominator);
         Assert.AreEqual("0.5000000", offer.Price);
         Assert.AreEqual(380, offer.LastModifiedLedger);
         Assert.AreEqual(new DateTimeOffset(2024, 12, 10, 17, 50, 8, TimeSpan.Zero), offer.LastModifiedTime);
