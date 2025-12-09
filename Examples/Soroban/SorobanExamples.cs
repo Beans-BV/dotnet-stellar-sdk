@@ -12,6 +12,7 @@ using StellarDotnetSdk.Xdr;
 using LedgerFootprint = StellarDotnetSdk.Soroban.LedgerFootprint;
 using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
 using SCBytes = StellarDotnetSdk.Soroban.SCBytes;
+using SCString = StellarDotnetSdk.Soroban.SCString;
 using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 using SorobanResources = StellarDotnetSdk.Soroban.SorobanResources;
@@ -24,6 +25,10 @@ internal static class SorobanExamples
 {
     private const string TestNetSorobanUrl = "https://soroban-testnet.stellar.org";
     private static readonly string HelloWasmPath = Path.GetFullPath("wasm/hello_world_contract.wasm");
+    private static readonly string TokenWasmPath = Path.GetFullPath("wasm/token_contract.wasm");
+    private static readonly string AtomicSwapWasmPath = Path.GetFullPath("wasm/atomic_swap_contract.wasm");
+    private static readonly string EventsWasmPath = Path.GetFullPath("wasm/events_contract.wasm");
+    private static readonly string IncrementWasmPath = Path.GetFullPath("wasm/increment_contract.wasm");
 
     private static async Task Main(string[] args)
     {
@@ -65,7 +70,7 @@ internal static class SorobanExamples
         await GetLedgerEntryClaimableBalance(balanceId);
 
         Console.WriteLine("\nUpload hello contract");
-        var wasmId = await UploadContract(keyPair);
+        var wasmId = await UploadContract(keyPair, HelloWasmPath);
 
         Console.WriteLine("\nGet ledger entry contract code");
         await GetLedgerEntryContractCode(wasmId);
@@ -85,6 +90,20 @@ internal static class SorobanExamples
 
         Console.WriteLine($"\nInvoke contract {createdContractId}");
         await InvokeContract(keyPair, createdContractId);
+
+        Console.WriteLine("\n=== Advanced Real-World Examples ===");
+
+        Console.WriteLine("\n1. Token Contract Example - Deploy and interact with a CAP-46-6 token");
+        await TokenContractExample(keyPair, childKeyPair);
+
+        Console.WriteLine("\n2. Increment Contract Example - Persistent storage demonstration");
+        await IncrementContractExample(keyPair);
+
+        Console.WriteLine("\n3. Events Contract Example - Publishing and reading contract events");
+        await EventsContractExample(keyPair);
+
+        Console.WriteLine("\n4. Atomic Swap Example - Trustless token exchange between parties");
+        await AtomicSwapExample(keyPair, childKeyPair, issuerKeyPair);
     }
 
     private static async Task GetHealth()
@@ -110,13 +129,13 @@ internal static class SorobanExamples
         Console.WriteLine($"Server latest ledger: {response.Sequence}");
     }
 
-    private static async Task<string> CreateContract(IAccountId keyPair, string wasmId)
+    private static async Task<string> CreateContract(IAccountId keyPair, string wasmId, SCVal[]? args = null)
     {
         SorobanServer server = new(TestNetSorobanUrl);
         // Load the account with the updated sequence number from Soroban server
         var account = await server.GetAccount(keyPair.AccountId);
 
-        var operation = CreateContractOperation.FromAddress(wasmId, account.AccountId);
+        var operation = CreateContractOperation.FromAddress(wasmId, account.AccountId, args);
 
         var tx = new TransactionBuilder(account).AddOperation(operation).Build();
         await SimulateAndUpdateTransaction(tx, keyPair);
@@ -310,11 +329,10 @@ internal static class SorobanExamples
         }
     }
 
-
-    private static async Task<string> UploadContract(IAccountId sourceKeyPair)
+    private static async Task<string> UploadContract(IAccountId sourceKeyPair, string wasmPath)
     {
         SorobanServer server = new(TestNetSorobanUrl);
-        var wasm = await File.ReadAllBytesAsync(HelloWasmPath);
+        var wasm = await File.ReadAllBytesAsync(wasmPath);
 
         // Load the account with the updated sequence number from Soroban server
         var account = await server.GetAccount(sourceKeyPair.AccountId);
@@ -333,7 +351,7 @@ internal static class SorobanExamples
         var result = (SCBytes)SCVal.FromXdrBase64(xdrBase64);
         Console.WriteLine($"Contract WASM hash: {Convert.ToBase64String(result.InnerValue)}");
 
-        Console.WriteLine($"Sending 'Upload contract' transaction with xdr: {tx.ToEnvelopeXdrBase64()}");
+        Console.WriteLine("Sending 'Upload contract' transaction");
         var sendResponse = await server.SendTransaction(tx);
         var txHash = sendResponse.Hash;
         Console.WriteLine($"Upload contract transaction hash: {txHash}");
@@ -420,6 +438,443 @@ internal static class SorobanExamples
         );
         return ledgerKeyContractData;
     }
+
+    #region Advanced Real-World Contract Examples
+
+    /// <summary>
+    ///     Demonstrates a complete token contract lifecycle:
+    ///     - Deploy a CAP-46-6 compliant token contract with constructor arguments
+    ///     - Initialize token metadata (name, symbol, decimals)
+    ///     - Mint tokens to an account
+    ///     - Transfer tokens between accounts
+    ///     - Check balances
+    ///     - Approve spending allowances
+    ///     - Burn tokens
+    ///     Note: This token contract uses a two-phase initialization:
+    ///     1. Constructor (called during deployment): Sets the admin
+    ///     2. Initialize function (called after deployment): Sets token metadata
+    /// </summary>
+    private static async Task TokenContractExample(IAccountId admin, IAccountId recipient)
+    {
+        SorobanServer server = new(TestNetSorobanUrl);
+
+        Console.WriteLine("--- Upload and Deploy Token Contract ---");
+
+        Console.WriteLine("Uploading token contract");
+        var tokenWasmId = await UploadContract(admin, TokenWasmPath);
+
+        Console.WriteLine("\n--- Deploy Token Contract with Constructor ---");
+
+        var constructorArgs = new SCVal[]
+        {
+            new ScAccountId(admin.AccountId),
+            new SCUint32(10),
+            new SCString("test name"),
+            new SCString("a symbol"),
+        };
+
+        var tokenContractId = await CreateContract(admin, tokenWasmId, constructorArgs);
+
+        Console.WriteLine($"Token contract ID: {tokenContractId}");
+
+        Console.WriteLine("\n--- Step 2: Mint Tokens ---");
+        var adminAccount = await server.GetAccount(admin.AccountId);
+
+        var mintAmount = 1000000L; // 1,000,000 tokens (with 7 decimals = 0.1 actual tokens)
+        var mintArgs = new SCVal[]
+        {
+            new ScAccountId(recipient.AccountId), // to
+            new SCInt128(mintAmount.ToString()), // amount
+        };
+
+        var mintOp = new InvokeContractOperation(tokenContractId, "mint", mintArgs, admin);
+        var mintTx = new TransactionBuilder(adminAccount).AddOperation(mintOp).Build();
+        await SimulateAndUpdateTransaction(mintTx, admin);
+
+        var mintResponse = await server.SendTransaction(mintTx);
+        ArgumentNullException.ThrowIfNull(mintResponse.Hash);
+        await PollTransaction(mintResponse.Hash);
+        Console.WriteLine($"Minted {mintAmount} tokens to {recipient.AccountId}");
+
+        Console.WriteLine("\n--- Step 3: Check Balance ---");
+        adminAccount = await server.GetAccount(admin.AccountId);
+
+        var balanceArgs = new SCVal[]
+        {
+            new ScAccountId(recipient.AccountId),
+        };
+
+        var balanceOp = new InvokeContractOperation(tokenContractId, "balance", balanceArgs, admin);
+        var balanceTx = new TransactionBuilder(adminAccount).AddOperation(balanceOp).Build();
+        var balanceSimulation = await server.SimulateTransaction(balanceTx);
+
+        if (balanceSimulation.Results != null && balanceSimulation.Results.Length > 0)
+        {
+            var balanceXdr = balanceSimulation.Results[0].Xdr;
+            ArgumentNullException.ThrowIfNull(balanceXdr);
+            var balanceVal = (SCInt128)SCVal.FromXdrBase64(balanceXdr);
+            Console.WriteLine($"Balance of {recipient.AccountId}: {balanceVal.Lo}");
+        }
+
+        Console.WriteLine("\n--- Step 4: Transfer Tokens ---");
+        // Recipient transfers half their tokens back to admin
+        // First we need to fund recipient account 
+        await HorizonExamples.FundAccountUsingFriendBot(recipient.AccountId);
+
+        var recipientAccount = await server.GetAccount(recipient.AccountId);
+
+        var transferAmount = mintAmount / 2;
+        var transferArgs = new SCVal[]
+        {
+            new ScAccountId(recipient.AccountId), // from
+            new ScAccountId(admin.AccountId), // to
+            new SCInt128(transferAmount.ToString()), // amount
+        };
+
+        var transferOp = new InvokeContractOperation(tokenContractId, "transfer", transferArgs, recipient);
+        var transferTx = new TransactionBuilder(recipientAccount).AddOperation(transferOp).Build();
+        await SimulateAndUpdateTransaction(transferTx, recipient);
+
+        Console.WriteLine($"Sending 'Transfer token' transaction {transferTx}");
+        var transferResponse = await server.SendTransaction(transferTx);
+        ArgumentNullException.ThrowIfNull(transferResponse.Hash);
+        await PollTransaction(transferResponse.Hash);
+        Console.WriteLine($"Transferred {transferAmount} tokens from recipient to admin");
+
+        Console.WriteLine("\n--- Step 5: Approve Allowance ---");
+        recipientAccount = await server.GetAccount(recipient.AccountId);
+
+        var latestLedgerResponse = await server.GetLatestLedger();
+        var latestLedger = latestLedgerResponse.Sequence;
+
+        var approveAmount = mintAmount / 10;
+        var approveArgs = new SCVal[]
+        {
+            new ScAccountId(recipient.AccountId), // from
+            new ScAccountId(admin.AccountId), // spender
+            new SCInt128(approveAmount.ToString()), // amount
+            new SCUint32((uint)latestLedger + 120000), // expiration_ledger (1 week from the current ledger)
+        };
+
+        var approveOp = new InvokeContractOperation(tokenContractId, "approve", approveArgs, recipient);
+        var approveTx = new TransactionBuilder(recipientAccount).AddOperation(approveOp).Build();
+        await SimulateAndUpdateTransaction(approveTx, recipient);
+
+        Console.WriteLine($"Sending 'Approve allowance' transaction {transferTx}");
+        var approveResponse = await server.SendTransaction(approveTx);
+        ArgumentNullException.ThrowIfNull(approveResponse.Hash);
+        await PollTransaction(approveResponse.Hash);
+        Console.WriteLine($"Approved {approveAmount} tokens for admin to spend from recipient's account");
+
+        Console.WriteLine("\n--- Step 6: Burn Tokens ---");
+        adminAccount = await server.GetAccount(admin.AccountId);
+
+        var burnAmount = 50000L;
+        var burnArgs = new SCVal[]
+        {
+            new ScAccountId(admin.AccountId), // from
+            new SCInt128(burnAmount.ToString()), // amount
+        };
+
+        var burnOp = new InvokeContractOperation(tokenContractId, "burn", burnArgs, admin);
+        var burnTx = new TransactionBuilder(adminAccount).AddOperation(burnOp).Build();
+        await SimulateAndUpdateTransaction(burnTx, admin);
+
+        var burnResponse = await server.SendTransaction(burnTx);
+        ArgumentNullException.ThrowIfNull(burnResponse.Hash);
+        await PollTransaction(burnResponse.Hash);
+        Console.WriteLine($"Burned {burnAmount} tokens from admin account");
+
+        Console.WriteLine("\n✓ Token contract example completed successfully!");
+    }
+
+    /// <summary>
+    ///     Demonstrates the increment contract showing persistent storage:
+    ///     - Deploy an increment contract
+    ///     - Increment a counter multiple times
+    ///     - Retrieve the current counter value
+    /// </summary>
+    private static async Task IncrementContractExample(IAccountId keyPair)
+    {
+        SorobanServer server = new(TestNetSorobanUrl);
+
+        Console.WriteLine("--- Step 1: Deploy Increment Contract ---");
+
+        Console.WriteLine("Uploading increment contract");
+        var wasmId = await UploadContract(keyPair, IncrementWasmPath);
+
+        Console.WriteLine("Creating increment contract instance");
+        var contractId = await CreateContract(keyPair, wasmId);
+
+        Console.WriteLine($"Increment contract ID: {contractId}");
+
+        Console.WriteLine("--- Step 2: Increment Counter ---");
+
+        var account = await server.GetAccount(keyPair.AccountId);
+
+        var incOp = new InvokeContractOperation(contractId, "increment", null, keyPair);
+        var incTx = new TransactionBuilder(account).AddOperation(incOp).Build();
+        await SimulateAndUpdateTransaction(incTx, keyPair);
+
+        Console.WriteLine("Sending 'Increment' transaction");
+        var incResponse = await server.SendTransaction(incTx);
+
+        ArgumentNullException.ThrowIfNull(incResponse.Hash);
+        var response = await PollTransaction(incResponse.Hash);
+        ArgumentNullException.ThrowIfNull(response.ResultValue);
+        var incrementedValue = (SCUint32)response.ResultValue!;
+        Console.WriteLine($"Incremented value: {incrementedValue.InnerValue}");
+    }
+
+    /// <summary>
+    ///     Demonstrates contract events:
+    ///     - Deploy an events contract
+    ///     - Invoke functions that publish events
+    ///     - Read and parse the published events from transaction results
+    /// </summary>
+    private static async Task EventsContractExample(IAccountId keyPair)
+    {
+        SorobanServer server = new(TestNetSorobanUrl);
+
+        Console.WriteLine("--- Step 1: Deploy Events Contract ---");
+        Console.WriteLine("Uploading events contract");
+        var wasmId = await UploadContract(keyPair, EventsWasmPath);
+
+        Console.WriteLine("Creating events contract instance");
+        var contractId = await CreateContract(keyPair, wasmId);
+
+        Console.WriteLine($"Events contract ID: {contractId}");
+
+        Console.WriteLine("\n--- Step 2: Invoke Contract to Publish Events ---");
+        var account = await server.GetAccount(keyPair.AccountId);
+
+        var eventOp = new InvokeContractOperation(contractId, "increment", null, keyPair);
+        var eventTx = new TransactionBuilder(account).AddOperation(eventOp).Build();
+        await SimulateAndUpdateTransaction(eventTx, keyPair);
+
+        var eventResponse = await server.SendTransaction(eventTx);
+        ArgumentNullException.ThrowIfNull(eventResponse.Hash);
+        var eventResult = await PollTransaction(eventResponse.Hash);
+
+        Console.WriteLine("\n--- Step 3: Read Published Events ---");
+        if (eventResult.ResultMetaXdr != null)
+        {
+            Console.WriteLine("Transaction produced events (check ResultMetaXdr for details)");
+            Console.WriteLine("Events are embedded in the transaction metadata");
+            Console.WriteLine($"Number of ContractEventsXdr: {eventResult.Events?.ContractEventsXdr?.Length ?? 0}");
+            Console.WriteLine($"Number of DiagnosticEventsXdr: {eventResult.Events?.DiagnosticEventsXdr?.Length ?? 0}");
+            Console.WriteLine(
+                $"Number of TransactionEventsXdr: {eventResult.Events?.TransactionEventsXdr?.Length ?? 0}");
+        }
+
+        Console.WriteLine("\nEvents contract example completed successfully!");
+    }
+
+    /// <summary>
+    ///     Demonstrates atomic swap between two parties:
+    ///     - Deploy atomic swap contract
+    ///     - Deploy two token contracts (Token A and Token B)
+    ///     - Mint tokens to both parties
+    ///     - Execute the atomic swap
+    ///     - The swap happens atomically (both succeed or both fail)
+    /// </summary>
+    private static async Task AtomicSwapExample(IAccountId partyA, IAccountId partyB, IAccountId tokenIssuer)
+    {
+        SorobanServer server = new(TestNetSorobanUrl);
+
+        Console.WriteLine("--- Step 1: Deploy Token A (Party A will swap this) ---");
+        Console.WriteLine("Uploading token A contract");
+        var tokenAWasmId = await UploadContract(partyA, TokenWasmPath);
+
+        var tokenAConstructorArgs = new SCVal[]
+        {
+            new ScAccountId(partyA.AccountId), // admin
+            new SCUint32(7), // decimals
+            new SCString("Token A"), // name
+            new SCString("TKNA"), // symbol
+        };
+
+        Console.WriteLine("Creating token A contract instance");
+        var tokenAContractId = await CreateContract(partyA, tokenAWasmId, tokenAConstructorArgs);
+        Console.WriteLine($"Token A contract ID: {tokenAContractId}");
+
+        Console.WriteLine("\n--- Step 2: Deploy Token B (Party B will swap this) ---");
+        Console.WriteLine("Uploading token B contract");
+        var tokenBWasmId = await UploadContract(partyB, TokenWasmPath);
+
+        var tokenBConstructorArgs = new SCVal[]
+        {
+            new ScAccountId(partyB.AccountId), // admin
+            new SCUint32(7), // decimals
+            new SCString("Token B"), // name
+            new SCString("TKNB"), // symbol
+        };
+
+        Console.WriteLine("Creating token B contract instance");
+        var tokenBContractId = await CreateContract(partyB, tokenBWasmId, tokenBConstructorArgs);
+        Console.WriteLine($"Token B contract ID: {tokenBContractId}");
+
+        Console.WriteLine("\n--- Step 3: Mint Token A to Party A ---");
+        var partyAAccount = await server.GetAccount(partyA.AccountId);
+        var amountA = 1000000L; // 0.1 tokens with 7 decimals
+
+        var mintAArgs = new SCVal[]
+        {
+            new ScAccountId(partyA.AccountId), // to
+            new SCInt128(amountA.ToString()), // amount
+        };
+
+        var mintAOp = new InvokeContractOperation(tokenAContractId, "mint", mintAArgs, partyA);
+        var mintATx = new TransactionBuilder(partyAAccount).AddOperation(mintAOp).Build();
+        await SimulateAndUpdateTransaction(mintATx, partyA);
+
+        var mintAResponse = await server.SendTransaction(mintATx);
+        ArgumentNullException.ThrowIfNull(mintAResponse.Hash);
+        await PollTransaction(mintAResponse.Hash);
+        Console.WriteLine($"Minted {amountA} of Token A to Party A");
+
+        Console.WriteLine("\n--- Step 4: Mint Token B to Party B ---");
+        var partyBAccount = await server.GetAccount(partyB.AccountId);
+        var amountB = 2000000L; // 0.2 tokens with 7 decimals
+
+        var mintBArgs = new SCVal[]
+        {
+            new ScAccountId(partyB.AccountId), // to
+            new SCInt128(amountB.ToString()), // amount
+        };
+
+        var mintBOp = new InvokeContractOperation(tokenBContractId, "mint", mintBArgs, partyB);
+        var mintBTx = new TransactionBuilder(partyBAccount).AddOperation(mintBOp).Build();
+        await SimulateAndUpdateTransaction(mintBTx, partyB);
+
+        var mintBResponse = await server.SendTransaction(mintBTx);
+        ArgumentNullException.ThrowIfNull(mintBResponse.Hash);
+        await PollTransaction(mintBResponse.Hash);
+        Console.WriteLine($"Minted {amountB} of Token B to Party B");
+
+        Console.WriteLine("\n--- Step 5: Deploy Atomic Swap Contract ---");
+        Console.WriteLine("Uploading atomic swap contract");
+        var swapWasmId = await UploadContract(partyA, AtomicSwapWasmPath);
+
+        Console.WriteLine("Creating atomic swap contract instance");
+        var swapContractId = await CreateContract(partyA, swapWasmId);
+        Console.WriteLine($"Atomic swap contract ID: {swapContractId}");
+
+        Console.WriteLine("\n--- Step 6: Party A Approves Swap Contract to Spend Token A ---");
+        partyAAccount = await server.GetAccount(partyA.AccountId);
+        var latestLedger = (await server.GetLatestLedger()).Sequence;
+
+        var approveAArgs = new SCVal[]
+        {
+            new ScAccountId(partyA.AccountId), // from
+            new ScContractId(swapContractId), // spender (swap contract)
+            new SCInt128(amountA.ToString()), // amount
+            new SCUint32((uint)latestLedger + 200000), // expiration_ledger
+        };
+
+        var approveAOp = new InvokeContractOperation(tokenAContractId, "approve", approveAArgs, partyA);
+        var approveATx = new TransactionBuilder(partyAAccount).AddOperation(approveAOp).Build();
+        await SimulateAndUpdateTransaction(approveATx, partyA);
+
+        var approveAResponse = await server.SendTransaction(approveATx);
+        ArgumentNullException.ThrowIfNull(approveAResponse.Hash);
+        await PollTransaction(approveAResponse.Hash);
+        Console.WriteLine($"Party A approved swap contract to spend {amountA} of Token A");
+
+        Console.WriteLine("\n--- Step 7: Party B Approves Swap Contract to Spend Token B ---");
+        partyBAccount = await server.GetAccount(partyB.AccountId);
+
+        var approveBArgs = new SCVal[]
+        {
+            new ScAccountId(partyB.AccountId), // from
+            new ScContractId(swapContractId), // spender (swap contract)
+            new SCInt128(amountB.ToString()), // amount
+            new SCUint32((uint)latestLedger + 200000), // expiration_ledger
+        };
+
+        var approveBOp = new InvokeContractOperation(tokenBContractId, "approve", approveBArgs, partyB);
+        var approveBTx = new TransactionBuilder(partyBAccount).AddOperation(approveBOp).Build();
+        await SimulateAndUpdateTransaction(approveBTx, partyB);
+
+        var approveBResponse = await server.SendTransaction(approveBTx);
+        ArgumentNullException.ThrowIfNull(approveBResponse.Hash);
+        await PollTransaction(approveBResponse.Hash);
+        Console.WriteLine($"Party B approved swap contract to spend {amountB} of Token B");
+
+        Console.WriteLine("\n--- Step 8: Execute Atomic Swap ---");
+        Console.WriteLine("Party A initiates the swap:");
+        Console.WriteLine($"  • Party A gives {amountA} of Token A");
+        Console.WriteLine($"  • Party A receives {amountB} of Token B");
+        Console.WriteLine($"  • Party B gives {amountB} of Token B");
+        Console.WriteLine($"  • Party B receives {amountA} of Token A");
+
+        partyAAccount = await server.GetAccount(partyA.AccountId);
+
+        // The swap function typically expects arguments like:
+        // swap(a: Address, b: Address, token_a: Address, token_b: Address,
+        //      amount_a: i128, min_b_for_a: i128, amount_b: i128, min_a_for_b: i128)
+        var swapArgs = new SCVal[]
+        {
+            new ScAccountId(partyA.AccountId), // party a
+            new ScAccountId(partyB.AccountId), // party b
+            new ScContractId(tokenAContractId), // token_a
+            new ScContractId(tokenBContractId), // token_b
+            new SCInt128(amountA.ToString()), // amount_a
+            new SCInt128(amountB.ToString()), // min_b_for_a (minimum of token B that A expects)
+            new SCInt128(amountB.ToString()), // amount_b
+            new SCInt128(amountA.ToString()), // min_a_for_b (minimum of token A that B expects)
+        };
+
+        var swapOp = new InvokeContractOperation(swapContractId, "swap", swapArgs, partyA);
+        var swapTx = new TransactionBuilder(partyAAccount).AddOperation(swapOp).Build();
+        await SimulateAndUpdateTransaction(swapTx, partyA);
+
+        Console.WriteLine("Sending atomic swap transaction...");
+        var swapResponse = await server.SendTransaction(swapTx);
+        ArgumentNullException.ThrowIfNull(swapResponse.Hash);
+        await PollTransaction(swapResponse.Hash);
+
+        Console.WriteLine("\n--- Step 9: Verify Swap Results ---");
+
+        // Check Party A's Token B balance
+        partyAAccount = await server.GetAccount(partyA.AccountId);
+        var balanceABArgs = new SCVal[] { new ScAccountId(partyA.AccountId) };
+        var balanceABOp = new InvokeContractOperation(tokenBContractId, "balance", balanceABArgs, partyA);
+        var balanceABTx = new TransactionBuilder(partyAAccount).AddOperation(balanceABOp).Build();
+        var balanceABSim = await server.SimulateTransaction(balanceABTx);
+
+        if (balanceABSim.Results != null && balanceABSim.Results.Length > 0)
+        {
+            var balanceXdr = balanceABSim.Results[0].Xdr;
+            ArgumentNullException.ThrowIfNull(balanceXdr);
+            var balance = (SCInt128)SCVal.FromXdrBase64(balanceXdr);
+            Console.WriteLine($"Party A now has {balance.Lo} of Token B (expected {amountB})");
+        }
+
+        // Check Party B's Token A balance
+        partyBAccount = await server.GetAccount(partyB.AccountId);
+        var balanceBAArgs = new SCVal[] { new ScAccountId(partyB.AccountId) };
+        var balanceBAOp = new InvokeContractOperation(tokenAContractId, "balance", balanceBAArgs, partyB);
+        var balanceBATx = new TransactionBuilder(partyBAccount).AddOperation(balanceBAOp).Build();
+        var balanceBASim = await server.SimulateTransaction(balanceBATx);
+
+        if (balanceBASim.Results != null && balanceBASim.Results.Length > 0)
+        {
+            var balanceXdr = balanceBASim.Results[0].Xdr;
+            ArgumentNullException.ThrowIfNull(balanceXdr);
+            var balance = (SCInt128)SCVal.FromXdrBase64(balanceXdr);
+            Console.WriteLine($"Party B now has {balance.Lo} of Token A (expected {amountA})");
+        }
+
+        Console.WriteLine("\n✓ Atomic swap completed successfully!");
+        Console.WriteLine("Key takeaways:");
+        Console.WriteLine("  • Both transfers succeeded together (atomicity)");
+        Console.WriteLine("  • No intermediary could steal funds");
+        Console.WriteLine("  • No trust required between parties");
+        Console.WriteLine("  • Smart contract enforced fair exchange");
+    }
+
+    #endregion
 
     #region Retry Configuration Examples
 
