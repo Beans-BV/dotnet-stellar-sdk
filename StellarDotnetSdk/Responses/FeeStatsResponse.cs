@@ -12,7 +12,7 @@ public sealed class FeeStatsResponse : Response
     ///     The average capacity usage over the last 5 ledgers (0 is no usage, 1.0 is completely full ledgers).
     /// </summary>
     [JsonPropertyName("ledger_capacity_usage")]
-    public required string LedgerCapacityUsage { get; init; }
+    public required double LedgerCapacityUsage { get; init; }
 
     /// <summary>
     ///     The base fee as defined in the last ledger.

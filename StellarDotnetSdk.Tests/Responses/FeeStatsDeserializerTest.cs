@@ -37,7 +37,7 @@ public class FeeStatsDeserializerTest
 
     public static void AssertTestData(FeeStatsResponse stats)
     {
-        Assert.AreEqual("0.97", stats.LedgerCapacityUsage);
+        Assert.AreEqual(0.97D, stats.LedgerCapacityUsage);
 
         // Assert Fee Charged Data
         Assert.AreEqual(1L, stats.FeeCharged.Min);

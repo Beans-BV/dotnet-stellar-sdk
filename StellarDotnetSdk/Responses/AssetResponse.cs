@@ -81,7 +81,7 @@ public sealed class AssetResponse : Response, IPagingToken
     ///     The number of Soroban contracts that hold this asset.
     /// </summary>
     [JsonPropertyName("num_contracts")]
-    public required int ContractsQuantity { get; init; }
+    public required uint ContractsQuantity { get; init; }
 
     /// <summary>
     ///     The number of units for this asset held by all Soroban contracts.

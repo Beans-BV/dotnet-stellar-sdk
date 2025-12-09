@@ -59,6 +59,6 @@ public sealed class OrderBookResponse : Response
         ///     The ask/bid price as a rational number (numerator/denominator).
         /// </summary>
         [JsonPropertyName("price_r")]
-        public required Price PriceR { get; init; }
+        public required Price PriceRatio { get; init; }
     }
 }
