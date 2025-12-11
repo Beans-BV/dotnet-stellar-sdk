@@ -78,7 +78,7 @@ public class PathPaymentStrictSendOperationResponseTest
         Assert.IsTrue(instance is PathPaymentStrictSendOperationResponse);
         var operation = (PathPaymentStrictSendOperationResponse)instance;
 
-        Assert.AreEqual(0, operation.Path.Length);
+        Assert.AreEqual(0, operation.Path.Count);
         Assert.AreEqual("GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB", operation.From);
         Assert.AreEqual("MB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVUAAAAAAAAABRN3NWG", operation.FromMuxed);
         Assert.AreEqual(12654UL, operation.FromMuxedId);

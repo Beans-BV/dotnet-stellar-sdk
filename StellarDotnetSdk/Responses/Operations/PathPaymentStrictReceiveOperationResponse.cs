@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
@@ -106,7 +107,7 @@ public class PathPaymentStrictReceiveOperationResponse : OperationResponse
     ///     The assets (excluding source and destination) the payment path goes through.
     /// </summary>
     [JsonPropertyName("path")]
-    public required Asset[] Path { get; init; }
+    public required IReadOnlyList<Asset> Path { get; init; }
 
     /// <summary>
     ///     The destination asset.

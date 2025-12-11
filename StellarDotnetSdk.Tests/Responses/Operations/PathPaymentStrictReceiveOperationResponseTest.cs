@@ -42,7 +42,7 @@ public class PathPaymentStrictReceiveOperationResponseTest
         Assert.AreEqual("GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST", operation.AssetIssuer);
         Assert.AreEqual(Asset.CreateNonNativeAsset("TEST", "GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST"),
             operation.DestinationAsset);
-        Assert.AreEqual(0, operation.Path.Length);
+        Assert.AreEqual(0, operation.Path.Count);
         Assert.AreEqual("GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB", operation.From);
         Assert.IsNull(operation.FromMuxed);
         Assert.IsNull(operation.FromMuxedId);
@@ -90,7 +90,7 @@ public class PathPaymentStrictReceiveOperationResponseTest
         Assert.AreEqual("GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST", operation.AssetIssuer);
         Assert.AreEqual(Asset.CreateNonNativeAsset("TEST", "GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST"),
             operation.DestinationAsset);
-        Assert.AreEqual(0, operation.Path.Length);
+        Assert.AreEqual(0, operation.Path.Count);
         Assert.AreEqual("GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB", operation.From);
         Assert.AreEqual("MB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVUAAAAAAAAABRN3NWG", operation.FromMuxed);
         Assert.AreEqual(12654UL, operation.FromMuxedId);
