@@ -1,34 +1,37 @@
 ﻿{
   "_links": {
-    "effects": {
-      "href": "/operations/25769807873/effects/{?cursor,limit,order}",
-      "templated": true
-    },
-    "precedes": {
-      "href": "/operations?cursor=25769807873\u0026order=asc"
-    },
     "self": {
-      "href": "/operations/25769807873"
-    },
-    "succeeds": {
-      "href": "/operations?cursor=25769807873\u0026order=desc"
+      "href": "https://horizon-testnet.stellar.org/operations/8629186298126337"
     },
     "transaction": {
-      "href": "/transactions/25769807872"
+      "href": "https://horizon-testnet.stellar.org/transactions/fed2ac1aea95802ce03e4eebcce841153fa3061dfb9c4dd8eeaf6c7ef0d258e3"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/8629186298126337/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=8629186298126337"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=8629186298126337"
     }
   },
-  "amount": "10.0",
-  "asset_type": "native",
-  "from": "GCXKG6RN4ONIEPCMNFB732A436Z5PNDSRLGWK7GBLCMQLIFO4S7EYWVU",
-  "id": "25769807873",
-  "paging_token": "25769807873",
-  "source_asset_code": "USD",
-  "source_asset_issuer": "GC23QF2HUE52AMXUFUH3AYJAXXGXXV2VHXYYR6EYXETPKDXZSAW67XO4",
-  "source_asset_type": "credit_alphanum4",
-  "source_amount": "10.0",
-  "source_max": "10.0",
-  "to": "GA5WBPYA5Y4WAEHXWR2UKO2UO4BUGHUQ74EUPKON2QHV4WRHOIRNKKH2",
+  "id": "8629186298126337",
+  "paging_token": "8629186298126337",
   "transaction_successful": true,
+  "source_account": "GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB",
+  "type": "path_payment_strict_receive",
   "type_i": 2,
-  "type": "path_payment_strict_receive"
+  "created_at": "2025-12-09T04:17:17Z",
+  "transaction_hash": "fed2ac1aea95802ce03e4eebcce841153fa3061dfb9c4dd8eeaf6c7ef0d258e3",
+  "asset_type": "credit_alphanum4",
+  "asset_code": "TEST",
+  "asset_issuer": "GB7DCP4SQBU3XZIJTJ55WEEVRBLSGT3ILJD2VUDMCTSZ4JVS2AUHTEST",
+  "from": "GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB",
+  "to": "GBZG3SMBL6FPLYYNQP6DMVZHDHCDIR4J4GYRGKE5BYRVLBYN364RBL5S",
+  "amount": "1.0000000",
+  "path": [],
+  "source_amount": "0.0900000",
+  "source_max": "15.0000000",
+  "source_asset_type": "native"
 }

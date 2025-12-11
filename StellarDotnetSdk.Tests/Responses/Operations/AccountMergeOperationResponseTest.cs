@@ -36,13 +36,14 @@ public class AccountMergeOperationResponseTest
         Assert.IsTrue(instance is AccountMergeOperationResponse);
         var operation = (AccountMergeOperationResponse)instance;
 
-        Assert.AreEqual(operation.Account, "GD6GKRABNDVYDETEZJQEPS7IBQMERCN44R5RCI4LJNX6BMYQM2KPGGZ2");
-        Assert.AreEqual(operation.Into, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
+        Assert.AreEqual("GD6GKRABNDVYDETEZJQEPS7IBQMERCN44R5RCI4LJNX6BMYQM2KPGGZ2", operation.Account);
+        Assert.AreEqual("GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2", operation.Into);
+        Assert.IsNull(operation.AccountMuxed);
+        Assert.IsNull(operation.AccountMuxedId);
         Assert.IsNull(operation.IntoMuxed);
         Assert.IsNull(operation.IntoMuxedID);
     }
 
-    //Account Merge (Muxed)
     [TestMethod]
     public void TestDeserializeAccountMergeOperationMuxed()
     {
@@ -70,9 +71,12 @@ public class AccountMergeOperationResponseTest
         Assert.IsTrue(instance is AccountMergeOperationResponse);
         var operation = (AccountMergeOperationResponse)instance;
 
-        Assert.AreEqual(operation.Account, "GD6GKRABNDVYDETEZJQEPS7IBQMERCN44R5RCI4LJNX6BMYQM2KPGGZ2");
-        Assert.AreEqual(operation.Into, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
-        Assert.AreEqual(operation.IntoMuxed, "MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24");
-        Assert.AreEqual(operation.IntoMuxedID, 5123456789UL);
+        Assert.AreEqual("GDI53A4VSMMYMVVTLO3X4SMZXWIPWN3ETEKTFVPOYO67A5FPLLK4T3YR", operation.Account);
+        Assert.AreEqual("MDI53A4VSMMYMVVTLO3X4SMZXWIPWN3ETEKTFVPOYO67A5FPLLK4SAAAAAAAAAJKERIZA",
+            operation.AccountMuxed);
+        Assert.AreEqual(76324UL, operation.AccountMuxedId);
+        Assert.AreEqual("GBZG3SMBL6FPLYYNQP6DMVZHDHCDIR4J4GYRGKE5BYRVLBYN364RBL5S", operation.Into);
+        Assert.AreEqual("MBZG3SMBL6FPLYYNQP6DMVZHDHCDIR4J4GYRGKE5BYRVLBYN364RAAAAAAAAAAICXIM64", operation.IntoMuxed);
+        Assert.AreEqual(66234UL, operation.IntoMuxedID);
     }
 }

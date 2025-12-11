@@ -19,29 +19,29 @@ public class OperationResponseLinks
     ///     This endpoint represents effects that occurred as a result of a given operation.
     /// </summary>
     [JsonPropertyName("effects")]
-    public Link<Page<EffectResponse>> Effects { get; init; }
+    public required Link<Page<EffectResponse>> Effects { get; init; }
 
     /// <summary>
     ///     This endpoint represents precedes that occurred as a result of a given operation.
     /// </summary>
     [JsonPropertyName("precedes")]
-    public Link<OperationResponse> Precedes { get; init; }
+    public required Link<OperationResponse> Precedes { get; init; }
 
     /// <summary>
     ///     This endpoint represents self that occurred as a result of a given operation.
     /// </summary>
     [JsonPropertyName("self")]
-    public Link<OperationResponse> Self { get; init; }
+    public required Link<OperationResponse> Self { get; init; }
 
     /// <summary>
     ///     This endpoint represents succeeds that occurred as a result of a given operation.
     /// </summary>
     [JsonPropertyName("succeeds")]
-    public Link<OperationResponse> Succeeds { get; init; }
+    public required Link<OperationResponse> Succeeds { get; init; }
 
     /// <summary>
     ///     This endpoint represents transaction that occurred as a result of a given operation.
     /// </summary>
     [JsonPropertyName("transaction")]
-    public Link<TransactionResponse> Transaction { get; init; }
+    public required Link<TransactionResponse> Transaction { get; init; }
 }

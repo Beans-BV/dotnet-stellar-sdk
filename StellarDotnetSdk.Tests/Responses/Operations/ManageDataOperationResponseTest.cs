@@ -9,7 +9,6 @@ namespace StellarDotnetSdk.Tests.Responses.Operations;
 [TestClass]
 public class ManageDataOperationResponseTest
 {
-    //Manage Data
     [TestMethod]
     public void TestManageDataOperation()
     {
@@ -37,12 +36,11 @@ public class ManageDataOperationResponseTest
         Assert.IsTrue(instance is ManageDataOperationResponse);
         var operation = (ManageDataOperationResponse)instance;
 
-        Assert.AreEqual(operation.Id, 14336188517191688L);
-        Assert.AreEqual(operation.Name, "CollateralValue");
-        Assert.AreEqual(operation.Value, "MjAwMA==");
+        Assert.AreEqual(14336188517191688L, operation.Id);
+        Assert.AreEqual("CollateralValue", operation.Name);
+        Assert.AreEqual("MjAwMA==", operation.Value);
     }
 
-    //Manage Data Value Empty
     [TestMethod]
     public void TestDeserializeManageDataOperationValueEmpty()
     {
@@ -70,6 +68,6 @@ public class ManageDataOperationResponseTest
         Assert.IsTrue(instance is ManageDataOperationResponse);
         var operation = (ManageDataOperationResponse)instance;
 
-        Assert.AreEqual(operation.Value, null);
+        Assert.AreEqual(null, operation.Value);
     }
 }

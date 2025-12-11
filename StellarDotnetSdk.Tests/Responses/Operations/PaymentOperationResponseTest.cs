@@ -12,7 +12,6 @@ namespace StellarDotnetSdk.Tests.Responses.Operations;
 [TestClass]
 public class PaymentOperationResponseTest
 {
-//Payment
     [TestMethod]
     public void TestDeserializePaymentOperation()
     {
@@ -37,22 +36,26 @@ public class PaymentOperationResponseTest
 
     public static void AssertPaymentOperationTestData(PaymentOperationResponse operation)
     {
-        Assert.AreEqual(operation.SourceAccount, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
+        Assert.AreEqual("GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2", operation.SourceAccount);
         Assert.IsNull(operation.SourceAccountMuxed);
         Assert.IsNull(operation.SourceAccountMuxedId);
-        Assert.AreEqual(DateTime.Parse("2024-10-23T02:12:22Z").ToUniversalTime(),
-            operation.CreatedAt.ToUniversalTime());
+        Assert.AreEqual(DateTime.Parse("2024-10-23T02:12:22Z").ToUniversalTime(), operation.CreatedAt);
 
-        Assert.AreEqual(operation.Id, 3940808587743233L);
+        Assert.AreEqual(3940808587743233L, operation.Id);
 
-        Assert.AreEqual(operation.From, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
+        Assert.AreEqual("GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2", operation.From);
         Assert.IsNull(operation.FromMuxed);
         Assert.IsNull(operation.FromMuxedId);
-        Assert.AreEqual(operation.To, "GDWNY2POLGK65VVKIH5KQSH7VWLKRTQ5M6ADLJAYC2UEHEBEARCZJWWI");
-        Assert.AreEqual(operation.Amount, "100.0");
-        Assert.AreEqual(operation.Asset, new AssetTypeNative());
+        Assert.AreEqual("GDWNY2POLGK65VVKIH5KQSH7VWLKRTQ5M6ADLJAYC2UEHEBEARCZJWWI", operation.To);
+        Assert.IsNull(operation.ToMuxed);
+        Assert.IsNull(operation.ToMuxedId);
+        Assert.AreEqual("100.0", operation.Amount);
+        Assert.AreEqual(new AssetTypeNative(), operation.Asset);
+        Assert.AreEqual("native", operation.AssetType);
+        Assert.IsNull(operation.AssetCode);
+        Assert.IsNull(operation.AssetIssuer);
 
-        Assert.AreEqual(operation.TransactionHash, "5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b");
+        Assert.AreEqual("5c2e4dad596941ef944d72741c8f8f1a4282f8f2f141e81d827f44bf365d626b", operation.TransactionHash);
 
         var transaction = operation.Transaction;
 
@@ -90,7 +93,6 @@ public class PaymentOperationResponseTest
         Assert.IsFalse(operation.TransactionSuccessful);
     }
 
-    //Payment Non Native
     [TestMethod]
     public void TestDeserializePaymentOperationNonNative()
     {
@@ -118,14 +120,13 @@ public class PaymentOperationResponseTest
         Assert.IsTrue(instance is PaymentOperationResponse);
         var operation = (PaymentOperationResponse)instance;
 
-        Assert.AreEqual(operation.From, "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA");
-        Assert.AreEqual(operation.To, "GBHUSIZZ7FS2OMLZVZ4HLWJMXQ336NFSXHYERD7GG54NRITDTEWWBBI6");
-        Assert.AreEqual(operation.Amount, "1000000000.0");
-        Assert.AreEqual(operation.Asset,
-            Asset.CreateNonNativeAsset("EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"));
+        Assert.AreEqual("GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA", operation.From);
+        Assert.AreEqual("GBHUSIZZ7FS2OMLZVZ4HLWJMXQ336NFSXHYERD7GG54NRITDTEWWBBI6", operation.To);
+        Assert.AreEqual("1000000000.0", operation.Amount);
+        Assert.AreEqual(Asset.CreateNonNativeAsset("EUR", "GAZN3PPIDQCSP5JD4ETQQQ2IU2RMFYQTAL4NNQZUGLLO2XJJJ3RDSDGA"),
+            operation.Asset);
     }
 
-    //Payment (Muxed)
     [TestMethod]
     public void TestDeserializePaymentOperationMuxed()
     {
@@ -153,19 +154,19 @@ public class PaymentOperationResponseTest
         Assert.IsTrue(instance is PaymentOperationResponse);
         var operation = (PaymentOperationResponse)instance;
 
-        Assert.AreEqual(operation.SourceAccount, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
-        Assert.AreEqual(operation.SourceAccountMuxed,
-            "MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24");
-        Assert.AreEqual(operation.SourceAccountMuxedId, 5123456789UL);
+        Assert.AreEqual("GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2", operation.SourceAccount);
+        Assert.AreEqual("MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24",
+            operation.SourceAccountMuxed);
+        Assert.AreEqual(5123456789UL, operation.SourceAccountMuxedId);
 
-        Assert.AreEqual(operation.Id, 3940808587743233L);
+        Assert.AreEqual(3940808587743233L, operation.Id);
 
-        Assert.AreEqual(operation.From, "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2");
-        Assert.AreEqual(operation.FromMuxed, "MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24");
-        Assert.AreEqual(operation.FromMuxedId, 5123456789UL);
-        Assert.AreEqual(operation.To, "GDWNY2POLGK65VVKIH5KQSH7VWLKRTQ5M6ADLJAYC2UEHEBEARCZJWWI");
-        Assert.AreEqual(operation.Amount, "100.0");
-        Assert.AreEqual(operation.Asset, new AssetTypeNative());
+        Assert.AreEqual("GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2", operation.From);
+        Assert.AreEqual("MAAAAAABGFQ36FMUQEJBVEBWVMPXIZAKSJYCLOECKPNZ4CFKSDCEWV75TR3C55HR2FJ24", operation.FromMuxed);
+        Assert.AreEqual(5123456789UL, operation.FromMuxedId);
+        Assert.AreEqual("GDWNY2POLGK65VVKIH5KQSH7VWLKRTQ5M6ADLJAYC2UEHEBEARCZJWWI", operation.To);
+        Assert.AreEqual("100.0", operation.Amount);
+        Assert.AreEqual(new AssetTypeNative(), operation.Asset);
 
         Assert.IsFalse(operation.TransactionSuccessful);
     }

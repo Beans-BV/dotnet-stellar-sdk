@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Text.Json;
-using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
@@ -38,20 +37,15 @@ public class ManageBuyOfferOperationResponseTest
         Assert.IsTrue(instance is ManageBuyOfferOperationResponse);
         var operation = (ManageBuyOfferOperationResponse)instance;
 
-        Assert.AreEqual(operation.OfferId, "1");
-        Assert.AreEqual(operation.Amount, "50000.0000000");
+        Assert.AreEqual("1", operation.OfferId);
+        Assert.AreEqual("50000.0000000", operation.Amount);
 
-        operation.Price
-            .Should().Be("0.0463000");
+        Assert.AreEqual("0.0463000", operation.Price);
+        Assert.AreEqual(463L, operation.PriceRatio.Numerator);
+        Assert.AreEqual(10000L, operation.PriceRatio.Denominator);
 
-        operation.PriceRatio.Numerator
-            .Should().Be(463);
-
-        operation.PriceRatio.Denominator
-            .Should().Be(10000);
-
-        Assert.AreEqual(operation.BuyingAsset,
-            Asset.CreateNonNativeAsset("RMT", "GDEGOXPCHXWFYY234D2YZSPEJ24BX42ESJNVHY5H7TWWQSYRN5ZKZE3N"));
-        Assert.AreEqual(operation.SellingAsset, new AssetTypeNative());
+        Assert.AreEqual(Asset.CreateNonNativeAsset("RMT", "GDEGOXPCHXWFYY234D2YZSPEJ24BX42ESJNVHY5H7TWWQSYRN5ZKZE3N"),
+            operation.BuyingAsset);
+        Assert.AreEqual(new AssetTypeNative(), operation.SellingAsset);
     }
 }

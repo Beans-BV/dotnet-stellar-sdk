@@ -1,25 +1,28 @@
 ﻿{
   "_links": {
-    "effects": {
-      "href": "/operations/12884914177/effects/{?cursor,limit,order}",
-      "templated": true
-    },
-    "precedes": {
-      "href": "/operations?cursor=12884914177&order=asc"
-    },
     "self": {
-      "href": "/operations/12884914177"
-    },
-    "succeeds": {
-      "href": "/operations?cursor=12884914177&order=desc"
+      "href": "https://horizon-testnet.stellar.org/operations/8627811908587521"
     },
     "transaction": {
-      "href": "/transactions/12884914176"
+      "href": "https://horizon-testnet.stellar.org/transactions/8d5b19dbb62f317c5aa87b9e62242a569c4bb653ae5124bcfbfe18b46a9f4eb2"
+    },
+    "effects": {
+      "href": "https://horizon-testnet.stellar.org/operations/8627811908587521/effects"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=8627811908587521"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=8627811908587521"
     }
   },
-  "id": 12884914177,
-  "paging_token": "12884914177",
-  "type_i": 11,
+  "id": "8627811908587521",
+  "paging_token": "8627811908587521",
+  "transaction_successful": true,
+  "source_account": "GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB",
   "type": "bump_sequence",
-  "bump_to": "79473726952833048"
+  "type_i": 11,
+  "created_at": "2025-12-09T03:50:36Z",
+  "transaction_hash": "8d5b19dbb62f317c5aa87b9e62242a569c4bb653ae5124bcfbfe18b46a9f4eb2",
+  "bump_to": "100"
 }

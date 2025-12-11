@@ -9,7 +9,6 @@ namespace StellarDotnetSdk.Tests.Responses.Operations;
 [TestClass]
 public class ClawbackClaimableBalance
 {
-    //Clawback Claimable Balance
     [TestMethod]
     public void TestClawbackClaimableBalance()
     {

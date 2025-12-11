@@ -2,14 +2,19 @@
 
 namespace StellarDotnetSdk.Responses.Operations;
 
-#nullable disable
 /// <summary>
-///     Represents AccountMerge operation response.
+///     Represents a begin_sponsoring_future_reserves operation response.
+///     This operation establishes a sponsorship relationship where the source account
+///     sponsors the reserves (minimum balance requirements) for operations performed
+///     by another account until an end_sponsoring_future_reserves operation is encountered.
 /// </summary>
 public class BeginSponsoringFutureReservesOperationResponse : OperationResponse
 {
     public override int TypeId => 16;
 
+    /// <summary>
+    ///     The account ID that will have its reserves sponsored by the source account.
+    /// </summary>
     [JsonPropertyName("sponsored_id")]
-    public string SponsoredId { get; init; }
+    public required string SponsoredId { get; init; }
 }

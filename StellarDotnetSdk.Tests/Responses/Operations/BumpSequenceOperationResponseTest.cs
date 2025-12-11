@@ -36,7 +36,7 @@ public class BumpSequenceOperationResponseTest
         Assert.IsTrue(instance is BumpSequenceOperationResponse);
         var operation = (BumpSequenceOperationResponse)instance;
 
-        Assert.AreEqual(12884914177L, operation.Id);
-        Assert.AreEqual("79473726952833048", operation.BumpTo);
+        Assert.AreEqual(8627811908587521L, operation.Id);
+        Assert.AreEqual(100L, operation.BumpTo);
     }
 }

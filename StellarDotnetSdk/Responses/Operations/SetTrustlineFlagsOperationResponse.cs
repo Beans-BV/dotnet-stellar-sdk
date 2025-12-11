@@ -3,57 +3,53 @@ using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Operations;
 
-#nullable disable
-/// <inheritdoc />
 /// <summary>
-///     Represents SetTrustlineFlags operation response.
+///     Represents a set_trustline_flags operation response.
+///     Sets flags on a trustline, controlling authorization states for an asset.
 /// </summary>
 public class SetTrustlineFlagsOperationResponse : OperationResponse
 {
     public override int TypeId => 21;
 
     /// <summary>
-    ///     Asset type (native / alphanum4 / alphanum12)
+    ///     The type of asset (e.g., "credit_alphanum4", "credit_alphanum12").
     /// </summary>
     [JsonPropertyName("asset_type")]
-    public string AssetType { get; init; }
+    public required string AssetType { get; init; }
 
     /// <summary>
-    ///     Asset code.
+    ///     The asset code.
     /// </summary>
     [JsonPropertyName("asset_code")]
-    public string AssetCode { get; init; }
+    public required string AssetCode { get; init; }
 
     /// <summary>
-    ///     Asset issuer.
+    ///     The asset issuer account.
     /// </summary>
     [JsonPropertyName("asset_issuer")]
-    public string AssetIssuer { get; init; }
+    public required string AssetIssuer { get; init; }
 
     /// <summary>
-    ///     Trustor account.
+    ///     The account whose trustline flags are being modified.
     /// </summary>
     [JsonPropertyName("trustor")]
-    public string Trustor { get; init; }
+    public required string Trustor { get; init; }
 
     /// <summary>
-    ///     Indicates which flags to clear. For details about the flags, please refer to the accounts doc. The bit mask integer
-    ///     adds onto the
-    ///     existing flags of the account. This allows for setting specific bits without knowledge of existing flags.
+    ///     Array of flag names to clear (e.g., ["authorized", "authorized_to_maintain_liabilities"]).
     /// </summary>
     [JsonPropertyName("clear_flags_s")]
-    public string[] ClearFlags { get; init; }
+    public required string[] ClearFlags { get; init; }
 
     /// <summary>
-    ///     Indicates which flags to set. For details about the flags, please refer to the accounts doc. The bit mask integer
-    ///     adds onto the
-    ///     existing flags of the account. This allows for setting specific bits without knowledge of existing flags.
+    ///     Array of flag names to set (e.g., ["authorized", "clawback_enabled"]).
     /// </summary>
     [JsonPropertyName("set_flags_s")]
-    public string[] SetFlags { get; init; }
+    public required string[] SetFlags { get; init; }
 
     /// <summary>
-    ///     Asset representation (Using the values of the other fields)
+    ///     The asset for which trustline flags are being modified.
     /// </summary>
-    public AssetTypeCreditAlphaNum Asset => Assets.Asset.CreateNonNativeAsset(AssetCode, AssetIssuer);
+    [JsonIgnore]
+    public Asset Asset => Asset.CreateNonNativeAsset(AssetCode, AssetIssuer);
 }
