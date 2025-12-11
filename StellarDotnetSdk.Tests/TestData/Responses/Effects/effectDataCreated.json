@@ -15,5 +15,7 @@
   "account": "GDPFGP4IPE5DXG6XRXC4ZBUI43PAGRQ5VVNJ3LJTBXDBZ4ITO6HBHNSF",
   "type": "data_created",
   "type_i": 40,
-  "created_at": "2018-06-06T10:23:57Z"
+  "created_at": "2018-06-06T10:23:57Z",
+  "name": "my key",
+  "value": "dGVzdC5jb20="
 }

@@ -3,40 +3,62 @@ using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
 
 namespace StellarDotnetSdk.Responses;
-#nullable disable
 
-public class OrderBookResponse : Response
+/// <summary>
+///     Represents an order book for a trading pair on the Stellar decentralized exchange.
+///     Contains both buy orders (bids) and sell orders (asks).
+/// </summary>
+public sealed class OrderBookResponse : Response
 {
+    /// <summary>
+    ///     The base asset for this order book (the asset being sold in asks, bought in bids).
+    /// </summary>
     [JsonPropertyName("base")]
     [JsonConverter(typeof(AssetJsonConverter))]
-    public Asset OrderBookBase { get; init; }
+    public required Asset OrderBookBase { get; init; }
 
+    /// <summary>
+    ///     The counter asset for this order book (the asset being bought in asks, sold in bids).
+    /// </summary>
     [JsonPropertyName("counter")]
     [JsonConverter(typeof(AssetJsonConverter))]
-    public Asset Counter { get; init; }
+    public required Asset Counter { get; init; }
 
+    /// <summary>
+    ///     The prices and amounts for the sellside of the asset pair.
+    /// </summary>
     [JsonPropertyName("asks")]
-    public Row[] Asks { get; init; }
+    public required Row[] Asks { get; init; }
 
+    /// <summary>
+    ///     The prices and amounts for the buyside of the asset pair.
+    /// </summary>
     [JsonPropertyName("bids")]
-    public Row[] Bids { get; init; }
+    public required Row[] Bids { get; init; }
 
-    /// Represents order book row.
-    public class Row
+    /// <summary>
+    ///     Represents a single row in the order book (either an ask or a bid).
+    /// </summary>
+    public sealed class Row
     {
+        /// <summary>
+        ///     The amount of the base asset available at this price level.
+        ///     Represented as a string to preserve precision.
+        /// </summary>
         [JsonPropertyName("amount")]
-        public string Amount { get; init; }
+        public required string Amount { get; init; }
 
         /// <summary>
-        ///     The ask/bid price.
+        ///     The ask/bid price as a decimal string.
+        ///     Represents how much of the counter asset is needed for 1 unit of the base asset.
         /// </summary>
         [JsonPropertyName("price")]
-        public string Price { get; init; }
+        public required string Price { get; init; }
 
         /// <summary>
-        ///     The ask/bid price as a ratio.
+        ///     The ask/bid price as a rational number (numerator/denominator).
         /// </summary>
         [JsonPropertyName("price_r")]
-        public Price PriceRatio { get; init; }
+        public required Price PriceRatio { get; init; }
     }
 }

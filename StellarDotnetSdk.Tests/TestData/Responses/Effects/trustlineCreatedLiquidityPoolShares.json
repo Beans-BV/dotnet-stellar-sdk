@@ -1,0 +1,23 @@
+﻿{
+  "_links": {
+    "operation": {
+      "href": "https://horizon-testnet.stellar.org/operations/8622194091364353"
+    },
+    "succeeds": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=desc&cursor=8622194091364353-1"
+    },
+    "precedes": {
+      "href": "https://horizon-testnet.stellar.org/effects?order=asc&cursor=8622194091364353-1"
+    }
+  },
+  "id": "0008622194091364353-0000000001",
+  "paging_token": "8622194091364353-1",
+  "account": "GB7BTYMGED4DATO5U2BMPWKYABQQ3QBOQZK5T46N5CSCVPI2G3PVVYMB",
+  "type": "trustline_created",
+  "type_i": 20,
+  "created_at": "2025-12-09T02:01:29Z",
+  "asset_type": "liquidity_pool_shares",
+  "liquidity_pool_id": "3cdf19b3d5d41f753e0f33ebf039f2733851732ab8fe679dcc5d6adafb4700e3",
+  "limit": "922337203685.4775807"
+}
+  

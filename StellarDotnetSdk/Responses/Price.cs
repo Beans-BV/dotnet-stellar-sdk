@@ -23,17 +23,17 @@ namespace StellarDotnetSdk.Responses;
 ///     </para>
 /// </remarks>
 /// <seealso cref="StellarDotnetSdk.Price" />
-public class Price
+public sealed class Price
 {
     /// <summary>
     ///     The numerator of the price ratio.
     /// </summary>
     [JsonPropertyName("n")]
-    public long Numerator { get; init; }
+    public required long Numerator { get; init; }
 
     /// <summary>
     ///     The denominator of the price ratio.
     /// </summary>
     [JsonPropertyName("d")]
-    public long Denominator { get; init; }
+    public required long Denominator { get; init; }
 }

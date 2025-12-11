@@ -1,18 +1,25 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses.Effects;
-#nullable disable
 
 /// <summary>
-///     Represents trustline_sponsorship_created effect response.
+///     Represents the trustline_sponsorship_created effect response.
+///     This effect occurs when a trustline becomes sponsored.
 /// </summary>
-public class TrustlineSponsorshipCreatedEffectResponse : EffectResponse
+public sealed class TrustlineSponsorshipCreatedEffectResponse : EffectResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 63;
 
+    /// <summary>
+    ///     The sponsored asset (in canonical form: "code:issuer" or "native").
+    /// </summary>
     [JsonPropertyName("asset")]
-    public string Asset { get; init; }
+    public required string Asset { get; init; }
 
+    /// <summary>
+    ///     The account ID of the sponsor.
+    /// </summary>
     [JsonPropertyName("sponsor")]
-    public string Sponsor { get; init; }
+    public required string Sponsor { get; init; }
 }

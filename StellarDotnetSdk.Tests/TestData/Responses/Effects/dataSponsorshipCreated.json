@@ -12,8 +12,10 @@
   },
   "id": "0000065571265847297-0000000001",
   "paging_token": "65571265847297-1",
+  "account": "GD2I2F7SWUHBAD7XBIZTF7MBMWQYWJVEFMWTXK76NSYVOY52OJRYNTIY",
   "sponsor": "GCBQ6JRBPF3SXQBQ6SO5MRBE7WVV4UCHYOSHQGXSZNPZLFRYVYOWBZRQ",
   "data_name": "welcome-friend",
   "type": "data_sponsorship_created",
-  "type_i": 66
+  "type_i": 66,
+  "created_at": "2025-12-01T16:05:45Z"
 }

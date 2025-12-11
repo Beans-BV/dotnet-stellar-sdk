@@ -1,0 +1,16 @@
+﻿{
+  "_links": {
+    "self": {
+      "href": "https://horizon-testnet.stellar.org/assets?asset_code=01&asset_issuer=GBGN64KCMODLTB6GCPNGNKPTZAZA4CBGRWMWTINEPBTUVQL2X35HPZSB&cursor=&limit=10&order=asc"
+    },
+    "next": {
+      "href": "https://horizon-testnet.stellar.org/assets?asset_code=01&asset_issuer=GBGN64KCMODLTB6GCPNGNKPTZAZA4CBGRWMWTINEPBTUVQL2X35HPZSB&cursor=&limit=10&order=asc"
+    },
+    "prev": {
+      "href": "https://horizon-testnet.stellar.org/assets?asset_code=01&asset_issuer=GBGN64KCMODLTB6GCPNGNKPTZAZA4CBGRWMWTINEPBTUVQL2X35HPZSB&cursor=&limit=10&order=desc"
+    }
+  },
+  "_embedded": {
+    "records": []
+  }
+}

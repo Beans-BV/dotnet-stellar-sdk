@@ -2,18 +2,31 @@
 using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Effects;
-#nullable disable
 
-public class LiquidityPoolDepositedEffectResponse : EffectResponse
+/// <summary>
+///     Represents the liquidity_pool_deposited effect response.
+///     This effect occurs when assets are deposited into a liquidity pool.
+/// </summary>
+public sealed class LiquidityPoolDepositedEffectResponse : EffectResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 90;
 
+    /// <summary>
+    ///     The liquidity pool that received the deposit.
+    /// </summary>
     [JsonPropertyName("liquidity_pool")]
-    public LiquidityPool.LiquidityPool LiquidityPool { get; init; }
+    public required LiquidityPool.LiquidityPool LiquidityPool { get; init; }
 
+    /// <summary>
+    ///     The amounts of each reserve asset deposited.
+    /// </summary>
     [JsonPropertyName("reserves_deposited")]
-    public AssetAmount[] ReservesDeposited { get; init; }
+    public required AssetAmount[] ReservesDeposited { get; init; }
 
+    /// <summary>
+    ///     The number of pool shares received by the depositor.
+    /// </summary>
     [JsonPropertyName("shares_received")]
-    public string SharesReceived { get; init; }
+    public required string SharesReceived { get; init; }
 }

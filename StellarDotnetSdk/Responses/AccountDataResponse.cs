@@ -3,12 +3,22 @@ using System.Text;
 using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Responses;
-#nullable disable
-public class AccountDataResponse : Response
-{
-    [JsonPropertyName("value")]
-    public string Value { get; init; }
 
+/// <summary>
+///     Represents a single data entry attached to an account.
+///     Account data entries are key-value pairs that can store arbitrary data on an account.
+/// </summary>
+public sealed class AccountDataResponse : Response
+{
+    /// <summary>
+    ///     The base64-encoded value of the data entry.
+    /// </summary>
+    [JsonPropertyName("value")]
+    public required string Value { get; init; }
+
+    /// <summary>
+    ///     The decoded UTF-8 string value of the data entry.
+    /// </summary>
     public string ValueDecoded
     {
         get

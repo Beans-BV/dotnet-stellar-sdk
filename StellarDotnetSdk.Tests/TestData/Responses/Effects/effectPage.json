@@ -29,6 +29,7 @@
         "account": "GAZHVTAM3NRJ6W643LOVA76T2W3TUKPF34ED5VNE4ZKJ2B5T2EUQHIQI",
         "type": "signer_created",
         "type_i": 10,
+        "created_at": "2025-12-01T16:05:45Z",
         "weight": 1,
         "public_key": "GAZHVTAM3NRJ6W643LOVA76T2W3TUKPF34ED5VNE4ZKJ2B5T2EUQHIQI"
       },
@@ -49,6 +50,7 @@
         "account": "GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K",
         "type": "account_debited",
         "type_i": 3,
+        "created_at": "2025-12-01T16:05:45Z",
         "asset_type": "native",
         "amount": "10000.0"
       },
@@ -69,6 +71,7 @@
         "account": "GAZHVTAM3NRJ6W643LOVA76T2W3TUKPF34ED5VNE4ZKJ2B5T2EUQHIQI",
         "type": "account_created",
         "type_i": 0,
+        "created_at": "2025-12-01T16:05:45Z",
         "starting_balance": "10000.0"
       },
       {
@@ -88,6 +91,7 @@
         "account": "GA43X7ERPZQUVNDVHBGN42AK3SYJRVJ7TUWQGNFVY2O74YVDQFW2KP7C",
         "type": "signer_created",
         "type_i": 10,
+        "created_at": "2025-12-01T16:05:45Z",
         "weight": 1,
         "public_key": "GA43X7ERPZQUVNDVHBGN42AK3SYJRVJ7TUWQGNFVY2O74YVDQFW2KP7C"
       },
@@ -108,6 +112,7 @@
         "account": "GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K",
         "type": "account_debited",
         "type_i": 3,
+        "created_at": "2025-12-01T16:05:45Z",
         "asset_type": "native",
         "amount": "10000.0"
       },
@@ -128,6 +133,7 @@
         "account": "GA43X7ERPZQUVNDVHBGN42AK3SYJRVJ7TUWQGNFVY2O74YVDQFW2KP7C",
         "type": "account_created",
         "type_i": 0,
+        "created_at": "2025-12-01T16:05:45Z",
         "starting_balance": "10000.0"
       },
       {
@@ -147,6 +153,7 @@
         "account": "GDIQJ6G5AWSBRMHIZYWVWCFN64Q4BZ4TYEAQRO5GVR4EWR23RKBJ2A4R",
         "type": "signer_created",
         "type_i": 10,
+        "created_at": "2025-12-01T16:05:45Z",
         "weight": 1,
         "public_key": "GDIQJ6G5AWSBRMHIZYWVWCFN64Q4BZ4TYEAQRO5GVR4EWR23RKBJ2A4R"
       },
@@ -167,6 +174,7 @@
         "account": "GBS43BF24ENNS3KPACUZVKK2VYPOZVBQO2CISGZ777RYGOPYC2FT6S3K",
         "type": "account_debited",
         "type_i": 3,
+        "created_at": "2025-12-01T16:05:45Z",
         "asset_type": "native",
         "amount": "10000.0"
       },
@@ -187,6 +195,7 @@
         "account": "GDIQJ6G5AWSBRMHIZYWVWCFN64Q4BZ4TYEAQRO5GVR4EWR23RKBJ2A4R",
         "type": "account_created",
         "type_i": 0,
+        "created_at": "2025-12-01T16:05:45Z",
         "starting_balance": "10000.0"
       },
       {
@@ -206,6 +215,7 @@
         "account": "GAXHEECODLEAGGSC4ERUH3YW7G47IS7TS32NZQT4YLP5FK7HQZZWLLFC",
         "type": "signer_created",
         "type_i": 10,
+        "created_at": "2025-12-01T16:05:45Z",
         "weight": 1,
         "public_key": "GAXHEECODLEAGGSC4ERUH3YW7G47IS7TS32NZQT4YLP5FK7HQZZWLLFC"
       }

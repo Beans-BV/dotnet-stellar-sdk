@@ -15,6 +15,7 @@
   "account": "GA6U5X6WOPNKKDKQULBR7IDHDBAQKOWPHYEC7WSXHZBFEYFD3XVZAKOO",
   "type": "trustline_deauthorized",
   "type_i": 24,
+  "created_at": "2025-12-01T16:05:45Z",
   "asset_type": "credit_alphanum4",
   "asset_code": "EUR",
   "trustor": "GB3E4AB4VWXJDUVN4Z3CPBU5HTMWVEQXONZYVDFMHQD6333KHCOL3UBR"

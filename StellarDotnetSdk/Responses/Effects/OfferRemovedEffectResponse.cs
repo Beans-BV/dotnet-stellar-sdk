@@ -1,9 +1,11 @@
-﻿namespace StellarDotnetSdk.Responses.Effects;
+namespace StellarDotnetSdk.Responses.Effects;
 
 /// <summary>
-///     Represents offer_removed effect response.
+///     Represents the offer_removed effect response.
+///     This effect occurs when an offer is removed from the DEX.
 /// </summary>
-public class OfferRemovedEffectResponse : EffectResponse
+public sealed class OfferRemovedEffectResponse : EffectResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 31;
 }

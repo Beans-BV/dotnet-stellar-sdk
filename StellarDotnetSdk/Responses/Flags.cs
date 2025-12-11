@@ -3,31 +3,40 @@
 namespace StellarDotnetSdk.Responses;
 
 /// <summary>
-///     Represents account flags.
+///     Represents account authorization flags that control how an issuing account
+///     manages trust and authorization for its issued assets.
 /// </summary>
-public class Flags
+public sealed class Flags
 {
     /// <summary>
-    ///     This account must approve anyone who wants to hold its asset.
+    ///     When true, an issuer must approve holders before they can hold the issuer's asset.
+    ///     This allows issuers to verify a holder's identity or other requirements
+    ///     before the holder can hold the asset.
     /// </summary>
     [JsonPropertyName("auth_required")]
-    public bool AuthRequired { get; init; }
+    public required bool AuthRequired { get; init; }
 
     /// <summary>
-    ///     This account can set the authorize flag of an existing trustline to freeze the assets held by an asset holder.
+    ///     When true, an issuer can set the authorize flag of an existing trustline
+    ///     to freeze or unfreeze the assets held by an asset holder.
+    ///     This allows issuers to freeze assets in case of theft or regulatory requirements.
     /// </summary>
     [JsonPropertyName("auth_revocable")]
-    public bool AuthRevocable { get; init; }
+    public required bool AuthRevocable { get; init; }
 
     /// <summary>
-    ///     This account cannot change any of the authorization flags.
+    ///     When true, the authorization flags (AuthRequired and AuthRevocable) cannot be changed.
+    ///     This is used to signal to potential holders that the flags will never change,
+    ///     providing certainty about the asset's authorization behavior.
     /// </summary>
     [JsonPropertyName("auth_immutable")]
-    public bool AuthImmutable { get; init; }
+    public required bool AuthImmutable { get; init; }
 
     /// <summary>
-    ///     This account can unilaterally take away any portion of its issued asset(s) from any asset holders.
+    ///     When true, the issuer can claw back (take away) any portion of their issued asset(s)
+    ///     from any asset holder. This allows issuers to recover assets in case of theft,
+    ///     regulatory requirements, or other exceptional circumstances.
     /// </summary>
     [JsonPropertyName("auth_clawback_enabled")]
-    public bool AuthClawback { get; init; }
+    public required bool AuthClawback { get; init; }
 }

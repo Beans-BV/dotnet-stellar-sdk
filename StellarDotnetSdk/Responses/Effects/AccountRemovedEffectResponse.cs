@@ -1,9 +1,11 @@
-﻿namespace StellarDotnetSdk.Responses.Effects;
+namespace StellarDotnetSdk.Responses.Effects;
 
 /// <summary>
-///     Represents account_removed effect response.
+///     Represents the account_removed effect response.
+///     This effect occurs when an account is merged into another account.
 /// </summary>
-public class AccountRemovedEffectResponse : EffectResponse
+public sealed class AccountRemovedEffectResponse : EffectResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 1;
 }

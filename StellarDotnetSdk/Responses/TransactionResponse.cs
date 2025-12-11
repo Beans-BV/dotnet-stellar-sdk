@@ -31,7 +31,7 @@ public sealed class TransactionResponse : Response, IPagingToken
     public required long Ledger { get; init; }
 
     /// <summary>
-    /// An ISO 8601 formatted string of when the transaction was created.
+    ///     An ISO 8601 formatted string of when the transaction was created.
     /// </summary>
     [JsonPropertyName("created_at")]
     public required DateTimeOffset CreatedAt { get; init; }
@@ -99,7 +99,7 @@ public sealed class TransactionResponse : Response, IPagingToken
 
     /// <summary>
     ///     A base64 encoded string of the raw LedgerEntryChanges XDR struct
-    /// produced by taking fees for this transaction.
+    ///     produced by taking fees for this transaction.
     /// </summary>
     [JsonPropertyName("fee_meta_xdr")]
     public required string FeeMetaXdr { get; init; }
