@@ -7,6 +7,10 @@ namespace StellarDotnetSdk.Tests.Assets;
 [TestClass]
 public class AssetAmountTest
 {
+    /// <summary>
+    /// Tests AssetAmount creation with an asset and amount string.
+    /// Verifies that both Asset and Amount properties are correctly stored and accessible.
+    /// </summary>
     [TestMethod]
     public void TestCreation()
     {
@@ -18,6 +22,10 @@ public class AssetAmountTest
         Assert.AreEqual(assetAmount.Amount, "100");
     }
 
+    /// <summary>
+    /// Tests that AssetAmount instances with the same asset and amount are considered equal.
+    /// Verifies both Equals and GetHashCode implementations for proper behavior in collections.
+    /// </summary>
     [TestMethod]
     public void TestEquality()
     {
@@ -30,6 +38,10 @@ public class AssetAmountTest
         Assert.AreEqual(assetAmount.GetHashCode(), assetAmount2.GetHashCode());
     }
 
+    /// <summary>
+    /// Tests that AssetAmount.Equals returns false when comparing with null or incompatible types.
+    /// Verifies type safety and null handling in the Equals implementation.
+    /// </summary>
     [TestMethod]
     public void TestEquality_NonMatchingType()
     {

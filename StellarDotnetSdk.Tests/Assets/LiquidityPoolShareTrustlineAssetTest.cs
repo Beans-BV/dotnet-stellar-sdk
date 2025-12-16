@@ -12,6 +12,10 @@ namespace StellarDotnetSdk.Tests.Assets;
 [TestClass]
 public class LiquidityPoolShareTrustlineAssetTest
 {
+    /// <summary>
+    /// Tests that LiquidityPoolShareTrustlineAsset instances with the same pool ID are considered equal.
+    /// Verifies that Equals implementation correctly compares the underlying LiquidityPoolId instances.
+    /// </summary>
     [TestMethod]
     public void TestEquality()
     {
@@ -28,6 +32,10 @@ public class LiquidityPoolShareTrustlineAssetTest
         Assert.IsTrue(trustlineAsset.Equals(trustlineAsset2));
     }
 
+    /// <summary>
+    /// Tests that LiquidityPoolShareTrustlineAsset.Type property returns "pool_share".
+    /// Verifies the asset type identifier for liquidity pool share trustline assets.
+    /// </summary>
     [TestMethod]
     public void TestType()
     {
@@ -43,6 +51,10 @@ public class LiquidityPoolShareTrustlineAssetTest
         Assert.AreEqual(trustlineAsset.Type, "pool_share");
     }
 
+    /// <summary>
+    /// Tests that LiquidityPoolShareTrustlineAsset constructor throws ArgumentNullException when pool ID is null.
+    /// Validates that a valid LiquidityPoolId is required for creating pool share trustline assets.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void TestConstructor_NullId()
@@ -50,6 +62,10 @@ public class LiquidityPoolShareTrustlineAssetTest
         new LiquidityPoolShareTrustlineAsset((StellarDotnetSdk.LiquidityPool.LiquidityPoolId)null!);
     }
 
+    /// <summary>
+    /// Tests that LiquidityPoolShareTrustlineAsset.Equals returns false when comparing with null.
+    /// Verifies null safety in the Equals implementation.
+    /// </summary>
     [TestMethod]
     public void TestEquals_Null()
     {
@@ -65,6 +81,10 @@ public class LiquidityPoolShareTrustlineAssetTest
         Assert.IsFalse(trustlineAsset.Equals(null));
     }
 
+    /// <summary>
+    /// Tests that LiquidityPoolShareTrustlineAsset.Equals returns false when comparing with incompatible types.
+    /// Verifies type safety in the Equals implementation for non-matching TrustlineAsset types.
+    /// </summary>
     [TestMethod]
     public void TestEquals_NonMatchingType()
     {
@@ -82,6 +102,10 @@ public class LiquidityPoolShareTrustlineAssetTest
         Assert.IsFalse(trustlineAsset.Equals(wrapper));
     }
 
+    /// <summary>
+    /// Tests comparison ordering between LiquidityPoolShareTrustlineAsset and TrustlineAsset.Wrapper.
+    /// Verifies that pool share assets sort after regular asset wrappers (returns 1).
+    /// </summary>
     [TestMethod]
     public void TestCompareTo_WithWrapper()
     {
@@ -100,6 +124,10 @@ public class LiquidityPoolShareTrustlineAssetTest
         Assert.AreEqual(1, comparison);
     }
 
+    /// <summary>
+    /// Tests comparison ordering between two LiquidityPoolShareTrustlineAsset instances.
+    /// Verifies that CompareTo correctly compares different liquidity pools based on their string representation.
+    /// </summary>
     [TestMethod]
     public void TestCompareTo_WithPoolShare()
     {
@@ -122,6 +150,11 @@ public class LiquidityPoolShareTrustlineAssetTest
         Assert.IsTrue(comparison != 0);
     }
 
+    /// <summary>
+    /// Tests ToXdrTrustLineAsset method for LiquidityPoolShareTrustlineAsset.
+    /// Verifies that the asset is correctly serialized to XDR format with ASSET_TYPE_POOL_SHARE discriminant
+    /// and includes the liquidity pool ID.
+    /// </summary>
     [TestMethod]
     public void TestToXdrTrustLineAsset()
     {
@@ -141,6 +174,10 @@ public class LiquidityPoolShareTrustlineAssetTest
         Assert.IsNotNull(xdr.LiquidityPoolID);
     }
 
+    /// <summary>
+    /// Tests that LiquidityPoolShareTrustlineAsset instances with the same pool ID produce the same hash code.
+    /// Verifies GetHashCode implementation for proper behavior in hash-based collections.
+    /// </summary>
     [TestMethod]
     public void TestGetHashCode()
     {
