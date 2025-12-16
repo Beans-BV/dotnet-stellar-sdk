@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace StellarDotnetSdk.Exceptions;
 
 [Serializable]
-internal class AssetCodeLengthInvalidException : Exception
+public class AssetCodeLengthInvalidException : Exception
 {
     public AssetCodeLengthInvalidException()
     {

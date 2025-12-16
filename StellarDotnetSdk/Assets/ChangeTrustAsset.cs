@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Xdr;
 using LiquidityPoolParameters = StellarDotnetSdk.LiquidityPool.LiquidityPoolParameters;
@@ -93,6 +93,11 @@ public abstract class ChangeTrustAsset
         public override bool Equals(object? obj)
         {
             return obj is Wrapper other && Asset.Equals(other.Asset);
+        }
+
+        public override int GetHashCode()
+        {
+            return Asset.GetHashCode();
         }
 
         public override int CompareTo(ChangeTrustAsset asset)
