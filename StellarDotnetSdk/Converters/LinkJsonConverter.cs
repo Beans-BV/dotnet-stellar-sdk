@@ -17,12 +17,6 @@ public class LinkJsonConverter<T> : JsonConverter<Link<T>> where T : Response
 {
     public override Link<T>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        // Handle null
-        if (reader.TokenType == JsonTokenType.Null)
-        {
-            return null;
-        }
-
         // Expect object
         if (reader.TokenType != JsonTokenType.StartObject)
         {

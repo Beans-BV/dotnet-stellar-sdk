@@ -8,11 +8,19 @@ using StellarDotnetSdk.Responses.Effects;
 
 namespace StellarDotnetSdk.Tests.Converters;
 
+/// <summary>
+///     Tests for LiquidityPoolClaimableAssetAmountJsonConverter.
+///     Focus: serialization and deserialization of LiquidityPoolClaimableAssetAmount with optional claimable_balance_id.
+/// </summary>
 [TestClass]
 public class LiquidityPoolClaimableAssetAmountJsonConverterTest
 {
     private readonly JsonSerializerOptions _options = JsonOptions.DefaultOptions;
 
+    /// <summary>
+    ///     Tests round-trip serialization and deserialization with claimable_balance_id present.
+    ///     Verifies that claimable_balance_id is preserved through serialization cycle.
+    /// </summary>
     [TestMethod]
     public void TestSerializeDeserializeWithClaimableBalanceId()
     {
@@ -34,6 +42,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
             deserialized.ClaimableBalanceId);
     }
 
+    /// <summary>
+    ///     Tests round-trip serialization and deserialization without claimable_balance_id.
+    ///     Verifies that null claimable_balance_id is handled correctly.
+    /// </summary>
     [TestMethod]
     public void TestSerializeDeserializeWithoutClaimableBalanceId()
     {
@@ -54,6 +66,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         Assert.IsNull(deserialized.ClaimableBalanceId);
     }
 
+    /// <summary>
+    ///     Tests deserialization of valid JSON with claimable_balance_id property.
+    ///     Verifies that claimable_balance_id is correctly deserialized from JSON.
+    /// </summary>
     [TestMethod]
     public void TestDeserializeValidJsonWithClaimableBalanceId()
     {
@@ -73,6 +89,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
             result.ClaimableBalanceId);
     }
 
+    /// <summary>
+    ///     Tests deserialization of valid JSON with null claimable_balance_id property.
+    ///     Verifies that explicit null claimable_balance_id is handled correctly.
+    /// </summary>
     [TestMethod]
     public void TestDeserializeValidJsonNullClaimableBalanceId()
     {
@@ -90,6 +110,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         Assert.IsNull(result.ClaimableBalanceId);
     }
 
+    /// <summary>
+    ///     Tests deserialization of valid JSON without claimable_balance_id property.
+    ///     Verifies that missing claimable_balance_id defaults to null.
+    /// </summary>
     [TestMethod]
     public void TestDeserializeValidJsonMissingClaimableBalanceId()
     {
@@ -106,6 +130,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         Assert.IsNull(result.ClaimableBalanceId);
     }
 
+    /// <summary>
+    ///     Tests that deserialization throws ArgumentException when asset property is missing.
+    ///     Verifies validation for required asset property.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void TestDeserializeMissingAssetThrowsException()
@@ -117,6 +145,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Tests that deserialization throws ArgumentException when amount property is missing.
+    ///     Verifies validation for required amount property.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void TestDeserializeMissingAmountThrowsException()
@@ -128,6 +160,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Tests that deserialization throws ArgumentException when asset property is null.
+    ///     Verifies validation for non-null asset property.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void TestDeserializeNullAssetThrowsException()
@@ -140,6 +176,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Tests that deserialization throws ArgumentException when amount property is null.
+    ///     Verifies validation for non-null amount property.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void TestDeserializeNullAmountThrowsException()
@@ -152,6 +192,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Tests serialization produces correct JSON format with all properties.
+    ///     Verifies that serialized JSON contains asset, amount, and claimable_balance_id properties.
+    /// </summary>
     [TestMethod]
     public void TestSerializeFormat()
     {
@@ -173,6 +217,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         Assert.IsTrue(json.Contains("00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072"));
     }
 
+    /// <summary>
+    ///     Tests that deserialization throws JsonException for malformed JSON.
+    ///     Verifies proper error handling for invalid JSON syntax.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
     public void TestDeserializeInvalidJsonThrowsException()
@@ -182,6 +230,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Tests that deserialization throws JsonException when JSON structure is wrong.
+    ///     Verifies proper error handling for non-object JSON values.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
     public void TestDeserializeWrongStructureThrowsException()
@@ -191,6 +243,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Tests deserialization handles large amount values correctly.
+    ///     Verifies that maximum precision amounts are preserved.
+    /// </summary>
     [TestMethod]
     public void TestDeserializeLargeAmount()
     {
@@ -205,6 +261,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         Assert.AreEqual("922337203685477.5807", result.Amount);
     }
 
+    /// <summary>
+    ///     Tests deserialization handles zero amount values correctly.
+    ///     Verifies that zero amounts are preserved correctly.
+    /// </summary>
     [TestMethod]
     public void TestDeserializeZeroAmount()
     {

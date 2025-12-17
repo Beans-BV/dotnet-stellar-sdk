@@ -7,11 +7,18 @@ using StellarDotnetSdk.Converters;
 
 namespace StellarDotnetSdk.Tests.Converters;
 
+/// <summary>
+///     Tests for AssetAmountJsonConverter.
+///     Focus: serialization and deserialization of AssetAmount with native and credit assets.
+/// </summary>
 [TestClass]
 public class AssetAmountJsonConverterTest
 {
     private readonly JsonSerializerOptions _options = JsonOptions.DefaultOptions;
 
+    /// <summary>
+    ///     Verifies round-trip serialization/deserialization of AssetAmount with native asset.
+    /// </summary>
     [TestMethod]
     public void TestSerializeDeserializeNativeAsset()
     {
@@ -25,6 +32,9 @@ public class AssetAmountJsonConverterTest
         Assert.AreEqual("100.50", deserialized.Amount);
     }
 
+    /// <summary>
+    ///     Verifies round-trip serialization/deserialization of AssetAmount with credit_alphanum4 asset.
+    /// </summary>
     [TestMethod]
     public void TestSerializeDeserializeCreditAssetAlphaNum4()
     {
@@ -42,6 +52,9 @@ public class AssetAmountJsonConverterTest
         Assert.AreEqual("500.0000000", deserialized.Amount);
     }
 
+    /// <summary>
+    ///     Verifies round-trip serialization/deserialization of AssetAmount with credit_alphanum12 asset.
+    /// </summary>
     [TestMethod]
     public void TestSerializeDeserializeCreditAssetAlphaNum12()
     {
@@ -59,6 +72,9 @@ public class AssetAmountJsonConverterTest
         Assert.AreEqual("1000.00", deserialized.Amount);
     }
 
+    /// <summary>
+    ///     Verifies deserialization of valid JSON with native asset.
+    /// </summary>
     [TestMethod]
     public void TestDeserializeValidJsonNative()
     {
@@ -71,6 +87,9 @@ public class AssetAmountJsonConverterTest
         Assert.AreEqual("250.50", result.Amount);
     }
 
+    /// <summary>
+    ///     Verifies deserialization of valid JSON with non-native asset.
+    /// </summary>
     [TestMethod]
     public void TestDeserializeValidJsonNonNative()
     {
@@ -84,6 +103,9 @@ public class AssetAmountJsonConverterTest
         Assert.AreEqual("100.00", result.Amount);
     }
 
+    /// <summary>
+    ///     Verifies that deserialization throws ArgumentException when asset property is missing.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void TestDeserializeMissingAssetThrowsException()
@@ -92,6 +114,9 @@ public class AssetAmountJsonConverterTest
         JsonSerializer.Deserialize<AssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Verifies that deserialization throws ArgumentException when amount property is missing.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void TestDeserializeMissingAmountThrowsException()
@@ -100,6 +125,9 @@ public class AssetAmountJsonConverterTest
         JsonSerializer.Deserialize<AssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Verifies that deserialization throws ArgumentException when asset property is null.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void TestDeserializeNullAssetThrowsException()
@@ -108,6 +136,9 @@ public class AssetAmountJsonConverterTest
         JsonSerializer.Deserialize<AssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Verifies that deserialization throws ArgumentException when amount property is null.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void TestDeserializeNullAmountThrowsException()
@@ -116,6 +147,9 @@ public class AssetAmountJsonConverterTest
         JsonSerializer.Deserialize<AssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Verifies deserialization handles large amount values correctly.
+    /// </summary>
     [TestMethod]
     public void TestDeserializeLargeAmount()
     {
@@ -126,6 +160,9 @@ public class AssetAmountJsonConverterTest
         Assert.AreEqual("922337203685477.5807", result.Amount);
     }
 
+    /// <summary>
+    ///     Verifies deserialization handles zero amount values correctly.
+    /// </summary>
     [TestMethod]
     public void TestDeserializeZeroAmount()
     {
@@ -136,6 +173,9 @@ public class AssetAmountJsonConverterTest
         Assert.AreEqual("0", result.Amount);
     }
 
+    /// <summary>
+    ///     Verifies serialization produces correct JSON format with asset and amount properties.
+    /// </summary>
     [TestMethod]
     public void TestSerializeFormat()
     {
@@ -153,6 +193,9 @@ public class AssetAmountJsonConverterTest
         Assert.IsTrue(json.Contains("100.50"));
     }
 
+    /// <summary>
+    ///     Verifies that deserialization throws JsonException for malformed JSON.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
     public void TestDeserializeInvalidJsonThrowsException()
