@@ -9,24 +9,19 @@ alwaysApply: false
 
 **Frameworks**: MSTest (`[TestClass]`, `[TestMethod]`), Moq (`Mock<T>`), FluentAssertions.
 
-**AAA (unit tests)**:
-```csharp
-[TestMethod]
-public async Task SubmitTransaction_ValidTransaction_ReturnsSuccess() {
-    // Arrange
-    using var server = await Utils.CreateTestServerWithJson("Responses/serverSuccess.json");
-    // Act
-    var response = await server.SubmitTransaction(BuildTransaction(), options);
-    // Assert
-    Assert.IsNotNull(response);
-    Assert.IsTrue(response.IsSuccess);
-}
-```
+**AAA (unit tests)**: Group code into `// Arrange`, `// Act`, `// Assert` sections.
 
 **Mocking**: `var mock = new Mock<IInterface>(); mock.Setup(x => x.Method()).ReturnsAsync(value);`. Use `It.IsAny<T>()` for flexible matching.
 
 **FluentAssertions**: `response.Should().NotBeNull(); response.IsSuccess.Should().BeTrue();`
 
 **Test data**: JSON files in `TestData/` folder, loaded via `Utils.CreateTestServerWithJson()`.
+
+**Documentation**: Add `/// <summary>` XML docs to test methods. Two sentences e.g.: 
+```
+/// Tests [what the test is for]
+/// Verifies [what it verifies]
+```
+Focus on behavior, not implementation.
 
 **Commands**: `dotnet test` (all) | `dotnet test --filter "FullyQualifiedName~ClassName"` (specific).
