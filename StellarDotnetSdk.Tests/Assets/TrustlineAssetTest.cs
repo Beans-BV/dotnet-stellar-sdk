@@ -362,7 +362,7 @@ public class TrustlineAssetTest
         var xdr = trustlineAsset.ToXdr();
         var roundTripAsset = (LiquidityPoolShareTrustlineAsset)TrustlineAsset.FromXdr(xdr);
         
-        Assert.IsTrue(roundTripAsset is LiquidityPoolShareTrustlineAsset);
+        Assert.IsInstanceOfType(roundTripAsset, typeof(LiquidityPoolShareTrustlineAsset));
         Assert.AreEqual(parameters.GetId(), roundTripAsset.Id);
     }
 

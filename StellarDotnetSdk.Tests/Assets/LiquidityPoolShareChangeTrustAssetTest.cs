@@ -262,5 +262,3 @@ public class LiquidityPoolShareChangeTrustAssetTest
             restoredPoolShare.Parameters.GetId());
     }
 }
-
-

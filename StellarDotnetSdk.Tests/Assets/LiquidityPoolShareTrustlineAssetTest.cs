@@ -59,7 +59,7 @@ public class LiquidityPoolShareTrustlineAssetTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void TestConstructor_NullId()
     {
-        new LiquidityPoolShareTrustlineAsset((StellarDotnetSdk.LiquidityPool.LiquidityPoolId)null!);
+        _ = new LiquidityPoolShareTrustlineAsset((LiquidityPoolId)null!);
     }
 
     /// <summary>

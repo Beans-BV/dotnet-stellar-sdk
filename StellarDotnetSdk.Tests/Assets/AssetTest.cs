@@ -232,7 +232,7 @@ public class AssetTest
     [ExpectedException(typeof(AssetCodeLengthInvalidException))]
     public void TestAssetTypeCreditAlphaNum4_CodeTooShort()
     {
-        new AssetTypeCreditAlphaNum4("", KeyPair.Random().AccountId);
+        _ = new AssetTypeCreditAlphaNum4("", KeyPair.Random().AccountId);
     }
 
     /// <summary>
