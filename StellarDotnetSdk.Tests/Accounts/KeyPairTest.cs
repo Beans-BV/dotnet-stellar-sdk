@@ -163,7 +163,7 @@ public class KeyPairTest
         var keyPair = KeyPair.FromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ");
 
         // Act & Assert
-        Assert.IsFalse(keyPair.Equals(null));
+        Assert.IsFalse(keyPair.Equals(null!));
     }
 
     /// <summary>

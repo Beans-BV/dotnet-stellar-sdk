@@ -54,7 +54,7 @@ public class AssetAmountTest
         var assetAmount = new AssetAmount(Asset.CreateNonNativeAsset("TEST", issuer.AccountId), "100");
 
         // Act & Assert
-        Assert.IsFalse(assetAmount.Equals(null));
+        Assert.IsFalse(assetAmount.Equals(null!));
         Assert.IsFalse(assetAmount.Equals("not an AssetAmount"));
         Assert.IsFalse(assetAmount.Equals(new object()));
     }

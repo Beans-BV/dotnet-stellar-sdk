@@ -269,7 +269,7 @@ public class TrustlineAssetTest
         var wrapper = new TrustlineAsset.Wrapper(asset);
 
         // Act & Assert
-        Assert.IsFalse(wrapper.Equals(null));
+        Assert.IsFalse(wrapper.Equals(null!));
     }
 
     /// <summary>

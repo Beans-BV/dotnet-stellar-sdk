@@ -119,6 +119,7 @@ public class ServerTest
         Assert.AreEqual("StellarDotnetSdk", clientName);
         Assert.IsFalse(string.IsNullOrWhiteSpace(clientVersion));
         var result = response.Result;
+        Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result, typeof(TransactionResultSuccess));
         Assert.AreEqual("0.00001", result.FeeCharged);
     }
@@ -151,6 +152,7 @@ public class ServerTest
             response.SubmitTransactionResponseExtras.ExtrasResultCodes.OperationsResultCodes[0]);
 
         var result = response.Result;
+        Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result, typeof(TransactionResultFailed));
         Assert.AreEqual("0.00001", result.FeeCharged);
         Assert.AreEqual(1, ((TransactionResultFailed)result).Results.Count);
