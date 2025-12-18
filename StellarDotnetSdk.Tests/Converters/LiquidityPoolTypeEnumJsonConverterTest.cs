@@ -191,4 +191,19 @@ public class LiquidityPoolTypeEnumJsonConverterTest
         // Act
         JsonSerializer.Deserialize<LiquidityPoolType.LiquidityPoolTypeEnum>(json, _options);
     }
+
+    /// <summary>
+    ///     Tests that serialization throws JsonException for unknown enum values.
+    ///     Verifies proper error handling when enum value is not recognized (covers default case in Write method).
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Serialize_WithUnknownEnumValue_ThrowsJsonException()
+    {
+        // Arrange - Cast to unknown enum value to test the default case in Write method
+        var unknownValue = (LiquidityPoolType.LiquidityPoolTypeEnum)999;
+
+        // Act & Assert
+        JsonSerializer.Serialize(unknownValue, _options);
+    }
 }
