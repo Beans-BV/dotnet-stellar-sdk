@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -7,15 +7,26 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+/// Unit tests for deserializing transaction page responses from JSON.
+/// </summary>
 [TestClass]
 public class TransactionPageDeserializeTest
 {
+    /// <summary>
+    /// Verifies that Page&lt;TransactionResponse&gt; can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithTransactionPageJson_ReturnsDeserializedTransactionPage()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("transactionPage.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var transactionsPage = JsonSerializer.Deserialize<Page<TransactionResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(transactionsPage);
         AssertTestData(transactionsPage);
     }

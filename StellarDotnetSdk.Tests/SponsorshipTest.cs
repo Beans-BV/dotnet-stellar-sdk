@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
@@ -10,6 +10,9 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace StellarDotnetSdk.Tests;
 
+/// <summary>
+/// Unit tests for sponsorship-related operations and functionality.
+/// </summary>
 [TestClass]
 public class SponsorshipTest
 {
@@ -344,9 +347,13 @@ public class SponsorshipTest
         Assert.IsInstanceOfType(results[2], typeof(EndSponsoringFutureReservesSuccess));
     }
 
+    /// <summary>
+    /// Verifies that revoking account sponsorship succeeds when submitting a transaction with RevokeLedgerEntrySponsorshipOperation for account.
+    /// </summary>
     [TestMethod]
-    public async Task TestRevokeSponsorshipAccount()
+    public async Task SubmitTransaction_RevokeAccountSponsorship_ReturnsSuccess()
     {
+        // Arrange
         var account = await _server.Accounts.Account(SponsoringId);
         var revokeOperation = RevokeLedgerEntrySponsorshipOperation.ForAccount(_sponsoringAccount);
 
@@ -355,7 +362,10 @@ public class SponsorshipTest
             .Build();
         tx.Sign(_sponsoringAccount);
 
+        // Act
         var txResponse = await _server.SubmitTransaction(tx);
+
+        // Assert
         Assert.IsNotNull(txResponse);
         Assert.IsTrue(txResponse.IsSuccess);
         Assert.IsNotNull(txResponse.ResultXdr);
@@ -368,34 +378,58 @@ public class SponsorshipTest
         Assert.IsInstanceOfType(results[0], typeof(RevokeSponsorshipSuccess));
     }
 
+    /// <summary>
+    /// Verifies that revoking claimable balance sponsorship succeeds.
+    /// </summary>
     [TestMethod]
-    public async Task TestRevokeSponsorshipClaimableBalance()
+    public async Task RevokeClaimableBalanceSponsorship_WithSponsoredBalance_Succeeds()
     {
+        // Arrange
         var balanceId = await CreateSponsoredClaimableBalance();
         await Task.Delay(2000);
+
+        // Act & Assert
         await RevokeClaimableBalanceSponsorship(balanceId);
     }
 
+    /// <summary>
+    /// Verifies that revoking data sponsorship succeeds.
+    /// </summary>
     [TestMethod]
-    public async Task TestRevokeSponsorshipData()
+    public async Task RevokeDataSponsorship_WithSponsoredData_Succeeds()
     {
+        // Arrange
         await CreateSponsoredData();
         await Task.Delay(2000);
+
+        // Act & Assert
         await RevokeDataSponsorship();
     }
 
+    /// <summary>
+    /// Verifies that revoking offer sponsorship succeeds.
+    /// </summary>
     [TestMethod]
-    public async Task TestRevokeSponsorshipOffer()
+    public async Task RevokeOfferSponsorship_WithSponsoredOffer_Succeeds()
     {
+        // Arrange
         var offerId = await CreateSponsoredOffer();
+
+        // Act & Assert
         await RevokeOfferSponsorship(offerId);
     }
 
+    /// <summary>
+    /// Verifies that revoking trustline sponsorship succeeds.
+    /// </summary>
     [TestMethod]
-    public async Task TestRevokeSponsorshipTrustline()
+    public async Task RevokeTrustlineSponsorship_WithSponsoredTrustline_Succeeds()
     {
+        // Arrange
         await CreateSponsoredTrustline(_assetB);
         await Task.Delay(2000);
+
+        // Act & Assert
         await RevokeTrustlineSponsorship(_assetB);
     }
 }

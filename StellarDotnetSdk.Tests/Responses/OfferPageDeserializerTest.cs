@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.Json;
 using FluentAssertions;
@@ -9,27 +9,46 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+/// Unit tests for deserializing offer page responses from JSON.
+/// </summary>
 [TestClass]
 public class OfferPageDeserializerTest
 {
+    /// <summary>
+    /// Verifies that Page&lt;OfferResponse&gt; can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithOfferPageJson_ReturnsDeserializedOfferPage()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("offerPage.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var offerResponsePage = JsonSerializer.Deserialize<Page<OfferResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(offerResponsePage);
         AssertTestData(offerResponsePage);
     }
 
+    /// <summary>
+    /// Verifies that Page&lt;OfferResponse&gt; can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserialize()
+    public void SerializeDeserialize_WithOfferPage_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("offerPage.json");
         var json = File.ReadAllText(jsonPath);
         var offerResponsePage = JsonSerializer.Deserialize<Page<OfferResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(offerResponsePage);
         var back = JsonSerializer.Deserialize<Page<OfferResponse>>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

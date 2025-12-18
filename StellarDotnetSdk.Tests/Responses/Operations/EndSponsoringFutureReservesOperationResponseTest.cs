@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -6,17 +6,28 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+/// Unit tests for <see cref="EndSponsoringFutureReservesOperationResponse"/> class.
+/// </summary>
 [TestClass]
 public class EndSponsoringFutureReservesOperationResponseTest
 {
+    /// <summary>
+    /// Verifies that EndSponsoringFutureReservesOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationEndSponsoringFutureReservesOperation()
+    public void SerializeDeserialize_WithEndSponsoringFutureReservesOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("endSponsoringFutureReserves.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertEndSponsoringFutureReservesData(back);
     }
@@ -32,14 +43,22 @@ public class EndSponsoringFutureReservesOperationResponseTest
         Assert.IsNull(operation.BeginSponsorMuxedId);
     }
 
+    /// <summary>
+    /// Verifies that EndSponsoringFutureReservesOperationResponse with muxed account can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationEndSponsoringFutureReservesOperationMuxed()
+    public void SerializeDeserialize_WithEndSponsoringFutureReservesOperationMuxed_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("endSponsoringFutureReservesMuxed.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertEndSponsoringFutureReservesDataMuxed(back);
     }

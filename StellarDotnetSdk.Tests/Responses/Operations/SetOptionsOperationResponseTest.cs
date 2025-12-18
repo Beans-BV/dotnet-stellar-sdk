@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -6,27 +6,46 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+/// Unit tests for <see cref="SetOptionsOperationResponse"/> class.
+/// </summary>
 [TestClass]
 public class SetOptionsOperationResponseTest
 {
+    /// <summary>
+    /// Verifies that SetOptionsOperationResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeSetOptionsOperation()
+    public void Deserialize_WithSetOptionsOperationJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("setOptions.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertSetOptionsData(instance);
     }
 
+    /// <summary>
+    /// Verifies that SetOptionsOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeSetOptionsOperation()
+    public void SerializeDeserialize_WithSetOptionsOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("setOptions.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertSetOptionsData(back);
     }
@@ -50,24 +69,40 @@ public class SetOptionsOperationResponseTest
         Assert.AreEqual("auth_revocable_flag", operation.ClearFlags[0]);
     }
 
+    /// <summary>
+    /// Verifies that SetOptionsOperationResponse with non-Ed25519 signer key can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeSetOptionsOperationWithNonEd25519Key()
+    public void Deserialize_WithSetOptionsOperationNonEd25519KeyJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("setOptionsNonEd25519Key.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertSetOptionsOperationWithNonEd25519KeyData(instance);
     }
 
+    /// <summary>
+    /// Verifies that SetOptionsOperationResponse with non-Ed25519 signer key can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeSetOptionsOperationWithNonEd25519Key()
+    public void SerializeDeserialize_WithSetOptionsOperationNonEd25519Key_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("setOptionsNonEd25519Key.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertSetOptionsOperationWithNonEd25519KeyData(back);
     }

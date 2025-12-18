@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,13 +19,20 @@ using Operation = StellarDotnetSdk.Operations.Operation;
 
 namespace StellarDotnetSdk.Tests.Operations;
 
+/// <summary>
+/// Unit tests for <see cref="Operation"/> class and operation-related functionality.
+/// </summary>
 [TestClass]
 public class OperationTest
 {
+    /// <summary>
+    /// Verifies that CreateAccountOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete("Deprecated")]
-    public void TestCreateAccountOperation()
+    public void FromXdr_CreateAccountOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR
@@ -34,9 +41,11 @@ public class OperationTest
         const string startingAmount = "1000";
         var operation = new CreateAccountOperation(destination, startingAmount, source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (CreateAccountOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.AreEqual(10000000000L, xdr.Body.CreateAccountOp.StartingBalance.InnerValue);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
@@ -49,10 +58,14 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that PaymentOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete("Deprecated")]
-    public void TestPaymentOperation()
+    public void FromXdr_PaymentOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR
@@ -63,9 +76,11 @@ public class OperationTest
 
         var operation = new PaymentOperation(destination, asset, amount, source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (PaymentOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.AreEqual(10000000000L, xdr.Body.PaymentOp.Amount.InnerValue);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
@@ -79,10 +94,14 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictReceiveOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestPathPaymentStrictReceiveOperation()
+    public void FromXdr_PathPaymentStrictReceiveOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR
@@ -108,9 +127,11 @@ public class OperationTest
         var operation = new PathPaymentStrictReceiveOperation(
             sendAsset, sendMax, destination, destAsset, destAmount, path, source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (PathPaymentStrictReceiveOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.AreEqual(1000L, xdr.Body.PathPaymentStrictReceiveOp.SendMax.InnerValue);
         Assert.AreEqual(1000L, xdr.Body.PathPaymentStrictReceiveOp.DestAmount.InnerValue);
         Assert.IsTrue(parsedOperation.SendAsset is AssetTypeNative);
@@ -128,10 +149,14 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictReceiveOperation with empty path round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestPathPaymentStrictReceiveEmptyPathOperation()
+    public void FromXdr_PathPaymentStrictReceiveOperationWithEmptyPath_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR
@@ -152,9 +177,11 @@ public class OperationTest
         var operation = new PathPaymentStrictReceiveOperation(
             sendAsset, sendMax, destination, destAsset, destAmount, null, source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (PathPaymentStrictReceiveOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.AreEqual(1000L, xdr.Body.PathPaymentStrictReceiveOp.SendMax.InnerValue);
         Assert.AreEqual(1000L, xdr.Body.PathPaymentStrictReceiveOp.DestAmount.InnerValue);
         Assert.IsTrue(parsedOperation.SendAsset is AssetTypeNative);
@@ -172,10 +199,14 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestPathPaymentStrictSendOperation()
+    public void FromXdr_PathPaymentStrictSendOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR
@@ -201,9 +232,11 @@ public class OperationTest
         var operation = new PathPaymentStrictSendOperation(
             sendAsset, sendAmount, destination, destAsset, destMin, path, source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (PathPaymentStrictSendOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.IsTrue(parsedOperation.SendAsset is AssetTypeNative);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
@@ -219,10 +252,14 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendOperation with empty path round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestPathPaymentStrictSendEmptyPathOperation()
+    public void FromXdr_PathPaymentStrictSendOperationWithEmptyPath_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR
@@ -243,9 +280,11 @@ public class OperationTest
         var operation = new PathPaymentStrictSendOperation(
             sendAsset, sendAmount, destination, destAsset, destMin, null, source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (PathPaymentStrictSendOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.IsTrue(parsedOperation.SendAsset is AssetTypeNative);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
@@ -261,10 +300,14 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that ChangeTrustOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestChangeTrustOperation()
+    public void FromXdr_ChangeTrustOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
@@ -272,9 +315,11 @@ public class OperationTest
 
         var operation = new ChangeTrustOperation(new AssetTypeNative(), limit, source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (ChangeTrustOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.AreEqual(long.MaxValue, xdr.Body.ChangeTrustOp.Limit.InnerValue);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
@@ -287,18 +332,24 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that ChangeTrustOperation with null limit uses MaxLimit and round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestChangeTrustOperationNoLimit()
+    public void FromXdr_ChangeTrustOperationWithNullLimit_UsesMaxLimitAndRoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
         var operation = new ChangeTrustOperation(new AssetTypeNative(), null, source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (ChangeTrustOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.AreEqual(long.MaxValue, xdr.Body.ChangeTrustOp.Limit.InnerValue);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
@@ -311,9 +362,13 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that ManageSellOfferOperation creates operation with correct XDR base64 encoding.
+    /// </summary>
     [TestMethod]
-    public void TestManageOfferOperation()
+    public void ToXdrBase64_ManageSellOfferOperation_ReturnsCorrectXdrBase64()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
@@ -328,15 +383,20 @@ public class OperationTest
 
         var operation = new ManageSellOfferOperation(selling, buying, amount, price, offerId, source);
 
+        // Act & Assert
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAMAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZABRYZcAX14QAAAAAAAAAAE=",
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that ManageSellOfferOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestManageSellOfferOperation()
+    public void FromXdr_ManageSellOfferOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
@@ -351,9 +411,11 @@ public class OperationTest
 
         var operation = new ManageSellOfferOperation(selling, buying, amount, price, offerId, source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (ManageSellOfferOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.AreEqual(100L, xdr.Body.ManageSellOfferOp.Amount.InnerValue);
         Assert.IsTrue(parsedOperation.Selling is AssetTypeNative);
         Assert.IsTrue(parsedOperation.Buying is AssetTypeCreditAlphaNum4);
@@ -370,10 +432,14 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that ManageBuyOfferOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestManageBuyOfferOperation()
+    public void FromXdr_ManageBuyOfferOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
@@ -388,9 +454,11 @@ public class OperationTest
 
         var operation = new ManageBuyOfferOperation(selling, buying, amount, price, offerId, source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (ManageBuyOfferOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.AreEqual(100L, xdr.Body.ManageBuyOfferOp.BuyAmount.InnerValue);
         Assert.IsTrue(parsedOperation.Selling is AssetTypeNative);
         Assert.IsTrue(parsedOperation.Buying is AssetTypeCreditAlphaNum4);
@@ -407,9 +475,13 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that CreatePassiveSellOfferOperation creates operation with correct XDR base64 encoding.
+    /// </summary>
     [TestMethod]
-    public void TestCreatePassiveOfferOperation()
+    public void ToXdrBase64_CreatePassiveSellOfferOperation_ReturnsCorrectXdrBase64()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
@@ -423,15 +495,20 @@ public class OperationTest
 
         var operation = new CreatePassiveSellOfferOperation(selling, buying, amount, price, source);
 
+        // Act & Assert
         Assert.AreEqual(
             "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAQAAAAAAAAAAVVTRAAAAAAARP7bVZfAS1dHLFv8YF7W1zlX9ZTMg5bjImn5dCA1RSIAAAAAAAAAZAIweX0Avrwg",
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that CreatePassiveSellOfferOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestCreatePassiveSellOfferOperation()
+    public void FromXdr_CreatePassiveSellOfferOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
@@ -445,9 +522,11 @@ public class OperationTest
 
         var operation = new CreatePassiveSellOfferOperation(selling, buying, amount, price, source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (CreatePassiveSellOfferOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.AreEqual(100L, xdr.Body.CreatePassiveSellOfferOp.Amount.InnerValue);
         Assert.IsTrue(parsedOperation.Selling is AssetTypeNative);
         Assert.IsTrue(parsedOperation.Buying is AssetTypeCreditAlphaNum4);
@@ -463,10 +542,14 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that AccountMergeOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestAccountMergeOperation()
+    public void FromXdr_AccountMergeOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR
@@ -474,10 +557,11 @@ public class OperationTest
 
         var operation = new AccountMergeOperation(destination, source);
 
+        // Act
         var xdr = operation.ToXdr();
-
         var parsedOperation = (AccountMergeOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.AreEqual(destination.AccountId, parsedOperation.Destination.AccountId);
         Assert.AreEqual(OperationThreshold.HIGH, parsedOperation.Threshold);
 
@@ -486,19 +570,24 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that ManageDataOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestManageDataOperation()
+    public void FromXdr_ManageDataOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
         var operation = new ManageDataOperation("test", new byte[] { 0, 1, 2, 3, 4 }, source);
 
+        // Act
         var xdr = operation.ToXdr();
-
         var parsedOperation = (ManageDataOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.AreEqual("test", parsedOperation.Name);
         Assert.IsNotNull(parsedOperation.Value);
         Assert.IsTrue(new byte[] { 0, 1, 2, 3, 4 }.SequenceEqual(parsedOperation.Value));
@@ -509,19 +598,24 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that ManageDataOperation with null value round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestManageDataOperationEmptyValue()
+    public void FromXdr_ManageDataOperationWithNullValue_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
         var operation = new ManageDataOperation("test", (string?)null, source);
 
+        // Act
         var xdr = operation.ToXdr();
-
         var parsedOperation = (ManageDataOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.AreEqual("test", parsedOperation.Name);
         Assert.AreEqual(null, parsedOperation.Value);
 
@@ -529,9 +623,16 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that Operation.ToXdrAmount converts string amounts to XDR amounts correctly.
+    /// </summary>
     [TestMethod]
-    public void TestToXdrAmount()
+    public void ToXdrAmount_WithVariousStringAmounts_ReturnsCorrectXdrAmounts()
     {
+        // Arrange
+        // Test cases for valid amounts and invalid amounts (too many decimal places)
+
+        // Act & Assert - Valid amounts
         Assert.AreEqual(0L, Operation.ToXdrAmount("0"));
         Assert.AreEqual(1L, Operation.ToXdrAmount("0.0000001"));
         Assert.AreEqual(10000000L, Operation.ToXdrAmount("1"));
@@ -541,6 +642,7 @@ public class OperationTest
         Assert.AreEqual(1014016711446800155L, Operation.ToXdrAmount("101401671144.6800155"));
         Assert.AreEqual(9223372036854775807L, Operation.ToXdrAmount("922337203685.4775807"));
 
+        // Act & Assert - Invalid amounts (too many decimal places)
         try
         {
             Operation.ToXdrAmount("0.00000001");
@@ -568,19 +670,25 @@ public class OperationTest
         }
     }
 
+    /// <summary>
+    /// Verifies that BumpSequenceOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestBumpSequence()
+    public void FromXdr_BumpSequenceOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
         var operation = new BumpSequenceOperation(156L, source);
 
+        // Act
         var xdr = operation.ToXdr();
 
         var parsedOperation = (BumpSequenceOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.AreEqual(156L, parsedOperation.BumpTo);
         Assert.AreEqual(OperationThreshold.LOW, parsedOperation.Threshold);
 
@@ -588,10 +696,14 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that CreateClaimableBalanceOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestCreateClaimableBalanceOperation()
+    public void FromXdr_CreateClaimableBalanceOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
 
@@ -604,9 +716,10 @@ public class OperationTest
 
         var operation = new CreateClaimableBalanceOperation(asset, "123.45", new[] { claimant }, source);
 
+        // Act
         var xdr = operation.ToXdr();
-
         var parsedOperation = (CreateClaimableBalanceOperation)Operation.FromXdr(xdr);
+        // Assert
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
@@ -616,15 +729,21 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that ClaimClaimableBalanceOperation with valid balance ID round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [DataRow("000000006d6a0c142516a9cc7885a85c5aba3a1f4af5181cf9e7a809ac7ae5e4a58c825f")]
-    public void TestClaimClaimableBalanceOperationConstructorWithValidArgument(string id)
+    public void FromXdr_ClaimClaimableBalanceOperationWithValidId_RoundTripsCorrectly(string id)
     {
+        // Arrange
         var accountId = KeyPair.FromAccountId("GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN");
         var operation = new ClaimClaimableBalanceOperation(id, accountId);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (ClaimClaimableBalanceOperation)Operation.FromXdr(xdr);
+        // Assert
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
@@ -635,22 +754,32 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that ClaimClaimableBalanceOperation constructor throws ArgumentException when balance ID is invalid.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     [DataRow("")]
     [DataRow("00000000")]
     [DataRow("00846c047755e4a46912336f56096b48ece78ddb5fbf6d90f0eb4ecae5324fbddb")]
     [DataRow("BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU")]
-    public void TestClaimClaimableBalanceOperationConstructorWithInvalidArgument(string id)
+    public void Constructor_WithInvalidBalanceId_ThrowsArgumentException(string id)
     {
+        // Arrange
         var accountId = KeyPair.FromAccountId("GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN");
+
+        // Act & Assert
         _ = new ClaimClaimableBalanceOperation(id, accountId);
     }
 
+    /// <summary>
+    /// Verifies that BeginSponsoringFutureReservesOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestBeginSponsoringFutureReservesOperation()
+    public void FromXdr_BeginSponsoringFutureReservesOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
 
@@ -659,9 +788,10 @@ public class OperationTest
 
         var operation = new BeginSponsoringFutureReservesOperation(sponsored, source);
 
+        // Act
         var xdr = operation.ToXdr();
-
         var parsedOperation = (BeginSponsoringFutureReservesOperation)Operation.FromXdr(xdr);
+        // Assert
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
@@ -671,18 +801,24 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that EndSponsoringFutureReservesOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestEndSponsoringFutureReservesOperation()
+    public void FromXdr_EndSponsoringFutureReservesOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
 
         var operation = new EndSponsoringFutureReservesOperation(source);
 
+        // Act
         var xdr = operation.ToXdr();
-
         var parsedOperation = (EndSponsoringFutureReservesOperation)Operation.FromXdr(xdr);
+
+        // Assert
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
@@ -690,10 +826,14 @@ public class OperationTest
         Assert.AreEqual("AAAAAQAAAADg3G3hclysZlFitS+s5zWyiiJD5B0STWy5LXCj6i5yxQAAABE=", operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that RevokeLedgerEntrySponsorshipOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestRevokeLedgerEntrySponsorshipOperation()
+    public void FromXdr_RevokeLedgerEntrySponsorshipOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
 
@@ -703,8 +843,8 @@ public class OperationTest
         var ledgerKey = LedgerKey.Account(otherAccount);
         var operation = new RevokeLedgerEntrySponsorshipOperation(ledgerKey, source);
 
+        // Act
         var xdr = operation.ToXdr();
-
         var parsedOperation = (RevokeLedgerEntrySponsorshipOperation)Operation.FromXdr(xdr);
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(parsedOperation.SourceAccount);
@@ -715,25 +855,35 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that RevokeLedgerEntrySponsorshipOperation for claimable balance round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestRevokeClaimableBalanceSponsorshipOperation()
+    public void FromXdr_RevokeClaimableBalanceSponsorshipOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var operation =
             RevokeLedgerEntrySponsorshipOperation.ForClaimableBalance(
                 "00000000d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780");
 
+        // Act
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (RevokeLedgerEntrySponsorshipOperation)Operation.FromXdr(xdrOperation);
 
+        // Assert
         Assert.IsNull(decodedOperation.SourceAccount);
         Assert.AreEqual(((LedgerKeyClaimableBalance)operation.LedgerKey).BalanceId.ToUpper(),
             ((LedgerKeyClaimableBalance)decodedOperation.LedgerKey).BalanceId.ToUpper());
     }
 
+    /// <summary>
+    /// Verifies that RevokeSignerSponsorshipOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestRevokeSignerSponsorshipOperation()
+    public void FromXdr_RevokeSignerSponsorshipOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
 
@@ -744,9 +894,10 @@ public class OperationTest
 
         var operation = new RevokeSignerSponsorshipOperation(otherAccount, signerKey, source);
 
+        // Act
         var xdr = operation.ToXdr();
-
         var parsedOperation = (RevokeSignerSponsorshipOperation)Operation.FromXdr(xdr);
+        // Assert
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
@@ -756,9 +907,13 @@ public class OperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that Operation.FromXdrAmount converts XDR amounts to string amounts correctly.
+    /// </summary>
     [TestMethod]
-    public void TestFromXdrAmount()
+    public void FromXdrAmount_WithVariousXdrAmounts_ReturnsCorrectStringAmounts()
     {
+        // Act & Assert
         Assert.AreEqual("0", Operation.FromXdrAmount(0L));
         Assert.AreEqual("0.0000001", Operation.FromXdrAmount(1L));
         Assert.AreEqual("1", Operation.FromXdrAmount(10000000L));
@@ -768,10 +923,14 @@ public class OperationTest
         Assert.AreEqual("922337203685.4775807", Operation.FromXdrAmount(9223372036854775807L));
     }
 
+    /// <summary>
+    /// Verifies that ClawbackOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestClawbackOperation()
+    public void FromXdr_ClawbackOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
 
@@ -781,8 +940,8 @@ public class OperationTest
                 "1000", KeyPair.FromAccountId("GCFRHRU5YRI3IN3IMRMYGWWEG2PX2B6MYH2RJW7NEDE2PTYPISPT3RU7"),
                 source);
 
+        // Act
         var xdr = operation.ToXdr();
-
         var parsedOperation = (ClawbackOperation)Operation.FromXdr(xdr);
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(parsedOperation.SourceAccount);
@@ -792,17 +951,21 @@ public class OperationTest
         Assert.AreEqual(operation.From.AccountId, parsedOperation.From.AccountId);
     }
 
+    /// <summary>
+    /// Verifies that ClawbackClaimableBalanceOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestClawbackClaimableBalanceOperation()
+    public void FromXdr_ClawbackClaimableBalanceOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
 
         var operation = new ClawbackClaimableBalanceOperation(
             "00000000526674017c3cf392614b3f2f500230affd58c7c364625c350c61058fbeacbdf7", source);
 
+        // Act
         var xdr = operation.ToXdr();
-
         var parsedOperation = (ClawbackClaimableBalanceOperation)Operation.FromXdr(xdr);
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(parsedOperation.SourceAccount);
@@ -810,10 +973,14 @@ public class OperationTest
         Assert.AreEqual(operation.BalanceId.ToUpper(), parsedOperation.BalanceId.ToUpper());
     }
 
+    /// <summary>
+    /// Verifies that SetTrustlineFlagsOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
     [Obsolete("Deprecated")]
-    public void TestSetTrustlineFlagsOperation()
+    public void FromXdr_SetTrustlineFlagsOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
 
@@ -822,9 +989,10 @@ public class OperationTest
             KeyPair.Random(), 1, 1,
             source);
 
+        // Act
         var xdr = operation.ToXdr();
-
         var parsedOperation = (SetTrustlineFlagsOperation)Operation.FromXdr(xdr);
+        // Assert
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, parsedOperation.SourceAccount.AccountId);
@@ -834,9 +1002,13 @@ public class OperationTest
         Assert.AreEqual(operation.ClearFlags, parsedOperation.ClearFlags);
     }
 
+    /// <summary>
+    /// Verifies that LiquidityPoolDepositOperation with asset amounts round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestLiquidityPoolDepositOperationConstructor1()
+    public void FromXdr_LiquidityPoolDepositOperationWithAssetAmounts_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
@@ -854,8 +1026,10 @@ public class OperationTest
 
         var operation = new LiquidityPoolDepositOperation(assetAmountA, assetAmountB, minPrice, maxPrice, source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (LiquidityPoolDepositOperation)Operation.FromXdr(xdr);
+        // Assert
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(operation.LiquidityPoolId, parsedOperation.LiquidityPoolId);
@@ -867,9 +1041,13 @@ public class OperationTest
         Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
     }
 
+    /// <summary>
+    /// Verifies that LiquidityPoolDepositOperation with liquidity pool ID round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestLiquidityPoolDepositOperationConstructor2()
+    public void FromXdr_LiquidityPoolDepositOperationWithPoolId_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
@@ -891,8 +1069,10 @@ public class OperationTest
 
         var operation = new LiquidityPoolDepositOperation(liquidityPoolId, "100", "200", minPrice, maxPrice, source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (LiquidityPoolDepositOperation)Operation.FromXdr(xdr);
+        // Assert
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(operation.LiquidityPoolId, parsedOperation.LiquidityPoolId);
@@ -904,29 +1084,35 @@ public class OperationTest
         Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
     }
 
+    /// <summary>
+    /// Verifies that LiquidityPoolDepositOperation constructor throws ArgumentException when assets are not in lexicographic order.
+    /// </summary>
     [TestMethod]
-    public void TestTestLiquidityPoolConstructionNotLexicographicOrder()
+    public void Constructor_WithAssetsNotInLexicographicOrder_ThrowsArgumentException()
     {
+        // Arrange
         var keypairAssetA = KeyPair.Random();
         var keypairAssetB = KeyPair.Random();
-
         var assetA = Asset.Create($"USD:{keypairAssetB.AccountId}");
         var assetB = Asset.Create($"EUR:{keypairAssetA.AccountId}");
-
         var assetAmountA = new AssetAmount(assetA, "100");
         var assetAmountB = new AssetAmount(assetB, "200");
-
         var minPrice = Price.FromString("0.01");
         var maxPrice = Price.FromString("0.02");
 
+        // Act & Assert
         Assert.ThrowsException<ArgumentException>(
             () => new LiquidityPoolDepositOperation(assetAmountA, assetAmountB, minPrice, maxPrice),
             "Asset A must be < Asset B (Lexicographic Order)");
     }
 
+    /// <summary>
+    /// Verifies that LiquidityPoolWithdrawOperation with asset amounts round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestLiquidityPoolWithdrawOperationConstructor1()
+    public void FromXdr_LiquidityPoolWithdrawOperationWithAssetAmounts_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
@@ -941,9 +1127,11 @@ public class OperationTest
 
         var operation = new LiquidityPoolWithdrawOperation(assetAmountA, assetAmountB, "100", source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (LiquidityPoolWithdrawOperation)Operation.FromXdr(xdr);
 
+        // Assert
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(operation.LiquidityPoolId, parsedOperation.LiquidityPoolId);
@@ -954,9 +1142,13 @@ public class OperationTest
         Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
     }
 
+    /// <summary>
+    /// Verifies that LiquidityPoolWithdrawOperation with liquidity pool ID round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestLiquidityPoolWithdrawOperationConstructor2()
+    public void FromXdr_LiquidityPoolWithdrawOperationWithPoolId_RoundTripsCorrectly()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
@@ -975,8 +1167,10 @@ public class OperationTest
 
         var operation = new LiquidityPoolWithdrawOperation(liquidityPoolId, "100", "100", "200", source);
 
+        // Act
         var xdr = operation.ToXdr();
         var parsedOperation = (LiquidityPoolWithdrawOperation)Operation.FromXdr(xdr);
+        // Assert
         Assert.IsNotNull(parsedOperation.SourceAccount);
         Assert.AreEqual(source.AccountId, parsedOperation.SourceAccount.AccountId);
         Assert.AreEqual(operation.LiquidityPoolId, parsedOperation.LiquidityPoolId);
@@ -987,9 +1181,13 @@ public class OperationTest
         Assert.AreEqual(OperationThreshold.MEDIUM, parsedOperation.Threshold);
     }
 
+    /// <summary>
+    /// Verifies that LiquidityPoolWithdrawOperation constructor throws ArgumentException when assets are not in lexicographic order.
+    /// </summary>
     [TestMethod]
-    public void TestNotLexicographicOrder()
+    public void Constructor_WithAssetsNotInLexicographicOrder_ThrowsArgumentExceptionWithInvalidPoolIdMessage()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
@@ -1002,14 +1200,19 @@ public class OperationTest
         var assetAmountA = new AssetAmount(assetA, "100");
         var assetAmountB = new AssetAmount(assetB, "200");
 
+        // Act & Assert
         var ex = Assert.ThrowsException<ArgumentException>(() =>
             new LiquidityPoolWithdrawOperation(assetAmountB, assetAmountA, "100", source));
         Assert.AreEqual("Invalid Liquidity Pool ID", ex.Message);
     }
 
+    /// <summary>
+    /// Verifies that UploadContractOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public async Task TestUploadContractOperation()
+    public async Task FromXdr_UploadContractOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
         var helloWasmPath = Path.GetFullPath("TestData/Wasm/soroban_hello_world_contract.wasm");
@@ -1017,27 +1220,33 @@ public class OperationTest
 
         var operation = new UploadContractOperation(wasm, source);
 
+        // Act
         var xdrOperation = operation.ToXdr();
-
         var decodedOperation = (UploadContractOperation)Operation.FromXdr(xdrOperation);
+        // Assert
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(decodedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, decodedOperation.SourceAccount.AccountId);
         CollectionAssert.AreEqual(operation.Wasm, decodedOperation.Wasm);
     }
 
+    /// <summary>
+    /// Verifies that CreateContractOperation round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestCreateContractOperation()
+    public void FromXdr_CreateContractOperation_RoundTripsCorrectly()
     {
+        // Arrange
         // GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
         const string wasmHash = "c1a650506f7c20c8f4d16aae73f894f302cd011d7ef33adef572f20b34f7653e";
         var arguments = new SCVal[] { new SCString("test"), new SCInt64(100) };
         var operation = CreateContractOperation.FromAddress(wasmHash, source.AccountId, arguments, null, source);
 
+        // Act
         var xdrOperation = operation.ToXdr();
-
         var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
+        // Assert
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(decodedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, decodedOperation.SourceAccount.AccountId);
@@ -1059,9 +1268,13 @@ public class OperationTest
         Assert.AreEqual(((SCInt64)arguments[1]).InnerValue, ((SCInt64)decodedArguments[1]).InnerValue);
     }
 
+    /// <summary>
+    /// Verifies that InvokeContractOperation with ScContractId round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestInvokeContractOperationConstructor1()
+    public void FromXdr_InvokeContractOperationWithScContractId_RoundTripsCorrectly()
     {
+        // Arrange
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
         var operation = new InvokeContractOperation(
             new ScContractId("CDSUR2JFKSUORJLUA2FISW7P6ALDTS2PDK6AYQZ7G4CSY5WZS5QVSM47"),
@@ -1069,9 +1282,8 @@ public class OperationTest
             [new SCString("test"), new SCBool(true)],
             source);
 
-
+        // Act
         var xdrOperation = operation.ToXdr();
-
         var decodedOperation = (InvokeContractOperation)Operation.FromXdr(xdrOperation);
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(decodedOperation.SourceAccount);
@@ -1091,9 +1303,13 @@ public class OperationTest
         Assert.AreEqual(((SCBool)arguments[1]).InnerValue, ((SCBool)decodedArguments[1]).InnerValue);
     }
 
+    /// <summary>
+    /// Verifies that InvokeContractOperation with string contract ID round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestInvokeContractOperationConstructor2()
+    public void FromXdr_InvokeContractOperationWithStringContractId_RoundTripsCorrectly()
     {
+        // Arrange
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
         var operation = new InvokeContractOperation(
             "CDSUR2JFKSUORJLUA2FISW7P6ALDTS2PDK6AYQZ7G4CSY5WZS5QVSM47",
@@ -1101,10 +1317,10 @@ public class OperationTest
             [new SCString("test"), new SCBool(true)],
             source);
 
-
+        // Act
         var xdrOperation = operation.ToXdr();
-
         var decodedOperation = (InvokeContractOperation)Operation.FromXdr(xdrOperation);
+        // Assert
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(decodedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, decodedOperation.SourceAccount.AccountId);
@@ -1123,16 +1339,22 @@ public class OperationTest
         Assert.AreEqual(((SCBool)arguments[1]).InnerValue, ((SCBool)decodedArguments[1]).InnerValue);
     }
 
+    /// <summary>
+    /// Verifies that CreateContractOperation from asset (SAC) round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestDeploySacOperation()
+    public void FromXdr_CreateContractOperationFromAsset_RoundTripsCorrectly()
     {
+        // Arrange
         var source = KeyPair.FromSecretSeed("SBPQUZ6G4FZNWFHKUWC5BEYWF6R52E3SEP7R3GWYSM2XTKGF5LNTWW4R");
         Asset asset = new AssetTypeCreditAlphaNum4("VNDT", source.AccountId);
         var operation = CreateContractOperation.FromAsset(asset, null, source);
 
+        // Act
         var xdrOperation = operation.ToXdr();
-
         var decodedOperation = (CreateContractOperation)Operation.FromXdr(xdrOperation);
+
+        // Assert
         Assert.IsNotNull(operation.SourceAccount);
         Assert.IsNotNull(decodedOperation.SourceAccount);
         Assert.AreEqual(operation.SourceAccount.AccountId, decodedOperation.SourceAccount.AccountId);

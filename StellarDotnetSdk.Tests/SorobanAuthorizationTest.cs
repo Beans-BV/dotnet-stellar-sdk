@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Operations;
@@ -10,6 +10,9 @@ using SorobanCredentials = StellarDotnetSdk.Operations.SorobanCredentials;
 
 namespace StellarDotnetSdk.Tests;
 
+/// <summary>
+/// Unit tests for Soroban authorization-related classes and functionality.
+/// </summary>
 [TestClass]
 public class SorobanAuthorizationTest
 {
@@ -29,9 +32,13 @@ public class SorobanAuthorizationTest
         return new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
     }
 
+    /// <summary>
+    /// Verifies that SorobanAddressCredentials round-trips correctly through XDR serialization with valid credentials.
+    /// </summary>
     [TestMethod]
-    public void TestSorobanAddressCredentialsWithValidCredentials()
+    public void FromXdr_SorobanAddressCredentialsWithValidCredentials_RoundTripsCorrectly()
     {
+        // Arrange
         var sorobanCredentials = InitSorobanAddressCredentials();
 
         // Act
@@ -47,17 +54,25 @@ public class SorobanAuthorizationTest
         Assert.AreEqual(sorobanCredentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
     }
 
+    /// <summary>
+    /// Verifies that SorobanAddressCredentials constructor throws ArgumentNullException when address is null.
+    /// </summary>
     [TestMethod]
-    public void TestSorobanAddressCredentialsWithMissingAddress()
+    public void Constructor_SorobanAddressCredentialsWithMissingAddress_ThrowsArgumentNullException()
     {
+        // Arrange & Act & Assert
         var ex = Assert.ThrowsException<ArgumentNullException>(() =>
             new SorobanAddressCredentials(null, Nonce, SignatureExpirationLedger, _signature));
         Assert.IsTrue(ex.Message.Contains("Address cannot be null."));
     }
 
+    /// <summary>
+    /// Verifies that SorobanAddressCredentials round-trips correctly through XDR serialization when address is a contract address.
+    /// </summary>
     [TestMethod]
-    public void TestSorobanAddressCredentialsWithAddressBeingAContractAddress()
+    public void FromXdr_SorobanAddressCredentialsWithContractAddress_RoundTripsCorrectly()
     {
+        // Arrange
         var contractAddress = new ScContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
         var sorobanCredentials =
             new SorobanAddressCredentials(contractAddress, Nonce, SignatureExpirationLedger, _signature);
@@ -74,20 +89,28 @@ public class SorobanAuthorizationTest
         Assert.AreEqual(sorobanCredentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
     }
 
+    /// <summary>
+    /// Verifies that SorobanAddressCredentials constructor throws ArgumentNullException when signature is null.
+    /// </summary>
     [TestMethod]
-    public void TestSorobanAddressCredentialsWithMissingSignature()
+    public void Constructor_SorobanAddressCredentialsWithMissingSignature_ThrowsArgumentNullException()
     {
+        // Arrange & Act & Assert
         var ex = Assert.ThrowsException<ArgumentNullException>(()
             => new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, null));
         Assert.IsTrue(ex.Message.Contains("Signature cannot be null."));
     }
 
+    /// <summary>
+    /// Verifies that SorobanAddressCredentials round-trips correctly through XDR serialization with zero signature expiration ledger.
+    /// </summary>
     [TestMethod]
-    public void TestSorobanAddressCredentialsWithZeroSignatureExpirationLedger()
+    public void FromXdr_SorobanAddressCredentialsWithZeroSignatureExpirationLedger_RoundTripsCorrectly()
     {
+        // Arrange
         var sorobanCredentials = new SorobanAddressCredentials(_accountAddress, Nonce, 0, _signature);
 
-        // Act 
+        // Act
         var xdrCredentials = sorobanCredentials.ToXdr();
         var decodedCredentials = (SorobanAddressCredentials)SorobanCredentials.FromXdr(xdrCredentials);
 
@@ -100,12 +123,17 @@ public class SorobanAuthorizationTest
         Assert.AreEqual(sorobanCredentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
     }
 
+    /// <summary>
+    /// Verifies that SorobanAddressCredentials round-trips correctly through XDR serialization with zero nonce.
+    /// </summary>
     [TestMethod]
-    public void TestSorobanAddressCredentialsWithZeroNonce()
+    public void FromXdr_SorobanAddressCredentialsWithZeroNonce_RoundTripsCorrectly()
     {
+        // Arrange
         var sorobanCredentials =
             new SorobanAddressCredentials(_accountAddress, 0, SignatureExpirationLedger, _signature);
-        // Act 
+
+        // Act
         var xdrCredentials = sorobanCredentials.ToXdr();
         var decodedCredentials = (SorobanAddressCredentials)SorobanCredentials.FromXdr(xdrCredentials);
 
@@ -118,9 +146,13 @@ public class SorobanAuthorizationTest
         Assert.AreEqual(sorobanCredentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
     }
 
+    /// <summary>
+    /// Verifies that SorobanAuthorizationEntry round-trips correctly through XDR serialization with empty sub-invocations.
+    /// </summary>
     [TestMethod]
-    public void TestSorobanAuthorizationEntryWithEmptySubInvocations()
+    public void FromXdr_SorobanAuthorizationEntryWithEmptySubInvocations_RoundTripsCorrectly()
     {
+        // Arrange
         var salt = new byte[32];
         RandomNumberGenerator.Create().GetBytes(salt);
 
@@ -133,9 +165,11 @@ public class SorobanAuthorizationTest
         var credentials = InitSorobanAddressCredentials();
         var authEntry = new SorobanAuthorizationEntry(credentials, rootInvocation);
 
+        // Act
         var xdrAuth = authEntry.ToXdr();
         var decodedAuth = SorobanAuthorizationEntry.FromXdr(xdrAuth);
 
+        // Assert
         Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
         var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
         Assert.AreEqual(((ScAccountId)credentials.Address).InnerValue,
@@ -160,9 +194,13 @@ public class SorobanAuthorizationTest
         Assert.AreEqual(0, decodedSubInvocations.Length);
     }
 
+    /// <summary>
+    /// Verifies that SorobanAuthorizationEntry round-trips correctly through XDR serialization containing AuthorizedCreateContractFunction.
+    /// </summary>
     [TestMethod]
-    public void TestSorobanAuthorizationEntryContainingAuthorizedCreateContractFunction()
+    public void FromXdr_SorobanAuthorizationEntryWithAuthorizedCreateContractFunction_RoundTripsCorrectly()
     {
+        // Arrange
         var hostFunction = new CreateContractHostFunction(WasmHash, _accountAddress.InnerValue);
         var authorizedCreateContractFn = new SorobanAuthorizedCreateContractFunction(hostFunction);
 
@@ -175,9 +213,11 @@ public class SorobanAuthorizationTest
         var credentials = InitSorobanAddressCredentials();
         var authEntry = new SorobanAuthorizationEntry(credentials, rootInvocation);
 
+        // Act
         var xdrAuth = authEntry.ToXdr();
         var decodedAuth = SorobanAuthorizationEntry.FromXdr(xdrAuth);
 
+        // Assert
         Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
         var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
         Assert.AreEqual(((ScAccountId)credentials.Address).InnerValue,
@@ -216,9 +256,13 @@ public class SorobanAuthorizationTest
         Assert.AreEqual(_contractExecutableWasm.WasmHash, decodedExecutable.WasmHash);
     }
 
+    /// <summary>
+    /// Verifies that SorobanAuthorizationEntry round-trips correctly through XDR serialization containing AuthorizedCreateContractV2Function.
+    /// </summary>
     [TestMethod]
-    public void TestSorobanAuthorizationEntryContainingAuthorizedCreateContractV2Function()
+    public void FromXdr_SorobanAuthorizationEntryWithAuthorizedCreateContractV2Function_RoundTripsCorrectly()
     {
+        // Arrange
         var arguments = new SCVal[] { new SCString("Test") };
         var hostFunction =
             new CreateContractV2HostFunction(WasmHash, _accountAddress.InnerValue, arguments);
@@ -234,9 +278,11 @@ public class SorobanAuthorizationTest
         var credentials = InitSorobanAddressCredentials();
         var authEntry = new SorobanAuthorizationEntry(credentials, rootInvocation);
 
+        // Act
         var xdrAuth = authEntry.ToXdr();
         var decodedAuth = SorobanAuthorizationEntry.FromXdr(xdrAuth);
 
+        // Assert
         Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
         var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
         Assert.AreEqual(((ScAccountId)credentials.Address).InnerValue,
@@ -278,9 +324,13 @@ public class SorobanAuthorizationTest
         Assert.AreEqual(((SCString)arguments[0]).InnerValue, ((SCString)decodedArguments[0]).InnerValue);
     }
 
+    /// <summary>
+    /// Verifies that SorobanAuthorizationEntry round-trips correctly through XDR serialization containing AuthorizedContractFunction.
+    /// </summary>
     [TestMethod]
-    public void TestSorobanAuthorizationEntryContainingAuthorizedContractFunction()
+    public void FromXdr_SorobanAuthorizationEntryWithAuthorizedContractFunction_RoundTripsCorrectly()
     {
+        // Arrange
         var contractAddress = new ScContractId("CDJ4RICANSXXZ275W2OY2U7RO73HYURBGBRHVW2UUXZNGEBIVBNRKEF7");
         var functionName = "hello";
         var argName = "world";
@@ -297,9 +347,11 @@ public class SorobanAuthorizationTest
         var credentials = InitSorobanAddressCredentials();
         var authEntry = new SorobanAuthorizationEntry(credentials, rootInvocation);
 
+        // Act
         var xdrAuth = authEntry.ToXdr();
         var decodedAuth = SorobanAuthorizationEntry.FromXdr(xdrAuth);
 
+        // Assert
         Assert.IsInstanceOfType(decodedAuth.Credentials, typeof(SorobanAddressCredentials));
         var decodedCredentials = (SorobanAddressCredentials)decodedAuth.Credentials;
         Assert.AreEqual(((ScAccountId)credentials.Address).InnerValue,

@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -6,29 +6,48 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+/// Unit tests for deserializing trade aggregations page responses from JSON.
+/// </summary>
 [TestClass]
 public class TradeAggregationsPageDeserializerTest
 {
+    /// <summary>
+    /// Verifies that Page&lt;TradeAggregationResponse&gt; can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithTradeAggregationsPageJson_ReturnsDeserializedTradeAggregationsPage()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("tradeAggregationPage.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var tradeAggregationsPage =
             JsonSerializer.Deserialize<Page<TradeAggregationResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(tradeAggregationsPage);
         AssertTestData(tradeAggregationsPage);
     }
 
+    /// <summary>
+    /// Verifies that Page&lt;TradeAggregationResponse&gt; can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserialize()
+    public void SerializeDeserialize_WithTradeAggregationsPage_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("tradeAggregationPage.json");
         var json = File.ReadAllText(jsonPath);
         var tradeAggregationsPage =
             JsonSerializer.Deserialize<Page<TradeAggregationResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(tradeAggregationsPage);
         var back = JsonSerializer.Deserialize<Page<TradeAggregationResponse>>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

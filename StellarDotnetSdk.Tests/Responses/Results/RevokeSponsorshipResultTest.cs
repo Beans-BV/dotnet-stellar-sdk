@@ -1,15 +1,22 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Responses.Results;
 using XDR = StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+/// Unit tests for revoke sponsorship result types.
+/// </summary>
 [TestClass]
 public class RevokeSponsorshipResultTest
 {
+    /// <summary>
+    /// Verifies that RevokeSponsorshipDoesNotExist result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDoesNotExist()
+    public void Deserialize_WithRevokeSponsorshipDoesNotExistXdr_ReturnsRevokeSponsorshipDoesNotExist()
     {
+        // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr
         {
             Discriminant =
@@ -27,14 +34,19 @@ public class RevokeSponsorshipResultTest
             },
         };
         operationResultTr.RevokeSponsorshipResult = result;
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
 
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(RevokeSponsorshipDoesNotExist), false);
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(RevokeSponsorshipDoesNotExist), false);
     }
 
+    /// <summary>
+    /// Verifies that RevokeSponsorshipLowReserve result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestLowReserve()
+    public void Deserialize_WithRevokeSponsorshipLowReserveXdr_ReturnsRevokeSponsorshipLowReserve()
     {
+        // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr
         {
             Discriminant =
@@ -52,15 +64,19 @@ public class RevokeSponsorshipResultTest
             },
         };
         operationResultTr.RevokeSponsorshipResult = result;
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
 
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(RevokeSponsorshipLowReserve),
-            false);
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(RevokeSponsorshipLowReserve), false);
     }
 
+    /// <summary>
+    /// Verifies that RevokeSponsorshipNotSponsor result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNotSponsor()
+    public void Deserialize_WithRevokeSponsorshipNotSponsorXdr_ReturnsRevokeSponsorshipNotSponsor()
     {
+        // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr
         {
             Discriminant =
@@ -78,15 +94,19 @@ public class RevokeSponsorshipResultTest
             },
         };
         operationResultTr.RevokeSponsorshipResult = result;
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
 
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(RevokeSponsorshipNotSponsor),
-            false);
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(RevokeSponsorshipNotSponsor), false);
     }
 
+    /// <summary>
+    /// Verifies that RevokeSponsorshipOnlyTransferable result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestOnlyTransferable()
+    public void Deserialize_WithRevokeSponsorshipOnlyTransferableXdr_ReturnsRevokeSponsorshipOnlyTransferable()
     {
+        // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr
         {
             Discriminant =
@@ -104,14 +124,19 @@ public class RevokeSponsorshipResultTest
             },
         };
         operationResultTr.RevokeSponsorshipResult = result;
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
 
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(RevokeSponsorshipOnlyTransferable), false);
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(RevokeSponsorshipOnlyTransferable), false);
     }
 
+    /// <summary>
+    /// Verifies that RevokeSponsorshipSuccess result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSuccess()
+    public void Deserialize_WithRevokeSponsorshipSuccessXdr_ReturnsRevokeSponsorshipSuccess()
     {
+        // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr
         {
             Discriminant =
@@ -128,9 +153,9 @@ public class RevokeSponsorshipResultTest
             },
         };
         operationResultTr.RevokeSponsorshipResult = result;
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
 
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(RevokeSponsorshipSuccess),
-            true);
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(RevokeSponsorshipSuccess), true);
     }
 }

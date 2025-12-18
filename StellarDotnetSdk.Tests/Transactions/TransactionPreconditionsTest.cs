@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Transactions;
 using xdrSDK = StellarDotnetSdk.Xdr;
@@ -6,12 +6,19 @@ using FormatException = StellarDotnetSdk.Exceptions.FormatException;
 
 namespace StellarDotnetSdk.Tests.Transactions;
 
+/// <summary>
+/// Unit tests for <see cref="TransactionPreconditions"/> class.
+/// </summary>
 [TestClass]
 public class TransactionPreconditionsTest
 {
+    /// <summary>
+    /// Verifies that TransactionPreconditions.FromXdr correctly converts PreconditionsV2 XDR to TransactionPreconditions with all properties.
+    /// </summary>
     [TestMethod]
-    public void ItConvertsFromXdr()
+    public void FromXdr_WithPreconditionsV2_ConvertsCorrectly()
     {
+        // Arrange
         var preconditions = new xdrSDK.Preconditions
         {
             Discriminant = xdrSDK.PreconditionType.Create(xdrSDK.PreconditionType.PreconditionTypeEnum.PRECOND_V2),
@@ -33,7 +40,10 @@ public class TransactionPreconditionsTest
         xdrSDK.Preconditions.Encode(stream, preconditions);
         preconditions = xdrSDK.Preconditions.Decode(new xdrSDK.XdrDataInputStream(stream.ToArray()));
 
+        // Act
         var transactionPreconditions = TransactionPreconditions.FromXdr(preconditions);
+
+        // Assert
         Assert.IsNotNull(transactionPreconditions);
         Assert.AreEqual(transactionPreconditions.MinSequenceAge, 2UL);
         Assert.IsNotNull(transactionPreconditions.LedgerBounds);
@@ -43,9 +53,13 @@ public class TransactionPreconditionsTest
         Assert.AreEqual(transactionPreconditions.MinSequenceLedgerGap, 0U);
     }
 
+    /// <summary>
+    /// Verifies that TransactionPreconditions round-trips from V2 to V1 XDR when only time bounds are present.
+    /// </summary>
     [TestMethod]
-    public void ItRoundTripsFromV2ToV1IfOnlyTimeBoundsPresent()
+    public void FromXdr_WithV2PreconditionsContainingOnlyTimeBounds_RoundTripsToV1()
     {
+        // Arrange
         const ulong minTime = 1UL;
         const ulong maxTime = 2UL;
         var preconditions = new xdrSDK.Preconditions
@@ -68,7 +82,10 @@ public class TransactionPreconditionsTest
         xdrSDK.Preconditions.Encode(stream, preconditions);
         preconditions = xdrSDK.Preconditions.Decode(new xdrSDK.XdrDataInputStream(stream.ToArray()));
 
+        // Act
         var transactionPreconditions = TransactionPreconditions.FromXdr(preconditions);
+
+        // Assert
         Assert.IsNotNull(transactionPreconditions);
         Assert.AreEqual(transactionPreconditions.TimeBounds, new TimeBounds(1L, 2L));
 
@@ -81,9 +98,13 @@ public class TransactionPreconditionsTest
         Assert.IsNull(preconditions.V2);
     }
 
+    /// <summary>
+    /// Verifies that TransactionPreconditions.ToXdr correctly converts to PreconditionsV2 XDR with time bounds, min sequence number, and extra signers.
+    /// </summary>
     [TestMethod]
-    public void ItConvertsToV2Xdr()
+    public void ToXdr_WithV2Preconditions_ConvertsToV2XdrCorrectly()
     {
+        // Arrange
         var payload = Util.HexToBytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20");
         var signerKey = new xdrSDK.SignerKey
         {
@@ -105,12 +126,14 @@ public class TransactionPreconditionsTest
             ExtraSigners = new List<xdrSDK.SignerKey> { signerKey, signerKey, signerKey },
         };
 
+        // Act
         var xdr = preconditions.ToXdr();
 
         var stream = new xdrSDK.XdrDataOutputStream();
         xdrSDK.Preconditions.Encode(stream, xdr);
         xdr = xdrSDK.Preconditions.Decode(new xdrSDK.XdrDataInputStream(stream.ToArray()));
 
+        // Assert
         Assert.AreEqual(xdr.Discriminant.InnerValue, xdrSDK.PreconditionType.PreconditionTypeEnum.PRECOND_V2);
         Assert.AreEqual(xdr.V2.TimeBounds.MinTime.InnerValue.InnerValue, 1UL);
         Assert.AreEqual(xdr.V2.TimeBounds.MaxTime.InnerValue.InnerValue, 2UL);
@@ -120,54 +143,77 @@ public class TransactionPreconditionsTest
         Assert.AreEqual(xdr.V2.ExtraSigners.Length, 3);
     }
 
+    /// <summary>
+    /// Verifies that TransactionPreconditions.ToXdr converts to PreconditionsTime XDR when only time bounds are present.
+    /// </summary>
     [TestMethod]
-    public void ItConvertsOnlyTimeBoundsXdr()
+    public void ToXdr_WithOnlyTimeBounds_ConvertsToTimeBoundsXdr()
     {
+        // Arrange
         var preconditions = new TransactionPreconditions
         {
             TimeBounds = new TimeBounds(1, 2),
         };
 
+        // Act
         var xdr = preconditions.ToXdr();
 
         var stream = new xdrSDK.XdrDataOutputStream();
         xdrSDK.Preconditions.Encode(stream, xdr);
         xdr = xdrSDK.Preconditions.Decode(new xdrSDK.XdrDataInputStream(stream.ToArray()));
 
+        // Assert
         Assert.AreEqual(xdr.Discriminant.InnerValue, xdrSDK.PreconditionType.PreconditionTypeEnum.PRECOND_TIME);
         Assert.AreEqual(xdr.TimeBounds.MinTime.InnerValue.InnerValue, 1UL);
         Assert.AreEqual(xdr.TimeBounds.MaxTime.InnerValue.InnerValue, 2UL);
         Assert.IsNull(xdr.V2);
     }
 
+    /// <summary>
+    /// Verifies that TransactionPreconditions.ToXdr converts to PreconditionsNone XDR when no time bounds are present.
+    /// </summary>
     [TestMethod]
-    public void ItConvertsNullTimeBoundsXdr()
+    public void ToXdr_WithNullTimeBounds_ConvertsToNoneXdr()
     {
+        // Arrange
         var preconditions = new TransactionPreconditions();
+
+        // Act
         var xdr = preconditions.ToXdr();
 
         var stream = new xdrSDK.XdrDataOutputStream();
         xdrSDK.Preconditions.Encode(stream, xdr);
         xdr = xdrSDK.Preconditions.Decode(new xdrSDK.XdrDataInputStream(stream.ToArray()));
 
+        // Assert
         Assert.AreEqual(xdr.Discriminant.InnerValue, xdrSDK.PreconditionType.PreconditionTypeEnum.PRECOND_NONE);
         Assert.IsNull(xdr.TimeBounds);
     }
 
+    /// <summary>
+    /// Verifies that TransactionPreconditions.IsValid throws FormatException when extra signers count exceeds maximum allowed.
+    /// </summary>
     [TestMethod]
-    public void ItChecksNonValidityOfExtraSignersSize()
+    public void IsValid_WithExtraSignersExceedingMaximum_ThrowsFormatException()
     {
+        // Arrange
         var preconditions = new TransactionPreconditions
         {
             TimeBounds = new TimeBounds(1, 2),
             ExtraSigners = new List<xdrSDK.SignerKey> { new(), new(), new() },
         };
+
+        // Act & Assert
         Assert.ThrowsException<FormatException>(() => preconditions.IsValid());
     }
 
+    /// <summary>
+    /// Verifies that TransactionPreconditions.HasV2 returns true when preconditions are V2 type.
+    /// </summary>
     [TestMethod]
-    public void ItChecksV2Status()
+    public void HasV2_WithV2Preconditions_ReturnsTrue()
     {
+        // Arrange
         var preconditions = new xdrSDK.Preconditions
         {
             Discriminant = xdrSDK.PreconditionType.Create(xdrSDK.PreconditionType.PreconditionTypeEnum.PRECOND_V2),
@@ -184,7 +230,10 @@ public class TransactionPreconditionsTest
             },
         };
 
+        // Act
         var transactionPreconditions = TransactionPreconditions.FromXdr(preconditions);
+
+        // Assert
         Assert.IsNotNull(transactionPreconditions);
         Assert.IsTrue(transactionPreconditions.HasV2());
     }

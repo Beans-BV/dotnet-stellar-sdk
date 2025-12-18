@@ -3,85 +3,178 @@ using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+/// Unit tests for <see cref="TransactionResult"/> class.
+/// </summary>
 [TestClass]
 public class TransactionResultTest
 {
+    /// <summary>
+    /// Verifies that TransactionResultTooEarly can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestTooEarly()
+    public void FromXdrBase64_WithTooEarlyXdr_ReturnsTransactionResultTooEarly()
     {
-        var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////+AAAAAA==");
+        // Arrange
+        var xdrBase64 = "AAAAAAAPQkD////+AAAAAA==";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.AreEqual("0.1", result.FeeCharged);
         Assert.IsInstanceOfType(result, typeof(TransactionResultTooEarly));
     }
 
+    /// <summary>
+    /// Verifies that TransactionResultTooLate can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestTooLate()
+    public void FromXdrBase64_WithTooLateXdr_ReturnsTransactionResultTooLate()
     {
-        var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////9AAAAAA==");
+        // Arrange
+        var xdrBase64 = "AAAAAAAPQkD////9AAAAAA==";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.AreEqual("0.1", result.FeeCharged);
         Assert.IsInstanceOfType(result, typeof(TransactionResultTooLate));
     }
 
+    /// <summary>
+    /// Verifies that TransactionResultMissingOperation can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestMissingOperation()
+    public void FromXdrBase64_WithMissingOperationXdr_ReturnsTransactionResultMissingOperation()
     {
-        var result = TransactionResult.FromXdrBase64(" AAAAAAAPQkD////8AAAAAA==");
+        // Arrange
+        var xdrBase64 = " AAAAAAAPQkD////8AAAAAA==";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.AreEqual("0.1", result.FeeCharged);
         Assert.IsInstanceOfType(result, typeof(TransactionResultMissingOperation));
     }
 
+    /// <summary>
+    /// Verifies that TransactionResultBadSeq can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestBadSeq()
+    public void FromXdrBase64_WithBadSeqXdr_ReturnsTransactionResultBadSeq()
     {
-        var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////7AAAAAA==");
+        // Arrange
+        var xdrBase64 = "AAAAAAAPQkD////7AAAAAA==";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.AreEqual("0.1", result.FeeCharged);
         Assert.IsInstanceOfType(result, typeof(TransactionResultBadSeq));
     }
 
+    /// <summary>
+    /// Verifies that TransactionResultBadAuth can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestBadAuth()
+    public void FromXdrBase64_WithBadAuthXdr_ReturnsTransactionResultBadAuth()
     {
-        var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////6AAAAAA==");
+        // Arrange
+        var xdrBase64 = "AAAAAAAPQkD////6AAAAAA==";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.AreEqual("0.1", result.FeeCharged);
         Assert.IsInstanceOfType(result, typeof(TransactionResultBadAuth));
     }
 
+    /// <summary>
+    /// Verifies that TransactionResultInsufficientBalance can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestInsufficientBalance()
+    public void FromXdrBase64_WithInsufficientBalanceXdr_ReturnsTransactionResultInsufficientBalance()
     {
-        var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////5AAAAAA==");
+        // Arrange
+        var xdrBase64 = "AAAAAAAPQkD////5AAAAAA==";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.AreEqual("0.1", result.FeeCharged);
         Assert.IsInstanceOfType(result, typeof(TransactionResultInsufficientBalance));
     }
 
+    /// <summary>
+    /// Verifies that TransactionResultNoAccount can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNoAccount()
+    public void FromXdrBase64_WithNoAccountXdr_ReturnsTransactionResultNoAccount()
     {
-        var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////4AAAAAA==");
+        // Arrange
+        var xdrBase64 = "AAAAAAAPQkD////4AAAAAA==";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.AreEqual("0.1", result.FeeCharged);
         Assert.IsInstanceOfType(result, typeof(TransactionResultNoAccount));
     }
 
+    /// <summary>
+    /// Verifies that TransactionResultInsufficientFee can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestInsufficientFee()
+    public void FromXdrBase64_WithInsufficientFeeXdr_ReturnsTransactionResultInsufficientFee()
     {
-        var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////3AAAAAA==");
+        // Arrange
+        var xdrBase64 = "AAAAAAAPQkD////3AAAAAA==";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.AreEqual("0.1", result.FeeCharged);
         Assert.IsInstanceOfType(result, typeof(TransactionResultInsufficientFee));
     }
 
+    /// <summary>
+    /// Verifies that TransactionResultBadAuthExtra can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestBadAuthExtra()
+    public void FromXdrBase64_WithBadAuthExtraXdr_ReturnsTransactionResultBadAuthExtra()
     {
-        var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////2AAAAAA==");
+        // Arrange
+        var xdrBase64 = "AAAAAAAPQkD////2AAAAAA==";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.AreEqual("0.1", result.FeeCharged);
         Assert.IsInstanceOfType(result, typeof(TransactionResultBadAuthExtra));
     }
 
+    /// <summary>
+    /// Verifies that TransactionResultInternalError can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestInternalError()
+    public void FromXdrBase64_WithInternalErrorXdr_ReturnsTransactionResultInternalError()
     {
-        var result = TransactionResult.FromXdrBase64("AAAAAAAPQkD////1AAAAAA==");
+        // Arrange
+        var xdrBase64 = "AAAAAAAPQkD////1AAAAAA==";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.AreEqual("0.1", result.FeeCharged);
         Assert.IsInstanceOfType(result, typeof(TransactionResultInternalError));
     }

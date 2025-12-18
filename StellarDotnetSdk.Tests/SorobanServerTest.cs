@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -31,6 +31,9 @@ using TransactionMetaV3 = StellarDotnetSdk.Soroban.TransactionMetaV3;
 
 namespace StellarDotnetSdk.Tests;
 
+/// <summary>
+/// Unit tests for <see cref="SorobanServer"/> class.
+/// </summary>
 [TestClass]
 public class SorobanServerTest
 {
@@ -42,9 +45,13 @@ public class SorobanServerTest
     // "GC5UTAORS4ASIS5H6M4WNFZECGWXJHET5VRPVYC7UM44CM62OA2RQEPS";
     private string AccountId => _account.AccountId;
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetHealth returns health status with correct ledger information.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetHealth()
+    public async Task GetHealth_WithValidResponse_ReturnsHealthStatus()
     {
+        // Arrange
         const string getNetworkResponseJson =
             """
             {
@@ -60,17 +67,24 @@ public class SorobanServerTest
             """;
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(getNetworkResponseJson);
+
+        // Act
         var response = await sorobanServer.GetHealth();
 
+        // Assert
         Assert.AreEqual("healthy", response.Status);
         Assert.AreEqual(453892L, response.LatestLedger);
         Assert.AreEqual(436613L, response.OldestLedger);
         Assert.AreEqual(17280L, response.LedgerRetentionWindow);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetNetwork returns network information with correct properties.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetNetwork()
+    public async Task GetNetwork_WithValidResponse_ReturnsNetworkInformation()
     {
+        // Arrange
         const string getNetworkResponseJson =
             """
             {
@@ -85,16 +99,23 @@ public class SorobanServerTest
             """;
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(getNetworkResponseJson);
+
+        // Act
         var response = await sorobanServer.GetNetwork();
 
+        // Assert
         Assert.AreEqual("https://friendbot.stellar.org/", response.FriendbotUrl);
         Assert.AreEqual("Test SDF Network ; September 2015", response.Passphrase);
         Assert.AreEqual(21, response.ProtocolVersion);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetLatestLedger returns latest ledger information with correct properties.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetLatestLedger()
+    public async Task GetLatestLedger_WithValidResponse_ReturnsLatestLedgerInformation()
     {
+        // Arrange
         const string getLatestLedgerResponseJson =
             """
             {
@@ -109,15 +130,23 @@ public class SorobanServerTest
             """;
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(getLatestLedgerResponseJson);
+
+        // Act
         var response = await sorobanServer.GetLatestLedger();
+
+        // Assert
         Assert.AreEqual(21, response.ProtocolVersion);
         Assert.AreEqual(453871, response.Sequence);
         Assert.AreEqual("6bdb3e5cd5dcbf53df4b67dd56f892d0134c5abfb659234a83778af0b85620fe", response.Id);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.SendTransaction returns response with PENDING status when transaction is pending.
+    /// </summary>
     [TestMethod]
-    public async Task TestSendTransactionPending()
+    public async Task SendTransaction_WithPendingStatus_ReturnsPendingResponse()
     {
+        // Arrange
         const string sendTransactionResponseJson =
             """
             {
@@ -133,8 +162,11 @@ public class SorobanServerTest
             """;
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+
+        // Act
         var response = await sorobanServer.SendTransaction(CreateDummyTransaction());
 
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsNull(response.ErrorResultXdr);
         Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.PENDING, response.Status);
@@ -143,9 +175,13 @@ public class SorobanServerTest
         Assert.AreEqual(1728974496L, response.LatestLedgerCloseTime);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.SendTransaction returns response with TRY_AGAIN_LATER status when server requests retry.
+    /// </summary>
     [TestMethod]
-    public async Task TestSendTransactionTryAgainLater()
+    public async Task SendTransaction_WithTryAgainLaterStatus_ReturnsTryAgainLaterResponse()
     {
+        // Arrange
         const string sendTransactionResponseJson =
             """
             {
@@ -161,8 +197,11 @@ public class SorobanServerTest
             """;
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+
+        // Act
         var response = await sorobanServer.SendTransaction(CreateDummyTransaction());
 
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsNull(response.ErrorResultXdr);
         Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.TRY_AGAIN_LATER, response.Status);
@@ -171,9 +210,13 @@ public class SorobanServerTest
         Assert.AreEqual(1728977723L, response.LatestLedgerCloseTime);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.SendTransaction returns response with ERROR status and error result XDR when transaction fails.
+    /// </summary>
     [TestMethod]
-    public async Task TestSendTransactionError()
+    public async Task SendTransaction_WithErrorStatus_ReturnsErrorResponseWithErrorResult()
     {
+        // Arrange
         const string sendTransactionResponseJson =
             """
             {
@@ -190,8 +233,11 @@ public class SorobanServerTest
             """;
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+
+        // Act
         var response = await sorobanServer.SendTransaction(CreateDummyTransaction());
 
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.ERROR, response.Status);
         Assert.AreEqual("AAAAAAAAAGT////7AAAAAA==", response.ErrorResultXdr);
@@ -200,9 +246,13 @@ public class SorobanServerTest
         Assert.AreEqual(1728977779L, response.LatestLedgerCloseTime);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.SendTransaction returns response with DUPLICATE status when transaction is duplicate.
+    /// </summary>
     [TestMethod]
-    public async Task TestSendTransactionDuplicate()
+    public async Task SendTransaction_WithDuplicateStatus_ReturnsDuplicateResponse()
     {
+        // Arrange
         const string sendTransactionResponseJson =
             """
             {
@@ -218,8 +268,11 @@ public class SorobanServerTest
             """;
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+
+        // Act
         var response = await sorobanServer.SendTransaction(CreateDummyTransaction());
 
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.DUPLICATE, response.Status);
         Assert.IsNull(response.ErrorResultXdr);
@@ -228,9 +281,13 @@ public class SorobanServerTest
         Assert.AreEqual(1728978088L, response.LatestLedgerCloseTime);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with PENDING status.
+    /// </summary>
     [TestMethod]
-    public async Task TestSendFeeBumpTransactionPending()
+    public async Task SendTransaction_WithFeeBumpTransactionPending_ReturnsPendingResponse()
     {
+        // Arrange
         const string sendTransactionResponseJson =
             """
             {
@@ -246,8 +303,11 @@ public class SorobanServerTest
             """;
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+
+        // Act
         var response = await sorobanServer.SendTransaction(CreateDummyFeeBumpTransaction());
 
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsNull(response.ErrorResultXdr);
         Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.PENDING, response.Status);
@@ -256,9 +316,13 @@ public class SorobanServerTest
         Assert.AreEqual(1728974496L, response.LatestLedgerCloseTime);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with TRY_AGAIN_LATER status.
+    /// </summary>
     [TestMethod]
-    public async Task TestSendFeeBumpTransactionTryAgainLater()
+    public async Task SendTransaction_WithFeeBumpTransactionTryAgainLater_ReturnsTryAgainLaterResponse()
     {
+        // Arrange
         const string sendTransactionResponseJson =
             """
             {
@@ -274,8 +338,11 @@ public class SorobanServerTest
             """;
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+
+        // Act
         var response = await sorobanServer.SendTransaction(CreateDummyFeeBumpTransaction());
 
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsNull(response.ErrorResultXdr);
         Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.TRY_AGAIN_LATER, response.Status);
@@ -284,9 +351,13 @@ public class SorobanServerTest
         Assert.AreEqual(1728977723L, response.LatestLedgerCloseTime);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with ERROR status and error result XDR.
+    /// </summary>
     [TestMethod]
-    public async Task TestSendFeeBumpTransactionError()
+    public async Task SendTransaction_WithFeeBumpTransactionError_ReturnsErrorResponseWithErrorResult()
     {
+        // Arrange
         const string sendTransactionResponseJson =
             """
             {
@@ -303,8 +374,11 @@ public class SorobanServerTest
             """;
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+
+        // Act
         var response = await sorobanServer.SendTransaction(CreateDummyFeeBumpTransaction());
 
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.ERROR, response.Status);
         Assert.AreEqual("AAAAAAAAAGT////7AAAAAA==", response.ErrorResultXdr);
@@ -313,9 +387,13 @@ public class SorobanServerTest
         Assert.AreEqual(1728977779L, response.LatestLedgerCloseTime);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with DUPLICATE status.
+    /// </summary>
     [TestMethod]
-    public async Task TestSendFeeBumpTransactionDuplicate()
+    public async Task SendTransaction_WithFeeBumpTransactionDuplicate_ReturnsDuplicateResponse()
     {
+        // Arrange
         const string sendTransactionResponseJson =
             """
             {
@@ -331,8 +409,11 @@ public class SorobanServerTest
             """;
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+
+        // Act
         var response = await sorobanServer.SendTransaction(CreateDummyFeeBumpTransaction());
 
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.DUPLICATE, response.Status);
         Assert.IsNull(response.ErrorResultXdr);
@@ -341,17 +422,27 @@ public class SorobanServerTest
         Assert.AreEqual(1728978088L, response.LatestLedgerCloseTime);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.SimulateTransaction throws TooManySignaturesException when transaction is signed.
+    /// </summary>
     [TestMethod]
-    public async Task TestSimulateSignedTransaction()
+    public async Task SimulateTransaction_WithSignedTransaction_ThrowsTooManySignaturesException()
     {
+        // Arrange
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent("");
+
+        // Act & Assert
         await Assert.ThrowsExceptionAsync<TooManySignaturesException>(() =>
             sorobanServer.SimulateTransaction(CreateDummyTransaction()));
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.SimulateTransaction returns response with error and diagnostic events when simulation fails.
+    /// </summary>
     [TestMethod]
-    public async Task TestSimulateTransactionFailed()
+    public async Task SimulateTransaction_WithFailedSimulation_ReturnsErrorResponseWithEvents()
     {
+        // Arrange
         const string simulateTransactionResponseJson =
             """
             {
@@ -369,8 +460,11 @@ public class SorobanServerTest
             """;
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(simulateTransactionResponseJson);
+
+        // Act
         var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
 
+        // Assert
         Assert.AreEqual(453979L, response.LatestLedger);
         Assert.IsNull(response.Results);
         Assert.IsNotNull(response.Error);
@@ -387,9 +481,13 @@ public class SorobanServerTest
             diagnosticEventStrings[1]);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetEvents returns events response with correct event properties.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetEvents()
+    public async Task GetEvents_WithValidRequest_ReturnsEventsResponse()
     {
+        // Arrange
         const string json =
             """
             {
@@ -475,6 +573,7 @@ public class SorobanServerTest
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
+        // Act
         var eventsResponse = await sorobanServer.GetEvents(new GetEventsRequest());
 
         Assert.IsNotNull(eventsResponse);
@@ -557,9 +656,13 @@ public class SorobanServerTest
         Assert.AreEqual("64bd9d003dbc4c9f766206dee34d57285322eeee6c5acb6d2a31d2668d88c2fd", event4.TransactionHash);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetAccount throws AccountNotFoundException when account is not found.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetAccountNotFound()
+    public async Task GetAccount_WithNonExistentAccount_ThrowsAccountNotFoundException()
     {
+        // Arrange
         const string json =
             """
             {
@@ -572,13 +675,19 @@ public class SorobanServerTest
             }
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        // Act & Assert
         await Assert.ThrowsExceptionAsync<AccountNotFoundException>(() =>
             sorobanServer.GetAccount("GDPNJ4YFMQYSNWMSF6XZEDXS4M4ECTQHMVXBISQA4U7DEHRGUY3EGDSB"));
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetAccount returns account with correct properties.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetAccount()
+    public async Task GetAccount_WithValidAccountId_ReturnsAccount()
     {
+        // Arrange
         const string json =
             """
             {
@@ -597,14 +706,22 @@ public class SorobanServerTest
             }
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        // Act
         var account = await sorobanServer.GetAccount("GDPNJ4YFMQYSNWMSF6XZEDXS4M4ECTQHMVXBISQA4U7DEHRGUY3EGDSB");
+
+        // Assert
         Assert.AreEqual("GDPNJ4YFMQYSNWMSF6XZEDXS4M4ECTQHMVXBISQA4U7DEHRGUY3EGDSB", account.AccountId);
         Assert.AreEqual(106974750441484L, account.SequenceNumber);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetLedgerEntries returns contract data ledger entries with correct properties.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetLedgerEntriesOfTypeContractData()
+    public async Task GetLedgerEntries_WithContractDataEntries_ReturnsContractDataEntries()
     {
+        // Arrange
         const string json =
             """
             {
@@ -625,8 +742,10 @@ public class SorobanServerTest
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
+        // Act
         var response = await sorobanServer.GetLedgerEntries([]);
 
+        // Assert
         Assert.AreEqual(458386U, response.LatestLedger);
         Assert.IsNotNull(response.LedgerEntries);
         Assert.IsNotNull(response.LedgerKeys);
@@ -656,9 +775,13 @@ public class SorobanServerTest
         Assert.IsNull(ledgerValue.Storage);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetLedgerEntries returns contract code ledger entries with correct properties.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetLedgerEntriesOfTypeContractCode()
+    public async Task GetLedgerEntries_WithContractCodeEntries_ReturnsContractCodeEntries()
     {
+        // Arrange
         const string getLedgerEntriesResponseJson =
             """
             {
@@ -679,8 +802,11 @@ public class SorobanServerTest
             """;
 
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(getLedgerEntriesResponseJson);
+
+        // Act
         var response = await sorobanServer.GetLedgerEntries([]);
 
+        // Assert
         Assert.AreEqual(454092U, response.LatestLedger);
         Assert.IsNotNull(response.LedgerEntries);
         Assert.IsNotNull(response.LedgerKeys);
@@ -718,9 +844,13 @@ public class SorobanServerTest
         Assert.IsNull(ledgerEntry.LedgerExtensionV1);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetLedgerEntries returns account ledger entries with correct properties.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetLedgerEntriesOfTypeAccount()
+    public async Task GetLedgerEntries_WithAccountEntries_ReturnsAccountEntries()
     {
+        // Arrange
         const string json =
             """
             {
@@ -739,8 +869,11 @@ public class SorobanServerTest
             }
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        // Act
         var response = await sorobanServer.GetLedgerEntries([]);
 
+        // Assert
         Assert.IsNotNull(response.LatestLedger);
         Assert.IsNotNull(response.LedgerEntries);
         Assert.IsNotNull(response.LedgerKeys);
@@ -779,9 +912,13 @@ public class SorobanServerTest
         Assert.AreEqual("GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54", ledgerKeyA.Account.AccountId);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetLedgerEntries returns data ledger entries with correct properties.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetLedgerEntriesOfTypeData()
+    public async Task GetLedgerEntries_WithDataEntries_ReturnsDataEntries()
     {
+        // Arrange
         const string json =
             """
             {
@@ -801,8 +938,10 @@ public class SorobanServerTest
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
+        // Act
         var response = await sorobanServer.GetLedgerEntries([]);
 
+        // Assert
         Assert.AreEqual(457887U, response.LatestLedger);
         Assert.IsNotNull(response.LedgerEntries);
         Assert.IsNotNull(response.LedgerKeys);
@@ -823,9 +962,13 @@ public class SorobanServerTest
         Assert.IsNull(ledgerEntry.DataExtension);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetLedgerEntries returns offer ledger entries with correct properties.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetLedgerEntriesOfTypeOffer()
+    public async Task GetLedgerEntries_WithOfferEntries_ReturnsOfferEntries()
     {
+        // Arrange
         const string json =
             """
             {
@@ -845,6 +988,7 @@ public class SorobanServerTest
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
+        // Act
         var response = await sorobanServer.GetLedgerEntries([]);
 
         Assert.AreEqual(457750U, response.LatestLedger);
@@ -872,9 +1016,13 @@ public class SorobanServerTest
         Assert.IsNull(ledgerEntry.OfferExtension);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetLedgerEntries returns claimable balance ledger entries with correct properties.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetLedgerEntriesOfTypeClaimableBalance()
+    public async Task GetLedgerEntries_WithClaimableBalanceEntries_ReturnsClaimableBalanceEntries()
     {
+        // Arrange
         const string json =
             """
             {
@@ -894,8 +1042,10 @@ public class SorobanServerTest
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
+        // Act
         var response = await sorobanServer.GetLedgerEntries([]);
 
+        // Assert
         Assert.AreEqual(457624U, response.LatestLedger);
         Assert.IsNotNull(response.LedgerEntries);
         Assert.IsNotNull(response.LedgerKeys);
@@ -917,10 +1067,14 @@ public class SorobanServerTest
         Assert.IsInstanceOfType(claimant.Predicate, typeof(ClaimPredicateUnconditional));
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetLedgerEntries returns liquidity pool ledger entries with correct properties.
+    /// </summary>
     // TODO Test liquidity pool with some deposits/withdrawals
     [TestMethod]
-    public async Task TestGetLedgerEntriesOfTypeLiquidityPool()
+    public async Task GetLedgerEntries_WithLiquidityPoolEntries_ReturnsLiquidityPoolEntries()
     {
+        // Arrange
         const string json =
             """
             {
@@ -940,8 +1094,10 @@ public class SorobanServerTest
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
+        // Act
         var response = await sorobanServer.GetLedgerEntries([]);
 
+        // Assert
         Assert.AreEqual(457992U, response.LatestLedger);
         Assert.IsNotNull(response.LedgerEntries);
         Assert.IsNotNull(response.LedgerKeys);
@@ -971,9 +1127,13 @@ public class SorobanServerTest
             ((AssetTypeCreditAlphaNum4)parameters.AssetB).Issuer);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetLedgerEntries returns trustline ledger entries with correct properties.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetLedgerEntriesOfTypeTrustline()
+    public async Task GetLedgerEntries_WithTrustlineEntries_ReturnsTrustlineEntries()
     {
+        // Arrange
         const string json =
             """
             {
@@ -993,8 +1153,10 @@ public class SorobanServerTest
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
+        // Act
         var response = await sorobanServer.GetLedgerEntries([]);
 
+        // Assert
         Assert.AreEqual(457171U, response.LatestLedger);
         Assert.IsNotNull(response.LedgerEntries);
         Assert.IsNotNull(response.LedgerKeys);
@@ -1016,9 +1178,13 @@ public class SorobanServerTest
         Assert.IsNull(ledgerEntry.TrustlineExtensionV1);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetTransaction returns NOT_FOUND status when transaction is not found.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetTransactionNotFound()
+    public async Task GetTransaction_WithNonExistentTransaction_ReturnsNotFoundStatus()
     {
+        // Arrange
         const string json =
             """
             {
@@ -1034,7 +1200,11 @@ public class SorobanServerTest
             }
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        // Act
         var response = await sorobanServer.GetTransaction("");
+
+        // Assert
         Assert.AreEqual(TransactionInfo.TransactionStatus.NOT_FOUND, response.Status);
         Assert.AreEqual(456220L, response.LatestLedger);
         Assert.AreEqual(438941L, response.OldestLedger);
@@ -1042,9 +1212,13 @@ public class SorobanServerTest
         Assert.AreEqual(1728899977, response.OldestLedgerCloseTime);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.SimulateTransaction returns successful simulation response with transaction data, events, and state changes.
+    /// </summary>
     [TestMethod]
-    public async Task TestSimulateTransactionSuccess()
+    public async Task SimulateTransaction_WithValidTransaction_ReturnsSuccessfulSimulationResponse()
     {
+        // Arrange
         const string json =
             """
             {
@@ -1079,6 +1253,7 @@ public class SorobanServerTest
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
+        // Act
         var response = await sorobanServer.SimulateTransaction(
             CreateDummyTransaction(false),
             null,
@@ -1181,10 +1356,14 @@ public class SorobanServerTest
             stateChanges.After);
     }
 
-    [TestMethod]
+    /// <summary>
+    /// Verifies that SorobanServer.SimulateTransaction returns successful simulation response with Protocol 23 extension data.
+    /// </summary>
     // This test only focuses on testing the SorobanTransactionDataExt
-    public async Task TestSimulateTransactionProtocol23Success()
+    [TestMethod]
+    public async Task SimulateTransaction_WithProtocol23Transaction_ReturnsSimulationResponseWithExtension()
     {
+        // Arrange
         const string json =
             """
             {
@@ -1219,10 +1398,12 @@ public class SorobanServerTest
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
+        // Act
         var response = await sorobanServer.SimulateTransaction(
             CreateDummyTransaction(false)
         );
 
+        // Assert
         Assert.IsNotNull(response);
 
         // SorobanTransactionData
@@ -1237,9 +1418,13 @@ public class SorobanServerTest
         Assert.AreEqual(554U, extension.ArchivedSorobanEntries[1]);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetFeeStats returns fee statistics with inclusion fee and Soroban inclusion fee data.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetFeeStats()
+    public async Task GetFeeStats_WithValidRequest_ReturnsFeeStatistics()
     {
+        // Arrange
         const string json =
             """
             {
@@ -1287,8 +1472,11 @@ public class SorobanServerTest
             }
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        // Act
         var response = await sorobanServer.GetFeeStats();
 
+        // Assert
         Assert.IsNotNull(response);
 
         var inclusionFee = response.InclusionFee;
@@ -1332,9 +1520,13 @@ public class SorobanServerTest
         Assert.AreEqual(4519945L, response.LatestLedger);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetVersionInfo returns version information with Protocol 22 data.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetVersionInfoProtocol22()
+    public async Task GetVersionInfo_WithProtocol22Server_ReturnsVersionInfoWithProtocol22()
     {
+        // Arrange
         const string json =
             """
             {
@@ -1354,8 +1546,11 @@ public class SorobanServerTest
             }
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        // Act
         var response = await sorobanServer.GetVersionInfo();
 
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual("22.1.0-c7e9737b54913f5a33f29decdb0c9f6101dc1cfc", response.Version);
         Assert.AreEqual("c7e9737b54913f5a33f29decdb0c9f6101dc1cfc", response.CommitHash);
@@ -1365,9 +1560,13 @@ public class SorobanServerTest
         Assert.AreEqual(22, response.ProtocolVersion);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetVersionInfo returns version information for servers prior to Protocol 22.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetVersionInfoPriorToProtocol22()
+    public async Task GetVersionInfo_WithServerPriorToProtocol22_ReturnsVersionInfo()
     {
+        // Arrange
         const string json =
             """
             {
@@ -1383,8 +1582,11 @@ public class SorobanServerTest
             }
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        // Act
         var response = await sorobanServer.GetVersionInfo();
 
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual("21.1.0", response.Version);
         Assert.AreEqual("fcd2f0523f04279bae4502f3e3fa00ca627e6f6a", response.CommitHash);
@@ -1394,9 +1596,13 @@ public class SorobanServerTest
         Assert.AreEqual(21, response.ProtocolVersion);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetTransaction returns transaction with SUCCESS status and all transaction details including events.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetTransactionSuccess()
+    public async Task GetTransaction_WithSuccessfulTransaction_ReturnsTransactionWithSuccessStatus()
     {
+        // Arrange
         const string json =
             """
             {
@@ -1435,8 +1641,11 @@ public class SorobanServerTest
             }
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        // Act
         var response = await sorobanServer.GetTransaction("");
 
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(TransactionInfo.TransactionStatus.SUCCESS, response.Status);
         Assert.AreEqual("89ed109b74a65e28f6771b78ca70c6aa937792eea16506eb359cb58cc94e5db0", response.TxHash);
@@ -1498,9 +1707,13 @@ public class SorobanServerTest
         #endregion
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetTransactions returns transactions response with multiple transactions including success and failed statuses.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetTransactions()
+    public async Task GetTransactions_WithValidRequest_ReturnsTransactionsResponse()
     {
+        // Arrange
         const string json =
             """
             {
@@ -1610,8 +1823,11 @@ public class SorobanServerTest
             }
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        // Act
         var response = await sorobanServer.GetTransactions(new GetTransactionsRequest());
 
+        // Assert
         Assert.IsNotNull(response);
         var transactions = response.Transactions;
         Assert.IsNotNull(transactions);
@@ -1801,9 +2017,13 @@ public class SorobanServerTest
             tx5.ResultMetaXdr);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetLedgerEntries returns config setting ledger entries with correct properties.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetLedgerEntriesOfTypeConfigSetting()
+    public async Task GetLedgerEntries_WithConfigSettingEntries_ReturnsConfigSettingEntries()
     {
+        // Arrange
         const string json =
             """
             {
@@ -1902,8 +2122,11 @@ public class SorobanServerTest
             }
             """;
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        // Act
         var response = await sorobanServer.GetLedgerEntries([]);
 
+        // Assert
         Assert.IsNotNull(response);
         var entries = response.LedgerEntries;
         Assert.IsNotNull(entries);
@@ -2070,9 +2293,13 @@ public class SorobanServerTest
         Assert.AreEqual(13U, entry16.BallotTimeoutIncrementMilliseconds);
     }
 
+    /// <summary>
+    /// Verifies that SorobanServer.GetLedgerEntries returns null when querying TTL ledger entries directly, as they cannot be queried.
+    /// </summary>
     [TestMethod]
-    public async Task TestGetLedgerEntriesOfTypeTtl()
+    public async Task GetLedgerEntries_WithTtlEntries_ReturnsNull()
     {
+        // Arrange
         const string json =
             """
             {
@@ -2091,7 +2318,10 @@ public class SorobanServerTest
         };
         using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
 
+        // Act
         var response = await sorobanServer.GetLedgerEntries(ledgerKeyTtl);
+
+        // Assert
         Assert.IsNull(response);
     }
 

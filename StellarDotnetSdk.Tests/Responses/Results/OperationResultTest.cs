@@ -3,13 +3,25 @@ using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+/// Unit tests for operation result types.
+/// </summary>
 [TestClass]
 public class OperationResultTest
 {
+    /// <summary>
+    /// Verifies that OperationResultBadAuth can be deserialized from a failed transaction result.
+    /// </summary>
     [TestMethod]
-    public void TestBadAuth()
+    public void FromXdrBase64_WithBadAuthOperationXdr_ReturnsOperationResultBadAuth()
     {
-        var result = TransactionResult.FromXdrBase64("AAAAAACYloD/////AAAAAf////8AAAAA");
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAf////8AAAAA";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.IsInstanceOfType(result, typeof(TransactionResultFailed));
         var failed = (TransactionResultFailed)result;
         Assert.IsFalse(failed.IsSuccess);
@@ -18,10 +30,19 @@ public class OperationResultTest
         Assert.IsInstanceOfType(op, typeof(OperationResultBadAuth));
     }
 
+    /// <summary>
+    /// Verifies that OperationResultNoAccount can be deserialized from a failed transaction result.
+    /// </summary>
     [TestMethod]
-    public void TestNoAccount()
+    public void FromXdrBase64_WithNoAccountOperationXdr_ReturnsOperationResultNoAccount()
     {
-        var result = TransactionResult.FromXdrBase64("AAAAAACYloD/////AAAAAf////4AAAAA");
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAf////4AAAAA";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.IsInstanceOfType(result, typeof(TransactionResultFailed));
         var failed = (TransactionResultFailed)result;
         Assert.IsFalse(failed.IsSuccess);
@@ -30,10 +51,19 @@ public class OperationResultTest
         Assert.IsInstanceOfType(op, typeof(OperationResultNoAccount));
     }
 
+    /// <summary>
+    /// Verifies that OperationResultNotSupported can be deserialized from a failed transaction result.
+    /// </summary>
     [TestMethod]
-    public void TestNotSupported()
+    public void FromXdrBase64_WithNotSupportedOperationXdr_ReturnsOperationResultNotSupported()
     {
-        var result = TransactionResult.FromXdrBase64("AAAAAACYloD/////AAAAAf////0AAAAA");
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAf////0AAAAA";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.IsInstanceOfType(result, typeof(TransactionResultFailed));
         var failed = (TransactionResultFailed)result;
         Assert.IsFalse(failed.IsSuccess);
@@ -42,10 +72,19 @@ public class OperationResultTest
         Assert.IsInstanceOfType(op, typeof(OperationResultNotSupported));
     }
 
+    /// <summary>
+    /// Verifies that multiple operation failures can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestMultipleFailures()
+    public void FromXdrBase64_WithMultipleFailuresXdr_ReturnsTransactionResultFailedWithMultipleResults()
     {
-        var result = TransactionResult.FromXdrBase64("AAAAAACYloD/////AAAAA/////3//////////gAAAAA=");
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAA/////3//////////gAAAAA=";
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
         Assert.IsInstanceOfType(result, typeof(TransactionResultFailed));
         var failed = (TransactionResultFailed)result;
         Assert.IsFalse(failed.IsSuccess);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,12 +10,19 @@ using StellarDotnetSdk.Transactions;
 
 namespace StellarDotnetSdk.Tests.Operations;
 
+/// <summary>
+/// Tests for FeeBumpTransaction functionality.
+/// </summary>
 [TestClass]
 public class FeeBumpOperationTest
 {
+    /// <summary>
+    /// Verifies that fee bump transaction with successful inner transaction submits successfully.
+    /// </summary>
     [TestMethod]
-    public async Task TransactionResultSuccess()
+    public async Task SubmitTransaction_WithSuccessfulInnerTransaction_ReturnsSuccessResult()
     {
+        // Arrange
         Network.UseTestNetwork();
         using var server = new Server("https://horizon-testnet.stellar.org");
 
@@ -32,9 +39,7 @@ public class FeeBumpOperationTest
         );
 
         var sourceAccount = await server.Accounts.Account(sourceKeyPair.AccountId);
-
         var transactionBuilder = new TransactionBuilder(sourceAccount);
-
         var paymentOperation = new PaymentOperation(
             sponsorKeyPair,
             new AssetTypeNative(),
@@ -50,7 +55,10 @@ public class FeeBumpOperationTest
         );
         feeBumpTransaction.Sign(sponsorKeyPair);
 
+        // Act
         var response = await server.SubmitTransaction(feeBumpTransaction);
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.IsFalse(string.IsNullOrEmpty(response.Hash));
@@ -65,9 +73,13 @@ public class FeeBumpOperationTest
         Assert.IsInstanceOfType(innerResult.Results.First(), typeof(PaymentSuccess));
     }
 
+    /// <summary>
+    /// Verifies that fee bump transaction with failed inner transaction returns failure result.
+    /// </summary>
     [TestMethod]
-    public async Task TransactionResultFailed()
+    public async Task SubmitTransaction_WithFailedInnerTransaction_ReturnsFailureResult()
     {
+        // Arrange
         Network.UseTestNetwork();
         using var server = new Server("https://horizon-testnet.stellar.org");
 
@@ -84,9 +96,7 @@ public class FeeBumpOperationTest
         );
 
         var sourceAccount = await server.Accounts.Account(sourceKeyPair.AccountId);
-
         var transactionBuilder = new TransactionBuilder(sourceAccount);
-
         var paymentOperation = new PaymentOperation(
             sponsorKeyPair,
             new AssetTypeNative(),
@@ -102,8 +112,10 @@ public class FeeBumpOperationTest
         );
         feeBumpTransaction.Sign(sponsorKeyPair);
 
+        // Act
         var response = await server.SubmitTransaction(feeBumpTransaction);
 
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsFalse(response.IsSuccess);
 
@@ -115,9 +127,13 @@ public class FeeBumpOperationTest
         Assert.IsInstanceOfType(innerResult.Results[0], typeof(PaymentUnderfunded));
     }
 
+    /// <summary>
+    /// Verifies that BuildFeeBumpTransaction throws Exception when fee is insufficient.
+    /// </summary>
     [TestMethod]
-    public async Task InsufficientFee()
+    public async Task BuildFeeBumpTransaction_WithInsufficientFee_ThrowsException()
     {
+        // Arrange
         Network.UseTestNetwork();
         using var server = new Server("https://horizon-testnet.stellar.org");
 
@@ -134,7 +150,6 @@ public class FeeBumpOperationTest
         );
 
         var sourceAccount = await server.Accounts.Account(sourceKeyPair.AccountId);
-
         const uint maxFee = 2000000u;
 
         var transactionBuilder = new TransactionBuilder(sourceAccount);
@@ -150,6 +165,7 @@ public class FeeBumpOperationTest
         var transaction = transactionBuilder.Build();
         transaction.Sign(sourceKeyPair);
 
+        // Act & Assert
         var exception = Assert.ThrowsException<Exception>(() =>
         {
             TransactionBuilder.BuildFeeBumpTransaction(
@@ -162,9 +178,13 @@ public class FeeBumpOperationTest
         Assert.AreEqual($"Invalid fee, it should be at least {maxFee} stroops", exception.Message);
     }
 
+    /// <summary>
+    /// Verifies that fee bump transaction with sufficient fee submits successfully.
+    /// </summary>
     [TestMethod]
-    public async Task SufficientFee()
+    public async Task BuildFeeBumpTransaction_WithSufficientFee_SubmitsSuccessfully()
     {
+        // Arrange
         Network.UseTestNetwork();
         using var server = new Server("https://horizon-testnet.stellar.org");
 
@@ -181,7 +201,6 @@ public class FeeBumpOperationTest
         );
 
         var sourceAccount = await server.Accounts.Account(sourceKeyPair.AccountId);
-
         const uint maxFee = 2000000u;
 
         var transactionBuilder = new TransactionBuilder(sourceAccount);
@@ -204,8 +223,10 @@ public class FeeBumpOperationTest
         );
         feeBumpTransaction.Sign(sponsorKeyPair);
 
+        // Act
         var response = await server.SubmitTransaction(feeBumpTransaction);
 
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.IsFalse(string.IsNullOrEmpty(response.Hash));

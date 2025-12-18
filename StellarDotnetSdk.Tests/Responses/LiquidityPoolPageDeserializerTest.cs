@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -7,28 +7,46 @@ using XDR = StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+/// Unit tests for deserializing liquidity pool page responses from JSON.
+/// </summary>
 [TestClass]
 public class LiquidityPoolPageDeserializerTest
 {
+    /// <summary>
+    /// Verifies that Page&lt;LiquidityPoolResponse&gt; can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithLiquidityPoolPageJson_ReturnsDeserializedLiquidityPoolPage()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("liquidityPoolPage.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<Page<LiquidityPoolResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertTestData(instance);
     }
 
-
+    /// <summary>
+    /// Verifies that Page&lt;LiquidityPoolResponse&gt; can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserialize()
+    public void SerializeDeserialize_WithLiquidityPoolPage_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("liquidityPoolPage.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<Page<LiquidityPoolResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var parsed = JsonSerializer.Deserialize<Page<LiquidityPoolResponse>>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(parsed);
         AssertTestData(parsed);
     }

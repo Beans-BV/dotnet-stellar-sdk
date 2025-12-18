@@ -1,9 +1,12 @@
-﻿using System.Linq;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Tests.Xdr;
 
+/// <summary>
+/// Unit tests for XDR data stream operations.
+/// </summary>
 [TestClass]
 public class XdrDataStreamTest
 {
@@ -21,38 +24,72 @@ public class XdrDataStreamTest
         return outputString;
     }
 
+    /// <summary>
+    /// Verifies that XDR string streaming round-trips correctly with standard ASCII characters.
+    /// </summary>
     [TestMethod]
-    public void BackAndForthXdrStreamingWithStandardAscii()
+    public void BackAndForthXdrStreaming_WithStandardAscii_RoundTripsCorrectly()
     {
+        // Arrange
         const string memo = "Dollar Sign $";
-        Assert.AreEqual(memo, BackAndForthXdrStreaming(memo));
+
+        // Act
+        var result = BackAndForthXdrStreaming(memo);
+
+        // Assert
+        Assert.AreEqual(memo, result);
     }
 
+    /// <summary>
+    /// Verifies that XDR string streaming round-trips correctly with non-standard ASCII characters.
+    /// </summary>
     [TestMethod]
-    public void BackAndForthXdrStreamingWithNonStandardAscii()
+    public void BackAndForthXdrStreaming_WithNonStandardAscii_RoundTripsCorrectly()
     {
+        // Arrange
         const string memo = "Euro Sign €";
-        Assert.AreEqual(memo, BackAndForthXdrStreaming(memo));
+
+        // Act
+        var result = BackAndForthXdrStreaming(memo);
+
+        // Assert
+        Assert.AreEqual(memo, result);
     }
 
+    /// <summary>
+    /// Verifies that XDR string streaming round-trips correctly with all non-standard ASCII characters.
+    /// </summary>
     [TestMethod]
-    public void BackAndForthXdrStreamingWithAllNonStandardAscii()
+    public void BackAndForthXdrStreaming_WithAllNonStandardAscii_RoundTripsCorrectly()
     {
+        // Arrange
         const string memo = "øûý™€♠♣♥†‡µ¢£€";
-        Assert.AreEqual(memo, BackAndForthXdrStreaming(memo));
+
+        // Act
+        var result = BackAndForthXdrStreaming(memo);
+
+        // Assert
+        Assert.AreEqual(memo, result);
     }
 
+    /// <summary>
+    /// Verifies that XdrDataInputStream.Read correctly reads fixed-length opaque array and subsequent bytes.
+    /// </summary>
     [TestMethod]
-    public void ReadFixedLengthOpaqueArray()
+    public void Read_WithFixedLengthOpaqueArray_ReadsCorrectly()
     {
+        // Arrange
         var bytes = new byte[] { 1, 2, 3, 4, 5, 0, 0, 0, 1 };
         var xdrInputStream = new XdrDataInputStream(bytes);
         var result = new byte[5];
-        xdrInputStream.Read(result, 0, 5);
         var expected = new byte[] { 1, 2, 3, 4, 5 };
-        Assert.IsTrue(expected.SequenceEqual(result));
 
+        // Act
+        xdrInputStream.Read(result, 0, 5);
         var sentinel = xdrInputStream.Read();
+
+        // Assert
+        Assert.IsTrue(expected.SequenceEqual(result));
         Assert.AreEqual(1, sentinel);
     }
 }

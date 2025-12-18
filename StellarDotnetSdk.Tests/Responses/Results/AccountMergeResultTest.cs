@@ -3,59 +3,105 @@ using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+/// Unit tests for account merge result types.
+/// </summary>
 [TestClass]
 public class AccountMergeResultTest
 {
+    /// <summary>
+    /// Verifies that AccountMergeSuccess result can be deserialized correctly and contains source account balance.
+    /// </summary>
     [TestMethod]
-    public void TestSuccess()
+    public void Deserialize_WithAccountMergeSuccessXdr_ReturnsAccountMergeSuccessWithBalance()
     {
-        var tx = Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAIAAAAAAAAAAAF9eEAAAAAAA==",
-            typeof(AccountMergeSuccess), true);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAIAAAAAAAAAAAF9eEAAAAAAA==";
+
+        // Act
+        var tx = Utils.AssertResultOfType(xdrBase64, typeof(AccountMergeSuccess), true);
+
+        // Assert
         var failed = (TransactionResultFailed)tx;
         var op = (AccountMergeSuccess)failed.Results[0];
         Assert.AreEqual("10", op.SourceAccountBalance);
     }
 
+    /// <summary>
+    /// Verifies that AccountMergeMalformed result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestMalformed()
+    public void Deserialize_WithAccountMergeMalformedXdr_ReturnsAccountMergeMalformed()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAI/////wAAAAA=", typeof(AccountMergeMalformed),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAI/////wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(AccountMergeMalformed), false);
     }
 
+    /// <summary>
+    /// Verifies that AccountMergeNoAccount result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNoAccount()
+    public void Deserialize_WithAccountMergeNoAccountXdr_ReturnsAccountMergeNoAccount()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAI/////gAAAAA=", typeof(AccountMergeNoAccount),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAI/////gAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(AccountMergeNoAccount), false);
     }
 
+    /// <summary>
+    /// Verifies that AccountMergeImmutableSet result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestImmutableSet()
+    public void Deserialize_WithAccountMergeImmutableSetXdr_ReturnsAccountMergeImmutableSet()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAI/////QAAAAA=", typeof(AccountMergeImmutableSet),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAI/////QAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(AccountMergeImmutableSet), false);
     }
 
+    /// <summary>
+    /// Verifies that AccountMergeHasSubEntries result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestHasSubEntry()
+    public void Deserialize_WithAccountMergeHasSubEntriesXdr_ReturnsAccountMergeHasSubEntries()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAI/////AAAAAA=", typeof(AccountMergeHasSubEntries),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAI/////AAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(AccountMergeHasSubEntries), false);
     }
 
+    /// <summary>
+    /// Verifies that AccountMergeSequenceNumberTooFar result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSeqnumTooFar()
+    public void Deserialize_WithAccountMergeSequenceNumberTooFarXdr_ReturnsAccountMergeSequenceNumberTooFar()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAI////+wAAAAA=",
-            typeof(AccountMergeSequenceNumberTooFar),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAI////+wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(AccountMergeSequenceNumberTooFar), false);
     }
 
+    /// <summary>
+    /// Verifies that AccountMergeDestFull result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDestFull()
+    public void Deserialize_WithAccountMergeDestFullXdr_ReturnsAccountMergeDestFull()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAI////+gAAAAA=", typeof(AccountMergeDestFull),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAI////+gAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(AccountMergeDestFull), false);
     }
 }

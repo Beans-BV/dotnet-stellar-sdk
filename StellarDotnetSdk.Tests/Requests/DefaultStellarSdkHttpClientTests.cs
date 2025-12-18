@@ -9,11 +9,17 @@ using StellarDotnetSdk.Requests;
 
 namespace StellarDotnetSdk.Tests.Requests;
 
+/// <summary>
+/// Unit tests for <see cref="DefaultStellarSdkHttpClient"/> class.
+/// </summary>
 [TestClass]
 public class DefaultStellarSdkHttpClientTests
 {
     private static readonly Uri TestUri = new("https://example.com");
 
+    /// <summary>
+    /// Verifies that DefaultStellarSdkHttpClient constructor uses the provided custom inner handler.
+    /// </summary>
     [TestMethod]
     public async Task Constructor_WithCustomInnerHandler_UsesProvidedHandler()
     {
@@ -29,6 +35,9 @@ public class DefaultStellarSdkHttpClientTests
         Assert.AreEqual(1, trackingHandler.CallCount, "Custom handler should have been invoked");
     }
 
+    /// <summary>
+    /// Verifies that DefaultStellarSdkHttpClient constructor correctly chains custom inner handler with resilience options.
+    /// </summary>
     [TestMethod]
     public async Task Constructor_WithCustomInnerHandlerAndResilienceOptions_ChainsCorrectly()
     {
@@ -64,6 +73,9 @@ public class DefaultStellarSdkHttpClientTests
         Assert.AreEqual(2, callCount, "Handler should be called twice due to retry");
     }
 
+    /// <summary>
+    /// Verifies that DefaultStellarSdkHttpClient constructor uses default handler when inner handler is null.
+    /// </summary>
     [TestMethod]
     public void Constructor_WithNullInnerHandler_UsesDefaultHandler()
     {
@@ -74,6 +86,9 @@ public class DefaultStellarSdkHttpClientTests
         Assert.IsNotNull(client);
     }
 
+    /// <summary>
+    /// Verifies that DefaultStellarSdkHttpClient constructor sets default X-Client-Name and X-Client-Version headers.
+    /// </summary>
     [TestMethod]
     public void Constructor_SetsDefaultHeaders()
     {
@@ -85,6 +100,9 @@ public class DefaultStellarSdkHttpClientTests
         Assert.IsTrue(client.DefaultRequestHeaders.Contains("X-Client-Version"));
     }
 
+    /// <summary>
+    /// Verifies that DefaultStellarSdkHttpClient constructor sets Authorization header with Bearer token when bearer token is provided.
+    /// </summary>
     [TestMethod]
     public void Constructor_WithBearerToken_SetsAuthorizationHeader()
     {
@@ -97,6 +115,9 @@ public class DefaultStellarSdkHttpClientTests
         Assert.AreEqual("test-token", client.DefaultRequestHeaders.Authorization.Parameter);
     }
 
+    /// <summary>
+    /// Verifies that DefaultStellarSdkHttpClient constructor sets custom X-Client-Name and X-Client-Version headers when provided.
+    /// </summary>
     [TestMethod]
     public void Constructor_WithCustomClientNameAndVersion_SetsHeaders()
     {
@@ -113,6 +134,9 @@ public class DefaultStellarSdkHttpClientTests
         Assert.IsTrue(string.Join("", clientVersionHeader).Contains("1.2.3"));
     }
 
+    /// <summary>
+    /// Verifies that DefaultStellarSdkHttpClient constructor creates resilience pipeline when only circuit breaker is enabled.
+    /// </summary>
     [TestMethod]
     public async Task Constructor_WithCircuitBreakerOnly_CreatesResiliencePipeline()
     {
@@ -138,6 +162,9 @@ public class DefaultStellarSdkHttpClientTests
         Assert.AreEqual(1, trackingHandler.CallCount, "Handler should have been invoked through resilience pipeline");
     }
 
+    /// <summary>
+    /// Verifies that DefaultStellarSdkHttpClient constructor creates resilience pipeline when only timeout is enabled.
+    /// </summary>
     [TestMethod]
     public async Task Constructor_WithTimeoutOnly_CreatesResiliencePipeline()
     {
@@ -166,6 +193,9 @@ public class DefaultStellarSdkHttpClientTests
         Assert.AreEqual(1, trackingHandler.CallCount, "Handler should have been invoked through resilience pipeline");
     }
 
+    /// <summary>
+    /// Verifies that DefaultStellarSdkHttpClient enforces request timeout when timeout is configured.
+    /// </summary>
     [TestMethod]
     public async Task Constructor_WithTimeoutOnly_EnforcesTimeout()
     {

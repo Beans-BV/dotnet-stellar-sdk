@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -9,32 +9,51 @@ using MuxedIdType =
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+/// Unit tests for <see cref="InvokeHostFunctionOperationResponse"/> class.
+/// </summary>
 [TestClass]
 public class InvokeHostFunctionOperationResponseTest
 {
+    /// <summary>
+    /// Verifies that InvokeHostFunctionOperationResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeInvokeHostFunctionOperation()
+    public void Deserialize_WithInvokeHostFunctionOperationJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("invokeHostFunction.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertData(instance);
     }
 
+    /// <summary>
+    /// Verifies that InvokeHostFunctionOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeInvokeHostFunctionOperation()
+    public void SerializeDeserialize_WithInvokeHostFunctionOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("invokeHostFunction.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertData(back);
     }
 
-    private void AssertData(OperationResponse operationResponse)
+    private static void AssertData(OperationResponse operationResponse)
     {
         Assert.IsTrue(operationResponse is InvokeHostFunctionOperationResponse);
         var operation = (InvokeHostFunctionOperationResponse)operationResponse;

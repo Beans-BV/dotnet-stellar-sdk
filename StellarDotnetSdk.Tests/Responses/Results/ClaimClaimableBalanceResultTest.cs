@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Responses.Results;
 using StellarDotnetSdk.Xdr;
 using ClaimClaimableBalanceResult = StellarDotnetSdk.Xdr.ClaimClaimableBalanceResult;
@@ -7,57 +7,94 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.ClaimClaimableBalanceResultCode.Clai
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+/// Unit tests for claim claimable balance result types.
+/// </summary>
 [TestClass]
 public class ClaimClaimableBalanceResultTest
 {
+    /// <summary>
+    /// Verifies that ClaimClaimableBalanceCannotClaim result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestCannotClaim()
+    public void Deserialize_WithClaimClaimableBalanceCannotClaimXdr_ReturnsClaimClaimableBalanceCannotClaim()
     {
+        // Arrange
         var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM);
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(ClaimClaimableBalanceCannotClaim), false);
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ClaimClaimableBalanceCannotClaim), false);
     }
 
+    /// <summary>
+    /// Verifies that ClaimClaimableBalanceDoesNotExist result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDoesNotExist()
+    public void Deserialize_WithClaimClaimableBalanceDoesNotExistXdr_ReturnsClaimClaimableBalanceDoesNotExist()
     {
+        // Arrange
         var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_DOES_NOT_EXIST);
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(ClaimClaimableBalanceDoesNotExist), false);
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ClaimClaimableBalanceDoesNotExist), false);
     }
 
+    /// <summary>
+    /// Verifies that ClaimClaimableBalanceLineFull result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestLineFull()
+    public void Deserialize_WithClaimClaimableBalanceLineFullXdr_ReturnsClaimClaimableBalanceLineFull()
     {
+        // Arrange
         var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_LINE_FULL);
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
 
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(ClaimClaimableBalanceLineFull), false);
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ClaimClaimableBalanceLineFull), false);
     }
 
+    /// <summary>
+    /// Verifies that ClaimClaimableBalanceNotAuthorized result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNotAuthorized()
+    public void Deserialize_WithClaimClaimableBalanceNotAuthorizedXdr_ReturnsClaimClaimableBalanceNotAuthorized()
     {
+        // Arrange
         var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED);
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(ClaimClaimableBalanceNotAuthorized), false);
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ClaimClaimableBalanceNotAuthorized), false);
     }
 
+    /// <summary>
+    /// Verifies that ClaimClaimableBalanceNoTrust result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNoTrust()
+    public void Deserialize_WithClaimClaimableBalanceNoTrustXdr_ReturnsClaimClaimableBalanceNoTrust()
     {
+        // Arrange
         var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_NO_TRUST);
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(ClaimClaimableBalanceNoTrust), false);
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ClaimClaimableBalanceNoTrust), false);
     }
 
-
+    /// <summary>
+    /// Verifies that ClaimClaimableBalanceSuccess result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSuccess()
+    public void Deserialize_WithClaimClaimableBalanceSuccessXdr_ReturnsClaimClaimableBalanceSuccess()
     {
+        // Arrange
         var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_SUCCESS);
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(ClaimClaimableBalanceSuccess), true);
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ClaimClaimableBalanceSuccess), true);
     }
 
     private static OperationResult.OperationResultTr CreateOperationResultTr(ResultCodeEnum type)

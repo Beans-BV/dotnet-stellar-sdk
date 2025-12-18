@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -6,16 +6,27 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+/// Unit tests for <see cref="SubmitTransactionResponse"/> class.
+/// </summary>
 [TestClass]
 public class SubmitTransactionResponseTest
 {
+    /// <summary>
+    /// Verifies that SubmitTransactionResponse with transaction failure can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeTransactionFailureResponse()
+    public void Deserialize_WithTransactionFailureJson_ReturnsDeserializedFailureResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("submitTransactionTransactionFailure.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var submitTransactionResponse =
             JsonSerializer.Deserialize<SubmitTransactionResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(submitTransactionResponse);
         Assert.AreEqual(false, submitTransactionResponse.IsSuccess);
         Assert.AreEqual(
@@ -28,13 +39,21 @@ public class SubmitTransactionResponseTest
             submitTransactionResponse.SubmitTransactionResponseExtras.ExtrasResultCodes.TransactionResultCode);
     }
 
+    /// <summary>
+    /// Verifies that SubmitTransactionResponse with operation failure can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeOperationFailureResponse()
+    public void Deserialize_WithOperationFailureJson_ReturnsDeserializedFailureResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("submitTransactionOperationFailure.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var submitTransactionResponse =
             JsonSerializer.Deserialize<SubmitTransactionResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(submitTransactionResponse);
         Assert.AreEqual(false, submitTransactionResponse.IsSuccess);
         Assert.AreEqual(
@@ -51,13 +70,21 @@ public class SubmitTransactionResponseTest
             submitTransactionResponse.SubmitTransactionResponseExtras.ExtrasResultCodes.OperationsResultCodes[0]);
     }
 
+    /// <summary>
+    /// Verifies that SubmitTransactionResponse with success can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeSuccessResponse()
+    public void Deserialize_WithSuccessJson_ReturnsDeserializedSuccessResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("submitTransactionSuccess.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var submitTransactionResponse =
             JsonSerializer.Deserialize<SubmitTransactionResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(submitTransactionResponse);
         Assert.AreEqual(true, submitTransactionResponse.IsSuccess);
         Assert.AreEqual("ee14b93fcd31d4cfe835b941a0a8744e23a6677097db1fafe0552d8657bed940",
@@ -72,13 +99,21 @@ public class SubmitTransactionResponseTest
         Assert.AreEqual(241L, submitTransactionResponse.GetOfferIdFromResult(0));
     }
 
+    /// <summary>
+    /// Verifies that SubmitTransactionResponse without offer ID can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeNoOfferId()
+    public void Deserialize_WithNoOfferIdJson_ReturnsResponseWithoutOfferId()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("submitTransactionNoOfferId.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var submitTransactionResponse =
             JsonSerializer.Deserialize<SubmitTransactionResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(submitTransactionResponse);
         Assert.AreEqual(true, submitTransactionResponse.IsSuccess);
         Assert.IsNull(submitTransactionResponse.GetOfferIdFromResult(0));

@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -7,27 +7,46 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+/// Unit tests for <see cref="ManageOfferOperationResponse"/> class.
+/// </summary>
 [TestClass]
 public class ManageOfferOperationResponseTest
 {
+    /// <summary>
+    /// Verifies that ManageOfferOperationResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeManageOfferOperation()
+    public void Deserialize_WithManageOfferOperationJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("manageOffer.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertManageOfferData(instance);
     }
 
+    /// <summary>
+    /// Verifies that ManageOfferOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeManageOfferOperation()
+    public void SerializeDeserialize_WithManageOfferOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("manageOffer.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertManageOfferData(back);
     }

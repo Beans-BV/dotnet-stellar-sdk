@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -6,17 +6,28 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+/// Unit tests for <see cref="ClawbackClaimableBalanceOperationResponse"/> class.
+/// </summary>
 [TestClass]
-public class ClawbackClaimableBalance
+public class ClawbackClaimableBalanceOperationResponseTest
 {
+    /// <summary>
+    /// Verifies that ClawbackClaimableBalanceOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestClawbackClaimableBalance()
+    public void SerializeDeserialize_WithClawbackClaimableBalanceOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("clawbackClaimableBalance.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertClawbackClaimableBalanceData(back);
     }

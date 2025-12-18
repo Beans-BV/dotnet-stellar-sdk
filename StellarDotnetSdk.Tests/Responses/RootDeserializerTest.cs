@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -7,28 +7,46 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+/// Unit tests for deserializing root responses from JSON.
+/// </summary>
 [TestClass]
 public class RootDeserializerTest
 {
+    /// <summary>
+    /// Verifies that RootResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithRootJson_ReturnsDeserializedRoot()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("root.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var root = JsonSerializer.Deserialize<RootResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(root);
         AssertTestData(root);
     }
 
+    /// <summary>
+    /// Verifies that RootResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserialize()
+    public void SerializeDeserialize_WithRoot_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("root.json");
         var json = File.ReadAllText(jsonPath);
         var root = JsonSerializer.Deserialize<RootResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(root);
         var back = JsonSerializer.Deserialize<RootResponse>(serialized, JsonOptions.DefaultOptions);
 
+        // Assert
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

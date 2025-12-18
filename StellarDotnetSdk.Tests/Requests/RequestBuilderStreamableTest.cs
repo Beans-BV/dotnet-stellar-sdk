@@ -1,18 +1,25 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.EventSources;
 
 namespace StellarDotnetSdk.Tests.Requests;
 
+/// <summary>
+/// Unit tests for streamable request builders and SSE event source functionality.
+/// </summary>
 [TestClass]
 public class RequestBuilderStreamableTest
 {
     private readonly Uri _uri = new("https://test.com");
 
+    /// <summary>
+    /// Verifies that SseEventSource skips the first "hello" message and processes subsequent data messages.
+    /// </summary>
     [TestMethod]
-    public async Task TestHelloStream()
+    public async Task Connect_WithHelloMessage_SkipsHelloAndReceivesSubsequentData()
     {
+        // Arrange
         // Check we skip the first message with "hello" data
         var fakeHandler = new FakeStreamableHttpMessageHandler();
         var stream = "event: open\ndata: hello\n\ndata: foobar\n\n";
@@ -26,14 +33,20 @@ public class RequestBuilderStreamableTest
             eventSource.Shutdown();
         };
 
+        // Act
         await eventSource.Connect();
 
+        // Assert
         Assert.AreEqual("foobar", dataReceived);
     }
 
+    /// <summary>
+    /// Verifies that SseEventSource handles multiple error events and retries connection.
+    /// </summary>
     [TestMethod]
-    public async Task TestStreamErrorEvent()
+    public async Task Connect_WithMultipleErrors_RetriesAndCountsErrors()
     {
+        // Arrange
         var fakeHandler = new FakeStreamableHttpMessageHandler();
         fakeHandler.QueueResponse(FakeResponse.WithIOError());
         fakeHandler.QueueResponse(FakeResponse.WithIOError());
@@ -49,7 +62,11 @@ public class RequestBuilderStreamableTest
                 eventSource.Shutdown();
             }
         };
+
+        // Act
         await eventSource.Connect();
+
+        // Assert
         Assert.AreEqual(2, errorCount);
     }
 }

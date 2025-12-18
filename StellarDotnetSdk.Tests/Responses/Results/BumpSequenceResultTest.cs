@@ -3,18 +3,35 @@ using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+/// Unit tests for bump sequence result types.
+/// </summary>
 [TestClass]
 public class BumpSequenceResultTest
 {
+    /// <summary>
+    /// Verifies that BumpSequenceSuccess result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSuccess()
+    public void Deserialize_WithBumpSequenceSuccessXdr_ReturnsBumpSequenceSuccess()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAALAAAAAAAAAAA=", typeof(BumpSequenceSuccess), true);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAALAAAAAAAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(BumpSequenceSuccess), true);
     }
 
+    /// <summary>
+    /// Verifies that BumpSequenceBadSeq result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestBadSeq()
+    public void Deserialize_WithBumpSequenceBadSeqXdr_ReturnsBumpSequenceBadSeq()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAL/////wAAAAA=", typeof(BumpSequenceBadSeq), false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAL/////wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(BumpSequenceBadSeq), false);
     }
 }

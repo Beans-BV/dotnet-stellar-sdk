@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using FakeItEasy;
 using FluentAssertions;
 using FsCheck;
@@ -9,20 +9,30 @@ using StellarDotnetSdk.Tests.Generators;
 
 namespace StellarDotnetSdk.Tests;
 
+/// <summary>
+/// Unit tests for <see cref="Balance"/> class.
+/// </summary>
 [TestFixture]
 public class BalanceTests
 {
     private Balance? Sut { get; set; }
 
+    /// <summary>
+    /// Verifies that Balance constructor creates instance with correct properties for liquidity pool shares.
+    /// </summary>
+    /// <param name="expectedIsAuthorized">Expected value for IsAuthorized property.</param>
+    /// <param name="expectedIsAuthorizedToMaintainLiabilities">Expected value for IsAuthorizedToMaintainLiabilities property.</param>
     [TestCase(true, false)]
     [TestCase(false, true)]
     public void Constructor_LiquidityPool(bool expectedIsAuthorized, bool expectedIsAuthorizedToMaintainLiabilities)
     {
+        // Arrange
         const string expectedLiquidityPoolId = "1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469";
         const string expectedAssetType = "liquidity_pool_shares";
         const string expectedLimit = "1.0";
         const string expectedBalance = "2.0";
 
+        // Act
         Sut = new Balance
         {
             AssetType = expectedAssetType,
@@ -34,7 +44,7 @@ public class BalanceTests
             LastModifiedLedger = 100,
         };
 
-        // expected
+        // Assert
         Sut.Asset
             .Should().BeNull();
 
@@ -69,6 +79,14 @@ public class BalanceTests
             .Should().Be(expectedIsAuthorizedToMaintainLiabilities);
     }
 
+    /// <summary>
+    /// Verifies that Balance constructor creates instance with correct properties for credit alphanum assets.
+    /// </summary>
+    /// <param name="expectedAssetCode">Expected asset code.</param>
+    /// <param name="expectedIsAuthorized">Expected value for IsAuthorized property.</param>
+    /// <param name="expectedIsAuthorizedToMaintainLiabilities">Expected value for IsAuthorizedToMaintainLiabilities property.</param>
+    /// <param name="expectedAssetType">Expected asset type string.</param>
+    /// <param name="expectedAssetDataType">Expected asset data type.</param>
     [TestCase("ABC4", true, false, AssetTypeCreditAlphaNum4.RestApiType, typeof(AssetTypeCreditAlphaNum4))]
     [TestCase("ABC12", false, true, AssetTypeCreditAlphaNum12.RestApiType, typeof(AssetTypeCreditAlphaNum12))]
     public void Constructor_CreditAlphaNum(
@@ -83,6 +101,8 @@ public class BalanceTests
         const string expectedAssetIssuer = "Expected Asset Issuer";
         const string expectedBuyingLiabilities = "3.0";
         const string expectedSellingLiabilities = "4.0";
+
+        // Act
         Sut = new Balance
         {
             AssetType = expectedAssetType,
@@ -97,7 +117,7 @@ public class BalanceTests
             LastModifiedLedger = 1200,
         };
 
-        // expected
+        // Assert
         Sut.Asset.Should().BeOfType(expectedAssetDataType);
 
         Sut.AssetCode.Should().Be(expectedAssetCode);
@@ -121,9 +141,14 @@ public class BalanceTests
         Sut.IsAuthorizedToMaintainLiabilities.Should().Be(expectedIsAuthorizedToMaintainLiabilities);
     }
 
+    /// <summary>
+    /// Verifies that Balance.Asset property returns AssetTypeCreditAlphaNum4 when AssetType is set to credit alphanum4.
+    /// </summary>
+    /// <param name="assetCode">The asset code to test.</param>
     [FsCheck.NUnit.Property(Arbitrary = [typeof(AlphaNum4Generator)])]
     public Property Asset_AlphaNum4(string assetCode)
     {
+        // Arrange & Act
         Sut = new Balance
         {
             AssetType = AssetTypeCreditAlphaNum4.RestApiType,
@@ -138,12 +163,18 @@ public class BalanceTests
             LastModifiedLedger = 500,
         };
 
+        // Assert
         return (Sut.Asset is AssetTypeCreditAlphaNum4).ToProperty();
     }
 
+    /// <summary>
+    /// Verifies that Balance.Asset property returns AssetTypeCreditAlphaNum12 when AssetType is set to credit alphanum12.
+    /// </summary>
+    /// <param name="assetCode">The asset code to test.</param>
     [FsCheck.NUnit.Property(Arbitrary = [typeof(AlphaNum12Generator)])]
     public Property Asset_AlphaNum12(string assetCode)
     {
+        // Arrange & Act
         Sut = new Balance
         {
             AssetType = AssetTypeCreditAlphaNum12.RestApiType,
@@ -158,12 +189,17 @@ public class BalanceTests
             LastModifiedLedger = 1500,
         };
 
+        // Assert
         return (Sut.Asset is AssetTypeCreditAlphaNum12).ToProperty();
     }
 
+    /// <summary>
+    /// Verifies that Balance.Asset property returns AssetTypeNative when AssetType is set to native.
+    /// </summary>
     [Test]
     public void Asset_Native()
     {
+        // Arrange & Act
         Sut = new Balance
         {
             AssetType = AssetTypeNative.RestApiType,
@@ -178,18 +214,23 @@ public class BalanceTests
             LastModifiedLedger = 1500,
         };
 
-        // actual 
+        // Act
         var actual = Sut.Asset;
 
-        // expected
+        // Assert
         actual.Should().BeOfType<AssetTypeNative>();
     }
 
+    /// <summary>
+    /// Verifies that Balance.Asset property returns null when AssetType is set to liquidity pool shares.
+    /// </summary>
     [Test]
     public void Asset_LiquidityPool()
     {
+        // Arrange
         const string expectedLiquidityPoolId = "1c80ecd9cc567ef5301683af3ca7c2deeba7d519275325549f22514076396469";
 
+        // Act
         Sut = new Balance
         {
             AssetType = "liquidity_pool_shares",
@@ -205,10 +246,10 @@ public class BalanceTests
             LastModifiedLedger = 1500,
         };
 
-        // actual 
+        // Act
         var actual = Sut.Asset;
 
-        // expected
+        // Assert
         actual.Should().BeNull();
     }
 }

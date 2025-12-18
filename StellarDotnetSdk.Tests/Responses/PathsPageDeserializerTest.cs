@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -7,27 +7,46 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+/// Unit tests for deserializing paths page responses from JSON.
+/// </summary>
 [TestClass]
 public class PathsPageDeserializerTest
 {
+    /// <summary>
+    /// Verifies that Page&lt;PathResponse&gt; can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithPathsPageJson_ReturnsDeserializedPathsPage()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("pathPage.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var pathsPage = JsonSerializer.Deserialize<Page<PathResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(pathsPage);
         AssertTestData(pathsPage);
     }
 
+    /// <summary>
+    /// Verifies that Page&lt;PathResponse&gt; can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserialize()
+    public void SerializeDeserialize_WithPathsPage_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("pathPage.json");
         var json = File.ReadAllText(jsonPath);
         var pathsPage = JsonSerializer.Deserialize<Page<PathResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(pathsPage);
         var back = JsonSerializer.Deserialize<Page<PathResponse>>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

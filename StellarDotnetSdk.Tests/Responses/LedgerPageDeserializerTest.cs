@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -6,27 +6,46 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+/// Unit tests for deserializing ledger page responses from JSON.
+/// </summary>
 [TestClass]
 public class LedgerPageDeserializerTest
 {
+    /// <summary>
+    /// Verifies that Page&lt;LedgerResponse&gt; can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithLedgerPageJson_ReturnsDeserializedLedgerPage()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("ledgerPage.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var ledgersPage = JsonSerializer.Deserialize<Page<LedgerResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(ledgersPage);
         AssertTestData(ledgersPage);
     }
 
+    /// <summary>
+    /// Verifies that Page&lt;LedgerResponse&gt; can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserialize()
+    public void SerializeDeserialize_WithLedgerPage_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("ledgerPage.json");
         var json = File.ReadAllText(jsonPath);
         var ledgersPage = JsonSerializer.Deserialize<Page<LedgerResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(ledgersPage);
         var back = JsonSerializer.Deserialize<Page<LedgerResponse>>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

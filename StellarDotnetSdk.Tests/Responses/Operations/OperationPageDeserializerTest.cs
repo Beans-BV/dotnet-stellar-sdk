@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -8,27 +8,46 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+/// Unit tests for deserializing operation page responses from JSON.
+/// </summary>
 [TestClass]
 public class OperationPageDeserializerTest
 {
-    private readonly string _getTestDataPath = Utils.GetTestDataPath("Responses/operationPage.json");
+    private readonly string _operationPageJsonPath = Utils.GetTestDataPath("Responses/operationPage.json");
 
+    /// <summary>
+    /// Verifies that Page&lt;OperationResponse&gt; can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithOperationPageJson_ReturnsDeserializedOperationsPage()
     {
-        var json = File.ReadAllText(_getTestDataPath);
+        // Arrange
+        var json = File.ReadAllText(_operationPageJsonPath);
+
+        // Act
         var operationsPage = JsonSerializer.Deserialize<Page<OperationResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(operationsPage);
         AssertTestData(operationsPage);
     }
 
+    /// <summary>
+    /// Verifies that Page&lt;OperationResponse&gt; can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserialize()
+    public void SerializeDeserialize_WithOperationPage_RoundTripsCorrectly()
     {
-        var json = File.ReadAllText(_getTestDataPath);
+        // Arrange
+        var json = File.ReadAllText(_operationPageJsonPath);
         var operationsPage = JsonSerializer.Deserialize<Page<OperationResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(operationsPage);
         var back = JsonSerializer.Deserialize<Page<OperationResponse>>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

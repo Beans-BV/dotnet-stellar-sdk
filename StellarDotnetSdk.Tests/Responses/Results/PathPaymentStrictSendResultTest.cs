@@ -4,17 +4,27 @@ using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+/// Unit tests for path payment strict send result types.
+/// </summary>
 [TestClass]
 public class PathPaymentStrictSendResultTest
 {
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendSuccess result can be deserialized correctly and contains payment details.
+    /// </summary>
     [TestMethod]
-    public void TestSuccess()
+    public void Deserialize_WithPathPaymentStrictSendSuccessXdr_ReturnsPathPaymentStrictSendSuccessWithDetails()
     {
-        var tx = Utils.AssertResultOfType(
-            "AAAAAACYloD/////AAAAAQAAAAAAAAANAAAAAAAAAAEAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAAAE0gAAAAAAAAAAAJiWgAAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAADDUAAAAAAAyzXIcEd0vK9XlVfmjyQE9QpJjOLzYUN5orR0N+Dz+QAAAABVVNEAAAAAAAqg0ayXzXGPwPxfJ6TMpldG5JTYoiaEeRCPhBaGuhjrgAAAAAAAw1AAAAAAA==",
-            typeof(PathPaymentStrictSendSuccess), true);
-        var failed = (TransactionResultFailed)tx;
+        // Arrange
+        var xdrBase64 =
+            "AAAAAACYloD/////AAAAAQAAAAAAAAANAAAAAAAAAAEAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAAAE0gAAAAAAAAAAAJiWgAAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAADDUAAAAAAAyzXIcEd0vK9XlVfmjyQE9QpJjOLzYUN5orR0N+Dz+QAAAABVVNEAAAAAAAqg0ayXzXGPwPxfJ6TMpldG5JTYoiaEeRCPhBaGuhjrgAAAAAAAw1AAAAAAA==";
 
+        // Act
+        var tx = Utils.AssertResultOfType(xdrBase64, typeof(PathPaymentStrictSendSuccess), true);
+
+        // Assert
+        var failed = (TransactionResultFailed)tx;
         var op = (PathPaymentStrictSendSuccess)failed.Results[0];
         Assert.AreEqual("GABSZVZBYEO5F4V5LZKV7GR4SAJ5IKJGGOF43BIN42FNDUG7QPH6IMRQ", op.Last.Destination.AccountId);
         Assert.AreEqual(Asset.CreateNonNativeAsset("USD", "GAVIGRVSL424MPYD6F6J5EZSTFORXESTMKEJUEPEII7BAWQ25BR25DUC"),
@@ -32,103 +42,166 @@ public class PathPaymentStrictSendResultTest
         Assert.AreEqual("0.02", offer.AmountBought);
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendMalformed result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestMalformed()
+    public void Deserialize_WithPathPaymentStrictSendMalformedXdr_ReturnsPathPaymentStrictSendMalformed()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN/////wAAAAA=",
-            typeof(PathPaymentStrictSendMalformed),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAN/////wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(PathPaymentStrictSendMalformed), false);
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendUnderfunded result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestUnderfunded()
+    public void Deserialize_WithPathPaymentStrictSendUnderfundedXdr_ReturnsPathPaymentStrictSendUnderfunded()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN/////gAAAAA=",
-            typeof(PathPaymentStrictSendUnderfunded),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAN/////gAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(PathPaymentStrictSendUnderfunded), false);
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendSrcNoTrust result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSrcNoTrust()
+    public void Deserialize_WithPathPaymentStrictSendSrcNoTrustXdr_ReturnsPathPaymentStrictSendSrcNoTrust()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN/////QAAAAA=",
-            typeof(PathPaymentStrictSendSrcNoTrust),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAN/////QAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(PathPaymentStrictSendSrcNoTrust), false);
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendSrcNotAuthorized result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSrcNotAuthorized()
+    public void Deserialize_WithPathPaymentStrictSendSrcNotAuthorizedXdr_ReturnsPathPaymentStrictSendSrcNotAuthorized()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN/////AAAAAA=",
-            typeof(PathPaymentStrictSendSrcNotAuthorized),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAN/////AAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(PathPaymentStrictSendSrcNotAuthorized), false);
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendNoDestination result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNoDestination()
+    public void Deserialize_WithPathPaymentStrictSendNoDestinationXdr_ReturnsPathPaymentStrictSendNoDestination()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////+wAAAAA=",
-            typeof(PathPaymentStrictSendNoDestination),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAN////+wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(PathPaymentStrictSendNoDestination), false);
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendNoTrust result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNoTrust()
+    public void Deserialize_WithPathPaymentStrictSendNoTrustXdr_ReturnsPathPaymentStrictSendNoTrust()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////+gAAAAA=",
-            typeof(PathPaymentStrictSendNoTrust),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAN////+gAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(PathPaymentStrictSendNoTrust), false);
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendNotAuthorized result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNotAuthorized()
+    public void Deserialize_WithPathPaymentStrictSendNotAuthorizedXdr_ReturnsPathPaymentStrictSendNotAuthorized()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////+QAAAAA=",
-            typeof(PathPaymentStrictSendNotAuthorized),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAN////+QAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(PathPaymentStrictSendNotAuthorized), false);
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendLineFull result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestLineFull()
+    public void Deserialize_WithPathPaymentStrictSendLineFullXdr_ReturnsPathPaymentStrictSendLineFull()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////+AAAAAA=",
-            typeof(PathPaymentStrictSendLineFull),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAN////+AAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(PathPaymentStrictSendLineFull), false);
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendNoIssuer result can be deserialized correctly and contains no issuer asset.
+    /// </summary>
     [TestMethod]
-    public void TestNoIssuer()
+    public void Deserialize_WithPathPaymentStrictSendNoIssuerXdr_ReturnsPathPaymentStrictSendNoIssuerWithAsset()
     {
-        var tx = Utils.AssertResultOfType(
-            "AAAAAACYloD/////AAAAAQAAAAAAAAAN////9wAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAA==",
-            typeof(PathPaymentStrictSendNoIssuer), false);
+        // Arrange
+        var xdrBase64 =
+            "AAAAAACYloD/////AAAAAQAAAAAAAAAN////9wAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAA==";
+
+        // Act
+        var tx = Utils.AssertResultOfType(xdrBase64, typeof(PathPaymentStrictSendNoIssuer), false);
+
+        // Assert
         var failed = (TransactionResultFailed)tx;
         var op = (PathPaymentStrictSendNoIssuer)failed.Results[0];
         Assert.AreEqual(Asset.CreateNonNativeAsset("USD", "GAVIGRVSL424MPYD6F6J5EZSTFORXESTMKEJUEPEII7BAWQ25BR25DUC"),
             op.NoIssuer);
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendTooFewOffers result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestTooFewOffer()
+    public void Deserialize_WithPathPaymentStrictSendTooFewOffersXdr_ReturnsPathPaymentStrictSendTooFewOffers()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////9gAAAAA=",
-            typeof(PathPaymentStrictSendTooFewOffers),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAN////9gAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(PathPaymentStrictSendTooFewOffers), false);
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendOfferCrossSelf result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestOfferCrossSelf()
+    public void Deserialize_WithPathPaymentStrictSendOfferCrossSelfXdr_ReturnsPathPaymentStrictSendOfferCrossSelf()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////9QAAAAA=",
-            typeof(PathPaymentStrictSendOfferCrossSelf),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAN////9QAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(PathPaymentStrictSendOfferCrossSelf), false);
     }
 
+    /// <summary>
+    /// Verifies that PathPaymentStrictSendUnderDestMin result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestUnderDestMin()
+    public void Deserialize_WithPathPaymentStrictSendUnderDestMinXdr_ReturnsPathPaymentStrictSendUnderDestMin()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAN////9AAAAAA=",
-            typeof(PathPaymentStrictSendUnderDestMin),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAN////9AAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(PathPaymentStrictSendUnderDestMin), false);
     }
 }

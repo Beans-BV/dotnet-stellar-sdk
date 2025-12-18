@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -7,21 +7,31 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+/// Unit tests for liquidity pool operation responses.
+/// </summary>
 [TestClass]
 public class LiquidityPoolOperationResponseTest
 {
+    /// <summary>
+    /// Verifies that LiquidityPoolDepositOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestPoolDeposit()
+    public void SerializeDeserialize_WithLiquidityPoolDepositOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolDepositOperationResponse.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolDepositOperationResponse);
-        Assert.IsNotNull(instance);
-        var response = (LiquidityPoolDepositOperationResponse)instance;
+        var response = (LiquidityPoolDepositOperationResponse)back;
         Assert.AreEqual(new LiquidityPoolId("b26c0d6545349ad7f44ba758b7c705459537201583f2e524635be04aff84bc69"),
             response.LiquidityPoolId);
         Assert.AreEqual("1508315204960257", response.PagingToken);
@@ -45,19 +55,26 @@ public class LiquidityPoolOperationResponseTest
         Assert.AreEqual("0.0000000", response.SharesReceived);
     }
 
+    /// <summary>
+    /// Verifies that LiquidityPoolWithdrawOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestPoolWithdraw()
+    public void SerializeDeserialize_WithLiquidityPoolWithdrawOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolWithdrawOperationResponse.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         Assert.IsNotNull(serialized);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolWithdrawOperationResponse);
-        Assert.IsNotNull(instance);
-        var response = (LiquidityPoolWithdrawOperationResponse)instance;
+        var response = (LiquidityPoolWithdrawOperationResponse)back;
         Assert.AreEqual(new LiquidityPoolId("b26c0d6545349ad7f44ba758b7c705459537201583f2e524635be04aff84bc69"),
             response.LiquidityPoolId);
         Assert.AreEqual("1508641622462465", response.PagingToken);

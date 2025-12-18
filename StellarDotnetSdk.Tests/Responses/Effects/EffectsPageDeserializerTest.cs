@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -7,15 +7,26 @@ using StellarDotnetSdk.Responses.Effects;
 
 namespace StellarDotnetSdk.Tests.Responses.Effects;
 
+/// <summary>
+/// Unit tests for deserializing effects page responses from JSON.
+/// </summary>
 [TestClass]
 public class EffectsPageDeserializerTest
 {
+    /// <summary>
+    /// Verifies that Page&lt;EffectResponse&gt; can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithEffectPageJson_ReturnsDeserializedEffectsPage()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectPage.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var effectsPage = JsonSerializer.Deserialize<Page<EffectResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(effectsPage);
         AssertTestData(effectsPage);
     }

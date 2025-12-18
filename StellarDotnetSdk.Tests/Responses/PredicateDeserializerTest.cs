@@ -6,15 +6,26 @@ using StellarDotnetSdk.Responses.Predicates;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+/// Unit tests for deserializing predicate responses from JSON.
+/// </summary>
 [TestClass]
 public class PredicateDeserializerTest
 {
+    /// <summary>
+    /// Verifies that complex Predicate with nested And, Or, and Not can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestPredicateDeserialize()
+    public void Deserialize_WithComplexPredicateJson_ReturnsDeserializedPredicate()
     {
+        // Arrange
         const string json =
             "{\"and\":[{\"or\":[{\"rel_before\":\"12\"},{\"abs_before\":\"2020-08-26T11:15:39Z\"}]},{\"not\":{\"unconditional\":true}}]}";
+
+        // Act
         var predicate = JsonSerializer.Deserialize<Predicate>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(predicate);
 
         // Test polymorphic deserialization
@@ -46,12 +57,19 @@ public class PredicateDeserializerTest
         Assert.IsInstanceOfType(claimAnd.RightPredicate, typeof(ClaimPredicateNot));
     }
 
+    /// <summary>
+    /// Verifies that PredicateUnconditional can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestPredicateUnconditional()
+    public void Deserialize_WithUnconditionalPredicateJson_ReturnsPredicateUnconditional()
     {
+        // Arrange
         const string json = "{\"unconditional\":true}";
+
+        // Act
         var predicate = JsonSerializer.Deserialize<Predicate>(json, JsonOptions.DefaultOptions);
 
+        // Assert
         Assert.IsNotNull(predicate);
         Assert.IsInstanceOfType(predicate, typeof(PredicateUnconditional));
 
@@ -59,12 +77,19 @@ public class PredicateDeserializerTest
         Assert.IsInstanceOfType(claimPredicate, typeof(ClaimPredicateUnconditional));
     }
 
+    /// <summary>
+    /// Verifies that PredicateBeforeAbsoluteTime with epoch can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestPredicateBeforeAbsoluteTimeWithEpoch()
+    public void Deserialize_WithAbsoluteTimePredicateJson_ReturnsPredicateBeforeAbsoluteTime()
     {
+        // Arrange
         const string json = "{\"abs_before\":\"2020-08-26T11:15:39Z\",\"abs_before_epoch\":1598440539}";
+
+        // Act
         var predicate = JsonSerializer.Deserialize<Predicate>(json, JsonOptions.DefaultOptions);
 
+        // Assert
         Assert.IsNotNull(predicate);
         Assert.IsInstanceOfType(predicate, typeof(PredicateBeforeAbsoluteTime));
 
@@ -73,12 +98,19 @@ public class PredicateDeserializerTest
         Assert.AreEqual(1598440539, absPredicate.AbsBeforeEpoch);
     }
 
+    /// <summary>
+    /// Verifies that PredicateBeforeRelativeTime can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestPredicateBeforeRelativeTime()
+    public void Deserialize_WithRelativeTimePredicateJson_ReturnsPredicateBeforeRelativeTime()
     {
+        // Arrange
         const string json = "{\"rel_before\":3600}";
+
+        // Act
         var predicate = JsonSerializer.Deserialize<Predicate>(json, JsonOptions.DefaultOptions);
 
+        // Assert
         Assert.IsNotNull(predicate);
         Assert.IsInstanceOfType(predicate, typeof(PredicateBeforeRelativeTime));
 
@@ -86,9 +118,13 @@ public class PredicateDeserializerTest
         Assert.AreEqual(3600, relPredicate.RelBefore);
     }
 
+    /// <summary>
+    /// Verifies that Predicate can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestPredicateSerialize()
+    public void SerializeDeserialize_WithPredicate_RoundTripsCorrectly()
     {
+        // Arrange
         var predicate = new PredicateAnd(
             new PredicateOr(
                 new PredicateBeforeRelativeTime(12),
@@ -97,8 +133,10 @@ public class PredicateDeserializerTest
             new PredicateNot(new PredicateUnconditional())
         );
 
-        // Serialize with explicit base type to ensure converter is used
+        // Act
         var json = JsonSerializer.Serialize<Predicate>(predicate, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(json);
 
         // Verify the JSON structure is correct
@@ -110,13 +148,19 @@ public class PredicateDeserializerTest
         Assert.IsInstanceOfType(deserialized, typeof(PredicateAnd));
     }
 
+    /// <summary>
+    /// Verifies that PredicateBeforeRelativeTime can be deserialized from JSON with string value.
+    /// </summary>
     [TestMethod]
-    public void TestPredicateBeforeRelativeTimeWithStringValue()
+    public void Deserialize_WithRelativeTimePredicateStringJson_ReturnsPredicateBeforeRelativeTime()
     {
-        // Horizon API may return numeric fields as strings
+        // Arrange
         const string json = "{\"rel_before\":\"3600\"}";
+
+        // Act
         var predicate = JsonSerializer.Deserialize<Predicate>(json, JsonOptions.DefaultOptions);
 
+        // Assert
         Assert.IsNotNull(predicate);
         Assert.IsInstanceOfType(predicate, typeof(PredicateBeforeRelativeTime));
 
@@ -124,13 +168,19 @@ public class PredicateDeserializerTest
         Assert.AreEqual(3600, relPredicate.RelBefore);
     }
 
+    /// <summary>
+    /// Verifies that PredicateBeforeAbsoluteTime can be deserialized from JSON with string epoch.
+    /// </summary>
     [TestMethod]
-    public void TestPredicateBeforeAbsoluteTimeWithStringEpoch()
+    public void Deserialize_WithAbsoluteTimePredicateStringEpochJson_ReturnsPredicateBeforeAbsoluteTime()
     {
-        // Horizon API may return numeric fields as strings
+        // Arrange
         const string json = "{\"abs_before\":\"2020-08-26T11:15:39Z\",\"abs_before_epoch\":\"1598440539\"}";
+
+        // Act
         var predicate = JsonSerializer.Deserialize<Predicate>(json, JsonOptions.DefaultOptions);
 
+        // Assert
         Assert.IsNotNull(predicate);
         Assert.IsInstanceOfType(predicate, typeof(PredicateBeforeAbsoluteTime));
 

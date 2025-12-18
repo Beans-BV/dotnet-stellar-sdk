@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,27 +9,46 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+/// Unit tests for <see cref="PaymentOperationResponse"/> class.
+/// </summary>
 [TestClass]
 public class PaymentOperationResponseTest
 {
+    /// <summary>
+    /// Verifies that PaymentOperationResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializePaymentOperation()
+    public void Deserialize_WithPaymentOperationJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("payment.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<PaymentOperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertPaymentOperationTestData(instance);
     }
 
+    /// <summary>
+    /// Verifies that PaymentOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializePaymentOperation()
+    public void SerializeDeserialize_WithPaymentOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("payment.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<PaymentOperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<PaymentOperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertPaymentOperationTestData(back);
     }
@@ -93,24 +112,40 @@ public class PaymentOperationResponseTest
         Assert.IsFalse(operation.TransactionSuccessful);
     }
 
+    /// <summary>
+    /// Verifies that PaymentOperationResponse with non-native asset can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializePaymentOperationNonNative()
+    public void Deserialize_WithPaymentOperationNonNativeJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("paymentNonNative.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertNonNativePaymentData(instance);
     }
 
+    /// <summary>
+    /// Verifies that PaymentOperationResponse with non-native asset can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializePaymentOperationNonNative()
+    public void SerializeDeserialize_WithPaymentOperationNonNative_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("paymentNonNative.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertNonNativePaymentData(back);
     }
@@ -127,24 +162,40 @@ public class PaymentOperationResponseTest
             operation.Asset);
     }
 
+    /// <summary>
+    /// Verifies that PaymentOperationResponse with muxed account can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializePaymentOperationMuxed()
+    public void Deserialize_WithPaymentOperationMuxedJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("paymentMuxed.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertPaymentOperationTestDataMuxed(instance);
     }
 
+    /// <summary>
+    /// Verifies that PaymentOperationResponse with muxed account can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializePaymentOperationMuxed()
+    public void SerializeDeserialize_WithPaymentOperationMuxed_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("paymentMuxed.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertPaymentOperationTestDataMuxed(back);
     }

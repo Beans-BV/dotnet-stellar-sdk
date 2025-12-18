@@ -9,6 +9,9 @@ using StellarDotnetSdk.Transactions;
 
 namespace StellarDotnetSdk.Tests.Transactions;
 
+/// <summary>
+/// Unit tests for <see cref="FeeBumpTransaction"/> class.
+/// </summary>
 [TestClass]
 public class FeeBumpTransactionTest
 {
@@ -33,20 +36,37 @@ public class FeeBumpTransactionTest
         Transaction = TransactionBuilder.BuildFeeBumpTransaction(FeeSource, InnerTransaction, 100);
     }
 
+    /// <summary>
+    /// Verifies that BuildFeeBumpTransaction throws exception when fee is less than inner base fee rate.
+    /// </summary>
     [TestMethod]
-    public void TestLessThanInnerBaseFeeRate()
+    public void BuildFeeBumpTransaction_WithFeeLessThanInnerBaseFeeRate_ThrowsException()
     {
-        var ex = Assert.ThrowsException<Exception>(() =>
-            TransactionBuilder.BuildFeeBumpTransaction(FeeSource, InnerTransaction, 50));
+        // Arrange
         var innerOps = InnerTransaction.Operations.Length;
         var innerBaseFeeRate = InnerTransaction.Fee / innerOps;
+
+        // Act
+        var ex = Assert.ThrowsException<Exception>(() =>
+            TransactionBuilder.BuildFeeBumpTransaction(FeeSource, InnerTransaction, 50));
+
+        // Assert
         Assert.AreEqual(ex.Message, $"Invalid fee, it should be at least {innerBaseFeeRate} stroops");
     }
 
+    /// <summary>
+    /// Verifies that FeeBumpTransaction builds correctly from transaction envelope with correct fee source and fee amount.
+    /// </summary>
     [TestMethod]
-    public void TestBuildFromTransactionEnvelope()
+    public void BuildFromTransactionEnvelope_WithSignedTransaction_HasCorrectFeeSourceAndFee()
     {
+        // Arrange
+        // Transaction is already initialized in TestInitialize
+
+        // Act
         Transaction.Sign(FeeSource, Network);
+
+        // Assert
         Assert.AreEqual(FeeSource, Transaction.FeeSource);
         Assert.AreEqual(200, Transaction.Fee);
 
@@ -55,73 +75,114 @@ public class FeeBumpTransactionTest
         Assert.AreEqual(expectedXdr, Transaction.ToEnvelopeXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that FeeBumpTransaction.Sign adds signature that can be verified with fee source key pair.
+    /// </summary>
     [TestMethod]
-    public void TestSign()
+    public void Sign_WithFeeSource_CreatesVerifiableSignature()
     {
+        // Act
         Transaction.Sign(FeeSource, Network);
         var xdr = Transaction.ToEnvelopeXdr();
+
+        // Assert
         Assert.AreEqual(1, xdr.FeeBump.Signatures.Length);
         var rawSig = xdr.FeeBump.Signatures[0];
         Assert.IsTrue(FeeSource.Verify(Transaction.Hash(Network), rawSig.Signature));
     }
 
+    /// <summary>
+    /// Verifies that FeeBumpTransaction.Sign with preimage creates signature with matching preimage bytes.
+    /// </summary>
     [TestMethod]
-    public void TestSignUsingPreImage()
+    public void Sign_WithPreImage_CreatesSignatureWithPreImageBytes()
     {
+        // Arrange
         var rng = RandomNumberGenerator.Create();
         var preImage = new byte[64];
         rng.GetBytes(preImage);
+
+        // Act
         Transaction.Sign(preImage);
         var xdr = Transaction.ToEnvelopeXdr();
         var rawSig = xdr.FeeBump.Signatures[0];
+
+        // Assert
         CollectionAssert.AreEqual(preImage, rawSig.Signature.InnerValue);
     }
 
+    /// <summary>
+    /// Verifies that TransactionBuilder.FromEnvelopeXdr correctly deserializes fee bump transaction that round-trips through XDR.
+    /// </summary>
     [TestMethod]
-    public void TestFromEnvelopeXdr()
+    public void FromEnvelopeXdr_WithFeeBumpTransaction_RoundTripsCorrectly()
     {
+        // Arrange
         const string xdr =
             "AAAABQAAAADgSJG2GOUMy/H9lHyjYZOwyuyytH8y0wWaoc596L+bEgAAAAAAAADIAAAAAgAAAABzdv3ojkzWHMD7KUoXhrPx0GH18vHKV0ZfqpMiEblG1gAAAGQAAAAAAAAACAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA9IYXBweSBiaXJ0aGRheSEAAAAAAQAAAAAAAAABAAAAAOBIkbYY5QzL8f2UfKNhk7DK7LK0fzLTBZqhzn3ov5sSAAAAAAAAAASoF8gAAAAAAAAAAAERuUbWAAAAQK933Dnt1pxXlsf1B5CYn81PLxeYsx+MiV9EGbMdUfEcdDWUySyIkdzJefjpR5ejdXVp/KXosGmNUQ+DrIBlzg0AAAAAAAAAAei/mxIAAABAijIIQpL6KlFefiL4FP8UWQktWEz4wFgGNSaXe7mZdVMuiREntehi1b7MRqZ1h+W+Y0y+Z2HtMunsilT2yS5mAA==";
+
+        // Act
         var tx = TransactionBuilder.FromEnvelopeXdr(xdr);
+
+        // Assert
         Assert.AreEqual(xdr, tx.ToEnvelopeXdrBase64());
     }
 
+    /// <summary>
+    /// Verifies that BuildFeeBumpTransaction with muxed account creates transaction with correct muxed account address.
+    /// </summary>
     [TestMethod]
-    public void TestMuxedAccounts()
+    public void BuildFeeBumpTransaction_WithMuxedAccount_CreatesTransactionWithCorrectMuxedAddress()
     {
+        // Arrange
         var muxed = new MuxedAccountMed25519(FeeSource, 0);
+
+        // Act
         var tx = TransactionBuilder.BuildFeeBumpTransaction(muxed, InnerTransaction, 100);
         var xdr = tx.ToUnsignedEnvelopeXdr();
         var txMuxed = MuxedAccount.FromXdrMuxedAccount(xdr.FeeBump.Tx.FeeSource);
+
+        // Assert
         Assert.AreEqual(muxed.Address, txMuxed.Address);
     }
 
+    /// <summary>
+    /// Verifies that BuildFeeBumpTransaction throws OverflowException when base fee multiplied by operation count overflows long.
+    /// </summary>
     [TestMethod]
-    public void TestBaseFeeOverflowsLong()
+    public void BuildFeeBumpTransaction_WithFeeOverflow_ThrowsOverflowException()
     {
+        // Arrange
         var network = Network.Test();
         var innerTx = CreateInnerTransaction(100 + 1, network);
         var feeSource = KeyPair.FromAccountId("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
+
+        // Act & Assert
         Assert.ThrowsException<OverflowException>(() =>
         {
             TransactionBuilder.BuildFeeBumpTransaction(feeSource, innerTx, long.MaxValue);
         });
     }
 
+    /// <summary>
+    /// Verifies that Transaction.Hash returns correct hash for both inner transaction and fee bump transaction.
+    /// </summary>
     [TestMethod]
-    public void TestTransactionHash()
+    public void Hash_WithInnerAndFeeBumpTransaction_ReturnsCorrectHashes()
     {
+        // Arrange
         var network = Network.Test();
         var innerTx = CreateInnerTransaction(100, network);
-
-        Assert.AreEqual("2a8ead3351faa7797b284f59027355ddd69c21adb8e4da0b9bb95531f7f32681",
-            Util.BytesToHex(innerTx.Hash(network)).ToLowerInvariant());
-
         var feeSource = KeyPair.FromAccountId("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3");
-        var feeBumpTx = TransactionBuilder.BuildFeeBumpTransaction(feeSource, innerTx, 200);
 
-        Assert.AreEqual("58266712c0c1d1cd98faa0e0159605a361cf2a5ca44ad69650eeb1d27ee62334",
-            Util.BytesToHex(feeBumpTx.Hash(network)).ToLowerInvariant());
+        // Act
+        var innerTxHash = Util.BytesToHex(innerTx.Hash(network)).ToLowerInvariant();
+        var feeBumpTx = TransactionBuilder.BuildFeeBumpTransaction(feeSource, innerTx, 200);
+        var feeBumpTxHash = Util.BytesToHex(feeBumpTx.Hash(network)).ToLowerInvariant();
+
+        // Assert
+        Assert.AreEqual("2a8ead3351faa7797b284f59027355ddd69c21adb8e4da0b9bb95531f7f32681", innerTxHash);
+        Assert.AreEqual("58266712c0c1d1cd98faa0e0159605a361cf2a5ca44ad69650eeb1d27ee62334", feeBumpTxHash);
     }
 
     private static Transaction CreateInnerTransaction(uint fee, Network network)

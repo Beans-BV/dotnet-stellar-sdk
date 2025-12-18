@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,36 +10,60 @@ using MuxedAccount = StellarDotnetSdk.Xdr.MuxedAccount;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+/// Unit tests for deserializing account responses from JSON.
+/// </summary>
 [TestClass]
 public class AccountDeserializerTest
 {
+    /// <summary>
+    /// Verifies that AccountResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeAccountResponse()
+    public void Deserialize_WithAccountResponseJson_ReturnsDeserializedAccount()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("account.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var account = JsonSerializer.Deserialize<AccountResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(account);
         AssertTestData(account);
     }
 
+    /// <summary>
+    /// Verifies that Account throws exception when accessing KeyPair with unknown account ID type.
+    /// </summary>
     [TestMethod]
-    public void TestMuxedAccountException()
+    public void KeyPair_WithUnknownAccountIdType_ThrowsException()
     {
+        // Arrange
         var account = new Account(new UnknownAccountId(), 128);
 
+        // Act & Assert
         var ex = Assert.ThrowsException<Exception>(() => account.KeyPair);
         Assert.AreEqual("Invalid Account MuxedAccount type", ex.Message);
     }
 
+    /// <summary>
+    /// Verifies that AccountResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeAccountResponse()
+    public void SerializeDeserialize_WithAccountResponse_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("account.json");
         var json = File.ReadAllText(jsonPath);
         var account = JsonSerializer.Deserialize<AccountResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(account);
         var back = JsonSerializer.Deserialize<AccountResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTestData(back);
     }
