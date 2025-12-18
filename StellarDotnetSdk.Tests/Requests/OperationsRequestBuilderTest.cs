@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,13 +9,13 @@ using StellarDotnetSdk.Tests.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="OperationsRequestBuilder"/> class.
+///     Unit tests for <see cref="OperationsRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class OperationsRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that OperationsRequestBuilder.BuildUri correctly constructs URI with limit and order parameters.
+    ///     Verifies that OperationsRequestBuilder.BuildUri correctly constructs URI with limit and order parameters.
     /// </summary>
     [TestMethod]
     public void BuildUri_WithLimitAndOrder_BuildsCorrectUri()
@@ -34,7 +34,7 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OperationsRequestBuilder.Operation correctly constructs URI for specific operation ID.
+    ///     Verifies that OperationsRequestBuilder.Operation correctly constructs URI for specific operation ID.
     /// </summary>
     [TestMethod]
     public void Operation_WithValidOperationId_BuildsCorrectUri()
@@ -52,7 +52,7 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OperationsRequestBuilder.ForAccount correctly constructs URI for account operations.
+    ///     Verifies that OperationsRequestBuilder.ForAccount correctly constructs URI for account operations.
     /// </summary>
     [TestMethod]
     public void ForAccount_WithValidAccountId_BuildsCorrectUri()
@@ -74,7 +74,8 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OperationsRequestBuilder.ForClaimableBalance correctly constructs URI for claimable balance operations with valid ID.
+    ///     Verifies that OperationsRequestBuilder.ForClaimableBalance correctly constructs URI for claimable balance
+    ///     operations with valid ID.
     /// </summary>
     [TestMethod]
     public void ForClaimableBalance_WithValidBalanceId_BuildsCorrectUri()
@@ -96,7 +97,7 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OperationsRequestBuilder.ForClaimableBalance throws ArgumentException when balance ID is empty.
+    ///     Verifies that OperationsRequestBuilder.ForClaimableBalance throws ArgumentException when balance ID is empty.
     /// </summary>
     /// <param name="invalidId">The invalid balance ID to test.</param>
     [TestMethod]
@@ -112,7 +113,7 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OperationsRequestBuilder.ForLedger correctly constructs URI for ledger operations.
+    ///     Verifies that OperationsRequestBuilder.ForLedger correctly constructs URI for ledger operations.
     /// </summary>
     [TestMethod]
     public void ForLedger_WithValidLedgerId_BuildsCorrectUri()
@@ -133,7 +134,7 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OperationsRequestBuilder.ForTransaction correctly constructs URI for transaction operations.
+    ///     Verifies that OperationsRequestBuilder.ForTransaction correctly constructs URI for transaction operations.
     /// </summary>
     [TestMethod]
     public void ForTransaction_WithValidTransactionHash_BuildsCorrectUri()
@@ -153,7 +154,7 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OperationsRequestBuilder.IncludeFailed correctly adds include_failed parameter to URI.
+    ///     Verifies that OperationsRequestBuilder.IncludeFailed correctly adds include_failed parameter to URI.
     /// </summary>
     [TestMethod]
     public void IncludeFailed_WithTrueValue_AddsIncludeFailedParameter()
@@ -176,7 +177,7 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OperationsRequestBuilder.Execute correctly retrieves and deserializes operation page data.
+    ///     Verifies that OperationsRequestBuilder.Execute correctly retrieves and deserializes operation page data.
     /// </summary>
     [TestMethod]
     public async Task Execute_ForAccount_ReturnsDeserializedOperationPage()
@@ -193,7 +194,7 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OperationsRequestBuilder.Stream correctly streams and deserializes operation events.
+    ///     Verifies that OperationsRequestBuilder.Stream correctly streams and deserializes operation events.
     /// </summary>
     [TestMethod]
     public async Task Stream_WithValidJson_StreamsOperationEvents()

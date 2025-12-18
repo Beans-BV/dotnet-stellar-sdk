@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="ChangeTrustOperationResponse"/> class.
+///     Unit tests for <see cref="ChangeTrustOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class ChangeTrustOperationResponseTest
 {
     /// <summary>
-    /// Verifies that ChangeTrustOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that ChangeTrustOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithChangeTrustOperationJson_ReturnsDeserializedOperation()
@@ -32,7 +32,7 @@ public class ChangeTrustOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that ChangeTrustOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ChangeTrustOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithChangeTrustOperation_RoundTripsCorrectly()
@@ -67,7 +67,7 @@ public class ChangeTrustOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that ChangeTrustOperationResponse with muxed account can be deserialized from JSON correctly.
+    ///     Verifies that ChangeTrustOperationResponse with muxed account can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithChangeTrustOperationMuxedJson_ReturnsDeserializedOperation()
@@ -85,7 +85,8 @@ public class ChangeTrustOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that ChangeTrustOperationResponse with muxed account can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ChangeTrustOperationResponse with muxed account can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithChangeTrustOperationMuxed_RoundTripsCorrectly()
@@ -121,7 +122,7 @@ public class ChangeTrustOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that ChangeTrustOperationResponse with liquidity pool shares can be deserialized from JSON correctly.
+    ///     Verifies that ChangeTrustOperationResponse with liquidity pool shares can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithChangeTrustOperationLiquidityPoolSharesJson_ReturnsDeserializedOperation()
@@ -139,7 +140,8 @@ public class ChangeTrustOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that ChangeTrustOperationResponse with liquidity pool shares can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ChangeTrustOperationResponse with liquidity pool shares can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithChangeTrustOperationLiquidityPoolShares_RoundTripsCorrectly()

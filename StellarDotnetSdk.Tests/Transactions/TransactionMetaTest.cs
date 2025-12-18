@@ -36,13 +36,14 @@ using TransactionMetaV4 = StellarDotnetSdk.Soroban.TransactionMetaV4;
 namespace StellarDotnetSdk.Tests.Transactions;
 
 /// <summary>
-/// Unit tests for <see cref="TransactionMeta"/> class.
+///     Unit tests for <see cref="TransactionMeta" /> class.
 /// </summary>
 [TestClass]
 public class TransactionMetaTest
 {
     /// <summary>
-    /// Verifies that TransactionMeta.FromXdrBase64 correctly deserializes TransactionMetaV3 with soroban metadata, diagnostic events, and ledger entry changes.
+    ///     Verifies that TransactionMeta.FromXdrBase64 correctly deserializes TransactionMetaV3 with soroban metadata,
+    ///     diagnostic events, and ledger entry changes.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithTransactionMetaV3_DeserializesCorrectly()
@@ -174,7 +175,8 @@ public class TransactionMetaTest
     }
 
     /// <summary>
-    /// Verifies that TransactionMeta.FromXdrBase64 correctly deserializes TransactionMetaV4 with transaction events, diagnostic events, operation metadata, and ledger entry changes.
+    ///     Verifies that TransactionMeta.FromXdrBase64 correctly deserializes TransactionMetaV4 with transaction events,
+    ///     diagnostic events, operation metadata, and ledger entry changes.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithTransactionMetaV4_DeserializesCorrectly()

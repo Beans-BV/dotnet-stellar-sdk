@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses.Predicates;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="CreateClaimableBalanceOperationResponse"/> class.
+///     Unit tests for <see cref="CreateClaimableBalanceOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class CreateClaimableBalanceOperationResponseTest
 {
     /// <summary>
-    /// Verifies that CreateClaimableBalanceOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that CreateClaimableBalanceOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithCreateClaimableBalanceOperation_RoundTripsCorrectly()
@@ -34,7 +34,8 @@ public class CreateClaimableBalanceOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that CreateClaimableBalanceOperationResponse with absolute time predicate before max int can be deserialized correctly.
+    ///     Verifies that CreateClaimableBalanceOperationResponse with absolute time predicate before max int can be
+    ///     deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateClaimableBalanceAbsBeforeMaxIntOperationJson_DeserializesCorrectly()

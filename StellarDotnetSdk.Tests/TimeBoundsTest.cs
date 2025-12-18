@@ -5,13 +5,13 @@ using StellarDotnetSdk.Transactions;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="TimeBounds"/> class.
+///     Unit tests for <see cref="TimeBounds" /> class.
 /// </summary>
 [TestClass]
 public class TimeBoundsTest
 {
     /// <summary>
-    /// Verifies that TimeBounds GetHashCode and Equals work correctly for equal time bounds.
+    ///     Verifies that TimeBounds GetHashCode and Equals work correctly for equal time bounds.
     /// </summary>
     [TestMethod]
     public void GetHashCode_WithEqualTimeBounds_ReturnsSameHashCode()
@@ -26,7 +26,7 @@ public class TimeBoundsTest
     }
 
     /// <summary>
-    /// Verifies that TimeBounds constructor with zero values creates time bounds with both min and max time set to zero.
+    ///     Verifies that TimeBounds constructor with zero values creates time bounds with both min and max time set to zero.
     /// </summary>
     [TestMethod]
     public void Constructor_WithZeroValues_SetsBothTimesToZero()
@@ -40,7 +40,7 @@ public class TimeBoundsTest
     }
 
     /// <summary>
-    /// Verifies that TimeBounds constructor with zero min time creates time bounds with correct values.
+    ///     Verifies that TimeBounds constructor with zero min time creates time bounds with correct values.
     /// </summary>
     [TestMethod]
     public void Constructor_WithZeroMinTime_SetsCorrectValues()
@@ -54,7 +54,7 @@ public class TimeBoundsTest
     }
 
     /// <summary>
-    /// Verifies that TimeBounds constructor with zero max time creates time bounds with correct values.
+    ///     Verifies that TimeBounds constructor with zero max time creates time bounds with correct values.
     /// </summary>
     [TestMethod]
     public void Constructor_WithZeroMaxTime_SetsCorrectValues()
@@ -68,7 +68,7 @@ public class TimeBoundsTest
     }
 
     /// <summary>
-    /// Verifies that TimeBounds constructor throws ArgumentException when max time is less than min time.
+    ///     Verifies that TimeBounds constructor throws ArgumentException when max time is less than min time.
     /// </summary>
     [TestMethod]
     public void Constructor_WithMaxTimeLessThanMinTime_ThrowsArgumentException()
@@ -78,7 +78,7 @@ public class TimeBoundsTest
     }
 
     /// <summary>
-    /// Verifies that TimeBounds constructor with DateTime creates time bounds with correct min time and zero max time.
+    ///     Verifies that TimeBounds constructor with DateTime creates time bounds with correct min time and zero max time.
     /// </summary>
     [TestMethod]
     public void Constructor_WithDateTime_SetsCorrectMinTimeAndZeroMaxTime()
@@ -95,7 +95,8 @@ public class TimeBoundsTest
     }
 
     /// <summary>
-    /// Verifies that TimeBounds constructor with maxTime DateTime creates time bounds with zero min time and correct max time.
+    ///     Verifies that TimeBounds constructor with maxTime DateTime creates time bounds with zero min time and correct max
+    ///     time.
     /// </summary>
     [TestMethod]
     public void Constructor_WithMaxTimeDateTime_SetsZeroMinTimeAndCorrectMaxTime()
@@ -112,7 +113,8 @@ public class TimeBoundsTest
     }
 
     /// <summary>
-    /// Verifies that TimeBounds constructor throws ArgumentException when max time DateTime is less than min time DateTime.
+    ///     Verifies that TimeBounds constructor throws ArgumentException when max time DateTime is less than min time
+    ///     DateTime.
     /// </summary>
     [TestMethod]
     public void Constructor_WithMaxTimeLessThanMinTimeDateTime_ThrowsArgumentException()
@@ -126,7 +128,7 @@ public class TimeBoundsTest
     }
 
     /// <summary>
-    /// Verifies that TimeBounds constructor with DateTime and duration creates time bounds with correct min and max times.
+    ///     Verifies that TimeBounds constructor with DateTime and duration creates time bounds with correct min and max times.
     /// </summary>
     [TestMethod]
     public void Constructor_WithDateTimeAndDuration_SetsCorrectMinAndMaxTimes()
@@ -144,7 +146,8 @@ public class TimeBoundsTest
     }
 
     /// <summary>
-    /// Verifies that TimeBounds constructor with duration from UtcNow creates time bounds with non-zero min time and max time greater than now.
+    ///     Verifies that TimeBounds constructor with duration from UtcNow creates time bounds with non-zero min time and max
+    ///     time greater than now.
     /// </summary>
     [TestMethod]
     public void Constructor_WithDurationFromUtcNow_SetsCorrectTimeBounds()

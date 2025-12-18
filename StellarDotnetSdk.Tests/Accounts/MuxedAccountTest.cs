@@ -4,13 +4,13 @@ using StellarDotnetSdk.Accounts;
 namespace StellarDotnetSdk.Tests.Accounts;
 
 /// <summary>
-/// Unit tests for <see cref="MuxedAccountMed25519"/> class.
+///     Unit tests for <see cref="MuxedAccountMed25519" /> class.
 /// </summary>
 [TestClass]
 public class MuxedAccountTest
 {
     /// <summary>
-    /// Verifies that FromMuxedAccountId correctly parses muxed account ID and extracts ID and key.
+    ///     Verifies that FromMuxedAccountId correctly parses muxed account ID and extracts ID and key.
     /// </summary>
     [TestMethod]
     public void FromMuxedAccountId_WithValidMuxedAccountId_ReturnsCorrectMuxedAccount()

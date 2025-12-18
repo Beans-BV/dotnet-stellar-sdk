@@ -7,13 +7,13 @@ using StellarDotnetSdk.Converters;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing asset responses from JSON.
+///     Unit tests for deserializing asset responses from JSON.
 /// </summary>
 [TestClass]
 public class AssetDeserializerTest
 {
     /// <summary>
-    /// Verifies that native Asset can be deserialized from JSON correctly.
+    ///     Verifies that native Asset can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithNativeAssetJson_ReturnsNativeAsset()
@@ -31,7 +31,7 @@ public class AssetDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that credit Asset can be deserialized from JSON correctly.
+    ///     Verifies that credit Asset can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreditAssetJson_ReturnsCreditAsset()

@@ -5,13 +5,13 @@ using XDR = StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for set trustline flags result types.
+///     Unit tests for set trustline flags result types.
 /// </summary>
 [TestClass]
 public class SetTrustlineFlagsResultTest
 {
     /// <summary>
-    /// Verifies that SetTrustlineFlagsCantRevoke result can be deserialized correctly.
+    ///     Verifies that SetTrustlineFlagsCantRevoke result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetTrustlineFlagsCantRevokeXdr_ReturnsSetTrustlineFlagsCantRevoke()
@@ -39,7 +39,7 @@ public class SetTrustlineFlagsResultTest
     }
 
     /// <summary>
-    /// Verifies that SetTrustlineFlagsInvalidState result can be deserialized correctly.
+    ///     Verifies that SetTrustlineFlagsInvalidState result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetTrustlineFlagsInvalidStateXdr_ReturnsSetTrustlineFlagsInvalidState()
@@ -67,7 +67,7 @@ public class SetTrustlineFlagsResultTest
     }
 
     /// <summary>
-    /// Verifies that SetTrustlineFlagsMalformed result can be deserialized correctly.
+    ///     Verifies that SetTrustlineFlagsMalformed result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetTrustlineFlagsMalformedXdr_ReturnsSetTrustlineFlagsMalformed()
@@ -95,7 +95,7 @@ public class SetTrustlineFlagsResultTest
     }
 
     /// <summary>
-    /// Verifies that SetTrustlineFlagsNoTrustline result can be deserialized correctly.
+    ///     Verifies that SetTrustlineFlagsNoTrustline result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetTrustlineFlagsNoTrustlineXdr_ReturnsSetTrustlineFlagsNoTrustline()
@@ -123,7 +123,7 @@ public class SetTrustlineFlagsResultTest
     }
 
     /// <summary>
-    /// Verifies that SetTrustlineFlagsSuccess result can be deserialized correctly.
+    ///     Verifies that SetTrustlineFlagsSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetTrustlineFlagsSuccessXdr_ReturnsSetTrustlineFlagsSuccess()

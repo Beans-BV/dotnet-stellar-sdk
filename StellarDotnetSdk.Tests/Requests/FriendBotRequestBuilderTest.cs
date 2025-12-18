@@ -6,7 +6,7 @@ using StellarDotnetSdk.Tests.Responses;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="FriendBotRequestBuilder"/> class.
+///     Unit tests for <see cref="FriendBotRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class FriendBotRequestBuilderTest
@@ -18,7 +18,7 @@ public class FriendBotRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that accessing TestNetFriendBot throws NotSupportedException when network is not testnet.
+    ///     Verifies that accessing TestNetFriendBot throws NotSupportedException when network is not testnet.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(NotSupportedException))]
@@ -33,7 +33,7 @@ public class FriendBotRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that accessing TestNetFriendBot does not throw exception when network is testnet.
+    ///     Verifies that accessing TestNetFriendBot does not throw exception when network is testnet.
     /// </summary>
     [TestMethod]
     public void TestNetFriendBot_WhenTestnetNetwork_DoesNotThrowException()
@@ -47,7 +47,7 @@ public class FriendBotRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that FriendBotRequestBuilder.FundAccount correctly constructs URI for funding account.
+    ///     Verifies that FriendBotRequestBuilder.FundAccount correctly constructs URI for funding account.
     /// </summary>
     [TestMethod]
     public void FundAccount_WithValidAccountId_BuildsCorrectUri()
@@ -68,7 +68,7 @@ public class FriendBotRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that FriendBotRequestBuilder.Execute correctly retrieves and deserializes friend bot response.
+    ///     Verifies that FriendBotRequestBuilder.Execute correctly retrieves and deserializes friend bot response.
     /// </summary>
     [TestMethod]
     public async Task Execute_WithValidAccountId_ReturnsDeserializedFriendBotResponse()

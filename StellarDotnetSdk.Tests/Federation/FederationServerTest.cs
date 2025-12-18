@@ -9,7 +9,7 @@ using StellarDotnetSdk.Federation;
 namespace StellarDotnetSdk.Tests.Federation;
 
 /// <summary>
-/// Tests for FederationServer class functionality.
+///     Tests for FederationServer class functionality.
 /// </summary>
 [TestClass]
 public abstract class FederationServerTest
@@ -17,7 +17,7 @@ public abstract class FederationServerTest
     private const string StellarToml = "FEDERATIONserver = \"https://api.stellar.org/federation\"";
 
     /// <summary>
-    /// Verifies that CreateForDomain creates a FederationServer with correct server URI and domain.
+    ///     Verifies that CreateForDomain creates a FederationServer with correct server URI and domain.
     /// </summary>
     [TestMethod]
     public async Task CreateForDomain_WithValidDomain_CreatesServerWithCorrectProperties()
@@ -45,7 +45,7 @@ public abstract class FederationServerTest
     }
 
     /// <summary>
-    /// Verifies that ResolveAddress resolves a stellar address to account ID successfully.
+    ///     Verifies that ResolveAddress resolves a stellar address to account ID successfully.
     /// </summary>
     [TestMethod]
     public async Task ResolveAddress_WithValidAddress_ResolvesToAccountId()
@@ -66,7 +66,7 @@ public abstract class FederationServerTest
     }
 
     /// <summary>
-    /// Verifies that ResolveAddress resolves a stellar address with memo information successfully.
+    ///     Verifies that ResolveAddress resolves a stellar address with memo information successfully.
     /// </summary>
     [TestMethod]
     public async Task ResolveAddress_WithValidAddressAndMemo_ResolvesWithMemoInformation()
@@ -87,7 +87,7 @@ public abstract class FederationServerTest
     }
 
     /// <summary>
-    /// Verifies that ResolveAddress throws NotFoundException when address is not found.
+    ///     Verifies that ResolveAddress throws NotFoundException when address is not found.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(NotFoundException))]

@@ -7,7 +7,7 @@ using Operation = StellarDotnetSdk.Operations.Operation;
 namespace StellarDotnetSdk.Tests.Operations;
 
 /// <summary>
-/// Tests for footprint-related operations (ExtendFootprintOperation and RestoreFootprintOperation).
+///     Tests for footprint-related operations (ExtendFootprintOperation and RestoreFootprintOperation).
 /// </summary>
 [TestClass]
 public class FootprintOperationTest
@@ -16,7 +16,7 @@ public class FootprintOperationTest
         KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
     /// <summary>
-    /// Verifies that ExtendFootprintOperation with null extension point uses ExtensionPointZero.
+    ///     Verifies that ExtendFootprintOperation with null extension point uses ExtensionPointZero.
     /// </summary>
     [TestMethod]
     public void ExtendFootprintOperation_WithNullExtensionPoint_UsesExtensionPointZero()
@@ -29,7 +29,7 @@ public class FootprintOperationTest
     }
 
     /// <summary>
-    /// Verifies that ExtendFootprintOperation without source account round-trips correctly through XDR.
+    ///     Verifies that ExtendFootprintOperation without source account round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void ExtendFootprintOperation_WithoutSourceAccount_RoundTripsThroughXdr()
@@ -48,7 +48,7 @@ public class FootprintOperationTest
     }
 
     /// <summary>
-    /// Verifies that ExtendFootprintOperation with valid configuration round-trips correctly through XDR.
+    ///     Verifies that ExtendFootprintOperation with valid configuration round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void ExtendFootprintOperation_WithValidConfiguration_RoundTripsThroughXdr()
@@ -67,7 +67,7 @@ public class FootprintOperationTest
     }
 
     /// <summary>
-    /// Verifies that RestoreFootprintOperation without source account round-trips correctly through XDR.
+    ///     Verifies that RestoreFootprintOperation without source account round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void RestoreFootprintOperation_WithoutSourceAccount_RoundTripsThroughXdr()
@@ -85,7 +85,7 @@ public class FootprintOperationTest
     }
 
     /// <summary>
-    /// Verifies that RestoreFootprintOperation with valid configuration round-trips correctly through XDR.
+    ///     Verifies that RestoreFootprintOperation with valid configuration round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void RestoreFootprintOperation_WithValidConfiguration_RoundTripsThroughXdr()

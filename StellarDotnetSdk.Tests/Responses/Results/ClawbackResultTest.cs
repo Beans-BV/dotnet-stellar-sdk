@@ -8,13 +8,13 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.ClawbackResultCode.ClawbackResultCod
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for clawback result types.
+///     Unit tests for clawback result types.
 /// </summary>
 [TestClass]
 public class ClawbackResultTest
 {
     /// <summary>
-    /// Verifies that ClawbackMalformed result can be deserialized correctly.
+    ///     Verifies that ClawbackMalformed result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClawbackMalformedXdr_ReturnsClawbackMalformed()
@@ -28,7 +28,7 @@ public class ClawbackResultTest
     }
 
     /// <summary>
-    /// Verifies that ClawbackNotClawbackEnabled result can be deserialized correctly.
+    ///     Verifies that ClawbackNotClawbackEnabled result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClawbackNotClawbackEnabledXdr_ReturnsClawbackNotClawbackEnabled()
@@ -42,7 +42,7 @@ public class ClawbackResultTest
     }
 
     /// <summary>
-    /// Verifies that ClawbackNoTrust result can be deserialized correctly.
+    ///     Verifies that ClawbackNoTrust result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClawbackNoTrustXdr_ReturnsClawbackNoTrust()
@@ -56,7 +56,7 @@ public class ClawbackResultTest
     }
 
     /// <summary>
-    /// Verifies that ClawbackSuccess result can be deserialized correctly.
+    ///     Verifies that ClawbackSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClawbackSuccessXdr_ReturnsClawbackSuccess()
@@ -70,7 +70,7 @@ public class ClawbackResultTest
     }
 
     /// <summary>
-    /// Verifies that ClawbackUnderfunded result can be deserialized correctly.
+    ///     Verifies that ClawbackUnderfunded result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClawbackUnderfundedXdr_ReturnsClawbackUnderfunded()

@@ -7,13 +7,14 @@ using FormatException = StellarDotnetSdk.Exceptions.FormatException;
 namespace StellarDotnetSdk.Tests.Transactions;
 
 /// <summary>
-/// Unit tests for <see cref="TransactionPreconditions"/> class.
+///     Unit tests for <see cref="TransactionPreconditions" /> class.
 /// </summary>
 [TestClass]
 public class TransactionPreconditionsTest
 {
     /// <summary>
-    /// Verifies that TransactionPreconditions.FromXdr correctly converts PreconditionsV2 XDR to TransactionPreconditions with all properties.
+    ///     Verifies that TransactionPreconditions.FromXdr correctly converts PreconditionsV2 XDR to TransactionPreconditions
+    ///     with all properties.
     /// </summary>
     [TestMethod]
     public void FromXdr_WithPreconditionsV2_ConvertsCorrectly()
@@ -54,7 +55,7 @@ public class TransactionPreconditionsTest
     }
 
     /// <summary>
-    /// Verifies that TransactionPreconditions round-trips from V2 to V1 XDR when only time bounds are present.
+    ///     Verifies that TransactionPreconditions round-trips from V2 to V1 XDR when only time bounds are present.
     /// </summary>
     [TestMethod]
     public void FromXdr_WithV2PreconditionsContainingOnlyTimeBounds_RoundTripsToV1()
@@ -99,7 +100,8 @@ public class TransactionPreconditionsTest
     }
 
     /// <summary>
-    /// Verifies that TransactionPreconditions.ToXdr correctly converts to PreconditionsV2 XDR with time bounds, min sequence number, and extra signers.
+    ///     Verifies that TransactionPreconditions.ToXdr correctly converts to PreconditionsV2 XDR with time bounds, min
+    ///     sequence number, and extra signers.
     /// </summary>
     [TestMethod]
     public void ToXdr_WithV2Preconditions_ConvertsToV2XdrCorrectly()
@@ -144,7 +146,7 @@ public class TransactionPreconditionsTest
     }
 
     /// <summary>
-    /// Verifies that TransactionPreconditions.ToXdr converts to PreconditionsTime XDR when only time bounds are present.
+    ///     Verifies that TransactionPreconditions.ToXdr converts to PreconditionsTime XDR when only time bounds are present.
     /// </summary>
     [TestMethod]
     public void ToXdr_WithOnlyTimeBounds_ConvertsToTimeBoundsXdr()
@@ -170,7 +172,7 @@ public class TransactionPreconditionsTest
     }
 
     /// <summary>
-    /// Verifies that TransactionPreconditions.ToXdr converts to PreconditionsNone XDR when no time bounds are present.
+    ///     Verifies that TransactionPreconditions.ToXdr converts to PreconditionsNone XDR when no time bounds are present.
     /// </summary>
     [TestMethod]
     public void ToXdr_WithNullTimeBounds_ConvertsToNoneXdr()
@@ -191,7 +193,8 @@ public class TransactionPreconditionsTest
     }
 
     /// <summary>
-    /// Verifies that TransactionPreconditions.IsValid throws FormatException when extra signers count exceeds maximum allowed.
+    ///     Verifies that TransactionPreconditions.IsValid throws FormatException when extra signers count exceeds maximum
+    ///     allowed.
     /// </summary>
     [TestMethod]
     public void IsValid_WithExtraSignersExceedingMaximum_ThrowsFormatException()
@@ -208,7 +211,7 @@ public class TransactionPreconditionsTest
     }
 
     /// <summary>
-    /// Verifies that TransactionPreconditions.HasV2 returns true when preconditions are V2 type.
+    ///     Verifies that TransactionPreconditions.HasV2 returns true when preconditions are V2 type.
     /// </summary>
     [TestMethod]
     public void HasV2_WithV2Preconditions_ReturnsTrue()

@@ -4,13 +4,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="SignerUtil"/> class.
+///     Unit tests for <see cref="SignerUtil" /> class.
 /// </summary>
 [TestClass]
 public class SignerTest
 {
     /// <summary>
-    /// Verifies that SignedPayload creates a signer key with the correct payload and account ID.
+    ///     Verifies that SignedPayload creates a signer key with the correct payload and account ID.
     /// </summary>
     [TestMethod]
     public void SignedPayload_WithValidSignedPayloadSigner_ReturnsSignerKeyWithCorrectPayloadAndAccountId()

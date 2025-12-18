@@ -12,19 +12,19 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Abstract base class for creating fake HTTP responses for testing purposes.
+///     Abstract base class for creating fake HTTP responses for testing purposes.
 /// </summary>
 public abstract class FakeResponse
 {
     /// <summary>
-    /// Creates an HTTP response message.
+    ///     Creates an HTTP response message.
     /// </summary>
     /// <param name="cancellationToken">Cancellation token for the operation.</param>
     /// <returns>An HTTP response message.</returns>
     public abstract HttpResponseMessage MakeResponse(CancellationToken cancellationToken);
 
     /// <summary>
-    /// Creates a fake response that starts a streaming response with the specified actions.
+    ///     Creates a fake response that starts a streaming response with the specified actions.
     /// </summary>
     /// <param name="actions">The stream actions to execute.</param>
     /// <returns>A fake response configured for streaming.</returns>
@@ -34,7 +34,7 @@ public abstract class FakeResponse
     }
 
     /// <summary>
-    /// Creates a fake response that throws an IO error.
+    ///     Creates a fake response that throws an IO error.
     /// </summary>
     /// <returns>A fake response configured to throw an IO error.</returns>
     public static FakeResponse WithIOError()

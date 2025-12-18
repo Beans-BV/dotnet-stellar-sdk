@@ -22,7 +22,7 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="Server"/> class.
+///     Unit tests for <see cref="Server" /> class.
 /// </summary>
 [TestClass]
 public class ServerTest
@@ -62,7 +62,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction returns success response when transaction is valid.
+    ///     Verifies that Server.SubmitTransaction returns success response when transaction is valid.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithValidTransaction_ReturnsSuccessResponse()
@@ -83,7 +83,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server includes default client headers in HTTP requests.
+    ///     Verifies that Server includes default client headers in HTTP requests.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithDefaultHeaders_IncludesClientHeaders()
@@ -124,7 +124,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction returns failure response when transaction is invalid.
+    ///     Verifies that Server.SubmitTransaction returns failure response when transaction is invalid.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithInvalidTransaction_ReturnsFailureResponse()
@@ -157,7 +157,8 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction with EnsureSuccess option returns success response when transaction succeeds.
+    ///     Verifies that Server.SubmitTransaction with EnsureSuccess option returns success response when transaction
+    ///     succeeds.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithEnsureSuccessAndValidTransaction_ReturnsSuccessResponse()
@@ -178,7 +179,8 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction with EnsureSuccess option throws ConnectionErrorException when transaction fails.
+    ///     Verifies that Server.SubmitTransaction with EnsureSuccess option throws ConnectionErrorException when transaction
+    ///     fails.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithEnsureSuccessAndFailedTransaction_ThrowsConnectionErrorException()
@@ -197,7 +199,8 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction with EnsureSuccess option throws ConnectionErrorException when response has empty content.
+    ///     Verifies that Server.SubmitTransaction with EnsureSuccess option throws ConnectionErrorException when response has
+    ///     empty content.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithEnsureSuccessAndEmptyContent_ThrowsConnectionErrorException()
@@ -216,7 +219,8 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction with EnsureSuccess option throws ConnectionErrorException when response has null content.
+    ///     Verifies that Server.SubmitTransaction with EnsureSuccess option throws ConnectionErrorException when response has
+    ///     null content.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithEnsureSuccessAndNullContent_ThrowsConnectionErrorException()
@@ -235,7 +239,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction with SkipMemoRequiredCheck set to false returns success response.
+    ///     Verifies that Server.SubmitTransaction with SkipMemoRequiredCheck set to false returns success response.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithSkipMemoRequiredCheckFalse_ReturnsSuccessResponse()
@@ -256,7 +260,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction with envelope XDR base64 string returns success response.
+    ///     Verifies that Server.SubmitTransaction with envelope XDR base64 string returns success response.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithEnvelopeXdrBase64_ReturnsSuccessResponse()
@@ -277,7 +281,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction with fee bump transaction envelope XDR base64 returns success response.
+    ///     Verifies that Server.SubmitTransaction with fee bump transaction envelope XDR base64 returns success response.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithFeeBumpTransactionEnvelopeXdrBase64_ReturnsSuccessResponse()
@@ -299,7 +303,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction with fee bump transaction without options returns success response.
+    ///     Verifies that Server.SubmitTransaction with fee bump transaction without options returns success response.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithFeeBumpTransactionWithoutOptions_ReturnsSuccessResponse()
@@ -319,7 +323,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction with fee bump transaction and options returns success response.
+    ///     Verifies that Server.SubmitTransaction with fee bump transaction and options returns success response.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithFeeBumpTransactionAndOptions_ReturnsSuccessResponse()
@@ -340,7 +344,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction without options returns success response.
+    ///     Verifies that Server.SubmitTransaction without options returns success response.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithoutOptions_ReturnsSuccessResponse()
@@ -360,7 +364,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction with envelope XDR base64 without options returns success response.
+    ///     Verifies that Server.SubmitTransaction with envelope XDR base64 without options returns success response.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithEnvelopeXdrBase64WithoutOptions_ReturnsSuccessResponse()
@@ -381,7 +385,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Transaction.FromEnvelopeXdr correctly deserializes transaction with InvokeContractOperation.
+    ///     Verifies that Transaction.FromEnvelopeXdr correctly deserializes transaction with InvokeContractOperation.
     /// </summary>
     [TestMethod]
     public void FromEnvelopeXdr_WithInvokeContractOperation_DeserializesCorrectly()
@@ -408,10 +412,12 @@ public class ServerTest
 
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction throws TooManyRequestsException with RetryAfter when server returns 429 with integer Retry-After header.
+    ///     Verifies that Server.SubmitTransaction throws TooManyRequestsException with RetryAfter when server returns 429 with
+    ///     integer Retry-After header.
     /// </summary>
     [TestMethod]
-    public async Task SubmitTransaction_WithTooManyRequestsAndIntegerRetryAfter_ThrowsTooManyRequestsExceptionWithRetryAfter()
+    public async Task
+        SubmitTransaction_WithTooManyRequestsAndIntegerRetryAfter_ThrowsTooManyRequestsExceptionWithRetryAfter()
     {
         // Arrange
         var server = Utils.CreateTestServerWithHeaders(
@@ -430,10 +436,12 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction throws TooManyRequestsException with RetryAfter when server returns 429 with DateTime Retry-After header.
+    ///     Verifies that Server.SubmitTransaction throws TooManyRequestsException with RetryAfter when server returns 429 with
+    ///     DateTime Retry-After header.
     /// </summary>
     [TestMethod]
-    public async Task SubmitTransaction_WithTooManyRequestsAndDateTimeRetryAfter_ThrowsTooManyRequestsExceptionWithRetryAfter()
+    public async Task
+        SubmitTransaction_WithTooManyRequestsAndDateTimeRetryAfter_ThrowsTooManyRequestsExceptionWithRetryAfter()
     {
         // Arrange
         var server = Utils.CreateTestServerWithHeaders(
@@ -453,10 +461,12 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction throws ServiceUnavailableException with RetryAfter when server returns 503 with integer Retry-After header.
+    ///     Verifies that Server.SubmitTransaction throws ServiceUnavailableException with RetryAfter when server returns 503
+    ///     with integer Retry-After header.
     /// </summary>
     [TestMethod]
-    public async Task SubmitTransaction_WithServiceUnavailableAndIntegerRetryAfter_ThrowsServiceUnavailableExceptionWithRetryAfter()
+    public async Task
+        SubmitTransaction_WithServiceUnavailableAndIntegerRetryAfter_ThrowsServiceUnavailableExceptionWithRetryAfter()
     {
         // Arrange
         var server = Utils.CreateTestServerWithHeaders(
@@ -475,10 +485,12 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransaction throws ServiceUnavailableException with RetryAfter when server returns 503 with DateTime Retry-After header.
+    ///     Verifies that Server.SubmitTransaction throws ServiceUnavailableException with RetryAfter when server returns 503
+    ///     with DateTime Retry-After header.
     /// </summary>
     [TestMethod]
-    public async Task SubmitTransaction_WithServiceUnavailableAndDateTimeRetryAfter_ThrowsServiceUnavailableExceptionWithRetryAfter()
+    public async Task
+        SubmitTransaction_WithServiceUnavailableAndDateTimeRetryAfter_ThrowsServiceUnavailableExceptionWithRetryAfter()
     {
         // Arrange
         var server = Utils.CreateTestServerWithHeaders(
@@ -497,7 +509,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransactionAsync returns response with PENDING status when transaction is pending.
+    ///     Verifies that Server.SubmitTransactionAsync returns response with PENDING status when transaction is pending.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransactionAsync_WithPendingTransaction_ReturnsPendingResponse()
@@ -523,7 +535,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransactionAsync returns response with DUPLICATE status when transaction is duplicate.
+    ///     Verifies that Server.SubmitTransactionAsync returns response with DUPLICATE status when transaction is duplicate.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransactionAsync_WithDuplicateTransaction_ReturnsDuplicateResponse()
@@ -549,7 +561,8 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransactionAsync returns response with TRY_AGAIN_LATER status when server requests retry.
+    ///     Verifies that Server.SubmitTransactionAsync returns response with TRY_AGAIN_LATER status when server requests
+    ///     retry.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransactionAsync_WithTryAgainLaterStatus_ReturnsTryAgainLaterResponse()
@@ -575,7 +588,8 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransactionAsync returns response with ERROR status and error result XDR for protocol prior to 22.
+    ///     Verifies that Server.SubmitTransactionAsync returns response with ERROR status and error result XDR for protocol
+    ///     prior to 22.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransactionAsync_WithErrorStatusPriorToProtocol22_ReturnsErrorResponseWithErrorResult()
@@ -603,7 +617,8 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransactionAsync returns response with ERROR status and error result XDR for protocol 22.
+    ///     Verifies that Server.SubmitTransactionAsync returns response with ERROR status and error result XDR for protocol
+    ///     22.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransactionAsync_WithErrorStatusProtocol22_ReturnsErrorResponseWithErrorResult()
@@ -632,7 +647,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransactionAsync without SkipMemoRequiredCheck returns response with PENDING status.
+    ///     Verifies that Server.SubmitTransactionAsync without SkipMemoRequiredCheck returns response with PENDING status.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransactionAsync_WithoutSkipMemoRequiredCheck_ReturnsPendingResponse()
@@ -657,7 +672,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransactionAsync with envelope XDR base64 returns response with PENDING status.
+    ///     Verifies that Server.SubmitTransactionAsync with envelope XDR base64 returns response with PENDING status.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransactionAsync_WithEnvelopeXdrBase64_ReturnsPendingResponse()
@@ -683,7 +698,7 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransactionAsync with fee bump transaction returns response with PENDING status.
+    ///     Verifies that Server.SubmitTransactionAsync with fee bump transaction returns response with PENDING status.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransactionAsync_WithFeeBumpTransaction_ReturnsPendingResponse()
@@ -708,7 +723,8 @@ public class ServerTest
     }
 
     /// <summary>
-    /// Verifies that Server.SubmitTransactionAsync with fee bump transaction and EnsureSuccess option returns response with PENDING status.
+    ///     Verifies that Server.SubmitTransactionAsync with fee bump transaction and EnsureSuccess option returns response
+    ///     with PENDING status.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransactionAsync_WithFeeBumpTransactionAndEnsureSuccess_ReturnsPendingResponse()

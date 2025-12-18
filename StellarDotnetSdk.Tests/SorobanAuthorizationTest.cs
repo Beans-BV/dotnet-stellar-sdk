@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Operations;
@@ -11,7 +11,7 @@ using SorobanCredentials = StellarDotnetSdk.Operations.SorobanCredentials;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for Soroban authorization-related classes and functionality.
+///     Unit tests for Soroban authorization-related classes and functionality.
 /// </summary>
 [TestClass]
 public class SorobanAuthorizationTest
@@ -33,7 +33,7 @@ public class SorobanAuthorizationTest
     }
 
     /// <summary>
-    /// Verifies that SorobanAddressCredentials round-trips correctly through XDR serialization with valid credentials.
+    ///     Verifies that SorobanAddressCredentials round-trips correctly through XDR serialization with valid credentials.
     /// </summary>
     [TestMethod]
     public void FromXdr_SorobanAddressCredentialsWithValidCredentials_RoundTripsCorrectly()
@@ -55,7 +55,7 @@ public class SorobanAuthorizationTest
     }
 
     /// <summary>
-    /// Verifies that SorobanAddressCredentials constructor throws ArgumentNullException when address is null.
+    ///     Verifies that SorobanAddressCredentials constructor throws ArgumentNullException when address is null.
     /// </summary>
     [TestMethod]
     public void Constructor_SorobanAddressCredentialsWithMissingAddress_ThrowsArgumentNullException()
@@ -67,7 +67,8 @@ public class SorobanAuthorizationTest
     }
 
     /// <summary>
-    /// Verifies that SorobanAddressCredentials round-trips correctly through XDR serialization when address is a contract address.
+    ///     Verifies that SorobanAddressCredentials round-trips correctly through XDR serialization when address is a contract
+    ///     address.
     /// </summary>
     [TestMethod]
     public void FromXdr_SorobanAddressCredentialsWithContractAddress_RoundTripsCorrectly()
@@ -90,7 +91,7 @@ public class SorobanAuthorizationTest
     }
 
     /// <summary>
-    /// Verifies that SorobanAddressCredentials constructor throws ArgumentNullException when signature is null.
+    ///     Verifies that SorobanAddressCredentials constructor throws ArgumentNullException when signature is null.
     /// </summary>
     [TestMethod]
     public void Constructor_SorobanAddressCredentialsWithMissingSignature_ThrowsArgumentNullException()
@@ -102,7 +103,8 @@ public class SorobanAuthorizationTest
     }
 
     /// <summary>
-    /// Verifies that SorobanAddressCredentials round-trips correctly through XDR serialization with zero signature expiration ledger.
+    ///     Verifies that SorobanAddressCredentials round-trips correctly through XDR serialization with zero signature
+    ///     expiration ledger.
     /// </summary>
     [TestMethod]
     public void FromXdr_SorobanAddressCredentialsWithZeroSignatureExpirationLedger_RoundTripsCorrectly()
@@ -124,7 +126,7 @@ public class SorobanAuthorizationTest
     }
 
     /// <summary>
-    /// Verifies that SorobanAddressCredentials round-trips correctly through XDR serialization with zero nonce.
+    ///     Verifies that SorobanAddressCredentials round-trips correctly through XDR serialization with zero nonce.
     /// </summary>
     [TestMethod]
     public void FromXdr_SorobanAddressCredentialsWithZeroNonce_RoundTripsCorrectly()
@@ -147,7 +149,7 @@ public class SorobanAuthorizationTest
     }
 
     /// <summary>
-    /// Verifies that SorobanAuthorizationEntry round-trips correctly through XDR serialization with empty sub-invocations.
+    ///     Verifies that SorobanAuthorizationEntry round-trips correctly through XDR serialization with empty sub-invocations.
     /// </summary>
     [TestMethod]
     public void FromXdr_SorobanAuthorizationEntryWithEmptySubInvocations_RoundTripsCorrectly()
@@ -195,7 +197,8 @@ public class SorobanAuthorizationTest
     }
 
     /// <summary>
-    /// Verifies that SorobanAuthorizationEntry round-trips correctly through XDR serialization containing AuthorizedCreateContractFunction.
+    ///     Verifies that SorobanAuthorizationEntry round-trips correctly through XDR serialization containing
+    ///     AuthorizedCreateContractFunction.
     /// </summary>
     [TestMethod]
     public void FromXdr_SorobanAuthorizationEntryWithAuthorizedCreateContractFunction_RoundTripsCorrectly()
@@ -257,7 +260,8 @@ public class SorobanAuthorizationTest
     }
 
     /// <summary>
-    /// Verifies that SorobanAuthorizationEntry round-trips correctly through XDR serialization containing AuthorizedCreateContractV2Function.
+    ///     Verifies that SorobanAuthorizationEntry round-trips correctly through XDR serialization containing
+    ///     AuthorizedCreateContractV2Function.
     /// </summary>
     [TestMethod]
     public void FromXdr_SorobanAuthorizationEntryWithAuthorizedCreateContractV2Function_RoundTripsCorrectly()
@@ -325,7 +329,8 @@ public class SorobanAuthorizationTest
     }
 
     /// <summary>
-    /// Verifies that SorobanAuthorizationEntry round-trips correctly through XDR serialization containing AuthorizedContractFunction.
+    ///     Verifies that SorobanAuthorizationEntry round-trips correctly through XDR serialization containing
+    ///     AuthorizedContractFunction.
     /// </summary>
     [TestMethod]
     public void FromXdr_SorobanAuthorizationEntryWithAuthorizedContractFunction_RoundTripsCorrectly()

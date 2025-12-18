@@ -8,7 +8,7 @@ using StellarDotnetSdk.Converters;
 namespace StellarDotnetSdk.Tests.Converters;
 
 /// <summary>
-/// Tests for AssetAmountJsonConverter JSON serialization and deserialization functionality.
+///     Tests for AssetAmountJsonConverter JSON serialization and deserialization functionality.
 /// </summary>
 [TestClass]
 public class AssetAmountJsonConverterTest
@@ -16,7 +16,7 @@ public class AssetAmountJsonConverterTest
     private readonly JsonSerializerOptions _options = JsonOptions.DefaultOptions;
 
     /// <summary>
-    /// Verifies that native asset amounts serialize and deserialize correctly through JSON.
+    ///     Verifies that native asset amounts serialize and deserialize correctly through JSON.
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithNativeAsset_RoundTripsCorrectly()
@@ -35,7 +35,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that CreditAlphaNum4 asset amounts serialize and deserialize correctly through JSON.
+    ///     Verifies that CreditAlphaNum4 asset amounts serialize and deserialize correctly through JSON.
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithCreditAlphaNum4Asset_RoundTripsCorrectly()
@@ -58,7 +58,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that CreditAlphaNum12 asset amounts serialize and deserialize correctly through JSON.
+    ///     Verifies that CreditAlphaNum12 asset amounts serialize and deserialize correctly through JSON.
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithCreditAlphaNum12Asset_RoundTripsCorrectly()
@@ -81,7 +81,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing valid JSON with native asset creates correct AssetAmount instance.
+    ///     Verifies that deserializing valid JSON with native asset creates correct AssetAmount instance.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithValidJsonNativeAsset_CreatesCorrectInstance()
@@ -99,7 +99,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing valid JSON with non-native asset creates correct AssetAmount instance.
+    ///     Verifies that deserializing valid JSON with non-native asset creates correct AssetAmount instance.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithValidJsonNonNativeAsset_CreatesCorrectInstance()
@@ -118,7 +118,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with missing asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with missing asset property throws ArgumentException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -132,7 +132,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with missing amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with missing amount property throws ArgumentException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -146,7 +146,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with null asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with null asset property throws ArgumentException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -160,7 +160,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with null amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with null amount property throws ArgumentException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -174,7 +174,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with large amount value succeeds.
+    ///     Verifies that deserializing JSON with large amount value succeeds.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithLargeAmount_Succeeds()
@@ -191,7 +191,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with zero amount value succeeds.
+    ///     Verifies that deserializing JSON with zero amount value succeeds.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithZeroAmount_Succeeds()
@@ -208,7 +208,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that serialization produces JSON with correct property names and values.
+    ///     Verifies that serialization produces JSON with correct property names and values.
     /// </summary>
     [TestMethod]
     public void Serialize_ProducesCorrectJsonFormat()
@@ -231,7 +231,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing invalid JSON throws JsonException.
+    ///     Verifies that deserializing invalid JSON throws JsonException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
@@ -245,7 +245,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with wrong structure throws JsonException.
+    ///     Verifies that deserializing JSON with wrong structure throws JsonException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
@@ -259,7 +259,7 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with empty asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with empty asset property throws ArgumentException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]

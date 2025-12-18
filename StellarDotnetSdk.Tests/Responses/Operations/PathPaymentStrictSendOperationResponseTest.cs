@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="PathPaymentStrictSendOperationResponse"/> class.
+///     Unit tests for <see cref="PathPaymentStrictSendOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class PathPaymentStrictSendOperationResponseTest
 {
     /// <summary>
-    /// Verifies that PathPaymentStrictSendOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that PathPaymentStrictSendOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendOperationJson_ReturnsDeserializedOperation()
@@ -32,7 +32,7 @@ public class PathPaymentStrictSendOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that PathPaymentStrictSendOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithPathPaymentStrictSendOperation_RoundTripsCorrectly()
@@ -71,7 +71,7 @@ public class PathPaymentStrictSendOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendOperationResponse with muxed accounts can be deserialized from JSON correctly.
+    ///     Verifies that PathPaymentStrictSendOperationResponse with muxed accounts can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendOperationMuxedJson_ReturnsDeserializedOperation()
@@ -89,7 +89,8 @@ public class PathPaymentStrictSendOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendOperationResponse with muxed accounts can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that PathPaymentStrictSendOperationResponse with muxed accounts can be serialized and deserialized
+    ///     correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithPathPaymentStrictSendOperationMuxed_RoundTripsCorrectly()

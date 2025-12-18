@@ -4,13 +4,13 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for account merge result types.
+///     Unit tests for account merge result types.
 /// </summary>
 [TestClass]
 public class AccountMergeResultTest
 {
     /// <summary>
-    /// Verifies that AccountMergeSuccess result can be deserialized correctly and contains source account balance.
+    ///     Verifies that AccountMergeSuccess result can be deserialized correctly and contains source account balance.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountMergeSuccessXdr_ReturnsAccountMergeSuccessWithBalance()
@@ -28,7 +28,7 @@ public class AccountMergeResultTest
     }
 
     /// <summary>
-    /// Verifies that AccountMergeMalformed result can be deserialized correctly.
+    ///     Verifies that AccountMergeMalformed result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountMergeMalformedXdr_ReturnsAccountMergeMalformed()
@@ -41,7 +41,7 @@ public class AccountMergeResultTest
     }
 
     /// <summary>
-    /// Verifies that AccountMergeNoAccount result can be deserialized correctly.
+    ///     Verifies that AccountMergeNoAccount result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountMergeNoAccountXdr_ReturnsAccountMergeNoAccount()
@@ -54,7 +54,7 @@ public class AccountMergeResultTest
     }
 
     /// <summary>
-    /// Verifies that AccountMergeImmutableSet result can be deserialized correctly.
+    ///     Verifies that AccountMergeImmutableSet result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountMergeImmutableSetXdr_ReturnsAccountMergeImmutableSet()
@@ -67,7 +67,7 @@ public class AccountMergeResultTest
     }
 
     /// <summary>
-    /// Verifies that AccountMergeHasSubEntries result can be deserialized correctly.
+    ///     Verifies that AccountMergeHasSubEntries result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountMergeHasSubEntriesXdr_ReturnsAccountMergeHasSubEntries()
@@ -80,7 +80,7 @@ public class AccountMergeResultTest
     }
 
     /// <summary>
-    /// Verifies that AccountMergeSequenceNumberTooFar result can be deserialized correctly.
+    ///     Verifies that AccountMergeSequenceNumberTooFar result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountMergeSequenceNumberTooFarXdr_ReturnsAccountMergeSequenceNumberTooFar()
@@ -93,7 +93,7 @@ public class AccountMergeResultTest
     }
 
     /// <summary>
-    /// Verifies that AccountMergeDestFull result can be deserialized correctly.
+    ///     Verifies that AccountMergeDestFull result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountMergeDestFullXdr_ReturnsAccountMergeDestFull()

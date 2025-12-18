@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing account page responses from JSON.
+///     Unit tests for deserializing account page responses from JSON.
 /// </summary>
 [TestClass]
 public class AccountPageDeserializerTest
 {
     /// <summary>
-    /// Verifies that Page&lt;AccountResponse&gt; can be deserialized from JSON correctly.
+    ///     Verifies that Page&lt;AccountResponse&gt; can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountPageJson_ReturnsDeserializedAccountPage()
@@ -31,7 +31,7 @@ public class AccountPageDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that Page&lt;AccountResponse&gt; can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that Page&lt;AccountResponse&gt; can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountPage_RoundTripsCorrectly()

@@ -10,13 +10,13 @@ using Memo = StellarDotnetSdk.Memos.Memo;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="Memo"/> class.
+///     Unit tests for <see cref="Memo" /> class.
 /// </summary>
 [TestClass]
 public class MemoTest
 {
     /// <summary>
-    /// Verifies that Memo.None creates a memo with MEMO_NONE type.
+    ///     Verifies that Memo.None creates a memo with MEMO_NONE type.
     /// </summary>
     [TestMethod]
     public void None_CreatesMemo_WithMemoNoneType()
@@ -29,7 +29,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Text creates a memo with MEMO_TEXT type and correct value.
+    ///     Verifies that Memo.Text creates a memo with MEMO_TEXT type and correct value.
     /// </summary>
     [TestMethod]
     public void Text_WithValidString_CreatesMemoWithTextType()
@@ -43,7 +43,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Text correctly handles UTF-8 characters.
+    ///     Verifies that Memo.Text correctly handles UTF-8 characters.
     /// </summary>
     [TestMethod]
     public void Text_WithUtf8Character_CreatesMemoWithCorrectValue()
@@ -57,7 +57,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Text throws ArgumentNullException when string is null.
+    ///     Verifies that Memo.Text throws ArgumentNullException when string is null.
     /// </summary>
     [TestMethod]
     public void Text_WithNullString_ThrowsArgumentNullException()
@@ -67,7 +67,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Text throws exception when string exceeds 28 bytes.
+    ///     Verifies that Memo.Text throws exception when string exceeds 28 bytes.
     /// </summary>
     [TestMethod]
     public void Text_WithStringTooLong_ThrowsException()
@@ -88,7 +88,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Text throws ArgumentNullException when byte array is null.
+    ///     Verifies that Memo.Text throws ArgumentNullException when byte array is null.
     /// </summary>
     [TestMethod]
     public void Text_WithNullByteArray_ThrowsArgumentNullException()
@@ -98,7 +98,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Text throws MemoTooLongException when byte array exceeds 28 bytes.
+    ///     Verifies that Memo.Text throws MemoTooLongException when byte array exceeds 28 bytes.
     /// </summary>
     [TestMethod]
     public void Text_WithByteArrayTooLong_ThrowsMemoTooLongException()
@@ -112,7 +112,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Text handles UTF-8 characters correctly even when they result in longer byte representation.
+    ///     Verifies that Memo.Text handles UTF-8 characters correctly even when they result in longer byte representation.
     /// </summary>
     [TestMethod]
     public void Text_WithUtf8Characters_HandlesCorrectly()
@@ -121,7 +121,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Id creates a memo with MEMO_ID type and correct ID value.
+    ///     Verifies that Memo.Id creates a memo with MEMO_ID type and correct ID value.
     /// </summary>
     [TestMethod]
     public void Id_WithValidId_CreatesMemoWithIdType()
@@ -136,7 +136,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Hash creates a memo with MEMO_HASH type and correct hash value from hex string.
+    ///     Verifies that Memo.Hash creates a memo with MEMO_HASH type and correct hash value from hex string.
     /// </summary>
     [TestMethod]
     public void Hash_WithValidHexString_CreatesMemoWithHashType()
@@ -152,7 +152,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Hash creates a memo with MEMO_HASH type and correct hash value from byte array.
+    ///     Verifies that Memo.Hash creates a memo with MEMO_HASH type and correct hash value from byte array.
     /// </summary>
     [TestMethod]
     public void Hash_WithValidByteArray_CreatesMemoWithHashType()
@@ -171,7 +171,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Hash throws MemoTooLongException when byte array exceeds 32 bytes.
+    ///     Verifies that Memo.Hash throws MemoTooLongException when byte array exceeds 32 bytes.
     /// </summary>
     [TestMethod]
     public void Hash_WithByteArrayTooLong_ThrowsMemoTooLongException()
@@ -192,7 +192,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Hash throws FormatException when hex string is invalid.
+    ///     Verifies that Memo.Hash throws FormatException when hex string is invalid.
     /// </summary>
     [TestMethod]
     public void Hash_WithInvalidHexString_ThrowsFormatException()
@@ -213,7 +213,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.ReturnHash creates a memo with MEMO_RETURN type and correct return hash value.
+    ///     Verifies that Memo.ReturnHash creates a memo with MEMO_RETURN type and correct return hash value.
     /// </summary>
     [TestMethod]
     public void ReturnHash_WithValidHexString_CreatesMemoWithReturnHashType()
@@ -231,7 +231,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Id instances with same ID value are equal and have same hash code.
+    ///     Verifies that Memo.Id instances with same ID value are equal and have same hash code.
     /// </summary>
     [TestMethod]
     public void Id_WithSameIdValue_AreEqualAndHaveSameHashCode()
@@ -246,7 +246,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.ReturnHash instances with same hash value are equal and have same hash code.
+    ///     Verifies that Memo.ReturnHash instances with same hash value are equal and have same hash code.
     /// </summary>
     [TestMethod]
     public void ReturnHash_WithSameHashValue_AreEqualAndHaveSameHashCode()
@@ -267,7 +267,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Hash instances with same hash value are equal and have same hash code.
+    ///     Verifies that Memo.Hash instances with same hash value are equal and have same hash code.
     /// </summary>
     [TestMethod]
     public void Hash_WithSameHashValue_AreEqualAndHaveSameHashCode()
@@ -282,7 +282,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.Text instances with same text value are equal and have same hash code.
+    ///     Verifies that Memo.Text instances with same text value are equal and have same hash code.
     /// </summary>
     [TestMethod]
     public void Text_WithSameTextValue_AreEqualAndHaveSameHashCode()
@@ -297,7 +297,7 @@ public class MemoTest
     }
 
     /// <summary>
-    /// Verifies that Memo.None instances are equal and have same hash code.
+    ///     Verifies that Memo.None instances are equal and have same hash code.
     /// </summary>
     [TestMethod]
     public void None_Instances_AreEqualAndHaveSameHashCode()

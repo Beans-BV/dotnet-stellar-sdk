@@ -5,13 +5,13 @@ using XDR = StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for revoke sponsorship result types.
+///     Unit tests for revoke sponsorship result types.
 /// </summary>
 [TestClass]
 public class RevokeSponsorshipResultTest
 {
     /// <summary>
-    /// Verifies that RevokeSponsorshipDoesNotExist result can be deserialized correctly.
+    ///     Verifies that RevokeSponsorshipDoesNotExist result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithRevokeSponsorshipDoesNotExistXdr_ReturnsRevokeSponsorshipDoesNotExist()
@@ -41,7 +41,7 @@ public class RevokeSponsorshipResultTest
     }
 
     /// <summary>
-    /// Verifies that RevokeSponsorshipLowReserve result can be deserialized correctly.
+    ///     Verifies that RevokeSponsorshipLowReserve result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithRevokeSponsorshipLowReserveXdr_ReturnsRevokeSponsorshipLowReserve()
@@ -71,7 +71,7 @@ public class RevokeSponsorshipResultTest
     }
 
     /// <summary>
-    /// Verifies that RevokeSponsorshipNotSponsor result can be deserialized correctly.
+    ///     Verifies that RevokeSponsorshipNotSponsor result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithRevokeSponsorshipNotSponsorXdr_ReturnsRevokeSponsorshipNotSponsor()
@@ -101,7 +101,7 @@ public class RevokeSponsorshipResultTest
     }
 
     /// <summary>
-    /// Verifies that RevokeSponsorshipOnlyTransferable result can be deserialized correctly.
+    ///     Verifies that RevokeSponsorshipOnlyTransferable result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithRevokeSponsorshipOnlyTransferableXdr_ReturnsRevokeSponsorshipOnlyTransferable()
@@ -131,7 +131,7 @@ public class RevokeSponsorshipResultTest
     }
 
     /// <summary>
-    /// Verifies that RevokeSponsorshipSuccess result can be deserialized correctly.
+    ///     Verifies that RevokeSponsorshipSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithRevokeSponsorshipSuccessXdr_ReturnsRevokeSponsorshipSuccess()

@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="BumpSequenceOperationResponse"/> class.
+///     Unit tests for <see cref="BumpSequenceOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class BumpSequenceOperationResponseTest
 {
     /// <summary>
-    /// Verifies that BumpSequenceOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that BumpSequenceOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithBumpSequenceOperationJson_ReturnsDeserializedOperation()
@@ -31,7 +31,7 @@ public class BumpSequenceOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that BumpSequenceOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that BumpSequenceOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithBumpSequenceOperation_RoundTripsCorrectly()

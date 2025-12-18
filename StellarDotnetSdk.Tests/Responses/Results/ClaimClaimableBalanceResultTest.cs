@@ -8,13 +8,13 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.ClaimClaimableBalanceResultCode.Clai
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for claim claimable balance result types.
+///     Unit tests for claim claimable balance result types.
 /// </summary>
 [TestClass]
 public class ClaimClaimableBalanceResultTest
 {
     /// <summary>
-    /// Verifies that ClaimClaimableBalanceCannotClaim result can be deserialized correctly.
+    ///     Verifies that ClaimClaimableBalanceCannotClaim result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClaimClaimableBalanceCannotClaimXdr_ReturnsClaimClaimableBalanceCannotClaim()
@@ -28,7 +28,7 @@ public class ClaimClaimableBalanceResultTest
     }
 
     /// <summary>
-    /// Verifies that ClaimClaimableBalanceDoesNotExist result can be deserialized correctly.
+    ///     Verifies that ClaimClaimableBalanceDoesNotExist result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClaimClaimableBalanceDoesNotExistXdr_ReturnsClaimClaimableBalanceDoesNotExist()
@@ -42,7 +42,7 @@ public class ClaimClaimableBalanceResultTest
     }
 
     /// <summary>
-    /// Verifies that ClaimClaimableBalanceLineFull result can be deserialized correctly.
+    ///     Verifies that ClaimClaimableBalanceLineFull result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClaimClaimableBalanceLineFullXdr_ReturnsClaimClaimableBalanceLineFull()
@@ -56,7 +56,7 @@ public class ClaimClaimableBalanceResultTest
     }
 
     /// <summary>
-    /// Verifies that ClaimClaimableBalanceNotAuthorized result can be deserialized correctly.
+    ///     Verifies that ClaimClaimableBalanceNotAuthorized result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClaimClaimableBalanceNotAuthorizedXdr_ReturnsClaimClaimableBalanceNotAuthorized()
@@ -70,7 +70,7 @@ public class ClaimClaimableBalanceResultTest
     }
 
     /// <summary>
-    /// Verifies that ClaimClaimableBalanceNoTrust result can be deserialized correctly.
+    ///     Verifies that ClaimClaimableBalanceNoTrust result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClaimClaimableBalanceNoTrustXdr_ReturnsClaimClaimableBalanceNoTrust()
@@ -84,7 +84,7 @@ public class ClaimClaimableBalanceResultTest
     }
 
     /// <summary>
-    /// Verifies that ClaimClaimableBalanceSuccess result can be deserialized correctly.
+    ///     Verifies that ClaimClaimableBalanceSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClaimClaimableBalanceSuccessXdr_ReturnsClaimClaimableBalanceSuccess()

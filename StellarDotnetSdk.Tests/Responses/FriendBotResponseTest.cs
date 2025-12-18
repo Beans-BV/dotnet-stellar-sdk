@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for <see cref="FriendBotResponse"/> class.
+///     Unit tests for <see cref="FriendBotResponse" /> class.
 /// </summary>
 [TestClass]
 public class FriendBotResponseTest
 {
     /// <summary>
-    /// Verifies that FriendBotResponse with failure can be deserialized from JSON correctly.
+    ///     Verifies that FriendBotResponse with failure can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithFriendBotFailureResponseJson_ReturnsDeserializedFailureResponse()
@@ -31,7 +31,7 @@ public class FriendBotResponseTest
     }
 
     /// <summary>
-    /// Verifies that FriendBotResponse with failure can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that FriendBotResponse with failure can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithFriendBotFailureResponse_RoundTripsCorrectly()
@@ -66,7 +66,7 @@ public class FriendBotResponseTest
     }
 
     /// <summary>
-    /// Verifies that FriendBotResponse with success can be deserialized from JSON correctly.
+    ///     Verifies that FriendBotResponse with success can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithFriendBotSuccessResponseJson_ReturnsDeserializedSuccessResponse()
@@ -84,7 +84,7 @@ public class FriendBotResponseTest
     }
 
     /// <summary>
-    /// Verifies that FriendBotResponse with success can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that FriendBotResponse with success can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithFriendBotSuccessResponse_RoundTripsCorrectly()

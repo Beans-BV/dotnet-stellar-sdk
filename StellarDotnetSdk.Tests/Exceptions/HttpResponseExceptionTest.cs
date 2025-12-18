@@ -4,13 +4,13 @@ using StellarDotnetSdk.Requests;
 namespace StellarDotnetSdk.Tests.Exceptions;
 
 /// <summary>
-/// Tests for HttpResponseException class functionality.
+///     Tests for HttpResponseException class functionality.
 /// </summary>
 [TestClass]
 public class HttpResponseExceptionTest
 {
     /// <summary>
-    /// Verifies that HttpResponseException constructor creates instance with correct message and status code.
+    ///     Verifies that HttpResponseException constructor creates instance with correct message and status code.
     /// </summary>
     [TestMethod]
     public void Constructor_WithStatusCodeAndMessage_CreatesInstanceWithCorrectProperties()
@@ -24,7 +24,7 @@ public class HttpResponseExceptionTest
     }
 
     /// <summary>
-    /// Verifies that HttpResponseException can be thrown and caught correctly.
+    ///     Verifies that HttpResponseException can be thrown and caught correctly.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(HttpResponseException))]

@@ -5,7 +5,7 @@ using StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Tests.Xdr;
 
 /// <summary>
-/// Unit tests for XDR data stream operations.
+///     Unit tests for XDR data stream operations.
 /// </summary>
 [TestClass]
 public class XdrDataStreamTest
@@ -25,7 +25,7 @@ public class XdrDataStreamTest
     }
 
     /// <summary>
-    /// Verifies that XDR string streaming round-trips correctly with standard ASCII characters.
+    ///     Verifies that XDR string streaming round-trips correctly with standard ASCII characters.
     /// </summary>
     [TestMethod]
     public void BackAndForthXdrStreaming_WithStandardAscii_RoundTripsCorrectly()
@@ -41,7 +41,7 @@ public class XdrDataStreamTest
     }
 
     /// <summary>
-    /// Verifies that XDR string streaming round-trips correctly with non-standard ASCII characters.
+    ///     Verifies that XDR string streaming round-trips correctly with non-standard ASCII characters.
     /// </summary>
     [TestMethod]
     public void BackAndForthXdrStreaming_WithNonStandardAscii_RoundTripsCorrectly()
@@ -57,7 +57,7 @@ public class XdrDataStreamTest
     }
 
     /// <summary>
-    /// Verifies that XDR string streaming round-trips correctly with all non-standard ASCII characters.
+    ///     Verifies that XDR string streaming round-trips correctly with all non-standard ASCII characters.
     /// </summary>
     [TestMethod]
     public void BackAndForthXdrStreaming_WithAllNonStandardAscii_RoundTripsCorrectly()
@@ -73,7 +73,7 @@ public class XdrDataStreamTest
     }
 
     /// <summary>
-    /// Verifies that XdrDataInputStream.Read correctly reads fixed-length opaque array and subsequent bytes.
+    ///     Verifies that XdrDataInputStream.Read correctly reads fixed-length opaque array and subsequent bytes.
     /// </summary>
     [TestMethod]
     public void Read_WithFixedLengthOpaqueArray_ReadsCorrectly()

@@ -6,13 +6,13 @@ using StellarDotnetSdk.Tests.Responses;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="OrderBookRequestBuilder"/> class.
+///     Unit tests for <see cref="OrderBookRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class OrderBookRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that OrderBookRequestBuilder.BuildUri correctly constructs URI with buying and selling credit assets.
+    ///     Verifies that OrderBookRequestBuilder.BuildUri correctly constructs URI with buying and selling credit assets.
     /// </summary>
     [TestMethod]
     public void BuildUri_WithBuyingAndSellingCreditAssets_BuildsCorrectUri()
@@ -41,7 +41,7 @@ public class OrderBookRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OrderBookRequestBuilder.Execute correctly retrieves and deserializes order book data.
+    ///     Verifies that OrderBookRequestBuilder.Execute correctly retrieves and deserializes order book data.
     /// </summary>
     [TestMethod]
     public async Task Execute_WithBuyingAndSellingAssets_ReturnsDeserializedOrderBook()

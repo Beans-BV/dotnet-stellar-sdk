@@ -3,13 +3,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="Price"/> class.
+///     Unit tests for <see cref="Price" /> class.
 /// </summary>
 [TestClass]
 public class PriceTest
 {
     /// <summary>
-    /// Verifies that FromString correctly parses various price strings and returns correct Price objects.
+    ///     Verifies that FromString correctly parses various price strings and returns correct Price objects.
     /// </summary>
     [TestMethod]
     public void FromString_WithVariousPriceStrings_ReturnsCorrectPrice()
@@ -53,7 +53,7 @@ public class PriceTest
     }
 
     /// <summary>
-    /// Verifies that Price Equals method returns true for equal prices.
+    ///     Verifies that Price Equals method returns true for equal prices.
     /// </summary>
     [TestMethod]
     public void Equals_WithEqualPrices_ReturnsTrue()

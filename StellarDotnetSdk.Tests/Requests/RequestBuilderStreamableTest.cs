@@ -6,7 +6,7 @@ using StellarDotnetSdk.EventSources;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for streamable request builders and SSE event source functionality.
+///     Unit tests for streamable request builders and SSE event source functionality.
 /// </summary>
 [TestClass]
 public class RequestBuilderStreamableTest
@@ -14,7 +14,7 @@ public class RequestBuilderStreamableTest
     private readonly Uri _uri = new("https://test.com");
 
     /// <summary>
-    /// Verifies that SseEventSource skips the first "hello" message and processes subsequent data messages.
+    ///     Verifies that SseEventSource skips the first "hello" message and processes subsequent data messages.
     /// </summary>
     [TestMethod]
     public async Task Connect_WithHelloMessage_SkipsHelloAndReceivesSubsequentData()
@@ -41,7 +41,7 @@ public class RequestBuilderStreamableTest
     }
 
     /// <summary>
-    /// Verifies that SseEventSource handles multiple error events and retries connection.
+    ///     Verifies that SseEventSource handles multiple error events and retries connection.
     /// </summary>
     [TestMethod]
     public async Task Connect_WithMultipleErrors_RetriesAndCountsErrors()

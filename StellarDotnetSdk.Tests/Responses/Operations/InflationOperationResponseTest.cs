@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="InflationOperationResponse"/> class.
+///     Unit tests for <see cref="InflationOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class InflationOperationResponseTest
 {
     /// <summary>
-    /// Verifies that InflationOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that InflationOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithInflationOperationJson_ReturnsDeserializedOperation()
@@ -31,7 +31,7 @@ public class InflationOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that InflationOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that InflationOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithInflationOperation_RoundTripsCorrectly()

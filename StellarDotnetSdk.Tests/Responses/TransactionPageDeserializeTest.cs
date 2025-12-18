@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing transaction page responses from JSON.
+///     Unit tests for deserializing transaction page responses from JSON.
 /// </summary>
 [TestClass]
 public class TransactionPageDeserializeTest
 {
     /// <summary>
-    /// Verifies that Page&lt;TransactionResponse&gt; can be deserialized from JSON correctly.
+    ///     Verifies that Page&lt;TransactionResponse&gt; can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithTransactionPageJson_ReturnsDeserializedTransactionPage()

@@ -10,13 +10,13 @@ using TransactionMeta = StellarDotnetSdk.Xdr.TransactionMeta;
 namespace StellarDotnetSdk.Tests.Xdr;
 
 /// <summary>
-/// Unit tests for XDR transaction decoding.
+///     Unit tests for XDR transaction decoding.
 /// </summary>
 [TestClass]
 public class TransactionDecodeTest
 {
     /// <summary>
-    /// Verifies that TransactionEnvelope.Decode correctly decodes transaction body and sequence number.
+    ///     Verifies that TransactionEnvelope.Decode correctly decodes transaction body and sequence number.
     /// </summary>
     [TestMethod]
     public void Decode_WithValidTransactionBody_DecodesSequenceNumberCorrectly()
@@ -36,7 +36,7 @@ public class TransactionDecodeTest
     }
 
     /// <summary>
-    /// Verifies that Transaction.Decode correctly decodes transaction without tail and memo text.
+    ///     Verifies that Transaction.Decode correctly decodes transaction without tail and memo text.
     /// </summary>
     [TestMethod]
     public void Decode_WithTransactionNoTail_DecodesMemoTextCorrectly()
@@ -58,7 +58,7 @@ public class TransactionDecodeTest
     }
 
     /// <summary>
-    /// Verifies that TransactionResultPair.Decode correctly decodes transaction result with success code.
+    ///     Verifies that TransactionResultPair.Decode correctly decodes transaction result with success code.
     /// </summary>
     [TestMethod]
     public void Decode_WithTransactionResult_DecodesSuccessCodeCorrectly()
@@ -77,7 +77,7 @@ public class TransactionDecodeTest
     }
 
     /// <summary>
-    /// Verifies that TransactionMeta.Decode correctly decodes transaction metadata with operations.
+    ///     Verifies that TransactionMeta.Decode correctly decodes transaction metadata with operations.
     /// </summary>
     [TestMethod]
     public void Decode_WithTransactionMeta_DecodesOperationsCorrectly()
@@ -95,7 +95,7 @@ public class TransactionDecodeTest
     }
 
     /// <summary>
-    /// Verifies that TransactionEnvelope.Decode correctly decodes transaction envelope with memo and asset code.
+    ///     Verifies that TransactionEnvelope.Decode correctly decodes transaction envelope with memo and asset code.
     /// </summary>
     [TestMethod]
     public void Decode_WithTransactionEnvelopeAndMemo_DecodesAssetCodeCorrectly()
@@ -118,10 +118,10 @@ public class TransactionDecodeTest
     }
 
     /// <summary>
-    /// Verifies that Amount conversion round-trips correctly with non-English culture settings.
+    ///     Verifies that Amount conversion round-trips correctly with non-English culture settings.
     /// </summary>
     /// <remarks>
-    /// See https://github.com/elucidsoft/dotnet-stellar-sdk/issues/185
+    ///     See https://github.com/elucidsoft/dotnet-stellar-sdk/issues/185
     /// </remarks>
     [TestMethod]
     public void AmountConversion_WithNonEnglishCulture_RoundTripsCorrectly()

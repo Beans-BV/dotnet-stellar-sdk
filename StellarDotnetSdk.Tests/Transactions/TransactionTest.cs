@@ -19,7 +19,7 @@ using Transaction = StellarDotnetSdk.Transactions.Transaction;
 namespace StellarDotnetSdk.Tests.Transactions;
 
 /// <summary>
-/// Unit tests for <see cref="Transaction"/> class and transaction building functionality.
+///     Unit tests for <see cref="Transaction" /> class and transaction building functionality.
 /// </summary>
 [TestClass]
 public class TransactionTest
@@ -37,7 +37,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that deprecated TransactionBuilder creates transaction with correct properties and XDR encoding.
+    ///     Verifies that deprecated TransactionBuilder creates transaction with correct properties and XDR encoding.
     /// </summary>
     [TestMethod]
     public void Build_WithDeprecatedTransactionBuilder_CreatesTransactionWithCorrectProperties()
@@ -74,7 +74,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that TransactionBuilder creates transaction with correct properties and XDR encoding on testnet.
+    ///     Verifies that TransactionBuilder creates transaction with correct properties and XDR encoding on testnet.
     /// </summary>
     [TestMethod]
     public void Build_WithTransactionBuilderOnTestnet_CreatesTransactionWithCorrectProperties()
@@ -106,7 +106,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that Transaction round-trips correctly through XDR serialization.
+    ///     Verifies that Transaction round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromEnvelopeXdr_WithValidXdr_RoundTripsCorrectly()
@@ -131,7 +131,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that Transaction.FromEnvelopeXdr correctly deserializes transaction with memo.
+    ///     Verifies that Transaction.FromEnvelopeXdr correctly deserializes transaction with memo.
     /// </summary>
     [TestMethod]
     public void FromEnvelopeXdr_WithMemo_DeserializesCorrectly()
@@ -158,7 +158,8 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that TransactionBuilder with memo text creates transaction that round-trips correctly through XDR serialization.
+    ///     Verifies that TransactionBuilder with memo text creates transaction that round-trips correctly through XDR
+    ///     serialization.
     /// </summary>
     [TestMethod]
     public void Build_WithMemoText_RoundTripsCorrectly()
@@ -199,7 +200,8 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that TransactionBuilder with time bounds creates transaction that round-trips correctly through XDR serialization.
+    ///     Verifies that TransactionBuilder with time bounds creates transaction that round-trips correctly through XDR
+    ///     serialization.
     /// </summary>
     [TestMethod]
     public void Build_WithTimeBounds_RoundTripsCorrectly()
@@ -240,7 +242,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that TransactionBuilder with custom fee creates transaction with correct fee.
+    ///     Verifies that TransactionBuilder with custom fee creates transaction with correct fee.
     /// </summary>
     [TestMethod]
     public void Build_WithCustomFee_SetsCorrectFee()
@@ -281,7 +283,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that TransactionBuilder creates transaction with correct properties and XDR encoding on public network.
+    ///     Verifies that TransactionBuilder creates transaction with correct properties and XDR encoding on public network.
     /// </summary>
     [TestMethod]
     public void Build_WithTransactionBuilderOnPublicNetwork_CreatesTransactionWithCorrectProperties()
@@ -312,7 +314,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that Transaction.Sign with preimage creates signature with correct hint.
+    ///     Verifies that Transaction.Sign with preimage creates signature with correct hint.
     /// </summary>
     [TestMethod]
     public void Sign_WithPreimage_CreatesSignatureWithCorrectHint()
@@ -347,7 +349,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that Transaction.Sign with pre-signed signature adds signature correctly.
+    ///     Verifies that Transaction.Sign with pre-signed signature adds signature correctly.
     /// </summary>
     [TestMethod]
     public void Sign_WithPreSignedSignature_AddsSignatureCorrectly()
@@ -376,7 +378,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that ToEnvelopeXdrBase64 throws NotEnoughSignaturesException when transaction has no signatures.
+    ///     Verifies that ToEnvelopeXdrBase64 throws NotEnoughSignaturesException when transaction has no signatures.
     /// </summary>
     [TestMethod]
     public void ToEnvelopeXdrBase64_WithNoSignatures_ThrowsNotEnoughSignaturesException()
@@ -397,7 +399,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that ToUnsignedEnvelopeXdr returns envelope XDR without throwing exception.
+    ///     Verifies that ToUnsignedEnvelopeXdr returns envelope XDR without throwing exception.
     /// </summary>
     [TestMethod]
     public void ToUnsignedEnvelopeXdr_WithUnsignedTransaction_ReturnsEnvelopeXdr()
@@ -424,7 +426,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that ToUnsignedEnvelopeXdrBase64 returns base64 encoded envelope XDR without throwing exception.
+    ///     Verifies that ToUnsignedEnvelopeXdrBase64 returns base64 encoded envelope XDR without throwing exception.
     /// </summary>
     [TestMethod]
     public void ToUnsignedEnvelopeXdrBase64_WithUnsignedTransaction_ReturnsBase64String()
@@ -451,7 +453,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that TransactionBuilder.Build throws exception when no operations are added.
+    ///     Verifies that TransactionBuilder.Build throws exception when no operations are added.
     /// </summary>
     [TestMethod]
     public void Build_WithNoOperations_ThrowsException()
@@ -476,7 +478,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that TransactionBuilder.AddMemo throws exception when memo is added twice.
+    ///     Verifies that TransactionBuilder.AddMemo throws exception when memo is added twice.
     /// </summary>
     [TestMethod]
     public void AddMemo_WhenMemoAlreadyAdded_ThrowsException()
@@ -503,7 +505,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that Transaction.Hash with explicit network argument uses the specified network.
+    ///     Verifies that Transaction.Hash with explicit network argument uses the specified network.
     /// </summary>
     [TestMethod]
     public void Hash_WithExplicitNetwork_UsesSpecifiedNetwork()
@@ -534,7 +536,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that Transaction.FromEnvelopeXdr correctly deserializes transaction with memo ID.
+    ///     Verifies that Transaction.FromEnvelopeXdr correctly deserializes transaction with memo ID.
     /// </summary>
     [TestMethod]
     public void FromEnvelopeXdr_WithMemoId_DeserializesCorrectly()
@@ -552,7 +554,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that Transaction with muxed account round-trips correctly through XDR serialization.
+    ///     Verifies that Transaction with muxed account round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromEnvelopeXdr_WithMuxedAccount_RoundTripsCorrectly()
@@ -583,7 +585,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that Transaction.SignatureBase throws NoNetworkSelectedException when network is null.
+    ///     Verifies that Transaction.SignatureBase throws NoNetworkSelectedException when network is null.
     /// </summary>
     [TestMethod]
     public void SignatureBase_WithNullNetwork_ThrowsNoNetworkSelectedException()
@@ -609,7 +611,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that Transaction.ToXdr throws exception when source account is muxed account.
+    ///     Verifies that Transaction.ToXdr throws exception when source account is muxed account.
     /// </summary>
     [TestMethod]
     public void ToXdr_WithMuxedAccount_ThrowsException()
@@ -636,7 +638,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that ToUnsignedEnvelopeXdr throws TooManySignaturesException when transaction is signed.
+    ///     Verifies that ToUnsignedEnvelopeXdr throws TooManySignaturesException when transaction is signed.
     /// </summary>
     [TestMethod]
     public void ToUnsignedEnvelopeXdr_WithSignedTransaction_ThrowsTooManySignaturesException()
@@ -663,7 +665,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that TransactionBuilder.Build throws OverflowException when fee multiplied by operation count overflows.
+    ///     Verifies that TransactionBuilder.Build throws OverflowException when fee multiplied by operation count overflows.
     /// </summary>
     [TestMethod]
     public void Build_WithFeeOverflow_ThrowsOverflowException()
@@ -691,7 +693,7 @@ public class TransactionTest
     }
 
     /// <summary>
-    /// Verifies that Transaction with Soroban transaction data round-trips correctly through XDR serialization.
+    ///     Verifies that Transaction with Soroban transaction data round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromEnvelopeXdr_WithSorobanData_RoundTripsCorrectly()

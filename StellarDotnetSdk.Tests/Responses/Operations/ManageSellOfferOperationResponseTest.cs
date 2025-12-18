@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="ManageSellOfferOperationResponse"/> class.
+///     Unit tests for <see cref="ManageSellOfferOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class ManageSellOfferOperationResponseTest
 {
     /// <summary>
-    /// Verifies that ManageSellOfferOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that ManageSellOfferOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithManageSellOfferOperationJson_ReturnsDeserializedOperation()
@@ -32,7 +32,7 @@ public class ManageSellOfferOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ManageSellOfferOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithManageSellOfferOperation_RoundTripsCorrectly()

@@ -5,13 +5,13 @@ using StellarDotnetSdk.Accounts;
 namespace StellarDotnetSdk.Tests.Accounts;
 
 /// <summary>
-/// Tests for BIP39 seed-based key pair derivation functionality.
+///     Tests for BIP39 seed-based key pair derivation functionality.
 /// </summary>
 [TestClass]
 public class KeyPairBip39Tests
 {
     /// <summary>
-    /// Verifies that FromBIP39Seed derives correct key pairs for test case 1 seed across account indices 0-9.
+    ///     Verifies that FromBIP39Seed derives correct key pairs for test case 1 seed across account indices 0-9.
     /// </summary>
     [TestMethod]
     public void FromBIP39Seed_WithTestCase1Seed_DerivesCorrectAccountsForIndices0To9()
@@ -54,7 +54,7 @@ public class KeyPairBip39Tests
     }
 
     /// <summary>
-    /// Verifies that FromBIP39Seed derives correct key pairs for test case 2 seed across account indices 0-9.
+    ///     Verifies that FromBIP39Seed derives correct key pairs for test case 2 seed across account indices 0-9.
     /// </summary>
     [TestMethod]
     public void FromBIP39Seed_WithTestCase2Seed_DerivesCorrectAccountsForIndices0To9()
@@ -97,7 +97,7 @@ public class KeyPairBip39Tests
     }
 
     /// <summary>
-    /// Verifies that FromBIP39Seed derives correct key pairs for test case 3 seed across account indices 0-9.
+    ///     Verifies that FromBIP39Seed derives correct key pairs for test case 3 seed across account indices 0-9.
     /// </summary>
     [TestMethod]
     public void FromBIP39Seed_WithTestCase3Seed_DerivesCorrectAccountsForIndices0To9()
@@ -140,7 +140,7 @@ public class KeyPairBip39Tests
     }
 
     /// <summary>
-    /// Verifies that FromBIP39Seed derives correct key pairs for test case 4 seed across account indices 0-9.
+    ///     Verifies that FromBIP39Seed derives correct key pairs for test case 4 seed across account indices 0-9.
     /// </summary>
     [TestMethod]
     public void FromBIP39Seed_WithTestCase4Seed_DerivesCorrectAccountsForIndices0To9()
@@ -183,7 +183,7 @@ public class KeyPairBip39Tests
     }
 
     /// <summary>
-    /// Verifies that FromBIP39Seed derives correct key pairs for test case 5 seed across account indices 0-9.
+    ///     Verifies that FromBIP39Seed derives correct key pairs for test case 5 seed across account indices 0-9.
     /// </summary>
     [TestMethod]
     public void FromBIP39Seed_WithTestCase5Seed_DerivesCorrectAccountsForIndices0To9()
@@ -226,7 +226,7 @@ public class KeyPairBip39Tests
     }
 
     /// <summary>
-    /// Verifies that FromBIP39Seed derives correct key pairs for large account indices, including boundary values.
+    ///     Verifies that FromBIP39Seed derives correct key pairs for large account indices, including boundary values.
     /// </summary>
     [TestMethod]
     public void FromBIP39Seed_WithLargeAccountIndices_DerivesCorrectAccounts()
@@ -260,13 +260,13 @@ public class KeyPairBip39Tests
     }
 
     /// <summary>
-    /// Helper class for asserting BIP39 seed-derived account key pairs.
+    ///     Helper class for asserting BIP39 seed-derived account key pairs.
     /// </summary>
     private static class Bip39Assert
     {
         /// <summary>
-        /// Verifies that a key pair derived from a BIP39 seed matches expected account ID and secret seed.
-        /// Tests both string and byte array seed formats.
+        ///     Verifies that a key pair derived from a BIP39 seed matches expected account ID and secret seed.
+        ///     Tests both string and byte array seed formats.
         /// </summary>
         /// <param name="bip39Seed">The BIP39 seed as a hexadecimal string.</param>
         /// <param name="accountIndex">The account index to derive.</param>

@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Requests;
@@ -8,13 +8,13 @@ using StellarDotnetSdk.Tests.Responses;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="TransactionsRequestBuilder"/> class.
+///     Unit tests for <see cref="TransactionsRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class TransactionsRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that TransactionsRequestBuilder.BuildUri correctly constructs URI with limit and order parameters.
+    ///     Verifies that TransactionsRequestBuilder.BuildUri correctly constructs URI with limit and order parameters.
     /// </summary>
     [TestMethod]
     public void BuildUri_WithLimitAndOrder_BuildsCorrectUri()
@@ -33,7 +33,7 @@ public class TransactionsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that TransactionsRequestBuilder.ForAccount correctly constructs URI for account transactions.
+    ///     Verifies that TransactionsRequestBuilder.ForAccount correctly constructs URI for account transactions.
     /// </summary>
     [TestMethod]
     public void ForAccount_WithValidAccountId_BuildsCorrectUri()
@@ -55,7 +55,8 @@ public class TransactionsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that TransactionsRequestBuilder.ForClaimableBalance correctly constructs URI for claimable balance transactions.
+    ///     Verifies that TransactionsRequestBuilder.ForClaimableBalance correctly constructs URI for claimable balance
+    ///     transactions.
     /// </summary>
     [TestMethod]
     public void ForClaimableBalance_WithValidBalanceId_BuildsCorrectUri()
@@ -77,7 +78,7 @@ public class TransactionsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that TransactionsRequestBuilder.ForLedger correctly constructs URI for ledger transactions.
+    ///     Verifies that TransactionsRequestBuilder.ForLedger correctly constructs URI for ledger transactions.
     /// </summary>
     [TestMethod]
     public void ForLedger_WithValidLedgerId_BuildsCorrectUri()
@@ -98,7 +99,7 @@ public class TransactionsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that TransactionsRequestBuilder.IncludeFailed correctly adds include_failed parameter to URI.
+    ///     Verifies that TransactionsRequestBuilder.IncludeFailed correctly adds include_failed parameter to URI.
     /// </summary>
     [TestMethod]
     public void IncludeFailed_WithTrueValue_AddsIncludeFailedParameter()
@@ -121,7 +122,7 @@ public class TransactionsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that TransactionsRequestBuilder.Execute correctly retrieves and deserializes transaction page data.
+    ///     Verifies that TransactionsRequestBuilder.Execute correctly retrieves and deserializes transaction page data.
     /// </summary>
     [TestMethod]
     public async Task Execute_ForAccount_ReturnsDeserializedTransactionPage()
@@ -139,7 +140,7 @@ public class TransactionsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that TransactionsRequestBuilder.Stream correctly streams and deserializes transaction events.
+    ///     Verifies that TransactionsRequestBuilder.Stream correctly streams and deserializes transaction events.
     /// </summary>
     [TestMethod]
     public async Task Stream_WithValidJson_StreamsTransactionEvents()

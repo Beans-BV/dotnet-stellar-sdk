@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing trade aggregations page responses from JSON.
+///     Unit tests for deserializing trade aggregations page responses from JSON.
 /// </summary>
 [TestClass]
 public class TradeAggregationsPageDeserializerTest
 {
     /// <summary>
-    /// Verifies that Page&lt;TradeAggregationResponse&gt; can be deserialized from JSON correctly.
+    ///     Verifies that Page&lt;TradeAggregationResponse&gt; can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithTradeAggregationsPageJson_ReturnsDeserializedTradeAggregationsPage()
@@ -32,7 +32,7 @@ public class TradeAggregationsPageDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that Page&lt;TradeAggregationResponse&gt; can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that Page&lt;TradeAggregationResponse&gt; can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithTradeAggregationsPage_RoundTripsCorrectly()

@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for unknown operation response handling.
+///     Unit tests for unknown operation response handling.
 /// </summary>
 [TestClass]
 public class UnknownOperationResponseTest
 {
     /// <summary>
-    /// Verifies that deserializing an unknown operation type throws JsonException.
+    ///     Verifies that deserializing an unknown operation type throws JsonException.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithUnknownOperationJson_ThrowsJsonException()

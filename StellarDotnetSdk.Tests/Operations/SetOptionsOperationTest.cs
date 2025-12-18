@@ -7,7 +7,7 @@ using StellarDotnetSdk.Transactions;
 namespace StellarDotnetSdk.Tests.Operations;
 
 /// <summary>
-/// Tests for SetOptionsOperation class functionality.
+///     Tests for SetOptionsOperation class functionality.
 /// </summary>
 [TestClass]
 public class SetOptionsOperationTest
@@ -16,7 +16,7 @@ public class SetOptionsOperationTest
         KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
     /// <summary>
-    /// Verifies that SetOptionsOperation with all options set round-trips correctly through XDR.
+    ///     Verifies that SetOptionsOperation with all options set round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void SetOptionsOperation_WithAllOptions_RoundTripsThroughXdr()
@@ -79,7 +79,7 @@ public class SetOptionsOperationTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsOperation with single field (home domain) round-trips correctly through XDR.
+    ///     Verifies that SetOptionsOperation with single field (home domain) round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void SetOptionsOperation_WithSingleField_RoundTripsThroughXdr()
@@ -109,7 +109,7 @@ public class SetOptionsOperationTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsOperation with SHA256 hash signer round-trips correctly through XDR.
+    ///     Verifies that SetOptionsOperation with SHA256 hash signer round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void SetOptionsOperation_WithSha256HashSigner_RoundTripsThroughXdr()
@@ -144,7 +144,7 @@ public class SetOptionsOperationTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsOperation with PreAuthTx signer round-trips correctly through XDR.
+    ///     Verifies that SetOptionsOperation with PreAuthTx signer round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void SetOptionsOperation_WithPreAuthTxSigner_RoundTripsThroughXdr()
@@ -193,7 +193,7 @@ public class SetOptionsOperationTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsOperation with signed payload signer round-trips correctly through XDR.
+    ///     Verifies that SetOptionsOperation with signed payload signer round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void SetOptionsOperation_WithSignedPayloadSigner_RoundTripsThroughXdr()

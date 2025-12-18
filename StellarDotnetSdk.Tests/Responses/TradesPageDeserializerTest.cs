@@ -9,13 +9,13 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing trades page responses from JSON.
+///     Unit tests for deserializing trades page responses from JSON.
 /// </summary>
 [TestClass]
 public class TradesPageDeserializerTest
 {
     /// <summary>
-    /// Verifies that Page&lt;TradeResponse&gt; with order book trades can be deserialized from JSON correctly.
+    ///     Verifies that Page&lt;TradeResponse&gt; with order book trades can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithOrderBookTradesPageJson_ReturnsDeserializedOrderBookTradesPage()
@@ -33,7 +33,8 @@ public class TradesPageDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that Page&lt;TradeResponse&gt; with order book trades can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that Page&lt;TradeResponse&gt; with order book trades can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithOrderBookTradesPage_RoundTripsCorrectly()
@@ -53,7 +54,7 @@ public class TradesPageDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that Page&lt;TradeResponse&gt; with liquidity pool trades can be deserialized from JSON correctly.
+    ///     Verifies that Page&lt;TradeResponse&gt; with liquidity pool trades can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithLiquidityPoolTradesPageJson_ReturnsDeserializedLiquidityPoolTradesPage()
@@ -71,7 +72,8 @@ public class TradesPageDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that Page&lt;TradeResponse&gt; with liquidity pool trades can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that Page&lt;TradeResponse&gt; with liquidity pool trades can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithLiquidityPoolTradesPage_RoundTripsCorrectly()

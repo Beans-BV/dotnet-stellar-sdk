@@ -6,16 +6,17 @@ using StellarDotnetSdk.Tests.Responses;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="PathStrictReceiveRequestBuilder"/> class.
+///     Unit tests for <see cref="PathStrictReceiveRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class PathStrictReceiveRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that PathStrictReceiveRequestBuilder.BuildUri correctly constructs URI with source account, source assets, destination account, destination asset, and destination amount.
+    ///     Verifies that PathStrictReceiveRequestBuilder.BuildUri correctly constructs URI with source account, source assets,
+    ///     destination account, destination asset, and destination amount.
     /// </summary>
     /// <remarks>
-    /// Technically not a valid request since it contains both a source account and assets.
+    ///     Technically not a valid request since it contains both a source account and assets.
     /// </remarks>
     [TestMethod]
     public void BuildUri_WithAllParameters_BuildsCorrectUri()
@@ -47,7 +48,7 @@ public class PathStrictReceiveRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that PathStrictReceiveRequestBuilder.Execute correctly retrieves and deserializes path page data.
+    ///     Verifies that PathStrictReceiveRequestBuilder.Execute correctly retrieves and deserializes path page data.
     /// </summary>
     [TestMethod]
     public async Task Execute_WithSourceAccountDestinationAccountAndAsset_ReturnsDeserializedPathPage()

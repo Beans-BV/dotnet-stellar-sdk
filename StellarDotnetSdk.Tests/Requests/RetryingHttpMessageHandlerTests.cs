@@ -12,7 +12,7 @@ using StellarDotnetSdk.Requests;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="RetryingHttpMessageHandler"/> class.
+///     Unit tests for <see cref="RetryingHttpMessageHandler" /> class.
 /// </summary>
 [TestClass]
 public class RetryingHttpMessageHandlerTests
@@ -20,7 +20,7 @@ public class RetryingHttpMessageHandlerTests
     private static readonly Uri TestUri = new("https://example.com");
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler does not retry when response is successful.
+    ///     Verifies that RetryingHttpMessageHandler does not retry when response is successful.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_SuccessfulResponse_NoRetry()
@@ -43,7 +43,8 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler does not retry HTTP error status codes - only connection failures are retried.
+    ///     Verifies that RetryingHttpMessageHandler does not retry HTTP error status codes - only connection failures are
+    ///     retried.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_HttpErrorStatus_DoesNotRetry()
@@ -78,7 +79,7 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler does not retry non-retryable HTTP status codes.
+    ///     Verifies that RetryingHttpMessageHandler does not retry non-retryable HTTP status codes.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_NonRetryableStatus_DoesNotRetry()
@@ -102,7 +103,7 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler retries on retryable exceptions and eventually succeeds.
+    ///     Verifies that RetryingHttpMessageHandler retries on retryable exceptions and eventually succeeds.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_RetryableException_EventuallySucceeds()
@@ -135,7 +136,7 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler reuses the same request object for connection failures.
+    ///     Verifies that RetryingHttpMessageHandler reuses the same request object for connection failures.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_ConnectionFailure_ReusesSameRequest()
@@ -183,7 +184,7 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler never retries HTTP status codes, even error codes.
+    ///     Verifies that RetryingHttpMessageHandler never retries HTTP status codes, even error codes.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_HttpStatusCodes_NeverRetried()
@@ -213,7 +214,7 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler retries exceptions added to AdditionalRetriableExceptionTypes.
+    ///     Verifies that RetryingHttpMessageHandler retries exceptions added to AdditionalRetriableExceptionTypes.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_AdditionalException_Retried()
@@ -245,7 +246,7 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler applies exponential backoff delays without jitter.
+    ///     Verifies that RetryingHttpMessageHandler applies exponential backoff delays without jitter.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_ExponentialBackoffWithoutJitter_AddsUpDelays()
@@ -281,7 +282,7 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler respects MaxRetryCount and stops retrying after maximum attempts.
+    ///     Verifies that RetryingHttpMessageHandler respects MaxRetryCount and stops retrying after maximum attempts.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_MaxRetryCount_IsRespected()
@@ -304,7 +305,8 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler throws TimeoutRejectedException when request timeout is exceeded and retries are disabled.
+    ///     Verifies that RetryingHttpMessageHandler throws TimeoutRejectedException when request timeout is exceeded and
+    ///     retries are disabled.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_RequestTimeout_ThrowsWhenNoRetries()
@@ -329,7 +331,7 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler retries TaskCanceledException from HttpClient timeout.
+    ///     Verifies that RetryingHttpMessageHandler retries TaskCanceledException from HttpClient timeout.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_TaskCanceledFromTimeout_Retried()
@@ -362,7 +364,7 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler opens circuit breaker after failure threshold is reached.
+    ///     Verifies that RetryingHttpMessageHandler opens circuit breaker after failure threshold is reached.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_CircuitBreaker_OpensAfterThreshold()
@@ -389,7 +391,7 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler does not throw BrokenCircuitException when circuit breaker is disabled.
+    ///     Verifies that RetryingHttpMessageHandler does not throw BrokenCircuitException when circuit breaker is disabled.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_CircuitBreakerDisabled_DoesNotThrow()
@@ -415,7 +417,7 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler does not retry when user cancellation token is triggered.
+    ///     Verifies that RetryingHttpMessageHandler does not retry when user cancellation token is triggered.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_UserCancellation_NotRetried()
@@ -442,7 +444,7 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler disables retries when MaxRetryCount is zero.
+    ///     Verifies that RetryingHttpMessageHandler disables retries when MaxRetryCount is zero.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_MaxRetryCountZero_DisablesRetries()
@@ -464,7 +466,7 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    /// Verifies that RetryingHttpMessageHandler has retries disabled by default.
+    ///     Verifies that RetryingHttpMessageHandler has retries disabled by default.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_RetriesDisabledByDefault()
@@ -536,13 +538,13 @@ public class RetryingHttpMessageHandlerTests
 }
 
 /// <summary>
-/// Unit tests for <see cref="HttpResilienceOptions"/> class validation.
+///     Unit tests for <see cref="HttpResilienceOptions" /> class validation.
 /// </summary>
 [TestClass]
 public class HttpResilienceOptionsTests
 {
     /// <summary>
-    /// Verifies that HttpResilienceOptions.MaxRetryCount throws ArgumentOutOfRangeException when set to negative value.
+    ///     Verifies that HttpResilienceOptions.MaxRetryCount throws ArgumentOutOfRangeException when set to negative value.
     /// </summary>
     [TestMethod]
     public void MaxRetryCount_WithNegativeValue_ThrowsArgumentOutOfRangeException()
@@ -555,7 +557,7 @@ public class HttpResilienceOptionsTests
     }
 
     /// <summary>
-    /// Verifies that HttpResilienceOptions.BaseDelay throws ArgumentOutOfRangeException when set to zero.
+    ///     Verifies that HttpResilienceOptions.BaseDelay throws ArgumentOutOfRangeException when set to zero.
     /// </summary>
     [TestMethod]
     public void BaseDelay_WithZeroValue_ThrowsArgumentOutOfRangeException()
@@ -568,7 +570,7 @@ public class HttpResilienceOptionsTests
     }
 
     /// <summary>
-    /// Verifies that HttpResilienceOptions.MaxDelay throws ArgumentOutOfRangeException when set to negative value.
+    ///     Verifies that HttpResilienceOptions.MaxDelay throws ArgumentOutOfRangeException when set to negative value.
     /// </summary>
     [TestMethod]
     public void MaxDelay_WithNegativeValue_ThrowsArgumentOutOfRangeException()
@@ -581,7 +583,8 @@ public class HttpResilienceOptionsTests
     }
 
     /// <summary>
-    /// Verifies that HttpResilienceOptions.FailureRatio throws ArgumentOutOfRangeException when set to value greater than 1.
+    ///     Verifies that HttpResilienceOptions.FailureRatio throws ArgumentOutOfRangeException when set to value greater than
+    ///     1.
     /// </summary>
     [TestMethod]
     public void FailureRatio_WithValueGreaterThanOne_ThrowsArgumentOutOfRangeException()
@@ -594,7 +597,7 @@ public class HttpResilienceOptionsTests
     }
 
     /// <summary>
-    /// Verifies that HttpResilienceOptions.MinimumThroughput throws ArgumentOutOfRangeException when set to zero.
+    ///     Verifies that HttpResilienceOptions.MinimumThroughput throws ArgumentOutOfRangeException when set to zero.
     /// </summary>
     [TestMethod]
     public void MinimumThroughput_WithZeroValue_ThrowsArgumentOutOfRangeException()
@@ -607,7 +610,7 @@ public class HttpResilienceOptionsTests
     }
 
     /// <summary>
-    /// Verifies that HttpResilienceOptions.SamplingDuration throws ArgumentOutOfRangeException when set to zero.
+    ///     Verifies that HttpResilienceOptions.SamplingDuration throws ArgumentOutOfRangeException when set to zero.
     /// </summary>
     [TestMethod]
     public void SamplingDuration_WithZeroValue_ThrowsArgumentOutOfRangeException()
@@ -620,7 +623,7 @@ public class HttpResilienceOptionsTests
     }
 
     /// <summary>
-    /// Verifies that HttpResilienceOptions.BreakDuration throws ArgumentOutOfRangeException when set to zero.
+    ///     Verifies that HttpResilienceOptions.BreakDuration throws ArgumentOutOfRangeException when set to zero.
     /// </summary>
     [TestMethod]
     public void BreakDuration_WithZeroValue_ThrowsArgumentOutOfRangeException()

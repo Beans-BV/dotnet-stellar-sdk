@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="SetOptionsOperationResponse"/> class.
+///     Unit tests for <see cref="SetOptionsOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class SetOptionsOperationResponseTest
 {
     /// <summary>
-    /// Verifies that SetOptionsOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that SetOptionsOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetOptionsOperationJson_ReturnsDeserializedOperation()
@@ -31,7 +31,7 @@ public class SetOptionsOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that SetOptionsOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithSetOptionsOperation_RoundTripsCorrectly()
@@ -70,7 +70,7 @@ public class SetOptionsOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsOperationResponse with non-Ed25519 signer key can be deserialized from JSON correctly.
+    ///     Verifies that SetOptionsOperationResponse with non-Ed25519 signer key can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetOptionsOperationNonEd25519KeyJson_ReturnsDeserializedOperation()
@@ -88,7 +88,8 @@ public class SetOptionsOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsOperationResponse with non-Ed25519 signer key can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that SetOptionsOperationResponse with non-Ed25519 signer key can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithSetOptionsOperationNonEd25519Key_RoundTripsCorrectly()

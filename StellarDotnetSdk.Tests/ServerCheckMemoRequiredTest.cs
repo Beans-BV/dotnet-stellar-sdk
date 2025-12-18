@@ -20,7 +20,7 @@ using StellarDotnetSdk.Transactions;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for memo requirement checking functionality in <see cref="Server"/> class.
+///     Unit tests for memo requirement checking functionality in <see cref="Server" /> class.
 /// </summary>
 [TestClass]
 public class ServerCheckMemoRequiredTest
@@ -28,7 +28,8 @@ public class ServerCheckMemoRequiredTest
     private const string AccountId = "GAYHAAKPAQLMGIJYMIWPDWCGUCQ5LAWY4Q7Q3IKSP57O7GUPD3NEOSEA";
 
     /// <summary>
-    /// Verifies that CheckMemoRequired throws AccountRequiresMemoException when account requires memo and transaction has no memo.
+    ///     Verifies that CheckMemoRequired throws AccountRequiresMemoException when account requires memo and transaction has
+    ///     no memo.
     /// </summary>
     [TestMethod]
     public async Task CheckMemoRequired_WhenMemoIsRequired_ThrowsAccountRequiresMemoException()
@@ -49,7 +50,7 @@ public class ServerCheckMemoRequiredTest
     }
 
     /// <summary>
-    /// Verifies that CheckMemoRequired does not throw when account does not exist.
+    ///     Verifies that CheckMemoRequired does not throw when account does not exist.
     /// </summary>
     [TestMethod]
     public async Task CheckMemoRequired_WhenAccountDoesNotExist_DoesNotThrow()
@@ -65,7 +66,7 @@ public class ServerCheckMemoRequiredTest
     }
 
     /// <summary>
-    /// Verifies that CheckMemoRequired does not throw when account does not have data field.
+    ///     Verifies that CheckMemoRequired does not throw when account does not have data field.
     /// </summary>
     [TestMethod]
     public async Task CheckMemoRequired_WhenAccountDoesNotHaveDataField_DoesNotThrow()
@@ -81,7 +82,7 @@ public class ServerCheckMemoRequiredTest
     }
 
     /// <summary>
-    /// Verifies that CheckMemoRequired rethrows HttpResponseException when server returns bad request.
+    ///     Verifies that CheckMemoRequired rethrows HttpResponseException when server returns bad request.
     /// </summary>
     [TestMethod]
     public async Task CheckMemoRequired_WhenServerReturnsBadRequest_ThrowsHttpResponseException()
@@ -97,7 +98,7 @@ public class ServerCheckMemoRequiredTest
     }
 
     /// <summary>
-    /// Verifies that CheckMemoRequired does not check the same destination account more than once.
+    ///     Verifies that CheckMemoRequired does not check the same destination account more than once.
     /// </summary>
     [TestMethod]
     public async Task CheckMemoRequired_WithDuplicateDestination_DoesNotCheckDestinationMoreThanOnce()
@@ -115,7 +116,7 @@ public class ServerCheckMemoRequiredTest
     }
 
     /// <summary>
-    /// Verifies that CheckMemoRequired checks memo requirement for various operation types with different destinations.
+    ///     Verifies that CheckMemoRequired checks memo requirement for various operation types with different destinations.
     /// </summary>
     [TestMethod]
     public async Task CheckMemoRequired_WithVariousOperationTypes_ChecksAllDestinations()
@@ -176,7 +177,7 @@ public class ServerCheckMemoRequiredTest
     }
 
     /// <summary>
-    /// Verifies that CheckMemoRequired skips memo check when transaction already has a memo.
+    ///     Verifies that CheckMemoRequired skips memo check when transaction already has a memo.
     /// </summary>
     [TestMethod]
     public async Task CheckMemoRequired_WhenTransactionHasMemo_SkipsCheck()
@@ -190,7 +191,7 @@ public class ServerCheckMemoRequiredTest
     }
 
     /// <summary>
-    /// Verifies that CheckMemoRequired checks memo requirement for fee bump transactions.
+    ///     Verifies that CheckMemoRequired checks memo requirement for fee bump transactions.
     /// </summary>
     [TestMethod]
     public async Task CheckMemoRequired_WithFeeBumpTransaction_ChecksMemoRequirement()
@@ -206,7 +207,7 @@ public class ServerCheckMemoRequiredTest
     }
 
     /// <summary>
-    /// Verifies that CheckMemoRequired skips memo check when destination is a muxed account.
+    ///     Verifies that CheckMemoRequired skips memo check when destination is a muxed account.
     /// </summary>
     [TestMethod]
     public async Task CheckMemoRequired_WhenDestinationIsMuxedAccount_SkipsCheck()

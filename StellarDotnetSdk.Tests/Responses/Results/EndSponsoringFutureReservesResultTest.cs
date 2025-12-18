@@ -5,16 +5,17 @@ using XDR = StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for end sponsoring future reserves result types.
+///     Unit tests for end sponsoring future reserves result types.
 /// </summary>
 [TestClass]
 public class EndSponsoringFutureReservesResultTest
 {
     /// <summary>
-    /// Verifies that EndSponsoringFutureReservesNotSponsored result can be deserialized correctly.
+    ///     Verifies that EndSponsoringFutureReservesNotSponsored result can be deserialized correctly.
     /// </summary>
     [TestMethod]
-    public void Deserialize_WithEndSponsoringFutureReservesNotSponsoredXdr_ReturnsEndSponsoringFutureReservesNotSponsored()
+    public void
+        Deserialize_WithEndSponsoringFutureReservesNotSponsoredXdr_ReturnsEndSponsoringFutureReservesNotSponsored()
     {
         // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr();
@@ -31,7 +32,7 @@ public class EndSponsoringFutureReservesResultTest
     }
 
     /// <summary>
-    /// Verifies that EndSponsoringFutureReservesSuccess result can be deserialized correctly.
+    ///     Verifies that EndSponsoringFutureReservesSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithEndSponsoringFutureReservesSuccessXdr_ReturnsEndSponsoringFutureReservesSuccess()

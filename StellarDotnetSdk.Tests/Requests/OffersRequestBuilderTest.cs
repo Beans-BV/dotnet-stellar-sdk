@@ -8,13 +8,13 @@ using StellarDotnetSdk.Tests.Responses;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="OffersRequestBuilder"/> class.
+///     Unit tests for <see cref="OffersRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class OffersRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that OffersRequestBuilder.ForAccount correctly constructs URI for account offers.
+    ///     Verifies that OffersRequestBuilder.ForAccount correctly constructs URI for account offers.
     /// </summary>
     [TestMethod]
     public void ForAccount_WithValidAccountId_BuildsCorrectUri()
@@ -36,7 +36,7 @@ public class OffersRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OffersRequestBuilder.Execute correctly retrieves and deserializes offer page data.
+    ///     Verifies that OffersRequestBuilder.Execute correctly retrieves and deserializes offer page data.
     /// </summary>
     [TestMethod]
     public async Task Execute_ForAccount_ReturnsDeserializedOfferPage()
@@ -54,7 +54,7 @@ public class OffersRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OffersRequestBuilder.WithSeller correctly filters offers by seller and returns matching offers.
+    ///     Verifies that OffersRequestBuilder.WithSeller correctly filters offers by seller and returns matching offers.
     /// </summary>
     [TestMethod]
     public async Task WithSeller_WithValidSellerId_ReturnsMatchingOffers()
@@ -74,7 +74,7 @@ public class OffersRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OffersRequestBuilder.WithSellingAsset correctly filters offers by selling native asset.
+    ///     Verifies that OffersRequestBuilder.WithSellingAsset correctly filters offers by selling native asset.
     /// </summary>
     [TestMethod]
     public async Task WithSellingAsset_WithNativeAsset_ReturnsMatchingOffers()
@@ -94,7 +94,7 @@ public class OffersRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OffersRequestBuilder.WithSellingAsset correctly filters offers by selling credit asset.
+    ///     Verifies that OffersRequestBuilder.WithSellingAsset correctly filters offers by selling credit asset.
     /// </summary>
     [TestMethod]
     public async Task WithSellingAsset_WithCreditAsset_ReturnsMatchingOffers()
@@ -116,7 +116,7 @@ public class OffersRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OffersRequestBuilder.WithBuyingAsset correctly filters offers by buying native asset.
+    ///     Verifies that OffersRequestBuilder.WithBuyingAsset correctly filters offers by buying native asset.
     /// </summary>
     [TestMethod]
     public async Task WithBuyingAsset_WithNativeAsset_ReturnsMatchingOffers()
@@ -136,7 +136,7 @@ public class OffersRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OffersRequestBuilder.WithBuyingAsset correctly filters offers by buying credit asset.
+    ///     Verifies that OffersRequestBuilder.WithBuyingAsset correctly filters offers by buying credit asset.
     /// </summary>
     [TestMethod]
     public async Task WithBuyingAsset_WithCreditAsset_ReturnsMatchingOffers()
@@ -158,7 +158,7 @@ public class OffersRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that OffersRequestBuilder.Offer correctly retrieves and deserializes single offer data.
+    ///     Verifies that OffersRequestBuilder.Offer correctly retrieves and deserializes single offer data.
     /// </summary>
     [TestMethod]
     public async Task Offer_WithValidOfferId_ReturnsDeserializedOffer()

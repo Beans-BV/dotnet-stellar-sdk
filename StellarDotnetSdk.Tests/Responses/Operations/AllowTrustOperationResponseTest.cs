@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="AllowTrustOperationResponse"/> class.
+///     Unit tests for <see cref="AllowTrustOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class AllowTrustOperationResponseTest
 {
     /// <summary>
-    /// Verifies that AllowTrustOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that AllowTrustOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAllowTrustOperationJson_ReturnsDeserializedOperation()
@@ -32,7 +32,7 @@ public class AllowTrustOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that AllowTrustOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AllowTrustOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAllowTrustOperation_RoundTripsCorrectly()
@@ -66,7 +66,7 @@ public class AllowTrustOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that AllowTrustOperationResponse with muxed account can be deserialized from JSON correctly.
+    ///     Verifies that AllowTrustOperationResponse with muxed account can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAllowTrustOperationMuxedJson_ReturnsDeserializedOperation()
@@ -84,7 +84,8 @@ public class AllowTrustOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that AllowTrustOperationResponse with muxed account can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AllowTrustOperationResponse with muxed account can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAllowTrustOperationMuxed_RoundTripsCorrectly()

@@ -9,13 +9,13 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.CreateClaimableBalanceResultCode.Cre
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for create claimable balance result types.
+///     Unit tests for create claimable balance result types.
 /// </summary>
 [TestClass]
 public class CreateClaimableBalanceResultTest
 {
     /// <summary>
-    /// Verifies that CreateClaimableBalanceLowReserve result can be deserialized correctly.
+    ///     Verifies that CreateClaimableBalanceLowReserve result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateClaimableBalanceLowReserveXdr_ReturnsCreateClaimableBalanceLowReserve()
@@ -29,7 +29,7 @@ public class CreateClaimableBalanceResultTest
     }
 
     /// <summary>
-    /// Verifies that CreateClaimableBalanceMalformed result can be deserialized correctly.
+    ///     Verifies that CreateClaimableBalanceMalformed result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateClaimableBalanceMalformedXdr_ReturnsCreateClaimableBalanceMalformed()
@@ -43,7 +43,7 @@ public class CreateClaimableBalanceResultTest
     }
 
     /// <summary>
-    /// Verifies that CreateClaimableBalanceNotAuthorized result can be deserialized correctly.
+    ///     Verifies that CreateClaimableBalanceNotAuthorized result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateClaimableBalanceNotAuthorizedXdr_ReturnsCreateClaimableBalanceNotAuthorized()
@@ -57,7 +57,7 @@ public class CreateClaimableBalanceResultTest
     }
 
     /// <summary>
-    /// Verifies that CreateClaimableBalanceNoTrust result can be deserialized correctly.
+    ///     Verifies that CreateClaimableBalanceNoTrust result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateClaimableBalanceNoTrustXdr_ReturnsCreateClaimableBalanceNoTrust()
@@ -71,7 +71,7 @@ public class CreateClaimableBalanceResultTest
     }
 
     /// <summary>
-    /// Verifies that CreateClaimableBalanceSuccess result can be deserialized correctly and contains balance ID.
+    ///     Verifies that CreateClaimableBalanceSuccess result can be deserialized correctly and contains balance ID.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateClaimableBalanceSuccessXdr_ReturnsCreateClaimableBalanceSuccessWithBalanceId()
@@ -92,7 +92,7 @@ public class CreateClaimableBalanceResultTest
     }
 
     /// <summary>
-    /// Verifies that CreateClaimableBalanceUnderfunded result can be deserialized correctly.
+    ///     Verifies that CreateClaimableBalanceUnderfunded result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateClaimableBalanceUnderfundedXdr_ReturnsCreateClaimableBalanceUnderfunded()

@@ -10,13 +10,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="PaymentOperationResponse"/> class.
+///     Unit tests for <see cref="PaymentOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class PaymentOperationResponseTest
 {
     /// <summary>
-    /// Verifies that PaymentOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that PaymentOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPaymentOperationJson_ReturnsDeserializedOperation()
@@ -34,7 +34,7 @@ public class PaymentOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that PaymentOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that PaymentOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithPaymentOperation_RoundTripsCorrectly()
@@ -113,7 +113,7 @@ public class PaymentOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that PaymentOperationResponse with non-native asset can be deserialized from JSON correctly.
+    ///     Verifies that PaymentOperationResponse with non-native asset can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPaymentOperationNonNativeJson_ReturnsDeserializedOperation()
@@ -131,7 +131,8 @@ public class PaymentOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that PaymentOperationResponse with non-native asset can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that PaymentOperationResponse with non-native asset can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithPaymentOperationNonNative_RoundTripsCorrectly()
@@ -163,7 +164,7 @@ public class PaymentOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that PaymentOperationResponse with muxed account can be deserialized from JSON correctly.
+    ///     Verifies that PaymentOperationResponse with muxed account can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPaymentOperationMuxedJson_ReturnsDeserializedOperation()
@@ -181,7 +182,8 @@ public class PaymentOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that PaymentOperationResponse with muxed account can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that PaymentOperationResponse with muxed account can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithPaymentOperationMuxed_RoundTripsCorrectly()

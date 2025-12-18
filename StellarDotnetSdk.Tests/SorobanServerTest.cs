@@ -32,7 +32,7 @@ using TransactionMetaV3 = StellarDotnetSdk.Soroban.TransactionMetaV3;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="SorobanServer"/> class.
+///     Unit tests for <see cref="SorobanServer" /> class.
 /// </summary>
 [TestClass]
 public class SorobanServerTest
@@ -46,7 +46,7 @@ public class SorobanServerTest
     private string AccountId => _account.AccountId;
 
     /// <summary>
-    /// Verifies that SorobanServer.GetHealth returns health status with correct ledger information.
+    ///     Verifies that SorobanServer.GetHealth returns health status with correct ledger information.
     /// </summary>
     [TestMethod]
     public async Task GetHealth_WithValidResponse_ReturnsHealthStatus()
@@ -79,7 +79,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetNetwork returns network information with correct properties.
+    ///     Verifies that SorobanServer.GetNetwork returns network information with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetNetwork_WithValidResponse_ReturnsNetworkInformation()
@@ -110,7 +110,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetLatestLedger returns latest ledger information with correct properties.
+    ///     Verifies that SorobanServer.GetLatestLedger returns latest ledger information with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLatestLedger_WithValidResponse_ReturnsLatestLedgerInformation()
@@ -141,7 +141,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.SendTransaction returns response with PENDING status when transaction is pending.
+    ///     Verifies that SorobanServer.SendTransaction returns response with PENDING status when transaction is pending.
     /// </summary>
     [TestMethod]
     public async Task SendTransaction_WithPendingStatus_ReturnsPendingResponse()
@@ -176,7 +176,8 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.SendTransaction returns response with TRY_AGAIN_LATER status when server requests retry.
+    ///     Verifies that SorobanServer.SendTransaction returns response with TRY_AGAIN_LATER status when server requests
+    ///     retry.
     /// </summary>
     [TestMethod]
     public async Task SendTransaction_WithTryAgainLaterStatus_ReturnsTryAgainLaterResponse()
@@ -211,7 +212,8 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.SendTransaction returns response with ERROR status and error result XDR when transaction fails.
+    ///     Verifies that SorobanServer.SendTransaction returns response with ERROR status and error result XDR when
+    ///     transaction fails.
     /// </summary>
     [TestMethod]
     public async Task SendTransaction_WithErrorStatus_ReturnsErrorResponseWithErrorResult()
@@ -247,7 +249,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.SendTransaction returns response with DUPLICATE status when transaction is duplicate.
+    ///     Verifies that SorobanServer.SendTransaction returns response with DUPLICATE status when transaction is duplicate.
     /// </summary>
     [TestMethod]
     public async Task SendTransaction_WithDuplicateStatus_ReturnsDuplicateResponse()
@@ -282,7 +284,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with PENDING status.
+    ///     Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with PENDING status.
     /// </summary>
     [TestMethod]
     public async Task SendTransaction_WithFeeBumpTransactionPending_ReturnsPendingResponse()
@@ -317,7 +319,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with TRY_AGAIN_LATER status.
+    ///     Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with TRY_AGAIN_LATER status.
     /// </summary>
     [TestMethod]
     public async Task SendTransaction_WithFeeBumpTransactionTryAgainLater_ReturnsTryAgainLaterResponse()
@@ -352,7 +354,8 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with ERROR status and error result XDR.
+    ///     Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with ERROR status and error
+    ///     result XDR.
     /// </summary>
     [TestMethod]
     public async Task SendTransaction_WithFeeBumpTransactionError_ReturnsErrorResponseWithErrorResult()
@@ -388,7 +391,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with DUPLICATE status.
+    ///     Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with DUPLICATE status.
     /// </summary>
     [TestMethod]
     public async Task SendTransaction_WithFeeBumpTransactionDuplicate_ReturnsDuplicateResponse()
@@ -423,7 +426,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.SimulateTransaction throws TooManySignaturesException when transaction is signed.
+    ///     Verifies that SorobanServer.SimulateTransaction throws TooManySignaturesException when transaction is signed.
     /// </summary>
     [TestMethod]
     public async Task SimulateTransaction_WithSignedTransaction_ThrowsTooManySignaturesException()
@@ -437,7 +440,8 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.SimulateTransaction returns response with error and diagnostic events when simulation fails.
+    ///     Verifies that SorobanServer.SimulateTransaction returns response with error and diagnostic events when simulation
+    ///     fails.
     /// </summary>
     [TestMethod]
     public async Task SimulateTransaction_WithFailedSimulation_ReturnsErrorResponseWithEvents()
@@ -482,7 +486,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetEvents returns events response with correct event properties.
+    ///     Verifies that SorobanServer.GetEvents returns events response with correct event properties.
     /// </summary>
     [TestMethod]
     public async Task GetEvents_WithValidRequest_ReturnsEventsResponse()
@@ -657,7 +661,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetAccount throws AccountNotFoundException when account is not found.
+    ///     Verifies that SorobanServer.GetAccount throws AccountNotFoundException when account is not found.
     /// </summary>
     [TestMethod]
     public async Task GetAccount_WithNonExistentAccount_ThrowsAccountNotFoundException()
@@ -682,7 +686,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetAccount returns account with correct properties.
+    ///     Verifies that SorobanServer.GetAccount returns account with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetAccount_WithValidAccountId_ReturnsAccount()
@@ -716,7 +720,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetLedgerEntries returns contract data ledger entries with correct properties.
+    ///     Verifies that SorobanServer.GetLedgerEntries returns contract data ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithContractDataEntries_ReturnsContractDataEntries()
@@ -776,7 +780,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetLedgerEntries returns contract code ledger entries with correct properties.
+    ///     Verifies that SorobanServer.GetLedgerEntries returns contract code ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithContractCodeEntries_ReturnsContractCodeEntries()
@@ -845,7 +849,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetLedgerEntries returns account ledger entries with correct properties.
+    ///     Verifies that SorobanServer.GetLedgerEntries returns account ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithAccountEntries_ReturnsAccountEntries()
@@ -913,7 +917,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetLedgerEntries returns data ledger entries with correct properties.
+    ///     Verifies that SorobanServer.GetLedgerEntries returns data ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithDataEntries_ReturnsDataEntries()
@@ -963,7 +967,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetLedgerEntries returns offer ledger entries with correct properties.
+    ///     Verifies that SorobanServer.GetLedgerEntries returns offer ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithOfferEntries_ReturnsOfferEntries()
@@ -1017,7 +1021,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetLedgerEntries returns claimable balance ledger entries with correct properties.
+    ///     Verifies that SorobanServer.GetLedgerEntries returns claimable balance ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithClaimableBalanceEntries_ReturnsClaimableBalanceEntries()
@@ -1068,7 +1072,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetLedgerEntries returns liquidity pool ledger entries with correct properties.
+    ///     Verifies that SorobanServer.GetLedgerEntries returns liquidity pool ledger entries with correct properties.
     /// </summary>
     // TODO Test liquidity pool with some deposits/withdrawals
     [TestMethod]
@@ -1128,7 +1132,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetLedgerEntries returns trustline ledger entries with correct properties.
+    ///     Verifies that SorobanServer.GetLedgerEntries returns trustline ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithTrustlineEntries_ReturnsTrustlineEntries()
@@ -1179,7 +1183,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetTransaction returns NOT_FOUND status when transaction is not found.
+    ///     Verifies that SorobanServer.GetTransaction returns NOT_FOUND status when transaction is not found.
     /// </summary>
     [TestMethod]
     public async Task GetTransaction_WithNonExistentTransaction_ReturnsNotFoundStatus()
@@ -1213,7 +1217,8 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.SimulateTransaction returns successful simulation response with transaction data, events, and state changes.
+    ///     Verifies that SorobanServer.SimulateTransaction returns successful simulation response with transaction data,
+    ///     events, and state changes.
     /// </summary>
     [TestMethod]
     public async Task SimulateTransaction_WithValidTransaction_ReturnsSuccessfulSimulationResponse()
@@ -1357,7 +1362,8 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.SimulateTransaction returns successful simulation response with Protocol 23 extension data.
+    ///     Verifies that SorobanServer.SimulateTransaction returns successful simulation response with Protocol 23 extension
+    ///     data.
     /// </summary>
     // This test only focuses on testing the SorobanTransactionDataExt
     [TestMethod]
@@ -1419,7 +1425,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetFeeStats returns fee statistics with inclusion fee and Soroban inclusion fee data.
+    ///     Verifies that SorobanServer.GetFeeStats returns fee statistics with inclusion fee and Soroban inclusion fee data.
     /// </summary>
     [TestMethod]
     public async Task GetFeeStats_WithValidRequest_ReturnsFeeStatistics()
@@ -1521,7 +1527,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetVersionInfo returns version information with Protocol 22 data.
+    ///     Verifies that SorobanServer.GetVersionInfo returns version information with Protocol 22 data.
     /// </summary>
     [TestMethod]
     public async Task GetVersionInfo_WithProtocol22Server_ReturnsVersionInfoWithProtocol22()
@@ -1561,7 +1567,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetVersionInfo returns version information for servers prior to Protocol 22.
+    ///     Verifies that SorobanServer.GetVersionInfo returns version information for servers prior to Protocol 22.
     /// </summary>
     [TestMethod]
     public async Task GetVersionInfo_WithServerPriorToProtocol22_ReturnsVersionInfo()
@@ -1597,7 +1603,8 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetTransaction returns transaction with SUCCESS status and all transaction details including events.
+    ///     Verifies that SorobanServer.GetTransaction returns transaction with SUCCESS status and all transaction details
+    ///     including events.
     /// </summary>
     [TestMethod]
     public async Task GetTransaction_WithSuccessfulTransaction_ReturnsTransactionWithSuccessStatus()
@@ -1708,7 +1715,8 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetTransactions returns transactions response with multiple transactions including success and failed statuses.
+    ///     Verifies that SorobanServer.GetTransactions returns transactions response with multiple transactions including
+    ///     success and failed statuses.
     /// </summary>
     [TestMethod]
     public async Task GetTransactions_WithValidRequest_ReturnsTransactionsResponse()
@@ -2018,7 +2026,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetLedgerEntries returns config setting ledger entries with correct properties.
+    ///     Verifies that SorobanServer.GetLedgerEntries returns config setting ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithConfigSettingEntries_ReturnsConfigSettingEntries()
@@ -2294,7 +2302,8 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    /// Verifies that SorobanServer.GetLedgerEntries returns null when querying TTL ledger entries directly, as they cannot be queried.
+    ///     Verifies that SorobanServer.GetLedgerEntries returns null when querying TTL ledger entries directly, as they cannot
+    ///     be queried.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithTtlEntries_ReturnsNull()

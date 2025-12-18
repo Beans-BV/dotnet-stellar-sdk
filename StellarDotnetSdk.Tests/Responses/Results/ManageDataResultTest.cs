@@ -4,13 +4,13 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for manage data result types.
+///     Unit tests for manage data result types.
 /// </summary>
 [TestClass]
 public class ManageDataResultTest
 {
     /// <summary>
-    /// Verifies that ManageDataSuccess result can be deserialized correctly.
+    ///     Verifies that ManageDataSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithManageDataSuccessXdr_ReturnsManageDataSuccess()
@@ -23,7 +23,7 @@ public class ManageDataResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageDataNotSupportedYet result can be deserialized correctly.
+    ///     Verifies that ManageDataNotSupportedYet result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithManageDataNotSupportedYetXdr_ReturnsManageDataNotSupportedYet()
@@ -36,7 +36,7 @@ public class ManageDataResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageDataNameNotFound result can be deserialized correctly.
+    ///     Verifies that ManageDataNameNotFound result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithManageDataNameNotFoundXdr_ReturnsManageDataNameNotFound()
@@ -49,7 +49,7 @@ public class ManageDataResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageDataLowReserve result can be deserialized correctly.
+    ///     Verifies that ManageDataLowReserve result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithManageDataLowReserveXdr_ReturnsManageDataLowReserve()
@@ -62,7 +62,7 @@ public class ManageDataResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageDataInvalidName result can be deserialized correctly.
+    ///     Verifies that ManageDataInvalidName result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithManageDataInvalidNameXdr_ReturnsManageDataInvalidName()

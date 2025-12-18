@@ -7,13 +7,13 @@ using XDR = StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="LiquidityPoolId"/> class.
+///     Unit tests for <see cref="LiquidityPoolId" /> class.
 /// </summary>
 [TestClass]
 public class LiquidityPoolIdTest
 {
     /// <summary>
-    /// Verifies that LiquidityPoolId constructor creates pool ID with correct string representation.
+    ///     Verifies that LiquidityPoolId constructor creates pool ID with correct string representation.
     /// </summary>
     [TestMethod]
     public void Constructor_WithValidAssets_CreatesPoolIdWithCorrectString()
@@ -32,7 +32,7 @@ public class LiquidityPoolIdTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolId constructor throws ArgumentException when assets are not in lexicographic order.
+    ///     Verifies that LiquidityPoolId constructor throws ArgumentException when assets are not in lexicographic order.
     /// </summary>
     [TestMethod]
     public void Constructor_WithAssetsNotInLexicographicOrder_ThrowsArgumentException()
@@ -49,7 +49,7 @@ public class LiquidityPoolIdTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolId Equals returns true for same pool ID instance.
+    ///     Verifies that LiquidityPoolId Equals returns true for same pool ID instance.
     /// </summary>
     [TestMethod]
     public void Equals_WithSameInstance_ReturnsTrue()
@@ -67,7 +67,7 @@ public class LiquidityPoolIdTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolId Equals returns false for different pool IDs.
+    ///     Verifies that LiquidityPoolId Equals returns false for different pool IDs.
     /// </summary>
     [TestMethod]
     public void Equals_WithDifferentPoolIds_ReturnsFalse()

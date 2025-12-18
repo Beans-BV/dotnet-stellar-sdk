@@ -9,13 +9,13 @@ using StellarDotnetSdk.Responses.Predicates;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing claimable balance responses from JSON.
+///     Unit tests for deserializing claimable balance responses from JSON.
 /// </summary>
 [TestClass]
 public class ClaimableBalanceDeserializerTest
 {
     /// <summary>
-    /// Verifies that ClaimableBalanceResponse can be deserialized from JSON correctly.
+    ///     Verifies that ClaimableBalanceResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClaimableBalanceJson_ReturnsDeserializedClaimableBalance()
@@ -33,7 +33,7 @@ public class ClaimableBalanceDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that ClaimableBalanceResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ClaimableBalanceResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithClaimableBalance_RoundTripsCorrectly()

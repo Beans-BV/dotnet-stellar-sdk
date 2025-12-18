@@ -4,13 +4,13 @@ using StellarDotnetSdk.Accounts;
 namespace StellarDotnetSdk.Tests.Accounts;
 
 /// <summary>
-/// Unit tests for <see cref="AccountFlag"/> enum.
+///     Unit tests for <see cref="AccountFlag" /> enum.
 /// </summary>
 [TestClass]
 public class AccountFlagTest
 {
     /// <summary>
-    /// Verifies that AccountFlag enum values are correct.
+    ///     Verifies that AccountFlag enum values are correct.
     /// </summary>
     [TestMethod]
     public void AccountFlag_Values_AreCorrect()

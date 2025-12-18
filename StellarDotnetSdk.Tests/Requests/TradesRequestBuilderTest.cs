@@ -7,13 +7,14 @@ using StellarDotnetSdk.Tests.Responses;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="TradesRequestBuilder"/> class.
+///     Unit tests for <see cref="TradesRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class TradesRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that TradesRequestBuilder.BuildUri correctly constructs URI with base asset, counter asset, cursor, limit, and order parameters.
+    ///     Verifies that TradesRequestBuilder.BuildUri correctly constructs URI with base asset, counter asset, cursor, limit,
+    ///     and order parameters.
     /// </summary>
     [TestMethod]
     public void BuildUri_WithBaseAssetCounterAssetCursorLimitAndOrder_BuildsCorrectUri()
@@ -44,7 +45,7 @@ public class TradesRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that TradesRequestBuilder.Execute correctly retrieves and deserializes trades page data.
+    ///     Verifies that TradesRequestBuilder.Execute correctly retrieves and deserializes trades page data.
     /// </summary>
     [TestMethod]
     public async Task Execute_WithBaseAndCounterAssets_ReturnsDeserializedTradesPage()
@@ -65,7 +66,7 @@ public class TradesRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that TradesRequestBuilder.ForAccount correctly constructs URI for account trades.
+    ///     Verifies that TradesRequestBuilder.ForAccount correctly constructs URI for account trades.
     /// </summary>
     [TestMethod]
     public void ForAccount_WithValidAccountId_BuildsCorrectUri()

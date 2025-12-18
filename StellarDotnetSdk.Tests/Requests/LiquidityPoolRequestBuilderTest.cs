@@ -8,13 +8,14 @@ using StellarDotnetSdk.Tests.Responses;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="LiquidityPoolRequestBuilder"/> class.
+///     Unit tests for <see cref="LiquidityPoolRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class LiquidityPoolRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that LiquidityPoolRequestBuilder.BuildUri correctly constructs URI with cursor, limit, and order parameters.
+    ///     Verifies that LiquidityPoolRequestBuilder.BuildUri correctly constructs URI with cursor, limit, and order
+    ///     parameters.
     /// </summary>
     [TestMethod]
     public void BuildUri_WithCursorLimitAndOrder_BuildsCorrectUri()
@@ -36,7 +37,7 @@ public class LiquidityPoolRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolRequestBuilder.ForReserves correctly constructs URI with reserves parameter.
+    ///     Verifies that LiquidityPoolRequestBuilder.ForReserves correctly constructs URI with reserves parameter.
     /// </summary>
     [TestMethod]
     public void ForReserves_WithValidReserveAssets_BuildsCorrectUri()
@@ -57,7 +58,7 @@ public class LiquidityPoolRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolRequestBuilder.Execute correctly retrieves and deserializes liquidity pool page data.
+    ///     Verifies that LiquidityPoolRequestBuilder.Execute correctly retrieves and deserializes liquidity pool page data.
     /// </summary>
     [TestMethod]
     public async Task Execute_WithDefaultParameters_ReturnsDeserializedLiquidityPoolPage()
@@ -73,7 +74,7 @@ public class LiquidityPoolRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolRequestBuilder.Stream correctly streams and deserializes liquidity pool events.
+    ///     Verifies that LiquidityPoolRequestBuilder.Stream correctly streams and deserializes liquidity pool events.
     /// </summary>
     [TestMethod]
     public async Task Stream_WithValidJson_StreamsLiquidityPoolEvents()

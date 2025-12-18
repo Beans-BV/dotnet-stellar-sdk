@@ -8,13 +8,13 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.ClawbackClaimableBalanceResultCode.C
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for clawback claimable balance result types.
+///     Unit tests for clawback claimable balance result types.
 /// </summary>
 [TestClass]
 public class ClawbackClaimableBalanceResultTest
 {
     /// <summary>
-    /// Verifies that ClawbackClaimableBalanceDoesNotExist result can be deserialized correctly.
+    ///     Verifies that ClawbackClaimableBalanceDoesNotExist result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClawbackClaimableBalanceDoesNotExistXdr_ReturnsClawbackClaimableBalanceDoesNotExist()
@@ -28,10 +28,11 @@ public class ClawbackClaimableBalanceResultTest
     }
 
     /// <summary>
-    /// Verifies that ClawbackClaimableBalanceNotClawbackEnabled result can be deserialized correctly.
+    ///     Verifies that ClawbackClaimableBalanceNotClawbackEnabled result can be deserialized correctly.
     /// </summary>
     [TestMethod]
-    public void Deserialize_WithClawbackClaimableBalanceNotClawbackEnabledXdr_ReturnsClawbackClaimableBalanceNotClawbackEnabled()
+    public void
+        Deserialize_WithClawbackClaimableBalanceNotClawbackEnabledXdr_ReturnsClawbackClaimableBalanceNotClawbackEnabled()
     {
         // Arrange
         var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED);
@@ -42,7 +43,7 @@ public class ClawbackClaimableBalanceResultTest
     }
 
     /// <summary>
-    /// Verifies that ClawbackClaimableBalanceNotIssuer result can be deserialized correctly.
+    ///     Verifies that ClawbackClaimableBalanceNotIssuer result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClawbackClaimableBalanceNotIssuerXdr_ReturnsClawbackClaimableBalanceNotIssuer()
@@ -56,7 +57,7 @@ public class ClawbackClaimableBalanceResultTest
     }
 
     /// <summary>
-    /// Verifies that ClawbackClaimableBalanceSuccess result can be deserialized correctly.
+    ///     Verifies that ClawbackClaimableBalanceSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithClawbackClaimableBalanceSuccessXdr_ReturnsClawbackClaimableBalanceSuccess()

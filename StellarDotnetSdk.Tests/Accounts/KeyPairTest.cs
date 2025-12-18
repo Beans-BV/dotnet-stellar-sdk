@@ -8,7 +8,7 @@ using StellarDotnetSdk.Accounts;
 namespace StellarDotnetSdk.Tests.Accounts;
 
 /// <summary>
-/// Unit tests for <see cref="KeyPair"/> class.
+///     Unit tests for <see cref="KeyPair" /> class.
 /// </summary>
 [TestClass]
 public class KeyPairTest
@@ -16,7 +16,7 @@ public class KeyPairTest
     private const string Seed = "1123740522f11bfef6b3671f51e159ccf589ccf8965262dd5f97d1721d383dd4";
 
     /// <summary>
-    /// Verifies that Sign method generates correct signature for given data.
+    ///     Verifies that Sign method generates correct signature for given data.
     /// </summary>
     [TestMethod]
     public void Sign_WithData_ReturnsCorrectSignature()
@@ -36,7 +36,7 @@ public class KeyPairTest
     }
 
     /// <summary>
-    /// Verifies that Verify method returns true for valid signature.
+    ///     Verifies that Verify method returns true for valid signature.
     /// </summary>
     [TestMethod]
     public void Verify_WithValidSignature_ReturnsTrue()
@@ -53,7 +53,7 @@ public class KeyPairTest
     }
 
     /// <summary>
-    /// Verifies that Verify method returns false for invalid signature.
+    ///     Verifies that Verify method returns false for invalid signature.
     /// </summary>
     [TestMethod]
     public void Verify_WithInvalidSignature_ReturnsFalse()
@@ -72,7 +72,7 @@ public class KeyPairTest
     }
 
     /// <summary>
-    /// Verifies that FromSecretSeed creates KeyPair with correct address and secret seed.
+    ///     Verifies that FromSecretSeed creates KeyPair with correct address and secret seed.
     /// </summary>
     [TestMethod]
     public void FromSecretSeed_WithValidSeeds_CreatesKeyPairWithCorrectAddress()
@@ -113,7 +113,8 @@ public class KeyPairTest
     }
 
     /// <summary>
-    /// Verifies that CanSign returns true for KeyPair created from secret seed and false for KeyPair created from account ID.
+    ///     Verifies that CanSign returns true for KeyPair created from secret seed and false for KeyPair created from account
+    ///     ID.
     /// </summary>
     [TestMethod]
     public void CanSign_WithSecretSeed_ReturnsTrue()
@@ -128,7 +129,7 @@ public class KeyPairTest
     }
 
     /// <summary>
-    /// Verifies that Sign throws exception when KeyPair does not contain secret key.
+    ///     Verifies that Sign throws exception when KeyPair does not contain secret key.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(Exception))]
@@ -153,7 +154,7 @@ public class KeyPairTest
     }
 
     /// <summary>
-    /// Verifies that Equals returns false when comparing with null.
+    ///     Verifies that Equals returns false when comparing with null.
     /// </summary>
     [TestMethod]
     public void Equals_WithNull_ReturnsFalse()
@@ -166,7 +167,7 @@ public class KeyPairTest
     }
 
     /// <summary>
-    /// Verifies that Equals returns false when comparing KeyPair with secret key to KeyPair without secret key.
+    ///     Verifies that Equals returns false when comparing KeyPair with secret key to KeyPair without secret key.
     /// </summary>
     [TestMethod]
     public void Equals_WithSecretKeyAndWithout_ReturnsFalse()
@@ -181,7 +182,7 @@ public class KeyPairTest
     }
 
     /// <summary>
-    /// Verifies that Equals returns true when comparing KeyPairs with same secret key.
+    ///     Verifies that Equals returns true when comparing KeyPairs with same secret key.
     /// </summary>
     [TestMethod]
     public void Equals_WithSameSecretKey_ReturnsTrue()
@@ -197,7 +198,7 @@ public class KeyPairTest
     }
 
     /// <summary>
-    /// Verifies that Equals returns true when comparing KeyPairs with only public key and same account ID.
+    ///     Verifies that Equals returns true when comparing KeyPairs with only public key and same account ID.
     /// </summary>
     [TestMethod]
     public void Equals_WithOnlyPublicKey_ReturnsTrue()
@@ -211,7 +212,7 @@ public class KeyPairTest
     }
 
     /// <summary>
-    /// Verifies that SignPayloadDecorated creates correct signature with payload signer.
+    ///     Verifies that SignPayloadDecorated creates correct signature with payload signer.
     /// </summary>
     [TestMethod]
     public void SignPayloadDecorated_WithPayload_CreatesCorrectSignature()
@@ -234,7 +235,7 @@ public class KeyPairTest
 
 
     /// <summary>
-    /// Verifies that SignPayloadDecorated creates signature with payload signer when hint is less than expected.
+    ///     Verifies that SignPayloadDecorated creates signature with payload signer when hint is less than expected.
     /// </summary>
     [TestMethod]
     public void SignPayloadDecorated_WithPayloadLessThanHint_CreatesSignature()

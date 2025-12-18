@@ -11,13 +11,13 @@ using XDR = StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing liquidity pool responses from JSON.
+///     Unit tests for deserializing liquidity pool responses from JSON.
 /// </summary>
 [TestClass]
 public class LiquidityPoolDeserializerTest
 {
     /// <summary>
-    /// Verifies that LiquidityPoolResponse can be deserialized from JSON correctly.
+    ///     Verifies that LiquidityPoolResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithLiquidityPoolJson_ReturnsDeserializedLiquidityPool()
@@ -35,7 +35,7 @@ public class LiquidityPoolDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that LiquidityPoolResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithLiquidityPool_RoundTripsCorrectly()
@@ -55,7 +55,7 @@ public class LiquidityPoolDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that Reserve equality comparison works correctly.
+    ///     Verifies that Reserve equality comparison works correctly.
     /// </summary>
     [TestMethod]
     public void Reserve_WithDifferentProperties_ComparesCorrectly()

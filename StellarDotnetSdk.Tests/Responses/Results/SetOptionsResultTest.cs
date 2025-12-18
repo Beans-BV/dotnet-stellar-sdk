@@ -4,13 +4,13 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for set options result types.
+///     Unit tests for set options result types.
 /// </summary>
 [TestClass]
 public class SetOptionsResultTest
 {
     /// <summary>
-    /// Verifies that SetOptionsSuccess result can be deserialized correctly.
+    ///     Verifies that SetOptionsSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetOptionsSuccessXdr_ReturnsSetOptionsSuccess()
@@ -23,7 +23,7 @@ public class SetOptionsResultTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsLowReserve result can be deserialized correctly.
+    ///     Verifies that SetOptionsLowReserve result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetOptionsLowReserveXdr_ReturnsSetOptionsLowReserve()
@@ -36,7 +36,7 @@ public class SetOptionsResultTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsTooManySigners result can be deserialized correctly.
+    ///     Verifies that SetOptionsTooManySigners result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetOptionsTooManySignersXdr_ReturnsSetOptionsTooManySigners()
@@ -49,7 +49,7 @@ public class SetOptionsResultTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsBadFlags result can be deserialized correctly.
+    ///     Verifies that SetOptionsBadFlags result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetOptionsBadFlagsXdr_ReturnsSetOptionsBadFlags()
@@ -62,7 +62,7 @@ public class SetOptionsResultTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsInvalidInflation result can be deserialized correctly.
+    ///     Verifies that SetOptionsInvalidInflation result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetOptionsInvalidInflationXdr_ReturnsSetOptionsInvalidInflation()
@@ -75,7 +75,7 @@ public class SetOptionsResultTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsCantChange result can be deserialized correctly.
+    ///     Verifies that SetOptionsCantChange result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetOptionsCantChangeXdr_ReturnsSetOptionsCantChange()
@@ -88,7 +88,7 @@ public class SetOptionsResultTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsUnknownFlag result can be deserialized correctly.
+    ///     Verifies that SetOptionsUnknownFlag result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetOptionsUnknownFlagXdr_ReturnsSetOptionsUnknownFlag()
@@ -101,7 +101,7 @@ public class SetOptionsResultTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsThresholdOutOfRange result can be deserialized correctly.
+    ///     Verifies that SetOptionsThresholdOutOfRange result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetOptionsThresholdOutOfRangeXdr_ReturnsSetOptionsThresholdOutOfRange()
@@ -114,7 +114,7 @@ public class SetOptionsResultTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsBadSigner result can be deserialized correctly.
+    ///     Verifies that SetOptionsBadSigner result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetOptionsBadSignerXdr_ReturnsSetOptionsBadSigner()
@@ -127,7 +127,7 @@ public class SetOptionsResultTest
     }
 
     /// <summary>
-    /// Verifies that SetOptionsInvalidHomeDomain result can be deserialized correctly.
+    ///     Verifies that SetOptionsInvalidHomeDomain result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSetOptionsInvalidHomeDomainXdr_ReturnsSetOptionsInvalidHomeDomain()

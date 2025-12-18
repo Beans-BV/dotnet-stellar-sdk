@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="ClawbackOperationResponse"/> class.
+///     Unit tests for <see cref="ClawbackOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class ClawbackOperationResponseTest
 {
     /// <summary>
-    /// Verifies that ClawbackOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ClawbackOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithClawbackOperation_RoundTripsCorrectly()
@@ -51,7 +51,8 @@ public class ClawbackOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that ClawbackOperationResponse with muxed account can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ClawbackOperationResponse with muxed account can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithClawbackOperationMuxed_RoundTripsCorrectly()

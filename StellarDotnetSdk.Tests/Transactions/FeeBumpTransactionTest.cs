@@ -10,7 +10,7 @@ using StellarDotnetSdk.Transactions;
 namespace StellarDotnetSdk.Tests.Transactions;
 
 /// <summary>
-/// Unit tests for <see cref="FeeBumpTransaction"/> class.
+///     Unit tests for <see cref="FeeBumpTransaction" /> class.
 /// </summary>
 [TestClass]
 public class FeeBumpTransactionTest
@@ -37,7 +37,7 @@ public class FeeBumpTransactionTest
     }
 
     /// <summary>
-    /// Verifies that BuildFeeBumpTransaction throws exception when fee is less than inner base fee rate.
+    ///     Verifies that BuildFeeBumpTransaction throws exception when fee is less than inner base fee rate.
     /// </summary>
     [TestMethod]
     public void BuildFeeBumpTransaction_WithFeeLessThanInnerBaseFeeRate_ThrowsException()
@@ -55,7 +55,7 @@ public class FeeBumpTransactionTest
     }
 
     /// <summary>
-    /// Verifies that FeeBumpTransaction builds correctly from transaction envelope with correct fee source and fee amount.
+    ///     Verifies that FeeBumpTransaction builds correctly from transaction envelope with correct fee source and fee amount.
     /// </summary>
     [TestMethod]
     public void BuildFromTransactionEnvelope_WithSignedTransaction_HasCorrectFeeSourceAndFee()
@@ -76,7 +76,7 @@ public class FeeBumpTransactionTest
     }
 
     /// <summary>
-    /// Verifies that FeeBumpTransaction.Sign adds signature that can be verified with fee source key pair.
+    ///     Verifies that FeeBumpTransaction.Sign adds signature that can be verified with fee source key pair.
     /// </summary>
     [TestMethod]
     public void Sign_WithFeeSource_CreatesVerifiableSignature()
@@ -92,7 +92,7 @@ public class FeeBumpTransactionTest
     }
 
     /// <summary>
-    /// Verifies that FeeBumpTransaction.Sign with preimage creates signature with matching preimage bytes.
+    ///     Verifies that FeeBumpTransaction.Sign with preimage creates signature with matching preimage bytes.
     /// </summary>
     [TestMethod]
     public void Sign_WithPreImage_CreatesSignatureWithPreImageBytes()
@@ -112,7 +112,8 @@ public class FeeBumpTransactionTest
     }
 
     /// <summary>
-    /// Verifies that TransactionBuilder.FromEnvelopeXdr correctly deserializes fee bump transaction that round-trips through XDR.
+    ///     Verifies that TransactionBuilder.FromEnvelopeXdr correctly deserializes fee bump transaction that round-trips
+    ///     through XDR.
     /// </summary>
     [TestMethod]
     public void FromEnvelopeXdr_WithFeeBumpTransaction_RoundTripsCorrectly()
@@ -129,7 +130,7 @@ public class FeeBumpTransactionTest
     }
 
     /// <summary>
-    /// Verifies that BuildFeeBumpTransaction with muxed account creates transaction with correct muxed account address.
+    ///     Verifies that BuildFeeBumpTransaction with muxed account creates transaction with correct muxed account address.
     /// </summary>
     [TestMethod]
     public void BuildFeeBumpTransaction_WithMuxedAccount_CreatesTransactionWithCorrectMuxedAddress()
@@ -147,7 +148,8 @@ public class FeeBumpTransactionTest
     }
 
     /// <summary>
-    /// Verifies that BuildFeeBumpTransaction throws OverflowException when base fee multiplied by operation count overflows long.
+    ///     Verifies that BuildFeeBumpTransaction throws OverflowException when base fee multiplied by operation count
+    ///     overflows long.
     /// </summary>
     [TestMethod]
     public void BuildFeeBumpTransaction_WithFeeOverflow_ThrowsOverflowException()
@@ -165,7 +167,7 @@ public class FeeBumpTransactionTest
     }
 
     /// <summary>
-    /// Verifies that Transaction.Hash returns correct hash for both inner transaction and fee bump transaction.
+    ///     Verifies that Transaction.Hash returns correct hash for both inner transaction and fee bump transaction.
     /// </summary>
     [TestMethod]
     public void Hash_WithInnerAndFeeBumpTransaction_ReturnsCorrectHashes()

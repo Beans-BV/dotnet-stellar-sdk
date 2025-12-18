@@ -10,7 +10,7 @@ using StellarDotnetSdk.Requests;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="DefaultStellarSdkHttpClient"/> class.
+///     Unit tests for <see cref="DefaultStellarSdkHttpClient" /> class.
 /// </summary>
 [TestClass]
 public class DefaultStellarSdkHttpClientTests
@@ -18,7 +18,7 @@ public class DefaultStellarSdkHttpClientTests
     private static readonly Uri TestUri = new("https://example.com");
 
     /// <summary>
-    /// Verifies that DefaultStellarSdkHttpClient constructor uses the provided custom inner handler.
+    ///     Verifies that DefaultStellarSdkHttpClient constructor uses the provided custom inner handler.
     /// </summary>
     [TestMethod]
     public async Task Constructor_WithCustomInnerHandler_UsesProvidedHandler()
@@ -36,7 +36,8 @@ public class DefaultStellarSdkHttpClientTests
     }
 
     /// <summary>
-    /// Verifies that DefaultStellarSdkHttpClient constructor correctly chains custom inner handler with resilience options.
+    ///     Verifies that DefaultStellarSdkHttpClient constructor correctly chains custom inner handler with resilience
+    ///     options.
     /// </summary>
     [TestMethod]
     public async Task Constructor_WithCustomInnerHandlerAndResilienceOptions_ChainsCorrectly()
@@ -74,7 +75,7 @@ public class DefaultStellarSdkHttpClientTests
     }
 
     /// <summary>
-    /// Verifies that DefaultStellarSdkHttpClient constructor uses default handler when inner handler is null.
+    ///     Verifies that DefaultStellarSdkHttpClient constructor uses default handler when inner handler is null.
     /// </summary>
     [TestMethod]
     public void Constructor_WithNullInnerHandler_UsesDefaultHandler()
@@ -87,7 +88,7 @@ public class DefaultStellarSdkHttpClientTests
     }
 
     /// <summary>
-    /// Verifies that DefaultStellarSdkHttpClient constructor sets default X-Client-Name and X-Client-Version headers.
+    ///     Verifies that DefaultStellarSdkHttpClient constructor sets default X-Client-Name and X-Client-Version headers.
     /// </summary>
     [TestMethod]
     public void Constructor_SetsDefaultHeaders()
@@ -101,7 +102,8 @@ public class DefaultStellarSdkHttpClientTests
     }
 
     /// <summary>
-    /// Verifies that DefaultStellarSdkHttpClient constructor sets Authorization header with Bearer token when bearer token is provided.
+    ///     Verifies that DefaultStellarSdkHttpClient constructor sets Authorization header with Bearer token when bearer token
+    ///     is provided.
     /// </summary>
     [TestMethod]
     public void Constructor_WithBearerToken_SetsAuthorizationHeader()
@@ -116,7 +118,8 @@ public class DefaultStellarSdkHttpClientTests
     }
 
     /// <summary>
-    /// Verifies that DefaultStellarSdkHttpClient constructor sets custom X-Client-Name and X-Client-Version headers when provided.
+    ///     Verifies that DefaultStellarSdkHttpClient constructor sets custom X-Client-Name and X-Client-Version headers when
+    ///     provided.
     /// </summary>
     [TestMethod]
     public void Constructor_WithCustomClientNameAndVersion_SetsHeaders()
@@ -135,7 +138,8 @@ public class DefaultStellarSdkHttpClientTests
     }
 
     /// <summary>
-    /// Verifies that DefaultStellarSdkHttpClient constructor creates resilience pipeline when only circuit breaker is enabled.
+    ///     Verifies that DefaultStellarSdkHttpClient constructor creates resilience pipeline when only circuit breaker is
+    ///     enabled.
     /// </summary>
     [TestMethod]
     public async Task Constructor_WithCircuitBreakerOnly_CreatesResiliencePipeline()
@@ -163,7 +167,7 @@ public class DefaultStellarSdkHttpClientTests
     }
 
     /// <summary>
-    /// Verifies that DefaultStellarSdkHttpClient constructor creates resilience pipeline when only timeout is enabled.
+    ///     Verifies that DefaultStellarSdkHttpClient constructor creates resilience pipeline when only timeout is enabled.
     /// </summary>
     [TestMethod]
     public async Task Constructor_WithTimeoutOnly_CreatesResiliencePipeline()
@@ -194,7 +198,7 @@ public class DefaultStellarSdkHttpClientTests
     }
 
     /// <summary>
-    /// Verifies that DefaultStellarSdkHttpClient enforces request timeout when timeout is configured.
+    ///     Verifies that DefaultStellarSdkHttpClient enforces request timeout when timeout is configured.
     /// </summary>
     [TestMethod]
     public async Task Constructor_WithTimeoutOnly_EnforcesTimeout()

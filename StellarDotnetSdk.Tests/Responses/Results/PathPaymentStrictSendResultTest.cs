@@ -5,13 +5,13 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for path payment strict send result types.
+///     Unit tests for path payment strict send result types.
 /// </summary>
 [TestClass]
 public class PathPaymentStrictSendResultTest
 {
     /// <summary>
-    /// Verifies that PathPaymentStrictSendSuccess result can be deserialized correctly and contains payment details.
+    ///     Verifies that PathPaymentStrictSendSuccess result can be deserialized correctly and contains payment details.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendSuccessXdr_ReturnsPathPaymentStrictSendSuccessWithDetails()
@@ -43,7 +43,7 @@ public class PathPaymentStrictSendResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendMalformed result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictSendMalformed result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendMalformedXdr_ReturnsPathPaymentStrictSendMalformed()
@@ -56,7 +56,7 @@ public class PathPaymentStrictSendResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendUnderfunded result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictSendUnderfunded result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendUnderfundedXdr_ReturnsPathPaymentStrictSendUnderfunded()
@@ -69,7 +69,7 @@ public class PathPaymentStrictSendResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendSrcNoTrust result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictSendSrcNoTrust result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendSrcNoTrustXdr_ReturnsPathPaymentStrictSendSrcNoTrust()
@@ -82,7 +82,7 @@ public class PathPaymentStrictSendResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendSrcNotAuthorized result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictSendSrcNotAuthorized result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendSrcNotAuthorizedXdr_ReturnsPathPaymentStrictSendSrcNotAuthorized()
@@ -95,7 +95,7 @@ public class PathPaymentStrictSendResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendNoDestination result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictSendNoDestination result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendNoDestinationXdr_ReturnsPathPaymentStrictSendNoDestination()
@@ -108,7 +108,7 @@ public class PathPaymentStrictSendResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendNoTrust result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictSendNoTrust result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendNoTrustXdr_ReturnsPathPaymentStrictSendNoTrust()
@@ -121,7 +121,7 @@ public class PathPaymentStrictSendResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendNotAuthorized result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictSendNotAuthorized result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendNotAuthorizedXdr_ReturnsPathPaymentStrictSendNotAuthorized()
@@ -134,7 +134,7 @@ public class PathPaymentStrictSendResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendLineFull result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictSendLineFull result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendLineFullXdr_ReturnsPathPaymentStrictSendLineFull()
@@ -147,7 +147,7 @@ public class PathPaymentStrictSendResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendNoIssuer result can be deserialized correctly and contains no issuer asset.
+    ///     Verifies that PathPaymentStrictSendNoIssuer result can be deserialized correctly and contains no issuer asset.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendNoIssuerXdr_ReturnsPathPaymentStrictSendNoIssuerWithAsset()
@@ -167,7 +167,7 @@ public class PathPaymentStrictSendResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendTooFewOffers result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictSendTooFewOffers result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendTooFewOffersXdr_ReturnsPathPaymentStrictSendTooFewOffers()
@@ -180,7 +180,7 @@ public class PathPaymentStrictSendResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendOfferCrossSelf result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictSendOfferCrossSelf result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendOfferCrossSelfXdr_ReturnsPathPaymentStrictSendOfferCrossSelf()
@@ -193,7 +193,7 @@ public class PathPaymentStrictSendResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendUnderDestMin result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictSendUnderDestMin result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictSendUnderDestMinXdr_ReturnsPathPaymentStrictSendUnderDestMin()

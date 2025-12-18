@@ -134,7 +134,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 throws ArgumentException when account entry has home domain exceeding 32 characters.
+    ///     Verifies that FromXdrBase64 throws ArgumentException when account entry has home domain exceeding 32 characters.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_AccountWithTooLongHomeDomain_ThrowsArgumentException()
@@ -152,7 +152,8 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes account entry with missing ledger entry extension, account extension, and empty signers.
+    ///     Verifies that FromXdrBase64 correctly decodes account entry with missing ledger entry extension, account extension,
+    ///     and empty signers.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_AccountWithMissingExtensionsAndEmptySigners_ReturnsDecodedEntry()
@@ -173,7 +174,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes account entry with AccountExtensionV1 only.
+    ///     Verifies that FromXdrBase64 correctly decodes account entry with AccountExtensionV1 only.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_AccountWithAccountExtensionV1Only_ReturnsDecodedEntry()
@@ -217,7 +218,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes account entry with AccountExtensionV1 and V2.
+    ///     Verifies that FromXdrBase64 correctly decodes account entry with AccountExtensionV1 and V2.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_AccountWithAccountExtensionV1AndV2_ReturnsDecodedEntry()
@@ -298,7 +299,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes account entry with all three account extensions (V1, V2, V3).
+    ///     Verifies that FromXdrBase64 correctly decodes account entry with all three account extensions (V1, V2, V3).
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_AccountWithAllThreeAccountExtensions_ReturnsDecodedEntry()
@@ -386,7 +387,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes account entry with all properties populated.
+    ///     Verifies that FromXdrBase64 correctly decodes account entry with all properties populated.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_AccountWithAllPropertiesPopulated_ReturnsDecodedEntry()
@@ -445,7 +446,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes offer entry with all properties populated.
+    ///     Verifies that FromXdrBase64 correctly decodes offer entry with all properties populated.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_OfferWithAllPropertiesPopulated_ReturnsDecodedEntry()
@@ -508,7 +509,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes trustline entry with TrustlineExtensionV1 only.
+    ///     Verifies that FromXdrBase64 correctly decodes trustline entry with TrustlineExtensionV1 only.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_TrustlineWithTrustlineExtensionV1Only_ReturnsDecodedEntry()
@@ -581,7 +582,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes trustline entry with all properties populated.
+    ///     Verifies that FromXdrBase64 correctly decodes trustline entry with all properties populated.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_TrustlineWithAllPropertiesPopulated_ReturnsDecodedEntry()
@@ -666,7 +667,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes data entry with all properties populated.
+    ///     Verifies that FromXdrBase64 correctly decodes data entry with all properties populated.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_DataWithAllPropertiesPopulated_ReturnsDecodedEntry()
@@ -707,7 +708,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes claimable balance entry with missing claimable balance extension.
+    ///     Verifies that FromXdrBase64 correctly decodes claimable balance entry with missing claimable balance extension.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ClaimableBalanceWithMissingExtension_ReturnsDecodedEntry()
@@ -756,7 +757,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes claimable balance entry with all properties populated.
+    ///     Verifies that FromXdrBase64 correctly decodes claimable balance entry with all properties populated.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ClaimableBalanceWithAllPropertiesPopulated_ReturnsDecodedEntry()
@@ -819,7 +820,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes LiquidityPool entry with all properties populated.
+    ///     Verifies that FromXdrBase64 correctly decodes LiquidityPool entry with all properties populated.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LiquidityPoolWithAllPropertiesPopulated_ReturnsCorrectLedgerEntry()
@@ -893,7 +894,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes contract data entry with contract being a contract address.
+    ///     Verifies that FromXdrBase64 correctly decodes contract data entry with contract being a contract address.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ContractDataWithContractAddress_ReturnsDecodedEntry()
@@ -926,7 +927,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes contract data entry with contract being an account address.
+    ///     Verifies that FromXdrBase64 correctly decodes contract data entry with contract being an account address.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ContractDataWithAccountAddress_ReturnsDecodedEntry()
@@ -963,7 +964,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes contract code V0 entry with all properties populated.
+    ///     Verifies that FromXdrBase64 correctly decodes contract code V0 entry with all properties populated.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ContractCodeV0WithAllPropertiesPopulated_ReturnsDecodedEntry()
@@ -1005,7 +1006,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ContractCode V1 entry with all properties populated.
+    ///     Verifies that FromXdrBase64 correctly decodes ContractCode V1 entry with all properties populated.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ContractCodeV1WithAllPropertiesPopulated_ReturnsCorrectLedgerEntry()
@@ -1100,7 +1101,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractBandwidthV0 entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractBandwidthV0 entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingContractBandwidthV0_ReturnsDecodedEntry()
@@ -1140,7 +1141,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractCostParamsMemoryBytes entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractCostParamsMemoryBytes entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingContractCostParamsMemoryBytes_ReturnsDecodedEntry()
@@ -1200,7 +1201,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractCostParamsCpuInstructions entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractCostParamsCpuInstructions entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingContractCostParamsCpuInstructions_ReturnsDecodedEntry()
@@ -1260,7 +1261,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractComputeV0 entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractComputeV0 entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingContractComputeV0_ReturnsCorrectConfigSetting()
@@ -1303,7 +1304,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractEventsV0 entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractEventsV0 entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingContractEventsV0_ReturnsDecodedEntry()
@@ -1340,7 +1341,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractExecutionLanesV0 entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractExecutionLanesV0 entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingContractExecutionLanesV0_ReturnsDecodedEntry()
@@ -1374,7 +1375,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractHistoricalDataV0 entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractHistoricalDataV0 entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingContractHistoricalDataV0_ReturnsDecodedEntry()
@@ -1409,7 +1410,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractLedgerCostV0 entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractLedgerCostV0 entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingContractLedgerCostV0_ReturnsDecodedEntry()
@@ -1485,7 +1486,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes StateArchivalSettings entry.
+    ///     Verifies that FromXdrBase64 correctly decodes StateArchivalSettings entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_StateArchivalSettings_ReturnsDecodedEntry()
@@ -1546,7 +1547,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting EvictionIterator entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting EvictionIterator entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingEvictionIterator_ReturnsDecodedEntry()
@@ -1586,7 +1587,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractMaxSizeBytes entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractMaxSizeBytes entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingContractMaxSizeBytes_ReturnsDecodedEntry()
@@ -1616,7 +1617,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractDataKeySizeBytes entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractDataKeySizeBytes entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingContractDataKeySizeBytes_ReturnsDecodedEntry()
@@ -1647,7 +1648,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractDataEntrySizeBytes entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractDataEntrySizeBytes entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingContractDataEntrySizeBytes_ReturnsDecodedEntry()
@@ -1677,7 +1678,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting LiveSorobanStateSizeWindow entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting LiveSorobanStateSizeWindow entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingLiveSorobanStateSizeWindow_ReturnsDecodedEntry()
@@ -1713,7 +1714,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractParallelComputeV0 entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractParallelComputeV0 entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingContractParallelComputeV0_ReturnsDecodedEntry()
@@ -1747,7 +1748,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractLedgerCostExtV0 entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractLedgerCostExtV0 entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingContractLedgerCostExtV0_ReturnsDecodedEntry()
@@ -1786,7 +1787,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes ConfigSetting ScpTiming entry.
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ScpTiming entry.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_ConfigSettingScpTiming_ReturnsDecodedEntry()
@@ -1834,7 +1835,7 @@ public class LedgerEntryTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly decodes TTL entry with all properties populated.
+    ///     Verifies that FromXdrBase64 correctly decodes TTL entry with all properties populated.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_TtlWithAllPropertiesPopulated_ReturnsDecodedEntry()

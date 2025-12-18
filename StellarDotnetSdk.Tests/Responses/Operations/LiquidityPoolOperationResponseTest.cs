@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for liquidity pool operation responses.
+///     Unit tests for liquidity pool operation responses.
 /// </summary>
 [TestClass]
 public class LiquidityPoolOperationResponseTest
 {
     /// <summary>
-    /// Verifies that LiquidityPoolDepositOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that LiquidityPoolDepositOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithLiquidityPoolDepositOperation_RoundTripsCorrectly()
@@ -56,7 +56,7 @@ public class LiquidityPoolOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolWithdrawOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that LiquidityPoolWithdrawOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithLiquidityPoolWithdrawOperation_RoundTripsCorrectly()

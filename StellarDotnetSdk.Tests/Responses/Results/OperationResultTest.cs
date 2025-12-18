@@ -4,13 +4,13 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for operation result types.
+///     Unit tests for operation result types.
 /// </summary>
 [TestClass]
 public class OperationResultTest
 {
     /// <summary>
-    /// Verifies that OperationResultBadAuth can be deserialized from a failed transaction result.
+    ///     Verifies that OperationResultBadAuth can be deserialized from a failed transaction result.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithBadAuthOperationXdr_ReturnsOperationResultBadAuth()
@@ -31,7 +31,7 @@ public class OperationResultTest
     }
 
     /// <summary>
-    /// Verifies that OperationResultNoAccount can be deserialized from a failed transaction result.
+    ///     Verifies that OperationResultNoAccount can be deserialized from a failed transaction result.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithNoAccountOperationXdr_ReturnsOperationResultNoAccount()
@@ -52,7 +52,7 @@ public class OperationResultTest
     }
 
     /// <summary>
-    /// Verifies that OperationResultNotSupported can be deserialized from a failed transaction result.
+    ///     Verifies that OperationResultNotSupported can be deserialized from a failed transaction result.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithNotSupportedOperationXdr_ReturnsOperationResultNotSupported()
@@ -73,7 +73,7 @@ public class OperationResultTest
     }
 
     /// <summary>
-    /// Verifies that multiple operation failures can be deserialized correctly.
+    ///     Verifies that multiple operation failures can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithMultipleFailuresXdr_ReturnsTransactionResultFailedWithMultipleResults()

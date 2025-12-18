@@ -7,13 +7,14 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="RevokeSponsorshipOperationResponse"/> class.
+///     Unit tests for <see cref="RevokeSponsorshipOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class RevokeSponsorshipOperationResponseTest
 {
     /// <summary>
-    /// Verifies that RevokeSponsorshipOperationResponse with account ID can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that RevokeSponsorshipOperationResponse with account ID can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithRevokeSponsorshipAccountIdOperation_RoundTripsCorrectly()
@@ -42,7 +43,8 @@ public class RevokeSponsorshipOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that RevokeSponsorshipOperationResponse with claimable balance can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that RevokeSponsorshipOperationResponse with claimable balance can be serialized and deserialized
+    ///     correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithRevokeSponsorshipClaimableBalanceOperation_RoundTripsCorrectly()
@@ -72,7 +74,8 @@ public class RevokeSponsorshipOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that RevokeSponsorshipOperationResponse with data can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that RevokeSponsorshipOperationResponse with data can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithRevokeSponsorshipDataOperation_RoundTripsCorrectly()
@@ -102,7 +105,8 @@ public class RevokeSponsorshipOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that RevokeSponsorshipOperationResponse with offer can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that RevokeSponsorshipOperationResponse with offer can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithRevokeSponsorshipOfferOperation_RoundTripsCorrectly()
@@ -131,7 +135,8 @@ public class RevokeSponsorshipOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that RevokeSponsorshipOperationResponse with signer key can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that RevokeSponsorshipOperationResponse with signer key can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithRevokeSponsorshipSignerKey_RoundTripsCorrectly()
@@ -161,7 +166,8 @@ public class RevokeSponsorshipOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that RevokeSponsorshipOperationResponse with trustline can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that RevokeSponsorshipOperationResponse with trustline can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithRevokeSponsorshipTrustline_RoundTripsCorrectly()

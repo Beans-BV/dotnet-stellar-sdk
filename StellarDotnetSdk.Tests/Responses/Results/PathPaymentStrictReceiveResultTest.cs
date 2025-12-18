@@ -5,13 +5,13 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for path payment strict receive result types.
+///     Unit tests for path payment strict receive result types.
 /// </summary>
 [TestClass]
 public class PathPaymentStrictReceiveResultTest
 {
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveSuccess result can be deserialized correctly and contains payment details.
+    ///     Verifies that PathPaymentStrictReceiveSuccess result can be deserialized correctly and contains payment details.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictReceiveSuccessXdr_ReturnsPathPaymentStrictReceiveSuccessWithDetails()
@@ -43,7 +43,7 @@ public class PathPaymentStrictReceiveResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveMalformed result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictReceiveMalformed result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictReceiveMalformedXdr_ReturnsPathPaymentStrictReceiveMalformed()
@@ -56,7 +56,7 @@ public class PathPaymentStrictReceiveResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveUnderfunded result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictReceiveUnderfunded result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictReceiveUnderfundedXdr_ReturnsPathPaymentStrictReceiveUnderfunded()
@@ -69,7 +69,7 @@ public class PathPaymentStrictReceiveResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveSrcNoTrust result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictReceiveSrcNoTrust result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictReceiveSrcNoTrustXdr_ReturnsPathPaymentStrictReceiveSrcNoTrust()
@@ -82,10 +82,11 @@ public class PathPaymentStrictReceiveResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveSrcNotAuthorized result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictReceiveSrcNotAuthorized result can be deserialized correctly.
     /// </summary>
     [TestMethod]
-    public void Deserialize_WithPathPaymentStrictReceiveSrcNotAuthorizedXdr_ReturnsPathPaymentStrictReceiveSrcNotAuthorized()
+    public void
+        Deserialize_WithPathPaymentStrictReceiveSrcNotAuthorizedXdr_ReturnsPathPaymentStrictReceiveSrcNotAuthorized()
     {
         // Arrange
         var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAC/////AAAAAA=";
@@ -95,7 +96,7 @@ public class PathPaymentStrictReceiveResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveNoDestination result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictReceiveNoDestination result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictReceiveNoDestinationXdr_ReturnsPathPaymentStrictReceiveNoDestination()
@@ -108,7 +109,7 @@ public class PathPaymentStrictReceiveResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveNoTrust result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictReceiveNoTrust result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictReceiveNoTrustXdr_ReturnsPathPaymentStrictReceiveNoTrust()
@@ -121,7 +122,7 @@ public class PathPaymentStrictReceiveResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveNotAuthorized result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictReceiveNotAuthorized result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictReceiveNotAuthorizedXdr_ReturnsPathPaymentStrictReceiveNotAuthorized()
@@ -134,7 +135,7 @@ public class PathPaymentStrictReceiveResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveLineFull result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictReceiveLineFull result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictReceiveLineFullXdr_ReturnsPathPaymentStrictReceiveLineFull()
@@ -147,7 +148,7 @@ public class PathPaymentStrictReceiveResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveNoIssuer result can be deserialized correctly and contains no issuer asset.
+    ///     Verifies that PathPaymentStrictReceiveNoIssuer result can be deserialized correctly and contains no issuer asset.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictReceiveNoIssuerXdr_ReturnsPathPaymentStrictReceiveNoIssuerWithAsset()
@@ -167,7 +168,7 @@ public class PathPaymentStrictReceiveResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveTooFewOffers result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictReceiveTooFewOffers result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictReceiveTooFewOffersXdr_ReturnsPathPaymentStrictReceiveTooFewOffers()
@@ -180,10 +181,11 @@ public class PathPaymentStrictReceiveResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveOfferCrossSelf result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictReceiveOfferCrossSelf result can be deserialized correctly.
     /// </summary>
     [TestMethod]
-    public void Deserialize_WithPathPaymentStrictReceiveOfferCrossSelfXdr_ReturnsPathPaymentStrictReceiveOfferCrossSelf()
+    public void
+        Deserialize_WithPathPaymentStrictReceiveOfferCrossSelfXdr_ReturnsPathPaymentStrictReceiveOfferCrossSelf()
     {
         // Arrange
         var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAC////9QAAAAA=";
@@ -193,7 +195,7 @@ public class PathPaymentStrictReceiveResultTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveOverSendmax result can be deserialized correctly.
+    ///     Verifies that PathPaymentStrictReceiveOverSendmax result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictReceiveOverSendmaxXdr_ReturnsPathPaymentStrictReceiveOverSendmax()

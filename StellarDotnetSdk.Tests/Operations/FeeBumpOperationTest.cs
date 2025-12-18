@@ -11,13 +11,13 @@ using StellarDotnetSdk.Transactions;
 namespace StellarDotnetSdk.Tests.Operations;
 
 /// <summary>
-/// Tests for FeeBumpTransaction functionality.
+///     Tests for FeeBumpTransaction functionality.
 /// </summary>
 [TestClass]
 public class FeeBumpOperationTest
 {
     /// <summary>
-    /// Verifies that fee bump transaction with successful inner transaction submits successfully.
+    ///     Verifies that fee bump transaction with successful inner transaction submits successfully.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithSuccessfulInnerTransaction_ReturnsSuccessResult()
@@ -74,7 +74,7 @@ public class FeeBumpOperationTest
     }
 
     /// <summary>
-    /// Verifies that fee bump transaction with failed inner transaction returns failure result.
+    ///     Verifies that fee bump transaction with failed inner transaction returns failure result.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_WithFailedInnerTransaction_ReturnsFailureResult()
@@ -128,7 +128,7 @@ public class FeeBumpOperationTest
     }
 
     /// <summary>
-    /// Verifies that BuildFeeBumpTransaction throws Exception when fee is insufficient.
+    ///     Verifies that BuildFeeBumpTransaction throws Exception when fee is insufficient.
     /// </summary>
     [TestMethod]
     public async Task BuildFeeBumpTransaction_WithInsufficientFee_ThrowsException()
@@ -179,7 +179,7 @@ public class FeeBumpOperationTest
     }
 
     /// <summary>
-    /// Verifies that fee bump transaction with sufficient fee submits successfully.
+    ///     Verifies that fee bump transaction with sufficient fee submits successfully.
     /// </summary>
     [TestMethod]
     public async Task BuildFeeBumpTransaction_WithSufficientFee_SubmitsSuccessfully()

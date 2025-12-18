@@ -4,13 +4,13 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for <see cref="TransactionResult"/> class.
+///     Unit tests for <see cref="TransactionResult" /> class.
 /// </summary>
 [TestClass]
 public class TransactionResultTest
 {
     /// <summary>
-    /// Verifies that TransactionResultTooEarly can be deserialized correctly.
+    ///     Verifies that TransactionResultTooEarly can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithTooEarlyXdr_ReturnsTransactionResultTooEarly()
@@ -27,7 +27,7 @@ public class TransactionResultTest
     }
 
     /// <summary>
-    /// Verifies that TransactionResultTooLate can be deserialized correctly.
+    ///     Verifies that TransactionResultTooLate can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithTooLateXdr_ReturnsTransactionResultTooLate()
@@ -44,7 +44,7 @@ public class TransactionResultTest
     }
 
     /// <summary>
-    /// Verifies that TransactionResultMissingOperation can be deserialized correctly.
+    ///     Verifies that TransactionResultMissingOperation can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithMissingOperationXdr_ReturnsTransactionResultMissingOperation()
@@ -61,7 +61,7 @@ public class TransactionResultTest
     }
 
     /// <summary>
-    /// Verifies that TransactionResultBadSeq can be deserialized correctly.
+    ///     Verifies that TransactionResultBadSeq can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithBadSeqXdr_ReturnsTransactionResultBadSeq()
@@ -78,7 +78,7 @@ public class TransactionResultTest
     }
 
     /// <summary>
-    /// Verifies that TransactionResultBadAuth can be deserialized correctly.
+    ///     Verifies that TransactionResultBadAuth can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithBadAuthXdr_ReturnsTransactionResultBadAuth()
@@ -95,7 +95,7 @@ public class TransactionResultTest
     }
 
     /// <summary>
-    /// Verifies that TransactionResultInsufficientBalance can be deserialized correctly.
+    ///     Verifies that TransactionResultInsufficientBalance can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithInsufficientBalanceXdr_ReturnsTransactionResultInsufficientBalance()
@@ -112,7 +112,7 @@ public class TransactionResultTest
     }
 
     /// <summary>
-    /// Verifies that TransactionResultNoAccount can be deserialized correctly.
+    ///     Verifies that TransactionResultNoAccount can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithNoAccountXdr_ReturnsTransactionResultNoAccount()
@@ -129,7 +129,7 @@ public class TransactionResultTest
     }
 
     /// <summary>
-    /// Verifies that TransactionResultInsufficientFee can be deserialized correctly.
+    ///     Verifies that TransactionResultInsufficientFee can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithInsufficientFeeXdr_ReturnsTransactionResultInsufficientFee()
@@ -146,7 +146,7 @@ public class TransactionResultTest
     }
 
     /// <summary>
-    /// Verifies that TransactionResultBadAuthExtra can be deserialized correctly.
+    ///     Verifies that TransactionResultBadAuthExtra can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithBadAuthExtraXdr_ReturnsTransactionResultBadAuthExtra()
@@ -163,7 +163,7 @@ public class TransactionResultTest
     }
 
     /// <summary>
-    /// Verifies that TransactionResultInternalError can be deserialized correctly.
+    ///     Verifies that TransactionResultInternalError can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithInternalErrorXdr_ReturnsTransactionResultInternalError()

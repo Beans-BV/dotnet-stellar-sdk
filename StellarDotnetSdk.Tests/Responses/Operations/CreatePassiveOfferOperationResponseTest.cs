@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="CreatePassiveOfferOperationResponse"/> class.
+///     Unit tests for <see cref="CreatePassiveOfferOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class CreatePassiveOfferOperationResponseTest
 {
     /// <summary>
-    /// Verifies that CreatePassiveOfferOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that CreatePassiveOfferOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreatePassiveOfferOperationJson_ReturnsDeserializedOperation()
@@ -33,7 +33,7 @@ public class CreatePassiveOfferOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that CreatePassiveOfferOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that CreatePassiveOfferOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithCreatePassiveOfferOperation_RoundTripsCorrectly()

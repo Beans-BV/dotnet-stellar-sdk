@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="ClaimClaimableBalanceOperationResponse"/> class.
+///     Unit tests for <see cref="ClaimClaimableBalanceOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class ClaimClaimableBalanceOperationResponseTest
 {
     /// <summary>
-    /// Verifies that ClaimClaimableBalanceOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ClaimClaimableBalanceOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithClaimClaimableBalanceOperation_RoundTripsCorrectly()
@@ -46,7 +46,8 @@ public class ClaimClaimableBalanceOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that ClaimClaimableBalanceOperationResponse with muxed account can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ClaimClaimableBalanceOperationResponse with muxed account can be serialized and deserialized
+    ///     correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithClaimClaimableBalanceOperationMuxed_RoundTripsCorrectly()

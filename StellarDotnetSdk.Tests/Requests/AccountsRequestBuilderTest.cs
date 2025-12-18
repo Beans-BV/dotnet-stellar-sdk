@@ -7,13 +7,13 @@ using StellarDotnetSdk.Tests.Responses;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="AccountsRequestBuilder"/> class.
+///     Unit tests for <see cref="AccountsRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class AccountsRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that AccountsRequestBuilder.BuildUri correctly constructs URI with cursor, limit, and order parameters.
+    ///     Verifies that AccountsRequestBuilder.BuildUri correctly constructs URI with cursor, limit, and order parameters.
     /// </summary>
     [TestMethod]
     public void BuildUri_WithCursorLimitAndOrder_BuildsCorrectUri()
@@ -34,7 +34,7 @@ public class AccountsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that AccountsRequestBuilder.BuildUri correctly constructs URI with path prefix.
+    ///     Verifies that AccountsRequestBuilder.BuildUri correctly constructs URI with path prefix.
     /// </summary>
     [TestMethod]
     public void BuildUri_WithPathPrefix_BuildsCorrectUri()
@@ -55,7 +55,7 @@ public class AccountsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that AccountsRequestBuilder.Account correctly retrieves and deserializes account data.
+    ///     Verifies that AccountsRequestBuilder.Account correctly retrieves and deserializes account data.
     /// </summary>
     [TestMethod]
     public async Task Account_WithValidAccountId_ReturnsDeserializedAccount()
@@ -71,7 +71,7 @@ public class AccountsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that AccountsRequestBuilder.AccountData correctly retrieves and decodes account data value.
+    ///     Verifies that AccountsRequestBuilder.AccountData correctly retrieves and decodes account data value.
     /// </summary>
     [TestMethod]
     public async Task AccountData_WithValidAccountIdAndKey_ReturnsDecodedValue()
@@ -90,7 +90,7 @@ public class AccountsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that AccountsRequestBuilder.WithSigner correctly filters accounts by signer and returns matching accounts.
+    ///     Verifies that AccountsRequestBuilder.WithSigner correctly filters accounts by signer and returns matching accounts.
     /// </summary>
     [TestMethod]
     public async Task WithSigner_WithValidSignerId_ReturnsMatchingAccounts()
@@ -111,7 +111,8 @@ public class AccountsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that AccountsRequestBuilder.WithTrustline correctly filters accounts by trustline asset and returns matching accounts.
+    ///     Verifies that AccountsRequestBuilder.WithTrustline correctly filters accounts by trustline asset and returns
+    ///     matching accounts.
     /// </summary>
     [TestMethod]
     public async Task WithTrustline_WithValidAsset_ReturnsMatchingAccounts()

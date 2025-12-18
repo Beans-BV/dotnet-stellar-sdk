@@ -4,13 +4,13 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for allow trust result types.
+///     Unit tests for allow trust result types.
 /// </summary>
 [TestClass]
 public class AllowTrustResultTest
 {
     /// <summary>
-    /// Verifies that AllowTrustSuccess result can be deserialized correctly.
+    ///     Verifies that AllowTrustSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAllowTrustSuccessXdr_ReturnsAllowTrustSuccess()
@@ -23,7 +23,7 @@ public class AllowTrustResultTest
     }
 
     /// <summary>
-    /// Verifies that AllowTrustMalformed result can be deserialized correctly.
+    ///     Verifies that AllowTrustMalformed result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAllowTrustMalformedXdr_ReturnsAllowTrustMalformed()
@@ -36,7 +36,7 @@ public class AllowTrustResultTest
     }
 
     /// <summary>
-    /// Verifies that AllowTrustNoTrustline result can be deserialized correctly.
+    ///     Verifies that AllowTrustNoTrustline result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAllowTrustNoTrustlineXdr_ReturnsAllowTrustNoTrustline()
@@ -49,7 +49,7 @@ public class AllowTrustResultTest
     }
 
     /// <summary>
-    /// Verifies that AllowTrustNotRequired result can be deserialized correctly.
+    ///     Verifies that AllowTrustNotRequired result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAllowTrustNotRequiredXdr_ReturnsAllowTrustNotRequired()
@@ -62,7 +62,7 @@ public class AllowTrustResultTest
     }
 
     /// <summary>
-    /// Verifies that AllowTrustCantRevoke result can be deserialized correctly.
+    ///     Verifies that AllowTrustCantRevoke result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAllowTrustCantRevokeXdr_ReturnsAllowTrustCantRevoke()
@@ -75,7 +75,7 @@ public class AllowTrustResultTest
     }
 
     /// <summary>
-    /// Verifies that AllowTrustSelfNotAllowed result can be deserialized correctly.
+    ///     Verifies that AllowTrustSelfNotAllowed result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAllowTrustSelfNotAllowedXdr_ReturnsAllowTrustSelfNotAllowed()

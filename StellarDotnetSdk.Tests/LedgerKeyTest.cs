@@ -12,13 +12,13 @@ using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="LedgerKey"/> class and related ledger key types.
+///     Unit tests for <see cref="LedgerKey" /> class and related ledger key types.
 /// </summary>
 [TestClass]
 public class LedgerKeyTest
 {
     /// <summary>
-    /// Verifies that Account ledger key round-trips correctly through XDR serialization.
+    ///     Verifies that Account ledger key round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerKeyAccount_RoundTripsCorrectly()
@@ -36,7 +36,7 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that Data ledger key factory method throws ArgumentException when data name exceeds 64 characters.
+    ///     Verifies that Data ledger key factory method throws ArgumentException when data name exceeds 64 characters.
     /// </summary>
     [TestMethod]
     public void Data_WithTooLongName_ThrowsArgumentException()
@@ -51,7 +51,7 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that Data ledger key with valid name round-trips correctly through XDR serialization.
+    ///     Verifies that Data ledger key with valid name round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerKeyDataWithValidName_RoundTripsCorrectly()
@@ -70,7 +70,7 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that Offer ledger key round-trips correctly through XDR serialization.
+    ///     Verifies that Offer ledger key round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerKeyOffer_RoundTripsCorrectly()
@@ -89,7 +89,7 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that Trustline ledger key round-trips correctly through XDR serialization.
+    ///     Verifies that Trustline ledger key round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerKeyTrustline_RoundTripsCorrectly()
@@ -111,7 +111,8 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that ClaimableBalance ledger key created from valid string round-trips correctly through XDR serialization.
+    ///     Verifies that ClaimableBalance ledger key created from valid string round-trips correctly through XDR
+    ///     serialization.
     /// </summary>
     [TestMethod]
     [DataRow("00000000c582697b67cbec7f9ce64f4dc67bfb2bfd26318bb9f964f4d70e3f41f650b1e6")]
@@ -129,7 +130,7 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that ClaimableBalance ledger key factory method throws ArgumentException when given invalid string.
+    ///     Verifies that ClaimableBalance ledger key factory method throws ArgumentException when given invalid string.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -143,7 +144,7 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPool ledger key round-trips correctly through XDR serialization.
+    ///     Verifies that LiquidityPool ledger key round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerKeyLiquidityPool_RoundTripsCorrectly()
@@ -162,7 +163,8 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that ContractData ledger key with contract being ContractId round-trips correctly through XDR serialization.
+    ///     Verifies that ContractData ledger key with contract being ContractId round-trips correctly through XDR
+    ///     serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerKeyContractDataWithContractId_RoundTripsCorrectly()
@@ -185,7 +187,8 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that ContractData ledger key with contract being AccountId round-trips correctly through XDR serialization.
+    ///     Verifies that ContractData ledger key with contract being AccountId round-trips correctly through XDR
+    ///     serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerKeyContractDataWithAccountId_RoundTripsCorrectly()
@@ -208,7 +211,8 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that ContractCode ledger key created from valid hash string round-trips correctly through XDR serialization.
+    ///     Verifies that ContractCode ledger key created from valid hash string round-trips correctly through XDR
+    ///     serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerKeyContractCodeFromValidHashString_RoundTripsCorrectly()
@@ -227,7 +231,8 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that ContractCode ledger key factory method throws ArgumentOutOfRangeException when hash string has invalid length.
+    ///     Verifies that ContractCode ledger key factory method throws ArgumentOutOfRangeException when hash string has
+    ///     invalid length.
     /// </summary>
     [TestMethod]
     public void ContractCode_WithInvalidHashStringLength_ThrowsArgumentOutOfRangeException()
@@ -239,7 +244,8 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that ConfigSetting ledger key round-trips correctly through XDR serialization for various config setting IDs.
+    ///     Verifies that ConfigSetting ledger key round-trips correctly through XDR serialization for various config setting
+    ///     IDs.
     /// </summary>
     [TestMethod]
     [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES)]
@@ -259,7 +265,8 @@ public class LedgerKeyTest
     [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0)]
     [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0)]
     [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_SCP_TIMING)]
-    public void FromXdrBase64_LedgerKeyConfigSetting_RoundTripsCorrectly(ConfigSettingID.ConfigSettingIDEnum configSettingId)
+    public void FromXdrBase64_LedgerKeyConfigSetting_RoundTripsCorrectly(
+        ConfigSettingID.ConfigSettingIDEnum configSettingId)
     {
         // Arrange
         var ledgerKey = (LedgerKeyConfigSetting)LedgerKey.ConfigSetting(new ConfigSettingID
@@ -276,7 +283,7 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that TTL ledger key created from valid hash string round-trips correctly through XDR serialization.
+    ///     Verifies that TTL ledger key created from valid hash string round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerKeyTtlFromValidHashString_RoundTripsCorrectly()
@@ -293,7 +300,8 @@ public class LedgerKeyTest
     }
 
     /// <summary>
-    /// Verifies that ContractCode ledger key factory method throws ArgumentOutOfRangeException when hash string has invalid length (for TTL test case).
+    ///     Verifies that ContractCode ledger key factory method throws ArgumentOutOfRangeException when hash string has
+    ///     invalid length (for TTL test case).
     /// </summary>
     [TestMethod]
     public void ContractCode_WithInvalidHashStringLengthForTtl_ThrowsArgumentOutOfRangeException()

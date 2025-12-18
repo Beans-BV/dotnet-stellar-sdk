@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing asset page responses from JSON.
+///     Unit tests for deserializing asset page responses from JSON.
 /// </summary>
 [TestClass]
 public class AssetPageDeserializerTest
 {
     /// <summary>
-    /// Verifies that Page&lt;AssetResponse&gt; can be deserialized from JSON correctly.
+    ///     Verifies that Page&lt;AssetResponse&gt; can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAssetPageJson_ReturnsDeserializedAssetPage()
@@ -32,7 +32,7 @@ public class AssetPageDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that Page&lt;AssetResponse&gt; can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that Page&lt;AssetResponse&gt; can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAssetPage_RoundTripsCorrectly()
@@ -87,7 +87,7 @@ public class AssetPageDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that empty Page&lt;AssetResponse&gt; can be deserialized from JSON correctly.
+    ///     Verifies that empty Page&lt;AssetResponse&gt; can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithEmptyAssetPageJson_ReturnsEmptyAssetPage()

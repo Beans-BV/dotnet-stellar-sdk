@@ -13,13 +13,13 @@ using LedgerKey = StellarDotnetSdk.Xdr.LedgerKey;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="LedgerEntryChange"/> XDR type deserialization.
+///     Unit tests for <see cref="LedgerEntryChange" /> XDR type deserialization.
 /// </summary>
 [TestClass]
 public class LedgerEntryChangeTest
 {
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_CREATED change.
+    ///     Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_CREATED change.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerEntryChangeCreated_ReturnsLedgerEntryCreated()
@@ -46,7 +46,7 @@ public class LedgerEntryChangeTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_RESTORED change.
+    ///     Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_RESTORED change.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerEntryChangeRestored_ReturnsLedgerEntryRestored()
@@ -73,7 +73,7 @@ public class LedgerEntryChangeTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_UPDATED change.
+    ///     Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_UPDATED change.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerEntryChangeUpdated_ReturnsLedgerEntryUpdated()
@@ -100,7 +100,7 @@ public class LedgerEntryChangeTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_STATE change.
+    ///     Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_STATE change.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerEntryChangeState_ReturnsLedgerEntryState()
@@ -126,7 +126,7 @@ public class LedgerEntryChangeTest
     }
 
     /// <summary>
-    /// Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_REMOVED change.
+    ///     Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_REMOVED change.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_LedgerEntryChangeRemoved_ReturnsLedgerEntryRemoved()

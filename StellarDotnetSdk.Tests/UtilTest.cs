@@ -4,13 +4,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="Util"/> class.
+///     Unit tests for <see cref="Util" /> class.
 /// </summary>
 [TestClass]
 public class UtilTest
 {
     /// <summary>
-    /// Verifies that BytesToHex and HexToBytes methods round-trip correctly.
+    ///     Verifies that BytesToHex and HexToBytes methods round-trip correctly.
     /// </summary>
     [TestMethod]
     public void BytesToHexAndHexToBytes_WithTestString_RoundTripsCorrectly()
@@ -30,7 +30,7 @@ public class UtilTest
     }
 
     /// <summary>
-    /// Verifies that PaddedByteArray with byte array pads the array correctly with zeros.
+    ///     Verifies that PaddedByteArray with byte array pads the array correctly with zeros.
     /// </summary>
     [TestMethod]
     public void PaddedByteArray_WithBytes_PadsWithZeros()
@@ -49,7 +49,7 @@ public class UtilTest
     }
 
     /// <summary>
-    /// Verifies that PaddedByteArray with string pads the array correctly with zeros.
+    ///     Verifies that PaddedByteArray with string pads the array correctly with zeros.
     /// </summary>
     [TestMethod]
     public void PaddedByteArray_WithString_PadsWithZeros()
@@ -68,7 +68,7 @@ public class UtilTest
     }
 
     /// <summary>
-    /// Verifies that PaddedByteArrayToString correctly converts padded byte array to string without zero padding.
+    ///     Verifies that PaddedByteArrayToString correctly converts padded byte array to string without zero padding.
     /// </summary>
     [TestMethod]
     public void PaddedByteArrayToString_WithPaddedByteArray_ReturnsStringWithoutZeros()
@@ -85,7 +85,7 @@ public class UtilTest
     }
 
     /// <summary>
-    /// Verifies that IsIdentical extension method returns true for identical byte arrays.
+    ///     Verifies that IsIdentical extension method returns true for identical byte arrays.
     /// </summary>
     [TestMethod]
     public void IsIdentical_WithIdenticalByteArrays_ReturnsTrue()

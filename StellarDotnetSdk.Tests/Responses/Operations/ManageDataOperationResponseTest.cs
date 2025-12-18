@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="ManageDataOperationResponse"/> class.
+///     Unit tests for <see cref="ManageDataOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class ManageDataOperationResponseTest
 {
     /// <summary>
-    /// Verifies that ManageDataOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that ManageDataOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithManageDataOperationJson_ReturnsDeserializedOperation()
@@ -31,7 +31,7 @@ public class ManageDataOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that ManageDataOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ManageDataOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithManageDataOperation_RoundTripsCorrectly()
@@ -61,7 +61,7 @@ public class ManageDataOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that ManageDataOperationResponse with empty value can be deserialized from JSON correctly.
+    ///     Verifies that ManageDataOperationResponse with empty value can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithManageDataOperationValueEmptyJson_ReturnsDeserializedOperation()
@@ -79,7 +79,8 @@ public class ManageDataOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that ManageDataOperationResponse with empty value can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ManageDataOperationResponse with empty value can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithManageDataOperationValueEmpty_RoundTripsCorrectly()

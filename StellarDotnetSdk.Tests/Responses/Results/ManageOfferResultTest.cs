@@ -6,19 +6,20 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for manage offer result types.
+///     Unit tests for manage offer result types.
 /// </summary>
 [TestClass]
 public class ManageOfferResultTest
 {
     /// <summary>
-    /// Verifies that ManageBuyOfferCreated result can be deserialized from XDR correctly.
+    ///     Verifies that ManageBuyOfferCreated result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithBuyOfferCreatedXdr_ReturnsManageBuyOfferCreated()
     {
         // Arrange
-        var xdrBase64 = "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAALtJgdGXASRLp/M5ZpckEa10nJPtYvrgX6M5wTPacDUYAAAAAAAAnIMAAAABWFhYAAAAAAC7SYHRlwEkS6fzOWaXJBGtdJyT7WL64F+jOcEz2nA1GAAAAAAAAAACWgHFAAAAAAoAAABlAAAAAAAAAAAAAAAA";
+        var xdrBase64 =
+            "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAALtJgdGXASRLp/M5ZpckEa10nJPtYvrgX6M5wTPacDUYAAAAAAAAnIMAAAABWFhYAAAAAAC7SYHRlwEkS6fzOWaXJBGtdJyT7WL64F+jOcEz2nA1GAAAAAAAAAACWgHFAAAAAAoAAABlAAAAAAAAAAAAAAAA";
 
         // Act
         var transactionResult = (TransactionResultSuccess)TransactionResult.FromXdrBase64(xdrBase64);
@@ -41,13 +42,14 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferCreated result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferCreated result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithSellOfferCreatedXdr_ReturnsManageSellOfferCreated()
     {
         // Arrange
-        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAADAAAAAAAAAAEAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAAAE0gAAAAAAAAAAAJiWgAAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAADDUAAAAAAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAAABNIAAAAAAAAAAVVTRAAAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAJiWgAAAA+gAABEYAAAAAQAAAAAAAAAA";
+        var xdrBase64 =
+            "AAAAAACYloD/////AAAAAQAAAAAAAAADAAAAAAAAAAEAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAAAE0gAAAAAAAAAAAJiWgAAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAADDUAAAAAAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAAABNIAAAAAAAAAAVVTRAAAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAJiWgAAAA+gAABEYAAAAAQAAAAAAAAAA";
 
         // Act
         var tx = Utils.AssertResultOfType(xdrBase64, typeof(ManageSellOfferCreated), true);
@@ -69,13 +71,14 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferUpdated result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferUpdated result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithSellOfferUpdatedXdr_ReturnsManageSellOfferUpdated()
     {
         // Arrange
-        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAADAAAAAAAAAAEAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAAAE0gAAAAAAAAAAAJiWgAAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAADDUAAAAABAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAAABNIAAAAAAAAAAVVTRAAAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAJiWgAAAA+gAABEYAAAAAQAAAAAAAAAA";
+        var xdrBase64 =
+            "AAAAAACYloD/////AAAAAQAAAAAAAAADAAAAAAAAAAEAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAAAE0gAAAAAAAAAAAJiWgAAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAADDUAAAAABAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAAABNIAAAAAAAAAAVVTRAAAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAJiWgAAAA+gAABEYAAAAAQAAAAAAAAAA";
 
         // Act
         var tx = Utils.AssertResultOfType(xdrBase64, typeof(ManageSellOfferUpdated), true);
@@ -97,13 +100,14 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferDeleted result with ClaimAtomV0 can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferDeleted result with ClaimAtomV0 can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithSellOfferDeletedClaimAtomV0Xdr_ReturnsManageSellOfferDeletedWithClaimAtomV0()
     {
         // Arrange
-        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAADAAAAAAAAAAEAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAAAE0gAAAAAAAAAAAJiWgAAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAADDUAAAAACAAAAAA==";
+        var xdrBase64 =
+            "AAAAAACYloD/////AAAAAQAAAAAAAAADAAAAAAAAAAEAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAAAE0gAAAAAAAAAAAJiWgAAAAAFVU0QAAAAAACqDRrJfNcY/A/F8npMymV0bklNiiJoR5EI+EFoa6GOuAAAAAAADDUAAAAACAAAAAA==";
 
         // Act
         var tx = Utils.AssertResultOfType(xdrBase64, typeof(ManageSellOfferDeleted), true);
@@ -123,7 +127,7 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferDeleted result with ClaimAtomOrderBook can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferDeleted result with ClaimAtomOrderBook can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithSellOfferDeletedClaimOrderBookXdr_ReturnsManageSellOfferDeletedWithClaimOrderBook()
@@ -151,13 +155,14 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageBuyOfferDeleted result with ClaimAtomOrderBook can be deserialized from XDR correctly.
+    ///     Verifies that ManageBuyOfferDeleted result with ClaimAtomOrderBook can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithBuyOfferDeletedClaimOrderBookXdr_ReturnsManageBuyOfferDeletedWithClaimOrderBook()
     {
         // Arrange
-        var xdrBase64 = "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAMAAAAAAAAAAEAAAABAAAAALtJgdGXASRLp/M5ZpckEa10nJPtYvrgX6M5wTPacDUYAAAAAAAAnIAAAAABWFhYAAAAAAC7SYHRlwEkS6fzOWaXJBGtdJyT7WL64F+jOcEz2nA1GAAAAAAELB2AAAAAAVlZWQAAAAAA6FIuuSZ2K/XrwkBn5+JDNnnUA9JidV5mVxvQ6AMQF28AAAAABJbtQAAAAAIAAAAA";
+        var xdrBase64 =
+            "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAAMAAAAAAAAAAEAAAABAAAAALtJgdGXASRLp/M5ZpckEa10nJPtYvrgX6M5wTPacDUYAAAAAAAAnIAAAAABWFhYAAAAAAC7SYHRlwEkS6fzOWaXJBGtdJyT7WL64F+jOcEz2nA1GAAAAAAELB2AAAAAAVlZWQAAAAAA6FIuuSZ2K/XrwkBn5+JDNnnUA9JidV5mVxvQ6AMQF28AAAAABJbtQAAAAAIAAAAA";
 
         // Act
         var transactionResult = (TransactionResultSuccess)TransactionResult.FromXdrBase64(xdrBase64);
@@ -179,7 +184,7 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferMalformed result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferMalformed result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithManageSellOfferMalformedXdr_ReturnsManageSellOfferMalformed()
@@ -192,7 +197,7 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferUnderfunded result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferUnderfunded result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithUnderfundedXdr_ReturnsManageSellOfferUnderfunded()
@@ -205,7 +210,7 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferSellNoTrust result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferSellNoTrust result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithManageSellOfferSellNoTrustXdr_ReturnsManageSellOfferSellNoTrust()
@@ -218,7 +223,7 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferBuyNoTrust result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferBuyNoTrust result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithBuyNoTrustXdr_ReturnsManageSellOfferBuyNoTrust()
@@ -231,7 +236,7 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferSellNotAuthorized result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferSellNotAuthorized result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithManageSellOfferSellNotAuthorizedXdr_ReturnsManageSellOfferSellNotAuthorized()
@@ -244,7 +249,7 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferBuyNotAuthorized result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferBuyNotAuthorized result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithBuyNotAuthorizedXdr_ReturnsManageSellOfferBuyNotAuthorized()
@@ -257,7 +262,7 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferLineFull result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferLineFull result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithLineFullXdr_ReturnsManageSellOfferLineFull()
@@ -270,7 +275,7 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferCrossSelf result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferCrossSelf result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithManageSellOfferCrossSelfXdr_ReturnsManageSellOfferCrossSelf()
@@ -283,7 +288,7 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferSellNoIssuer result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferSellNoIssuer result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithSellNoIssuerXdr_ReturnsManageSellOfferSellNoIssuer()
@@ -296,7 +301,7 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferBuyNoIssuer result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferBuyNoIssuer result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithBuyNoIssuerXdr_ReturnsManageSellOfferBuyNoIssuer()
@@ -309,7 +314,7 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferNotFound result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferNotFound result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithNotFoundXdr_ReturnsManageSellOfferNotFound()
@@ -322,7 +327,7 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferLowReserve result can be deserialized from XDR correctly.
+    ///     Verifies that ManageSellOfferLowReserve result can be deserialized from XDR correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithLowReserveXdr_ReturnsManageSellOfferLowReserve()
@@ -335,13 +340,14 @@ public class ManageOfferResultTest
     }
 
     /// <summary>
-    /// Verifies that OfferEntryFlags are correctly set when deserializing ManageSellOfferCreated result.
+    ///     Verifies that OfferEntryFlags are correctly set when deserializing ManageSellOfferCreated result.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_WithOfferEntryFlagsXdr_ReturnsOfferWithCorrectFlags()
     {
         // Arrange
-        var xdrBase64 = "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAM/Ee4SnT3/gopz3ng3SEYJcq/D+9k6K6UsSPJLpqpV3AAAAAAGV4XUAAAABTEtLMQAAAACqysdXjcCwA0NHMgy+BYFMm3s5N8yUziZS4Dge3zQ05QAAAAAAAAAAAcnDgAAAAAEAAAABAAAAAAAAAAAAAAAA";
+        var xdrBase64 =
+            "AAAAAAAAAGQAAAAAAAAAAQAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAM/Ee4SnT3/gopz3ng3SEYJcq/D+9k6K6UsSPJLpqpV3AAAAAAGV4XUAAAABTEtLMQAAAACqysdXjcCwA0NHMgy+BYFMm3s5N8yUziZS4Dge3zQ05QAAAAAAAAAAAcnDgAAAAAEAAAABAAAAAAAAAAAAAAAA";
 
         // Act
         var result = TransactionResult.FromXdrBase64(xdrBase64);

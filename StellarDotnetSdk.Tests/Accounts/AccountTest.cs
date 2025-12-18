@@ -5,13 +5,13 @@ using StellarDotnetSdk.Accounts;
 namespace StellarDotnetSdk.Tests.Accounts;
 
 /// <summary>
-/// Unit tests for <see cref="Account"/> class.
+///     Unit tests for <see cref="Account" /> class.
 /// </summary>
 [TestClass]
 public class AccountTest
 {
     /// <summary>
-    /// Verifies that Account constructor throws ArgumentNullException when arguments are null.
+    ///     Verifies that Account constructor throws ArgumentNullException when arguments are null.
     /// </summary>
     [TestMethod]
     public void Constructor_WithNullArguments_ThrowsArgumentNullException()
@@ -22,7 +22,7 @@ public class AccountTest
     }
 
     /// <summary>
-    /// Verifies that Account constructor with string argument creates account with correct KeyPair.
+    ///     Verifies that Account constructor with string argument creates account with correct KeyPair.
     /// </summary>
     [TestMethod]
     public void Constructor_WithStringArgument_CreatesAccountWithCorrectKeyPair()
@@ -39,7 +39,7 @@ public class AccountTest
     }
 
     /// <summary>
-    /// Verifies that Account constructor with muxed account creates account with correct account ID and key pair.
+    ///     Verifies that Account constructor with muxed account creates account with correct account ID and key pair.
     /// </summary>
     [TestMethod]
     public void Constructor_WithMuxedAccount_CreatesAccountWithCorrectAccountId()
@@ -58,7 +58,7 @@ public class AccountTest
     }
 
     /// <summary>
-    /// Verifies that IncrementedSequenceNumber returns incremented value without modifying account sequence number.
+    ///     Verifies that IncrementedSequenceNumber returns incremented value without modifying account sequence number.
     /// </summary>
     [TestMethod]
     public void IncrementedSequenceNumber_ReturnsIncrementedValue_WithoutModifyingAccount()
@@ -79,7 +79,7 @@ public class AccountTest
     }
 
     /// <summary>
-    /// Verifies that IncrementSequenceNumber increments the account sequence number.
+    ///     Verifies that IncrementSequenceNumber increments the account sequence number.
     /// </summary>
     [TestMethod]
     public void IncrementSequenceNumber_IncrementsSequenceNumber()
@@ -96,7 +96,7 @@ public class AccountTest
     }
 
     /// <summary>
-    /// Verifies that Account getters return correct values.
+    ///     Verifies that Account getters return correct values.
     /// </summary>
     [TestMethod]
     public void Getters_ReturnCorrectValues()

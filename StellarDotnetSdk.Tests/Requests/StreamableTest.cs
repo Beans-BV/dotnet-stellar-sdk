@@ -7,7 +7,7 @@ using StellarDotnetSdk.Requests;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Helper class for testing streamable request builders with SSE event sources.
+///     Helper class for testing streamable request builders with SSE event sources.
 /// </summary>
 /// <typeparam name="T">The type of response object expected from the stream.</typeparam>
 public class StreamableTest<T> where T : class
@@ -19,7 +19,7 @@ public class StreamableTest<T> where T : class
     private FakeStreamableRequestBuilder? _requestBuilder;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StreamableTest{T}"/> class.
+    ///     Initializes a new instance of the <see cref="StreamableTest{T}" /> class.
     /// </summary>
     /// <param name="json">The JSON data to stream.</param>
     /// <param name="action">The action to perform when a message is received.</param>
@@ -34,17 +34,17 @@ public class StreamableTest<T> where T : class
     }
 
     /// <summary>
-    /// Gets the last event ID received from the stream.
+    ///     Gets the last event ID received from the stream.
     /// </summary>
     public string? LastEventId => _eventSource?.LastEventId;
 
     /// <summary>
-    /// Gets the URI that was built for the request.
+    ///     Gets the URI that was built for the request.
     /// </summary>
     public string? Uri => _requestBuilder?.BuildUri().ToString();
 
     /// <summary>
-    /// Runs the streamable test, connecting to the event source and verifying the message is received and processed.
+    ///     Runs the streamable test, connecting to the event source and verifying the message is received and processed.
     /// </summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     /// <exception cref="Exception">Thrown when the task does not complete or no message is received.</exception>
@@ -98,12 +98,12 @@ public class StreamableTest<T> where T : class
     }
 
     /// <summary>
-    /// Fake streamable request builder for testing purposes.
+    ///     Fake streamable request builder for testing purposes.
     /// </summary>
     public class FakeStreamableRequestBuilder : RequestBuilderStreamable<FakeStreamableRequestBuilder, T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FakeStreamableRequestBuilder"/> class.
+        ///     Initializes a new instance of the <see cref="FakeStreamableRequestBuilder" /> class.
         /// </summary>
         /// <param name="serverUri">The server URI.</param>
         /// <param name="defaultSegment">The default segment for the request.</param>

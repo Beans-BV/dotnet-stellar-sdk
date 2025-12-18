@@ -9,7 +9,7 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.Tests.Converters;
 
 /// <summary>
-/// Tests for ReserveJsonConverter JSON serialization and deserialization functionality.
+///     Tests for ReserveJsonConverter JSON serialization and deserialization functionality.
 /// </summary>
 [TestClass]
 public class ReserveJsonConverterTest
@@ -17,7 +17,7 @@ public class ReserveJsonConverterTest
     private readonly JsonSerializerOptions _options = JsonOptions.DefaultOptions;
 
     /// <summary>
-    /// Verifies that native asset reserves serialize and deserialize correctly through JSON.
+    ///     Verifies that native asset reserves serialize and deserialize correctly through JSON.
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithNativeAsset_RoundTripsCorrectly()
@@ -40,7 +40,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that CreditAlphaNum4 asset reserves serialize and deserialize correctly through JSON.
+    ///     Verifies that CreditAlphaNum4 asset reserves serialize and deserialize correctly through JSON.
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithCreditAlphaNum4Asset_RoundTripsCorrectly()
@@ -64,7 +64,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that CreditAlphaNum12 asset reserves serialize and deserialize correctly through JSON.
+    ///     Verifies that CreditAlphaNum12 asset reserves serialize and deserialize correctly through JSON.
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithCreditAlphaNum12Asset_RoundTripsCorrectly()
@@ -88,7 +88,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing valid JSON with native asset creates correct Reserve instance.
+    ///     Verifies that deserializing valid JSON with native asset creates correct Reserve instance.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithValidJsonNativeAsset_CreatesCorrectInstance()
@@ -106,7 +106,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing valid JSON with credit asset creates correct Reserve instance.
+    ///     Verifies that deserializing valid JSON with credit asset creates correct Reserve instance.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithValidJsonCreditAsset_CreatesCorrectInstance()
@@ -125,7 +125,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with missing asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with missing asset property throws ArgumentException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -139,7 +139,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with missing amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with missing amount property throws ArgumentException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -153,7 +153,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with null asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with null asset property throws ArgumentException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -167,7 +167,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with null amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with null amount property throws ArgumentException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -181,7 +181,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with large amount value succeeds.
+    ///     Verifies that deserializing JSON with large amount value succeeds.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithLargeAmount_Succeeds()
@@ -198,7 +198,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with zero amount value succeeds.
+    ///     Verifies that deserializing JSON with zero amount value succeeds.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithZeroAmount_Succeeds()
@@ -215,7 +215,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that serialization produces JSON with correct property names and values.
+    ///     Verifies that serialization produces JSON with correct property names and values.
     /// </summary>
     [TestMethod]
     public void Serialize_ProducesCorrectJsonFormat()
@@ -239,7 +239,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing invalid JSON throws JsonException.
+    ///     Verifies that deserializing invalid JSON throws JsonException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
@@ -253,7 +253,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with wrong structure throws JsonException.
+    ///     Verifies that deserializing JSON with wrong structure throws JsonException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
@@ -267,7 +267,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with empty asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with empty asset property throws ArgumentException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -281,7 +281,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with empty amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with empty amount property throws ArgumentException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -295,7 +295,7 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with extra properties ignores them and creates correct instance.
+    ///     Verifies that deserializing JSON with extra properties ignores them and creates correct instance.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithExtraProperties_IgnoresExtraProperties()

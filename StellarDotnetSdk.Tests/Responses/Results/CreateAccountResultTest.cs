@@ -4,13 +4,13 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for create account result types.
+///     Unit tests for create account result types.
 /// </summary>
 [TestClass]
 public class CreateAccountResultTest
 {
     /// <summary>
-    /// Verifies that CreateAccountSuccess result can be deserialized correctly.
+    ///     Verifies that CreateAccountSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateAccountSuccessXdr_ReturnsCreateAccountSuccess()
@@ -23,7 +23,7 @@ public class CreateAccountResultTest
     }
 
     /// <summary>
-    /// Verifies that CreateAccountMalformed result can be deserialized correctly.
+    ///     Verifies that CreateAccountMalformed result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateAccountMalformedXdr_ReturnsCreateAccountMalformed()
@@ -36,7 +36,7 @@ public class CreateAccountResultTest
     }
 
     /// <summary>
-    /// Verifies that CreateAccountUnderfunded result can be deserialized correctly.
+    ///     Verifies that CreateAccountUnderfunded result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateAccountUnderfundedXdr_ReturnsCreateAccountUnderfunded()
@@ -49,7 +49,7 @@ public class CreateAccountResultTest
     }
 
     /// <summary>
-    /// Verifies that CreateAccountLowReserve result can be deserialized correctly.
+    ///     Verifies that CreateAccountLowReserve result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateAccountLowReserveXdr_ReturnsCreateAccountLowReserve()
@@ -62,7 +62,7 @@ public class CreateAccountResultTest
     }
 
     /// <summary>
-    /// Verifies that CreateAccountAlreadyExists result can be deserialized correctly.
+    ///     Verifies that CreateAccountAlreadyExists result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateAccountAlreadyExistsXdr_ReturnsCreateAccountAlreadyExists()

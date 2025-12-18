@@ -4,13 +4,13 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for bump sequence result types.
+///     Unit tests for bump sequence result types.
 /// </summary>
 [TestClass]
 public class BumpSequenceResultTest
 {
     /// <summary>
-    /// Verifies that BumpSequenceSuccess result can be deserialized correctly.
+    ///     Verifies that BumpSequenceSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithBumpSequenceSuccessXdr_ReturnsBumpSequenceSuccess()
@@ -23,7 +23,7 @@ public class BumpSequenceResultTest
     }
 
     /// <summary>
-    /// Verifies that BumpSequenceBadSeq result can be deserialized correctly.
+    ///     Verifies that BumpSequenceBadSeq result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithBumpSequenceBadSeqXdr_ReturnsBumpSequenceBadSeq()

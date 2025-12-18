@@ -6,7 +6,7 @@ using StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Tests.Converters;
 
 /// <summary>
-/// Tests for LiquidityPoolTypeEnumJsonConverter JSON serialization and deserialization functionality.
+///     Tests for LiquidityPoolTypeEnumJsonConverter JSON serialization and deserialization functionality.
 /// </summary>
 [TestClass]
 public class LiquidityPoolTypeEnumJsonConverterTest
@@ -14,7 +14,7 @@ public class LiquidityPoolTypeEnumJsonConverterTest
     private readonly JsonSerializerOptions _options = JsonOptions.DefaultOptions;
 
     /// <summary>
-    /// Verifies that constant product liquidity pool type serializes and deserializes correctly through JSON.
+    ///     Verifies that constant product liquidity pool type serializes and deserializes correctly through JSON.
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithConstantProduct_RoundTripsCorrectly()
@@ -31,7 +31,7 @@ public class LiquidityPoolTypeEnumJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing valid JSON string "constant_product" creates correct enum value.
+    ///     Verifies that deserializing valid JSON string "constant_product" creates correct enum value.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithValidJsonConstantProduct_CreatesCorrectEnumValue()
@@ -47,7 +47,7 @@ public class LiquidityPoolTypeEnumJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that serializing constant product type produces correct JSON format.
+    ///     Verifies that serializing constant product type produces correct JSON format.
     /// </summary>
     [TestMethod]
     public void Serialize_WithConstantProduct_ProducesCorrectJsonFormat()
@@ -63,7 +63,7 @@ public class LiquidityPoolTypeEnumJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with unknown pool type throws JsonException.
+    ///     Verifies that deserializing JSON with unknown pool type throws JsonException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
@@ -77,7 +77,7 @@ public class LiquidityPoolTypeEnumJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with empty string throws JsonException.
+    ///     Verifies that deserializing JSON with empty string throws JsonException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
@@ -91,7 +91,7 @@ public class LiquidityPoolTypeEnumJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with number token type throws JsonException.
+    ///     Verifies that deserializing JSON with number token type throws JsonException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
@@ -105,7 +105,7 @@ public class LiquidityPoolTypeEnumJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with object token type throws JsonException.
+    ///     Verifies that deserializing JSON with object token type throws JsonException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
@@ -119,7 +119,7 @@ public class LiquidityPoolTypeEnumJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with array token type throws JsonException.
+    ///     Verifies that deserializing JSON with array token type throws JsonException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
@@ -133,7 +133,7 @@ public class LiquidityPoolTypeEnumJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing invalid JSON throws JsonException.
+    ///     Verifies that deserializing invalid JSON throws JsonException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
@@ -147,7 +147,7 @@ public class LiquidityPoolTypeEnumJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that constant product type round-trips correctly through JSON with correct format.
+    ///     Verifies that constant product type round-trips correctly through JSON with correct format.
     /// </summary>
     [TestMethod]
     public void RoundTrip_WithConstantProduct_RoundTripsCorrectly()
@@ -165,7 +165,7 @@ public class LiquidityPoolTypeEnumJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with incorrect case throws JsonException (case-sensitive).
+    ///     Verifies that deserializing JSON with incorrect case throws JsonException (case-sensitive).
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
@@ -179,7 +179,7 @@ public class LiquidityPoolTypeEnumJsonConverterTest
     }
 
     /// <summary>
-    /// Verifies that deserializing JSON with whitespace throws JsonException.
+    ///     Verifies that deserializing JSON with whitespace throws JsonException.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]

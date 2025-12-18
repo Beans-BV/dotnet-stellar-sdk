@@ -20,13 +20,13 @@ using Operation = StellarDotnetSdk.Operations.Operation;
 namespace StellarDotnetSdk.Tests.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="Operation"/> class and operation-related functionality.
+///     Unit tests for <see cref="Operation" /> class and operation-related functionality.
 /// </summary>
 [TestClass]
 public class OperationTest
 {
     /// <summary>
-    /// Verifies that CreateAccountOperation round-trips correctly through XDR serialization.
+    ///     Verifies that CreateAccountOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete("Deprecated")]
@@ -59,7 +59,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that PaymentOperation round-trips correctly through XDR serialization.
+    ///     Verifies that PaymentOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete("Deprecated")]
@@ -95,7 +95,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveOperation round-trips correctly through XDR serialization.
+    ///     Verifies that PathPaymentStrictReceiveOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -150,7 +150,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveOperation with empty path round-trips correctly through XDR serialization.
+    ///     Verifies that PathPaymentStrictReceiveOperation with empty path round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -200,7 +200,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendOperation round-trips correctly through XDR serialization.
+    ///     Verifies that PathPaymentStrictSendOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -253,7 +253,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictSendOperation with empty path round-trips correctly through XDR serialization.
+    ///     Verifies that PathPaymentStrictSendOperation with empty path round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -301,7 +301,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that ChangeTrustOperation round-trips correctly through XDR serialization.
+    ///     Verifies that ChangeTrustOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -333,7 +333,8 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that ChangeTrustOperation with null limit uses MaxLimit and round-trips correctly through XDR serialization.
+    ///     Verifies that ChangeTrustOperation with null limit uses MaxLimit and round-trips correctly through XDR
+    ///     serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -363,7 +364,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferOperation creates operation with correct XDR base64 encoding.
+    ///     Verifies that ManageSellOfferOperation creates operation with correct XDR base64 encoding.
     /// </summary>
     [TestMethod]
     public void ToXdrBase64_ManageSellOfferOperation_ReturnsCorrectXdrBase64()
@@ -390,7 +391,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that ManageSellOfferOperation round-trips correctly through XDR serialization.
+    ///     Verifies that ManageSellOfferOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -433,7 +434,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that ManageBuyOfferOperation round-trips correctly through XDR serialization.
+    ///     Verifies that ManageBuyOfferOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -476,7 +477,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that CreatePassiveSellOfferOperation creates operation with correct XDR base64 encoding.
+    ///     Verifies that CreatePassiveSellOfferOperation creates operation with correct XDR base64 encoding.
     /// </summary>
     [TestMethod]
     public void ToXdrBase64_CreatePassiveSellOfferOperation_ReturnsCorrectXdrBase64()
@@ -502,7 +503,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that CreatePassiveSellOfferOperation round-trips correctly through XDR serialization.
+    ///     Verifies that CreatePassiveSellOfferOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -543,7 +544,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that AccountMergeOperation round-trips correctly through XDR serialization.
+    ///     Verifies that AccountMergeOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -571,7 +572,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that ManageDataOperation round-trips correctly through XDR serialization.
+    ///     Verifies that ManageDataOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -599,7 +600,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that ManageDataOperation with null value round-trips correctly through XDR serialization.
+    ///     Verifies that ManageDataOperation with null value round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -624,7 +625,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that Operation.ToXdrAmount converts string amounts to XDR amounts correctly.
+    ///     Verifies that Operation.ToXdrAmount converts string amounts to XDR amounts correctly.
     /// </summary>
     [TestMethod]
     public void ToXdrAmount_WithVariousStringAmounts_ReturnsCorrectXdrAmounts()
@@ -671,7 +672,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that BumpSequenceOperation round-trips correctly through XDR serialization.
+    ///     Verifies that BumpSequenceOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -697,7 +698,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that CreateClaimableBalanceOperation round-trips correctly through XDR serialization.
+    ///     Verifies that CreateClaimableBalanceOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -730,7 +731,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that ClaimClaimableBalanceOperation with valid balance ID round-trips correctly through XDR serialization.
+    ///     Verifies that ClaimClaimableBalanceOperation with valid balance ID round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [DataRow("000000006d6a0c142516a9cc7885a85c5aba3a1f4af5181cf9e7a809ac7ae5e4a58c825f")]
@@ -755,7 +756,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that ClaimClaimableBalanceOperation constructor throws ArgumentException when balance ID is invalid.
+    ///     Verifies that ClaimClaimableBalanceOperation constructor throws ArgumentException when balance ID is invalid.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -773,7 +774,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that BeginSponsoringFutureReservesOperation round-trips correctly through XDR serialization.
+    ///     Verifies that BeginSponsoringFutureReservesOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -802,7 +803,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that EndSponsoringFutureReservesOperation round-trips correctly through XDR serialization.
+    ///     Verifies that EndSponsoringFutureReservesOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -827,7 +828,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that RevokeLedgerEntrySponsorshipOperation round-trips correctly through XDR serialization.
+    ///     Verifies that RevokeLedgerEntrySponsorshipOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -856,7 +857,8 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that RevokeLedgerEntrySponsorshipOperation for claimable balance round-trips correctly through XDR serialization.
+    ///     Verifies that RevokeLedgerEntrySponsorshipOperation for claimable balance round-trips correctly through XDR
+    ///     serialization.
     /// </summary>
     [TestMethod]
     public void FromXdr_RevokeClaimableBalanceSponsorshipOperation_RoundTripsCorrectly()
@@ -877,7 +879,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that RevokeSignerSponsorshipOperation round-trips correctly through XDR serialization.
+    ///     Verifies that RevokeSignerSponsorshipOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -908,7 +910,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that Operation.FromXdrAmount converts XDR amounts to string amounts correctly.
+    ///     Verifies that Operation.FromXdrAmount converts XDR amounts to string amounts correctly.
     /// </summary>
     [TestMethod]
     public void FromXdrAmount_WithVariousXdrAmounts_ReturnsCorrectStringAmounts()
@@ -924,7 +926,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that ClawbackOperation round-trips correctly through XDR serialization.
+    ///     Verifies that ClawbackOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -952,7 +954,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that ClawbackClaimableBalanceOperation round-trips correctly through XDR serialization.
+    ///     Verifies that ClawbackClaimableBalanceOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdr_ClawbackClaimableBalanceOperation_RoundTripsCorrectly()
@@ -974,7 +976,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that SetTrustlineFlagsOperation round-trips correctly through XDR serialization.
+    ///     Verifies that SetTrustlineFlagsOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [Obsolete("Deprecated")]
@@ -1003,7 +1005,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolDepositOperation with asset amounts round-trips correctly through XDR serialization.
+    ///     Verifies that LiquidityPoolDepositOperation with asset amounts round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdr_LiquidityPoolDepositOperationWithAssetAmounts_RoundTripsCorrectly()
@@ -1042,7 +1044,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolDepositOperation with liquidity pool ID round-trips correctly through XDR serialization.
+    ///     Verifies that LiquidityPoolDepositOperation with liquidity pool ID round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdr_LiquidityPoolDepositOperationWithPoolId_RoundTripsCorrectly()
@@ -1085,7 +1087,8 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolDepositOperation constructor throws ArgumentException when assets are not in lexicographic order.
+    ///     Verifies that LiquidityPoolDepositOperation constructor throws ArgumentException when assets are not in
+    ///     lexicographic order.
     /// </summary>
     [TestMethod]
     public void Constructor_WithAssetsNotInLexicographicOrder_ThrowsArgumentException()
@@ -1107,7 +1110,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolWithdrawOperation with asset amounts round-trips correctly through XDR serialization.
+    ///     Verifies that LiquidityPoolWithdrawOperation with asset amounts round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdr_LiquidityPoolWithdrawOperationWithAssetAmounts_RoundTripsCorrectly()
@@ -1143,7 +1146,8 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolWithdrawOperation with liquidity pool ID round-trips correctly through XDR serialization.
+    ///     Verifies that LiquidityPoolWithdrawOperation with liquidity pool ID round-trips correctly through XDR
+    ///     serialization.
     /// </summary>
     [TestMethod]
     public void FromXdr_LiquidityPoolWithdrawOperationWithPoolId_RoundTripsCorrectly()
@@ -1182,7 +1186,8 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolWithdrawOperation constructor throws ArgumentException when assets are not in lexicographic order.
+    ///     Verifies that LiquidityPoolWithdrawOperation constructor throws ArgumentException when assets are not in
+    ///     lexicographic order.
     /// </summary>
     [TestMethod]
     public void Constructor_WithAssetsNotInLexicographicOrder_ThrowsArgumentExceptionWithInvalidPoolIdMessage()
@@ -1207,7 +1212,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that UploadContractOperation round-trips correctly through XDR serialization.
+    ///     Verifies that UploadContractOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public async Task FromXdr_UploadContractOperation_RoundTripsCorrectly()
@@ -1231,7 +1236,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that CreateContractOperation round-trips correctly through XDR serialization.
+    ///     Verifies that CreateContractOperation round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdr_CreateContractOperation_RoundTripsCorrectly()
@@ -1269,7 +1274,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that InvokeContractOperation with ScContractId round-trips correctly through XDR serialization.
+    ///     Verifies that InvokeContractOperation with ScContractId round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdr_InvokeContractOperationWithScContractId_RoundTripsCorrectly()
@@ -1304,7 +1309,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that InvokeContractOperation with string contract ID round-trips correctly through XDR serialization.
+    ///     Verifies that InvokeContractOperation with string contract ID round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdr_InvokeContractOperationWithStringContractId_RoundTripsCorrectly()
@@ -1340,7 +1345,7 @@ public class OperationTest
     }
 
     /// <summary>
-    /// Verifies that CreateContractOperation from asset (SAC) round-trips correctly through XDR serialization.
+    ///     Verifies that CreateContractOperation from asset (SAC) round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdr_CreateContractOperationFromAsset_RoundTripsCorrectly()

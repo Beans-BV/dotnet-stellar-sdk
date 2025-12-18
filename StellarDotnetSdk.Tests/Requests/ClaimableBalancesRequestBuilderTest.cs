@@ -7,13 +7,13 @@ using StellarDotnetSdk.Tests.Responses;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="ClaimableBalancesRequestBuilder"/> class.
+///     Unit tests for <see cref="ClaimableBalancesRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class ClaimableBalancesRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that ClaimableBalancesRequestBuilder.ForAsset correctly constructs URI with native asset parameter.
+    ///     Verifies that ClaimableBalancesRequestBuilder.ForAsset correctly constructs URI with native asset parameter.
     /// </summary>
     [TestMethod]
     public void ForAsset_WithNativeAsset_BuildsCorrectUri()
@@ -29,7 +29,7 @@ public class ClaimableBalancesRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that ClaimableBalancesRequestBuilder.ForAsset correctly constructs URI with credit asset parameter.
+    ///     Verifies that ClaimableBalancesRequestBuilder.ForAsset correctly constructs URI with credit asset parameter.
     /// </summary>
     [TestMethod]
     public void ForAsset_WithCreditAsset_BuildsCorrectUri()
@@ -48,7 +48,7 @@ public class ClaimableBalancesRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that ClaimableBalancesRequestBuilder.ForClaimant correctly constructs URI with claimant parameter.
+    ///     Verifies that ClaimableBalancesRequestBuilder.ForClaimant correctly constructs URI with claimant parameter.
     /// </summary>
     [TestMethod]
     public void ForClaimant_WithValidClaimant_BuildsCorrectUri()
@@ -67,7 +67,7 @@ public class ClaimableBalancesRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that ClaimableBalancesRequestBuilder.ForSponsor correctly constructs URI with sponsor parameter.
+    ///     Verifies that ClaimableBalancesRequestBuilder.ForSponsor correctly constructs URI with sponsor parameter.
     /// </summary>
     [TestMethod]
     public void ForSponsor_WithValidSponsor_BuildsCorrectUri()
@@ -86,7 +86,8 @@ public class ClaimableBalancesRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that ClaimableBalancesRequestBuilder.ClaimableBalance correctly retrieves and deserializes claimable balance data.
+    ///     Verifies that ClaimableBalancesRequestBuilder.ClaimableBalance correctly retrieves and deserializes claimable
+    ///     balance data.
     /// </summary>
     [TestMethod]
     public async Task ClaimableBalance_WithValidBalanceId_ReturnsDeserializedClaimableBalance()

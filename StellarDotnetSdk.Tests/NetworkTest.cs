@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="Network"/> class.
+///     Unit tests for <see cref="Network" /> class.
 /// </summary>
 [TestClass]
 public class NetworkTest
@@ -15,7 +15,7 @@ public class NetworkTest
     }
 
     /// <summary>
-    /// Verifies that UseTestNetwork switches to test network with correct passphrase.
+    ///     Verifies that UseTestNetwork switches to test network with correct passphrase.
     /// </summary>
     [TestMethod]
     public void UseTestNetwork_SwitchesToTestNetwork_WithCorrectPassphrase()
@@ -32,7 +32,7 @@ public class NetworkTest
     }
 
     /// <summary>
-    /// Verifies that UsePublicNetwork switches to public network with correct passphrase.
+    ///     Verifies that UsePublicNetwork switches to public network with correct passphrase.
     /// </summary>
     [TestMethod]
     public void UsePublicNetwork_SwitchesToPublicNetwork_WithCorrectPassphrase()

@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses.Effects;
 namespace StellarDotnetSdk.Tests.Responses.Effects;
 
 /// <summary>
-/// Unit tests for deserializing effects page responses from JSON.
+///     Unit tests for deserializing effects page responses from JSON.
 /// </summary>
 [TestClass]
 public class EffectsPageDeserializerTest
 {
     /// <summary>
-    /// Verifies that Page&lt;EffectResponse&gt; can be deserialized from JSON correctly.
+    ///     Verifies that Page&lt;EffectResponse&gt; can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithEffectPageJson_ReturnsDeserializedEffectsPage()

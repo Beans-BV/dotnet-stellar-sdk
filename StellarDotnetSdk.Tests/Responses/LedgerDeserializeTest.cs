@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing ledger responses from JSON.
+///     Unit tests for deserializing ledger responses from JSON.
 /// </summary>
 [TestClass]
 public class LedgerDeserializeTest
 {
     /// <summary>
-    /// Verifies that LedgerResponse can be deserialized from JSON correctly.
+    ///     Verifies that LedgerResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithLedgerJson_ReturnsDeserializedLedger()
@@ -32,7 +32,7 @@ public class LedgerDeserializeTest
     }
 
     /// <summary>
-    /// Verifies that LedgerResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that LedgerResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithLedger_RoundTripsCorrectly()

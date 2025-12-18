@@ -4,13 +4,13 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for change trust result types.
+///     Unit tests for change trust result types.
 /// </summary>
 [TestClass]
 public class ChangeTrustResultTest
 {
     /// <summary>
-    /// Verifies that ChangeTrustSuccess result can be deserialized correctly.
+    ///     Verifies that ChangeTrustSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithChangeTrustSuccessXdr_ReturnsChangeTrustSuccess()
@@ -23,7 +23,7 @@ public class ChangeTrustResultTest
     }
 
     /// <summary>
-    /// Verifies that ChangeTrustMalformed result can be deserialized correctly.
+    ///     Verifies that ChangeTrustMalformed result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithChangeTrustMalformedXdr_ReturnsChangeTrustMalformed()
@@ -36,7 +36,7 @@ public class ChangeTrustResultTest
     }
 
     /// <summary>
-    /// Verifies that ChangeTrustNoIssuer result can be deserialized correctly.
+    ///     Verifies that ChangeTrustNoIssuer result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithChangeTrustNoIssuerXdr_ReturnsChangeTrustNoIssuer()
@@ -49,7 +49,7 @@ public class ChangeTrustResultTest
     }
 
     /// <summary>
-    /// Verifies that ChangeTrustInvalidLimit result can be deserialized correctly.
+    ///     Verifies that ChangeTrustInvalidLimit result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithChangeTrustInvalidLimitXdr_ReturnsChangeTrustInvalidLimit()
@@ -62,7 +62,7 @@ public class ChangeTrustResultTest
     }
 
     /// <summary>
-    /// Verifies that ChangeTrustLowReserve result can be deserialized correctly.
+    ///     Verifies that ChangeTrustLowReserve result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithChangeTrustLowReserveXdr_ReturnsChangeTrustLowReserve()
@@ -75,7 +75,7 @@ public class ChangeTrustResultTest
     }
 
     /// <summary>
-    /// Verifies that ChangeTrustSelfNotAllowed result can be deserialized correctly.
+    ///     Verifies that ChangeTrustSelfNotAllowed result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithChangeTrustSelfNotAllowedXdr_ReturnsChangeTrustSelfNotAllowed()

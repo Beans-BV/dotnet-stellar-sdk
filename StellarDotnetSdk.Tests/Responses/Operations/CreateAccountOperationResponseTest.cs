@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="CreateAccountOperationResponse"/> class.
+///     Unit tests for <see cref="CreateAccountOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class CreateAccountOperationResponseTest
 {
     /// <summary>
-    /// Verifies that CreateAccountOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that CreateAccountOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateAccountOperationJson_ReturnsDeserializedOperation()
@@ -31,7 +31,7 @@ public class CreateAccountOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that CreateAccountOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that CreateAccountOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithCreateAccountOperation_RoundTripsCorrectly()
@@ -75,7 +75,7 @@ public class CreateAccountOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that CreateAccountOperationResponse with muxed account can be deserialized from JSON correctly.
+    ///     Verifies that CreateAccountOperationResponse with muxed account can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithCreateAccountOperationMuxedJson_ReturnsDeserializedOperation()
@@ -93,7 +93,8 @@ public class CreateAccountOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that CreateAccountOperationResponse with muxed account can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that CreateAccountOperationResponse with muxed account can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithCreateAccountOperationMuxed_RoundTripsCorrectly()

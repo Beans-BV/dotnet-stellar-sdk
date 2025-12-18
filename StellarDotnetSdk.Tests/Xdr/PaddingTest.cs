@@ -5,13 +5,13 @@ using StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Tests.Xdr;
 
 /// <summary>
-/// Unit tests for XDR padding validation.
+///     Unit tests for XDR padding validation.
 /// </summary>
 [TestClass]
 public class PaddingTest
 {
     /// <summary>
-    /// Verifies that String32.Decode throws IOException when non-zero padding is detected.
+    ///     Verifies that String32.Decode throws IOException when non-zero padding is detected.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(IOException))]
@@ -34,7 +34,7 @@ public class PaddingTest
     }
 
     /// <summary>
-    /// Verifies that DataValue.Decode throws IOException when non-zero padding is detected.
+    ///     Verifies that DataValue.Decode throws IOException when non-zero padding is detected.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(IOException))]

@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses.Predicates;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing predicate responses from JSON.
+///     Unit tests for deserializing predicate responses from JSON.
 /// </summary>
 [TestClass]
 public class PredicateDeserializerTest
 {
     /// <summary>
-    /// Verifies that complex Predicate with nested And, Or, and Not can be deserialized from JSON correctly.
+    ///     Verifies that complex Predicate with nested And, Or, and Not can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithComplexPredicateJson_ReturnsDeserializedPredicate()
@@ -58,7 +58,7 @@ public class PredicateDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that PredicateUnconditional can be deserialized from JSON correctly.
+    ///     Verifies that PredicateUnconditional can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithUnconditionalPredicateJson_ReturnsPredicateUnconditional()
@@ -78,7 +78,7 @@ public class PredicateDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that PredicateBeforeAbsoluteTime with epoch can be deserialized from JSON correctly.
+    ///     Verifies that PredicateBeforeAbsoluteTime with epoch can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAbsoluteTimePredicateJson_ReturnsPredicateBeforeAbsoluteTime()
@@ -99,7 +99,7 @@ public class PredicateDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that PredicateBeforeRelativeTime can be deserialized from JSON correctly.
+    ///     Verifies that PredicateBeforeRelativeTime can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithRelativeTimePredicateJson_ReturnsPredicateBeforeRelativeTime()
@@ -119,7 +119,7 @@ public class PredicateDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that Predicate can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that Predicate can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithPredicate_RoundTripsCorrectly()
@@ -149,7 +149,7 @@ public class PredicateDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that PredicateBeforeRelativeTime can be deserialized from JSON with string value.
+    ///     Verifies that PredicateBeforeRelativeTime can be deserialized from JSON with string value.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithRelativeTimePredicateStringJson_ReturnsPredicateBeforeRelativeTime()
@@ -169,7 +169,7 @@ public class PredicateDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that PredicateBeforeAbsoluteTime can be deserialized from JSON with string epoch.
+    ///     Verifies that PredicateBeforeAbsoluteTime can be deserialized from JSON with string epoch.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAbsoluteTimePredicateStringEpochJson_ReturnsPredicateBeforeAbsoluteTime()

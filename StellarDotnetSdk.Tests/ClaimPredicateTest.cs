@@ -5,13 +5,13 @@ using xdrSDK = StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="ClaimPredicate"/> class.
+///     Unit tests for <see cref="ClaimPredicate" /> class.
 /// </summary>
 [TestClass]
 public class ClaimPredicateTest
 {
     /// <summary>
-    /// Verifies that ClaimPredicate.BeforeAbsoluteTime creates predicate that round-trips correctly through XDR.
+    ///     Verifies that ClaimPredicate.BeforeAbsoluteTime creates predicate that round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void BeforeAbsoluteTime_WithTimePoint_RoundTripsCorrectly()
@@ -28,7 +28,7 @@ public class ClaimPredicateTest
     }
 
     /// <summary>
-    /// Verifies that ClaimPredicate.BeforeAbsoluteTime with max ulong value round-trips correctly through XDR.
+    ///     Verifies that ClaimPredicate.BeforeAbsoluteTime with max ulong value round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void BeforeAbsoluteTime_WithMaxUlongValue_RoundTripsCorrectly()
@@ -45,7 +45,7 @@ public class ClaimPredicateTest
     }
 
     /// <summary>
-    /// Verifies that ClaimPredicate.BeforeRelativeTime creates predicate that round-trips correctly through XDR.
+    ///     Verifies that ClaimPredicate.BeforeRelativeTime creates predicate that round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void BeforeRelativeTime_WithDuration_RoundTripsCorrectly()
@@ -62,7 +62,7 @@ public class ClaimPredicateTest
     }
 
     /// <summary>
-    /// Verifies that ClaimPredicate.Not creates predicate that round-trips correctly through XDR.
+    ///     Verifies that ClaimPredicate.Not creates predicate that round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void Not_WithPredicate_RoundTripsCorrectly()
@@ -80,7 +80,7 @@ public class ClaimPredicateTest
     }
 
     /// <summary>
-    /// Verifies that ClaimPredicate.And creates predicate that round-trips correctly through XDR.
+    ///     Verifies that ClaimPredicate.And creates predicate that round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void And_WithTwoPredicates_RoundTripsCorrectly()
@@ -100,7 +100,7 @@ public class ClaimPredicateTest
     }
 
     /// <summary>
-    /// Verifies that ClaimPredicate.Or creates predicate that round-trips correctly through XDR.
+    ///     Verifies that ClaimPredicate.Or creates predicate that round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void Or_WithTwoPredicates_RoundTripsCorrectly()
@@ -120,7 +120,7 @@ public class ClaimPredicateTest
     }
 
     /// <summary>
-    /// Verifies that ClaimPredicate.Unconditional creates predicate that round-trips correctly through XDR.
+    ///     Verifies that ClaimPredicate.Unconditional creates predicate that round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void Unconditional_CreatesPredicate_RoundTripsCorrectly()

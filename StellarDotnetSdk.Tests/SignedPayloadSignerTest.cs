@@ -5,13 +5,13 @@ using xdrSDK = StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="SignedPayloadSigner"/> class.
+///     Unit tests for <see cref="SignedPayloadSigner" /> class.
 /// </summary>
 [TestClass]
 public class SignedPayloadSignerTest
 {
     /// <summary>
-    /// Verifies that constructor throws ArgumentNullException when account ID is null.
+    ///     Verifies that constructor throws ArgumentNullException when account ID is null.
     /// </summary>
     [TestMethod]
     public void Constructor_WithNullAccountId_ThrowsArgumentNullException()
@@ -24,7 +24,7 @@ public class SignedPayloadSignerTest
     }
 
     /// <summary>
-    /// Verifies that constructor throws ArgumentException when payload length exceeds maximum allowed size.
+    ///     Verifies that constructor throws ArgumentException when payload length exceeds maximum allowed size.
     /// </summary>
     [TestMethod]
     public void Constructor_WithPayloadLengthTooBig_ThrowsArgumentException()

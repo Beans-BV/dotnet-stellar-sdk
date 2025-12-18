@@ -5,16 +5,17 @@ using XDR = StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for begin sponsoring future reserves result types.
+///     Unit tests for begin sponsoring future reserves result types.
 /// </summary>
 [TestClass]
 public class BeginSponsoringFutureReservesResultTest
 {
     /// <summary>
-    /// Verifies that BeginSponsoringFutureReservesAlreadySponsored result can be deserialized correctly.
+    ///     Verifies that BeginSponsoringFutureReservesAlreadySponsored result can be deserialized correctly.
     /// </summary>
     [TestMethod]
-    public void Deserialize_WithBeginSponsoringFutureReservesAlreadySponsoredXdr_ReturnsBeginSponsoringFutureReservesAlreadySponsored()
+    public void
+        Deserialize_WithBeginSponsoringFutureReservesAlreadySponsoredXdr_ReturnsBeginSponsoringFutureReservesAlreadySponsored()
     {
         // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr();
@@ -32,10 +33,11 @@ public class BeginSponsoringFutureReservesResultTest
     }
 
     /// <summary>
-    /// Verifies that BeginSponsoringFutureReservesMalformed result can be deserialized correctly.
+    ///     Verifies that BeginSponsoringFutureReservesMalformed result can be deserialized correctly.
     /// </summary>
     [TestMethod]
-    public void Deserialize_WithBeginSponsoringFutureReservesMalformedXdr_ReturnsBeginSponsoringFutureReservesMalformed()
+    public void
+        Deserialize_WithBeginSponsoringFutureReservesMalformedXdr_ReturnsBeginSponsoringFutureReservesMalformed()
     {
         // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr();
@@ -53,10 +55,11 @@ public class BeginSponsoringFutureReservesResultTest
     }
 
     /// <summary>
-    /// Verifies that BeginSponsoringFutureReservesRecursive result can be deserialized correctly.
+    ///     Verifies that BeginSponsoringFutureReservesRecursive result can be deserialized correctly.
     /// </summary>
     [TestMethod]
-    public void Deserialize_WithBeginSponsoringFutureReservesRecursiveXdr_ReturnsBeginSponsoringFutureReservesRecursive()
+    public void
+        Deserialize_WithBeginSponsoringFutureReservesRecursiveXdr_ReturnsBeginSponsoringFutureReservesRecursive()
     {
         // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr();
@@ -74,7 +77,7 @@ public class BeginSponsoringFutureReservesResultTest
     }
 
     /// <summary>
-    /// Verifies that BeginSponsoringFutureReservesSuccess result can be deserialized correctly.
+    ///     Verifies that BeginSponsoringFutureReservesSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithBeginSponsoringFutureReservesSuccessXdr_ReturnsBeginSponsoringFutureReservesSuccess()

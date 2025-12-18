@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="PathPaymentStrictReceiveOperationResponse"/> class.
+///     Unit tests for <see cref="PathPaymentStrictReceiveOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class PathPaymentStrictReceiveOperationResponseTest
 {
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that PathPaymentStrictReceiveOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictReceiveOperationJson_ReturnsDeserializedOperation()
@@ -32,7 +32,7 @@ public class PathPaymentStrictReceiveOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that PathPaymentStrictReceiveOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithPathPaymentStrictReceiveOperation_RoundTripsCorrectly()
@@ -78,7 +78,8 @@ public class PathPaymentStrictReceiveOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveOperationResponse with muxed accounts can be deserialized from JSON correctly.
+    ///     Verifies that PathPaymentStrictReceiveOperationResponse with muxed accounts can be deserialized from JSON
+    ///     correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathPaymentStrictReceiveOperationMuxedJson_ReturnsDeserializedOperation()
@@ -96,7 +97,8 @@ public class PathPaymentStrictReceiveOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that PathPaymentStrictReceiveOperationResponse with muxed accounts can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that PathPaymentStrictReceiveOperationResponse with muxed accounts can be serialized and deserialized
+    ///     correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithPathPaymentStrictReceiveOperationMuxed_RoundTripsCorrectly()

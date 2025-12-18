@@ -7,13 +7,13 @@ using Asset = StellarDotnetSdk.Assets.Asset;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="ClaimAtom"/> class, specifically ClaimLiquidityAtom functionality.
+///     Unit tests for <see cref="ClaimAtom" /> class, specifically ClaimLiquidityAtom functionality.
 /// </summary>
 [TestClass]
 public class ClaimLiquidityAtomTest
 {
     /// <summary>
-    /// Verifies that ClaimAtom.FromXdr correctly deserializes ClaimLiquidityAtom from XDR.
+    ///     Verifies that ClaimAtom.FromXdr correctly deserializes ClaimLiquidityAtom from XDR.
     /// </summary>
     [TestMethod]
     public void FromXdr_WithClaimLiquidityAtom_ReturnsCorrectClaimAtomLiquidityPool()

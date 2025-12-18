@@ -9,13 +9,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for <see cref="Link{T}"/> and <see cref="TemplatedLink{T}"/> classes.
+///     Unit tests for <see cref="Link{T}" /> and <see cref="TemplatedLink{T}" /> classes.
 /// </summary>
 [TestClass]
 public class LinkTest
 {
     /// <summary>
-    /// Verifies that Link Follow method correctly follows the link and deserializes the response.
+    ///     Verifies that Link Follow method correctly follows the link and deserializes the response.
     /// </summary>
     [TestMethod]
     public async Task Follow_WithValidLink_ReturnsDeserializedResponse()
@@ -41,7 +41,7 @@ public class LinkTest
     }
 
     /// <summary>
-    /// Verifies that TemplatedLink correctly parses URI and segments from templated href.
+    ///     Verifies that TemplatedLink correctly parses URI and segments from templated href.
     /// </summary>
     [TestMethod]
     public void Constructor_WithTemplatedLink_ParsesUriAndSegmentsCorrectly()
@@ -60,7 +60,7 @@ public class LinkTest
     }
 
     /// <summary>
-    /// Verifies that TemplatedLink Resolve method correctly resolves query parameters.
+    ///     Verifies that TemplatedLink Resolve method correctly resolves query parameters.
     /// </summary>
     [TestMethod]
     public void Resolve_WithQueryParameters_ReturnsUriWithCorrectQueryString()
@@ -88,7 +88,7 @@ public class LinkTest
     }
 
     /// <summary>
-    /// Verifies that TemplatedLink Resolve method correctly resolves path variables.
+    ///     Verifies that TemplatedLink Resolve method correctly resolves path variables.
     /// </summary>
     [TestMethod]
     public void Resolve_WithPathVariable_ReturnsUriWithResolvedPath()

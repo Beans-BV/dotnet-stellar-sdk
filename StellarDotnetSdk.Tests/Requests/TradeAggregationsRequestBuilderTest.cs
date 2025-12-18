@@ -7,13 +7,13 @@ using StellarDotnetSdk.Tests.Responses;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="TradeAggregationsRequestBuilder"/> class.
+///     Unit tests for <see cref="TradeAggregationsRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class TradeAggregationsRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that TradeAggregationsRequestBuilder.BuildUri correctly constructs URI with all aggregation parameters.
+    ///     Verifies that TradeAggregationsRequestBuilder.BuildUri correctly constructs URI with all aggregation parameters.
     /// </summary>
     [TestMethod]
     public void BuildUri_WithAllAggregationParameters_BuildsCorrectUri()
@@ -49,7 +49,8 @@ public class TradeAggregationsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that TradeAggregationsRequestBuilder.Execute correctly retrieves and deserializes trade aggregations page data.
+    ///     Verifies that TradeAggregationsRequestBuilder.Execute correctly retrieves and deserializes trade aggregations page
+    ///     data.
     /// </summary>
     [TestMethod]
     public async Task Execute_WithBaseAssetCounterAssetAndTimeRange_ReturnsDeserializedTradeAggregationsPage()

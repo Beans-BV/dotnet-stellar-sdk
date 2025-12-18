@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing fee stats responses from JSON.
+///     Unit tests for deserializing fee stats responses from JSON.
 /// </summary>
 [TestClass]
 public class FeeStatsDeserializerTest
 {
     /// <summary>
-    /// Verifies that FeeStatsResponse can be deserialized from JSON correctly.
+    ///     Verifies that FeeStatsResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithFeeStatsJson_ReturnsDeserializedFeeStats()
@@ -31,7 +31,7 @@ public class FeeStatsDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that FeeStatsResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that FeeStatsResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithFeeStats_RoundTripsCorrectly()

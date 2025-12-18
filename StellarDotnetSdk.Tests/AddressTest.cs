@@ -6,13 +6,14 @@ using SCVal = StellarDotnetSdk.Soroban.SCVal;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for Soroban address types (ScAccountId, ScContractId, ScLiquidityPoolId, ScClaimableBalanceId, ScMuxedAccountId).
+///     Unit tests for Soroban address types (ScAccountId, ScContractId, ScLiquidityPoolId, ScClaimableBalanceId,
+///     ScMuxedAccountId).
 /// </summary>
 [TestClass]
 public class AddressTest
 {
     /// <summary>
-    /// Verifies that ScAccountId constructor throws ArgumentException when account ID is invalid.
+    ///     Verifies that ScAccountId constructor throws ArgumentException when account ID is invalid.
     /// </summary>
     [TestMethod]
     [DataRow("Invalid id")]
@@ -28,7 +29,7 @@ public class AddressTest
     }
 
     /// <summary>
-    /// Verifies that ScContractId constructor throws ArgumentException when contract ID is invalid.
+    ///     Verifies that ScContractId constructor throws ArgumentException when contract ID is invalid.
     /// </summary>
     [TestMethod]
     [DataRow("Invalid id")]
@@ -47,7 +48,7 @@ public class AddressTest
 
 
     /// <summary>
-    /// Verifies that ScLiquidityPoolId constructor throws ArgumentException when liquidity pool ID is invalid.
+    ///     Verifies that ScLiquidityPoolId constructor throws ArgumentException when liquidity pool ID is invalid.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -65,7 +66,7 @@ public class AddressTest
     }
 
     /// <summary>
-    /// Verifies that ScClaimableBalanceId constructor throws ArgumentException when claimable balance ID is invalid.
+    ///     Verifies that ScClaimableBalanceId constructor throws ArgumentException when claimable balance ID is invalid.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -83,7 +84,7 @@ public class AddressTest
     }
 
     /// <summary>
-    /// Verifies that ScMuxedAccountId constructor throws ArgumentException when muxed account ID is invalid.
+    ///     Verifies that ScMuxedAccountId constructor throws ArgumentException when muxed account ID is invalid.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -100,7 +101,7 @@ public class AddressTest
     }
 
     /// <summary>
-    /// Verifies that ScAccountId round-trips correctly through XDR serialization.
+    ///     Verifies that ScAccountId round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void ToXdrBase64_WithValidAccountId_RoundTripsCorrectly()
@@ -117,7 +118,7 @@ public class AddressTest
     }
 
     /// <summary>
-    /// Verifies that ScContractId round-trips correctly through XDR serialization.
+    ///     Verifies that ScContractId round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void ToXdrBase64_WithValidContractId_RoundTripsCorrectly()
@@ -134,7 +135,7 @@ public class AddressTest
     }
 
     /// <summary>
-    /// Verifies that ScClaimableBalanceId round-trips correctly through XDR serialization.
+    ///     Verifies that ScClaimableBalanceId round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [DataRow("BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU")]
@@ -152,7 +153,7 @@ public class AddressTest
     }
 
     /// <summary>
-    /// Verifies that ScLiquidityPoolId round-trips correctly through XDR serialization.
+    ///     Verifies that ScLiquidityPoolId round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [DataRow("LAARAHN7HK7EW57IB6FK5SOZIXXK56GKBOMSVJQTMRHOTABLMA2A5VHB")]
@@ -171,7 +172,7 @@ public class AddressTest
     }
 
     /// <summary>
-    /// Verifies that ScMuxedAccountId round-trips correctly through XDR serialization.
+    ///     Verifies that ScMuxedAccountId round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     [DataRow("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ")]

@@ -11,7 +11,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for sponsorship-related operations and functionality.
+///     Unit tests for sponsorship-related operations and functionality.
 /// </summary>
 [TestClass]
 public class SponsorshipTest
@@ -348,7 +348,8 @@ public class SponsorshipTest
     }
 
     /// <summary>
-    /// Verifies that revoking account sponsorship succeeds when submitting a transaction with RevokeLedgerEntrySponsorshipOperation for account.
+    ///     Verifies that revoking account sponsorship succeeds when submitting a transaction with
+    ///     RevokeLedgerEntrySponsorshipOperation for account.
     /// </summary>
     [TestMethod]
     public async Task SubmitTransaction_RevokeAccountSponsorship_ReturnsSuccess()
@@ -379,7 +380,7 @@ public class SponsorshipTest
     }
 
     /// <summary>
-    /// Verifies that revoking claimable balance sponsorship succeeds.
+    ///     Verifies that revoking claimable balance sponsorship succeeds.
     /// </summary>
     [TestMethod]
     public async Task RevokeClaimableBalanceSponsorship_WithSponsoredBalance_Succeeds()
@@ -393,7 +394,7 @@ public class SponsorshipTest
     }
 
     /// <summary>
-    /// Verifies that revoking data sponsorship succeeds.
+    ///     Verifies that revoking data sponsorship succeeds.
     /// </summary>
     [TestMethod]
     public async Task RevokeDataSponsorship_WithSponsoredData_Succeeds()
@@ -407,7 +408,7 @@ public class SponsorshipTest
     }
 
     /// <summary>
-    /// Verifies that revoking offer sponsorship succeeds.
+    ///     Verifies that revoking offer sponsorship succeeds.
     /// </summary>
     [TestMethod]
     public async Task RevokeOfferSponsorship_WithSponsoredOffer_Succeeds()
@@ -420,7 +421,7 @@ public class SponsorshipTest
     }
 
     /// <summary>
-    /// Verifies that revoking trustline sponsorship succeeds.
+    ///     Verifies that revoking trustline sponsorship succeeds.
     /// </summary>
     [TestMethod]
     public async Task RevokeTrustlineSponsorship_WithSponsoredTrustline_Succeeds()

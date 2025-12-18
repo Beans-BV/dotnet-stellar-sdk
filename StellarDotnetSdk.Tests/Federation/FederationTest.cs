@@ -8,13 +8,13 @@ using StellarDotnetSdk.Federation;
 namespace StellarDotnetSdk.Tests.Federation;
 
 /// <summary>
-/// Tests for Federation class functionality.
+///     Tests for Federation class functionality.
 /// </summary>
 [TestClass]
 public class FederationTest
 {
     /// <summary>
-    /// Verifies that Resolve resolves a stellar address to account ID successfully.
+    ///     Verifies that Resolve resolves a stellar address to account ID successfully.
     /// </summary>
     [TestMethod]
     public async Task Resolve_WithValidAddress_ResolvesToAccountId()
@@ -49,7 +49,7 @@ public class FederationTest
     }
 
     /// <summary>
-    /// Verifies that Resolve throws MalformedAddressException when address format is invalid.
+    ///     Verifies that Resolve throws MalformedAddressException when address format is invalid.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(MalformedAddressException))]

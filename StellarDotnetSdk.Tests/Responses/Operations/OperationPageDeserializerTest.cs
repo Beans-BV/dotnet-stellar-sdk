@@ -9,7 +9,7 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for deserializing operation page responses from JSON.
+///     Unit tests for deserializing operation page responses from JSON.
 /// </summary>
 [TestClass]
 public class OperationPageDeserializerTest
@@ -17,7 +17,7 @@ public class OperationPageDeserializerTest
     private readonly string _operationPageJsonPath = Utils.GetTestDataPath("Responses/operationPage.json");
 
     /// <summary>
-    /// Verifies that Page&lt;OperationResponse&gt; can be deserialized from JSON correctly.
+    ///     Verifies that Page&lt;OperationResponse&gt; can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithOperationPageJson_ReturnsDeserializedOperationsPage()
@@ -34,7 +34,7 @@ public class OperationPageDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that Page&lt;OperationResponse&gt; can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that Page&lt;OperationResponse&gt; can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithOperationPage_RoundTripsCorrectly()

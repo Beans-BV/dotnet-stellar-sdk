@@ -6,13 +6,13 @@ using StellarDotnetSdk.Tests.Responses;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="AssetsRequestBuilder"/> class.
+///     Unit tests for <see cref="AssetsRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class AssetsRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that AssetsRequestBuilder.BuildUri correctly constructs URI with limit and order parameters.
+    ///     Verifies that AssetsRequestBuilder.BuildUri correctly constructs URI with limit and order parameters.
     /// </summary>
     [TestMethod]
     public void BuildUri_WithLimitAndOrder_BuildsCorrectUri()
@@ -31,7 +31,7 @@ public class AssetsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that AssetsRequestBuilder.AssetCode correctly adds asset code parameter to URI.
+    ///     Verifies that AssetsRequestBuilder.AssetCode correctly adds asset code parameter to URI.
     /// </summary>
     [TestMethod]
     public void AssetCode_WithValidAssetCode_AddsAssetCodeParameter()
@@ -49,7 +49,7 @@ public class AssetsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that AssetsRequestBuilder.AssetIssuer correctly adds asset issuer parameter to URI.
+    ///     Verifies that AssetsRequestBuilder.AssetIssuer correctly adds asset issuer parameter to URI.
     /// </summary>
     [TestMethod]
     public void AssetIssuer_WithValidIssuerId_AddsAssetIssuerParameter()
@@ -69,7 +69,7 @@ public class AssetsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that AssetsRequestBuilder.Execute correctly retrieves and deserializes asset page data.
+    ///     Verifies that AssetsRequestBuilder.Execute correctly retrieves and deserializes asset page data.
     /// </summary>
     [TestMethod]
     public async Task Execute_WithAssetCode_ReturnsDeserializedAssetPage()

@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing root responses from JSON.
+///     Unit tests for deserializing root responses from JSON.
 /// </summary>
 [TestClass]
 public class RootDeserializerTest
 {
     /// <summary>
-    /// Verifies that RootResponse can be deserialized from JSON correctly.
+    ///     Verifies that RootResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithRootJson_ReturnsDeserializedRoot()
@@ -32,7 +32,7 @@ public class RootDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that RootResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that RootResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithRoot_RoundTripsCorrectly()

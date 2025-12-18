@@ -6,7 +6,7 @@ using xdrSDK = StellarDotnetSdk.Xdr;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="SCVal"/> class and related Soroban value types.
+///     Unit tests for <see cref="SCVal" /> class and related Soroban value types.
 /// </summary>
 [TestClass]
 public class ScValTest
@@ -14,7 +14,7 @@ public class ScValTest
     private const string WasmHash = "6416281094F721A3CC324DC5A119A71101E80F17B03D92FE528AFEC56238B882";
 
     /// <summary>
-    /// Verifies that SCBool values round-trip correctly through XDR serialization.
+    ///     Verifies that SCBool values round-trip correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCBoolValues_RoundTripsCorrectly()
@@ -36,7 +36,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCContractError round-trips correctly through XDR serialization.
+    ///     Verifies that SCContractError round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCContractError_RoundTripsCorrectly()
@@ -53,7 +53,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCWasmVmError values round-trip correctly through XDR serialization.
+    ///     Verifies that SCWasmVmError values round-trip correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCWasmVmErrorValues_RoundTripsCorrectly()
@@ -81,7 +81,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCContextError values round-trip correctly through XDR serialization.
+    ///     Verifies that SCContextError values round-trip correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCContextErrorValues_RoundTripsCorrectly()
@@ -109,7 +109,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCStorageError values round-trip correctly through XDR serialization.
+    ///     Verifies that SCStorageError values round-trip correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCStorageErrorValues_RoundTripsCorrectly()
@@ -137,7 +137,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCObjectError values round-trip correctly through XDR serialization.
+    ///     Verifies that SCObjectError values round-trip correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCObjectErrorValues_RoundTripsCorrectly()
@@ -165,7 +165,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCCryptoError values round-trip correctly through XDR serialization.
+    ///     Verifies that SCCryptoError values round-trip correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCCryptoErrorValues_RoundTripsCorrectly()
@@ -193,7 +193,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCEventsError values round-trip correctly through XDR serialization.
+    ///     Verifies that SCEventsError values round-trip correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCEventsErrorValues_RoundTripsCorrectly()
@@ -221,7 +221,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCBudgetError values round-trip correctly through XDR serialization.
+    ///     Verifies that SCBudgetError values round-trip correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCBudgetErrorValues_RoundTripsCorrectly()
@@ -249,7 +249,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCValueError values round-trip correctly through XDR serialization.
+    ///     Verifies that SCValueError values round-trip correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCValueErrorValues_RoundTripsCorrectly()
@@ -277,7 +277,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCAuthError values round-trip correctly through XDR serialization.
+    ///     Verifies that SCAuthError values round-trip correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCAuthErrorValues_RoundTripsCorrectly()
@@ -305,7 +305,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCUint32 round-trips correctly through XDR serialization.
+    ///     Verifies that SCUint32 round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCUint32_RoundTripsCorrectly()
@@ -322,7 +322,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCInt32 round-trips correctly through XDR serialization.
+    ///     Verifies that SCInt32 round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCInt32_RoundTripsCorrectly()
@@ -339,7 +339,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCUint64 round-trips correctly through XDR serialization.
+    ///     Verifies that SCUint64 round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCUint64_RoundTripsCorrectly()
@@ -356,7 +356,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCInt64 round-trips correctly through XDR serialization.
+    ///     Verifies that SCInt64 round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCInt64_RoundTripsCorrectly()
@@ -373,7 +373,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCTimePoint round-trips correctly through XDR serialization.
+    ///     Verifies that SCTimePoint round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCTimePoint_RoundTripsCorrectly()
@@ -390,7 +390,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCDuration round-trips correctly through XDR serialization.
+    ///     Verifies that SCDuration round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCDuration_RoundTripsCorrectly()
@@ -407,7 +407,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCUint128 round-trips correctly through XDR serialization.
+    ///     Verifies that SCUint128 round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCUint128_RoundTripsCorrectly()
@@ -425,7 +425,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCInt128 created from parts round-trips correctly through XDR serialization.
+    ///     Verifies that SCInt128 created from parts round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCInt128FromParts_RoundTripsCorrectly()
@@ -443,7 +443,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCInt128 constructed from valid string round-trips correctly through XDR serialization.
+    ///     Verifies that SCInt128 constructed from valid string round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCInt128FromValidString_RoundTripsCorrectly()
@@ -466,7 +466,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCInt128 constructor throws ArgumentOutOfRangeException when value exceeds maximum allowed.
+    ///     Verifies that SCInt128 constructor throws ArgumentOutOfRangeException when value exceeds maximum allowed.
     /// </summary>
     [TestMethod]
     public void Constructor_WithTooBigNumericString_ThrowsArgumentOutOfRangeException()
@@ -480,7 +480,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCInt128 constructor throws ArgumentException when given invalid numeric string format.
+    ///     Verifies that SCInt128 constructor throws ArgumentException when given invalid numeric string format.
     /// </summary>
     [TestMethod]
     public void Constructor_WithInvalidNumericString_ThrowsArgumentException()
@@ -491,7 +491,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCUint256 round-trips correctly through XDR serialization.
+    ///     Verifies that SCUint256 round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCUint256_RoundTripsCorrectly()
@@ -517,7 +517,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCInt256 round-trips correctly through XDR serialization.
+    ///     Verifies that SCInt256 round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCInt256_RoundTripsCorrectly()
@@ -543,7 +543,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCBytes with valid byte array round-trips correctly through XDR serialization.
+    ///     Verifies that SCBytes with valid byte array round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCBytesWithValidArgument_RoundTripsCorrectly()
@@ -561,7 +561,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCBytes with empty byte array round-trips correctly through XDR serialization.
+    ///     Verifies that SCBytes with empty byte array round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCBytesWithEmptyArgument_RoundTripsCorrectly()
@@ -579,7 +579,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCString round-trips correctly through XDR serialization.
+    ///     Verifies that SCString round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCString_RoundTripsCorrectly()
@@ -596,7 +596,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCString with empty string round-trips correctly through XDR serialization.
+    ///     Verifies that SCString with empty string round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCStringWithEmptyArgument_RoundTripsCorrectly()
@@ -613,7 +613,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCSymbol round-trips correctly through XDR serialization.
+    ///     Verifies that SCSymbol round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCSymbol_RoundTripsCorrectly()
@@ -630,7 +630,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCVec with valid entries round-trips correctly through XDR serialization.
+    ///     Verifies that SCVec with valid entries round-trips correctly through XDR serialization.
     /// </summary>
     /// <remarks>
     ///     It's not necessary to check each of the scVec.InnerValue element for type and properties,
@@ -659,7 +659,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCMap with valid entries round-trips correctly through XDR serialization.
+    ///     Verifies that SCMap with valid entries round-trips correctly through XDR serialization.
     /// </summary>
     /// <remarks>
     ///     It's not necessary to check each of the scMap Key and Value for type and properties,
@@ -693,7 +693,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCMap with no entries round-trips correctly through XDR serialization.
+    ///     Verifies that SCMap with no entries round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCMapWithNoEntries_RoundTripsCorrectly()
@@ -710,7 +710,8 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCContractInstance with ContractExecutableWasm and missing storage round-trips correctly through XDR serialization.
+    ///     Verifies that SCContractInstance with ContractExecutableWasm and missing storage round-trips correctly through XDR
+    ///     serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCContractExecutableWasmWithMissingStorage_RoundTripsCorrectly()
@@ -733,7 +734,8 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCContractInstance with ContractExecutableWasm and storage round-trips correctly through XDR serialization.
+    ///     Verifies that SCContractInstance with ContractExecutableWasm and storage round-trips correctly through XDR
+    ///     serialization.
     /// </summary>
     /// <remarks>
     ///     It's not necessary to check each of the entries element Key and Value for type and properties,
@@ -777,7 +779,8 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCContractInstance with ContractExecutableStellarAsset round-trips correctly through XDR serialization.
+    ///     Verifies that SCContractInstance with ContractExecutableStellarAsset round-trips correctly through XDR
+    ///     serialization.
     /// </summary>
     /// <remarks>
     ///     It's not necessary to check each of the entries element Key and Value for type and properties,
@@ -816,7 +819,7 @@ public class ScValTest
     }
 
     /// <summary>
-    /// Verifies that SCNonceKey round-trips correctly through XDR serialization.
+    ///     Verifies that SCNonceKey round-trips correctly through XDR serialization.
     /// </summary>
     [TestMethod]
     public void FromXdrBase64_SCNonceKey_RoundTripsCorrectly()

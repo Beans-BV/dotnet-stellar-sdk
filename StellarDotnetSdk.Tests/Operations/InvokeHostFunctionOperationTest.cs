@@ -9,7 +9,7 @@ using StellarDotnetSdk.Soroban;
 namespace StellarDotnetSdk.Tests.Operations;
 
 /// <summary>
-/// Tests for InvokeHostFunctionOperation and related contract operations.
+///     Tests for InvokeHostFunctionOperation and related contract operations.
 /// </summary>
 [TestClass]
 public class InvokeHostFunctionOperationTest
@@ -54,7 +54,7 @@ public class InvokeHostFunctionOperationTest
     }
 
     /// <summary>
-    /// Verifies that CreateContractOperation without source account round-trips correctly through XDR.
+    ///     Verifies that CreateContractOperation without source account round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void CreateContractOperation_WithoutSourceAccount_RoundTripsThroughXdr()
@@ -86,7 +86,7 @@ public class InvokeHostFunctionOperationTest
     }
 
     /// <summary>
-    /// Verifies that CreateContractOperation from address without authorization entry round-trips correctly through XDR.
+    ///     Verifies that CreateContractOperation from address without authorization entry round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void CreateContractOperation_FromAddressWithoutAuthorizationEntry_RoundTripsThroughXdr()
@@ -119,7 +119,8 @@ public class InvokeHostFunctionOperationTest
     }
 
     /// <summary>
-    /// Verifies that CreateContractOperation from address with valid arguments and authorization round-trips correctly through XDR.
+    ///     Verifies that CreateContractOperation from address with valid arguments and authorization round-trips correctly
+    ///     through XDR.
     /// </summary>
     /// <remarks>
     ///     It's not necessary to check each of the operation.Auth element for the type and properties,
@@ -190,7 +191,7 @@ public class InvokeHostFunctionOperationTest
     }
 
     /// <summary>
-    /// Verifies that CreateContractOperation with Stellar asset executable round-trips correctly through XDR.
+    ///     Verifies that CreateContractOperation with Stellar asset executable round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void CreateContractOperation_WithStellarAssetExecutable_RoundTripsThroughXdr()
@@ -222,7 +223,7 @@ public class InvokeHostFunctionOperationTest
     }
 
     /// <summary>
-    /// Verifies that UploadContractOperation without source account round-trips correctly through XDR.
+    ///     Verifies that UploadContractOperation without source account round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void UploadContractOperation_WithoutSourceAccount_RoundTripsThroughXdr()
@@ -242,7 +243,7 @@ public class InvokeHostFunctionOperationTest
     }
 
     /// <summary>
-    /// Verifies that UploadContractOperation without authorization entry round-trips correctly through XDR.
+    ///     Verifies that UploadContractOperation without authorization entry round-trips correctly through XDR.
     /// </summary>
     [TestMethod]
     public void UploadContractOperation_WithoutAuthorizationEntry_RoundTripsThroughXdr()
@@ -264,7 +265,7 @@ public class InvokeHostFunctionOperationTest
     }
 
     /// <summary>
-    /// Verifies that UploadContractOperation with valid arguments and authorization round-trips correctly through XDR.
+    ///     Verifies that UploadContractOperation with valid arguments and authorization round-trips correctly through XDR.
     /// </summary>
     /// <remarks>
     ///     It's not necessary to check each of the operation.Auth element for the type and properties,
@@ -295,7 +296,7 @@ public class InvokeHostFunctionOperationTest
     }
 
     /// <summary>
-    /// Verifies that InvokeContractOperation without authorization entry round-trips correctly through XDR.
+    ///     Verifies that InvokeContractOperation without authorization entry round-trips correctly through XDR.
     /// </summary>
     /// <remarks>
     ///     It's not necessary to check each of the hostFunction.Args element for type and properties,
@@ -335,7 +336,7 @@ public class InvokeHostFunctionOperationTest
     }
 
     /// <summary>
-    /// Verifies that InvokeContractOperation with valid arguments and authorization round-trips correctly through XDR.
+    ///     Verifies that InvokeContractOperation with valid arguments and authorization round-trips correctly through XDR.
     /// </summary>
     /// <remarks>
     ///     It's not necessary to check each of the hostFunction.Args element for type and properties,

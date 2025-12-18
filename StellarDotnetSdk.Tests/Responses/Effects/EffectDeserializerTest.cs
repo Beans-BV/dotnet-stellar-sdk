@@ -9,13 +9,13 @@ using StellarDotnetSdk.Responses.Effects;
 namespace StellarDotnetSdk.Tests.Responses.Effects;
 
 /// <summary>
-/// Unit tests for deserializing various effect response types from JSON.
+///     Unit tests for deserializing various effect response types from JSON.
 /// </summary>
 [TestClass]
 public class EffectDeserializerTest
 {
     /// <summary>
-    /// Verifies that AccountCreatedEffect can be deserialized from JSON correctly.
+    ///     Verifies that AccountCreatedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountCreatedEffectJson_ReturnsAccountCreatedEffectResponse()
@@ -33,7 +33,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountCreatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountCreatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountCreatedEffect_RoundTripsCorrectly()
@@ -72,7 +72,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountRemovedEffect can be deserialized from JSON correctly.
+    ///     Verifies that AccountRemovedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountRemovedEffectJson_ReturnsAccountRemovedEffectResponse()
@@ -90,7 +90,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountRemovedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountRemovedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountRemovedEffect_RoundTripsCorrectly()
@@ -124,7 +124,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountCreditedEffect can be deserialized from JSON correctly.
+    ///     Verifies that AccountCreditedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountCreditedEffectJson_ReturnsAccountCreditedEffectResponse()
@@ -142,7 +142,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountCreditedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountCreditedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountCreditedEffect_RoundTripsCorrectly()
@@ -181,7 +181,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountDebitedEffect can be deserialized from JSON correctly.
+    ///     Verifies that AccountDebitedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountDebitedEffectJson_ReturnsAccountDebitedEffectResponse()
@@ -199,7 +199,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountDebitedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountDebitedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountDebitedEffect_RoundTripsCorrectly()
@@ -240,7 +240,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountThresholdsUpdatedEffect can be deserialized from JSON correctly.
+    ///     Verifies that AccountThresholdsUpdatedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountThresholdsUpdatedEffectJson_ReturnsAccountThresholdsUpdatedEffectResponse()
@@ -258,7 +258,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountThresholdsUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountThresholdsUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountThresholdsUpdatedEffect_RoundTripsCorrectly()
@@ -295,7 +295,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountHomeDomainUpdatedEffect can be deserialized from JSON correctly.
+    ///     Verifies that AccountHomeDomainUpdatedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountHomeDomainUpdatedEffectJson_ReturnsAccountHomeDomainUpdatedEffectResponse()
@@ -313,7 +313,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountHomeDomainUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountHomeDomainUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountHomeDomainUpdatedEffect_RoundTripsCorrectly()
@@ -348,7 +348,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountFlagsUpdatedEffect can be deserialized from JSON correctly.
+    ///     Verifies that AccountFlagsUpdatedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountFlagsUpdatedEffectJson_ReturnsAccountFlagsUpdatedEffectResponse()
@@ -366,7 +366,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountFlagsUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountFlagsUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountFlagsUpdatedEffect_RoundTripsCorrectly()
@@ -402,7 +402,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that SignerCreatedEffect can be deserialized from JSON correctly.
+    ///     Verifies that SignerCreatedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSignerCreatedEffectJson_ReturnsSignerCreatedEffectResponse()
@@ -420,7 +420,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that SignerCreatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that SignerCreatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithSignerCreatedEffect_RoundTripsCorrectly()
@@ -456,7 +456,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that SignerRemovedEffect can be deserialized from JSON correctly.
+    ///     Verifies that SignerRemovedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSignerRemovedEffectJson_ReturnsSignerRemovedEffectResponse()
@@ -474,7 +474,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that SignerRemovedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that SignerRemovedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithSignerRemovedEffect_RoundTripsCorrectly()
@@ -510,7 +510,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that SignerUpdatedEffect can be deserialized from JSON correctly.
+    ///     Verifies that SignerUpdatedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSignerUpdatedEffectJson_ReturnsSignerUpdatedEffectResponse()
@@ -528,7 +528,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that SignerUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that SignerUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithSignerUpdatedEffect_RoundTripsCorrectly()
@@ -564,7 +564,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineCreatedEffect can be deserialized from JSON correctly.
+    ///     Verifies that TrustlineCreatedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithTrustlineCreatedEffectJson_ReturnsTrustlineCreatedEffectResponse()
@@ -582,7 +582,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineCreatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that TrustlineCreatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithTrustlineCreatedEffect_RoundTripsCorrectly()
@@ -624,7 +624,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineCreatedLiquidityPoolSharesEffect can be deserialized from JSON correctly.
+    ///     Verifies that TrustlineCreatedLiquidityPoolSharesEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithTrustlineCreatedLiquidityPoolSharesEffectJson_ReturnsTrustlineCreatedEffectResponse()
@@ -642,7 +642,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineCreatedLiquidityPoolSharesEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that TrustlineCreatedLiquidityPoolSharesEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithTrustlineCreatedLiquidityPoolSharesEffect_RoundTripsCorrectly()
@@ -683,7 +683,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineRemovedEffect can be deserialized from JSON correctly.
+    ///     Verifies that TrustlineRemovedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithTrustlineRemovedEffectJson_ReturnsTrustlineRemovedEffectResponse()
@@ -701,7 +701,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineRemovedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that TrustlineRemovedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithTrustlineRemovedEffect_RoundTripsCorrectly()
@@ -738,7 +738,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineUpdatedEffect can be deserialized from JSON correctly.
+    ///     Verifies that TrustlineUpdatedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithTrustlineUpdatedEffectJson_ReturnsTrustlineUpdatedEffectResponse()
@@ -756,7 +756,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that TrustlineUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithTrustlineUpdatedEffect_RoundTripsCorrectly()
@@ -794,7 +794,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineAuthorizedEffect can be deserialized from JSON correctly.
+    ///     Verifies that TrustlineAuthorizedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -813,11 +813,12 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineAuthorizedToMaintainLiabilitiesEffect can be deserialized from JSON correctly.
+    ///     Verifies that TrustlineAuthorizedToMaintainLiabilitiesEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     [Obsolete]
-    public void Deserialize_WithTrustlineAuthorizedToMaintainLiabilitiesEffectJson_ReturnsTrustlineAuthorizedToMaintainLiabilitiesEffectResponse()
+    public void
+        Deserialize_WithTrustlineAuthorizedToMaintainLiabilitiesEffectJson_ReturnsTrustlineAuthorizedToMaintainLiabilitiesEffectResponse()
     {
         // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineAuthorizedToMaintainLiabilities.json");
@@ -832,7 +833,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineAuthorizedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that TrustlineAuthorizedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -886,7 +887,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineDeauthorizedEffect can be deserialized from JSON correctly.
+    ///     Verifies that TrustlineDeauthorizedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -905,7 +906,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineDeauthorizedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that TrustlineDeauthorizedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -944,7 +945,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AlphaNum12NativeTradeEffect can be deserialized and serialized correctly (round-trip).
+    ///     Verifies that AlphaNum12NativeTradeEffect can be deserialized and serialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAlphaNum12NativeTradeEffect_RoundTripsCorrectly()
@@ -966,7 +967,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that NativeAlphaNum4TradeEffect can be deserialized and serialized correctly (round-trip).
+    ///     Verifies that NativeAlphaNum4TradeEffect can be deserialized and serialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithNativeAlphaNum4TradeEffect_RoundTripsCorrectly()
@@ -1044,10 +1045,11 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountInflationUpdatedEffect can be deserialized from JSON correctly.
+    ///     Verifies that AccountInflationUpdatedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
-    public void Deserialize_WithAccountInflationUpdatedEffectJson_ReturnsAccountInflationDestinationUpdatedEffectResponse()
+    public void
+        Deserialize_WithAccountInflationUpdatedEffectJson_ReturnsAccountInflationDestinationUpdatedEffectResponse()
     {
         // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountInflationUpdated.json");
@@ -1062,7 +1064,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountInflationUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountInflationUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountInflationUpdatedEffect_RoundTripsCorrectly()
@@ -1091,7 +1093,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that DataCreatedEffect can be deserialized from JSON correctly.
+    ///     Verifies that DataCreatedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithDataCreatedEffectJson_ReturnsDataCreatedEffectResponse()
@@ -1109,7 +1111,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that DataCreatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that DataCreatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithDataCreatedEffect_RoundTripsCorrectly()
@@ -1140,7 +1142,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that DataRemovedEffect can be deserialized from JSON correctly.
+    ///     Verifies that DataRemovedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithDataRemovedEffectJson_ReturnsDataRemovedEffectResponse()
@@ -1158,7 +1160,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that DataRemovedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that DataRemovedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithDataRemovedEffect_RoundTripsCorrectly()
@@ -1188,7 +1190,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that DataUpdatedEffect can be deserialized from JSON correctly.
+    ///     Verifies that DataUpdatedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithDataUpdatedEffectJson_ReturnsDataUpdatedEffectResponse()
@@ -1206,7 +1208,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that DataUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that DataUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithDataUpdatedEffect_RoundTripsCorrectly()
@@ -1237,7 +1239,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that deserializing an unknown effect type throws JsonException.
+    ///     Verifies that deserializing an unknown effect type throws JsonException.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithUnknownEffectJson_ThrowsJsonException()
@@ -1252,7 +1254,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that SequenceBumpedEffect can be deserialized from JSON correctly.
+    ///     Verifies that SequenceBumpedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSequenceBumpedEffectJson_ReturnsSequenceBumpedEffectResponse()
@@ -1270,7 +1272,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that SequenceBumpedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that SequenceBumpedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithSequenceBumpedEffect_RoundTripsCorrectly()
@@ -1300,7 +1302,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that OfferCreatedEffect can be deserialized from JSON correctly.
+    ///     Verifies that OfferCreatedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithOfferCreatedEffectJson_ReturnsOfferCreatedEffectResponse()
@@ -1318,7 +1320,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that OfferCreatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that OfferCreatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithOfferCreatedEffect_RoundTripsCorrectly()
@@ -1347,7 +1349,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that OfferRemovedEffect can be deserialized from JSON correctly.
+    ///     Verifies that OfferRemovedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithOfferRemovedEffectJson_ReturnsOfferRemovedEffectResponse()
@@ -1365,7 +1367,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that OfferRemovedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that OfferRemovedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithOfferRemovedEffect_RoundTripsCorrectly()
@@ -1394,7 +1396,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that OfferUpdatedEffect can be deserialized from JSON correctly.
+    ///     Verifies that OfferUpdatedEffect can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithOfferUpdatedEffectJson_ReturnsOfferUpdatedEffectResponse()
@@ -1412,7 +1414,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that OfferUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that OfferUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithOfferUpdatedEffect_RoundTripsCorrectly()
@@ -1441,7 +1443,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountSponsorshipCreatedEffect_RoundTripsCorrectly()
@@ -1469,7 +1471,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountSponsorshipRemovedEffect_RoundTripsCorrectly()
@@ -1497,7 +1499,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountSponsorshipUpdatedEffect_RoundTripsCorrectly()
@@ -1526,7 +1528,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that ClaimableBalanceClaimantCreatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ClaimableBalanceClaimantCreatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithClaimableBalanceClaimantCreatedEffect_RoundTripsCorrectly()
@@ -1559,7 +1561,7 @@ public class EffectDeserializerTest
 
 
     /// <summary>
-    /// Verifies that ClaimableBalanceClaimedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ClaimableBalanceClaimedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithClaimableBalanceClaimedEffect_RoundTripsCorrectly()
@@ -1589,7 +1591,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that ClaimableBalanceCreatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ClaimableBalanceCreatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithClaimableBalanceCreatedEffect_RoundTripsCorrectly()
@@ -1619,7 +1621,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that ClaimableBalanceSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ClaimableBalanceSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithClaimableBalanceSponsorshipCreatedEffect_RoundTripsCorrectly()
@@ -1648,7 +1650,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that ClaimableBalanceSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ClaimableBalanceSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithClaimableBalanceSponsorshipRemovedEffect_RoundTripsCorrectly()
@@ -1677,7 +1679,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that ClaimableBalanceSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ClaimableBalanceSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithClaimableBalanceSponsorshipUpdatedEffect_RoundTripsCorrectly()
@@ -1707,7 +1709,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that SignerSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that SignerSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithSignerSponsorshipCreatedEffect_RoundTripsCorrectly()
@@ -1736,7 +1738,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that SignerSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that SignerSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithSignerSponsorshipRemovedEffect_RoundTripsCorrectly()
@@ -1765,7 +1767,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that SignerSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that SignerSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithSignerSponsorshipUpdatedEffect_RoundTripsCorrectly()
@@ -1795,7 +1797,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that TrustlineSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithTrustlineSponsorshipCreatedEffect_RoundTripsCorrectly()
@@ -1824,7 +1826,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that TrustlineSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithTrustlineSponsorshipRemovedEffect_RoundTripsCorrectly()
@@ -1853,7 +1855,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that TrustlineSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithTrustlineSponsorshipUpdatedEffect_RoundTripsCorrectly()
@@ -1883,7 +1885,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that DataSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that DataSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithDataSponsorshipCreatedEffect_RoundTripsCorrectly()
@@ -1912,7 +1914,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that DataSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that DataSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithDataSponsorshipRemovedEffect_RoundTripsCorrectly()
@@ -1941,7 +1943,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that DataSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that DataSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithDataSponsorshipUpdatedEffect_RoundTripsCorrectly()
@@ -1971,7 +1973,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TrustlineFlagsUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that TrustlineFlagsUpdatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithTrustlineFlagsUpdatedEffect_RoundTripsCorrectly()
@@ -2005,7 +2007,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that ClaimableBalanceClawedBackEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ClaimableBalanceClawedBackEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithClaimableBalanceClawedBackEffect_RoundTripsCorrectly()
@@ -2033,7 +2035,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolCreatedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that LiquidityPoolCreatedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithLiquidityPoolCreatedEffect_RoundTripsCorrectly()
@@ -2070,7 +2072,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolDepositedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that LiquidityPoolDepositedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithLiquidityPoolDepositedEffect_RoundTripsCorrectly()
@@ -2109,7 +2111,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolRemovedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that LiquidityPoolRemovedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithLiquidityPoolRemovedEffect_RoundTripsCorrectly()
@@ -2135,7 +2137,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolRevokedEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that LiquidityPoolRevokedEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithLiquidityPoolRevokedEffect_RoundTripsCorrectly()
@@ -2181,7 +2183,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolTradeEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that LiquidityPoolTradeEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithLiquidityPoolTradeEffect_RoundTripsCorrectly()
@@ -2213,7 +2215,7 @@ public class EffectDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that LiquidityPoolWithdrewEffect can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that LiquidityPoolWithdrewEffect can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithLiquidityPoolWithdrewEffect_RoundTripsCorrectly()

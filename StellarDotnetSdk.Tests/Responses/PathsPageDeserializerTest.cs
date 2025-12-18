@@ -8,13 +8,13 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing paths page responses from JSON.
+///     Unit tests for deserializing paths page responses from JSON.
 /// </summary>
 [TestClass]
 public class PathsPageDeserializerTest
 {
     /// <summary>
-    /// Verifies that Page&lt;PathResponse&gt; can be deserialized from JSON correctly.
+    ///     Verifies that Page&lt;PathResponse&gt; can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPathsPageJson_ReturnsDeserializedPathsPage()
@@ -32,7 +32,7 @@ public class PathsPageDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that Page&lt;PathResponse&gt; can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that Page&lt;PathResponse&gt; can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithPathsPage_RoundTripsCorrectly()

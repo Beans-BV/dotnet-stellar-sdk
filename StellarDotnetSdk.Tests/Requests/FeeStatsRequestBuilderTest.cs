@@ -5,13 +5,13 @@ using StellarDotnetSdk.Tests.Responses;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="FeeStatsRequestBuilder"/> class.
+///     Unit tests for <see cref="FeeStatsRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class FeeStatsRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that FeeStatsRequestBuilder.BuildUri correctly constructs URI for fee stats endpoint.
+    ///     Verifies that FeeStatsRequestBuilder.BuildUri correctly constructs URI for fee stats endpoint.
     /// </summary>
     [TestMethod]
     public void BuildUri_WithDefaultParameters_BuildsCorrectUri()
@@ -27,7 +27,7 @@ public class FeeStatsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that FeeStatsRequestBuilder.Execute correctly retrieves and deserializes fee stats data.
+    ///     Verifies that FeeStatsRequestBuilder.Execute correctly retrieves and deserializes fee stats data.
     /// </summary>
     [TestMethod]
     public async Task Execute_WithDefaultParameters_ReturnsDeserializedFeeStats()

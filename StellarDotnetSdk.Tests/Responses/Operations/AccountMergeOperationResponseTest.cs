@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="AccountMergeOperationResponse"/> class.
+///     Unit tests for <see cref="AccountMergeOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class AccountMergeOperationResponseTest
 {
     /// <summary>
-    /// Verifies that AccountMergeOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that AccountMergeOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountMergeOperationJson_ReturnsDeserializedOperation()
@@ -31,7 +31,7 @@ public class AccountMergeOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that AccountMergeOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountMergeOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountMergeOperation_RoundTripsCorrectly()
@@ -64,7 +64,7 @@ public class AccountMergeOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that AccountMergeOperationResponse with muxed accounts can be deserialized from JSON correctly.
+    ///     Verifies that AccountMergeOperationResponse with muxed accounts can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountMergeOperationMuxedJson_ReturnsDeserializedOperation()
@@ -82,7 +82,8 @@ public class AccountMergeOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that AccountMergeOperationResponse with muxed accounts can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountMergeOperationResponse with muxed accounts can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountMergeOperationMuxed_RoundTripsCorrectly()

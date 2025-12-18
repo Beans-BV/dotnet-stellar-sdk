@@ -11,13 +11,13 @@ using MuxedAccount = StellarDotnetSdk.Xdr.MuxedAccount;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing account responses from JSON.
+///     Unit tests for deserializing account responses from JSON.
 /// </summary>
 [TestClass]
 public class AccountDeserializerTest
 {
     /// <summary>
-    /// Verifies that AccountResponse can be deserialized from JSON correctly.
+    ///     Verifies that AccountResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithAccountResponseJson_ReturnsDeserializedAccount()
@@ -35,7 +35,7 @@ public class AccountDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that Account throws exception when accessing KeyPair with unknown account ID type.
+    ///     Verifies that Account throws exception when accessing KeyPair with unknown account ID type.
     /// </summary>
     [TestMethod]
     public void KeyPair_WithUnknownAccountIdType_ThrowsException()
@@ -49,7 +49,7 @@ public class AccountDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that AccountResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that AccountResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithAccountResponse_RoundTripsCorrectly()

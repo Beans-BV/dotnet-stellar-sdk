@@ -8,13 +8,13 @@ using StellarDotnetSdk.Tests.Responses;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="LedgersRequestBuilder"/> class.
+///     Unit tests for <see cref="LedgersRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class LedgersRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that LedgersRequestBuilder.BuildUri correctly constructs URI with limit and order parameters.
+    ///     Verifies that LedgersRequestBuilder.BuildUri correctly constructs URI with limit and order parameters.
     /// </summary>
     [TestMethod]
     public void BuildUri_WithLimitAndOrder_BuildsCorrectUri()
@@ -33,7 +33,7 @@ public class LedgersRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that LedgersRequestBuilder.Execute correctly retrieves and deserializes ledger page data.
+    ///     Verifies that LedgersRequestBuilder.Execute correctly retrieves and deserializes ledger page data.
     /// </summary>
     [TestMethod]
     public async Task Execute_WithDefaultParameters_ReturnsDeserializedLedgerPage()
@@ -50,7 +50,7 @@ public class LedgersRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that LedgersRequestBuilder.Stream correctly streams and deserializes ledger events.
+    ///     Verifies that LedgersRequestBuilder.Stream correctly streams and deserializes ledger events.
     /// </summary>
     [TestMethod]
     public async Task Stream_WithValidJson_StreamsLedgerEvents()

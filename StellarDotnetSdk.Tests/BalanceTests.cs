@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using FakeItEasy;
 using FluentAssertions;
 using FsCheck;
@@ -10,7 +10,7 @@ using StellarDotnetSdk.Tests.Generators;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="Balance"/> class.
+///     Unit tests for <see cref="Balance" /> class.
 /// </summary>
 [TestFixture]
 public class BalanceTests
@@ -18,7 +18,7 @@ public class BalanceTests
     private Balance? Sut { get; set; }
 
     /// <summary>
-    /// Verifies that Balance constructor creates instance with correct properties for liquidity pool shares.
+    ///     Verifies that Balance constructor creates instance with correct properties for liquidity pool shares.
     /// </summary>
     /// <param name="expectedIsAuthorized">Expected value for IsAuthorized property.</param>
     /// <param name="expectedIsAuthorizedToMaintainLiabilities">Expected value for IsAuthorizedToMaintainLiabilities property.</param>
@@ -80,7 +80,7 @@ public class BalanceTests
     }
 
     /// <summary>
-    /// Verifies that Balance constructor creates instance with correct properties for credit alphanum assets.
+    ///     Verifies that Balance constructor creates instance with correct properties for credit alphanum assets.
     /// </summary>
     /// <param name="expectedAssetCode">Expected asset code.</param>
     /// <param name="expectedIsAuthorized">Expected value for IsAuthorized property.</param>
@@ -142,7 +142,7 @@ public class BalanceTests
     }
 
     /// <summary>
-    /// Verifies that Balance.Asset property returns AssetTypeCreditAlphaNum4 when AssetType is set to credit alphanum4.
+    ///     Verifies that Balance.Asset property returns AssetTypeCreditAlphaNum4 when AssetType is set to credit alphanum4.
     /// </summary>
     /// <param name="assetCode">The asset code to test.</param>
     [FsCheck.NUnit.Property(Arbitrary = [typeof(AlphaNum4Generator)])]
@@ -168,7 +168,7 @@ public class BalanceTests
     }
 
     /// <summary>
-    /// Verifies that Balance.Asset property returns AssetTypeCreditAlphaNum12 when AssetType is set to credit alphanum12.
+    ///     Verifies that Balance.Asset property returns AssetTypeCreditAlphaNum12 when AssetType is set to credit alphanum12.
     /// </summary>
     /// <param name="assetCode">The asset code to test.</param>
     [FsCheck.NUnit.Property(Arbitrary = [typeof(AlphaNum12Generator)])]
@@ -194,7 +194,7 @@ public class BalanceTests
     }
 
     /// <summary>
-    /// Verifies that Balance.Asset property returns AssetTypeNative when AssetType is set to native.
+    ///     Verifies that Balance.Asset property returns AssetTypeNative when AssetType is set to native.
     /// </summary>
     [Test]
     public void Asset_Native()
@@ -222,7 +222,7 @@ public class BalanceTests
     }
 
     /// <summary>
-    /// Verifies that Balance.Asset property returns null when AssetType is set to liquidity pool shares.
+    ///     Verifies that Balance.Asset property returns null when AssetType is set to liquidity pool shares.
     /// </summary>
     [Test]
     public void Asset_LiquidityPool()

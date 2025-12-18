@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Fake HTTP message handler for testing streamable requests. Queues responses that are returned in order.
+///     Fake HTTP message handler for testing streamable requests. Queues responses that are returned in order.
 /// </summary>
 public class FakeStreamableHttpMessageHandler : HttpMessageHandler
 {
@@ -15,7 +15,7 @@ public class FakeStreamableHttpMessageHandler : HttpMessageHandler
     private readonly Queue<FakeResponse> _responses = new();
 
     /// <summary>
-    /// Sends an HTTP request and returns a queued fake response.
+    ///     Sends an HTTP request and returns a queued fake response.
     /// </summary>
     /// <param name="request">The HTTP request message.</param>
     /// <param name="cancellationToken">Cancellation token for the operation.</param>
@@ -36,7 +36,7 @@ public class FakeStreamableHttpMessageHandler : HttpMessageHandler
     }
 
     /// <summary>
-    /// Queues a fake response to be returned on the next request.
+    ///     Queues a fake response to be returned on the next request.
     /// </summary>
     /// <param name="response">The fake response to queue.</param>
     public void QueueResponse(FakeResponse response)

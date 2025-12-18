@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for <see cref="SubmitTransactionResponse"/> class.
+///     Unit tests for <see cref="SubmitTransactionResponse" /> class.
 /// </summary>
 [TestClass]
 public class SubmitTransactionResponseTest
 {
     /// <summary>
-    /// Verifies that SubmitTransactionResponse with transaction failure can be deserialized from JSON correctly.
+    ///     Verifies that SubmitTransactionResponse with transaction failure can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithTransactionFailureJson_ReturnsDeserializedFailureResponse()
@@ -40,7 +40,7 @@ public class SubmitTransactionResponseTest
     }
 
     /// <summary>
-    /// Verifies that SubmitTransactionResponse with operation failure can be deserialized from JSON correctly.
+    ///     Verifies that SubmitTransactionResponse with operation failure can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithOperationFailureJson_ReturnsDeserializedFailureResponse()
@@ -71,7 +71,7 @@ public class SubmitTransactionResponseTest
     }
 
     /// <summary>
-    /// Verifies that SubmitTransactionResponse with success can be deserialized from JSON correctly.
+    ///     Verifies that SubmitTransactionResponse with success can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithSuccessJson_ReturnsDeserializedSuccessResponse()
@@ -100,7 +100,7 @@ public class SubmitTransactionResponseTest
     }
 
     /// <summary>
-    /// Verifies that SubmitTransactionResponse without offer ID can be deserialized from JSON correctly.
+    ///     Verifies that SubmitTransactionResponse without offer ID can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithNoOfferIdJson_ReturnsResponseWithoutOfferId()

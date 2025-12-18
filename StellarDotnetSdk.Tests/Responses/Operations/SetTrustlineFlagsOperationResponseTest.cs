@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="SetTrustlineFlagsOperationResponse"/> class.
+///     Unit tests for <see cref="SetTrustlineFlagsOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class SetTrustlineFlagsOperationResponseTest
 {
     /// <summary>
-    /// Verifies that SetTrustlineFlagsOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that SetTrustlineFlagsOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithSetTrustlineFlagsOperation_RoundTripsCorrectly()

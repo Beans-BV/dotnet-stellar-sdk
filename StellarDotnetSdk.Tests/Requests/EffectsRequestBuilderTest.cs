@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Requests;
@@ -8,13 +8,13 @@ using StellarDotnetSdk.Tests.Responses.Effects;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="EffectsRequestBuilder"/> class.
+///     Unit tests for <see cref="EffectsRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class EffectsRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that EffectsRequestBuilder.BuildUri correctly constructs URI with limit and order parameters.
+    ///     Verifies that EffectsRequestBuilder.BuildUri correctly constructs URI with limit and order parameters.
     /// </summary>
     [TestMethod]
     public void BuildUri_WithLimitAndOrder_BuildsCorrectUri()
@@ -33,7 +33,7 @@ public class EffectsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that EffectsRequestBuilder.ForAccount correctly constructs URI for account effects.
+    ///     Verifies that EffectsRequestBuilder.ForAccount correctly constructs URI for account effects.
     /// </summary>
     [TestMethod]
     public void ForAccount_WithValidAccountId_BuildsCorrectUri()
@@ -55,7 +55,7 @@ public class EffectsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that EffectsRequestBuilder.ForLedger correctly constructs URI for ledger effects.
+    ///     Verifies that EffectsRequestBuilder.ForLedger correctly constructs URI for ledger effects.
     /// </summary>
     [TestMethod]
     public void ForLedger_WithValidLedgerId_BuildsCorrectUri()
@@ -76,7 +76,7 @@ public class EffectsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that EffectsRequestBuilder.ForTransaction correctly constructs URI for transaction effects.
+    ///     Verifies that EffectsRequestBuilder.ForTransaction correctly constructs URI for transaction effects.
     /// </summary>
     [TestMethod]
     public void ForTransaction_WithValidTransactionHash_BuildsCorrectUri()
@@ -96,7 +96,7 @@ public class EffectsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that EffectsRequestBuilder.ForOperation correctly constructs URI for operation effects with cursor.
+    ///     Verifies that EffectsRequestBuilder.ForOperation correctly constructs URI for operation effects with cursor.
     /// </summary>
     [TestMethod]
     public void ForOperation_WithValidOperationIdAndCursor_BuildsCorrectUri()
@@ -116,7 +116,7 @@ public class EffectsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that EffectsRequestBuilder.Execute correctly retrieves and deserializes effects page data.
+    ///     Verifies that EffectsRequestBuilder.Execute correctly retrieves and deserializes effects page data.
     /// </summary>
     [TestMethod]
     public async Task Execute_ForAccount_ReturnsDeserializedEffectsPage()
@@ -134,7 +134,7 @@ public class EffectsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that EffectsRequestBuilder.Stream correctly streams and deserializes effect events.
+    ///     Verifies that EffectsRequestBuilder.Stream correctly streams and deserializes effect events.
     /// </summary>
     [TestMethod]
     public async Task Stream_WithValidJson_StreamsEffectEvents()
@@ -149,7 +149,7 @@ public class EffectsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that EffectsRequestBuilder.Stream correctly sets cursor and event ID when streaming with cursor.
+    ///     Verifies that EffectsRequestBuilder.Stream correctly sets cursor and event ID when streaming with cursor.
     /// </summary>
     [TestMethod]
     public async Task Stream_WithCursor_SetsLastEventIdAndCursorInUri()

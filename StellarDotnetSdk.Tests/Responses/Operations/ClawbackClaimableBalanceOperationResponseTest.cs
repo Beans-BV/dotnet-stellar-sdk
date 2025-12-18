@@ -7,13 +7,13 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="ClawbackClaimableBalanceOperationResponse"/> class.
+///     Unit tests for <see cref="ClawbackClaimableBalanceOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class ClawbackClaimableBalanceOperationResponseTest
 {
     /// <summary>
-    /// Verifies that ClawbackClaimableBalanceOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that ClawbackClaimableBalanceOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithClawbackClaimableBalanceOperation_RoundTripsCorrectly()

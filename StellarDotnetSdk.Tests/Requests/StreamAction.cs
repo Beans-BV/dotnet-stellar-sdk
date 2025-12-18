@@ -3,7 +3,7 @@ using System;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Represents an action to perform on a streaming response for testing purposes.
+///     Represents an action to perform on a streaming response for testing purposes.
 /// </summary>
 public class StreamAction
 {
@@ -17,7 +17,7 @@ public class StreamAction
     }
 
     /// <summary>
-    /// Determines whether the stream should be closed.
+    ///     Determines whether the stream should be closed.
     /// </summary>
     /// <returns>True if the stream should be closed; otherwise, false.</returns>
     public bool ShouldQuit()
@@ -26,7 +26,7 @@ public class StreamAction
     }
 
     /// <summary>
-    /// Creates a stream action that writes the specified content immediately.
+    ///     Creates a stream action that writes the specified content immediately.
     /// </summary>
     /// <param name="content">The content to write to the stream.</param>
     /// <returns>A stream action configured to write the content.</returns>
@@ -36,7 +36,7 @@ public class StreamAction
     }
 
     /// <summary>
-    /// Creates a stream action that closes the stream.
+    ///     Creates a stream action that closes the stream.
     /// </summary>
     /// <returns>A stream action configured to close the stream.</returns>
     public static StreamAction CloseStream()
@@ -45,7 +45,7 @@ public class StreamAction
     }
 
     /// <summary>
-    /// Creates a new stream action with the same content but with an additional delay.
+    ///     Creates a new stream action with the same content but with an additional delay.
     /// </summary>
     /// <param name="delay">The delay to add before executing the action.</param>
     /// <returns>A new stream action with the specified delay.</returns>

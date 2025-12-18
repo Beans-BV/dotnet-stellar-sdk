@@ -9,13 +9,13 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.Tests.Responses;
 
 /// <summary>
-/// Unit tests for deserializing transaction responses from JSON.
+///     Unit tests for deserializing transaction responses from JSON.
 /// </summary>
 [TestClass]
 public class TransactionDeserializerTest
 {
     /// <summary>
-    /// Verifies that TransactionResponse can be deserialized from JSON correctly.
+    ///     Verifies that TransactionResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithTransactionJson_ReturnsDeserializedTransaction()
@@ -33,7 +33,7 @@ public class TransactionDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TransactionResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that TransactionResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithTransaction_RoundTripsCorrectly()
@@ -185,7 +185,7 @@ public class TransactionDeserializerTest
 
 
     /// <summary>
-    /// Verifies that TransactionResponse with text memo can be deserialized from JSON correctly.
+    ///     Verifies that TransactionResponse with text memo can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithTextMemoJson_ReturnsTransactionWithTextMemo()
@@ -208,7 +208,7 @@ public class TransactionDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TransactionResponse with fee bump transaction can be deserialized from JSON correctly.
+    ///     Verifies that TransactionResponse with fee bump transaction can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithFeeBumpTransactionJson_ReturnsTransactionWithFeeBump()
@@ -237,7 +237,7 @@ public class TransactionDeserializerTest
     }
 
     /// <summary>
-    /// Verifies that TransactionResponse with muxed account can be deserialized from JSON correctly.
+    ///     Verifies that TransactionResponse with muxed account can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithMuxedAccountJson_ReturnsTransactionWithMuxedAccount()

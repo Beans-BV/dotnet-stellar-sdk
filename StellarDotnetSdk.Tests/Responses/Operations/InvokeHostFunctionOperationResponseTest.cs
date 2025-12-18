@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -10,13 +10,13 @@ using MuxedIdType =
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="InvokeHostFunctionOperationResponse"/> class.
+///     Unit tests for <see cref="InvokeHostFunctionOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class InvokeHostFunctionOperationResponseTest
 {
     /// <summary>
-    /// Verifies that InvokeHostFunctionOperationResponse can be deserialized from JSON correctly.
+    ///     Verifies that InvokeHostFunctionOperationResponse can be deserialized from JSON correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithInvokeHostFunctionOperationJson_ReturnsDeserializedOperation()
@@ -34,7 +34,7 @@ public class InvokeHostFunctionOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that InvokeHostFunctionOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that InvokeHostFunctionOperationResponse can be serialized and deserialized correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithInvokeHostFunctionOperation_RoundTripsCorrectly()

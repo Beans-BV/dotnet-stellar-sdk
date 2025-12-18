@@ -7,13 +7,14 @@ using StellarDotnetSdk.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
 /// <summary>
-/// Unit tests for <see cref="EndSponsoringFutureReservesOperationResponse"/> class.
+///     Unit tests for <see cref="EndSponsoringFutureReservesOperationResponse" /> class.
 /// </summary>
 [TestClass]
 public class EndSponsoringFutureReservesOperationResponseTest
 {
     /// <summary>
-    /// Verifies that EndSponsoringFutureReservesOperationResponse can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that EndSponsoringFutureReservesOperationResponse can be serialized and deserialized correctly
+    ///     (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithEndSponsoringFutureReservesOperation_RoundTripsCorrectly()
@@ -44,7 +45,8 @@ public class EndSponsoringFutureReservesOperationResponseTest
     }
 
     /// <summary>
-    /// Verifies that EndSponsoringFutureReservesOperationResponse with muxed account can be serialized and deserialized correctly (round-trip).
+    ///     Verifies that EndSponsoringFutureReservesOperationResponse with muxed account can be serialized and deserialized
+    ///     correctly (round-trip).
     /// </summary>
     [TestMethod]
     public void SerializeDeserialize_WithEndSponsoringFutureReservesOperationMuxed_RoundTripsCorrectly()

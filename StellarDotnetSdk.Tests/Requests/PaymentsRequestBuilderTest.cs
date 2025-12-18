@@ -8,13 +8,14 @@ using StellarDotnetSdk.Tests.Responses.Operations;
 namespace StellarDotnetSdk.Tests.Requests;
 
 /// <summary>
-/// Unit tests for <see cref="PaymentsRequestBuilder"/> class.
+///     Unit tests for <see cref="PaymentsRequestBuilder" /> class.
 /// </summary>
 [TestClass]
 public class PaymentsRequestBuilderTest
 {
     /// <summary>
-    /// Verifies that PaymentsRequestBuilder.BuildUri correctly constructs URI with include transaction, limit, and order parameters.
+    ///     Verifies that PaymentsRequestBuilder.BuildUri correctly constructs URI with include transaction, limit, and order
+    ///     parameters.
     /// </summary>
     [TestMethod]
     public void BuildUri_WithIncludeTransactionLimitAndOrder_BuildsCorrectUri()
@@ -35,7 +36,7 @@ public class PaymentsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that PaymentsRequestBuilder.ForAccount correctly constructs URI for account payments.
+    ///     Verifies that PaymentsRequestBuilder.ForAccount correctly constructs URI for account payments.
     /// </summary>
     [TestMethod]
     public void ForAccount_WithValidAccountId_BuildsCorrectUri()
@@ -58,7 +59,7 @@ public class PaymentsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that PaymentsRequestBuilder.ForLedger correctly constructs URI for ledger payments.
+    ///     Verifies that PaymentsRequestBuilder.ForLedger correctly constructs URI for ledger payments.
     /// </summary>
     [TestMethod]
     public void ForLedger_WithValidLedgerId_BuildsCorrectUri()
@@ -81,7 +82,7 @@ public class PaymentsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that PaymentsRequestBuilder.ForTransaction correctly constructs URI for transaction payments.
+    ///     Verifies that PaymentsRequestBuilder.ForTransaction correctly constructs URI for transaction payments.
     /// </summary>
     [TestMethod]
     public void ForTransaction_WithValidTransactionHash_BuildsCorrectUri()
@@ -101,7 +102,7 @@ public class PaymentsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that PaymentsRequestBuilder.Execute correctly retrieves and deserializes payment page data.
+    ///     Verifies that PaymentsRequestBuilder.Execute correctly retrieves and deserializes payment page data.
     /// </summary>
     [TestMethod]
     public async Task Execute_ForAccount_ReturnsDeserializedOperationPage()
@@ -119,7 +120,7 @@ public class PaymentsRequestBuilderTest
     }
 
     /// <summary>
-    /// Verifies that PaymentsRequestBuilder.Stream correctly streams and deserializes payment events.
+    ///     Verifies that PaymentsRequestBuilder.Stream correctly streams and deserializes payment events.
     /// </summary>
     [TestMethod]
     public async Task Stream_WithValidJson_StreamsPaymentEvents()

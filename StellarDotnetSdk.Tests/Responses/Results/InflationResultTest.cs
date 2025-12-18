@@ -4,13 +4,13 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for inflation result types.
+///     Unit tests for inflation result types.
 /// </summary>
 [TestClass]
 public class InflationResultTest
 {
     /// <summary>
-    /// Verifies that InflationSuccess result can be deserialized correctly and contains payouts.
+    ///     Verifies that InflationSuccess result can be deserialized correctly and contains payouts.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithInflationSuccessXdr_ReturnsInflationSuccessWithPayouts()
@@ -32,7 +32,7 @@ public class InflationResultTest
     }
 
     /// <summary>
-    /// Verifies that InflationNotTime result can be deserialized correctly.
+    ///     Verifies that InflationNotTime result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithInflationNotTimeXdr_ReturnsInflationNotTime()

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -7,13 +7,13 @@ using StellarDotnetSdk.Accounts;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-/// Unit tests for <see cref="StrKey"/> class.
+///     Unit tests for <see cref="StrKey" /> class.
 /// </summary>
 [TestClass]
 public class StrKeyTest
 {
     /// <summary>
-    /// Verifies that DecodeEd25519SecretSeed and EncodeEd25519SecretSeed round-trip correctly.
+    ///     Verifies that DecodeEd25519SecretSeed and EncodeEd25519SecretSeed round-trip correctly.
     /// </summary>
     [TestMethod]
     [DataRow("SCCSHY6F77I3ZQSYFB34ILSUBDOUACEUBXTV5OJ6JW5OGQPDGAYRRF5L")]
@@ -33,7 +33,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that DecodeEd25519PublicKey and EncodeEd25519PublicKey round-trip correctly.
+    ///     Verifies that DecodeEd25519PublicKey and EncodeEd25519PublicKey round-trip correctly.
     /// </summary>
     [TestMethod]
     [DataRow("GC5ZDZL56FJT75QOWB4OH7KBPBFBBYIJCDNTUNTB3QRFV4Z2IVUE6ESM")]
@@ -53,7 +53,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that DecodeContractId and EncodeContractId round-trip correctly.
+    ///     Verifies that DecodeContractId and EncodeContractId round-trip correctly.
     /// </summary>
     [TestMethod]
     [DataRow("CCADCR3WTIFPZM6TV33WE7FO5JB2DZMWQ5IPRATYMXPYQSMCKWSAEMJD")]
@@ -73,7 +73,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that DecodeMed25519PublicKey and EncodeMed25519PublicKey round-trip correctly.
+    ///     Verifies that DecodeMed25519PublicKey and EncodeMed25519PublicKey round-trip correctly.
     /// </summary>
     [TestMethod]
     [DataRow("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ")]
@@ -91,7 +91,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that DecodeCheck throws ArgumentException when version byte does not match the address.
+    ///     Verifies that DecodeCheck throws ArgumentException when version byte does not match the address.
     /// </summary>
     [TestMethod]
     public void DecodeCheck_WithInvalidVersionByte_ThrowsArgumentException()
@@ -109,7 +109,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that DecodeEd25519SecretSeed throws ArgumentException when seed is invalid.
+    ///     Verifies that DecodeEd25519SecretSeed throws ArgumentException when seed is invalid.
     /// </summary>
     [TestMethod]
     [DataRow("SAA6NXOBOXP3RXGAXBW6PGFI5BPK4ODVAWITS4VDOMN5C2M4B66ZML")]
@@ -123,7 +123,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that DecodeStellarMuxedAccount and EncodeStellarMuxedAccount round-trip correctly.
+    ///     Verifies that DecodeStellarMuxedAccount and EncodeStellarMuxedAccount round-trip correctly.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -148,7 +148,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that DecodeStellarMuxedAccount and EncodeStellarMuxedAccount round-trip correctly with large ID.
+    ///     Verifies that DecodeStellarMuxedAccount and EncodeStellarMuxedAccount round-trip correctly with large ID.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -173,7 +173,7 @@ public class StrKeyTest
 
 
     /// <summary>
-    /// Verifies that EncodeLiquidityPoolId and DecodeLiquidityPoolId round-trip correctly.
+    ///     Verifies that EncodeLiquidityPoolId and DecodeLiquidityPoolId round-trip correctly.
     /// </summary>
     [TestMethod]
     [DataRow("0000a8198b5e25994c1ca5b0556faeb27325ac746296944144e0a7406d501e8a")]
@@ -193,7 +193,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that DecodePreAuthTx and EncodePreAuthTx round-trip correctly.
+    ///     Verifies that DecodePreAuthTx and EncodePreAuthTx round-trip correctly.
     /// </summary>
     [TestMethod]
     [DataRow("TB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZM5K")]
@@ -211,7 +211,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that DecodeSha256Hash and EncodeSha256Hash round-trip correctly.
+    ///     Verifies that DecodeSha256Hash and EncodeSha256Hash round-trip correctly.
     /// </summary>
     [TestMethod]
     [DataRow("XB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLYIYT")]
@@ -229,7 +229,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that DecodeSignedPayload and EncodeSignedPayload round-trip correctly.
+    ///     Verifies that DecodeSignedPayload and EncodeSignedPayload round-trip correctly.
     /// </summary>
     [TestMethod]
     [DataRow("PBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5SAAAAAE5L4J5XWKV5GPZBUAAAAAYQ4")]
@@ -247,7 +247,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that EncodeClaimableBalanceId and DecodeClaimableBalanceId round-trip correctly.
+    ///     Verifies that EncodeClaimableBalanceId and DecodeClaimableBalanceId round-trip correctly.
     /// </summary>
     [TestMethod]
     [DataRow("003F0C34BF93AD0D9971D04CCC90F705511C838AAD9734A4A2FB0D7A03FC7FE89A")]
@@ -268,7 +268,7 @@ public class StrKeyTest
 
 
     /// <summary>
-    /// Verifies that DecodeClaimableBalanceId and EncodeClaimableBalanceId round-trip correctly.
+    ///     Verifies that DecodeClaimableBalanceId and EncodeClaimableBalanceId round-trip correctly.
     /// </summary>
     [TestMethod]
     [DataRow("BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU")]
@@ -288,7 +288,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that IsValidLiquidityPoolId returns false for invalid liquidity pool IDs.
+    ///     Verifies that IsValidLiquidityPoolId returns false for invalid liquidity pool IDs.
     /// </summary>
     [TestMethod]
     [DataRow("0fc9dec967732e70d07d1006eca5389d32121c197cad633b60c227e5cde8b861")]
@@ -305,7 +305,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that IsValidLiquidityPoolId returns true for valid liquidity pool IDs.
+    ///     Verifies that IsValidLiquidityPoolId returns true for valid liquidity pool IDs.
     /// </summary>
     [TestMethod]
     [DataRow("LAARAHN7HK7EW57IB6FK5SOZIXXK56GKBOMSVJQTMRHOTABLMA2A5VHB")]
@@ -321,7 +321,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that IsValidClaimableBalanceId returns false for invalid claimable balance IDs.
+    ///     Verifies that IsValidClaimableBalanceId returns false for invalid claimable balance IDs.
     /// </summary>
     [TestMethod]
     [DataRow("BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4T")]
@@ -339,7 +339,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that IsValidClaimableBalanceId returns true for valid claimable balance IDs.
+    ///     Verifies that IsValidClaimableBalanceId returns true for valid claimable balance IDs.
     /// </summary>
     [TestMethod]
     [DataRow("BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU")]
@@ -354,7 +354,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that IsValidEd25519PublicKey returns true for valid Ed25519 public keys.
+    ///     Verifies that IsValidEd25519PublicKey returns true for valid Ed25519 public keys.
     /// </summary>
     [TestMethod]
     [DataRow("GCZHXL5HXQX5ABDM26LHYRCQZ5OJFHLOPLZX47WEBP3V2PF5AVFK2A5D")]
@@ -370,7 +370,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that IsValidEd25519PublicKey returns false for invalid Ed25519 public keys.
+    ///     Verifies that IsValidEd25519PublicKey returns false for invalid Ed25519 public keys.
     /// </summary>
     [TestMethod]
     [DataRow("SAA6NXOBOXP3RXGAXBW6PGFI5BPK4ODVAWITS4VDOMN5C2M4B66ZML", DisplayName = "Secret Key")]
@@ -403,7 +403,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that IsValidMed25519PublicKey returns true for valid muxed Ed25519 public keys.
+    ///     Verifies that IsValidMed25519PublicKey returns true for valid muxed Ed25519 public keys.
     /// </summary>
     [TestMethod]
     [DataRow("MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ")]
@@ -418,7 +418,7 @@ public class StrKeyTest
 
 
     /// <summary>
-    /// Verifies that IsValidContractId returns false for invalid contract IDs.
+    ///     Verifies that IsValidContractId returns false for invalid contract IDs.
     /// </summary>
     [TestMethod]
     [DataRow("BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4T")]
@@ -436,7 +436,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that IsValidContractId returns true for valid contract IDs.
+    ///     Verifies that IsValidContractId returns true for valid contract IDs.
     /// </summary>
     [TestMethod]
     [DataRow("CCVEAWF4737OANGCBTM6ARENVOTKJQILJH4ZUJBANGZBPIUMNGYFGAEB")]
@@ -452,7 +452,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that IsValidMuxedAccount returns false for invalid muxed account IDs.
+    ///     Verifies that IsValidMuxedAccount returns false for invalid muxed account IDs.
     /// </summary>
     [TestMethod]
     [DataRow("MAAAAAAAAAAAAAB7BQ2L7E5NBWMXDUCMZSIPOBKRDSBYVLMXGSSKF6YNPIB7Y77ITIADJPA",
@@ -470,7 +470,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that IsValidEd25519SecretSeed returns true for valid Ed25519 secret seeds.
+    ///     Verifies that IsValidEd25519SecretSeed returns true for valid Ed25519 secret seeds.
     /// </summary>
     [TestMethod]
     [DataRow("SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE")]
@@ -486,7 +486,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that IsValidEd25519SecretSeed returns false for invalid Ed25519 secret seeds.
+    ///     Verifies that IsValidEd25519SecretSeed returns false for invalid Ed25519 secret seeds.
     /// </summary>
     [TestMethod]
     [DataRow("GCZHXL5HXQX5ABDM26LHYRCQZ5OJFHLOPLZX47WEBP3V2PF5AVFK2A5D")]
@@ -501,7 +501,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that EncodeSignedPayload correctly encodes signed payload signers with various payload sizes.
+    ///     Verifies that EncodeSignedPayload correctly encodes signed payload signers with various payload sizes.
     /// </summary>
     [TestMethod]
     public void EncodeSignedPayload_WithValidSignedPayloadSigner_ReturnsCorrectEncodedValue()
@@ -530,7 +530,7 @@ public class StrKeyTest
     }
 
     /// <summary>
-    /// Verifies that EncodeCheck and DecodeCheck round-trip correctly for SIGNED_PAYLOAD version byte.
+    ///     Verifies that EncodeCheck and DecodeCheck round-trip correctly for SIGNED_PAYLOAD version byte.
     /// </summary>
     [TestMethod]
     public void EncodeDecodeCheck_WithSignedPayloadVersionByte_RoundTripsCorrectly()

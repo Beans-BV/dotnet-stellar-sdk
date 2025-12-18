@@ -4,13 +4,13 @@ using StellarDotnetSdk.Responses.Results;
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
 /// <summary>
-/// Unit tests for payment result types.
+///     Unit tests for payment result types.
 /// </summary>
 [TestClass]
 public class PaymentResultTest
 {
     /// <summary>
-    /// Verifies that PaymentSuccess result can be deserialized correctly.
+    ///     Verifies that PaymentSuccess result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPaymentSuccessXdr_ReturnsPaymentSuccess()
@@ -23,7 +23,7 @@ public class PaymentResultTest
     }
 
     /// <summary>
-    /// Verifies that PaymentMalformed result can be deserialized correctly.
+    ///     Verifies that PaymentMalformed result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPaymentMalformedXdr_ReturnsPaymentMalformed()
@@ -36,7 +36,7 @@ public class PaymentResultTest
     }
 
     /// <summary>
-    /// Verifies that PaymentUnderfunded result can be deserialized correctly.
+    ///     Verifies that PaymentUnderfunded result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPaymentUnderfundedXdr_ReturnsPaymentUnderfunded()
@@ -49,7 +49,7 @@ public class PaymentResultTest
     }
 
     /// <summary>
-    /// Verifies that PaymentSrcNoTrust result can be deserialized correctly.
+    ///     Verifies that PaymentSrcNoTrust result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPaymentSrcNoTrustXdr_ReturnsPaymentSrcNoTrust()
@@ -62,7 +62,7 @@ public class PaymentResultTest
     }
 
     /// <summary>
-    /// Verifies that PaymentSrcNotAuthorized result can be deserialized correctly.
+    ///     Verifies that PaymentSrcNotAuthorized result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPaymentSrcNotAuthorizedXdr_ReturnsPaymentSrcNotAuthorized()
@@ -75,7 +75,7 @@ public class PaymentResultTest
     }
 
     /// <summary>
-    /// Verifies that PaymentNoDestination result can be deserialized correctly.
+    ///     Verifies that PaymentNoDestination result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPaymentNoDestinationXdr_ReturnsPaymentNoDestination()
@@ -88,7 +88,7 @@ public class PaymentResultTest
     }
 
     /// <summary>
-    /// Verifies that PaymentNoTrust result can be deserialized correctly.
+    ///     Verifies that PaymentNoTrust result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPaymentNoTrustXdr_ReturnsPaymentNoTrust()
@@ -101,7 +101,7 @@ public class PaymentResultTest
     }
 
     /// <summary>
-    /// Verifies that PaymentNotAuthorized result can be deserialized correctly.
+    ///     Verifies that PaymentNotAuthorized result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPaymentNotAuthorizedXdr_ReturnsPaymentNotAuthorized()
@@ -114,7 +114,7 @@ public class PaymentResultTest
     }
 
     /// <summary>
-    /// Verifies that PaymentLineFull result can be deserialized correctly.
+    ///     Verifies that PaymentLineFull result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPaymentLineFullXdr_ReturnsPaymentLineFull()
@@ -127,7 +127,7 @@ public class PaymentResultTest
     }
 
     /// <summary>
-    /// Verifies that PaymentNoIssuer result can be deserialized correctly.
+    ///     Verifies that PaymentNoIssuer result can be deserialized correctly.
     /// </summary>
     [TestMethod]
     public void Deserialize_WithPaymentNoIssuerXdr_ReturnsPaymentNoIssuer()
