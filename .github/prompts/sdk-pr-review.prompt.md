@@ -14,7 +14,8 @@ Use the following context to understand our contribution process, expectations, 
 When reviewing a PR in this repo, follow this process:
 
 1. **Summarize the change**
-   - In 3–6 sentences, summarize what the PR is doing in terms of:
+   - Summarize what the PR is doing in terms of:
+     - Replace the `<!-- Copilot: generate the summary here -->` with a concise summary of the PR.
      - Affected areas (Horizon, Soroban, HTTP resilience, XDR, transactions, accounts, assets, etc.).
      - Whether it is likely to be breaking or non-breaking from a consumer’s perspective.
 
