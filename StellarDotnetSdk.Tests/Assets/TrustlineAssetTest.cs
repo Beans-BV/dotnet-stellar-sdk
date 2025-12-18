@@ -11,8 +11,9 @@ namespace StellarDotnetSdk.Tests.Assets;
 public class TrustlineAssetTest
 {
     /// <summary>
-    /// Tests TrustlineAsset creation from canonical form string (format: "CODE:ISSUER").
-    /// Verifies that the factory method correctly parses the canonical form and creates a Wrapper with the appropriate asset.
+    ///     Tests TrustlineAsset creation from canonical form string (format: "CODE:ISSUER").
+    ///     Verifies that the factory method correctly parses the canonical form and creates a Wrapper with the appropriate
+    ///     asset.
     /// </summary>
     [TestMethod]
     public void TestCreateCanonicalName()
@@ -23,8 +24,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests TrustlineAsset creation using the Create(string type, string code, string issuer) overload.
-    /// Verifies that non-native assets are correctly created and wrapped.
+    ///     Tests TrustlineAsset creation using the Create(string type, string code, string issuer) overload.
+    ///     Verifies that non-native assets are correctly created and wrapped.
     /// </summary>
     [TestMethod]
     public void TestCreate()
@@ -35,8 +36,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests TrustlineAsset creation from LiquidityPoolParameters.
-    /// Verifies that liquidity pool share trustline assets can be created and their pool IDs are correctly preserved.
+    ///     Tests TrustlineAsset creation from LiquidityPoolParameters.
+    ///     Verifies that liquidity pool share trustline assets can be created and their pool IDs are correctly preserved.
     /// </summary>
     [TestMethod]
     public void TestCreateParameters()
@@ -55,8 +56,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests TrustlineAsset creation from a LiquidityPoolShareChangeTrustAsset.
-    /// Verifies interoperability between ChangeTrustAsset and TrustlineAsset for liquidity pool shares.
+    ///     Tests TrustlineAsset creation from a LiquidityPoolShareChangeTrustAsset.
+    ///     Verifies interoperability between ChangeTrustAsset and TrustlineAsset for liquidity pool shares.
     /// </summary>
     [TestMethod]
     public void TestCreateShareChangeTrust()
@@ -78,8 +79,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests TrustlineAsset creation from a LiquidityPoolId.
-    /// Verifies that trustline assets can be created directly from a pool ID without requiring full parameters.
+    ///     Tests TrustlineAsset creation from a LiquidityPoolId.
+    ///     Verifies that trustline assets can be created directly from a pool ID without requiring full parameters.
     /// </summary>
     [TestMethod]
     public void TestCreateLiquidityPoolId()
@@ -101,8 +102,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests deserialization of TrustlineAsset from XDR format for CreditAlphaNum4 assets.
-    /// Verifies that XDR data with ASSET_TYPE_CREDIT_ALPHANUM4 discriminant is correctly parsed.
+    ///     Tests deserialization of TrustlineAsset from XDR format for CreditAlphaNum4 assets.
+    ///     Verifies that XDR data with ASSET_TYPE_CREDIT_ALPHANUM4 discriminant is correctly parsed.
     /// </summary>
     [TestMethod]
     public void TestFromXdrAlphaNum4()
@@ -120,8 +121,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests deserialization of TrustlineAsset from XDR format for CreditAlphaNum12 assets.
-    /// Verifies that XDR data with ASSET_TYPE_CREDIT_ALPHANUM12 discriminant is correctly parsed.
+    ///     Tests deserialization of TrustlineAsset from XDR format for CreditAlphaNum12 assets.
+    ///     Verifies that XDR data with ASSET_TYPE_CREDIT_ALPHANUM12 discriminant is correctly parsed.
     /// </summary>
     [TestMethod]
     public void TestFromXdrAlphaNum12()
@@ -139,8 +140,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests deserialization of TrustlineAsset from XDR format for native assets.
-    /// Verifies that XDR data with ASSET_TYPE_NATIVE discriminant correctly creates a native asset wrapper.
+    ///     Tests deserialization of TrustlineAsset from XDR format for native assets.
+    ///     Verifies that XDR data with ASSET_TYPE_NATIVE discriminant correctly creates a native asset wrapper.
     /// </summary>
     [TestMethod]
     public void TestFromXdrNative()
@@ -155,9 +156,9 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests XDR round-trip conversion for LiquidityPoolShareTrustlineAsset.
-    /// Verifies that liquidity pool share trustline assets can be serialized to XDR and deserialized back correctly,
-    /// preserving the pool ID hash.
+    ///     Tests XDR round-trip conversion for LiquidityPoolShareTrustlineAsset.
+    ///     Verifies that liquidity pool share trustline assets can be serialized to XDR and deserialized back correctly,
+    ///     preserving the pool ID hash.
     /// </summary>
     [TestMethod]
     public void TestLiquidityPoolShareTrustlineAsset()
@@ -174,8 +175,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests TrustlineAsset creation from a ChangeTrustAsset.Wrapper.
-    /// Verifies interoperability between ChangeTrustAsset and TrustlineAsset by extracting the underlying asset.
+    ///     Tests TrustlineAsset creation from a ChangeTrustAsset.Wrapper.
+    ///     Verifies interoperability between ChangeTrustAsset and TrustlineAsset by extracting the underlying asset.
     /// </summary>
     [TestMethod]
     public void TestCreateWithChangeTrustAssetWrapper()
@@ -188,8 +189,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests TrustlineAsset creation for non-native assets using CreateNonNativeAsset helper method.
-    /// Verifies that credit assets are correctly created and wrapped.
+    ///     Tests TrustlineAsset creation for non-native assets using CreateNonNativeAsset helper method.
+    ///     Verifies that credit assets are correctly created and wrapped.
     /// </summary>
     [TestMethod]
     public void TestCreateNonNativeAsset()
@@ -200,8 +201,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests that TrustlineAsset.FromXdr throws ArgumentException for unknown asset types in XDR.
-    /// Validates error handling for malformed or future XDR data with unrecognized asset type discriminants.
+    ///     Tests that TrustlineAsset.FromXdr throws ArgumentException for unknown asset types in XDR.
+    ///     Validates error handling for malformed or future XDR data with unrecognized asset type discriminants.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -209,14 +210,14 @@ public class TrustlineAssetTest
     {
         var trustlineAssetXdr = new XDR.TrustLineAsset
         {
-            Discriminant = new XDR.AssetType { InnerValue = (XDR.AssetType.AssetTypeEnum)999 }
+            Discriminant = new XDR.AssetType { InnerValue = (XDR.AssetType.AssetTypeEnum)999 },
         };
         TrustlineAsset.FromXdr(trustlineAssetXdr);
     }
 
     /// <summary>
-    /// Tests that TrustlineAsset.Wrapper.Equals returns false when comparing with null.
-    /// Verifies null safety in the Equals implementation.
+    ///     Tests that TrustlineAsset.Wrapper.Equals returns false when comparing with null.
+    ///     Verifies null safety in the Equals implementation.
     /// </summary>
     [TestMethod]
     public void TestWrapperEquals_Null()
@@ -228,8 +229,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests that TrustlineAsset.Wrapper.Equals returns false when comparing with incompatible types.
-    /// Verifies type safety in the Equals implementation for non-matching object types.
+    ///     Tests that TrustlineAsset.Wrapper.Equals returns false when comparing with incompatible types.
+    ///     Verifies type safety in the Equals implementation for non-matching object types.
     /// </summary>
     [TestMethod]
     public void TestWrapperEquals_TypeMismatch()
@@ -241,8 +242,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests that TrustlineAsset.Wrapper instances with the same underlying asset are considered equal.
-    /// Verifies that Equals implementation correctly compares the wrapped Asset instances.
+    ///     Tests that TrustlineAsset.Wrapper instances with the same underlying asset are considered equal.
+    ///     Verifies that Equals implementation correctly compares the wrapped Asset instances.
     /// </summary>
     [TestMethod]
     public void TestWrapperEquals_SameAsset()
@@ -255,8 +256,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests that TrustlineAsset.Wrapper instances with different underlying assets are not equal.
-    /// Verifies that Equals correctly distinguishes between different assets.
+    ///     Tests that TrustlineAsset.Wrapper instances with different underlying assets are not equal.
+    ///     Verifies that Equals correctly distinguishes between different assets.
     /// </summary>
     [TestMethod]
     public void TestWrapperEquals_DifferentAsset()
@@ -271,8 +272,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests comparison ordering between TrustlineAsset.Wrapper and LiquidityPoolShareTrustlineAsset.
-    /// Verifies that regular asset wrappers sort before pool share assets (returns -1).
+    ///     Tests comparison ordering between TrustlineAsset.Wrapper and LiquidityPoolShareTrustlineAsset.
+    ///     Verifies that regular asset wrappers sort before pool share assets (returns -1).
     /// </summary>
     [TestMethod]
     public void TestWrapperCompareTo_WithPoolShare()
@@ -293,8 +294,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests comparison ordering between two TrustlineAsset.Wrapper instances.
-    /// Verifies that CompareTo delegates to the underlying Asset.CompareTo method.
+    ///     Tests comparison ordering between two TrustlineAsset.Wrapper instances.
+    ///     Verifies that CompareTo delegates to the underlying Asset.CompareTo method.
     /// </summary>
     [TestMethod]
     public void TestWrapperCompareTo_WithWrapper()
@@ -310,8 +311,8 @@ public class TrustlineAssetTest
     }
 
     /// <summary>
-    /// Tests XDR serialization and deserialization round-trip for TrustlineAsset.Wrapper with credit assets.
-    /// Verifies that credit assets can be converted to XDR format and back without data loss.
+    ///     Tests XDR serialization and deserialization round-trip for TrustlineAsset.Wrapper with credit assets.
+    ///     Verifies that credit assets can be converted to XDR format and back without data loss.
     /// </summary>
     [TestMethod]
     public void TestToXdr_Wrapper()
@@ -321,14 +322,14 @@ public class TrustlineAssetTest
         TrustlineAsset trustlineAsset = new TrustlineAsset.Wrapper(asset);
         var xdr = trustlineAsset.ToXdr();
         var roundTripAsset = (TrustlineAsset.Wrapper)TrustlineAsset.FromXdr(xdr);
-        
+
         Assert.IsTrue(roundTripAsset.Asset is AssetTypeCreditAlphaNum);
         Assert.AreEqual($"USD:{keypair.AccountId}", roundTripAsset.Asset.CanonicalName());
     }
 
     /// <summary>
-    /// Tests XDR serialization and deserialization round-trip for TrustlineAsset.Wrapper with native assets.
-    /// Verifies that native assets can be converted to XDR format and back without data loss.
+    ///     Tests XDR serialization and deserialization round-trip for TrustlineAsset.Wrapper with native assets.
+    ///     Verifies that native assets can be converted to XDR format and back without data loss.
     /// </summary>
     [TestMethod]
     public void TestToXdr_Wrapper_Native()
@@ -337,15 +338,15 @@ public class TrustlineAssetTest
         TrustlineAsset trustlineAsset = new TrustlineAsset.Wrapper(nativeAsset);
         var xdr = trustlineAsset.ToXdr();
         var roundTripAsset = (TrustlineAsset.Wrapper)TrustlineAsset.FromXdr(xdr);
-        
+
         Assert.IsTrue(roundTripAsset.Asset is AssetTypeNative);
         Assert.AreEqual("native", roundTripAsset.Asset.CanonicalName());
     }
 
     /// <summary>
-    /// Tests XDR serialization and deserialization round-trip for LiquidityPoolShareTrustlineAsset.
-    /// Verifies that liquidity pool share trustline assets can be converted to XDR format and back,
-    /// preserving the pool ID.
+    ///     Tests XDR serialization and deserialization round-trip for LiquidityPoolShareTrustlineAsset.
+    ///     Verifies that liquidity pool share trustline assets can be converted to XDR format and back,
+    ///     preserving the pool ID.
     /// </summary>
     [TestMethod]
     public void TestToXdr_LiquidityPoolShareTrustlineAsset()
@@ -354,22 +355,22 @@ public class TrustlineAssetTest
         var keypair2 = KeyPair.Random();
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"USD:{keypair2.AccountId}");
-        
+
         var parameters = LiquidityPoolParameters.Create(
             XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
             assetA, assetB, 30);
         TrustlineAsset trustlineAsset = new LiquidityPoolShareTrustlineAsset(parameters);
         var xdr = trustlineAsset.ToXdr();
         var roundTripAsset = (LiquidityPoolShareTrustlineAsset)TrustlineAsset.FromXdr(xdr);
-        
+
         Assert.IsInstanceOfType(roundTripAsset, typeof(LiquidityPoolShareTrustlineAsset));
         Assert.AreEqual(parameters.GetId(), roundTripAsset.Id);
     }
 
     /// <summary>
-    /// Tests that TrustlineAsset.ToXdr throws InvalidOperationException for unknown asset types.
-    /// Verifies the default case in the switch expression that handles unexpected TrustlineAsset implementations.
-    /// This test uses a test-only subclass to exercise the otherwise unreachable exception path.
+    ///     Tests that TrustlineAsset.ToXdr throws InvalidOperationException for unknown asset types.
+    ///     Verifies the default case in the switch expression that handles unexpected TrustlineAsset implementations.
+    ///     This test uses a test-only subclass to exercise the otherwise unreachable exception path.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(InvalidOperationException))]

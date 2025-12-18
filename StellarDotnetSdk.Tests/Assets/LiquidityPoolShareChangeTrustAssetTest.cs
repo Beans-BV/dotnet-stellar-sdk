@@ -2,7 +2,6 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.LiquidityPool;
 using XDR = StellarDotnetSdk.Xdr;
 using Asset = StellarDotnetSdk.Assets.Asset;
 using LiquidityPoolParameters = StellarDotnetSdk.LiquidityPool.LiquidityPoolParameters;
@@ -13,19 +12,19 @@ namespace StellarDotnetSdk.Tests.Assets;
 public class LiquidityPoolShareChangeTrustAssetTest
 {
     /// <summary>
-    /// Tests that LiquidityPoolShareChangeTrustAsset constructor throws ArgumentNullException when parameters are null.
-    /// Validates that liquidity pool parameters are required for creating pool share change trust assets.
+    ///     Tests that LiquidityPoolShareChangeTrustAsset constructor throws ArgumentNullException when parameters are null.
+    ///     Validates that liquidity pool parameters are required for creating pool share change trust assets.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void TestConstructor_NullParameters()
     {
-        new LiquidityPoolShareChangeTrustAsset((LiquidityPoolParameters)null!);
+        _ = new LiquidityPoolShareChangeTrustAsset(null!);
     }
 
     /// <summary>
-    /// Tests LiquidityPoolShareChangeTrustAsset creation using the constructor with two assets and fee.
-    /// Verifies that a liquidity pool share change trust asset is created with the correct pool parameters and type.
+    ///     Tests LiquidityPoolShareChangeTrustAsset creation using the constructor with two assets and fee.
+    ///     Verifies that a liquidity pool share change trust asset is created with the correct pool parameters and type.
     /// </summary>
     [TestMethod]
     public void TestConstructor_WithAssetAAndAssetB()
@@ -42,8 +41,8 @@ public class LiquidityPoolShareChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests GetLiquidityPoolId method to retrieve the unique pool identifier.
-    /// Verifies that the pool ID matches the ID from the underlying liquidity pool parameters.
+    ///     Tests GetLiquidityPoolId method to retrieve the unique pool identifier.
+    ///     Verifies that the pool ID matches the ID from the underlying liquidity pool parameters.
     /// </summary>
     [TestMethod]
     public void TestGetLiquidityPoolId()
@@ -65,8 +64,8 @@ public class LiquidityPoolShareChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests ToString method returns the string representation of the liquidity pool ID.
-    /// Verifies that ToString delegates to the pool ID's string representation.
+    ///     Tests ToString method returns the string representation of the liquidity pool ID.
+    ///     Verifies that ToString delegates to the pool ID's string representation.
     /// </summary>
     [TestMethod]
     public void TestToString()
@@ -88,8 +87,8 @@ public class LiquidityPoolShareChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests that LiquidityPoolShareChangeTrustAsset instances with the same parameters are considered equal.
-    /// Verifies that Equals implementation correctly compares the underlying liquidity pool parameters.
+    ///     Tests that LiquidityPoolShareChangeTrustAsset instances with the same parameters are considered equal.
+    ///     Verifies that Equals implementation correctly compares the underlying liquidity pool parameters.
     /// </summary>
     [TestMethod]
     public void TestEquals_SameParameters()
@@ -110,8 +109,8 @@ public class LiquidityPoolShareChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests that LiquidityPoolShareChangeTrustAsset instances with different parameters are not equal.
-    /// Verifies that Equals correctly distinguishes between different liquidity pools (different assets or fees).
+    ///     Tests that LiquidityPoolShareChangeTrustAsset instances with different parameters are not equal.
+    ///     Verifies that Equals correctly distinguishes between different liquidity pools (different assets or fees).
     /// </summary>
     [TestMethod]
     public void TestEquals_DifferentParameters()
@@ -138,8 +137,8 @@ public class LiquidityPoolShareChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests that LiquidityPoolShareChangeTrustAsset.Equals returns false when comparing with null.
-    /// Verifies null safety in the Equals implementation.
+    ///     Tests that LiquidityPoolShareChangeTrustAsset.Equals returns false when comparing with null.
+    ///     Verifies null safety in the Equals implementation.
     /// </summary>
     [TestMethod]
     public void TestEquals_Null()
@@ -155,12 +154,12 @@ public class LiquidityPoolShareChangeTrustAssetTest
                 assetA, assetB, 30);
         var liquidityPoolShareChangeTrustAsset = new LiquidityPoolShareChangeTrustAsset(parameters);
 
-        Assert.IsFalse(liquidityPoolShareChangeTrustAsset.Equals(null));
+        Assert.IsFalse(liquidityPoolShareChangeTrustAsset.Equals(null!));
     }
 
     /// <summary>
-    /// Tests that LiquidityPoolShareChangeTrustAsset instances with the same parameters produce the same hash code.
-    /// Verifies GetHashCode implementation for proper behavior in hash-based collections.
+    ///     Tests that LiquidityPoolShareChangeTrustAsset instances with the same parameters produce the same hash code.
+    ///     Verifies GetHashCode implementation for proper behavior in hash-based collections.
     /// </summary>
     [TestMethod]
     public void TestGetHashCode_Consistency()
@@ -182,8 +181,8 @@ public class LiquidityPoolShareChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests comparison ordering between LiquidityPoolShareChangeTrustAsset and ChangeTrustAsset.Wrapper.
-    /// Verifies that pool share assets sort after regular asset wrappers (returns 1).
+    ///     Tests comparison ordering between LiquidityPoolShareChangeTrustAsset and ChangeTrustAsset.Wrapper.
+    ///     Verifies that pool share assets sort after regular asset wrappers (returns 1).
     /// </summary>
     [TestMethod]
     public void TestCompareTo_WithWrapper()
@@ -206,8 +205,8 @@ public class LiquidityPoolShareChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests comparison ordering between two LiquidityPoolShareChangeTrustAsset instances.
-    /// Verifies that CompareTo correctly compares different liquidity pools based on their parameters.
+    ///     Tests comparison ordering between two LiquidityPoolShareChangeTrustAsset instances.
+    ///     Verifies that CompareTo correctly compares different liquidity pools based on their parameters.
     /// </summary>
     [TestMethod]
     public void TestCompareTo_WithPoolShare()
@@ -235,9 +234,9 @@ public class LiquidityPoolShareChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests XDR serialization and deserialization round-trip for LiquidityPoolShareChangeTrustAsset.
-    /// Verifies that liquidity pool share change trust assets can be converted to XDR format and back,
-    /// preserving the pool parameters and ID.
+    ///     Tests XDR serialization and deserialization round-trip for LiquidityPoolShareChangeTrustAsset.
+    ///     Verifies that liquidity pool share change trust assets can be converted to XDR format and back,
+    ///     preserving the pool parameters and ID.
     /// </summary>
     [TestMethod]
     public void TestToXdr_RoundTrip()

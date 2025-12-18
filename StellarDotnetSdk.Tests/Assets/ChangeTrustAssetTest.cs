@@ -11,8 +11,9 @@ namespace StellarDotnetSdk.Tests.Assets;
 public class ChangeTrustAssetTest
 {
     /// <summary>
-    /// Tests ChangeTrustAsset creation from canonical form string (format: "CODE:ISSUER").
-    /// Verifies that the factory method correctly parses the canonical form and creates a Wrapper with the appropriate asset.
+    ///     Tests ChangeTrustAsset creation from canonical form string (format: "CODE:ISSUER").
+    ///     Verifies that the factory method correctly parses the canonical form and creates a Wrapper with the appropriate
+    ///     asset.
     /// </summary>
     [TestMethod]
     public void TestCreateCanonical()
@@ -23,8 +24,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests ChangeTrustAsset creation from LiquidityPoolParameters and XDR round-trip conversion.
-    /// Verifies that liquidity pool share assets can be created, serialized to XDR, and deserialized back correctly.
+    ///     Tests ChangeTrustAsset creation from LiquidityPoolParameters and XDR round-trip conversion.
+    ///     Verifies that liquidity pool share assets can be created, serialized to XDR, and deserialized back correctly.
     /// </summary>
     [TestMethod]
     public void TestCreateLiquidityPoolParameters()
@@ -49,8 +50,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests ChangeTrustAsset creation from a TrustlineAsset.Wrapper.
-    /// Verifies interoperability between TrustlineAsset and ChangeTrustAsset by extracting the underlying asset.
+    ///     Tests ChangeTrustAsset creation from a TrustlineAsset.Wrapper.
+    ///     Verifies interoperability between TrustlineAsset and ChangeTrustAsset by extracting the underlying asset.
     /// </summary>
     [TestMethod]
     public void TestCreateTrustlineWrapper()
@@ -63,8 +64,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests ChangeTrustAsset creation for non-native assets using CreateNonNativeAsset helper method.
-    /// Verifies that credit assets are correctly created and wrapped.
+    ///     Tests ChangeTrustAsset creation for non-native assets using CreateNonNativeAsset helper method.
+    ///     Verifies that credit assets are correctly created and wrapped.
     /// </summary>
     [TestMethod]
     public void TestCreateNonNative()
@@ -76,8 +77,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests deserialization of ChangeTrustAsset from XDR format for CreditAlphaNum4 assets.
-    /// Verifies that XDR data with ASSET_TYPE_CREDIT_ALPHANUM4 discriminant is correctly parsed.
+    ///     Tests deserialization of ChangeTrustAsset from XDR format for CreditAlphaNum4 assets.
+    ///     Verifies that XDR data with ASSET_TYPE_CREDIT_ALPHANUM4 discriminant is correctly parsed.
     /// </summary>
     [TestMethod]
     public void TestFromXdrAlphaNum4()
@@ -94,8 +95,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests deserialization of ChangeTrustAsset from XDR format for CreditAlphaNum12 assets.
-    /// Verifies that XDR data with ASSET_TYPE_CREDIT_ALPHANUM12 discriminant is correctly parsed.
+    ///     Tests deserialization of ChangeTrustAsset from XDR format for CreditAlphaNum12 assets.
+    ///     Verifies that XDR data with ASSET_TYPE_CREDIT_ALPHANUM12 discriminant is correctly parsed.
     /// </summary>
     [TestMethod]
     public void TestFromXdrAlphaNum12()
@@ -112,8 +113,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests deserialization of ChangeTrustAsset from XDR format for native assets.
-    /// Verifies that XDR data with ASSET_TYPE_NATIVE discriminant correctly creates a native asset wrapper.
+    ///     Tests deserialization of ChangeTrustAsset from XDR format for native assets.
+    ///     Verifies that XDR data with ASSET_TYPE_NATIVE discriminant correctly creates a native asset wrapper.
     /// </summary>
     [TestMethod]
     public void TestFromXdrNative()
@@ -127,8 +128,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests ChangeTrustAsset creation directly from an Asset instance.
-    /// Verifies that the factory method correctly wraps a regular Asset as a ChangeTrustAsset.
+    ///     Tests ChangeTrustAsset creation directly from an Asset instance.
+    ///     Verifies that the factory method correctly wraps a regular Asset as a ChangeTrustAsset.
     /// </summary>
     [TestMethod]
     public void TestCreateWithAsset()
@@ -140,8 +141,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests ChangeTrustAsset creation for liquidity pool shares using two assets and fee.
-    /// Verifies that a LiquidityPoolShareChangeTrustAsset is created with the correct pool parameters.
+    ///     Tests ChangeTrustAsset creation for liquidity pool shares using two assets and fee.
+    ///     Verifies that a LiquidityPoolShareChangeTrustAsset is created with the correct pool parameters.
     /// </summary>
     [TestMethod]
     public void TestCreateWithAssetAAndAssetB()
@@ -159,8 +160,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests that ChangeTrustAsset.FromXdr throws ArgumentException for unknown asset types in XDR.
-    /// Validates error handling for malformed or future XDR data with unrecognized asset type discriminants.
+    ///     Tests that ChangeTrustAsset.FromXdr throws ArgumentException for unknown asset types in XDR.
+    ///     Validates error handling for malformed or future XDR data with unrecognized asset type discriminants.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -174,8 +175,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests that ChangeTrustAsset.Wrapper instances with the same underlying asset are considered equal.
-    /// Verifies that Equals implementation correctly compares the wrapped Asset instances.
+    ///     Tests that ChangeTrustAsset.Wrapper instances with the same underlying asset are considered equal.
+    ///     Verifies that Equals implementation correctly compares the wrapped Asset instances.
     /// </summary>
     [TestMethod]
     public void TestWrapperEquals_SameAsset()
@@ -188,8 +189,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests that ChangeTrustAsset.Wrapper instances with different underlying assets are not equal.
-    /// Verifies that Equals correctly distinguishes between different assets.
+    ///     Tests that ChangeTrustAsset.Wrapper instances with different underlying assets are not equal.
+    ///     Verifies that Equals correctly distinguishes between different assets.
     /// </summary>
     [TestMethod]
     public void TestWrapperEquals_DifferentAsset()
@@ -204,8 +205,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests that ChangeTrustAsset.Wrapper.Equals returns false when comparing with null.
-    /// Verifies null safety in the Equals implementation.
+    ///     Tests that ChangeTrustAsset.Wrapper.Equals returns false when comparing with null.
+    ///     Verifies null safety in the Equals implementation.
     /// </summary>
     [TestMethod]
     public void TestWrapperEquals_Null()
@@ -217,8 +218,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests comparison ordering between ChangeTrustAsset.Wrapper and LiquidityPoolShareChangeTrustAsset.
-    /// Verifies that regular asset wrappers sort before pool share assets (returns -1).
+    ///     Tests comparison ordering between ChangeTrustAsset.Wrapper and LiquidityPoolShareChangeTrustAsset.
+    ///     Verifies that regular asset wrappers sort before pool share assets (returns -1).
     /// </summary>
     [TestMethod]
     public void TestWrapperCompareTo_WithPoolShare()
@@ -237,8 +238,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests comparison ordering between two ChangeTrustAsset.Wrapper instances.
-    /// Verifies that CompareTo delegates to the underlying Asset.CompareTo method.
+    ///     Tests comparison ordering between two ChangeTrustAsset.Wrapper instances.
+    ///     Verifies that CompareTo delegates to the underlying Asset.CompareTo method.
     /// </summary>
     [TestMethod]
     public void TestWrapperCompareTo_WithWrapper()
@@ -254,8 +255,8 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests that ChangeTrustAsset.Wrapper instances with the same underlying asset produce the same hash code.
-    /// Verifies GetHashCode implementation for proper behavior in hash-based collections.
+    ///     Tests that ChangeTrustAsset.Wrapper instances with the same underlying asset produce the same hash code.
+    ///     Verifies GetHashCode implementation for proper behavior in hash-based collections.
     /// </summary>
     [TestMethod]
     public void TestWrapperGetHashCode()
@@ -268,33 +269,36 @@ public class ChangeTrustAssetTest
     }
 
     /// <summary>
-    /// Tests ChangeTrustAsset creation using the Create(string type, string code, string issuer) overload for native assets.
-    /// Verifies that passing "native" as the type correctly creates a native asset wrapper.
+    ///     Tests ChangeTrustAsset creation using the Create(string type, string code, string issuer) overload for native
+    ///     assets.
+    ///     Verifies that passing "native" as the type correctly creates a native asset wrapper.
     /// </summary>
     [TestMethod]
     public void TestCreateWithTypeCodeIssuer_Native()
     {
-        var changeTrustAsset = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.Create("native", null, null);
+        var changeTrustAsset = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.Create("native", null!, null!);
         Assert.IsTrue(changeTrustAsset.Asset is AssetTypeNative);
         Assert.AreEqual("native", changeTrustAsset.Asset.CanonicalName());
     }
 
     /// <summary>
-    /// Tests ChangeTrustAsset creation using the Create(string type, string code, string issuer) overload for non-native assets.
-    /// Verifies that passing "non-native" as the type correctly creates a credit asset wrapper.
+    ///     Tests ChangeTrustAsset creation using the Create(string type, string code, string issuer) overload for non-native
+    ///     assets.
+    ///     Verifies that passing "non-native" as the type correctly creates a credit asset wrapper.
     /// </summary>
     [TestMethod]
     public void TestCreateWithTypeCodeIssuer_NonNative()
     {
         var keypair = KeyPair.Random();
-        var changeTrustAsset = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.Create("non-native", "USD", keypair.AccountId);
+        var changeTrustAsset =
+            (ChangeTrustAsset.Wrapper)ChangeTrustAsset.Create("non-native", "USD", keypair.AccountId);
         Assert.IsTrue(changeTrustAsset.Asset is AssetTypeCreditAlphaNum);
         Assert.AreEqual($"USD:{keypair.AccountId}", changeTrustAsset.Asset.CanonicalName());
     }
 
     /// <summary>
-    /// Tests XDR serialization and deserialization round-trip for ChangeTrustAsset.Wrapper with native assets.
-    /// Verifies that native assets can be converted to XDR format and back without data loss.
+    ///     Tests XDR serialization and deserialization round-trip for ChangeTrustAsset.Wrapper with native assets.
+    ///     Verifies that native assets can be converted to XDR format and back without data loss.
     /// </summary>
     [TestMethod]
     public void TestWrapperToXdr_Native()
@@ -302,14 +306,14 @@ public class ChangeTrustAssetTest
         var wrapper = new ChangeTrustAsset.Wrapper(new AssetTypeNative());
         var xdr = wrapper.ToXdr();
         var roundTripWrapper = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.FromXdr(xdr);
-        
+
         Assert.IsTrue(roundTripWrapper.Asset is AssetTypeNative);
         Assert.AreEqual("native", roundTripWrapper.Asset.CanonicalName());
     }
 
     /// <summary>
-    /// Tests XDR serialization and deserialization round-trip for ChangeTrustAsset.Wrapper with CreditAlphaNum4 assets.
-    /// Verifies that 4-character asset codes are correctly preserved through XDR conversion.
+    ///     Tests XDR serialization and deserialization round-trip for ChangeTrustAsset.Wrapper with CreditAlphaNum4 assets.
+    ///     Verifies that 4-character asset codes are correctly preserved through XDR conversion.
     /// </summary>
     [TestMethod]
     public void TestWrapperToXdr_CreditAlphaNum4()
@@ -319,14 +323,14 @@ public class ChangeTrustAssetTest
         var wrapper = new ChangeTrustAsset.Wrapper(asset);
         var xdr = wrapper.ToXdr();
         var roundTripWrapper = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.FromXdr(xdr);
-        
+
         Assert.IsTrue(roundTripWrapper.Asset is AssetTypeCreditAlphaNum4);
         Assert.AreEqual($"USD:{keypair.AccountId}", roundTripWrapper.Asset.CanonicalName());
     }
 
     /// <summary>
-    /// Tests XDR serialization and deserialization round-trip for ChangeTrustAsset.Wrapper with CreditAlphaNum12 assets.
-    /// Verifies that 5-12 character asset codes are correctly preserved through XDR conversion.
+    ///     Tests XDR serialization and deserialization round-trip for ChangeTrustAsset.Wrapper with CreditAlphaNum12 assets.
+    ///     Verifies that 5-12 character asset codes are correctly preserved through XDR conversion.
     /// </summary>
     [TestMethod]
     public void TestWrapperToXdr_CreditAlphaNum12()
@@ -336,7 +340,7 @@ public class ChangeTrustAssetTest
         var wrapper = new ChangeTrustAsset.Wrapper(asset);
         var xdr = wrapper.ToXdr();
         var roundTripWrapper = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.FromXdr(xdr);
-        
+
         Assert.IsTrue(roundTripWrapper.Asset is AssetTypeCreditAlphaNum12);
         Assert.AreEqual($"TESTTEST:{keypair.AccountId}", roundTripWrapper.Asset.CanonicalName());
     }

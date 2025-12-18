@@ -3,7 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Exceptions;
-using XDR = StellarDotnetSdk.Xdr;
+using StellarDotnetSdk.Xdr;
+using Asset = StellarDotnetSdk.Assets.Asset;
 
 namespace StellarDotnetSdk.Tests.Assets;
 
@@ -11,8 +12,8 @@ namespace StellarDotnetSdk.Tests.Assets;
 public class AssetTest
 {
     /// <summary>
-    /// Tests that native assets can be serialized to XDR and deserialized back correctly.
-    /// Verifies round-trip conversion for the native XLM asset type.
+    ///     Tests that native assets can be serialized to XDR and deserialized back correctly.
+    ///     Verifies round-trip conversion for the native XLM asset type.
     /// </summary>
     [TestMethod]
     public void TestAssetTypeNative()
@@ -24,8 +25,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests the Asset.Create factory method with type, code, and issuer parameters.
-    /// Verifies that it correctly creates native assets and non-native credit assets.
+    ///     Tests the Asset.Create factory method with type, code, and issuer parameters.
+    ///     Verifies that it correctly creates native assets and non-native credit assets.
     /// </summary>
     [TestMethod]
     public void TestAssetCreation()
@@ -38,8 +39,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests AssetTypeCreditAlphaNum4 creation and XDR round-trip conversion.
-    /// Verifies that asset codes up to 4 characters are correctly serialized and deserialized.
+    ///     Tests AssetTypeCreditAlphaNum4 creation and XDR round-trip conversion.
+    ///     Verifies that asset codes up to 4 characters are correctly serialized and deserialized.
     /// </summary>
     [TestMethod]
     public void TestAssetTypeCreditAlphaNum4()
@@ -54,8 +55,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests AssetTypeCreditAlphaNum12 creation and XDR round-trip conversion.
-    /// Verifies that asset codes between 5-12 characters are correctly serialized and deserialized.
+    ///     Tests AssetTypeCreditAlphaNum12 creation and XDR round-trip conversion.
+    ///     Verifies that asset codes between 5-12 characters are correctly serialized and deserialized.
     /// </summary>
     [TestMethod]
     public void TestAssetTypeCreditAlphaNum12()
@@ -71,9 +72,9 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests GetHashCode implementation for all asset types.
-    /// Verifies that equal assets produce the same hash code, and different assets produce different hash codes.
-    /// This is critical for proper behavior in hash-based collections like Dictionary and HashSet.
+    ///     Tests GetHashCode implementation for all asset types.
+    ///     Verifies that equal assets produce the same hash code, and different assets produce different hash codes.
+    ///     This is critical for proper behavior in hash-based collections like Dictionary and HashSet.
     /// </summary>
     [TestMethod]
     public void TestHashCode()
@@ -108,9 +109,10 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests the Equals implementation for all asset types.
-    /// Verifies that assets with the same code and issuer are equal, and assets with different codes or issuers are not equal.
-    /// Also verifies that different asset types (native vs credit) are never equal.
+    ///     Tests the Equals implementation for all asset types.
+    ///     Verifies that assets with the same code and issuer are equal, and assets with different codes or issuers are not
+    ///     equal.
+    ///     Also verifies that different asset types (native vs credit) are never equal.
     /// </summary>
     [TestMethod]
     public void TestAssetEquals()
@@ -148,8 +150,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests that Asset.Create throws ArgumentException when canonical form is missing the colon separator.
-    /// Validates input validation for malformed canonical asset strings (format: "CODE:ISSUER").
+    ///     Tests that Asset.Create throws ArgumentException when canonical form is missing the colon separator.
+    ///     Validates input validation for malformed canonical asset strings (format: "CODE:ISSUER").
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -159,8 +161,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests that Asset.Create throws ArgumentException when canonical form has too many parts.
-    /// Validates that only two parts (code and issuer) separated by a single colon are accepted.
+    ///     Tests that Asset.Create throws ArgumentException when canonical form has too many parts.
+    ///     Validates that only two parts (code and issuer) separated by a single colon are accepted.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -170,8 +172,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests that Asset.Create correctly creates a native asset from the canonical form "native".
-    /// Verifies the special case handling for the native XLM asset.
+    ///     Tests that Asset.Create correctly creates a native asset from the canonical form "native".
+    ///     Verifies the special case handling for the native XLM asset.
     /// </summary>
     [TestMethod]
     public void TestCreateCanonicalForm_Native()
@@ -181,8 +183,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests that Asset.Create throws ArgumentNullException when code is null for non-native assets.
-    /// Validates that non-native assets require both code and issuer to be provided.
+    ///     Tests that Asset.Create throws ArgumentNullException when code is null for non-native assets.
+    ///     Validates that non-native assets require both code and issuer to be provided.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
@@ -192,8 +194,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests that Asset.Create throws ArgumentNullException when issuer is null for non-native assets.
-    /// Validates that credit assets require an issuer account ID.
+    ///     Tests that Asset.Create throws ArgumentNullException when issuer is null for non-native assets.
+    ///     Validates that credit assets require an issuer account ID.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
@@ -203,8 +205,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests that CreateNonNativeAsset throws AssetCodeLengthInvalidException for empty asset codes.
-    /// Validates that asset codes must be between 1-12 characters in length.
+    ///     Tests that CreateNonNativeAsset throws AssetCodeLengthInvalidException for empty asset codes.
+    ///     Validates that asset codes must be between 1-12 characters in length.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(AssetCodeLengthInvalidException))]
@@ -214,8 +216,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests that CreateNonNativeAsset throws AssetCodeLengthInvalidException for asset codes exceeding 12 characters.
-    /// Validates the maximum length constraint for asset codes.
+    ///     Tests that CreateNonNativeAsset throws AssetCodeLengthInvalidException for asset codes exceeding 12 characters.
+    ///     Validates the maximum length constraint for asset codes.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(AssetCodeLengthInvalidException))]
@@ -225,8 +227,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests that AssetTypeCreditAlphaNum4 constructor throws AssetCodeLengthInvalidException for empty codes.
-    /// Validates that CreditAlphaNum4 requires codes between 1-4 characters.
+    ///     Tests that AssetTypeCreditAlphaNum4 constructor throws AssetCodeLengthInvalidException for empty codes.
+    ///     Validates that CreditAlphaNum4 requires codes between 1-4 characters.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(AssetCodeLengthInvalidException))]
@@ -236,41 +238,44 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests that AssetTypeCreditAlphaNum4 constructor throws AssetCodeLengthInvalidException for codes exceeding 4 characters.
-    /// Validates the maximum length constraint for CreditAlphaNum4 asset codes.
+    ///     Tests that AssetTypeCreditAlphaNum4 constructor throws AssetCodeLengthInvalidException for codes exceeding 4
+    ///     characters.
+    ///     Validates the maximum length constraint for CreditAlphaNum4 asset codes.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(AssetCodeLengthInvalidException))]
     public void TestAssetTypeCreditAlphaNum4_CodeTooLong()
     {
-        new AssetTypeCreditAlphaNum4("FIVES", KeyPair.Random().AccountId);
+        _ = new AssetTypeCreditAlphaNum4("FIVES", KeyPair.Random().AccountId);
     }
 
     /// <summary>
-    /// Tests that AssetTypeCreditAlphaNum12 constructor throws AssetCodeLengthInvalidException for codes shorter than 5 characters.
-    /// Validates that CreditAlphaNum12 requires codes between 5-12 characters (shorter codes should use CreditAlphaNum4).
+    ///     Tests that AssetTypeCreditAlphaNum12 constructor throws AssetCodeLengthInvalidException for codes shorter than 5
+    ///     characters.
+    ///     Validates that CreditAlphaNum12 requires codes between 5-12 characters (shorter codes should use CreditAlphaNum4).
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(AssetCodeLengthInvalidException))]
     public void TestAssetTypeCreditAlphaNum12_CodeTooShort()
     {
-        new AssetTypeCreditAlphaNum12("FOUR", KeyPair.Random().AccountId);
+        _ = new AssetTypeCreditAlphaNum12("FOUR", KeyPair.Random().AccountId);
     }
 
     /// <summary>
-    /// Tests that AssetTypeCreditAlphaNum12 constructor throws AssetCodeLengthInvalidException for codes exceeding 12 characters.
-    /// Validates the maximum length constraint for CreditAlphaNum12 asset codes.
+    ///     Tests that AssetTypeCreditAlphaNum12 constructor throws AssetCodeLengthInvalidException for codes exceeding 12
+    ///     characters.
+    ///     Validates the maximum length constraint for CreditAlphaNum12 asset codes.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(AssetCodeLengthInvalidException))]
     public void TestAssetTypeCreditAlphaNum12_CodeTooLong()
     {
-        new AssetTypeCreditAlphaNum12("THISCODEISTOOLONG", KeyPair.Random().AccountId);
+        _ = new AssetTypeCreditAlphaNum12("THISCODEISTOOLONG", KeyPair.Random().AccountId);
     }
 
     /// <summary>
-    /// Tests that Asset.FromXdr throws ArgumentException when encountering an unknown asset type in XDR.
-    /// Validates error handling for malformed or future XDR data with unrecognized asset type discriminants.
+    ///     Tests that Asset.FromXdr throws ArgumentException when encountering an unknown asset type in XDR.
+    ///     Validates error handling for malformed or future XDR data with unrecognized asset type discriminants.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
@@ -278,14 +283,14 @@ public class AssetTest
     {
         var xdrAsset = new StellarDotnetSdk.Xdr.Asset
         {
-            Discriminant = new StellarDotnetSdk.Xdr.AssetType { InnerValue = (StellarDotnetSdk.Xdr.AssetType.AssetTypeEnum)999 }
+            Discriminant = new AssetType { InnerValue = (AssetType.AssetTypeEnum)999 },
         };
         Asset.FromXdr(xdrAsset);
     }
 
     /// <summary>
-    /// Tests that native assets compare as equal (CompareTo returns 0).
-    /// Verifies that all native assets are considered equivalent for ordering purposes.
+    ///     Tests that native assets compare as equal (CompareTo returns 0).
+    ///     Verifies that all native assets are considered equivalent for ordering purposes.
     /// </summary>
     [TestMethod]
     public void TestCompareTo_NativeVsNative()
@@ -296,8 +301,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests comparison ordering between native assets and CreditAlphaNum4 assets.
-    /// Verifies that native assets sort before credit assets (native returns -1, credit returns 1).
+    ///     Tests comparison ordering between native assets and CreditAlphaNum4 assets.
+    ///     Verifies that native assets sort before credit assets (native returns -1, credit returns 1).
     /// </summary>
     [TestMethod]
     public void TestCompareTo_NativeVsCreditAlphaNum4()
@@ -309,8 +314,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests comparison ordering between native assets and CreditAlphaNum12 assets.
-    /// Verifies that native assets sort before credit assets regardless of code length.
+    ///     Tests comparison ordering between native assets and CreditAlphaNum12 assets.
+    ///     Verifies that native assets sort before credit assets regardless of code length.
     /// </summary>
     [TestMethod]
     public void TestCompareTo_NativeVsCreditAlphaNum12()
@@ -322,8 +327,9 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests comparison ordering between CreditAlphaNum4 and CreditAlphaNum12 assets.
-    /// Verifies that CreditAlphaNum4 assets sort before CreditAlphaNum12 assets (4-character codes before 5-12 character codes).
+    ///     Tests comparison ordering between CreditAlphaNum4 and CreditAlphaNum12 assets.
+    ///     Verifies that CreditAlphaNum4 assets sort before CreditAlphaNum12 assets (4-character codes before 5-12 character
+    ///     codes).
     /// </summary>
     [TestMethod]
     public void TestCompareTo_CreditAlphaNum4VsCreditAlphaNum12()
@@ -336,8 +342,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests that assets with the same code but different issuers are not equal.
-    /// Verifies that issuer is part of the comparison logic (same code from different issuers are different assets).
+    ///     Tests that assets with the same code but different issuers are not equal.
+    ///     Verifies that issuer is part of the comparison logic (same code from different issuers are different assets).
     /// </summary>
     [TestMethod]
     public void TestCompareTo_CreditAlphaNum4_SameCodeDifferentIssuer()
@@ -351,8 +357,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests that assets with different codes but the same issuer are not equal.
-    /// Verifies that asset code is part of the comparison logic.
+    ///     Tests that assets with different codes but the same issuer are not equal.
+    ///     Verifies that asset code is part of the comparison logic.
     /// </summary>
     [TestMethod]
     public void TestCompareTo_CreditAlphaNum4_DifferentCode()
@@ -365,8 +371,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests that CreditAlphaNum12 assets with the same code but different issuers are not equal.
-    /// Verifies that issuer is part of the comparison logic for longer asset codes.
+    ///     Tests that CreditAlphaNum12 assets with the same code but different issuers are not equal.
+    ///     Verifies that issuer is part of the comparison logic for longer asset codes.
     /// </summary>
     [TestMethod]
     public void TestCompareTo_CreditAlphaNum12_SameCodeDifferentIssuer()
@@ -380,8 +386,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests that CreditAlphaNum12 assets with different codes but the same issuer are not equal.
-    /// Verifies that asset code is part of the comparison logic for longer codes.
+    ///     Tests that CreditAlphaNum12 assets with different codes but the same issuer are not equal.
+    ///     Verifies that asset code is part of the comparison logic for longer codes.
     /// </summary>
     [TestMethod]
     public void TestCompareTo_CreditAlphaNum12_DifferentCode()
@@ -394,8 +400,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests ToQueryParameterEncodedString extension method for native assets.
-    /// Verifies that native assets are encoded as "native" for use in URL query parameters.
+    ///     Tests ToQueryParameterEncodedString extension method for native assets.
+    ///     Verifies that native assets are encoded as "native" for use in URL query parameters.
     /// </summary>
     [TestMethod]
     public void TestToQueryParameterEncodedString_Native()
@@ -406,8 +412,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests ToQueryParameterEncodedString extension method for CreditAlphaNum4 assets.
-    /// Verifies that credit assets are encoded as "CODE:ISSUER" format for use in URL query parameters.
+    ///     Tests ToQueryParameterEncodedString extension method for CreditAlphaNum4 assets.
+    ///     Verifies that credit assets are encoded as "CODE:ISSUER" format for use in URL query parameters.
     /// </summary>
     [TestMethod]
     public void TestToQueryParameterEncodedString_CreditAlphaNum4()
@@ -420,8 +426,8 @@ public class AssetTest
     }
 
     /// <summary>
-    /// Tests ToQueryParameterEncodedString extension method for CreditAlphaNum12 assets.
-    /// Verifies that longer credit asset codes are also encoded as "CODE:ISSUER" format.
+    ///     Tests ToQueryParameterEncodedString extension method for CreditAlphaNum12 assets.
+    ///     Verifies that longer credit asset codes are also encoded as "CODE:ISSUER" format.
     /// </summary>
     [TestMethod]
     public void TestToQueryParameterEncodedString_CreditAlphaNum12()
