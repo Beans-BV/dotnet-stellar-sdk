@@ -16,10 +16,15 @@ public class ChangeTrustAssetTest
     ///     asset.
     /// </summary>
     [TestMethod]
-    public void TestCreateCanonical()
+    public void Create_WithCanonicalForm_ReturnsWrapperWithCorrectAsset()
     {
+        // Arrange
         var keypair = KeyPair.Random();
+
+        // Act
         var changeTrustAsset = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.Create($"USD:{keypair.AccountId}");
+
+        // Assert
         Assert.AreEqual(changeTrustAsset.Asset.CanonicalName(), $"USD:{keypair.AccountId}");
     }
 
@@ -28,23 +33,24 @@ public class ChangeTrustAssetTest
     ///     Verifies that liquidity pool share assets can be created, serialized to XDR, and deserialized back correctly.
     /// </summary>
     [TestMethod]
-    public void TestCreateLiquidityPoolParameters()
+    public void Create_WithLiquidityPoolParameters_RoundTripsCorrectly()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var keypair2 = KeyPair.Random();
-
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"USD:{keypair2.AccountId}");
-
         var parameters =
             LiquidityPoolParameters.Create(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetB, 30);
 
+        // Act
         var liquidityPoolShareChangeTrustAsset =
             (LiquidityPoolShareChangeTrustAsset)ChangeTrustAsset.Create(parameters);
         var liquidityPoolShareChangeTrustAsset2 =
             (LiquidityPoolShareChangeTrustAsset)ChangeTrustAsset.FromXdr(liquidityPoolShareChangeTrustAsset.ToXdr());
 
+        // Assert
         Assert.AreEqual(liquidityPoolShareChangeTrustAsset.Parameters.GetId(),
             liquidityPoolShareChangeTrustAsset2.Parameters.GetId());
     }
@@ -54,12 +60,16 @@ public class ChangeTrustAssetTest
     ///     Verifies interoperability between TrustlineAsset and ChangeTrustAsset by extracting the underlying asset.
     /// </summary>
     [TestMethod]
-    public void TestCreateTrustlineWrapper()
+    public void Create_WithTrustlineWrapper_ReturnsWrapperWithSameAsset()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var trustlineAsset = (TrustlineAsset.Wrapper)TrustlineAsset.Create("non-native", "USD", keypair.AccountId);
+
+        // Act
         var changeTrustAsset = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.Create(trustlineAsset);
 
+        // Assert
         Assert.AreEqual(trustlineAsset.Asset, changeTrustAsset.Asset);
     }
 
@@ -68,11 +78,16 @@ public class ChangeTrustAssetTest
     ///     Verifies that credit assets are correctly created and wrapped.
     /// </summary>
     [TestMethod]
-    public void TestCreateNonNative()
+    public void CreateNonNativeAsset_WithCodeAndIssuer_ReturnsWrapperWithCorrectAsset()
     {
+        // Arrange
         var keypair = KeyPair.Random();
+
+        // Act
         var changeTrustAsset =
             (ChangeTrustAsset.Wrapper)ChangeTrustAsset.CreateNonNativeAsset("USD", keypair.AccountId);
+
+        // Assert
         Assert.AreEqual(changeTrustAsset.Asset.CanonicalName(), $"USD:{keypair.AccountId}");
     }
 
@@ -81,16 +96,19 @@ public class ChangeTrustAssetTest
     ///     Verifies that XDR data with ASSET_TYPE_CREDIT_ALPHANUM4 discriminant is correctly parsed.
     /// </summary>
     [TestMethod]
-    public void TestFromXdrAlphaNum4()
+    public void FromXdr_WithCreditAlphaNum4_ReturnsWrapperWithCorrectAsset()
     {
+        // Arrange
         var keypair = KeyPair.Random();
-
         var changeTrustAssetXdr = new XDR.ChangeTrustAsset();
         changeTrustAssetXdr.Discriminant = new XDR.AssetType
             { InnerValue = XDR.AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM4 };
         changeTrustAssetXdr.AlphaNum4 = Asset.Create($"USD:{keypair.AccountId}").ToXdr().AlphaNum4;
 
+        // Act
         var changeTrustAsset = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.FromXdr(changeTrustAssetXdr);
+
+        // Assert
         Assert.AreEqual(changeTrustAsset.Asset.CanonicalName(), $"USD:{keypair.AccountId}");
     }
 
@@ -99,16 +117,19 @@ public class ChangeTrustAssetTest
     ///     Verifies that XDR data with ASSET_TYPE_CREDIT_ALPHANUM12 discriminant is correctly parsed.
     /// </summary>
     [TestMethod]
-    public void TestFromXdrAlphaNum12()
+    public void FromXdr_WithCreditAlphaNum12_ReturnsWrapperWithCorrectAsset()
     {
+        // Arrange
         var keypair = KeyPair.Random();
-
         var changeTrustAssetXdr = new XDR.ChangeTrustAsset();
         changeTrustAssetXdr.Discriminant = new XDR.AssetType
             { InnerValue = XDR.AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM12 };
         changeTrustAssetXdr.AlphaNum12 = Asset.Create($"USDUSD:{keypair.AccountId}").ToXdr().AlphaNum12;
 
+        // Act
         var changeTrustAsset = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.FromXdr(changeTrustAssetXdr);
+
+        // Assert
         Assert.AreEqual(changeTrustAsset.Asset.CanonicalName(), $"USDUSD:{keypair.AccountId}");
     }
 
@@ -117,13 +138,17 @@ public class ChangeTrustAssetTest
     ///     Verifies that XDR data with ASSET_TYPE_NATIVE discriminant correctly creates a native asset wrapper.
     /// </summary>
     [TestMethod]
-    public void TestFromXdrNative()
+    public void FromXdr_WithNativeAsset_ReturnsWrapperWithNativeAsset()
     {
+        // Arrange
         var changeTrustAssetXdr = new XDR.ChangeTrustAsset();
         changeTrustAssetXdr.Discriminant = new XDR.AssetType
             { InnerValue = XDR.AssetType.AssetTypeEnum.ASSET_TYPE_NATIVE };
 
+        // Act
         var trustlineAsset = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.FromXdr(changeTrustAssetXdr);
+
+        // Assert
         Assert.AreEqual(trustlineAsset.Asset.CanonicalName(), "native");
     }
 
@@ -132,11 +157,16 @@ public class ChangeTrustAssetTest
     ///     Verifies that the factory method correctly wraps a regular Asset as a ChangeTrustAsset.
     /// </summary>
     [TestMethod]
-    public void TestCreateWithAsset()
+    public void Create_WithAsset_ReturnsWrapperWithSameAsset()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var asset = Asset.Create($"USD:{keypair.AccountId}");
+
+        // Act
         var changeTrustAsset = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.Create(asset);
+
+        // Assert
         Assert.AreEqual(asset, changeTrustAsset.Asset);
     }
 
@@ -145,16 +175,19 @@ public class ChangeTrustAssetTest
     ///     Verifies that a LiquidityPoolShareChangeTrustAsset is created with the correct pool parameters.
     /// </summary>
     [TestMethod]
-    public void TestCreateWithAssetAAndAssetB()
+    public void Create_WithAssetAAndAssetB_ReturnsLiquidityPoolShareChangeTrustAsset()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var keypair2 = KeyPair.Random();
-
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"USD:{keypair2.AccountId}");
 
+        // Act
         var liquidityPoolShareChangeTrustAsset =
             (LiquidityPoolShareChangeTrustAsset)ChangeTrustAsset.Create(assetA, assetB, 30);
+
+        // Assert
         Assert.IsNotNull(liquidityPoolShareChangeTrustAsset.Parameters);
         Assert.AreEqual("pool_share", liquidityPoolShareChangeTrustAsset.Type);
     }
@@ -165,12 +198,14 @@ public class ChangeTrustAssetTest
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestFromXdr_UnknownAssetType()
+    public void FromXdr_WithUnknownAssetType_ThrowsArgumentException()
     {
+        // Arrange
         var changeTrustAssetXdr = new XDR.ChangeTrustAsset();
         changeTrustAssetXdr.Discriminant = new XDR.AssetType
             { InnerValue = (XDR.AssetType.AssetTypeEnum)999 };
 
+        // Act & Assert
         ChangeTrustAsset.FromXdr(changeTrustAssetXdr);
     }
 
@@ -179,12 +214,15 @@ public class ChangeTrustAssetTest
     ///     Verifies that Equals implementation correctly compares the wrapped Asset instances.
     /// </summary>
     [TestMethod]
-    public void TestWrapperEquals_SameAsset()
+    public void WrapperEquals_WithSameAsset_ReturnsTrue()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var asset = Asset.Create($"USD:{keypair.AccountId}");
         var wrapper1 = new ChangeTrustAsset.Wrapper(asset);
         var wrapper2 = new ChangeTrustAsset.Wrapper(asset);
+
+        // Act & Assert
         Assert.IsTrue(wrapper1.Equals(wrapper2));
     }
 
@@ -193,14 +231,17 @@ public class ChangeTrustAssetTest
     ///     Verifies that Equals correctly distinguishes between different assets.
     /// </summary>
     [TestMethod]
-    public void TestWrapperEquals_DifferentAsset()
+    public void WrapperEquals_WithDifferentAsset_ReturnsFalse()
     {
+        // Arrange
         var keypair1 = KeyPair.Random();
         var keypair2 = KeyPair.Random();
         var asset1 = Asset.Create($"USD:{keypair1.AccountId}");
         var asset2 = Asset.Create($"EUR:{keypair2.AccountId}");
         var wrapper1 = new ChangeTrustAsset.Wrapper(asset1);
         var wrapper2 = new ChangeTrustAsset.Wrapper(asset2);
+
+        // Act & Assert
         Assert.IsFalse(wrapper1.Equals(wrapper2));
     }
 
@@ -209,11 +250,14 @@ public class ChangeTrustAssetTest
     ///     Verifies null safety in the Equals implementation.
     /// </summary>
     [TestMethod]
-    public void TestWrapperEquals_Null()
+    public void WrapperEquals_WithNull_ReturnsFalse()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var asset = Asset.Create($"USD:{keypair.AccountId}");
         var wrapper = new ChangeTrustAsset.Wrapper(asset);
+
+        // Act & Assert
         Assert.IsFalse(wrapper.Equals(null));
     }
 
@@ -222,18 +266,21 @@ public class ChangeTrustAssetTest
     ///     Verifies that regular asset wrappers sort before pool share assets (returns -1).
     /// </summary>
     [TestMethod]
-    public void TestWrapperCompareTo_WithPoolShare()
+    public void WrapperCompareTo_WithPoolShare_ReturnsNegativeOne()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var asset = Asset.Create($"USD:{keypair.AccountId}");
         var wrapper = new ChangeTrustAsset.Wrapper(asset);
-
         var keypair2 = KeyPair.Random();
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"GBP:{keypair2.AccountId}");
         var poolShare = new LiquidityPoolShareChangeTrustAsset(assetA, assetB, 30);
 
+        // Act
         var comparison = wrapper.CompareTo(poolShare);
+
+        // Assert
         Assert.AreEqual(-1, comparison);
     }
 
@@ -242,15 +289,19 @@ public class ChangeTrustAssetTest
     ///     Verifies that CompareTo delegates to the underlying Asset.CompareTo method.
     /// </summary>
     [TestMethod]
-    public void TestWrapperCompareTo_WithWrapper()
+    public void WrapperCompareTo_WithWrapper_ReturnsNonZero()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var asset1 = Asset.Create($"EUR:{keypair.AccountId}");
         var asset2 = Asset.Create($"USD:{keypair.AccountId}");
         var wrapper1 = new ChangeTrustAsset.Wrapper(asset1);
         var wrapper2 = new ChangeTrustAsset.Wrapper(asset2);
 
+        // Act
         var comparison = wrapper1.CompareTo(wrapper2);
+
+        // Assert
         Assert.IsTrue(comparison != 0);
     }
 
@@ -259,12 +310,15 @@ public class ChangeTrustAssetTest
     ///     Verifies GetHashCode implementation for proper behavior in hash-based collections.
     /// </summary>
     [TestMethod]
-    public void TestWrapperGetHashCode()
+    public void WrapperGetHashCode_WithSameAsset_ReturnsSameHashCode()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var asset = Asset.Create($"USD:{keypair.AccountId}");
         var wrapper1 = new ChangeTrustAsset.Wrapper(asset);
         var wrapper2 = new ChangeTrustAsset.Wrapper(asset);
+
+        // Act & Assert
         Assert.AreEqual(wrapper1.GetHashCode(), wrapper2.GetHashCode());
     }
 
@@ -274,9 +328,12 @@ public class ChangeTrustAssetTest
     ///     Verifies that passing "native" as the type correctly creates a native asset wrapper.
     /// </summary>
     [TestMethod]
-    public void TestCreateWithTypeCodeIssuer_Native()
+    public void Create_WithTypeNative_ReturnsWrapperWithNativeAsset()
     {
+        // Arrange & Act
         var changeTrustAsset = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.Create("native", null!, null!);
+
+        // Assert
         Assert.IsTrue(changeTrustAsset.Asset is AssetTypeNative);
         Assert.AreEqual("native", changeTrustAsset.Asset.CanonicalName());
     }
@@ -287,11 +344,16 @@ public class ChangeTrustAssetTest
     ///     Verifies that passing "non-native" as the type correctly creates a credit asset wrapper.
     /// </summary>
     [TestMethod]
-    public void TestCreateWithTypeCodeIssuer_NonNative()
+    public void Create_WithTypeNonNative_ReturnsWrapperWithCreditAsset()
     {
+        // Arrange
         var keypair = KeyPair.Random();
+
+        // Act
         var changeTrustAsset =
             (ChangeTrustAsset.Wrapper)ChangeTrustAsset.Create("non-native", "USD", keypair.AccountId);
+
+        // Assert
         Assert.IsTrue(changeTrustAsset.Asset is AssetTypeCreditAlphaNum);
         Assert.AreEqual($"USD:{keypair.AccountId}", changeTrustAsset.Asset.CanonicalName());
     }
@@ -301,12 +363,16 @@ public class ChangeTrustAssetTest
     ///     Verifies that native assets can be converted to XDR format and back without data loss.
     /// </summary>
     [TestMethod]
-    public void TestWrapperToXdr_Native()
+    public void WrapperToXdr_WithNativeAsset_RoundTripsCorrectly()
     {
+        // Arrange
         var wrapper = new ChangeTrustAsset.Wrapper(new AssetTypeNative());
+
+        // Act
         var xdr = wrapper.ToXdr();
         var roundTripWrapper = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.FromXdr(xdr);
 
+        // Assert
         Assert.IsTrue(roundTripWrapper.Asset is AssetTypeNative);
         Assert.AreEqual("native", roundTripWrapper.Asset.CanonicalName());
     }
@@ -316,14 +382,18 @@ public class ChangeTrustAssetTest
     ///     Verifies that 4-character asset codes are correctly preserved through XDR conversion.
     /// </summary>
     [TestMethod]
-    public void TestWrapperToXdr_CreditAlphaNum4()
+    public void WrapperToXdr_WithCreditAlphaNum4_RoundTripsCorrectly()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var asset = new AssetTypeCreditAlphaNum4("USD", keypair.AccountId);
         var wrapper = new ChangeTrustAsset.Wrapper(asset);
+
+        // Act
         var xdr = wrapper.ToXdr();
         var roundTripWrapper = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.FromXdr(xdr);
 
+        // Assert
         Assert.IsTrue(roundTripWrapper.Asset is AssetTypeCreditAlphaNum4);
         Assert.AreEqual($"USD:{keypair.AccountId}", roundTripWrapper.Asset.CanonicalName());
     }
@@ -333,14 +403,18 @@ public class ChangeTrustAssetTest
     ///     Verifies that 5-12 character asset codes are correctly preserved through XDR conversion.
     /// </summary>
     [TestMethod]
-    public void TestWrapperToXdr_CreditAlphaNum12()
+    public void WrapperToXdr_WithCreditAlphaNum12_RoundTripsCorrectly()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var asset = new AssetTypeCreditAlphaNum12("TESTTEST", keypair.AccountId);
         var wrapper = new ChangeTrustAsset.Wrapper(asset);
+
+        // Act
         var xdr = wrapper.ToXdr();
         var roundTripWrapper = (ChangeTrustAsset.Wrapper)ChangeTrustAsset.FromXdr(xdr);
 
+        // Assert
         Assert.IsTrue(roundTripWrapper.Asset is AssetTypeCreditAlphaNum12);
         Assert.AreEqual($"TESTTEST:{keypair.AccountId}", roundTripWrapper.Asset.CanonicalName());
     }
