@@ -3,73 +3,139 @@ using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+///     Unit tests for set options result types.
+/// </summary>
 [TestClass]
 public class SetOptionsResultTest
 {
+    /// <summary>
+    ///     Verifies that SetOptionsSuccess result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSuccess()
+    public void Deserialize_WithSetOptionsSuccessXdr_ReturnsSetOptionsSuccess()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAFAAAAAAAAAAA=", typeof(SetOptionsSuccess), true);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAFAAAAAAAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(SetOptionsSuccess), true);
     }
 
+    /// <summary>
+    ///     Verifies that SetOptionsLowReserve result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestLowReserve()
+    public void Deserialize_WithSetOptionsLowReserveXdr_ReturnsSetOptionsLowReserve()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAF/////wAAAAA=", typeof(SetOptionsLowReserve),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAF/////wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(SetOptionsLowReserve), false);
     }
 
+    /// <summary>
+    ///     Verifies that SetOptionsTooManySigners result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestTooManySigner()
+    public void Deserialize_WithSetOptionsTooManySignersXdr_ReturnsSetOptionsTooManySigners()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAF/////gAAAAA=", typeof(SetOptionsTooManySigners),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAF/////gAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(SetOptionsTooManySigners), false);
     }
 
+    /// <summary>
+    ///     Verifies that SetOptionsBadFlags result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestBadFlag()
+    public void Deserialize_WithSetOptionsBadFlagsXdr_ReturnsSetOptionsBadFlags()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAF/////QAAAAA=", typeof(SetOptionsBadFlags), false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAF/////QAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(SetOptionsBadFlags), false);
     }
 
+    /// <summary>
+    ///     Verifies that SetOptionsInvalidInflation result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestInvalidInflation()
+    public void Deserialize_WithSetOptionsInvalidInflationXdr_ReturnsSetOptionsInvalidInflation()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAF/////AAAAAA=", typeof(SetOptionsInvalidInflation),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAF/////AAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(SetOptionsInvalidInflation), false);
     }
 
+    /// <summary>
+    ///     Verifies that SetOptionsCantChange result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestCantChange()
+    public void Deserialize_WithSetOptionsCantChangeXdr_ReturnsSetOptionsCantChange()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAF////+wAAAAA=", typeof(SetOptionsCantChange),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAF////+wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(SetOptionsCantChange), false);
     }
 
+    /// <summary>
+    ///     Verifies that SetOptionsUnknownFlag result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestUnknownFlag()
+    public void Deserialize_WithSetOptionsUnknownFlagXdr_ReturnsSetOptionsUnknownFlag()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAF////+gAAAAA=", typeof(SetOptionsUnknownFlag),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAF////+gAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(SetOptionsUnknownFlag), false);
     }
 
+    /// <summary>
+    ///     Verifies that SetOptionsThresholdOutOfRange result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestThresholdOutOfRange()
+    public void Deserialize_WithSetOptionsThresholdOutOfRangeXdr_ReturnsSetOptionsThresholdOutOfRange()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAF////+QAAAAA=",
-            typeof(SetOptionsThresholdOutOfRange), false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAF////+QAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(SetOptionsThresholdOutOfRange), false);
     }
 
+    /// <summary>
+    ///     Verifies that SetOptionsBadSigner result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestBadSigner()
+    public void Deserialize_WithSetOptionsBadSignerXdr_ReturnsSetOptionsBadSigner()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAF////+AAAAAA=", typeof(SetOptionsBadSigner), false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAF////+AAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(SetOptionsBadSigner), false);
     }
 
+    /// <summary>
+    ///     Verifies that SetOptionsInvalidHomeDomain result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestInvalidHomeDomain()
+    public void Deserialize_WithSetOptionsInvalidHomeDomainXdr_ReturnsSetOptionsInvalidHomeDomain()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAF////9wAAAAA=", typeof(SetOptionsInvalidHomeDomain),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAF////9wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(SetOptionsInvalidHomeDomain), false);
     }
 }

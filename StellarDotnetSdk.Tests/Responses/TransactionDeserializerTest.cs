@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,28 +8,46 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+///     Unit tests for deserializing transaction responses from JSON.
+/// </summary>
 [TestClass]
 public class TransactionDeserializerTest
 {
+    /// <summary>
+    ///     Verifies that TransactionResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithTransactionJson_ReturnsDeserializedTransaction()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("transaction.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
 
+        // Assert
         Assert.IsNotNull(transaction);
         AssertTransaction(transaction);
     }
 
+    /// <summary>
+    ///     Verifies that TransactionResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserialize()
+    public void SerializeDeserialize_WithTransaction_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("transaction.json");
         var json = File.ReadAllText(jsonPath);
         var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(transaction);
         var back = JsonSerializer.Deserialize<TransactionResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTransaction(back);
     }
@@ -166,14 +184,21 @@ public class TransactionDeserializerTest
     }
 
 
+    /// <summary>
+    ///     Verifies that TransactionResponse with text memo can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeWithMemoText()
+    public void Deserialize_WithTextMemoJson_ReturnsTransactionWithTextMemo()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("transactionWithTextMemo.json");
         var json = File.ReadAllText(jsonPath);
-        var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
-        Assert.IsNotNull(transaction);
 
+        // Act
+        var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
+        Assert.IsNotNull(transaction);
 
         // Skip checking the main properties as they have been tested in other test methods
         Assert.AreEqual("XLM e2e monitor transaction", transaction.MemoValue);
@@ -182,14 +207,20 @@ public class TransactionDeserializerTest
         Assert.IsTrue(transaction.Memo is MemoText);
     }
 
-    //
+    /// <summary>
+    ///     Verifies that TransactionResponse with fee bump transaction can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeFeeBump()
+    public void Deserialize_WithFeeBumpTransactionJson_ReturnsTransactionWithFeeBump()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("transactionFeeBump.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
 
+        // Assert
         Assert.IsNotNull(transaction);
 
         // Skip checking the main properties as they have been tested in other test methods
@@ -205,13 +236,20 @@ public class TransactionDeserializerTest
         Assert.AreEqual(99L, transaction.InnerTx.MaxFee);
     }
 
+    /// <summary>
+    ///     Verifies that TransactionResponse with muxed account can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeMuxed()
+    public void Deserialize_WithMuxedAccountJson_ReturnsTransactionWithMuxedAccount()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("transactionMuxed.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
 
+        // Assert
         Assert.IsNotNull(transaction);
         AssertTransactionMuxedAccount(transaction);
     }

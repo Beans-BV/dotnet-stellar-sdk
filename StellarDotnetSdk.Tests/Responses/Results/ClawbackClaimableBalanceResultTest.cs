@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Responses.Results;
 using StellarDotnetSdk.Xdr;
 using ClawbackClaimableBalanceResult = StellarDotnetSdk.Xdr.ClawbackClaimableBalanceResult;
@@ -7,41 +7,67 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.ClawbackClaimableBalanceResultCode.C
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+///     Unit tests for clawback claimable balance result types.
+/// </summary>
 [TestClass]
-public class ClawbackClaimableBalanceOperationResponse
+public class ClawbackClaimableBalanceResultTest
 {
+    /// <summary>
+    ///     Verifies that ClawbackClaimableBalanceDoesNotExist result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDoesNotExist()
+    public void Deserialize_WithClawbackClaimableBalanceDoesNotExistXdr_ReturnsClawbackClaimableBalanceDoesNotExist()
     {
+        // Arrange
         var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST);
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(ClawbackClaimableBalanceDoesNotExist), false);
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ClawbackClaimableBalanceDoesNotExist), false);
     }
 
+    /// <summary>
+    ///     Verifies that ClawbackClaimableBalanceNotClawbackEnabled result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNotClawbackEnabled()
+    public void
+        Deserialize_WithClawbackClaimableBalanceNotClawbackEnabledXdr_ReturnsClawbackClaimableBalanceNotClawbackEnabled()
     {
+        // Arrange
         var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED);
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
 
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(ClawbackClaimableBalanceNotClawbackEnabled), false);
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ClawbackClaimableBalanceNotClawbackEnabled), false);
     }
 
+    /// <summary>
+    ///     Verifies that ClawbackClaimableBalanceNotIssuer result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNotIssuer()
+    public void Deserialize_WithClawbackClaimableBalanceNotIssuerXdr_ReturnsClawbackClaimableBalanceNotIssuer()
     {
+        // Arrange
         var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER);
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(ClawbackClaimableBalanceNotIssuer), false);
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ClawbackClaimableBalanceNotIssuer), false);
     }
 
+    /// <summary>
+    ///     Verifies that ClawbackClaimableBalanceSuccess result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSuccess()
+    public void Deserialize_WithClawbackClaimableBalanceSuccessXdr_ReturnsClawbackClaimableBalanceSuccess()
     {
+        // Arrange
         var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CLAWBACK_CLAIMABLE_BALANCE_SUCCESS);
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
 
-        Utils.AssertResultOfType(Utils.CreateTransactionResultXdr(operationResultTr),
-            typeof(ClawbackClaimableBalanceSuccess), true);
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ClawbackClaimableBalanceSuccess), true);
     }
 
     private static OperationResult.OperationResultTr CreateOperationResultTr(ResultCodeEnum type)

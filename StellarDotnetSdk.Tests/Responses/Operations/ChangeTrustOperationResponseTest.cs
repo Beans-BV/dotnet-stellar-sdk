@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -7,27 +7,46 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+///     Unit tests for <see cref="ChangeTrustOperationResponse" /> class.
+/// </summary>
 [TestClass]
 public class ChangeTrustOperationResponseTest
 {
+    /// <summary>
+    ///     Verifies that ChangeTrustOperationResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeChangeTrustOperation()
+    public void Deserialize_WithChangeTrustOperationJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("changeTrust.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertChangeTrustData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that ChangeTrustOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeChangeTrustOperation()
+    public void SerializeDeserialize_WithChangeTrustOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("changeTrust.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertChangeTrustData(back);
     }
@@ -47,24 +66,41 @@ public class ChangeTrustOperationResponseTest
             operation.Asset);
     }
 
+    /// <summary>
+    ///     Verifies that ChangeTrustOperationResponse with muxed account can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeChangeTrustOperationMuxed()
+    public void Deserialize_WithChangeTrustOperationMuxedJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("changeTrustMuxed.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertChangeTrustDataMuxed(instance);
     }
 
+    /// <summary>
+    ///     Verifies that ChangeTrustOperationResponse with muxed account can be serialized and deserialized correctly
+    ///     (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeChangeTrustOperationMuxed()
+    public void SerializeDeserialize_WithChangeTrustOperationMuxed_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("changeTrustMuxed.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertChangeTrustDataMuxed(back);
     }
@@ -85,24 +121,41 @@ public class ChangeTrustOperationResponseTest
             operation.Asset);
     }
 
+    /// <summary>
+    ///     Verifies that ChangeTrustOperationResponse with liquidity pool shares can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeChangeTrustOperationLiquidityPoolShares()
+    public void Deserialize_WithChangeTrustOperationLiquidityPoolSharesJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("changeTrustLiquidityPoolShares.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertChangeTrustDataLiquidityPoolShares(instance);
     }
 
+    /// <summary>
+    ///     Verifies that ChangeTrustOperationResponse with liquidity pool shares can be serialized and deserialized correctly
+    ///     (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeChangeTrustOperationLiquidityPoolShares()
+    public void SerializeDeserialize_WithChangeTrustOperationLiquidityPoolShares_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("changeTrustLiquidityPoolShares.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertChangeTrustDataLiquidityPoolShares(back);
     }

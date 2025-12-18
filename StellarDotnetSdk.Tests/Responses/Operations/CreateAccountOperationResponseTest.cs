@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -6,27 +6,46 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+///     Unit tests for <see cref="CreateAccountOperationResponse" /> class.
+/// </summary>
 [TestClass]
 public class CreateAccountOperationResponseTest
 {
+    /// <summary>
+    ///     Verifies that CreateAccountOperationResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeCreateAccountOperation()
+    public void Deserialize_WithCreateAccountOperationJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("createAccount.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertCreateAccountOperationData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that CreateAccountOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeCreateAccountOperation()
+    public void SerializeDeserialize_WithCreateAccountOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("createAccount.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertCreateAccountOperationData(back);
     }
@@ -55,24 +74,41 @@ public class CreateAccountOperationResponseTest
             operation.Links.Transaction.Href);
     }
 
+    /// <summary>
+    ///     Verifies that CreateAccountOperationResponse with muxed account can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeCreateAccountOperationMuxed()
+    public void Deserialize_WithCreateAccountOperationMuxedJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("createAccountMuxed.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertCreateAccountOperationDataMuxed(instance);
     }
 
+    /// <summary>
+    ///     Verifies that CreateAccountOperationResponse with muxed account can be serialized and deserialized correctly
+    ///     (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeCreateAccountOperationMuxed()
+    public void SerializeDeserialize_WithCreateAccountOperationMuxed_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("createAccountMuxed.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertCreateAccountOperationDataMuxed(back);
     }

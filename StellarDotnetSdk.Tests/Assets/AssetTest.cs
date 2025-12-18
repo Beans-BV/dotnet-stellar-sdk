@@ -16,11 +16,16 @@ public class AssetTest
     ///     Verifies round-trip conversion for the native XLM asset type.
     /// </summary>
     [TestMethod]
-    public void TestAssetTypeNative()
+    public void ToXdr_WithNativeAsset_RoundTripsCorrectly()
     {
+        // Arrange
         var asset = new AssetTypeNative();
+
+        // Act
         var thisXdr = asset.ToXdr();
         var parsedAsset = Asset.FromXdr(thisXdr);
+
+        // Assert
         Assert.IsTrue(parsedAsset is AssetTypeNative);
     }
 
@@ -29,12 +34,14 @@ public class AssetTest
     ///     Verifies that it correctly creates native assets and non-native credit assets.
     /// </summary>
     [TestMethod]
-    public void TestAssetCreation()
+    public void Create_WithTypeCodeIssuer_CreatesCorrectAssetType()
     {
+        // Arrange & Act
         var nativeAsset = Asset.Create("native", null, null);
-        Assert.IsTrue(nativeAsset is AssetTypeNative);
-
         var nonNativeAsset = Asset.Create(null, "XLMTEST", "GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
+
+        // Assert
+        Assert.IsTrue(nativeAsset is AssetTypeNative);
         Assert.IsTrue(nonNativeAsset is AssetTypeCreditAlphaNum);
     }
 
@@ -43,13 +50,18 @@ public class AssetTest
     ///     Verifies that asset codes up to 4 characters are correctly serialized and deserialized.
     /// </summary>
     [TestMethod]
-    public void TestAssetTypeCreditAlphaNum4()
+    public void ToXdr_WithCreditAlphaNum4_RoundTripsCorrectly()
     {
+        // Arrange
         var code = "USDA";
         var issuer = KeyPair.Random();
         var asset = new AssetTypeCreditAlphaNum4(code, issuer.AccountId);
+
+        // Act
         var thisXdr = asset.ToXdr();
         var parsedAsset = (AssetTypeCreditAlphaNum4)Asset.FromXdr(thisXdr);
+
+        // Assert
         Assert.AreEqual(code, asset.Code);
         Assert.AreEqual(issuer.AccountId, parsedAsset.Issuer);
     }
@@ -59,13 +71,18 @@ public class AssetTest
     ///     Verifies that asset codes between 5-12 characters are correctly serialized and deserialized.
     /// </summary>
     [TestMethod]
-    public void TestAssetTypeCreditAlphaNum12()
+    public void ToXdr_WithCreditAlphaNum12_RoundTripsCorrectly()
     {
+        // Arrange
         var code = "TESTTEST";
         var issuer = KeyPair.Random();
         var asset = new AssetTypeCreditAlphaNum12(code, issuer.AccountId);
+
+        // Act
         var thisXdr = asset.ToXdr();
         var parsedAsset = (AssetTypeCreditAlphaNum12)Asset.FromXdr(thisXdr);
+
+        // Assert
         Assert.AreEqual(code, asset.Code);
         Assert.AreEqual(issuer.AccountId, parsedAsset.Issuer);
         Assert.AreEqual(asset.Type, "credit_alphanum12");
@@ -77,19 +94,20 @@ public class AssetTest
     ///     This is critical for proper behavior in hash-based collections like Dictionary and HashSet.
     /// </summary>
     [TestMethod]
-    public void TestHashCode()
+    public void GetHashCode_WithVariousAssets_ReturnsConsistentResults()
     {
+        // Arrange
         var issuer1 = KeyPair.Random().AccountId;
         var issuer2 = KeyPair.Random().AccountId;
 
-        // Equal
+        // Act & Assert - Equal cases
         Assert.AreEqual(new AssetTypeNative().GetHashCode(), new AssetTypeNative().GetHashCode());
         Assert.AreEqual(new AssetTypeCreditAlphaNum4("USD", issuer1).GetHashCode(),
             new AssetTypeCreditAlphaNum4("USD", issuer1).GetHashCode());
         Assert.AreEqual(new AssetTypeCreditAlphaNum12("ABCDE", issuer1).GetHashCode(),
             new AssetTypeCreditAlphaNum12("ABCDE", issuer1).GetHashCode());
 
-        // Not equal
+        // Act & Assert - Not equal cases
         Assert.AreNotEqual(new AssetTypeNative().GetHashCode(),
             new AssetTypeCreditAlphaNum4("USD", issuer1).GetHashCode());
         Assert.AreNotEqual(new AssetTypeNative().GetHashCode(),
@@ -115,16 +133,19 @@ public class AssetTest
     ///     Also verifies that different asset types (native vs credit) are never equal.
     /// </summary>
     [TestMethod]
-    public void TestAssetEquals()
+    public void Equals_WithVariousAssets_ReturnsCorrectResults()
     {
+        // Arrange
         var issuer1 = KeyPair.Random().AccountId;
         var issuer2 = KeyPair.Random().AccountId;
 
+        // Act & Assert - Equal cases
         Assert.AreEqual(new AssetTypeNative(), new AssetTypeNative());
         Assert.AreEqual(new AssetTypeCreditAlphaNum4("USD", issuer1), new AssetTypeCreditAlphaNum4("USD", issuer1));
         Assert.AreEqual(new AssetTypeCreditAlphaNum12("ABCDE", issuer1),
             new AssetTypeCreditAlphaNum12("ABCDE", issuer1));
 
+        // Act & Assert - Not equal cases
         Assert.AreNotEqual(new AssetTypeNative(), new AssetTypeCreditAlphaNum4("USD", issuer1));
         Assert.AreNotEqual(new AssetTypeNative(), new AssetTypeCreditAlphaNum12("ABCDE", issuer1));
         Assert.IsFalse(
@@ -137,13 +158,19 @@ public class AssetTest
             new AssetTypeCreditAlphaNum12("ABCDE", issuer1).Equals(new AssetTypeCreditAlphaNum12("ABCDE", issuer2)));
     }
 
+    /// <summary>
+    ///     Tests that AssetTypeCreditAlphaNum.Equals returns false when comparing with incompatible types.
+    ///     Verifies type safety and null handling in the Equals implementation.
+    /// </summary>
     [TestMethod]
-    public void TestAssetTypeCreditAlphaNum_Equals_NonMatchingType()
+    public void Equals_WithIncompatibleType_ReturnsFalse()
     {
+        // Arrange
         var issuer = KeyPair.Random().AccountId;
         var credit4 = new AssetTypeCreditAlphaNum4("USD", issuer);
         var native = new AssetTypeNative();
 
+        // Act & Assert
         Assert.IsFalse(credit4.Equals(native));
         Assert.IsFalse(credit4.Equals(null));
         Assert.IsFalse(credit4.Equals("not an asset"));
@@ -155,8 +182,9 @@ public class AssetTest
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestCreateCanonicalFormInvalidFormat_MissingColon()
+    public void Create_WithCanonicalFormMissingColon_ThrowsArgumentException()
     {
+        // Arrange & Act & Assert
         Asset.Create("USD");
     }
 
@@ -166,8 +194,9 @@ public class AssetTest
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestCreateCanonicalFormInvalidFormat_TooManyParts()
+    public void Create_WithCanonicalFormTooManyParts_ThrowsArgumentException()
     {
+        // Arrange & Act & Assert
         Asset.Create("USD:ISSUER:EXTRA");
     }
 
@@ -176,9 +205,12 @@ public class AssetTest
     ///     Verifies the special case handling for the native XLM asset.
     /// </summary>
     [TestMethod]
-    public void TestCreateCanonicalForm_Native()
+    public void Create_WithCanonicalFormNative_ReturnsNativeAsset()
     {
+        // Arrange & Act
         var asset = Asset.Create("native");
+
+        // Assert
         Assert.IsTrue(asset is AssetTypeNative);
     }
 
@@ -188,8 +220,9 @@ public class AssetTest
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void TestCreateWithNullCode()
+    public void Create_WithNullCode_ThrowsArgumentNullException()
     {
+        // Arrange & Act & Assert
         Asset.Create("non-native", null, "GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
     }
 
@@ -199,8 +232,9 @@ public class AssetTest
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void TestCreateWithNullIssuer()
+    public void Create_WithNullIssuer_ThrowsArgumentNullException()
     {
+        // Arrange & Act & Assert
         Asset.Create("non-native", "USD", null);
     }
 
@@ -210,8 +244,9 @@ public class AssetTest
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(AssetCodeLengthInvalidException))]
-    public void TestCreateNonNativeAsset_EmptyCode()
+    public void CreateNonNativeAsset_WithEmptyCode_ThrowsAssetCodeLengthInvalidException()
     {
+        // Arrange & Act & Assert
         Asset.CreateNonNativeAsset("", "GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
     }
 
@@ -221,8 +256,9 @@ public class AssetTest
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(AssetCodeLengthInvalidException))]
-    public void TestCreateNonNativeAsset_CodeTooLong()
+    public void CreateNonNativeAsset_WithCodeTooLong_ThrowsAssetCodeLengthInvalidException()
     {
+        // Arrange & Act & Assert
         Asset.CreateNonNativeAsset("THISCODEISTOOLONG", "GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR");
     }
 
@@ -232,8 +268,9 @@ public class AssetTest
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(AssetCodeLengthInvalidException))]
-    public void TestAssetTypeCreditAlphaNum4_CodeTooShort()
+    public void AssetTypeCreditAlphaNum4_WithCodeTooShort_ThrowsAssetCodeLengthInvalidException()
     {
+        // Arrange & Act & Assert
         _ = new AssetTypeCreditAlphaNum4("", KeyPair.Random().AccountId);
     }
 
@@ -244,8 +281,9 @@ public class AssetTest
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(AssetCodeLengthInvalidException))]
-    public void TestAssetTypeCreditAlphaNum4_CodeTooLong()
+    public void AssetTypeCreditAlphaNum4_WithCodeTooLong_ThrowsAssetCodeLengthInvalidException()
     {
+        // Arrange & Act & Assert
         _ = new AssetTypeCreditAlphaNum4("FIVES", KeyPair.Random().AccountId);
     }
 
@@ -256,8 +294,9 @@ public class AssetTest
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(AssetCodeLengthInvalidException))]
-    public void TestAssetTypeCreditAlphaNum12_CodeTooShort()
+    public void AssetTypeCreditAlphaNum12_WithCodeTooShort_ThrowsAssetCodeLengthInvalidException()
     {
+        // Arrange & Act & Assert
         _ = new AssetTypeCreditAlphaNum12("FOUR", KeyPair.Random().AccountId);
     }
 
@@ -268,8 +307,9 @@ public class AssetTest
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(AssetCodeLengthInvalidException))]
-    public void TestAssetTypeCreditAlphaNum12_CodeTooLong()
+    public void AssetTypeCreditAlphaNum12_WithCodeTooLong_ThrowsAssetCodeLengthInvalidException()
     {
+        // Arrange & Act & Assert
         _ = new AssetTypeCreditAlphaNum12("THISCODEISTOOLONG", KeyPair.Random().AccountId);
     }
 
@@ -279,12 +319,15 @@ public class AssetTest
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestFromXdr_UnknownAssetType()
+    public void FromXdr_WithUnknownAssetType_ThrowsArgumentException()
     {
+        // Arrange
         var xdrAsset = new StellarDotnetSdk.Xdr.Asset
         {
             Discriminant = new AssetType { InnerValue = (AssetType.AssetTypeEnum)999 },
         };
+
+        // Act & Assert
         Asset.FromXdr(xdrAsset);
     }
 
@@ -293,11 +336,17 @@ public class AssetTest
     ///     Verifies that all native assets are considered equivalent for ordering purposes.
     /// </summary>
     [TestMethod]
-    public void TestCompareTo_NativeVsNative()
+    public void CompareTo_NativeVsNative_ReturnsZero()
     {
+        // Arrange
         var native1 = new AssetTypeNative();
         var native2 = new AssetTypeNative();
-        Assert.AreEqual(0, native1.CompareTo(native2));
+
+        // Act
+        var result = native1.CompareTo(native2);
+
+        // Assert
+        Assert.AreEqual(0, result);
     }
 
     /// <summary>
@@ -305,10 +354,13 @@ public class AssetTest
     ///     Verifies that native assets sort before credit assets (native returns -1, credit returns 1).
     /// </summary>
     [TestMethod]
-    public void TestCompareTo_NativeVsCreditAlphaNum4()
+    public void CompareTo_NativeVsCreditAlphaNum4_ReturnsCorrectOrder()
     {
+        // Arrange
         var native = new AssetTypeNative();
         var credit = new AssetTypeCreditAlphaNum4("USD", KeyPair.Random().AccountId);
+
+        // Act & Assert
         Assert.AreEqual(-1, native.CompareTo(credit));
         Assert.AreEqual(1, credit.CompareTo(native));
     }
@@ -318,10 +370,13 @@ public class AssetTest
     ///     Verifies that native assets sort before credit assets regardless of code length.
     /// </summary>
     [TestMethod]
-    public void TestCompareTo_NativeVsCreditAlphaNum12()
+    public void CompareTo_NativeVsCreditAlphaNum12_ReturnsCorrectOrder()
     {
+        // Arrange
         var native = new AssetTypeNative();
         var credit = new AssetTypeCreditAlphaNum12("TESTTEST", KeyPair.Random().AccountId);
+
+        // Act & Assert
         Assert.AreEqual(-1, native.CompareTo(credit));
         Assert.AreEqual(1, credit.CompareTo(native));
     }
@@ -332,11 +387,14 @@ public class AssetTest
     ///     codes).
     /// </summary>
     [TestMethod]
-    public void TestCompareTo_CreditAlphaNum4VsCreditAlphaNum12()
+    public void CompareTo_CreditAlphaNum4VsCreditAlphaNum12_ReturnsCorrectOrder()
     {
+        // Arrange
         var issuer = KeyPair.Random().AccountId;
         var credit4 = new AssetTypeCreditAlphaNum4("USD", issuer);
         var credit12 = new AssetTypeCreditAlphaNum12("TESTTEST", issuer);
+
+        // Act & Assert
         Assert.AreEqual(-1, credit4.CompareTo(credit12));
         Assert.AreEqual(1, credit12.CompareTo(credit4));
     }
@@ -346,13 +404,18 @@ public class AssetTest
     ///     Verifies that issuer is part of the comparison logic (same code from different issuers are different assets).
     /// </summary>
     [TestMethod]
-    public void TestCompareTo_CreditAlphaNum4_SameCodeDifferentIssuer()
+    public void CompareTo_CreditAlphaNum4WithSameCodeDifferentIssuer_ReturnsNonZero()
     {
+        // Arrange
         var issuer1 = KeyPair.Random().AccountId;
         var issuer2 = KeyPair.Random().AccountId;
         var credit1 = new AssetTypeCreditAlphaNum4("USD", issuer1);
         var credit2 = new AssetTypeCreditAlphaNum4("USD", issuer2);
+
+        // Act
         var comparison = credit1.CompareTo(credit2);
+
+        // Assert
         Assert.IsTrue(comparison != 0);
     }
 
@@ -361,12 +424,17 @@ public class AssetTest
     ///     Verifies that asset code is part of the comparison logic.
     /// </summary>
     [TestMethod]
-    public void TestCompareTo_CreditAlphaNum4_DifferentCode()
+    public void CompareTo_CreditAlphaNum4WithDifferentCode_ReturnsNonZero()
     {
+        // Arrange
         var issuer = KeyPair.Random().AccountId;
         var credit1 = new AssetTypeCreditAlphaNum4("EUR", issuer);
         var credit2 = new AssetTypeCreditAlphaNum4("USD", issuer);
+
+        // Act
         var comparison = credit1.CompareTo(credit2);
+
+        // Assert
         Assert.IsTrue(comparison != 0);
     }
 
@@ -375,13 +443,18 @@ public class AssetTest
     ///     Verifies that issuer is part of the comparison logic for longer asset codes.
     /// </summary>
     [TestMethod]
-    public void TestCompareTo_CreditAlphaNum12_SameCodeDifferentIssuer()
+    public void CompareTo_CreditAlphaNum12WithSameCodeDifferentIssuer_ReturnsNonZero()
     {
+        // Arrange
         var issuer1 = KeyPair.Random().AccountId;
         var issuer2 = KeyPair.Random().AccountId;
         var credit1 = new AssetTypeCreditAlphaNum12("TESTTEST", issuer1);
         var credit2 = new AssetTypeCreditAlphaNum12("TESTTEST", issuer2);
+
+        // Act
         var comparison = credit1.CompareTo(credit2);
+
+        // Assert
         Assert.IsTrue(comparison != 0);
     }
 
@@ -390,12 +463,17 @@ public class AssetTest
     ///     Verifies that asset code is part of the comparison logic for longer codes.
     /// </summary>
     [TestMethod]
-    public void TestCompareTo_CreditAlphaNum12_DifferentCode()
+    public void CompareTo_CreditAlphaNum12WithDifferentCode_ReturnsNonZero()
     {
+        // Arrange
         var issuer = KeyPair.Random().AccountId;
         var credit1 = new AssetTypeCreditAlphaNum12("EUROPEAN", issuer);
         var credit2 = new AssetTypeCreditAlphaNum12("TESTTEST", issuer);
+
+        // Act
         var comparison = credit1.CompareTo(credit2);
+
+        // Assert
         Assert.IsTrue(comparison != 0);
     }
 
@@ -404,10 +482,15 @@ public class AssetTest
     ///     Verifies that native assets are encoded as "native" for use in URL query parameters.
     /// </summary>
     [TestMethod]
-    public void TestToQueryParameterEncodedString_Native()
+    public void ToQueryParameterEncodedString_WithNativeAsset_ReturnsNative()
     {
+        // Arrange
         var nativeAsset = new AssetTypeNative();
+
+        // Act
         var result = nativeAsset.ToQueryParameterEncodedString();
+
+        // Assert
         Assert.AreEqual("native", result);
     }
 
@@ -416,12 +499,17 @@ public class AssetTest
     ///     Verifies that credit assets are encoded as "CODE:ISSUER" format for use in URL query parameters.
     /// </summary>
     [TestMethod]
-    public void TestToQueryParameterEncodedString_CreditAlphaNum4()
+    public void ToQueryParameterEncodedString_WithCreditAlphaNum4_ReturnsCodeColonIssuer()
     {
+        // Arrange
         var issuer = KeyPair.Random();
         var code = "USD";
         var asset = new AssetTypeCreditAlphaNum4(code, issuer.AccountId);
+
+        // Act
         var result = asset.ToQueryParameterEncodedString();
+
+        // Assert
         Assert.AreEqual($"{code}:{issuer.AccountId}", result);
     }
 
@@ -430,12 +518,17 @@ public class AssetTest
     ///     Verifies that longer credit asset codes are also encoded as "CODE:ISSUER" format.
     /// </summary>
     [TestMethod]
-    public void TestToQueryParameterEncodedString_CreditAlphaNum12()
+    public void ToQueryParameterEncodedString_WithCreditAlphaNum12_ReturnsCodeColonIssuer()
     {
+        // Arrange
         var issuer = KeyPair.Random();
         var code = "TESTTEST";
         var asset = new AssetTypeCreditAlphaNum12(code, issuer.AccountId);
+
+        // Act
         var result = asset.ToQueryParameterEncodedString();
+
+        // Assert
         Assert.AreEqual($"{code}:{issuer.AccountId}", result);
     }
 }

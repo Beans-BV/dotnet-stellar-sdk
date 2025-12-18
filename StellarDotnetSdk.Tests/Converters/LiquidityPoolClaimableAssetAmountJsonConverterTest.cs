@@ -8,14 +8,21 @@ using StellarDotnetSdk.Responses.Effects;
 
 namespace StellarDotnetSdk.Tests.Converters;
 
+/// <summary>
+///     Tests for LiquidityPoolClaimableAssetAmountJsonConverter JSON serialization and deserialization functionality.
+/// </summary>
 [TestClass]
 public class LiquidityPoolClaimableAssetAmountJsonConverterTest
 {
     private readonly JsonSerializerOptions _options = JsonOptions.DefaultOptions;
 
+    /// <summary>
+    ///     Verifies that instances with claimable balance ID serialize and deserialize correctly through JSON.
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeWithClaimableBalanceId()
+    public void SerializeDeserialize_WithClaimableBalanceId_RoundTripsCorrectly()
     {
+        // Arrange
         var issuer = KeyPair.Random();
         var original = new LiquidityPoolClaimableAssetAmount
         {
@@ -24,9 +31,11 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
             ClaimableBalanceId = "00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072",
         };
 
+        // Act
         var json = JsonSerializer.Serialize(original, _options);
         var deserialized = JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
 
+        // Assert
         Assert.IsNotNull(deserialized);
         Assert.AreEqual($"USD:{issuer.AccountId}", deserialized.Asset.CanonicalName());
         Assert.AreEqual("100.50", deserialized.Amount);
@@ -34,9 +43,13 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
             deserialized.ClaimableBalanceId);
     }
 
+    /// <summary>
+    ///     Verifies that instances without claimable balance ID serialize and deserialize correctly through JSON.
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeWithoutClaimableBalanceId()
+    public void SerializeDeserialize_WithoutClaimableBalanceId_RoundTripsCorrectly()
     {
+        // Arrange
         var issuer = KeyPair.Random();
         var original = new LiquidityPoolClaimableAssetAmount
         {
@@ -45,18 +58,24 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
             ClaimableBalanceId = null,
         };
 
+        // Act
         var json = JsonSerializer.Serialize(original, _options);
         var deserialized = JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
 
+        // Assert
         Assert.IsNotNull(deserialized);
         Assert.AreEqual("native", deserialized.Asset.CanonicalName());
         Assert.AreEqual("250.00", deserialized.Amount);
         Assert.IsNull(deserialized.ClaimableBalanceId);
     }
 
+    /// <summary>
+    ///     Verifies that deserializing valid JSON with claimable balance ID creates correct instance.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeValidJsonWithClaimableBalanceId()
+    public void Deserialize_WithValidJsonAndClaimableBalanceId_CreatesCorrectInstance()
     {
+        // Arrange
         var issuer = KeyPair.Random();
         var json = $@"{{
             ""asset"":""USD:{issuer.AccountId}"",
@@ -64,8 +83,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
             ""claimable_balance_id"":""00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072""
         }}";
 
+        // Act
         var result = JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
 
+        // Assert
         Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result.Asset, typeof(AssetTypeCreditAlphaNum));
         Assert.AreEqual("500.0000000", result.Amount);
@@ -73,88 +94,129 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
             result.ClaimableBalanceId);
     }
 
+    /// <summary>
+    ///     Verifies that deserializing valid JSON with null claimable balance ID creates correct instance.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeValidJsonNullClaimableBalanceId()
+    public void Deserialize_WithValidJsonAndNullClaimableBalanceId_CreatesCorrectInstance()
     {
+        // Arrange
         var json = @"{
             ""asset"":""native"",
             ""amount"":""100.00"",
             ""claimable_balance_id"":null
         }";
 
+        // Act
         var result = JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
 
+        // Assert
         Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result.Asset, typeof(AssetTypeNative));
         Assert.AreEqual("100.00", result.Amount);
         Assert.IsNull(result.ClaimableBalanceId);
     }
 
+    /// <summary>
+    ///     Verifies that deserializing valid JSON without claimable balance ID property creates instance with null claimable
+    ///     balance ID.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeValidJsonMissingClaimableBalanceId()
+    public void Deserialize_WithValidJsonMissingClaimableBalanceId_CreatesInstanceWithNullClaimableBalanceId()
     {
+        // Arrange
         var json = @"{
             ""asset"":""native"",
             ""amount"":""75.25""
         }";
 
+        // Act
         var result = JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
 
+        // Assert
         Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result.Asset, typeof(AssetTypeNative));
         Assert.AreEqual("75.25", result.Amount);
         Assert.IsNull(result.ClaimableBalanceId);
     }
 
+    /// <summary>
+    ///     Verifies that deserializing JSON with missing asset property throws ArgumentException.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestDeserializeMissingAssetThrowsException()
+    public void Deserialize_WithMissingAsset_ThrowsArgumentException()
     {
+        // Arrange
         var json = @"{
             ""amount"":""100"",
             ""claimable_balance_id"":""00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072""
         }";
+
+        // Act
         JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Verifies that deserializing JSON with missing amount property throws ArgumentException.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestDeserializeMissingAmountThrowsException()
+    public void Deserialize_WithMissingAmount_ThrowsArgumentException()
     {
+        // Arrange
         var json = @"{
             ""asset"":""native"",
             ""claimable_balance_id"":""00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072""
         }";
+
+        // Act
         JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Verifies that deserializing JSON with null asset property throws ArgumentException.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestDeserializeNullAssetThrowsException()
+    public void Deserialize_WithNullAsset_ThrowsArgumentException()
     {
+        // Arrange
         var json = @"{
             ""asset"":null,
             ""amount"":""100"",
             ""claimable_balance_id"":""00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072""
         }";
+
+        // Act
         JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Verifies that deserializing JSON with null amount property throws ArgumentException.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestDeserializeNullAmountThrowsException()
+    public void Deserialize_WithNullAmount_ThrowsArgumentException()
     {
+        // Arrange
         var json = @"{
             ""asset"":""native"",
             ""amount"":null,
             ""claimable_balance_id"":""00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072""
         }";
+
+        // Act
         JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Verifies that serialization produces JSON with correct property names and values.
+    /// </summary>
     [TestMethod]
-    public void TestSerializeFormat()
+    public void Serialize_ProducesCorrectJsonFormat()
     {
+        // Arrange
         var issuer = KeyPair.Random();
         var obj = new LiquidityPoolClaimableAssetAmount
         {
@@ -163,8 +225,10 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
             ClaimableBalanceId = "00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072",
         };
 
+        // Act
         var json = JsonSerializer.Serialize(obj, _options);
 
+        // Assert
         Assert.IsTrue(json.Contains("\"asset\":"));
         Assert.IsTrue(json.Contains("\"amount\":"));
         Assert.IsTrue(json.Contains("\"claimable_balance_id\":"));
@@ -173,48 +237,72 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
         Assert.IsTrue(json.Contains("00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072"));
     }
 
+    /// <summary>
+    ///     Verifies that deserializing invalid JSON throws JsonException.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
-    public void TestDeserializeInvalidJsonThrowsException()
+    public void Deserialize_WithInvalidJson_ThrowsJsonException()
     {
-        // Incomplete JSON
+        // Arrange - Incomplete JSON
         var json = @"{""asset"":""native"",""amount"":";
+
+        // Act
         JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Verifies that deserializing JSON with wrong structure throws JsonException.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(JsonException))]
-    public void TestDeserializeWrongStructureThrowsException()
+    public void Deserialize_WithWrongStructure_ThrowsJsonException()
     {
-        // Not an object
+        // Arrange - Not an object
         var json = @"""just a string""";
+
+        // Act
         JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
     }
 
+    /// <summary>
+    ///     Verifies that deserializing JSON with large amount value succeeds.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeLargeAmount()
+    public void Deserialize_WithLargeAmount_Succeeds()
     {
+        // Arrange
         var json = @"{
             ""asset"":""native"",
             ""amount"":""922337203685477.5807"",
             ""claimable_balance_id"":null
         }";
+
+        // Act
         var result = JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
 
+        // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual("922337203685477.5807", result.Amount);
     }
 
+    /// <summary>
+    ///     Verifies that deserializing JSON with zero amount value succeeds.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeZeroAmount()
+    public void Deserialize_WithZeroAmount_Succeeds()
     {
+        // Arrange
         var json = @"{
             ""asset"":""native"",
             ""amount"":""0"",
             ""claimable_balance_id"":null
         }";
+
+        // Act
         var result = JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
 
+        // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual("0", result.Amount);
     }

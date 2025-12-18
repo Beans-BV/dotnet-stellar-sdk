@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Requests;
@@ -6,13 +6,22 @@ using StellarDotnetSdk.Tests.Responses;
 
 namespace StellarDotnetSdk.Tests.Requests;
 
+/// <summary>
+///     Unit tests for <see cref="TradeAggregationsRequestBuilder" /> class.
+/// </summary>
 [TestClass]
 public class TradeAggregationsRequestBuilderTest
 {
+    /// <summary>
+    ///     Verifies that TradeAggregationsRequestBuilder.BuildUri correctly constructs URI with all aggregation parameters.
+    /// </summary>
     [TestMethod]
-    public void TestTradeAggregations()
+    public void BuildUri_WithAllAggregationParameters_BuildsCorrectUri()
     {
+        // Arrange
         var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act
         var uri = server.TradeAggregations
             .BaseAsset(new AssetTypeNative())
             .CounterAsset(Asset.CreateNonNativeAsset("BTC", "GATEMHCCKCY67ZUCKTROYN24ZYT5GK4EQZ65JJLDHKHRUZI3EUEKMTCH"))
@@ -24,6 +33,7 @@ public class TradeAggregationsRequestBuilderTest
             .Order(OrderDirection.ASC)
             .BuildUri();
 
+        // Assert
         Assert.AreEqual(uri.ToString(),
             "https://horizon-testnet.stellar.org/trade_aggregations?" +
             "base_asset_type=native&" +
@@ -38,10 +48,17 @@ public class TradeAggregationsRequestBuilderTest
             "order=asc");
     }
 
+    /// <summary>
+    ///     Verifies that TradeAggregationsRequestBuilder.Execute correctly retrieves and deserializes trade aggregations page
+    ///     data.
+    /// </summary>
     [TestMethod]
-    public async Task TestTradeAggregationsExecute()
+    public async Task Execute_WithBaseAssetCounterAssetAndTimeRange_ReturnsDeserializedTradeAggregationsPage()
     {
+        // Arrange
         using var server = await Utils.CreateTestServerWithJson("Responses/tradeAggregationPage.json");
+
+        // Act
         var account = await server.TradeAggregations
             .BaseAsset(new AssetTypeNative())
             .CounterAsset(new AssetTypeCreditAlphaNum4("BTC",
@@ -51,6 +68,7 @@ public class TradeAggregationsRequestBuilderTest
             .Resolution(300000L)
             .Execute();
 
+        // Assert
         TradeAggregationsPageDeserializerTest.AssertTestData(account);
     }
 }

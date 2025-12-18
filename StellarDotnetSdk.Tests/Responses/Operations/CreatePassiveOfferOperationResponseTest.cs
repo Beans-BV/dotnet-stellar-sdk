@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -7,30 +7,49 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+///     Unit tests for <see cref="CreatePassiveOfferOperationResponse" /> class.
+/// </summary>
 [TestClass]
 public class CreatePassiveOfferOperationResponseTest
 {
+    /// <summary>
+    ///     Verifies that CreatePassiveOfferOperationResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeCreatePassiveOfferOperation()
+    public void Deserialize_WithCreatePassiveOfferOperationJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("createPassiveOffer.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance =
             JsonSerializer.Deserialize<CreatePassiveOfferOperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertCreatePassiveOfferData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that CreatePassiveOfferOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeCreatePassiveOfferOperation()
+    public void SerializeDeserialize_WithCreatePassiveOfferOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("createPassiveOffer.json");
         var json = File.ReadAllText(jsonPath);
         var instance =
             JsonSerializer.Deserialize<CreatePassiveOfferOperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<CreatePassiveOfferOperationResponse>(serialized,
             JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertCreatePassiveOfferData(back);
     }

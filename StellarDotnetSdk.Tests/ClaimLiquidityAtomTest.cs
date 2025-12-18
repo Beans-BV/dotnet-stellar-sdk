@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Xdr;
@@ -6,12 +6,19 @@ using Asset = StellarDotnetSdk.Assets.Asset;
 
 namespace StellarDotnetSdk.Tests;
 
+/// <summary>
+///     Unit tests for <see cref="ClaimAtom" /> class, specifically ClaimLiquidityAtom functionality.
+/// </summary>
 [TestClass]
 public class ClaimLiquidityAtomTest
 {
+    /// <summary>
+    ///     Verifies that ClaimAtom.FromXdr correctly deserializes ClaimLiquidityAtom from XDR.
+    /// </summary>
     [TestMethod]
-    public void TestFromXdr()
+    public void FromXdr_WithClaimLiquidityAtom_ReturnsCorrectClaimAtomLiquidityPool()
     {
+        // Arrange
         var claimLiquidityAtomXdr = new ClaimLiquidityAtom();
 
         var asset1 = Asset.CreateNonNativeAsset("TEST0", KeyPair.Random().AccountId);
@@ -34,8 +41,10 @@ public class ClaimLiquidityAtomTest
             LiquidityPool = claimLiquidityAtomXdr,
         };
 
+        // Act
         var claimAtomLiquidityPool = (ClaimAtomLiquidityPool)ClaimAtom.FromXdr(claimAtom);
 
+        // Assert
         Assert.AreEqual(claimAtomLiquidityPool.AmountBought, "0.00001");
         Assert.AreEqual(claimAtomLiquidityPool.AmountSold, "0.00001");
         Assert.AreEqual(claimAtomLiquidityPool.AssetBought, asset1);

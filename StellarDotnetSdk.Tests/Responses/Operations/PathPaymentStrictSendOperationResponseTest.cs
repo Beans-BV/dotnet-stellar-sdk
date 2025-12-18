@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -7,27 +7,46 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+///     Unit tests for <see cref="PathPaymentStrictSendOperationResponse" /> class.
+/// </summary>
 [TestClass]
 public class PathPaymentStrictSendOperationResponseTest
 {
+    /// <summary>
+    ///     Verifies that PathPaymentStrictSendOperationResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializePathPaymentStrictSendOperation()
+    public void Deserialize_WithPathPaymentStrictSendOperationJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("pathPaymentStrictSend.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertPathPaymentStrictSendData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that PathPaymentStrictSendOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializePathPaymentStrictSendOperation()
+    public void SerializeDeserialize_WithPathPaymentStrictSendOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("pathPaymentStrictSend.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertPathPaymentStrictSendData(back);
     }
@@ -51,24 +70,41 @@ public class PathPaymentStrictSendOperationResponseTest
             operation.SourceAsset);
     }
 
+    /// <summary>
+    ///     Verifies that PathPaymentStrictSendOperationResponse with muxed accounts can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializePathPaymentStrictSendOperationMuxed()
+    public void Deserialize_WithPathPaymentStrictSendOperationMuxedJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("pathPaymentStrictSendMuxed.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertPathPaymentStrictSendMuxedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that PathPaymentStrictSendOperationResponse with muxed accounts can be serialized and deserialized
+    ///     correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializePathPaymentStrictSendOperationMuxed()
+    public void SerializeDeserialize_WithPathPaymentStrictSendOperationMuxed_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("pathPaymentStrictSendMuxed.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertPathPaymentStrictSendMuxedData(back);
     }

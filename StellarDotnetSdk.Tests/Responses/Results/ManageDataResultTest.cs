@@ -3,40 +3,74 @@ using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+///     Unit tests for manage data result types.
+/// </summary>
 [TestClass]
 public class ManageDataResultTest
 {
+    /// <summary>
+    ///     Verifies that ManageDataSuccess result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSuccess()
+    public void Deserialize_WithManageDataSuccessXdr_ReturnsManageDataSuccess()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAKAAAAAAAAAAA=", typeof(ManageDataSuccess), true);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAKAAAAAAAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ManageDataSuccess), true);
     }
 
+    /// <summary>
+    ///     Verifies that ManageDataNotSupportedYet result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNotSupportedYet()
+    public void Deserialize_WithManageDataNotSupportedYetXdr_ReturnsManageDataNotSupportedYet()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAK/////wAAAAA=", typeof(ManageDataNotSupportedYet),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAK/////wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ManageDataNotSupportedYet), false);
     }
 
+    /// <summary>
+    ///     Verifies that ManageDataNameNotFound result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNameNotFound()
+    public void Deserialize_WithManageDataNameNotFoundXdr_ReturnsManageDataNameNotFound()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAK/////gAAAAA=", typeof(ManageDataNameNotFound),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAK/////gAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ManageDataNameNotFound), false);
     }
 
+    /// <summary>
+    ///     Verifies that ManageDataLowReserve result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestLowReserve()
+    public void Deserialize_WithManageDataLowReserveXdr_ReturnsManageDataLowReserve()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAK/////QAAAAA=", typeof(ManageDataLowReserve),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAK/////QAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ManageDataLowReserve), false);
     }
 
+    /// <summary>
+    ///     Verifies that ManageDataInvalidName result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestInvalidName()
+    public void Deserialize_WithManageDataInvalidNameXdr_ReturnsManageDataInvalidName()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAK/////AAAAAA=", typeof(ManageDataInvalidName),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAK/////AAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ManageDataInvalidName), false);
     }
 }

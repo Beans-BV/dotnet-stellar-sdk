@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,35 +10,57 @@ using XDR = StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+///     Unit tests for deserializing liquidity pool responses from JSON.
+/// </summary>
 [TestClass]
 public class LiquidityPoolDeserializerTest
 {
+    /// <summary>
+    ///     Verifies that LiquidityPoolResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithLiquidityPoolJson_ReturnsDeserializedLiquidityPool()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("liquidityPool.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<LiquidityPoolResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertTestData(instance);
     }
 
-
+    /// <summary>
+    ///     Verifies that LiquidityPoolResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserialize()
+    public void SerializeDeserialize_WithLiquidityPool_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("liquidityPool.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<LiquidityPoolResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var parsed = JsonSerializer.Deserialize<LiquidityPoolResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(parsed);
         AssertTestData(parsed);
     }
 
+    /// <summary>
+    ///     Verifies that Reserve equality comparison works correctly.
+    /// </summary>
     [TestMethod]
-    public void TestReserveEquality()
+    public void Reserve_WithDifferentProperties_ComparesCorrectly()
     {
+        // Arrange
         var assetA = Asset.Create("PHP:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S");
         var assetB = Asset.Create("EURT:GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S");
         var reserveA = new Reserve
@@ -63,6 +85,7 @@ public class LiquidityPoolDeserializerTest
             Asset = assetB,
         };
 
+        // Act & Assert
         Assert.AreEqual(reserveA, reserveB);
         Assert.AreNotEqual(reserveA, reserveC);
         Assert.AreNotEqual(reserveA, reserveD);

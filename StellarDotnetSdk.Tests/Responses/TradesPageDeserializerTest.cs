@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,49 +8,86 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+///     Unit tests for deserializing trades page responses from JSON.
+/// </summary>
 [TestClass]
 public class TradesPageDeserializerTest
 {
+    /// <summary>
+    ///     Verifies that Page&lt;TradeResponse&gt; with order book trades can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializePageOfOrderBookTrade()
+    public void Deserialize_WithOrderBookTradesPageJson_ReturnsDeserializedOrderBookTradesPage()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("tradePageOrderBook.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var tradesPage = JsonSerializer.Deserialize<Page<TradeResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(tradesPage);
         AssertOrderBookTrade(tradesPage);
     }
 
+    /// <summary>
+    ///     Verifies that Page&lt;TradeResponse&gt; with order book trades can be serialized and deserialized correctly
+    ///     (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializePageOfOrderBookTrade()
+    public void SerializeDeserialize_WithOrderBookTradesPage_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("tradePageOrderBook.json");
         var json = File.ReadAllText(jsonPath);
         var tradesPage = JsonSerializer.Deserialize<Page<TradeResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(tradesPage);
         var back = JsonSerializer.Deserialize<Page<TradeResponse>>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertOrderBookTrade(back);
     }
 
+    /// <summary>
+    ///     Verifies that Page&lt;TradeResponse&gt; with liquidity pool trades can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializePageOfLiquidityPoolTrades()
+    public void Deserialize_WithLiquidityPoolTradesPageJson_ReturnsDeserializedLiquidityPoolTradesPage()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("tradePageLiquidityPool.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var tradesPage = JsonSerializer.Deserialize<Page<TradeResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(tradesPage);
         AssertLiquidityPoolTrades(tradesPage);
     }
 
+    /// <summary>
+    ///     Verifies that Page&lt;TradeResponse&gt; with liquidity pool trades can be serialized and deserialized correctly
+    ///     (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializePageOfLiquidityPoolTrades()
+    public void SerializeDeserialize_WithLiquidityPoolTradesPage_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("tradePageLiquidityPool.json");
         var json = File.ReadAllText(jsonPath);
         var tradesPage = JsonSerializer.Deserialize<Page<TradeResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(tradesPage);
         var back = JsonSerializer.Deserialize<Page<TradeResponse>>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertLiquidityPoolTrades(back);
     }

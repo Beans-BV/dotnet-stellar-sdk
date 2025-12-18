@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -7,27 +7,46 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+///     Unit tests for deserializing asset page responses from JSON.
+/// </summary>
 [TestClass]
 public class AssetPageDeserializerTest
 {
+    /// <summary>
+    ///     Verifies that Page&lt;AssetResponse&gt; can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeAssetPage()
+    public void Deserialize_WithAssetPageJson_ReturnsDeserializedAssetPage()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("assetPage.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var assetsPage = JsonSerializer.Deserialize<Page<AssetResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(assetsPage);
         AssertTestData(assetsPage);
     }
 
+    /// <summary>
+    ///     Verifies that Page&lt;AssetResponse&gt; can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeAssetPage()
+    public void SerializeDeserialize_WithAssetPage_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("assetPage.json");
         var json = File.ReadAllText(jsonPath);
         var assetsPage = JsonSerializer.Deserialize<Page<AssetResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(assetsPage);
         var back = JsonSerializer.Deserialize<Page<AssetResponse>>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTestData(back);
     }
@@ -67,12 +86,20 @@ public class AssetPageDeserializerTest
         Assert.AreEqual("70000000.0000000", record.LiquidityPoolsAmount);
     }
 
+    /// <summary>
+    ///     Verifies that empty Page&lt;AssetResponse&gt; can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeEmptyAssetPage()
+    public void Deserialize_WithEmptyAssetPageJson_ReturnsEmptyAssetPage()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("assetPageEmpty.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var assetsPage = JsonSerializer.Deserialize<Page<AssetResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(assetsPage);
         Assert.IsNotNull(assetsPage.Links);
         Assert.AreEqual(

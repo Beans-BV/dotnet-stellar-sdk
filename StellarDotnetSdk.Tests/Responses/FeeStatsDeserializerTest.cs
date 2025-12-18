@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -6,28 +6,46 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+///     Unit tests for deserializing fee stats responses from JSON.
+/// </summary>
 [TestClass]
 public class FeeStatsDeserializerTest
 {
+    /// <summary>
+    ///     Verifies that FeeStatsResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithFeeStatsJson_ReturnsDeserializedFeeStats()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("feeStats.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var stats = JsonSerializer.Deserialize<FeeStatsResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(stats);
         AssertTestData(stats);
     }
 
+    /// <summary>
+    ///     Verifies that FeeStatsResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserialize()
+    public void SerializeDeserialize_WithFeeStats_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("feeStats.json");
         var json = File.ReadAllText(jsonPath);
         var stats = JsonSerializer.Deserialize<FeeStatsResponse>(json, JsonOptions.DefaultOptions);
 
+        // Act
         var serialized = JsonSerializer.Serialize(stats);
         var back = JsonSerializer.Deserialize<FeeStatsResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(stats);
         Assert.IsNotNull(back);
         Assert.AreEqual(stats.LastLedger, back.LastLedger);

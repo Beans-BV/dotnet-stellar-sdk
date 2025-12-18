@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -7,27 +7,46 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+///     Unit tests for <see cref="AllowTrustOperationResponse" /> class.
+/// </summary>
 [TestClass]
 public class AllowTrustOperationResponseTest
 {
+    /// <summary>
+    ///     Verifies that AllowTrustOperationResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeAllowTrustOperation()
+    public void Deserialize_WithAllowTrustOperationJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("allowTrust.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertAllowTrustOperationData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that AllowTrustOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeAllowTrustOperation()
+    public void SerializeDeserialize_WithAllowTrustOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("allowTrust.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertAllowTrustOperationData(back);
     }
@@ -46,24 +65,41 @@ public class AllowTrustOperationResponseTest
             operation.Asset);
     }
 
+    /// <summary>
+    ///     Verifies that AllowTrustOperationResponse with muxed account can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeAllowTrustOperationMuxed()
+    public void Deserialize_WithAllowTrustOperationMuxedJson_ReturnsDeserializedOperation()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("allowTrustMuxed.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertAllowTrustOperationMuxed(instance);
     }
 
+    /// <summary>
+    ///     Verifies that AllowTrustOperationResponse with muxed account can be serialized and deserialized correctly
+    ///     (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeAllowTrustOperationMuxed()
+    public void SerializeDeserialize_WithAllowTrustOperationMuxed_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("allowTrustMuxed.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertAllowTrustOperationMuxed(back);
     }

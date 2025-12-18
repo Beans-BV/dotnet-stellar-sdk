@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -7,27 +7,46 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+///     Unit tests for deserializing order book responses from JSON.
+/// </summary>
 [TestClass]
 public class OrderBookDeserializerTest
 {
+    /// <summary>
+    ///     Verifies that OrderBookResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithOrderBookJson_ReturnsDeserializedOrderBook()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("orderBook.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var orderBook = JsonSerializer.Deserialize<OrderBookResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(orderBook);
         AssertTestData(orderBook);
     }
 
+    /// <summary>
+    ///     Verifies that OrderBookResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserialize()
+    public void SerializeDeserialize_WithOrderBook_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("orderBook.json");
         var json = File.ReadAllText(jsonPath);
         var orderBook = JsonSerializer.Deserialize<OrderBookResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(orderBook);
         var back = JsonSerializer.Deserialize<OrderBookResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

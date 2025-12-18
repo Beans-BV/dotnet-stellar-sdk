@@ -8,28 +8,46 @@ using StellarDotnetSdk.Responses.Predicates;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+///     Unit tests for deserializing claimable balance responses from JSON.
+/// </summary>
 [TestClass]
 public class ClaimableBalanceDeserializerTest
 {
+    /// <summary>
+    ///     Verifies that ClaimableBalanceResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithClaimableBalanceJson_ReturnsDeserializedClaimableBalance()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("claimableBalance.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var claimableBalance = JsonSerializer.Deserialize<ClaimableBalanceResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(claimableBalance);
         AssertTestData(claimableBalance);
     }
 
+    /// <summary>
+    ///     Verifies that ClaimableBalanceResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserialize()
+    public void SerializeDeserialize_WithClaimableBalance_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("claimableBalance.json");
         var json = File.ReadAllText(jsonPath);
         var claimableBalance = JsonSerializer.Deserialize<ClaimableBalanceResponse>(json, JsonOptions.DefaultOptions);
 
+        // Act
         var serialized = JsonSerializer.Serialize(claimableBalance);
         var back = JsonSerializer.Deserialize<ClaimableBalanceResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         Assert.IsNotNull(claimableBalance);
         Assert.AreEqual(claimableBalance.LastModifiedLedger, back.LastModifiedLedger);

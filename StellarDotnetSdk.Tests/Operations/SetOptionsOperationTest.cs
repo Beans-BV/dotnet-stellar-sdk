@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Operations;
@@ -6,15 +6,22 @@ using StellarDotnetSdk.Transactions;
 
 namespace StellarDotnetSdk.Tests.Operations;
 
+/// <summary>
+///     Tests for SetOptionsOperation class functionality.
+/// </summary>
 [TestClass]
 public class SetOptionsOperationTest
 {
     private readonly KeyPair _source =
         KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
 
+    /// <summary>
+    ///     Verifies that SetOptionsOperation with all options set round-trips correctly through XDR.
+    /// </summary>
     [TestMethod]
-    public void TestSetOptionsOperation()
+    public void SetOptionsOperation_WithAllOptions_RoundTripsThroughXdr()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
         // GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR
@@ -44,9 +51,11 @@ public class SetOptionsOperationTest
             .SetHomeDomain(homeDomain)
             .SetSigner("GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR", signerWeight);
 
+        // Act
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (SetOptionsOperation)Operation.FromXdr(xdrOperation);
 
+        // Assert
         Assert.IsNotNull(decodedOperation.InflationDestination);
         Assert.AreEqual(inflationDestination.AccountId, decodedOperation.InflationDestination.AccountId);
         Assert.AreEqual(1U, decodedOperation.ClearFlags);
@@ -69,19 +78,23 @@ public class SetOptionsOperationTest
             operation.ToXdrBase64());
     }
 
+    /// <summary>
+    ///     Verifies that SetOptionsOperation with single field (home domain) round-trips correctly through XDR.
+    /// </summary>
     [TestMethod]
-    public void TestSetOptionsOperationSingleField()
+    public void SetOptionsOperation_WithSingleField_RoundTripsThroughXdr()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
-
         var homeDomain = "stellar.org";
-
         var operation = new SetOptionsOperation(source).SetHomeDomain(homeDomain);
 
+        // Act
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (SetOptionsOperation)Operation.FromXdr(xdrOperation);
 
+        // Assert
         Assert.AreEqual(null, decodedOperation.InflationDestination);
         Assert.AreEqual(null, decodedOperation.ClearFlags);
         Assert.AreEqual(null, decodedOperation.SetFlags);
@@ -95,21 +108,26 @@ public class SetOptionsOperationTest
         Assert.AreEqual(source.AccountId, decodedOperation.SourceAccount.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that SetOptionsOperation with SHA256 hash signer round-trips correctly through XDR.
+    /// </summary>
     [TestMethod]
-    public void TestSetOptionsOperationSignerSha256()
+    public void SetOptionsOperation_WithSha256HashSigner_RoundTripsThroughXdr()
     {
+        // Arrange
         // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
         var source = KeyPair.FromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
-
         var preimage = "stellar.org"u8.ToArray();
         var hash = Util.Hash(preimage);
 
         var operation = new SetOptionsOperation(source)
             .SetSigner(SignerUtil.Sha256Hash(hash), 10);
 
+        // Act
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (SetOptionsOperation)Operation.FromXdr(xdrOperation);
 
+        // Assert
         Assert.AreEqual(null, decodedOperation.InflationDestination);
         Assert.AreEqual(null, decodedOperation.ClearFlags);
         Assert.AreEqual(null, decodedOperation.SetFlags);
@@ -125,9 +143,13 @@ public class SetOptionsOperationTest
         Assert.AreEqual(source.AccountId, decodedOperation.SourceAccount.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that SetOptionsOperation with PreAuthTx signer round-trips correctly through XDR.
+    /// </summary>
     [TestMethod]
-    public void TestSetOptionsOperationPreAuthTxSigner()
+    public void SetOptionsOperation_WithPreAuthTxSigner_RoundTripsThroughXdr()
     {
+        // Arrange
         Network.UseTestNetwork();
 
         // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
@@ -148,9 +170,11 @@ public class SetOptionsOperationTest
         var operation = new SetOptionsOperation(opSource)
             .SetSigner(SignerUtil.PreAuthTx(transaction), 10);
 
+        // Act
         var xdrOperation = operation.ToXdr();
         var decodedOperation = (SetOptionsOperation)Operation.FromXdr(xdrOperation);
 
+        // Assert
         Assert.AreEqual(operation.InflationDestination, decodedOperation.InflationDestination);
         Assert.AreEqual(operation.ClearFlags, decodedOperation.ClearFlags);
         Assert.AreEqual(operation.SetFlags, decodedOperation.SetFlags);
@@ -168,13 +192,14 @@ public class SetOptionsOperationTest
         Assert.AreEqual(operation.SourceAccount.AccountId, decodedOperation.SourceAccount.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that SetOptionsOperation with signed payload signer round-trips correctly through XDR.
+    /// </summary>
     [TestMethod]
-    public void TestPayloadSignerKey()
+    public void SetOptionsOperation_WithSignedPayloadSigner_RoundTripsThroughXdr()
     {
         // Arrange
         const string payloadSignerStrKey = "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ";
-
-
         var payload = Util.HexToBytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20");
         var signedPayloadSigner = new SignedPayloadSigner(StrKey.DecodeEd25519PublicKey(payloadSignerStrKey), payload);
         var signerKey = SignerUtil.SignedPayload(signedPayloadSigner);

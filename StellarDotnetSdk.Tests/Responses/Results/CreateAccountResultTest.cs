@@ -3,40 +3,74 @@ using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+///     Unit tests for create account result types.
+/// </summary>
 [TestClass]
 public class CreateAccountResultTest
 {
+    /// <summary>
+    ///     Verifies that CreateAccountSuccess result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSuccess()
+    public void Deserialize_WithCreateAccountSuccessXdr_ReturnsCreateAccountSuccess()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAAAAAAAAAAAAA=", typeof(CreateAccountSuccess), true);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAAAAAAAAAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(CreateAccountSuccess), true);
     }
 
+    /// <summary>
+    ///     Verifies that CreateAccountMalformed result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestMalformed()
+    public void Deserialize_WithCreateAccountMalformedXdr_ReturnsCreateAccountMalformed()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAA/////wAAAAA=", typeof(CreateAccountMalformed),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAA/////wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(CreateAccountMalformed), false);
     }
 
+    /// <summary>
+    ///     Verifies that CreateAccountUnderfunded result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestUnderfunded()
+    public void Deserialize_WithCreateAccountUnderfundedXdr_ReturnsCreateAccountUnderfunded()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAA/////gAAAAA=", typeof(CreateAccountUnderfunded),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAA/////gAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(CreateAccountUnderfunded), false);
     }
 
+    /// <summary>
+    ///     Verifies that CreateAccountLowReserve result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestLowReserve()
+    public void Deserialize_WithCreateAccountLowReserveXdr_ReturnsCreateAccountLowReserve()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAA/////QAAAAA=", typeof(CreateAccountLowReserve),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAA/////QAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(CreateAccountLowReserve), false);
     }
 
+    /// <summary>
+    ///     Verifies that CreateAccountAlreadyExists result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestAlreadyExist()
+    public void Deserialize_WithCreateAccountAlreadyExistsXdr_ReturnsCreateAccountAlreadyExists()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAA/////AAAAAA=", typeof(CreateAccountAlreadyExists),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAA/////AAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(CreateAccountAlreadyExists), false);
     }
 }

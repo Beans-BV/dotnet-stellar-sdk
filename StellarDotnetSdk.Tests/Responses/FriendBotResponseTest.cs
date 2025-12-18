@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -6,27 +6,46 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+///     Unit tests for <see cref="FriendBotResponse" /> class.
+/// </summary>
 [TestClass]
 public class FriendBotResponseTest
 {
+    /// <summary>
+    ///     Verifies that FriendBotResponse with failure can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeFriendBotResponseFailureResponse()
+    public void Deserialize_WithFriendBotFailureResponseJson_ReturnsDeserializedFailureResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("friendBotFail.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var friendBotResponse = JsonSerializer.Deserialize<FriendBotResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(friendBotResponse);
         AssertFriendBotResponseFailureData(friendBotResponse);
     }
 
+    /// <summary>
+    ///     Verifies that FriendBotResponse with failure can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeFriendBotResponseFailureResponse()
+    public void SerializeDeserialize_WithFriendBotFailureResponse_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("friendBotFail.json");
         var json = File.ReadAllText(jsonPath);
         var friendBotResponse = JsonSerializer.Deserialize<FriendBotResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(friendBotResponse);
         var back = JsonSerializer.Deserialize<FriendBotResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertFriendBotResponseFailureData(back);
     }
@@ -46,24 +65,40 @@ public class FriendBotResponseTest
         Assert.AreEqual(friendBotResponse.Extras.ResultXdr, "AAAAAAAAAGT/////AAAAAQAAAAAAAAAA/////AAAAAA=");
     }
 
+    /// <summary>
+    ///     Verifies that FriendBotResponse with success can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeFriendBotResponseSuccessResponse()
+    public void Deserialize_WithFriendBotSuccessResponseJson_ReturnsDeserializedSuccessResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("friendBotSuccess.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var friendBotResponse = JsonSerializer.Deserialize<FriendBotResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(friendBotResponse);
         AssertSuccessTestData(friendBotResponse);
     }
 
+    /// <summary>
+    ///     Verifies that FriendBotResponse with success can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeFriendBotResponseSuccessResponse()
+    public void SerializeDeserialize_WithFriendBotSuccessResponse_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("friendBotSuccess.json");
         var json = File.ReadAllText(jsonPath);
         var friendBotResponse = JsonSerializer.Deserialize<FriendBotResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(friendBotResponse);
         var back = JsonSerializer.Deserialize<FriendBotResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertSuccessTestData(back);
     }

@@ -17,8 +17,9 @@ public class LiquidityPoolShareChangeTrustAssetTest
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void TestConstructor_NullParameters()
+    public void Constructor_WithNullParameters_ThrowsArgumentNullException()
     {
+        // Arrange & Act & Assert
         _ = new LiquidityPoolShareChangeTrustAsset(null!);
     }
 
@@ -27,15 +28,18 @@ public class LiquidityPoolShareChangeTrustAssetTest
     ///     Verifies that a liquidity pool share change trust asset is created with the correct pool parameters and type.
     /// </summary>
     [TestMethod]
-    public void TestConstructor_WithAssetAAndAssetB()
+    public void Constructor_WithAssetAAndAssetB_CreatesWithCorrectParameters()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var keypair2 = KeyPair.Random();
-
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"USD:{keypair2.AccountId}");
 
+        // Act
         var liquidityPoolShareChangeTrustAsset = new LiquidityPoolShareChangeTrustAsset(assetA, assetB, 30);
+
+        // Assert
         Assert.IsNotNull(liquidityPoolShareChangeTrustAsset.Parameters);
         Assert.AreEqual("pool_share", liquidityPoolShareChangeTrustAsset.Type);
     }
@@ -45,20 +49,22 @@ public class LiquidityPoolShareChangeTrustAssetTest
     ///     Verifies that the pool ID matches the ID from the underlying liquidity pool parameters.
     /// </summary>
     [TestMethod]
-    public void TestGetLiquidityPoolId()
+    public void GetLiquidityPoolId_WithParameters_ReturnsMatchingPoolId()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var keypair2 = KeyPair.Random();
-
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"USD:{keypair2.AccountId}");
-
         var parameters =
             LiquidityPoolParameters.Create(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetB, 30);
         var liquidityPoolShareChangeTrustAsset = new LiquidityPoolShareChangeTrustAsset(parameters);
 
+        // Act
         var poolId = liquidityPoolShareChangeTrustAsset.GetLiquidityPoolId();
+
+        // Assert
         Assert.IsNotNull(poolId);
         Assert.AreEqual(parameters.GetId(), poolId);
     }
@@ -68,21 +74,23 @@ public class LiquidityPoolShareChangeTrustAssetTest
     ///     Verifies that ToString delegates to the pool ID's string representation.
     /// </summary>
     [TestMethod]
-    public void TestToString()
+    public void ToString_WithPoolShare_ReturnsPoolIdString()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var keypair2 = KeyPair.Random();
-
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"USD:{keypair2.AccountId}");
-
         var parameters =
             LiquidityPoolParameters.Create(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetB, 30);
         var liquidityPoolShareChangeTrustAsset = new LiquidityPoolShareChangeTrustAsset(parameters);
-
         var poolId = liquidityPoolShareChangeTrustAsset.GetLiquidityPoolId();
+
+        // Act
         var toStringResult = liquidityPoolShareChangeTrustAsset.ToString();
+
+        // Assert
         Assert.AreEqual(poolId.ToString(), toStringResult);
     }
 
@@ -91,20 +99,20 @@ public class LiquidityPoolShareChangeTrustAssetTest
     ///     Verifies that Equals implementation correctly compares the underlying liquidity pool parameters.
     /// </summary>
     [TestMethod]
-    public void TestEquals_SameParameters()
+    public void Equals_WithSameParameters_ReturnsTrue()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var keypair2 = KeyPair.Random();
-
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"USD:{keypair2.AccountId}");
-
         var parameters =
             LiquidityPoolParameters.Create(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetB, 30);
         var liquidityPoolShareChangeTrustAsset1 = new LiquidityPoolShareChangeTrustAsset(parameters);
         var liquidityPoolShareChangeTrustAsset2 = new LiquidityPoolShareChangeTrustAsset(parameters);
 
+        // Act & Assert
         Assert.IsTrue(liquidityPoolShareChangeTrustAsset1.Equals(liquidityPoolShareChangeTrustAsset2));
     }
 
@@ -113,26 +121,25 @@ public class LiquidityPoolShareChangeTrustAssetTest
     ///     Verifies that Equals correctly distinguishes between different liquidity pools (different assets or fees).
     /// </summary>
     [TestMethod]
-    public void TestEquals_DifferentParameters()
+    public void Equals_WithDifferentParameters_ReturnsFalse()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var keypair2 = KeyPair.Random();
         var keypair3 = KeyPair.Random();
-
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"USD:{keypair2.AccountId}");
         var assetC = Asset.Create($"GBP:{keypair3.AccountId}");
-
         var parameters1 =
             LiquidityPoolParameters.Create(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetB, 30);
         var parameters2 =
             LiquidityPoolParameters.Create(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetC, 30);
-
         var liquidityPoolShareChangeTrustAsset1 = new LiquidityPoolShareChangeTrustAsset(parameters1);
         var liquidityPoolShareChangeTrustAsset2 = new LiquidityPoolShareChangeTrustAsset(parameters2);
 
+        // Act & Assert
         Assert.IsFalse(liquidityPoolShareChangeTrustAsset1.Equals(liquidityPoolShareChangeTrustAsset2));
     }
 
@@ -141,19 +148,19 @@ public class LiquidityPoolShareChangeTrustAssetTest
     ///     Verifies null safety in the Equals implementation.
     /// </summary>
     [TestMethod]
-    public void TestEquals_Null()
+    public void Equals_WithNull_ReturnsFalse()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var keypair2 = KeyPair.Random();
-
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"USD:{keypair2.AccountId}");
-
         var parameters =
             LiquidityPoolParameters.Create(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetB, 30);
         var liquidityPoolShareChangeTrustAsset = new LiquidityPoolShareChangeTrustAsset(parameters);
 
+        // Act & Assert
         Assert.IsFalse(liquidityPoolShareChangeTrustAsset.Equals(null!));
     }
 
@@ -162,20 +169,20 @@ public class LiquidityPoolShareChangeTrustAssetTest
     ///     Verifies GetHashCode implementation for proper behavior in hash-based collections.
     /// </summary>
     [TestMethod]
-    public void TestGetHashCode_Consistency()
+    public void GetHashCode_WithSameParameters_ReturnsSameHashCode()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var keypair2 = KeyPair.Random();
-
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"USD:{keypair2.AccountId}");
-
         var parameters =
             LiquidityPoolParameters.Create(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetB, 30);
         var liquidityPoolShareChangeTrustAsset1 = new LiquidityPoolShareChangeTrustAsset(parameters);
         var liquidityPoolShareChangeTrustAsset2 = new LiquidityPoolShareChangeTrustAsset(parameters);
 
+        // Act & Assert
         Assert.AreEqual(liquidityPoolShareChangeTrustAsset1.GetHashCode(),
             liquidityPoolShareChangeTrustAsset2.GetHashCode());
     }
@@ -185,22 +192,23 @@ public class LiquidityPoolShareChangeTrustAssetTest
     ///     Verifies that pool share assets sort after regular asset wrappers (returns 1).
     /// </summary>
     [TestMethod]
-    public void TestCompareTo_WithWrapper()
+    public void CompareTo_WithWrapper_ReturnsOne()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var keypair2 = KeyPair.Random();
-
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"USD:{keypair2.AccountId}");
-
         var parameters =
             LiquidityPoolParameters.Create(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetB, 30);
         var liquidityPoolShareChangeTrustAsset = new LiquidityPoolShareChangeTrustAsset(parameters);
-
         var wrapper = new ChangeTrustAsset.Wrapper(Asset.Create($"USD:{keypair.AccountId}"));
 
+        // Act
         var comparison = liquidityPoolShareChangeTrustAsset.CompareTo(wrapper);
+
+        // Assert
         Assert.AreEqual(1, comparison);
     }
 
@@ -209,27 +217,28 @@ public class LiquidityPoolShareChangeTrustAssetTest
     ///     Verifies that CompareTo correctly compares different liquidity pools based on their parameters.
     /// </summary>
     [TestMethod]
-    public void TestCompareTo_WithPoolShare()
+    public void CompareTo_WithPoolShare_ReturnsNonZero()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var keypair2 = KeyPair.Random();
         var keypair3 = KeyPair.Random();
-
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"USD:{keypair2.AccountId}");
         var assetC = Asset.Create($"GBP:{keypair3.AccountId}");
-
         var parameters1 =
             LiquidityPoolParameters.Create(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetB, 30);
         var parameters2 =
             LiquidityPoolParameters.Create(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetC, 30);
-
         var liquidityPoolShareChangeTrustAsset1 = new LiquidityPoolShareChangeTrustAsset(parameters1);
         var liquidityPoolShareChangeTrustAsset2 = new LiquidityPoolShareChangeTrustAsset(parameters2);
 
+        // Act
         var comparison = liquidityPoolShareChangeTrustAsset1.CompareTo(liquidityPoolShareChangeTrustAsset2);
+
+        // Assert
         Assert.IsTrue(comparison != 0);
     }
 
@@ -239,22 +248,23 @@ public class LiquidityPoolShareChangeTrustAssetTest
     ///     preserving the pool parameters and ID.
     /// </summary>
     [TestMethod]
-    public void TestToXdr_RoundTrip()
+    public void ToXdr_WithPoolShare_RoundTripsCorrectly()
     {
+        // Arrange
         var keypair = KeyPair.Random();
         var keypair2 = KeyPair.Random();
-
         var assetA = Asset.Create($"EUR:{keypair.AccountId}");
         var assetB = Asset.Create($"USD:{keypair2.AccountId}");
-
         var parameters =
             LiquidityPoolParameters.Create(XDR.LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
                 assetA, assetB, 30);
         var liquidityPoolShareChangeTrustAsset = new LiquidityPoolShareChangeTrustAsset(parameters);
 
+        // Act
         var xdr = liquidityPoolShareChangeTrustAsset.ToXdr();
         var restored = ChangeTrustAsset.FromXdr(xdr);
 
+        // Assert
         Assert.IsInstanceOfType(restored, typeof(LiquidityPoolShareChangeTrustAsset));
         var restoredPoolShare = (LiquidityPoolShareChangeTrustAsset)restored;
         Assert.AreEqual(liquidityPoolShareChangeTrustAsset.Parameters.GetId(),

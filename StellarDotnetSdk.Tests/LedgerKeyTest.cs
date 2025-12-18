@@ -11,12 +11,19 @@ using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
 
 namespace StellarDotnetSdk.Tests;
 
+/// <summary>
+///     Unit tests for <see cref="LedgerKey" /> class and related ledger key types.
+/// </summary>
 [TestClass]
 public class LedgerKeyTest
 {
+    /// <summary>
+    ///     Verifies that Account ledger key round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerKeyAccount()
+    public void FromXdrBase64_LedgerKeyAccount_RoundTripsCorrectly()
     {
+        // Arrange
         var keypair = KeyPair.FromAccountId("GCFRHRU5YRI3IN3IMRMYGWWEG2PX2B6MYH2RJW7NEDE2PTYPISPT3RU7");
         var ledgerKey = (LedgerKeyAccount)LedgerKey.Account(keypair);
 
@@ -28,18 +35,28 @@ public class LedgerKeyTest
         Assert.AreEqual(ledgerKey.Account.AccountId, decodedLedgerKey.Account.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that Data ledger key factory method throws ArgumentException when data name exceeds 64 characters.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerKeyDataWithTooLongName()
+    public void Data_WithTooLongName_ThrowsArgumentException()
     {
+        // Arrange
         var keypair = KeyPair.FromAccountId("GCFRHRU5YRI3IN3IMRMYGWWEG2PX2B6MYH2RJW7NEDE2PTYPISPT3RU7");
         const string dataName = "This is a 73 characters long string which is too strong for String64 type";
+
+        // Act & Assert
         var ex = Assert.ThrowsException<ArgumentException>(() => LedgerKey.Data(keypair, dataName));
         Assert.IsTrue(ex.Message.Contains("Data name cannot exceed 64 characters."));
     }
 
+    /// <summary>
+    ///     Verifies that Data ledger key with valid name round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerKeyDataWithValidName()
+    public void FromXdrBase64_LedgerKeyDataWithValidName_RoundTripsCorrectly()
     {
+        // Arrange
         var keypair = KeyPair.FromAccountId("GCFRHRU5YRI3IN3IMRMYGWWEG2PX2B6MYH2RJW7NEDE2PTYPISPT3RU7");
         var ledgerKey = (LedgerKeyData)LedgerKey.Data(keypair, "Test Data");
 
@@ -52,9 +69,13 @@ public class LedgerKeyTest
         Assert.AreEqual(ledgerKey.Account.AccountId, decodedLedgerKey.Account.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that Offer ledger key round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerKeyOffer()
+    public void FromXdrBase64_LedgerKeyOffer_RoundTripsCorrectly()
     {
+        // Arrange
         var keypair = KeyPair.FromAccountId("GCFRHRU5YRI3IN3IMRMYGWWEG2PX2B6MYH2RJW7NEDE2PTYPISPT3RU7");
         var ledgerKey = (LedgerKeyOffer)LedgerKey.Offer(keypair, 1234);
 
@@ -67,9 +88,13 @@ public class LedgerKeyTest
         Assert.AreEqual(ledgerKey.Seller.AccountId, decodedLedgerKey.Seller.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that Trustline ledger key round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerKeyTrustline()
+    public void FromXdrBase64_LedgerKeyTrustline_RoundTripsCorrectly()
     {
+        // Arrange
         var keypair = KeyPair.FromAccountId("GCFRHRU5YRI3IN3IMRMYGWWEG2PX2B6MYH2RJW7NEDE2PTYPISPT3RU7");
         var issuer = KeyPair.FromAccountId("GB24C27VKWCBG7NTCT4J2L4MXJGYC3K3SQ4JOTCSPOVVEN7EZEB43XNE");
         var asset = TrustlineAsset.CreateNonNativeAsset("ABCD", issuer.AccountId);
@@ -85,10 +110,15 @@ public class LedgerKeyTest
         Assert.AreEqual(keypair.AccountId, decodedLedgerKey.Account.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that ClaimableBalance ledger key created from valid string round-trips correctly through XDR
+    ///     serialization.
+    /// </summary>
     [TestMethod]
     [DataRow("00000000c582697b67cbec7f9ce64f4dc67bfb2bfd26318bb9f964f4d70e3f41f650b1e6")]
-    public void TestLedgerKeyClaimableBalanceStringConstructorValid(string id)
+    public void FromXdrBase64_LedgerKeyClaimableBalanceFromValidString_RoundTripsCorrectly(string id)
     {
+        // Arrange
         var ledgerKey = LedgerKey.ClaimableBalance(id);
 
         // Act
@@ -99,19 +129,27 @@ public class LedgerKeyTest
         Assert.AreEqual(id, decodedLedgerKey.BalanceId.ToLower());
     }
 
+    /// <summary>
+    ///     Verifies that ClaimableBalance ledger key factory method throws ArgumentException when given invalid string.
+    /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     [DataRow("BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU")]
     [DataRow("d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780")]
     [DataRow("00d1d73327fc560cc09f54a11c7a64180611e1f480f3bf60117e41d19d9593b780")]
-    public void TestLedgerKeyClaimableBalanceStringConstructorInvalid(string id)
+    public void ClaimableBalance_WithInvalidString_ThrowsArgumentException(string id)
     {
+        // Arrange & Act & Assert
         _ = LedgerKey.ClaimableBalance(id);
     }
 
+    /// <summary>
+    ///     Verifies that LiquidityPool ledger key round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerKeyLiquidityPool()
+    public void FromXdrBase64_LedgerKeyLiquidityPool_RoundTripsCorrectly()
     {
+        // Arrange
         var hash = new byte[]
             { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2 };
         var ledgerKey = LedgerKey.LiquidityPool(new LiquidityPoolId(hash));
@@ -124,9 +162,14 @@ public class LedgerKeyTest
         CollectionAssert.AreEqual(hash, decodedLedgerKey.LiquidityPoolId.Hash);
     }
 
+    /// <summary>
+    ///     Verifies that ContractData ledger key with contract being ContractId round-trips correctly through XDR
+    ///     serialization.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerKeyContractDataWithContractBeingContractId()
+    public void FromXdrBase64_LedgerKeyContractDataWithContractId_RoundTripsCorrectly()
     {
+        // Arrange
         var contractId = new ScContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
         var key = new SCSymbol("kk");
 
@@ -143,9 +186,14 @@ public class LedgerKeyTest
         Assert.AreEqual(ledgerKey.Durability.InnerValue, decodedLedgerKey.Durability.InnerValue);
     }
 
+    /// <summary>
+    ///     Verifies that ContractData ledger key with contract being AccountId round-trips correctly through XDR
+    ///     serialization.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerKeyContractDataWithWithContractBeingAccountId()
+    public void FromXdrBase64_LedgerKeyContractDataWithAccountId_RoundTripsCorrectly()
     {
+        // Arrange
         var accountId = new ScAccountId("GCZFMH32MF5EAWETZTKF3ZV5SEVJPI53UEMDNSW55WBR75GMZJU4U573");
         var key = new SCInt64(122);
 
@@ -162,9 +210,14 @@ public class LedgerKeyTest
         Assert.AreEqual(ledgerKey.Durability.InnerValue, decodedLedgerKey.Durability.InnerValue);
     }
 
+    /// <summary>
+    ///     Verifies that ContractCode ledger key created from valid hash string round-trips correctly through XDR
+    ///     serialization.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerKeyContractCodeCreationFromValidHashString()
+    public void FromXdrBase64_LedgerKeyContractCodeFromValidHashString_RoundTripsCorrectly()
     {
+        // Arrange
         var ledgerKey =
             (LedgerKeyContractCode)LedgerKey.ContractCode(
                 "0102030405060708090001020304050607080900010203040506070809000102");
@@ -177,14 +230,23 @@ public class LedgerKeyTest
         CollectionAssert.AreEqual(ledgerKey.Hash, decodedLedgerKey.Hash);
     }
 
+    /// <summary>
+    ///     Verifies that ContractCode ledger key factory method throws ArgumentOutOfRangeException when hash string has
+    ///     invalid length.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerKeyContractCodeCreationFromInvalidHashString()
+    public void ContractCode_WithInvalidHashStringLength_ThrowsArgumentOutOfRangeException()
     {
+        // Arrange & Act & Assert
         var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
             LedgerKey.ContractCode("01020304050607080900010203040506070809000102030405060708090002"));
         Assert.IsTrue(ex.Message.Contains("Hash must have exactly 32 bytes."));
     }
 
+    /// <summary>
+    ///     Verifies that ConfigSetting ledger key round-trips correctly through XDR serialization for various config setting
+    ///     IDs.
+    /// </summary>
     [TestMethod]
     [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES)]
     [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_COMPUTE_V0)]
@@ -203,8 +265,10 @@ public class LedgerKeyTest
     [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0)]
     [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0)]
     [DataRow(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_SCP_TIMING)]
-    public void TestLedgerKeyConfigSetting(ConfigSettingID.ConfigSettingIDEnum configSettingId)
+    public void FromXdrBase64_LedgerKeyConfigSetting_RoundTripsCorrectly(
+        ConfigSettingID.ConfigSettingIDEnum configSettingId)
     {
+        // Arrange
         var ledgerKey = (LedgerKeyConfigSetting)LedgerKey.ConfigSetting(new ConfigSettingID
         {
             InnerValue = configSettingId,
@@ -218,9 +282,13 @@ public class LedgerKeyTest
         Assert.AreEqual(ledgerKey.ConfigSettingId.InnerValue, decodedLedgerKey.ConfigSettingId.InnerValue);
     }
 
+    /// <summary>
+    ///     Verifies that TTL ledger key created from valid hash string round-trips correctly through XDR serialization.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerKeyTtlCreationFromValidHashString()
+    public void FromXdrBase64_LedgerKeyTtlFromValidHashString_RoundTripsCorrectly()
     {
+        // Arrange
         var ledgerKey = (LedgerKeyTtl)LedgerKey.Ttl("AQIDBAUGBwgJAAECAwQFBgcICQABAgMEBQYHCAkAAQI=");
 
         // Act
@@ -231,9 +299,14 @@ public class LedgerKeyTest
         CollectionAssert.AreEqual(ledgerKey.Key, decodedLedgerKey.Key);
     }
 
+    /// <summary>
+    ///     Verifies that ContractCode ledger key factory method throws ArgumentOutOfRangeException when hash string has
+    ///     invalid length (for TTL test case).
+    /// </summary>
     [TestMethod]
-    public void TestLedgerKeyTtlCreationFromInvalidHashString()
+    public void ContractCode_WithInvalidHashStringLengthForTtl_ThrowsArgumentOutOfRangeException()
     {
+        // Arrange & Act & Assert
         var ex = Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
             LedgerKey.ContractCode("01020304050607080900010203040506070809000102030405060708090001020304"));
         Assert.IsTrue(ex.Message.Contains("Hash must have exactly 32 bytes."));

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
@@ -8,6 +8,9 @@ using StellarDotnetSdk.Soroban;
 
 namespace StellarDotnetSdk.Tests.Operations;
 
+/// <summary>
+///     Tests for InvokeHostFunctionOperation and related contract operations.
+/// </summary>
 [TestClass]
 public class InvokeHostFunctionOperationTest
 {
@@ -50,9 +53,13 @@ public class InvokeHostFunctionOperationTest
         return new SorobanAuthorizationEntry(InitSorobanAddressCredentials(), rootInvocation);
     }
 
+    /// <summary>
+    ///     Verifies that CreateContractOperation without source account round-trips correctly through XDR.
+    /// </summary>
     [TestMethod]
-    public void TestCreateContractOperationWithMissingSourceAccount()
+    public void CreateContractOperation_WithoutSourceAccount_RoundTripsThroughXdr()
     {
+        // Arrange
         var salt = new byte[32];
         RandomNumberGenerator.Create().GetBytes(salt);
         var operation = CreateContractOperation.FromAddress(WasmHash, _accountAddress.InnerValue, [], salt);
@@ -78,9 +85,13 @@ public class InvokeHostFunctionOperationTest
         Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that CreateContractOperation from address without authorization entry round-trips correctly through XDR.
+    /// </summary>
     [TestMethod]
-    public void TestCreateContractOperationFromAddressWithMissingAuthorizationEntry()
+    public void CreateContractOperation_FromAddressWithoutAuthorizationEntry_RoundTripsThroughXdr()
     {
+        // Arrange
         var salt = new byte[32];
         RandomNumberGenerator.Create().GetBytes(salt);
         var operation =
@@ -107,15 +118,19 @@ public class InvokeHostFunctionOperationTest
         Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
     }
 
-    /// <summary></summary>
+    /// <summary>
+    ///     Verifies that CreateContractOperation from address with valid arguments and authorization round-trips correctly
+    ///     through XDR.
+    /// </summary>
     /// <remarks>
     ///     It's not necessary to check each of the operation.Auth element for the type and properties,
     ///     since there is already the dedicated test class <see cref="SorobanAuthorizationTest" /> for
     ///     <see cref="SorobanAuthorizationEntry" />
     /// </remarks>
     [TestMethod]
-    public void TestCreateContractOperationFromAddressWithValidArguments()
+    public void CreateContractOperation_FromAddressWithValidArguments_RoundTripsThroughXdr()
     {
+        // Arrange
         var salt = new byte[32];
         RandomNumberGenerator.Create().GetBytes(salt);
         var operation =
@@ -175,9 +190,13 @@ public class InvokeHostFunctionOperationTest
         Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that CreateContractOperation with Stellar asset executable round-trips correctly through XDR.
+    /// </summary>
     [TestMethod]
-    public void TestCreateContractOperationWithStellarAssetExecutable()
+    public void CreateContractOperation_WithStellarAssetExecutable_RoundTripsThroughXdr()
     {
+        // Arrange
         var operation = CreateContractOperation.FromAsset(
             new AssetTypeCreditAlphaNum4(
                 "VNDC",
@@ -203,11 +222,14 @@ public class InvokeHostFunctionOperationTest
         Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that UploadContractOperation without source account round-trips correctly through XDR.
+    /// </summary>
     [TestMethod]
-    public void TestUploadContractOperationWithMissingSourceAccount()
+    public void UploadContractOperation_WithoutSourceAccount_RoundTripsThroughXdr()
     {
+        // Arrange
         byte[] wasm = [0x00, 0x01, 0x02, 0x03, 0x34, 0x45, 0x66, 0x46];
-
         var operation = new UploadContractOperation(wasm);
 
         // Act
@@ -220,12 +242,14 @@ public class InvokeHostFunctionOperationTest
         Assert.AreEqual(operation.SourceAccount?.AccountId, decodedOperation.SourceAccount?.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that UploadContractOperation without authorization entry round-trips correctly through XDR.
+    /// </summary>
     [TestMethod]
-    public void TestUploadContractOperationWithMissingAuthorizationEntry()
+    public void UploadContractOperation_WithoutAuthorizationEntry_RoundTripsThroughXdr()
     {
         // Arrange
         byte[] wasm = [0x00, 0x01, 0x02, 0x03, 0x34, 0x45, 0x66, 0x46];
-
         var operation = new UploadContractOperation(wasm, _sourceAccount);
 
         // Act
@@ -240,14 +264,16 @@ public class InvokeHostFunctionOperationTest
         Assert.AreEqual(_sourceAccount.AccountId, decodedSourceAccount.AccountId);
     }
 
-    /// <summary></summary>
+    /// <summary>
+    ///     Verifies that UploadContractOperation with valid arguments and authorization round-trips correctly through XDR.
+    /// </summary>
     /// <remarks>
     ///     It's not necessary to check each of the operation.Auth element for the type and properties,
     ///     since there is already the dedicated test class <see cref="SorobanAuthorizationTest" /> for
     ///     <see cref="SorobanAuthorizationEntry" />
     /// </remarks>
     [TestMethod]
-    public void TestUploadContractOperationWithValidArguments()
+    public void UploadContractOperation_WithValidArguments_RoundTripsThroughXdr()
     {
         // Arrange
         byte[] wasm = [0x00, 0x01, 0x02, 0x03, 0x34, 0x45, 0x66, 0x46];
@@ -269,19 +295,22 @@ public class InvokeHostFunctionOperationTest
         Assert.AreEqual(_sourceAccount.AccountId, decodedSourceAccount.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that InvokeContractOperation without authorization entry round-trips correctly through XDR.
+    /// </summary>
     /// <remarks>
     ///     It's not necessary to check each of the hostFunction.Args element for type and properties,
     ///     since there are already other tests in the <see cref="ScValTest" /> class that cover different scenarios for
     ///     <see cref="SCVal" />
     /// </remarks>
     [TestMethod]
-    public void TestInvokeContractOperationWithMissingAuthorizationEntry()
+    public void InvokeContractOperation_WithoutAuthorizationEntry_RoundTripsThroughXdr()
     {
+        // Arrange
         var operation = new InvokeContractOperation(_contractAddress, _functionName, _args, _sourceAccount);
 
         // Act
         var xdrOperation = operation.ToXdr();
-
         var decodedOperation = (InvokeContractOperation)Operation.FromXdr(xdrOperation);
 
         var address = (ScContractId)operation.HostFunction.ContractAddress;
@@ -306,6 +335,9 @@ public class InvokeHostFunctionOperationTest
         Assert.AreEqual(_sourceAccount.AccountId, decodedSourceAccount.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that InvokeContractOperation with valid arguments and authorization round-trips correctly through XDR.
+    /// </summary>
     /// <remarks>
     ///     It's not necessary to check each of the hostFunction.Args element for type and properties,
     ///     since there are already other tests in class <see cref="ScValTest" /> that cover different scenarios for
@@ -315,8 +347,9 @@ public class InvokeHostFunctionOperationTest
     ///     <see cref="SorobanAuthorizationEntry" />
     /// </remarks>
     [TestMethod]
-    public void TestInvokeContractOperationWithValidArguments()
+    public void InvokeContractOperation_WithValidArguments_RoundTripsThroughXdr()
     {
+        // Arrange
         var operation = new InvokeContractOperation(_contractAddress, _functionName, _args, _sourceAccount)
         {
             Auth = [InitAuthEntry()],
@@ -324,7 +357,6 @@ public class InvokeHostFunctionOperationTest
 
         // Act
         var xdrOperation = operation.ToXdr();
-
         var decodedOperation = (InvokeContractOperation)Operation.FromXdr(xdrOperation);
 
         var hostFunction = operation.HostFunction;

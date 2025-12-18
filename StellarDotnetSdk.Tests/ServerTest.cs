@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +21,9 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace StellarDotnetSdk.Tests;
 
+/// <summary>
+///     Unit tests for <see cref="Server" /> class.
+/// </summary>
 [TestClass]
 public class ServerTest
 {
@@ -58,12 +61,20 @@ public class ServerTest
         return tx;
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction returns success response when transaction is valid.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionSuccess()
+    public async Task SubmitTransaction_WithValidTransaction_ReturnsSuccessResponse()
     {
+        // Arrange
         using var server = await Utils.CreateTestServerWithJson("Responses/serverSuccess.json");
+
+        // Act
         var response = await server.SubmitTransaction(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, 826150);
@@ -71,9 +82,13 @@ public class ServerTest
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
 
+    /// <summary>
+    ///     Verifies that Server includes default client headers in HTTP requests.
+    /// </summary>
     [TestMethod]
-    public async Task TestDefaultClientHeaders()
+    public async Task SubmitTransaction_WithDefaultHeaders_IncludesClientHeaders()
     {
+        // Arrange
         Network.UseTestNetwork();
         var messageHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
         var httpClient = Server.CreateHttpClient(messageHandler.Object);
@@ -94,8 +109,11 @@ public class ServerTest
             })
             .Returns(new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent(json) });
 
+        // Act
         var response = await server.SubmitTransaction(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual("StellarDotnetSdk", clientName);
@@ -105,13 +123,20 @@ public class ServerTest
         Assert.AreEqual("0.00001", result.FeeCharged);
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction returns failure response when transaction is invalid.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionFail()
+    public async Task SubmitTransaction_WithInvalidTransaction_ReturnsFailureResponse()
     {
+        // Arrange
         using var server = await Utils.CreateTestServerWithJson(ServerFailureJsonPath, HttpBadRequest);
 
+        // Act
         var response = await server.SubmitTransaction(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsFalse(response.IsSuccess);
         Assert.IsNull(response.Ledger);
@@ -131,13 +156,21 @@ public class ServerTest
         Assert.AreEqual(1, ((TransactionResultFailed)result).Results.Count);
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction with EnsureSuccess option returns success response when transaction
+    ///     succeeds.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionEnsureSuccess()
+    public async Task SubmitTransaction_WithEnsureSuccessAndValidTransaction_ReturnsSuccessResponse()
     {
+        // Arrange
         using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
+        // Act
         var response = await server.SubmitTransaction(
             BuildTransaction().ToEnvelopeXdrBase64(), new SubmitTransactionOptions { EnsureSuccess = true });
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, 826150);
@@ -145,11 +178,17 @@ public class ServerTest
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction with EnsureSuccess option throws ConnectionErrorException when transaction
+    ///     fails.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionEnsureSuccessWithContent()
+    public async Task SubmitTransaction_WithEnsureSuccessAndFailedTransaction_ThrowsConnectionErrorException()
     {
+        // Arrange
         using var server = await Utils.CreateTestServerWithJson(ServerFailureJsonPath, HttpBadRequest);
 
+        // Act & Assert
         var ex = await Assert.ThrowsExceptionAsync<ConnectionErrorException>(async () =>
         {
             await server.SubmitTransaction(BuildTransaction(),
@@ -159,10 +198,17 @@ public class ServerTest
         Assert.IsTrue(ex.Message.Contains("Status code (BadRequest) is not success."));
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction with EnsureSuccess option throws ConnectionErrorException when response has
+    ///     empty content.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionEnsureSuccessWithEmptyContent()
+    public async Task SubmitTransaction_WithEnsureSuccessAndEmptyContent_ThrowsConnectionErrorException()
     {
+        // Arrange
         using var server = Utils.CreateTestServerWithContent("", HttpBadRequest);
+
+        // Act & Assert
         var ex = await Assert.ThrowsExceptionAsync<ConnectionErrorException>(async () =>
         {
             await server.SubmitTransaction(BuildTransaction(),
@@ -172,11 +218,17 @@ public class ServerTest
         Assert.AreEqual(ex.Message, "Status code (BadRequest) is not success.");
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction with EnsureSuccess option throws ConnectionErrorException when response has
+    ///     null content.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionEnsureSuccessWithNullContent()
+    public async Task SubmitTransaction_WithEnsureSuccessAndNullContent_ThrowsConnectionErrorException()
     {
+        // Arrange
         using var server = Utils.CreateTestServerWithContent(null, HttpBadRequest);
 
+        // Act & Assert
         var ex = await Assert.ThrowsExceptionAsync<ConnectionErrorException>(async () =>
         {
             await server.SubmitTransaction(BuildTransaction(),
@@ -186,13 +238,20 @@ public class ServerTest
         Assert.AreEqual(ex.Message, "Status code (BadRequest) is not success.");
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction with SkipMemoRequiredCheck set to false returns success response.
+    /// </summary>
     [TestMethod]
-    public async Task TestNoSkipMemoRequiredCheck()
+    public async Task SubmitTransaction_WithSkipMemoRequiredCheckFalse_ReturnsSuccessResponse()
     {
+        // Arrange
         using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
+        // Act
         var response = await server.SubmitTransaction(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = false });
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, 826150);
@@ -200,13 +259,20 @@ public class ServerTest
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction with envelope XDR base64 string returns success response.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionEnvelopeBase64()
+    public async Task SubmitTransaction_WithEnvelopeXdrBase64_ReturnsSuccessResponse()
     {
+        // Arrange
         using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
+        // Act
         var response = await server.SubmitTransaction(
             BuildTransaction().ToEnvelopeXdrBase64(), new SubmitTransactionOptions { SkipMemoRequiredCheck = false });
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, 826150);
@@ -214,14 +280,21 @@ public class ServerTest
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction with fee bump transaction envelope XDR base64 returns success response.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitFeeBumpTransactionEnvelopeBase64()
+    public async Task SubmitTransaction_WithFeeBumpTransactionEnvelopeXdrBase64_ReturnsSuccessResponse()
     {
+        // Arrange
         using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
+        // Act
         var response = await server.SubmitTransaction(
             BuildFeeBumpTransaction().ToEnvelopeXdrBase64(),
             new SubmitTransactionOptions { SkipMemoRequiredCheck = false, FeeBumpTransaction = true });
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, 826150);
@@ -229,12 +302,19 @@ public class ServerTest
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction with fee bump transaction without options returns success response.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitFeeBumpTransactionWithoutOptions()
+    public async Task SubmitTransaction_WithFeeBumpTransactionWithoutOptions_ReturnsSuccessResponse()
     {
+        // Arrange
         using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
+        // Act
         var response = await server.SubmitTransaction(BuildFeeBumpTransaction());
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, 826150);
@@ -242,13 +322,20 @@ public class ServerTest
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction with fee bump transaction and options returns success response.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitFeeBumpTransactionWithOptions()
+    public async Task SubmitTransaction_WithFeeBumpTransactionAndOptions_ReturnsSuccessResponse()
     {
+        // Arrange
         using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
+        // Act
         var response = await server.SubmitTransaction(
             BuildFeeBumpTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = false });
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, 826150);
@@ -256,12 +343,19 @@ public class ServerTest
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction without options returns success response.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionWithoutOptions()
+    public async Task SubmitTransaction_WithoutOptions_ReturnsSuccessResponse()
     {
+        // Arrange
         using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
+        // Act
         var response = await server.SubmitTransaction(BuildTransaction());
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, 826150);
@@ -269,13 +363,20 @@ public class ServerTest
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction with envelope XDR base64 without options returns success response.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionEnvelopeBase64WithoutOptions()
+    public async Task SubmitTransaction_WithEnvelopeXdrBase64WithoutOptions_ReturnsSuccessResponse()
     {
+        // Arrange
         using var server = await Utils.CreateTestServerWithJson(ServerSuccessJsonPath);
 
+        // Act
         var response = await server.SubmitTransaction(
             BuildTransaction().ToEnvelopeXdrBase64());
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.AreEqual(response.Ledger, 826150);
@@ -283,15 +384,23 @@ public class ServerTest
         Assert.IsNull(response.SubmitTransactionResponseExtras);
     }
 
+    /// <summary>
+    ///     Verifies that Transaction.FromEnvelopeXdr correctly deserializes transaction with InvokeContractOperation.
+    /// </summary>
     [TestMethod]
-    public void TestSubmitInvokeContractTransaction()
+    public void FromEnvelopeXdr_WithInvokeContractOperation_DeserializesCorrectly()
     {
+        // Arrange
         const string xdrBase64 =
             "AAAAAgAAAACPMSyy9mKtfCdjSZ5M9UAOGywn8EzskQZ/LFn+t7f31QAAdLYAK1faAAAABwAAAAAAAAAAAAAAAQAAAAAAAAAYAAAAAAAAAAH+ApqHuMOZcvSEr0QsaWWqzWWy/O/iCwZB9QY7+KjlwQAAAAZzdWJtaXQAAAAAAAEAAAAPAAAACmRhbmNpblJhcGgAAAAAAAAAAAABAAAAAAAAAAIAAAAGAAAAAf4Cmoe4w5ly9ISvRCxpZarNZbL87+ILBkH1Bjv4qOXBAAAAFAAAAAEAAAAHvyeT3bL2fs8RgEztJaliJzxp5kxwYfGR7ftoXA7sMUIAAAAAABumWQAABGwAAAAAAAAAAAAAAAMAAAABt7f31QAAAECV4sHbkhrlj5k0y3Peu+WnWUyhv2voubC/LxGkbP/HvVRdWifEYuoWw/MXg7p7kDmo3IBvEffR85YULwKy284D";
+
+        // Act
         var tx = Transaction.FromEnvelopeXdr(xdrBase64);
         var invokeContractOperation = (InvokeContractOperation)tx.Operations[0];
         var hostFunction = invokeContractOperation.HostFunction;
         var sourceAccount = tx.SourceAccount;
+
+        // Assert
         Assert.AreEqual(sourceAccount.AccountId, "GCHTCLFS6ZRK27BHMNEZ4THVIAHBWLBH6BGOZEIGP4WFT7VXW735KJW2");
         Assert.AreEqual(((ScContractId)hostFunction.ContractAddress).InnerValue,
             StrKey.EncodeContractId(
@@ -302,9 +411,15 @@ public class ServerTest
     }
 
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction throws TooManyRequestsException with RetryAfter when server returns 429 with
+    ///     integer Retry-After header.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionTooManyRequestsWithRetryAfterInt()
+    public async Task
+        SubmitTransaction_WithTooManyRequestsAndIntegerRetryAfter_ThrowsTooManyRequestsExceptionWithRetryAfter()
     {
+        // Arrange
         var server = Utils.CreateTestServerWithHeaders(
             new Dictionary<string, IEnumerable<string>>
             {
@@ -312,6 +427,7 @@ public class ServerTest
             },
             HttpStatusCode.TooManyRequests);
 
+        // Act & Assert
         var exception = await Assert.ThrowsExceptionAsync<TooManyRequestsException>(() => server.SubmitTransaction(
             BuildTransaction(),
             new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
@@ -319,9 +435,15 @@ public class ServerTest
         Assert.AreEqual(10, exception.RetryAfter);
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction throws TooManyRequestsException with RetryAfter when server returns 429 with
+    ///     DateTime Retry-After header.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionTooManyRequestsWithRetryAfterDateTime()
+    public async Task
+        SubmitTransaction_WithTooManyRequestsAndDateTimeRetryAfter_ThrowsTooManyRequestsExceptionWithRetryAfter()
     {
+        // Arrange
         var server = Utils.CreateTestServerWithHeaders(
             new Dictionary<string, IEnumerable<string>>
             {
@@ -329,6 +451,7 @@ public class ServerTest
             },
             HttpStatusCode.TooManyRequests);
 
+        // Act & Assert
         var exception = await Assert.ThrowsExceptionAsync<TooManyRequestsException>(() => server.SubmitTransaction(
             BuildTransaction(),
             new SubmitTransactionOptions { SkipMemoRequiredCheck = true }
@@ -337,9 +460,15 @@ public class ServerTest
         Assert.IsTrue(exception.RetryAfter is >= 7 and <= 10, "The RetryAfter value is outside the expected range.");
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction throws ServiceUnavailableException with RetryAfter when server returns 503
+    ///     with integer Retry-After header.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionServiceUnavailableWithRetryAfterInt()
+    public async Task
+        SubmitTransaction_WithServiceUnavailableAndIntegerRetryAfter_ThrowsServiceUnavailableExceptionWithRetryAfter()
     {
+        // Arrange
         var server = Utils.CreateTestServerWithHeaders(
             new Dictionary<string, IEnumerable<string>>
             {
@@ -347,6 +476,7 @@ public class ServerTest
             },
             HttpStatusCode.ServiceUnavailable);
 
+        // Act & Assert
         var exception = await Assert.ThrowsExceptionAsync<ServiceUnavailableException>(() => server.SubmitTransaction(
             BuildTransaction(),
             new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
@@ -354,9 +484,15 @@ public class ServerTest
         Assert.AreEqual(10, exception.RetryAfter);
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransaction throws ServiceUnavailableException with RetryAfter when server returns 503
+    ///     with DateTime Retry-After header.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionServiceUnavailableWithRetryAfterDateTime()
+    public async Task
+        SubmitTransaction_WithServiceUnavailableAndDateTimeRetryAfter_ThrowsServiceUnavailableExceptionWithRetryAfter()
     {
+        // Arrange
         var server = Utils.CreateTestServerWithHeaders(
             new Dictionary<string, IEnumerable<string>>
             {
@@ -364,6 +500,7 @@ public class ServerTest
             },
             HttpStatusCode.ServiceUnavailable);
 
+        // Act & Assert
         var exception = await Assert.ThrowsExceptionAsync<ServiceUnavailableException>(() => server.SubmitTransaction(
             BuildTransaction(),
             new SubmitTransactionOptions { SkipMemoRequiredCheck = true }));
@@ -371,9 +508,13 @@ public class ServerTest
         Assert.IsTrue(exception.RetryAfter is >= 7 and <= 10, "The RetryAfter value is outside the expected range.");
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransactionAsync returns response with PENDING status when transaction is pending.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionAsyncPending()
+    public async Task SubmitTransactionAsync_WithPendingTransaction_ReturnsPendingResponse()
     {
+        // Arrange
         const string json =
             """
             {
@@ -382,16 +523,24 @@ public class ServerTest
             }
             """;
         using var server = Utils.CreateTestServerWithContent(json, HttpStatusCode.Created);
+
+        // Act
         var response = await server.SubmitTransactionAsync(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.PENDING, response.TxStatus);
         Assert.AreEqual(response.Hash, "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b21");
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransactionAsync returns response with DUPLICATE status when transaction is duplicate.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionAsyncDuplicate()
+    public async Task SubmitTransactionAsync_WithDuplicateTransaction_ReturnsDuplicateResponse()
     {
+        // Arrange
         const string json =
             """
             {
@@ -400,16 +549,25 @@ public class ServerTest
             }
             """;
         using var server = Utils.CreateTestServerWithContent(json);
+
+        // Act
         var response = await server.SubmitTransactionAsync(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.DUPLICATE, response.TxStatus);
         Assert.AreEqual(response.Hash, "ded59eecb33c1c36c05e681744b923377e2358af4b6f66b7471753379fb049ac");
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransactionAsync returns response with TRY_AGAIN_LATER status when server requests
+    ///     retry.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionAsyncTryAgainLater()
+    public async Task SubmitTransactionAsync_WithTryAgainLaterStatus_ReturnsTryAgainLaterResponse()
     {
+        // Arrange
         const string json =
             """
             {
@@ -418,16 +576,25 @@ public class ServerTest
             }
             """;
         using var server = Utils.CreateTestServerWithContent(json);
+
+        // Act
         var response = await server.SubmitTransactionAsync(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.TRY_AGAIN_LATER, response.TxStatus);
         Assert.AreEqual(response.Hash, "bf170746f990a53e73dc249a75028cbacadf7248e080e3e30b5c9b8a8e397894");
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransactionAsync returns response with ERROR status and error result XDR for protocol
+    ///     prior to 22.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionAsyncErrorPriorToProtocol22()
+    public async Task SubmitTransactionAsync_WithErrorStatusPriorToProtocol22_ReturnsErrorResponseWithErrorResult()
     {
+        // Arrange
         const string json =
             """
             {
@@ -437,17 +604,26 @@ public class ServerTest
             }
             """;
         using var server = Utils.CreateTestServerWithContent(json);
+
+        // Act
         var response = await server.SubmitTransactionAsync(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.ERROR, response.TxStatus);
         Assert.AreEqual(response.Hash, "9f8e7d6c5b4a3210fedcba9876543210abcdef0123456789abcdef0123456789");
         Assert.IsNotNull(response.ErrorResult);
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransactionAsync returns response with ERROR status and error result XDR for protocol
+    ///     22.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionAsyncErrorProtocol22()
+    public async Task SubmitTransactionAsync_WithErrorStatusProtocol22_ReturnsErrorResponseWithErrorResult()
     {
+        // Arrange
         const string json =
             """
             {
@@ -458,17 +634,25 @@ public class ServerTest
             }
             """;
         using var server = Utils.CreateTestServerWithContent(json);
+
+        // Act
         var response = await server.SubmitTransactionAsync(
             BuildTransaction(), new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.ERROR, response.TxStatus);
         Assert.AreEqual(response.Hash, "9f8e7d6c5b4a3210fedcba9876543210abcdef0123456789abcdef0123456789");
         Assert.IsNotNull(response.ErrorResult);
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransactionAsync without SkipMemoRequiredCheck returns response with PENDING status.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionAsyncObjectNoSkipMemoRequiredCheck()
+    public async Task SubmitTransactionAsync_WithoutSkipMemoRequiredCheck_ReturnsPendingResponse()
     {
+        // Arrange
         const string json =
             """
             {
@@ -477,15 +661,23 @@ public class ServerTest
             }
             """;
         using var server = Utils.CreateTestServerWithContent(json);
+
+        // Act
         var response = await server.SubmitTransactionAsync(BuildTransaction());
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.PENDING, response.TxStatus);
         Assert.AreEqual(response.Hash, "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b22");
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransactionAsync with envelope XDR base64 returns response with PENDING status.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionAsyncBase64()
+    public async Task SubmitTransactionAsync_WithEnvelopeXdrBase64_ReturnsPendingResponse()
     {
+        // Arrange
         const string json =
             """
             {
@@ -494,16 +686,24 @@ public class ServerTest
             }
             """;
         using var server = Utils.CreateTestServerWithContent(json);
+
+        // Act
         var response = await server.SubmitTransactionAsync(
             "AAAAAgAAAADe1PMFZDEm2ZIvr5IO8uM4QU4HZW4USgDlPjIeJqY2QwAAAGQAAGFLAAAABQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAJPSwAAAAAAAQAAAAAAAAABAAAAALtJgdGXASRLp/M5ZpckEa10nJPtYvrgX6M5wTPacDUYAAAAAAAAAAAAmJaAAAAAAAAAAAEmpjZDAAAAQBYm/5Z7kfwwt9HvOamKuF50118xXu3tKl49yUjHBZ5GVKwlvXJf4HajFZH1XaKXlhQl9YDBdIlPKHEa4PQ+RQI=\n");
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.PENDING, response.TxStatus);
         Assert.AreEqual(response.Hash, "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b23");
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransactionAsync with fee bump transaction returns response with PENDING status.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionAsyncFeeBump()
+    public async Task SubmitTransactionAsync_WithFeeBumpTransaction_ReturnsPendingResponse()
     {
+        // Arrange
         const string json =
             """
             {
@@ -512,15 +712,24 @@ public class ServerTest
             }
             """;
         using var server = Utils.CreateTestServerWithContent(json);
+
+        // Act
         var response = await server.SubmitTransactionAsync(BuildFeeBumpTransaction());
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.PENDING, response.TxStatus);
         Assert.AreEqual(response.Hash, "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b24");
     }
 
+    /// <summary>
+    ///     Verifies that Server.SubmitTransactionAsync with fee bump transaction and EnsureSuccess option returns response
+    ///     with PENDING status.
+    /// </summary>
     [TestMethod]
-    public async Task TestSubmitTransactionAsyncFeeBumpEnsureSuccess()
+    public async Task SubmitTransactionAsync_WithFeeBumpTransactionAndEnsureSuccess_ReturnsPendingResponse()
     {
+        // Arrange
         const string json =
             """
             {
@@ -529,10 +738,14 @@ public class ServerTest
             }
             """;
         using var server = Utils.CreateTestServerWithContent(json);
+
+        // Act
         var response = await server.SubmitTransactionAsync(
             BuildFeeBumpTransaction(),
             new SubmitTransactionOptions { EnsureSuccess = true }
         );
+
+        // Assert
         Assert.IsNotNull(response);
         Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.PENDING, response.TxStatus);
         Assert.AreEqual(response.Hash, "7a9c84f5b6e3d2c1a8f7e6d5c4b3a2918d7c6b5a4f3e2d1c9b8a7f6e5d4c3b25");

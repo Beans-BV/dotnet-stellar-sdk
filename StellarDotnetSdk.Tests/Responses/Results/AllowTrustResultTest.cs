@@ -3,46 +3,87 @@ using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+///     Unit tests for allow trust result types.
+/// </summary>
 [TestClass]
 public class AllowTrustResultTest
 {
+    /// <summary>
+    ///     Verifies that AllowTrustSuccess result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSuccess()
+    public void Deserialize_WithAllowTrustSuccessXdr_ReturnsAllowTrustSuccess()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAHAAAAAAAAAAA=", typeof(AllowTrustSuccess), true);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAHAAAAAAAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(AllowTrustSuccess), true);
     }
 
+    /// <summary>
+    ///     Verifies that AllowTrustMalformed result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestMalformed()
+    public void Deserialize_WithAllowTrustMalformedXdr_ReturnsAllowTrustMalformed()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAH/////wAAAAA=", typeof(AllowTrustMalformed), false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAH/////wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(AllowTrustMalformed), false);
     }
 
+    /// <summary>
+    ///     Verifies that AllowTrustNoTrustline result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNoTrustLine()
+    public void Deserialize_WithAllowTrustNoTrustlineXdr_ReturnsAllowTrustNoTrustline()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAH/////gAAAAA=", typeof(AllowTrustNoTrustline),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAH/////gAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(AllowTrustNoTrustline), false);
     }
 
+    /// <summary>
+    ///     Verifies that AllowTrustNotRequired result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestTrustNotRequired()
+    public void Deserialize_WithAllowTrustNotRequiredXdr_ReturnsAllowTrustNotRequired()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAH/////QAAAAA=", typeof(AllowTrustNotRequired),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAH/////QAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(AllowTrustNotRequired), false);
     }
 
+    /// <summary>
+    ///     Verifies that AllowTrustCantRevoke result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestCantRevoke()
+    public void Deserialize_WithAllowTrustCantRevokeXdr_ReturnsAllowTrustCantRevoke()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAH/////AAAAAA=", typeof(AllowTrustCantRevoke),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAH/////AAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(AllowTrustCantRevoke), false);
     }
 
+    /// <summary>
+    ///     Verifies that AllowTrustSelfNotAllowed result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSelfNotAllowed()
+    public void Deserialize_WithAllowTrustSelfNotAllowedXdr_ReturnsAllowTrustSelfNotAllowed()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAH////+wAAAAA=", typeof(AllowTrustSelfNotAllowed),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAH////+wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(AllowTrustSelfNotAllowed), false);
     }
 }

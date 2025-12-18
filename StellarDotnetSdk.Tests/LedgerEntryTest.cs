@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
@@ -133,26 +133,38 @@ public class LedgerEntryTest
         };
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 throws ArgumentException when account entry has home domain exceeding 32 characters.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryAccountWithTooLongHomeDomain()
+    public void FromXdrBase64_AccountWithTooLongHomeDomain_ThrowsArgumentException()
     {
+        // Arrange
         var xdrLedgerEntry = InitBasicAccountEntry();
         xdrLedgerEntry.Account.HomeDomain = new String32("123456789012345678901234567890123456");
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntry);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act & Assert
         var ex = Assert.ThrowsException<ArgumentException>(() => LedgerEntry.FromXdrBase64(entryXdrBase64));
         Assert.IsTrue(ex.Message.Contains("Home domain cannot exceed 32 characters"));
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes account entry with missing ledger entry extension, account extension,
+    ///     and empty signers.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryAccountWithMissingLedgerEntryExtensionAndAccountExtensionAndEmptySigners()
+    public void FromXdrBase64_AccountWithMissingExtensionsAndEmptySigners_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrLedgerEntry = InitBasicAccountEntry();
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntry);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
 
+        // Act
         var decodedLedgerEntry = (LedgerEntryAccount)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -161,9 +173,13 @@ public class LedgerEntryTest
         Assert.AreEqual(0, decodedLedgerEntry.Signers.Length);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes account entry with AccountExtensionV1 only.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryAccountWithAccountExtensionV1Only()
+    public void FromXdrBase64_AccountWithAccountExtensionV1Only_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrLiabilities = new Liabilities
         {
             Buying = new Int64(100),
@@ -186,6 +202,7 @@ public class LedgerEntryTest
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntry);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
 
+        // Act
         var decodedLedgerEntry = (LedgerEntryAccount)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -200,9 +217,13 @@ public class LedgerEntryTest
         Assert.IsNull(decodedExtensionV1.ExtensionV2);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes account entry with AccountExtensionV1 and V2.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryAccountWithAccountExtensionV1AndV2()
+    public void FromXdrBase64_AccountWithAccountExtensionV1AndV2_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrLiabilities = new Liabilities
         {
             Buying = new Int64(100),
@@ -242,6 +263,7 @@ public class LedgerEntryTest
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntry);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
 
+        // Act
         var decodedLedgerEntry = (LedgerEntryAccount)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -276,9 +298,13 @@ public class LedgerEntryTest
         Assert.IsNull(decodedExtensionV2.ExtensionV3);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes account entry with all three account extensions (V1, V2, V3).
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryAccountWithAllThreeAccountExtensions()
+    public void FromXdrBase64_AccountWithAllThreeAccountExtensions_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrLiabilities = new Liabilities
         {
             Buying = new Int64(100),
@@ -360,9 +386,13 @@ public class LedgerEntryTest
             decodedExtensionV3.SequenceTime);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes account entry with all properties populated.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryAccountWithAllPropertiesPopulated()
+    public void FromXdrBase64_AccountWithAllPropertiesPopulated_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrLedgerEntry = InitBasicAccountEntry();
         var xdrAccountEntry = xdrLedgerEntry.Account;
         xdrAccountEntry.InflationDest = new AccountID(KeyPair.Random().XdrPublicKey);
@@ -379,6 +409,7 @@ public class LedgerEntryTest
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntry);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
 
+        // Act
         var decodedLedgerEntry = (LedgerEntryAccount)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -414,9 +445,13 @@ public class LedgerEntryTest
             decodedInflationDest.XdrPublicKey.Ed25519.InnerValue);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes offer entry with all properties populated.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryOfferWithAllPropertiesPopulated()
+    public void FromXdrBase64_OfferWithAllPropertiesPopulated_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrOfferEntry = new OfferEntry
         {
             SellerID = new AccountID(_keyPair.XdrPublicKey),
@@ -443,6 +478,7 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
         // Act
         var decodedLedgerEntry = (LedgerEntryOffer)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
@@ -472,9 +508,13 @@ public class LedgerEntryTest
         Assert.IsNull(decodedLedgerEntry.OfferExtension); // Currently, no offer entry extension is available
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes trustline entry with TrustlineExtensionV1 only.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryTrustlineWithTrustlineExtensionV1Only()
+    public void FromXdrBase64_TrustlineWithTrustlineExtensionV1Only_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrTrustlineEntry = new TrustLineEntry
         {
             AccountID = new AccountID(_keyPair.XdrPublicKey),
@@ -541,9 +581,13 @@ public class LedgerEntryTest
         Assert.IsNull(decodedTrustlineExtensionV1.TrustlineExtensionV2);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes trustline entry with all properties populated.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryTrustlineWithAllPropertiesPopulated()
+    public void FromXdrBase64_TrustlineWithAllPropertiesPopulated_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrExtensionV2 = new TrustLineEntryExtensionV2
         {
             Ext = new TrustLineEntryExtensionV2.TrustLineEntryExtensionV2Ext
@@ -622,9 +666,13 @@ public class LedgerEntryTest
             decodedExtensionV2.LiquidityPoolUseCount);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes data entry with all properties populated.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryDataWithAllPropertiesPopulated()
+    public void FromXdrBase64_DataWithAllPropertiesPopulated_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrDataEntry = new DataEntry
         {
             AccountID = new AccountID(_keyPair.XdrPublicKey),
@@ -645,6 +693,7 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
         // Act
         var decodedLedgerEntry = (LedgerEntryData)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
@@ -658,9 +707,13 @@ public class LedgerEntryTest
         Assert.IsNull(decodedLedgerEntry.DataExtension); // Currently, no data entry extension is available
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes claimable balance entry with missing claimable balance extension.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryClaimableBalanceWithMissingClaimableBalanceExtension()
+    public void FromXdrBase64_ClaimableBalanceWithMissingExtension_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrClaimableBalanceEntry = InitBasicXdrClaimableBalanceEntry();
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
@@ -671,6 +724,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedLedgerEntry = (LedgerEntryClaimableBalance)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -701,9 +756,13 @@ public class LedgerEntryTest
         Assert.IsNull(decodedLedgerEntry.ClaimableBalanceEntryExtensionV1);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes claimable balance entry with all properties populated.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryClaimableBalanceWithAllPropertiesPopulated()
+    public void FromXdrBase64_ClaimableBalanceWithAllPropertiesPopulated_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrClaimableBalanceEntry = InitBasicXdrClaimableBalanceEntry();
 
         var xdrExtension = new ClaimableBalanceEntryExtensionV1
@@ -727,6 +786,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedLedgerEntry = (LedgerEntryClaimableBalance)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -758,9 +819,13 @@ public class LedgerEntryTest
             decodedExtension.Flags);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes LiquidityPool entry with all properties populated.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryLiquidityPoolWithAllPropertiesPopulated()
+    public void FromXdrBase64_LiquidityPoolWithAllPropertiesPopulated_ReturnsCorrectLedgerEntry()
     {
+        // Arrange
         var xdrLiquidityPoolEntry = new LiquidityPoolEntry
         {
             LiquidityPoolID = new PoolID
@@ -797,6 +862,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedLedgerEntry = (LedgerEntryLiquidityPool)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -826,9 +893,13 @@ public class LedgerEntryTest
             KeyPair.FromAccountId(decodedAssetB.Issuer).XdrPublicKey.Ed25519.InnerValue);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes contract data entry with contract being a contract address.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryContractDataWithWithContractBeingAContractAddress()
+    public void FromXdrBase64_ContractDataWithContractAddress_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrContractDataEntry = InitBasicContractDataEntry();
 
         var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
@@ -839,6 +910,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedLedgerEntry = (LedgerEntryContractData)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -853,9 +926,13 @@ public class LedgerEntryTest
             ((SCUint64)decodedLedgerEntry.Value).InnerValue);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes contract data entry with contract being an account address.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryContractDataWithWithContractBeingAnAccountAddress()
+    public void FromXdrBase64_ContractDataWithAccountAddress_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrContractDataEntry = InitBasicContractDataEntry();
         xdrContractDataEntry.Contract = new SCAddress
         {
@@ -886,9 +963,13 @@ public class LedgerEntryTest
             ((SCUint64)decodedLedgerEntry.Value).InnerValue);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes contract code V0 entry with all properties populated.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryContractCodeV0WithAllPropertiesPopulated()
+    public void FromXdrBase64_ContractCodeV0WithAllPropertiesPopulated_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrContractCodeEntry = new ContractCodeEntry
         {
             Ext = new ContractCodeEntry.ContractCodeEntryExt
@@ -912,6 +993,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedLedgerEntry = (LedgerEntryContractCode)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -922,9 +1005,13 @@ public class LedgerEntryTest
         Assert.IsNull(decodedLedgerEntry.ContractCodeExtensionV1);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ContractCode V1 entry with all properties populated.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryContractCodeV1WithAllPropertiesPopulated()
+    public void FromXdrBase64_ContractCodeV1WithAllPropertiesPopulated_ReturnsCorrectLedgerEntry()
     {
+        // Arrange
         var xdrContractCodeEntry = new ContractCodeEntry
         {
             Ext = new ContractCodeEntry.ContractCodeEntryExt
@@ -972,6 +1059,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedLedgerEntry = (LedgerEntryContractCode)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1011,9 +1100,13 @@ public class LedgerEntryTest
             typeof(ExtensionPointZero));
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractBandwidthV0 entry.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryConfigSettingContractBandwidthV0()
+    public void FromXdrBase64_ConfigSettingContractBandwidthV0_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ConfigSettingContractBandwidthV0
         {
             LedgerMaxTxsSizeBytes = new Uint32(1024),
@@ -1034,6 +1127,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting = (ConfigSettingContractBandwidth)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1045,9 +1140,13 @@ public class LedgerEntryTest
             decodedConfigSetting.LedgerMaxTxsSizeBytes);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractCostParamsMemoryBytes entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingContractCostParamsMemoryBytes()
+    public void FromXdrBase64_ConfigSettingContractCostParamsMemoryBytes_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ContractCostParams
         {
             InnerValue = new ContractCostParamEntry[]
@@ -1080,6 +1179,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting =
             (ConfigSettingContractCostParamsMemoryBytes)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
@@ -1099,9 +1200,13 @@ public class LedgerEntryTest
         }
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractCostParamsCpuInstructions entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingContractCostParamsCpuInstructions()
+    public void FromXdrBase64_ConfigSettingContractCostParamsCpuInstructions_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ContractCostParams
         {
             InnerValue = new ContractCostParamEntry[]
@@ -1134,6 +1239,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting =
             (ConfigSettingContractCostParamsCpuInstructions)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
@@ -1153,9 +1260,13 @@ public class LedgerEntryTest
         }
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractComputeV0 entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingContractComputeV0()
+    public void FromXdrBase64_ConfigSettingContractComputeV0_ReturnsCorrectConfigSetting()
     {
+        // Arrange
         var xdrConfigSetting = new ConfigSettingContractComputeV0
         {
             LedgerMaxInstructions = new Int64(10),
@@ -1177,6 +1288,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting = (ConfigSettingContractCompute)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1190,9 +1303,13 @@ public class LedgerEntryTest
             decodedConfigSetting.TxMemoryLimit);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractEventsV0 entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingContractEventsV0()
+    public void FromXdrBase64_ConfigSettingContractEventsV0_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ConfigSettingContractEventsV0
         {
             TxMaxContractEventsSizeBytes = new Uint32(100),
@@ -1212,6 +1329,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting = (ConfigSettingContractEvents)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1221,9 +1340,13 @@ public class LedgerEntryTest
             decodedConfigSetting.TxMaxContractEventsSizeBytes);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractExecutionLanesV0 entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingContractExecutionLanesV0()
+    public void FromXdrBase64_ConfigSettingContractExecutionLanesV0_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ConfigSettingContractExecutionLanesV0
         {
             LedgerMaxTxCount = new Uint32(1000),
@@ -1242,6 +1365,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting = (ConfigSettingContractExecutionLanes)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1249,9 +1374,13 @@ public class LedgerEntryTest
             decodedConfigSetting.LedgerMaxTxCount);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractHistoricalDataV0 entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingContractHistoricalDataV0()
+    public void FromXdrBase64_ConfigSettingContractHistoricalDataV0_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ConfigSettingContractHistoricalDataV0
         {
             FeeHistorical1KB = new Int64(1000),
@@ -1271,6 +1400,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting = (ConfigSettingContractHistoricalData)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1278,9 +1409,13 @@ public class LedgerEntryTest
             decodedConfigSetting.FeeHistorical1Kb);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractLedgerCostV0 entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingContractLedgerCostV0()
+    public void FromXdrBase64_ConfigSettingContractLedgerCostV0_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ConfigSettingContractLedgerCostV0
         {
             LedgerMaxDiskReadEntries = new Uint32(10),
@@ -1313,6 +1448,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting = (ConfigSettingContractLedgerCost)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1348,9 +1485,13 @@ public class LedgerEntryTest
             decodedConfigSetting.SorobanStateRentFeeGrowthFactor);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes StateArchivalSettings entry.
+    /// </summary>
     [TestMethod]
-    public void TestStateArchivalSettings()
+    public void FromXdrBase64_StateArchivalSettings_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new StellarDotnetSdk.Xdr.StateArchivalSettings
         {
             MaxEntryTTL = new Uint32(10),
@@ -1378,6 +1519,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting = (StateArchivalSettings)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1403,9 +1546,13 @@ public class LedgerEntryTest
             decodedConfigSetting.StartingEvictionScanLevel);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting EvictionIterator entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingEvictionIterator()
+    public void FromXdrBase64_ConfigSettingEvictionIterator_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new StellarDotnetSdk.Xdr.EvictionIterator
         {
             BucketListLevel = new Uint32(10),
@@ -1426,6 +1573,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting = (EvictionIterator)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1437,9 +1586,13 @@ public class LedgerEntryTest
             decodedConfigSetting.BucketFileOffset);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractMaxSizeBytes entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingContractMaxSizeBytes()
+    public void FromXdrBase64_ConfigSettingContractMaxSizeBytes_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ConfigSettingEntry
         {
             Discriminant =
@@ -1454,6 +1607,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting = (ConfigSettingContractMaxSizeBytes)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1461,9 +1616,13 @@ public class LedgerEntryTest
             decodedConfigSetting.InnerValue);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractDataKeySizeBytes entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingContractDataKeySizeBytes()
+    public void FromXdrBase64_ConfigSettingContractDataKeySizeBytes_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ConfigSettingEntry
         {
             Discriminant =
@@ -1479,6 +1638,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting = (ConfigSettingContractDataKeySizeBytes)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1486,9 +1647,13 @@ public class LedgerEntryTest
             decodedConfigSetting.InnerValue);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractDataEntrySizeBytes entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingContractDataEntrySizeBytes()
+    public void FromXdrBase64_ConfigSettingContractDataEntrySizeBytes_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ConfigSettingEntry
         {
             Discriminant = ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum
@@ -1503,6 +1668,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting = (ConfigSettingContractDataEntrySizeBytes)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1510,9 +1677,13 @@ public class LedgerEntryTest
             decodedConfigSetting.InnerValue);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting LiveSorobanStateSizeWindow entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingLiveSorobanStateSizeWindow()
+    public void FromXdrBase64_ConfigSettingLiveSorobanStateSizeWindow_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ConfigSettingEntry
         {
             Discriminant =
@@ -1528,6 +1699,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting = (ConfigSettingLiveSorobanStateSizeWindow)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1540,9 +1713,13 @@ public class LedgerEntryTest
         }
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractParallelComputeV0 entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingContractParallelComputeV0()
+    public void FromXdrBase64_ConfigSettingContractParallelComputeV0_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ConfigSettingEntry
         {
             Discriminant =
@@ -1561,6 +1738,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting = (ConfigSettingContractParallelComputeV0)LedgerEntry.FromXdrBase64(entryXdrBase64);
 
         // Assert
@@ -1568,9 +1747,13 @@ public class LedgerEntryTest
             decodedConfigSetting.LedgerMaxDependentTxClusters);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ContractLedgerCostExtV0 entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingContractLedgerCostExtV0()
+    public void FromXdrBase64_ConfigSettingContractLedgerCostExtV0_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ConfigSettingEntry
         {
             Discriminant =
@@ -1590,6 +1773,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting =
             (LedgerEntries.ConfigSettingContractLedgerCostExtV0)LedgerEntry.FromXdrBase64(
                 entryXdrBase64);
@@ -1601,9 +1786,13 @@ public class LedgerEntryTest
             decodedConfigSetting.FeeWrite1Kb);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting ScpTiming entry.
+    /// </summary>
     [TestMethod]
-    public void TestConfigSettingScpTiming()
+    public void FromXdrBase64_ConfigSettingScpTiming_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrConfigSetting = new ConfigSettingEntry
         {
             Discriminant =
@@ -1626,6 +1815,8 @@ public class LedgerEntryTest
         var os = new XdrDataOutputStream();
         StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
         var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
         var decodedConfigSetting =
             (ConfigSettingScpTiming)LedgerEntry.FromXdrBase64(
                 entryXdrBase64);
@@ -1643,9 +1834,13 @@ public class LedgerEntryTest
             decodedConfigSetting.BallotTimeoutIncrementMilliseconds);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes TTL entry with all properties populated.
+    /// </summary>
     [TestMethod]
-    public void TestLedgerEntryTtlWithAllPropertiesPopulated()
+    public void FromXdrBase64_TtlWithAllPropertiesPopulated_ReturnsDecodedEntry()
     {
+        // Arrange
         var xdrTtlEntry = new TTLEntry
         {
             KeyHash = new Hash(new byte[]

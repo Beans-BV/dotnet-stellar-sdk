@@ -3,15 +3,26 @@ using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+///     Unit tests for inflation result types.
+/// </summary>
 [TestClass]
 public class InflationResultTest
 {
+    /// <summary>
+    ///     Verifies that InflationSuccess result can be deserialized correctly and contains payouts.
+    /// </summary>
     [TestMethod]
-    public void TestSuccess()
+    public void Deserialize_WithInflationSuccessXdr_ReturnsInflationSuccessWithPayouts()
     {
-        var tx = Utils.AssertResultOfType(
-            "AAAAAACYloD/////AAAAAQAAAAAAAAAJAAAAAAAAAAIAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAJiWgAAAAAADLNchwR3S8r1eVV+aPJAT1CkmM4vNhQ3mitHQ34PP5AAAAAABMS0AAAAAAA==",
-            typeof(InflationSuccess), true);
+        // Arrange
+        var xdrBase64 =
+            "AAAAAACYloD/////AAAAAQAAAAAAAAAJAAAAAAAAAAIAAAAAKoNGsl81xj8D8XyekzKZXRuSU2KImhHkQj4QWhroY64AAAAAAJiWgAAAAAADLNchwR3S8r1eVV+aPJAT1CkmM4vNhQ3mitHQ34PP5AAAAAABMS0AAAAAAA==";
+
+        // Act
+        var tx = Utils.AssertResultOfType(xdrBase64, typeof(InflationSuccess), true);
+
+        // Assert
         var failed = (TransactionResultFailed)tx;
         var op = (InflationSuccess)failed.Results[0];
         Assert.AreEqual(2, op.Payouts.Length);
@@ -20,9 +31,16 @@ public class InflationResultTest
         Assert.AreEqual("1", payout.Amount);
     }
 
+    /// <summary>
+    ///     Verifies that InflationNotTime result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNotTime()
+    public void Deserialize_WithInflationNotTimeXdr_ReturnsInflationNotTime()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAJ/////wAAAAA=", typeof(InflationNotTime), false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAJ/////wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(InflationNotTime), false);
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,27 +8,46 @@ using StellarDotnetSdk.Responses.Effects;
 
 namespace StellarDotnetSdk.Tests.Responses.Effects;
 
+/// <summary>
+///     Unit tests for deserializing various effect response types from JSON.
+/// </summary>
 [TestClass]
 public class EffectDeserializerTest
 {
+    /// <summary>
+    ///     Verifies that AccountCreatedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeAccountCreatedEffect()
+    public void Deserialize_WithAccountCreatedEffectJson_ReturnsAccountCreatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountCreated.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertAccountCreatedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that AccountCreatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeAccountCreatedEffect()
+    public void SerializeDeserialize_WithAccountCreatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountCreated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertAccountCreatedData(back);
     }
@@ -52,24 +71,40 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that AccountRemovedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeAccountRemovedEffect()
+    public void Deserialize_WithAccountRemovedEffectJson_ReturnsAccountRemovedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountRemoved.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertAccountRemovedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that AccountRemovedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeAccountRemovedEffect()
+    public void SerializeDeserialize_WithAccountRemovedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountRemoved.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertAccountRemovedData(back);
     }
@@ -88,24 +123,40 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that AccountCreditedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeAccountCreditedEffect()
+    public void Deserialize_WithAccountCreditedEffectJson_ReturnsAccountCreditedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountCredited.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertAccountCreditedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that AccountCreditedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeAccountCreditedEffect()
+    public void SerializeDeserialize_WithAccountCreditedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountCredited.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertAccountCreditedData(back);
     }
@@ -129,24 +180,40 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that AccountDebitedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeAccountDebitedEffect()
+    public void Deserialize_WithAccountDebitedEffectJson_ReturnsAccountDebitedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountDebited.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertAccountDebitedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that AccountDebitedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeAccountDebitedEffect()
+    public void SerializeDeserialize_WithAccountDebitedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountDebited.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertAccountDebitedData(back);
     }
@@ -172,24 +239,40 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that AccountThresholdsUpdatedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeAccountThresholdsUpdatedEffect()
+    public void Deserialize_WithAccountThresholdsUpdatedEffectJson_ReturnsAccountThresholdsUpdatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountThresholdsUpdated.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertAccountThresholdsUpdatedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that AccountThresholdsUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeAccountThresholdsUpdatedEffect()
+    public void SerializeDeserialize_WithAccountThresholdsUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountThresholdsUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertAccountThresholdsUpdatedData(back);
     }
@@ -211,24 +294,40 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that AccountHomeDomainUpdatedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeAccountHomeDomainUpdatedEffect()
+    public void Deserialize_WithAccountHomeDomainUpdatedEffectJson_ReturnsAccountHomeDomainUpdatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountHomeDomainUpdated.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertAccountHomeDomainUpdatedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that AccountHomeDomainUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeAccountHomeDomainUpdatedEffect()
+    public void SerializeDeserialize_WithAccountHomeDomainUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountHomeDomainUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertAccountHomeDomainUpdatedData(back);
     }
@@ -248,25 +347,40 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that AccountFlagsUpdatedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeAccountFlagsUpdatedEffect()
+    public void Deserialize_WithAccountFlagsUpdatedEffectJson_ReturnsAccountFlagsUpdatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountFlagsUpdated.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
+        // Assert
         Assert.IsNotNull(instance);
         AssertAccountFlagsUpdatedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that AccountFlagsUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeAccountFlagsUpdatedEffect()
+    public void SerializeDeserialize_WithAccountFlagsUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountFlagsUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertAccountFlagsUpdatedData(back);
     }
@@ -287,24 +401,40 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that SignerCreatedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeSignerCreatedEffect()
+    public void Deserialize_WithSignerCreatedEffectJson_ReturnsSignerCreatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectSignerCreated.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertSignerCreatedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that SignerCreatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeSignerCreatedEffect()
+    public void SerializeDeserialize_WithSignerCreatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectSignerCreated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertSignerCreatedData(back);
     }
@@ -325,24 +455,40 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that SignerRemovedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeSignerRemovedEffect()
+    public void Deserialize_WithSignerRemovedEffectJson_ReturnsSignerRemovedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectSignerRemoved.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertSignerRemoveData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that SignerRemovedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeSignerRemovedEffect()
+    public void SerializeDeserialize_WithSignerRemovedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectSignerRemoved.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertSignerRemoveData(back);
     }
@@ -363,24 +509,40 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that SignerUpdatedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeSignerUpdatedEffect()
+    public void Deserialize_WithSignerUpdatedEffectJson_ReturnsSignerUpdatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectSignerUpdated.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertSignerUpdatedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that SignerUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeSignerUpdatedEffect()
+    public void SerializeDeserialize_WithSignerUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectSignerUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertSignerUpdatedData(back);
     }
@@ -401,24 +563,40 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineCreatedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeTrustlineCreatedEffect()
+    public void Deserialize_WithTrustlineCreatedEffectJson_ReturnsTrustlineCreatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineCreated.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertTrustlineCreatedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineCreatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeTrustlineCreatedEffect()
+    public void SerializeDeserialize_WithTrustlineCreatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineCreated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTrustlineCreatedData(back);
     }
@@ -445,24 +623,40 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineCreatedLiquidityPoolSharesEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeTrustlineCreatedLiquidityPoolSharesEffect()
+    public void Deserialize_WithTrustlineCreatedLiquidityPoolSharesEffectJson_ReturnsTrustlineCreatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineCreatedLiquidityPoolShares.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertTrustlineCreatedLiquidityPoolSharesData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineCreatedLiquidityPoolSharesEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeTrustlineCreatedLiquidityPoolSharesEffect()
+    public void SerializeDeserialize_WithTrustlineCreatedLiquidityPoolSharesEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineCreatedLiquidityPoolShares.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTrustlineCreatedLiquidityPoolSharesData(back);
     }
@@ -488,24 +682,40 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineRemovedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeTrustlineRemovedEffect()
+    public void Deserialize_WithTrustlineRemovedEffectJson_ReturnsTrustlineRemovedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineRemoved.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertTrustlineRemovedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineRemovedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeTrustlineRemovedEffect()
+    public void SerializeDeserialize_WithTrustlineRemovedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineRemoved.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTrustlineRemovedData(back);
     }
@@ -527,24 +737,40 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineUpdatedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeTrustlineUpdatedEffect()
+    public void Deserialize_WithTrustlineUpdatedEffectJson_ReturnsTrustlineUpdatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineUpdated.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertTrustlineUpdatedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeTrustlineUpdatedEffect()
+    public void SerializeDeserialize_WithTrustlineUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTrustlineUpdatedData(back);
     }
@@ -567,37 +793,62 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineAuthorizedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestDeserializeTrustlineAuthorizedEffect()
+    public void Deserialize_WithTrustlineAuthorizedEffectJson_ReturnsTrustlineAuthorizedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineAuthorized.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertTrustlineAuthorizedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineAuthorizedToMaintainLiabilitiesEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestDeserializeTrustlineAuthorizedToMaintainLiabilitiesEffect()
+    public void
+        Deserialize_WithTrustlineAuthorizedToMaintainLiabilitiesEffectJson_ReturnsTrustlineAuthorizedToMaintainLiabilitiesEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineAuthorizedToMaintainLiabilities.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertTrustlineAuthorizedToMaintainLiabilitiesEffect(instance);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineAuthorizedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestSerializeDeserializeTrustlineAuthorizedEffect()
+    public void SerializeDeserialize_WithTrustlineAuthorizedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineAuthorized.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTrustlineAuthorizedData(back);
     }
@@ -635,26 +886,42 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineDeauthorizedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestDeserializeTrustlineDeauthorizedEffect()
+    public void Deserialize_WithTrustlineDeauthorizedEffectJson_ReturnsTrustlineDeauthorizedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineDeAuthorized.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertTrustlineDeauthorizedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineDeauthorizedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
     [Obsolete]
-    public void TestSerializeDeserializeTrustlineDeauthorizedEffect()
+    public void SerializeDeserialize_WithTrustlineDeauthorizedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineDeAuthorized.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTrustlineDeauthorizedData(back);
     }
@@ -677,30 +944,46 @@ public class EffectDeserializerTest
             effect.Links.Precedes.Href);
     }
 
+    /// <summary>
+    ///     Verifies that AlphaNum12NativeTradeEffect can be deserialized and serialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestAlphaNum12NativeTradeEffect()
+    public void SerializeDeserialize_WithAlphaNum12NativeTradeEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectTradeAlphaNum12Native.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
-        Assert.IsNotNull(instance);
-        AssertAlphaNum12NativeTradeData(instance);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
+        Assert.IsNotNull(instance);
+        AssertAlphaNum12NativeTradeData(instance);
         Assert.IsNotNull(back);
         AssertAlphaNum12NativeTradeData(back);
     }
 
+    /// <summary>
+    ///     Verifies that NativeAlphaNum4TradeEffect can be deserialized and serialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestNativeAlphaNum4TradeEffect()
+    public void SerializeDeserialize_WithNativeAlphaNum4TradeEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectTradeNativeAphaNum4.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
-        Assert.IsNotNull(instance);
-        AssertNativeAphaNum4TradeData(instance);
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
+        Assert.IsNotNull(instance);
+        AssertNativeAphaNum4TradeData(instance);
         Assert.IsNotNull(back);
         AssertNativeAphaNum4TradeData(back);
     }
@@ -761,24 +1044,41 @@ public class EffectDeserializerTest
         AssertOtherTradeData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that AccountInflationUpdatedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeAccountInflationUpdatedEffect()
+    public void
+        Deserialize_WithAccountInflationUpdatedEffectJson_ReturnsAccountInflationDestinationUpdatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountInflationUpdated.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertAccountInflationUpdated(instance);
     }
 
+    /// <summary>
+    ///     Verifies that AccountInflationUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeAccountInflationUpdatedEffect()
+    public void SerializeDeserialize_WithAccountInflationUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectAccountInflationUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertAccountInflationUpdated(back);
     }
@@ -792,24 +1092,40 @@ public class EffectDeserializerTest
         Assert.AreEqual(DateTimeOffset.Parse("2018-06-06T10:23:57Z").UtcDateTime, effect.CreatedAt);
     }
 
+    /// <summary>
+    ///     Verifies that DataCreatedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeDataCreatedEffect()
+    public void Deserialize_WithDataCreatedEffectJson_ReturnsDataCreatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectDataCreated.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertDataCreatedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that DataCreatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeDataCreatedEffect()
+    public void SerializeDeserialize_WithDataCreatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectDataCreated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertDataCreatedData(back);
     }
@@ -825,24 +1141,40 @@ public class EffectDeserializerTest
         Assert.AreEqual("dGVzdC5jb20=", effect.Value);
     }
 
+    /// <summary>
+    ///     Verifies that DataRemovedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeDataRemovedEffect()
+    public void Deserialize_WithDataRemovedEffectJson_ReturnsDataRemovedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectDataRemoved.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertDataRemovedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that DataRemovedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeDataRemovedEffect()
+    public void SerializeDeserialize_WithDataRemovedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectDataRemoved.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertDataRemovedData(back);
     }
@@ -857,24 +1189,40 @@ public class EffectDeserializerTest
         Assert.AreEqual("my key", effect.Name);
     }
 
+    /// <summary>
+    ///     Verifies that DataUpdatedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeDataUpdatedEffect()
+    public void Deserialize_WithDataUpdatedEffectJson_ReturnsDataUpdatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectDataUpdated.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertDataUpdatedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that DataUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeDataUpdatedEffect()
+    public void SerializeDeserialize_WithDataUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectDataUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertDataUpdatedData(back);
     }
@@ -890,33 +1238,55 @@ public class EffectDeserializerTest
         Assert.AreEqual("Mg==", effect.Value);
     }
 
+    /// <summary>
+    ///     Verifies that deserializing an unknown effect type throws JsonException.
+    /// </summary>
     [TestMethod]
-    public void TestUnknownEffect()
+    public void Deserialize_WithUnknownEffectJson_ThrowsJsonException()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectUnknown.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act & Assert
         Assert.ThrowsException<JsonException>(() =>
             JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions));
     }
 
+    /// <summary>
+    ///     Verifies that SequenceBumpedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeSequenceBumpedEffect()
+    public void Deserialize_WithSequenceBumpedEffectJson_ReturnsSequenceBumpedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectSequenceBumped.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertSequenceBumpedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that SequenceBumpedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeSequenceBumpedEffect()
+    public void SerializeDeserialize_WithSequenceBumpedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectSequenceBumped.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertSequenceBumpedData(back);
     }
@@ -931,24 +1301,40 @@ public class EffectDeserializerTest
         Assert.AreEqual(79473726952833048L, effect.NewSequence);
     }
 
+    /// <summary>
+    ///     Verifies that OfferCreatedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeOfferCreatedEffect()
+    public void Deserialize_WithOfferCreatedEffectJson_ReturnsOfferCreatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectOfferCreated.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertOfferCreatedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that OfferCreatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeOfferCreatedEffect()
+    public void SerializeDeserialize_WithOfferCreatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectOfferCreated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertOfferCreatedData(back);
     }
@@ -962,24 +1348,40 @@ public class EffectDeserializerTest
         Assert.AreEqual(DateTimeOffset.Parse("2018-06-06T10:23:57Z").UtcDateTime, effect.CreatedAt);
     }
 
+    /// <summary>
+    ///     Verifies that OfferRemovedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeOfferRemovedEffect()
+    public void Deserialize_WithOfferRemovedEffectJson_ReturnsOfferRemovedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectOfferRemoved.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertOfferRemovedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that OfferRemovedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeOfferRemovedEffect()
+    public void SerializeDeserialize_WithOfferRemovedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectOfferRemoved.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertOfferRemovedData(back);
     }
@@ -993,24 +1395,40 @@ public class EffectDeserializerTest
         Assert.AreEqual(DateTimeOffset.Parse("2018-06-06T10:23:57Z").UtcDateTime, effect.CreatedAt);
     }
 
+    /// <summary>
+    ///     Verifies that OfferUpdatedEffect can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeOfferUpdatedEffect()
+    public void Deserialize_WithOfferUpdatedEffectJson_ReturnsOfferUpdatedEffectResponse()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectOfferUpdated.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(instance);
         AssertOfferUpdatedData(instance);
     }
 
+    /// <summary>
+    ///     Verifies that OfferUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeOfferUpdatedEffect()
+    public void SerializeDeserialize_WithOfferUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("effectOfferUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertOfferUpdatedData(back);
     }
@@ -1024,14 +1442,22 @@ public class EffectDeserializerTest
         Assert.AreEqual(DateTimeOffset.Parse("2018-06-06T10:23:57Z").UtcDateTime, effect.CreatedAt);
     }
 
+    /// <summary>
+    ///     Verifies that AccountSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationAccountSponsorshipCreatedEffect()
+    public void SerializeDeserialize_WithAccountSponsorshipCreatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("accountSponsorshipCreated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertAccountSponsorshipCreatedData(back);
     }
@@ -1044,14 +1470,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("GCBQ6JRBPF3SXQBQ6SO5MRBE7WVV4UCHYOSHQGXSZNPZLFRYVYOWBZRQ", effect.Sponsor);
     }
 
+    /// <summary>
+    ///     Verifies that AccountSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationAccountSponsorshipRemovedEffect()
+    public void SerializeDeserialize_WithAccountSponsorshipRemovedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("accountSponsorshipRemoved.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertAccountSponsorshipRemovedData(back);
     }
@@ -1064,14 +1498,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("GCBQ6JRBPF3SXQBQ6SO5MRBE7WVV4UCHYOSHQGXSZNPZLFRYVYOWBZRQ", effect.FormerSponsor);
     }
 
+    /// <summary>
+    ///     Verifies that AccountSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationAccountSponsorshipUpdatedEffect()
+    public void SerializeDeserialize_WithAccountSponsorshipUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("accountSponsorshipUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertAccountSponsorshipUpdatedData(back);
     }
@@ -1085,14 +1527,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("GBVFLWXYCIGPO3455XVFIKHS66FCT5AI64ZARKS7QJN4NF7K5FOXTJNL", effect.NewSponsor);
     }
 
+    /// <summary>
+    ///     Verifies that ClaimableBalanceClaimantCreatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationClaimableBalanceClaimantCreatedEffect()
+    public void SerializeDeserialize_WithClaimableBalanceClaimantCreatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("claimableBalanceClaimantCreated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertClaimableBalanceClaimantCreatedEffect(back);
     }
@@ -1110,14 +1560,22 @@ public class EffectDeserializerTest
     }
 
 
+    /// <summary>
+    ///     Verifies that ClaimableBalanceClaimedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationClaimableBalanceClaimedEffect()
+    public void SerializeDeserialize_WithClaimableBalanceClaimedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("claimableBalanceClaimed.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertClaimableBalanceClaimedEffect(back);
     }
@@ -1132,14 +1590,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("1.0000000", effect.Amount);
     }
 
+    /// <summary>
+    ///     Verifies that ClaimableBalanceCreatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationClaimableBalanceCreatedEffect()
+    public void SerializeDeserialize_WithClaimableBalanceCreatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("claimableBalanceCreated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertClaimableBalanceCreatedEffect(back);
     }
@@ -1154,14 +1620,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("1.0000000", effect.Amount);
     }
 
+    /// <summary>
+    ///     Verifies that ClaimableBalanceSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationClaimableBalanceSponsorshipCreatedEffect()
+    public void SerializeDeserialize_WithClaimableBalanceSponsorshipCreatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("claimableBalanceSponsorshipCreated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertClaimableBalanceSponsorshipCreatedEffect(back);
     }
@@ -1175,14 +1649,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("GD2I2F7SWUHBAD7XBIZTF7MBMWQYWJVEFMWTXK76NSYVOY52OJRYNTIY", effect.Sponsor);
     }
 
+    /// <summary>
+    ///     Verifies that ClaimableBalanceSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationClaimableBalanceSponsorshipRemovedEffect()
+    public void SerializeDeserialize_WithClaimableBalanceSponsorshipRemovedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("claimableBalanceSponsorshipRemoved.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertClaimableBalanceSponsorshipRemovedEffect(back);
     }
@@ -1196,14 +1678,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("GD2I2F7SWUHBAD7XBIZTF7MBMWQYWJVEFMWTXK76NSYVOY52OJRYNTIY", effect.FormerSponsor);
     }
 
+    /// <summary>
+    ///     Verifies that ClaimableBalanceSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationClaimableBalanceSponsorshipUpdatedEffect()
+    public void SerializeDeserialize_WithClaimableBalanceSponsorshipUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("claimableBalanceSponsorshipUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertClaimableBalanceSponsorshipUpdatedEffect(back);
     }
@@ -1218,14 +1708,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("GBVFLWXYCIGPO3455XVFIKHS66FCT5AI64ZARKS7QJN4NF7K5FOXTJNL", effect.NewSponsor);
     }
 
+    /// <summary>
+    ///     Verifies that SignerSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationSignerSponsorshipCreatedEffect()
+    public void SerializeDeserialize_WithSignerSponsorshipCreatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("signerSponsorshipCreated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertSignerSponsorshipCreatedEffect(back);
     }
@@ -1239,14 +1737,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("GAEJ2UF46PKAPJYED6SQ45CKEHSXV63UQEYHVUZSVJU6PK5Y4ZVA4ELU", effect.Sponsor);
     }
 
+    /// <summary>
+    ///     Verifies that SignerSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationSignerSponsorshipRemovedEffect()
+    public void SerializeDeserialize_WithSignerSponsorshipRemovedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("signerSponsorshipRemoved.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertSignerSponsorshipRemovedEffect(back);
     }
@@ -1260,14 +1766,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("GAEJ2UF46PKAPJYED6SQ45CKEHSXV63UQEYHVUZSVJU6PK5Y4ZVA4ELU", effect.FormerSponsor);
     }
 
+    /// <summary>
+    ///     Verifies that SignerSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationSignerSponsorshipUpdatedEffect()
+    public void SerializeDeserialize_WithSignerSponsorshipUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("signerSponsorshipUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertSignerSponsorshipUpdatedEffect(back);
     }
@@ -1282,14 +1796,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("GB5N4275ETC6A77K4DTDL3EFAQMN66PC7UITDUZUBM7Y6LDJP7EYSGOB", effect.NewSponsor);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationTrustlineSponsorshipCreatedEffect()
+    public void SerializeDeserialize_WithTrustlineSponsorshipCreatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineSponsorshipCreated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTrustlineSponsorshipCreatedEffect(back);
     }
@@ -1303,14 +1825,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("GAEJ2UF46PKAPJYED6SQ45CKEHSXV63UQEYHVUZSVJU6PK5Y4ZVA4ELU", effect.Sponsor);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationTrustlineSponsorshipRemovedEffect()
+    public void SerializeDeserialize_WithTrustlineSponsorshipRemovedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineSponsorshipRemoved.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTrustlineSponsorshipRemovedEffect(back);
     }
@@ -1324,14 +1854,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("GAEJ2UF46PKAPJYED6SQ45CKEHSXV63UQEYHVUZSVJU6PK5Y4ZVA4ELU", effect.FormerSponsor);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationTrustlineSponsorshipUpdatedEffect()
+    public void SerializeDeserialize_WithTrustlineSponsorshipUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineSponsorshipUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTrustlineSponsorshipUpdatedEffect(back);
     }
@@ -1346,14 +1884,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("GB5N4275ETC6A77K4DTDL3EFAQMN66PC7UITDUZUBM7Y6LDJP7EYSGOB", effect.NewSponsor);
     }
 
+    /// <summary>
+    ///     Verifies that DataSponsorshipCreatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationDataSponsorshipCreatedEffect()
+    public void SerializeDeserialize_WithDataSponsorshipCreatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("dataSponsorshipCreated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertDataSponsorshipCreatedData(back);
     }
@@ -1367,14 +1913,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("welcome-friend", effect.DataName);
     }
 
+    /// <summary>
+    ///     Verifies that DataSponsorshipRemovedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationDataSponsorshipRemovedEffect()
+    public void SerializeDeserialize_WithDataSponsorshipRemovedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("dataSponsorshipRemoved.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertDataSponsorshipRemovedData(back);
     }
@@ -1388,14 +1942,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("welcome-friend", effect.DataName);
     }
 
+    /// <summary>
+    ///     Verifies that DataSponsorshipUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationDataSponsorshipUpdatedEffect()
+    public void SerializeDeserialize_WithDataSponsorshipUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("dataSponsorshipUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertDataSponsorshipUpdatedData(back);
     }
@@ -1410,14 +1972,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("welcome-friend", effect.DataName);
     }
 
+    /// <summary>
+    ///     Verifies that TrustlineFlagsUpdatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationTrustlineFlagsUpdatedEffect()
+    public void SerializeDeserialize_WithTrustlineFlagsUpdatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("trustlineFlagsUpdated.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTrustlineFlagsUpdatedEffect(back);
     }
@@ -1436,14 +2006,22 @@ public class EffectDeserializerTest
         Assert.IsTrue(effect.ClawbackEnabledFlag);
     }
 
+    /// <summary>
+    ///     Verifies that ClaimableBalanceClawedBackEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationClaimableBalanceClawedBackEffect()
+    public void SerializeDeserialize_WithClaimableBalanceClawedBackEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("claimableBalanceClawedBack.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertClaimableBalanceClawedBackEffect(back);
     }
@@ -1456,16 +2034,23 @@ public class EffectDeserializerTest
         Assert.AreEqual("00000000526674017c3cf392614b3f2f500230affd58c7c364625c350c61058fbeacbdf7", effect.BalanceId);
     }
 
+    /// <summary>
+    ///     Verifies that LiquidityPoolCreatedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeLiquidityPoolCreatedEffect()
+    public void SerializeDeserialize_WithLiquidityPoolCreatedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolCreatedEffectResponse.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
-        Assert.IsNotNull(back);
 
+        // Assert
+        Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolCreatedEffectResponse);
         var effect = (LiquidityPoolCreatedEffectResponse)back;
 
@@ -1486,14 +2071,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("0.0000000", effect.LiquidityPool.Reserves[1].Amount);
     }
 
+    /// <summary>
+    ///     Verifies that LiquidityPoolDepositedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeLiquidityPoolDepositedEffect()
+    public void SerializeDeserialize_WithLiquidityPoolDepositedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolDepositedEffectResponse.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolDepositedEffectResponse);
         var effect = (LiquidityPoolDepositedEffectResponse)back;
@@ -1517,14 +2110,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("250.0000000", effect.SharesReceived);
     }
 
+    /// <summary>
+    ///     Verifies that LiquidityPoolRemovedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeLiquidityPoolRemovedEffect()
+    public void SerializeDeserialize_WithLiquidityPoolRemovedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolRemovedEffectResponse.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolRemovedEffectResponse);
         var effect = (LiquidityPoolRemovedEffectResponse)back;
@@ -1535,14 +2136,22 @@ public class EffectDeserializerTest
             effect.LiquidityPoolId.ToString());
     }
 
+    /// <summary>
+    ///     Verifies that LiquidityPoolRevokedEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeLiquidityPoolRevokedEffect()
+    public void SerializeDeserialize_WithLiquidityPoolRevokedEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolRevokedEffectResponse.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolRevokedEffectResponse);
         var effect = (LiquidityPoolRevokedEffectResponse)back;
@@ -1573,14 +2182,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("100.0000000", effect.SharesRevoked);
     }
 
+    /// <summary>
+    ///     Verifies that LiquidityPoolTradeEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeLiquidityPoolTradeEffect()
+    public void SerializeDeserialize_WithLiquidityPoolTradeEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolTradeEffectResponse.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolTradeEffectResponse);
         var effect = (LiquidityPoolTradeEffectResponse)back;
@@ -1597,14 +2214,22 @@ public class EffectDeserializerTest
         Assert.AreEqual("100.0000000", effect.Bought.Amount);
     }
 
+    /// <summary>
+    ///     Verifies that LiquidityPoolWithdrewEffect can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeLiquidityPoolWithdrewEffectEffect()
+    public void SerializeDeserialize_WithLiquidityPoolWithdrewEffect_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("LiquidityPoolWithdrewEffectResponse.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         Assert.IsTrue(back is LiquidityPoolWithdrewEffectResponse);
         var effect = (LiquidityPoolWithdrewEffectResponse)back;

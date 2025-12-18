@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -6,27 +6,46 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+///     Unit tests for deserializing account page responses from JSON.
+/// </summary>
 [TestClass]
 public class AccountPageDeserializerTest
 {
+    /// <summary>
+    ///     Verifies that Page&lt;AccountResponse&gt; can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeAccountPage()
+    public void Deserialize_WithAccountPageJson_ReturnsDeserializedAccountPage()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("accountPage.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var accountsPage = JsonSerializer.Deserialize<Page<AccountResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(accountsPage);
         AssertTestData(accountsPage);
     }
 
+    /// <summary>
+    ///     Verifies that Page&lt;AccountResponse&gt; can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserializeAccountPage()
+    public void SerializeDeserialize_WithAccountPage_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("accountPage.json");
         var json = File.ReadAllText(jsonPath);
         var accountsPage = JsonSerializer.Deserialize<Page<AccountResponse>>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(accountsPage);
         var back = JsonSerializer.Deserialize<Page<AccountResponse>>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

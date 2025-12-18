@@ -12,11 +12,17 @@ using LedgerKey = StellarDotnetSdk.Xdr.LedgerKey;
 
 namespace StellarDotnetSdk.Tests;
 
+/// <summary>
+///     Unit tests for <see cref="LedgerEntryChange" /> XDR type deserialization.
+/// </summary>
 [TestClass]
 public class LedgerEntryChangeTest
 {
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_CREATED change.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeLedgerEntryChangeCreated()
+    public void FromXdrBase64_LedgerEntryChangeCreated_ReturnsLedgerEntryCreated()
     {
         // Arrange
         var xdrLedgerEntryChange = new LedgerEntryChange
@@ -39,8 +45,11 @@ public class LedgerEntryChangeTest
             (LedgerEntryData)createdLedger.CreatedEntry);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_RESTORED change.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeLedgerEntryChangeRestored()
+    public void FromXdrBase64_LedgerEntryChangeRestored_ReturnsLedgerEntryRestored()
     {
         // Arrange
         var xdrLedgerEntryChange = new LedgerEntryChange
@@ -63,8 +72,11 @@ public class LedgerEntryChangeTest
             (LedgerEntryData)restoredLedger.RestoredEntry);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_UPDATED change.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeLedgerEntryChangeUpdated()
+    public void FromXdrBase64_LedgerEntryChangeUpdated_ReturnsLedgerEntryUpdated()
     {
         // Arrange
         var xdrLedgerEntryChange = new LedgerEntryChange
@@ -87,8 +99,11 @@ public class LedgerEntryChangeTest
             (LedgerEntryData)updatedLedger.UpdatedEntry);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_STATE change.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeLedgerEntryChangeState()
+    public void FromXdrBase64_LedgerEntryChangeState_ReturnsLedgerEntryState()
     {
         // Arrange
         var xdrLedgerEntryChange = new LedgerEntryChange
@@ -110,8 +125,11 @@ public class LedgerEntryChangeTest
         AssertEqualLedgerDataEntries(xdrLedgerEntryChange.State.Data.Data, (LedgerEntryData)stateLedger.State);
     }
 
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly deserializes LEDGER_ENTRY_REMOVED change.
+    /// </summary>
     [TestMethod]
-    public void TestDeserializeLedgerEntryChangeRemoved()
+    public void FromXdrBase64_LedgerEntryChangeRemoved_ReturnsLedgerEntryRemoved()
     {
         // Arrange
         var xdrLedgerEntryChange = new LedgerEntryChange

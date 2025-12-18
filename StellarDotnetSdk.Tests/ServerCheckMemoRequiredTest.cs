@@ -19,14 +19,22 @@ using StellarDotnetSdk.Transactions;
 
 namespace StellarDotnetSdk.Tests;
 
+/// <summary>
+///     Unit tests for memo requirement checking functionality in <see cref="Server" /> class.
+/// </summary>
 [TestClass]
 public class ServerCheckMemoRequiredTest
 {
     private const string AccountId = "GAYHAAKPAQLMGIJYMIWPDWCGUCQ5LAWY4Q7Q3IKSP57O7GUPD3NEOSEA";
 
+    /// <summary>
+    ///     Verifies that CheckMemoRequired throws AccountRequiresMemoException when account requires memo and transaction has
+    ///     no memo.
+    /// </summary>
     [TestMethod]
-    public async Task TestFailsIfMemoIsRequired()
+    public async Task CheckMemoRequired_WhenMemoIsRequired_ThrowsAccountRequiresMemoException()
     {
+        // Arrange
         var data = new Dictionary<string, string>
         {
             { "config.memo_required", "MQ==" },
@@ -36,54 +44,84 @@ public class ServerCheckMemoRequiredTest
         using var server = Utils.CreateTestServerWithContent(json);
 
         var tx = BuildTransaction(AccountId);
+
+        // Act & Assert
         await Assert.ThrowsExceptionAsync<AccountRequiresMemoException>(() => server.CheckMemoRequired(tx));
     }
 
+    /// <summary>
+    ///     Verifies that CheckMemoRequired does not throw when account does not exist.
+    /// </summary>
     [TestMethod]
-    public async Task TestItDoesNotThrowIfAccountDoesNotExists()
+    public async Task CheckMemoRequired_WhenAccountDoesNotExist_DoesNotThrow()
     {
+        // Arrange
         var json = BuildAccountResponse(AccountId);
         using var server = Utils.CreateTestServerWithContent(json, HttpStatusCode.NotFound);
 
         var tx = BuildTransaction(AccountId);
+
+        // Act
         await server.CheckMemoRequired(tx);
     }
 
+    /// <summary>
+    ///     Verifies that CheckMemoRequired does not throw when account does not have data field.
+    /// </summary>
     [TestMethod]
-    public async Task TestItDoesNotThrowIfAccountDoesNotHaveDataField()
+    public async Task CheckMemoRequired_WhenAccountDoesNotHaveDataField_DoesNotThrow()
     {
+        // Arrange
         var json = BuildAccountResponse(AccountId);
         using var server = Utils.CreateTestServerWithContent(json);
 
         var tx = BuildTransaction(AccountId);
+
+        // Act
         await server.CheckMemoRequired(tx);
     }
 
+    /// <summary>
+    ///     Verifies that CheckMemoRequired rethrows HttpResponseException when server returns bad request.
+    /// </summary>
     [TestMethod]
-    public async Task TestRethrowClientException()
+    public async Task CheckMemoRequired_WhenServerReturnsBadRequest_ThrowsHttpResponseException()
     {
+        // Arrange
         var json = BuildAccountResponse(AccountId);
         using var server = Utils.CreateTestServerWithContent(json, HttpStatusCode.BadRequest);
 
         var tx = BuildTransaction(AccountId);
+
+        // Act & Assert
         await Assert.ThrowsExceptionAsync<HttpResponseException>(() => server.CheckMemoRequired(tx));
     }
 
+    /// <summary>
+    ///     Verifies that CheckMemoRequired does not check the same destination account more than once.
+    /// </summary>
     [TestMethod]
-    public async Task TestDoesNotCheckDestinationMoreThanOnce()
+    public async Task CheckMemoRequired_WithDuplicateDestination_DoesNotCheckDestinationMoreThanOnce()
     {
+        // Arrange
         var json = BuildAccountResponse(AccountId);
         using var server = Utils.CreateTestServerWithContent(json);
 
         var payment = new PaymentOperation(KeyPair.FromAccountId(AccountId), new AssetTypeNative(), "100.500");
 
         var tx = BuildTransaction(AccountId, new Operation[] { payment });
+
+        // Act
         await server.CheckMemoRequired(tx);
     }
 
+    /// <summary>
+    ///     Verifies that CheckMemoRequired checks memo requirement for various operation types with different destinations.
+    /// </summary>
     [TestMethod]
-    public async Task TestCheckOtherOperationTypes()
+    public async Task CheckMemoRequired_WithVariousOperationTypes_ChecksAllDestinations()
     {
+        // Arrange
         var destinations = new[]
         {
             "GASGNGGXDNJE5C2O7LDCATIVYSSTZKB24SHYS6F4RQT4M4IGNYXB4TIV",
@@ -133,30 +171,48 @@ public class ServerCheckMemoRequiredTest
         Network.UseTestNetwork();
         using var server = new Server("https://horizon-testnet.stellar.org", httpClient);
         var tx = BuildTransaction(AccountId, operations, Memo.None());
+
+        // Act
         await server.CheckMemoRequired(tx);
     }
 
+    /// <summary>
+    ///     Verifies that CheckMemoRequired skips memo check when transaction already has a memo.
+    /// </summary>
     [TestMethod]
-    public async Task TestSkipCheckIfHasMemo()
+    public async Task CheckMemoRequired_WhenTransactionHasMemo_SkipsCheck()
     {
+        // Arrange
         using var server = Utils.CreateTestServerWithContent(null);
         var tx = BuildTransaction(AccountId, [], Memo.Text("foobar"));
+
+        // Act
         await server.CheckMemoRequired(tx);
     }
 
+    /// <summary>
+    ///     Verifies that CheckMemoRequired checks memo requirement for fee bump transactions.
+    /// </summary>
     [TestMethod]
-    public async Task TestCheckFeeBumpTransaction()
+    public async Task CheckMemoRequired_WithFeeBumpTransaction_ChecksMemoRequirement()
     {
+        // Arrange
         using var server = Utils.CreateTestServerWithContent("");
         var innerTx = BuildTransaction(AccountId, [], Memo.Text("foobar"));
         var feeSource = KeyPair.FromAccountId("GD7HCWFO77E76G6BKJLRHRFRLE6I7BMPJQZQKGNYTT3SPE6BA4DHJAQY");
         var tx = TransactionBuilder.BuildFeeBumpTransaction(feeSource, innerTx, 200);
+
+        // Act
         await server.CheckMemoRequired(tx);
     }
 
+    /// <summary>
+    ///     Verifies that CheckMemoRequired skips memo check when destination is a muxed account.
+    /// </summary>
     [TestMethod]
-    public async Task TestSkipCheckIfDestinationIsMuxedAccount()
+    public async Task CheckMemoRequired_WhenDestinationIsMuxedAccount_SkipsCheck()
     {
+        // Arrange
         var muxed = MuxedAccountMed25519.FromMuxedAccountId(
             "MAAAAAAAAAAAJURAAB2X52XFQP6FBXLGT6LWOOWMEXWHEWBDVRZ7V5WH34Y22MPFBHUHY");
 
@@ -164,6 +220,8 @@ public class ServerCheckMemoRequiredTest
 
         var tx = BuildTransaction(AccountId, [payment], Memo.None(), true);
         using var server = Utils.CreateTestServerWithContent("");
+
+        // Act
         await server.CheckMemoRequired(tx);
     }
 

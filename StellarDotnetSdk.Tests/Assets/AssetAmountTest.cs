@@ -12,12 +12,15 @@ public class AssetAmountTest
     ///     Verifies that both Asset and Amount properties are correctly stored and accessible.
     /// </summary>
     [TestMethod]
-    public void TestCreation()
+    public void Constructor_WithAssetAndAmount_SetsPropertiesCorrectly()
     {
+        // Arrange
         var issuer = KeyPair.Random();
 
+        // Act
         var assetAmount = new AssetAmount(Asset.CreateNonNativeAsset("TEST", issuer.AccountId), "100");
 
+        // Assert
         Assert.AreEqual(assetAmount.Asset.CanonicalName(), $"TEST:{issuer.AccountId}");
         Assert.AreEqual(assetAmount.Amount, "100");
     }
@@ -27,13 +30,14 @@ public class AssetAmountTest
     ///     Verifies both Equals and GetHashCode implementations for proper behavior in collections.
     /// </summary>
     [TestMethod]
-    public void TestEquality()
+    public void Equals_WithSameAssetAndAmount_ReturnsTrue()
     {
+        // Arrange
         var issuer = KeyPair.Random();
-
         var assetAmount = new AssetAmount(Asset.CreateNonNativeAsset("TEST", issuer.AccountId), "100");
         var assetAmount2 = new AssetAmount(Asset.CreateNonNativeAsset("TEST", issuer.AccountId), "100");
 
+        // Act & Assert
         Assert.AreEqual(assetAmount, assetAmount2);
         Assert.AreEqual(assetAmount.GetHashCode(), assetAmount2.GetHashCode());
     }
@@ -43,11 +47,13 @@ public class AssetAmountTest
     ///     Verifies type safety and null handling in the Equals implementation.
     /// </summary>
     [TestMethod]
-    public void TestEquality_NonMatchingType()
+    public void Equals_WithNullOrIncompatibleType_ReturnsFalse()
     {
+        // Arrange
         var issuer = KeyPair.Random();
         var assetAmount = new AssetAmount(Asset.CreateNonNativeAsset("TEST", issuer.AccountId), "100");
 
+        // Act & Assert
         Assert.IsFalse(assetAmount.Equals(null));
         Assert.IsFalse(assetAmount.Equals("not an AssetAmount"));
         Assert.IsFalse(assetAmount.Equals(new object()));

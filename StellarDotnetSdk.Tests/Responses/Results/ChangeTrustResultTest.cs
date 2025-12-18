@@ -3,46 +3,87 @@ using StellarDotnetSdk.Responses.Results;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
+/// <summary>
+///     Unit tests for change trust result types.
+/// </summary>
 [TestClass]
 public class ChangeTrustResultTest
 {
+    /// <summary>
+    ///     Verifies that ChangeTrustSuccess result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSuccess()
+    public void Deserialize_WithChangeTrustSuccessXdr_ReturnsChangeTrustSuccess()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAGAAAAAAAAAAA=", typeof(ChangeTrustSuccess), true);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAGAAAAAAAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ChangeTrustSuccess), true);
     }
 
+    /// <summary>
+    ///     Verifies that ChangeTrustMalformed result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestMalformed()
+    public void Deserialize_WithChangeTrustMalformedXdr_ReturnsChangeTrustMalformed()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAG/////wAAAAA=", typeof(ChangeTrustMalformed),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAG/////wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ChangeTrustMalformed), false);
     }
 
+    /// <summary>
+    ///     Verifies that ChangeTrustNoIssuer result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestNoIssuer()
+    public void Deserialize_WithChangeTrustNoIssuerXdr_ReturnsChangeTrustNoIssuer()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAG/////gAAAAA=", typeof(ChangeTrustNoIssuer), false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAG/////gAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ChangeTrustNoIssuer), false);
     }
 
+    /// <summary>
+    ///     Verifies that ChangeTrustInvalidLimit result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestInvalidLimit()
+    public void Deserialize_WithChangeTrustInvalidLimitXdr_ReturnsChangeTrustInvalidLimit()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAG/////QAAAAA=", typeof(ChangeTrustInvalidLimit),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAG/////QAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ChangeTrustInvalidLimit), false);
     }
 
+    /// <summary>
+    ///     Verifies that ChangeTrustLowReserve result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestLowReserve()
+    public void Deserialize_WithChangeTrustLowReserveXdr_ReturnsChangeTrustLowReserve()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAG/////AAAAAA=", typeof(ChangeTrustLowReserve),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAG/////AAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ChangeTrustLowReserve), false);
     }
 
+    /// <summary>
+    ///     Verifies that ChangeTrustSelfNotAllowed result can be deserialized correctly.
+    /// </summary>
     [TestMethod]
-    public void TestSelfNotAllowed()
+    public void Deserialize_WithChangeTrustSelfNotAllowedXdr_ReturnsChangeTrustSelfNotAllowed()
     {
-        Utils.AssertResultOfType("AAAAAACYloD/////AAAAAQAAAAAAAAAG////+wAAAAA=", typeof(ChangeTrustSelfNotAllowed),
-            false);
+        // Arrange
+        var xdrBase64 = "AAAAAACYloD/////AAAAAQAAAAAAAAAG////+wAAAAA=";
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ChangeTrustSelfNotAllowed), false);
     }
 }

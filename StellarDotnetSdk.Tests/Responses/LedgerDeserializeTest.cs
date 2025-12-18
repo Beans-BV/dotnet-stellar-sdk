@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -7,27 +7,46 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Tests.Responses;
 
+/// <summary>
+///     Unit tests for deserializing ledger responses from JSON.
+/// </summary>
 [TestClass]
 public class LedgerDeserializeTest
 {
+    /// <summary>
+    ///     Verifies that LedgerResponse can be deserialized from JSON correctly.
+    /// </summary>
     [TestMethod]
-    public void TestDeserialize()
+    public void Deserialize_WithLedgerJson_ReturnsDeserializedLedger()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("ledger.json");
         var json = File.ReadAllText(jsonPath);
+
+        // Act
         var ledger = JsonSerializer.Deserialize<LedgerResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(ledger);
         AssertTestData(ledger);
     }
 
+    /// <summary>
+    ///     Verifies that LedgerResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializeDeserialize()
+    public void SerializeDeserialize_WithLedger_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("ledger.json");
         var json = File.ReadAllText(jsonPath);
         var ledger = JsonSerializer.Deserialize<LedgerResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(ledger);
         var back = JsonSerializer.Deserialize<LedgerResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertTestData(back);
     }

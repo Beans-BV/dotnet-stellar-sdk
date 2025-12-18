@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -6,17 +6,29 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+///     Unit tests for <see cref="RevokeSponsorshipOperationResponse" /> class.
+/// </summary>
 [TestClass]
 public class RevokeSponsorshipOperationResponseTest
 {
+    /// <summary>
+    ///     Verifies that RevokeSponsorshipOperationResponse with account ID can be serialized and deserialized correctly
+    ///     (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationRevokeSponsorshipAccountIdOperation()
+    public void SerializeDeserialize_WithRevokeSponsorshipAccountIdOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("revokeSponsorshipAccountID.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertRevokeSponsorshipAccountIdData(back);
     }
@@ -30,14 +42,23 @@ public class RevokeSponsorshipOperationResponseTest
         Assert.AreEqual("GCLHBHJAYWFT6JA27KEPUQCCGIHUB33HURYAKNWIY4FB7IY3K24PRXET", operation.AccountId);
     }
 
+    /// <summary>
+    ///     Verifies that RevokeSponsorshipOperationResponse with claimable balance can be serialized and deserialized
+    ///     correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationRevokeSponsorshipClaimableBalanceOperation()
+    public void SerializeDeserialize_WithRevokeSponsorshipClaimableBalanceOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("revokeSponsorshipClaimableBalance.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertRevokeSponsorshipClaimableBalanceData(back);
     }
@@ -52,14 +73,23 @@ public class RevokeSponsorshipOperationResponseTest
             operation.ClaimableBalanceId);
     }
 
+    /// <summary>
+    ///     Verifies that RevokeSponsorshipOperationResponse with data can be serialized and deserialized correctly
+    ///     (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationRevokeSponsorshipDataOperation()
+    public void SerializeDeserialize_WithRevokeSponsorshipDataOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("revokeSponsorshipData.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertRevokeSponsorshipDataData(back);
     }
@@ -74,14 +104,23 @@ public class RevokeSponsorshipOperationResponseTest
         Assert.AreEqual("hello", operation.DataName);
     }
 
+    /// <summary>
+    ///     Verifies that RevokeSponsorshipOperationResponse with offer can be serialized and deserialized correctly
+    ///     (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationRevokeSponsorshipOfferOperation()
+    public void SerializeDeserialize_WithRevokeSponsorshipOfferOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("revokeSponsorshipOffer.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertRevokeSponsorshipOfferData(back);
     }
@@ -95,14 +134,23 @@ public class RevokeSponsorshipOperationResponseTest
         Assert.IsNull(operation.OfferId);
     }
 
+    /// <summary>
+    ///     Verifies that RevokeSponsorshipOperationResponse with signer key can be serialized and deserialized correctly
+    ///     (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationRevokeSponsorshipSignerKey()
+    public void SerializeDeserialize_WithRevokeSponsorshipSignerKey_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("revokeSponsorshipSignerKey.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertRevokeSponsorshipSignerKeyData(back);
     }
@@ -117,14 +165,23 @@ public class RevokeSponsorshipOperationResponseTest
         Assert.AreEqual("XAMF7DNTEJY74JPVMGTPZE4LFYTEGBXMGBHNUUMAA7IXMSBGHAMWSND6", operation.SignerKey);
     }
 
+    /// <summary>
+    ///     Verifies that RevokeSponsorshipOperationResponse with trustline can be serialized and deserialized correctly
+    ///     (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationRevokeSponsorshipTrustline()
+    public void SerializeDeserialize_WithRevokeSponsorshipTrustline_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("revokeSponsorshipTrustline.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertRevokeSponsorshipTrustlineData(back);
     }

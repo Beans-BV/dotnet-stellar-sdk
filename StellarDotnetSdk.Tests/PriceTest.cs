@@ -1,13 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace StellarDotnetSdk.Tests;
 
+/// <summary>
+///     Unit tests for <see cref="Price" /> class.
+/// </summary>
 [TestClass]
 public class PriceTest
 {
+    /// <summary>
+    ///     Verifies that FromString correctly parses various price strings and returns correct Price objects.
+    /// </summary>
     [TestMethod]
-    public void TestFromDouble()
+    public void FromString_WithVariousPriceStrings_ReturnsCorrectPrice()
     {
+        // Arrange
         PriceTestCase[] tests =
         {
             new("0", new Price(0, 1)),
@@ -35,6 +42,7 @@ public class PriceTest
             new("2147483647", new Price(2147483647, 1)),
         };
 
+        // Act & Assert
         foreach (var test in tests)
         {
             var price = Price.FromString(test.Input);
@@ -44,12 +52,17 @@ public class PriceTest
         }
     }
 
+    /// <summary>
+    ///     Verifies that Price Equals method returns true for equal prices.
+    /// </summary>
     [TestMethod]
-    public void TestPriceEquals()
+    public void Equals_WithEqualPrices_ReturnsTrue()
     {
+        // Arrange
         var price1 = Price.FromString("1.25");
         var price2 = Price.FromString("1.25");
 
+        // Act & Assert
         Assert.IsTrue(price1.Equals(price2));
     }
 

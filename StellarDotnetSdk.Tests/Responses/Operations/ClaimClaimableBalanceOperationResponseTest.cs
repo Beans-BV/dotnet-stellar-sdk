@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -6,17 +6,28 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Tests.Responses.Operations;
 
+/// <summary>
+///     Unit tests for <see cref="ClaimClaimableBalanceOperationResponse" /> class.
+/// </summary>
 [TestClass]
 public class ClaimClaimableBalanceOperationResponseTest
 {
+    /// <summary>
+    ///     Verifies that ClaimClaimableBalanceOperationResponse can be serialized and deserialized correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationClaimClaimableBalanceOperation()
+    public void SerializeDeserialize_WithClaimClaimableBalanceOperation_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("claimClaimableBalance.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertClaimClaimableBalanceData(back);
     }
@@ -34,14 +45,23 @@ public class ClaimClaimableBalanceOperationResponseTest
         Assert.IsNull(operation.ClaimantMuxedId);
     }
 
+    /// <summary>
+    ///     Verifies that ClaimClaimableBalanceOperationResponse with muxed account can be serialized and deserialized
+    ///     correctly (round-trip).
+    /// </summary>
     [TestMethod]
-    public void TestSerializationClaimClaimableBalanceOperationMuxed()
+    public void SerializeDeserialize_WithClaimClaimableBalanceOperationMuxed_RoundTripsCorrectly()
     {
+        // Arrange
         var jsonPath = Utils.GetTestDataPath("claimClaimableBalanceMuxed.json");
         var json = File.ReadAllText(jsonPath);
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
+
+        // Act
         var serialized = JsonSerializer.Serialize(instance);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
+
+        // Assert
         Assert.IsNotNull(back);
         AssertClaimClaimableBalanceDataMuxed(back);
     }
