@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Xdr;
@@ -96,12 +96,10 @@ public abstract class TrustlineAsset
 
         public override bool Equals(object? obj)
         {
-            if (obj == null || typeof(Wrapper) == obj.GetType())
+            if (obj is not Wrapper other)
             {
                 return false;
             }
-
-            var other = (Wrapper)obj;
             return Asset.Equals(other.Asset);
         }
 
@@ -111,7 +109,6 @@ public abstract class TrustlineAsset
             {
                 return -1;
             }
-
             return Asset.CompareTo(((Wrapper)asset).Asset);
         }
 

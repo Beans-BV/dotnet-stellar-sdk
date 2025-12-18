@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
@@ -109,8 +110,25 @@ public static class Utils
             do
             {
                 var fundResponse = await server.TestNetFriendBot.FundAccount(accountId).Execute();
-                var result = TransactionResult.FromXdrBase64(fundResponse.ResultXdr);
-                isSuccess = result.IsSuccess && result is TransactionResultSuccess;
+
+                // Check if the account already exists (this is considered success for our purpose)
+                var alreadyExists = fundResponse.Extras?.ExtrasResultCodes?.OperationsResultCodes
+                    ?.Any(code => code == "op_already_exists") == true;
+
+                if (alreadyExists)
+                {
+                    isSuccess = true;
+                }
+                else if (fundResponse.ResultXdr != null)
+                {
+                    var result = TransactionResult.FromXdrBase64(fundResponse.ResultXdr);
+                    isSuccess = result.IsSuccess && result is TransactionResultSuccess;
+                }
+                else
+                {
+                    // No ResultXdr and not already_exists - retry
+                    isSuccess = false;
+                }
             } while (!isSuccess);
         }
     }
