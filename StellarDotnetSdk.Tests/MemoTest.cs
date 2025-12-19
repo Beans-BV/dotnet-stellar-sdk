@@ -63,7 +63,7 @@ public class MemoTest
     public void Text_WithNullString_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() => { Memo.Text((string)null!); });
+        Assert.ThrowsException<ArgumentNullException>(() => Memo.Text((string)null!));
     }
 
     /// <summary>
