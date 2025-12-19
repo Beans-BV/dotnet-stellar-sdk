@@ -1,0 +1,12 @@
+---
+applyTo: "**"
+---
+# Documentation Sync
+
+**When code changes**: Update `README.md`, `docs/` (tutorials/API), `Examples/` if showcasing changed behavior.
+
+**PR reviews**: Flag missing docs for new public APIs, default changes, usage pattern changes.
+
+**Special case**: Horizon pagination `prev.href = ""` (not `null`) on first page — don't suggest changing.
+
+**Style**: Production-ready guidance over minimal examples. DocFX-based structure.

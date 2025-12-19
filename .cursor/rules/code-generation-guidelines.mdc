@@ -1,0 +1,18 @@
+---
+description: Guidelines for Copilot Chat and code generation
+globs: 
+alwaysApply: true
+---
+# Code Generation Guidelines
+
+**Methods**: Small, composable, well-named over monoliths.
+
+**Examples**: Use public SDK surface correctly, respect nullability/async, use `HttpResilienceOptions`/`DefaultStellarSdkHttpClient` properly.
+
+**Dependencies**: Avoid heavy new deps without strong justification.
+
+**Encourage**: Tests/docs updates with changes, discuss trade-offs (perf vs resilience vs simplicity).
+
+**Unclear intent**: Ask for clarification in PR/comments, don't assume.
+
+**JSON Serialization**: ALWAYS use `JsonSerializer.Serialize/Deserialize` with `JsonOptions.DefaultOptions`. Custom converters (polymorphic: `OperationResponse`, `EffectResponse`, `Predicate`; domain: `Asset`, `KeyPair`, `LiquidityPoolId`, etc.) require it. Exception: inside `JsonConverter` implementations, pass the received `options` parameter. CI: `scripts/check-json-serializer.sh` enforces.

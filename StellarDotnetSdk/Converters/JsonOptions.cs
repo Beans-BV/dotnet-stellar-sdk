@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Effects;
@@ -17,13 +17,12 @@ public static class JsonOptions
     /// <remarks>
     ///     Configuration:
     ///     - NumberHandling: Allows reading numbers from strings (API compatibility)
-    ///     - WriteIndented: Pretty-prints JSON for debugging
     ///     - PropertyNameCaseInsensitive: Allows flexible property matching
     ///     Registered Converters:
-    ///     - Polymorphic converters for operations and effects
-    ///     - Domain type converters for assets, key pairs, etc.
-    ///     - HATEOAS link converters
-    ///     - Standard enum converter
+    ///     - Polymorphic converters: OperationResponse, EffectResponse, Predicate
+    ///     - Domain type converters: Asset, AssetAmount, KeyPair, LiquidityPoolId, LiquidityPoolClaimableAssetAmount, Reserve
+    ///     - Enum converters: LiquidityPoolTypeEnum, SendTransactionStatusEnum, JsonStringEnumConverter (standard)
+    ///     - HATEOAS link converters: LinkJsonConverter for EffectResponse and Response
     /// </remarks>
     public static JsonSerializerOptions DefaultOptions { get; } = new()
     {
@@ -38,18 +37,24 @@ public static class JsonOptions
             // Polymorphic converters (MUST be registered globally)
             new OperationResponseJsonConverter(),
             new EffectResponseJsonConverter(),
+            new PredicateJsonConverter(),
 
             // Domain type converters
             new AssetJsonConverter(),
+            new AssetAmountJsonConverter(),
             new KeyPairJsonConverter(),
             new LiquidityPoolTypeEnumJsonConverter(),
+            new LiquidityPoolIdJsonConverter(),
+            new LiquidityPoolClaimableAssetAmountJsonConverter(),
+            new ReserveJsonConverter(),
 
             // HATEOAS link converters
             new LinkJsonConverter<EffectResponse>(),
             new LinkJsonConverter<Response>(),
 
-            // Standard enum converter
+            // Enum converters
             new JsonStringEnumConverter(),
+            new SendTransactionStatusEnumJsonConverter(),
         },
     };
 }

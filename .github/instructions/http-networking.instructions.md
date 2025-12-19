@@ -1,0 +1,28 @@
+---
+applyTo: "**/Requests/**,**/*Client*.cs,**/*RequestBuilder*.cs"
+---
+# HTTP & Networking
+
+**Architecture**: Request builders (`AccountsRequestBuilder`, `TransactionsRequestBuilder`) encapsulate endpoint logic. `Server` class manages `HttpClient` lifecycle.
+
+**HttpClient**: Inject via constructor, implement `IDisposable`. Use `DefaultStellarSdkHttpClient` with `HttpResilienceOptions` for retries/timeouts.
+
+**Polly**: Configure via `HttpResilienceOptions` (MaxRetryCount, BaseDelay, MaxDelay, UseJitter). Apply to `HttpClient` via `DefaultStellarSdkHttpClient`.
+
+**Request builders**:
+```csharp
+public AccountsRequestBuilder Accounts => new(_serverUri, _httpClient);
+public async Task<AccountResponse> Account(string accountId) => await Get<AccountResponse>(...);
+```
+
+**JSON**: `System.Text.Json` with `JsonOptions.DefaultOptions`. Use `JsonSerializer.Deserialize<T>()` / `Serialize()`.
+
+**Errors**: HTTP status codes → exceptions (`TooManyRequestsException`, `ServiceUnavailableException`, `HttpResponseException`). Include retry info in exceptions.
+
+**SSE**: Use `LaunchDarkly.EventSource` for streaming endpoints (effects, operations).
+
+**Resilience defaults**: Retries disabled by default (`MaxRetryCount = 0`, matches Java SDK). Users enable via `HttpResilienceOptions`.
+
+**Docs sync**: Changes to resilience behavior → update `docs/tutorials/examples/http-retry.md` and `README.md` retry sections. Validate defaults/presets match docs.
+
+**Performance**: Consider throughput/latency impact (e.g., trading bots). Preserve reasonable defaults, handle timeouts/cancellation/circuit breaker properly.

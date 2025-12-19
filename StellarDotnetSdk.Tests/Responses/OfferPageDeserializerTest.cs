@@ -45,7 +45,7 @@ public class OfferPageDeserializerTest
         var offerResponsePage = JsonSerializer.Deserialize<Page<OfferResponse>>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(offerResponsePage);
+        var serialized = JsonSerializer.Serialize(offerResponsePage, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<Page<OfferResponse>>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

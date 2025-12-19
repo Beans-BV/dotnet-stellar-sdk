@@ -43,7 +43,7 @@ public class OrderBookDeserializerTest
         var orderBook = JsonSerializer.Deserialize<OrderBookResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(orderBook);
+        var serialized = JsonSerializer.Serialize(orderBook, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<OrderBookResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

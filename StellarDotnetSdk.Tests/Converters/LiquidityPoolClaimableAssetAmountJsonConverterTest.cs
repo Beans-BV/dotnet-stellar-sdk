@@ -37,6 +37,7 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
 
         // Assert
         Assert.IsNotNull(deserialized);
+        Assert.IsNotNull(deserialized.Asset);
         Assert.AreEqual($"USD:{issuer.AccountId}", deserialized.Asset.CanonicalName());
         Assert.AreEqual("100.50", deserialized.Amount);
         Assert.AreEqual("00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072",
@@ -64,6 +65,7 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
 
         // Assert
         Assert.IsNotNull(deserialized);
+        Assert.IsNotNull(deserialized.Asset);
         Assert.AreEqual("native", deserialized.Asset.CanonicalName());
         Assert.AreEqual("250.00", deserialized.Amount);
         Assert.IsNull(deserialized.ClaimableBalanceId);

@@ -1,23 +1,13 @@
-﻿using System.Text.Json.Serialization;
-using StellarDotnetSdk.Converters;
-
-namespace StellarDotnetSdk.Assets;
+﻿namespace StellarDotnetSdk.Assets;
 
 /// <summary>
 ///     Class to have Asset and Amount in the same place.
 /// </summary>
-[JsonConverter(typeof(AssetAmountJsonConverter))]
-public class AssetAmount
+public class AssetAmount(Asset asset, string amount)
 {
-    public AssetAmount(Asset asset, string amount)
-    {
-        Asset = asset;
-        Amount = amount;
-    }
+    public Asset Asset { get; } = asset;
 
-    public Asset Asset { get; }
-
-    public string Amount { get; }
+    public string Amount { get; } = amount;
 
     public override int GetHashCode()
     {

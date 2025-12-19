@@ -1,0 +1,10 @@
+---
+applyTo: "**"
+---
+# Minimal Changes Policy
+
+- **Do only what's requested** — no assumptions, no extras, no future-proofing
+- **One file per request** unless explicitly multi-file (exceptions: docs, splitting files)
+- **Ask if unclear** — never hallucinate requirements
+- **Keep it simple** — no overcomplication, maintain existing patterns
+- **Run tests** after changes if they exist

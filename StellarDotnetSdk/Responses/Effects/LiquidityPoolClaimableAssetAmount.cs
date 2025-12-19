@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Converters;
 
 namespace StellarDotnetSdk.Responses.Effects;
 
@@ -8,7 +7,6 @@ namespace StellarDotnetSdk.Responses.Effects;
 ///     Represents an asset amount with an optional claimable balance ID.
 ///     Used in liquidity pool revocation effects.
 /// </summary>
-[JsonConverter(typeof(LiquidityPoolClaimableAssetAmountJsonConverter))]
 public sealed class LiquidityPoolClaimableAssetAmount
 {
     /// <summary>

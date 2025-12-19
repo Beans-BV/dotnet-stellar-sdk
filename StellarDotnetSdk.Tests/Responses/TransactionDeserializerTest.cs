@@ -44,7 +44,7 @@ public class TransactionDeserializerTest
         var transaction = JsonSerializer.Deserialize<TransactionResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(transaction);
+        var serialized = JsonSerializer.Serialize(transaction, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<TransactionResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

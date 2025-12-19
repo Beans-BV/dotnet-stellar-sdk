@@ -45,7 +45,7 @@ public class TradesPageDeserializerTest
         var tradesPage = JsonSerializer.Deserialize<Page<TradeResponse>>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(tradesPage);
+        var serialized = JsonSerializer.Serialize(tradesPage, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<Page<TradeResponse>>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -84,7 +84,7 @@ public class TradesPageDeserializerTest
         var tradesPage = JsonSerializer.Deserialize<Page<TradeResponse>>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(tradesPage);
+        var serialized = JsonSerializer.Serialize(tradesPage, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<Page<TradeResponse>>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

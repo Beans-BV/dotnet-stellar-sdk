@@ -15,6 +15,7 @@ using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Results;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -449,7 +450,7 @@ public class ServerTest
         var server = Utils.CreateTestServerWithHeaders(
             new Dictionary<string, IEnumerable<string>>
             {
-                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10)).Trim('"') } },
+                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10), JsonOptions.DefaultOptions).Trim('"') } },
             },
             HttpStatusCode.TooManyRequests);
 
@@ -498,7 +499,7 @@ public class ServerTest
         var server = Utils.CreateTestServerWithHeaders(
             new Dictionary<string, IEnumerable<string>>
             {
-                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10)).Trim('"') } },
+                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10), JsonOptions.DefaultOptions).Trim('"') } },
             },
             HttpStatusCode.ServiceUnavailable);
 

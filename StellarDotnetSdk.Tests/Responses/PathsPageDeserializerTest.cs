@@ -43,7 +43,7 @@ public class PathsPageDeserializerTest
         var pathsPage = JsonSerializer.Deserialize<Page<PathResponse>>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(pathsPage);
+        var serialized = JsonSerializer.Serialize(pathsPage, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<Page<PathResponse>>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

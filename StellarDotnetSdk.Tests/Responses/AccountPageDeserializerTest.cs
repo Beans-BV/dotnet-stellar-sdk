@@ -42,7 +42,7 @@ public class AccountPageDeserializerTest
         var accountsPage = JsonSerializer.Deserialize<Page<AccountResponse>>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(accountsPage);
+        var serialized = JsonSerializer.Serialize(accountsPage, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<Page<AccountResponse>>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

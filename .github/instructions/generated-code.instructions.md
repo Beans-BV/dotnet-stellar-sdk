@@ -1,0 +1,12 @@
+---
+applyTo: "**/StellarDotnetSdk.Xdr/**"
+---
+# Generated Code — READ ONLY
+
+**Never edit**: `StellarDotnetSdk.Xdr/**` — all XDR code is generated from `.x` files.
+
+**To change**:
+- XDR types → edit `.x` files → regenerate using XDR generator tool
+- Never manually edit generated `.cs` files in `StellarDotnetSdk.Xdr/`
+
+Commit both source `.x` files and generated `.cs` files.

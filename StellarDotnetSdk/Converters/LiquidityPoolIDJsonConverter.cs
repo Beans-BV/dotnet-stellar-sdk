@@ -13,12 +13,6 @@ public class LiquidityPoolIdJsonConverter : JsonConverter<LiquidityPoolId>
 {
     public override LiquidityPoolId? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        // Check for null token first
-        if (reader.TokenType == JsonTokenType.Null)
-        {
-            return null;
-        }
-
         // Then check for expected token type
         if (reader.TokenType != JsonTokenType.String)
         {

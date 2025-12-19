@@ -6,7 +6,6 @@ using Asset = StellarDotnetSdk.Assets.Asset;
 
 namespace StellarDotnetSdk.LiquidityPool;
 
-[JsonConverter(typeof(LiquidityPoolIdJsonConverter))]
 public class LiquidityPoolId
 {
     public LiquidityPoolId(LiquidityPoolType.LiquidityPoolTypeEnum type, Asset assetA, Asset assetB, int fee)

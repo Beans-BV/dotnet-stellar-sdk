@@ -41,7 +41,7 @@ public class LiquidityPoolIdJsonConverterTest
     public void Deserialize_WithValidHexString_ReturnsLiquidityPoolId()
     {
         // Arrange
-        var json = @"""4f7f29db33ead1a38c2edf17aa0416c369c207ca081de5c686c050c1ad320385""";
+        const string json = @"""4f7f29db33ead1a38c2edf17aa0416c369c207ca081de5c686c050c1ad320385""";
 
         // Act
         var result = JsonSerializer.Deserialize<LiquidityPoolId>(json, _options);
@@ -60,9 +60,9 @@ public class LiquidityPoolIdJsonConverterTest
     public void Deserialize_WithInvalidTokenType_ThrowsJsonException()
     {
         // Arrange - Tests that non-string tokens throw (number, object, array all hit same code path)
-        var json = "123";
+        const string json = "123";
 
         // Act & Assert
-        JsonSerializer.Deserialize<LiquidityPoolId>(json, _options);
+        _ = JsonSerializer.Deserialize<LiquidityPoolId>(json, _options);
     }
 }

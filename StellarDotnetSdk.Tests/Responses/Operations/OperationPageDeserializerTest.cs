@@ -44,7 +44,7 @@ public class OperationPageDeserializerTest
         var operationsPage = JsonSerializer.Deserialize<Page<OperationResponse>>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(operationsPage);
+        var serialized = JsonSerializer.Serialize(operationsPage, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<Page<OperationResponse>>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

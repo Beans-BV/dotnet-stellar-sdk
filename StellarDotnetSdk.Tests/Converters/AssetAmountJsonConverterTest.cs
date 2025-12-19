@@ -30,6 +30,7 @@ public class AssetAmountJsonConverterTest
 
         // Assert
         Assert.IsNotNull(deserialized);
+        Assert.IsNotNull(deserialized.Asset);
         Assert.AreEqual("native", deserialized.Asset.CanonicalName());
         Assert.AreEqual("100.50", deserialized.Amount);
     }
@@ -53,6 +54,7 @@ public class AssetAmountJsonConverterTest
 
         // Assert
         Assert.IsNotNull(deserialized);
+        Assert.IsNotNull(deserialized.Asset);
         Assert.AreEqual($"USD:{issuer.AccountId}", deserialized.Asset.CanonicalName());
         Assert.AreEqual("500.0000000", deserialized.Amount);
     }
@@ -76,6 +78,7 @@ public class AssetAmountJsonConverterTest
 
         // Assert
         Assert.IsNotNull(deserialized);
+        Assert.IsNotNull(deserialized.Asset);
         Assert.AreEqual($"LONGASSET123:{issuer.AccountId}", deserialized.Asset.CanonicalName());
         Assert.AreEqual("1000.00", deserialized.Amount);
     }

@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Converters;
 
 namespace StellarDotnetSdk.Responses;
 
 /// <summary>
 ///     Represents a reserve in a liquidity pool, containing an asset and its amount.
 /// </summary>
-[JsonConverter(typeof(ReserveJsonConverter))]
 public sealed class Reserve
 {
     /// <summary>

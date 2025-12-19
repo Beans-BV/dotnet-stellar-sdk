@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-using StellarDotnetSdk.Converters;
 using ClaimPredicate = StellarDotnetSdk.Claimants.ClaimPredicate;
 
 namespace StellarDotnetSdk.Responses.Predicates;
@@ -18,7 +16,6 @@ namespace StellarDotnetSdk.Responses.Predicates;
 ///     </para>
 /// </remarks>
 /// <seealso cref="Claimants.ClaimPredicate" />
-[JsonConverter(typeof(PredicateJsonConverter))]
 public abstract class Predicate
 {
     /// <summary>

@@ -44,7 +44,7 @@ public class TradeAggregationsPageDeserializerTest
             JsonSerializer.Deserialize<Page<TradeAggregationResponse>>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(tradeAggregationsPage);
+        var serialized = JsonSerializer.Serialize(tradeAggregationsPage, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<Page<TradeAggregationResponse>>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

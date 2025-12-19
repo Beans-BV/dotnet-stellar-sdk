@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -44,7 +44,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -101,7 +101,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -153,7 +153,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -210,7 +210,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -269,7 +269,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -324,7 +324,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -377,7 +377,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -431,7 +431,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -485,7 +485,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -539,7 +539,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -593,7 +593,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -653,7 +653,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -712,7 +712,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -767,7 +767,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -845,7 +845,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -918,7 +918,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -956,7 +956,7 @@ public class EffectDeserializerTest
 
         // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -978,7 +978,7 @@ public class EffectDeserializerTest
 
         // Act
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1075,7 +1075,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1122,7 +1122,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1171,7 +1171,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1219,7 +1219,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1283,7 +1283,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1331,7 +1331,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1378,7 +1378,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1425,7 +1425,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1454,7 +1454,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1482,7 +1482,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1510,7 +1510,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1539,7 +1539,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1572,7 +1572,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1602,7 +1602,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1632,7 +1632,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1661,7 +1661,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1690,7 +1690,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1720,7 +1720,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1749,7 +1749,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1778,7 +1778,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1808,7 +1808,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1837,7 +1837,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1866,7 +1866,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1896,7 +1896,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1925,7 +1925,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1954,7 +1954,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -1984,7 +1984,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -2018,7 +2018,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -2046,7 +2046,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -2083,7 +2083,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -2122,7 +2122,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -2148,7 +2148,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -2194,7 +2194,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -2226,7 +2226,7 @@ public class EffectDeserializerTest
         var instance = JsonSerializer.Deserialize<EffectResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<EffectResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
