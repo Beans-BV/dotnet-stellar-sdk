@@ -1,13 +1,14 @@
-﻿namespace StellarDotnetSdk.Assets;
+namespace StellarDotnetSdk.Assets;
 
 /// <summary>
 ///     Class to have Asset and Amount in the same place.
 /// </summary>
-public class AssetAmount(Asset asset, string amount)
+public class AssetAmount(
+     Asset Asset,
+    string Amount)
 {
-    public Asset Asset { get; } = asset;
-
-    public string Amount { get; } = amount;
+    public Asset Asset { get; } = Asset;
+    public string Amount { get; } = Amount;
 
     public override int GetHashCode()
     {
