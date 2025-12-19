@@ -1,7 +1,15 @@
 {
   "mcpServers": {
     "GitHub MCP": {
-      "url": "https://api.githubcopilot.com/mcp/"
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "--env-file",
+        ".env.mcp",
+        "ghcr.io/github/github-mcp-server:latest"
+      ]
     },
     "sequential-thinking": {
       "command": "npx -y @modelcontextprotocol/server-sequential-thinking"

@@ -17,3 +17,9 @@ package/lib/
 packages/
 
 TestResults/
+
+# Environment variables
+.env
+.env.*
+!.env.template
+!.env.*.template

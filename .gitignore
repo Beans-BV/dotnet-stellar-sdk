@@ -47,3 +47,8 @@ stellar-dotnet-sdk.sln.DotSettings.user
 .idea/.idea.stellar-dotnetcore-sdk/.idea/workspace.xml
 stellar-dotnet-sdk-test/coverage.opencover.xml
 
+# Environment variables
+.env
+.env.*
+!.env.template
+!.env.*.template
