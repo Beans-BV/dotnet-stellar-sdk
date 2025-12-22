@@ -60,7 +60,7 @@ public class AccountDeserializerTest
         var account = JsonSerializer.Deserialize<AccountResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(account);
+        var serialized = JsonSerializer.Serialize(account, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<AccountResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

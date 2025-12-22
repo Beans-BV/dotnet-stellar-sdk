@@ -42,7 +42,7 @@ public class FeeStatsDeserializerTest
         var stats = JsonSerializer.Deserialize<FeeStatsResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(stats);
+        var serialized = JsonSerializer.Serialize(stats, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<FeeStatsResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

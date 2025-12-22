@@ -82,7 +82,7 @@ public class LiquidityPoolShareTrustlineAssetTest
                 assetA, assetB, 30));
 
         // Act & Assert
-        Assert.IsFalse(trustlineAsset.Equals(null));
+        Assert.IsFalse(trustlineAsset.Equals(null!));
     }
 
     /// <summary>

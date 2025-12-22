@@ -43,7 +43,7 @@ public class AssetPageDeserializerTest
         var assetsPage = JsonSerializer.Deserialize<Page<AssetResponse>>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(assetsPage);
+        var serialized = JsonSerializer.Serialize(assetsPage, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<Page<AssetResponse>>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

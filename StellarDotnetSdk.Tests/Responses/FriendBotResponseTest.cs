@@ -42,7 +42,7 @@ public class FriendBotResponseTest
         var friendBotResponse = JsonSerializer.Deserialize<FriendBotResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(friendBotResponse);
+        var serialized = JsonSerializer.Serialize(friendBotResponse, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<FriendBotResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -95,7 +95,7 @@ public class FriendBotResponseTest
         var friendBotResponse = JsonSerializer.Deserialize<FriendBotResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(friendBotResponse);
+        var serialized = JsonSerializer.Serialize(friendBotResponse, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<FriendBotResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

@@ -258,7 +258,7 @@ public class ChangeTrustAssetTest
         var wrapper = new ChangeTrustAsset.Wrapper(asset);
 
         // Act & Assert
-        Assert.IsFalse(wrapper.Equals(null));
+        Assert.IsFalse(wrapper.Equals(null!));
     }
 
     /// <summary>

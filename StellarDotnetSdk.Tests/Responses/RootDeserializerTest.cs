@@ -43,7 +43,7 @@ public class RootDeserializerTest
         var root = JsonSerializer.Deserialize<RootResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(root);
+        var serialized = JsonSerializer.Serialize(root, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<RootResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

@@ -62,6 +62,7 @@ public class FeeBumpOperationTest
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.IsFalse(string.IsNullOrEmpty(response.Hash));
+        Assert.IsNotNull(response.Result);
         Assert.IsInstanceOfType(response.Result, typeof(FeeBumpTransactionResultSuccess));
         var result = (FeeBumpTransactionResultSuccess)response.Result;
         Assert.IsNotNull(result.FeeCharged);
@@ -230,6 +231,7 @@ public class FeeBumpOperationTest
         Assert.IsNotNull(response);
         Assert.IsTrue(response.IsSuccess);
         Assert.IsFalse(string.IsNullOrEmpty(response.Hash));
+        Assert.IsNotNull(response.Result);
         Assert.IsInstanceOfType(response.Result, typeof(FeeBumpTransactionResultSuccess));
     }
 }

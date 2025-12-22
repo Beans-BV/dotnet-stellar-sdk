@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
@@ -298,7 +299,7 @@ public class ServerCheckMemoRequiredTest
             LastModifiedTime = new DateTimeOffset(2025, 8, 14, 19, 44, 19, TimeSpan.Zero),
             PagingToken = "123",
         };
-        return JsonSerializer.Serialize(response);
+        return JsonSerializer.Serialize(response, JsonOptions.DefaultOptions);
     }
 
     private Transaction BuildTransaction(string destination)

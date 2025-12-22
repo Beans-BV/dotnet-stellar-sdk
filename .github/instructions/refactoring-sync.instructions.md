@@ -1,0 +1,18 @@
+---
+applyTo: "**"
+---
+# Refactoring Sync
+
+When refactoring, update ALL related artifacts:
+
+**Checklist**:
+- [ ] Code implementation
+- [ ] Regenerate XDR if `.x` files changed
+- [ ] Update tests (names, logic, add/remove)
+- [ ] Update using statements across projects
+- [ ] Update `.cursor/rules/` if patterns changed
+- [ ] Run `dotnet build` + `dotnet test`
+
+**For renames**: Search for string references in comments/docs too.
+
+**For pattern changes**: Update examples in cursor rules.

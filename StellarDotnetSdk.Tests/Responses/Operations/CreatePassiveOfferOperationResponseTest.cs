@@ -45,7 +45,7 @@ public class CreatePassiveOfferOperationResponseTest
             JsonSerializer.Deserialize<CreatePassiveOfferOperationResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<CreatePassiveOfferOperationResponse>(serialized,
             JsonOptions.DefaultOptions);
 

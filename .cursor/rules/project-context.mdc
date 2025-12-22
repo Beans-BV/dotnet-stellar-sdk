@@ -15,6 +15,8 @@ alwaysApply: true
 
 **HttpClient**: Use `Server` class with `HttpResilienceOptions` for retries/timeouts. Implement `IDisposable` for cleanup.
 
+**JSON Serialization**: ALWAYS use `JsonSerializer.Serialize/Deserialize` with `JsonOptions.DefaultOptions`. Custom converters require it. CI: `scripts/check-json-serializer.sh`.
+
 **XDR**: `StellarDotnetSdk.Xdr/` is READ-ONLY. Generated from `.x` files. Never edit manually.
 
 **Errors**: Custom exceptions in `Exceptions/` folder. HTTP status codes → specific exceptions (`TooManyRequestsException`, `ServiceUnavailableException`).
@@ -22,3 +24,7 @@ alwaysApply: true
 **Testing**: MSTest (`[TestClass]`, `[TestMethod]`), AAA pattern, Moq for mocks, FluentAssertions for assertions. Test data in `TestData/`.
 
 **Build**: `dotnet build` | `dotnet test` | `dotnet pack` (NuGet). After code changes → `dotnet build` + `dotnet test`.
+
+**Context**: Production-grade public SDK (`net8.0`, C# 12, nullable enabled). Widely-used → backward compatibility, robustness, clarity > micro-optimizations.
+
+**Layout**: `Examples/Horizon`, `Examples/Soroban` for demos. `docs/` (DocFX) for tutorials/API docs. Changes to public behavior → update docs/examples.

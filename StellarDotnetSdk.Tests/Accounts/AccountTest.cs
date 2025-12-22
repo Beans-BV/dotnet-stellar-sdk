@@ -17,7 +17,7 @@ public class AccountTest
     public void Constructor_WithNullArguments_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() => new Account((string)null, 10L));
+        Assert.ThrowsException<ArgumentNullException>(() => new Account((string)null!, 10L));
         Assert.ThrowsException<ArgumentNullException>(() => new Account(KeyPair.Random().AccountId, null));
     }
 

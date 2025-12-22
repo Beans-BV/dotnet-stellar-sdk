@@ -42,7 +42,7 @@ public class LedgerPageDeserializerTest
         var ledgersPage = JsonSerializer.Deserialize<Page<LedgerResponse>>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(ledgersPage);
+        var serialized = JsonSerializer.Serialize(ledgersPage, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<Page<LedgerResponse>>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

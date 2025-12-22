@@ -46,7 +46,7 @@ public class LiquidityPoolDeserializerTest
         var instance = JsonSerializer.Deserialize<LiquidityPoolResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var parsed = JsonSerializer.Deserialize<LiquidityPoolResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

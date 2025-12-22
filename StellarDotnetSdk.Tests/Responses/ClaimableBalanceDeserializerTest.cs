@@ -44,7 +44,7 @@ public class ClaimableBalanceDeserializerTest
         var claimableBalance = JsonSerializer.Deserialize<ClaimableBalanceResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(claimableBalance);
+        var serialized = JsonSerializer.Serialize(claimableBalance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<ClaimableBalanceResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

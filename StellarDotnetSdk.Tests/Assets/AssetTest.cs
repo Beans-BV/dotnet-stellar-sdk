@@ -172,7 +172,7 @@ public class AssetTest
 
         // Act & Assert
         Assert.IsFalse(credit4.Equals(native));
-        Assert.IsFalse(credit4.Equals(null));
+        Assert.IsFalse(credit4.Equals(null!));
         Assert.IsFalse(credit4.Equals("not an asset"));
     }
 

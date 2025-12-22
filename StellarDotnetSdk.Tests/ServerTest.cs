@@ -15,6 +15,7 @@ using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Results;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -119,6 +120,7 @@ public class ServerTest
         Assert.AreEqual("StellarDotnetSdk", clientName);
         Assert.IsFalse(string.IsNullOrWhiteSpace(clientVersion));
         var result = response.Result;
+        Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result, typeof(TransactionResultSuccess));
         Assert.AreEqual("0.00001", result.FeeCharged);
     }
@@ -151,6 +153,7 @@ public class ServerTest
             response.SubmitTransactionResponseExtras.ExtrasResultCodes.OperationsResultCodes[0]);
 
         var result = response.Result;
+        Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result, typeof(TransactionResultFailed));
         Assert.AreEqual("0.00001", result.FeeCharged);
         Assert.AreEqual(1, ((TransactionResultFailed)result).Results.Count);
@@ -447,7 +450,7 @@ public class ServerTest
         var server = Utils.CreateTestServerWithHeaders(
             new Dictionary<string, IEnumerable<string>>
             {
-                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10)).Trim('"') } },
+                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10), JsonOptions.DefaultOptions).Trim('"') } },
             },
             HttpStatusCode.TooManyRequests);
 
@@ -496,7 +499,7 @@ public class ServerTest
         var server = Utils.CreateTestServerWithHeaders(
             new Dictionary<string, IEnumerable<string>>
             {
-                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10)).Trim('"') } },
+                { "Retry-After", new[] { JsonSerializer.Serialize(DateTime.UtcNow.AddSeconds(10), JsonOptions.DefaultOptions).Trim('"') } },
             },
             HttpStatusCode.ServiceUnavailable);
 

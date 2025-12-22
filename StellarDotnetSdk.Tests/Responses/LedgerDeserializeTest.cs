@@ -43,7 +43,7 @@ public class LedgerDeserializeTest
         var ledger = JsonSerializer.Deserialize<LedgerResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(ledger);
+        var serialized = JsonSerializer.Serialize(ledger, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<LedgerResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

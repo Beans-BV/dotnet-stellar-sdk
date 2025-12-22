@@ -1,0 +1,15 @@
+---
+applyTo: "**"
+---
+# Code Review Process
+
+**7-step review**:
+1. Summarize change (user-oriented, affected areas)
+2. Assess risk/impact (breaking changes, transaction safety, XDR correctness)
+3. Enforce architecture/style (separation of concerns, clarity)
+4. Verify tests (`StellarDotnetSdk.Tests` coverage)
+5. Verify docs/examples (user-visible changes documented)
+6. Consider performance/resilience (hot paths, retries)
+7. Be explicit/actionable (concrete feedback, code-level improvements)
+
+**Small PRs**: Still confirm non-breaking, tests/docs sufficient, follow-ups.

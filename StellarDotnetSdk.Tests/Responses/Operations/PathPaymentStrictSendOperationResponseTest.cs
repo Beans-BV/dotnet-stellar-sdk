@@ -43,7 +43,7 @@ public class PathPaymentStrictSendOperationResponseTest
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert
@@ -101,7 +101,7 @@ public class PathPaymentStrictSendOperationResponseTest
         var instance = JsonSerializer.Deserialize<OperationResponse>(json, JsonOptions.DefaultOptions);
 
         // Act
-        var serialized = JsonSerializer.Serialize(instance);
+        var serialized = JsonSerializer.Serialize(instance, JsonOptions.DefaultOptions);
         var back = JsonSerializer.Deserialize<OperationResponse>(serialized, JsonOptions.DefaultOptions);
 
         // Assert

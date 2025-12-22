@@ -1,7 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using StellarDotnetSdk.Converters;
-
-namespace StellarDotnetSdk.Responses.SorobanRpc;
+﻿namespace StellarDotnetSdk.Responses.SorobanRpc;
 
 /// <summary>
 ///     Transaction status and network state. The result will include if the transaction was successfully enqueued, and
@@ -62,6 +59,5 @@ public class SendTransactionResponse
     ///     TRY_AGAIN_LATER represents the status value returned by stellar-core when a submitted transaction was not included
     ///     in the previous 4 ledgers and get banned for being added in the next few ledgers.
     /// </summary>
-    [JsonConverter(typeof(SendTransactionStatusEnumJsonConverter))]
     public SendTransactionStatus Status { get; init; }
 }
