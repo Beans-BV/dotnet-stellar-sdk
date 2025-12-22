@@ -208,4 +208,193 @@ public class OperationsRequestBuilderTest
             CreateAccountOperationResponseTest.AssertCreateAccountOperationData);
         await streamableTest.Run();
     }
+
+    /// <summary>
+    ///     Verifies that OperationsRequestBuilder.Operation correctly retrieves and deserializes operation data from URI.
+    /// </summary>
+    [TestMethod]
+    public async Task Operation_WithValidUri_ReturnsDeserializedOperation()
+    {
+        // Arrange
+        using var server = await Utils.CreateTestServerWithJson("Responses/Operations/createAccount.json");
+        var uri = new Uri("https://horizon-testnet.stellar.org/operations/100000");
+
+        // Act
+        var operation = await server.Operations.Operation(uri);
+
+        // Assert
+        CreateAccountOperationResponseTest.AssertCreateAccountOperationData(operation);
+    }
+
+    /// <summary>
+    ///     Verifies that OperationsRequestBuilder.ForAccount throws ArgumentException when account ID is invalid.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ForAccount_WithInvalidAccountId_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("");
+
+        // Act & Assert
+        _ = server.Operations.ForAccount("INVALID_ACCOUNT_ID");
+    }
+
+    /// <summary>
+    ///     Verifies that OperationsRequestBuilder.ForAccount throws ArgumentException when account is null.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void ForAccount_WithNullAccount_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("");
+
+        // Act & Assert
+        _ = server.Operations.ForAccount(null!);
+    }
+
+    /// <summary>
+    ///     Verifies that OperationsRequestBuilder.ForAccount throws ArgumentException when account is empty.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ForAccount_WithEmptyAccount_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("");
+
+        // Act & Assert
+        _ = server.Operations.ForAccount("");
+    }
+
+    /// <summary>
+    ///     Verifies that OperationsRequestBuilder.ForClaimableBalance throws ArgumentException when balance ID is null.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void ForClaimableBalance_WithNullBalanceId_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("");
+
+        // Act & Assert
+        _ = server.Operations.ForClaimableBalance(null!);
+    }
+
+    /// <summary>
+    ///     Verifies that OperationsRequestBuilder.ForClaimableBalance throws ArgumentException when balance ID format is invalid.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ForClaimableBalance_WithInvalidFormat_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("");
+
+        // Act & Assert
+        _ = server.Operations.ForClaimableBalance("invalid_format");
+    }
+
+    /// <summary>
+    ///     Verifies that OperationsRequestBuilder.ForTransaction throws ArgumentException when transaction ID is null.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void ForTransaction_WithNullTransactionId_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("");
+
+        // Act & Assert
+        _ = server.Operations.ForTransaction(null!);
+    }
+
+    /// <summary>
+    ///     Verifies that OperationsRequestBuilder.ForTransaction throws ArgumentException when transaction ID is empty.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ForTransaction_WithEmptyTransactionId_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("");
+
+        // Act & Assert
+        _ = server.Operations.ForTransaction("");
+    }
+
+    /// <summary>
+    ///     Verifies that OperationsRequestBuilder.ForLiquidityPool correctly constructs URI for liquidity pool operations.
+    /// </summary>
+    [TestMethod]
+    public void ForLiquidityPool_WithValidPoolId_BuildsCorrectUri()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("");
+        const string poolId = "cc22414997d7e3d9a9ac3b1d65ca9cc3e5f35ce33e0bd6a885648b11aaa3b72d";
+
+        // Act
+        var uri = server.Operations
+            .ForLiquidityPool(poolId)
+            .Limit(50)
+            .Order(OrderDirection.ASC)
+            .BuildUri();
+
+        // Assert
+        Assert.AreEqual(
+            $"https://horizon-testnet.stellar.org/liquidity_pools/{poolId}/operations?limit=50&order=asc",
+            uri.ToString());
+    }
+
+    /// <summary>
+    ///     Verifies that OperationsRequestBuilder.ForLiquidityPool throws ArgumentException when pool ID is null.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void ForLiquidityPool_WithNullPoolId_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("");
+
+        // Act & Assert
+        _ = server.Operations.ForLiquidityPool(null!);
+    }
+
+    /// <summary>
+    ///     Verifies that OperationsRequestBuilder.ForLiquidityPool throws ArgumentException when pool ID is empty.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ForLiquidityPool_WithEmptyPoolId_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("");
+
+        // Act & Assert
+        _ = server.Operations.ForLiquidityPool("");
+    }
+
+    /// <summary>
+    ///     Verifies that OperationsRequestBuilder.IncludeFailed correctly adds include_failed parameter with false value.
+    /// </summary>
+    [TestMethod]
+    public void IncludeFailed_WithFalseValue_AddsIncludeFailedParameter()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("");
+
+        // Act
+        var uri = server.Operations
+            .ForLedger(200000000000L)
+            .IncludeFailed(false)
+            .Limit(50)
+            .Order(OrderDirection.ASC)
+            .BuildUri();
+
+        // Assert
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/ledgers/200000000000/operations?include_failed=false&limit=50&order=asc",
+            uri.ToString());
+    }
 }
