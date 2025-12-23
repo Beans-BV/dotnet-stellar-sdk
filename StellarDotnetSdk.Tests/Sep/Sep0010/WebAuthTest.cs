@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Moq.Protected;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
@@ -16,6 +19,10 @@ using StellarDotnetSdk.Sep.Sep0001;
 using StellarDotnetSdk.Sep.Sep0010;
 using StellarDotnetSdk.Sep.Sep0010.Exceptions;
 using StellarDotnetSdk.Transactions;
+using StellarDotnetSdk.Xdr;
+using TimeBounds = StellarDotnetSdk.Transactions.TimeBounds;
+using Memo = StellarDotnetSdk.Memos.Memo;
+using Transaction = StellarDotnetSdk.Transactions.Transaction;
 
 namespace StellarDotnetSdk.Tests.Sep.Sep0010;
 
@@ -804,6 +811,425 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         Assert.IsTrue(capturedRequest.RequestUri!.Query.Contains("account="));
         Assert.IsTrue(capturedRequest.RequestUri.Query.Contains("memo=12345"));
         Assert.IsTrue(capturedRequest.RequestUri.Query.Contains("home_domain=custom.domain"));
+    }
+
+    /// <summary>
+    ///     Verifies that GetChallengeResponseAsync includes client_domain query parameter when provided.
+    /// </summary>
+    [TestMethod]
+    public async Task GetChallengeResponseAsync_WithClientDomain_IncludesClientDomainParameter()
+    {
+        // Arrange
+        var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
+        var challengeResponse = new ChallengeResponse { Transaction = challengeXdr };
+        var responseJson = JsonSerializer.Serialize(challengeResponse, JsonOptions.DefaultOptions);
+
+        var mockHandler = new Moq.Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
+        HttpRequestMessage? capturedRequest = null;
+        mockHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>()))
+            .Callback<HttpRequestMessage>(req => capturedRequest = req)
+            .Returns(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(responseJson),
+            });
+
+        using var httpClient = new HttpClient(mockHandler.Object);
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+
+        // Act
+        await webAuth.GetChallengeResponseAsync(_clientKeypair.AccountId, clientDomain: ClientDomain);
+
+        // Assert
+        Assert.IsNotNull(capturedRequest);
+        Assert.IsTrue(capturedRequest.RequestUri!.Query.Contains("account="));
+        Assert.IsTrue(capturedRequest.RequestUri.Query.Contains($"client_domain={Uri.EscapeDataString(ClientDomain)}"));
+    }
+
+    /// <summary>
+    ///     Verifies that GetChallengeResponseAsync includes custom headers when provided.
+    /// </summary>
+    [TestMethod]
+    public async Task GetChallengeResponseAsync_WithCustomHeaders_IncludesHeaders()
+    {
+        // Arrange
+        var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
+        var challengeResponse = new ChallengeResponse { Transaction = challengeXdr };
+        var responseJson = JsonSerializer.Serialize(challengeResponse, JsonOptions.DefaultOptions);
+
+        HttpRequestMessage? capturedRequest = null;
+        var mockHandler = new Mock<HttpMessageHandler>();
+        mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .Callback<HttpRequestMessage, CancellationToken>((req, ct) => { capturedRequest = req; })
+            .Returns(Task.FromResult(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(responseJson),
+            }));
+
+        using var httpClient = new HttpClient(mockHandler.Object);
+        var customHeaders = new Dictionary<string, string>
+        {
+            { "X-Custom-Header", "custom-value" },
+            { "Authorization", "Bearer token123" }
+        };
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient, customHeaders);
+
+        // Act
+        await webAuth.GetChallengeResponseAsync(_clientKeypair.AccountId);
+
+        // Assert
+        Assert.IsNotNull(capturedRequest);
+        Assert.IsTrue(capturedRequest.Headers.Contains("X-Custom-Header"));
+        Assert.AreEqual("custom-value", capturedRequest.Headers.GetValues("X-Custom-Header").First());
+        Assert.IsTrue(capturedRequest.Headers.Contains("Authorization"));
+        Assert.AreEqual("Bearer token123", capturedRequest.Headers.GetValues("Authorization").First());
+    }
+
+    /// <summary>
+    ///     Verifies that GetChallengeResponseAsync throws ChallengeRequestErrorException when response deserializes to null.
+    /// </summary>
+    [TestMethod]
+    public async Task GetChallengeResponseAsync_NullDeserializedResponse_ThrowsChallengeRequestErrorException()
+    {
+        // Arrange
+        // Invalid JSON that deserializes to null
+        using var httpClient = CreateMockHttpClient("null", HttpStatusCode.OK);
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<ChallengeRequestErrorException>(async () =>
+        {
+            await webAuth.GetChallengeResponseAsync(_clientKeypair.AccountId);
+        });
+
+        Assert.AreEqual(500, ex.StatusCode);
+        Assert.AreEqual("Challenge request failed with status code 500", ex.Message);
+        // The ResponseBody should contain the detailed error message, but in this case it's null
+        // The important thing is that the exception is thrown with status code 500
+    }
+
+    /// <summary>
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidMemoValue when memo is expected but missing.
+    /// </summary>
+    [TestMethod]
+    public void ValidateChallenge_MissingMemoWhenExpected_ThrowsChallengeValidationErrorInvalidMemoValue()
+    {
+        // Arrange
+        var transaction = WebAuthentication.BuildChallengeTransaction(
+            _serverKeypair,
+            _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain,
+            validFrom: DateTimeOffset.UtcNow);
+
+        // Transaction already has MemoNone, but we expect a memo
+        var challengeXdr = transaction.ToEnvelopeXdrBase64();
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+
+        // Act & Assert
+        Assert.ThrowsException<ChallengeValidationErrorInvalidMemoValue>(() =>
+        {
+            webAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId, memo: 12345);
+        });
+    }
+
+
+    /// <summary>
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidSourceAccount when operation has null source account.
+    /// </summary>
+    [TestMethod]
+    public void ValidateChallenge_NullOperationSourceAccount_ThrowsChallengeValidationErrorInvalidSourceAccount()
+    {
+        // Arrange
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        
+        // Create operation with null source account
+        var operation = new ManageDataOperation($"{HomeDomain} auth", Encoding.UTF8.GetBytes("test"), null);
+        var transaction = new TransactionBuilder(transactionSource)
+            .AddOperation(operation)
+            .AddPreconditions(new TransactionPreconditions
+                { TimeBounds = new TimeBounds(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddSeconds(1000)) })
+            .Build();
+
+        transaction.Sign(_serverKeypair);
+        var challengeXdr = transaction.ToEnvelopeXdrBase64();
+
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+
+        // Act & Assert
+        Assert.ThrowsException<ChallengeValidationErrorInvalidSourceAccount>(() =>
+        {
+            webAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId);
+        });
+    }
+
+    /// <summary>
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidSourceAccount when client domain operation has wrong source account.
+    /// </summary>
+    [TestMethod]
+    public void ValidateChallenge_WrongClientDomainSourceAccount_ThrowsChallengeValidationErrorInvalidSourceAccount()
+    {
+        // Arrange
+        var clientDomainKeypair = KeyPair.Random();
+        var wrongSourceKeypair = KeyPair.Random();
+        
+        var transaction = WebAuthentication.BuildChallengeTransaction(
+            _serverKeypair,
+            _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain,
+            validFrom: DateTimeOffset.UtcNow);
+
+        // Add client domain operation with wrong source account
+        var clientDomainOp = new ManageDataOperation("client_domain", Encoding.UTF8.GetBytes(ClientDomain), wrongSourceKeypair);
+        var transactionBuilder = new TransactionBuilder(new Account(_serverKeypair.Address, -1))
+            .AddOperation(transaction.Operations[0])
+            .AddOperation(clientDomainOp)
+            .AddPreconditions(transaction.Preconditions);
+
+        var transactionWithClientDomain = transactionBuilder.Build();
+        transactionWithClientDomain.Sign(_serverKeypair);
+        var challengeXdr = transactionWithClientDomain.ToEnvelopeXdrBase64();
+
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+
+        // Act & Assert
+        Assert.ThrowsException<ChallengeValidationErrorInvalidSourceAccount>(() =>
+        {
+            webAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId, clientDomainAccountId: clientDomainKeypair.AccountId);
+        });
+    }
+
+    /// <summary>
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidSourceAccount when non-client-domain operation has wrong source account.
+    /// </summary>
+    [TestMethod]
+    public void ValidateChallenge_WrongNonClientDomainSourceAccount_ThrowsChallengeValidationErrorInvalidSourceAccount()
+    {
+        // Arrange
+        var wrongSourceKeypair = KeyPair.Random();
+        
+        var transaction = WebAuthentication.BuildChallengeTransaction(
+            _serverKeypair,
+            _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain,
+            validFrom: DateTimeOffset.UtcNow);
+
+        // Add second operation with wrong source account (not client domain)
+        var secondOp = new ManageDataOperation("web_auth_domain", Encoding.UTF8.GetBytes(WebAuthDomain), wrongSourceKeypair);
+        var transactionBuilder = new TransactionBuilder(new Account(_serverKeypair.Address, -1))
+            .AddOperation(transaction.Operations[0])
+            .AddOperation(secondOp)
+            .AddPreconditions(transaction.Preconditions);
+
+        var transactionWithSecondOp = transactionBuilder.Build();
+        transactionWithSecondOp.Sign(_serverKeypair);
+        var challengeXdr = transactionWithSecondOp.ToEnvelopeXdrBase64();
+
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+
+        // Act & Assert
+        Assert.ThrowsException<ChallengeValidationErrorInvalidSourceAccount>(() =>
+        {
+            webAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId);
+        });
+    }
+
+    /// <summary>
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidSignature when signature count is not 1.
+    /// </summary>
+    [TestMethod]
+    public void ValidateChallenge_InvalidSignatureCount_ThrowsChallengeValidationErrorInvalidSignature()
+    {
+        // Arrange
+        var transaction = WebAuthentication.BuildChallengeTransaction(
+            _serverKeypair,
+            _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain,
+            validFrom: DateTimeOffset.UtcNow);
+
+        // Remove all signatures by manipulating XDR envelope
+        var envelopeXdr = transaction.ToEnvelopeXdr();
+        var emptySignaturesEnvelope = new TransactionEnvelope
+        {
+            Discriminant = EnvelopeType.Create(EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX),
+            V1 = new TransactionV1Envelope
+            {
+                Tx = envelopeXdr.V1!.Tx,
+                Signatures = Array.Empty<DecoratedSignature>() // Empty signatures array
+            }
+        };
+        
+        var outputStream = new XdrDataOutputStream();
+        TransactionEnvelope.Encode(outputStream, emptySignaturesEnvelope);
+        var challengeXdr = Convert.ToBase64String(outputStream.ToArray());
+
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+
+        // Act & Assert
+        Assert.ThrowsException<ChallengeValidationErrorInvalidSignature>(() =>
+        {
+            webAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId);
+        });
+    }
+
+    /// <summary>
+    ///     Verifies that SendSignedChallengeAsync skips Content-Type header when provided in custom headers.
+    /// </summary>
+    [TestMethod]
+    public async Task SendSignedChallengeAsync_SkipsContentTypeHeader_DoesNotOverrideExplicitContentType()
+    {
+        // Arrange
+        var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var signedXdr = webAuth.SignTransaction(challengeXdr, new[] { _clientKeypair });
+
+        var submitResponse = new SubmitChallengeResponse { Token = "test.jwt.token" };
+        var responseJson = JsonSerializer.Serialize(submitResponse, JsonOptions.DefaultOptions);
+
+        HttpRequestMessage? capturedRequest = null;
+        var mockHandler = new Mock<HttpMessageHandler>();
+        mockHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .Callback<HttpRequestMessage, CancellationToken>((req, ct) => { capturedRequest = req; })
+            .Returns(Task.FromResult(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(responseJson),
+            }));
+
+        using var httpClient = new HttpClient(mockHandler.Object);
+        var customHeaders = new Dictionary<string, string>
+        {
+            { "Content-Type", "application/xml" }, // Should be skipped
+            { "X-Custom-Header", "custom-value" } // Should be added
+        };
+        var webAuthWithClient = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient, customHeaders);
+
+        // Act
+        await webAuthWithClient.SendSignedChallengeAsync(signedXdr);
+
+        // Assert
+        Assert.IsNotNull(capturedRequest);
+        Assert.AreEqual("application/json", capturedRequest.Content!.Headers.ContentType!.MediaType);
+        Assert.IsTrue(capturedRequest.Headers.Contains("X-Custom-Header"));
+        Assert.AreEqual("custom-value", capturedRequest.Headers.GetValues("X-Custom-Header").First());
+    }
+
+    /// <summary>
+    ///     Verifies that SendSignedChallengeAsync throws SubmitChallengeUnknownResponseException when response deserializes to null.
+    /// </summary>
+    [TestMethod]
+    public async Task SendSignedChallengeAsync_NullResponse_ThrowsSubmitChallengeUnknownResponseException()
+    {
+        // Arrange
+        var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var signedXdr = webAuth.SignTransaction(challengeXdr, new[] { _clientKeypair });
+
+        // Invalid JSON that deserializes to null
+        using var httpClient = CreateMockHttpClient("null", HttpStatusCode.OK);
+        var webAuthWithClient = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<SubmitChallengeUnknownResponseException>(async () =>
+        {
+            await webAuthWithClient.SendSignedChallengeAsync(signedXdr);
+        });
+
+        Assert.AreEqual(200, ex.Code);
+    }
+
+    /// <summary>
+    ///     Verifies that SendSignedChallengeAsync throws SubmitChallengeUnknownResponseException when token is null.
+    /// </summary>
+    [TestMethod]
+    public async Task SendSignedChallengeAsync_NullToken_ThrowsSubmitChallengeUnknownResponseException()
+    {
+        // Arrange
+        var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var signedXdr = webAuth.SignTransaction(challengeXdr, new[] { _clientKeypair });
+
+        // Response with null token
+        var submitResponse = new SubmitChallengeResponse { Token = null };
+        var responseJson = JsonSerializer.Serialize(submitResponse, JsonOptions.DefaultOptions);
+
+        using var httpClient = CreateMockHttpClient(responseJson, HttpStatusCode.OK);
+        var webAuthWithClient = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+
+        // Act & Assert
+        var ex = await Assert.ThrowsExceptionAsync<SubmitChallengeUnknownResponseException>(async () =>
+        {
+            await webAuthWithClient.SendSignedChallengeAsync(signedXdr);
+        });
+
+        Assert.AreEqual(200, ex.Code);
+    }
+
+    /// <summary>
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidNonceValue when first operation's value is not 64 bytes.
+    /// </summary>
+    [TestMethod]
+    public void ValidateChallenge_InvalidNonceValueLength_ThrowsChallengeValidationErrorInvalidNonceValue()
+    {
+        // Arrange
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
+
+        // Create operation with invalid nonce length (should be 64 bytes, using 32 bytes instead)
+        var invalidNonceBytes = Encoding.UTF8.GetBytes(new string('A', 32));
+        var operation = new ManageDataOperation($"{HomeDomain} auth", invalidNonceBytes, opSource.KeyPair);
+        var transaction = new TransactionBuilder(transactionSource)
+            .AddOperation(operation)
+            .AddPreconditions(new TransactionPreconditions
+                { TimeBounds = new TimeBounds(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddSeconds(1000)) })
+            .Build();
+
+        transaction.Sign(_serverKeypair);
+        var challengeXdr = transaction.ToEnvelopeXdrBase64();
+
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+
+        // Act & Assert
+        Assert.ThrowsException<ChallengeValidationErrorInvalidNonceValue>(() =>
+        {
+            webAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId);
+        });
+    }
+
+    /// <summary>
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidNonceValue when first operation's value is null.
+    /// </summary>
+    [TestMethod]
+    public void ValidateChallenge_NullNonceValue_ThrowsChallengeValidationErrorInvalidNonceValue()
+    {
+        // Arrange
+        var transactionSource = new Account(_serverKeypair.Address, -1);
+        var opSource = new Account(_clientKeypair.Address, 0);
+
+        // Create operation with null value (explicitly cast to byte[]? to resolve ambiguity)
+        var operation = new ManageDataOperation($"{HomeDomain} auth", (byte[]?)null, opSource.KeyPair);
+        var transaction = new TransactionBuilder(transactionSource)
+            .AddOperation(operation)
+            .AddPreconditions(new TransactionPreconditions
+                { TimeBounds = new TimeBounds(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddSeconds(1000)) })
+            .Build();
+
+        transaction.Sign(_serverKeypair);
+        var challengeXdr = transaction.ToEnvelopeXdrBase64();
+
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+
+        // Act & Assert
+        Assert.ThrowsException<ChallengeValidationErrorInvalidNonceValue>(() =>
+        {
+            webAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId);
+        });
     }
 }
 

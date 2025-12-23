@@ -16,7 +16,6 @@ using StellarDotnetSdk.Transactions;
 using StellarDotnetSdk.Xdr;
 using FormatException = System.FormatException;
 using MuxedAccount = StellarDotnetSdk.Accounts.MuxedAccount;
-using XdrTransaction = StellarDotnetSdk.Xdr.Transaction;
 
 namespace StellarDotnetSdk.Sep.Sep0010;
 
@@ -30,7 +29,6 @@ public class WebAuth : IDisposable
     private const string WebAuthDataKey = "web_auth_domain";
     private const string ClientDomainDataKey = "client_domain";
     private const string AuthSuffix = " auth";
-    private const int ChallengeNonceLength = 48;
 
     /// <summary>
     ///     Give a small grace period for the transaction time to account for clock drift.
@@ -305,10 +303,6 @@ public class WebAuth : IDisposable
 
             return challengeResponse;
         }
-        catch (ChallengeRequestErrorException)
-        {
-            throw;
-        }
         catch (HttpRequestException ex)
         {
             throw new ChallengeRequestErrorException(0, ex.Message);
@@ -333,71 +327,70 @@ public class WebAuth : IDisposable
         ArgumentException.ThrowIfNullOrEmpty(challengeTransaction);
         ArgumentException.ThrowIfNullOrEmpty(userAccountId);
 
-        var bytes = Convert.FromBase64String(challengeTransaction);
-        var envelopeXdr = TransactionEnvelope.Decode(new XdrDataInputStream(bytes));
+        // Convert to SDK Transaction early - single conversion point
+        var transaction = Transactions.Transaction.FromEnvelopeXdr(challengeTransaction);
 
-        if (envelopeXdr.Discriminant.InnerValue != EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX)
-        {
-            throw new ChallengeValidationException("Invalid transaction type received in challenge");
-        }
-
-        var transaction = envelopeXdr.V1!.Tx;
-
-        if (transaction.SeqNum.InnerValue.InnerValue != 0)
+        // Validate sequence number
+        if (transaction.SequenceNumber != 0)
         {
             throw new ChallengeValidationErrorInvalidSeqNr("Invalid transaction, sequence number not 0");
         }
 
-        // Validate memo
-        if (transaction.Memo.Discriminant.InnerValue != MemoType.MemoTypeEnum.MEMO_NONE)
+        // Validate memo using SDK types
+        if (transaction.Memo is MemoId memoId)
         {
             if (userAccountId.StartsWith("M", StringComparison.Ordinal))
             {
                 throw new ChallengeValidationErrorMemoAndMuxedAccount("Memo and muxed account (M...) found");
             }
 
-            if (transaction.Memo.Discriminant.InnerValue != MemoType.MemoTypeEnum.MEMO_ID)
-            {
-                throw new ChallengeValidationErrorInvalidMemoType("invalid memo type");
-            }
-
-            if (memo != null && transaction.Memo.Id!.InnerValue != (ulong)memo)
+            if (memo != null && memoId.IdValue != (ulong)memo)
             {
                 throw new ChallengeValidationErrorInvalidMemoValue("invalid memo value");
             }
+        }
+        else if (transaction.Memo is not MemoNone)
+        {
+            throw new ChallengeValidationErrorInvalidMemoType("invalid memo type");
         }
         else if (memo != null)
         {
             throw new ChallengeValidationErrorInvalidMemoValue("missing memo");
         }
 
+        // Validate operations
+        // Note: This check is defensive code. Transaction.FromEnvelopeXdr throws ArgumentNullException
+        // for empty operations before this check can be reached, so this path is unreachable in practice.
+        // However, we keep it as defensive programming in case the SDK behavior changes.
         if (transaction.Operations.Length == 0)
         {
             throw new ChallengeValidationException("invalid number of operations (0)");
         }
 
-        // Validate operations
         for (var i = 0; i < transaction.Operations.Length; i++)
         {
             var op = transaction.Operations[i];
-            if (op.SourceAccount == null)
+            
+            // Type check instead of discriminant access
+            if (op is not ManageDataOperation manageDataOp)
+            {
+                throw new ChallengeValidationErrorInvalidOperationType($"invalid type of operation {i}");
+            }
+
+            // Use SDK property access
+            var opSourceAccountId = op.SourceAccount?.AccountId;
+            if (opSourceAccountId == null)
             {
                 throw new ChallengeValidationErrorInvalidSourceAccount($"invalid source account (is null) in operation[{i}]");
             }
 
-            var opSourceAccountId = MuxedAccount.FromXdrMuxedAccount(op.SourceAccount).AccountId;
             if (i == 0 && opSourceAccountId != userAccountId)
             {
                 throw new ChallengeValidationErrorInvalidSourceAccount($"invalid source account in operation[{i}]");
             }
 
-            // All operations must be manage data operations
-            if (op.Body.Discriminant.InnerValue != OperationType.OperationTypeEnum.MANAGE_DATA || op.Body.ManageDataOp == null)
-            {
-                throw new ChallengeValidationErrorInvalidOperationType($"invalid type of operation {i}");
-            }
-
-            var dataName = op.Body.ManageDataOp.DataName.InnerValue;
+            // Use clean property access
+            var dataName = manageDataOp.Name;
             if (i > 0)
             {
                 if (dataName == ClientDomainDataKey)
@@ -418,7 +411,18 @@ public class WebAuth : IDisposable
                 throw new ChallengeValidationErrorInvalidHomeDomain($"invalid home domain in operation {i}");
             }
 
-            var dataValue = op.Body.ManageDataOp.DataValue?.InnerValue;
+            // Use clean property access
+            var dataValue = manageDataOp.Value;
+            
+            // Validate nonce value length for first operation (must be 64 bytes per SEP-0010)
+            if (i == 0)
+            {
+                if (dataValue == null || dataValue.Length != 64)
+                {
+                    throw new ChallengeValidationErrorInvalidNonceValue(
+                        $"invalid nonce value in operation {i}. Expected: 64 bytes, Actual: {dataValue?.Length ?? 0} bytes");
+                }
+            }
             if (i > 0 && dataName == WebAuthDataKey)
             {
                 var uri = new Uri(_authEndpoint);
@@ -432,15 +436,13 @@ public class WebAuth : IDisposable
             }
         }
 
-        // Check time bounds
-        var preconditions = TransactionPreconditions.FromXdr(transaction.Cond);
-        var timeBounds = preconditions?.TimeBounds;
-        if (timeBounds != null)
+        // Check time bounds using SDK property
+        if (transaction.TimeBounds != null)
         {
             var grace = timeBoundsGracePeriod ?? _gracePeriod;
             var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            var minTime = timeBounds.MinTime - grace;
-            var maxTime = timeBounds.MaxTime + grace;
+            var minTime = transaction.TimeBounds.MinTime - grace;
+            var maxTime = transaction.TimeBounds.MaxTime + grace;
 
             if (currentTime < minTime || currentTime > maxTime)
             {
@@ -448,8 +450,11 @@ public class WebAuth : IDisposable
             }
         }
 
-        // Validate server signature
+        // Validate server signature - need to access envelope for signatures
+        var bytes = Convert.FromBase64String(challengeTransaction);
+        var envelopeXdr = TransactionEnvelope.Decode(new XdrDataInputStream(bytes));
         var signatures = envelopeXdr.V1!.Signatures.ToArray();
+        
         if (signatures.Length != 1)
         {
             throw new ChallengeValidationErrorInvalidSignature(
@@ -458,8 +463,7 @@ public class WebAuth : IDisposable
 
         var firstSignature = signatures[0];
         var serverKeyPair = KeyPair.FromAccountId(_serverSigningKey);
-        var transactionObj = Transactions.Transaction.FromEnvelopeXdr(envelopeXdr);
-        var transactionHash = transactionObj.Hash(_network);
+        var transactionHash = transaction.Hash(_network);
         var valid = serverKeyPair.Verify(transactionHash, firstSignature.Signature.InnerValue);
 
         if (!valid)
@@ -480,26 +484,18 @@ public class WebAuth : IDisposable
         ArgumentException.ThrowIfNullOrEmpty(challengeTransaction);
         ArgumentNullException.ThrowIfNull(signers);
 
-        var bytes = Convert.FromBase64String(challengeTransaction);
-        var envelopeXdr = TransactionEnvelope.Decode(new XdrDataInputStream(bytes));
+        // Convert to SDK Transaction for easy access
+        var transaction = Transactions.Transaction.FromEnvelopeXdr(challengeTransaction);
+        var txHash = transaction.Hash(_network);
 
-        if (envelopeXdr.Discriminant.InnerValue != EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX)
-        {
-            throw new ChallengeValidationException("Invalid transaction type");
-        }
-
-        var transactionObj = Transactions.Transaction.FromEnvelopeXdr(envelopeXdr);
-        var txHash = transactionObj.Hash(_network);
-
-        var signatures = envelopeXdr.V1!.Signatures.ToList();
+        // Add signatures using SDK Transaction
         foreach (var signer in signers)
         {
-            var signature = signer.SignDecorated(txHash);
-            signatures.Add(signature);
+            transaction.Sign(signer, _network);
         }
 
-        envelopeXdr.V1!.Signatures = signatures.ToArray();
-        
+        // Convert back to XDR envelope for return
+        var envelopeXdr = transaction.ToEnvelopeXdr();
         var outputStream = new XdrDataOutputStream();
         TransactionEnvelope.Encode(outputStream, envelopeXdr);
         return Convert.ToBase64String(outputStream.ToArray());
@@ -570,18 +566,6 @@ public class WebAuth : IDisposable
                     var errorBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     throw new SubmitChallengeUnknownResponseException((int)response.StatusCode, errorBody);
             }
-        }
-        catch (SubmitChallengeTimeoutResponseException)
-        {
-            throw;
-        }
-        catch (SubmitChallengeErrorResponseException)
-        {
-            throw;
-        }
-        catch (SubmitChallengeUnknownResponseException)
-        {
-            throw;
         }
         catch (HttpRequestException ex)
         {
