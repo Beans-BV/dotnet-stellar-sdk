@@ -348,16 +348,17 @@ public class StellarToml
 
         if (document.TryGetValue("ACCOUNTS", out var accounts))
         {
-            // ACCOUNTS is a direct array of strings
+            var result = new List<string>();
             var accountsArray = accounts.Get<TomlArray>();
             foreach (var item in accountsArray.Items)
             {
                 var accountValue = item.Get<string>();
                 if (!string.IsNullOrWhiteSpace(accountValue))
                 {
-                    info.Accounts.Add(accountValue);
+                    result.Add(accountValue);
                 }
             }
+            info.Accounts = result.AsReadOnly();
         }
 
         if (document.TryGetValue("URI_REQUEST_SIGNING_KEY", out var uriRequestSigningKey))
@@ -666,44 +667,47 @@ public class StellarToml
 
         if (currencyTable.TryGetValue("collateral_addresses", out var collateralAddresses))
         {
+            var result = new List<string>();
             var addressesArray = collateralAddresses.Get<TomlArray>();
-            currency.CollateralAddresses = new List<string>();
             foreach (var item in addressesArray.Items)
             {
                 var address = item.Get<string>();
                 if (!string.IsNullOrWhiteSpace(address))
                 {
-                    currency.CollateralAddresses.Add(address);
+                    result.Add(address);
                 }
             }
+            currency.CollateralAddresses = result.AsReadOnly();
         }
 
         if (currencyTable.TryGetValue("collateral_address_messages", out var collateralAddressMessages))
         {
+            var result = new List<string>();
             var messagesArray = collateralAddressMessages.Get<TomlArray>();
-            currency.CollateralAddressMessages = new List<string>();
             foreach (var item in messagesArray.Items)
             {
                 var message = item.Get<string>();
                 if (!string.IsNullOrWhiteSpace(message))
                 {
-                    currency.CollateralAddressMessages.Add(message);
+                    result.Add(message);
                 }
             }
+            currency.CollateralAddressMessages = result.AsReadOnly();
         }
 
         if (currencyTable.TryGetValue("collateral_address_signatures", out var collateralAddressSignatures))
         {
+            var result = new List<string>();
             var signaturesArray = collateralAddressSignatures.Get<TomlArray>();
-            currency.CollateralAddressSignatures = new List<string>();
             foreach (var item in signaturesArray.Items)
             {
                 var signature = item.Get<string>();
                 if (!string.IsNullOrWhiteSpace(signature))
                 {
-                    currency.CollateralAddressSignatures.Add(signature);
+                    result.Add(signature);
                 }
             }
+            currency.CollateralAddressSignatures = result.AsReadOnly();
         }
 
         if (currencyTable.TryGetValue("regulated", out var regulated))

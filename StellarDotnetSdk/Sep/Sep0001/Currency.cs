@@ -105,18 +105,18 @@ public class Currency
     /// <summary>
     ///     If this is an anchored crypto token, list of one or more public addresses that hold the assets for which you are issuing tokens.
     /// </summary>
-    public List<string>? CollateralAddresses { get; set; }
+    public IReadOnlyCollection<string>? CollateralAddresses { get; set; }
 
     /// <summary>
     ///     Messages stating that funds in the collateralAddresses list are reserved to back the issued asset.
     /// </summary>
-    public List<string>? CollateralAddressMessages { get; set; }
+    public IReadOnlyCollection<string>? CollateralAddressMessages { get; set; }
 
     /// <summary>
     ///     These prove you control the collateralAddresses. For each address you list, sign the entry in collateralAddressMessages
     ///     with the address's private key and add the resulting string to this list as a base64-encoded raw signature.
     /// </summary>
-    public List<string>? CollateralAddressSignatures { get; set; }
+    public IReadOnlyCollection<string>? CollateralAddressSignatures { get; set; }
 
     /// <summary>
     ///     Indicates whether or not this is a sep0008 regulated asset. If missing, false is assumed.

@@ -59,9 +59,9 @@ public class GeneralInformation
     public string? HorizonUrl { get; set; }
 
     /// <summary>
-    ///     A list of Stellar accounts that are controlled by this domain.
+    ///     A read-only list of Stellar accounts that are controlled by this domain.
     /// </summary>
-    public List<string> Accounts { get; } = [];
+    public IReadOnlyCollection<string>? Accounts { get; set; }
 
     /// <summary>
     ///     The signing key is used for SEP-7 delegated signing.
