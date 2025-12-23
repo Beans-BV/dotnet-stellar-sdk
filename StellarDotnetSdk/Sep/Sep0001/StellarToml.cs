@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Nett;
 using StellarDotnetSdk.Requests;
@@ -24,7 +22,9 @@ public class StellarToml
     ///     Gets or creates an HttpClient instance.
     ///     Uses DefaultStellarSdkHttpClient without retries by default, matching the Server class pattern.
     /// </summary>
-    private static HttpClient GetOrCreateHttpClient(string? bearerToken = null, HttpResilienceOptions? resilienceOptions = null)
+    private static HttpClient GetOrCreateHttpClient(
+        string? bearerToken = null,
+        HttpResilienceOptions? resilienceOptions = null)
     {
         return new DefaultStellarSdkHttpClient(
             bearerToken,
@@ -127,6 +127,7 @@ public class StellarToml
         var stellarTomlUri = new Uri($"https://{domain}/.well-known/stellar.toml");
 
         var client = httpClient ?? GetOrCreateHttpClient(bearerToken, resilienceOptions);
+        var internalHttpClient = httpClient == null;
         try
         {
             var request = new HttpRequestMessage(HttpMethod.Get, stellarTomlUri);
@@ -160,6 +161,13 @@ public class StellarToml
         catch (Exception ex)
         {
             throw new StellarTomlException($"Unexpected error fetching stellar.toml from {stellarTomlUri}", ex);
+        }
+        finally
+        {
+            if (internalHttpClient)
+            {
+                client.Dispose();
+            }
         }
     }
 
@@ -211,6 +219,7 @@ public class StellarToml
         }
 
         var client = httpClient ?? GetOrCreateHttpClient(bearerToken, resilienceOptions);
+        var internalHttpClient = httpClient == null;
         try
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
@@ -245,6 +254,13 @@ public class StellarToml
         catch (Exception ex)
         {
             throw new StellarTomlException($"Unexpected error fetching currency TOML from {uri}", ex);
+        }
+        finally
+        {
+            if (internalHttpClient)
+            {
+                client.Dispose();
+            }
         }
     }
 

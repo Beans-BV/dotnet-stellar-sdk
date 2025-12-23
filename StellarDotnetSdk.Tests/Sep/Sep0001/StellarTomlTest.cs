@@ -621,5 +621,69 @@ keybase=""johndoe""
         Assert.AreEqual("@johndoe", pointOfContact.Telegram);
         Assert.AreEqual("johndoe", pointOfContact.Keybase);
     }
+
+    /// <summary>
+    ///     Verifies that FromDomainAsync does not dispose externally provided HttpClient.
+    /// </summary>
+    [TestMethod]
+    public async Task FromDomainAsync_WithExternalHttpClient_DoesNotDisposeHttpClient()
+    {
+        // Arrange
+        var fakeHttpMessageHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
+        fakeHttpMessageHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>())).Returns(new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent(_sampleTomlContent),
+        });
+
+        var trackingHttpClient = new DisposableTrackingHttpClient(fakeHttpMessageHandler.Object);
+
+        // Act
+        await StellarToml.FromDomainAsync("example.com", trackingHttpClient);
+
+        // Assert - External HttpClient should NOT be disposed
+        Assert.IsFalse(trackingHttpClient.IsDisposed, "External HttpClient should not be disposed by StellarToml");
+    }
+
+    /// <summary>
+    ///     Verifies that CurrencyFromUrlAsync does not dispose externally provided HttpClient.
+    /// </summary>
+    [TestMethod]
+    public async Task CurrencyFromUrlAsync_WithExternalHttpClient_DoesNotDisposeHttpClient()
+    {
+        // Arrange
+        var fakeHttpMessageHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
+        fakeHttpMessageHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>())).Returns(new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent(_linkedCurrencyTomlContent),
+        });
+
+        var trackingHttpClient = new DisposableTrackingHttpClient(fakeHttpMessageHandler.Object);
+
+        // Act
+        await StellarToml.CurrencyFromUrlAsync("https://example.com/.well-known/TESTC.toml", trackingHttpClient);
+
+        // Assert - External HttpClient should NOT be disposed
+        Assert.IsFalse(trackingHttpClient.IsDisposed, "External HttpClient should not be disposed by StellarToml");
+    }
+
+    /// <summary>
+    ///     HttpClient wrapper that tracks disposal for testing purposes.
+    /// </summary>
+    private class DisposableTrackingHttpClient : HttpClient
+    {
+        public DisposableTrackingHttpClient(HttpMessageHandler handler) : base(handler)
+        {
+        }
+
+        public bool IsDisposed { get; private set; }
+
+        protected override void Dispose(bool disposing)
+        {
+            IsDisposed = true;
+            base.Dispose(disposing);
+        }
+    }
 }
 
