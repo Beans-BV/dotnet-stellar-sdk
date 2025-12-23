@@ -15,6 +15,14 @@ namespace StellarDotnetSdk.Sep.Sep0001;
 ///     about their Stellar integration, including service endpoints, validators,
 ///     currencies, and organizational details.
 ///     See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md">SEP-0001</a>
+///     <para>
+///         <strong>HttpClient Usage:</strong> For production code, it is strongly recommended to pass a shared
+///         <see cref="HttpClient" /> instance to the static methods (<see cref="FromDomainAsync" /> and
+///         <see cref="CurrencyFromUrlAsync" />). If no HttpClient is provided, a new instance will be created
+///         and disposed for each call, which is inefficient and can lead to socket exhaustion under load.
+///         Create and reuse a single HttpClient instance (or use <see cref="System.Net.Http.IHttpClientFactory" />)
+///         for multiple calls to these methods.
+///     </para>
 /// </summary>
 public class StellarToml
 {
@@ -87,7 +95,11 @@ public class StellarToml
     ///     `https://DOMAIN/.well-known/stellar.toml`
     /// </summary>
     /// <param name="domain">The domain name (without protocol). E.g., "example.com"</param>
-    /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration</param>
+    /// <param name="httpClient">
+    ///     Optional HTTP client instance. <strong>Recommended:</strong> Pass a shared HttpClient instance
+    ///     for production use to avoid creating a new client per call. If null, a new HttpClient will be
+    ///     created and disposed after the request completes.
+    /// </param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in the request</param>
     /// <returns>StellarToml instance containing the parsed stellar.toml data</returns>
     /// <exception cref="StellarTomlException">Thrown when the stellar.toml file is not found or cannot be parsed</exception>
@@ -108,7 +120,11 @@ public class StellarToml
     /// <param name="domain">The domain name (without protocol). E.g., "example.com"</param>
     /// <param name="resilienceOptions">Resilience options for HTTP requests. If null, default retry configuration is used.</param>
     /// <param name="bearerToken">(Optional) Bearer token in case the server requires it.</param>
-    /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration. If provided, resilienceOptions and bearerToken are ignored.</param>
+    /// <param name="httpClient">
+    ///     Optional HTTP client instance. <strong>Recommended:</strong> Pass a shared HttpClient instance
+    ///     for production use to avoid creating a new client per call. If null, a new HttpClient will be
+    ///     created and disposed after the request completes. If provided, resilienceOptions and bearerToken are ignored.
+    /// </param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in the request</param>
     /// <returns>StellarToml instance containing the parsed stellar.toml data</returns>
     /// <exception cref="StellarTomlException">Thrown when the stellar.toml file is not found or cannot be parsed</exception>
@@ -177,7 +193,11 @@ public class StellarToml
     ///     organizations can link to separate TOML files for each currency.
     /// </summary>
     /// <param name="tomlUrl">The full URL to the currency TOML file</param>
-    /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration</param>
+    /// <param name="httpClient">
+    ///     Optional HTTP client instance. <strong>Recommended:</strong> Pass a shared HttpClient instance
+    ///     for production use to avoid creating a new client per call. If null, a new HttpClient will be
+    ///     created and disposed after the request completes.
+    /// </param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in the request</param>
     /// <returns>Currency instance containing the complete currency information</returns>
     /// <exception cref="StellarTomlException">Thrown when the currency TOML file is not found or cannot be parsed</exception>
@@ -197,7 +217,11 @@ public class StellarToml
     /// <param name="tomlUrl">The full URL to the currency TOML file</param>
     /// <param name="resilienceOptions">Resilience options for HTTP requests. If null, default retry configuration is used.</param>
     /// <param name="bearerToken">(Optional) Bearer token in case the server requires it.</param>
-    /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration. If provided, resilienceOptions and bearerToken are ignored.</param>
+    /// <param name="httpClient">
+    ///     Optional HTTP client instance. <strong>Recommended:</strong> Pass a shared HttpClient instance
+    ///     for production use to avoid creating a new client per call. If null, a new HttpClient will be
+    ///     created and disposed after the request completes. If provided, resilienceOptions and bearerToken are ignored.
+    /// </param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in the request</param>
     /// <returns>Currency instance containing the complete currency information</returns>
     /// <exception cref="StellarTomlException">Thrown when the currency TOML file is not found or cannot be parsed</exception>
