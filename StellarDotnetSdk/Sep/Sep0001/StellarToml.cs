@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Nett;
 using StellarDotnetSdk.Requests;
+using StellarDotnetSdk.Sep.Sep0001.Exceptions;
 
 namespace StellarDotnetSdk.Sep.Sep0001;
 
@@ -141,7 +142,7 @@ public class StellarToml
                 }
             }
 
-            var response = await client.SendAsync(request);
+            var response = await client.SendAsync(request).ConfigureAwait(false);
 
             if ((int)response.StatusCode >= 300)
             {
@@ -149,7 +150,7 @@ public class StellarToml
                     $"Stellar toml not found, response status code {(int)response.StatusCode}");
             }
 
-            var responseToml = await response.Content.ReadAsStringAsync();
+            var responseToml = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             return new StellarToml(responseToml);
         }
         catch (HttpRequestException ex)
@@ -225,7 +226,7 @@ public class StellarToml
                 }
             }
 
-            var response = await client.SendAsync(request);
+            var response = await client.SendAsync(request).ConfigureAwait(false);
 
             if ((int)response.StatusCode >= 300)
             {
@@ -233,7 +234,7 @@ public class StellarToml
                     $"Currency toml not found, response status code {(int)response.StatusCode}");
             }
 
-            var responseToml = await response.Content.ReadAsStringAsync();
+            var responseToml = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var document = Toml.ReadString(responseToml);
             return ParseCurrency(document);
         }

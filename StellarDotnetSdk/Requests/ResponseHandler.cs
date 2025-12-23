@@ -14,7 +14,7 @@ public class ResponseHandler<T> where T : class
     public async Task<T> HandleResponse(HttpResponseMessage response)
     {
         var statusCode = response.StatusCode;
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
         switch ((int)statusCode)
         {

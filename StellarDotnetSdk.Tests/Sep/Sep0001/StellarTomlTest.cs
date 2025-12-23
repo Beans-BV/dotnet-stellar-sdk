@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Sep.Sep0001;
+using StellarDotnetSdk.Sep.Sep0001.Exceptions;
 
 namespace StellarDotnetSdk.Tests.Sep.Sep0001;
 

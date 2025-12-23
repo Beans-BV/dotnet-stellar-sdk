@@ -237,7 +237,7 @@ public class Server : IDisposable
         };
 
         var response = await _httpClient.PostAsync(transactionUriBuilder.Uri, new FormUrlEncodedContent(paramsPairs));
-        var responseString = await response.Content.ReadAsStringAsync();
+        var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
         if (options.EnsureSuccess && !response.IsSuccessStatusCode)
         {

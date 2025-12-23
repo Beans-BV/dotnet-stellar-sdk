@@ -1,6 +1,6 @@
 using System;
 
-namespace StellarDotnetSdk.Sep.Sep0001;
+namespace StellarDotnetSdk.Sep.Sep0001.Exceptions;
 
 /// <summary>
 ///     Exception thrown when stellar.toml parsing or fetching fails.
