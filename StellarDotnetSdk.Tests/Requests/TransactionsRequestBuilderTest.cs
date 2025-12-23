@@ -205,6 +205,34 @@ public class TransactionsRequestBuilderTest
     }
 
     /// <summary>
+    ///     Verifies that TransactionsRequestBuilder.ForAccount throws ArgumentException when account is empty.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ForAccount_WithEmptyAccount_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act & Assert
+        _ = server.Transactions.ForAccount("");
+    }
+
+    /// <summary>
+    ///     Verifies that TransactionsRequestBuilder.ForAccount throws ArgumentException when account ID is invalid.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ForAccount_WithInvalidAccountId_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act & Assert
+        _ = server.Transactions.ForAccount("INVALID_ACCOUNT_ID");
+    }
+
+    /// <summary>
     ///     Verifies that TransactionsRequestBuilder.ForClaimableBalance throws ArgumentNullException when claimableBalance is null.
     /// </summary>
     [TestMethod]
