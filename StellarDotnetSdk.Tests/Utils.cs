@@ -23,6 +23,36 @@ namespace StellarDotnetSdk.Tests;
 public static class Utils
 {
     /// <summary>
+    ///     Gets the root path of the test project (StellarDotnetSdk.Tests directory).
+    ///     This is calculated by going up 4 levels from AppContext.BaseDirectory
+    ///     (bin/Debug/net8.0 -> Debug -> bin -> StellarDotnetSdk.Tests).
+    /// </summary>
+    /// <returns>The absolute path to the test project root directory.</returns>
+    private static string GetTestProjectRoot()
+    {
+        var baseDir = AppContext.BaseDirectory;
+        // Go up 4 levels: bin/Debug/net8.0 -> Debug -> bin -> StellarDotnetSdk.Tests
+        for (var i = 0; i < 4; i++)
+        {
+            baseDir = Path.GetDirectoryName(baseDir);
+        }
+
+        return baseDir ?? ".";
+    }
+
+    /// <summary>
+    ///     Gets the absolute path to a test data file.
+    /// </summary>
+    /// <param name="jsonFilePath">Path of the test data file (relative to TestData directory or just filename).</param>
+    /// <param name="testFilePath">Caller file path (automatically provided by compiler).</param>
+    /// <returns>The absolute path to the test data file.</returns>
+    public static string GetTestDataAbsolutePath(string jsonFilePath, [CallerFilePath] string testFilePath = "")
+    {
+        var relativePath = GetTestDataPath(jsonFilePath, testFilePath);
+        return Path.Combine(GetTestProjectRoot(), relativePath);
+    }
+
+    /// <summary>
     ///     Gets the path to the JSON data file relative to the calling test.
     ///     By default, the JSON data files should have the same directory structure as their tests, but under /TestData.
     ///     For example, if the test is in Responses\Effects\LiquidityPoolEffectResponseTest, then the JSON file is located in
@@ -48,9 +78,7 @@ public static class Utils
         // AppContext.BaseDirectory would be /home/runner/work/dotnet-stellar-sdk/dotnet-stellar-sdk/StellarDotnetSdk.Tests/bin/Release/net8.0 on Linux
         // and C:\workspace\dotnet-stellar-sdk\StellarDotnetSdk.Tests\bin\Release\net8.0 on Windows
         // rootPath would be something like C:\workspace\dotnet-stellar-sdk\StellarDotnetSdk.Tests\ on Windows
-        var rootPath =
-            Path.GetDirectoryName(
-                Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(AppContext.BaseDirectory))));
+        var rootPath = GetTestProjectRoot();
 
         var testFileDirectoryPath = Path.GetDirectoryName(testFilePath);
         // Would be responses\Effects\

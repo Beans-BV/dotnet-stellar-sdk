@@ -84,7 +84,7 @@ public class FederationServer : IDisposable
                 throw new StellarTomlNotFoundInvalidException();
             }
 
-            var responseToml = await response.Content.ReadAsStringAsync();
+            var responseToml = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             stellarToml = Toml.ReadString(responseToml);
         }
         catch (HttpRequestException e)

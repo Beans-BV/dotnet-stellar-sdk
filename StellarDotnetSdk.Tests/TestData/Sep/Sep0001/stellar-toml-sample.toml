@@ -1,0 +1,105 @@
+# Sample stellar.toml
+VERSION="2.0.0"
+
+NETWORK_PASSPHRASE="Public Global Stellar Network ; September 2015"
+FEDERATION_SERVER="https://stellarid.io/federation/"
+AUTH_SERVER="https://api.domain.com/auth"
+TRANSFER_SERVER="https://api.domain.com"
+TRANSFER_SERVER_SEP0024="https://api.domain.com/sep24"
+KYC_SERVER="https://api.domain.com/kyc"
+WEB_AUTH_ENDPOINT="https://api.domain.com/auth"
+SIGNING_KEY="GBBHQ7H4V6RRORKYLHTCAWP6MOHNORRFJSDPXDFYDGJB2LPZUFPXUEW3"
+HORIZON_URL="https://horizon.domain.com"
+ACCOUNTS=[
+"GD5DJQDDBKGAYNEAXU562HYGOOSYAEOO6AS53PZXBOZGCP5M2OPGMZV3",
+"GAENZLGHJGJRCMX5VCHOLHQXU3EMCU5XWDNU4BGGJFNLI2EL354IVBK7",
+"GAOO3LWBC4XF6VWRP5ESJ6IBHAISVJMSBTALHOQM2EZG7Q477UWA6L7U"
+]
+URI_REQUEST_SIGNING_KEY="GBWMCCC3NHSKLAOJDBKKYW7SSH2PFTTNVFKWSGLWGDLEBKLOVP5JLBBP"
+DIRECT_PAYMENT_SERVER="https://test.direct-payment.com"
+ANCHOR_QUOTE_SERVER="https://test.anchor-quote.com"
+WEB_AUTH_FOR_CONTRACTS_ENDPOINT="https://api.example.com:8001/contracts/auth"
+WEB_AUTH_CONTRACT_ID="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+
+[DOCUMENTATION]
+ORG_NAME="Organization Name"
+ORG_DBA="Organization DBA"
+ORG_URL="https://www.domain.com"
+ORG_LOGO="https://www.domain.com/awesomelogo.png"
+ORG_DESCRIPTION="Description of issuer"
+ORG_PHYSICAL_ADDRESS="123 Sesame Street, New York, NY 12345, United States"
+ORG_PHYSICAL_ADDRESS_ATTESTATION="https://www.domain.com/address_attestation.jpg"
+ORG_PHONE_NUMBER="+14155552671"
+ORG_PHONE_NUMBER_ATTESTATION="https://www.domain.com/phone_attestation.jpg"
+ORG_KEYBASE="accountname"
+ORG_TWITTER="orgtweet"
+ORG_GITHUB="orgcode"
+ORG_OFFICIAL_EMAIL="info@domain.com"
+ORG_SUPPORT_EMAIL="support@domain.com"
+ORG_LICENSING_AUTHORITY="State Banking Authority"
+ORG_LICENSE_TYPE="Money Transmitter"
+ORG_LICENSE_NUMBER="MT-12345"
+
+[[PRINCIPALS]]
+name="Jane Jedidiah Johnson"
+email="jane@domain.com"
+keybase="crypto_jane"
+twitter="crypto_jane"
+github="crypto_jane"
+id_photo_hash="be688838ca8686e5c90689bf2ab585cef1137c999b48c70b92f67a5c34dc15697b5d11c982ed6d71be1e1e7f7b4e0733884aa97c3f7a339a8ed03577cf74be09"
+verification_photo_hash="016ba8c4cfde65af99cb5fa8b8a37e2eb73f481b3ae34991666df2e04feb6c038666ebd1ec2b6f623967756033c702dde5f423f7d47ab6ed1827ff53783731f7"
+
+[[CURRENCIES]]
+code="USD"
+issuer="GCZJM35NKGVK47BB4SPBDV25477PZYIYPVVG453LPYFNXLS3FGHDXOCM"
+display_decimals=2
+
+[[CURRENCIES]]
+code="BTC"
+issuer="GAOO3LWBC4XF6VWRP5ESJ6IBHAISVJMSBTALHOQM2EZG7Q477UWA6L7U"
+display_decimals=7
+anchor_asset_type="crypto"
+anchor_asset="BTC"
+redemption_instructions="Use SEP6 with our federation server"
+collateral_addresses=["2C1mCx3ukix1KfegAY5zgQJV7sanAciZpv"]
+collateral_address_signatures=["304502206e21798a42fae0e854281abd38bacd1aeed3ee3738d9e1446618c4571d10"]
+
+[[CURRENCIES]]
+code="GOAT"
+issuer="GD5T6IPRNCKFOHQWT264YPKOZAWUMMZOLZBJ6BNQMUGPWGRLBK3U7ZNP"
+display_decimals=2
+name="goat share"
+desc="1 GOAT token entitles you to a share of revenue from Elkins Goat Farm."
+conditions="There will only ever be 10,000 GOAT tokens in existence. We will distribute the revenue share annually on Jan. 15th"
+image="https://static.thenounproject.com/png/2292360-200.png"
+fixed_number=10000
+
+[[CURRENCIES]]
+code="CCRT"
+issuer="GD5T6IPRNCKFOHQWT264YPKOZAWUMMZOLZBJ6BNQMUGPWGRLBK3U7ZNP"
+contract="CC4DZNN2TPLUOAIRBI3CY7TGRFFCCW6GNVVRRQ3QIIBY6TM6M2RVMBMC"
+display_decimals=2
+name="ccrt"
+desc="contract test"
+
+[[VALIDATORS]]
+ALIAS="domain-au"
+DISPLAY_NAME="Domain Australia"
+HOST="core-au.domain.com:11625"
+PUBLIC_KEY="GD5DJQDDBKGAYNEAXU562HYGOOSYAEOO6AS53PZXBOZGCP5M2OPGMZV3"
+HISTORY="http://history.domain.com/prd/core-live/core_live_001/"
+
+[[VALIDATORS]]
+ALIAS="domain-sg"
+DISPLAY_NAME="Domain Singapore"
+HOST="core-sg.domain.com:11625"
+PUBLIC_KEY="GAENZLGHJGJRCMX5VCHOLHQXU3EMCU5XWDNU4BGGJFNLI2EL354IVBK7"
+HISTORY="http://history.domain.com/prd/core-live/core_live_002/"
+
+[[VALIDATORS]]
+ALIAS="domain-us"
+DISPLAY_NAME="Domain United States"
+HOST="core-us.domain.com:11625"
+PUBLIC_KEY="GAOO3LWBC4XF6VWRP5ESJ6IBHAISVJMSBTALHOQM2EZG7Q477UWA6L7U"
+HISTORY="http://history.domain.com/prd/core-live/core_live_003/"
+

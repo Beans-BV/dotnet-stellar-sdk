@@ -25,11 +25,15 @@
 `dotnet-stellar-sdk` is a .NET library for communicating with
 a [Stellar Horizon server](https://github.com/stellar/go/tree/master/services/horizon)
 or [Stellar RPC server](https://developers.stellar.org/docs/data/rpc).
-<br />
+
+
 It is used for building Stellar apps.
-<br />
+
 _This project originated as a full port of the
 official [Java SDK API](https://github.com/lightsail-network/java-stellar-sdk)._
+
+_The SEP (Stellar Ecosystem Proposal) protocol implementations were ported from the
+[Flutter SDK](https://github.com/Soneso/stellar_flutter_sdk)._
 
 ## Features
 

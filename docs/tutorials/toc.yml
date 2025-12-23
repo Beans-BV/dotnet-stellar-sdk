@@ -24,3 +24,7 @@
   items:
   - href: examples/http-retry.md
     name: HTTP Retry Configuration
+- name: SEP Examples
+  items:
+  - href: examples/sep-0001-stellar-toml.md
+    name: SEP-0001: stellar.toml
