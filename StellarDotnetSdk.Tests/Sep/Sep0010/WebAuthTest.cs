@@ -36,6 +36,7 @@ public class WebAuthTest
     private const string WebAuthDomain = "thisisatest.sandbox.anchor.webauth.com";
     private const string ClientDomain = "thisisatest.sandbox.anchor.client.com";
     private const string AuthEndpoint = "https://thisisatest.sandbox.anchor.webauth.com/auth";
+    private const string MuxedAccountId = "MAAAAAAAAAAAJURAAB2X52XFQP6FBXLGT6LWOOWMEXWHEWBDVRZ7V5WH34Y22MPFBHUHY";
 
     private Network _testnet = null!;
     private KeyPair _clientKeypair = null!;
@@ -86,6 +87,92 @@ SIGNING_KEY = ""{signingKey}""
             validFrom: DateTimeOffset.UtcNow);
 
         return transaction.ToEnvelopeXdrBase64();
+    }
+
+    /// <summary>
+    ///     Creates a WebAuth instance with optional HttpClient, custom headers, and grace period.
+    /// </summary>
+    private WebAuth CreateWebAuth(
+        HttpClient? httpClient = null,
+        Dictionary<string, string>? customHeaders = null,
+        int? gracePeriod = null)
+    {
+        return httpClient != null
+            ? new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient, customHeaders, gracePeriod)
+            : new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, gracePeriod: gracePeriod);
+    }
+
+    /// <summary>
+    ///     Wrapper class to hold captured HTTP request messages.
+    /// </summary>
+    private class RequestCapture
+    {
+        public HttpRequestMessage? Request { get; set; }
+    }
+
+    /// <summary>
+    ///     Creates a mock HttpClient that captures the request message for verification.
+    /// </summary>
+    private (HttpClient HttpClient, RequestCapture Capture) CreateMockHttpClientWithCapturedRequest(
+        string content,
+        HttpStatusCode statusCode = HttpStatusCode.OK)
+    {
+        var mockHandler = new Moq.Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
+        var capture = new RequestCapture();
+        mockHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>()))
+            .Callback<HttpRequestMessage>(req => capture.Request = req)
+            .Returns(new HttpResponseMessage
+            {
+                StatusCode = statusCode,
+                Content = new StringContent(content),
+            });
+
+        return (new HttpClient(mockHandler.Object), capture);
+    }
+
+    /// <summary>
+    ///     Creates a signed transaction XDR for validation testing.
+    /// </summary>
+    private string CreateSignedTransactionXdr(
+        Account transactionSource,
+        StellarDotnetSdk.Operations.Operation operation,
+        KeyPair signer,
+        long? sequenceNumber = null,
+        TimeBounds? timeBounds = null)
+    {
+        if (sequenceNumber.HasValue)
+        {
+            transactionSource = new Account(transactionSource.KeyPair, sequenceNumber.Value);
+        }
+
+        var builder = new TransactionBuilder(transactionSource)
+            .AddOperation(operation);
+
+        if (timeBounds != null)
+        {
+            builder.AddPreconditions(new TransactionPreconditions { TimeBounds = timeBounds });
+        }
+        else
+        {
+            builder.AddPreconditions(new TransactionPreconditions
+            {
+                TimeBounds = new TimeBounds(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddSeconds(1000))
+            });
+        }
+
+        var transaction = builder.Build();
+        transaction.Sign(signer);
+        return transaction.ToEnvelopeXdrBase64();
+    }
+
+    /// <summary>
+    ///     Creates a signed challenge transaction XDR for testing.
+    /// </summary>
+    private string CreateSignedChallengeXdr(string clientAccountId, KeyPair[] signers, HttpClient? httpClient = null)
+    {
+        var challengeXdr = CreateChallengeTransactionXdr(clientAccountId);
+        var webAuth = CreateWebAuth(httpClient);
+        return webAuth.SignTransaction(challengeXdr, signers);
     }
 
     /// <summary>
@@ -155,7 +242,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var responseJson = JsonSerializer.Serialize(challengeResponse, JsonOptions.DefaultOptions);
 
         using var httpClient = CreateMockHttpClient(responseJson);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuth = CreateWebAuth(httpClient);
 
         // Act
         var result = await webAuth.GetChallengeResponseAsync(_clientKeypair.AccountId);
@@ -176,7 +263,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var responseJson = JsonSerializer.Serialize(challengeResponse, JsonOptions.DefaultOptions);
 
         using var httpClient = CreateMockHttpClient(responseJson);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuth = CreateWebAuth(httpClient);
 
         // Act & Assert
         await Assert.ThrowsExceptionAsync<MissingTransactionInChallengeResponseException>(async () =>
@@ -192,14 +279,13 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public async Task GetChallengeResponseAsync_MemoWithMuxedAccount_ThrowsNoMemoForMuxedAccountsException()
     {
         // Arrange
-        var muxedAccountId = "MAAAAAAAAAAAJURAAB2X52XFQP6FBXLGT6LWOOWMEXWHEWBDVRZ7V5WH34Y22MPFBHUHY";
         using var httpClient = CreateMockHttpClient("{}");
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuth = CreateWebAuth(httpClient);
 
         // Act & Assert
         await Assert.ThrowsExceptionAsync<NoMemoForMuxedAccountsException>(async () =>
         {
-            await webAuth.GetChallengeResponseAsync(muxedAccountId, memo: 123);
+            await webAuth.GetChallengeResponseAsync(MuxedAccountId, memo: 123);
         });
     }
 
@@ -210,23 +296,16 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public void ValidateChallenge_InvalidSequenceNumber_ThrowsChallengeValidationErrorInvalidSeqNr()
     {
         // Arrange
-        var transactionSource = new Account(_serverKeypair.Address, 1234);
+        var transactionSource = new Account(_serverKeypair.Address, -1);
         var opSource = new Account(_clientKeypair.Address, 0);
 
         var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation($"{HomeDomain} auth", base64Data, opSource.KeyPair);
-        var transaction = new TransactionBuilder(transactionSource)
-            .AddOperation(operation)
-            .AddPreconditions(new TransactionPreconditions
-                { TimeBounds = new TimeBounds(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddSeconds(1000)) })
-            .Build();
+        var challengeXdr = CreateSignedTransactionXdr(transactionSource, operation, _serverKeypair, sequenceNumber: 1234);
 
-        transaction.Sign(_serverKeypair);
-        var challengeXdr = transaction.ToEnvelopeXdrBase64();
-
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidSeqNr>(() =>
@@ -243,7 +322,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     {
         // Arrange
         var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, "wrong.domain.com");
+        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, "wrong.domain.com"); // Different domain for test
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidHomeDomain>(() =>
@@ -269,7 +348,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
             validFor: TimeSpan.FromMinutes(5));
 
         var challengeXdr = transaction.ToEnvelopeXdrBase64();
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidTimeBounds>(() =>
@@ -297,7 +376,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         transaction.Sign(_clientKeypair);
 
         var challengeXdr = transaction.ToEnvelopeXdrBase64();
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidSignature>(() =>
@@ -313,7 +392,6 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public void ValidateChallenge_MemoWithMuxedAccount_ThrowsChallengeValidationErrorMemoAndMuxedAccount()
     {
         // Arrange
-        var muxedAccountId = "MAAAAAAAAAAAJURAAB2X52XFQP6FBXLGT6LWOOWMEXWHEWBDVRZ7V5WH34Y22MPFBHUHY";
         var transaction = WebAuthentication.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
@@ -331,12 +409,12 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         transactionWithMemo.Sign(_serverKeypair);
         var challengeXdr = transactionWithMemo.ToEnvelopeXdrBase64();
 
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorMemoAndMuxedAccount>(() =>
         {
-            webAuth.ValidateChallenge(challengeXdr, muxedAccountId);
+            webAuth.ValidateChallenge(challengeXdr, MuxedAccountId);
         });
     }
 
@@ -348,7 +426,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     {
         // Arrange
         var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act
         var signedXdr = webAuth.SignTransaction(challengeXdr, new[] { _clientKeypair });
@@ -366,14 +444,14 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     {
         // Arrange
         var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
         var signedXdr = webAuth.SignTransaction(challengeXdr, new[] { _clientKeypair });
 
         var submitResponse = new SubmitChallengeResponse { Token = "test.jwt.token" };
         var responseJson = JsonSerializer.Serialize(submitResponse, JsonOptions.DefaultOptions);
 
         using var httpClient = CreateMockHttpClient(responseJson);
-        var webAuthWithClient = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuthWithClient = CreateWebAuth(httpClient);
 
         // Act
         var jwtToken = await webAuthWithClient.SendSignedChallengeAsync(signedXdr);
@@ -389,15 +467,13 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public async Task SendSignedChallengeAsync_Http400_ThrowsSubmitChallengeErrorResponseException()
     {
         // Arrange
-        var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
-        var signedXdr = webAuth.SignTransaction(challengeXdr, new[] { _clientKeypair });
+        var signedXdr = CreateSignedChallengeXdr(_clientKeypair.AccountId, new[] { _clientKeypair });
 
         var submitResponse = new SubmitChallengeResponse { Error = "Invalid signature" };
         var responseJson = JsonSerializer.Serialize(submitResponse, JsonOptions.DefaultOptions);
 
         using var httpClient = CreateMockHttpClient(responseJson, HttpStatusCode.BadRequest);
-        var webAuthWithClient = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuthWithClient = CreateWebAuth(httpClient);
 
         // Act & Assert
         var ex = await Assert.ThrowsExceptionAsync<SubmitChallengeErrorResponseException>(async () =>
@@ -415,12 +491,10 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public async Task SendSignedChallengeAsync_Http504_ThrowsSubmitChallengeTimeoutResponseException()
     {
         // Arrange
-        var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
-        var signedXdr = webAuth.SignTransaction(challengeXdr, new[] { _clientKeypair });
+        var signedXdr = CreateSignedChallengeXdr(_clientKeypair.AccountId, new[] { _clientKeypair });
 
         using var httpClient = CreateMockHttpClient("", HttpStatusCode.GatewayTimeout);
-        var webAuthWithClient = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuthWithClient = CreateWebAuth(httpClient);
 
         // Act & Assert
         await Assert.ThrowsExceptionAsync<SubmitChallengeTimeoutResponseException>(async () =>
@@ -471,7 +545,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
             });
 
         using var httpClient = new HttpClient(mockHandler.Object);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuth = CreateWebAuth(httpClient);
 
         // Act
         var jwtToken = await webAuth.JwtTokenAsync(_clientKeypair.AccountId, new[] { _clientKeypair });
@@ -487,14 +561,13 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public async Task JwtTokenAsync_MemoWithMuxedAccount_ThrowsNoMemoForMuxedAccountsException()
     {
         // Arrange
-        var muxedAccountId = "MAAAAAAAAAAAJURAAB2X52XFQP6FBXLGT6LWOOWMEXWHEWBDVRZ7V5WH34Y22MPFBHUHY";
         using var httpClient = CreateMockHttpClient("{}");
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuth = CreateWebAuth(httpClient);
 
         // Act & Assert
         await Assert.ThrowsExceptionAsync<NoMemoForMuxedAccountsException>(async () =>
         {
-            await webAuth.JwtTokenAsync(muxedAccountId, new[] { _clientKeypair }, memo: 123);
+            await webAuth.JwtTokenAsync(MuxedAccountId, new[] { _clientKeypair }, memo: 123);
         });
     }
 
@@ -510,7 +583,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var challengeJson = JsonSerializer.Serialize(challengeResponse, JsonOptions.DefaultOptions);
 
         using var httpClient = CreateMockHttpClient(challengeJson);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuth = CreateWebAuth(httpClient);
 
         ClientDomainSigningDelegate delegateFunc = async (xdr) => await Task.FromResult(xdr);
 
@@ -531,7 +604,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public void Dispose_WithInternalHttpClient_DisposesHttpClient()
     {
         // Arrange
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act
         webAuth.Dispose();
@@ -548,7 +621,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     {
         // Arrange
         using var httpClient = CreateMockHttpClient("{}");
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuth = CreateWebAuth(httpClient);
 
         // Act
         webAuth.Dispose();
@@ -565,7 +638,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     {
         // Arrange
         using var httpClient = CreateMockHttpClient("Error", HttpStatusCode.BadRequest);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuth = CreateWebAuth(httpClient);
 
         // Act & Assert
         var ex = await Assert.ThrowsExceptionAsync<ChallengeRequestErrorException>(async () =>
@@ -596,7 +669,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         transaction.Sign(_serverKeypair);
         var challengeXdr = transaction.ToEnvelopeXdrBase64();
 
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidOperationType>(() =>
@@ -628,7 +701,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         transaction.Sign(_serverKeypair);
         var challengeXdr = transaction.ToEnvelopeXdrBase64();
 
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidSourceAccount>(() =>
@@ -661,7 +734,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         transactionWithMemo.Sign(_serverKeypair);
         var challengeXdr = transactionWithMemo.ToEnvelopeXdrBase64();
 
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidMemoType>(() =>
@@ -694,7 +767,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         transactionWithMemo.Sign(_serverKeypair);
         var challengeXdr = transactionWithMemo.ToEnvelopeXdrBase64();
 
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidMemoValue>(() =>
@@ -718,7 +791,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
             validFrom: DateTimeOffset.UtcNow);
 
         var challengeXdr = transaction.ToEnvelopeXdrBase64();
-        // Use different auth endpoint domain
+        // Use different auth endpoint domain for test
         var webAuth = new WebAuth("https://wrong.domain.com/auth", _testnet, _serverSigningKey, HomeDomain);
 
         // Act & Assert
@@ -735,12 +808,10 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public async Task SendSignedChallengeAsync_UnexpectedStatusCode_ThrowsSubmitChallengeUnknownResponseException()
     {
         // Arrange
-        var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
-        var signedXdr = webAuth.SignTransaction(challengeXdr, new[] { _clientKeypair });
+        var signedXdr = CreateSignedChallengeXdr(_clientKeypair.AccountId, new[] { _clientKeypair });
 
         using var httpClient = CreateMockHttpClient("Internal Server Error", HttpStatusCode.InternalServerError);
-        var webAuthWithClient = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuthWithClient = CreateWebAuth(httpClient);
 
         // Act & Assert
         var ex = await Assert.ThrowsExceptionAsync<SubmitChallengeUnknownResponseException>(async () =>
@@ -759,7 +830,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     {
         // Arrange
         var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert - Should not throw
         webAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId);
@@ -773,7 +844,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     {
         // Arrange
         var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, gracePeriod: 600);
+        var webAuth = CreateWebAuth(gracePeriod: 600);
 
         // Act & Assert - Should not throw
         webAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId, _clientKeypair.AccountId, 600);
@@ -790,27 +861,18 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var challengeResponse = new ChallengeResponse { Transaction = challengeXdr };
         var responseJson = JsonSerializer.Serialize(challengeResponse, JsonOptions.DefaultOptions);
 
-        var mockHandler = new Moq.Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
-        HttpRequestMessage? capturedRequest = null;
-        mockHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>()))
-            .Callback<HttpRequestMessage>(req => capturedRequest = req)
-            .Returns(new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(responseJson),
-            });
-
-        using var httpClient = new HttpClient(mockHandler.Object);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var (httpClient, capture) = CreateMockHttpClientWithCapturedRequest(responseJson);
+        using var httpClientDisposable = httpClient;
+        var webAuth = CreateWebAuth(httpClientDisposable);
 
         // Act
         await webAuth.GetChallengeResponseAsync(_clientKeypair.AccountId, memo: 12345, homeDomain: "custom.domain");
 
         // Assert
-        Assert.IsNotNull(capturedRequest);
-        Assert.IsTrue(capturedRequest.RequestUri!.Query.Contains("account="));
-        Assert.IsTrue(capturedRequest.RequestUri.Query.Contains("memo=12345"));
-        Assert.IsTrue(capturedRequest.RequestUri.Query.Contains("home_domain=custom.domain"));
+        Assert.IsNotNull(capture.Request);
+        Assert.IsTrue(capture.Request.RequestUri!.Query.Contains("account="));
+        Assert.IsTrue(capture.Request.RequestUri.Query.Contains("memo=12345"));
+        Assert.IsTrue(capture.Request.RequestUri.Query.Contains("home_domain=custom.domain"));
     }
 
     /// <summary>
@@ -824,26 +886,17 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var challengeResponse = new ChallengeResponse { Transaction = challengeXdr };
         var responseJson = JsonSerializer.Serialize(challengeResponse, JsonOptions.DefaultOptions);
 
-        var mockHandler = new Moq.Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
-        HttpRequestMessage? capturedRequest = null;
-        mockHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>()))
-            .Callback<HttpRequestMessage>(req => capturedRequest = req)
-            .Returns(new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(responseJson),
-            });
-
-        using var httpClient = new HttpClient(mockHandler.Object);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var (httpClient, capture) = CreateMockHttpClientWithCapturedRequest(responseJson);
+        using var httpClientDisposable = httpClient;
+        var webAuth = CreateWebAuth(httpClientDisposable);
 
         // Act
         await webAuth.GetChallengeResponseAsync(_clientKeypair.AccountId, clientDomain: ClientDomain);
 
         // Assert
-        Assert.IsNotNull(capturedRequest);
-        Assert.IsTrue(capturedRequest.RequestUri!.Query.Contains("account="));
-        Assert.IsTrue(capturedRequest.RequestUri.Query.Contains($"client_domain={Uri.EscapeDataString(ClientDomain)}"));
+        Assert.IsNotNull(capture.Request);
+        Assert.IsTrue(capture.Request.RequestUri!.Query.Contains("account="));
+        Assert.IsTrue(capture.Request.RequestUri.Query.Contains($"client_domain={Uri.EscapeDataString(ClientDomain)}"));
     }
 
     /// <summary>
@@ -874,7 +927,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
             { "X-Custom-Header", "custom-value" },
             { "Authorization", "Bearer token123" }
         };
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient, customHeaders);
+        var webAuth = CreateWebAuth(httpClient, customHeaders);
 
         // Act
         await webAuth.GetChallengeResponseAsync(_clientKeypair.AccountId);
@@ -896,7 +949,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         // Arrange
         // Invalid JSON that deserializes to null
         using var httpClient = CreateMockHttpClient("null", HttpStatusCode.OK);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuth = CreateWebAuth(httpClient);
 
         // Act & Assert
         var ex = await Assert.ThrowsExceptionAsync<ChallengeRequestErrorException>(async () =>
@@ -926,7 +979,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
 
         // Transaction already has MemoNone, but we expect a memo
         var challengeXdr = transaction.ToEnvelopeXdrBase64();
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidMemoValue>(() =>
@@ -956,7 +1009,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         transaction.Sign(_serverKeypair);
         var challengeXdr = transaction.ToEnvelopeXdrBase64();
 
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidSourceAccount>(() =>
@@ -993,7 +1046,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         transactionWithClientDomain.Sign(_serverKeypair);
         var challengeXdr = transactionWithClientDomain.ToEnvelopeXdrBase64();
 
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidSourceAccount>(() =>
@@ -1029,7 +1082,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         transactionWithSecondOp.Sign(_serverKeypair);
         var challengeXdr = transactionWithSecondOp.ToEnvelopeXdrBase64();
 
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidSourceAccount>(() =>
@@ -1068,7 +1121,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         TransactionEnvelope.Encode(outputStream, emptySignaturesEnvelope);
         var challengeXdr = Convert.ToBase64String(outputStream.ToArray());
 
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidSignature>(() =>
@@ -1084,9 +1137,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public async Task SendSignedChallengeAsync_SkipsContentTypeHeader_DoesNotOverrideExplicitContentType()
     {
         // Arrange
-        var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
-        var signedXdr = webAuth.SignTransaction(challengeXdr, new[] { _clientKeypair });
+        var signedXdr = CreateSignedChallengeXdr(_clientKeypair.AccountId, new[] { _clientKeypair });
 
         var submitResponse = new SubmitChallengeResponse { Token = "test.jwt.token" };
         var responseJson = JsonSerializer.Serialize(submitResponse, JsonOptions.DefaultOptions);
@@ -1108,7 +1159,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
             { "Content-Type", "application/xml" }, // Should be skipped
             { "X-Custom-Header", "custom-value" } // Should be added
         };
-        var webAuthWithClient = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient, customHeaders);
+        var webAuthWithClient = CreateWebAuth(httpClient, customHeaders);
 
         // Act
         await webAuthWithClient.SendSignedChallengeAsync(signedXdr);
@@ -1127,13 +1178,11 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public async Task SendSignedChallengeAsync_NullResponse_ThrowsSubmitChallengeUnknownResponseException()
     {
         // Arrange
-        var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
-        var signedXdr = webAuth.SignTransaction(challengeXdr, new[] { _clientKeypair });
+        var signedXdr = CreateSignedChallengeXdr(_clientKeypair.AccountId, new[] { _clientKeypair });
 
         // Invalid JSON that deserializes to null
         using var httpClient = CreateMockHttpClient("null", HttpStatusCode.OK);
-        var webAuthWithClient = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuthWithClient = CreateWebAuth(httpClient);
 
         // Act & Assert
         var ex = await Assert.ThrowsExceptionAsync<SubmitChallengeUnknownResponseException>(async () =>
@@ -1151,16 +1200,14 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public async Task SendSignedChallengeAsync_NullToken_ThrowsSubmitChallengeUnknownResponseException()
     {
         // Arrange
-        var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
-        var signedXdr = webAuth.SignTransaction(challengeXdr, new[] { _clientKeypair });
+        var signedXdr = CreateSignedChallengeXdr(_clientKeypair.AccountId, new[] { _clientKeypair });
 
         // Response with null token
         var submitResponse = new SubmitChallengeResponse { Token = null };
         var responseJson = JsonSerializer.Serialize(submitResponse, JsonOptions.DefaultOptions);
 
         using var httpClient = CreateMockHttpClient(responseJson, HttpStatusCode.OK);
-        var webAuthWithClient = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient);
+        var webAuthWithClient = CreateWebAuth(httpClient);
 
         // Act & Assert
         var ex = await Assert.ThrowsExceptionAsync<SubmitChallengeUnknownResponseException>(async () =>
@@ -1193,7 +1240,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         transaction.Sign(_serverKeypair);
         var challengeXdr = transaction.ToEnvelopeXdrBase64();
 
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidNonceValue>(() =>
@@ -1223,7 +1270,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         transaction.Sign(_serverKeypair);
         var challengeXdr = transaction.ToEnvelopeXdrBase64();
 
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = CreateWebAuth();
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidNonceValue>(() =>
