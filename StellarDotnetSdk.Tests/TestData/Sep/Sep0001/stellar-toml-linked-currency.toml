@@ -1,0 +1,9 @@
+code="TESTC"
+issuer="GCPWPTAX6QVJQIQARN2WESISHVLN65D4HAGQECHLCAV22UST3W2Q6QTA"
+display_decimals=2
+name="test currency"
+desc="TESTC description"
+conditions="TESTC conditions"
+image="https://soneso.com/123.png"
+fixed_number=10000
+
