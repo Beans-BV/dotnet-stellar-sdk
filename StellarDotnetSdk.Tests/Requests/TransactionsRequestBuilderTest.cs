@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Requests;
@@ -153,5 +154,132 @@ public class TransactionsRequestBuilderTest
         var streamableTest =
             new StreamableTest<TransactionResponse>(json, TransactionDeserializerTest.AssertTransaction);
         await streamableTest.Run();
+    }
+
+    /// <summary>
+    ///     Verifies that TransactionsRequestBuilder.Transaction correctly retrieves and deserializes transaction data from URI.
+    /// </summary>
+    [TestMethod]
+    public async Task Transaction_WithValidUri_ReturnsDeserializedTransaction()
+    {
+        // Arrange
+        using var server = await Utils.CreateTestServerWithJson("Responses/transaction.json");
+        var uri = new Uri("https://horizon-testnet.stellar.org/transactions/991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3");
+
+        // Act
+        var transaction = await server.Transactions.Transaction(uri);
+
+        // Assert
+        TransactionDeserializerTest.AssertTransaction(transaction);
+    }
+
+    /// <summary>
+    ///     Verifies that TransactionsRequestBuilder.Transaction correctly retrieves and deserializes transaction data from transaction ID.
+    /// </summary>
+    [TestMethod]
+    public async Task Transaction_WithValidTransactionId_ReturnsDeserializedTransaction()
+    {
+        // Arrange
+        using var server = await Utils.CreateTestServerWithJson("Responses/transaction.json");
+        const string transactionId = "991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3";
+
+        // Act
+        var transaction = await server.Transactions.Transaction(transactionId);
+
+        // Assert
+        TransactionDeserializerTest.AssertTransaction(transaction);
+    }
+
+    /// <summary>
+    ///     Verifies that TransactionsRequestBuilder.ForAccount throws ArgumentNullException when account is null.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void ForAccount_WithNullAccount_ThrowsArgumentNullException()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act & Assert
+        _ = server.Transactions.ForAccount(null!);
+    }
+
+    /// <summary>
+    ///     Verifies that TransactionsRequestBuilder.ForAccount throws ArgumentException when account is empty.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ForAccount_WithEmptyAccount_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act & Assert
+        _ = server.Transactions.ForAccount("");
+    }
+
+    /// <summary>
+    ///     Verifies that TransactionsRequestBuilder.ForAccount throws ArgumentException when account ID is invalid.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ForAccount_WithInvalidAccountId_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act & Assert
+        _ = server.Transactions.ForAccount("INVALID_ACCOUNT_ID");
+    }
+
+    /// <summary>
+    ///     Verifies that TransactionsRequestBuilder.ForClaimableBalance throws ArgumentNullException when claimableBalance is null.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void ForClaimableBalance_WithNullBalanceId_ThrowsArgumentNullException()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act & Assert
+        _ = server.Transactions.ForClaimableBalance(null!);
+    }
+
+    /// <summary>
+    ///     Verifies that TransactionsRequestBuilder.ForClaimableBalance throws ArgumentNullException when claimableBalance is whitespace.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void ForClaimableBalance_WithWhitespaceBalanceId_ThrowsArgumentNullException()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act & Assert
+        _ = server.Transactions.ForClaimableBalance("   ");
+    }
+
+    /// <summary>
+    ///     Verifies that TransactionsRequestBuilder.IncludeFailed correctly adds include_failed parameter with false value.
+    /// </summary>
+    [TestMethod]
+    public void IncludeFailed_WithFalseValue_AddsIncludeFailedParameter()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act
+        var uri = server.Transactions
+            .ForLedger(200000000000L)
+            .IncludeFailed(false)
+            .Limit(50)
+            .Order(OrderDirection.ASC)
+            .BuildUri();
+
+        // Assert
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/ledgers/200000000000/transactions?include_failed=false&limit=50&order=asc",
+            uri.ToString());
     }
 }

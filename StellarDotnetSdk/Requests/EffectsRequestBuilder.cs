@@ -19,7 +19,12 @@ public class EffectsRequestBuilder : RequestBuilderStreamable<EffectsRequestBuil
     /// <param name="account">Account for which to get effects</param>
     public EffectsRequestBuilder ForAccount(string account)
     {
-        account = account ?? throw new ArgumentNullException(nameof(account), "account cannot be null");
+        ArgumentException.ThrowIfNullOrEmpty(account);
+
+        if (!StrKey.IsValidEd25519PublicKey(account))
+        {
+            throw new ArgumentException($"Invalid account ID {account}");
+        }
         SetSegments("accounts", account, "effects");
         return this;
     }
@@ -42,8 +47,8 @@ public class EffectsRequestBuilder : RequestBuilderStreamable<EffectsRequestBuil
     /// <param name="transactionId">Transaction ID for which to get effects</param>
     public EffectsRequestBuilder ForTransaction(string transactionId)
     {
-        transactionId = transactionId ??
-                        throw new ArgumentNullException(nameof(transactionId), "transactionId cannot be null");
+        ArgumentException.ThrowIfNullOrEmpty(transactionId);
+
         SetSegments("transactions", transactionId, "effects");
         return this;
     }
@@ -66,6 +71,8 @@ public class EffectsRequestBuilder : RequestBuilderStreamable<EffectsRequestBuil
 
     public EffectsRequestBuilder ForLiquidityPool(string liquidityPoolId)
     {
+        ArgumentException.ThrowIfNullOrEmpty(liquidityPoolId);
+
         SetSegments("liquidity_pools", liquidityPoolId, "effects");
         return this;
     }

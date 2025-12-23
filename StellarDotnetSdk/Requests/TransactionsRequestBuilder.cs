@@ -45,7 +45,12 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
     /// <param name="account">Account for which to get transactions</param>
     public TransactionsRequestBuilder ForAccount(string account)
     {
-        account = account ?? throw new ArgumentNullException(nameof(account), "account cannot be null");
+        ArgumentException.ThrowIfNullOrEmpty(account);
+
+        if (!StrKey.IsValidEd25519PublicKey(account))
+        {
+            throw new ArgumentException($"Invalid account ID {account}");
+        }
         SetSegments("accounts", account, "transactions");
         return this;
     }

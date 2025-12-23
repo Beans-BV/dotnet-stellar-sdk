@@ -17,12 +17,24 @@ public class PathsRequestBuilder : RequestBuilderExecutePageable<PathsRequestBui
 
     public PathsRequestBuilder DestinationAccount(string account)
     {
+        ArgumentException.ThrowIfNullOrEmpty(account);
+
+        if (!StrKey.IsValidEd25519PublicKey(account))
+        {
+            throw new ArgumentException($"Invalid account ID {account}");
+        }
         UriBuilder.SetQueryParam("destination_account", account);
         return this;
     }
 
     public PathsRequestBuilder SourceAccount(string account)
     {
+        ArgumentException.ThrowIfNullOrEmpty(account);
+
+        if (!StrKey.IsValidEd25519PublicKey(account))
+        {
+            throw new ArgumentException($"Invalid account ID {account}");
+        }
         UriBuilder.SetQueryParam("source_account", account);
         return this;
     }
@@ -37,9 +49,8 @@ public class PathsRequestBuilder : RequestBuilderExecutePageable<PathsRequestBui
     {
         UriBuilder.SetQueryParam("destination_asset_type", asset.Type);
 
-        if (asset is AssetTypeCreditAlphaNum)
+        if (asset is AssetTypeCreditAlphaNum creditAlphaNumAsset)
         {
-            var creditAlphaNumAsset = (AssetTypeCreditAlphaNum)asset;
             UriBuilder.SetQueryParam("destination_asset_code", creditAlphaNumAsset.Code);
             UriBuilder.SetQueryParam("destination_asset_issuer", creditAlphaNumAsset.Issuer);
         }
