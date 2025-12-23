@@ -1,5 +1,7 @@
 {
   "setup-worktree": [
-    "dotnet restore stellar-dotnet-sdk.sln"
+    "dotnet restore stellar-dotnet-sdk.sln",
+    "cp $ROOT_WORKTREE_PATH/.env.mcp .env.mcp",
+    "echo 'Setup complete'"
   ]
 }
