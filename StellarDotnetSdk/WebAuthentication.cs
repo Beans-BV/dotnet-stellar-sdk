@@ -18,6 +18,7 @@ namespace StellarDotnetSdk;
 ///     Implement SEP-10: Stellar Web Authentication.
 ///     https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md
 /// </summary>
+[Obsolete("Use StellarDotnetSdk.Sep.Sep0010.WebAuth instead. This class will be removed in a future version.")]
 public static class WebAuthentication
 {
     private const string WebAuthDataKey = "web_auth_domain";
