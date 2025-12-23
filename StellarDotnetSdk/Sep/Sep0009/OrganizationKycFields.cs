@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace StellarDotnetSdk.Sep.Sep0009;
@@ -62,7 +63,7 @@ public sealed record OrganizationKycFields
     /// <summary>
     ///     Date the organization was registered
     /// </summary>
-    public string? RegistrationDate { get; init; }
+    public DateOnly? RegistrationDate { get; init; }
 
     /// <summary>
     ///     Organization registered address
@@ -159,9 +160,9 @@ public sealed record OrganizationKycFields
         {
             result[RegistrationNumberFieldKey] = RegistrationNumber;
         }
-        if (RegistrationDate is not null)
+        if (RegistrationDate.HasValue)
         {
-            result[RegistrationDateFieldKey] = RegistrationDate;
+            result[RegistrationDateFieldKey] = RegistrationDate.Value.ToString("yyyy-MM-dd");
         }
         if (RegisteredAddress is not null)
         {

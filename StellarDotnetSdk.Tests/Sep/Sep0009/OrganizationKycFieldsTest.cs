@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,12 +19,13 @@ public class OrganizationKycFieldsTest
     public void TextProperties_SetAndGet_WorkCorrectly()
     {
         // Arrange
+        var registrationDate = new DateOnly(2020, 1, 1);
         var fields = new OrganizationKycFields
         {
             Name = "Acme Corp",
             VatNumber = "VAT123456",
             RegistrationNumber = "REG789012",
-            RegistrationDate = "2020-01-01",
+            RegistrationDate = registrationDate,
             RegisteredAddress = "123 Business St",
             ShareholderName = "John Doe",
             AddressCountryCode = "USA",
@@ -40,7 +42,7 @@ public class OrganizationKycFieldsTest
         fields.Name.Should().Be("Acme Corp");
         fields.VatNumber.Should().Be("VAT123456");
         fields.RegistrationNumber.Should().Be("REG789012");
-        fields.RegistrationDate.Should().Be("2020-01-01");
+        fields.RegistrationDate.Should().Be(registrationDate);
         fields.RegisteredAddress.Should().Be("123 Business St");
         fields.ShareholderName.Should().Be("John Doe");
         fields.AddressCountryCode.Should().Be("USA");
@@ -114,12 +116,13 @@ public class OrganizationKycFieldsTest
     public void GetFields_WithAllTextFieldsSet_ReturnsAllFields()
     {
         // Arrange
+        var registrationDate = new DateOnly(2020, 1, 1);
         var fields = new OrganizationKycFields
         {
             Name = "Acme Corp",
             VatNumber = "VAT123456",
             RegistrationNumber = "REG789012",
-            RegistrationDate = "2020-01-01",
+            RegistrationDate = registrationDate,
             RegisteredAddress = "123 Business St",
             ShareholderName = "John Doe",
             AddressCountryCode = "USA",
@@ -150,6 +153,25 @@ public class OrganizationKycFieldsTest
         result.Should().ContainKey(OrganizationKycFields.WebsiteFieldKey).WhoseValue.Should().Be("https://acme.com");
         result.Should().ContainKey(OrganizationKycFields.EmailFieldKey).WhoseValue.Should().Be("contact@acme.com");
         result.Should().ContainKey(OrganizationKycFields.PhoneFieldKey).WhoseValue.Should().Be("+14155552671");
+    }
+
+    /// <summary>
+    ///     Verifies that GetFields formats DateOnly values as ISO 8601 date-only strings.
+    /// </summary>
+    [TestMethod]
+    public void GetFields_WithDateFields_FormatsAsIso8601DateOnly()
+    {
+        // Arrange
+        var fields = new OrganizationKycFields
+        {
+            RegistrationDate = new DateOnly(2020, 1, 15)
+        };
+
+        // Act
+        var result = fields.GetFields();
+
+        // Assert
+        result.Should().ContainKey(OrganizationKycFields.RegistrationDateFieldKey).WhoseValue.Should().Be("2020-01-15");
     }
 
     /// <summary>
