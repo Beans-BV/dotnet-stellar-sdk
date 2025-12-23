@@ -55,6 +55,51 @@ public class PathsRequestBuilderTest
     }
 
     /// <summary>
+    ///     Verifies that PathsRequestBuilder.DestinationAccount throws ArgumentNullException when account is null.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void DestinationAccount_WithNullAccount_ThrowsArgumentNullException()
+    {
+        // Arrange
+        using var httpClient = Utils.CreateFakeHttpClient("");
+        var pathsBuilder = new PathsRequestBuilder(new Uri("https://horizon-testnet.stellar.org"), httpClient);
+
+        // Act & Assert
+        _ = pathsBuilder.DestinationAccount(null!);
+    }
+
+    /// <summary>
+    ///     Verifies that PathsRequestBuilder.DestinationAccount throws ArgumentException when account is empty.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void DestinationAccount_WithEmptyAccount_ThrowsArgumentException()
+    {
+        // Arrange
+        using var httpClient = Utils.CreateFakeHttpClient("");
+        var pathsBuilder = new PathsRequestBuilder(new Uri("https://horizon-testnet.stellar.org"), httpClient);
+
+        // Act & Assert
+        _ = pathsBuilder.DestinationAccount("");
+    }
+
+    /// <summary>
+    ///     Verifies that PathsRequestBuilder.DestinationAccount throws ArgumentException when account ID is invalid.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void DestinationAccount_WithInvalidAccountId_ThrowsArgumentException()
+    {
+        // Arrange
+        using var httpClient = Utils.CreateFakeHttpClient("");
+        var pathsBuilder = new PathsRequestBuilder(new Uri("https://horizon-testnet.stellar.org"), httpClient);
+
+        // Act & Assert
+        _ = pathsBuilder.DestinationAccount("INVALID_ACCOUNT_ID");
+    }
+
+    /// <summary>
     ///     Verifies that PathsRequestBuilder.SourceAccount correctly adds source_account parameter to URI.
     /// </summary>
     [TestMethod]
@@ -73,6 +118,51 @@ public class PathsRequestBuilderTest
         Assert.AreEqual(
             "https://horizon-testnet.stellar.org/paths?source_account=GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7",
             uri.ToString());
+    }
+
+    /// <summary>
+    ///     Verifies that PathsRequestBuilder.SourceAccount throws ArgumentNullException when account is null.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void SourceAccount_WithNullAccount_ThrowsArgumentNullException()
+    {
+        // Arrange
+        using var httpClient = Utils.CreateFakeHttpClient("");
+        var pathsBuilder = new PathsRequestBuilder(new Uri("https://horizon-testnet.stellar.org"), httpClient);
+
+        // Act & Assert
+        _ = pathsBuilder.SourceAccount(null!);
+    }
+
+    /// <summary>
+    ///     Verifies that PathsRequestBuilder.SourceAccount throws ArgumentException when account is empty.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void SourceAccount_WithEmptyAccount_ThrowsArgumentException()
+    {
+        // Arrange
+        using var httpClient = Utils.CreateFakeHttpClient("");
+        var pathsBuilder = new PathsRequestBuilder(new Uri("https://horizon-testnet.stellar.org"), httpClient);
+
+        // Act & Assert
+        _ = pathsBuilder.SourceAccount("");
+    }
+
+    /// <summary>
+    ///     Verifies that PathsRequestBuilder.SourceAccount throws ArgumentException when account ID is invalid.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void SourceAccount_WithInvalidAccountId_ThrowsArgumentException()
+    {
+        // Arrange
+        using var httpClient = Utils.CreateFakeHttpClient("");
+        var pathsBuilder = new PathsRequestBuilder(new Uri("https://horizon-testnet.stellar.org"), httpClient);
+
+        // Act & Assert
+        _ = pathsBuilder.SourceAccount("INVALID_ACCOUNT_ID");
     }
 
     /// <summary>
