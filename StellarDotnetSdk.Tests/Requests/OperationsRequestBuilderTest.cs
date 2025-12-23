@@ -241,11 +241,11 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    ///     Verifies that OperationsRequestBuilder.ForAccount throws ArgumentException when account is null.
+    ///     Verifies that OperationsRequestBuilder.ForAccount throws ArgumentNullException when account is null.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void ForAccount_WithNullAccount_ThrowsArgumentException()
+    public void ForAccount_WithNullAccount_ThrowsArgumentNullException()
     {
         // Arrange
         using var server = Utils.CreateTestServerWithContent("");
@@ -269,11 +269,11 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    ///     Verifies that OperationsRequestBuilder.ForClaimableBalance throws ArgumentException when balance ID is null.
+    ///     Verifies that OperationsRequestBuilder.ForClaimableBalance throws ArgumentNullException when balance ID is null.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void ForClaimableBalance_WithNullBalanceId_ThrowsArgumentException()
+    public void ForClaimableBalance_WithNullBalanceId_ThrowsArgumentNullException()
     {
         // Arrange
         using var server = Utils.CreateTestServerWithContent("");
@@ -297,11 +297,11 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    ///     Verifies that OperationsRequestBuilder.ForTransaction throws ArgumentException when transaction ID is null.
+    ///     Verifies that OperationsRequestBuilder.ForTransaction throws ArgumentNullException when transaction ID is null.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void ForTransaction_WithNullTransactionId_ThrowsArgumentException()
+    public void ForTransaction_WithNullTransactionId_ThrowsArgumentNullException()
     {
         // Arrange
         using var server = Utils.CreateTestServerWithContent("");
@@ -348,11 +348,11 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    ///     Verifies that OperationsRequestBuilder.ForLiquidityPool throws ArgumentException when pool ID is null.
+    ///     Verifies that OperationsRequestBuilder.ForLiquidityPool throws ArgumentNullException when pool ID is null.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void ForLiquidityPool_WithNullPoolId_ThrowsArgumentException()
+    public void ForLiquidityPool_WithNullPoolId_ThrowsArgumentNullException()
     {
         // Arrange
         using var server = Utils.CreateTestServerWithContent("");

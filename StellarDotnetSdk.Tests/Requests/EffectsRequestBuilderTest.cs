@@ -188,6 +188,34 @@ public class EffectsRequestBuilderTest
     }
 
     /// <summary>
+    ///     Verifies that EffectsRequestBuilder.ForAccount throws ArgumentException when account is empty.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ForAccount_WithEmptyAccount_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act & Assert
+        _ = server.Effects.ForAccount("");
+    }
+
+    /// <summary>
+    ///     Verifies that EffectsRequestBuilder.ForAccount throws ArgumentException when account ID is invalid.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ForAccount_WithInvalidAccountId_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act & Assert
+        _ = server.Effects.ForAccount("INVALID_ACCOUNT_ID");
+    }
+
+    /// <summary>
     ///     Verifies that EffectsRequestBuilder.ForTransaction throws ArgumentNullException when transactionId is null.
     /// </summary>
     [TestMethod]
@@ -199,6 +227,20 @@ public class EffectsRequestBuilderTest
 
         // Act & Assert
         _ = server.Effects.ForTransaction(null!);
+    }
+
+    /// <summary>
+    ///     Verifies that EffectsRequestBuilder.ForTransaction throws ArgumentException when transaction ID is empty.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ForTransaction_WithEmptyTransactionId_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act & Assert
+        _ = server.Effects.ForTransaction("");
     }
 
     /// <summary>
@@ -247,5 +289,33 @@ public class EffectsRequestBuilderTest
         Assert.AreEqual(
             $"https://horizon-testnet.stellar.org/liquidity_pools/{poolId}/effects?limit=50&order=asc",
             uri.ToString());
+    }
+
+    /// <summary>
+    ///     Verifies that EffectsRequestBuilder.ForLiquidityPool throws ArgumentNullException when pool ID is null.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void ForLiquidityPool_WithNullPoolId_ThrowsArgumentNullException()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act & Assert
+        _ = server.Effects.ForLiquidityPool((string)null!);
+    }
+
+    /// <summary>
+    ///     Verifies that EffectsRequestBuilder.ForLiquidityPool throws ArgumentException when pool ID is empty.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ForLiquidityPool_WithEmptyPoolId_ThrowsArgumentException()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act & Assert
+        _ = server.Effects.ForLiquidityPool("");
     }
 }
