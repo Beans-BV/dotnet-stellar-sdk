@@ -7,10 +7,6 @@ namespace StellarDotnetSdk.Sep.Sep0001;
 /// </summary>
 public class StellarTomlException : Exception
 {
-    public StellarTomlException()
-    {
-    }
-
     public StellarTomlException(string message)
         : base(message)
     {
