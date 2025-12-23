@@ -52,17 +52,17 @@ public class StellarToml
     /// <summary>
     ///     Points of contact from the PRINCIPALS list.
     /// </summary>
-    public List<PointOfContact>? PointsOfContact { get; }
+    public IReadOnlyList<PointOfContact>? PointsOfContact { get; }
 
     /// <summary>
     ///     Currencies from the CURRENCIES list.
     /// </summary>
-    public List<Currency>? Currencies { get; }
+    public IReadOnlyList<Currency>? Currencies { get; }
 
     /// <summary>
     ///     Validators from the VALIDATORS list.
     /// </summary>
-    public List<Validator>? Validators { get; }
+    public IReadOnlyList<Validator>? Validators { get; }
 
     /// <summary>
     ///     Constructs a StellarToml instance by parsing raw TOML content.
@@ -334,62 +334,11 @@ public class StellarToml
 
     private static GeneralInformation ParseGeneralInformation(TomlTable document)
     {
-        var info = new GeneralInformation();
-
-        if (document.TryGetValue("VERSION", out var version))
-        {
-            info.Version = version.Get<string>();
-        }
-
-        if (document.TryGetValue("NETWORK_PASSPHRASE", out var networkPassphrase))
-        {
-            info.NetworkPassphrase = networkPassphrase.Get<string>();
-        }
-
-        if (document.TryGetValue("FEDERATION_SERVER", out var federationServer))
-        {
-            info.FederationServer = federationServer.Get<string>();
-        }
-
-        if (document.TryGetValue("AUTH_SERVER", out var authServer))
-        {
-            info.AuthServer = authServer.Get<string>();
-        }
-
-        if (document.TryGetValue("TRANSFER_SERVER", out var transferServer))
-        {
-            info.TransferServer = transferServer.Get<string>();
-        }
-
-        if (document.TryGetValue("TRANSFER_SERVER_SEP0024", out var transferServerSep24))
-        {
-            info.TransferServerSep24 = transferServerSep24.Get<string>();
-        }
-
-        if (document.TryGetValue("KYC_SERVER", out var kycServer))
-        {
-            info.KycServer = kycServer.Get<string>();
-        }
-
-        if (document.TryGetValue("WEB_AUTH_ENDPOINT", out var webAuthEndpoint))
-        {
-            info.WebAuthEndpoint = webAuthEndpoint.Get<string>();
-        }
-
-        if (document.TryGetValue("SIGNING_KEY", out var signingKey))
-        {
-            info.SigningKey = signingKey.Get<string>();
-        }
-
-        if (document.TryGetValue("HORIZON_URL", out var horizonUrl))
-        {
-            info.HorizonUrl = horizonUrl.Get<string>();
-        }
-
-        if (document.TryGetValue("ACCOUNTS", out var accounts))
+        IReadOnlyCollection<string>? accounts = null;
+        if (document.TryGetValue("ACCOUNTS", out var accountsValue))
         {
             var result = new List<string>();
-            var accountsArray = accounts.Get<TomlArray>();
+            var accountsArray = accountsValue.Get<TomlArray>();
             foreach (var item in accountsArray.Items)
             {
                 var accountValue = item.Get<string>();
@@ -398,35 +347,58 @@ public class StellarToml
                     result.Add(accountValue);
                 }
             }
-            info.Accounts = result.AsReadOnly();
+            accounts = result.AsReadOnly();
         }
 
-        if (document.TryGetValue("URI_REQUEST_SIGNING_KEY", out var uriRequestSigningKey))
+        return new GeneralInformation
         {
-            info.UriRequestSigningKey = uriRequestSigningKey.Get<string>();
-        }
-
-        if (document.TryGetValue("DIRECT_PAYMENT_SERVER", out var directPaymentServer))
-        {
-            info.DirectPaymentServer = directPaymentServer.Get<string>();
-        }
-
-        if (document.TryGetValue("ANCHOR_QUOTE_SERVER", out var anchorQuoteServer))
-        {
-            info.AnchorQuoteServer = anchorQuoteServer.Get<string>();
-        }
-
-        if (document.TryGetValue("WEB_AUTH_FOR_CONTRACTS_ENDPOINT", out var webAuthForContractsEndpoint))
-        {
-            info.WebAuthForContractsEndpoint = webAuthForContractsEndpoint.Get<string>();
-        }
-
-        if (document.TryGetValue("WEB_AUTH_CONTRACT_ID", out var webAuthContractId))
-        {
-            info.WebAuthContractId = webAuthContractId.Get<string>();
-        }
-
-        return info;
+            Version = document.TryGetValue("VERSION", out var version)
+                ? version.Get<string>()
+                : null,
+            NetworkPassphrase = document.TryGetValue("NETWORK_PASSPHRASE", out var networkPassphrase)
+                ? networkPassphrase.Get<string>()
+                : null,
+            FederationServer = document.TryGetValue("FEDERATION_SERVER", out var federationServer)
+                ? federationServer.Get<string>()
+                : null,
+            AuthServer = document.TryGetValue("AUTH_SERVER", out var authServer)
+                ? authServer.Get<string>()
+                : null,
+            TransferServer = document.TryGetValue("TRANSFER_SERVER", out var transferServer)
+                ? transferServer.Get<string>()
+                : null,
+            TransferServerSep24 = document.TryGetValue("TRANSFER_SERVER_SEP0024", out var transferServerSep24)
+                ? transferServerSep24.Get<string>()
+                : null,
+            KycServer = document.TryGetValue("KYC_SERVER", out var kycServer)
+                ? kycServer.Get<string>()
+                : null,
+            WebAuthEndpoint = document.TryGetValue("WEB_AUTH_ENDPOINT", out var webAuthEndpoint)
+                ? webAuthEndpoint.Get<string>()
+                : null,
+            SigningKey = document.TryGetValue("SIGNING_KEY", out var signingKey)
+                ? signingKey.Get<string>()
+                : null,
+            HorizonUrl = document.TryGetValue("HORIZON_URL", out var horizonUrl)
+                ? horizonUrl.Get<string>()
+                : null,
+            Accounts = accounts,
+            UriRequestSigningKey = document.TryGetValue("URI_REQUEST_SIGNING_KEY", out var uriRequestSigningKey)
+                ? uriRequestSigningKey.Get<string>()
+                : null,
+            DirectPaymentServer = document.TryGetValue("DIRECT_PAYMENT_SERVER", out var directPaymentServer)
+                ? directPaymentServer.Get<string>()
+                : null,
+            AnchorQuoteServer = document.TryGetValue("ANCHOR_QUOTE_SERVER", out var anchorQuoteServer)
+                ? anchorQuoteServer.Get<string>()
+                : null,
+            WebAuthForContractsEndpoint = document.TryGetValue("WEB_AUTH_FOR_CONTRACTS_ENDPOINT", out var webAuthForContractsEndpoint)
+                ? webAuthForContractsEndpoint.Get<string>()
+                : null,
+            WebAuthContractId = document.TryGetValue("WEB_AUTH_CONTRACT_ID", out var webAuthContractId)
+                ? webAuthContractId.Get<string>()
+                : null,
+        };
     }
 
     private static Documentation? ParseDocumentation(TomlTable document)
@@ -437,97 +409,64 @@ public class StellarToml
         }
 
         var doc = docTable.Get<TomlTable>();
-        var documentation = new Documentation();
 
-        if (doc.TryGetValue("ORG_NAME", out var orgName))
+        return new Documentation
         {
-            documentation.OrgName = orgName.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_DBA", out var orgDba))
-        {
-            documentation.OrgDba = orgDba.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_URL", out var orgUrl))
-        {
-            documentation.OrgUrl = orgUrl.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_LOGO", out var orgLogo))
-        {
-            documentation.OrgLogo = orgLogo.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_DESCRIPTION", out var orgDescription))
-        {
-            documentation.OrgDescription = orgDescription.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_PHYSICAL_ADDRESS", out var orgPhysicalAddress))
-        {
-            documentation.OrgPhysicalAddress = orgPhysicalAddress.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_PHYSICAL_ADDRESS_ATTESTATION", out var orgPhysicalAddressAttestation))
-        {
-            documentation.OrgPhysicalAddressAttestation = orgPhysicalAddressAttestation.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_PHONE_NUMBER", out var orgPhoneNumber))
-        {
-            documentation.OrgPhoneNumber = orgPhoneNumber.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_PHONE_NUMBER_ATTESTATION", out var orgPhoneNumberAttestation))
-        {
-            documentation.OrgPhoneNumberAttestation = orgPhoneNumberAttestation.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_KEYBASE", out var orgKeybase))
-        {
-            documentation.OrgKeybase = orgKeybase.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_TWITTER", out var orgTwitter))
-        {
-            documentation.OrgTwitter = orgTwitter.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_GITHUB", out var orgGithub))
-        {
-            documentation.OrgGithub = orgGithub.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_OFFICIAL_EMAIL", out var orgOfficialEmail))
-        {
-            documentation.OrgOfficialEmail = orgOfficialEmail.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_SUPPORT_EMAIL", out var orgSupportEmail))
-        {
-            documentation.OrgSupportEmail = orgSupportEmail.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_LICENSING_AUTHORITY", out var orgLicensingAuthority))
-        {
-            documentation.OrgLicensingAuthority = orgLicensingAuthority.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_LICENSE_TYPE", out var orgLicenseType))
-        {
-            documentation.OrgLicenseType = orgLicenseType.Get<string>();
-        }
-
-        if (doc.TryGetValue("ORG_LICENSE_NUMBER", out var orgLicenseNumber))
-        {
-            documentation.OrgLicenseNumber = orgLicenseNumber.Get<string>();
-        }
-
-        return documentation;
+            OrgName = doc.TryGetValue("ORG_NAME", out var orgName)
+                ? orgName.Get<string>()
+                : null,
+            OrgDba = doc.TryGetValue("ORG_DBA", out var orgDba)
+                ? orgDba.Get<string>()
+                : null,
+            OrgUrl = doc.TryGetValue("ORG_URL", out var orgUrl)
+                ? orgUrl.Get<string>()
+                : null,
+            OrgLogo = doc.TryGetValue("ORG_LOGO", out var orgLogo)
+                ? orgLogo.Get<string>()
+                : null,
+            OrgDescription = doc.TryGetValue("ORG_DESCRIPTION", out var orgDescription)
+                ? orgDescription.Get<string>()
+                : null,
+            OrgPhysicalAddress = doc.TryGetValue("ORG_PHYSICAL_ADDRESS", out var orgPhysicalAddress)
+                ? orgPhysicalAddress.Get<string>()
+                : null,
+            OrgPhysicalAddressAttestation = doc.TryGetValue("ORG_PHYSICAL_ADDRESS_ATTESTATION", out var orgPhysicalAddressAttestation)
+                ? orgPhysicalAddressAttestation.Get<string>()
+                : null,
+            OrgPhoneNumber = doc.TryGetValue("ORG_PHONE_NUMBER", out var orgPhoneNumber)
+                ? orgPhoneNumber.Get<string>()
+                : null,
+            OrgPhoneNumberAttestation = doc.TryGetValue("ORG_PHONE_NUMBER_ATTESTATION", out var orgPhoneNumberAttestation)
+                ? orgPhoneNumberAttestation.Get<string>()
+                : null,
+            OrgKeybase = doc.TryGetValue("ORG_KEYBASE", out var orgKeybase)
+                ? orgKeybase.Get<string>()
+                : null,
+            OrgTwitter = doc.TryGetValue("ORG_TWITTER", out var orgTwitter)
+                ? orgTwitter.Get<string>()
+                : null,
+            OrgGithub = doc.TryGetValue("ORG_GITHUB", out var orgGithub)
+                ? orgGithub.Get<string>()
+                : null,
+            OrgOfficialEmail = doc.TryGetValue("ORG_OFFICIAL_EMAIL", out var orgOfficialEmail)
+                ? orgOfficialEmail.Get<string>()
+                : null,
+            OrgSupportEmail = doc.TryGetValue("ORG_SUPPORT_EMAIL", out var orgSupportEmail)
+                ? orgSupportEmail.Get<string>()
+                : null,
+            OrgLicensingAuthority = doc.TryGetValue("ORG_LICENSING_AUTHORITY", out var orgLicensingAuthority)
+                ? orgLicensingAuthority.Get<string>()
+                : null,
+            OrgLicenseType = doc.TryGetValue("ORG_LICENSE_TYPE", out var orgLicenseType)
+                ? orgLicenseType.Get<string>()
+                : null,
+            OrgLicenseNumber = doc.TryGetValue("ORG_LICENSE_NUMBER", out var orgLicenseNumber)
+                ? orgLicenseNumber.Get<string>()
+                : null,
+        };
     }
 
-    private static List<PointOfContact>? ParsePointsOfContact(TomlTable document)
+    private static IReadOnlyList<PointOfContact>? ParsePointsOfContact(TomlTable document)
     {
         if (!document.TryGetValue("PRINCIPALS", out var principals))
         {
@@ -539,55 +478,41 @@ public class StellarToml
 
         foreach (var principalTable in principalsArray.Items)
         {
-            var pointOfContact = new PointOfContact();
-
-            if (principalTable.TryGetValue("name", out var name))
+            var pointOfContact = new PointOfContact
             {
-                pointOfContact.Name = name.Get<string>();
-            }
-
-            if (principalTable.TryGetValue("email", out var email))
-            {
-                pointOfContact.Email = email.Get<string>();
-            }
-
-            if (principalTable.TryGetValue("keybase", out var keybase))
-            {
-                pointOfContact.Keybase = keybase.Get<string>();
-            }
-
-            if (principalTable.TryGetValue("telegram", out var telegram))
-            {
-                pointOfContact.Telegram = telegram.Get<string>();
-            }
-
-            if (principalTable.TryGetValue("twitter", out var twitter))
-            {
-                pointOfContact.Twitter = twitter.Get<string>();
-            }
-
-            if (principalTable.TryGetValue("github", out var github))
-            {
-                pointOfContact.Github = github.Get<string>();
-            }
-
-            if (principalTable.TryGetValue("id_photo_hash", out var idPhotoHash))
-            {
-                pointOfContact.IdPhotoHash = idPhotoHash.Get<string>();
-            }
-
-            if (principalTable.TryGetValue("verification_photo_hash", out var verificationPhotoHash))
-            {
-                pointOfContact.VerificationPhotoHash = verificationPhotoHash.Get<string>();
-            }
+                Name = principalTable.TryGetValue("name", out var name)
+                    ? name.Get<string>()
+                    : null,
+                Email = principalTable.TryGetValue("email", out var email)
+                    ? email.Get<string>()
+                    : null,
+                Keybase = principalTable.TryGetValue("keybase", out var keybase)
+                    ? keybase.Get<string>()
+                    : null,
+                Telegram = principalTable.TryGetValue("telegram", out var telegram)
+                    ? telegram.Get<string>()
+                    : null,
+                Twitter = principalTable.TryGetValue("twitter", out var twitter)
+                    ? twitter.Get<string>()
+                    : null,
+                Github = principalTable.TryGetValue("github", out var github)
+                    ? github.Get<string>()
+                    : null,
+                IdPhotoHash = principalTable.TryGetValue("id_photo_hash", out var idPhotoHash)
+                    ? idPhotoHash.Get<string>()
+                    : null,
+                VerificationPhotoHash = principalTable.TryGetValue("verification_photo_hash", out var verificationPhotoHash)
+                    ? verificationPhotoHash.Get<string>()
+                    : null,
+            };
 
             pointsOfContact.Add(pointOfContact);
         }
 
-        return pointsOfContact;
+        return pointsOfContact.AsReadOnly();
     }
 
-    private static List<Currency>? ParseCurrencies(TomlTable document)
+    private static IReadOnlyList<Currency>? ParseCurrencies(TomlTable document)
     {
         if (!document.TryGetValue("CURRENCIES", out var currencies))
         {
@@ -603,112 +528,16 @@ public class StellarToml
             currencyList.Add(currency);
         }
 
-        return currencyList;
+        return currencyList.AsReadOnly();
     }
 
     private static Currency ParseCurrency(TomlTable currencyTable)
     {
-        var currency = new Currency();
-
-        if (currencyTable.TryGetValue("toml", out var toml))
-        {
-            currency.Toml = toml.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("code", out var code))
-        {
-            currency.Code = code.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("code_template", out var codeTemplate))
-        {
-            currency.CodeTemplate = codeTemplate.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("issuer", out var issuer))
-        {
-            currency.Issuer = issuer.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("contract", out var contract))
-        {
-            currency.Contract = contract.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("status", out var status))
-        {
-            currency.Status = status.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("display_decimals", out var displayDecimals))
-        {
-            currency.DisplayDecimals = displayDecimals.Get<int>();
-        }
-
-        if (currencyTable.TryGetValue("name", out var name))
-        {
-            currency.Name = name.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("desc", out var desc))
-        {
-            currency.Desc = desc.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("conditions", out var conditions))
-        {
-            currency.Conditions = conditions.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("image", out var image))
-        {
-            currency.Image = image.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("fixed_number", out var fixedNumber))
-        {
-            currency.FixedNumber = fixedNumber.Get<int>();
-        }
-
-        if (currencyTable.TryGetValue("max_number", out var maxNumber))
-        {
-            currency.MaxNumber = maxNumber.Get<int>();
-        }
-
-        if (currencyTable.TryGetValue("is_unlimited", out var isUnlimited))
-        {
-            currency.IsUnlimited = isUnlimited.Get<bool>();
-        }
-
-        if (currencyTable.TryGetValue("is_asset_anchored", out var isAssetAnchored))
-        {
-            currency.IsAssetAnchored = isAssetAnchored.Get<bool>();
-        }
-
-        if (currencyTable.TryGetValue("anchor_asset_type", out var anchorAssetType))
-        {
-            currency.AnchorAssetType = anchorAssetType.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("anchor_asset", out var anchorAsset))
-        {
-            currency.AnchorAsset = anchorAsset.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("attestation_of_reserve", out var attestationOfReserve))
-        {
-            currency.AttestationOfReserve = attestationOfReserve.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("redemption_instructions", out var redemptionInstructions))
-        {
-            currency.RedemptionInstructions = redemptionInstructions.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("collateral_addresses", out var collateralAddresses))
+        IReadOnlyCollection<string>? collateralAddresses = null;
+        if (currencyTable.TryGetValue("collateral_addresses", out var collateralAddressesValue))
         {
             var result = new List<string>();
-            var addressesArray = collateralAddresses.Get<TomlArray>();
+            var addressesArray = collateralAddressesValue.Get<TomlArray>();
             foreach (var item in addressesArray.Items)
             {
                 var address = item.Get<string>();
@@ -717,13 +546,14 @@ public class StellarToml
                     result.Add(address);
                 }
             }
-            currency.CollateralAddresses = result.AsReadOnly();
+            collateralAddresses = result.AsReadOnly();
         }
 
-        if (currencyTable.TryGetValue("collateral_address_messages", out var collateralAddressMessages))
+        IReadOnlyCollection<string>? collateralAddressMessages = null;
+        if (currencyTable.TryGetValue("collateral_address_messages", out var collateralAddressMessagesValue))
         {
             var result = new List<string>();
-            var messagesArray = collateralAddressMessages.Get<TomlArray>();
+            var messagesArray = collateralAddressMessagesValue.Get<TomlArray>();
             foreach (var item in messagesArray.Items)
             {
                 var message = item.Get<string>();
@@ -732,13 +562,14 @@ public class StellarToml
                     result.Add(message);
                 }
             }
-            currency.CollateralAddressMessages = result.AsReadOnly();
+            collateralAddressMessages = result.AsReadOnly();
         }
 
-        if (currencyTable.TryGetValue("collateral_address_signatures", out var collateralAddressSignatures))
+        IReadOnlyCollection<string>? collateralAddressSignatures = null;
+        if (currencyTable.TryGetValue("collateral_address_signatures", out var collateralAddressSignaturesValue))
         {
             var result = new List<string>();
-            var signaturesArray = collateralAddressSignatures.Get<TomlArray>();
+            var signaturesArray = collateralAddressSignaturesValue.Get<TomlArray>();
             foreach (var item in signaturesArray.Items)
             {
                 var signature = item.Get<string>();
@@ -747,28 +578,84 @@ public class StellarToml
                     result.Add(signature);
                 }
             }
-            currency.CollateralAddressSignatures = result.AsReadOnly();
+            collateralAddressSignatures = result.AsReadOnly();
         }
 
-        if (currencyTable.TryGetValue("regulated", out var regulated))
+        return new Currency
         {
-            currency.Regulated = regulated.Get<bool>();
-        }
-
-        if (currencyTable.TryGetValue("approval_server", out var approvalServer))
-        {
-            currency.ApprovalServer = approvalServer.Get<string>();
-        }
-
-        if (currencyTable.TryGetValue("approval_criteria", out var approvalCriteria))
-        {
-            currency.ApprovalCriteria = approvalCriteria.Get<string>();
-        }
-
-        return currency;
+            Toml = currencyTable.TryGetValue("toml", out var toml)
+                ? toml.Get<string>()
+                : null,
+            Code = currencyTable.TryGetValue("code", out var code)
+                ? code.Get<string>()
+                : null,
+            CodeTemplate = currencyTable.TryGetValue("code_template", out var codeTemplate)
+                ? codeTemplate.Get<string>()
+                : null,
+            Issuer = currencyTable.TryGetValue("issuer", out var issuer)
+                ? issuer.Get<string>()
+                : null,
+            Contract = currencyTable.TryGetValue("contract", out var contract)
+                ? contract.Get<string>()
+                : null,
+            Status = currencyTable.TryGetValue("status", out var status)
+                ? status.Get<string>()
+                : null,
+            DisplayDecimals = currencyTable.TryGetValue("display_decimals", out var displayDecimals)
+                ? displayDecimals.Get<int>()
+                : null,
+            Name = currencyTable.TryGetValue("name", out var name)
+                ? name.Get<string>()
+                : null,
+            Desc = currencyTable.TryGetValue("desc", out var desc)
+                ? desc.Get<string>()
+                : null,
+            Conditions = currencyTable.TryGetValue("conditions", out var conditions)
+                ? conditions.Get<string>()
+                : null,
+            Image = currencyTable.TryGetValue("image", out var image)
+                ? image.Get<string>()
+                : null,
+            FixedNumber = currencyTable.TryGetValue("fixed_number", out var fixedNumber)
+                ? fixedNumber.Get<int>()
+                : null,
+            MaxNumber = currencyTable.TryGetValue("max_number", out var maxNumber)
+                ? maxNumber.Get<int>()
+                : null,
+            IsUnlimited = currencyTable.TryGetValue("is_unlimited", out var isUnlimited)
+                ? isUnlimited.Get<bool>()
+                : null,
+            IsAssetAnchored = currencyTable.TryGetValue("is_asset_anchored", out var isAssetAnchored)
+                ? isAssetAnchored.Get<bool>()
+                : null,
+            AnchorAssetType = currencyTable.TryGetValue("anchor_asset_type", out var anchorAssetType)
+                ? anchorAssetType.Get<string>()
+                : null,
+            AnchorAsset = currencyTable.TryGetValue("anchor_asset", out var anchorAsset)
+                ? anchorAsset.Get<string>()
+                : null,
+            AttestationOfReserve = currencyTable.TryGetValue("attestation_of_reserve", out var attestationOfReserve)
+                ? attestationOfReserve.Get<string>()
+                : null,
+            RedemptionInstructions = currencyTable.TryGetValue("redemption_instructions", out var redemptionInstructions)
+                ? redemptionInstructions.Get<string>()
+                : null,
+            CollateralAddresses = collateralAddresses,
+            CollateralAddressMessages = collateralAddressMessages,
+            CollateralAddressSignatures = collateralAddressSignatures,
+            Regulated = currencyTable.TryGetValue("regulated", out var regulated)
+                ? regulated.Get<bool>()
+                : null,
+            ApprovalServer = currencyTable.TryGetValue("approval_server", out var approvalServer)
+                ? approvalServer.Get<string>()
+                : null,
+            ApprovalCriteria = currencyTable.TryGetValue("approval_criteria", out var approvalCriteria)
+                ? approvalCriteria.Get<string>()
+                : null,
+        };
     }
 
-    private static List<Validator>? ParseValidators(TomlTable document)
+    private static IReadOnlyList<Validator>? ParseValidators(TomlTable document)
     {
         if (!document.TryGetValue("VALIDATORS", out var validators))
         {
@@ -780,37 +667,29 @@ public class StellarToml
 
         foreach (var validatorTable in validatorsArray.Items)
         {
-            var validator = new Validator();
-
-            if (validatorTable.TryGetValue("ALIAS", out var alias))
+            var validator = new Validator
             {
-                validator.Alias = alias.Get<string>();
-            }
-
-            if (validatorTable.TryGetValue("DISPLAY_NAME", out var displayName))
-            {
-                validator.DisplayName = displayName.Get<string>();
-            }
-
-            if (validatorTable.TryGetValue("PUBLIC_KEY", out var publicKey))
-            {
-                validator.PublicKey = publicKey.Get<string>();
-            }
-
-            if (validatorTable.TryGetValue("HOST", out var host))
-            {
-                validator.Host = host.Get<string>();
-            }
-
-            if (validatorTable.TryGetValue("HISTORY", out var history))
-            {
-                validator.History = history.Get<string>();
-            }
+                Alias = validatorTable.TryGetValue("ALIAS", out var alias)
+                    ? alias.Get<string>()
+                    : null,
+                DisplayName = validatorTable.TryGetValue("DISPLAY_NAME", out var displayName)
+                    ? displayName.Get<string>()
+                    : null,
+                PublicKey = validatorTable.TryGetValue("PUBLIC_KEY", out var publicKey)
+                    ? publicKey.Get<string>()
+                    : null,
+                Host = validatorTable.TryGetValue("HOST", out var host)
+                    ? host.Get<string>()
+                    : null,
+                History = validatorTable.TryGetValue("HISTORY", out var history)
+                    ? history.Get<string>()
+                    : null,
+            };
 
             validatorList.Add(validator);
         }
 
-        return validatorList;
+        return validatorList.AsReadOnly();
     }
 }
 

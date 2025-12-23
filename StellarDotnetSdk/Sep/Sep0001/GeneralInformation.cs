@@ -6,86 +6,86 @@ namespace StellarDotnetSdk.Sep.Sep0001;
 ///     General information from the stellar.toml file.
 ///     See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md">SEP-0001</a>
 /// </summary>
-public class GeneralInformation
+public sealed record GeneralInformation
 {
     /// <summary>
     ///     The version of SEP-1 your stellar.toml adheres to. This helps parsers know which fields to expect.
     /// </summary>
-    public string? Version { get; set; }
+    public string? Version { get; init; }
 
     /// <summary>
     ///     The passphrase for the specific Stellar network this infrastructure operates on.
     /// </summary>
-    public string? NetworkPassphrase { get; set; }
+    public string? NetworkPassphrase { get; init; }
 
     /// <summary>
     ///     The endpoint for clients to resolve stellar addresses for users on your domain via SEP-2 Federation Protocol.
     /// </summary>
-    public string? FederationServer { get; set; }
+    public string? FederationServer { get; init; }
 
     /// <summary>
     ///     The endpoint used for SEP-3 Compliance Protocol (deprecated).
     /// </summary>
-    public string? AuthServer { get; set; }
+    public string? AuthServer { get; init; }
 
     /// <summary>
     ///     The server used for SEP-6 Anchor/Client interoperability.
     /// </summary>
-    public string? TransferServer { get; set; }
+    public string? TransferServer { get; init; }
 
     /// <summary>
     ///     The server used for SEP-24 Anchor/Client interoperability.
     /// </summary>
-    public string? TransferServerSep24 { get; set; }
+    public string? TransferServerSep24 { get; init; }
 
     /// <summary>
     ///     The server used for SEP-12 Anchor/Client customer info transfer.
     /// </summary>
-    public string? KycServer { get; set; }
+    public string? KycServer { get; init; }
 
     /// <summary>
     ///     The endpoint used for SEP-10 Web Authentication.
     /// </summary>
-    public string? WebAuthEndpoint { get; set; }
+    public string? WebAuthEndpoint { get; init; }
 
     /// <summary>
     ///     The signing key is used for SEP-3 Compliance Protocol (deprecated) and SEP-10/SEP-45 Authentication Protocols.
     /// </summary>
-    public string? SigningKey { get; set; }
+    public string? SigningKey { get; init; }
 
     /// <summary>
     ///     Location of public-facing Horizon instance (if one is offered).
     /// </summary>
-    public string? HorizonUrl { get; set; }
+    public string? HorizonUrl { get; init; }
 
     /// <summary>
     ///     A read-only list of Stellar accounts that are controlled by this domain.
     /// </summary>
-    public IReadOnlyCollection<string>? Accounts { get; set; }
+    public IReadOnlyCollection<string>? Accounts { get; init; }
 
     /// <summary>
     ///     The signing key is used for SEP-7 delegated signing.
     /// </summary>
-    public string? UriRequestSigningKey { get; set; }
+    public string? UriRequestSigningKey { get; init; }
 
     /// <summary>
     ///     The server used for receiving SEP-31 direct fiat-to-fiat payments. Requires SEP-12 and hence a KYC_SERVER TOML attribute.
     /// </summary>
-    public string? DirectPaymentServer { get; set; }
+    public string? DirectPaymentServer { get; init; }
 
     /// <summary>
     ///     The server used for receiving SEP-38 requests.
     /// </summary>
-    public string? AnchorQuoteServer { get; set; }
+    public string? AnchorQuoteServer { get; init; }
 
     /// <summary>
     ///     The endpoint used for SEP-45 Web Authentication (contract-based auth).
     /// </summary>
-    public string? WebAuthForContractsEndpoint { get; set; }
+    public string? WebAuthForContractsEndpoint { get; init; }
 
     /// <summary>
     ///     The web authentication contract ID for SEP-45 Web Authentication.
     /// </summary>
-    public string? WebAuthContractId { get; set; }
+    public string? WebAuthContractId { get; init; }
 }
 
