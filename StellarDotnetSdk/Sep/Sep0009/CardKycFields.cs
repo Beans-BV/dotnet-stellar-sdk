@@ -60,7 +60,7 @@ public sealed record CardKycFields
     public string? CountryCode { get; init; }
 
     /// <summary>
-    ///     Name of state/province/region/prefecture is ISO 3166-2 format
+    ///     Name of state/province/region/prefecture in ISO 3166-2 format
     /// </summary>
     public string? StateOrProvince { get; init; }
 
