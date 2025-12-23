@@ -1,0 +1,37 @@
+{
+  "transaction": {
+    "id": "test-transaction-id",
+    "kind": "deposit",
+    "status": "completed",
+    "status_eta": 3600,
+    "kyc_verified": true,
+    "more_info_url": "https://anchor.example.com/transactions/test-transaction-id",
+    "amount_in": "100.0",
+    "amount_in_asset": "iso4217:USD",
+    "amount_out": "95.0",
+    "amount_out_asset": "stellar:USD:GCZJM35NKGVK47BB4SPBDV25477PZYIYPVVG453LPYFNXLS3FGHDXOCM",
+    "amount_fee": "5.0",
+    "amount_fee_asset": "stellar:USD:GCZJM35NKGVK47BB4SPBDV25477PZYIYPVVG453LPYFNXLS3FGHDXOCM",
+    "quote_id": "test-quote-id",
+    "started_at": "2023-01-01T00:00:00Z",
+    "completed_at": "2023-01-01T01:00:00Z",
+    "updated_at": "2023-01-01T01:00:00Z",
+    "user_action_required_by": "2023-01-02T00:00:00Z",
+    "stellar_transaction_id": "17a670bc424ff5ce3b386dbfaae9990b66a2a37b4fbe51547e8794962a3f9e6a",
+    "external_transaction_id": "ext-tx-12345",
+    "message": "Transaction completed successfully",
+    "refunds": {
+      "amount_refunded": "0",
+      "amount_fee": "0",
+      "payments": []
+    },
+    "from": "bank_account_12345",
+    "to": "GASYKQXV47TPTB6HKXWZNB6IRVPMTQ6M6B27IM5L2LYMNYBX2O53YJAL",
+    "deposit_memo": "test-memo",
+    "deposit_memo_type": "text",
+    "claimable_balance_id": null,
+    "withdraw_anchor_account": null,
+    "withdraw_memo": null,
+    "withdraw_memo_type": null
+  }
+}
