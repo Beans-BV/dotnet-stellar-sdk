@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Effects;
+using StellarDotnetSdk.Sep.Sep0006.Responses;
 
 namespace StellarDotnetSdk.Converters;
 
@@ -51,6 +52,9 @@ public static class JsonOptions
             // HATEOAS link converters
             new LinkJsonConverter<EffectResponse>(),
             new LinkJsonConverter<Response>(),
+
+            // SEP-6 converters
+            new AnchorTransactionJsonConverter(),
 
             // Enum converters
             new JsonStringEnumConverter(),

@@ -1,0 +1,663 @@
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+using System.Web;
+using StellarDotnetSdk.Converters;
+using StellarDotnetSdk.Exceptions;
+using StellarDotnetSdk.Requests;
+using StellarDotnetSdk.Responses;
+using StellarDotnetSdk.Sep.Sep0001;
+using StellarDotnetSdk.Sep.Sep0006.Exceptions;
+using StellarDotnetSdk.Sep.Sep0006.Requests;
+using StellarDotnetSdk.Sep.Sep0006.Responses;
+
+namespace StellarDotnetSdk.Sep.Sep0006;
+
+/// <summary>
+///     Implements SEP-0006 Programmatic Deposit and Withdrawal API.
+///     This service implements SEP-0006, which defines a non-interactive
+///     protocol for deposits and withdrawals between Stellar assets and external systems
+///     (fiat, crypto, etc.). Unlike SEP-0024's interactive flow, SEP-0006 is designed
+///     for programmatic integration where all required information can be provided in
+///     API requests.
+///     See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md">SEP-0006</a>
+/// </summary>
+public class TransferServerService : IDisposable
+{
+    private readonly string _transferServiceAddress;
+    private readonly HttpClient? _httpClient;
+    private readonly Dictionary<string, string>? _httpRequestHeaders;
+    private readonly HttpResilienceOptions? _resilienceOptions;
+    private readonly string? _bearerToken;
+    private HttpClient? _internalHttpClient;
+    private bool _disposed;
+
+    /// <summary>
+    ///     Creates a TransferServerService instance with the specified transfer server address.
+    ///     Use <see cref="FromDomainAsync" /> instead if you want to automatically discover the transfer
+    ///     server URL from an anchor's stellar.toml file.
+    /// </summary>
+    /// <param name="transferServiceAddress">The base URL of the anchor's transfer server endpoint</param>
+    /// <param name="httpClient">Optional custom HTTP client for making requests</param>
+    /// <param name="httpRequestHeaders">Optional custom headers to include in all requests</param>
+    public TransferServerService(
+        string transferServiceAddress,
+        HttpClient? httpClient = null,
+        Dictionary<string, string>? httpRequestHeaders = null)
+    {
+        if (string.IsNullOrWhiteSpace(transferServiceAddress))
+        {
+            throw new ArgumentException("Transfer service address cannot be null or empty", nameof(transferServiceAddress));
+        }
+
+        _transferServiceAddress = transferServiceAddress.TrimEnd('/');
+        _httpClient = httpClient;
+        _httpRequestHeaders = httpRequestHeaders;
+    }
+
+    /// <summary>
+    ///     Creates a TransferServerService instance with resilience options and bearer token.
+    /// </summary>
+    /// <param name="transferServiceAddress">The base URL of the anchor's transfer server endpoint</param>
+    /// <param name="resilienceOptions">Resilience options for HTTP requests</param>
+    /// <param name="bearerToken">Bearer token in case the server requires it</param>
+    /// <param name="httpRequestHeaders">Optional custom headers to include in all requests</param>
+    public TransferServerService(
+        string transferServiceAddress,
+        HttpResilienceOptions? resilienceOptions,
+        string? bearerToken = null,
+        Dictionary<string, string>? httpRequestHeaders = null)
+    {
+        if (string.IsNullOrWhiteSpace(transferServiceAddress))
+        {
+            throw new ArgumentException("Transfer service address cannot be null or empty", nameof(transferServiceAddress));
+        }
+
+        _transferServiceAddress = transferServiceAddress.TrimEnd('/');
+        _resilienceOptions = resilienceOptions;
+        _bearerToken = bearerToken;
+        _httpRequestHeaders = httpRequestHeaders;
+    }
+
+    /// <summary>
+    ///     Creates a TransferServerService by automatically discovering the transfer
+    ///     server URL from an anchor's stellar.toml file.
+    ///     This is the recommended way to create a TransferServerService instance.
+    /// </summary>
+    /// <param name="domain">The anchor's domain name (e.g., 'testanchor.stellar.org')</param>
+    /// <param name="httpClient">Optional custom HTTP client for making requests</param>
+    /// <param name="httpRequestHeaders">Optional custom headers to include in all requests</param>
+    /// <returns>A configured TransferServerService instance ready to use</returns>
+    /// <exception cref="TransferServerException">Thrown when the stellar.toml file cannot be fetched or TRANSFER_SERVER is not found</exception>
+    public static async Task<TransferServerService> FromDomainAsync(
+        string domain,
+        HttpClient? httpClient = null,
+        Dictionary<string, string>? httpRequestHeaders = null)
+    {
+        var toml = await StellarToml.FromDomainAsync(domain, httpClient, httpRequestHeaders).ConfigureAwait(false);
+        var transferServer = toml.GeneralInformation.TransferServer;
+
+        if (string.IsNullOrWhiteSpace(transferServer))
+        {
+            throw new TransferServerException($"Transfer server not found in stellar.toml of domain {domain}");
+        }
+
+        return new TransferServerService(transferServer, httpClient, httpRequestHeaders);
+    }
+
+    /// <summary>
+    ///     Creates a TransferServerService by automatically discovering the transfer
+    ///     server URL from an anchor's stellar.toml file with resilience options.
+    /// </summary>
+    /// <param name="domain">The anchor's domain name</param>
+    /// <param name="resilienceOptions">Resilience options for HTTP requests</param>
+    /// <param name="bearerToken">Bearer token in case the server requires it</param>
+    /// <param name="httpClient">Optional custom HTTP client for making requests</param>
+    /// <param name="httpRequestHeaders">Optional custom headers to include in all requests</param>
+    /// <returns>A configured TransferServerService instance ready to use</returns>
+    /// <exception cref="TransferServerException">Thrown when the stellar.toml file cannot be fetched or TRANSFER_SERVER is not found</exception>
+    public static async Task<TransferServerService> FromDomainAsync(
+        string domain,
+        HttpResilienceOptions? resilienceOptions,
+        string? bearerToken = null,
+        HttpClient? httpClient = null,
+        Dictionary<string, string>? httpRequestHeaders = null)
+    {
+        var toml = await StellarToml.FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient, httpRequestHeaders).ConfigureAwait(false);
+        var transferServer = toml.GeneralInformation.TransferServer;
+
+        if (string.IsNullOrWhiteSpace(transferServer))
+        {
+            throw new TransferServerException($"Transfer server not found in stellar.toml of domain {domain}");
+        }
+
+        return new TransferServerService(transferServer, resilienceOptions, bearerToken, httpRequestHeaders);
+    }
+
+    /// <summary>
+    ///     Gets or creates an HttpClient instance.
+    ///     Uses DefaultStellarSdkHttpClient without retries by default, matching the Server class pattern.
+    /// </summary>
+    private HttpClient GetOrCreateHttpClient()
+    {
+        if (_httpClient != null)
+        {
+            return _httpClient;
+        }
+
+        if (_internalHttpClient == null)
+        {
+            _internalHttpClient = new DefaultStellarSdkHttpClient(
+                _bearerToken,
+                resilienceOptions: _resilienceOptions);
+        }
+
+        return _internalHttpClient;
+    }
+
+    /// <summary>
+    ///     Disposes the internal HttpClient if one was created.
+    ///     Does not dispose externally provided HttpClient instances.
+    /// </summary>
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (_internalHttpClient != null)
+        {
+            _internalHttpClient.Dispose();
+            _internalHttpClient = null;
+        }
+
+        _disposed = true;
+    }
+
+    /// <summary>
+    ///     Retrieves basic information about the anchor's transfer server capabilities.
+    ///     Queries the /info endpoint to discover which assets the anchor supports for
+    ///     deposit and withdrawal operations, along with required fields and fee structure
+    ///     for each asset.
+    /// </summary>
+    /// <param name="language">Language code for error messages using RFC 4646 (defaults to 'en')</param>
+    /// <param name="jwt">JWT token from SEP-10 authentication</param>
+    /// <returns>Information about supported assets and their requirements</returns>
+    public async Task<InfoResponse> InfoAsync(string? language = null, string? jwt = null)
+    {
+        var queryParams = new Dictionary<string, string>();
+        if (!string.IsNullOrWhiteSpace(language))
+        {
+            queryParams["lang"] = language;
+        }
+
+        return await ExecuteGetAsync<InfoResponse>("info", queryParams, jwt).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    ///     Initiates a deposit of an external asset to receive the equivalent Stellar asset.
+    ///     A deposit occurs when a user sends an external asset (BTC, USD via bank transfer,
+    ///     etc.) to an address held by an anchor. The anchor then sends an equivalent amount
+    ///     of the Stellar asset (minus fees) to the user's Stellar account.
+    /// </summary>
+    /// <param name="request">Deposit request parameters</param>
+    /// <returns>Deposit instructions including how to send the external asset</returns>
+    /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
+    /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
+    /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
+    public async Task<DepositResponse> DepositAsync(DepositRequest request)
+    {
+        var queryParams = BuildDepositQueryParams(request);
+        return await ExecuteGetWithErrorHandlingAsync<DepositResponse>("deposit", queryParams, request.Jwt).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    ///     Initiates a deposit with asset conversion between non-equivalent tokens.
+    ///     Used when the anchor supports SEP-38 quotes and the user wants to deposit one
+    ///     asset type and receive a different asset type on Stellar.
+    /// </summary>
+    /// <param name="request">Deposit exchange request with source asset, destination asset, and amount</param>
+    /// <returns>Deposit instructions for the cross-asset deposit</returns>
+    /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
+    /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
+    /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
+    public async Task<DepositResponse> DepositExchangeAsync(DepositExchangeRequest request)
+    {
+        var queryParams = BuildDepositExchangeQueryParams(request);
+        return await ExecuteGetWithErrorHandlingAsync<DepositResponse>("deposit-exchange", queryParams, request.Jwt).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    ///     Initiates a withdrawal to redeem a Stellar asset for its off-chain equivalent.
+    ///     A withdrawal occurs when a user redeems an asset on the Stellar network for its
+    ///     equivalent off-chain asset via the anchor.
+    /// </summary>
+    /// <param name="request">Withdrawal request parameters</param>
+    /// <returns>Withdrawal instructions including the Stellar account to send funds to</returns>
+    /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
+    /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
+    /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
+    public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequest request)
+    {
+        var queryParams = BuildWithdrawQueryParams(request);
+        return await ExecuteGetWithErrorHandlingAsync<WithdrawResponse>("withdraw", queryParams, request.Jwt).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    ///     Initiates a withdrawal with asset conversion between non-equivalent tokens.
+    ///     Used when the anchor supports SEP-38 quotes and the user wants to withdraw one
+    ///     asset type from Stellar and receive a different asset type off-chain.
+    /// </summary>
+    /// <param name="request">Withdrawal exchange request with source asset, destination asset, and amount</param>
+    /// <returns>Withdrawal instructions for the cross-asset withdrawal</returns>
+    /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
+    /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
+    /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
+    public async Task<WithdrawResponse> WithdrawExchangeAsync(WithdrawExchangeRequest request)
+    {
+        var queryParams = BuildWithdrawExchangeQueryParams(request);
+        return await ExecuteGetWithErrorHandlingAsync<WithdrawResponse>("withdraw-exchange", queryParams, request.Jwt).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    ///     Retrieves the fee structure for deposit or withdrawal operations.
+    ///     This endpoint allows wallets to query the fee that would be charged for
+    ///     a given deposit or withdrawal operation before initiating it.
+    /// </summary>
+    /// <param name="request">Fee request parameters</param>
+    /// <returns>A FeeResponse containing the calculated fee amount</returns>
+    public async Task<FeeResponse> FeeAsync(FeeRequest request)
+    {
+        var queryParams = new Dictionary<string, string>
+        {
+            { "operation", request.Operation },
+            { "asset_code", request.AssetCode },
+            { "amount", request.Amount.ToString() }
+        };
+
+        if (!string.IsNullOrWhiteSpace(request.Type))
+        {
+            queryParams["type"] = request.Type;
+        }
+
+        return await ExecuteGetAsync<FeeResponse>("fee", queryParams, request.Jwt).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    ///     Retrieves transaction history for an account with the anchor.
+    ///     Queries the /transactions endpoint to get the status of deposits and withdrawals
+    ///     while they process, as well as a history of past transactions.
+    /// </summary>
+    /// <param name="request">Transaction history request with account, asset code, and optional filters</param>
+    /// <returns>List of transactions with their current status and details</returns>
+    public async Task<AnchorTransactionsResponse> TransactionsAsync(AnchorTransactionsRequest request)
+    {
+        var queryParams = new Dictionary<string, string>
+        {
+            { "asset_code", request.AssetCode },
+            { "account", request.Account }
+        };
+
+        if (request.NoOlderThan.HasValue)
+        {
+            queryParams["no_older_than"] = request.NoOlderThan.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
+        }
+
+        if (request.Limit.HasValue)
+        {
+            queryParams["limit"] = request.Limit.Value.ToString();
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Kind))
+        {
+            queryParams["kind"] = request.Kind;
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.PagingId))
+        {
+            queryParams["paging_id"] = request.PagingId;
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Lang))
+        {
+            queryParams["lang"] = request.Lang;
+        }
+
+        return await ExecuteGetAsync<AnchorTransactionsResponse>("transactions", queryParams, request.Jwt).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    ///     Retrieves details for a specific transaction at the anchor.
+    ///     Queries the /transaction endpoint to get the current status and details of
+    ///     a specific deposit or withdrawal transaction.
+    /// </summary>
+    /// <param name="request">Transaction query request with at least one identifier</param>
+    /// <returns>Current status and details of the requested transaction</returns>
+    public async Task<AnchorTransactionResponse> TransactionAsync(AnchorTransactionRequest request)
+    {
+        var queryParams = new Dictionary<string, string>();
+
+        if (!string.IsNullOrWhiteSpace(request.Id))
+        {
+            queryParams["id"] = request.Id;
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.StellarTransactionId))
+        {
+            queryParams["stellar_transaction_id"] = request.StellarTransactionId;
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.ExternalTransactionId))
+        {
+            queryParams["external_transaction_id"] = request.ExternalTransactionId;
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Lang))
+        {
+            queryParams["lang"] = request.Lang;
+        }
+
+        return await ExecuteGetAsync<AnchorTransactionResponse>("transaction", queryParams, request.Jwt).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    ///     Updates transaction information with additional fields requested by the anchor.
+    ///     This endpoint allows clients to update a transaction with additional information
+    ///     that the anchor has requested.
+    /// </summary>
+    /// <param name="request">Patch transaction request with transaction ID and fields to update</param>
+    /// <returns>HTTP response indicating success or failure</returns>
+    /// <exception cref="ArgumentException">Thrown when request.Fields is null</exception>
+    public async Task<HttpResponseMessage> PatchTransactionAsync(PatchTransactionRequest request)
+    {
+        if (request.Fields == null)
+        {
+            throw new ArgumentException("Fields cannot be null", nameof(request));
+        }
+
+        var uri = BuildUri($"transactions/{request.Id}");
+        var client = GetOrCreateHttpClient();
+        var httpRequest = new HttpRequestMessage(HttpMethod.Patch, uri);
+
+        AddHeaders(httpRequest, request.Jwt);
+
+        var transactionObject = new Dictionary<string, object>(request.Fields);
+        var jsonContent = JsonSerializer.Serialize(transactionObject, JsonOptions.DefaultOptions);
+        httpRequest.Content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
+
+        return await client.SendAsync(httpRequest).ConfigureAwait(false);
+    }
+
+    private Dictionary<string, string> BuildDepositQueryParams(DepositRequest request)
+    {
+        var queryParams = new Dictionary<string, string>
+        {
+            { "asset_code", request.AssetCode },
+            { "account", request.Account }
+        };
+
+        AddIfNotNull(queryParams, "memo_type", request.MemoType);
+        AddIfNotNull(queryParams, "memo", request.Memo);
+        AddIfNotNull(queryParams, "email_address", request.EmailAddress);
+        AddIfNotNull(queryParams, "type", request.Type);
+        AddIfNotNull(queryParams, "wallet_name", request.WalletName);
+        AddIfNotNull(queryParams, "wallet_url", request.WalletUrl);
+        AddIfNotNull(queryParams, "lang", request.Lang);
+        AddIfNotNull(queryParams, "on_change_callback", request.OnChangeCallback);
+        AddIfNotNull(queryParams, "amount", request.Amount);
+        AddIfNotNull(queryParams, "country_code", request.CountryCode);
+        AddIfNotNull(queryParams, "claimable_balance_supported", request.ClaimableBalanceSupported);
+        AddIfNotNull(queryParams, "customer_id", request.CustomerId);
+        AddIfNotNull(queryParams, "location_id", request.LocationId);
+
+        if (request.ExtraFields != null)
+        {
+            foreach (var field in request.ExtraFields)
+            {
+                queryParams[field.Key] = field.Value;
+            }
+        }
+
+        return queryParams;
+    }
+
+    private Dictionary<string, string> BuildDepositExchangeQueryParams(DepositExchangeRequest request)
+    {
+        var queryParams = new Dictionary<string, string>
+        {
+            { "destination_asset", request.DestinationAsset },
+            { "source_asset", request.SourceAsset },
+            { "amount", request.Amount },
+            { "account", request.Account }
+        };
+
+        AddIfNotNull(queryParams, "quote_id", request.QuoteId);
+        AddIfNotNull(queryParams, "memo_type", request.MemoType);
+        AddIfNotNull(queryParams, "memo", request.Memo);
+        AddIfNotNull(queryParams, "email_address", request.EmailAddress);
+        AddIfNotNull(queryParams, "type", request.Type);
+        AddIfNotNull(queryParams, "wallet_name", request.WalletName);
+        AddIfNotNull(queryParams, "wallet_url", request.WalletUrl);
+        AddIfNotNull(queryParams, "lang", request.Lang);
+        AddIfNotNull(queryParams, "on_change_callback", request.OnChangeCallback);
+        AddIfNotNull(queryParams, "country_code", request.CountryCode);
+        AddIfNotNull(queryParams, "claimable_balance_supported", request.ClaimableBalanceSupported);
+        AddIfNotNull(queryParams, "customer_id", request.CustomerId);
+        AddIfNotNull(queryParams, "location_id", request.LocationId);
+
+        if (request.ExtraFields != null)
+        {
+            foreach (var field in request.ExtraFields)
+            {
+                queryParams[field.Key] = field.Value;
+            }
+        }
+
+        return queryParams;
+    }
+
+    private Dictionary<string, string> BuildWithdrawQueryParams(WithdrawRequest request)
+    {
+        var queryParams = new Dictionary<string, string>
+        {
+            { "asset_code", request.AssetCode },
+            { "type", request.Type }
+        };
+
+        AddIfNotNull(queryParams, "dest", request.Dest);
+        AddIfNotNull(queryParams, "dest_extra", request.DestExtra);
+        AddIfNotNull(queryParams, "account", request.Account);
+        AddIfNotNull(queryParams, "memo", request.Memo);
+        AddIfNotNull(queryParams, "memo_type", request.MemoType);
+        AddIfNotNull(queryParams, "wallet_name", request.WalletName);
+        AddIfNotNull(queryParams, "wallet_url", request.WalletUrl);
+        AddIfNotNull(queryParams, "lang", request.Lang);
+        AddIfNotNull(queryParams, "on_change_callback", request.OnChangeCallback);
+        AddIfNotNull(queryParams, "amount", request.Amount);
+        AddIfNotNull(queryParams, "country_code", request.CountryCode);
+        AddIfNotNull(queryParams, "refund_memo", request.RefundMemo);
+        AddIfNotNull(queryParams, "refund_memo_type", request.RefundMemoType);
+        AddIfNotNull(queryParams, "customer_id", request.CustomerId);
+        AddIfNotNull(queryParams, "location_id", request.LocationId);
+
+        if (request.ExtraFields != null)
+        {
+            foreach (var field in request.ExtraFields)
+            {
+                queryParams[field.Key] = field.Value;
+            }
+        }
+
+        return queryParams;
+    }
+
+    private Dictionary<string, string> BuildWithdrawExchangeQueryParams(WithdrawExchangeRequest request)
+    {
+        var queryParams = new Dictionary<string, string>
+        {
+            { "source_asset", request.SourceAsset },
+            { "destination_asset", request.DestinationAsset },
+            { "amount", request.Amount },
+            { "type", request.Type }
+        };
+
+        AddIfNotNull(queryParams, "dest", request.Dest);
+        AddIfNotNull(queryParams, "dest_extra", request.DestExtra);
+        AddIfNotNull(queryParams, "quote_id", request.QuoteId);
+        AddIfNotNull(queryParams, "account", request.Account);
+        AddIfNotNull(queryParams, "memo", request.Memo);
+        AddIfNotNull(queryParams, "memo_type", request.MemoType);
+        AddIfNotNull(queryParams, "wallet_name", request.WalletName);
+        AddIfNotNull(queryParams, "wallet_url", request.WalletUrl);
+        AddIfNotNull(queryParams, "lang", request.Lang);
+        AddIfNotNull(queryParams, "on_change_callback", request.OnChangeCallback);
+        AddIfNotNull(queryParams, "country_code", request.CountryCode);
+        AddIfNotNull(queryParams, "claimable_balance_supported", request.ClaimableBalanceSupported);
+        AddIfNotNull(queryParams, "refund_memo", request.RefundMemo);
+        AddIfNotNull(queryParams, "refund_memo_type", request.RefundMemoType);
+        AddIfNotNull(queryParams, "customer_id", request.CustomerId);
+        AddIfNotNull(queryParams, "location_id", request.LocationId);
+
+        if (request.ExtraFields != null)
+        {
+            foreach (var field in request.ExtraFields)
+            {
+                queryParams[field.Key] = field.Value;
+            }
+        }
+
+        return queryParams;
+    }
+
+    private static void AddIfNotNull(Dictionary<string, string> dict, string key, string? value)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            dict[key] = value;
+        }
+    }
+
+    private Uri BuildUri(string endpoint, Dictionary<string, string>? queryParams = null)
+    {
+        var uriBuilder = new UriBuilder($"{_transferServiceAddress}/{endpoint}");
+
+        if (queryParams != null && queryParams.Count > 0)
+        {
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            foreach (var param in queryParams)
+            {
+                query[param.Key] = param.Value;
+            }
+
+            uriBuilder.Query = query.ToString();
+        }
+
+        return uriBuilder.Uri;
+    }
+
+    private void AddHeaders(HttpRequestMessage request, string? jwt)
+    {
+        if (_httpRequestHeaders != null)
+        {
+            foreach (var header in _httpRequestHeaders)
+            {
+                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(jwt))
+        {
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+        }
+    }
+
+    private async Task<T> ExecuteGetAsync<T>(string endpoint, Dictionary<string, string>? queryParams = null, string? jwt = null) where T : Response
+    {
+        var uri = BuildUri(endpoint, queryParams);
+        var client = GetOrCreateHttpClient();
+        var httpRequest = new HttpRequestMessage(HttpMethod.Get, uri);
+
+        AddHeaders(httpRequest, jwt);
+
+        var response = await client.SendAsync(httpRequest).ConfigureAwait(false);
+
+        // Handle 403 Forbidden responses specially to parse error types
+        if ((int)response.StatusCode == 403)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            HandleForbiddenResponse(errorContent);
+        }
+
+        var responseHandler = new ResponseHandler<T>();
+        return await responseHandler.HandleResponse(response).ConfigureAwait(false);
+    }
+
+    private async Task<T> ExecuteGetWithErrorHandlingAsync<T>(string endpoint, Dictionary<string, string>? queryParams = null, string? jwt = null) where T : Response
+    {
+        return await ExecuteGetAsync<T>(endpoint, queryParams, jwt).ConfigureAwait(false);
+    }
+
+    private void HandleForbiddenResponse(string errorJson)
+    {
+        if (string.IsNullOrWhiteSpace(errorJson))
+        {
+            return;
+        }
+
+        try
+        {
+            using var document = JsonDocument.Parse(errorJson);
+            if (!document.RootElement.TryGetProperty("type", out var typeProperty))
+            {
+                return;
+            }
+
+            var type = typeProperty.GetString();
+            if (string.IsNullOrWhiteSpace(type))
+            {
+                return;
+            }
+
+            if (type == "non_interactive_customer_info_needed")
+            {
+                var response = JsonSerializer.Deserialize<CustomerInformationNeededResponse>(errorJson, JsonOptions.DefaultOptions);
+                if (response != null)
+                {
+                    throw new CustomerInformationNeededException(response);
+                }
+            }
+            else if (type == "customer_info_status")
+            {
+                var response = JsonSerializer.Deserialize<CustomerInformationStatusResponse>(errorJson, JsonOptions.DefaultOptions);
+                if (response != null)
+                {
+                    throw new CustomerInformationStatusException(response);
+                }
+            }
+            else if (type == "authentication_required")
+            {
+                throw new AuthenticationRequiredException();
+            }
+        }
+        catch (CustomerInformationNeededException)
+        {
+            throw;
+        }
+        catch (CustomerInformationStatusException)
+        {
+            throw;
+        }
+        catch (AuthenticationRequiredException)
+        {
+            throw;
+        }
+        catch
+        {
+            // If parsing fails, let the original exception propagate
+        }
+    }
+}
+

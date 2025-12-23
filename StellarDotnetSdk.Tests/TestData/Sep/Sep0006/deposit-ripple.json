@@ -1,0 +1,20 @@
+{
+  "id": "9421871e-0623-4356-b7b5-5996da122f3e",
+  "instructions": {
+    "organization.crypto_address": {
+      "value": "rNXEkKCxvfLcM1h4HJkaj2FtmYuAWrHGbf",
+      "description": "Ripple address"
+    },
+    "organization.crypto_memo": {
+      "value": "88",
+      "description": "Ripple tag"
+    }
+  },
+  "how": "Make a payment to Ripple address rNXEkKCxvfLcM1h4HJkaj2FtmYuAWrHGbf with tag 88",
+  "eta": 60,
+  "fee_percent": 0.1,
+  "extra_info": {
+    "message": "You must include the tag. If the amount is more than 1000 XRP, deposit will take 24h to complete."
+  }
+}
+
