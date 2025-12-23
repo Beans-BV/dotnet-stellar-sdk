@@ -124,11 +124,7 @@ public class StellarToml
             throw new ArgumentException("Domain cannot be null or empty", nameof(domain));
         }
 
-        var uriBuilder = new StringBuilder();
-        uriBuilder.Append("https://");
-        uriBuilder.Append(domain);
-        uriBuilder.Append("/.well-known/stellar.toml");
-        var stellarTomlUri = new Uri(uriBuilder.ToString());
+        var stellarTomlUri = new Uri($"https://{domain}/.well-known/stellar.toml");
 
         var client = httpClient ?? GetOrCreateHttpClient(bearerToken, resilienceOptions);
         try
