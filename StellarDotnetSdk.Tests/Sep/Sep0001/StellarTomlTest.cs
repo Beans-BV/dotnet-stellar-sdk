@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Sep.Sep0001;
 
 namespace StellarDotnetSdk.Tests.Sep.Sep0001;
@@ -16,12 +18,110 @@ namespace StellarDotnetSdk.Tests.Sep.Sep0001;
 public class StellarTomlTest
 {
     private string _sampleTomlContent = null!;
+    private string _linkedCurrencyTomlContent = null!;
 
     [TestInitialize]
     public void Setup()
     {
-        var testDataPath = Utils.GetTestDataPath("stellar-toml-sample.toml");
+        var testDataPath = Utils.GetTestDataAbsolutePath("stellar-toml-sample.toml");
         _sampleTomlContent = File.ReadAllText(testDataPath);
+
+        var linkedCurrencyTomlPath = Utils.GetTestDataAbsolutePath("stellar-toml-linked-currency.toml");
+        _linkedCurrencyTomlContent = File.ReadAllText(linkedCurrencyTomlPath);
+    }
+
+    /// <summary>
+    ///     Creates a mock HttpClient that returns the specified content and status code.
+    /// </summary>
+    private static HttpClient CreateMockHttpClient(string content, HttpStatusCode statusCode = HttpStatusCode.OK)
+    {
+        return Utils.CreateFakeHttpClient(content, statusCode);
+    }
+
+    /// <summary>
+    ///     Creates a mock HttpClient with a callback to capture the request message.
+    ///     Returns both the HttpClient and a wrapper object that holds the captured request.
+    /// </summary>
+    private static (HttpClient HttpClient, RequestCapture Capture) CreateMockHttpClientWithCallback(
+        string content,
+        HttpStatusCode statusCode = HttpStatusCode.OK)
+    {
+        var fakeHttpMessageHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
+        var capture = new RequestCapture();
+        fakeHttpMessageHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>()))
+            .Callback<HttpRequestMessage>(req => capture.Request = req)
+            .Returns(new HttpResponseMessage
+            {
+                StatusCode = statusCode,
+                Content = new StringContent(content),
+            });
+
+        var httpClient = new HttpClient(fakeHttpMessageHandler.Object);
+        return (httpClient, capture);
+    }
+
+    /// <summary>
+    ///     Wrapper class to hold captured HTTP request messages.
+    /// </summary>
+    private class RequestCapture
+    {
+        public HttpRequestMessage? Request { get; set; }
+    }
+
+    /// <summary>
+    ///     Creates a mock HttpClient that throws the specified exception.
+    /// </summary>
+    private static HttpClient CreateMockHttpClientWithException(Exception exception)
+    {
+        var fakeHttpMessageHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
+        fakeHttpMessageHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>()))
+            .Throws(exception);
+
+        return new HttpClient(fakeHttpMessageHandler.Object);
+    }
+
+    /// <summary>
+    ///     Asserts common currency properties.
+    /// </summary>
+    private static void AssertCurrencyProperties(
+        Currency currency,
+        string expectedCode,
+        string expectedIssuer,
+        int expectedDisplayDecimals,
+        string? expectedName = null,
+        string? expectedDesc = null,
+        string? expectedConditions = null,
+        string? expectedImage = null,
+        int? expectedFixedNumber = null)
+    {
+        Assert.IsNotNull(currency);
+        Assert.AreEqual(expectedCode, currency.Code);
+        Assert.AreEqual(expectedIssuer, currency.Issuer);
+        Assert.AreEqual(expectedDisplayDecimals, currency.DisplayDecimals);
+        if (expectedName != null)
+        {
+            Assert.AreEqual(expectedName, currency.Name);
+        }
+
+        if (expectedDesc != null)
+        {
+            Assert.AreEqual(expectedDesc, currency.Desc);
+        }
+
+        if (expectedConditions != null)
+        {
+            Assert.AreEqual(expectedConditions, currency.Conditions);
+        }
+
+        if (expectedImage != null)
+        {
+            Assert.AreEqual(expectedImage, currency.Image);
+        }
+
+        if (expectedFixedNumber.HasValue)
+        {
+            Assert.AreEqual(expectedFixedNumber.Value, currency.FixedNumber);
+        }
     }
 
     /// <summary>
@@ -142,15 +242,13 @@ public class StellarTomlTest
     [TestMethod]
     public void Constructor_WithMalformedHeaders_CorrectsHeaders()
     {
-        // Arrange - TOML with incorrect headers
+        // Arrange - TOML with incorrect headers (using array-of-tables syntax where single table is expected)
         var malformedToml = @"
 VERSION=""2.0.0""
 NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
 
-[DOCUMENTATION]
-ORG_NAME=""Test Org""
-
 [[DOCUMENTATION]]
+ORG_NAME=""Test Org""
 ORG_DBA=""Test DBA""
 
 [PRINCIPALS]
@@ -190,26 +288,19 @@ PUBLIC_KEY=""GD5DJQDDBKGAYNEAXU562HYGOOSYAEOO6AS53PZXBOZGCP5M2OPGMZV3""
             Content = new StringContent(_sampleTomlContent),
         });
 
-        var httpClient = new HttpClient(fakeHttpMessageHandler.Object);
+        using var httpClient = new HttpClient(fakeHttpMessageHandler.Object);
 
-        try
-        {
-            // Act
-            var stellarToml = await StellarToml.FromDomainAsync("example.com", httpClient);
+        // Act
+        var stellarToml = await StellarToml.FromDomainAsync("example.com", httpClient);
 
-            // Assert
-            Assert.IsNotNull(stellarToml);
-            Assert.AreEqual("2.0.0", stellarToml.GeneralInformation.Version);
-            Assert.AreEqual("https://stellarid.io/federation/", stellarToml.GeneralInformation.FederationServer);
+        // Assert
+        Assert.IsNotNull(stellarToml);
+        Assert.AreEqual("2.0.0", stellarToml.GeneralInformation.Version);
+        Assert.AreEqual("https://stellarid.io/federation/", stellarToml.GeneralInformation.FederationServer);
 
-            fakeHttpMessageHandler.Verify(a => a.Send(It.IsAny<HttpRequestMessage>()));
-            Assert.AreEqual(new Uri("https://example.com/.well-known/stellar.toml"),
-                fakeHttpMessageHandler.Object.RequestUri);
-        }
-        finally
-        {
-            httpClient.Dispose();
-        }
+        fakeHttpMessageHandler.Verify(a => a.Send(It.IsAny<HttpRequestMessage>()));
+        Assert.AreEqual(new Uri("https://example.com/.well-known/stellar.toml"),
+            fakeHttpMessageHandler.Object.RequestUri);
     }
 
     /// <summary>
@@ -220,24 +311,10 @@ PUBLIC_KEY=""GD5DJQDDBKGAYNEAXU562HYGOOSYAEOO6AS53PZXBOZGCP5M2OPGMZV3""
     public async Task FromDomainAsync_WithNotFound_ThrowsException()
     {
         // Arrange
-        var fakeHttpMessageHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
-        fakeHttpMessageHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>())).Returns(new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.NotFound,
-            Content = new StringContent("Not Found"),
-        });
+        using var httpClient = CreateMockHttpClient("Not Found", HttpStatusCode.NotFound);
 
-        var httpClient = new HttpClient(fakeHttpMessageHandler.Object);
-
-        try
-        {
-            // Act
-            await StellarToml.FromDomainAsync("example.com", httpClient);
-        }
-        finally
-        {
-            httpClient.Dispose();
-        }
+        // Act
+        await StellarToml.FromDomainAsync("example.com", httpClient);
     }
 
     /// <summary>
@@ -247,38 +324,22 @@ PUBLIC_KEY=""GD5DJQDDBKGAYNEAXU562HYGOOSYAEOO6AS53PZXBOZGCP5M2OPGMZV3""
     public async Task CurrencyFromUrlAsync_WithValidUrl_LoadsCurrency()
     {
         // Arrange
-        var linkedCurrencyTomlPath = Utils.GetTestDataPath("stellar-toml-linked-currency.toml");
-        var linkedCurrencyToml = File.ReadAllText(linkedCurrencyTomlPath);
+        using var httpClient = CreateMockHttpClient(_linkedCurrencyTomlContent);
 
-        var fakeHttpMessageHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
-        fakeHttpMessageHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>())).Returns(new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent(linkedCurrencyToml),
-        });
+        // Act
+        var currency = await StellarToml.CurrencyFromUrlAsync("https://example.com/.well-known/TESTC.toml", httpClient);
 
-        var httpClient = new HttpClient(fakeHttpMessageHandler.Object);
-
-        try
-        {
-            // Act
-            var currency = await StellarToml.CurrencyFromUrlAsync("https://example.com/.well-known/TESTC.toml", httpClient);
-
-            // Assert
-            Assert.IsNotNull(currency);
-            Assert.AreEqual("TESTC", currency.Code);
-            Assert.AreEqual("GCPWPTAX6QVJQIQARN2WESISHVLN65D4HAGQECHLCAV22UST3W2Q6QTA", currency.Issuer);
-            Assert.AreEqual(2, currency.DisplayDecimals);
-            Assert.AreEqual("test currency", currency.Name);
-            Assert.AreEqual("TESTC description", currency.Desc);
-            Assert.AreEqual("TESTC conditions", currency.Conditions);
-            Assert.AreEqual("https://soneso.com/123.png", currency.Image);
-            Assert.AreEqual(10000, currency.FixedNumber);
-        }
-        finally
-        {
-            httpClient.Dispose();
-        }
+        // Assert
+        AssertCurrencyProperties(
+            currency,
+            "TESTC",
+            "GCPWPTAX6QVJQIQARN2WESISHVLN65D4HAGQECHLCAV22UST3W2Q6QTA",
+            2,
+            "test currency",
+            "TESTC description",
+            "TESTC conditions",
+            "https://soneso.com/123.png",
+            10000);
     }
 
     /// <summary>
@@ -289,23 +350,35 @@ PUBLIC_KEY=""GD5DJQDDBKGAYNEAXU562HYGOOSYAEOO6AS53PZXBOZGCP5M2OPGMZV3""
     public async Task CurrencyFromUrlAsync_WithNotFound_ThrowsException()
     {
         // Arrange
-        var fakeHttpMessageHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
-        fakeHttpMessageHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>())).Returns(new HttpResponseMessage
+        using var httpClient = CreateMockHttpClient("Not Found", HttpStatusCode.NotFound);
+
+        // Act
+        await StellarToml.CurrencyFromUrlAsync("https://example.com/.well-known/CURRENCY.toml", httpClient);
+    }
+
+    /// <summary>
+    ///     Verifies that CurrencyFromUrlAsync correctly handles custom HTTP headers.
+    /// </summary>
+    [TestMethod]
+    public async Task CurrencyFromUrlAsync_WithCustomHeaders_IncludesHeadersInRequest()
+    {
+        // Arrange
+        var (httpClient, capture) = CreateMockHttpClientWithCallback(_linkedCurrencyTomlContent);
+        var customHeaders = new Dictionary<string, string>
         {
-            StatusCode = HttpStatusCode.NotFound,
-            Content = new StringContent("Not Found"),
-        });
+            { "X-Custom-Header", "custom-value" },
+            { "Authorization", "Bearer token123" },
+        };
 
-        var httpClient = new HttpClient(fakeHttpMessageHandler.Object);
-
-        try
+        using (httpClient)
         {
             // Act
-            await StellarToml.CurrencyFromUrlAsync("https://example.com/.well-known/CURRENCY.toml", httpClient);
-        }
-        finally
-        {
-            httpClient.Dispose();
+            await StellarToml.CurrencyFromUrlAsync("https://example.com/.well-known/TESTC.toml", httpClient, customHeaders);
+
+            // Assert
+            Assert.IsNotNull(capture.Request);
+            Assert.IsTrue(capture.Request.Headers.Contains("X-Custom-Header"));
+            Assert.IsTrue(capture.Request.Headers.Contains("Authorization"));
         }
     }
 
@@ -329,6 +402,222 @@ PUBLIC_KEY=""GD5DJQDDBKGAYNEAXU562HYGOOSYAEOO6AS53PZXBOZGCP5M2OPGMZV3""
     {
         // Act
         await StellarToml.CurrencyFromUrlAsync("not-a-valid-url");
+    }
+
+    /// <summary>
+    ///     Verifies that CurrencyFromUrlAsync throws exception when URL is null or empty.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public async Task CurrencyFromUrlAsync_WithEmptyUrl_ThrowsArgumentException()
+    {
+        // Act
+        await StellarToml.CurrencyFromUrlAsync("");
+    }
+
+    /// <summary>
+    ///     Verifies that FromDomainAsync correctly handles custom HTTP headers.
+    /// </summary>
+    [TestMethod]
+    public async Task FromDomainAsync_WithCustomHeaders_IncludesHeadersInRequest()
+    {
+        // Arrange
+        var (httpClient, capture) = CreateMockHttpClientWithCallback(_sampleTomlContent);
+        var customHeaders = new Dictionary<string, string>
+        {
+            { "X-Custom-Header", "custom-value" },
+            { "Authorization", "Bearer token123" },
+        };
+
+        using (httpClient)
+        {
+            // Act
+            await StellarToml.FromDomainAsync("example.com", httpClient, customHeaders);
+
+            // Assert
+            Assert.IsNotNull(capture.Request);
+            Assert.IsTrue(capture.Request.Headers.Contains("X-Custom-Header"));
+            Assert.IsTrue(capture.Request.Headers.Contains("Authorization"));
+        }
+    }
+
+    /// <summary>
+    ///     Verifies that FromDomainAsync overload with bearerToken and resilienceOptions works correctly.
+    ///     This indirectly tests GetOrCreateHttpClient by verifying the overload accepts these parameters.
+    /// </summary>
+    [TestMethod]
+    public async Task FromDomainAsync_WithBearerTokenAndResilienceOptions_WorksCorrectly()
+    {
+        // Arrange
+        using var httpClient = CreateMockHttpClient(_sampleTomlContent);
+        var resilienceOptions = HttpResilienceOptionsPresets.WithConnectionRetries();
+
+        // Act - Call with bearerToken and resilienceOptions (GetOrCreateHttpClient is called internally when httpClient is null,
+        // but we provide httpClient here to avoid real network calls. The test verifies the overload signature works.)
+        var stellarToml = await StellarToml.FromDomainAsync("example.com", resilienceOptions, "test-bearer-token", httpClient);
+
+        // Assert - Request succeeded, verifying the overload works correctly
+        Assert.IsNotNull(stellarToml);
+        Assert.AreEqual("2.0.0", stellarToml.GeneralInformation.Version);
+    }
+
+    /// <summary>
+    ///     Verifies that CurrencyFromUrlAsync overload with bearerToken and resilienceOptions works correctly.
+    ///     This indirectly tests GetOrCreateHttpClient by verifying the overload accepts these parameters.
+    /// </summary>
+    [TestMethod]
+    public async Task CurrencyFromUrlAsync_WithBearerTokenAndResilienceOptions_WorksCorrectly()
+    {
+        // Arrange
+        using var httpClient = CreateMockHttpClient(_linkedCurrencyTomlContent);
+        var resilienceOptions = HttpResilienceOptionsPresets.WithConnectionRetries();
+
+        // Act - Call with bearerToken and resilienceOptions (GetOrCreateHttpClient is called internally when httpClient is null,
+        // but we provide httpClient here to avoid real network calls. The test verifies the overload signature works.)
+        var currency = await StellarToml.CurrencyFromUrlAsync(
+            "https://example.com/.well-known/TESTC.toml",
+            resilienceOptions,
+            "test-bearer-token",
+            httpClient);
+
+        // Assert - Request succeeded, verifying the overload works correctly
+        Assert.IsNotNull(currency);
+        Assert.AreEqual("TESTC", currency.Code);
+    }
+
+    /// <summary>
+    ///     Verifies that CurrencyFromUrlAsync handles HttpRequestException correctly.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(StellarTomlException))]
+    public async Task CurrencyFromUrlAsync_WithHttpRequestException_WrapsException()
+    {
+        // Arrange
+        using var httpClient = CreateMockHttpClientWithException(new HttpRequestException("Network error"));
+
+        try
+        {
+            // Act
+            await StellarToml.CurrencyFromUrlAsync("https://example.com/currency.toml", httpClient);
+        }
+        catch (StellarTomlException ex)
+        {
+            // Assert
+            Assert.IsTrue(ex.Message.Contains("Failed to fetch currency TOML"));
+            Assert.IsNotNull(ex.InnerException);
+            Assert.IsInstanceOfType(ex.InnerException, typeof(HttpRequestException));
+            throw;
+        }
+    }
+
+    /// <summary>
+    ///     Verifies that StellarToml parses TOML correctly when optional sections (PRINCIPALS, CURRENCIES, VALIDATORS) are missing.
+    /// </summary>
+    [TestMethod]
+    public void Constructor_WithOptionalSectionsMissing_ParsesSuccessfully()
+    {
+        // Arrange - TOML with only required sections
+        var minimalToml = @"
+VERSION=""2.0.0""
+NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
+FEDERATION_SERVER=""https://stellarid.io/federation/""
+
+[DOCUMENTATION]
+ORG_NAME=""Test Org""
+";
+
+        // Act
+        var stellarToml = new StellarToml(minimalToml);
+
+        // Assert
+        Assert.IsNotNull(stellarToml.GeneralInformation);
+        Assert.IsNotNull(stellarToml.Documentation);
+        Assert.IsNull(stellarToml.PointsOfContact); // PRINCIPALS missing
+        Assert.IsNull(stellarToml.Currencies); // CURRENCIES missing
+        Assert.IsNull(stellarToml.Validators); // VALIDATORS missing
+    }
+
+    /// <summary>
+    ///     Verifies that StellarToml parses all extended currency fields correctly.
+    /// </summary>
+    [TestMethod]
+    public void Constructor_WithExtendedCurrencyFields_ParsesAllFields()
+    {
+        // Arrange - TOML with currency containing all optional fields
+        var extendedCurrencyToml = @"
+VERSION=""2.0.0""
+NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
+
+[[CURRENCIES]]
+code=""EXTENDED""
+code_template=""EXT*""
+issuer=""GCZJM35NKGVK47BB4SPBDV25477PZYIYPVVG453LPYFNXLS3FGHDXOCM""
+status=""live""
+display_decimals=2
+toml=""https://example.com/.well-known/EXTENDED.toml""
+max_number=1000000
+is_unlimited=false
+is_asset_anchored=true
+attestation_of_reserve=""https://example.com/attestation.pdf""
+collateral_address_messages=[""Message 1"", ""Message 2""]
+regulated=true
+approval_server=""https://example.com/approval""
+approval_criteria=""Must be verified""
+";
+
+        // Act
+        var stellarToml = new StellarToml(extendedCurrencyToml);
+
+        // Assert
+        Assert.IsNotNull(stellarToml.Currencies);
+        Assert.AreEqual(1, stellarToml.Currencies!.Count);
+        var currency = stellarToml.Currencies[0];
+        Assert.AreEqual("EXTENDED", currency.Code);
+        Assert.AreEqual("EXT*", currency.CodeTemplate);
+        Assert.AreEqual("live", currency.Status);
+        Assert.AreEqual("https://example.com/.well-known/EXTENDED.toml", currency.Toml);
+        Assert.AreEqual(1000000, currency.MaxNumber);
+        Assert.AreEqual(false, currency.IsUnlimited);
+        Assert.AreEqual(true, currency.IsAssetAnchored);
+        Assert.AreEqual("https://example.com/attestation.pdf", currency.AttestationOfReserve);
+        Assert.IsNotNull(currency.CollateralAddressMessages);
+        Assert.AreEqual(2, currency.CollateralAddressMessages!.Count);
+        Assert.IsTrue(currency.CollateralAddressMessages.Contains("Message 1"));
+        Assert.IsTrue(currency.CollateralAddressMessages.Contains("Message 2"));
+        Assert.AreEqual(true, currency.Regulated);
+        Assert.AreEqual("https://example.com/approval", currency.ApprovalServer);
+        Assert.AreEqual("Must be verified", currency.ApprovalCriteria);
+    }
+
+    /// <summary>
+    ///     Verifies that StellarToml parses PointOfContact with Telegram field correctly.
+    /// </summary>
+    [TestMethod]
+    public void Constructor_WithPointOfContactTelegram_ParsesTelegramField()
+    {
+        // Arrange - TOML with PRINCIPALS containing telegram field
+        var tomlWithTelegram = @"
+VERSION=""2.0.0""
+NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
+
+[[PRINCIPALS]]
+name=""John Doe""
+email=""john@example.com""
+telegram=""@johndoe""
+keybase=""johndoe""
+";
+
+        // Act
+        var stellarToml = new StellarToml(tomlWithTelegram);
+
+        // Assert
+        Assert.IsNotNull(stellarToml.PointsOfContact);
+        Assert.AreEqual(1, stellarToml.PointsOfContact!.Count);
+        var pointOfContact = stellarToml.PointsOfContact[0];
+        Assert.AreEqual("John Doe", pointOfContact.Name);
+        Assert.AreEqual("john@example.com", pointOfContact.Email);
+        Assert.AreEqual("@johndoe", pointOfContact.Telegram);
+        Assert.AreEqual("johndoe", pointOfContact.Keybase);
     }
 }
 

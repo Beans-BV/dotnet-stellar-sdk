@@ -61,7 +61,7 @@ public class GeneralInformation
     /// <summary>
     ///     A list of Stellar accounts that are controlled by this domain.
     /// </summary>
-    public List<string> Accounts { get; set; } = new();
+    public List<string> Accounts { get; } = [];
 
     /// <summary>
     ///     The signing key is used for SEP-7 delegated signing.

@@ -25,7 +25,9 @@ public class StellarToml
     /// </summary>
     private static HttpClient GetOrCreateHttpClient(string? bearerToken = null, HttpResilienceOptions? resilienceOptions = null)
     {
-        return new DefaultStellarSdkHttpClient(bearerToken, resilienceOptions: resilienceOptions);
+        return new DefaultStellarSdkHttpClient(
+            bearerToken,
+            resilienceOptions: resilienceOptions);
     }
 
     /// <summary>
