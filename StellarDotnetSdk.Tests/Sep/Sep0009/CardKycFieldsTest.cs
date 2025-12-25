@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Sep.Sep0009;
@@ -30,7 +29,7 @@ public class CardKycFieldsTest
             StateOrProvince = "NY",
             City = "New York",
             Address = "123 Main St\nNew York, NY 12345",
-            Token = "tok_visa_1234"
+            Token = "tok_visa_1234",
         };
 
         // Assert
@@ -83,7 +82,7 @@ public class CardKycFieldsTest
             StateOrProvince = "NY",
             City = "New York",
             Address = "123 Main St\nNew York, NY 12345",
-            Token = "tok_visa_1234"
+            Token = "tok_visa_1234",
         };
 
         // Act
@@ -100,7 +99,8 @@ public class CardKycFieldsTest
         result.Should().ContainKey(CardKycFields.CountryCodeFieldKey).WhoseValue.Should().Be("US");
         result.Should().ContainKey(CardKycFields.StateOrProvinceFieldKey).WhoseValue.Should().Be("NY");
         result.Should().ContainKey(CardKycFields.CityFieldKey).WhoseValue.Should().Be("New York");
-        result.Should().ContainKey(CardKycFields.AddressFieldKey).WhoseValue.Should().Be("123 Main St\nNew York, NY 12345");
+        result.Should().ContainKey(CardKycFields.AddressFieldKey).WhoseValue.Should()
+            .Be("123 Main St\nNew York, NY 12345");
         result.Should().ContainKey(CardKycFields.TokenFieldKey).WhoseValue.Should().Be("tok_visa_1234");
     }
 
@@ -115,7 +115,7 @@ public class CardKycFieldsTest
         {
             Number = "4111111111111111",
             ExpirationDate = "29-11",
-            Cvc = "123"
+            Cvc = "123",
         };
 
         // Act
@@ -171,4 +171,3 @@ public class CardKycFieldsTest
         CardKycFields.TokenFieldKey.Should().Be("card.token");
     }
 }
-

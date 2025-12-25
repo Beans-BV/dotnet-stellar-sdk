@@ -15,8 +15,10 @@ public sealed record Currency
     public string? Code { get; init; }
 
     /// <summary>
-    ///     A pattern with ? as a single character wildcard. Allows a CURRENCIES entry to apply to multiple assets that share the same info.
-    ///     An example is futures, where the only difference between issues is the date of the contract. E.g. CORN???????? to match codes such as CORN20180604.
+    ///     A pattern with ? as a single character wildcard. Allows a CURRENCIES entry to apply to multiple assets that share
+    ///     the same info.
+    ///     An example is futures, where the only difference between issues is the date of the contract. E.g. CORN???????? to
+    ///     match codes such as CORN20180604.
     /// </summary>
     public string? CodeTemplate { get; init; }
 
@@ -32,7 +34,8 @@ public sealed record Currency
     public string? Contract { get; init; }
 
     /// <summary>
-    ///     Status of token. One of live, dead, test, or private. Allows issuer to mark whether token is dead/for testing/for private use
+    ///     Status of token. One of live, dead, test, or private. Allows issuer to mark whether token is dead/for testing/for
+    ///     private use
     ///     or is live and should be listed in live exchanges.
     /// </summary>
     public string? Status { get; init; }
@@ -88,7 +91,8 @@ public sealed record Currency
     public string? AnchorAssetType { get; init; }
 
     /// <summary>
-    ///     If anchored token, code / symbol for asset that token is anchored to. E.g. USD, BTC, SBUX, Address of real-estate investment property.
+    ///     If anchored token, code / symbol for asset that token is anchored to. E.g. USD, BTC, SBUX, Address of real-estate
+    ///     investment property.
     /// </summary>
     public string? AnchorAsset { get; init; }
 
@@ -103,7 +107,8 @@ public sealed record Currency
     public string? RedemptionInstructions { get; init; }
 
     /// <summary>
-    ///     If this is an anchored crypto token, list of one or more public addresses that hold the assets for which you are issuing tokens.
+    ///     If this is an anchored crypto token, list of one or more public addresses that hold the assets for which you are
+    ///     issuing tokens.
     /// </summary>
     public IReadOnlyCollection<string>? CollateralAddresses { get; init; }
 
@@ -113,7 +118,8 @@ public sealed record Currency
     public IReadOnlyCollection<string>? CollateralAddressMessages { get; init; }
 
     /// <summary>
-    ///     These prove you control the collateralAddresses. For each address you list, sign the entry in collateralAddressMessages
+    ///     These prove you control the collateralAddresses. For each address you list, sign the entry in
+    ///     collateralAddressMessages
     ///     with the address's private key and add the resulting string to this list as a base64-encoded raw signature.
     /// </summary>
     public IReadOnlyCollection<string>? CollateralAddressSignatures { get; init; }
@@ -136,8 +142,8 @@ public sealed record Currency
     /// <summary>
     ///     Alternately, stellar.toml can link out to a separate TOML file for each currency by specifying
     ///     toml="https://DOMAIN/.well-known/CURRENCY.toml" as the currency's only field.
-    ///     In this case only this field is filled. To load the currency data, you can use StellarToml.CurrencyFromUrlAsync(string toml).
+    ///     In this case only this field is filled. To load the currency data, you can use
+    ///     StellarToml.CurrencyFromUrlAsync(string toml).
     /// </summary>
     public string? Toml { get; init; }
 }
-

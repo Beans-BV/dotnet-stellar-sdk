@@ -69,7 +69,8 @@ public sealed record GeneralInformation
     public string? UriRequestSigningKey { get; init; }
 
     /// <summary>
-    ///     The server used for receiving SEP-31 direct fiat-to-fiat payments. Requires SEP-12 and hence a KYC_SERVER TOML attribute.
+    ///     The server used for receiving SEP-31 direct fiat-to-fiat payments. Requires SEP-12 and hence a KYC_SERVER TOML
+    ///     attribute.
     /// </summary>
     public string? DirectPaymentServer { get; init; }
 
@@ -88,4 +89,3 @@ public sealed record GeneralInformation
     /// </summary>
     public string? WebAuthContractId { get; init; }
 }
-

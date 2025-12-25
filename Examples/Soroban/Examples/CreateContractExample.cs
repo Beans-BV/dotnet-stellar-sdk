@@ -1,7 +1,7 @@
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Examples.Soroban.Helpers;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Transactions;
-using StellarDotnetSdk.Examples.Soroban.Helpers;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 
 namespace StellarDotnetSdk.Examples.Soroban.Examples;
@@ -55,4 +55,3 @@ internal static class CreateContractExample
         return createdContractId;
     }
 }
-

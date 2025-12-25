@@ -5,7 +5,6 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Sep.Sep0010;
@@ -374,7 +373,8 @@ public class ServerWebAuthTest
     }
 
     /// <summary>
-    ///     Verifies that VerifyChallengeTransactionSigners throws InvalidWebAuthenticationException when transaction is not signed by
+    ///     Verifies that VerifyChallengeTransactionSigners throws InvalidWebAuthenticationException when transaction is not
+    ///     signed by
     ///     client.
     /// </summary>
     [TestMethod]
@@ -404,7 +404,8 @@ public class ServerWebAuthTest
     }
 
     /// <summary>
-    ///     Verifies that VerifyChallengeTransactionSigners throws InvalidWebAuthenticationException when transaction is signed by
+    ///     Verifies that VerifyChallengeTransactionSigners throws InvalidWebAuthenticationException when transaction is signed
+    ///     by
     ///     client on different network.
     /// </summary>
     [TestMethod]
@@ -2224,8 +2225,8 @@ public class ServerWebAuthTest
             [_clientKeypair.AccountId],
             HomeDomain,
             WebAuthDomain,
-            network: _testnet,
-            now: now);
+            _testnet,
+            now);
 
         // Assert: Verification should succeed and return the client signer
         Assert.AreEqual(1, signers.Length);
@@ -2277,8 +2278,8 @@ public class ServerWebAuthTest
             [_clientKeypair.AccountId, clientDomainKeypair.AccountId],
             HomeDomain,
             WebAuthDomain,
-            network: _testnet,
-            now: now);
+            _testnet,
+            now);
 
         // Assert: Verification should succeed and return both signers (excluding server)
         Assert.AreEqual(2, signers.Length);
@@ -2326,7 +2327,7 @@ public class ServerWebAuthTest
         var signerSummary = new Dictionary<string, int>
         {
             { _clientKeypair.AccountId, 5 },
-            { client2Keypair.AccountId, 3 }
+            { client2Keypair.AccountId, 3 },
         };
         const int threshold = 7; // Both signers together (5+3=8) meet threshold
 
@@ -2337,8 +2338,8 @@ public class ServerWebAuthTest
             signerSummary,
             HomeDomain,
             WebAuthDomain,
-            network: _testnet,
-            now: now);
+            _testnet,
+            now);
 
         // Assert: Verification should succeed and return both signers (excluding server)
         Assert.AreEqual(2, signers.Count);

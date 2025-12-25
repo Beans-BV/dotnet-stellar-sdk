@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 
 namespace StellarDotnetSdk.Sep.Sep0009;
 
@@ -46,4 +45,3 @@ public sealed record StandardKycFields
         return result;
     }
 }
-

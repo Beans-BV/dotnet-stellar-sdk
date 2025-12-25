@@ -20,11 +20,11 @@ public class StandardKycFieldsTest
         var naturalPerson = new NaturalPersonKycFields
         {
             FirstName = "John",
-            LastName = "Doe"
+            LastName = "Doe",
         };
         var fields = new StandardKycFields
         {
-            NaturalPerson = naturalPerson
+            NaturalPerson = naturalPerson,
         };
 
         // Act & Assert
@@ -43,11 +43,11 @@ public class StandardKycFieldsTest
         var organization = new OrganizationKycFields
         {
             Name = "Acme Corp",
-            VatNumber = "VAT123456"
+            VatNumber = "VAT123456",
         };
         var fields = new StandardKycFields
         {
-            Organization = organization
+            Organization = organization,
         };
 
         // Act & Assert
@@ -66,16 +66,16 @@ public class StandardKycFieldsTest
         var naturalPerson = new NaturalPersonKycFields
         {
             FirstName = "John",
-            LastName = "Doe"
+            LastName = "Doe",
         };
         var organization = new OrganizationKycFields
         {
-            Name = "Acme Corp"
+            Name = "Acme Corp",
         };
         var fields = new StandardKycFields
         {
             NaturalPerson = naturalPerson,
-            Organization = organization
+            Organization = organization,
         };
 
         // Act & Assert
@@ -108,7 +108,7 @@ public class StandardKycFieldsTest
         // Arrange
         var fields = new StandardKycFields
         {
-            NaturalPerson = new NaturalPersonKycFields { FirstName = "John" }
+            NaturalPerson = new NaturalPersonKycFields { FirstName = "John" },
         };
 
         // Act - Use with expression to create a new instance with null NaturalPerson
@@ -128,7 +128,7 @@ public class StandardKycFieldsTest
         // Arrange
         var fields = new StandardKycFields
         {
-            Organization = new OrganizationKycFields { Name = "Acme Corp" }
+            Organization = new OrganizationKycFields { Name = "Acme Corp" },
         };
 
         // Act - Use with expression to create a new instance with null Organization
@@ -169,8 +169,8 @@ public class StandardKycFieldsTest
             {
                 FirstName = "John",
                 LastName = "Doe",
-                EmailAddress = "john@example.com"
-            }
+                EmailAddress = "john@example.com",
+            },
         };
 
         // Act
@@ -180,7 +180,8 @@ public class StandardKycFieldsTest
         result.Should().NotBeNull();
         result.Should().ContainKey(NaturalPersonKycFields.FirstNameFieldKey).WhoseValue.Should().Be("John");
         result.Should().ContainKey(NaturalPersonKycFields.LastNameFieldKey).WhoseValue.Should().Be("Doe");
-        result.Should().ContainKey(NaturalPersonKycFields.EmailAddressFieldKey).WhoseValue.Should().Be("john@example.com");
+        result.Should().ContainKey(NaturalPersonKycFields.EmailAddressFieldKey).WhoseValue.Should()
+            .Be("john@example.com");
     }
 
     /// <summary>
@@ -196,8 +197,8 @@ public class StandardKycFieldsTest
             {
                 Name = "Acme Corp",
                 VatNumber = "VAT123456",
-                Email = "contact@acme.com"
-            }
+                Email = "contact@acme.com",
+            },
         };
 
         // Act
@@ -223,14 +224,14 @@ public class StandardKycFieldsTest
             {
                 FirstName = "John",
                 LastName = "Doe",
-                EmailAddress = "john@example.com"
+                EmailAddress = "john@example.com",
             },
             Organization = new OrganizationKycFields
             {
                 Name = "Acme Corp",
                 VatNumber = "VAT123456",
-                Email = "contact@acme.com"
-            }
+                Email = "contact@acme.com",
+            },
         };
 
         // Act
@@ -241,7 +242,8 @@ public class StandardKycFieldsTest
         // Verify NaturalPerson fields are present
         result.Should().ContainKey(NaturalPersonKycFields.FirstNameFieldKey).WhoseValue.Should().Be("John");
         result.Should().ContainKey(NaturalPersonKycFields.LastNameFieldKey).WhoseValue.Should().Be("Doe");
-        result.Should().ContainKey(NaturalPersonKycFields.EmailAddressFieldKey).WhoseValue.Should().Be("john@example.com");
+        result.Should().ContainKey(NaturalPersonKycFields.EmailAddressFieldKey).WhoseValue.Should()
+            .Be("john@example.com");
         // Verify Organization fields are present
         result.Should().ContainKey(OrganizationKycFields.NameFieldKey).WhoseValue.Should().Be("Acme Corp");
         result.Should().ContainKey(OrganizationKycFields.VatNumberFieldKey).WhoseValue.Should().Be("VAT123456");
@@ -250,4 +252,3 @@ public class StandardKycFieldsTest
         result.Should().HaveCount(6);
     }
 }
-

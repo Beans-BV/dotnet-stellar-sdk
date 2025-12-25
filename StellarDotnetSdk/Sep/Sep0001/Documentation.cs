@@ -37,8 +37,10 @@ public sealed record Documentation
     public string? OrgPhysicalAddress { get; init; }
 
     /// <summary>
-    ///     URL on the same domain as the orgUrl that contains an image or pdf official document attesting to the physical address.
-    ///     It must list the orgName or orgDba as the party at the address. Only documents from an official third party are acceptable.
+    ///     URL on the same domain as the orgUrl that contains an image or pdf official document attesting to the physical
+    ///     address.
+    ///     It must list the orgName or orgDba as the party at the address. Only documents from an official third party are
+    ///     acceptable.
     ///     E.g. a utility bill, mail from a financial institution, or business license.
     /// </summary>
     public string? OrgPhysicalAddressAttestation { get; init; }
@@ -49,12 +51,14 @@ public sealed record Documentation
     public string? OrgPhoneNumber { get; init; }
 
     /// <summary>
-    ///     URL on the same domain as the orgUrl that contains an image or pdf of a phone bill showing both the phone number and the organization's name.
+    ///     URL on the same domain as the orgUrl that contains an image or pdf of a phone bill showing both the phone number
+    ///     and the organization's name.
     /// </summary>
     public string? OrgPhoneNumberAttestation { get; init; }
 
     /// <summary>
-    ///     A Keybase account name for the organization. Should contain proof of ownership of any public online accounts you list here,
+    ///     A Keybase account name for the organization. Should contain proof of ownership of any public online accounts you
+    ///     list here,
     ///     including the organization's domain.
     /// </summary>
     public string? OrgKeybase { get; init; }
@@ -94,4 +98,3 @@ public sealed record Documentation
     /// </summary>
     public string? OrgLicenseNumber { get; init; }
 }
-

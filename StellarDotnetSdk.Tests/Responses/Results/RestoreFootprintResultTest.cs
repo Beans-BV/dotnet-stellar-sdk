@@ -107,7 +107,8 @@ public class RestoreFootprintResultTest
     ///     Verifies that RestoreFootprintInsufficientRefundableFee result can be deserialized correctly.
     /// </summary>
     [TestMethod]
-    public void Deserialize_WithRestoreFootprintInsufficientRefundableFeeXdr_ReturnsRestoreFootprintInsufficientRefundableFee()
+    public void
+        Deserialize_WithRestoreFootprintInsufficientRefundableFeeXdr_ReturnsRestoreFootprintInsufficientRefundableFee()
     {
         // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr
@@ -150,4 +151,3 @@ public class RestoreFootprintResultTest
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => RestoreFootprintResult.FromXdr(xdrResult));
     }
 }
-

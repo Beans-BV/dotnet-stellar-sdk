@@ -19,8 +19,8 @@ namespace StellarDotnetSdk.Tests.Sep.Sep0001;
 [TestClass]
 public class StellarTomlTest
 {
-    private string _sampleTomlContent = null!;
     private string _linkedCurrencyTomlContent = null!;
+    private string _sampleTomlContent = null!;
 
     [TestInitialize]
     public void Setup()
@@ -60,14 +60,6 @@ public class StellarTomlTest
 
         var httpClient = new HttpClient(fakeHttpMessageHandler.Object);
         return (httpClient, capture);
-    }
-
-    /// <summary>
-    ///     Wrapper class to hold captured HTTP request messages.
-    /// </summary>
-    private class RequestCapture
-    {
-        public HttpRequestMessage? Request { get; set; }
     }
 
     /// <summary>
@@ -155,7 +147,8 @@ public class StellarTomlTest
         Assert.AreEqual("https://test.direct-payment.com", generalInfo.DirectPaymentServer);
         Assert.AreEqual("https://test.anchor-quote.com", generalInfo.AnchorQuoteServer);
         Assert.AreEqual("https://api.example.com:8001/contracts/auth", generalInfo.WebAuthForContractsEndpoint);
-        Assert.AreEqual("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC", generalInfo.WebAuthContractId);
+        Assert.AreEqual("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            generalInfo.WebAuthContractId);
 
         // Assert - Documentation
         Assert.IsNotNull(stellarToml.Documentation);
@@ -375,7 +368,8 @@ PUBLIC_KEY=""GD5DJQDDBKGAYNEAXU562HYGOOSYAEOO6AS53PZXBOZGCP5M2OPGMZV3""
         using (httpClient)
         {
             // Act
-            await StellarToml.CurrencyFromUrlAsync("https://example.com/.well-known/TESTC.toml", httpClient, customHeaders);
+            await StellarToml.CurrencyFromUrlAsync("https://example.com/.well-known/TESTC.toml", httpClient,
+                customHeaders);
 
             // Assert
             Assert.IsNotNull(capture.Request);
@@ -456,7 +450,8 @@ PUBLIC_KEY=""GD5DJQDDBKGAYNEAXU562HYGOOSYAEOO6AS53PZXBOZGCP5M2OPGMZV3""
 
         // Act - Call with bearerToken and resilienceOptions (GetOrCreateHttpClient is called internally when httpClient is null,
         // but we provide httpClient here to avoid real network calls. The test verifies the overload signature works.)
-        var stellarToml = await StellarToml.FromDomainAsync("example.com", resilienceOptions, "test-bearer-token", httpClient);
+        var stellarToml =
+            await StellarToml.FromDomainAsync("example.com", resilienceOptions, "test-bearer-token", httpClient);
 
         // Assert - Request succeeded, verifying the overload works correctly
         Assert.IsNotNull(stellarToml);
@@ -513,7 +508,8 @@ PUBLIC_KEY=""GD5DJQDDBKGAYNEAXU562HYGOOSYAEOO6AS53PZXBOZGCP5M2OPGMZV3""
     }
 
     /// <summary>
-    ///     Verifies that StellarToml parses TOML correctly when optional sections (PRINCIPALS, CURRENCIES, VALIDATORS) are missing.
+    ///     Verifies that StellarToml parses TOML correctly when optional sections (PRINCIPALS, CURRENCIES, VALIDATORS) are
+    ///     missing.
     /// </summary>
     [TestMethod]
     public void Constructor_WithOptionalSectionsMissing_ParsesSuccessfully()
@@ -669,6 +665,14 @@ keybase=""johndoe""
     }
 
     /// <summary>
+    ///     Wrapper class to hold captured HTTP request messages.
+    /// </summary>
+    private class RequestCapture
+    {
+        public HttpRequestMessage? Request { get; set; }
+    }
+
+    /// <summary>
     ///     HttpClient wrapper that tracks disposal for testing purposes.
     /// </summary>
     private class DisposableTrackingHttpClient : HttpClient
@@ -686,4 +690,3 @@ keybase=""johndoe""
         }
     }
 }
-

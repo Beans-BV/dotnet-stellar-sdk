@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.Json.Serialization;
-using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Xdr;
 using Asset = StellarDotnetSdk.Assets.Asset;
 

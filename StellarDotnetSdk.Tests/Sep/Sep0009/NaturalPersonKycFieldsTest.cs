@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Sep.Sep0009;
@@ -44,7 +43,7 @@ public class NaturalPersonKycFieldsTest
             IdNumber = "123456789",
             IpAddress = "192.168.1.1",
             Sex = "male",
-            ReferralId = "ref123"
+            ReferralId = "ref123",
         };
 
         // Assert
@@ -89,7 +88,7 @@ public class NaturalPersonKycFieldsTest
         {
             BirthDate = birthDate,
             IdIssueDate = idIssueDate,
-            IdExpirationDate = idExpirationDate
+            IdExpirationDate = idExpirationDate,
         };
 
         // Assert
@@ -107,7 +106,7 @@ public class NaturalPersonKycFieldsTest
         // Arrange
         var fields = new NaturalPersonKycFields
         {
-            Occupation = 1234
+            Occupation = 1234,
         };
 
         // Assert
@@ -135,7 +134,7 @@ public class NaturalPersonKycFieldsTest
             NotaryApprovalOfPhotoId = notaryApproval,
             PhotoProofResidence = photoProofResidence,
             ProofOfIncome = proofOfIncome,
-            ProofOfLiveness = proofOfLiveness
+            ProofOfLiveness = proofOfLiveness,
         };
 
         // Assert
@@ -196,7 +195,7 @@ public class NaturalPersonKycFieldsTest
             IdNumber = "123456789",
             IpAddress = "192.168.1.1",
             Sex = "male",
-            ReferralId = "ref123"
+            ReferralId = "ref123",
         };
 
         // Act
@@ -213,13 +212,15 @@ public class NaturalPersonKycFieldsTest
         result.Should().ContainKey(NaturalPersonKycFields.AddressFieldKey).WhoseValue.Should().Be("123 Main St");
         result.Should().ContainKey(NaturalPersonKycFields.MobileNumberFieldKey).WhoseValue.Should().Be("+14155552671");
         result.Should().ContainKey(NaturalPersonKycFields.MobileNumberFormatFieldKey).WhoseValue.Should().Be("E.164");
-        result.Should().ContainKey(NaturalPersonKycFields.EmailAddressFieldKey).WhoseValue.Should().Be("john@example.com");
+        result.Should().ContainKey(NaturalPersonKycFields.EmailAddressFieldKey).WhoseValue.Should()
+            .Be("john@example.com");
         result.Should().ContainKey(NaturalPersonKycFields.BirthPlaceFieldKey).WhoseValue.Should().Be("New York");
         result.Should().ContainKey(NaturalPersonKycFields.BirthCountryCodeFieldKey).WhoseValue.Should().Be("USA");
         result.Should().ContainKey(NaturalPersonKycFields.TaxIdFieldKey).WhoseValue.Should().Be("123-45-6789");
         result.Should().ContainKey(NaturalPersonKycFields.TaxIdNameFieldKey).WhoseValue.Should().Be("SSN");
         result.Should().ContainKey(NaturalPersonKycFields.EmployerNameFieldKey).WhoseValue.Should().Be("Acme Corp");
-        result.Should().ContainKey(NaturalPersonKycFields.EmployerAddressFieldKey).WhoseValue.Should().Be("456 Business Ave");
+        result.Should().ContainKey(NaturalPersonKycFields.EmployerAddressFieldKey).WhoseValue.Should()
+            .Be("456 Business Ave");
         result.Should().ContainKey(NaturalPersonKycFields.LanguageCodeFieldKey).WhoseValue.Should().Be("en");
         result.Should().ContainKey(NaturalPersonKycFields.IdTypeFieldKey).WhoseValue.Should().Be("passport");
         result.Should().ContainKey(NaturalPersonKycFields.IdCountryCodeFieldKey).WhoseValue.Should().Be("USA");
@@ -240,7 +241,7 @@ public class NaturalPersonKycFieldsTest
         {
             BirthDate = new DateOnly(1990, 1, 15),
             IdIssueDate = new DateOnly(2020, 5, 10),
-            IdExpirationDate = new DateOnly(2030, 5, 10)
+            IdExpirationDate = new DateOnly(2030, 5, 10),
         };
 
         // Act
@@ -249,7 +250,8 @@ public class NaturalPersonKycFieldsTest
         // Assert
         result.Should().ContainKey(NaturalPersonKycFields.BirthDateFieldKey).WhoseValue.Should().Be("1990-01-15");
         result.Should().ContainKey(NaturalPersonKycFields.IdIssueDateFieldKey).WhoseValue.Should().Be("2020-05-10");
-        result.Should().ContainKey(NaturalPersonKycFields.IdExpirationDateFieldKey).WhoseValue.Should().Be("2030-05-10");
+        result.Should().ContainKey(NaturalPersonKycFields.IdExpirationDateFieldKey).WhoseValue.Should()
+            .Be("2030-05-10");
     }
 
     /// <summary>
@@ -261,7 +263,7 @@ public class NaturalPersonKycFieldsTest
         // Arrange
         var fields = new NaturalPersonKycFields
         {
-            Occupation = 1234
+            Occupation = 1234,
         };
 
         // Act
@@ -285,8 +287,8 @@ public class NaturalPersonKycFieldsTest
             FinancialAccount = new FinancialAccountKycFields
             {
                 BankName = "Test Bank",
-                BankAccountNumber = "1234567890"
-            }
+                BankAccountNumber = "1234567890",
+            },
         };
 
         // Act
@@ -296,7 +298,8 @@ public class NaturalPersonKycFieldsTest
         result.Should().ContainKey(NaturalPersonKycFields.FirstNameFieldKey);
         result.Should().ContainKey(NaturalPersonKycFields.LastNameFieldKey);
         result.Should().ContainKey(FinancialAccountKycFields.BankNameFieldKey).WhoseValue.Should().Be("Test Bank");
-        result.Should().ContainKey(FinancialAccountKycFields.BankAccountNumberFieldKey).WhoseValue.Should().Be("1234567890");
+        result.Should().ContainKey(FinancialAccountKycFields.BankAccountNumberFieldKey).WhoseValue.Should()
+            .Be("1234567890");
     }
 
     /// <summary>
@@ -313,8 +316,8 @@ public class NaturalPersonKycFieldsTest
             Card = new CardKycFields
             {
                 Number = "4111111111111111",
-                ExpirationDate = "29-11"
-            }
+                ExpirationDate = "29-11",
+            },
         };
 
         // Act
@@ -365,7 +368,7 @@ public class NaturalPersonKycFieldsTest
             NotaryApprovalOfPhotoId = notaryApproval,
             PhotoProofResidence = photoProofResidence,
             ProofOfIncome = proofOfIncome,
-            ProofOfLiveness = proofOfLiveness
+            ProofOfLiveness = proofOfLiveness,
         };
 
         // Act
@@ -373,12 +376,18 @@ public class NaturalPersonKycFieldsTest
 
         // Assert
         result.Should().HaveCount(6);
-        result.Should().ContainKey(NaturalPersonKycFields.PhotoIdFrontFileKey).WhoseValue.Should().BeEquivalentTo(photoIdFront);
-        result.Should().ContainKey(NaturalPersonKycFields.PhotoIdBackFileKey).WhoseValue.Should().BeEquivalentTo(photoIdBack);
-        result.Should().ContainKey(NaturalPersonKycFields.NotaryApprovalOfPhotoIdFileKey).WhoseValue.Should().BeEquivalentTo(notaryApproval);
-        result.Should().ContainKey(NaturalPersonKycFields.PhotoProofResidenceFileKey).WhoseValue.Should().BeEquivalentTo(photoProofResidence);
-        result.Should().ContainKey(NaturalPersonKycFields.ProofOfIncomeFileKey).WhoseValue.Should().BeEquivalentTo(proofOfIncome);
-        result.Should().ContainKey(NaturalPersonKycFields.ProofOfLivenessFileKey).WhoseValue.Should().BeEquivalentTo(proofOfLiveness);
+        result.Should().ContainKey(NaturalPersonKycFields.PhotoIdFrontFileKey).WhoseValue.Should()
+            .BeEquivalentTo(photoIdFront);
+        result.Should().ContainKey(NaturalPersonKycFields.PhotoIdBackFileKey).WhoseValue.Should()
+            .BeEquivalentTo(photoIdBack);
+        result.Should().ContainKey(NaturalPersonKycFields.NotaryApprovalOfPhotoIdFileKey).WhoseValue.Should()
+            .BeEquivalentTo(notaryApproval);
+        result.Should().ContainKey(NaturalPersonKycFields.PhotoProofResidenceFileKey).WhoseValue.Should()
+            .BeEquivalentTo(photoProofResidence);
+        result.Should().ContainKey(NaturalPersonKycFields.ProofOfIncomeFileKey).WhoseValue.Should()
+            .BeEquivalentTo(proofOfIncome);
+        result.Should().ContainKey(NaturalPersonKycFields.ProofOfLivenessFileKey).WhoseValue.Should()
+            .BeEquivalentTo(proofOfLiveness);
     }
 
     /// <summary>
@@ -391,7 +400,7 @@ public class NaturalPersonKycFieldsTest
         var photoIdFront = new byte[] { 1, 2, 3 };
         var fields = new NaturalPersonKycFields
         {
-            PhotoIdFront = photoIdFront
+            PhotoIdFront = photoIdFront,
         };
 
         // Act
@@ -458,4 +467,3 @@ public class NaturalPersonKycFieldsTest
         NaturalPersonKycFields.ProofOfLivenessFileKey.Should().Be("proof_of_liveness");
     }
 }
-

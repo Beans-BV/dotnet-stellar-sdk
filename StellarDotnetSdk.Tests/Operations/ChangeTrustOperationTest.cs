@@ -2,7 +2,6 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
-using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Xdr;
 using Asset = StellarDotnetSdk.Assets.Asset;
@@ -153,7 +152,7 @@ public class ChangeTrustOperationTest
         var changeTrustAsset = ChangeTrustAsset.Create(new AssetTypeNative());
 
         // Act
-        var operation = new ChangeTrustOperation(changeTrustAsset, null);
+        var operation = new ChangeTrustOperation(changeTrustAsset);
 
         // Assert
         Assert.AreEqual(ChangeTrustOperation.MaxLimit, operation.Limit);
@@ -179,7 +178,8 @@ public class ChangeTrustOperationTest
     }
 
     /// <summary>
-    ///     Verifies that ChangeTrustOperation with ChangeTrustAsset parameter and source account sets source account correctly.
+    ///     Verifies that ChangeTrustOperation with ChangeTrustAsset parameter and source account sets source account
+    ///     correctly.
     /// </summary>
     [TestMethod]
     public void Constructor_WithChangeTrustAssetAndSourceAccount_SetsSourceAccount()
@@ -207,7 +207,7 @@ public class ChangeTrustOperationTest
         var assetB = Asset.Create($"USD:{KeyPair.Random().AccountId}");
 
         // Act
-        var operation = new ChangeTrustOperation(assetA, assetB, null, null);
+        var operation = new ChangeTrustOperation(assetA, assetB);
 
         // Assert
         Assert.IsTrue(operation.Asset is LiquidityPoolShareChangeTrustAsset);
@@ -218,7 +218,8 @@ public class ChangeTrustOperationTest
     }
 
     /// <summary>
-    ///     Verifies that ChangeTrustOperation obsolete constructor with liquidity pool assets and specific feeBP uses provided fee.
+    ///     Verifies that ChangeTrustOperation obsolete constructor with liquidity pool assets and specific feeBP uses provided
+    ///     fee.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -230,7 +231,7 @@ public class ChangeTrustOperationTest
         const int feeBP = 50;
 
         // Act
-        var operation = new ChangeTrustOperation(assetA, assetB, feeBP, null);
+        var operation = new ChangeTrustOperation(assetA, assetB, feeBP);
 
         // Assert
         Assert.IsTrue(operation.Asset is LiquidityPoolShareChangeTrustAsset);
@@ -240,7 +241,8 @@ public class ChangeTrustOperationTest
     }
 
     /// <summary>
-    ///     Verifies that ChangeTrustOperation obsolete constructor with liquidity pool assets and specific limit uses provided limit.
+    ///     Verifies that ChangeTrustOperation obsolete constructor with liquidity pool assets and specific limit uses provided
+    ///     limit.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -259,7 +261,8 @@ public class ChangeTrustOperationTest
     }
 
     /// <summary>
-    ///     Verifies that ChangeTrustOperation obsolete constructor with liquidity pool assets and source account sets source account correctly.
+    ///     Verifies that ChangeTrustOperation obsolete constructor with liquidity pool assets and source account sets source
+    ///     account correctly.
     /// </summary>
     [TestMethod]
     [Obsolete]
@@ -299,7 +302,8 @@ public class ChangeTrustOperationTest
         Assert.IsTrue(decodedOperation.Asset is LiquidityPoolShareChangeTrustAsset);
         var decodedPoolAsset = (LiquidityPoolShareChangeTrustAsset)decodedOperation.Asset;
         var decodedParameters = (LiquidityPoolConstantProductParameters)decodedPoolAsset.Parameters;
-        var originalParameters = (LiquidityPoolConstantProductParameters)((LiquidityPoolShareChangeTrustAsset)changeTrustAsset).Parameters;
+        var originalParameters =
+            (LiquidityPoolConstantProductParameters)((LiquidityPoolShareChangeTrustAsset)changeTrustAsset).Parameters;
         Assert.AreEqual(originalParameters.AssetA.CanonicalName(), decodedParameters.AssetA.CanonicalName());
         Assert.AreEqual(originalParameters.AssetB.CanonicalName(), decodedParameters.AssetB.CanonicalName());
         Assert.AreEqual(originalParameters.Fee, decodedParameters.Fee);
@@ -321,7 +325,8 @@ public class ChangeTrustOperationTest
         Assert.AreEqual(OperationType.OperationTypeEnum.CHANGE_TRUST, operationBody.Discriminant.InnerValue);
         Assert.IsNotNull(operationBody.ChangeTrustOp);
         Assert.IsNotNull(operationBody.ChangeTrustOp.Line);
-        Assert.AreEqual(AssetType.AssetTypeEnum.ASSET_TYPE_NATIVE, operationBody.ChangeTrustOp.Line.Discriminant.InnerValue);
+        Assert.AreEqual(AssetType.AssetTypeEnum.ASSET_TYPE_NATIVE,
+            operationBody.ChangeTrustOp.Line.Discriminant.InnerValue);
         Assert.AreEqual(10000000000L, operationBody.ChangeTrustOp.Limit.InnerValue);
     }
 
@@ -537,7 +542,8 @@ public class ChangeTrustOperationTest
     }
 
     /// <summary>
-    ///     Verifies that ChangeTrustOperation with liquidity pool share asset and source account round-trips correctly through XDR.
+    ///     Verifies that ChangeTrustOperation with liquidity pool share asset and source account round-trips correctly through
+    ///     XDR.
     /// </summary>
     [TestMethod]
     public void RoundTrip_WithLiquidityPoolShareAssetAndSourceAccount_RoundTripsCorrectly()
@@ -559,4 +565,3 @@ public class ChangeTrustOperationTest
         Assert.IsTrue(decodedOperation.Asset is LiquidityPoolShareChangeTrustAsset);
     }
 }
-

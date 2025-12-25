@@ -165,4 +165,3 @@ public sealed record FinancialAccountKycFields
         return result;
     }
 }
-

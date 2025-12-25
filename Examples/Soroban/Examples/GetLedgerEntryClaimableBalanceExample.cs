@@ -1,6 +1,6 @@
+using StellarDotnetSdk.Examples.Soroban.Helpers;
 using StellarDotnetSdk.LedgerEntries;
 using StellarDotnetSdk.LedgerKeys;
-using StellarDotnetSdk.Examples.Soroban.Helpers;
 
 namespace StellarDotnetSdk.Examples.Soroban.Examples;
 
@@ -38,4 +38,3 @@ internal static class GetLedgerEntryClaimableBalanceExample
         }
     }
 }
-

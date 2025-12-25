@@ -108,7 +108,8 @@ public class InvokeHostFunctionResultTest
     ///     Verifies that InvokeHostFunctionResourceLimitExceeded result can be deserialized correctly.
     /// </summary>
     [TestMethod]
-    public void Deserialize_WithInvokeHostFunctionResourceLimitExceededXdr_ReturnsInvokeHostFunctionResourceLimitExceeded()
+    public void
+        Deserialize_WithInvokeHostFunctionResourceLimitExceededXdr_ReturnsInvokeHostFunctionResourceLimitExceeded()
     {
         // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr
@@ -164,7 +165,8 @@ public class InvokeHostFunctionResultTest
     ///     Verifies that InvokeHostFunctionInsufficientRefundableFee result can be deserialized correctly.
     /// </summary>
     [TestMethod]
-    public void Deserialize_WithInvokeHostFunctionInsufficientRefundableFeeXdr_ReturnsInvokeHostFunctionInsufficientRefundableFee()
+    public void
+        Deserialize_WithInvokeHostFunctionInsufficientRefundableFeeXdr_ReturnsInvokeHostFunctionInsufficientRefundableFee()
     {
         // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr
@@ -207,4 +209,3 @@ public class InvokeHostFunctionResultTest
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => InvokeHostFunctionResult.FromXdr(xdrResult));
     }
 }
-

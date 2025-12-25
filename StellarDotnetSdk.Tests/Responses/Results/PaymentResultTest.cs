@@ -26,16 +26,27 @@ public class PaymentResultTest
     ///     Verifies that payment result types can be deserialized correctly from XDR.
     /// </summary>
     [DataTestMethod]
-    [DataRow(PaymentResultCodeEnum.PAYMENT_SUCCESS, typeof(PaymentSuccess), true, PaymentSuccessXdr, DisplayName = "Deserialize_WithPaymentSuccessXdr_ReturnsPaymentSuccess")]
-    [DataRow(PaymentResultCodeEnum.PAYMENT_MALFORMED, typeof(PaymentMalformed), false, PaymentMalformedXdr, DisplayName = "Deserialize_WithPaymentMalformedXdr_ReturnsPaymentMalformed")]
-    [DataRow(PaymentResultCodeEnum.PAYMENT_UNDERFUNDED, typeof(PaymentUnderfunded), false, PaymentUnderfundedXdr, DisplayName = "Deserialize_WithPaymentUnderfundedXdr_ReturnsPaymentUnderfunded")]
-    [DataRow(PaymentResultCodeEnum.PAYMENT_SRC_NO_TRUST, typeof(PaymentSrcNoTrust), false, PaymentSrcNoTrustXdr, DisplayName = "Deserialize_WithPaymentSrcNoTrustXdr_ReturnsPaymentSrcNoTrust")]
-    [DataRow(PaymentResultCodeEnum.PAYMENT_SRC_NOT_AUTHORIZED, typeof(PaymentSrcNotAuthorized), false, PaymentSrcNotAuthorizedXdr, DisplayName = "Deserialize_WithPaymentSrcNotAuthorizedXdr_ReturnsPaymentSrcNotAuthorized")]
-    [DataRow(PaymentResultCodeEnum.PAYMENT_NO_DESTINATION, typeof(PaymentNoDestination), false, PaymentNoDestinationXdr, DisplayName = "Deserialize_WithPaymentNoDestinationXdr_ReturnsPaymentNoDestination")]
-    [DataRow(PaymentResultCodeEnum.PAYMENT_NO_TRUST, typeof(PaymentNoTrust), false, PaymentNoTrustXdr, DisplayName = "Deserialize_WithPaymentNoTrustXdr_ReturnsPaymentNoTrust")]
-    [DataRow(PaymentResultCodeEnum.PAYMENT_NOT_AUTHORIZED, typeof(PaymentNotAuthorized), false, PaymentNotAuthorizedXdr, DisplayName = "Deserialize_WithPaymentNotAuthorizedXdr_ReturnsPaymentNotAuthorized")]
-    [DataRow(PaymentResultCodeEnum.PAYMENT_LINE_FULL, typeof(PaymentLineFull), false, PaymentLineFullXdr, DisplayName = "Deserialize_WithPaymentLineFullXdr_ReturnsPaymentLineFull")]
-    [DataRow(PaymentResultCodeEnum.PAYMENT_NO_ISSUER, typeof(PaymentNoIssuer), false, PaymentNoIssuerXdr, DisplayName = "Deserialize_WithPaymentNoIssuerXdr_ReturnsPaymentNoIssuer")]
+    [DataRow(PaymentResultCodeEnum.PAYMENT_SUCCESS, typeof(PaymentSuccess), true, PaymentSuccessXdr,
+        DisplayName = "Deserialize_WithPaymentSuccessXdr_ReturnsPaymentSuccess")]
+    [DataRow(PaymentResultCodeEnum.PAYMENT_MALFORMED, typeof(PaymentMalformed), false, PaymentMalformedXdr,
+        DisplayName = "Deserialize_WithPaymentMalformedXdr_ReturnsPaymentMalformed")]
+    [DataRow(PaymentResultCodeEnum.PAYMENT_UNDERFUNDED, typeof(PaymentUnderfunded), false, PaymentUnderfundedXdr,
+        DisplayName = "Deserialize_WithPaymentUnderfundedXdr_ReturnsPaymentUnderfunded")]
+    [DataRow(PaymentResultCodeEnum.PAYMENT_SRC_NO_TRUST, typeof(PaymentSrcNoTrust), false, PaymentSrcNoTrustXdr,
+        DisplayName = "Deserialize_WithPaymentSrcNoTrustXdr_ReturnsPaymentSrcNoTrust")]
+    [DataRow(PaymentResultCodeEnum.PAYMENT_SRC_NOT_AUTHORIZED, typeof(PaymentSrcNotAuthorized), false,
+        PaymentSrcNotAuthorizedXdr,
+        DisplayName = "Deserialize_WithPaymentSrcNotAuthorizedXdr_ReturnsPaymentSrcNotAuthorized")]
+    [DataRow(PaymentResultCodeEnum.PAYMENT_NO_DESTINATION, typeof(PaymentNoDestination), false, PaymentNoDestinationXdr,
+        DisplayName = "Deserialize_WithPaymentNoDestinationXdr_ReturnsPaymentNoDestination")]
+    [DataRow(PaymentResultCodeEnum.PAYMENT_NO_TRUST, typeof(PaymentNoTrust), false, PaymentNoTrustXdr,
+        DisplayName = "Deserialize_WithPaymentNoTrustXdr_ReturnsPaymentNoTrust")]
+    [DataRow(PaymentResultCodeEnum.PAYMENT_NOT_AUTHORIZED, typeof(PaymentNotAuthorized), false, PaymentNotAuthorizedXdr,
+        DisplayName = "Deserialize_WithPaymentNotAuthorizedXdr_ReturnsPaymentNotAuthorized")]
+    [DataRow(PaymentResultCodeEnum.PAYMENT_LINE_FULL, typeof(PaymentLineFull), false, PaymentLineFullXdr,
+        DisplayName = "Deserialize_WithPaymentLineFullXdr_ReturnsPaymentLineFull")]
+    [DataRow(PaymentResultCodeEnum.PAYMENT_NO_ISSUER, typeof(PaymentNoIssuer), false, PaymentNoIssuerXdr,
+        DisplayName = "Deserialize_WithPaymentNoIssuerXdr_ReturnsPaymentNoIssuer")]
     public void Deserialize_WithResultCode_ReturnsExpectedType(
         PaymentResultCodeEnum resultCode,
         Type expectedType,

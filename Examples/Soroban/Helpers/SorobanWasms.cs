@@ -11,4 +11,3 @@ internal static class SorobanWasms
     public static readonly string EventsWasmPath = Path.GetFullPath("wasm/events_contract.wasm");
     public static readonly string IncrementWasmPath = Path.GetFullPath("wasm/increment_contract.wasm");
 }
-

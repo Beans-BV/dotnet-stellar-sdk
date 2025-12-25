@@ -1,5 +1,5 @@
-using StellarDotnetSdk.LedgerEntries;
 using StellarDotnetSdk.Examples.Soroban.Helpers;
+using StellarDotnetSdk.LedgerEntries;
 
 namespace StellarDotnetSdk.Examples.Soroban.Examples;
 
@@ -42,4 +42,3 @@ internal static class GetLedgerEntryContractDataExample
         return (ledgerSeq, ttl.Value);
     }
 }
-

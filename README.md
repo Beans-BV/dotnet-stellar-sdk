@@ -26,7 +26,6 @@
 a [Stellar Horizon server](https://github.com/stellar/go/tree/master/services/horizon)
 or [Stellar RPC server](https://developers.stellar.org/docs/data/rpc).
 
-
 It is used for building Stellar apps.
 
 _This project originated as a full port of the

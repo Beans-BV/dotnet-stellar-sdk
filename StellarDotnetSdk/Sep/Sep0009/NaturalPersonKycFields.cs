@@ -432,4 +432,3 @@ public sealed record NaturalPersonKycFields
         return result;
     }
 }
-

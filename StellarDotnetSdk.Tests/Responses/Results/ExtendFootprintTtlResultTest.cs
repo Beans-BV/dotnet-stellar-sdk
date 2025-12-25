@@ -79,7 +79,8 @@ public class ExtendFootprintTtlResultTest
     ///     Verifies that ExtendFootprintTtlResourceLimitExceeded result can be deserialized correctly.
     /// </summary>
     [TestMethod]
-    public void Deserialize_WithExtendFootprintTtlResourceLimitExceededXdr_ReturnsExtendFootprintTtlResourceLimitExceeded()
+    public void
+        Deserialize_WithExtendFootprintTtlResourceLimitExceededXdr_ReturnsExtendFootprintTtlResourceLimitExceeded()
     {
         // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr
@@ -107,7 +108,8 @@ public class ExtendFootprintTtlResultTest
     ///     Verifies that ExtendFootprintTtlInsufficientRefundableFee result can be deserialized correctly.
     /// </summary>
     [TestMethod]
-    public void Deserialize_WithExtendFootprintTtlInsufficientRefundableFeeXdr_ReturnsExtendFootprintTtlInsufficientRefundableFee()
+    public void
+        Deserialize_WithExtendFootprintTtlInsufficientRefundableFeeXdr_ReturnsExtendFootprintTtlInsufficientRefundableFee()
     {
         // Arrange
         var operationResultTr = new XDR.OperationResult.OperationResultTr
@@ -150,4 +152,3 @@ public class ExtendFootprintTtlResultTest
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => ExtendFootprintTtlResult.FromXdr(xdrResult));
     }
 }
-

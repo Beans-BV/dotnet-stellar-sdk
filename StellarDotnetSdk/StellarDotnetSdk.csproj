@@ -60,6 +60,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="StellarDotnetSdk.Tests" />
+        <InternalsVisibleTo Include="StellarDotnetSdk.Tests"/>
     </ItemGroup>
 </Project>

@@ -18,7 +18,8 @@ public sealed record PointOfContact
     public string? Email { get; init; }
 
     /// <summary>
-    ///     Personal Keybase account. Should include proof of ownership for other online accounts, as well as the organization's domain.
+    ///     Personal Keybase account. Should include proof of ownership for other online accounts, as well as the
+    ///     organization's domain.
     /// </summary>
     public string? Keybase { get; init; }
 
@@ -43,9 +44,10 @@ public sealed record PointOfContact
     public string? IdPhotoHash { get; init; }
 
     /// <summary>
-    ///     SHA-256 hash of a verification photo of principal. Should be well-lit and contain: principal holding ID card and signed,
-    ///     dated, hand-written message stating I, $name, am a principal of $orgName, a Stellar token issuer with address $issuerAddress.
+    ///     SHA-256 hash of a verification photo of principal. Should be well-lit and contain: principal holding ID card and
+    ///     signed,
+    ///     dated, hand-written message stating I, $name, am a principal of $orgName, a Stellar token issuer with address
+    ///     $issuerAddress.
     /// </summary>
     public string? VerificationPhotoHash { get; init; }
 }
-

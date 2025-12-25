@@ -1,7 +1,7 @@
 using System.Net.Sockets;
+using StellarDotnetSdk.Examples.Soroban.Helpers;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Soroban;
-using StellarDotnetSdk.Examples.Soroban.Helpers;
 
 namespace StellarDotnetSdk.Examples.Soroban.Examples;
 
@@ -123,4 +123,3 @@ internal static class SorobanRetryConfigurationExample
         }
     }
 }
-

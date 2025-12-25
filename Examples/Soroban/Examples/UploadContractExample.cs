@@ -1,7 +1,7 @@
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Examples.Soroban.Helpers;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Transactions;
-using StellarDotnetSdk.Examples.Soroban.Helpers;
 using SCBytes = StellarDotnetSdk.Soroban.SCBytes;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 
@@ -63,4 +63,3 @@ internal static class UploadContractExample
         return wasmId;
     }
 }
-

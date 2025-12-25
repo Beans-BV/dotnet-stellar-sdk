@@ -1,9 +1,9 @@
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Examples.Horizon;
+using StellarDotnetSdk.Examples.Soroban.Helpers;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
-using StellarDotnetSdk.Examples.Soroban.Helpers;
 using SCString = StellarDotnetSdk.Soroban.SCString;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 
@@ -137,7 +137,7 @@ internal static class TokenContractExample
         var transferTx = new TransactionBuilder(recipientAccount).AddOperation(transferOp).Build();
         await SorobanHelpers.SimulateAndUpdateTransaction(transferTx, recipient);
 
-        Console.WriteLine($"Sending 'Transfer token' transaction");
+        Console.WriteLine("Sending 'Transfer token' transaction");
         var transferResponse = await server.SendTransaction(transferTx);
         ArgumentNullException.ThrowIfNull(transferResponse.Hash);
         await SorobanHelpers.PollTransaction(transferResponse.Hash);
@@ -167,7 +167,7 @@ internal static class TokenContractExample
         var approveTx = new TransactionBuilder(recipientAccount).AddOperation(approveOp).Build();
         await SorobanHelpers.SimulateAndUpdateTransaction(approveTx, recipient);
 
-        Console.WriteLine($"Sending 'Approve allowance' transaction");
+        Console.WriteLine("Sending 'Approve allowance' transaction");
         var approveResponse = await server.SendTransaction(approveTx);
         ArgumentNullException.ThrowIfNull(approveResponse.Hash);
         await SorobanHelpers.PollTransaction(approveResponse.Hash);
@@ -195,4 +195,3 @@ internal static class TokenContractExample
         Console.WriteLine($"Burned {burnAmount} tokens from admin account");
     }
 }
-

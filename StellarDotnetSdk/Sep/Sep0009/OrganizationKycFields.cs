@@ -243,4 +243,3 @@ public sealed record OrganizationKycFields
         return result;
     }
 }
-

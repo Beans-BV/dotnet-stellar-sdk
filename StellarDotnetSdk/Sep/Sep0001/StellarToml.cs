@@ -27,16 +27,27 @@ namespace StellarDotnetSdk.Sep.Sep0001;
 public class StellarToml
 {
     /// <summary>
-    ///     Gets or creates an HttpClient instance.
-    ///     Uses DefaultStellarSdkHttpClient without retries by default, matching the Server class pattern.
+    ///     Constructs a StellarToml instance by parsing raw TOML content.
     /// </summary>
-    private static HttpClient GetOrCreateHttpClient(
-        string? bearerToken = null,
-        HttpResilienceOptions? resilienceOptions = null)
+    /// <param name="toml">Raw TOML content string to parse</param>
+    /// <exception cref="StellarTomlException">Thrown when TOML parsing fails</exception>
+    public StellarToml(string toml)
     {
-        return new DefaultStellarSdkHttpClient(
-            bearerToken,
-            resilienceOptions: resilienceOptions);
+        try
+        {
+            var safeToml = SafeguardTomlContent(toml);
+            var document = Toml.ReadString(safeToml);
+
+            GeneralInformation = ParseGeneralInformation(document);
+            Documentation = ParseDocumentation(document);
+            PointsOfContact = ParsePointsOfContact(document);
+            Currencies = ParseCurrencies(document);
+            Validators = ParseValidators(document);
+        }
+        catch (Exception ex)
+        {
+            throw new StellarTomlException("Failed to parse stellar.toml content", ex);
+        }
     }
 
     /// <summary>
@@ -65,27 +76,16 @@ public class StellarToml
     public IReadOnlyList<Validator>? Validators { get; }
 
     /// <summary>
-    ///     Constructs a StellarToml instance by parsing raw TOML content.
+    ///     Gets or creates an HttpClient instance.
+    ///     Uses DefaultStellarSdkHttpClient without retries by default, matching the Server class pattern.
     /// </summary>
-    /// <param name="toml">Raw TOML content string to parse</param>
-    /// <exception cref="StellarTomlException">Thrown when TOML parsing fails</exception>
-    public StellarToml(string toml)
+    private static HttpClient GetOrCreateHttpClient(
+        string? bearerToken = null,
+        HttpResilienceOptions? resilienceOptions = null)
     {
-        try
-        {
-            var safeToml = SafeguardTomlContent(toml);
-            var document = Toml.ReadString(safeToml);
-
-            GeneralInformation = ParseGeneralInformation(document);
-            Documentation = ParseDocumentation(document);
-            PointsOfContact = ParsePointsOfContact(document);
-            Currencies = ParseCurrencies(document);
-            Validators = ParseValidators(document);
-        }
-        catch (Exception ex)
-        {
-            throw new StellarTomlException("Failed to parse stellar.toml content", ex);
-        }
+        return new DefaultStellarSdkHttpClient(
+            bearerToken,
+            resilienceOptions: resilienceOptions);
     }
 
     /// <summary>
@@ -392,9 +392,10 @@ public class StellarToml
             AnchorQuoteServer = document.TryGetValue("ANCHOR_QUOTE_SERVER", out var anchorQuoteServer)
                 ? anchorQuoteServer.Get<string>()
                 : null,
-            WebAuthForContractsEndpoint = document.TryGetValue("WEB_AUTH_FOR_CONTRACTS_ENDPOINT", out var webAuthForContractsEndpoint)
-                ? webAuthForContractsEndpoint.Get<string>()
-                : null,
+            WebAuthForContractsEndpoint =
+                document.TryGetValue("WEB_AUTH_FOR_CONTRACTS_ENDPOINT", out var webAuthForContractsEndpoint)
+                    ? webAuthForContractsEndpoint.Get<string>()
+                    : null,
             WebAuthContractId = document.TryGetValue("WEB_AUTH_CONTRACT_ID", out var webAuthContractId)
                 ? webAuthContractId.Get<string>()
                 : null,
@@ -430,15 +431,17 @@ public class StellarToml
             OrgPhysicalAddress = doc.TryGetValue("ORG_PHYSICAL_ADDRESS", out var orgPhysicalAddress)
                 ? orgPhysicalAddress.Get<string>()
                 : null,
-            OrgPhysicalAddressAttestation = doc.TryGetValue("ORG_PHYSICAL_ADDRESS_ATTESTATION", out var orgPhysicalAddressAttestation)
-                ? orgPhysicalAddressAttestation.Get<string>()
-                : null,
+            OrgPhysicalAddressAttestation =
+                doc.TryGetValue("ORG_PHYSICAL_ADDRESS_ATTESTATION", out var orgPhysicalAddressAttestation)
+                    ? orgPhysicalAddressAttestation.Get<string>()
+                    : null,
             OrgPhoneNumber = doc.TryGetValue("ORG_PHONE_NUMBER", out var orgPhoneNumber)
                 ? orgPhoneNumber.Get<string>()
                 : null,
-            OrgPhoneNumberAttestation = doc.TryGetValue("ORG_PHONE_NUMBER_ATTESTATION", out var orgPhoneNumberAttestation)
-                ? orgPhoneNumberAttestation.Get<string>()
-                : null,
+            OrgPhoneNumberAttestation =
+                doc.TryGetValue("ORG_PHONE_NUMBER_ATTESTATION", out var orgPhoneNumberAttestation)
+                    ? orgPhoneNumberAttestation.Get<string>()
+                    : null,
             OrgKeybase = doc.TryGetValue("ORG_KEYBASE", out var orgKeybase)
                 ? orgKeybase.Get<string>()
                 : null,
@@ -501,9 +504,10 @@ public class StellarToml
                 IdPhotoHash = principalTable.TryGetValue("id_photo_hash", out var idPhotoHash)
                     ? idPhotoHash.Get<string>()
                     : null,
-                VerificationPhotoHash = principalTable.TryGetValue("verification_photo_hash", out var verificationPhotoHash)
-                    ? verificationPhotoHash.Get<string>()
-                    : null,
+                VerificationPhotoHash =
+                    principalTable.TryGetValue("verification_photo_hash", out var verificationPhotoHash)
+                        ? verificationPhotoHash.Get<string>()
+                        : null,
             };
 
             pointsOfContact.Add(pointOfContact);
@@ -637,9 +641,10 @@ public class StellarToml
             AttestationOfReserve = currencyTable.TryGetValue("attestation_of_reserve", out var attestationOfReserve)
                 ? attestationOfReserve.Get<string>()
                 : null,
-            RedemptionInstructions = currencyTable.TryGetValue("redemption_instructions", out var redemptionInstructions)
-                ? redemptionInstructions.Get<string>()
-                : null,
+            RedemptionInstructions =
+                currencyTable.TryGetValue("redemption_instructions", out var redemptionInstructions)
+                    ? redemptionInstructions.Get<string>()
+                    : null,
             CollateralAddresses = collateralAddresses,
             CollateralAddressMessages = collateralAddressMessages,
             CollateralAddressSignatures = collateralAddressSignatures,
@@ -692,4 +697,3 @@ public class StellarToml
         return validatorList.AsReadOnly();
     }
 }
-

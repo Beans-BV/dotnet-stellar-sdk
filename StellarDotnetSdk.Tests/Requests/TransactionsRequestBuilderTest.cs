@@ -157,14 +157,16 @@ public class TransactionsRequestBuilderTest
     }
 
     /// <summary>
-    ///     Verifies that TransactionsRequestBuilder.Transaction correctly retrieves and deserializes transaction data from URI.
+    ///     Verifies that TransactionsRequestBuilder.Transaction correctly retrieves and deserializes transaction data from
+    ///     URI.
     /// </summary>
     [TestMethod]
     public async Task Transaction_WithValidUri_ReturnsDeserializedTransaction()
     {
         // Arrange
         using var server = await Utils.CreateTestServerWithJson("Responses/transaction.json");
-        var uri = new Uri("https://horizon-testnet.stellar.org/transactions/991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3");
+        var uri = new Uri(
+            "https://horizon-testnet.stellar.org/transactions/991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3");
 
         // Act
         var transaction = await server.Transactions.Transaction(uri);
@@ -174,7 +176,8 @@ public class TransactionsRequestBuilderTest
     }
 
     /// <summary>
-    ///     Verifies that TransactionsRequestBuilder.Transaction correctly retrieves and deserializes transaction data from transaction ID.
+    ///     Verifies that TransactionsRequestBuilder.Transaction correctly retrieves and deserializes transaction data from
+    ///     transaction ID.
     /// </summary>
     [TestMethod]
     public async Task Transaction_WithValidTransactionId_ReturnsDeserializedTransaction()
@@ -233,7 +236,8 @@ public class TransactionsRequestBuilderTest
     }
 
     /// <summary>
-    ///     Verifies that TransactionsRequestBuilder.ForClaimableBalance throws ArgumentNullException when claimableBalance is null.
+    ///     Verifies that TransactionsRequestBuilder.ForClaimableBalance throws ArgumentNullException when claimableBalance is
+    ///     null.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
@@ -247,7 +251,8 @@ public class TransactionsRequestBuilderTest
     }
 
     /// <summary>
-    ///     Verifies that TransactionsRequestBuilder.ForClaimableBalance throws ArgumentNullException when claimableBalance is whitespace.
+    ///     Verifies that TransactionsRequestBuilder.ForClaimableBalance throws ArgumentNullException when claimableBalance is
+    ///     whitespace.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]

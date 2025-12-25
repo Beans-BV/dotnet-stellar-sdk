@@ -17,4 +17,3 @@ internal static class GetHealthExample
         Console.WriteLine($"Server health: {response.Status}");
     }
 }
-

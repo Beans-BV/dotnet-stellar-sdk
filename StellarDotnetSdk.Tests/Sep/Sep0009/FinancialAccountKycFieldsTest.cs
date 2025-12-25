@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Sep.Sep0009;
@@ -33,7 +32,7 @@ public class FinancialAccountKycFieldsTest
             MobileMoneyNumber = "+14155552672",
             MobileMoneyProvider = "M-Pesa",
             CryptoAddress = "GDJK...",
-            CryptoMemo = "cryptomemo123"
+            CryptoMemo = "cryptomemo123",
         };
 
         // Assert
@@ -92,7 +91,7 @@ public class FinancialAccountKycFieldsTest
             MobileMoneyNumber = "+14155552672",
             MobileMoneyProvider = "M-Pesa",
             CryptoAddress = "GDJK...",
-            CryptoMemo = "cryptomemo123"
+            CryptoMemo = "cryptomemo123",
         };
 
         // Act
@@ -102,18 +101,26 @@ public class FinancialAccountKycFieldsTest
         result.Should().HaveCount(14);
         result.Should().ContainKey(FinancialAccountKycFields.BankNameFieldKey).WhoseValue.Should().Be("Test Bank");
         result.Should().ContainKey(FinancialAccountKycFields.BankAccountTypeFieldKey).WhoseValue.Should().Be("savings");
-        result.Should().ContainKey(FinancialAccountKycFields.BankAccountNumberFieldKey).WhoseValue.Should().Be("1234567890");
+        result.Should().ContainKey(FinancialAccountKycFields.BankAccountNumberFieldKey).WhoseValue.Should()
+            .Be("1234567890");
         result.Should().ContainKey(FinancialAccountKycFields.BankNumberFieldKey).WhoseValue.Should().Be("987654321");
-        result.Should().ContainKey(FinancialAccountKycFields.BankPhoneNumberFieldKey).WhoseValue.Should().Be("+14155552671");
+        result.Should().ContainKey(FinancialAccountKycFields.BankPhoneNumberFieldKey).WhoseValue.Should()
+            .Be("+14155552671");
         result.Should().ContainKey(FinancialAccountKycFields.BankBranchNumberFieldKey).WhoseValue.Should().Be("001");
-        result.Should().ContainKey(FinancialAccountKycFields.ExternalTransferMemoFieldKey).WhoseValue.Should().Be("memo123");
-        result.Should().ContainKey(FinancialAccountKycFields.ClabeNumberFieldKey).WhoseValue.Should().Be("032180000118359719");
-        result.Should().ContainKey(FinancialAccountKycFields.CbuNumberFieldKey).WhoseValue.Should().Be("1234567890123456789012");
+        result.Should().ContainKey(FinancialAccountKycFields.ExternalTransferMemoFieldKey).WhoseValue.Should()
+            .Be("memo123");
+        result.Should().ContainKey(FinancialAccountKycFields.ClabeNumberFieldKey).WhoseValue.Should()
+            .Be("032180000118359719");
+        result.Should().ContainKey(FinancialAccountKycFields.CbuNumberFieldKey).WhoseValue.Should()
+            .Be("1234567890123456789012");
         result.Should().ContainKey(FinancialAccountKycFields.CbuAliasFieldKey).WhoseValue.Should().Be("alias123");
-        result.Should().ContainKey(FinancialAccountKycFields.MobileMoneyNumberFieldKey).WhoseValue.Should().Be("+14155552672");
-        result.Should().ContainKey(FinancialAccountKycFields.MobileMoneyProviderFieldKey).WhoseValue.Should().Be("M-Pesa");
+        result.Should().ContainKey(FinancialAccountKycFields.MobileMoneyNumberFieldKey).WhoseValue.Should()
+            .Be("+14155552672");
+        result.Should().ContainKey(FinancialAccountKycFields.MobileMoneyProviderFieldKey).WhoseValue.Should()
+            .Be("M-Pesa");
         result.Should().ContainKey(FinancialAccountKycFields.CryptoAddressFieldKey).WhoseValue.Should().Be("GDJK...");
-        result.Should().ContainKey(FinancialAccountKycFields.CryptoMemoFieldKey).WhoseValue.Should().Be("cryptomemo123");
+        result.Should().ContainKey(FinancialAccountKycFields.CryptoMemoFieldKey).WhoseValue.Should()
+            .Be("cryptomemo123");
     }
 
     /// <summary>
@@ -127,7 +134,7 @@ public class FinancialAccountKycFieldsTest
         {
             BankName = "Test Bank",
             BankAccountNumber = "1234567890",
-            CryptoAddress = "GDJK..."
+            CryptoAddress = "GDJK...",
         };
 
         // Act
@@ -152,7 +159,7 @@ public class FinancialAccountKycFieldsTest
         var fields = new FinancialAccountKycFields
         {
             BankName = "Test Bank",
-            BankAccountNumber = "1234567890"
+            BankAccountNumber = "1234567890",
         };
         const string prefix = "organization.";
 
@@ -177,12 +184,12 @@ public class FinancialAccountKycFieldsTest
         var fields = new FinancialAccountKycFields
         {
             BankName = "Test Bank",
-            BankAccountNumber = "1234567890"
+            BankAccountNumber = "1234567890",
         };
 
         // Act
         var resultDefault = fields.GetFields();
-        var resultEmpty = fields.GetFields("");
+        var resultEmpty = fields.GetFields();
 
         // Assert
         resultDefault.Should().BeEquivalentTo(resultEmpty);
@@ -211,4 +218,3 @@ public class FinancialAccountKycFieldsTest
         FinancialAccountKycFields.CryptoMemoFieldKey.Should().Be("crypto_memo");
     }
 }
-

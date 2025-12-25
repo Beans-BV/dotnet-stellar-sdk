@@ -283,7 +283,8 @@ public class OperationsRequestBuilderTest
     }
 
     /// <summary>
-    ///     Verifies that OperationsRequestBuilder.ForClaimableBalance throws ArgumentException when balance ID format is invalid.
+    ///     Verifies that OperationsRequestBuilder.ForClaimableBalance throws ArgumentException when balance ID format is
+    ///     invalid.
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]

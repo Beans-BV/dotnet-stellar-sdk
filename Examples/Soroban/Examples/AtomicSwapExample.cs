@@ -1,8 +1,8 @@
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Examples.Soroban.Helpers;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
-using StellarDotnetSdk.Examples.Soroban.Helpers;
 using SCString = StellarDotnetSdk.Soroban.SCString;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 
@@ -223,4 +223,3 @@ internal static class AtomicSwapExample
         }
     }
 }
-

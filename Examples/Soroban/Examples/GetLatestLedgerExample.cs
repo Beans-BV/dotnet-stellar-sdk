@@ -18,4 +18,3 @@ internal static class GetLatestLedgerExample
         Console.WriteLine($"Server latest ledger: {response.Sequence}");
     }
 }
-

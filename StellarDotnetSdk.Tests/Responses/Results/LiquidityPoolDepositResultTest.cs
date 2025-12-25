@@ -262,4 +262,3 @@ public class LiquidityPoolDepositResultTest
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => LiquidityPoolDepositResult.FromXdr(xdrResult));
     }
 }
-

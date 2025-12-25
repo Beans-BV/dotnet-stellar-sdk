@@ -1,3 +1,4 @@
+using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Examples.Horizon;
 using StellarDotnetSdk.Examples.Soroban.Examples;
 using StellarDotnetSdk.Examples.Soroban.Helpers;
@@ -44,8 +45,8 @@ internal static class Program
     ///     Runs basic Soroban RPC examples demonstrating server queries and ledger entries.
     /// </summary>
     private static async Task RunBasicRpcExamples(
-        Accounts.IAccountId keyPair,
-        Accounts.IAccountId childKeyPair)
+        IAccountId keyPair,
+        IAccountId childKeyPair)
     {
         Console.WriteLine("\n=== Basic Soroban RPC Examples ===");
 
@@ -71,7 +72,7 @@ internal static class Program
     /// <summary>
     ///     Runs contract operation examples demonstrating upload, create, invoke, and TTL management.
     /// </summary>
-    private static async Task RunContractOperationsExamples(Accounts.IAccountId keyPair)
+    private static async Task RunContractOperationsExamples(IAccountId keyPair)
     {
         Console.WriteLine("\n=== Contract Operations Examples ===");
 
@@ -103,9 +104,9 @@ internal static class Program
     ///     Runs advanced real-world examples demonstrating complex contract interactions.
     /// </summary>
     private static async Task RunAdvancedExamples(
-        Accounts.IAccountId keyPair,
-        Accounts.IAccountId childKeyPair,
-        Accounts.IAccountId issuerKeyPair)
+        IAccountId keyPair,
+        IAccountId childKeyPair,
+        IAccountId issuerKeyPair)
     {
         Console.WriteLine("\n=== Advanced Real-World Examples ===");
 

@@ -18,4 +18,3 @@ internal static class GetNetworkExample
         Console.WriteLine($"Server Friend Bot URL: {response.FriendbotUrl}");
     }
 }
-

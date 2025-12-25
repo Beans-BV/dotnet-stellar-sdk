@@ -1,6 +1,6 @@
+using StellarDotnetSdk.Examples.Soroban.Helpers;
 using StellarDotnetSdk.LedgerEntries;
 using StellarDotnetSdk.LedgerKeys;
-using StellarDotnetSdk.Examples.Soroban.Helpers;
 using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
 
 namespace StellarDotnetSdk.Examples.Soroban.Examples;
@@ -37,4 +37,3 @@ internal static class GetLedgerEntryContractCodeExample
         Console.WriteLine($"Contract code TTL: {entry.LiveUntilLedger}");
     }
 }
-

@@ -362,7 +362,8 @@ public class ManageBuyOfferResultTest
             SellerID = new XDR.AccountID(sellerKeyPair.XdrPublicKey),
             OfferID = new XDR.Int64(12345),
             Selling = new AssetTypeNative().ToXdr(),
-            Buying = Asset.CreateNonNativeAsset("USD", "GAVIGRVSL424MPYD6F6J5EZSTFORXESTMKEJUEPEII7BAWQ25BR25DUC").ToXdr(),
+            Buying = Asset.CreateNonNativeAsset("USD", "GAVIGRVSL424MPYD6F6J5EZSTFORXESTMKEJUEPEII7BAWQ25BR25DUC")
+                .ToXdr(),
             Amount = new XDR.Int64(1000),
             Price = new XDR.Price
             {
@@ -449,4 +450,3 @@ public class ManageBuyOfferResultTest
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => ManageBuyOfferResult.FromXdr(xdrResult));
     }
 }
-

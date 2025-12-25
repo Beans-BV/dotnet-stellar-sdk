@@ -1,7 +1,7 @@
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Examples.Soroban.Helpers;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Transactions;
-using StellarDotnetSdk.Examples.Soroban.Helpers;
 using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
 
 namespace StellarDotnetSdk.Examples.Soroban.Examples;
@@ -49,4 +49,3 @@ internal static class InvokeContractExample
         await SorobanHelpers.PollTransaction(txHash);
     }
 }
-

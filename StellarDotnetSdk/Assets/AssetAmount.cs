@@ -4,7 +4,7 @@ namespace StellarDotnetSdk.Assets;
 ///     Class to have Asset and Amount in the same place.
 /// </summary>
 public class AssetAmount(
-     Asset Asset,
+    Asset Asset,
     string Amount)
 {
     public Asset Asset { get; } = Asset;

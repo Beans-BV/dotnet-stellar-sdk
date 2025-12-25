@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Sep.Sep0009;
@@ -35,7 +34,7 @@ public class OrganizationKycFieldsTest
             DirectorName = "Jane Smith",
             Website = "https://acme.com",
             Email = "contact@acme.com",
-            Phone = "+14155552671"
+            Phone = "+14155552671",
         };
 
         // Assert
@@ -64,7 +63,7 @@ public class OrganizationKycFieldsTest
         // Arrange
         var fields = new OrganizationKycFields
         {
-            NumberOfShareholders = 5
+            NumberOfShareholders = 5,
         };
 
         // Assert
@@ -84,7 +83,7 @@ public class OrganizationKycFieldsTest
         var fields = new OrganizationKycFields
         {
             PhotoIncorporationDoc = photoIncorporationDoc,
-            PhotoProofAddress = photoProofAddress
+            PhotoProofAddress = photoProofAddress,
         };
 
         // Assert
@@ -132,7 +131,7 @@ public class OrganizationKycFieldsTest
             DirectorName = "Jane Smith",
             Website = "https://acme.com",
             Email = "contact@acme.com",
-            Phone = "+14155552671"
+            Phone = "+14155552671",
         };
 
         // Act
@@ -141,9 +140,11 @@ public class OrganizationKycFieldsTest
         // Assert
         result.Should().ContainKey(OrganizationKycFields.NameFieldKey).WhoseValue.Should().Be("Acme Corp");
         result.Should().ContainKey(OrganizationKycFields.VatNumberFieldKey).WhoseValue.Should().Be("VAT123456");
-        result.Should().ContainKey(OrganizationKycFields.RegistrationNumberFieldKey).WhoseValue.Should().Be("REG789012");
+        result.Should().ContainKey(OrganizationKycFields.RegistrationNumberFieldKey).WhoseValue.Should()
+            .Be("REG789012");
         result.Should().ContainKey(OrganizationKycFields.RegistrationDateFieldKey).WhoseValue.Should().Be("2020-01-01");
-        result.Should().ContainKey(OrganizationKycFields.RegisteredAddressFieldKey).WhoseValue.Should().Be("123 Business St");
+        result.Should().ContainKey(OrganizationKycFields.RegisteredAddressFieldKey).WhoseValue.Should()
+            .Be("123 Business St");
         result.Should().ContainKey(OrganizationKycFields.ShareholderNameFieldKey).WhoseValue.Should().Be("John Doe");
         result.Should().ContainKey(OrganizationKycFields.AddressCountryCodeFieldKey).WhoseValue.Should().Be("USA");
         result.Should().ContainKey(OrganizationKycFields.StateOrProvinceFieldKey).WhoseValue.Should().Be("NY");
@@ -164,7 +165,7 @@ public class OrganizationKycFieldsTest
         // Arrange
         var fields = new OrganizationKycFields
         {
-            RegistrationDate = new DateOnly(2020, 1, 15)
+            RegistrationDate = new DateOnly(2020, 1, 15),
         };
 
         // Act
@@ -183,7 +184,7 @@ public class OrganizationKycFieldsTest
         // Arrange
         var fields = new OrganizationKycFields
         {
-            NumberOfShareholders = 5
+            NumberOfShareholders = 5,
         };
 
         // Act
@@ -206,8 +207,8 @@ public class OrganizationKycFieldsTest
             FinancialAccount = new FinancialAccountKycFields
             {
                 BankName = "Test Bank",
-                BankAccountNumber = "1234567890"
-            }
+                BankAccountNumber = "1234567890",
+            },
         };
 
         // Act
@@ -215,8 +216,11 @@ public class OrganizationKycFieldsTest
 
         // Assert
         result.Should().ContainKey(OrganizationKycFields.NameFieldKey);
-        result.Should().ContainKey(OrganizationKycFields.KeyPrefix + FinancialAccountKycFields.BankNameFieldKey).WhoseValue.Should().Be("Test Bank");
-        result.Should().ContainKey(OrganizationKycFields.KeyPrefix + FinancialAccountKycFields.BankAccountNumberFieldKey).WhoseValue.Should().Be("1234567890");
+        result.Should().ContainKey(OrganizationKycFields.KeyPrefix + FinancialAccountKycFields.BankNameFieldKey)
+            .WhoseValue.Should().Be("Test Bank");
+        result.Should()
+            .ContainKey(OrganizationKycFields.KeyPrefix + FinancialAccountKycFields.BankAccountNumberFieldKey)
+            .WhoseValue.Should().Be("1234567890");
     }
 
     /// <summary>
@@ -232,8 +236,8 @@ public class OrganizationKycFieldsTest
             Card = new CardKycFields
             {
                 Number = "4111111111111111",
-                ExpirationDate = "29-11"
-            }
+                ExpirationDate = "29-11",
+            },
         };
 
         // Act
@@ -275,7 +279,7 @@ public class OrganizationKycFieldsTest
         var fields = new OrganizationKycFields
         {
             PhotoIncorporationDoc = photoIncorporationDoc,
-            PhotoProofAddress = photoProofAddress
+            PhotoProofAddress = photoProofAddress,
         };
 
         // Act
@@ -283,8 +287,10 @@ public class OrganizationKycFieldsTest
 
         // Assert
         result.Should().HaveCount(2);
-        result.Should().ContainKey(OrganizationKycFields.PhotoIncorporationDocFileKey).WhoseValue.Should().BeEquivalentTo(photoIncorporationDoc);
-        result.Should().ContainKey(OrganizationKycFields.PhotoProofAddressFileKey).WhoseValue.Should().BeEquivalentTo(photoProofAddress);
+        result.Should().ContainKey(OrganizationKycFields.PhotoIncorporationDocFileKey).WhoseValue.Should()
+            .BeEquivalentTo(photoIncorporationDoc);
+        result.Should().ContainKey(OrganizationKycFields.PhotoProofAddressFileKey).WhoseValue.Should()
+            .BeEquivalentTo(photoProofAddress);
     }
 
     /// <summary>
@@ -297,7 +303,7 @@ public class OrganizationKycFieldsTest
         var photoIncorporationDoc = new byte[] { 1, 2, 3 };
         var fields = new OrganizationKycFields
         {
-            PhotoIncorporationDoc = photoIncorporationDoc
+            PhotoIncorporationDoc = photoIncorporationDoc,
         };
 
         // Act
@@ -369,4 +375,3 @@ public class OrganizationKycFieldsTest
         OrganizationKycFields.PhotoProofAddressFileKey.Should().Be("organization.photo_proof_address");
     }
 }
-

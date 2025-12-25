@@ -1,7 +1,8 @@
 namespace StellarDotnetSdk.Sep.Sep0001;
 
 /// <summary>
-///     Validator Information. From the stellar.toml VALIDATORS list, one set of fields for each node your organization runs.
+///     Validator Information. From the stellar.toml VALIDATORS list, one set of fields for each node your organization
+///     runs.
 ///     Combined with the steps outlined in SEP-20, this section allows to declare the node(s), and to let others know
 ///     the location of any public archives they maintain.
 ///     See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md">SEP-0001</a>
@@ -33,4 +34,3 @@ public sealed record Validator
     /// </summary>
     public string? History { get; init; }
 }
-

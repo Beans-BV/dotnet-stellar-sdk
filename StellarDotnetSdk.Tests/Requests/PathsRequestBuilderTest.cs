@@ -1,11 +1,9 @@
 using System;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Requests;
-using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Tests.Responses;
 
 namespace StellarDotnetSdk.Tests.Requests;
@@ -185,7 +183,8 @@ public class PathsRequestBuilderTest
     }
 
     /// <summary>
-    ///     Verifies that PathsRequestBuilder.DestinationAsset correctly adds destination asset parameters for credit alphanum asset.
+    ///     Verifies that PathsRequestBuilder.DestinationAsset correctly adds destination asset parameters for credit alphanum
+    ///     asset.
     /// </summary>
     [TestMethod]
     public void DestinationAsset_WithCreditAlphaNumAsset_AddsDestinationAssetParameters()
@@ -278,4 +277,3 @@ public class PathsRequestBuilderTest
         PathsPageDeserializerTest.AssertTestData(pathsPage);
     }
 }
-

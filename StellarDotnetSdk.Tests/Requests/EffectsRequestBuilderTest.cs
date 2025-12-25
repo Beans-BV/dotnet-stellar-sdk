@@ -244,7 +244,8 @@ public class EffectsRequestBuilderTest
     }
 
     /// <summary>
-    ///     Verifies that EffectsRequestBuilder.ForLiquidityPool correctly constructs URI for liquidity pool effects with LiquidityPoolId.
+    ///     Verifies that EffectsRequestBuilder.ForLiquidityPool correctly constructs URI for liquidity pool effects with
+    ///     LiquidityPoolId.
     /// </summary>
     [TestMethod]
     public void ForLiquidityPool_WithLiquidityPoolId_BuildsCorrectUri()
@@ -269,7 +270,8 @@ public class EffectsRequestBuilderTest
     }
 
     /// <summary>
-    ///     Verifies that EffectsRequestBuilder.ForLiquidityPool correctly constructs URI for liquidity pool effects with string ID.
+    ///     Verifies that EffectsRequestBuilder.ForLiquidityPool correctly constructs URI for liquidity pool effects with
+    ///     string ID.
     /// </summary>
     [TestMethod]
     public void ForLiquidityPool_WithStringId_BuildsCorrectUri()

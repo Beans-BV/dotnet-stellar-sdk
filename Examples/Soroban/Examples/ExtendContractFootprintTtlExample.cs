@@ -1,7 +1,7 @@
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Examples.Soroban.Helpers;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Transactions;
-using StellarDotnetSdk.Examples.Soroban.Helpers;
 using LedgerFootprint = StellarDotnetSdk.Soroban.LedgerFootprint;
 using SorobanResources = StellarDotnetSdk.Soroban.SorobanResources;
 using SorobanTransactionData = StellarDotnetSdk.Soroban.SorobanTransactionData;
@@ -64,4 +64,3 @@ internal static class ExtendContractFootprintTtlExample
         await SorobanHelpers.PollTransaction(txHash);
     }
 }
-
