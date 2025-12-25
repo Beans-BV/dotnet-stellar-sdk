@@ -211,7 +211,7 @@ public class TransferServerService : IDisposable
     public async Task<DepositResponse> DepositAsync(DepositRequest request)
     {
         var queryParams = BuildDepositQueryParams(request);
-        return await ExecuteGetWithErrorHandlingAsync<DepositResponse>("deposit", queryParams, request.Jwt).ConfigureAwait(false);
+        return await ExecuteGetAsync<DepositResponse>("deposit", queryParams, request.Jwt).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -227,7 +227,7 @@ public class TransferServerService : IDisposable
     public async Task<DepositResponse> DepositExchangeAsync(DepositExchangeRequest request)
     {
         var queryParams = BuildDepositExchangeQueryParams(request);
-        return await ExecuteGetWithErrorHandlingAsync<DepositResponse>("deposit-exchange", queryParams, request.Jwt).ConfigureAwait(false);
+        return await ExecuteGetAsync<DepositResponse>("deposit-exchange", queryParams, request.Jwt).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -243,7 +243,7 @@ public class TransferServerService : IDisposable
     public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequest request)
     {
         var queryParams = BuildWithdrawQueryParams(request);
-        return await ExecuteGetWithErrorHandlingAsync<WithdrawResponse>("withdraw", queryParams, request.Jwt).ConfigureAwait(false);
+        return await ExecuteGetAsync<WithdrawResponse>("withdraw", queryParams, request.Jwt).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -259,7 +259,7 @@ public class TransferServerService : IDisposable
     public async Task<WithdrawResponse> WithdrawExchangeAsync(WithdrawExchangeRequest request)
     {
         var queryParams = BuildWithdrawExchangeQueryParams(request);
-        return await ExecuteGetWithErrorHandlingAsync<WithdrawResponse>("withdraw-exchange", queryParams, request.Jwt).ConfigureAwait(false);
+        return await ExecuteGetAsync<WithdrawResponse>("withdraw-exchange", queryParams, request.Jwt).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -593,11 +593,6 @@ public class TransferServerService : IDisposable
 
         var responseHandler = new ResponseHandler<T>();
         return await responseHandler.HandleResponse(response).ConfigureAwait(false);
-    }
-
-    private async Task<T> ExecuteGetWithErrorHandlingAsync<T>(string endpoint, Dictionary<string, string>? queryParams = null, string? jwt = null) where T : Response
-    {
-        return await ExecuteGetAsync<T>(endpoint, queryParams, jwt).ConfigureAwait(false);
     }
 
     private void HandleForbiddenResponse(string errorJson)

@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using StellarDotnetSdk.Requests;
-using StellarDotnetSdk.Sep.Sep0001;
 using StellarDotnetSdk.Sep.Sep0006;
 using StellarDotnetSdk.Sep.Sep0006.Exceptions;
 using StellarDotnetSdk.Sep.Sep0006.Requests;
-using StellarDotnetSdk.Sep.Sep0006.Responses;
 
 namespace StellarDotnetSdk.Tests.Sep.Sep0006;
 
@@ -22,7 +20,10 @@ namespace StellarDotnetSdk.Tests.Sep.Sep0006;
 public class TransferServerServiceTest
 {
     private const string ServiceAddress = "http://api.stellar.org/transfer";
-    private const string JwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJHQTZVSVhYUEVXWUZJTE5VSVdBQzM3WTRRUEVaTVFWREpIREtWV0ZaSjJLQ1dVQklVNUlYWk5EQSIsImp0aSI6IjE0NGQzNjdiY2IwZTcyY2FiZmRiZGU2MGVhZTBhZDczM2NjNjVkMmE2NTg3MDgzZGFiM2Q2MTZmODg1MTkwMjQiLCJpc3MiOiJodHRwczovL2ZsYXBweS1iaXJkLWRhcHAuZmlyZWJhc2VhcHAuY29tLyIsImlhdCI6MTUzNDI1Nzk5NCwiZXhwIjoxNTM0MzQ0Mzk0fQ.8nbB83Z6vGBgC1X9r3N6oQCFTBzDiITAfCJasRft0z0";
+
+    private const string JwtToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJHQTZVSVhYUEVXWUZJTE5VSVdBQzM3WTRRUEVaTVFWREpIREtWV0ZaSjJLQ1dVQklVNUlYWk5EQSIsImp0aSI6IjE0NGQzNjdiY2IwZTcyY2FiZmRiZGU2MGVhZTBhZDczM2NjNjVkMmE2NTg3MDgzZGFiM2Q2MTZmODg1MTkwMjQiLCJpc3MiOiJodHRwczovL2ZsYXBweS1iaXJkLWRhcHAuZmlyZWJhc2VhcHAuY29tLyIsImlhdCI6MTUzNDI1Nzk5NCwiZXhwIjoxNTM0MzQ0Mzk0fQ.8nbB83Z6vGBgC1X9r3N6oQCFTBzDiITAfCJasRft0z0";
+
     private const string AccountId = "GBWMCCC3NHSKLAOJDBKKYW7SSH2PFTTNVFKWSGLWGDLEBKLOVP5JLBBP";
 
     private static HttpClient CreateMockHttpClient(string content, HttpStatusCode statusCode = HttpStatusCode.OK)
@@ -68,7 +69,7 @@ public class TransferServerServiceTest
         Assert.IsTrue(usdDeposit.Fields["email_address"].Optional);
         Assert.IsTrue(usdDeposit.Fields.ContainsKey("country_code"));
         Assert.IsNotNull(usdDeposit.Fields["country_code"].Choices);
-        Assert.IsTrue(usdDeposit.Fields["country_code"].Choices.Contains("USA"));
+        Assert.IsTrue(usdDeposit.Fields["country_code"].Choices?.Contains("USA"));
 
         Assert.IsNotNull(response.DepositExchangeAssets);
         Assert.IsTrue(response.DepositExchangeAssets.ContainsKey("USD"));
@@ -123,7 +124,7 @@ public class TransferServerServiceTest
             AssetCode = "ETH",
             Amount = 2034.09,
             Type = "SEPA",
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -149,7 +150,7 @@ public class TransferServerServiceTest
             AssetCode = "USD",
             Account = AccountId,
             Amount = "123.123",
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -181,7 +182,7 @@ public class TransferServerServiceTest
             AssetCode = "BTC",
             Account = AccountId,
             Amount = "3.123",
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -194,7 +195,8 @@ public class TransferServerServiceTest
         Assert.AreEqual(0.0002, response.FeeFixed);
         Assert.IsNotNull(response.Instructions);
         Assert.IsTrue(response.Instructions.ContainsKey("organization.crypto_address"));
-        Assert.AreEqual("1Nh7uHdvY6fNwtQtM1G5EZAFPLC33B59rB", response.Instructions["organization.crypto_address"].Value);
+        Assert.AreEqual("1Nh7uHdvY6fNwtQtM1G5EZAFPLC33B59rB",
+            response.Instructions["organization.crypto_address"].Value);
     }
 
     /// <summary>
@@ -212,7 +214,7 @@ public class TransferServerServiceTest
             AssetCode = "XRP",
             Account = AccountId,
             Amount = "300.0",
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -220,7 +222,8 @@ public class TransferServerServiceTest
 
         // Assert
         Assert.IsNotNull(response);
-        Assert.AreEqual("Make a payment to Ripple address rNXEkKCxvfLcM1h4HJkaj2FtmYuAWrHGbf with tag 88", response.How);
+        Assert.AreEqual("Make a payment to Ripple address rNXEkKCxvfLcM1h4HJkaj2FtmYuAWrHGbf with tag 88",
+            response.How);
         Assert.AreEqual("9421871e-0623-4356-b7b5-5996da122f3e", response.Id);
         Assert.AreEqual(60, response.Eta);
         Assert.AreEqual(0.1, response.FeePercent);
@@ -244,7 +247,7 @@ public class TransferServerServiceTest
             AssetCode = "MXN",
             Account = AccountId,
             Amount = "120.0",
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -274,7 +277,7 @@ public class TransferServerServiceTest
             Dest = "GCTTGO5ABSTHABXWL2FMHPZ2XFOZDXJYJN5CKFRKXMPAAWZW3Y3JZ3JK",
             Account = AccountId,
             Amount = "120.0",
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -306,7 +309,7 @@ public class TransferServerServiceTest
             Amount = "100",
             Account = "GCIBUCGPOHWMMMFPFTDWBSVHQRT4DIBJ7AD6BZJYDITBK2LCVBYW7HUQ",
             LocationId = "999",
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -336,7 +339,7 @@ public class TransferServerServiceTest
             Amount = "700",
             Type = "bank_account",
             LocationId = "999",
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -365,7 +368,7 @@ public class TransferServerServiceTest
             AssetCode = "MXN",
             Account = AccountId,
             Amount = "120.0",
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -401,7 +404,7 @@ public class TransferServerServiceTest
             Dest = "GCTTGO5ABSTHABXWL2FMHPZ2XFOZDXJYJN5CKFRKXMPAAWZW3Y3JZ3JK",
             Account = AccountId,
             Amount = "120.0",
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -435,7 +438,7 @@ public class TransferServerServiceTest
             AssetCode = "MXN",
             Account = AccountId,
             Amount = "120.0",
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -467,7 +470,7 @@ public class TransferServerServiceTest
         {
             AssetCode = "XLM",
             Account = "GCTTGO5ABSTHABXWL2FMHPZ2XFOZDXJYJN5CKFRKXMPAAWZW3Y3JZ3JK",
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -491,7 +494,8 @@ public class TransferServerServiceTest
         Assert.AreEqual("52fys79f63dh3v2", secondTx.Id);
         Assert.AreEqual("deposit-exchange", secondTx.Kind);
         Assert.AreEqual("iso4217:BRL", secondTx.AmountInAsset);
-        Assert.AreEqual("stellar:USDC:GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN", secondTx.AmountOutAsset);
+        Assert.AreEqual("stellar:USDC:GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+            secondTx.AmountOutAsset);
 
         var thirdTx = response.Transactions[2];
         Assert.AreEqual("withdrawal", thirdTx.Kind);
@@ -533,7 +537,7 @@ public class TransferServerServiceTest
         {
             Id = "82fhs729f63dh0v4",
             StellarTransactionId = "17a670bc424ff5ce3b386dbfaae9990b66a2a37b4fbe51547e8794962a3f9e6a",
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -561,7 +565,7 @@ public class TransferServerServiceTest
     public async Task PatchTransactionAsync_WithValidRequest_ReturnsSuccess()
     {
         // Arrange
-        using var httpClient = CreateMockHttpClient("", HttpStatusCode.OK);
+        using var httpClient = CreateMockHttpClient("");
         var service = new TransferServerService(ServiceAddress, httpClient);
         var request = new PatchTransactionRequest
         {
@@ -569,9 +573,9 @@ public class TransferServerServiceTest
             Fields = new Dictionary<string, object>
             {
                 { "dest", "12345678901234" },
-                { "dest_extra", "021000021" }
+                { "dest_extra", "021000021" },
             },
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -596,7 +600,7 @@ public class TransferServerServiceTest
         {
             Id = "82fhs729f63dh0v4",
             Fields = null,
-            Jwt = JwtToken
+            Jwt = JwtToken,
         };
 
         // Act
@@ -610,7 +614,8 @@ public class TransferServerServiceTest
     public async Task FromDomainAsync_WithValidDomain_CreatesService()
     {
         // Arrange
-        var tomlContent = await File.ReadAllTextAsync(Utils.GetTestDataAbsolutePath("Sep/Sep0001/stellar-toml-sample.toml"));
+        var tomlContent =
+            await File.ReadAllTextAsync(Utils.GetTestDataAbsolutePath("Sep/Sep0001/stellar-toml-sample.toml"));
         using var httpClient = CreateMockHttpClient(tomlContent);
         var service = await TransferServerService.FromDomainAsync("example.com", httpClient);
 
@@ -642,7 +647,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""";
     public void Constructor_WithEmptyAddress_ThrowsArgumentException()
     {
         // Act
-        new TransferServerService("");
+        _ = new TransferServerService("");
     }
 
     /// <summary>
@@ -660,7 +665,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""";
             .Returns(new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(content)
+                Content = new StringContent(content),
             });
 
         using var httpClient = new HttpClient(mockHandler.Object);
@@ -671,7 +676,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""";
 
         // Assert
         Assert.IsNotNull(capture.Request);
-        Assert.IsTrue(capture.Request.RequestUri.ToString().Contains("lang=es"));
+        Assert.IsTrue(capture.Request.RequestUri?.ToString().Contains("lang=es"));
     }
 
     private class RequestCapture
@@ -679,4 +684,3 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""";
         public HttpRequestMessage? Request { get; set; }
     }
 }
-
