@@ -138,5 +138,116 @@ public class StandardKycFieldsTest
         fields.Organization.Should().NotBeNull(); // Original unchanged
         fieldsWithNull.Organization.Should().BeNull(); // New instance has null
     }
+
+    /// <summary>
+    ///     Verifies that GetFields returns empty dictionary when both properties are null.
+    /// </summary>
+    [TestMethod]
+    public void GetFields_WithBothPropertiesNull_ReturnsEmptyDictionary()
+    {
+        // Arrange
+        var fields = new StandardKycFields();
+
+        // Act
+        var result = fields.GetFields();
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+    }
+
+    /// <summary>
+    ///     Verifies that GetFields includes fields from NaturalPerson when set.
+    /// </summary>
+    [TestMethod]
+    public void GetFields_WithNaturalPersonSet_ReturnsNaturalPersonFields()
+    {
+        // Arrange
+        var fields = new StandardKycFields
+        {
+            NaturalPerson = new NaturalPersonKycFields
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                EmailAddress = "john@example.com"
+            }
+        };
+
+        // Act
+        var result = fields.GetFields();
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().ContainKey(NaturalPersonKycFields.FirstNameFieldKey).WhoseValue.Should().Be("John");
+        result.Should().ContainKey(NaturalPersonKycFields.LastNameFieldKey).WhoseValue.Should().Be("Doe");
+        result.Should().ContainKey(NaturalPersonKycFields.EmailAddressFieldKey).WhoseValue.Should().Be("john@example.com");
+    }
+
+    /// <summary>
+    ///     Verifies that GetFields includes fields from Organization when set.
+    /// </summary>
+    [TestMethod]
+    public void GetFields_WithOrganizationSet_ReturnsOrganizationFields()
+    {
+        // Arrange
+        var fields = new StandardKycFields
+        {
+            Organization = new OrganizationKycFields
+            {
+                Name = "Acme Corp",
+                VatNumber = "VAT123456",
+                Email = "contact@acme.com"
+            }
+        };
+
+        // Act
+        var result = fields.GetFields();
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().ContainKey(OrganizationKycFields.NameFieldKey).WhoseValue.Should().Be("Acme Corp");
+        result.Should().ContainKey(OrganizationKycFields.VatNumberFieldKey).WhoseValue.Should().Be("VAT123456");
+        result.Should().ContainKey(OrganizationKycFields.EmailFieldKey).WhoseValue.Should().Be("contact@acme.com");
+    }
+
+    /// <summary>
+    ///     Verifies that GetFields combines fields from both NaturalPerson and Organization when both are set.
+    /// </summary>
+    [TestMethod]
+    public void GetFields_WithBothPropertiesSet_ReturnsCombinedFields()
+    {
+        // Arrange
+        var fields = new StandardKycFields
+        {
+            NaturalPerson = new NaturalPersonKycFields
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                EmailAddress = "john@example.com"
+            },
+            Organization = new OrganizationKycFields
+            {
+                Name = "Acme Corp",
+                VatNumber = "VAT123456",
+                Email = "contact@acme.com"
+            }
+        };
+
+        // Act
+        var result = fields.GetFields();
+
+        // Assert
+        result.Should().NotBeNull();
+        // Verify NaturalPerson fields are present
+        result.Should().ContainKey(NaturalPersonKycFields.FirstNameFieldKey).WhoseValue.Should().Be("John");
+        result.Should().ContainKey(NaturalPersonKycFields.LastNameFieldKey).WhoseValue.Should().Be("Doe");
+        result.Should().ContainKey(NaturalPersonKycFields.EmailAddressFieldKey).WhoseValue.Should().Be("john@example.com");
+        // Verify Organization fields are present
+        result.Should().ContainKey(OrganizationKycFields.NameFieldKey).WhoseValue.Should().Be("Acme Corp");
+        result.Should().ContainKey(OrganizationKycFields.VatNumberFieldKey).WhoseValue.Should().Be("VAT123456");
+        result.Should().ContainKey(OrganizationKycFields.EmailFieldKey).WhoseValue.Should().Be("contact@acme.com");
+        // Verify all fields are present
+        result.Should().HaveCount(6);
+    }
 }
 
