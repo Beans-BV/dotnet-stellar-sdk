@@ -18,7 +18,7 @@ public class Sep24Refund : Response
     /// <param name="amountFee">The total amount charged in fees for processing all refund payments.</param>
     /// <param name="payments">A list of individual refund payments made back to the user.</param>
     [JsonConstructor]
-    public Sep24Refund(string amountRefunded, string amountFee, List<Sep24RefundPayment> payments)
+    public Sep24Refund(decimal amountRefunded, decimal amountFee, List<Sep24RefundPayment> payments)
     {
         AmountRefunded = amountRefunded;
         AmountFee = amountFee;
@@ -30,7 +30,7 @@ public class Sep24Refund : Response
     ///     If a full refund was issued, this amount should match the transaction's amountIn.
     /// </summary>
     [JsonPropertyName("amount_refunded")]
-    public string AmountRefunded { get; }
+    public decimal AmountRefunded { get; }
 
     /// <summary>
     ///     Gets the total amount charged in fees for processing all refund payments,
@@ -38,7 +38,7 @@ public class Sep24Refund : Response
     ///     The sum of all fee values in the payments list should equal this value.
     /// </summary>
     [JsonPropertyName("amount_fee")]
-    public string AmountFee { get; }
+    public decimal AmountFee { get; }
 
     /// <summary>
     ///     Gets a list of individual refund payments made back to the user.

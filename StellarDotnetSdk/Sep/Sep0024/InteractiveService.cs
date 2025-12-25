@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -199,7 +200,7 @@ public class InteractiveService : IDisposable
         {
             { "operation", request.Operation },
             { "asset_code", request.AssetCode },
-            { "amount", request.Amount.ToString("G") },
+            { "amount", request.Amount.ToString(CultureInfo.InvariantCulture) },
         };
 
         if (!string.IsNullOrWhiteSpace(request.Type))
@@ -542,9 +543,9 @@ public class InteractiveService : IDisposable
             fields["source_asset"] = request.SourceAsset;
         }
 
-        if (!string.IsNullOrWhiteSpace(request.Amount))
+        if (request.Amount.HasValue)
         {
-            fields["amount"] = request.Amount;
+            fields["amount"] = request.Amount.Value.ToString(CultureInfo.InvariantCulture);
         }
 
         if (!string.IsNullOrWhiteSpace(request.QuoteId))
@@ -661,9 +662,9 @@ public class InteractiveService : IDisposable
             fields["asset_issuer"] = request.AssetIssuer;
         }
 
-        if (!string.IsNullOrWhiteSpace(request.Amount))
+        if (request.Amount.HasValue)
         {
-            fields["amount"] = request.Amount;
+            fields["amount"] = request.Amount.Value.ToString(CultureInfo.InvariantCulture);
         }
 
         if (!string.IsNullOrWhiteSpace(request.QuoteId))

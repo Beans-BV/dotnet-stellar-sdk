@@ -34,11 +34,11 @@ public class Sep24Transaction : Response
         int? statusEta = null,
         bool? kycVerified = null,
         string? moreInfoUrl = null,
-        string? amountIn = null,
+        decimal? amountIn = null,
         string? amountInAsset = null,
-        string? amountOut = null,
+        decimal? amountOut = null,
         string? amountOutAsset = null,
-        string? amountFee = null,
+        decimal? amountFee = null,
         string? amountFeeAsset = null,
         string? quoteId = null,
         string? startedAt = null,
@@ -132,11 +132,11 @@ public class Sep24Transaction : Response
     public string? MoreInfoUrl { get; }
 
     /// <summary>
-    ///     Gets the amount received by anchor at start of transaction as a string with up to 7 decimals.
+    ///     Gets the amount received by anchor at start of transaction as a decimal with up to 7 decimals.
     ///     Excludes any fees charged before the anchor received the funds.
     /// </summary>
     [JsonPropertyName("amount_in")]
-    public string? AmountIn { get; }
+    public decimal? AmountIn { get; }
 
     /// <summary>
     ///     Gets the asset received or to be received by the Anchor.
@@ -147,11 +147,11 @@ public class Sep24Transaction : Response
     public string? AmountInAsset { get; }
 
     /// <summary>
-    ///     Gets the amount sent by anchor to user at end of transaction as a string with up to 7 decimals.
+    ///     Gets the amount sent by anchor to user at end of transaction as a decimal with up to 7 decimals.
     ///     Excludes amount converted to XLM to fund account and any external fees.
     /// </summary>
     [JsonPropertyName("amount_out")]
-    public string? AmountOut { get; }
+    public decimal? AmountOut { get; }
 
     /// <summary>
     ///     Gets the asset delivered or to be delivered to the user.
@@ -165,7 +165,7 @@ public class Sep24Transaction : Response
     ///     Gets the amount of fee charged by anchor.
     /// </summary>
     [JsonPropertyName("amount_fee")]
-    public string? AmountFee { get; }
+    public decimal? AmountFee { get; }
 
     /// <summary>
     ///     Gets the asset in which fees are calculated in.

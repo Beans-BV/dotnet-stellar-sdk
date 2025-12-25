@@ -17,7 +17,7 @@ public class Sep24FeeBreakdown : Response
     /// <param name="amount">The amount of asset applied. If fee_details.breakdown is provided, sum(fee_details.breakdown.amount) should equal fee_details.total.</param>
     /// <param name="description">Optional text describing the fee.</param>
     [JsonConstructor]
-    public Sep24FeeBreakdown(string name, string amount, string? description = null)
+    public Sep24FeeBreakdown(string name, decimal amount, string? description = null)
     {
         Name = name;
         Amount = amount;
@@ -41,6 +41,6 @@ public class Sep24FeeBreakdown : Response
     ///     sum(fee_details.breakdown.amount) should equal fee_details.total.
     /// </summary>
     [JsonPropertyName("amount")]
-    public string Amount { get; }
+    public decimal Amount { get; }
 }
 

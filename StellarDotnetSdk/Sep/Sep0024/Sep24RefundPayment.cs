@@ -18,7 +18,7 @@ public class Sep24RefundPayment : Response
     /// <param name="amount">Amount sent back to user in units of amountInAsset.</param>
     /// <param name="fee">Fee charged for processing this refund payment.</param>
     [JsonConstructor]
-    public Sep24RefundPayment(string id, string idType, string amount, string fee)
+    public Sep24RefundPayment(string id, string idType, decimal amount, decimal fee)
     {
         Id = id;
         IdType = idType;
@@ -46,12 +46,12 @@ public class Sep24RefundPayment : Response
     ///     Gets the amount sent back to the user for this payment, in units of amountInAsset.
     /// </summary>
     [JsonPropertyName("amount")]
-    public string Amount { get; }
+    public decimal Amount { get; }
 
     /// <summary>
     ///     Gets the fee charged for processing this refund payment, in units of amountInAsset.
     /// </summary>
     [JsonPropertyName("fee")]
-    public string Fee { get; }
+    public decimal Fee { get; }
 }
 

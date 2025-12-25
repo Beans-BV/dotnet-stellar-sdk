@@ -47,7 +47,7 @@ public sealed record Sep24DepositRequest
     ///     Gets or sets the amount of asset requested to deposit.
     ///     If not provided, it will be collected in the interactive flow.
     /// </summary>
-    public string? Amount { get; init; }
+    public decimal? Amount { get; init; }
 
     /// <summary>
     ///     Gets or sets the id returned from a SEP-38 POST /quote response.

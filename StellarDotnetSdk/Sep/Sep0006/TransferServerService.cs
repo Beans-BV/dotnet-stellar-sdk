@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -333,7 +334,7 @@ public class TransferServerService : IDisposable
         {
             { "operation", request.Operation },
             { "asset_code", request.AssetCode },
-            { "amount", request.Amount.ToString() },
+            { "amount", request.Amount.ToString(CultureInfo.InvariantCulture) },
         };
 
         if (!string.IsNullOrWhiteSpace(request.Type))
@@ -518,7 +519,7 @@ public class TransferServerService : IDisposable
         {
             { "destination_asset", request.DestinationAsset },
             { "source_asset", request.SourceAsset },
-            { "amount", request.Amount.ToString() },
+            { "amount", request.Amount.ToString(CultureInfo.InvariantCulture) },
             { "account", request.Account },
         };
 
@@ -590,7 +591,7 @@ public class TransferServerService : IDisposable
         {
             { "source_asset", request.SourceAsset },
             { "destination_asset", request.DestinationAsset },
-            { "amount", request.Amount.ToString() },
+            { "amount", request.Amount.ToString(CultureInfo.InvariantCulture) },
         };
 
         AddIfNotNull(queryParams, "funding_method", request.FundingMethod);
@@ -637,7 +638,7 @@ public class TransferServerService : IDisposable
         {
             return;
         }
-        dict[key] = value.Value.ToString();
+        dict[key] = value.Value.ToString(CultureInfo.InvariantCulture);
     }
 
     private Uri BuildUri(string endpoint, Dictionary<string, string>? queryParams = null)

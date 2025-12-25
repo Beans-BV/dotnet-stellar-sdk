@@ -19,7 +19,7 @@ public class Sep24FeeDetails : Response
     /// <param name="asset">The asset in which the fee is applied, represented through the Asset Identification Format.</param>
     /// <param name="breakdown">Optional array of objects detailing the fees that were used to calculate the conversion price.</param>
     [JsonConstructor]
-    public Sep24FeeDetails(string total, string asset, List<Sep24FeeBreakdown>? breakdown = null)
+    public Sep24FeeDetails(decimal total, string asset, List<Sep24FeeBreakdown>? breakdown = null)
     {
         Total = total;
         Asset = asset;
@@ -30,7 +30,7 @@ public class Sep24FeeDetails : Response
     ///     Gets the total amount of fee applied.
     /// </summary>
     [JsonPropertyName("total")]
-    public string Total { get; }
+    public decimal Total { get; }
 
     /// <summary>
     ///     Gets the asset in which the fee is applied, represented through the Asset Identification Format.
