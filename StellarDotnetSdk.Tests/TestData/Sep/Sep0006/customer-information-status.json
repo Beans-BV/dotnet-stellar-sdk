@@ -1,0 +1,7 @@
+{
+  "type": "customer_info_status",
+  "status": "denied",
+  "more_info_url": "https://api.example.com/kycstatus?account=GACW7NONV43MZIFHCOKCQJAKSJSISSICFVUJ2C6EZIW5773OU3HD64VI",
+  "eta": 3600
+}
+

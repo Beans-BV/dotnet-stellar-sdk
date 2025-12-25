@@ -1,0 +1,12 @@
+{
+  "id": "9421871e-0623-4356-b7b5-5996da122f3e",
+  "instructions": {
+    "organization.clabe_number": {
+      "value": "646180111803859359",
+      "description": "CLABE number"
+    }
+  },
+  "how": "Make a payment to Bank: STP Account: 646180111803859359",
+  "eta": 1800
+}
+

@@ -1,0 +1,17 @@
+{
+  "id": "9421871e-0623-4356-b7b5-5996da122f3e",
+  "instructions": {
+    "organization.bank_number": {
+      "value": "121122676",
+      "description": "US bank routing number"
+    },
+    "organization.bank_account_number": {
+      "value": "13719713158835300",
+      "description": "US bank account number"
+    }
+  },
+  "how": "Make a payment to Bank: 121122676 Account: 13719713158835300",
+  "min_amount": 10.0,
+  "max_amount": 5000.0
+}
+

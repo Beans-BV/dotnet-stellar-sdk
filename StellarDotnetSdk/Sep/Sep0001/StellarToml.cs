@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Nett;
 using StellarDotnetSdk.Requests;
@@ -101,14 +102,17 @@ public class StellarToml
     ///     created and disposed after the request completes.
     /// </param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in the request</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>StellarToml instance containing the parsed stellar.toml data</returns>
     /// <exception cref="StellarTomlException">Thrown when the stellar.toml file is not found or cannot be parsed</exception>
     public static async Task<StellarToml> FromDomainAsync(
         string domain,
         HttpClient? httpClient = null,
-        Dictionary<string, string>? httpRequestHeaders = null)
+        Dictionary<string, string>? httpRequestHeaders = null,
+        CancellationToken cancellationToken = default)
     {
-        return await FromDomainAsync(domain, null, null, httpClient, httpRequestHeaders);
+        return await FromDomainAsync(domain, null, null, httpClient, httpRequestHeaders, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -126,14 +130,17 @@ public class StellarToml
     ///     created and disposed after the request completes. If provided, resilienceOptions and bearerToken are ignored.
     /// </param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in the request</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>StellarToml instance containing the parsed stellar.toml data</returns>
     /// <exception cref="StellarTomlException">Thrown when the stellar.toml file is not found or cannot be parsed</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is cancelled via the cancellation token</exception>
     public static async Task<StellarToml> FromDomainAsync(
         string domain,
         HttpResilienceOptions? resilienceOptions,
         string? bearerToken,
         HttpClient? httpClient = null,
-        Dictionary<string, string>? httpRequestHeaders = null)
+        Dictionary<string, string>? httpRequestHeaders = null,
+        CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(domain))
         {
@@ -155,7 +162,7 @@ public class StellarToml
                 }
             }
 
-            var response = await client.SendAsync(request).ConfigureAwait(false);
+            var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -163,12 +170,16 @@ public class StellarToml
                     $"Stellar toml not found, response status code {(int)response.StatusCode}");
             }
 
-            var responseToml = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var responseToml = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             return new StellarToml(responseToml);
         }
         catch (HttpRequestException ex)
         {
             throw new StellarTomlException($"Failed to fetch stellar.toml from {stellarTomlUri}", ex);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (StellarTomlException)
         {
@@ -199,14 +210,17 @@ public class StellarToml
     ///     created and disposed after the request completes.
     /// </param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in the request</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>Currency instance containing the complete currency information</returns>
     /// <exception cref="StellarTomlException">Thrown when the currency TOML file is not found or cannot be parsed</exception>
     public static async Task<Currency> CurrencyFromUrlAsync(
         string tomlUrl,
         HttpClient? httpClient = null,
-        Dictionary<string, string>? httpRequestHeaders = null)
+        Dictionary<string, string>? httpRequestHeaders = null,
+        CancellationToken cancellationToken = default)
     {
-        return await CurrencyFromUrlAsync(tomlUrl, null, null, httpClient, httpRequestHeaders);
+        return await CurrencyFromUrlAsync(tomlUrl, null, null, httpClient, httpRequestHeaders, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -223,14 +237,17 @@ public class StellarToml
     ///     created and disposed after the request completes. If provided, resilienceOptions and bearerToken are ignored.
     /// </param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in the request</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>Currency instance containing the complete currency information</returns>
     /// <exception cref="StellarTomlException">Thrown when the currency TOML file is not found or cannot be parsed</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is cancelled via the cancellation token</exception>
     public static async Task<Currency> CurrencyFromUrlAsync(
         string tomlUrl,
         HttpResilienceOptions? resilienceOptions,
         string? bearerToken,
         HttpClient? httpClient = null,
-        Dictionary<string, string>? httpRequestHeaders = null)
+        Dictionary<string, string>? httpRequestHeaders = null,
+        CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(tomlUrl))
         {
@@ -255,7 +272,7 @@ public class StellarToml
                 }
             }
 
-            var response = await client.SendAsync(request).ConfigureAwait(false);
+            var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -263,13 +280,17 @@ public class StellarToml
                     $"Currency toml not found, response status code {(int)response.StatusCode}");
             }
 
-            var responseToml = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var responseToml = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             var document = Toml.ReadString(responseToml);
             return ParseCurrency(document);
         }
         catch (HttpRequestException ex)
         {
             throw new StellarTomlException($"Failed to fetch currency TOML from {uri}", ex);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (StellarTomlException)
         {
