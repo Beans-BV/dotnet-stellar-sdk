@@ -39,11 +39,20 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///     </para>
 ///     <para>
 ///         If you pass an external <see cref="HttpClient" /> into the constructor or
-///         <see cref="FromDomainAsync(string, HttpClient?, Dictionary{string, string}?, CancellationToken)" />,
+///         <see cref="FromDomainAsync(string, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?, CancellationToken)" />,
 ///         that client remains owned by the caller. In that case, disposing <see cref="InteractiveService" /> will not dispose
 ///         the external client, and you are responsible for managing the <see cref="HttpClient" /> lifecycle yourself
-///         (for example, by reusing a single long-lived instance for performance and resilience).
-///     </para>
+    ///         (for example, by reusing a single long-lived instance for performance and resilience).
+    ///     </para>
+    ///     <para>
+    ///         <b>HttpResilienceOptions</b>
+    ///     </para>
+    ///     <para>
+    ///         You can configure retry policies, timeouts, and circuit breaker behavior by passing
+    ///         <see cref="HttpResilienceOptions" /> to the constructor or <see cref="FromDomainAsync" />. These options
+    ///         are only used when creating an internal <see cref="HttpClient" />. If you provide your own
+    ///         <see cref="HttpClient" />, the resilience options are ignored.
+    ///     </para>
 /// </summary>
 public class InteractiveService : IDisposable
 {
@@ -58,10 +67,15 @@ public class InteractiveService : IDisposable
     /// <param name="transferServiceAddress">The transfer server SEP-24 URL.</param>
     /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration.</param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in requests.</param>
+    /// <param name="resilienceOptions">
+    ///     Optional resilience options for HTTP requests (retries, timeouts). Ignored if
+    ///     httpClient is provided.
+    /// </param>
     public InteractiveService(
         string transferServiceAddress,
         HttpClient? httpClient = null,
-        Dictionary<string, string>? httpRequestHeaders = null)
+        Dictionary<string, string>? httpRequestHeaders = null,
+        HttpResilienceOptions? resilienceOptions = null)
     {
         _transferServiceAddress = transferServiceAddress ?? throw new ArgumentNullException(nameof(transferServiceAddress));
         _httpRequestHeaders = httpRequestHeaders;
@@ -72,7 +86,7 @@ public class InteractiveService : IDisposable
         }
         else
         {
-            _httpClient = new DefaultStellarSdkHttpClient();
+            _httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
             _internalHttpClient = true;
         }
     }
@@ -81,6 +95,11 @@ public class InteractiveService : IDisposable
     ///     Creates an instance of this class by loading the transfer server SEP-24 URL from the given domain's stellar.toml file.
     /// </summary>
     /// <param name="domain">The domain hosting the stellar.toml file.</param>
+    /// <param name="resilienceOptions">
+    ///     Resilience options for HTTP requests (applies to stellar.toml fetch and all SEP-24
+    ///     requests)
+    /// </param>
+    /// <param name="bearerToken">Optional bearer token for stellar.toml fetch only (not used for SEP-24 requests)</param>
     /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration.</param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in requests.</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
@@ -89,11 +108,13 @@ public class InteractiveService : IDisposable
     /// <exception cref="ArgumentException">Thrown when TRANSFER_SERVER_SEP0024 is not available for the domain.</exception>
     public static async Task<InteractiveService> FromDomainAsync(
         string domain,
+        HttpResilienceOptions? resilienceOptions = null,
+        string? bearerToken = null,
         HttpClient? httpClient = null,
         Dictionary<string, string>? httpRequestHeaders = null,
         CancellationToken cancellationToken = default)
     {
-        var toml = await StellarToml.FromDomainAsync(domain, httpClient: httpClient, httpRequestHeaders: httpRequestHeaders)
+        var toml = await StellarToml.FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient, httpRequestHeaders)
             .ConfigureAwait(false);
         var addr = toml.GeneralInformation.TransferServerSep24;
         if (string.IsNullOrWhiteSpace(addr))
@@ -101,7 +122,7 @@ public class InteractiveService : IDisposable
             throw new ArgumentException($"Transfer server SEP 24 not available for domain {domain}", nameof(domain));
         }
 
-        return new InteractiveService(addr, httpClient, httpRequestHeaders);
+        return new InteractiveService(addr, httpClient, httpRequestHeaders, resilienceOptions);
     }
 
     /// <summary>
