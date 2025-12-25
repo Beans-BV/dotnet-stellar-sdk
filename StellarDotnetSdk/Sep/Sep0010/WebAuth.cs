@@ -409,16 +409,16 @@ public class WebAuth : IDisposable
 
             if (memo != null && memoId.IdValue != memo)
             {
-                throw new ChallengeValidationErrorInvalidMemoValue("invalid memo value");
+                throw new ChallengeValidationErrorInvalidMemoValue("Invalid memo value");
             }
         }
         else if (transaction.Memo is not MemoNone)
         {
-            throw new ChallengeValidationErrorInvalidMemoType("invalid memo type");
+            throw new ChallengeValidationErrorInvalidMemoType("Invalid memo type");
         }
         else if (memo != null)
         {
-            throw new ChallengeValidationErrorInvalidMemoValue("missing memo");
+            throw new ChallengeValidationErrorInvalidMemoValue("Missing memo");
         }
 
         for (var i = 0; i < transaction.Operations.Length; i++)
@@ -427,19 +427,19 @@ public class WebAuth : IDisposable
             
             if (op is not ManageDataOperation manageDataOp)
             {
-                throw new ChallengeValidationErrorInvalidOperationType($"invalid type of operation {i}");
+                throw new ChallengeValidationErrorInvalidOperationType($"Invalid type of operation {i}");
             }
 
             // Use SDK property access
             var opSourceAccountId = op.SourceAccount?.AccountId;
             if (opSourceAccountId == null)
             {
-                throw new ChallengeValidationErrorInvalidSourceAccount($"invalid source account (is null) in operation[{i}]");
+                throw new ChallengeValidationErrorInvalidSourceAccount($"Invalid source account (is null) in operation[{i}]");
             }
 
             if (i == 0 && opSourceAccountId != userAccountId)
             {
-                throw new ChallengeValidationErrorInvalidSourceAccount($"invalid source account in operation[{i}]");
+                throw new ChallengeValidationErrorInvalidSourceAccount($"Invalid source account in operation[{i}]");
             }
 
             // Use clean property access
@@ -450,18 +450,18 @@ public class WebAuth : IDisposable
                 {
                     if (opSourceAccountId != clientDomainAccountId)
                     {
-                        throw new ChallengeValidationErrorInvalidSourceAccount($"invalid source account in operation[{i}]");
+                        throw new ChallengeValidationErrorInvalidSourceAccount($"Invalid source account in operation[{i}]");
                     }
                 }
                 else if (opSourceAccountId != _serverSigningKey)
                 {
-                    throw new ChallengeValidationErrorInvalidSourceAccount($"invalid source account in operation[{i}]");
+                    throw new ChallengeValidationErrorInvalidSourceAccount($"Invalid source account in operation[{i}]");
                 }
             }
 
             if (i == 0 && dataName != _serverHomeDomain + AuthSuffix)
             {
-                throw new ChallengeValidationErrorInvalidHomeDomain($"invalid home domain in operation {i}");
+                throw new ChallengeValidationErrorInvalidHomeDomain($"Invalid home domain in operation {i}");
             }
 
             // Use clean property access
@@ -473,7 +473,7 @@ public class WebAuth : IDisposable
                 if (dataValue == null || dataValue.Length != 64)
                 {
                     throw new ChallengeValidationErrorInvalidNonceValue(
-                        $"invalid nonce value in operation {i}. Expected: 64 bytes, Actual: {dataValue?.Length ?? 0} bytes");
+                        $"Invalid nonce value in operation {i}. Expected: 64 bytes, Actual: {dataValue?.Length ?? 0} bytes");
                 }
             }
             if (i > 0 && dataName == WebAuthDataKey)
@@ -484,7 +484,7 @@ public class WebAuth : IDisposable
                 {
                     var actualValue = dataValue != null ? Encoding.UTF8.GetString(dataValue) : null;
                     throw new ChallengeValidationErrorInvalidWebAuthDomain(
-                        $"invalid web auth domain in operation {i}. Expected: {uri.Host} Actual: {actualValue}");
+                        $"Invalid web auth domain in operation {i}. Expected: {uri.Host} Actual: {actualValue}");
                 }
             }
         }
