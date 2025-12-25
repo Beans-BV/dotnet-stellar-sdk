@@ -1,0 +1,6 @@
+{
+  "type": "interactive_customer_info_needed",
+  "url": "https://anchor.example.com/transactions/deposit/interactive?id=test-transaction-id",
+  "id": "test-transaction-id"
+}
+

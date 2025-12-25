@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -333,7 +334,7 @@ public class TransferServerService : IDisposable
         {
             { "operation", request.Operation },
             { "asset_code", request.AssetCode },
-            { "amount", request.Amount.ToString() },
+            { "amount", request.Amount.ToString(CultureInfo.InvariantCulture) },
         };
 
         if (!string.IsNullOrWhiteSpace(request.Type))
@@ -372,11 +373,6 @@ public class TransferServerService : IDisposable
             queryParams["limit"] = request.Limit.Value.ToString();
         }
 
-        if (!string.IsNullOrWhiteSpace(request.Kind))
-        {
-            queryParams["kind"] = request.Kind;
-        }
-
         if (!string.IsNullOrWhiteSpace(request.PagingId))
         {
             queryParams["paging_id"] = request.PagingId;
@@ -387,11 +383,25 @@ public class TransferServerService : IDisposable
             queryParams["lang"] = request.Lang;
         }
 
-        return await ExecuteGetAsync<AnchorTransactionsResponse>(
-            "transactions",
-            queryParams,
-            request.Jwt,
-            cancellationToken).ConfigureAwait(false);
+        // Build URI with support for multiple kind values
+        var uri = BuildUriWithKinds("transactions", queryParams, request.Kinds);
+
+        var client = GetOrCreateHttpClient();
+        var httpRequest = new HttpRequestMessage(HttpMethod.Get, uri);
+
+        AddHeaders(httpRequest, request.Jwt);
+
+        var response = await client.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+
+        // Handle 403 Forbidden responses specially to parse error types
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            HandleForbiddenResponse(errorContent);
+        }
+
+        var responseHandler = new ResponseHandler<AnchorTransactionsResponse>();
+        return await responseHandler.HandleResponse(response).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -518,7 +528,7 @@ public class TransferServerService : IDisposable
         {
             { "destination_asset", request.DestinationAsset },
             { "source_asset", request.SourceAsset },
-            { "amount", request.Amount.ToString() },
+            { "amount", request.Amount.ToString(CultureInfo.InvariantCulture) },
             { "account", request.Account },
         };
 
@@ -590,7 +600,7 @@ public class TransferServerService : IDisposable
         {
             { "source_asset", request.SourceAsset },
             { "destination_asset", request.DestinationAsset },
-            { "amount", request.Amount.ToString() },
+            { "amount", request.Amount.ToString(CultureInfo.InvariantCulture) },
         };
 
         AddIfNotNull(queryParams, "funding_method", request.FundingMethod);
@@ -637,7 +647,16 @@ public class TransferServerService : IDisposable
         {
             return;
         }
-        dict[key] = value.Value.ToString();
+        dict[key] = value.Value.ToString(CultureInfo.InvariantCulture);
+    }
+
+    private static void AddIfNotNull(Dictionary<string, string> dict, string key, bool? value)
+    {
+        if (!value.HasValue)
+        {
+            return;
+        }
+        dict[key] = value.Value.ToString().ToLowerInvariant();
     }
 
     private Uri BuildUri(string endpoint, Dictionary<string, string>? queryParams = null)
@@ -652,6 +671,47 @@ public class TransferServerService : IDisposable
                 query[param.Key] = param.Value;
             }
 
+            uriBuilder.Query = query.ToString();
+        }
+
+        return uriBuilder.Uri;
+    }
+
+    /// <summary>
+    ///     Builds a URI with support for multiple 'kind' query parameters.
+    ///     Per SEP-6 spec, the 'kind' parameter can be repeated multiple times
+    ///     (e.g., kind=deposit&amp;kind=withdrawal).
+    /// </summary>
+    private Uri BuildUriWithKinds(
+        string endpoint,
+        Dictionary<string, string>? queryParams,
+        IEnumerable<string>? kinds)
+    {
+        var uriBuilder = new UriBuilder($"{_transferServiceAddress}/{endpoint}");
+        var query = HttpUtility.ParseQueryString(string.Empty);
+
+        if (queryParams != null)
+        {
+            foreach (var param in queryParams)
+            {
+                query[param.Key] = param.Value;
+            }
+        }
+
+        // Add multiple kind parameters - HttpUtility.ParseQueryString supports duplicate keys
+        if (kinds != null)
+        {
+            foreach (var kind in kinds)
+            {
+                if (!string.IsNullOrWhiteSpace(kind))
+                {
+                    query.Add("kind", kind);
+                }
+            }
+        }
+
+        if (query.Count > 0)
+        {
             uriBuilder.Query = query.ToString();
         }
 

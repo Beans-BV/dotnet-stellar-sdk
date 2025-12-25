@@ -1,0 +1,45 @@
+{
+  "deposit": {
+    "USD": {
+      "enabled": true,
+      "min_amount": 10.0,
+      "max_amount": 10000.0,
+      "fee_fixed": 5.0,
+      "fee_percent": 1.0,
+      "fee_minimum": 2.0
+    },
+    "BTC": {
+      "enabled": true,
+      "min_amount": 0.001,
+      "max_amount": 10.0,
+      "fee_fixed": 0.0001,
+      "fee_percent": 0.5
+    }
+  },
+  "withdraw": {
+    "USD": {
+      "enabled": true,
+      "min_amount": 10.0,
+      "max_amount": 10000.0,
+      "fee_fixed": 5.0,
+      "fee_percent": 1.0,
+      "fee_minimum": 2.0
+    },
+    "BTC": {
+      "enabled": true,
+      "min_amount": 0.001,
+      "max_amount": 10.0,
+      "fee_fixed": 0.0001,
+      "fee_percent": 0.5
+    }
+  },
+  "fee": {
+    "enabled": true,
+    "authentication_required": false
+  },
+  "features": {
+    "account_creation": true,
+    "claimable_balances": false
+  }
+}
+

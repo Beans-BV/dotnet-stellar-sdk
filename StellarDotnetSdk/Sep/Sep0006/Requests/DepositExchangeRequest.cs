@@ -102,7 +102,7 @@ public sealed record DepositExchangeRequest
     ///     True if the client supports receiving deposit transactions
     ///     as a claimable balance, false otherwise.
     /// </summary>
-    public string? ClaimableBalanceSupported { get; init; }
+    public bool? ClaimableBalanceSupported { get; init; }
 
     /// <summary>
     ///     Id of an off-chain account (managed by the anchor) associated
