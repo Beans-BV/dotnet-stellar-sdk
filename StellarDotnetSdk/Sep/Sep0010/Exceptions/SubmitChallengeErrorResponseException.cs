@@ -5,15 +5,14 @@ namespace StellarDotnetSdk.Sep.Sep0010.Exceptions;
 /// </summary>
 public class SubmitChallengeErrorResponseException : WebAuthException
 {
-    /// <summary>
-    ///     The server's error message describing why the challenge was rejected.
-    /// </summary>
-    public string Error { get; }
-
     public SubmitChallengeErrorResponseException(string error)
         : base($"Error requesting jwtToken - error: {error}")
     {
         Error = error;
     }
-}
 
+    /// <summary>
+    ///     The server's error message describing why the challenge was rejected.
+    /// </summary>
+    public string Error { get; }
+}

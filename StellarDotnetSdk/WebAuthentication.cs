@@ -48,16 +48,16 @@ public static class WebAuthentication
         KeyPair? clientKeypair = null)
     {
         return ServerWebAuth.BuildChallengeTransaction(
-          serverKeypair,
-          clientAccountId,
-          homeDomain,
-          webAuthDomain,
-          nonce,
-          validFrom,
-          validFor,
-          network,
-          clientDomain,
-          clientKeypair);
+            serverKeypair,
+            clientAccountId,
+            homeDomain,
+            webAuthDomain,
+            nonce,
+            validFrom,
+            validFor,
+            network,
+            clientDomain,
+            clientKeypair);
     }
 
     /// <summary>
@@ -89,16 +89,16 @@ public static class WebAuthentication
         KeyPair? clientSigningKey = null)
     {
         return ServerWebAuth.BuildChallengeTransaction(
-          serverKeypair,
-          clientAccountId,
-          homeDomain,
-          webAuthDomain,
-          nonce,
-          validFrom,
-          validFor,
-          network,
-          clientDomain,
-          clientSigningKey);
+            serverKeypair,
+            clientAccountId,
+            homeDomain,
+            webAuthDomain,
+            nonce,
+            validFrom,
+            validFor,
+            network,
+            clientDomain,
+            clientSigningKey);
     }
 
     /// <summary>
@@ -128,12 +128,12 @@ public static class WebAuthentication
         DateTimeOffset? now = null)
     {
         return ServerWebAuth.ReadChallengeTransaction(
-          transaction,
-          serverAccountId,
-          homeDomain,
-          webAuthDomain,
-          network,
-          now);
+            transaction,
+            serverAccountId,
+            homeDomain,
+            webAuthDomain,
+            network,
+            now);
     }
 
     /// <summary>
@@ -163,12 +163,12 @@ public static class WebAuthentication
         DateTimeOffset? now = null)
     {
         return ServerWebAuth.ReadChallengeTransaction(
-          transaction,
-          serverAccountId,
-          homeDomains,
-          webAuthDomain,
-          network,
-          now);
+            transaction,
+            serverAccountId,
+            homeDomains,
+            webAuthDomain,
+            network,
+            now);
     }
 
     public static ICollection<string> VerifyChallengeTransactionThreshold(
@@ -182,14 +182,14 @@ public static class WebAuthentication
         DateTimeOffset? now = null)
     {
         return ServerWebAuth.VerifyChallengeTransactionThreshold(
-          transaction,
-          serverAccountId,
-          threshold,
-          signerSummary,
-          homeDomain,
-          webAuthDomain,
-          network,
-          now);
+            transaction,
+            serverAccountId,
+            threshold,
+            signerSummary,
+            homeDomain,
+            webAuthDomain,
+            network,
+            now);
     }
 
     /// <summary>
@@ -218,12 +218,12 @@ public static class WebAuthentication
         DateTimeOffset? now = null)
     {
         return ServerWebAuth.VerifyChallengeTransactionSigners(
-          transaction,
-          serverAccountId,
-          signers,
-          homeDomain,
-          webAuthDomain,
-          network,
-          now);
+            transaction,
+            serverAccountId,
+            signers,
+            homeDomain,
+            webAuthDomain,
+            network,
+            now);
     }
 }

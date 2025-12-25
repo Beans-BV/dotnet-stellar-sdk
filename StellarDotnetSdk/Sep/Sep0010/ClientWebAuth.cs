@@ -13,6 +13,7 @@ using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Sep.Sep0001;
 using StellarDotnetSdk.Sep.Sep0010.Exceptions;
 using StellarDotnetSdk.Xdr;
+using Transaction = StellarDotnetSdk.Transactions.Transaction;
 
 namespace StellarDotnetSdk.Sep.Sep0010;
 
@@ -31,8 +32,10 @@ namespace StellarDotnetSdk.Sep.Sep0010;
 ///     <list type="number">
 ///         <item>
 ///             <description>
-///                 Create a <see cref="ClientWebAuth"/> instance. In most cases you should use
-///                 <see cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)"/> to load
+///                 Create a <see cref="ClientWebAuth" /> instance. In most cases you should use
+///                 <see
+///                     cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string,string}?)" />
+///                 to load
 ///                 configuration from the anchor&apos;s <c>stellar.toml</c> (WEB_AUTH_ENDPOINT, SIGNING_KEY, and network).
 ///                 Use the constructor directly only when you already know all parameters or need custom configuration.
 ///             </description>
@@ -45,7 +48,8 @@ namespace StellarDotnetSdk.Sep.Sep0010;
 ///         </item>
 ///         <item>
 ///             <description>
-///                 Have the user sign the challenge transaction with their Stellar keypair (typically on-device or in a wallet).
+///                 Have the user sign the challenge transaction with their Stellar keypair (typically on-device or in a
+///                 wallet).
 ///             </description>
 ///         </item>
 ///         <item>
@@ -60,7 +64,10 @@ namespace StellarDotnetSdk.Sep.Sep0010;
 ///         <b>Choosing between constructor and FromDomainAsync</b>
 ///     </para>
 ///     <para>
-///         Use <see cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)"/> when you have a
+///         Use
+///         <see
+///             cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)" />
+///         when you have a
 ///         Stellar home domain (for example, <c>"example.com"</c>) and want the SDK to discover the WEB_AUTH_ENDPOINT,
 ///         SIGNING_KEY, and network passphrase from the domain&apos;s <c>stellar.toml</c>. This is the recommended,
 ///         high-level entry point for most clients.
@@ -74,16 +81,25 @@ namespace StellarDotnetSdk.Sep.Sep0010;
 ///         <b>IDisposable and HttpClient ownership</b>
 ///     </para>
 ///     <para>
-///         <see cref="ClientWebAuth"/> implements <see cref="IDisposable"/> because it may create and own an internal
-///         <see cref="HttpClient"/> instance. When you let <see cref="ClientWebAuth"/> create its own client (for example,
-///         by calling <see cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)"/> without
-///         passing an <see cref="HttpClient"/>), you should either wrap <see cref="ClientWebAuth"/> in a <c>using</c> block
-///         or explicitly call <see cref="Dispose"/> when you are finished with it so the internal client is cleaned up.
+///         <see cref="ClientWebAuth" /> implements <see cref="IDisposable" /> because it may create and own an internal
+///         <see cref="HttpClient" /> instance. When you let <see cref="ClientWebAuth" /> create its own client (for
+///         example,
+///         by calling
+///         <see
+///             cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)" />
+///         without
+///         passing an <see cref="HttpClient" />), you should either wrap <see cref="ClientWebAuth" /> in a <c>using</c>
+///         block
+///         or explicitly call <see cref="Dispose" /> when you are finished with it so the internal client is cleaned up.
 ///     </para>
 ///     <para>
-///         If you pass an external <see cref="HttpClient"/> into the constructor or <see cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)"/>,
-///         that client remains owned by the caller. In that case, disposing <see cref="ClientWebAuth"/> will not dispose the
-///         external client, and you are responsible for managing the <see cref="HttpClient"/> lifecycle yourself
+///         If you pass an external <see cref="HttpClient" /> into the constructor or
+///         <see
+///             cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)" />
+///         ,
+///         that client remains owned by the caller. In that case, disposing <see cref="ClientWebAuth" /> will not dispose
+///         the
+///         external client, and you are responsible for managing the <see cref="HttpClient" /> lifecycle yourself
 ///         (for example, by reusing a single long-lived instance for performance and resilience).
 ///     </para>
 /// </remarks>
@@ -99,13 +115,13 @@ public class ClientWebAuth : IDisposable
     public const int GracePeriod = 60 * 5; // 5 minutes
 
     private readonly string _authEndpoint;
-    private readonly Network _network;
-    private readonly string _serverSigningKey;
-    private readonly string _serverHomeDomain;
-    private readonly HttpClient _httpClient;
-    private readonly bool _internalHttpClient;
-    private readonly Dictionary<string, string>? _httpRequestHeaders;
     private readonly int _gracePeriod;
+    private readonly HttpClient _httpClient;
+    private readonly Dictionary<string, string>? _httpRequestHeaders;
+    private readonly bool _internalHttpClient;
+    private readonly Network _network;
+    private readonly string _serverHomeDomain;
+    private readonly string _serverSigningKey;
 
     /// <summary>
     ///     Creates a WebAuth instance with explicit configuration.
@@ -117,7 +133,10 @@ public class ClientWebAuth : IDisposable
     /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration</param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers for all requests</param>
     /// <param name="gracePeriod">Optional grace period in seconds for time bounds validation (default: 300)</param>
-    /// <param name="resilienceOptions">Optional resilience options for HTTP requests (retries, timeouts). Ignored if httpClient is provided.</param>
+    /// <param name="resilienceOptions">
+    ///     Optional resilience options for HTTP requests (retries, timeouts). Ignored if
+    ///     httpClient is provided.
+    /// </param>
     public ClientWebAuth(
         string authEndpoint,
         Network network,
@@ -153,11 +172,25 @@ public class ClientWebAuth : IDisposable
     }
 
     /// <summary>
+    ///     Disposes the internal HttpClient if it was created by this instance.
+    /// </summary>
+    public void Dispose()
+    {
+        if (_internalHttpClient)
+        {
+            _httpClient.Dispose();
+        }
+    }
+
+    /// <summary>
     ///     Creates a WebAuth instance by automatically discovering configuration from stellar.toml.
     /// </summary>
     /// <param name="domain">The domain name (without protocol) hosting the stellar.toml file</param>
     /// <param name="network">The Stellar network (Network.Public() or Network.Test())</param>
-    /// <param name="resilienceOptions">Resilience options for HTTP requests (applies to stellar.toml fetch and all WebAuth requests)</param>
+    /// <param name="resilienceOptions">
+    ///     Resilience options for HTTP requests (applies to stellar.toml fetch and all WebAuth
+    ///     requests)
+    /// </param>
     /// <param name="bearerToken">Optional bearer token for stellar.toml fetch only (not used for WebAuth requests)</param>
     /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration</param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers for requests</param>
@@ -170,7 +203,8 @@ public class ClientWebAuth : IDisposable
         HttpClient? httpClient = null,
         Dictionary<string, string>? httpRequestHeaders = null)
     {
-        var toml = await StellarToml.FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient, httpRequestHeaders)
+        var toml = await StellarToml
+            .FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient, httpRequestHeaders)
             .ConfigureAwait(false);
 
         if (toml.GeneralInformation.WebAuthEndpoint == null)
@@ -394,7 +428,7 @@ public class ClientWebAuth : IDisposable
         ArgumentException.ThrowIfNullOrEmpty(userAccountId);
 
         // Convert to SDK Transaction early - single conversion point
-        var transaction = Transactions.Transaction.FromEnvelopeXdr(challengeTransaction);
+        var transaction = Transaction.FromEnvelopeXdr(challengeTransaction);
 
         // Validate sequence number
         if (transaction.SequenceNumber != 0)
@@ -436,7 +470,8 @@ public class ClientWebAuth : IDisposable
             var opSourceAccountId = op.SourceAccount?.AccountId;
             if (opSourceAccountId == null)
             {
-                throw new ChallengeValidationErrorInvalidSourceAccount($"Invalid source account (is null) in operation[{i}]");
+                throw new ChallengeValidationErrorInvalidSourceAccount(
+                    $"Invalid source account (is null) in operation[{i}]");
             }
 
             if (i == 0 && opSourceAccountId != userAccountId)
@@ -452,7 +487,8 @@ public class ClientWebAuth : IDisposable
                 {
                     if (opSourceAccountId != clientDomainAccountId)
                     {
-                        throw new ChallengeValidationErrorInvalidSourceAccount($"Invalid source account in operation[{i}]");
+                        throw new ChallengeValidationErrorInvalidSourceAccount(
+                            $"Invalid source account in operation[{i}]");
                     }
                 }
                 else if (opSourceAccountId != _serverSigningKey)
@@ -468,7 +504,7 @@ public class ClientWebAuth : IDisposable
 
             // Use clean property access
             var dataValue = manageDataOp.Value;
-            
+
             // Validate nonce value length for first operation (must be 64 bytes per SEP-0010)
             if (i == 0)
             {
@@ -555,7 +591,7 @@ public class ClientWebAuth : IDisposable
         ArgumentNullException.ThrowIfNull(signers);
 
         // Convert to SDK Transaction for easy access
-        var transaction = Transactions.Transaction.FromEnvelopeXdr(challengeTransaction);
+        var transaction = Transaction.FromEnvelopeXdr(challengeTransaction);
 
         // Add signatures using SDK Transaction
         foreach (var signer in signers)
@@ -584,7 +620,7 @@ public class ClientWebAuth : IDisposable
         var requestBody = JsonSerializer.Serialize(new { transaction = base64EnvelopeXdr }, JsonOptions.DefaultOptions);
         var request = new HttpRequestMessage(HttpMethod.Post, serverUri)
         {
-            Content = new StringContent(requestBody, Encoding.UTF8, "application/json")
+            Content = new StringContent(requestBody, Encoding.UTF8, "application/json"),
         };
 
         if (_httpRequestHeaders != null)
@@ -609,7 +645,8 @@ public class ClientWebAuth : IDisposable
                 case 200:
                 case 400:
                     var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    var submitResponse = JsonSerializer.Deserialize<SubmitChallengeResponse>(content, JsonOptions.DefaultOptions);
+                    var submitResponse =
+                        JsonSerializer.Deserialize<SubmitChallengeResponse>(content, JsonOptions.DefaultOptions);
 
                     if (submitResponse == null)
                     {
@@ -641,16 +678,4 @@ public class ClientWebAuth : IDisposable
             throw new SubmitChallengeUnknownResponseException(0, ex.Message);
         }
     }
-
-    /// <summary>
-    ///     Disposes the internal HttpClient if it was created by this instance.
-    /// </summary>
-    public void Dispose()
-    {
-        if (_internalHttpClient)
-        {
-            _httpClient.Dispose();
-        }
-    }
 }
-

@@ -9,4 +9,3 @@ namespace StellarDotnetSdk.Sep.Sep0010;
 /// <param name="transactionXdr">The base64-encoded XDR transaction envelope to sign</param>
 /// <returns>The signed transaction envelope as base64-encoded XDR</returns>
 public delegate Task<string> ClientDomainSigningDelegate(string transactionXdr);
-

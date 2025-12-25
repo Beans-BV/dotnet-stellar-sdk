@@ -13,15 +13,14 @@ using Moq.Protected;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
-using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
-using StellarDotnetSdk.Sep.Sep0001;
 using StellarDotnetSdk.Sep.Sep0010;
 using StellarDotnetSdk.Sep.Sep0010.Exceptions;
 using StellarDotnetSdk.Transactions;
 using StellarDotnetSdk.Xdr;
 using TimeBounds = StellarDotnetSdk.Transactions.TimeBounds;
 using Memo = StellarDotnetSdk.Memos.Memo;
+using Operation = StellarDotnetSdk.Operations.Operation;
 using Transaction = StellarDotnetSdk.Transactions.Transaction;
 
 namespace StellarDotnetSdk.Tests.Sep.Sep0010;
@@ -37,11 +36,11 @@ public class ClientWebAuthTest
     private const string ClientDomain = "thisisatest.sandbox.anchor.client.com";
     private const string AuthEndpoint = "https://thisisatest.sandbox.anchor.webauth.com/auth";
     private const string MuxedAccountId = "MAAAAAAAAAAAJURAAB2X52XFQP6FBXLGT6LWOOWMEXWHEWBDVRZ7V5WH34Y22MPFBHUHY";
-
-    private Network _testnet = Network.Test();
     private KeyPair _clientKeypair = KeyPair.Random();
     private KeyPair _serverKeypair = KeyPair.Random();
     private string _serverSigningKey = string.Empty;
+
+    private Network _testnet = Network.Test();
 
     [TestInitialize]
     public void Initialize()
@@ -98,16 +97,9 @@ SIGNING_KEY = ""{signingKey}""
         int? gracePeriod = null)
     {
         return httpClient != null
-            ? new ClientWebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient, customHeaders, gracePeriod)
+            ? new ClientWebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient, customHeaders,
+                gracePeriod)
             : new ClientWebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, gracePeriod: gracePeriod);
-    }
-
-    /// <summary>
-    ///     Wrapper class to hold captured HTTP request messages.
-    /// </summary>
-    private class RequestCapture
-    {
-        public HttpRequestMessage? Request { get; set; }
     }
 
     /// <summary>
@@ -135,7 +127,7 @@ SIGNING_KEY = ""{signingKey}""
     /// </summary>
     private string CreateSignedTransactionXdr(
         Account transactionSource,
-        StellarDotnetSdk.Operations.Operation operation,
+        Operation operation,
         KeyPair signer,
         long? sequenceNumber = null,
         TimeBounds? timeBounds = null)
@@ -156,7 +148,7 @@ SIGNING_KEY = ""{signingKey}""
         {
             builder.AddPreconditions(new TransactionPreconditions
             {
-                TimeBounds = new TimeBounds(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddSeconds(1000))
+                TimeBounds = new TimeBounds(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddSeconds(1000)),
             });
         }
 
@@ -273,7 +265,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     }
 
     /// <summary>
-    ///     Verifies that GetChallengeResponseAsync throws NoMemoForMuxedAccountsException when memo is provided for muxed account.
+    ///     Verifies that GetChallengeResponseAsync throws NoMemoForMuxedAccountsException when memo is provided for muxed
+    ///     account.
     /// </summary>
     [TestMethod]
     public async Task GetChallengeResponseAsync_MemoWithMuxedAccount_ThrowsNoMemoForMuxedAccountsException()
@@ -285,7 +278,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         // Act & Assert
         await Assert.ThrowsExceptionAsync<NoMemoForMuxedAccountsException>(async () =>
         {
-            await webAuth.GetChallengeResponseAsync(MuxedAccountId, memo: 123);
+            await webAuth.GetChallengeResponseAsync(MuxedAccountId, 123);
         });
     }
 
@@ -303,7 +296,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var base64Data = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         var operation = new ManageDataOperation($"{HomeDomain} auth", base64Data, opSource.KeyPair);
-        var challengeXdr = CreateSignedTransactionXdr(transactionSource, operation, _serverKeypair, sequenceNumber: 1234);
+        var challengeXdr = CreateSignedTransactionXdr(transactionSource, operation, _serverKeypair, 1234);
 
         var webAuth = CreateWebAuth();
 
@@ -322,7 +315,9 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     {
         // Arrange
         var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
-        var webAuth = new ClientWebAuth(AuthEndpoint, _testnet, _serverSigningKey, "wrong.domain.com"); // Different domain for test
+        var webAuth =
+            new ClientWebAuth(AuthEndpoint, _testnet, _serverSigningKey,
+                "wrong.domain.com"); // Different domain for test
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidHomeDomain>(() =>
@@ -386,7 +381,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     }
 
     /// <summary>
-    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorMemoAndMuxedAccount when memo is present with muxed account.
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorMemoAndMuxedAccount when memo is present with muxed
+    ///     account.
     /// </summary>
     [TestMethod]
     public void ValidateChallenge_MemoWithMuxedAccount_ThrowsChallengeValidationErrorMemoAndMuxedAccount()
@@ -533,15 +529,12 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
                         Content = new StringContent(challengeJson),
                     };
                 }
-                else
+                // Second call: submit challenge
+                return new HttpResponseMessage
                 {
-                    // Second call: submit challenge
-                    return new HttpResponseMessage
-                    {
-                        StatusCode = HttpStatusCode.OK,
-                        Content = new StringContent(submitJson),
-                    };
-                }
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent(submitJson),
+                };
             });
 
         using var httpClient = new HttpClient(mockHttpHandler.Object);
@@ -567,7 +560,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         // Act & Assert
         await Assert.ThrowsExceptionAsync<NoMemoForMuxedAccountsException>(async () =>
         {
-            await webAuth.JwtTokenAsync(MuxedAccountId, new[] { _clientKeypair }, memo: 123);
+            await webAuth.JwtTokenAsync(MuxedAccountId, new[] { _clientKeypair }, 123);
         });
     }
 
@@ -585,7 +578,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         using var httpClient = CreateMockHttpClient(challengeJson);
         var webAuth = CreateWebAuth(httpClient);
 
-        ClientDomainSigningDelegate delegateFunc = async (xdr) => await Task.FromResult(xdr);
+        ClientDomainSigningDelegate delegateFunc = async xdr => await Task.FromResult(xdr);
 
         // Act & Assert
         await Assert.ThrowsExceptionAsync<MissingClientDomainException>(async () =>
@@ -679,7 +672,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     }
 
     /// <summary>
-    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidSourceAccount when operation source doesn't match.
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidSourceAccount when operation source doesn't
+    ///     match.
     /// </summary>
     [TestMethod]
     public void ValidateChallenge_InvalidOperationSourceAccount_ThrowsChallengeValidationErrorInvalidSourceAccount()
@@ -777,7 +771,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     }
 
     /// <summary>
-    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidWebAuthDomain when web auth domain doesn't match.
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidWebAuthDomain when web auth domain doesn't
+    ///     match.
     /// </summary>
     [TestMethod]
     public void ValidateChallenge_InvalidWebAuthDomain_ThrowsChallengeValidationErrorInvalidWebAuthDomain()
@@ -866,7 +861,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var webAuth = CreateWebAuth(httpClientDisposable);
 
         // Act
-        await webAuth.GetChallengeResponseAsync(_clientKeypair.AccountId, memo: 12345, homeDomain: "custom.domain");
+        await webAuth.GetChallengeResponseAsync(_clientKeypair.AccountId, 12345, "custom.domain");
 
         // Assert
         Assert.IsNotNull(capture.Request);
@@ -913,7 +908,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         HttpRequestMessage? capturedRequest = null;
         var mockHttpHandler = new Mock<HttpMessageHandler>();
         mockHttpHandler.Protected()
-            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
             .Callback<HttpRequestMessage, CancellationToken>((req, ct) => { capturedRequest = req; })
             .Returns(Task.FromResult(new HttpResponseMessage
             {
@@ -925,7 +921,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var customHeaders = new Dictionary<string, string>
         {
             { "X-Custom-Header", "custom-value" },
-            { "Authorization", "Bearer token123" }
+            { "Authorization", "Bearer token123" },
         };
         var webAuth = CreateWebAuth(httpClient, customHeaders);
 
@@ -948,7 +944,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     {
         // Arrange
         // Invalid JSON that deserializes to null
-        using var httpClient = CreateMockHttpClient("null", HttpStatusCode.OK);
+        using var httpClient = CreateMockHttpClient("null");
         var webAuth = CreateWebAuth(httpClient);
 
         // Act & Assert
@@ -989,7 +985,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
 
 
     /// <summary>
-    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidSourceAccount when operation has null source account.
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidSourceAccount when operation has null source
+    ///     account.
     /// </summary>
     [TestMethod]
     public void ValidateChallenge_NullOperationSourceAccount_ThrowsChallengeValidationErrorInvalidSourceAccount()
@@ -1002,7 +999,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var validNonceBytes = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
 
         // Create operation with null source account
-        var operation = new ManageDataOperation($"{HomeDomain} auth", validNonceBytes, null);
+        var operation = new ManageDataOperation($"{HomeDomain} auth", validNonceBytes);
         var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
@@ -1022,7 +1019,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     }
 
     /// <summary>
-    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidSourceAccount when client domain operation has wrong source account.
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidSourceAccount when client domain operation
+    ///     has wrong source account.
     /// </summary>
     [TestMethod]
     public void ValidateChallenge_WrongClientDomainSourceAccount_ThrowsChallengeValidationErrorInvalidSourceAccount()
@@ -1030,7 +1028,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         // Arrange
         var clientDomainKeypair = KeyPair.Random();
         var wrongSourceKeypair = KeyPair.Random();
-        
+
         var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
@@ -1039,7 +1037,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
             validFrom: DateTimeOffset.UtcNow);
 
         // Add client domain operation with wrong source account
-        var clientDomainOp = new ManageDataOperation("client_domain", Encoding.UTF8.GetBytes(ClientDomain), wrongSourceKeypair);
+        var clientDomainOp =
+            new ManageDataOperation("client_domain", Encoding.UTF8.GetBytes(ClientDomain), wrongSourceKeypair);
         var transactionBuilder = new TransactionBuilder(new Account(_serverKeypair.Address, -1))
             .AddOperation(transaction.Operations[0])
             .AddOperation(clientDomainOp)
@@ -1054,19 +1053,20 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidSourceAccount>(() =>
         {
-            webAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId, clientDomainAccountId: clientDomainKeypair.AccountId);
+            webAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId, clientDomainKeypair.AccountId);
         });
     }
 
     /// <summary>
-    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidSourceAccount when non-client-domain operation has wrong source account.
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidSourceAccount when non-client-domain
+    ///     operation has wrong source account.
     /// </summary>
     [TestMethod]
     public void ValidateChallenge_WrongNonClientDomainSourceAccount_ThrowsChallengeValidationErrorInvalidSourceAccount()
     {
         // Arrange
         var wrongSourceKeypair = KeyPair.Random();
-        
+
         var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
@@ -1075,7 +1075,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
             validFrom: DateTimeOffset.UtcNow);
 
         // Add second operation with wrong source account (not client domain)
-        var secondOp = new ManageDataOperation("web_auth_domain", Encoding.UTF8.GetBytes(WebAuthDomain), wrongSourceKeypair);
+        var secondOp =
+            new ManageDataOperation("web_auth_domain", Encoding.UTF8.GetBytes(WebAuthDomain), wrongSourceKeypair);
         var transactionBuilder = new TransactionBuilder(new Account(_serverKeypair.Address, -1))
             .AddOperation(transaction.Operations[0])
             .AddOperation(secondOp)
@@ -1116,10 +1117,10 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
             V1 = new TransactionV1Envelope
             {
                 Tx = envelopeXdr.V1!.Tx,
-                Signatures = Array.Empty<DecoratedSignature>() // Empty signatures array
-            }
+                Signatures = Array.Empty<DecoratedSignature>(), // Empty signatures array
+            },
         };
-        
+
         var outputStream = new XdrDataOutputStream();
         TransactionEnvelope.Encode(outputStream, emptySignaturesEnvelope);
         var challengeXdr = Convert.ToBase64String(outputStream.ToArray());
@@ -1148,7 +1149,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         HttpRequestMessage? capturedRequest = null;
         var mockHttpHandler = new Mock<HttpMessageHandler>();
         mockHttpHandler.Protected()
-            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
             .Callback<HttpRequestMessage, CancellationToken>((req, ct) => { capturedRequest = req; })
             .Returns(Task.FromResult(new HttpResponseMessage
             {
@@ -1160,7 +1162,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var customHeaders = new Dictionary<string, string>
         {
             { "Content-Type", "application/xml" }, // Should be skipped
-            { "X-Custom-Header", "custom-value" } // Should be added
+            { "X-Custom-Header", "custom-value" }, // Should be added
         };
         var webAuthWithClient = CreateWebAuth(httpClient, customHeaders);
 
@@ -1175,7 +1177,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     }
 
     /// <summary>
-    ///     Verifies that SendSignedChallengeAsync throws SubmitChallengeUnknownResponseException when response deserializes to null.
+    ///     Verifies that SendSignedChallengeAsync throws SubmitChallengeUnknownResponseException when response deserializes to
+    ///     null.
     /// </summary>
     [TestMethod]
     public async Task SendSignedChallengeAsync_NullResponse_ThrowsSubmitChallengeUnknownResponseException()
@@ -1184,7 +1187,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var signedXdr = CreateSignedChallengeXdr(_clientKeypair.AccountId, new[] { _clientKeypair });
 
         // Invalid JSON that deserializes to null
-        using var httpClient = CreateMockHttpClient("null", HttpStatusCode.OK);
+        using var httpClient = CreateMockHttpClient("null");
         var webAuthWithClient = CreateWebAuth(httpClient);
 
         // Act & Assert
@@ -1209,7 +1212,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var submitResponse = new SubmitChallengeResponse { Token = null };
         var responseJson = JsonSerializer.Serialize(submitResponse, JsonOptions.DefaultOptions);
 
-        using var httpClient = CreateMockHttpClient(responseJson, HttpStatusCode.OK);
+        using var httpClient = CreateMockHttpClient(responseJson);
         var webAuthWithClient = CreateWebAuth(httpClient);
 
         // Act & Assert
@@ -1222,7 +1225,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     }
 
     /// <summary>
-    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidNonceValue when first operation's value is not 64 bytes.
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidNonceValue when first operation's value is
+    ///     not 64 bytes.
     /// </summary>
     [TestMethod]
     public void ValidateChallenge_InvalidNonceValueLength_ThrowsChallengeValidationErrorInvalidNonceValue()
@@ -1253,7 +1257,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     }
 
     /// <summary>
-    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidNonceValue when first operation's value is null.
+    ///     Verifies that ValidateChallenge throws ChallengeValidationErrorInvalidNonceValue when first operation's value is
+    ///     null.
     /// </summary>
     [TestMethod]
     public void ValidateChallenge_NullNonceValue_ThrowsChallengeValidationErrorInvalidNonceValue()
@@ -1281,5 +1286,12 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
             webAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId);
         });
     }
-}
 
+    /// <summary>
+    ///     Wrapper class to hold captured HTTP request messages.
+    /// </summary>
+    private class RequestCapture
+    {
+        public HttpRequestMessage? Request { get; set; }
+    }
+}

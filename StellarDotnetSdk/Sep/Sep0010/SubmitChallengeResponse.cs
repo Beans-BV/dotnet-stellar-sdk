@@ -21,4 +21,3 @@ public sealed record SubmitChallengeResponse
     [JsonPropertyName("error")]
     public string? Error { get; init; }
 }
-

@@ -20,4 +20,3 @@ public sealed record ChallengeResponse
     [JsonPropertyName("network_passphrase")]
     public string? NetworkPassphrase { get; init; }
 }
-
