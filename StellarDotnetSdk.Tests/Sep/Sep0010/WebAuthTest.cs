@@ -996,9 +996,13 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     {
         // Arrange
         var transactionSource = new Account(_serverKeypair.Address, -1);
-        
+
+        // Create valid 64-byte nonce (48 raw bytes → 64 base64 characters)
+        var plainTextBytes = Encoding.UTF8.GetBytes(new string(' ', 48));
+        var validNonceBytes = Encoding.ASCII.GetBytes(Convert.ToBase64String(plainTextBytes));
+
         // Create operation with null source account
-        var operation = new ManageDataOperation($"{HomeDomain} auth", Encoding.UTF8.GetBytes("test"), null);
+        var operation = new ManageDataOperation($"{HomeDomain} auth", validNonceBytes, null);
         var transaction = new TransactionBuilder(transactionSource)
             .AddOperation(operation)
             .AddPreconditions(new TransactionPreconditions
