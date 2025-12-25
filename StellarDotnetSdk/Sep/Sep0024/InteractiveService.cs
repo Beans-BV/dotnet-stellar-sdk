@@ -88,8 +88,8 @@ public class InteractiveService : IDisposable
     public InteractiveService(
         string transferServiceAddress,
         HttpClient? httpClient = null,
-        Dictionary<string, string>? httpRequestHeaders = null,
-        HttpResilienceOptions? resilienceOptions = null)
+        HttpResilienceOptions? resilienceOptions = null,
+        Dictionary<string, string>? httpRequestHeaders = null)
     {
         _transferServiceAddress = transferServiceAddress ?? throw new ArgumentNullException(nameof(transferServiceAddress));
         _httpRequestHeaders = httpRequestHeaders;
@@ -140,7 +140,7 @@ public class InteractiveService : IDisposable
             throw new ArgumentException($"Transfer server SEP 24 not available for domain {domain}", nameof(domain));
         }
 
-        return new InteractiveService(addr, httpClient, httpRequestHeaders, resilienceOptions);
+        return new InteractiveService(addr, httpClient, resilienceOptions, httpRequestHeaders);
     }
 
     /// <summary>

@@ -157,7 +157,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         {
             { "X-Custom-Header", "custom-value" },
         };
-        var service = new InteractiveService(TestTransferServerUrl, httpClient, customHeaders);
+        var service = new InteractiveService(TestTransferServerUrl, httpClient, httpRequestHeaders: customHeaders);
 
         using (httpClient)
         {
@@ -180,7 +180,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         {
             { "Content-Type", "multipart/form-data; boundary=custom" },
         };
-        var service = new InteractiveService(TestTransferServerUrl, httpClient, customHeaders);
+        var service = new InteractiveService(TestTransferServerUrl, httpClient, httpRequestHeaders: customHeaders);
         var request = new Sep24DepositRequest
         {
             Jwt = TestJwt,
@@ -1349,7 +1349,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         };
 
         // Act
-        var service = new InteractiveService(TestTransferServerUrl, null, customHeaders);
+        var service = new InteractiveService(TestTransferServerUrl, httpClient: null, httpRequestHeaders: customHeaders);
 
         // Assert
         Assert.IsNotNull(service);
