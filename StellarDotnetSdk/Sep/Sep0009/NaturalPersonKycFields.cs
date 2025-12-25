@@ -64,14 +64,24 @@ public sealed record NaturalPersonKycFields
     public const string ProofOfLivenessFileKey = "proof_of_liveness";
 
     /// <summary>
-    ///     Family or last name
+    ///     Last name
     /// </summary>
     public string? LastName { get; init; }
 
     /// <summary>
-    ///     Given or first name
+    ///     Family name
+    /// </summary>
+    public string? FamilyName { get; init; }
+
+    /// <summary>
+    ///     First name
     /// </summary>
     public string? FirstName { get; init; }
+
+    /// <summary>
+    ///     Given name
+    /// </summary>
+    public string? GivenName { get; init; }
 
     /// <summary>
     ///     Middle name or other additional name
@@ -255,9 +265,17 @@ public sealed record NaturalPersonKycFields
         {
             result[LastNameFieldKey] = LastName;
         }
+        if (FamilyName is not null)
+        {
+            result[FamilyNameFieldKey] = FamilyName;
+        }
         if (FirstName is not null)
         {
             result[FirstNameFieldKey] = FirstName;
+        }
+        if (GivenName is not null)
+        {
+            result[GivenNameFieldKey] = GivenName;
         }
         if (AdditionalName is not null)
         {
