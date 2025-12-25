@@ -31,7 +31,7 @@ namespace StellarDotnetSdk.Sep.Sep0010;
 ///     <list type="number">
 ///         <item>
 ///             <description>
-///                 Create a <see cref="WebAuth"/> instance. In most cases you should use
+///                 Create a <see cref="ClientWebAuth"/> instance. In most cases you should use
 ///                 <see cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)"/> to load
 ///                 configuration from the anchor&apos;s <c>stellar.toml</c> (WEB_AUTH_ENDPOINT, SIGNING_KEY, and network).
 ///                 Use the constructor directly only when you already know all parameters or need custom configuration.
@@ -74,20 +74,20 @@ namespace StellarDotnetSdk.Sep.Sep0010;
 ///         <b>IDisposable and HttpClient ownership</b>
 ///     </para>
 ///     <para>
-///         <see cref="WebAuth"/> implements <see cref="IDisposable"/> because it may create and own an internal
-///         <see cref="HttpClient"/> instance. When you let <see cref="WebAuth"/> create its own client (for example,
+///         <see cref="ClientWebAuth"/> implements <see cref="IDisposable"/> because it may create and own an internal
+///         <see cref="HttpClient"/> instance. When you let <see cref="ClientWebAuth"/> create its own client (for example,
 ///         by calling <see cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)"/> without
-///         passing an <see cref="HttpClient"/>), you should either wrap <see cref="WebAuth"/> in a <c>using</c> block
+///         passing an <see cref="HttpClient"/>), you should either wrap <see cref="ClientWebAuth"/> in a <c>using</c> block
 ///         or explicitly call <see cref="Dispose"/> when you are finished with it so the internal client is cleaned up.
 ///     </para>
 ///     <para>
 ///         If you pass an external <see cref="HttpClient"/> into the constructor or <see cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)"/>,
-///         that client remains owned by the caller. In that case, disposing <see cref="WebAuth"/> will not dispose the
+///         that client remains owned by the caller. In that case, disposing <see cref="ClientWebAuth"/> will not dispose the
 ///         external client, and you are responsible for managing the <see cref="HttpClient"/> lifecycle yourself
 ///         (for example, by reusing a single long-lived instance for performance and resilience).
 ///     </para>
 /// </remarks>
-public class WebAuth : IDisposable
+public class ClientWebAuth : IDisposable
 {
     private const string WebAuthDataKey = "web_auth_domain";
     private const string ClientDomainDataKey = "client_domain";
@@ -118,7 +118,7 @@ public class WebAuth : IDisposable
     /// <param name="httpRequestHeaders">Optional custom HTTP headers for all requests</param>
     /// <param name="gracePeriod">Optional grace period in seconds for time bounds validation (default: 300)</param>
     /// <param name="resilienceOptions">Optional resilience options for HTTP requests (retries, timeouts). Ignored if httpClient is provided.</param>
-    public WebAuth(
+    public ClientWebAuth(
         string authEndpoint,
         Network network,
         string serverSigningKey,
@@ -162,7 +162,7 @@ public class WebAuth : IDisposable
     /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration</param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers for requests</param>
     /// <returns>WebAuth instance configured with the domain's settings</returns>
-    public static async Task<WebAuth> FromDomainAsync(
+    public static async Task<ClientWebAuth> FromDomainAsync(
         string domain,
         Network network,
         HttpResilienceOptions? resilienceOptions = null,
@@ -183,7 +183,7 @@ public class WebAuth : IDisposable
             throw new NoWebAuthServerSigningKeyFoundException(domain);
         }
 
-        return new WebAuth(
+        return new ClientWebAuth(
             toml.GeneralInformation.WebAuthEndpoint,
             network,
             toml.GeneralInformation.SigningKey,

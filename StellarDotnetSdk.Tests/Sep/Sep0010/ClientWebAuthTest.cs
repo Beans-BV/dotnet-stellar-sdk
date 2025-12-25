@@ -30,7 +30,7 @@ namespace StellarDotnetSdk.Tests.Sep.Sep0010;
 ///     Unit tests for SEP-0010 Web Authentication functionality.
 /// </summary>
 [TestClass]
-public class WebAuthTest
+public class ClientWebAuthTest
 {
     private const string HomeDomain = "thisisatest.sandbox.anchor.anchordomain.com";
     private const string WebAuthDomain = "thisisatest.sandbox.anchor.webauth.com";
@@ -79,7 +79,7 @@ SIGNING_KEY = ""{signingKey}""
     /// </summary>
     private string CreateChallengeTransactionXdr(string clientAccountId)
     {
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             clientAccountId,
             HomeDomain,
@@ -92,14 +92,14 @@ SIGNING_KEY = ""{signingKey}""
     /// <summary>
     ///     Creates a WebAuth instance with optional HttpClient, custom headers, and grace period.
     /// </summary>
-    private WebAuth CreateWebAuth(
+    private ClientWebAuth CreateWebAuth(
         HttpClient? httpClient = null,
         Dictionary<string, string>? customHeaders = null,
         int? gracePeriod = null)
     {
         return httpClient != null
-            ? new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient, customHeaders, gracePeriod)
-            : new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, gracePeriod: gracePeriod);
+            ? new ClientWebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, httpClient, customHeaders, gracePeriod)
+            : new ClientWebAuth(AuthEndpoint, _testnet, _serverSigningKey, HomeDomain, gracePeriod: gracePeriod);
     }
 
     /// <summary>
@@ -186,7 +186,7 @@ SIGNING_KEY = ""{signingKey}""
         using var httpClient = CreateMockHttpClient(tomlContent);
 
         // Act
-        var webAuth = await WebAuth.FromDomainAsync(HomeDomain, _testnet, httpClient: httpClient);
+        var webAuth = await ClientWebAuth.FromDomainAsync(HomeDomain, _testnet, httpClient: httpClient);
 
         // Assert
         Assert.IsNotNull(webAuth);
@@ -207,7 +207,7 @@ SIGNING_KEY = ""GBWMCCC3NHSKLAOJDBKKYW7SSH2PFTTNVFKWSGLWGDLEBKLOVP5JLBBP""
         // Act & Assert
         await Assert.ThrowsExceptionAsync<NoWebAuthEndpointFoundException>(async () =>
         {
-            await WebAuth.FromDomainAsync(HomeDomain, _testnet, httpClient: httpClient);
+            await ClientWebAuth.FromDomainAsync(HomeDomain, _testnet, httpClient: httpClient);
         });
     }
 
@@ -226,7 +226,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         // Act & Assert
         await Assert.ThrowsExceptionAsync<NoWebAuthServerSigningKeyFoundException>(async () =>
         {
-            await WebAuth.FromDomainAsync(HomeDomain, _testnet, httpClient: httpClient);
+            await ClientWebAuth.FromDomainAsync(HomeDomain, _testnet, httpClient: httpClient);
         });
     }
 
@@ -322,7 +322,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     {
         // Arrange
         var challengeXdr = CreateChallengeTransactionXdr(_clientKeypair.AccountId);
-        var webAuth = new WebAuth(AuthEndpoint, _testnet, _serverSigningKey, "wrong.domain.com"); // Different domain for test
+        var webAuth = new ClientWebAuth(AuthEndpoint, _testnet, _serverSigningKey, "wrong.domain.com"); // Different domain for test
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidHomeDomain>(() =>
@@ -339,7 +339,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     {
         // Arrange
         var expiredTime = DateTimeOffset.UtcNow.AddHours(-1);
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -364,7 +364,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public void ValidateChallenge_InvalidSignature_ThrowsChallengeValidationErrorInvalidSignature()
     {
         // Arrange
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -392,7 +392,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public void ValidateChallenge_MemoWithMuxedAccount_ThrowsChallengeValidationErrorMemoAndMuxedAccount()
     {
         // Arrange
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -717,7 +717,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public void ValidateChallenge_InvalidMemoType_ThrowsChallengeValidationErrorInvalidMemoType()
     {
         // Arrange
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -750,7 +750,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public void ValidateChallenge_MemoValueMismatch_ThrowsChallengeValidationErrorInvalidMemoValue()
     {
         // Arrange
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -783,7 +783,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public void ValidateChallenge_InvalidWebAuthDomain_ThrowsChallengeValidationErrorInvalidWebAuthDomain()
     {
         // Arrange
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -792,7 +792,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
 
         var challengeXdr = transaction.ToEnvelopeXdrBase64();
         // Use different auth endpoint domain for test
-        var webAuth = new WebAuth("https://wrong.domain.com/auth", _testnet, _serverSigningKey, HomeDomain);
+        var webAuth = new ClientWebAuth("https://wrong.domain.com/auth", _testnet, _serverSigningKey, HomeDomain);
 
         // Act & Assert
         Assert.ThrowsException<ChallengeValidationErrorInvalidWebAuthDomain>(() =>
@@ -969,7 +969,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public void ValidateChallenge_MissingMemoWhenExpected_ThrowsChallengeValidationErrorInvalidMemoValue()
     {
         // Arrange
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -1031,7 +1031,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var clientDomainKeypair = KeyPair.Random();
         var wrongSourceKeypair = KeyPair.Random();
         
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -1067,7 +1067,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         // Arrange
         var wrongSourceKeypair = KeyPair.Random();
         
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -1101,7 +1101,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
     public void ValidateChallenge_InvalidSignatureCount_ThrowsChallengeValidationErrorInvalidSignature()
     {
         // Arrange
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,

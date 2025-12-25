@@ -8,15 +8,16 @@ using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Sep.Sep0010;
 using StellarDotnetSdk.Transactions;
 
-namespace StellarDotnetSdk.Tests;
+namespace StellarDotnetSdk.Tests.Sep.Sep0010;
 
 /// <summary>
 ///     Unit tests for web authentication (SEP-10) functionality.
 /// </summary>
 [TestClass]
-public class WebAuthenticationTest
+public class ServerWebAuthTest
 {
     private const string HomeDomain = "thisisatest.sandbox.anchor.anchordomain.com";
     private const string WebAuthDomain = "thisisatest.sandbox.anchor.webauth.com";
@@ -49,7 +50,7 @@ public class WebAuthenticationTest
         const string clientAccountId = "GBDIT5GUJ7R5BXO3GJHFXJ6AZ5UQK6MNOIDMPQUSMXLIHTUNR2Q5CFNF";
 
         // Act
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             clientAccountId,
             HomeDomain,
@@ -84,7 +85,7 @@ public class WebAuthenticationTest
         var duration = TimeSpan.FromMinutes(10.0);
 
         // Act
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             clientAccountId,
             HomeDomain,
@@ -125,7 +126,7 @@ public class WebAuthenticationTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.BuildChallengeTransaction(
+            ServerWebAuth.BuildChallengeTransaction(
                 _serverKeypair,
                 clientAccountId.Address,
                 HomeDomain,
@@ -145,7 +146,7 @@ public class WebAuthenticationTest
         // Arrange
         var now = DateTimeOffset.Now;
 
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -154,7 +155,7 @@ public class WebAuthenticationTest
         transaction.Sign(_clientKeypair);
 
         // Act & Assert
-        Assert.IsTrue(WebAuthentication.VerifyChallengeTransaction(
+        Assert.IsTrue(ServerWebAuth.VerifyChallengeTransaction(
             transaction,
             _serverKeypair.AccountId,
             HomeDomain,
@@ -181,7 +182,7 @@ public class WebAuthenticationTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(
+            ServerWebAuth.VerifyChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -200,7 +201,7 @@ public class WebAuthenticationTest
         // Arrange
         var now = DateTimeOffset.Now;
 
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -211,7 +212,7 @@ public class WebAuthenticationTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(
+            ServerWebAuth.VerifyChallengeTransaction(
                 transaction,
                 KeyPair.Random().AccountId,
                 HomeDomain,
@@ -239,7 +240,7 @@ public class WebAuthenticationTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(
+            ServerWebAuth.VerifyChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -266,7 +267,7 @@ public class WebAuthenticationTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(
+            ServerWebAuth.VerifyChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -293,7 +294,7 @@ public class WebAuthenticationTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(
+            ServerWebAuth.VerifyChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -312,7 +313,7 @@ public class WebAuthenticationTest
         // Arrange
         var now = DateTimeOffset.Now;
 
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -324,7 +325,7 @@ public class WebAuthenticationTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(
+            ServerWebAuth.VerifyChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -343,7 +344,7 @@ public class WebAuthenticationTest
         // Arrange
         var now = DateTimeOffset.Now;
 
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -358,7 +359,7 @@ public class WebAuthenticationTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(
+            ServerWebAuth.VerifyChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -378,7 +379,7 @@ public class WebAuthenticationTest
         // Arrange
         var now = DateTimeOffset.Now;
 
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -388,7 +389,7 @@ public class WebAuthenticationTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(
+            ServerWebAuth.VerifyChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -407,7 +408,7 @@ public class WebAuthenticationTest
         // Arrange
         var now = DateTimeOffset.Now;
 
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -422,7 +423,7 @@ public class WebAuthenticationTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(
+            ServerWebAuth.VerifyChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -450,7 +451,7 @@ public class WebAuthenticationTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(
+            ServerWebAuth.VerifyChallengeTransaction(
                 transaction,
                 serverKeypair.AccountId,
                 HomeDomain,
@@ -477,7 +478,7 @@ public class WebAuthenticationTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransaction(
+            ServerWebAuth.VerifyChallengeTransaction(
                 transaction,
                 serverKeypair.AccountId,
                 HomeDomain,
@@ -538,7 +539,7 @@ public class WebAuthenticationTest
         transaction.Sign(_clientKeypair);
 
         // Act
-        var readTransactionId = WebAuthentication.ReadChallengeTransaction(
+        var readTransactionId = ServerWebAuth.ReadChallengeTransaction(
             transaction,
             _serverKeypair.AccountId,
             HomeDomain,
@@ -571,7 +572,7 @@ public class WebAuthenticationTest
         transaction.Sign(_serverKeypair);
 
         // Act
-        var readTransactionId = WebAuthentication.ReadChallengeTransaction(
+        var readTransactionId = ServerWebAuth.ReadChallengeTransaction(
             transaction,
             _serverKeypair.AccountId,
             HomeDomain,
@@ -604,7 +605,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.ReadChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -640,7 +641,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.ReadChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -675,7 +676,7 @@ public class WebAuthenticationTest
 
         // Act & Assert
         var ex = Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
-            WebAuthentication.ReadChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -705,7 +706,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.ReadChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -743,7 +744,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.ReadChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -777,7 +778,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.ReadChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -819,7 +820,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.VerifyChallengeTransactionThreshold(
+            ServerWebAuth.VerifyChallengeTransactionThreshold(
                 transaction,
                 _serverKeypair.AccountId,
                 threshold,
@@ -868,7 +869,7 @@ public class WebAuthenticationTest
         };
 
         // Act
-        var signersFound = WebAuthentication.VerifyChallengeTransactionThreshold(
+        var signersFound = ServerWebAuth.VerifyChallengeTransactionThreshold(
             transaction,
             _serverKeypair.AccountId,
             threshold,
@@ -924,7 +925,7 @@ public class WebAuthenticationTest
         };
 
         // Act
-        var signersFound = WebAuthentication.VerifyChallengeTransactionThreshold(
+        var signersFound = ServerWebAuth.VerifyChallengeTransactionThreshold(
             transaction,
             _serverKeypair.AccountId,
             threshold,
@@ -981,7 +982,7 @@ public class WebAuthenticationTest
         };
 
         // Act
-        var signersFound = WebAuthentication.VerifyChallengeTransactionThreshold(
+        var signersFound = ServerWebAuth.VerifyChallengeTransactionThreshold(
             transaction,
             _serverKeypair.AccountId,
             threshold,
@@ -1033,7 +1034,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.VerifyChallengeTransactionThreshold(
+            ServerWebAuth.VerifyChallengeTransactionThreshold(
                 transaction,
                 _serverKeypair.AccountId,
                 threshold,
@@ -1084,7 +1085,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.VerifyChallengeTransactionThreshold(
+            ServerWebAuth.VerifyChallengeTransactionThreshold(
                 transaction,
                 _serverKeypair.AccountId,
                 threshold,
@@ -1131,7 +1132,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.VerifyChallengeTransactionThreshold(
+            ServerWebAuth.VerifyChallengeTransactionThreshold(
                 transaction,
                 _serverKeypair.AccountId,
                 threshold,
@@ -1184,7 +1185,7 @@ public class WebAuthenticationTest
         };
 
         // Act
-        var signersFound = WebAuthentication.VerifyChallengeTransactionThreshold(
+        var signersFound = ServerWebAuth.VerifyChallengeTransactionThreshold(
             transaction,
             _serverKeypair.AccountId,
             threshold,
@@ -1229,7 +1230,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.VerifyChallengeTransactionThreshold(
+            ServerWebAuth.VerifyChallengeTransactionThreshold(
                 transaction,
                 _serverKeypair.AccountId,
                 threshold,
@@ -1271,7 +1272,7 @@ public class WebAuthenticationTest
         };
 
         // Act
-        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(
+        var signersFound = ServerWebAuth.VerifyChallengeTransactionSigners(
             transaction,
             _serverKeypair.AccountId,
             signers,
@@ -1311,7 +1312,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(
+            ServerWebAuth.VerifyChallengeTransactionSigners(
                 transaction,
                 _serverKeypair.AccountId,
                 signers,
@@ -1356,7 +1357,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(
+            ServerWebAuth.VerifyChallengeTransactionSigners(
                 transaction,
                 _serverKeypair.AccountId,
                 signers,
@@ -1408,7 +1409,7 @@ public class WebAuthenticationTest
         };
 
         // Act
-        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(
+        var signersFound = ServerWebAuth.VerifyChallengeTransactionSigners(
             transaction,
             _serverKeypair.AccountId,
             signers,
@@ -1461,7 +1462,7 @@ public class WebAuthenticationTest
         };
 
         // Act
-        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(
+        var signersFound = ServerWebAuth.VerifyChallengeTransactionSigners(
             transaction,
             _serverKeypair.AccountId,
             signers,
@@ -1510,7 +1511,7 @@ public class WebAuthenticationTest
         };
 
         // Act
-        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(
+        var signersFound = ServerWebAuth.VerifyChallengeTransactionSigners(
             transaction,
             _serverKeypair.AccountId,
             signers,
@@ -1560,7 +1561,7 @@ public class WebAuthenticationTest
         };
 
         // Act
-        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(
+        var signersFound = ServerWebAuth.VerifyChallengeTransactionSigners(
             transaction,
             _serverKeypair.AccountId,
             signers,
@@ -1606,7 +1607,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(
+            ServerWebAuth.VerifyChallengeTransactionSigners(
                 transaction,
                 _serverKeypair.AccountId,
                 signers,
@@ -1653,7 +1654,7 @@ public class WebAuthenticationTest
         };
 
         // Act
-        var signersFound = WebAuthentication.VerifyChallengeTransactionSigners(
+        var signersFound = ServerWebAuth.VerifyChallengeTransactionSigners(
             transaction,
             _serverKeypair.AccountId,
             signers,
@@ -1700,7 +1701,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(
+            ServerWebAuth.VerifyChallengeTransactionSigners(
                 transaction,
                 _serverKeypair.AccountId,
                 signers,
@@ -1741,7 +1742,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(
+            ServerWebAuth.VerifyChallengeTransactionSigners(
                 transaction,
                 _serverKeypair.AccountId,
                 signers,
@@ -1781,7 +1782,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(
+            ServerWebAuth.VerifyChallengeTransactionSigners(
                 transaction,
                 _serverKeypair.AccountId,
                 signers,
@@ -1823,7 +1824,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.ReadChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -1865,7 +1866,7 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            WebAuthentication.ReadChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -1889,12 +1890,12 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            var transaction = WebAuthentication.BuildChallengeTransaction(
+            var transaction = ServerWebAuth.BuildChallengeTransaction(
                 _serverKeypair,
                 clientAccountId,
                 HomeDomain,
                 WebAuthDomain);
-            WebAuthentication.ReadChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 $"{HomeDomain}bad",
@@ -1919,12 +1920,12 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            var transaction = WebAuthentication.BuildChallengeTransaction(
+            var transaction = ServerWebAuth.BuildChallengeTransaction(
                 _serverKeypair,
                 clientAccountId,
                 HomeDomain,
                 WebAuthDomain);
-            WebAuthentication.ReadChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 Array.Empty<string>(),
@@ -1945,7 +1946,7 @@ public class WebAuthenticationTest
         // Arrange & Act & Assert
         var ex = Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.ReadChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 null,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -1966,12 +1967,12 @@ public class WebAuthenticationTest
         // Act & Assert
         try
         {
-            var transaction = WebAuthentication.BuildChallengeTransaction(
+            var transaction = ServerWebAuth.BuildChallengeTransaction(
                 _serverKeypair,
                 clientAccountId,
                 HomeDomain,
                 WebAuthDomain);
-            WebAuthentication.ReadChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -2007,7 +2008,7 @@ public class WebAuthenticationTest
         transaction.Sign(_clientKeypair);
 
         // Act
-        var readTransactionId = WebAuthentication.ReadChallengeTransaction(
+        var readTransactionId = ServerWebAuth.ReadChallengeTransaction(
             transaction,
             _serverKeypair.AccountId,
             HomeDomain, "");
@@ -2026,7 +2027,7 @@ public class WebAuthenticationTest
         // Arrange
         var now = DateTimeOffset.Now;
 
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair,
             HomeDomain,
@@ -2047,7 +2048,7 @@ public class WebAuthenticationTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            WebAuthentication.VerifyChallengeTransactionSigners(
+            ServerWebAuth.VerifyChallengeTransactionSigners(
                 transaction,
                 _serverKeypair.AccountId,
                 signers,
@@ -2075,7 +2076,7 @@ public class WebAuthenticationTest
             validFor);
 
         // Grace time bounds
-        var graceValidFrom = validFrom.AddSeconds(-WebAuthentication.GracePeriod);
+        var graceValidFrom = validFrom.AddSeconds(-ServerWebAuth.GracePeriod);
 
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
@@ -2104,7 +2105,7 @@ public class WebAuthenticationTest
             validFor);
 
         // Grace time bounds
-        var graceValidFrom = validFrom.AddSeconds(-WebAuthentication.GracePeriod);
+        var graceValidFrom = validFrom.AddSeconds(-ServerWebAuth.GracePeriod);
 
         // Act & Assert
         var result = _ReadChallengeTransaction(
@@ -2132,7 +2133,7 @@ public class WebAuthenticationTest
             validFor);
 
         // Grace time bounds
-        var graceValidFor = validFor + TimeSpan.FromSeconds(WebAuthentication.GracePeriod);
+        var graceValidFor = validFor + TimeSpan.FromSeconds(ServerWebAuth.GracePeriod);
         var graceValidTill = validFrom.Add(graceValidFor);
 
         // Act & Assert
@@ -2162,7 +2163,7 @@ public class WebAuthenticationTest
             validFor);
 
         // Grace time bounds
-        var graceValidFor = validFor + TimeSpan.FromSeconds(WebAuthentication.GracePeriod);
+        var graceValidFor = validFor + TimeSpan.FromSeconds(ServerWebAuth.GracePeriod);
         var graceValidTill = validFrom.Add(graceValidFor);
 
         // Act
@@ -2179,7 +2180,7 @@ public class WebAuthenticationTest
         DateTimeOffset? validFrom = null,
         TimeSpan? validFor = null)
     {
-        var transaction = WebAuthentication.BuildChallengeTransaction(
+        var transaction = ServerWebAuth.BuildChallengeTransaction(
             _serverKeypair,
             _clientKeypair.AccountId,
             HomeDomain,
@@ -2194,7 +2195,7 @@ public class WebAuthenticationTest
         Transaction transaction,
         DateTimeOffset? now = null)
     {
-        return WebAuthentication.ReadChallengeTransaction(
+        return ServerWebAuth.ReadChallengeTransaction(
             transaction,
             _serverKeypair.AccountId,
             HomeDomain,
