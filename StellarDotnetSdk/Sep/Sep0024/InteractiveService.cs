@@ -56,6 +56,8 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 /// </summary>
 public class InteractiveService : IDisposable
 {
+    private const string AuthenticationRequiredType = "authentication_required";
+
     private readonly string _transferServiceAddress;
     private readonly HttpClient _httpClient;
     private readonly Dictionary<string, string>? _httpRequestHeaders;
@@ -738,7 +740,7 @@ public class InteractiveService : IDisposable
             if (doc.RootElement.TryGetProperty("type", out var typeElement))
             {
                 var type = typeElement.GetString();
-                if (type == "authentication_required")
+                if (type == AuthenticationRequiredType)
                 {
                     throw new Sep24AuthenticationRequiredException();
                 }
