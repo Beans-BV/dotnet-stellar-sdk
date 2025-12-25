@@ -515,8 +515,8 @@ public class TransferServerServiceTest
         Assert.AreEqual("pending_transaction_info_update", fifthTx.Status);
         Assert.IsNotNull(fifthTx.RequiredInfoMessage);
         Assert.IsNotNull(fifthTx.RequiredInfoUpdates);
-        Assert.IsTrue(fifthTx.RequiredInfoUpdates.ContainsKey("dest"));
-        Assert.AreEqual("your bank account number", fifthTx.RequiredInfoUpdates["dest"].Description);
+        Assert.IsTrue(fifthTx.RequiredInfoUpdates.Transaction?.ContainsKey("dest"));
+        Assert.AreEqual("your bank account number", fifthTx.RequiredInfoUpdates.Transaction?["dest"].Description);
 
         var sixthTx = response.Transactions[5];
         Assert.AreEqual("withdrawal-exchange", sixthTx.Kind);

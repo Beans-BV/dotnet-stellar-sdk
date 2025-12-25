@@ -241,7 +241,7 @@ public sealed class AnchorTransaction : Response
     ///     pending_transaction_info_update.
     /// </summary>
     [JsonPropertyName("required_info_updates")]
-    public Dictionary<string, AnchorField>? RequiredInfoUpdates { get; init; }
+    public RequiredInfoUpdates? RequiredInfoUpdates { get; init; }
 
     /// <summary>
     ///     JSON object containing the SEP-9 financial account fields that

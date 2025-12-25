@@ -52,9 +52,6 @@ public static class JsonOptions
             new LinkJsonConverter<EffectResponse>(),
             new LinkJsonConverter<Response>(),
 
-            // SEP-6 converters
-            new AnchorTransactionJsonConverter(),
-
             // Enum converters
             new JsonStringEnumConverter(),
             new SendTransactionStatusEnumJsonConverter(),
