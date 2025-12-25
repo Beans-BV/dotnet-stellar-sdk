@@ -27,7 +27,7 @@ public sealed record WithdrawExchangeRequest
     ///     The amount of the on-chain asset (source_asset) the user would like to
     ///     send to the anchor's Stellar account.
     /// </summary>
-    public required string Amount { get; init; }
+    public required decimal Amount { get; init; }
 
     /// <summary>
     ///     Type of withdrawal. Can be: crypto, bank_account, cash, mobile,

@@ -443,7 +443,7 @@ public class TransferServerService : IDisposable
         {
             { "destination_asset", request.DestinationAsset },
             { "source_asset", request.SourceAsset },
-            { "amount", request.Amount },
+            { "amount", request.Amount.ToString() },
             { "account", request.Account }
         };
 
@@ -513,7 +513,7 @@ public class TransferServerService : IDisposable
         {
             { "source_asset", request.SourceAsset },
             { "destination_asset", request.DestinationAsset },
-            { "amount", request.Amount },
+            { "amount", request.Amount.ToString() },
             { "type", request.Type }
         };
 
@@ -547,10 +547,20 @@ public class TransferServerService : IDisposable
 
     private static void AddIfNotNull(Dictionary<string, string> dict, string key, string? value)
     {
-        if (!string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(value))
         {
-            dict[key] = value;
+            return;
         }
+        dict[key] = value;
+    }
+
+    private static void AddIfNotNull(Dictionary<string, string> dict, string key, decimal? value)
+    {
+        if (!value.HasValue)
+        {
+            return;
+        }
+        dict[key] = value.Value.ToString();
     }
 
     private Uri BuildUri(string endpoint, Dictionary<string, string>? queryParams = null)

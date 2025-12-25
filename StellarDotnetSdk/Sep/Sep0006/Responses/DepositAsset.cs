@@ -29,26 +29,26 @@ public sealed class DepositAsset
     ///     Null if there is no fee or the fee schedule is complex.
     /// </summary>
     [JsonPropertyName("fee_fixed")]
-    public double? FeeFixed { get; init; }
+    public decimal? FeeFixed { get; init; }
 
     /// <summary>
     ///     Optional percentage fee for deposit, in percentage points of the Stellar
     ///     asset. Null if there is no fee or the fee schedule is complex.
     /// </summary>
     [JsonPropertyName("fee_percent")]
-    public double? FeePercent { get; init; }
+    public decimal? FeePercent { get; init; }
 
     /// <summary>
     ///     Optional minimum amount. No limit if not specified.
     /// </summary>
     [JsonPropertyName("min_amount")]
-    public double? MinAmount { get; init; }
+    public decimal? MinAmount { get; init; }
 
     /// <summary>
     ///     Optional maximum amount. No limit if not specified.
     /// </summary>
     [JsonPropertyName("max_amount")]
-    public double? MaxAmount { get; init; }
+    public decimal? MaxAmount { get; init; }
 
     /// <summary>
     ///     (Deprecated) Accepting personally identifiable information through

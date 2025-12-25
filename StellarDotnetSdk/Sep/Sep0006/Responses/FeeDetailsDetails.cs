@@ -20,7 +20,7 @@ public sealed class FeeDetailsDetails
     ///     sum(fee_details.details.amount) should be equals fee_details.total.
     /// </summary>
     [JsonPropertyName("amount")]
-    public required string Amount { get; init; }
+    public required decimal Amount { get; init; }
 
     /// <summary>
     ///     A text describing the fee.

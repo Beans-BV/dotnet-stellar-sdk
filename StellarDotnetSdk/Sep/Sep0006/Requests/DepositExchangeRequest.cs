@@ -27,7 +27,7 @@ public sealed record DepositExchangeRequest
     ///     The amount of the source_asset the user would like to deposit to the
     ///     anchor's off-chain account.
     /// </summary>
-    public required string Amount { get; init; }
+    public required decimal Amount { get; init; }
 
     /// <summary>
     ///     The stellar or muxed account ID of the user that wants to deposit.

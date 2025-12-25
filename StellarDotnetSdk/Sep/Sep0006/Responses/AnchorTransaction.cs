@@ -47,7 +47,7 @@ public sealed class AnchorTransaction : Response
     ///     a quote_id was used.
     /// </summary>
     [JsonPropertyName("amount_in")]
-    public string? AmountIn { get; init; }
+    public decimal? AmountIn { get; init; }
 
     /// <summary>
     ///     The asset received or to be received by the Anchor.
@@ -64,7 +64,7 @@ public sealed class AnchorTransaction : Response
     ///     if a quote_id was used.
     /// </summary>
     [JsonPropertyName("amount_out")]
-    public string? AmountOut { get; init; }
+    public decimal? AmountOut { get; init; }
 
     /// <summary>
     ///     The asset delivered or to be delivered to the user.
@@ -79,7 +79,7 @@ public sealed class AnchorTransaction : Response
     ///     Should be equals to quote.fee.total if a quote_id was used.
     /// </summary>
     [JsonPropertyName("amount_fee")]
-    public string? AmountFee { get; init; }
+    public decimal? AmountFee { get; init; }
 
     /// <summary>
     ///     (Deprecated, optional) The asset in which fees are calculated in.

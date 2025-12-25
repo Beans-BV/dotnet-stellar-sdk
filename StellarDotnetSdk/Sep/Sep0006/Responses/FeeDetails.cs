@@ -15,7 +15,7 @@ public sealed class FeeDetails
     ///     The total amount of fee applied.
     /// </summary>
     [JsonPropertyName("total")]
-    public required string Total { get; init; }
+    public required decimal Total { get; init; }
 
     /// <summary>
     ///     The asset in which the fee is applied, represented through the

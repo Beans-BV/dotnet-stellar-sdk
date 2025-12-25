@@ -13,14 +13,14 @@ public sealed class TransactionRefunds
     ///     If a full refund was issued, this amount should match amount_in.
     /// </summary>
     [JsonPropertyName("amount_refunded")]
-    public required string AmountRefunded { get; init; }
+    public required decimal AmountRefunded { get; init; }
 
     /// <summary>
     ///     The total amount charged in fees for processing all refund payments, in units of amount_in_asset.
     ///     The sum of all fee values in the payments object list should equal this value.
     /// </summary>
     [JsonPropertyName("amount_fee")]
-    public required string AmountFee { get; init; }
+    public required decimal AmountFee { get; init; }
 
     /// <summary>
     ///     A list of objects containing information on the individual payments made back to the user as refunds.

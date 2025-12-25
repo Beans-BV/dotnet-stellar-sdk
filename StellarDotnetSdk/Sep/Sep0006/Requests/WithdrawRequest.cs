@@ -76,7 +76,7 @@ public sealed record WithdrawRequest
     /// <summary>
     ///     The amount of the asset the user would like to withdraw.
     /// </summary>
-    public string? Amount { get; init; }
+    public decimal? Amount { get; init; }
 
     /// <summary>
     ///     The ISO 3166-1 alpha-3 code of the user's current address.

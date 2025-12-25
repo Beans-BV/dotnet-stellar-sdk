@@ -13,6 +13,6 @@ public sealed class FeeResponse : Response
     ///     to deposit/withdraw the specified amount of asset_code.
     /// </summary>
     [JsonPropertyName("fee")]
-    public required double Fee { get; init; }
+    public required decimal Fee { get; init; }
 }
 

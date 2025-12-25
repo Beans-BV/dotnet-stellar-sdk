@@ -77,7 +77,7 @@ public sealed record DepositRequest
     ///     the anchor. This field may be necessary for the anchor to determine
     ///     what KYC information is necessary to collect.
     /// </summary>
-    public string? Amount { get; init; }
+    public decimal? Amount { get; init; }
 
     /// <summary>
     ///     The ISO 3166-1 alpha-3 code of the user's current address.

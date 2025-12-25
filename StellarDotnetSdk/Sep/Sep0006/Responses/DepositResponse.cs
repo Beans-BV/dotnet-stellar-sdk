@@ -34,25 +34,25 @@ public sealed class DepositResponse : Response
     ///     Minimum amount of an asset that a user can deposit.
     /// </summary>
     [JsonPropertyName("min_amount")]
-    public double? MinAmount { get; init; }
+    public decimal? MinAmount { get; init; }
 
     /// <summary>
     ///     Maximum amount of asset that a user can deposit.
     /// </summary>
     [JsonPropertyName("max_amount")]
-    public double? MaxAmount { get; init; }
+    public decimal? MaxAmount { get; init; }
 
     /// <summary>
     ///     Fixed fee (if any). In units of the deposited asset.
     /// </summary>
     [JsonPropertyName("fee_fixed")]
-    public double? FeeFixed { get; init; }
+    public decimal? FeeFixed { get; init; }
 
     /// <summary>
     ///     Percentage fee (if any). In units of percentage points.
     /// </summary>
     [JsonPropertyName("fee_percent")]
-    public double? FeePercent { get; init; }
+    public decimal? FeePercent { get; init; }
 
     /// <summary>
     ///     Object with additional information about the deposit process.

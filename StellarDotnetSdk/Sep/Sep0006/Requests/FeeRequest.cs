@@ -20,7 +20,7 @@ public sealed record FeeRequest
     /// <summary>
     ///     Amount of the asset that will be deposited/withdrawn.
     /// </summary>
-    public required double Amount { get; init; }
+    public required decimal Amount { get; init; }
 
     /// <summary>
     ///     Type of deposit or withdrawal (SEPA, bank_account, cash, etc...).

@@ -47,25 +47,25 @@ public sealed class WithdrawResponse : Response
     ///     Minimum amount of an asset that a user can withdraw.
     /// </summary>
     [JsonPropertyName("min_amount")]
-    public double? MinAmount { get; init; }
+    public decimal? MinAmount { get; init; }
 
     /// <summary>
     ///     Maximum amount of asset that a user can withdraw.
     /// </summary>
     [JsonPropertyName("max_amount")]
-    public double? MaxAmount { get; init; }
+    public decimal? MaxAmount { get; init; }
 
     /// <summary>
     ///     If there is a fee for withdraw. In units of the withdrawn asset.
     /// </summary>
     [JsonPropertyName("fee_fixed")]
-    public double? FeeFixed { get; init; }
+    public decimal? FeeFixed { get; init; }
 
     /// <summary>
     ///     If there is a percent fee for withdraw.
     /// </summary>
     [JsonPropertyName("fee_percent")]
-    public double? FeePercent { get; init; }
+    public decimal? FeePercent { get; init; }
 
     /// <summary>
     ///     Any additional data needed as an input for this withdraw,

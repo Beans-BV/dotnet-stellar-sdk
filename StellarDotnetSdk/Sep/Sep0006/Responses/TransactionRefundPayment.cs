@@ -25,12 +25,12 @@ public sealed class TransactionRefundPayment
     ///     The amount sent back to the user for the payment identified by id, in units of amount_in_asset.
     /// </summary>
     [JsonPropertyName("amount")]
-    public required string Amount { get; init; }
+    public required decimal Amount { get; init; }
 
     /// <summary>
     ///     The amount charged as a fee for processing the refund, in units of amount_in_asset.
     /// </summary>
     [JsonPropertyName("fee")]
-    public required string Fee { get; init; }
+    public required decimal Fee { get; init; }
 }
 
