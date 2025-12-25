@@ -27,6 +27,19 @@ namespace StellarDotnetSdk.Sep.Sep0006;
 ///     API requests.
 ///     See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md">SEP-0006</a>
 /// </summary>
+/// <remarks>
+///     <para>
+///         <b>HttpClient Usage:</b> It is strongly recommended to pass a shared <see cref="HttpClient" />
+///         instance to this service. HttpClient is designed to be long-lived and reused across multiple
+///         requests. Creating a new HttpClient for each request can exhaust available sockets and lead
+///         to <see cref="System.Net.Sockets.SocketException" /> errors under load.
+///     </para>
+///     <para>
+///         If no HttpClient is provided, an internal one will be created and disposed when this service
+///         is disposed. For optimal performance and resource management, inject your application's
+///         shared HttpClient instance (e.g., via IHttpClientFactory in ASP.NET Core applications).
+///     </para>
+/// </remarks>
 public class TransferServerService : IDisposable
 {
     private readonly string? _bearerToken;
@@ -43,7 +56,11 @@ public class TransferServerService : IDisposable
     ///     server URL from an anchor's stellar.toml file.
     /// </summary>
     /// <param name="transferServiceAddress">The base URL of the anchor's transfer server endpoint</param>
-    /// <param name="httpClient">Optional custom HTTP client for making requests</param>
+    /// <param name="httpClient">
+    ///     A shared HttpClient instance for making requests. It is strongly recommended to provide
+    ///     a shared instance to avoid socket exhaustion. If not provided, an internal client will be
+    ///     created and disposed with this service.
+    /// </param>
     /// <param name="httpRequestHeaders">Optional custom headers to include in all requests</param>
     public TransferServerService(
         string transferServiceAddress,
@@ -87,32 +104,16 @@ public class TransferServerService : IDisposable
     }
 
     /// <summary>
-    ///     Disposes the internal HttpClient if one was created.
-    ///     Does not dispose externally provided HttpClient instances.
-    /// </summary>
-    public void Dispose()
-    {
-        if (_disposed)
-        {
-            return;
-        }
-
-        if (_internalHttpClient != null)
-        {
-            _internalHttpClient.Dispose();
-            _internalHttpClient = null;
-        }
-
-        _disposed = true;
-    }
-
-    /// <summary>
     ///     Creates a TransferServerService by automatically discovering the transfer
     ///     server URL from an anchor's stellar.toml file.
     ///     This is the recommended way to create a TransferServerService instance.
     /// </summary>
     /// <param name="domain">The anchor's domain name (e.g., 'testanchor.stellar.org')</param>
-    /// <param name="httpClient">Optional custom HTTP client for making requests</param>
+    /// <param name="httpClient">
+    ///     A shared HttpClient instance for making requests. It is strongly recommended to provide
+    ///     a shared instance to avoid socket exhaustion. If not provided, an internal client will be
+    ///     created and disposed with this service.
+    /// </param>
     /// <param name="httpRequestHeaders">Optional custom headers to include in all requests</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>A configured TransferServerService instance ready to use</returns>
@@ -145,7 +146,11 @@ public class TransferServerService : IDisposable
     /// <param name="domain">The anchor's domain name</param>
     /// <param name="resilienceOptions">Resilience options for HTTP requests</param>
     /// <param name="bearerToken">Bearer token in case the server requires it</param>
-    /// <param name="httpClient">Optional custom HTTP client for making requests</param>
+    /// <param name="httpClient">
+    ///     A shared HttpClient instance for making requests. It is strongly recommended to provide
+    ///     a shared instance to avoid socket exhaustion. If not provided, an internal client will be
+    ///     created and disposed with this service.
+    /// </param>
     /// <param name="httpRequestHeaders">Optional custom headers to include in all requests</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>A configured TransferServerService instance ready to use</returns>
@@ -172,6 +177,26 @@ public class TransferServerService : IDisposable
         }
 
         return new TransferServerService(transferServer, resilienceOptions, bearerToken, httpRequestHeaders);
+    }
+
+    /// <summary>
+    ///     Disposes the internal HttpClient if one was created.
+    ///     Does not dispose externally provided HttpClient instances.
+    /// </summary>
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (_internalHttpClient != null)
+        {
+            _internalHttpClient.Dispose();
+            _internalHttpClient = null;
+        }
+
+        _disposed = true;
     }
 
     /// <summary>
