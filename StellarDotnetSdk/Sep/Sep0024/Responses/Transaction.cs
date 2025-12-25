@@ -2,7 +2,7 @@ using System;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Responses;
 
 /// <summary>
 ///     Represents a single deposit or withdrawal transaction with an anchor.
@@ -21,13 +21,13 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///     - expired: Transaction expired before completion
 ///     - error: Transaction failed with an error
 /// </summary>
-public class Sep24Transaction : Response
+public class Transaction : Response
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="Sep24Transaction" /> class.
+    ///     Initializes a new instance of the <see cref="Transaction" /> class.
     /// </summary>
     [JsonConstructor]
-    public Sep24Transaction(
+    public Transaction(
         string id,
         string kind,
         string status,
@@ -49,8 +49,8 @@ public class Sep24Transaction : Response
         string? externalTransactionId = null,
         string? message = null,
         bool? refunded = null,
-        Sep24Refund? refunds = null,
-        Sep24FeeDetails? feeDetails = null,
+        Refund? refunds = null,
+        FeeDetails? feeDetails = null,
         string? from = null,
         string? to = null,
         string? depositMemo = null,
@@ -243,7 +243,7 @@ public class Sep24Transaction : Response
     ///     Contains detailed information about refund amounts, fees, and individual payment records.
     /// </summary>
     [JsonPropertyName("refunds")]
-    public Sep24Refund? Refunds { get; }
+    public Refund? Refunds { get; }
 
     /// <summary>
     ///     Gets the description of fee charged by the anchor.
@@ -252,7 +252,7 @@ public class Sep24Transaction : Response
     ///     If quote_id is present, it should match the referenced quote's fee object.
     /// </summary>
     [JsonPropertyName("fee_details")]
-    public Sep24FeeDetails? FeeDetails { get; }
+    public FeeDetails? FeeDetails { get; }
 
     /// <summary>
     ///     Gets the source address.

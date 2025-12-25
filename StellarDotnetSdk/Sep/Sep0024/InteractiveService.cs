@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Sep.Sep0001;
+using StellarDotnetSdk.Sep.Sep0024.Exceptions;
+using StellarDotnetSdk.Sep.Sep0024.Requests;
+using StellarDotnetSdk.Sep.Sep0024.Responses;
 
 namespace StellarDotnetSdk.Sep.Sep0024;
 
@@ -151,7 +154,7 @@ public class InteractiveService : IDisposable
     /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>Anchor capabilities information.</returns>
     /// <exception cref="HttpRequestException">Thrown when the HTTP request fails.</exception>
-    public async Task<Sep24InfoResponse> InfoAsync(string? lang = null, CancellationToken cancellationToken = default)
+    public async Task<InfoResponse> InfoAsync(string? lang = null, CancellationToken cancellationToken = default)
     {
         var uri = AppendEndpointToUrl(_transferServiceAddress, "info");
         var queryParams = new Dictionary<string, string>();
@@ -172,7 +175,7 @@ public class InteractiveService : IDisposable
             HandleErrorResponse(response.StatusCode, responseString);
         }
 
-        return JsonSerializer.Deserialize<Sep24InfoResponse>(responseString, JsonOptions.DefaultOptions)
+        return JsonSerializer.Deserialize<InfoResponse>(responseString, JsonOptions.DefaultOptions)
                ?? throw new InvalidOperationException("Failed to deserialize response");
     }
 
@@ -185,10 +188,10 @@ public class InteractiveService : IDisposable
     /// <param name="request">The fee request containing operation type, asset code, and amount.</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>The calculated fee response.</returns>
-    /// <exception cref="Sep24AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
-    /// <exception cref="Sep24RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
+    /// <exception cref="AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
+    /// <exception cref="RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
     /// <exception cref="HttpRequestException">Thrown when the HTTP request fails.</exception>
-    public async Task<Sep24FeeResponse> FeeAsync(Sep24FeeRequest request, CancellationToken cancellationToken = default)
+    public async Task<FeeResponse> FeeAsync(FeeRequest request, CancellationToken cancellationToken = default)
     {
         if (request == null)
         {
@@ -230,7 +233,7 @@ public class InteractiveService : IDisposable
             HandleErrorResponse(response.StatusCode, responseString);
         }
 
-        return JsonSerializer.Deserialize<Sep24FeeResponse>(responseString, JsonOptions.DefaultOptions)
+        return JsonSerializer.Deserialize<FeeResponse>(responseString, JsonOptions.DefaultOptions)
                ?? throw new InvalidOperationException("Failed to deserialize response");
     }
 
@@ -246,10 +249,10 @@ public class InteractiveService : IDisposable
     /// <param name="request">The deposit request containing asset code, account, and optional parameters.</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>Interactive response containing URL and transaction ID.</returns>
-    /// <exception cref="Sep24AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
-    /// <exception cref="Sep24RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
+    /// <exception cref="AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
+    /// <exception cref="RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
     /// <exception cref="HttpRequestException">Thrown when the HTTP request fails.</exception>
-    public async Task<Sep24InteractiveResponse> DepositAsync(Sep24DepositRequest request, CancellationToken cancellationToken = default)
+    public async Task<InteractiveResponse> DepositAsync(DepositRequest request, CancellationToken cancellationToken = default)
     {
         if (request == null)
         {
@@ -290,7 +293,7 @@ public class InteractiveService : IDisposable
             HandleErrorResponse(response.StatusCode, responseString);
         }
 
-        return JsonSerializer.Deserialize<Sep24InteractiveResponse>(responseString, JsonOptions.DefaultOptions)
+        return JsonSerializer.Deserialize<InteractiveResponse>(responseString, JsonOptions.DefaultOptions)
                ?? throw new InvalidOperationException("Failed to deserialize response");
     }
 
@@ -302,10 +305,10 @@ public class InteractiveService : IDisposable
     /// <param name="request">The withdrawal request containing asset code, account, and optional parameters.</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>Interactive response containing URL and transaction ID.</returns>
-    /// <exception cref="Sep24AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
-    /// <exception cref="Sep24RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
+    /// <exception cref="AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
+    /// <exception cref="RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
     /// <exception cref="HttpRequestException">Thrown when the HTTP request fails.</exception>
-    public async Task<Sep24InteractiveResponse> WithdrawAsync(Sep24WithdrawRequest request, CancellationToken cancellationToken = default)
+    public async Task<InteractiveResponse> WithdrawAsync(WithdrawRequest request, CancellationToken cancellationToken = default)
     {
         if (request == null)
         {
@@ -346,7 +349,7 @@ public class InteractiveService : IDisposable
             HandleErrorResponse(response.StatusCode, responseString);
         }
 
-        return JsonSerializer.Deserialize<Sep24InteractiveResponse>(responseString, JsonOptions.DefaultOptions)
+        return JsonSerializer.Deserialize<InteractiveResponse>(responseString, JsonOptions.DefaultOptions)
                ?? throw new InvalidOperationException("Failed to deserialize response");
     }
 
@@ -359,10 +362,10 @@ public class InteractiveService : IDisposable
     /// <param name="request">The transactions request containing asset code and optional filters.</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>List of transactions matching the request criteria.</returns>
-    /// <exception cref="Sep24AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
-    /// <exception cref="Sep24RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
+    /// <exception cref="AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
+    /// <exception cref="RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
     /// <exception cref="HttpRequestException">Thrown when the HTTP request fails.</exception>
-    public async Task<Sep24TransactionsResponse> TransactionsAsync(Sep24TransactionsRequest request, CancellationToken cancellationToken = default)
+    public async Task<TransactionsResponse> TransactionsAsync(TransactionsRequest request, CancellationToken cancellationToken = default)
     {
         if (request == null)
         {
@@ -418,7 +421,7 @@ public class InteractiveService : IDisposable
             HandleErrorResponse(response.StatusCode, responseString);
         }
 
-        return JsonSerializer.Deserialize<Sep24TransactionsResponse>(responseString, JsonOptions.DefaultOptions)
+        return JsonSerializer.Deserialize<TransactionsResponse>(responseString, JsonOptions.DefaultOptions)
                ?? throw new InvalidOperationException("Failed to deserialize response");
     }
 
@@ -431,11 +434,11 @@ public class InteractiveService : IDisposable
     /// <param name="request">The transaction request containing transaction identifier.</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>Detailed transaction information.</returns>
-    /// <exception cref="Sep24TransactionNotFoundException">Thrown when the server could not find the transaction.</exception>
-    /// <exception cref="Sep24AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
-    /// <exception cref="Sep24RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
+    /// <exception cref="TransactionNotFoundException">Thrown when the server could not find the transaction.</exception>
+    /// <exception cref="AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
+    /// <exception cref="RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
     /// <exception cref="HttpRequestException">Thrown when the HTTP request fails.</exception>
-    public async Task<Sep24TransactionResponse> TransactionAsync(Sep24TransactionRequest request, CancellationToken cancellationToken = default)
+    public async Task<TransactionResponse> TransactionAsync(TransactionRequest request, CancellationToken cancellationToken = default)
     {
         if (request == null)
         {
@@ -475,7 +478,7 @@ public class InteractiveService : IDisposable
 
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
-            throw new Sep24TransactionNotFoundException();
+            throw new TransactionNotFoundException();
         }
 
         if (response.StatusCode == HttpStatusCode.Forbidden)
@@ -488,7 +491,7 @@ public class InteractiveService : IDisposable
             HandleErrorResponse(response.StatusCode, responseString);
         }
 
-        return JsonSerializer.Deserialize<Sep24TransactionResponse>(responseString, JsonOptions.DefaultOptions)
+        return JsonSerializer.Deserialize<TransactionResponse>(responseString, JsonOptions.DefaultOptions)
                ?? throw new InvalidOperationException("Failed to deserialize response");
     }
 
@@ -526,7 +529,7 @@ public class InteractiveService : IDisposable
         }
     }
 
-    private static (Dictionary<string, string> Fields, Dictionary<string, byte[]> Files) BuildFormData(Sep24DepositRequest request)
+    private static (Dictionary<string, string> Fields, Dictionary<string, byte[]> Files) BuildFormData(DepositRequest request)
     {
         var fields = new Dictionary<string, string>
         {
@@ -645,7 +648,7 @@ public class InteractiveService : IDisposable
         return (fields, files);
     }
 
-    private static (Dictionary<string, string> Fields, Dictionary<string, byte[]> Files) BuildFormData(Sep24WithdrawRequest request)
+    private static (Dictionary<string, string> Fields, Dictionary<string, byte[]> Files) BuildFormData(WithdrawRequest request)
     {
         var fields = new Dictionary<string, string>
         {
@@ -779,7 +782,7 @@ public class InteractiveService : IDisposable
                 var type = typeElement.GetString();
                 if (type == AuthenticationRequiredType)
                 {
-                    throw new Sep24AuthenticationRequiredException();
+                    throw new AuthenticationRequiredException();
                 }
             }
         }
@@ -797,7 +800,7 @@ public class InteractiveService : IDisposable
             if (doc.RootElement.TryGetProperty("error", out var errorElement))
             {
                 var errorMessage = errorElement.GetString();
-                throw new Sep24RequestException(errorMessage ?? "Unknown error");
+                throw new RequestException(errorMessage ?? "Unknown error");
             }
         }
         catch (JsonException)

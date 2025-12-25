@@ -1,22 +1,22 @@
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Responses;
 
 /// <summary>
 ///     Information about the /fee endpoint availability and requirements.
 ///     Indicates whether the anchor provides a separate fee endpoint for querying fees,
 ///     and whether authentication is required to access it.
 /// </summary>
-public class Sep24FeeEndpointInfo : Response
+public class FeeEndpointInfo : Response
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="Sep24FeeEndpointInfo" /> class.
+    ///     Initializes a new instance of the <see cref="FeeEndpointInfo" /> class.
     /// </summary>
     /// <param name="enabled">True if the /fee endpoint is available.</param>
     /// <param name="authenticationRequired">True if client must be authenticated (SEP-10 JWT) before accessing the fee endpoint.</param>
     [JsonConstructor]
-    public Sep24FeeEndpointInfo(bool enabled, bool authenticationRequired = false)
+    public FeeEndpointInfo(bool enabled, bool authenticationRequired = false)
     {
         Enabled = enabled;
         AuthenticationRequired = authenticationRequired;

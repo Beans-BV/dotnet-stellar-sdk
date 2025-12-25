@@ -1,4 +1,4 @@
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Requests;
 
 /// <summary>
 ///     Request to query or validate a specific transaction with the anchor.
@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///     At least one of Id, StellarTransactionId, or ExternalTransactionId must be provided.
 ///     Authentication: Always required. Must provide a SEP-10 JWT token.
 /// </summary>
-public sealed record Sep24TransactionRequest
+public sealed record TransactionRequest
 {
     /// <summary>
     ///     Gets or sets the JWT token previously received from the anchor via the SEP-10 authentication flow.
@@ -18,7 +18,7 @@ public sealed record Sep24TransactionRequest
 
     /// <summary>
     ///     Gets or sets the anchor's internal ID for the transaction.
-    ///     This is the ID returned in the Sep24InteractiveResponse.
+    ///     This is the ID returned in the InteractiveResponse.
     /// </summary>
     public string? Id { get; init; }
 

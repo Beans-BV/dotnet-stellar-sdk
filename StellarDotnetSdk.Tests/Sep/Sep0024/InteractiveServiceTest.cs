@@ -8,6 +8,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using StellarDotnetSdk.Sep.Sep0009;
 using StellarDotnetSdk.Sep.Sep0024;
+using StellarDotnetSdk.Sep.Sep0024.Exceptions;
+using StellarDotnetSdk.Sep.Sep0024.Requests;
+using StellarDotnetSdk.Sep.Sep0024.Responses;
 
 namespace StellarDotnetSdk.Tests.Sep.Sep0024;
 
@@ -181,7 +184,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
             { "Content-Type", "multipart/form-data; boundary=custom" },
         };
         var service = new InteractiveService(TestTransferServerUrl, httpClient, httpRequestHeaders: customHeaders);
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -201,8 +204,8 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Sep24RequestException))]
-    public async Task InfoAsync_WithErrorResponse_ThrowsSep24RequestException()
+    [ExpectedException(typeof(RequestException))]
+    public async Task InfoAsync_WithErrorResponse_ThrowsRequestException()
     {
         // Arrange
         using var httpClient = CreateMockHttpClient(_errorResponseJson, HttpStatusCode.BadRequest);
@@ -222,7 +225,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         using var httpClient = CreateMockHttpClient(_feeResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24FeeRequest
+        var request = new FeeRequest
         {
             Operation = "deposit",
             AssetCode = "USD",
@@ -244,7 +247,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         var (httpClient, capture) = CreateMockHttpClientWithCallback(_feeResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24FeeRequest
+        var request = new FeeRequest
         {
             Operation = "deposit",
             AssetCode = "USD",
@@ -269,7 +272,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         var (httpClient, capture) = CreateMockHttpClientWithCallback(_feeResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24FeeRequest
+        var request = new FeeRequest
         {
             Operation = "deposit",
             Type = "SEPA",
@@ -295,7 +298,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         var (httpClient, capture) = CreateMockHttpClientWithCallback(_feeResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24FeeRequest
+        var request = new FeeRequest
         {
             Operation = "deposit",
             AssetCode = "USD",
@@ -317,13 +320,13 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Sep24AuthenticationRequiredException))]
+    [ExpectedException(typeof(AuthenticationRequiredException))]
     public async Task FeeAsync_WithForbiddenResponse_ThrowsAuthenticationRequiredException()
     {
         // Arrange
         using var httpClient = CreateMockHttpClient(_authRequiredResponseJson, HttpStatusCode.Forbidden);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24FeeRequest
+        var request = new FeeRequest
         {
             Operation = "deposit",
             AssetCode = "USD",
@@ -344,7 +347,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // and then HandleErrorResponse is called, which throws HttpRequestException
         using var httpClient = CreateMockHttpClient("not valid json", HttpStatusCode.Forbidden);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24FeeRequest
+        var request = new FeeRequest
         {
             Operation = "deposit",
             AssetCode = "USD",
@@ -357,13 +360,13 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Sep24RequestException))]
+    [ExpectedException(typeof(RequestException))]
     public async Task FeeAsync_WithErrorResponse_ThrowsRequestException()
     {
         // Arrange
         using var httpClient = CreateMockHttpClient(_errorResponseJson, HttpStatusCode.BadRequest);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24FeeRequest
+        var request = new FeeRequest
         {
             Operation = "deposit",
             AssetCode = "USD",
@@ -397,7 +400,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         using var httpClient = CreateMockHttpClient(_interactiveResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -420,7 +423,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         var (httpClient, capture) = CreateMockHttpClientWithCallback(_interactiveResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -468,7 +471,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
                 EmailAddress = "john.doe@example.com",
             },
         };
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -501,7 +504,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
                 PhotoIdBack = new byte[] { 6, 7, 8, 9, 10 },
             },
         };
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -526,7 +529,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         var (httpClient, capture) = CreateMockHttpClientWithCallback(_interactiveResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -566,7 +569,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
                 VatNumber = "VAT123",
             },
         };
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -586,13 +589,13 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Sep24AuthenticationRequiredException))]
+    [ExpectedException(typeof(AuthenticationRequiredException))]
     public async Task DepositAsync_WithForbiddenResponse_ThrowsAuthenticationRequiredException()
     {
         // Arrange
         using var httpClient = CreateMockHttpClient(_authRequiredResponseJson, HttpStatusCode.Forbidden);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -624,7 +627,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         using var httpClient = CreateMockHttpClient(_interactiveResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -646,7 +649,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         var (httpClient, capture) = CreateMockHttpClientWithCallback(_interactiveResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -681,13 +684,13 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Sep24AuthenticationRequiredException))]
+    [ExpectedException(typeof(AuthenticationRequiredException))]
     public async Task WithdrawAsync_WithForbiddenResponse_ThrowsAuthenticationRequiredException()
     {
         // Arrange
         using var httpClient = CreateMockHttpClient(_authRequiredResponseJson, HttpStatusCode.Forbidden);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -724,7 +727,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
                 EmailAddress = "jane.smith@example.com",
             },
         };
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -757,7 +760,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
                 PhotoIdBack = new byte[] { 4, 5, 6 },
             },
         };
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -791,7 +794,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
                 RegistrationNumber = "REG456",
             },
         };
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -824,7 +827,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
                 PhotoProofAddress = new byte[] { 40, 50, 60 },
             },
         };
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -849,7 +852,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         var (httpClient, capture) = CreateMockHttpClientWithCallback(_interactiveResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -885,7 +888,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         using var httpClient = CreateMockHttpClient(_transactionsResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionsRequest
+        var request = new TransactionsRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -951,7 +954,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         var (httpClient, capture) = CreateMockHttpClientWithCallback(_transactionsResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionsRequest
+        var request = new TransactionsRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -988,7 +991,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         var (httpClient, capture) = CreateMockHttpClientWithCallback(_transactionsResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionsRequest
+        var request = new TransactionsRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1012,13 +1015,13 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Sep24AuthenticationRequiredException))]
+    [ExpectedException(typeof(AuthenticationRequiredException))]
     public async Task TransactionsAsync_WithForbiddenResponse_ThrowsAuthenticationRequiredException()
     {
         // Arrange
         using var httpClient = CreateMockHttpClient(_authRequiredResponseJson, HttpStatusCode.Forbidden);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionsRequest
+        var request = new TransactionsRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1050,7 +1053,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         using var httpClient = CreateMockHttpClient(_transactionResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionRequest
+        var request = new TransactionRequest
         {
             Jwt = TestJwt,
             Id = "test-transaction-id",
@@ -1108,7 +1111,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         var (httpClient, capture) = CreateMockHttpClientWithCallback(_transactionResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionRequest
+        var request = new TransactionRequest
         {
             Jwt = TestJwt,
             StellarTransactionId = "17a670bc424ff5ce3b386dbfaae9990b66a2a37b4fbe51547e8794962a3f9e6a",
@@ -1135,7 +1138,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         var (httpClient, capture) = CreateMockHttpClientWithCallback(_transactionResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionRequest
+        var request = new TransactionRequest
         {
             Jwt = TestJwt,
             ExternalTransactionId = "ext-tx-12345",
@@ -1160,7 +1163,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         var (httpClient, capture) = CreateMockHttpClientWithCallback(_transactionResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionRequest
+        var request = new TransactionRequest
         {
             Jwt = TestJwt,
             Id = "test-transaction-id",
@@ -1185,7 +1188,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         // Arrange
         using var httpClient = CreateMockHttpClient(_transactionWithRefundJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionRequest
+        var request = new TransactionRequest
         {
             Jwt = TestJwt,
             Id = "test-transaction-id-refund",
@@ -1213,13 +1216,13 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Sep24TransactionNotFoundException))]
+    [ExpectedException(typeof(TransactionNotFoundException))]
     public async Task TransactionAsync_WithNotFoundResponse_ThrowsTransactionNotFoundException()
     {
         // Arrange
         using var httpClient = CreateMockHttpClient("", HttpStatusCode.NotFound);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionRequest
+        var request = new TransactionRequest
         {
             Jwt = TestJwt,
             Id = "non-existent-id",
@@ -1230,13 +1233,13 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Sep24AuthenticationRequiredException))]
+    [ExpectedException(typeof(AuthenticationRequiredException))]
     public async Task TransactionAsync_WithForbiddenResponse_ThrowsAuthenticationRequiredException()
     {
         // Arrange
         using var httpClient = CreateMockHttpClient(_authRequiredResponseJson, HttpStatusCode.Forbidden);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionRequest
+        var request = new TransactionRequest
         {
             Jwt = TestJwt,
             Id = "test-transaction-id",
@@ -1383,7 +1386,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         var nullFeeJson = @"{""fee"": null}";
         using var httpClient = CreateMockHttpClient(nullFeeJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24FeeRequest
+        var request = new FeeRequest
         {
             Operation = "deposit",
             AssetCode = "USD",
@@ -1406,7 +1409,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         var emptyTransactionsJson = @"{""transactions"": []}";
         using var httpClient = CreateMockHttpClient(emptyTransactionsJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionsRequest
+        var request = new TransactionsRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1427,7 +1430,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         // Arrange
         using var httpClient = CreateMockHttpClient(_interactiveResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1448,7 +1451,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         // Arrange
         using var httpClient = CreateMockHttpClient(_interactiveResponseJson);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1464,13 +1467,13 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Sep24RequestException))]
+    [ExpectedException(typeof(RequestException))]
     public async Task DepositAsync_WithErrorResponse_ThrowsRequestException()
     {
         // Arrange
         using var httpClient = CreateMockHttpClient(_errorResponseJson, HttpStatusCode.BadRequest);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1487,7 +1490,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         // Arrange
         using var httpClient = CreateMockHttpClient("not valid json", HttpStatusCode.BadRequest);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1498,13 +1501,13 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Sep24RequestException))]
+    [ExpectedException(typeof(RequestException))]
     public async Task WithdrawAsync_WithErrorResponse_ThrowsRequestException()
     {
         // Arrange
         using var httpClient = CreateMockHttpClient(_errorResponseJson, HttpStatusCode.BadRequest);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1521,7 +1524,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         // Arrange
         using var httpClient = CreateMockHttpClient("not valid json", HttpStatusCode.BadRequest);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1532,13 +1535,13 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Sep24RequestException))]
+    [ExpectedException(typeof(RequestException))]
     public async Task TransactionsAsync_WithErrorResponse_ThrowsRequestException()
     {
         // Arrange
         using var httpClient = CreateMockHttpClient(_errorResponseJson, HttpStatusCode.BadRequest);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionsRequest
+        var request = new TransactionsRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1555,7 +1558,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         // Arrange
         using var httpClient = CreateMockHttpClient("not valid json", HttpStatusCode.BadRequest);
         var service = new InteractiveService(TestTransferServerUrl, httpClient);
-        var request = new Sep24TransactionsRequest
+        var request = new TransactionsRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1570,7 +1573,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     #region Property Setter Tests
 
     [TestMethod]
-    public void Sep24DepositRequest_KycFields_CanBeSetAndRetrieved()
+    public void DepositRequest_KycFields_CanBeSetAndRetrieved()
     {
         // Arrange
         var kycFields = new StandardKycFields
@@ -1581,7 +1584,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
                 LastName = "Doe",
             },
         };
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1599,10 +1602,10 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24DepositRequest_KycFields_CanBeSetToNull()
+    public void DepositRequest_KycFields_CanBeSetToNull()
     {
         // Arrange & Act
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1614,7 +1617,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24DepositRequest_CustomFields_CanBeSetAndRetrieved()
+    public void DepositRequest_CustomFields_CanBeSetAndRetrieved()
     {
         // Arrange
         var customFields = new Dictionary<string, string>
@@ -1622,7 +1625,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
             { "custom_field_1", "value_1" },
             { "custom_field_2", "value_2" },
         };
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1640,10 +1643,10 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24DepositRequest_CustomFields_CanBeSetToNull()
+    public void DepositRequest_CustomFields_CanBeSetToNull()
     {
         // Arrange & Act
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1655,7 +1658,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24DepositRequest_CustomFiles_CanBeSetAndRetrieved()
+    public void DepositRequest_CustomFiles_CanBeSetAndRetrieved()
     {
         // Arrange
         var customFiles = new Dictionary<string, byte[]>
@@ -1663,7 +1666,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
             { "file_1", new byte[] { 1, 2, 3 } },
             { "file_2", new byte[] { 4, 5, 6 } },
         };
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1681,10 +1684,10 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24DepositRequest_CustomFiles_CanBeSetToNull()
+    public void DepositRequest_CustomFiles_CanBeSetToNull()
     {
         // Arrange & Act
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1696,7 +1699,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24WithdrawRequest_KycFields_CanBeSetAndRetrieved()
+    public void WithdrawRequest_KycFields_CanBeSetAndRetrieved()
     {
         // Arrange
         var kycFields = new StandardKycFields
@@ -1709,7 +1712,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         };
 
         // Act
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1724,10 +1727,10 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24WithdrawRequest_KycFields_CanBeSetToNull()
+    public void WithdrawRequest_KycFields_CanBeSetToNull()
     {
         // Arrange & Act
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1739,7 +1742,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24WithdrawRequest_CustomFields_CanBeSetAndRetrieved()
+    public void WithdrawRequest_CustomFields_CanBeSetAndRetrieved()
     {
         // Arrange
         var customFields = new Dictionary<string, string>
@@ -1749,7 +1752,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         };
 
         // Act
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1764,10 +1767,10 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24WithdrawRequest_CustomFields_CanBeSetToNull()
+    public void WithdrawRequest_CustomFields_CanBeSetToNull()
     {
         // Arrange & Act
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1779,7 +1782,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24WithdrawRequest_CustomFiles_CanBeSetAndRetrieved()
+    public void WithdrawRequest_CustomFiles_CanBeSetAndRetrieved()
     {
         // Arrange
         var customFiles = new Dictionary<string, byte[]>
@@ -1789,7 +1792,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         };
 
         // Act
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1804,10 +1807,10 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24WithdrawRequest_CustomFiles_CanBeSetToNull()
+    public void WithdrawRequest_CustomFiles_CanBeSetToNull()
     {
         // Arrange & Act
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1819,10 +1822,10 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24DepositRequest_AllKycProperties_CanBeSetTogether()
+    public void DepositRequest_AllKycProperties_CanBeSetTogether()
     {
         // Arrange & Act
-        var request = new Sep24DepositRequest
+        var request = new DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1853,10 +1856,10 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24WithdrawRequest_AllKycProperties_CanBeSetTogether()
+    public void WithdrawRequest_AllKycProperties_CanBeSetTogether()
     {
         // Arrange & Act
-        var request = new Sep24WithdrawRequest
+        var request = new WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
@@ -1891,14 +1894,14 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     #region Exception Constructor Tests
 
     [TestMethod]
-    public void Sep24RequestException_WithMessageAndInnerException_InitializesCorrectly()
+    public void RequestException_WithMessageAndInnerException_InitializesCorrectly()
     {
         // Arrange
         var innerException = new InvalidOperationException("Inner exception message");
         var message = "Outer exception message";
 
         // Act
-        var exception = new Sep24RequestException(message, innerException);
+        var exception = new RequestException(message, innerException);
 
         // Assert
         Assert.IsNotNull(exception);
@@ -1909,13 +1912,13 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24AuthenticationRequiredException_WithMessage_InitializesCorrectly()
+    public void AuthenticationRequiredException_WithMessage_InitializesCorrectly()
     {
         // Arrange
         var message = "Custom authentication required message";
 
         // Act
-        var exception = new Sep24AuthenticationRequiredException(message);
+        var exception = new AuthenticationRequiredException(message);
 
         // Assert
         Assert.IsNotNull(exception);
@@ -1924,14 +1927,14 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24AuthenticationRequiredException_WithMessageAndInnerException_InitializesCorrectly()
+    public void AuthenticationRequiredException_WithMessageAndInnerException_InitializesCorrectly()
     {
         // Arrange
         var innerException = new UnauthorizedAccessException("Inner exception message");
         var message = "Custom authentication required message";
 
         // Act
-        var exception = new Sep24AuthenticationRequiredException(message, innerException);
+        var exception = new AuthenticationRequiredException(message, innerException);
 
         // Assert
         Assert.IsNotNull(exception);
@@ -1942,13 +1945,13 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24TransactionNotFoundException_WithMessage_InitializesCorrectly()
+    public void TransactionNotFoundException_WithMessage_InitializesCorrectly()
     {
         // Arrange
         var message = "Custom transaction not found message";
 
         // Act
-        var exception = new Sep24TransactionNotFoundException(message);
+        var exception = new TransactionNotFoundException(message);
 
         // Assert
         Assert.IsNotNull(exception);
@@ -1957,14 +1960,14 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     }
 
     [TestMethod]
-    public void Sep24TransactionNotFoundException_WithMessageAndInnerException_InitializesCorrectly()
+    public void TransactionNotFoundException_WithMessageAndInnerException_InitializesCorrectly()
     {
         // Arrange
         var innerException = new KeyNotFoundException("Inner exception message");
         var message = "Custom transaction not found message";
 
         // Act
-        var exception = new Sep24TransactionNotFoundException(message, innerException);
+        var exception = new TransactionNotFoundException(message, innerException);
 
         // Assert
         Assert.IsNotNull(exception);

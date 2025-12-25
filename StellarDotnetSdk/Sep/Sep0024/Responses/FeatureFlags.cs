@@ -1,21 +1,21 @@
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Responses;
 
 /// <summary>
 ///     Feature flags indicating optional capabilities supported by the anchor.
 ///     These flags help clients understand what advanced features the anchor supports for deposits and withdrawals.
 /// </summary>
-public class Sep24FeatureFlags : Response
+public class FeatureFlags : Response
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="Sep24FeatureFlags" /> class.
+    ///     Initializes a new instance of the <see cref="FeatureFlags" /> class.
     /// </summary>
     /// <param name="accountCreation">Whether the anchor supports creating accounts for users requesting deposits. Defaults to true.</param>
     /// <param name="claimableBalances">Whether the anchor supports sending deposit funds as claimable balances. Defaults to false.</param>
     [JsonConstructor]
-    public Sep24FeatureFlags(bool accountCreation = true, bool claimableBalances = false)
+    public FeatureFlags(bool accountCreation = true, bool claimableBalances = false)
     {
         AccountCreation = accountCreation;
         ClaimableBalances = claimableBalances;

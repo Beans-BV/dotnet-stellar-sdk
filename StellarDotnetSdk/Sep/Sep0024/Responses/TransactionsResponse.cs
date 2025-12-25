@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Responses;
 
 /// <summary>
 ///     Response from the /transactions endpoint containing a list of transactions.
@@ -10,14 +10,14 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///     the authenticated account. Supports pagination and filtering by asset,
 ///     transaction kind, and date range.
 /// </summary>
-public class Sep24TransactionsResponse : Response
+public class TransactionsResponse : Response
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="Sep24TransactionsResponse" /> class.
+    ///     Initializes a new instance of the <see cref="TransactionsResponse" /> class.
     /// </summary>
     /// <param name="transactions">List of transactions matching the request criteria.</param>
     [JsonConstructor]
-    public Sep24TransactionsResponse(List<Sep24Transaction> transactions)
+    public TransactionsResponse(List<Transaction> transactions)
     {
         Transactions = transactions;
     }
@@ -27,6 +27,6 @@ public class Sep24TransactionsResponse : Response
     ///     May be empty if no transactions match the filters.
     /// </summary>
     [JsonPropertyName("transactions")]
-    public List<Sep24Transaction> Transactions { get; }
+    public List<Transaction> Transactions { get; }
 }
 

@@ -1,4 +1,4 @@
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Requests;
 
 /// <summary>
 ///     Request to query the anchor's fee schedule for deposit or withdrawal operations.
@@ -9,7 +9,7 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///     Authentication: Required if feeEndpointInfo.authenticationRequired is true in
 ///     the /info response. Provide a SEP-10 JWT token in the Jwt property.
 /// </summary>
-public sealed record Sep24FeeRequest
+public sealed record FeeRequest
 {
     /// <summary>
     ///     Gets or sets the kind of operation (deposit or withdraw).

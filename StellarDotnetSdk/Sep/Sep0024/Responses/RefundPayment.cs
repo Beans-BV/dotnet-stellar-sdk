@@ -1,24 +1,24 @@
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Responses;
 
 /// <summary>
 ///     Information about a single refund payment.
 ///     Represents an individual payment made back to the user as part of a refund.
 ///     Multiple refund payments may exist for a single transaction.
 /// </summary>
-public class Sep24RefundPayment : Response
+public class RefundPayment : Response
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="Sep24RefundPayment" /> class.
+    ///     Initializes a new instance of the <see cref="RefundPayment" /> class.
     /// </summary>
     /// <param name="id">Payment ID (Stellar transaction hash or off-chain reference).</param>
     /// <param name="idType">Type of refund payment ('stellar' or 'external').</param>
     /// <param name="amount">Amount sent back to user in units of amountInAsset.</param>
     /// <param name="fee">Fee charged for processing this refund payment.</param>
     [JsonConstructor]
-    public Sep24RefundPayment(string id, string idType, decimal amount, decimal fee)
+    public RefundPayment(string id, string idType, decimal amount, decimal fee)
     {
         Id = id;
         IdType = idType;

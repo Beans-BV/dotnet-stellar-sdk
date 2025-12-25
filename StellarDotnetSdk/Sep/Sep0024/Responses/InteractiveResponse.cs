@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Responses;
 
 /// <summary>
 ///     Response from deposit or withdraw endpoints containing interactive flow details.
@@ -10,16 +10,16 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///     The URL should be displayed in a popup window or webview. The client should
 ///     poll the /transaction endpoint using the provided ID to monitor status changes.
 /// </summary>
-public class Sep24InteractiveResponse : Response
+public class InteractiveResponse : Response
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="Sep24InteractiveResponse" /> class.
+    ///     Initializes a new instance of the <see cref="InteractiveResponse" /> class.
     /// </summary>
     /// <param name="type">Response type (always 'interactive_customer_info_needed').</param>
     /// <param name="url">URL for the interactive flow to display to user.</param>
     /// <param name="id">Anchor's internal ID for this transaction.</param>
     [JsonConstructor]
-    public Sep24InteractiveResponse(string type, string url, string id)
+    public InteractiveResponse(string type, string url, string id)
     {
         Type = type;
         Url = url;

@@ -1,17 +1,17 @@
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Responses;
 
 /// <summary>
 ///     Information about a specific asset available for deposit.
 ///     Contains configuration details for depositing an asset, including deposit limits and fee structure.
 ///     Returned as part of the /info endpoint response.
 /// </summary>
-public class Sep24DepositAsset : Response
+public class DepositAsset : Response
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="Sep24DepositAsset" /> class.
+    ///     Initializes a new instance of the <see cref="DepositAsset" /> class.
     /// </summary>
     /// <param name="enabled">True if deposit for this asset is supported by the anchor.</param>
     /// <param name="minAmount">Minimum amount that can be deposited. No limit if not specified.</param>
@@ -20,7 +20,7 @@ public class Sep24DepositAsset : Response
     /// <param name="feePercent">Percentage fee for deposit in percentage points.</param>
     /// <param name="feeMinimum">Minimum fee in units of the deposited asset.</param>
     [JsonConstructor]
-    public Sep24DepositAsset(
+    public DepositAsset(
         bool enabled,
         decimal? minAmount = null,
         decimal? maxAmount = null,

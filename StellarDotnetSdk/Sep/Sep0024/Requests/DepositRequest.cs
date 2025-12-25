@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using StellarDotnetSdk.Sep.Sep0009;
 
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Requests;
 
 /// <summary>
 ///     Request to initiate an interactive deposit flow with an anchor.
@@ -13,7 +13,7 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///     assets to the anchor.
 ///     Authentication: Always required. Must provide a SEP-10 JWT token.
 /// </summary>
-public sealed record Sep24DepositRequest
+public sealed record DepositRequest
 {
     /// <summary>
     ///     Gets or sets the JWT token previously received from the anchor via the SEP-10 authentication flow.

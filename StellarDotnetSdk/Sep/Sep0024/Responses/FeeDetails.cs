@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Responses;
 
 /// <summary>
 ///     Description of fee charged by the anchor.
@@ -10,16 +10,16 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///     detailing the individual fee components. This replaces the deprecated amount_fee field.
 ///     If quote_id is present, it should match the referenced quote's fee object.
 /// </summary>
-public class Sep24FeeDetails : Response
+public class FeeDetails : Response
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="Sep24FeeDetails" /> class.
+    ///     Initializes a new instance of the <see cref="FeeDetails" /> class.
     /// </summary>
     /// <param name="total">The total amount of fee applied.</param>
     /// <param name="asset">The asset in which the fee is applied, represented through the Asset Identification Format.</param>
     /// <param name="breakdown">Optional array of objects detailing the fees that were used to calculate the conversion price.</param>
     [JsonConstructor]
-    public Sep24FeeDetails(decimal total, string asset, List<Sep24FeeBreakdown>? breakdown = null)
+    public FeeDetails(decimal total, string asset, List<FeeBreakdown>? breakdown = null)
     {
         Total = total;
         Asset = asset;
@@ -44,6 +44,6 @@ public class Sep24FeeDetails : Response
     ///     If breakdown is provided, sum(breakdown.amount) should equal total.
     /// </summary>
     [JsonPropertyName("breakdown")]
-    public List<Sep24FeeBreakdown>? Breakdown { get; }
+    public List<FeeBreakdown>? Breakdown { get; }
 }
 

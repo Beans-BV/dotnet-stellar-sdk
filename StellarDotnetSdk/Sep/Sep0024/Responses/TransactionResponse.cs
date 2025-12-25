@@ -1,21 +1,21 @@
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Responses;
 
 /// <summary>
 ///     Response from the /transaction endpoint containing a single transaction.
 ///     Returns detailed information about a specific transaction identified by
 ///     its ID, Stellar transaction hash, or external transaction ID.
 /// </summary>
-public class Sep24TransactionResponse : Response
+public class TransactionResponse : Response
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="Sep24TransactionResponse" /> class.
+    ///     Initializes a new instance of the <see cref="TransactionResponse" /> class.
     /// </summary>
     /// <param name="transaction">The transaction details queried from the anchor.</param>
     [JsonConstructor]
-    public Sep24TransactionResponse(Sep24Transaction transaction)
+    public TransactionResponse(Transaction transaction)
     {
         Transaction = transaction;
     }
@@ -24,6 +24,6 @@ public class Sep24TransactionResponse : Response
     ///     Gets the transaction details.
     /// </summary>
     [JsonPropertyName("transaction")]
-    public Sep24Transaction Transaction { get; }
+    public Transaction Transaction { get; }
 }
 

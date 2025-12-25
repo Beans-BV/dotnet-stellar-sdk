@@ -1,6 +1,6 @@
 using System;
 
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Requests;
 
 /// <summary>
 ///     Request to query transaction history for deposits and withdrawals.
@@ -9,7 +9,7 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///     in the authenticated SEP-10 JWT token.
 ///     Authentication: Always required. Must provide a SEP-10 JWT token.
 /// </summary>
-public sealed record Sep24TransactionsRequest
+public sealed record TransactionsRequest
 {
     /// <summary>
     ///     Gets or sets the JWT token previously received from the anchor via the SEP-10 authentication flow.

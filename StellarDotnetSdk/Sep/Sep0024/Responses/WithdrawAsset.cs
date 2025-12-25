@@ -1,17 +1,17 @@
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 
-namespace StellarDotnetSdk.Sep.Sep0024;
+namespace StellarDotnetSdk.Sep.Sep0024.Responses;
 
 /// <summary>
 ///     Information about a specific asset available for withdrawal.
 ///     Contains configuration details for withdrawing an asset, including withdrawal limits and fee structure.
 ///     Returned as part of the /info endpoint response.
 /// </summary>
-public class Sep24WithdrawAsset : Response
+public class WithdrawAsset : Response
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="Sep24WithdrawAsset" /> class.
+    ///     Initializes a new instance of the <see cref="WithdrawAsset" /> class.
     /// </summary>
     /// <param name="enabled">True if withdrawal for this asset is supported by the anchor.</param>
     /// <param name="minAmount">Minimum amount that can be withdrawn. No limit if not specified.</param>
@@ -20,7 +20,7 @@ public class Sep24WithdrawAsset : Response
     /// <param name="feePercent">Percentage fee for withdrawal in percentage points.</param>
     /// <param name="feeMinimum">Minimum fee in units of the withdrawn asset.</param>
     [JsonConstructor]
-    public Sep24WithdrawAsset(
+    public WithdrawAsset(
         bool enabled,
         decimal? minAmount = null,
         decimal? maxAmount = null,
