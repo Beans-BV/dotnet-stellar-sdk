@@ -1,3 +1,5 @@
+using System;
+
 namespace StellarDotnetSdk.Sep.Sep0010.Exceptions;
 
 /// <summary>
@@ -5,9 +7,19 @@ namespace StellarDotnetSdk.Sep.Sep0010.Exceptions;
 /// </summary>
 public class ChallengeValidationErrorInvalidTimeBounds : ChallengeValidationException
 {
-    public ChallengeValidationErrorInvalidTimeBounds(string message)
-        : base(message)
+    public ChallengeValidationErrorInvalidTimeBounds(
+        DateTimeOffset minTime,
+        DateTimeOffset maxTime,
+        DateTimeOffset currentTime,
+        string message)
+        : base(message + $"\nMinTime: {minTime}, MaxTime: {maxTime}, CurrentTime: {currentTime}")
     {
+        MinTime = minTime;
+        MaxTime = maxTime;
+        CurrentTime = currentTime;
     }
-}
 
+    public DateTimeOffset MinTime { get; }
+    public DateTimeOffset MaxTime { get; }
+    public DateTimeOffset CurrentTime { get; }
+}

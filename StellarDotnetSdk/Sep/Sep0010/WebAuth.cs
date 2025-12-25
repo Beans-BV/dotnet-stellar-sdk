@@ -499,7 +499,11 @@ public class WebAuth : IDisposable
 
             if (currentTime < minTime || currentTime > maxTime)
             {
-                throw new ChallengeValidationErrorInvalidTimeBounds("Invalid transaction, invalid time bounds");
+                throw new ChallengeValidationErrorInvalidTimeBounds(
+                    DateTimeOffset.FromUnixTimeSeconds(minTime),
+                    DateTimeOffset.FromUnixTimeSeconds(maxTime),
+                    DateTimeOffset.FromUnixTimeSeconds(currentTime),
+                    "Invalid transaction, invalid time bounds");
             }
         }
 
