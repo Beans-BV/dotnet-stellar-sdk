@@ -539,7 +539,6 @@ public class WebAuth : IDisposable
 
         // Convert to SDK Transaction for easy access
         var transaction = Transactions.Transaction.FromEnvelopeXdr(challengeTransaction);
-        var txHash = transaction.Hash(_network);
 
         // Add signatures using SDK Transaction
         foreach (var signer in signers)
