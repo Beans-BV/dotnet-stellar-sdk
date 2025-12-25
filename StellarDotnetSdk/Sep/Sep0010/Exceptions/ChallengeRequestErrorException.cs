@@ -1,5 +1,3 @@
-using System.Net.Http;
-
 namespace StellarDotnetSdk.Sep.Sep0010.Exceptions;
 
 /// <summary>
@@ -22,11 +20,6 @@ public class ChallengeRequestErrorException : WebAuthException
     {
         StatusCode = statusCode;
         ResponseBody = responseBody;
-    }
-
-    public ChallengeRequestErrorException(HttpResponseMessage response)
-        : this((int)response.StatusCode, response.Content?.ReadAsStringAsync().Result)
-    {
     }
 }
 
