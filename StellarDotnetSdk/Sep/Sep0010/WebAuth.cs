@@ -425,7 +425,6 @@ public class WebAuth : IDisposable
         {
             var op = transaction.Operations[i];
             
-            // Type check instead of discriminant access
             if (op is not ManageDataOperation manageDataOp)
             {
                 throw new ChallengeValidationErrorInvalidOperationType($"invalid type of operation {i}");
