@@ -32,7 +32,7 @@ namespace StellarDotnetSdk.Sep.Sep0010;
 ///         <item>
 ///             <description>
 ///                 Create a <see cref="WebAuth"/> instance. In most cases you should use
-///                 <see cref="FromDomainAsync(string, HttpClient?, Dictionary{string, string}?, int?)"/> to load
+///                 <see cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)"/> to load
 ///                 configuration from the anchor&apos;s <c>stellar.toml</c> (WEB_AUTH_ENDPOINT, SIGNING_KEY, and network).
 ///                 Use the constructor directly only when you already know all parameters or need custom configuration.
 ///             </description>
@@ -60,7 +60,7 @@ namespace StellarDotnetSdk.Sep.Sep0010;
 ///         <b>Choosing between constructor and FromDomainAsync</b>
 ///     </para>
 ///     <para>
-///         Use <see cref="FromDomainAsync(string, HttpClient?, Dictionary{string, string}?, int?)"/> when you have a
+///         Use <see cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)"/> when you have a
 ///         Stellar home domain (for example, <c>"example.com"</c>) and want the SDK to discover the WEB_AUTH_ENDPOINT,
 ///         SIGNING_KEY, and network passphrase from the domain&apos;s <c>stellar.toml</c>. This is the recommended,
 ///         high-level entry point for most clients.
@@ -76,12 +76,12 @@ namespace StellarDotnetSdk.Sep.Sep0010;
 ///     <para>
 ///         <see cref="WebAuth"/> implements <see cref="IDisposable"/> because it may create and own an internal
 ///         <see cref="HttpClient"/> instance. When you let <see cref="WebAuth"/> create its own client (for example,
-///         by calling <see cref="FromDomainAsync(string, HttpClient?, Dictionary{string, string}?, int?)"/> without
+///         by calling <see cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)"/> without
 ///         passing an <see cref="HttpClient"/>), you should either wrap <see cref="WebAuth"/> in a <c>using</c> block
 ///         or explicitly call <see cref="Dispose"/> when you are finished with it so the internal client is cleaned up.
 ///     </para>
 ///     <para>
-///         If you pass an external <see cref="HttpClient"/> into the constructor or <see cref="FromDomainAsync(string, HttpClient?, Dictionary{string, string}?, int?)"/>,
+///         If you pass an external <see cref="HttpClient"/> into the constructor or <see cref="FromDomainAsync(string, Network, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?)"/>,
 ///         that client remains owned by the caller. In that case, disposing <see cref="WebAuth"/> will not dispose the
 ///         external client, and you are responsible for managing the <see cref="HttpClient"/> lifecycle yourself
 ///         (for example, by reusing a single long-lived instance for performance and resilience).
