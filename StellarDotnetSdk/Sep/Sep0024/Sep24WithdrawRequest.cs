@@ -10,7 +10,7 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///     (fiat via bank transfer, BTC, USD cash, etc.) via the anchor. The user sends
 ///     the Stellar asset to the anchor, and the anchor sends the equivalent off-chain
 ///     asset (minus fees) to the user.
-///     The withdraw endpoint returns an interactive URL where the user completes KYC,
+///     The withdrawal endpoint returns an interactive URL where the user completes KYC,
 ///     provides bank account or wallet details, and receives instructions for the withdrawal.
 ///     Authentication: Always required. Must provide a SEP-10 JWT token.
 /// </summary>
