@@ -114,7 +114,11 @@ public class InteractiveService : IDisposable
     ///     requests)
     /// </param>
     /// <param name="bearerToken">Optional bearer token for stellar.toml fetch only (not used for SEP-24 requests)</param>
-    /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration.</param>
+    /// <param name="httpClient">
+    ///     Optional HTTP client instance. <strong>Recommended:</strong> Pass a shared HttpClient instance
+    ///     for production use to avoid creating a new client per instance. If null, a new HttpClient will be
+    ///     created internally and disposed when the returned instance is disposed.
+    /// </param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in requests.</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>An instance of InteractiveService configured with the transfer server URL.</returns>
