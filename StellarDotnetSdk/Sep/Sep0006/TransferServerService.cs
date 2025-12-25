@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -407,7 +408,7 @@ public class TransferServerService : IDisposable
         var response = await client.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 
         // Handle 403 Forbidden responses specially to parse error types
-        if ((int)response.StatusCode == 403)
+        if (response.StatusCode == HttpStatusCode.Forbidden)
         {
             var errorContent = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             HandleForbiddenResponse(errorContent);
@@ -621,7 +622,7 @@ public class TransferServerService : IDisposable
         var response = await client.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 
         // Handle 403 Forbidden responses specially to parse error types
-        if ((int)response.StatusCode == 403)
+        if (response.StatusCode == HttpStatusCode.Forbidden)
         {
             var errorContent = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             HandleForbiddenResponse(errorContent);

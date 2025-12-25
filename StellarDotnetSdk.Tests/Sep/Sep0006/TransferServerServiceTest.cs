@@ -687,6 +687,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""";
 
         // Assert
         Assert.IsNotNull(capture.Request);
+        Assert.IsNotNull(capture.Request.RequestUri);
         Assert.IsTrue(capture.Request.RequestUri?.ToString().Contains("lang=es"));
     }
 
