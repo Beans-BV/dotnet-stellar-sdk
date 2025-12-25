@@ -12,18 +12,81 @@ using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Sep.Sep0001;
 using StellarDotnetSdk.Sep.Sep0010.Exceptions;
-using StellarDotnetSdk.Transactions;
 using StellarDotnetSdk.Xdr;
-using FormatException = System.FormatException;
-using MuxedAccount = StellarDotnetSdk.Accounts.MuxedAccount;
 
 namespace StellarDotnetSdk.Sep.Sep0010;
 
 /// <summary>
-///     Implements SEP-0010 Web Authentication protocol for Stellar applications.
+///     Implements the SEP-0010 Web Authentication protocol for Stellar applications.
 ///     This class implements SEP-0010 version 3.4.1, which defines a standard protocol
 ///     for authenticating users of Stellar applications using their Stellar account.
 /// </summary>
+/// <remarks>
+///     <para>
+///         <b>Typical authentication flow</b>
+///     </para>
+///     <para>
+///         A typical SEP-0010 authentication flow using this class is:
+///     </para>
+///     <list type="number">
+///         <item>
+///             <description>
+///                 Create a <see cref="WebAuth"/> instance. In most cases you should use
+///                 <see cref="FromDomainAsync(string, HttpClient?, Dictionary{string, string}?, int?)"/> to load
+///                 configuration from the anchor&apos;s <c>stellar.toml</c> (WEB_AUTH_ENDPOINT, SIGNING_KEY, and network).
+///                 Use the constructor directly only when you already know all parameters or need custom configuration.
+///             </description>
+///         </item>
+///         <item>
+///             <description>
+///                 Call <c>BuildChallengeTransactionAsync</c> (or the appropriate method) to fetch or construct a
+///                 challenge transaction from the SEP-0010 server for the user&apos;s Stellar account.
+///             </description>
+///         </item>
+///         <item>
+///             <description>
+///                 Have the user sign the challenge transaction with their Stellar keypair (typically on-device or in a wallet).
+///             </description>
+///         </item>
+///         <item>
+///             <description>
+///                 Submit the signed challenge back to the server using the corresponding method on this class.
+///                 If the server verifies the signatures and validity window, it issues a JWT or other auth token
+///                 according to SEP-0010.
+///             </description>
+///         </item>
+///     </list>
+///     <para>
+///         <b>Choosing between constructor and FromDomainAsync</b>
+///     </para>
+///     <para>
+///         Use <see cref="FromDomainAsync(string, HttpClient?, Dictionary{string, string}?, int?)"/> when you have a
+///         Stellar home domain (for example, <c>"example.com"</c>) and want the SDK to discover the WEB_AUTH_ENDPOINT,
+///         SIGNING_KEY, and network passphrase from the domain&apos;s <c>stellar.toml</c>. This is the recommended,
+///         high-level entry point for most clients.
+///     </para>
+///     <para>
+///         Use the public constructor when you already know the auth endpoint URL, network, and server signing key
+///         (for example, in test environments or when configuration is not coming from <c>stellar.toml</c>), or when
+///         you need to inject additional headers or other advanced settings explicitly.
+///     </para>
+///     <para>
+///         <b>IDisposable and HttpClient ownership</b>
+///     </para>
+///     <para>
+///         <see cref="WebAuth"/> implements <see cref="IDisposable"/> because it may create and own an internal
+///         <see cref="HttpClient"/> instance. When you let <see cref="WebAuth"/> create its own client (for example,
+///         by calling <see cref="FromDomainAsync(string, HttpClient?, Dictionary{string, string}?, int?)"/> without
+///         passing an <see cref="HttpClient"/>), you should either wrap <see cref="WebAuth"/> in a <c>using</c> block
+///         or explicitly call <see cref="Dispose"/> when you are finished with it so the internal client is cleaned up.
+///     </para>
+///     <para>
+///         If you pass an external <see cref="HttpClient"/> into the constructor or <see cref="FromDomainAsync(string, HttpClient?, Dictionary{string, string}?, int?)"/>,
+///         that client remains owned by the caller. In that case, disposing <see cref="WebAuth"/> will not dispose the
+///         external client, and you are responsible for managing the <see cref="HttpClient"/> lifecycle yourself
+///         (for example, by reusing a single long-lived instance for performance and resilience).
+///     </para>
+/// </remarks>
 public class WebAuth : IDisposable
 {
     private const string WebAuthDataKey = "web_auth_domain";
