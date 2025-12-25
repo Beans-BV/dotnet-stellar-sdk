@@ -48,7 +48,9 @@ public class Sep24Transaction : Response
         string? stellarTransactionId = null,
         string? externalTransactionId = null,
         string? message = null,
+        bool? refunded = null,
         Sep24Refund? refunds = null,
+        Sep24FeeDetails? feeDetails = null,
         string? from = null,
         string? to = null,
         string? depositMemo = null,
@@ -78,7 +80,9 @@ public class Sep24Transaction : Response
         StellarTransactionId = stellarTransactionId;
         ExternalTransactionId = externalTransactionId;
         Message = message;
+        Refunded = refunded;
         Refunds = refunds;
+        FeeDetails = feeDetails;
         From = from;
         To = to;
         DepositMemo = depositMemo;
@@ -226,11 +230,29 @@ public class Sep24Transaction : Response
     public string? Message { get; }
 
     /// <summary>
+    ///     Gets a value indicating whether the transaction was refunded.
+    ///     True if the transaction was refunded in full. False if the transaction was partially refunded or not refunded.
+    ///     Deprecated: This field is deprecated in favor of the refunds object and the refunded status.
+    ///     For more details about any refunds, see the Refunds object.
+    /// </summary>
+    [JsonPropertyName("refunded")]
+    public bool? Refunded { get; }
+
+    /// <summary>
     ///     Gets an object describing any on-chain or off-chain refund associated with this transaction.
     ///     Contains detailed information about refund amounts, fees, and individual payment records.
     /// </summary>
     [JsonPropertyName("refunds")]
     public Sep24Refund? Refunds { get; }
+
+    /// <summary>
+    ///     Gets the description of fee charged by the anchor.
+    ///     Contains the total fee amount, the asset in which fees are calculated, and an optional breakdown
+    ///     detailing the individual fee components. This replaces the deprecated amount_fee field.
+    ///     If quote_id is present, it should match the referenced quote's fee object.
+    /// </summary>
+    [JsonPropertyName("fee_details")]
+    public Sep24FeeDetails? FeeDetails { get; }
 
     /// <summary>
     ///     Gets the source address.

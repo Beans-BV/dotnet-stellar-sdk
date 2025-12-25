@@ -20,6 +20,7 @@
     "stellar_transaction_id": null,
     "external_transaction_id": null,
     "message": "Transaction refunded",
+    "refunded": true,
     "refunds": {
       "amount_refunded": "98.0",
       "amount_fee": "2.0",
@@ -31,6 +32,10 @@
           "fee": "2.0"
         }
       ]
+    },
+    "fee_details": {
+      "total": "2.0",
+      "asset": "iso4217:USD"
     },
     "from": "bank_account_12345",
     "to": "GASYKQXV47TPTB6HKXWZNB6IRVPMTQ6M6B27IM5L2LYMNYBX2O53YJAL",

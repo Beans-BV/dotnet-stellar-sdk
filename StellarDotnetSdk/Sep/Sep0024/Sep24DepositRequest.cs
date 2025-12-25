@@ -99,6 +99,14 @@ public sealed record Sep24DepositRequest
     public string? ClaimableBalanceSupported { get; init; }
 
     /// <summary>
+    ///     Gets or sets the id of an off-chain account (managed by the anchor) associated with this user's Stellar account
+    ///     (identified by the JWT's sub field). If the anchor supports SEP-12, the customer_id field should match the SEP-12 customer's id.
+    ///     customer_id should be passed only when the off-chain id is known to the client, but the relationship between this id
+    ///     and the user's Stellar account is not known to the Anchor.
+    /// </summary>
+    public string? CustomerId { get; init; }
+
+    /// <summary>
     ///     Gets or sets the SEP-9 KYC fields to make the onboarding experience simpler.
     ///     These fields may be used to pre-fill the interactive form.
     /// </summary>

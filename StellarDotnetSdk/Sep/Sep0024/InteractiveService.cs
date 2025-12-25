@@ -587,6 +587,11 @@ public class InteractiveService : IDisposable
             fields["claimable_balance_supported"] = request.ClaimableBalanceSupported;
         }
 
+        if (!string.IsNullOrWhiteSpace(request.CustomerId))
+        {
+            fields["customer_id"] = request.CustomerId;
+        }
+
         var files = new Dictionary<string, byte[]>();
 
         // Add KYC fields
@@ -671,6 +676,16 @@ public class InteractiveService : IDisposable
             fields["account"] = request.Account;
         }
 
+        if (!string.IsNullOrWhiteSpace(request.Memo))
+        {
+            fields["memo"] = request.Memo;
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.MemoType))
+        {
+            fields["memo_type"] = request.MemoType;
+        }
+
         if (!string.IsNullOrWhiteSpace(request.WalletName))
         {
             fields["wallet_name"] = request.WalletName;
@@ -694,6 +709,11 @@ public class InteractiveService : IDisposable
         if (!string.IsNullOrWhiteSpace(request.RefundMemoType))
         {
             fields["refund_memo_type"] = request.RefundMemoType;
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.CustomerId))
+        {
+            fields["customer_id"] = request.CustomerId;
         }
 
         var files = new Dictionary<string, byte[]>();

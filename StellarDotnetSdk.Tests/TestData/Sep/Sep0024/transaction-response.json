@@ -20,10 +20,27 @@
     "stellar_transaction_id": "17a670bc424ff5ce3b386dbfaae9990b66a2a37b4fbe51547e8794962a3f9e6a",
     "external_transaction_id": "ext-tx-12345",
     "message": "Transaction completed successfully",
+    "refunded": false,
     "refunds": {
       "amount_refunded": "0",
       "amount_fee": "0",
       "payments": []
+    },
+    "fee_details": {
+      "total": "5.0",
+      "asset": "stellar:USD:GCZJM35NKGVK47BB4SPBDV25477PZYIYPVVG453LPYFNXLS3FGHDXOCM",
+      "breakdown": [
+        {
+          "name": "Service fee",
+          "description": "Standard processing fee",
+          "amount": "3.0"
+        },
+        {
+          "name": "Network fee",
+          "description": "Stellar network transaction fee",
+          "amount": "2.0"
+        }
+      ]
     },
     "from": "bank_account_12345",
     "to": "GASYKQXV47TPTB6HKXWZNB6IRVPMTQ6M6B27IM5L2LYMNYBX2O53YJAL",

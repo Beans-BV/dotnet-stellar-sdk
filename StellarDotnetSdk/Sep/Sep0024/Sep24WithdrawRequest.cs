@@ -63,6 +63,20 @@ public sealed record Sep24WithdrawRequest
     public string? Account { get; init; }
 
     /// <summary>
+    ///     Gets or sets the memo value. This field was originally intended to differentiate users of the same Stellar account.
+    ///     However, the anchor should use the sub value included in the decoded SEP-10 JWT instead.
+    ///     Anchors should still support this parameter to maintain support for outdated clients.
+    ///     Deprecated: Use the sub value in the SEP-10 JWT instead.
+    /// </summary>
+    public string? Memo { get; init; }
+
+    /// <summary>
+    ///     Gets or sets the type of memo. One of: text, id, or hash.
+    ///     Deprecated: Memos used to identify users of the same Stellar account should always be of type id.
+    /// </summary>
+    public string? MemoType { get; init; }
+
+    /// <summary>
     ///     Gets or sets the wallet name that the anchor should display to explain where funds are coming from.
     ///     Used in communications and pages about the withdrawal.
     /// </summary>
@@ -93,6 +107,14 @@ public sealed record Sep24WithdrawRequest
     ///     If specified, refundMemo must also be specified.
     /// </summary>
     public string? RefundMemoType { get; init; }
+
+    /// <summary>
+    ///     Gets or sets the id of an off-chain account (managed by the anchor) associated with this user's Stellar account
+    ///     (identified by the JWT's sub field). If the anchor supports SEP-12, the customer_id field should match the SEP-12 customer's id.
+    ///     customer_id should be passed only when the off-chain id is known to the client, but the relationship between this id
+    ///     and the user's Stellar account is not known to the Anchor.
+    /// </summary>
+    public string? CustomerId { get; init; }
 
     /// <summary>
     ///     Gets or sets the SEP-9 KYC fields to make the onboarding experience simpler.

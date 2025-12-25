@@ -435,6 +435,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
             WalletUrl = "https://wallet.example.com",
             Lang = "en-US",
             ClaimableBalanceSupported = "true",
+            CustomerId = "customer-123",
         };
 
         using (httpClient)
@@ -654,11 +655,14 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
             Amount = "50.0",
             QuoteId = "quote-456",
             Account = "GASYKQXV47TPTB6HKXWZNB6IRVPMTQ6M6B27IM5L2LYMNYBX2O53YJAL",
+            Memo = "withdraw-memo",
+            MemoType = "id",
             WalletName = "Test Wallet",
             WalletUrl = "https://wallet.example.com",
             Lang = "en-US",
             RefundMemo = "refund-memo",
             RefundMemoType = "text",
+            CustomerId = "customer-456",
         };
 
         using (httpClient)
@@ -906,6 +910,12 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         Assert.AreEqual("iso4217:USD", tx1.AmountInAsset);
         Assert.AreEqual("95.0", tx1.AmountOut);
         Assert.AreEqual("stellar:USD:GCZJM35NKGVK47BB4SPBDV25477PZYIYPVVG453LPYFNXLS3FGHDXOCM", tx1.AmountFeeAsset);
+        Assert.IsFalse(tx1.Refunded);
+        Assert.IsNotNull(tx1.FeeDetails);
+        Assert.AreEqual("5.0", tx1.FeeDetails.Total);
+        Assert.AreEqual("stellar:USD:GCZJM35NKGVK47BB4SPBDV25477PZYIYPVVG453LPYFNXLS3FGHDXOCM", tx1.FeeDetails.Asset);
+        Assert.IsNotNull(tx1.FeeDetails.Breakdown);
+        Assert.AreEqual(2, tx1.FeeDetails.Breakdown.Count);
         Assert.AreEqual("Transaction completed successfully", tx1.Message);
         Assert.AreEqual("bank_account_12345", tx1.From);
         Assert.AreEqual("GASYKQXV47TPTB6HKXWZNB6IRVPMTQ6M6B27IM5L2LYMNYBX2O53YJAL", tx1.To);
@@ -921,6 +931,11 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         Assert.AreEqual("stellar:USD:GCZJM35NKGVK47BB4SPBDV25477PZYIYPVVG453LPYFNXLS3FGHDXOCM", tx2.AmountInAsset);
         Assert.AreEqual("iso4217:USD", tx2.AmountOutAsset);
         Assert.AreEqual("stellar:USD:GCZJM35NKGVK47BB4SPBDV25477PZYIYPVVG453LPYFNXLS3FGHDXOCM", tx2.AmountFeeAsset);
+        Assert.IsFalse(tx2.Refunded);
+        Assert.IsNotNull(tx2.FeeDetails);
+        Assert.AreEqual("2.5", tx2.FeeDetails.Total);
+        Assert.AreEqual("stellar:USD:GCZJM35NKGVK47BB4SPBDV25477PZYIYPVVG453LPYFNXLS3FGHDXOCM", tx2.FeeDetails.Asset);
+        Assert.IsNull(tx2.FeeDetails.Breakdown);
         Assert.AreEqual("Processing withdrawal", tx2.Message);
         Assert.AreEqual("GASYKQXV47TPTB6HKXWZNB6IRVPMTQ6M6B27IM5L2LYMNYBX2O53YJAL", tx2.From);
         Assert.AreEqual("bank_account_67890", tx2.To);
@@ -1066,6 +1081,19 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         Assert.IsNotNull(result.Transaction.StellarTransactionId);
         Assert.IsNotNull(result.Transaction.ExternalTransactionId);
         Assert.AreEqual("Transaction completed successfully", result.Transaction.Message);
+        Assert.IsFalse(result.Transaction.Refunded);
+        Assert.IsNotNull(result.Transaction.Refunds);
+        Assert.IsNotNull(result.Transaction.FeeDetails);
+        Assert.AreEqual("5.0", result.Transaction.FeeDetails.Total);
+        Assert.AreEqual("stellar:USD:GCZJM35NKGVK47BB4SPBDV25477PZYIYPVVG453LPYFNXLS3FGHDXOCM", result.Transaction.FeeDetails.Asset);
+        Assert.IsNotNull(result.Transaction.FeeDetails.Breakdown);
+        Assert.AreEqual(2, result.Transaction.FeeDetails.Breakdown.Count);
+        Assert.AreEqual("Service fee", result.Transaction.FeeDetails.Breakdown[0].Name);
+        Assert.AreEqual("Standard processing fee", result.Transaction.FeeDetails.Breakdown[0].Description);
+        Assert.AreEqual("3.0", result.Transaction.FeeDetails.Breakdown[0].Amount);
+        Assert.AreEqual("Network fee", result.Transaction.FeeDetails.Breakdown[1].Name);
+        Assert.AreEqual("Stellar network transaction fee", result.Transaction.FeeDetails.Breakdown[1].Description);
+        Assert.AreEqual("2.0", result.Transaction.FeeDetails.Breakdown[1].Amount);
         Assert.AreEqual("bank_account_12345", result.Transaction.From);
         Assert.AreEqual("GASYKQXV47TPTB6HKXWZNB6IRVPMTQ6M6B27IM5L2LYMNYBX2O53YJAL", result.Transaction.To);
         Assert.AreEqual("test-memo", result.Transaction.DepositMemo);
@@ -1170,6 +1198,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         Assert.IsNotNull(result);
         Assert.IsNotNull(result.Transaction);
         Assert.AreEqual("refunded", result.Transaction.Status);
+        Assert.IsTrue(result.Transaction.Refunded);
         Assert.IsNotNull(result.Transaction.Refunds);
         Assert.AreEqual("98.0", result.Transaction.Refunds.AmountRefunded);
         Assert.AreEqual("2.0", result.Transaction.Refunds.AmountFee);
@@ -1178,6 +1207,9 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         Assert.AreEqual("stellar", result.Transaction.Refunds.Payments[0].IdType);
         Assert.AreEqual("98.0", result.Transaction.Refunds.Payments[0].Amount);
         Assert.AreEqual("2.0", result.Transaction.Refunds.Payments[0].Fee);
+        Assert.IsNotNull(result.Transaction.FeeDetails);
+        Assert.AreEqual("2.0", result.Transaction.FeeDetails.Total);
+        Assert.AreEqual("iso4217:USD", result.Transaction.FeeDetails.Asset);
     }
 
     [TestMethod]
