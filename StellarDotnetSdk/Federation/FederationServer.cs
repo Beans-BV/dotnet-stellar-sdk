@@ -79,7 +79,7 @@ public class FederationServer : IDisposable
         {
             var response = await _httpClient.GetAsync(stellarTomUri, HttpCompletionOption.ResponseContentRead);
 
-            if ((int)response.StatusCode >= 300)
+            if (!response.IsSuccessStatusCode)
             {
                 throw new StellarTomlNotFoundInvalidException();
             }

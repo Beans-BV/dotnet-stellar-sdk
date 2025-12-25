@@ -350,7 +350,7 @@ public class WebAuth : IDisposable
         {
             var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
 
-            if ((int)response.StatusCode >= 300)
+            if (!response.IsSuccessStatusCode)
             {
                 var errorBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 throw new ChallengeRequestErrorException((int)response.StatusCode, errorBody);
