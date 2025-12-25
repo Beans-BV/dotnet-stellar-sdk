@@ -50,17 +50,17 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///         <see cref="FromDomainAsync(string, HttpResilienceOptions?, string?, HttpClient?, Dictionary{string, string}?, CancellationToken)" />,
 ///         that client remains owned by the caller. In that case, disposing <see cref="InteractiveService" /> will not dispose
 ///         the external client, and you are responsible for managing the <see cref="HttpClient" /> lifecycle yourself
-    ///         (for example, by reusing a single long-lived instance for performance and resilience).
-    ///     </para>
-    ///     <para>
-    ///         <b>HttpResilienceOptions</b>
-    ///     </para>
-    ///     <para>
-    ///         You can configure retry policies, timeouts, and circuit breaker behavior by passing
-    ///         <see cref="HttpResilienceOptions" /> to the constructor or <see cref="FromDomainAsync" />. These options
-    ///         are only used when creating an internal <see cref="HttpClient" />. If you provide your own
-    ///         <see cref="HttpClient" />, the resilience options are ignored.
-    ///     </para>
+///         (for example, by reusing a single long-lived instance for performance and resilience).
+///     </para>
+///     <para>
+///         <b>HttpResilienceOptions</b>
+///     </para>
+///     <para>
+///         You can configure retry policies, timeouts, and circuit breaker behavior by passing
+///         <see cref="HttpResilienceOptions" /> to the constructor or <see cref="FromDomainAsync" />. These options
+///         are only used when creating an internal <see cref="HttpClient" />. If you provide your own
+///         <see cref="HttpClient" />, the resilience options are ignored.
+///     </para>
 /// </summary>
 public class InteractiveService : IDisposable
 {
