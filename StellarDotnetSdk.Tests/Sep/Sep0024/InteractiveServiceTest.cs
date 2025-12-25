@@ -19,15 +19,15 @@ public class InteractiveServiceTest
 {
     private const string TestTransferServerUrl = "https://api.example.com/sep24";
     private const string TestJwt = "test-jwt-token";
-    private string _infoResponseJson = null!;
-    private string _feeResponseJson = null!;
-    private string _interactiveResponseJson = null!;
-    private string _transactionResponseJson = null!;
-    private string _transactionsResponseJson = null!;
-    private string _transactionWithRefundJson = null!;
-    private string _errorResponseJson = null!;
-    private string _authRequiredResponseJson = null!;
-    private string _stellarTomlContent = null!;
+    private string _infoResponseJson = "";
+    private string _feeResponseJson = "";
+    private string _interactiveResponseJson = "";
+    private string _transactionResponseJson = "";
+    private string _transactionsResponseJson = "";
+    private string _transactionWithRefundJson = "";
+    private string _errorResponseJson = "";
+    private string _authRequiredResponseJson = "";
+    private string _stellarTomlContent = "";
 
     [TestInitialize]
     public void Setup()
