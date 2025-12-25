@@ -382,9 +382,12 @@ public class TransferServerService : IDisposable
     /// </summary>
     /// <param name="request">Patch transaction request with transaction ID and fields to update</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
-    /// <returns>HTTP response indicating success or failure</returns>
+    /// <returns>The updated transaction details</returns>
     /// <exception cref="ArgumentException">Thrown when request.Fields is null</exception>
-    public async Task<HttpResponseMessage> PatchTransactionAsync(PatchTransactionRequest request, CancellationToken cancellationToken = default)
+    /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
+    /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
+    /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
+    public async Task<AnchorTransactionResponse> PatchTransactionAsync(PatchTransactionRequest request, CancellationToken cancellationToken = default)
     {
         if (request.Fields == null)
         {
@@ -401,7 +404,17 @@ public class TransferServerService : IDisposable
         var jsonContent = JsonSerializer.Serialize(transactionObject, JsonOptions.DefaultOptions);
         httpRequest.Content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
 
-        return await client.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+        var response = await client.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+
+        // Handle 403 Forbidden responses specially to parse error types
+        if ((int)response.StatusCode == 403)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            HandleForbiddenResponse(errorContent);
+        }
+
+        var responseHandler = new ResponseHandler<AnchorTransactionResponse>();
+        return await responseHandler.HandleResponse(response).ConfigureAwait(false);
     }
 
     private Dictionary<string, string> BuildDepositQueryParams(DepositRequest request)

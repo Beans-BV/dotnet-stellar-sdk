@@ -122,7 +122,7 @@ public class TransferServerServiceTest
         {
             Operation = "deposit",
             AssetCode = "ETH",
-            Amount = 2034.09,
+            Amount = 2034.09m,
             Type = "SEPA",
             Jwt = JwtToken,
         };
@@ -149,7 +149,7 @@ public class TransferServerServiceTest
         {
             AssetCode = "USD",
             Account = AccountId,
-            Amount = "123.123",
+            Amount = 123.123m,
             Jwt = JwtToken,
         };
 
@@ -181,7 +181,7 @@ public class TransferServerServiceTest
         {
             AssetCode = "BTC",
             Account = AccountId,
-            Amount = "3.123",
+            Amount = 3.123m,
             Jwt = JwtToken,
         };
 
@@ -213,7 +213,7 @@ public class TransferServerServiceTest
         {
             AssetCode = "XRP",
             Account = AccountId,
-            Amount = "300.0",
+            Amount = 300.0m,
             Jwt = JwtToken,
         };
 
@@ -246,7 +246,7 @@ public class TransferServerServiceTest
         {
             AssetCode = "MXN",
             Account = AccountId,
-            Amount = "120.0",
+            Amount = 120.0m,
             Jwt = JwtToken,
         };
 
@@ -276,7 +276,7 @@ public class TransferServerServiceTest
             Type = "crypto",
             Dest = "GCTTGO5ABSTHABXWL2FMHPZ2XFOZDXJYJN5CKFRKXMPAAWZW3Y3JZ3JK",
             Account = AccountId,
-            Amount = "120.0",
+            Amount = 120.0m,
             Jwt = JwtToken,
         };
 
@@ -306,7 +306,7 @@ public class TransferServerServiceTest
             DestinationAsset = "XYZ",
             SourceAsset = "iso4217:USD",
             QuoteId = "282837",
-            Amount = "100",
+            Amount = 100m,
             Account = "GCIBUCGPOHWMMMFPFTDWBSVHQRT4DIBJ7AD6BZJYDITBK2LCVBYW7HUQ",
             LocationId = "999",
             Jwt = JwtToken,
@@ -336,7 +336,7 @@ public class TransferServerServiceTest
             SourceAsset = "XYZ",
             DestinationAsset = "iso4217:USD",
             QuoteId = "282837",
-            Amount = "700",
+            Amount = 700m,
             Type = "bank_account",
             LocationId = "999",
             Jwt = JwtToken,
@@ -367,7 +367,7 @@ public class TransferServerServiceTest
         {
             AssetCode = "MXN",
             Account = AccountId,
-            Amount = "120.0",
+            Amount = 120.0m,
             Jwt = JwtToken,
         };
 
@@ -403,7 +403,7 @@ public class TransferServerServiceTest
             Type = "crypto",
             Dest = "GCTTGO5ABSTHABXWL2FMHPZ2XFOZDXJYJN5CKFRKXMPAAWZW3Y3JZ3JK",
             Account = AccountId,
-            Amount = "120.0",
+            Amount = 120.0m,
             Jwt = JwtToken,
         };
 
@@ -437,7 +437,7 @@ public class TransferServerServiceTest
         {
             AssetCode = "MXN",
             Account = AccountId,
-            Amount = "120.0",
+            Amount = 120.0m,
             Jwt = JwtToken,
         };
 
@@ -486,9 +486,9 @@ public class TransferServerServiceTest
         Assert.AreEqual("deposit", firstTx.Kind);
         Assert.AreEqual("pending_external", firstTx.Status);
         Assert.AreEqual(3600, firstTx.StatusEta);
-        Assert.AreEqual("18.34", firstTx.AmountIn);
-        Assert.AreEqual("18.24", firstTx.AmountOut);
-        Assert.AreEqual("0.1", firstTx.AmountFee);
+        Assert.AreEqual(18.34m, firstTx.AmountIn);
+        Assert.AreEqual(18.24m, firstTx.AmountOut);
+        Assert.AreEqual(0.1m, firstTx.AmountFee);
 
         var secondTx = response.Transactions[1];
         Assert.AreEqual("52fys79f63dh3v2", secondTx.Id);
@@ -501,8 +501,8 @@ public class TransferServerServiceTest
         Assert.AreEqual("withdrawal", thirdTx.Kind);
         Assert.AreEqual("completed", thirdTx.Status);
         Assert.IsNotNull(thirdTx.Refunds);
-        Assert.AreEqual("10", thirdTx.Refunds.AmountRefunded);
-        Assert.AreEqual("5", thirdTx.Refunds.AmountFee);
+        Assert.AreEqual(10m, thirdTx.Refunds.AmountRefunded);
+        Assert.AreEqual(5m, thirdTx.Refunds.AmountFee);
         Assert.AreEqual(1, thirdTx.Refunds.Payments.Count);
         Assert.AreEqual("stellar", thirdTx.Refunds.Payments[0].IdType);
 
@@ -550,11 +550,11 @@ public class TransferServerServiceTest
         Assert.AreEqual("deposit", response.Transaction.Kind);
         Assert.AreEqual("pending_external", response.Transaction.Status);
         Assert.AreEqual(3600, response.Transaction.StatusEta);
-        Assert.AreEqual("18.34", response.Transaction.AmountIn);
-        Assert.AreEqual("18.24", response.Transaction.AmountOut);
-        Assert.AreEqual("0.1", response.Transaction.AmountFee);
+        Assert.AreEqual(18.34m, response.Transaction.AmountIn);
+        Assert.AreEqual(18.24m, response.Transaction.AmountOut);
+        Assert.AreEqual(0.1m, response.Transaction.AmountFee);
         Assert.IsNotNull(response.Transaction.FeeDetails);
-        Assert.AreEqual("0.1", response.Transaction.FeeDetails.Total);
+        Assert.AreEqual(0.1m, response.Transaction.FeeDetails.Total);
         Assert.AreEqual("iso4217:USD", response.Transaction.FeeDetails.Asset);
     }
 
@@ -562,10 +562,11 @@ public class TransferServerServiceTest
     ///     Verifies that PatchTransactionAsync updates transaction correctly.
     /// </summary>
     [TestMethod]
-    public async Task PatchTransactionAsync_WithValidRequest_ReturnsSuccess()
+    public async Task PatchTransactionAsync_WithValidRequest_ReturnsTransactionResponse()
     {
         // Arrange
-        using var httpClient = CreateMockHttpClient("");
+        var content = await LoadTestDataAsync("transaction.json");
+        using var httpClient = CreateMockHttpClient(content);
         var service = new TransferServerService(ServiceAddress, httpClient);
         var request = new PatchTransactionRequest
         {
@@ -583,7 +584,17 @@ public class TransferServerServiceTest
 
         // Assert
         Assert.IsNotNull(response);
-        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.IsNotNull(response.Transaction);
+        Assert.AreEqual("82fhs729f63dh0v4", response.Transaction.Id);
+        Assert.AreEqual("deposit", response.Transaction.Kind);
+        Assert.AreEqual("pending_external", response.Transaction.Status);
+        Assert.AreEqual(3600, response.Transaction.StatusEta);
+        Assert.AreEqual(18.34m, response.Transaction.AmountIn);
+        Assert.AreEqual(18.24m, response.Transaction.AmountOut);
+        Assert.AreEqual(0.1m, response.Transaction.AmountFee);
+        Assert.IsNotNull(response.Transaction.FeeDetails);
+        Assert.AreEqual(0.1m, response.Transaction.FeeDetails.Total);
+        Assert.AreEqual("iso4217:USD", response.Transaction.FeeDetails.Asset);
     }
 
     /// <summary>
