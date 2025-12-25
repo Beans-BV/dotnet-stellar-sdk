@@ -133,7 +133,7 @@ public class InteractiveService : IDisposable
         Dictionary<string, string>? httpRequestHeaders = null,
         CancellationToken cancellationToken = default)
     {
-        var toml = await StellarToml.FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient, httpRequestHeaders)
+        var toml = await StellarToml.FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient, httpRequestHeaders, cancellationToken)
             .ConfigureAwait(false);
         var addr = toml.GeneralInformation.TransferServerSep24;
         if (string.IsNullOrWhiteSpace(addr))
