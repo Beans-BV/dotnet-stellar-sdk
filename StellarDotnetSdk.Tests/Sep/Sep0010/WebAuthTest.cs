@@ -117,9 +117,9 @@ SIGNING_KEY = ""{signingKey}""
         string content,
         HttpStatusCode statusCode = HttpStatusCode.OK)
     {
-        var mockHandler = new Moq.Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
+        var mockHttpHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
         var capture = new RequestCapture();
-        mockHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>()))
+        mockHttpHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>()))
             .Callback<HttpRequestMessage>(req => capture.Request = req)
             .Returns(new HttpResponseMessage
             {
@@ -127,7 +127,7 @@ SIGNING_KEY = ""{signingKey}""
                 Content = new StringContent(content),
             });
 
-        return (new HttpClient(mockHandler.Object), capture);
+        return (new HttpClient(mockHttpHandler.Object), capture);
     }
 
     /// <summary>
@@ -186,7 +186,7 @@ SIGNING_KEY = ""{signingKey}""
         using var httpClient = CreateMockHttpClient(tomlContent);
 
         // Act
-        var webAuth = await WebAuth.FromDomainAsync(HomeDomain, _testnet, httpClient);
+        var webAuth = await WebAuth.FromDomainAsync(HomeDomain, _testnet, httpClient: httpClient);
 
         // Assert
         Assert.IsNotNull(webAuth);
@@ -207,7 +207,7 @@ SIGNING_KEY = ""GBWMCCC3NHSKLAOJDBKKYW7SSH2PFTTNVFKWSGLWGDLEBKLOVP5JLBBP""
         // Act & Assert
         await Assert.ThrowsExceptionAsync<NoWebAuthEndpointFoundException>(async () =>
         {
-            await WebAuth.FromDomainAsync(HomeDomain, _testnet, httpClient);
+            await WebAuth.FromDomainAsync(HomeDomain, _testnet, httpClient: httpClient);
         });
     }
 
@@ -226,7 +226,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         // Act & Assert
         await Assert.ThrowsExceptionAsync<NoWebAuthServerSigningKeyFoundException>(async () =>
         {
-            await WebAuth.FromDomainAsync(HomeDomain, _testnet, httpClient);
+            await WebAuth.FromDomainAsync(HomeDomain, _testnet, httpClient: httpClient);
         });
     }
 
@@ -518,9 +518,9 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var submitJson = JsonSerializer.Serialize(submitResponse, JsonOptions.DefaultOptions);
 
         // Create HttpClient that returns different responses for different requests
-        var mockHandler = new Moq.Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
+        var mockHttpHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
         var callCount = 0;
-        mockHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>()))
+        mockHttpHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>()))
             .Returns<HttpRequestMessage>(req =>
             {
                 callCount++;
@@ -544,7 +544,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
                 }
             });
 
-        using var httpClient = new HttpClient(mockHandler.Object);
+        using var httpClient = new HttpClient(mockHttpHandler.Object);
         var webAuth = CreateWebAuth(httpClient);
 
         // Act
@@ -911,8 +911,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var responseJson = JsonSerializer.Serialize(challengeResponse, JsonOptions.DefaultOptions);
 
         HttpRequestMessage? capturedRequest = null;
-        var mockHandler = new Mock<HttpMessageHandler>();
-        mockHandler.Protected()
+        var mockHttpHandler = new Mock<HttpMessageHandler>();
+        mockHttpHandler.Protected()
             .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
             .Callback<HttpRequestMessage, CancellationToken>((req, ct) => { capturedRequest = req; })
             .Returns(Task.FromResult(new HttpResponseMessage
@@ -921,7 +921,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
                 Content = new StringContent(responseJson),
             }));
 
-        using var httpClient = new HttpClient(mockHandler.Object);
+        using var httpClient = new HttpClient(mockHttpHandler.Object);
         var customHeaders = new Dictionary<string, string>
         {
             { "X-Custom-Header", "custom-value" },
@@ -1142,8 +1142,8 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
         var responseJson = JsonSerializer.Serialize(submitResponse, JsonOptions.DefaultOptions);
 
         HttpRequestMessage? capturedRequest = null;
-        var mockHandler = new Mock<HttpMessageHandler>();
-        mockHandler.Protected()
+        var mockHttpHandler = new Mock<HttpMessageHandler>();
+        mockHttpHandler.Protected()
             .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
             .Callback<HttpRequestMessage, CancellationToken>((req, ct) => { capturedRequest = req; })
             .Returns(Task.FromResult(new HttpResponseMessage
@@ -1152,7 +1152,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
                 Content = new StringContent(responseJson),
             }));
 
-        using var httpClient = new HttpClient(mockHandler.Object);
+        using var httpClient = new HttpClient(mockHttpHandler.Object);
         var customHeaders = new Dictionary<string, string>
         {
             { "Content-Type", "application/xml" }, // Should be skipped
