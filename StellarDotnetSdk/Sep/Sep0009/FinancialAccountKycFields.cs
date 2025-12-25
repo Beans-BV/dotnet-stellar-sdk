@@ -103,7 +103,7 @@ public sealed record FinancialAccountKycFields
     /// </summary>
     /// <param name="keyPrefix">Optional prefix to prepend to all field keys (e.g., "organization.")</param>
     /// <returns>Dictionary containing all non-null field values</returns>
-    public IReadOnlyDictionary<string, string> GetFields(string keyPrefix = "")
+    internal IReadOnlyDictionary<string, string> GetFields(string keyPrefix = "")
     {
         var result = new Dictionary<string, string>();
         if (BankName is not null)

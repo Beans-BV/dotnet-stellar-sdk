@@ -248,7 +248,7 @@ public sealed record NaturalPersonKycFields
     ///     Converts all natural person KYC fields to a map of field names to values for SEP-9 submission.
     /// </summary>
     /// <returns>Dictionary containing all non-null field values</returns>
-    public IReadOnlyDictionary<string, string> GetFields()
+    internal IReadOnlyDictionary<string, string> GetFields()
     {
         var result = new Dictionary<string, string>();
         if (LastName is not null)

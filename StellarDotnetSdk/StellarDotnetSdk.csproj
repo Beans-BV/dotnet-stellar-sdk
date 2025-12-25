@@ -58,4 +58,8 @@
         <Compile Remove="Operations\InflationOperation.cs"/>
         <Compile Remove="Operations\ManageOfferOperation.cs"/>
     </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="StellarDotnetSdk.Tests" />
+    </ItemGroup>
 </Project>

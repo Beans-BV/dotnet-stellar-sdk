@@ -83,7 +83,7 @@ public sealed record CardKycFields
     ///     Converts all card KYC fields to a map for SEP-9 submission.
     /// </summary>
     /// <returns>Dictionary containing all non-null field values</returns>
-    public IReadOnlyDictionary<string, string> GetFields()
+    internal IReadOnlyDictionary<string, string> GetFields()
     {
         var result = new Dictionary<string, string>();
         if (Number is not null)
