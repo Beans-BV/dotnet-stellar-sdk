@@ -9,6 +9,7 @@ using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Sep.Sep0010;
+using StellarDotnetSdk.Sep.Sep0010.Exceptions;
 using StellarDotnetSdk.Transactions;
 
 namespace StellarDotnetSdk.Tests.Sep.Sep0010;

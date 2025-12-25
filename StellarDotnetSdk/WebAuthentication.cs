@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Sep.Sep0010;
+using StellarDotnetSdk.Sep.Sep0010.Exceptions;
 using Transaction = StellarDotnetSdk.Transactions.Transaction;
 
 namespace StellarDotnetSdk;

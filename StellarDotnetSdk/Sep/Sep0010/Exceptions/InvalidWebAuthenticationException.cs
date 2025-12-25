@@ -1,6 +1,6 @@
 using System;
 
-namespace StellarDotnetSdk.Exceptions;
+namespace StellarDotnetSdk.Sep.Sep0010.Exceptions;
 
 /// <summary>
 ///     Exception thrown when WebAuthentication verification fails.
@@ -8,10 +8,6 @@ namespace StellarDotnetSdk.Exceptions;
 public class InvalidWebAuthenticationException : Exception
 {
     public InvalidWebAuthenticationException(string message) : base(message)
-    {
-    }
-
-    public InvalidWebAuthenticationException(string message, Exception inner) : base(message, inner)
     {
     }
 }
