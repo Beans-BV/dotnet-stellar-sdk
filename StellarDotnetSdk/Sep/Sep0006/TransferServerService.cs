@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using StellarDotnetSdk.Converters;
-using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Sep.Sep0001;
@@ -89,12 +89,14 @@ public class TransferServerService : IDisposable
     /// <param name="domain">The anchor's domain name (e.g., 'testanchor.stellar.org')</param>
     /// <param name="httpClient">Optional custom HTTP client for making requests</param>
     /// <param name="httpRequestHeaders">Optional custom headers to include in all requests</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>A configured TransferServerService instance ready to use</returns>
     /// <exception cref="TransferServerException">Thrown when the stellar.toml file cannot be fetched or TRANSFER_SERVER is not found</exception>
     public static async Task<TransferServerService> FromDomainAsync(
         string domain,
         HttpClient? httpClient = null,
-        Dictionary<string, string>? httpRequestHeaders = null)
+        Dictionary<string, string>? httpRequestHeaders = null,
+        CancellationToken cancellationToken = default)
     {
         var toml = await StellarToml.FromDomainAsync(domain, httpClient, httpRequestHeaders).ConfigureAwait(false);
         var transferServer = toml.GeneralInformation.TransferServer;
@@ -116,6 +118,7 @@ public class TransferServerService : IDisposable
     /// <param name="bearerToken">Bearer token in case the server requires it</param>
     /// <param name="httpClient">Optional custom HTTP client for making requests</param>
     /// <param name="httpRequestHeaders">Optional custom headers to include in all requests</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>A configured TransferServerService instance ready to use</returns>
     /// <exception cref="TransferServerException">Thrown when the stellar.toml file cannot be fetched or TRANSFER_SERVER is not found</exception>
     public static async Task<TransferServerService> FromDomainAsync(
@@ -123,7 +126,8 @@ public class TransferServerService : IDisposable
         HttpResilienceOptions? resilienceOptions,
         string? bearerToken = null,
         HttpClient? httpClient = null,
-        Dictionary<string, string>? httpRequestHeaders = null)
+        Dictionary<string, string>? httpRequestHeaders = null,
+        CancellationToken cancellationToken = default)
     {
         var toml = await StellarToml.FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient, httpRequestHeaders).ConfigureAwait(false);
         var transferServer = toml.GeneralInformation.TransferServer;
@@ -185,8 +189,9 @@ public class TransferServerService : IDisposable
     /// </summary>
     /// <param name="language">Language code for error messages using RFC 4646 (defaults to 'en')</param>
     /// <param name="jwt">JWT token from SEP-10 authentication</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>Information about supported assets and their requirements</returns>
-    public async Task<InfoResponse> InfoAsync(string? language = null, string? jwt = null)
+    public async Task<InfoResponse> InfoAsync(string? language = null, string? jwt = null, CancellationToken cancellationToken = default)
     {
         var queryParams = new Dictionary<string, string>();
         if (!string.IsNullOrWhiteSpace(language))
@@ -194,7 +199,7 @@ public class TransferServerService : IDisposable
             queryParams["lang"] = language;
         }
 
-        return await ExecuteGetAsync<InfoResponse>("info", queryParams, jwt).ConfigureAwait(false);
+        return await ExecuteGetAsync<InfoResponse>("info", queryParams, jwt, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -204,14 +209,15 @@ public class TransferServerService : IDisposable
     ///     of the Stellar asset (minus fees) to the user's Stellar account.
     /// </summary>
     /// <param name="request">Deposit request parameters</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>Deposit instructions including how to send the external asset</returns>
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
-    public async Task<DepositResponse> DepositAsync(DepositRequest request)
+    public async Task<DepositResponse> DepositAsync(DepositRequest request, CancellationToken cancellationToken = default)
     {
         var queryParams = BuildDepositQueryParams(request);
-        return await ExecuteGetAsync<DepositResponse>("deposit", queryParams, request.Jwt).ConfigureAwait(false);
+        return await ExecuteGetAsync<DepositResponse>("deposit", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -220,14 +226,15 @@ public class TransferServerService : IDisposable
     ///     asset type and receive a different asset type on Stellar.
     /// </summary>
     /// <param name="request">Deposit exchange request with source asset, destination asset, and amount</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>Deposit instructions for the cross-asset deposit</returns>
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
-    public async Task<DepositResponse> DepositExchangeAsync(DepositExchangeRequest request)
+    public async Task<DepositResponse> DepositExchangeAsync(DepositExchangeRequest request, CancellationToken cancellationToken = default)
     {
         var queryParams = BuildDepositExchangeQueryParams(request);
-        return await ExecuteGetAsync<DepositResponse>("deposit-exchange", queryParams, request.Jwt).ConfigureAwait(false);
+        return await ExecuteGetAsync<DepositResponse>("deposit-exchange", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -236,14 +243,15 @@ public class TransferServerService : IDisposable
     ///     equivalent off-chain asset via the anchor.
     /// </summary>
     /// <param name="request">Withdrawal request parameters</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>Withdrawal instructions including the Stellar account to send funds to</returns>
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
-    public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequest request)
+    public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequest request, CancellationToken cancellationToken = default)
     {
         var queryParams = BuildWithdrawQueryParams(request);
-        return await ExecuteGetAsync<WithdrawResponse>("withdraw", queryParams, request.Jwt).ConfigureAwait(false);
+        return await ExecuteGetAsync<WithdrawResponse>("withdraw", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -252,14 +260,15 @@ public class TransferServerService : IDisposable
     ///     asset type from Stellar and receive a different asset type off-chain.
     /// </summary>
     /// <param name="request">Withdrawal exchange request with source asset, destination asset, and amount</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>Withdrawal instructions for the cross-asset withdrawal</returns>
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
-    public async Task<WithdrawResponse> WithdrawExchangeAsync(WithdrawExchangeRequest request)
+    public async Task<WithdrawResponse> WithdrawExchangeAsync(WithdrawExchangeRequest request, CancellationToken cancellationToken = default)
     {
         var queryParams = BuildWithdrawExchangeQueryParams(request);
-        return await ExecuteGetAsync<WithdrawResponse>("withdraw-exchange", queryParams, request.Jwt).ConfigureAwait(false);
+        return await ExecuteGetAsync<WithdrawResponse>("withdraw-exchange", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -268,8 +277,9 @@ public class TransferServerService : IDisposable
     ///     a given deposit or withdrawal operation before initiating it.
     /// </summary>
     /// <param name="request">Fee request parameters</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>A FeeResponse containing the calculated fee amount</returns>
-    public async Task<FeeResponse> FeeAsync(FeeRequest request)
+    public async Task<FeeResponse> FeeAsync(FeeRequest request, CancellationToken cancellationToken = default)
     {
         var queryParams = new Dictionary<string, string>
         {
@@ -283,7 +293,7 @@ public class TransferServerService : IDisposable
             queryParams["type"] = request.Type;
         }
 
-        return await ExecuteGetAsync<FeeResponse>("fee", queryParams, request.Jwt).ConfigureAwait(false);
+        return await ExecuteGetAsync<FeeResponse>("fee", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -292,8 +302,9 @@ public class TransferServerService : IDisposable
     ///     while they process, as well as a history of past transactions.
     /// </summary>
     /// <param name="request">Transaction history request with account, asset code, and optional filters</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>List of transactions with their current status and details</returns>
-    public async Task<AnchorTransactionsResponse> TransactionsAsync(AnchorTransactionsRequest request)
+    public async Task<AnchorTransactionsResponse> TransactionsAsync(AnchorTransactionsRequest request, CancellationToken cancellationToken = default)
     {
         var queryParams = new Dictionary<string, string>
         {
@@ -326,7 +337,7 @@ public class TransferServerService : IDisposable
             queryParams["lang"] = request.Lang;
         }
 
-        return await ExecuteGetAsync<AnchorTransactionsResponse>("transactions", queryParams, request.Jwt).ConfigureAwait(false);
+        return await ExecuteGetAsync<AnchorTransactionsResponse>("transactions", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -335,8 +346,9 @@ public class TransferServerService : IDisposable
     ///     a specific deposit or withdrawal transaction.
     /// </summary>
     /// <param name="request">Transaction query request with at least one identifier</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>Current status and details of the requested transaction</returns>
-    public async Task<AnchorTransactionResponse> TransactionAsync(AnchorTransactionRequest request)
+    public async Task<AnchorTransactionResponse> TransactionAsync(AnchorTransactionRequest request, CancellationToken cancellationToken = default)
     {
         var queryParams = new Dictionary<string, string>();
 
@@ -360,7 +372,7 @@ public class TransferServerService : IDisposable
             queryParams["lang"] = request.Lang;
         }
 
-        return await ExecuteGetAsync<AnchorTransactionResponse>("transaction", queryParams, request.Jwt).ConfigureAwait(false);
+        return await ExecuteGetAsync<AnchorTransactionResponse>("transaction", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -369,9 +381,10 @@ public class TransferServerService : IDisposable
     ///     that the anchor has requested.
     /// </summary>
     /// <param name="request">Patch transaction request with transaction ID and fields to update</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>HTTP response indicating success or failure</returns>
     /// <exception cref="ArgumentException">Thrown when request.Fields is null</exception>
-    public async Task<HttpResponseMessage> PatchTransactionAsync(PatchTransactionRequest request)
+    public async Task<HttpResponseMessage> PatchTransactionAsync(PatchTransactionRequest request, CancellationToken cancellationToken = default)
     {
         if (request.Fields == null)
         {
@@ -388,7 +401,7 @@ public class TransferServerService : IDisposable
         var jsonContent = JsonSerializer.Serialize(transactionObject, JsonOptions.DefaultOptions);
         httpRequest.Content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
 
-        return await client.SendAsync(httpRequest).ConfigureAwait(false);
+        return await client.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
     }
 
     private Dictionary<string, string> BuildDepositQueryParams(DepositRequest request)
@@ -574,7 +587,7 @@ public class TransferServerService : IDisposable
         }
     }
 
-    private async Task<T> ExecuteGetAsync<T>(string endpoint, Dictionary<string, string>? queryParams = null, string? jwt = null) where T : Response
+    private async Task<T> ExecuteGetAsync<T>(string endpoint, Dictionary<string, string>? queryParams = null, string? jwt = null, CancellationToken cancellationToken = default) where T : Response
     {
         var uri = BuildUri(endpoint, queryParams);
         var client = GetOrCreateHttpClient();
@@ -582,12 +595,12 @@ public class TransferServerService : IDisposable
 
         AddHeaders(httpRequest, jwt);
 
-        var response = await client.SendAsync(httpRequest).ConfigureAwait(false);
+        var response = await client.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 
         // Handle 403 Forbidden responses specially to parse error types
         if ((int)response.StatusCode == 403)
         {
-            var errorContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var errorContent = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             HandleForbiddenResponse(errorContent);
         }
 
