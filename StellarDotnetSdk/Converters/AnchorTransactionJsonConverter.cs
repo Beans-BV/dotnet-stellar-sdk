@@ -49,20 +49,20 @@ public class AnchorTransactionJsonConverter : JsonConverter<AnchorTransaction>
             jsonWriter.Flush();
 
             var modifiedJson = System.Text.Encoding.UTF8.GetString(writer.ToArray());
-            var modifiedTransaction = JsonSerializer.Deserialize<AnchorTransaction>(modifiedJson, options);
-            if (modifiedTransaction is null)
+            var anchorTransaction = JsonSerializer.Deserialize<AnchorTransaction>(modifiedJson, options);
+            if (anchorTransaction is null)
             {
-                throw new JsonException("Deserialization of AnchorTransaction from modified JSON returned null.");
+                throw new JsonException("Failed to deserialize AnchorTransaction from modified JSON.");
             }
-            return modifiedTransaction;
+            return anchorTransaction;
         }
         // Normal deserialization
-        var transaction = JsonSerializer.Deserialize<AnchorTransaction>(root.GetRawText(), options);
-        if (transaction is null)
+        var normalAnchorTransaction = JsonSerializer.Deserialize<AnchorTransaction>(root.GetRawText(), options);
+        if (normalAnchorTransaction is null)
         {
-            throw new JsonException("Deserialization of AnchorTransaction from JSON returned null.");
+            throw new JsonException("Failed to deserialize AnchorTransaction.");
         }
-        return transaction;
+        return normalAnchorTransaction;
     }
 
     public override void Write(Utf8JsonWriter writer, AnchorTransaction value, JsonSerializerOptions options)
