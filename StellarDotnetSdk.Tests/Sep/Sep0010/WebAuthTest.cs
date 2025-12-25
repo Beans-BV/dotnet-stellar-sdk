@@ -959,8 +959,7 @@ WEB_AUTH_ENDPOINT = ""{AuthEndpoint}""
 
         Assert.AreEqual(500, ex.StatusCode);
         Assert.AreEqual("Challenge request failed with status code 500", ex.Message);
-        // The ResponseBody should contain the detailed error message, but in this case it's null
-        // The important thing is that the exception is thrown with status code 500
+        Assert.AreEqual("Failed to deserialize challenge response", ex.ResponseBody);
     }
 
     /// <summary>
