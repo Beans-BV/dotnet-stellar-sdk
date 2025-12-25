@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace StellarDotnetSdk.Sep.Sep0009;
 
 /// <summary>
@@ -18,5 +21,29 @@ public sealed record StandardKycFields
     ///     KYC fields for organizations (businesses).
     /// </summary>
     public OrganizationKycFields? Organization { get; init; }
+
+    /// <summary>
+    ///     Converts all card KYC fields to a map for SEP-9 submission.
+    /// </summary>
+    /// <returns>Dictionary containing all non-null field values</returns>
+    public IReadOnlyDictionary<string, string> GetFields()
+    {
+        var result = new Dictionary<string, string>();
+        if (NaturalPerson is not null)
+        {
+            foreach (var kvp in NaturalPerson.GetFields())
+            {
+                result[kvp.Key] = kvp.Value;
+            }
+        }
+        if (Organization is not null)
+        {
+            foreach (var kvp in Organization.GetFields())
+            {
+                result[kvp.Key] = kvp.Value;
+            }
+        }
+        return result;
+    }
 }
 
