@@ -155,18 +155,18 @@ public class WebAuth : IDisposable
     /// </summary>
     /// <param name="domain">The domain name (without protocol) hosting the stellar.toml file</param>
     /// <param name="network">The Stellar network (Network.Public() or Network.Test())</param>
-    /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration</param>
-    /// <param name="httpRequestHeaders">Optional custom HTTP headers for requests</param>
     /// <param name="resilienceOptions">Resilience options for HTTP requests</param>
     /// <param name="bearerToken">Optional bearer token for stellar.toml requests</param>
+    /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration</param>
+    /// <param name="httpRequestHeaders">Optional custom HTTP headers for requests</param>
     /// <returns>WebAuth instance configured with the domain's settings</returns>
     public static async Task<WebAuth> FromDomainAsync(
         string domain,
         Network network,
-        HttpClient? httpClient = null,
-        Dictionary<string, string>? httpRequestHeaders = null,
         HttpResilienceOptions? resilienceOptions = null,
-        string? bearerToken = null)
+        string? bearerToken = null,
+        HttpClient? httpClient = null,
+        Dictionary<string, string>? httpRequestHeaders = null)
     {
         var toml = await StellarToml.FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient, httpRequestHeaders)
             .ConfigureAwait(false);
