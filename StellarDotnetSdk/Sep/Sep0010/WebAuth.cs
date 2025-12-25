@@ -421,15 +421,6 @@ public class WebAuth : IDisposable
             throw new ChallengeValidationErrorInvalidMemoValue("missing memo");
         }
 
-        // Validate operations
-        // Note: This check is defensive code. Transaction.FromEnvelopeXdr throws ArgumentNullException
-        // for empty operations before this check can be reached, so this path is unreachable in practice.
-        // However, we keep it as defensive programming in case the SDK behavior changes.
-        if (transaction.Operations.Length == 0)
-        {
-            throw new ChallengeValidationException("invalid number of operations (0)");
-        }
-
         for (var i = 0; i < transaction.Operations.Length; i++)
         {
             var op = transaction.Operations[i];
