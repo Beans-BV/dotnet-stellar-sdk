@@ -434,7 +434,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
             WalletName = "Test Wallet",
             WalletUrl = "https://wallet.example.com",
             Lang = "en-US",
-            ClaimableBalanceSupported = "true",
+            ClaimableBalanceSupported = true,
             CustomerId = "customer-123",
         };
 

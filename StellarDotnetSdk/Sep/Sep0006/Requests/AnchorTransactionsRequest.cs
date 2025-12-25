@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace StellarDotnetSdk.Sep.Sep0006.Requests;
 
@@ -38,7 +39,7 @@ public sealed record AnchorTransactionsRequest
     ///     The possible values are deposit, deposit-exchange, withdrawal
     ///     and withdrawal-exchange.
     /// </summary>
-    public string? Kind { get; init; }
+    public IEnumerable<string>? Kinds { get; init; }
 
     /// <summary>
     ///     The response should contain transactions starting

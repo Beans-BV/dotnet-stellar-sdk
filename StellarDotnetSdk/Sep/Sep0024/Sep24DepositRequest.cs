@@ -96,7 +96,7 @@ public sealed record Sep24DepositRequest
     ///     Gets or sets a value indicating whether the client supports receiving deposit transactions as a claimable balance.
     ///     This is relevant for users without a trustline to the requested asset.
     /// </summary>
-    public string? ClaimableBalanceSupported { get; init; }
+    public bool? ClaimableBalanceSupported { get; init; }
 
     /// <summary>
     ///     Gets or sets the id of an off-chain account (managed by the anchor) associated with this user's Stellar account

@@ -583,9 +583,9 @@ public class InteractiveService : IDisposable
             fields["lang"] = request.Lang;
         }
 
-        if (!string.IsNullOrWhiteSpace(request.ClaimableBalanceSupported))
+        if (request.ClaimableBalanceSupported.HasValue)
         {
-            fields["claimable_balance_supported"] = request.ClaimableBalanceSupported;
+            fields["claimable_balance_supported"] = request.ClaimableBalanceSupported.Value.ToString().ToLowerInvariant();
         }
 
         if (!string.IsNullOrWhiteSpace(request.CustomerId))
