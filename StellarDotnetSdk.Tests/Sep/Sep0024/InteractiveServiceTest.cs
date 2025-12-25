@@ -1244,7 +1244,7 @@ TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
         using var httpClient = new HttpClient(fakeHttpMessageHandler.Object);
 
         // Act
-        var service = await InteractiveService.FromDomainAsync("example.com", httpClient);
+        var service = await InteractiveService.FromDomainAsync("example.com", httpClient: httpClient);
 
         // Assert
         Assert.IsNotNull(service);
@@ -1269,7 +1269,7 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         using var httpClient = new HttpClient(fakeHttpMessageHandler.Object);
 
         // Act
-        await InteractiveService.FromDomainAsync("example.com", httpClient);
+        await InteractiveService.FromDomainAsync("example.com", httpClient: httpClient);
     }
 
     #endregion
@@ -1541,11 +1541,6 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     public void Sep24DepositRequest_KycFields_CanBeSetAndRetrieved()
     {
         // Arrange
-        var request = new Sep24DepositRequest
-        {
-            Jwt = TestJwt,
-            AssetCode = "USD",
-        };
         var kycFields = new StandardKycFields
         {
             NaturalPerson = new NaturalPersonKycFields
@@ -1554,9 +1549,15 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
                 LastName = "Doe",
             },
         };
+        var request = new Sep24DepositRequest
+        {
+            Jwt = TestJwt,
+            AssetCode = "USD",
+            KycFields = kycFields,
+        };
 
         // Act
-        request.KycFields = kycFields;
+        // KycFields is set during initialization
 
         // Assert
         Assert.IsNotNull(request.KycFields);
@@ -1568,19 +1569,13 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     [TestMethod]
     public void Sep24DepositRequest_KycFields_CanBeSetToNull()
     {
-        // Arrange
+        // Arrange & Act
         var request = new Sep24DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
-            KycFields = new StandardKycFields
-            {
-                NaturalPerson = new NaturalPersonKycFields(),
-            },
+            KycFields = null,
         };
-
-        // Act
-        request.KycFields = null;
 
         // Assert
         Assert.IsNull(request.KycFields);
@@ -1590,19 +1585,20 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     public void Sep24DepositRequest_CustomFields_CanBeSetAndRetrieved()
     {
         // Arrange
-        var request = new Sep24DepositRequest
-        {
-            Jwt = TestJwt,
-            AssetCode = "USD",
-        };
         var customFields = new Dictionary<string, string>
         {
             { "custom_field_1", "value_1" },
             { "custom_field_2", "value_2" },
         };
+        var request = new Sep24DepositRequest
+        {
+            Jwt = TestJwt,
+            AssetCode = "USD",
+            CustomFields = customFields,
+        };
 
         // Act
-        request.CustomFields = customFields;
+        // CustomFields is set during initialization
 
         // Assert
         Assert.IsNotNull(request.CustomFields);
@@ -1614,19 +1610,13 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     [TestMethod]
     public void Sep24DepositRequest_CustomFields_CanBeSetToNull()
     {
-        // Arrange
+        // Arrange & Act
         var request = new Sep24DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
-            CustomFields = new Dictionary<string, string>
-            {
-                { "test", "value" },
-            },
+            CustomFields = null,
         };
-
-        // Act
-        request.CustomFields = null;
 
         // Assert
         Assert.IsNull(request.CustomFields);
@@ -1636,19 +1626,20 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     public void Sep24DepositRequest_CustomFiles_CanBeSetAndRetrieved()
     {
         // Arrange
-        var request = new Sep24DepositRequest
-        {
-            Jwt = TestJwt,
-            AssetCode = "USD",
-        };
         var customFiles = new Dictionary<string, byte[]>
         {
             { "file_1", new byte[] { 1, 2, 3 } },
             { "file_2", new byte[] { 4, 5, 6 } },
         };
+        var request = new Sep24DepositRequest
+        {
+            Jwt = TestJwt,
+            AssetCode = "USD",
+            CustomFiles = customFiles,
+        };
 
         // Act
-        request.CustomFiles = customFiles;
+        // CustomFiles is set during initialization
 
         // Assert
         Assert.IsNotNull(request.CustomFiles);
@@ -1660,19 +1651,13 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     [TestMethod]
     public void Sep24DepositRequest_CustomFiles_CanBeSetToNull()
     {
-        // Arrange
+        // Arrange & Act
         var request = new Sep24DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
-            CustomFiles = new Dictionary<string, byte[]>
-            {
-                { "test", new byte[] { 1, 2, 3 } },
-            },
+            CustomFiles = null,
         };
-
-        // Act
-        request.CustomFiles = null;
 
         // Assert
         Assert.IsNull(request.CustomFiles);
@@ -1682,11 +1667,6 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     public void Sep24WithdrawRequest_KycFields_CanBeSetAndRetrieved()
     {
         // Arrange
-        var request = new Sep24WithdrawRequest
-        {
-            Jwt = TestJwt,
-            AssetCode = "USD",
-        };
         var kycFields = new StandardKycFields
         {
             NaturalPerson = new NaturalPersonKycFields
@@ -1697,7 +1677,12 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         };
 
         // Act
-        request.KycFields = kycFields;
+        var request = new Sep24WithdrawRequest
+        {
+            Jwt = TestJwt,
+            AssetCode = "USD",
+            KycFields = kycFields,
+        };
 
         // Assert
         Assert.IsNotNull(request.KycFields);
@@ -1709,19 +1694,13 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     [TestMethod]
     public void Sep24WithdrawRequest_KycFields_CanBeSetToNull()
     {
-        // Arrange
+        // Arrange & Act
         var request = new Sep24WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
-            KycFields = new StandardKycFields
-            {
-                NaturalPerson = new NaturalPersonKycFields(),
-            },
+            KycFields = null,
         };
-
-        // Act
-        request.KycFields = null;
 
         // Assert
         Assert.IsNull(request.KycFields);
@@ -1731,11 +1710,6 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     public void Sep24WithdrawRequest_CustomFields_CanBeSetAndRetrieved()
     {
         // Arrange
-        var request = new Sep24WithdrawRequest
-        {
-            Jwt = TestJwt,
-            AssetCode = "USD",
-        };
         var customFields = new Dictionary<string, string>
         {
             { "withdraw_field_1", "withdraw_value_1" },
@@ -1743,7 +1717,12 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         };
 
         // Act
-        request.CustomFields = customFields;
+        var request = new Sep24WithdrawRequest
+        {
+            Jwt = TestJwt,
+            AssetCode = "USD",
+            CustomFields = customFields,
+        };
 
         // Assert
         Assert.IsNotNull(request.CustomFields);
@@ -1755,19 +1734,13 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     [TestMethod]
     public void Sep24WithdrawRequest_CustomFields_CanBeSetToNull()
     {
-        // Arrange
+        // Arrange & Act
         var request = new Sep24WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
-            CustomFields = new Dictionary<string, string>
-            {
-                { "test", "value" },
-            },
+            CustomFields = null,
         };
-
-        // Act
-        request.CustomFields = null;
 
         // Assert
         Assert.IsNull(request.CustomFields);
@@ -1777,11 +1750,6 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     public void Sep24WithdrawRequest_CustomFiles_CanBeSetAndRetrieved()
     {
         // Arrange
-        var request = new Sep24WithdrawRequest
-        {
-            Jwt = TestJwt,
-            AssetCode = "USD",
-        };
         var customFiles = new Dictionary<string, byte[]>
         {
             { "withdraw_file_1", new byte[] { 7, 8, 9 } },
@@ -1789,7 +1757,12 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
         };
 
         // Act
-        request.CustomFiles = customFiles;
+        var request = new Sep24WithdrawRequest
+        {
+            Jwt = TestJwt,
+            AssetCode = "USD",
+            CustomFiles = customFiles,
+        };
 
         // Assert
         Assert.IsNotNull(request.CustomFiles);
@@ -1801,19 +1774,13 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     [TestMethod]
     public void Sep24WithdrawRequest_CustomFiles_CanBeSetToNull()
     {
-        // Arrange
+        // Arrange & Act
         var request = new Sep24WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
-            CustomFiles = new Dictionary<string, byte[]>
-            {
-                { "test", new byte[] { 1, 2, 3 } },
-            },
+            CustomFiles = null,
         };
-
-        // Act
-        request.CustomFiles = null;
 
         // Assert
         Assert.IsNull(request.CustomFiles);
@@ -1822,28 +1789,26 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     [TestMethod]
     public void Sep24DepositRequest_AllKycProperties_CanBeSetTogether()
     {
-        // Arrange
+        // Arrange & Act
         var request = new Sep24DepositRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
-        };
-
-        // Act
-        request.KycFields = new StandardKycFields
-        {
-            NaturalPerson = new NaturalPersonKycFields
+            KycFields = new StandardKycFields
             {
-                FirstName = "John",
+                NaturalPerson = new NaturalPersonKycFields
+                {
+                    FirstName = "John",
+                },
             },
-        };
-        request.CustomFields = new Dictionary<string, string>
-        {
-            { "custom1", "value1" },
-        };
-        request.CustomFiles = new Dictionary<string, byte[]>
-        {
-            { "file1", new byte[] { 1, 2, 3 } },
+            CustomFields = new Dictionary<string, string>
+            {
+                { "custom1", "value1" },
+            },
+            CustomFiles = new Dictionary<string, byte[]>
+            {
+                { "file1", new byte[] { 1, 2, 3 } },
+            },
         };
 
         // Assert
@@ -1858,28 +1823,26 @@ NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
     [TestMethod]
     public void Sep24WithdrawRequest_AllKycProperties_CanBeSetTogether()
     {
-        // Arrange
+        // Arrange & Act
         var request = new Sep24WithdrawRequest
         {
             Jwt = TestJwt,
             AssetCode = "USD",
-        };
-
-        // Act
-        request.KycFields = new StandardKycFields
-        {
-            Organization = new OrganizationKycFields
+            KycFields = new StandardKycFields
             {
-                Name = "Test Org",
+                Organization = new OrganizationKycFields
+                {
+                    Name = "Test Org",
+                },
             },
-        };
-        request.CustomFields = new Dictionary<string, string>
-        {
-            { "custom1", "value1" },
-        };
-        request.CustomFiles = new Dictionary<string, byte[]>
-        {
-            { "file1", new byte[] { 1, 2, 3 } },
+            CustomFields = new Dictionary<string, string>
+            {
+                { "custom1", "value1" },
+            },
+            CustomFiles = new Dictionary<string, byte[]>
+            {
+                { "file1", new byte[] { 1, 2, 3 } },
+            },
         };
 
         // Assert

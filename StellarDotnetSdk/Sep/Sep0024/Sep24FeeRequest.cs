@@ -9,33 +9,33 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///     Authentication: Required if feeEndpointInfo.authenticationRequired is true in
 ///     the /info response. Provide a SEP-10 JWT token in the Jwt property.
 /// </summary>
-public class Sep24FeeRequest
+public sealed record Sep24FeeRequest
 {
     /// <summary>
     ///     Gets or sets the kind of operation (deposit or withdraw).
     /// </summary>
-    public string Operation { get; set; } = null!;
+    public required string Operation { get; init; }
 
     /// <summary>
     ///     Gets or sets the type of deposit or withdrawal (SEPA, bank_account, cash, etc.).
     ///     Optional. Used when the anchor supports multiple transfer methods for an asset.
     /// </summary>
-    public string? Type { get; set; }
+    public string? Type { get; init; }
 
     /// <summary>
     ///     Gets or sets the asset code.
     /// </summary>
-    public string AssetCode { get; set; } = null!;
+    public required string AssetCode { get; init; }
 
     /// <summary>
     ///     Gets or sets the amount of the asset that will be deposited/withdrawn.
     /// </summary>
-    public decimal Amount { get; set; }
+    public required decimal Amount { get; init; }
 
     /// <summary>
     ///     Gets or sets the JWT token previously received from the anchor via the SEP-10 authentication flow.
     ///     Required if the fee endpoint requires authentication.
     /// </summary>
-    public string? Jwt { get; set; }
+    public string? Jwt { get; init; }
 }
 
