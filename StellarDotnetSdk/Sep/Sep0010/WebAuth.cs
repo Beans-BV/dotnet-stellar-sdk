@@ -117,6 +117,7 @@ public class WebAuth : IDisposable
     /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration</param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers for all requests</param>
     /// <param name="gracePeriod">Optional grace period in seconds for time bounds validation (default: 300)</param>
+    /// <param name="resilienceOptions">Optional resilience options for HTTP requests (retries, timeouts). Ignored if httpClient is provided.</param>
     public WebAuth(
         string authEndpoint,
         Network network,
@@ -124,7 +125,8 @@ public class WebAuth : IDisposable
         string serverHomeDomain,
         HttpClient? httpClient = null,
         Dictionary<string, string>? httpRequestHeaders = null,
-        int? gracePeriod = null)
+        int? gracePeriod = null,
+        HttpResilienceOptions? resilienceOptions = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(authEndpoint);
         ArgumentNullException.ThrowIfNull(network);
@@ -145,7 +147,7 @@ public class WebAuth : IDisposable
         }
         else
         {
-            _httpClient = new DefaultStellarSdkHttpClient();
+            _httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
             _internalHttpClient = true;
         }
     }
@@ -155,8 +157,8 @@ public class WebAuth : IDisposable
     /// </summary>
     /// <param name="domain">The domain name (without protocol) hosting the stellar.toml file</param>
     /// <param name="network">The Stellar network (Network.Public() or Network.Test())</param>
-    /// <param name="resilienceOptions">Resilience options for HTTP requests</param>
-    /// <param name="bearerToken">Optional bearer token for stellar.toml requests</param>
+    /// <param name="resilienceOptions">Resilience options for HTTP requests (applies to stellar.toml fetch and all WebAuth requests)</param>
+    /// <param name="bearerToken">Optional bearer token for stellar.toml fetch only (not used for WebAuth requests)</param>
     /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration</param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers for requests</param>
     /// <returns>WebAuth instance configured with the domain's settings</returns>
@@ -187,7 +189,8 @@ public class WebAuth : IDisposable
             toml.GeneralInformation.SigningKey,
             domain,
             httpClient,
-            httpRequestHeaders);
+            httpRequestHeaders,
+            resilienceOptions: resilienceOptions);
     }
 
     /// <summary>
@@ -424,7 +427,6 @@ public class WebAuth : IDisposable
         for (var i = 0; i < transaction.Operations.Length; i++)
         {
             var op = transaction.Operations[i];
-            
             if (op is not ManageDataOperation manageDataOp)
             {
                 throw new ChallengeValidationErrorInvalidOperationType($"Invalid type of operation {i}");
