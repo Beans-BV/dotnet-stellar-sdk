@@ -51,6 +51,15 @@ public sealed class DepositAsset
     public decimal? MaxAmount { get; init; }
 
     /// <summary>
+    ///     A list of methods supported by the Anchor for transferring or settling assets.
+    ///     For deposits, this specifies the methods available to transfer funds from the
+    ///     client's account to the anchor, typically listing options such as WIRE or ACH
+    ///     for fiat settlements.
+    /// </summary>
+    [JsonPropertyName("funding_methods")]
+    public IReadOnlyList<string>? FundingMethods { get; init; }
+
+    /// <summary>
     ///     (Deprecated) Accepting personally identifiable information through
     ///     request parameters is a security risk due to web server request logging.
     ///     KYC information should be supplied to the Anchor via SEP-12.

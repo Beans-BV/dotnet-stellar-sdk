@@ -9,7 +9,24 @@
       "amount_in": "18.34",
       "amount_out": "18.24",
       "amount_fee": "0.1",
-      "started_at": "2017-03-20T17:05:32Z"
+      "started_at": "2017-03-20T17:05:32Z",
+      "updated_at": "2017-03-20T17:10:32Z",
+      "more_info_url": "https://anchor.example.com/transaction/82fhs729f63dh0v4",
+      "deposit_memo": "memo123",
+      "deposit_memo_type": "text",
+      "claimable_balance_id": "00000000178826fbfe339e1afa5c46263572cfc1dccb9d82b193e8912492f10",
+      "external_extra": "SWIFT123",
+      "external_extra_text": "Bank of America",
+      "instructions": {
+        "organization.bank_number": {
+          "value": "121122676",
+          "description": "US bank routing number"
+        },
+        "organization.bank_account_number": {
+          "value": "13719713158835300",
+          "description": "US bank account number"
+        }
+      }
     },
     {
       "id": "52fys79f63dh3v2",
@@ -23,7 +40,9 @@
       "amount_out_asset": "stellar:USDC:GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
       "amount_fee": "0.1",
       "amount_fee_asset": "iso4217:BRL",
-      "started_at": "2021-06-11T17:05:32Z"
+      "started_at": "2021-06-11T17:05:32Z",
+      "quote_id": "quote-12345",
+      "message": "Exchange transaction in progress"
     },
     {
       "id": "82fhs729f63dh0v4",
@@ -61,10 +80,12 @@
       "amount_fee": "5",
       "started_at": "2017-03-20T17:00:02Z",
       "completed_at": "2017-03-20T17:09:58Z",
+      "updated_at": "2017-03-20T17:09:58Z",
       "stellar_transaction_id": "17a670bc424ff5ce3b386dbfaae9990b66a2a37b4fbe51547e8794962a3f9e6a",
       "external_transaction_id": "1238234",
       "from": "AJ3845SAD",
       "to": "GBITQ4YAFKD2372TNAMNHQ4JV5VS3BYKRK4QQR6FOLAR7XAHC3RVGVVJ",
+      "refunded": false,
       "refunds": {
         "amount_refunded": "10",
         "amount_fee": "5",
@@ -86,6 +107,7 @@
       "amount_out": null,
       "amount_fee": null,
       "started_at": "2017-03-20T17:00:02Z",
+      "user_action_required_by": "2017-03-27T17:00:02Z",
       "required_info_message": "We were unable to send funds to the provided bank account. Bank error: 'Account does not exist'. Please provide the correct bank account address.",
       "required_info_updates": {
         "transaction": {

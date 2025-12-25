@@ -36,6 +36,13 @@ public sealed record DepositExchangeRequest
     public required string Account { get; init; }
 
     /// <summary>
+    ///     A method supported by the Anchor for transferring or settling assets.
+    ///     Must match one of the values specified in the corresponding /info response.
+    ///     This field is required to help the Anchor identify the necessary KYC information to collect.
+    /// </summary>
+    public string? FundingMethod { get; init; }
+
+    /// <summary>
     ///     The id returned from a SEP-38 POST /quote response.
     /// </summary>
     public string? QuoteId { get; init; }
@@ -74,7 +81,8 @@ public sealed record DepositExchangeRequest
     public string? WalletUrl { get; init; }
 
     /// <summary>
-    ///     Defaults to en if not specified. Language code specified using RFC 4646.
+    ///     Defaults to en if not specified or if the specified language is not supported.
+    ///     Language code specified using RFC 4646.
     /// </summary>
     public string? Lang { get; init; }
 

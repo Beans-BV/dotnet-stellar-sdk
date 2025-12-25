@@ -2,6 +2,14 @@
   "account_id": "GCIBUCGPOHWMMMFPFTDWBSVHQRT4DIBJ7AD6BZJYDITBK2LCVBYW7HUQ",
   "memo_type": "id",
   "memo": "123",
-  "id": "9421871e-0623-4356-b7b5-5996da122f3e"
+  "id": "9421871e-0623-4356-b7b5-5996da122f3e",
+  "eta": 3600,
+  "min_amount": 0.1,
+  "max_amount": 10000.0,
+  "fee_fixed": 0.5,
+  "fee_percent": 1.5,
+  "extra_info": {
+    "message": "Please ensure your bank account details are correct"
+  }
 }
 

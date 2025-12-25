@@ -11,7 +11,19 @@
     "started_at": "2017-03-20T17:05:32Z",
     "fee_details": {
       "total": "0.1",
-      "asset": "iso4217:USD"
+      "asset": "iso4217:USD",
+      "details": [
+        {
+          "name": "Service fee",
+          "amount": "0.05",
+          "description": "Standard processing fee"
+        },
+        {
+          "name": "Network fee",
+          "amount": "0.05",
+          "description": "Blockchain network transaction fee"
+        }
+      ]
     }
   }
 }

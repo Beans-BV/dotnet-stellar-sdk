@@ -432,8 +432,12 @@ public class TransferServerService : IDisposable
 
         AddHeaders(httpRequest, request.Jwt);
 
-        var transactionObject = new Dictionary<string, object>(request.Fields);
-        var jsonContent = JsonSerializer.Serialize(transactionObject, JsonOptions.DefaultOptions);
+        // SEP-6 spec requires fields to be wrapped in a "transaction" object
+        var payload = new Dictionary<string, object>
+        {
+            { "transaction", request.Fields },
+        };
+        var jsonContent = JsonSerializer.Serialize(payload, JsonOptions.DefaultOptions);
         httpRequest.Content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
         var response = await client.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
@@ -457,6 +461,7 @@ public class TransferServerService : IDisposable
             { "account", request.Account },
         };
 
+        AddIfNotNull(queryParams, "funding_method", request.FundingMethod);
         AddIfNotNull(queryParams, "memo_type", request.MemoType);
         AddIfNotNull(queryParams, "memo", request.Memo);
         AddIfNotNull(queryParams, "email_address", request.EmailAddress);
@@ -492,6 +497,7 @@ public class TransferServerService : IDisposable
             { "account", request.Account },
         };
 
+        AddIfNotNull(queryParams, "funding_method", request.FundingMethod);
         AddIfNotNull(queryParams, "quote_id", request.QuoteId);
         AddIfNotNull(queryParams, "memo_type", request.MemoType);
         AddIfNotNull(queryParams, "memo", request.Memo);
@@ -522,9 +528,10 @@ public class TransferServerService : IDisposable
         var queryParams = new Dictionary<string, string>
         {
             { "asset_code", request.AssetCode },
-            { "type", request.Type },
         };
 
+        AddIfNotNull(queryParams, "funding_method", request.FundingMethod);
+        AddIfNotNull(queryParams, "type", request.Type);
         AddIfNotNull(queryParams, "dest", request.Dest);
         AddIfNotNull(queryParams, "dest_extra", request.DestExtra);
         AddIfNotNull(queryParams, "account", request.Account);
@@ -559,9 +566,10 @@ public class TransferServerService : IDisposable
             { "source_asset", request.SourceAsset },
             { "destination_asset", request.DestinationAsset },
             { "amount", request.Amount.ToString() },
-            { "type", request.Type },
         };
 
+        AddIfNotNull(queryParams, "funding_method", request.FundingMethod);
+        AddIfNotNull(queryParams, "type", request.Type);
         AddIfNotNull(queryParams, "dest", request.Dest);
         AddIfNotNull(queryParams, "dest_extra", request.DestExtra);
         AddIfNotNull(queryParams, "quote_id", request.QuoteId);
@@ -573,7 +581,6 @@ public class TransferServerService : IDisposable
         AddIfNotNull(queryParams, "lang", request.Lang);
         AddIfNotNull(queryParams, "on_change_callback", request.OnChangeCallback);
         AddIfNotNull(queryParams, "country_code", request.CountryCode);
-        AddIfNotNull(queryParams, "claimable_balance_supported", request.ClaimableBalanceSupported);
         AddIfNotNull(queryParams, "refund_memo", request.RefundMemo);
         AddIfNotNull(queryParams, "refund_memo_type", request.RefundMemoType);
         AddIfNotNull(queryParams, "customer_id", request.CustomerId);

@@ -42,7 +42,14 @@ public sealed record DepositRequest
     public string? EmailAddress { get; init; }
 
     /// <summary>
-    ///     Type of deposit. If the anchor supports multiple deposit
+    ///     A method supported by the Anchor for transferring or settling assets.
+    ///     Must match one of the values specified in the corresponding /info response.
+    ///     This field is required to help the Anchor identify the necessary KYC information to collect.
+    /// </summary>
+    public string? FundingMethod { get; init; }
+
+    /// <summary>
+    ///     (Deprecated in favor of FundingMethod) Type of deposit. If the anchor supports multiple deposit
     ///     methods (e.g. SEPA or SWIFT), the wallet should specify type.
     /// </summary>
     public string? Type { get; init; }
@@ -61,7 +68,8 @@ public sealed record DepositRequest
     public string? WalletUrl { get; init; }
 
     /// <summary>
-    ///     Defaults to en. Language code specified using ISO 639-1.
+    ///     Defaults to en if not specified or if the specified language is not supported.
+    ///     Language code specified using RFC 4646.
     /// </summary>
     public string? Lang { get; init; }
 

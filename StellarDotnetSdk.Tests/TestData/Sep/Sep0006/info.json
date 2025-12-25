@@ -5,6 +5,9 @@
       "authentication_required": true,
       "min_amount": 0.1,
       "max_amount": 1000,
+      "fee_fixed": 0.25,
+      "fee_percent": 0.5,
+      "funding_methods": ["SEPA", "SWIFT", "cash"],
       "fields": {
         "email_address": {
           "description": "your email address for transaction status updates",
@@ -39,6 +42,7 @@
     "USD": {
       "enabled": false,
       "authentication_required": true,
+      "funding_methods": ["SEPA", "SWIFT"],
       "fields": {
         "email_address": {
           "description": "your email address for transaction status updates",
@@ -71,6 +75,9 @@
       "authentication_required": true,
       "min_amount": 0.1,
       "max_amount": 1000,
+      "fee_fixed": 0.5,
+      "fee_percent": 1.5,
+      "funding_methods": ["bank_account", "cash"],
       "types": {
         "bank_account": {
           "fields": {
@@ -113,6 +120,9 @@
     "USD": {
       "enabled": false,
       "authentication_required": true,
+      "min_amount": 0.1,
+      "max_amount": 1000,
+      "funding_methods": ["bank_account", "cash"],
       "types": {
         "bank_account": {
           "fields": {
@@ -150,6 +160,7 @@
   },
   "fee": {
     "enabled": false,
+    "authentication_required": true,
     "description": "Fees vary from 3 to 7 percent based on the the assets transacted and method by which funds are delivered to or collected by the anchor."
   },
   "transactions": {
