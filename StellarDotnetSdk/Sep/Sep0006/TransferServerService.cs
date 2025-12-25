@@ -98,7 +98,7 @@ public class TransferServerService : IDisposable
         Dictionary<string, string>? httpRequestHeaders = null,
         CancellationToken cancellationToken = default)
     {
-        var toml = await StellarToml.FromDomainAsync(domain, httpClient, httpRequestHeaders).ConfigureAwait(false);
+        var toml = await StellarToml.FromDomainAsync(domain, httpClient, httpRequestHeaders, cancellationToken).ConfigureAwait(false);
         var transferServer = toml.GeneralInformation.TransferServer;
 
         if (string.IsNullOrWhiteSpace(transferServer))
@@ -129,7 +129,7 @@ public class TransferServerService : IDisposable
         Dictionary<string, string>? httpRequestHeaders = null,
         CancellationToken cancellationToken = default)
     {
-        var toml = await StellarToml.FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient, httpRequestHeaders).ConfigureAwait(false);
+        var toml = await StellarToml.FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient, httpRequestHeaders, cancellationToken).ConfigureAwait(false);
         var transferServer = toml.GeneralInformation.TransferServer;
 
         if (string.IsNullOrWhiteSpace(transferServer))
@@ -631,13 +631,17 @@ public class TransferServerService : IDisposable
         return await responseHandler.HandleResponse(response).ConfigureAwait(false);
     }
 
-    private void HandleForbiddenResponse(string errorJson)
+    private static void HandleForbiddenResponse(string errorJson)
     {
         if (string.IsNullOrWhiteSpace(errorJson))
         {
             return;
         }
 
+        // Try to parse the error type from the JSON response.
+        // If parsing fails or the type is unknown, return and let ResponseHandler
+        // handle it as a generic HTTP 403 error.
+        string? type;
         try
         {
             using var document = JsonDocument.Parse(errorJson);
@@ -645,50 +649,48 @@ public class TransferServerService : IDisposable
             {
                 return;
             }
+            type = typeProperty.GetString();
+        }
+        catch (JsonException)
+        {
+            // Malformed JSON - fall back to generic error handling
+            return;
+        }
 
-            var type = typeProperty.GetString();
-            if (string.IsNullOrWhiteSpace(type))
-            {
-                return;
-            }
+        if (string.IsNullOrWhiteSpace(type))
+        {
+            return;
+        }
 
-            if (type == "non_interactive_customer_info_needed")
+        // Handle SEP-6 specific error types as defined in:
+        // https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md
+        switch (type)
+        {
+            case "non_interactive_customer_info_needed":
             {
                 var response = JsonSerializer.Deserialize<CustomerInformationNeededResponse>(errorJson, JsonOptions.DefaultOptions);
                 if (response != null)
                 {
                     throw new CustomerInformationNeededException(response);
                 }
+                break;
             }
-            else if (type == "customer_info_status")
+            case "customer_info_status":
             {
                 var response = JsonSerializer.Deserialize<CustomerInformationStatusResponse>(errorJson, JsonOptions.DefaultOptions);
                 if (response != null)
                 {
                     throw new CustomerInformationStatusException(response);
                 }
+                break;
             }
-            else if (type == "authentication_required")
+            case "authentication_required":
             {
                 throw new AuthenticationRequiredException();
             }
         }
-        catch (CustomerInformationNeededException)
-        {
-            throw;
-        }
-        catch (CustomerInformationStatusException)
-        {
-            throw;
-        }
-        catch (AuthenticationRequiredException)
-        {
-            throw;
-        }
-        catch
-        {
-            // If parsing fails, let the original exception propagate
-        }
+
+        // Unknown type - fall back to generic error handling in ResponseHandler
     }
 }
 
