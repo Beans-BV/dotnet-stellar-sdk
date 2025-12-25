@@ -10,7 +10,7 @@ namespace StellarDotnetSdk.Sep.Sep0006.Responses;
 ///     operations where users deposit one asset (e.g., USD) and receive a different
 ///     asset (e.g., USDC) on Stellar.
 /// </summary>
-public sealed class DepositExchangeAsset
+public sealed record DepositExchangeAsset
 {
     /// <summary>
     ///     True if SEP-6 deposit-exchange for this asset is supported.

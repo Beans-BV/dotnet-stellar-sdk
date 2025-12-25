@@ -6,7 +6,7 @@ namespace StellarDotnetSdk.Sep.Sep0006.Responses;
 ///     Individual fee component within a transaction's fee breakdown.
 ///     Represents a single named fee that contributes to the total transaction fee.
 /// </summary>
-public sealed class FeeDetailsDetails
+public sealed record FeeDetailsDetails
 {
     /// <summary>
     ///     The name of the fee, for example ACH fee, Brazilian conciliation fee,

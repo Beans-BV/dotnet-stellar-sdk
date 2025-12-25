@@ -9,7 +9,7 @@ namespace StellarDotnetSdk.Sep.Sep0006.Responses;
 ///     in which the fee is charged, and optionally a detailed breakdown of individual
 ///     fee components that make up the total.
 /// </summary>
-public sealed class FeeDetails
+public sealed record FeeDetails
 {
     /// <summary>
     ///     The total amount of fee applied.

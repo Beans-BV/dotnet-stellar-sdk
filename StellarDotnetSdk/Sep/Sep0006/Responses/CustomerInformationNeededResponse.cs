@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Sep.Sep0006.Responses;
 ///     When an anchor needs more KYC information before processing a transaction,
 ///     this response specifies which fields must be provided via SEP-12.
 /// </summary>
-public sealed class CustomerInformationNeededResponse
+public sealed record CustomerInformationNeededResponse
 {
     /// <summary>
     ///     A list of field names that need to be transmitted via SEP-12 for the transaction to proceed.

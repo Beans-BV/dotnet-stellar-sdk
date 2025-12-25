@@ -7,7 +7,7 @@ namespace StellarDotnetSdk.Sep.Sep0006.Responses;
 ///     Container for required info updates in a transaction.
 ///     The SEP-6 API wraps the fields in a "transaction" object.
 /// </summary>
-public sealed class RequiredInfoUpdates
+public sealed record RequiredInfoUpdates
 {
     /// <summary>
     ///     The fields that require updates, keyed by field name.

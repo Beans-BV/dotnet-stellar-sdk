@@ -10,7 +10,7 @@ namespace StellarDotnetSdk.Sep.Sep0006.Responses;
 ///     operations where users send one asset (e.g., USDC) on Stellar and receive a
 ///     different asset (e.g., USD) off-chain.
 /// </summary>
-public sealed class WithdrawExchangeAsset
+public sealed record WithdrawExchangeAsset
 {
     /// <summary>
     ///     True if SEP-6 withdrawal-exchange for this asset is supported.

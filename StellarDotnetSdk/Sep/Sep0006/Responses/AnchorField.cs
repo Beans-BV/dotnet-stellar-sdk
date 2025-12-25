@@ -9,7 +9,7 @@ namespace StellarDotnetSdk.Sep.Sep0006.Responses;
 ///     withdrawals beyond the standard parameters. Each field includes a
 ///     description and whether it's optional.
 /// </summary>
-public sealed class AnchorField
+public sealed record AnchorField
 {
     /// <summary>
     ///     Description of field to show to user.

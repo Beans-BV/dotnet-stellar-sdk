@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Sep.Sep0006.Responses;
 ///     containing account numbers, routing codes, or other payment identifiers
 ///     needed to send funds to the anchor.
 /// </summary>
-public sealed class DepositInstruction
+public sealed record DepositInstruction
 {
     /// <summary>
     ///     The value of the field.

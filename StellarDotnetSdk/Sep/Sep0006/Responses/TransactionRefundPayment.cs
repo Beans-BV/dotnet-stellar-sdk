@@ -5,7 +5,7 @@ namespace StellarDotnetSdk.Sep.Sep0006.Responses;
 /// <summary>
 ///     Part of the transaction result representing a refund payment.
 /// </summary>
-public sealed class TransactionRefundPayment
+public sealed record TransactionRefundPayment
 {
     /// <summary>
     ///     The payment ID that can be used to identify the refund payment.

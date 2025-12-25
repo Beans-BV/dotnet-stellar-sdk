@@ -9,7 +9,7 @@ namespace StellarDotnetSdk.Sep.Sep0006.Responses;
 ///     including whether it's enabled, authentication requirements, fee structure,
 ///     transaction limits, and supported withdrawal types with their required fields.
 /// </summary>
-public sealed class WithdrawAsset
+public sealed record WithdrawAsset
 {
     /// <summary>
     ///     True if SEP-6 withdrawal for this asset is supported.

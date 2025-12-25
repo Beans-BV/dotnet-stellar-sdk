@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Sep.Sep0006.Responses;
 ///     or has been rejected, this response provides the current status and
 ///     additional details.
 /// </summary>
-public sealed class CustomerInformationStatusResponse
+public sealed record CustomerInformationStatusResponse
 {
     /// <summary>
     ///     Status of customer information processing. One of: pending, denied.

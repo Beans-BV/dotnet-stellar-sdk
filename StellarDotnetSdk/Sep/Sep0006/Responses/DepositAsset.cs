@@ -9,7 +9,7 @@ namespace StellarDotnetSdk.Sep.Sep0006.Responses;
 ///     including whether it's enabled, authentication requirements, fee structure,
 ///     transaction limits, and any additional fields required.
 /// </summary>
-public sealed class DepositAsset
+public sealed record DepositAsset
 {
     /// <summary>
     ///     True if SEP-6 deposit for this asset is supported.

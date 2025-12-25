@@ -6,7 +6,7 @@ namespace StellarDotnetSdk.Sep.Sep0006.Responses;
 /// <summary>
 ///     Part of the transaction result representing refund information.
 /// </summary>
-public sealed class TransactionRefunds
+public sealed record TransactionRefunds
 {
     /// <summary>
     ///     The total amount refunded to the user, in units of amount_in_asset.
