@@ -157,7 +157,7 @@ public class StellarToml
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
 
-            if ((int)response.StatusCode >= 300)
+            if (!response.IsSuccessStatusCode)
             {
                 throw new StellarTomlException(
                     $"Stellar toml not found, response status code {(int)response.StatusCode}");
@@ -257,7 +257,7 @@ public class StellarToml
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
 
-            if ((int)response.StatusCode >= 300)
+            if (!response.IsSuccessStatusCode)
             {
                 throw new StellarTomlException(
                     $"Currency toml not found, response status code {(int)response.StatusCode}");

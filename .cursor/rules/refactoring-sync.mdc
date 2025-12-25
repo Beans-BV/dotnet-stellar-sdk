@@ -18,3 +18,21 @@ When refactoring, update ALL related artifacts:
 **For renames**: Search for string references in comments/docs too.
 
 **For pattern changes**: Update examples in cursor rules.
+
+## Large Refactorings: Use Scripts
+
+**For big renames/refactorings** (class names, namespaces, method names across many files):
+1. **Write a script** (`find`/`sed`, PowerShell, or `dotnet` CLI) to perform bulk replacements
+2. **Execute the script** to apply changes efficiently
+3. **Verify the output** by reviewing a sample of changed files and running tests
+4. **Clean up** any edge cases manually if needed
+
+**Why scripts?** Much faster and token-efficient than manual file-by-file edits. Saves time and reduces API costs.
+
+**Example approach**:
+- Use `find` + `sed` for cross-platform text replacements
+- Use PowerShell for Windows-specific refactorings
+- Use `dotnet` CLI tools when available (e.g., `dotnet format`)
+- Always review script output before committing
+
+**After script execution**: Double-check critical files, run build/test, verify no regressions.
