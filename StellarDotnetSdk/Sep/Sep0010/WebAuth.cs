@@ -512,8 +512,19 @@ public class WebAuth : IDisposable
         // Validate server signature - need to access envelope for signatures
         var bytes = Convert.FromBase64String(challengeTransaction);
         var envelopeXdr = TransactionEnvelope.Decode(new XdrDataInputStream(bytes));
-        var signatures = envelopeXdr.V1!.Signatures.ToArray();
-        
+
+        if (envelopeXdr.Discriminant.InnerValue != EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX)
+        {
+            throw new ChallengeValidationErrorInvalidSignature(
+                $"Invalid transaction envelope, unexpected envelope type: {envelopeXdr.Discriminant.InnerValue}");
+        }
+        if (envelopeXdr.V1 == null)
+        {
+            throw new ChallengeValidationErrorInvalidSignature(
+                "Invalid transaction envelope, missing V1 transaction");
+        }
+
+        var signatures = envelopeXdr.V1.Signatures.ToArray();
         if (signatures.Length != 1)
         {
             throw new ChallengeValidationErrorInvalidSignature(
