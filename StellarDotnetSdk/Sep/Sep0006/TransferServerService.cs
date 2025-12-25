@@ -338,7 +338,11 @@ public class TransferServerService : IDisposable
             queryParams["lang"] = request.Lang;
         }
 
-        return await ExecuteGetAsync<AnchorTransactionsResponse>("transactions", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
+        return await ExecuteGetAsync<AnchorTransactionsResponse>(
+            "transactions",
+            queryParams,
+            request.Jwt,
+            cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -611,7 +615,11 @@ public class TransferServerService : IDisposable
         }
     }
 
-    private async Task<T> ExecuteGetAsync<T>(string endpoint, Dictionary<string, string>? queryParams = null, string? jwt = null, CancellationToken cancellationToken = default) where T : Response
+    private async Task<T> ExecuteGetAsync<T>(
+        string endpoint,
+        Dictionary<string, string>? queryParams = null,
+        string? jwt = null,
+        CancellationToken cancellationToken = default) where T : Response
     {
         var uri = BuildUri(endpoint, queryParams);
         var client = GetOrCreateHttpClient();

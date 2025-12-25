@@ -17,4 +17,3 @@ public sealed class AnchorTransactionsResponse : Response
     [JsonPropertyName("transactions")]
     public required IReadOnlyList<AnchorTransaction> Transactions { get; init; }
 }
-

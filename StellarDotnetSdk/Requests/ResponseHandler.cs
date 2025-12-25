@@ -38,7 +38,6 @@ public class ResponseHandler<T> where T : class
         }
 
         var responseObj = JsonSerializer.Deserialize<T>(content, JsonOptions.DefaultOptions);
-
         if (responseObj is Response responseInstance)
         {
             responseInstance.SetHeaders(response.Headers);
