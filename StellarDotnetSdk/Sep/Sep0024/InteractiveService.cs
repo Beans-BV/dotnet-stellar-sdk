@@ -1,18 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Converters;
-using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Sep.Sep0001;
-using StellarDotnetSdk.Sep.Sep0009;
 
 namespace StellarDotnetSdk.Sep.Sep0024;
 
@@ -30,12 +27,30 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///     6. Server processes the transaction and updates status
 ///     7. Client polls the transaction status endpoint for updates
 ///     See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md">SEP-0024</a>
+///     <para>
+///         <b>IDisposable and HttpClient ownership</b>
+///     </para>
+///     <para>
+///         <see cref="InteractiveService" /> implements <see cref="IDisposable" /> because it may create and own an internal
+///         <see cref="HttpClient" /> instance. When you let <see cref="InteractiveService" /> create its own client (for
+///         example, by calling the constructor without passing an <see cref="HttpClient" />), you should either wrap
+///         <see cref="InteractiveService" /> in a <c>using</c> block or explicitly call <see cref="Dispose" /> when you are
+///         finished with it so the internal client is cleaned up.
+///     </para>
+///     <para>
+///         If you pass an external <see cref="HttpClient" /> into the constructor or
+///         <see cref="FromDomainAsync(string, HttpClient?, Dictionary{string, string}?, CancellationToken)" />,
+///         that client remains owned by the caller. In that case, disposing <see cref="InteractiveService" /> will not dispose
+///         the external client, and you are responsible for managing the <see cref="HttpClient" /> lifecycle yourself
+///         (for example, by reusing a single long-lived instance for performance and resilience).
+///     </para>
 /// </summary>
-public class InteractiveService
+public class InteractiveService : IDisposable
 {
     private readonly string _transferServiceAddress;
     private readonly HttpClient _httpClient;
     private readonly Dictionary<string, string>? _httpRequestHeaders;
+    private readonly bool _internalHttpClient;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="InteractiveService" /> class with explicit transfer server address.
@@ -49,8 +64,17 @@ public class InteractiveService
         Dictionary<string, string>? httpRequestHeaders = null)
     {
         _transferServiceAddress = transferServiceAddress ?? throw new ArgumentNullException(nameof(transferServiceAddress));
-        _httpClient = httpClient ?? new DefaultStellarSdkHttpClient();
         _httpRequestHeaders = httpRequestHeaders;
+        if (httpClient != null)
+        {
+            _httpClient = httpClient;
+            _internalHttpClient = false;
+        }
+        else
+        {
+            _httpClient = new DefaultStellarSdkHttpClient();
+            _internalHttpClient = true;
+        }
     }
 
     /// <summary>
@@ -59,15 +83,18 @@ public class InteractiveService
     /// <param name="domain">The domain hosting the stellar.toml file.</param>
     /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration.</param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in requests.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>An instance of InteractiveService configured with the transfer server URL.</returns>
     /// <exception cref="StellarTomlException">Thrown when the stellar.toml file cannot be loaded or parsed.</exception>
     /// <exception cref="ArgumentException">Thrown when TRANSFER_SERVER_SEP0024 is not available for the domain.</exception>
     public static async Task<InteractiveService> FromDomainAsync(
         string domain,
         HttpClient? httpClient = null,
-        Dictionary<string, string>? httpRequestHeaders = null)
+        Dictionary<string, string>? httpRequestHeaders = null,
+        CancellationToken cancellationToken = default)
     {
-        var toml = await StellarToml.FromDomainAsync(domain, httpClient: httpClient, httpRequestHeaders: httpRequestHeaders);
+        var toml = await StellarToml.FromDomainAsync(domain, httpClient: httpClient, httpRequestHeaders: httpRequestHeaders)
+            .ConfigureAwait(false);
         var addr = toml.GeneralInformation.TransferServerSep24;
         if (string.IsNullOrWhiteSpace(addr))
         {
@@ -81,9 +108,10 @@ public class InteractiveService
     ///     Gets the anchor's basic info about what their TRANSFER_SERVER_SEP0024 supports to wallets and clients.
     /// </summary>
     /// <param name="lang">Language code specified using ISO 639-1. Description fields in the response should be in this language. Defaults to en.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>Anchor capabilities information.</returns>
     /// <exception cref="HttpRequestException">Thrown when the HTTP request fails.</exception>
-    public async Task<Sep24InfoResponse> InfoAsync(string? lang = null)
+    public async Task<Sep24InfoResponse> InfoAsync(string? lang = null, CancellationToken cancellationToken = default)
     {
         var uri = AppendEndpointToUrl(_transferServiceAddress, "info");
         var queryParams = new Dictionary<string, string>();
@@ -96,8 +124,8 @@ public class InteractiveService
         var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
         AddCustomHeaders(request);
 
-        var response = await _httpClient.SendAsync(request);
-        var responseString = await response.Content.ReadAsStringAsync();
+        var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        var responseString = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -115,11 +143,12 @@ public class InteractiveService
     ///     then an anchor will not implement this endpoint.
     /// </summary>
     /// <param name="request">The fee request containing operation type, asset code, and amount.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>The calculated fee response.</returns>
     /// <exception cref="Sep24AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
     /// <exception cref="Sep24RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
     /// <exception cref="HttpRequestException">Thrown when the HTTP request fails.</exception>
-    public async Task<Sep24FeeResponse> FeeAsync(Sep24FeeRequest request)
+    public async Task<Sep24FeeResponse> FeeAsync(Sep24FeeRequest request, CancellationToken cancellationToken = default)
     {
         if (request == null)
         {
@@ -148,8 +177,8 @@ public class InteractiveService
             httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", request.Jwt);
         }
 
-        var response = await _httpClient.SendAsync(httpRequest);
-        var responseString = await response.Content.ReadAsStringAsync();
+        var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+        var responseString = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
         if (response.StatusCode == HttpStatusCode.Forbidden)
         {
@@ -175,11 +204,12 @@ public class InteractiveService
     ///     window to be able to deposit.
     /// </summary>
     /// <param name="request">The deposit request containing asset code, account, and optional parameters.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>Interactive response containing URL and transaction ID.</returns>
     /// <exception cref="Sep24AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
     /// <exception cref="Sep24RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
     /// <exception cref="HttpRequestException">Thrown when the HTTP request fails.</exception>
-    public async Task<Sep24InteractiveResponse> DepositAsync(Sep24DepositRequest request)
+    public async Task<Sep24InteractiveResponse> DepositAsync(Sep24DepositRequest request, CancellationToken cancellationToken = default)
     {
         if (request == null)
         {
@@ -207,8 +237,8 @@ public class InteractiveService
         AddCustomHeaders(httpRequest);
         httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", request.Jwt);
 
-        var response = await _httpClient.SendAsync(httpRequest);
-        var responseString = await response.Content.ReadAsStringAsync();
+        var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+        var responseString = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
         if (response.StatusCode == HttpStatusCode.Forbidden)
         {
@@ -230,11 +260,12 @@ public class InteractiveService
     ///     It also lets the anchor specify the url for the interactive webapp to continue with the anchor's side of the withdraw.
     /// </summary>
     /// <param name="request">The withdrawal request containing asset code, account, and optional parameters.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>Interactive response containing URL and transaction ID.</returns>
     /// <exception cref="Sep24AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
     /// <exception cref="Sep24RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
     /// <exception cref="HttpRequestException">Thrown when the HTTP request fails.</exception>
-    public async Task<Sep24InteractiveResponse> WithdrawAsync(Sep24WithdrawRequest request)
+    public async Task<Sep24InteractiveResponse> WithdrawAsync(Sep24WithdrawRequest request, CancellationToken cancellationToken = default)
     {
         if (request == null)
         {
@@ -262,8 +293,8 @@ public class InteractiveService
         AddCustomHeaders(httpRequest);
         httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", request.Jwt);
 
-        var response = await _httpClient.SendAsync(httpRequest);
-        var responseString = await response.Content.ReadAsStringAsync();
+        var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+        var responseString = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
         if (response.StatusCode == HttpStatusCode.Forbidden)
         {
@@ -286,11 +317,12 @@ public class InteractiveService
     ///     It returns a list of transactions from the account encoded in the authenticated JWT.
     /// </summary>
     /// <param name="request">The transactions request containing asset code and optional filters.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>List of transactions matching the request criteria.</returns>
     /// <exception cref="Sep24AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
     /// <exception cref="Sep24RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
     /// <exception cref="HttpRequestException">Thrown when the HTTP request fails.</exception>
-    public async Task<Sep24TransactionsResponse> TransactionsAsync(Sep24TransactionsRequest request)
+    public async Task<Sep24TransactionsResponse> TransactionsAsync(Sep24TransactionsRequest request, CancellationToken cancellationToken = default)
     {
         if (request == null)
         {
@@ -333,8 +365,8 @@ public class InteractiveService
         AddCustomHeaders(httpRequest);
         httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", request.Jwt);
 
-        var response = await _httpClient.SendAsync(httpRequest);
-        var responseString = await response.Content.ReadAsStringAsync();
+        var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+        var responseString = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
         if (response.StatusCode == HttpStatusCode.Forbidden)
         {
@@ -357,12 +389,13 @@ public class InteractiveService
     ///     that resulted in the transaction requested using this endpoint.
     /// </summary>
     /// <param name="request">The transaction request containing transaction identifier.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>Detailed transaction information.</returns>
     /// <exception cref="Sep24TransactionNotFoundException">Thrown when the server could not find the transaction.</exception>
     /// <exception cref="Sep24AuthenticationRequiredException">Thrown when the server responds with an authentication_required error.</exception>
     /// <exception cref="Sep24RequestException">Thrown when the server responds with an error and corresponding error message.</exception>
     /// <exception cref="HttpRequestException">Thrown when the HTTP request fails.</exception>
-    public async Task<Sep24TransactionResponse> TransactionAsync(Sep24TransactionRequest request)
+    public async Task<Sep24TransactionResponse> TransactionAsync(Sep24TransactionRequest request, CancellationToken cancellationToken = default)
     {
         if (request == null)
         {
@@ -397,8 +430,8 @@ public class InteractiveService
         AddCustomHeaders(httpRequest);
         httpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", request.Jwt);
 
-        var response = await _httpClient.SendAsync(httpRequest);
-        var responseString = await response.Content.ReadAsStringAsync();
+        var response = await _httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
+        var responseString = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
@@ -713,6 +746,17 @@ public class InteractiveService
         }
 
         throw new HttpRequestException($"Request failed with status code {(int)statusCode}: {responseBody}");
+    }
+
+    /// <summary>
+    ///     Disposes the internal HttpClient if it was created by this instance.
+    /// </summary>
+    public void Dispose()
+    {
+        if (_internalHttpClient)
+        {
+            _httpClient.Dispose();
+        }
     }
 }
 
