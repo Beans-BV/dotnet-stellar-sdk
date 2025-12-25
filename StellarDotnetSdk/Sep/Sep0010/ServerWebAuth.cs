@@ -164,7 +164,7 @@ public static class ServerWebAuth
 
         var transaction = transactionBuilder.Build();
 
-        transaction.Sign(serverKeypair, network);
+        transaction.Sign(serverKeypair, network!);
 
         return transaction;
     }
@@ -322,7 +322,7 @@ public static class ServerWebAuth
         var clientSigningKey = GetClientSigningKey(transaction);
 
         var allVerifiedSigners =
-            VerifyTransactionSignatures(transaction, signers, serverKeypair, clientSigningKey, network);
+            VerifyTransactionSignatures(transaction, signers, serverKeypair, clientSigningKey, network!);
 
         ValidateSignatures(allVerifiedSigners, serverKeypair, clientSigningKey, transaction.Signatures.Count);
 

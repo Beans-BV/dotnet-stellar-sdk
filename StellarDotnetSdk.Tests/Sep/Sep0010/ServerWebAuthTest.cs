@@ -155,12 +155,15 @@ public class ServerWebAuthTest
         transaction.Sign(_clientKeypair);
 
         // Act & Assert
-        Assert.IsTrue(ServerWebAuth.VerifyChallengeTransaction(
+        var signers = ServerWebAuth.VerifyChallengeTransactionSigners(
             transaction,
             _serverKeypair.AccountId,
+            [_clientKeypair.AccountId],
             HomeDomain,
             WebAuthDomain,
-            now: now));
+            now: now);
+        Assert.AreEqual(1, signers.Length);
+        Assert.AreEqual(_clientKeypair.AccountId, signers[0]);
     }
 
     /// <summary>
@@ -182,7 +185,7 @@ public class ServerWebAuthTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            ServerWebAuth.VerifyChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -212,7 +215,7 @@ public class ServerWebAuthTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            ServerWebAuth.VerifyChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 KeyPair.Random().AccountId,
                 HomeDomain,
@@ -240,7 +243,7 @@ public class ServerWebAuthTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            ServerWebAuth.VerifyChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -267,7 +270,7 @@ public class ServerWebAuthTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            ServerWebAuth.VerifyChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -294,7 +297,7 @@ public class ServerWebAuthTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            ServerWebAuth.VerifyChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -325,7 +328,7 @@ public class ServerWebAuthTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            ServerWebAuth.VerifyChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -359,7 +362,7 @@ public class ServerWebAuthTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            ServerWebAuth.VerifyChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 _serverKeypair.AccountId,
                 HomeDomain,
@@ -370,7 +373,7 @@ public class ServerWebAuthTest
     }
 
     /// <summary>
-    ///     Verifies that VerifyChallengeTransaction throws InvalidWebAuthenticationException when transaction is not signed by
+    ///     Verifies that VerifyChallengeTransactionSigners throws InvalidWebAuthenticationException when transaction is not signed by
     ///     client.
     /// </summary>
     [TestMethod]
@@ -389,9 +392,10 @@ public class ServerWebAuthTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            ServerWebAuth.VerifyChallengeTransaction(
+            ServerWebAuth.VerifyChallengeTransactionSigners(
                 transaction,
                 _serverKeypair.AccountId,
+                [_clientKeypair.AccountId],
                 HomeDomain,
                 WebAuthDomain,
                 now: now);
@@ -399,7 +403,7 @@ public class ServerWebAuthTest
     }
 
     /// <summary>
-    ///     Verifies that VerifyChallengeTransaction throws InvalidWebAuthenticationException when transaction is signed by
+    ///     Verifies that VerifyChallengeTransactionSigners throws InvalidWebAuthenticationException when transaction is signed by
     ///     client on different network.
     /// </summary>
     [TestMethod]
@@ -423,9 +427,10 @@ public class ServerWebAuthTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            ServerWebAuth.VerifyChallengeTransaction(
+            ServerWebAuth.VerifyChallengeTransactionSigners(
                 transaction,
                 _serverKeypair.AccountId,
+                [_clientKeypair.AccountId],
                 HomeDomain,
                 WebAuthDomain,
                 now: now,
@@ -451,7 +456,7 @@ public class ServerWebAuthTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            ServerWebAuth.VerifyChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 serverKeypair.AccountId,
                 HomeDomain,
@@ -478,7 +483,7 @@ public class ServerWebAuthTest
         // Act & Assert
         Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
-            ServerWebAuth.VerifyChallengeTransaction(
+            ServerWebAuth.ReadChallengeTransaction(
                 transaction,
                 serverKeypair.AccountId,
                 HomeDomain,
@@ -1947,7 +1952,7 @@ public class ServerWebAuthTest
         var ex = Assert.ThrowsException<InvalidWebAuthenticationException>(() =>
         {
             ServerWebAuth.ReadChallengeTransaction(
-                null,
+                null!,
                 _serverKeypair.AccountId,
                 HomeDomain,
                 WebAuthDomain);
@@ -2174,6 +2179,170 @@ public class ServerWebAuthTest
 
         // Assert
         Assert.AreEqual(_clientKeypair.AccountId, result);
+    }
+
+    /// <summary>
+    ///     Verifies the full SEP-10 authentication cycle:
+    ///     1. Server builds challenge transaction
+    ///     2. Client validates challenge transaction
+    ///     3. Client signs challenge transaction
+    ///     4. Server verifies signed challenge transaction
+    /// </summary>
+    [TestMethod]
+    public void FullSep10Cycle_ServerBuildsClientValidatesSignsServerVerifies_Succeeds()
+    {
+        // Arrange
+        var now = DateTimeOffset.Now;
+        var authEndpoint = $"https://{WebAuthDomain}/auth";
+
+        // Step 1: Server builds challenge transaction
+        var challengeTransaction = ServerWebAuth.BuildChallengeTransaction(
+            _serverKeypair,
+            _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain,
+            validFrom: now);
+        var challengeXdr = challengeTransaction.ToEnvelopeXdrBase64();
+
+        // Step 2: Client validates challenge transaction
+        var clientWebAuth = new ClientWebAuth(
+            authEndpoint,
+            _testnet,
+            _serverKeypair.AccountId,
+            HomeDomain);
+        clientWebAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId);
+
+        // Step 3: Client signs challenge transaction
+        var signedXdr = clientWebAuth.SignTransaction(challengeXdr, [_clientKeypair]);
+
+        // Step 4: Server verifies signed challenge transaction
+        var signedTransaction = Transaction.FromEnvelopeXdr(signedXdr);
+        var signers = ServerWebAuth.VerifyChallengeTransactionSigners(
+            signedTransaction,
+            _serverKeypair.AccountId,
+            [_clientKeypair.AccountId],
+            HomeDomain,
+            WebAuthDomain,
+            network: _testnet,
+            now: now);
+
+        // Assert: Verification should succeed and return the client signer
+        Assert.AreEqual(1, signers.Length);
+        Assert.AreEqual(_clientKeypair.AccountId, signers[0]);
+    }
+
+    /// <summary>
+    ///     Verifies the full SEP-10 authentication cycle with client domain:
+    ///     1. Server builds challenge transaction with client domain
+    ///     2. Client validates challenge transaction
+    ///     3. Client signs challenge transaction
+    ///     4. Server verifies signed challenge transaction
+    /// </summary>
+    [TestMethod]
+    public void FullSep10Cycle_WithClientDomain_Succeeds()
+    {
+        // Arrange
+        var now = DateTimeOffset.Now;
+        var authEndpoint = $"https://{WebAuthDomain}/auth";
+        var clientDomainKeypair = KeyPair.Random();
+
+        // Step 1: Server builds challenge transaction with client domain
+        var challengeTransaction = ServerWebAuth.BuildChallengeTransaction(
+            _serverKeypair,
+            _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain,
+            validFrom: now,
+            clientDomain: ClientDomain,
+            clientKeypair: clientDomainKeypair);
+        var challengeXdr = challengeTransaction.ToEnvelopeXdrBase64();
+
+        // Step 2: Client validates challenge transaction
+        var clientWebAuth = new ClientWebAuth(
+            authEndpoint,
+            _testnet,
+            _serverKeypair.AccountId,
+            HomeDomain);
+        clientWebAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId, clientDomainKeypair.AccountId);
+
+        // Step 3: Client signs challenge transaction (both client and client domain keypairs must sign)
+        var signedXdr = clientWebAuth.SignTransaction(challengeXdr, [_clientKeypair, clientDomainKeypair]);
+
+        // Step 4: Server verifies signed challenge transaction
+        var signedTransaction = Transaction.FromEnvelopeXdr(signedXdr);
+        var signers = ServerWebAuth.VerifyChallengeTransactionSigners(
+            signedTransaction,
+            _serverKeypair.AccountId,
+            [_clientKeypair.AccountId, clientDomainKeypair.AccountId],
+            HomeDomain,
+            WebAuthDomain,
+            network: _testnet,
+            now: now);
+
+        // Assert: Verification should succeed and return both signers (excluding server)
+        Assert.AreEqual(2, signers.Length);
+        Assert.IsTrue(signers.Contains(_clientKeypair.AccountId));
+        Assert.IsTrue(signers.Contains(clientDomainKeypair.AccountId));
+    }
+
+    /// <summary>
+    ///     Verifies the full SEP-10 authentication cycle using threshold verification:
+    ///     1. Server builds challenge transaction
+    ///     2. Client validates challenge transaction
+    ///     3. Client signs challenge transaction with multiple signers
+    ///     4. Server verifies signed challenge transaction using threshold verification
+    /// </summary>
+    [TestMethod]
+    public void FullSep10Cycle_WithThresholdVerification_Succeeds()
+    {
+        // Arrange
+        var now = DateTimeOffset.Now;
+        var authEndpoint = $"https://{WebAuthDomain}/auth";
+        var client2Keypair = KeyPair.Random();
+
+        // Step 1: Server builds challenge transaction
+        var challengeTransaction = ServerWebAuth.BuildChallengeTransaction(
+            _serverKeypair,
+            _clientKeypair.AccountId,
+            HomeDomain,
+            WebAuthDomain,
+            validFrom: now);
+        var challengeXdr = challengeTransaction.ToEnvelopeXdrBase64();
+
+        // Step 2: Client validates challenge transaction
+        var clientWebAuth = new ClientWebAuth(
+            authEndpoint,
+            _testnet,
+            _serverKeypair.AccountId,
+            HomeDomain);
+        clientWebAuth.ValidateChallenge(challengeXdr, _clientKeypair.AccountId);
+
+        // Step 3: Client signs challenge transaction with multiple signers
+        var signedXdr = clientWebAuth.SignTransaction(challengeXdr, [_clientKeypair, client2Keypair]);
+
+        // Step 4: Server verifies signed challenge transaction using threshold verification
+        var signedTransaction = Transaction.FromEnvelopeXdr(signedXdr);
+        var signerSummary = new Dictionary<string, int>
+        {
+            { _clientKeypair.AccountId, 5 },
+            { client2Keypair.AccountId, 3 }
+        };
+        const int threshold = 7; // Both signers together (5+3=8) meet threshold
+
+        var signers = ServerWebAuth.VerifyChallengeTransactionThreshold(
+            signedTransaction,
+            _serverKeypair.AccountId,
+            threshold,
+            signerSummary,
+            HomeDomain,
+            WebAuthDomain,
+            network: _testnet,
+            now: now);
+
+        // Assert: Verification should succeed and return both signers (excluding server)
+        Assert.AreEqual(2, signers.Count);
+        Assert.IsTrue(signers.Contains(_clientKeypair.AccountId));
+        Assert.IsTrue(signers.Contains(client2Keypair.AccountId));
     }
 
     private Transaction _BuildAndSignChallengeTransaction(
