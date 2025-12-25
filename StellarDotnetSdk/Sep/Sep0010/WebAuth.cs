@@ -204,7 +204,7 @@ public class WebAuth : IDisposable
     public async Task<string> JwtTokenAsync(
         string clientAccountId,
         ICollection<KeyPair> signers,
-        int? memo = null,
+        ulong? memo = null,
         string? homeDomain = null,
         string? clientDomain = null,
         KeyPair? clientDomainAccountKeyPair = null,
@@ -282,7 +282,7 @@ public class WebAuth : IDisposable
     /// <returns>The base64-encoded XDR transaction envelope</returns>
     public async Task<string> GetChallengeAsync(
         string clientAccountId,
-        int? memo = null,
+        ulong? memo = null,
         string? homeDomain = null,
         string? clientDomain = null)
     {
@@ -307,7 +307,7 @@ public class WebAuth : IDisposable
     /// <returns>ChallengeResponse with transaction XDR and optional network_passphrase</returns>
     public async Task<ChallengeResponse> GetChallengeResponseAsync(
         string accountId,
-        int? memo = null,
+        ulong? memo = null,
         string? homeDomain = null,
         string? clientDomain = null)
     {
@@ -385,7 +385,7 @@ public class WebAuth : IDisposable
         string userAccountId,
         string? clientDomainAccountId = null,
         int? timeBoundsGracePeriod = null,
-        int? memo = null)
+        ulong? memo = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(challengeTransaction);
         ArgumentException.ThrowIfNullOrEmpty(userAccountId);
@@ -407,7 +407,7 @@ public class WebAuth : IDisposable
                 throw new ChallengeValidationErrorMemoAndMuxedAccount("Memo and muxed account (M...) found");
             }
 
-            if (memo != null && memoId.IdValue != (ulong)memo)
+            if (memo != null && memoId.IdValue != memo)
             {
                 throw new ChallengeValidationErrorInvalidMemoValue("invalid memo value");
             }
