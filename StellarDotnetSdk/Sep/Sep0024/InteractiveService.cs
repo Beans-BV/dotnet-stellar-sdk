@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -150,7 +151,7 @@ public class InteractiveService
         var response = await _httpClient.SendAsync(httpRequest);
         var responseString = await response.Content.ReadAsStringAsync();
 
-        if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+        if (response.StatusCode == HttpStatusCode.Forbidden)
         {
             HandleForbiddenResponse(responseString);
         }
@@ -209,7 +210,7 @@ public class InteractiveService
         var response = await _httpClient.SendAsync(httpRequest);
         var responseString = await response.Content.ReadAsStringAsync();
 
-        if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+        if (response.StatusCode == HttpStatusCode.Forbidden)
         {
             HandleForbiddenResponse(responseString);
         }
@@ -264,7 +265,7 @@ public class InteractiveService
         var response = await _httpClient.SendAsync(httpRequest);
         var responseString = await response.Content.ReadAsStringAsync();
 
-        if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+        if (response.StatusCode == HttpStatusCode.Forbidden)
         {
             HandleForbiddenResponse(responseString);
         }
@@ -335,7 +336,7 @@ public class InteractiveService
         var response = await _httpClient.SendAsync(httpRequest);
         var responseString = await response.Content.ReadAsStringAsync();
 
-        if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+        if (response.StatusCode == HttpStatusCode.Forbidden)
         {
             HandleForbiddenResponse(responseString);
         }
@@ -399,12 +400,12 @@ public class InteractiveService
         var response = await _httpClient.SendAsync(httpRequest);
         var responseString = await response.Content.ReadAsStringAsync();
 
-        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        if (response.StatusCode == HttpStatusCode.NotFound)
         {
             throw new Sep24TransactionNotFoundException();
         }
 
-        if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+        if (response.StatusCode == HttpStatusCode.Forbidden)
         {
             HandleForbiddenResponse(responseString);
         }
@@ -695,7 +696,7 @@ public class InteractiveService
         }
     }
 
-    private static void HandleErrorResponse(System.Net.HttpStatusCode statusCode, string responseBody)
+    private static void HandleErrorResponse(HttpStatusCode statusCode, string responseBody)
     {
         try
         {

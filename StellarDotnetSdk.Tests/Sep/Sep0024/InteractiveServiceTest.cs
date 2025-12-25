@@ -32,20 +32,25 @@ public class InteractiveServiceTest
     [TestInitialize]
     public void Setup()
     {
-        _infoResponseJson = File.ReadAllText(Utils.GetTestDataAbsolutePath("info-response.json"));
-        _feeResponseJson = File.ReadAllText(Utils.GetTestDataAbsolutePath("fee-response.json"));
-        _interactiveResponseJson = File.ReadAllText(Utils.GetTestDataAbsolutePath("interactive-response.json"));
-        _transactionResponseJson = File.ReadAllText(Utils.GetTestDataAbsolutePath("transaction-response.json"));
-        _transactionsResponseJson = File.ReadAllText(Utils.GetTestDataAbsolutePath("transactions-response.json"));
-        _transactionWithRefundJson = File.ReadAllText(Utils.GetTestDataAbsolutePath("transaction-with-refund.json"));
-        _errorResponseJson = File.ReadAllText(Utils.GetTestDataAbsolutePath("error-response.json"));
-        _authRequiredResponseJson = File.ReadAllText(Utils.GetTestDataAbsolutePath("authentication-required-response.json"));
+        _infoResponseJson = ReadTestDataFile("info-response.json");
+        _feeResponseJson = ReadTestDataFile("fee-response.json");
+        _interactiveResponseJson = ReadTestDataFile("interactive-response.json");
+        _transactionResponseJson = ReadTestDataFile("transaction-response.json");
+        _transactionsResponseJson = ReadTestDataFile("transactions-response.json");
+        _transactionWithRefundJson = ReadTestDataFile("transaction-with-refund.json");
+        _errorResponseJson = ReadTestDataFile("error-response.json");
+        _authRequiredResponseJson = ReadTestDataFile("authentication-required-response.json");
 
         _stellarTomlContent = @"
 VERSION=""2.0.0""
 NETWORK_PASSPHRASE=""Public Global Stellar Network ; September 2015""
 TRANSFER_SERVER_SEP0024=""https://api.example.com/sep24""
 ";
+    }
+
+    private static string ReadTestDataFile(string filename)
+    {
+        return File.ReadAllText(Utils.GetTestDataAbsolutePath(filename));
     }
 
     private static HttpClient CreateMockHttpClient(string content, HttpStatusCode statusCode = HttpStatusCode.OK)
