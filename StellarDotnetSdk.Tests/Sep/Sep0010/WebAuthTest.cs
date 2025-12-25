@@ -38,10 +38,10 @@ public class WebAuthTest
     private const string AuthEndpoint = "https://thisisatest.sandbox.anchor.webauth.com/auth";
     private const string MuxedAccountId = "MAAAAAAAAAAAJURAAB2X52XFQP6FBXLGT6LWOOWMEXWHEWBDVRZ7V5WH34Y22MPFBHUHY";
 
-    private Network _testnet = null!;
-    private KeyPair _clientKeypair = null!;
-    private KeyPair _serverKeypair = null!;
-    private string _serverSigningKey = null!;
+    private Network _testnet = Network.Test();
+    private KeyPair _clientKeypair = KeyPair.Random();
+    private KeyPair _serverKeypair = KeyPair.Random();
+    private string _serverSigningKey = string.Empty;
 
     [TestInitialize]
     public void Initialize()
