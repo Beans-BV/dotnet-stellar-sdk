@@ -28,6 +28,14 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///     7. Client polls the transaction status endpoint for updates
 ///     See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md">SEP-0024</a>
 ///     <para>
+///         <strong>HttpClient Usage:</strong> For production code, it is strongly recommended to pass a shared
+///         <see cref="HttpClient" /> instance to the constructor or <see cref="FromDomainAsync" />. If no HttpClient
+///         is provided, a new instance will be created internally. While <see cref="InteractiveService" /> implements
+///         <see cref="IDisposable" /> to clean up internal clients, reusing a single HttpClient instance
+///         (or using <see cref="System.Net.Http.IHttpClientFactory" />) is more efficient and avoids socket exhaustion
+///         under load.
+///     </para>
+///     <para>
 ///         <b>IDisposable and HttpClient ownership</b>
 ///     </para>
 ///     <para>
@@ -67,7 +75,11 @@ public class InteractiveService : IDisposable
     ///     Initializes a new instance of the <see cref="InteractiveService" /> class with explicit transfer server address.
     /// </summary>
     /// <param name="transferServiceAddress">The transfer server SEP-24 URL.</param>
-    /// <param name="httpClient">Optional custom HTTP client for testing or proxy configuration.</param>
+    /// <param name="httpClient">
+    ///     Optional HTTP client instance. <strong>Recommended:</strong> Pass a shared HttpClient instance
+    ///     for production use to avoid creating a new client per instance. If null, a new HttpClient will be
+    ///     created internally and disposed when this instance is disposed.
+    /// </param>
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in requests.</param>
     /// <param name="resilienceOptions">
     ///     Optional resilience options for HTTP requests (retries, timeouts). Ignored if
