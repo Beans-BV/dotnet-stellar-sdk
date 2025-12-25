@@ -32,4 +32,3 @@ public sealed record FeeRequest
     /// </summary>
     public string? Jwt { get; init; }
 }
-

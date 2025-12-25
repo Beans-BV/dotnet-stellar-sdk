@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,13 +29,13 @@ namespace StellarDotnetSdk.Sep.Sep0006;
 /// </summary>
 public class TransferServerService : IDisposable
 {
-    private readonly string _transferServiceAddress;
+    private readonly string? _bearerToken;
     private readonly HttpClient? _httpClient;
     private readonly Dictionary<string, string>? _httpRequestHeaders;
     private readonly HttpResilienceOptions? _resilienceOptions;
-    private readonly string? _bearerToken;
-    private HttpClient? _internalHttpClient;
+    private readonly string _transferServiceAddress;
     private bool _disposed;
+    private HttpClient? _internalHttpClient;
 
     /// <summary>
     ///     Creates a TransferServerService instance with the specified transfer server address.
@@ -50,7 +52,8 @@ public class TransferServerService : IDisposable
     {
         if (string.IsNullOrWhiteSpace(transferServiceAddress))
         {
-            throw new ArgumentException("Transfer service address cannot be null or empty", nameof(transferServiceAddress));
+            throw new ArgumentException("Transfer service address cannot be null or empty",
+                nameof(transferServiceAddress));
         }
 
         _transferServiceAddress = transferServiceAddress.TrimEnd('/');
@@ -73,13 +76,34 @@ public class TransferServerService : IDisposable
     {
         if (string.IsNullOrWhiteSpace(transferServiceAddress))
         {
-            throw new ArgumentException("Transfer service address cannot be null or empty", nameof(transferServiceAddress));
+            throw new ArgumentException("Transfer service address cannot be null or empty",
+                nameof(transferServiceAddress));
         }
 
         _transferServiceAddress = transferServiceAddress.TrimEnd('/');
         _resilienceOptions = resilienceOptions;
         _bearerToken = bearerToken;
         _httpRequestHeaders = httpRequestHeaders;
+    }
+
+    /// <summary>
+    ///     Disposes the internal HttpClient if one was created.
+    ///     Does not dispose externally provided HttpClient instances.
+    /// </summary>
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (_internalHttpClient != null)
+        {
+            _internalHttpClient.Dispose();
+            _internalHttpClient = null;
+        }
+
+        _disposed = true;
     }
 
     /// <summary>
@@ -92,14 +116,18 @@ public class TransferServerService : IDisposable
     /// <param name="httpRequestHeaders">Optional custom headers to include in all requests</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>A configured TransferServerService instance ready to use</returns>
-    /// <exception cref="TransferServerException">Thrown when the stellar.toml file cannot be fetched or TRANSFER_SERVER is not found</exception>
+    /// <exception cref="TransferServerException">
+    ///     Thrown when the stellar.toml file cannot be fetched or TRANSFER_SERVER is not
+    ///     found
+    /// </exception>
     public static async Task<TransferServerService> FromDomainAsync(
         string domain,
         HttpClient? httpClient = null,
         Dictionary<string, string>? httpRequestHeaders = null,
         CancellationToken cancellationToken = default)
     {
-        var toml = await StellarToml.FromDomainAsync(domain, httpClient, httpRequestHeaders, cancellationToken).ConfigureAwait(false);
+        var toml = await StellarToml.FromDomainAsync(domain, httpClient, httpRequestHeaders, cancellationToken)
+            .ConfigureAwait(false);
         var transferServer = toml.GeneralInformation.TransferServer;
 
         if (string.IsNullOrWhiteSpace(transferServer))
@@ -121,7 +149,10 @@ public class TransferServerService : IDisposable
     /// <param name="httpRequestHeaders">Optional custom headers to include in all requests</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>A configured TransferServerService instance ready to use</returns>
-    /// <exception cref="TransferServerException">Thrown when the stellar.toml file cannot be fetched or TRANSFER_SERVER is not found</exception>
+    /// <exception cref="TransferServerException">
+    ///     Thrown when the stellar.toml file cannot be fetched or TRANSFER_SERVER is not
+    ///     found
+    /// </exception>
     public static async Task<TransferServerService> FromDomainAsync(
         string domain,
         HttpResilienceOptions? resilienceOptions,
@@ -130,7 +161,9 @@ public class TransferServerService : IDisposable
         Dictionary<string, string>? httpRequestHeaders = null,
         CancellationToken cancellationToken = default)
     {
-        var toml = await StellarToml.FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient, httpRequestHeaders, cancellationToken).ConfigureAwait(false);
+        var toml = await StellarToml
+            .FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient, httpRequestHeaders, cancellationToken)
+            .ConfigureAwait(false);
         var transferServer = toml.GeneralInformation.TransferServer;
 
         if (string.IsNullOrWhiteSpace(transferServer))
@@ -163,26 +196,6 @@ public class TransferServerService : IDisposable
     }
 
     /// <summary>
-    ///     Disposes the internal HttpClient if one was created.
-    ///     Does not dispose externally provided HttpClient instances.
-    /// </summary>
-    public void Dispose()
-    {
-        if (_disposed)
-        {
-            return;
-        }
-
-        if (_internalHttpClient != null)
-        {
-            _internalHttpClient.Dispose();
-            _internalHttpClient = null;
-        }
-
-        _disposed = true;
-    }
-
-    /// <summary>
     ///     Retrieves basic information about the anchor's transfer server capabilities.
     ///     Queries the /info endpoint to discover which assets the anchor supports for
     ///     deposit and withdrawal operations, along with required fields and fee structure
@@ -192,7 +205,8 @@ public class TransferServerService : IDisposable
     /// <param name="jwt">JWT token from SEP-10 authentication</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>Information about supported assets and their requirements</returns>
-    public async Task<InfoResponse> InfoAsync(string? language = null, string? jwt = null, CancellationToken cancellationToken = default)
+    public async Task<InfoResponse> InfoAsync(string? language = null, string? jwt = null,
+        CancellationToken cancellationToken = default)
     {
         var queryParams = new Dictionary<string, string>();
         if (!string.IsNullOrWhiteSpace(language))
@@ -215,10 +229,12 @@ public class TransferServerService : IDisposable
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
-    public async Task<DepositResponse> DepositAsync(DepositRequest request, CancellationToken cancellationToken = default)
+    public async Task<DepositResponse> DepositAsync(DepositRequest request,
+        CancellationToken cancellationToken = default)
     {
         var queryParams = BuildDepositQueryParams(request);
-        return await ExecuteGetAsync<DepositResponse>("deposit", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
+        return await ExecuteGetAsync<DepositResponse>("deposit", queryParams, request.Jwt, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -232,10 +248,12 @@ public class TransferServerService : IDisposable
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
-    public async Task<DepositResponse> DepositExchangeAsync(DepositExchangeRequest request, CancellationToken cancellationToken = default)
+    public async Task<DepositResponse> DepositExchangeAsync(DepositExchangeRequest request,
+        CancellationToken cancellationToken = default)
     {
         var queryParams = BuildDepositExchangeQueryParams(request);
-        return await ExecuteGetAsync<DepositResponse>("deposit-exchange", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
+        return await ExecuteGetAsync<DepositResponse>("deposit-exchange", queryParams, request.Jwt, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -249,10 +267,12 @@ public class TransferServerService : IDisposable
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
-    public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequest request, CancellationToken cancellationToken = default)
+    public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequest request,
+        CancellationToken cancellationToken = default)
     {
         var queryParams = BuildWithdrawQueryParams(request);
-        return await ExecuteGetAsync<WithdrawResponse>("withdraw", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
+        return await ExecuteGetAsync<WithdrawResponse>("withdraw", queryParams, request.Jwt, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -266,10 +286,12 @@ public class TransferServerService : IDisposable
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
-    public async Task<WithdrawResponse> WithdrawExchangeAsync(WithdrawExchangeRequest request, CancellationToken cancellationToken = default)
+    public async Task<WithdrawResponse> WithdrawExchangeAsync(WithdrawExchangeRequest request,
+        CancellationToken cancellationToken = default)
     {
         var queryParams = BuildWithdrawExchangeQueryParams(request);
-        return await ExecuteGetAsync<WithdrawResponse>("withdraw-exchange", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
+        return await ExecuteGetAsync<WithdrawResponse>("withdraw-exchange", queryParams, request.Jwt, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -286,7 +308,7 @@ public class TransferServerService : IDisposable
         {
             { "operation", request.Operation },
             { "asset_code", request.AssetCode },
-            { "amount", request.Amount.ToString() }
+            { "amount", request.Amount.ToString() },
         };
 
         if (!string.IsNullOrWhiteSpace(request.Type))
@@ -294,7 +316,8 @@ public class TransferServerService : IDisposable
             queryParams["type"] = request.Type;
         }
 
-        return await ExecuteGetAsync<FeeResponse>("fee", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
+        return await ExecuteGetAsync<FeeResponse>("fee", queryParams, request.Jwt, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -305,12 +328,13 @@ public class TransferServerService : IDisposable
     /// <param name="request">Transaction history request with account, asset code, and optional filters</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>List of transactions with their current status and details</returns>
-    public async Task<AnchorTransactionsResponse> TransactionsAsync(AnchorTransactionsRequest request, CancellationToken cancellationToken = default)
+    public async Task<AnchorTransactionsResponse> TransactionsAsync(AnchorTransactionsRequest request,
+        CancellationToken cancellationToken = default)
     {
         var queryParams = new Dictionary<string, string>
         {
             { "asset_code", request.AssetCode },
-            { "account", request.Account }
+            { "account", request.Account },
         };
 
         if (request.NoOlderThan.HasValue)
@@ -353,7 +377,8 @@ public class TransferServerService : IDisposable
     /// <param name="request">Transaction query request with at least one identifier</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>Current status and details of the requested transaction</returns>
-    public async Task<AnchorTransactionResponse> TransactionAsync(AnchorTransactionRequest request, CancellationToken cancellationToken = default)
+    public async Task<AnchorTransactionResponse> TransactionAsync(AnchorTransactionRequest request,
+        CancellationToken cancellationToken = default)
     {
         var queryParams = new Dictionary<string, string>();
 
@@ -377,7 +402,8 @@ public class TransferServerService : IDisposable
             queryParams["lang"] = request.Lang;
         }
 
-        return await ExecuteGetAsync<AnchorTransactionResponse>("transaction", queryParams, request.Jwt, cancellationToken).ConfigureAwait(false);
+        return await ExecuteGetAsync<AnchorTransactionResponse>("transaction", queryParams, request.Jwt,
+            cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -392,7 +418,8 @@ public class TransferServerService : IDisposable
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
-    public async Task<AnchorTransactionResponse> PatchTransactionAsync(PatchTransactionRequest request, CancellationToken cancellationToken = default)
+    public async Task<AnchorTransactionResponse> PatchTransactionAsync(PatchTransactionRequest request,
+        CancellationToken cancellationToken = default)
     {
         if (request.Fields == null)
         {
@@ -407,7 +434,7 @@ public class TransferServerService : IDisposable
 
         var transactionObject = new Dictionary<string, object>(request.Fields);
         var jsonContent = JsonSerializer.Serialize(transactionObject, JsonOptions.DefaultOptions);
-        httpRequest.Content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
+        httpRequest.Content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
         var response = await client.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 
@@ -427,7 +454,7 @@ public class TransferServerService : IDisposable
         var queryParams = new Dictionary<string, string>
         {
             { "asset_code", request.AssetCode },
-            { "account", request.Account }
+            { "account", request.Account },
         };
 
         AddIfNotNull(queryParams, "memo_type", request.MemoType);
@@ -462,7 +489,7 @@ public class TransferServerService : IDisposable
             { "destination_asset", request.DestinationAsset },
             { "source_asset", request.SourceAsset },
             { "amount", request.Amount.ToString() },
-            { "account", request.Account }
+            { "account", request.Account },
         };
 
         AddIfNotNull(queryParams, "quote_id", request.QuoteId);
@@ -495,7 +522,7 @@ public class TransferServerService : IDisposable
         var queryParams = new Dictionary<string, string>
         {
             { "asset_code", request.AssetCode },
-            { "type", request.Type }
+            { "type", request.Type },
         };
 
         AddIfNotNull(queryParams, "dest", request.Dest);
@@ -532,7 +559,7 @@ public class TransferServerService : IDisposable
             { "source_asset", request.SourceAsset },
             { "destination_asset", request.DestinationAsset },
             { "amount", request.Amount.ToString() },
-            { "type", request.Type }
+            { "type", request.Type },
         };
 
         AddIfNotNull(queryParams, "dest", request.Dest);
@@ -611,7 +638,7 @@ public class TransferServerService : IDisposable
 
         if (!string.IsNullOrWhiteSpace(jwt))
         {
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
         }
     }
 
@@ -677,7 +704,9 @@ public class TransferServerService : IDisposable
         {
             case "non_interactive_customer_info_needed":
             {
-                var response = JsonSerializer.Deserialize<CustomerInformationNeededResponse>(errorJson, JsonOptions.DefaultOptions);
+                var response =
+                    JsonSerializer.Deserialize<CustomerInformationNeededResponse>(errorJson,
+                        JsonOptions.DefaultOptions);
                 if (response != null)
                 {
                     throw new CustomerInformationNeededException(response);
@@ -686,7 +715,9 @@ public class TransferServerService : IDisposable
             }
             case "customer_info_status":
             {
-                var response = JsonSerializer.Deserialize<CustomerInformationStatusResponse>(errorJson, JsonOptions.DefaultOptions);
+                var response =
+                    JsonSerializer.Deserialize<CustomerInformationStatusResponse>(errorJson,
+                        JsonOptions.DefaultOptions);
                 if (response != null)
                 {
                     throw new CustomerInformationStatusException(response);
@@ -702,4 +733,3 @@ public class TransferServerService : IDisposable
         // Unknown type - fall back to generic error handling in ResponseHandler
     }
 }
-

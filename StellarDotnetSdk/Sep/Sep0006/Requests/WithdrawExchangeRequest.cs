@@ -133,4 +133,3 @@ public sealed record WithdrawExchangeRequest
     /// </summary>
     public string? Jwt { get; init; }
 }
-

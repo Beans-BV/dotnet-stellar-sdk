@@ -61,8 +61,8 @@ public class TransferServerServiceTest
         var usdDeposit = response.DepositAssets["USD"];
         Assert.IsTrue(usdDeposit.Enabled);
         Assert.IsTrue(usdDeposit.AuthenticationRequired);
-        Assert.AreEqual(0.1, usdDeposit.MinAmount);
-        Assert.AreEqual(1000.0, usdDeposit.MaxAmount);
+        Assert.AreEqual(0.1m, usdDeposit.MinAmount);
+        Assert.AreEqual(1000.0m, usdDeposit.MaxAmount);
         Assert.IsNotNull(usdDeposit.Fields);
         Assert.AreEqual(4, usdDeposit.Fields.Count);
         Assert.IsTrue(usdDeposit.Fields.ContainsKey("email_address"));
@@ -132,7 +132,7 @@ public class TransferServerServiceTest
 
         // Assert
         Assert.IsNotNull(response);
-        Assert.AreEqual(0.013, response.Fee);
+        Assert.AreEqual(0.013m, response.Fee);
     }
 
     /// <summary>
@@ -192,7 +192,7 @@ public class TransferServerServiceTest
         Assert.IsNotNull(response);
         Assert.AreEqual("Make a payment to Bitcoin address 1Nh7uHdvY6fNwtQtM1G5EZAFPLC33B59rB", response.How);
         Assert.AreEqual("9421871e-0623-4356-b7b5-5996da122f3e", response.Id);
-        Assert.AreEqual(0.0002, response.FeeFixed);
+        Assert.AreEqual(0.0002m, response.FeeFixed);
         Assert.IsNotNull(response.Instructions);
         Assert.IsTrue(response.Instructions.ContainsKey("organization.crypto_address"));
         Assert.AreEqual("1Nh7uHdvY6fNwtQtM1G5EZAFPLC33B59rB",
@@ -226,7 +226,7 @@ public class TransferServerServiceTest
             response.How);
         Assert.AreEqual("9421871e-0623-4356-b7b5-5996da122f3e", response.Id);
         Assert.AreEqual(60, response.Eta);
-        Assert.AreEqual(0.1, response.FeePercent);
+        Assert.AreEqual(0.1m, response.FeePercent);
         Assert.IsNotNull(response.ExtraInfo);
         Assert.IsNotNull(response.ExtraInfo.Message);
         Assert.IsTrue(response.ExtraInfo.Message.Contains("You must include the tag"));

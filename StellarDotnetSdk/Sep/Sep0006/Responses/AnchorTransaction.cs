@@ -260,4 +260,3 @@ public sealed class AnchorTransaction : Response
     [JsonPropertyName("claimable_balance_id")]
     public string? ClaimableBalanceId { get; init; }
 }
-

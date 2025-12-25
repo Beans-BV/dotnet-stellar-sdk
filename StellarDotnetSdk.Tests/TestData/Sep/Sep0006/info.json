@@ -15,11 +15,18 @@
         },
         "country_code": {
           "description": "The ISO 3166-1 alpha-3 code of the user's current address",
-          "choices": ["USA", "PRI"]
+          "choices": [
+            "USA",
+            "PRI"
+          ]
         },
         "type": {
           "description": "type of deposit to make",
-          "choices": ["SEPA", "SWIFT", "cash"]
+          "choices": [
+            "SEPA",
+            "SWIFT",
+            "cash"
+          ]
         }
       }
     },
@@ -42,11 +49,18 @@
         },
         "country_code": {
           "description": "The ISO 3166-1 alpha-3 code of the user's current address",
-          "choices": ["USA", "PRI"]
+          "choices": [
+            "USA",
+            "PRI"
+          ]
         },
         "type": {
           "description": "type of deposit to make",
-          "choices": ["SEPA", "SWIFT", "cash"]
+          "choices": [
+            "SEPA",
+            "SWIFT",
+            "cash"
+          ]
         }
       }
     }
@@ -74,7 +88,10 @@
             },
             "country_code": {
               "description": "The ISO 3166-1 alpha-3 code of the user's current address",
-              "choices": ["USA", "PRI"]
+              "choices": [
+                "USA",
+                "PRI"
+              ]
             }
           }
         },
@@ -113,7 +130,10 @@
             },
             "country_code": {
               "description": "The ISO 3166-1 alpha-3 code of the user's current address",
-              "choices": ["USA", "PRI"]
+              "choices": [
+                "USA",
+                "PRI"
+              ]
             }
           }
         },

@@ -111,7 +111,8 @@ public class StellarToml
         Dictionary<string, string>? httpRequestHeaders = null,
         CancellationToken cancellationToken = default)
     {
-        return await FromDomainAsync(domain, null, null, httpClient, httpRequestHeaders, cancellationToken).ConfigureAwait(false);
+        return await FromDomainAsync(domain, null, null, httpClient, httpRequestHeaders, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -218,7 +219,8 @@ public class StellarToml
         Dictionary<string, string>? httpRequestHeaders = null,
         CancellationToken cancellationToken = default)
     {
-        return await CurrencyFromUrlAsync(tomlUrl, null, null, httpClient, httpRequestHeaders, cancellationToken).ConfigureAwait(false);
+        return await CurrencyFromUrlAsync(tomlUrl, null, null, httpClient, httpRequestHeaders, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>

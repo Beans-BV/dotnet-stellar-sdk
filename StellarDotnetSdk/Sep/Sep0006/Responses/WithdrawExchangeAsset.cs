@@ -34,4 +34,3 @@ public sealed class WithdrawExchangeAsset
     [JsonPropertyName("types")]
     public Dictionary<string, Dictionary<string, AnchorField>?>? Types { get; init; }
 }
-

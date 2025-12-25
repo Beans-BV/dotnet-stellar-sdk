@@ -22,4 +22,3 @@ public sealed class AnchorTransactionsInfo : Response
     [JsonPropertyName("authentication_required")]
     public bool? AuthenticationRequired { get; init; }
 }
-

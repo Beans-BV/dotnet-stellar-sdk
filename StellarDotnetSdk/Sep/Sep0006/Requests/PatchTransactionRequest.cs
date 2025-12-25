@@ -24,4 +24,3 @@ public sealed record PatchTransactionRequest
     /// </summary>
     public string? Jwt { get; init; }
 }
-

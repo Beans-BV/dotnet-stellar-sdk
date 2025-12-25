@@ -60,4 +60,3 @@ public sealed class InfoResponse : Response
     [JsonPropertyName("features")]
     public AnchorFeatureFlags? FeatureFlags { get; init; }
 }
-

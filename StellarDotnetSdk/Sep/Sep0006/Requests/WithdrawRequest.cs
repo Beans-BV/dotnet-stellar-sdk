@@ -115,4 +115,3 @@ public sealed record WithdrawRequest
     /// </summary>
     public string? Jwt { get; init; }
 }
-

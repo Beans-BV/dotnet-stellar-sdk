@@ -24,4 +24,3 @@ public sealed class DepositInstruction
     [JsonPropertyName("description")]
     public required string Description { get; init; }
 }
-

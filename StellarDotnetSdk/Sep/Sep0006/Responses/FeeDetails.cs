@@ -32,4 +32,3 @@ public sealed class FeeDetails
     [JsonPropertyName("details")]
     public IReadOnlyList<FeeDetailsDetails>? Details { get; init; }
 }
-

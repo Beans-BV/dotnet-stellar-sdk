@@ -28,4 +28,3 @@ public sealed class CustomerInformationStatusResponse
     [JsonPropertyName("eta")]
     public int? Eta { get; init; }
 }
-

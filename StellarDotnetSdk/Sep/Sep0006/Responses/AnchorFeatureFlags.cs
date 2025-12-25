@@ -23,4 +23,3 @@ public sealed class AnchorFeatureFlags : Response
     [JsonPropertyName("claimable_balances")]
     public bool ClaimableBalances { get; init; }
 }
-

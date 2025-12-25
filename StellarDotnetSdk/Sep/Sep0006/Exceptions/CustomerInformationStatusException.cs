@@ -22,7 +22,7 @@ public class CustomerInformationStatusException : TransferServerException
         var moreInfoUrl = response.MoreInfoUrl ?? "none";
         var eta = response.Eta.HasValue ? response.Eta.Value.ToString() : "unknown";
 
-        return $"Customer information was submitted for the account, but the information is either still being processed or was not accepted. Status: {status} - More info url: {moreInfoUrl} - Eta: {eta}";
+        return
+            $"Customer information was submitted for the account, but the information is either still being processed or was not accepted. Status: {status} - More info url: {moreInfoUrl} - Eta: {eta}";
     }
 }
-

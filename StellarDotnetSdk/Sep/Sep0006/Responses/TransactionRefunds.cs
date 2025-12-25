@@ -28,4 +28,3 @@ public sealed class TransactionRefunds
     [JsonPropertyName("payments")]
     public required IReadOnlyList<TransactionRefundPayment> Payments { get; init; }
 }
-

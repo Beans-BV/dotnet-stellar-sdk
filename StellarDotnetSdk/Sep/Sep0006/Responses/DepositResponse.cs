@@ -68,4 +68,3 @@ public sealed class DepositResponse : Response
     [JsonPropertyName("instructions")]
     public Dictionary<string, DepositInstruction>? Instructions { get; init; }
 }
-

@@ -117,4 +117,3 @@ public sealed record DepositExchangeRequest
     /// </summary>
     public string? Jwt { get; init; }
 }
-

@@ -2,7 +2,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Effects;
-using StellarDotnetSdk.Sep.Sep0006.Responses;
 
 namespace StellarDotnetSdk.Converters;
 

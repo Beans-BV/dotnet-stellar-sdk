@@ -15,4 +15,3 @@ public sealed class FeeResponse : Response
     [JsonPropertyName("fee")]
     public required decimal Fee { get; init; }
 }
-

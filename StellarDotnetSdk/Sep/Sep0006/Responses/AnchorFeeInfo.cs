@@ -31,4 +31,3 @@ public sealed class AnchorFeeInfo : Response
     [JsonPropertyName("description")]
     public string? Description { get; init; }
 }
-

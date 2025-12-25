@@ -28,4 +28,3 @@ public sealed class FeeDetailsDetails
     [JsonPropertyName("description")]
     public string? Description { get; init; }
 }
-

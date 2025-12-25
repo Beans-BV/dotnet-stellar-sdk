@@ -74,4 +74,3 @@ public sealed class WithdrawResponse : Response
     [JsonPropertyName("extra_info")]
     public ExtraInfo? ExtraInfo { get; init; }
 }
-

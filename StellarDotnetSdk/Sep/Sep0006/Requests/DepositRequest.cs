@@ -115,4 +115,3 @@ public sealed record DepositRequest
     /// </summary>
     public string? Jwt { get; init; }
 }
-

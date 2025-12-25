@@ -16,4 +16,3 @@ public sealed class ExtraInfo : Response
     [JsonPropertyName("message")]
     public string? Message { get; init; }
 }
-

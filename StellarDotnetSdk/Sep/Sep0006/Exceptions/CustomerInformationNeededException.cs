@@ -20,11 +20,12 @@ public class CustomerInformationNeededException : TransferServerException
     {
         if (response.Fields == null || response.Fields.Count == 0)
         {
-            return "The anchor needs more information about the customer. All information can be received non-interactively via SEP-12.";
+            return
+                "The anchor needs more information about the customer. All information can be received non-interactively via SEP-12.";
         }
 
         var fieldsList = string.Join(", ", response.Fields);
-        return $"The anchor needs more information about the customer and all the information can be received non-interactively via SEP-12. Fields: {fieldsList}";
+        return
+            $"The anchor needs more information about the customer and all the information can be received non-interactively via SEP-12. Fields: {fieldsList}";
     }
 }
-

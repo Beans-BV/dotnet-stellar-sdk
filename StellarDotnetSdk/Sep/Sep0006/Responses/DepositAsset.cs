@@ -58,4 +58,3 @@ public sealed class DepositAsset
     [JsonPropertyName("fields")]
     public Dictionary<string, AnchorField>? Fields { get; init; }
 }
-

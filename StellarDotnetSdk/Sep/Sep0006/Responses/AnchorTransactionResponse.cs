@@ -16,4 +16,3 @@ public sealed class AnchorTransactionResponse : Response
     [JsonPropertyName("transaction")]
     public required AnchorTransaction Transaction { get; init; }
 }
-

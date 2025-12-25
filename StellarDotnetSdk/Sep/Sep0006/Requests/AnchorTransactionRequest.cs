@@ -34,4 +34,3 @@ public sealed record AnchorTransactionRequest
     /// </summary>
     public string? Jwt { get; init; }
 }
-

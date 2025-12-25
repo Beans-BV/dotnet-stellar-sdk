@@ -29,4 +29,3 @@ public sealed class AnchorField
     [JsonPropertyName("choices")]
     public IReadOnlyList<string>? Choices { get; init; }
 }
-

@@ -16,4 +16,3 @@ public sealed class CustomerInformationNeededResponse
     [JsonPropertyName("fields")]
     public IReadOnlyList<string>? Fields { get; init; }
 }
-

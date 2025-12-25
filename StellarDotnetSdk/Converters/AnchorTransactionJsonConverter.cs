@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Sep.Sep0006.Responses;
@@ -28,7 +30,7 @@ public class AnchorTransactionJsonConverter : JsonConverter<AnchorTransaction>
             transactionElement.ValueKind == JsonValueKind.Object)
         {
             // Unwrap the nested structure by replacing required_info_updates with the transaction object
-            using var writer = new System.IO.MemoryStream();
+            using var writer = new MemoryStream();
             using var jsonWriter = new Utf8JsonWriter(writer);
             jsonWriter.WriteStartObject();
 
@@ -48,7 +50,7 @@ public class AnchorTransactionJsonConverter : JsonConverter<AnchorTransaction>
             jsonWriter.WriteEndObject();
             jsonWriter.Flush();
 
-            var modifiedJson = System.Text.Encoding.UTF8.GetString(writer.ToArray());
+            var modifiedJson = Encoding.UTF8.GetString(writer.ToArray());
             var anchorTransaction = JsonSerializer.Deserialize<AnchorTransaction>(modifiedJson, options);
             if (anchorTransaction is null)
             {
@@ -70,4 +72,3 @@ public class AnchorTransactionJsonConverter : JsonConverter<AnchorTransaction>
         JsonSerializer.Serialize(writer, value, options);
     }
 }
-

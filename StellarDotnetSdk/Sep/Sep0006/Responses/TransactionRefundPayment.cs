@@ -33,4 +33,3 @@ public sealed class TransactionRefundPayment
     [JsonPropertyName("fee")]
     public required decimal Fee { get; init; }
 }
-
