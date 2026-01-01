@@ -1,7 +1,8 @@
 {
   "setup-worktree": [
-    "dotnet restore stellar-dotnet-sdk.sln",
+    "cp $ROOT_WORKTREE_PATH/.devcontainer/claudecontainer-settings.local.json .devcontainer/claudecontainer-settings.local.json",
     "cp $ROOT_WORKTREE_PATH/.env.mcp .env.mcp",
+    "dotnet restore stellar-dotnet-sdk.sln",
     "echo 'Setup complete'"
   ]
 }
