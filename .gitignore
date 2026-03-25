@@ -52,3 +52,6 @@ stellar-dotnet-sdk-test/coverage.opencover.xml
 .env.*
 !.env.template
 !.env.*.template
+
+.claude/settings.local.json
+.claude/worktrees
