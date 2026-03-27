@@ -75,4 +75,37 @@ public class TradesRequestBuilder : RequestBuilderExecutePageable<TradesRequestB
         SetSegments("accounts", accountId, "trades");
         return this;
     }
+
+    /// <summary>
+    ///     Builds request to <code>GET /liquidity_pools/{liquidity_pool_id}/trades</code>
+    ///     <a href="https://developers.stellar.org/docs/data/horizon/api-reference/list-trades-by-liquidity-pool">
+    ///         Trades for
+    ///         Liquidity Pool
+    ///     </a>
+    /// </summary>
+    /// <param name="liquidityPoolId">Liquidity pool for which to get trades</param>
+    public TradesRequestBuilder ForLiquidityPool(string liquidityPoolId)
+    {
+        if (liquidityPoolId is null)
+        {
+            throw new ArgumentNullException(nameof(liquidityPoolId), "liquidityPoolId cannot be null");
+        }
+        SetSegments("liquidity_pools", liquidityPoolId, "trades");
+        return this;
+    }
+
+    /// <summary>
+    ///     Builds request to <code>GET /offers/{offer_id}/trades</code>
+    ///     <a href="https://developers.stellar.org/docs/data/horizon/api-reference/get-trades-by-offer-id">Trades for Offer</a>
+    /// </summary>
+    /// <param name="offerId">Offer for which to get trades</param>
+    public TradesRequestBuilder ForOffer(string offerId)
+    {
+        if (offerId is null)
+        {
+            throw new ArgumentNullException(nameof(offerId), "offerId cannot be null");
+        }
+        SetSegments("offers", offerId, "trades");
+        return this;
+    }
 }

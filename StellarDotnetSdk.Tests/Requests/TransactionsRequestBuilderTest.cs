@@ -266,6 +266,43 @@ public class TransactionsRequestBuilderTest
     }
 
     /// <summary>
+    ///     Verifies that TransactionsRequestBuilder.ForLiquidityPool correctly constructs URI for liquidity pool transactions.
+    /// </summary>
+    [TestMethod]
+    public void ForLiquidityPool_WithValidPoolId_BuildsCorrectUri()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act
+        var uri = server.Transactions
+            .ForLiquidityPool("0000a8198b5e25994c1ca5b0556faeb27325ac746296944144e0a7406d501e8a")
+            .Limit(200)
+            .Order(OrderDirection.DESC)
+            .BuildUri();
+
+        // Assert
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/liquidity_pools/0000a8198b5e25994c1ca5b0556faeb27325ac746296944144e0a7406d501e8a/transactions?limit=200&order=desc",
+            uri.ToString());
+    }
+
+    /// <summary>
+    ///     Verifies that TransactionsRequestBuilder.ForLiquidityPool throws ArgumentNullException when liquidityPoolId is
+    ///     null.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void ForLiquidityPool_WithNullPoolId_ThrowsArgumentNullException()
+    {
+        // Arrange
+        using var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act & Assert
+        _ = server.Transactions.ForLiquidityPool(null!);
+    }
+
+    /// <summary>
     ///     Verifies that TransactionsRequestBuilder.IncludeFailed correctly adds include_failed parameter with false value.
     /// </summary>
     [TestMethod]

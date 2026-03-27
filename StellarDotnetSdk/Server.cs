@@ -121,6 +121,8 @@ public class Server : IDisposable
     /// <summary>Gets a request builder for querying liquidity pools.</summary>
     public LiquidityPoolsRequestBuilder LiquidityPools => new(_serverUri, _httpClient);
 
+    public HealthRequestBuilder Health => new(_serverUri, _httpClient);
+
     /// <inheritdoc />
     public void Dispose()
     {

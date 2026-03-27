@@ -95,6 +95,24 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
     }
 
     /// <summary>
+    ///     Builds request to <code>GET /liquidity_pools/{liquidity_pool_id}/transactions</code>
+    ///     <a href="https://developers.stellar.org/docs/data/horizon/api-reference/list-transactions-by-liquidity-pool">
+    ///         Retrieve a Liquidity Pool's Transactions
+    ///     </a>
+    /// </summary>
+    /// <param name="liquidityPoolId">Liquidity pool for which to get transactions</param>
+    public TransactionsRequestBuilder ForLiquidityPool(string liquidityPoolId)
+    {
+        if (liquidityPoolId is null)
+        {
+            throw new ArgumentNullException(nameof(liquidityPoolId), "liquidityPoolId cannot be null");
+        }
+
+        SetSegments("liquidity_pools", liquidityPoolId, "transactions");
+        return this;
+    }
+
+    /// <summary>
     ///     Set <code>include_failed</code> flag to include failed transactions.
     /// </summary>
     /// <param name="includeFailed">Set to true to include failed transactions in results</param>

@@ -89,4 +89,54 @@ public class TradesRequestBuilderTest
             "limit=200&" +
             "order=asc", uri.ToString());
     }
+
+    /// <summary>
+    ///     Verifies that TradesRequestBuilder.ForLiquidityPool correctly constructs URI for liquidity pool trades.
+    /// </summary>
+    [TestMethod]
+    public void ForLiquidityPool_WithValidPoolId_BuildsCorrectUri()
+    {
+        // Arrange
+        var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act
+        var uri = server.Trades
+            .ForLiquidityPool("0000a8198b5e25994c1ca5b0556faeb27325ac746296944144e0a7406d501e8a")
+            .Cursor("113537736921089")
+            .Limit(200)
+            .Order(OrderDirection.ASC)
+            .BuildUri();
+
+        // Assert
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/liquidity_pools/0000a8198b5e25994c1ca5b0556faeb27325ac746296944144e0a7406d501e8a/trades?" +
+            "cursor=113537736921089&" +
+            "limit=200&" +
+            "order=asc", uri.ToString());
+    }
+
+    /// <summary>
+    ///     Verifies that TradesRequestBuilder.ForOffer correctly constructs URI for offer trades.
+    /// </summary>
+    [TestMethod]
+    public void ForOffer_WithValidOfferId_BuildsCorrectUri()
+    {
+        // Arrange
+        var server = new Server("https://horizon-testnet.stellar.org");
+
+        // Act
+        var uri = server.Trades
+            .ForOffer("1")
+            .Cursor("13537736921089")
+            .Limit(200)
+            .Order(OrderDirection.ASC)
+            .BuildUri();
+
+        // Assert
+        Assert.AreEqual(
+            "https://horizon-testnet.stellar.org/offers/1/trades?" +
+            "cursor=13537736921089&" +
+            "limit=200&" +
+            "order=asc", uri.ToString());
+    }
 }
