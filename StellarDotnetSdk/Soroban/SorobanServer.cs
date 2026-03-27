@@ -147,6 +147,18 @@ public class SorobanServer : IDisposable
     }
 
     /// <summary>
+    ///     The <c>getLedgers</c> method returns a detailed list of ledgers starting from the user specified starting point
+    ///     that you can paginate as long as the pages fall within the history retention of their corresponding RPC provider.
+    ///     See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgers
+    /// </summary>
+    /// <param name="request">The request parameters including start ledger and pagination options.</param>
+    /// <returns>A <see cref="GetLedgersResponse" /> object containing the ledger details.</returns>
+    public Task<GetLedgersResponse> GetLedgers(GetLedgersRequest request)
+    {
+        return SendRequest<object, GetLedgersResponse>("getLedgers", request);
+    }
+
+    /// <summary>
     ///     Version information about the RPC and Captive core. RPC manages its own, pared-down version of Stellar Core
     ///     optimized for its own subset of needs. we'll refer to this as a "Captive Core" instance.
     ///     See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/getVersionInfo

@@ -1843,6 +1843,7 @@ public class SorobanServerTest
         Assert.AreEqual(1717166057L, response.LatestLedgerCloseTimestamp);
         Assert.AreEqual(1871263L, response.OldestLedger);
         Assert.AreEqual(1717075350L, response.OldestLedgerCloseTimestamp);
+        Assert.AreEqual("8111217537191937", response.Cursor);
         Assert.AreEqual(5, transactions.Length);
 
         var tx1 = transactions[0];
@@ -2023,6 +2024,75 @@ public class SorobanServerTest
         Assert.AreEqual(
             "AAAAAwAAAAAAAAACAAAAAwAc0RwAAAAAAAAAADEswRzGZ9SA3Mvrzsmzixf+OYVAOpOjUuPgoOgLU95JAAAAFxzxIbUAAAIJAAtMUAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAMAAAAAABzRGgAAAABmWd/VAAAAAAAAAAEAHNEcAAAAAAAAAAAxLMEcxmfUgNzL687Js4sX/jmFQDqTo1Lj4KDoC1PeSQAAABcc8SG1AAACCQALTFEAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADAAAAAAAc0RwAAAAAZlnf3wAAAAAAAAAAAAAAAAAAAAA=",
             tx5.ResultMetaXdr);
+    }
+
+    /// <summary>
+    ///     Verifies that SorobanServer.GetLedgers returns ledger details with correct properties.
+    /// </summary>
+    [TestMethod]
+    public async Task GetLedgers_WithValidRequest_ReturnsLedgersResponse()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "8675309",
+              "result": {
+                "ledgers": [
+                  {
+                    "hash": "63d98f536ee68d1b27b5b89f23af5311b7569a24faf1403ad0b52b633b07be99",
+                    "sequence": 50,
+                    "ledgerCloseTime": "1727097600",
+                    "headerXdr": "AAAAAA==",
+                    "metadataXdr": "AAAAAA=="
+                  },
+                  {
+                    "hash": "a2bba8c3c6e197b95e0234a8e45a227cc47afea9299c0a577e6e94e4b9e53add",
+                    "sequence": 51,
+                    "ledgerCloseTime": "1727097605",
+                    "headerXdr": "AAAAAQ==",
+                    "metadataXdr": "AAAAAQ=="
+                  }
+                ],
+                "latestLedger": 100,
+                "latestLedgerCloseTime": 1727097900,
+                "oldestLedger": 1,
+                "oldestLedgerCloseTime": 1727094000,
+                "cursor": "214748364801"
+              }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.GetLedgers(new GetLedgersRequest { StartLedger = 50 });
+
+        // Assert
+        Assert.IsNotNull(response);
+        Assert.AreEqual(100L, response.LatestLedger);
+        Assert.AreEqual(1727097900L, response.LatestLedgerCloseTime);
+        Assert.AreEqual(1L, response.OldestLedger);
+        Assert.AreEqual(1727094000L, response.OldestLedgerCloseTime);
+        Assert.AreEqual("214748364801", response.Cursor);
+
+        var ledgers = response.Ledgers;
+        Assert.IsNotNull(ledgers);
+        Assert.AreEqual(2, ledgers.Length);
+
+        var ledger1 = ledgers[0];
+        Assert.AreEqual("63d98f536ee68d1b27b5b89f23af5311b7569a24faf1403ad0b52b633b07be99", ledger1.Hash);
+        Assert.AreEqual(50L, ledger1.Sequence);
+        Assert.AreEqual("1727097600", ledger1.LedgerCloseTime);
+        Assert.AreEqual("AAAAAA==", ledger1.HeaderXdr);
+        Assert.AreEqual("AAAAAA==", ledger1.MetadataXdr);
+
+        var ledger2 = ledgers[1];
+        Assert.AreEqual("a2bba8c3c6e197b95e0234a8e45a227cc47afea9299c0a577e6e94e4b9e53add", ledger2.Hash);
+        Assert.AreEqual(51L, ledger2.Sequence);
+        Assert.AreEqual("1727097605", ledger2.LedgerCloseTime);
+        Assert.AreEqual("AAAAAQ==", ledger2.HeaderXdr);
+        Assert.AreEqual("AAAAAQ==", ledger2.MetadataXdr);
     }
 
     /// <summary>

@@ -1,17 +1,17 @@
 # Soroban RPC vs .NET SDK Compatibility Matrix
 
-**RPC Version:** v25.0.0 (released 2025-12-12)  
-**RPC Source:** [https://github.com/stellar/stellar-rpc/releases/tag/v25.0.0](https://github.com/stellar/stellar-rpc/releases/tag/v25.0.0)  
-**SDK Version:** 12.0.0  
-**Generated:** 2026-01-07 13:19:17
+**RPC Version:** v25.0.0 (released 2025-12-12)
+**RPC Source:** [https://github.com/stellar/stellar-rpc/releases/tag/v25.0.0](https://github.com/stellar/stellar-rpc/releases/tag/v25.0.0)
+**SDK Version:** 12.0.0
+**Updated:** 2026-03-27
 
 ## Overall Coverage
 
-**Coverage:** 83.3%
+**Coverage:** 100%
 
-- ✅ **Fully Supported:** 10/12
-- ⚠️ **Partially Supported:** 1/12
-- ❌ **Not Supported:** 1/12
+- ✅ **Fully Supported:** 12/12
+- ⚠️ **Partially Supported:** 0/12
+- ❌ **Not Supported:** 0/12
 
 ## Method Comparison
 
@@ -22,10 +22,10 @@
 | `getHealth` | ✅ Fully Supported | `getHealth` | N/A | 4/4 | All parameters and response fields implemented |
 | `getLatestLedger` | ✅ Fully Supported | `getLatestLedger` | N/A | 3/3 | All parameters and response fields implemented |
 | `getLedgerEntries` | ✅ Fully Supported | `getLedgerEntries` | 1/1 | 2/2 | All parameters and response fields implemented |
-| `getLedgers` | ❌ Not Supported | `getLedgers` | 1/1 | 6/6 | No `getLedgers` implementation in .NET SDK (`SorobanServer`) |
+| `getLedgers` | ✅ Fully Supported | `getLedgers` | 1/1 | 6/6 | All parameters and response fields implemented |
 | `getNetwork` | ✅ Fully Supported | `getNetwork` | N/A | 3/3 | All parameters and response fields implemented |
 | `getTransaction` | ✅ Fully Supported | `getTransaction` | 1/1 | 5/5 | All parameters and response fields implemented |
-| `getTransactions` | ⚠️ Partially Supported | `getTransactions` | 1/1 | 5/6 | Response field `cursor` is not exposed in .NET SDK response model |
+| `getTransactions` | ✅ Fully Supported | `getTransactions` | 1/1 | 6/6 | All parameters and response fields implemented |
 | `getVersionInfo` | ✅ Fully Supported | `getVersionInfo` | N/A | 5/5 | All parameters and response fields implemented |
 | `sendTransaction` | ✅ Fully Supported | `sendTransaction` | 1/1 | N/A | All parameters and response fields implemented |
 | `simulateTransaction` | ✅ Fully Supported | `simulateTransaction` | 1/1 | N/A | All parameters and response fields implemented |
@@ -41,8 +41,8 @@ Detailed breakdown of response field support per method.
 | `getHealth` | 4 | 4 | - |
 | `getLatestLedger` | 3 | 3 | - |
 | `getLedgerEntries` | 2 | 2 | - |
-| `getLedgers` | 6 | 0 | All fields (method not implemented) |
+| `getLedgers` | 6 | 6 | - |
 | `getNetwork` | 3 | 3 | - |
 | `getTransaction` | 5 | 5 | - |
-| `getTransactions` | 6 | 5 | `cursor` |
+| `getTransactions` | 6 | 6 | - |
 | `getVersionInfo` | 5 | 5 | - |
