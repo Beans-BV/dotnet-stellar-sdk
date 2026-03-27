@@ -2,6 +2,10 @@
 
 namespace StellarDotnetSdk.Requests.SorobanRpc;
 
+/// <summary>
+///     Represents a JSON-RPC 2.0 request envelope for Soroban RPC calls.
+/// </summary>
+/// <typeparam name="T">The type of the request parameters payload.</typeparam>
 public class SorobanRpcRequest<T>
 {
     public SorobanRpcRequest(string id, string method, T? parameters)

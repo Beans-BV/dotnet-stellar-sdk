@@ -4,6 +4,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.ExtendFootprintTTLResultCode.ExtendF
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of an extend footprint TTL operation.
+/// </summary>
 public class ExtendFootprintTtlResult : OperationResult
 {
     public static ExtendFootprintTtlResult FromXdr(ExtendFootprintTTLResult result)
@@ -23,6 +26,9 @@ public class ExtendFootprintTtlResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful extend footprint TTL operation result.
+/// </summary>
 public class ExtendFootprintTtlSuccess : ExtendFootprintTtlResult
 {
     public override bool IsSuccess => true;

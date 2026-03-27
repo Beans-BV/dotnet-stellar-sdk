@@ -99,6 +99,9 @@ public abstract class SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban boolean value.
+/// </summary>
 public class SCBool : SCVal
 {
     public SCBool(bool value)
@@ -141,6 +144,9 @@ public class SCBool : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban void value, carrying no data.
+/// </summary>
 public class SCVoid : SCVal
 {
     public new void ToXdr()
@@ -237,6 +243,9 @@ public abstract class SCError : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban contract error, containing a contract-defined error code.
+/// </summary>
 public class SCContractError : SCError
 {
     public SCContractError(uint value)
@@ -264,6 +273,9 @@ public class SCContractError : SCError
     }
 }
 
+/// <summary>
+///     Represents a Soroban WebAssembly VM error.
+/// </summary>
 public class SCWasmVmError : SCError
 {
     public static SCWasmVmError FromSCErrorXdr(Xdr.SCError xdrSCError)
@@ -287,6 +299,9 @@ public class SCWasmVmError : SCError
     }
 }
 
+/// <summary>
+///     Represents a Soroban context error.
+/// </summary>
 public class SCContextError : SCError
 {
     public static SCContextError FromSCErrorXdr(Xdr.SCError xdrSCError)
@@ -310,6 +325,9 @@ public class SCContextError : SCError
     }
 }
 
+/// <summary>
+///     Represents a Soroban storage error.
+/// </summary>
 public class SCStorageError : SCError
 {
     public static SCStorageError FromSCErrorXdr(Xdr.SCError xdrSCError)
@@ -333,6 +351,9 @@ public class SCStorageError : SCError
     }
 }
 
+/// <summary>
+///     Represents a Soroban object error.
+/// </summary>
 public class SCObjectError : SCError
 {
     public static SCObjectError FromSCErrorXdr(Xdr.SCError xdrSCError)
@@ -356,6 +377,9 @@ public class SCObjectError : SCError
     }
 }
 
+/// <summary>
+///     Represents a Soroban cryptography error.
+/// </summary>
 public class SCCryptoError : SCError
 {
     public static SCCryptoError FromSCErrorXdr(Xdr.SCError xdrSCError)
@@ -379,6 +403,9 @@ public class SCCryptoError : SCError
     }
 }
 
+/// <summary>
+///     Represents a Soroban events error.
+/// </summary>
 public class SCEventsError : SCError
 {
     public static SCEventsError FromSCErrorXdr(Xdr.SCError xdrSCError)
@@ -402,6 +429,9 @@ public class SCEventsError : SCError
     }
 }
 
+/// <summary>
+///     Represents a Soroban budget error.
+/// </summary>
 public class SCBudgetError : SCError
 {
     public static SCBudgetError FromSCErrorXdr(Xdr.SCError xdrSCError)
@@ -425,6 +455,9 @@ public class SCBudgetError : SCError
     }
 }
 
+/// <summary>
+///     Represents a Soroban value error.
+/// </summary>
 public class SCValueError : SCError
 {
     public static SCValueError FromSCErrorXdr(Xdr.SCError xdrSCError)
@@ -448,6 +481,9 @@ public class SCValueError : SCError
     }
 }
 
+/// <summary>
+///     Represents a Soroban authentication error.
+/// </summary>
 public class SCAuthError : SCError
 {
     public static SCAuthError FromSCErrorXdr(Xdr.SCError xdrSCError)
@@ -471,6 +507,9 @@ public class SCAuthError : SCError
     }
 }
 
+/// <summary>
+///     Represents a Soroban unsigned 32-bit integer value.
+/// </summary>
 public class SCUint32 : SCVal
 {
     public SCUint32(uint value)
@@ -480,6 +519,10 @@ public class SCUint32 : SCVal
 
     public uint InnerValue { get; set; }
 
+    /// <summary>
+    ///     Converts this value to its XDR representation.
+    /// </summary>
+    /// <returns>A <see cref="Uint32" /> XDR object.</returns>
     public Uint32 ToXdr()
     {
         return new Uint32(InnerValue);
@@ -513,6 +556,9 @@ public class SCUint32 : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban signed 32-bit integer value.
+/// </summary>
 public class SCInt32 : SCVal
 {
     public SCInt32(int value)
@@ -522,6 +568,10 @@ public class SCInt32 : SCVal
 
     public int InnerValue { get; set; }
 
+    /// <summary>
+    ///     Converts this value to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Int32" /> XDR object.</returns>
     public Int32 ToXdr()
     {
         return new Int32(InnerValue);
@@ -555,6 +605,9 @@ public class SCInt32 : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban unsigned 64-bit integer value.
+/// </summary>
 public class SCUint64 : SCVal
 {
     public SCUint64(ulong value)
@@ -564,6 +617,10 @@ public class SCUint64 : SCVal
 
     public ulong InnerValue { get; set; }
 
+    /// <summary>
+    ///     Converts this value to its XDR representation.
+    /// </summary>
+    /// <returns>A <see cref="Uint64" /> XDR object.</returns>
     public Uint64 ToXdr()
     {
         return new Uint64(InnerValue);
@@ -597,6 +654,9 @@ public class SCUint64 : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban signed 64-bit integer value.
+/// </summary>
 public class SCInt64 : SCVal
 {
     public SCInt64(long value)
@@ -606,6 +666,10 @@ public class SCInt64 : SCVal
 
     public long InnerValue { get; set; }
 
+    /// <summary>
+    ///     Converts this value to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Int64" /> XDR object.</returns>
     public Int64 ToXdr()
     {
         return new Int64(InnerValue);
@@ -639,6 +703,9 @@ public class SCInt64 : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban time point value (a UNIX timestamp as an unsigned 64-bit integer).
+/// </summary>
 public class SCTimePoint : SCVal
 {
     public SCTimePoint(ulong value)
@@ -648,6 +715,10 @@ public class SCTimePoint : SCVal
 
     public ulong InnerValue { get; set; }
 
+    /// <summary>
+    ///     Converts this value to its XDR representation.
+    /// </summary>
+    /// <returns>A <see cref="TimePoint" /> XDR object.</returns>
     public TimePoint ToXdr()
     {
         return new TimePoint(new Uint64(InnerValue));
@@ -681,6 +752,9 @@ public class SCTimePoint : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban duration value (a time span as an unsigned 64-bit integer).
+/// </summary>
 public class SCDuration : SCVal
 {
     public SCDuration(ulong value)
@@ -690,6 +764,10 @@ public class SCDuration : SCVal
 
     public ulong InnerValue { get; set; }
 
+    /// <summary>
+    ///     Converts this value to its XDR representation.
+    /// </summary>
+    /// <returns>A <see cref="Duration" /> XDR object.</returns>
     public Duration ToXdr()
     {
         return new Duration(new Uint64(InnerValue));
@@ -723,6 +801,9 @@ public class SCDuration : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban unsigned 128-bit integer value, stored as high and low 64-bit parts.
+/// </summary>
 public class SCUint128 : SCVal
 {
     public SCUint128(ulong lo, ulong hi)
@@ -734,6 +815,10 @@ public class SCUint128 : SCVal
     public ulong Lo { get; set; }
     public ulong Hi { get; set; }
 
+    /// <summary>
+    ///     Converts this value to its XDR representation.
+    /// </summary>
+    /// <returns>A <see cref="UInt128Parts" /> XDR object.</returns>
     public UInt128Parts ToXdr()
     {
         return new UInt128Parts
@@ -771,6 +856,9 @@ public class SCUint128 : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban signed 128-bit integer value, stored as high and low 64-bit parts.
+/// </summary>
 public class SCInt128 : SCVal
 {
     /// <summary>
@@ -807,6 +895,10 @@ public class SCInt128 : SCVal
     public ulong Lo { get; set; }
     public long Hi { get; set; }
 
+    /// <summary>
+    ///     Converts this value to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Int128Parts" /> XDR object.</returns>
     public Int128Parts ToXdr()
     {
         return new Int128Parts
@@ -848,6 +940,9 @@ public class SCInt128 : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban unsigned 256-bit integer value, stored as four 64-bit parts.
+/// </summary>
 public class SCUint256 : SCVal
 {
     public ulong HiHi { get; set; }
@@ -855,6 +950,10 @@ public class SCUint256 : SCVal
     public ulong LoHi { get; set; }
     public ulong LoLo { get; set; }
 
+    /// <summary>
+    ///     Converts this value to its XDR representation.
+    /// </summary>
+    /// <returns>A <see cref="UInt256Parts" /> XDR object.</returns>
     public UInt256Parts ToXdr()
     {
         return new UInt256Parts
@@ -900,6 +999,9 @@ public class SCUint256 : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban signed 256-bit integer value, stored as four 64-bit parts.
+/// </summary>
 public class SCInt256 : SCVal
 {
     public long HiHi { get; set; }
@@ -907,6 +1009,10 @@ public class SCInt256 : SCVal
     public ulong LoHi { get; set; }
     public ulong LoLo { get; set; }
 
+    /// <summary>
+    ///     Converts this value to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Int256Parts" /> XDR object.</returns>
     public Int256Parts ToXdr()
     {
         return new Int256Parts
@@ -952,6 +1058,9 @@ public class SCInt256 : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban byte array value.
+/// </summary>
 public class SCBytes : SCVal
 {
     public SCBytes(byte[] value)
@@ -994,6 +1103,9 @@ public class SCBytes : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban string value.
+/// </summary>
 public class SCString : SCVal
 {
     public SCString(string value)
@@ -1036,6 +1148,9 @@ public class SCString : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban symbol value, a short identifier string used for function names and map keys.
+/// </summary>
 public class SCSymbol : SCVal
 {
     public SCSymbol(string innerValue)
@@ -1078,6 +1193,9 @@ public class SCSymbol : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban vector (ordered collection) of <see cref="SCVal" /> elements.
+/// </summary>
 public class SCVec : SCVal
 {
     public SCVec(SCVal[] value)
@@ -1120,6 +1238,9 @@ public class SCVec : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban map (key-value collection) of <see cref="SCMapEntry" /> elements.
+/// </summary>
 public class SCMap : SCVal
 {
     public SCMap(SCMapEntry[]? entries = null)
@@ -1165,6 +1286,9 @@ public class SCMap : SCVal
     }
 }
 
+/// <summary>
+///     Represents a single key-value entry in a Soroban map.
+/// </summary>
 public class SCMapEntry
 {
     public SCMapEntry(SCVal key, SCVal value)
@@ -1191,6 +1315,9 @@ public class SCMapEntry
     }
 }
 
+/// <summary>
+///     Represents a Soroban ledger key that refers to a contract instance entry.
+/// </summary>
 public class SCLedgerKeyContractInstance : SCVal
 {
     public Xdr.SCVal ToSCValXdr()
@@ -1220,6 +1347,9 @@ public class SCLedgerKeyContractInstance : SCVal
     }
 }
 
+/// <summary>
+///     Represents a Soroban contract instance, containing the executable and optional persistent storage.
+/// </summary>
 public class SCContractInstance : SCVal
 {
     public SCContractInstance(ContractExecutable executable, SCMap? storage)
@@ -1295,6 +1425,9 @@ public abstract class ContractExecutable
     public abstract Xdr.ContractExecutable ToXdr();
 }
 
+/// <summary>
+///     Represents a contract executable backed by a WebAssembly (Wasm) module, identified by its hash.
+/// </summary>
 public class ContractExecutableWasm : ContractExecutable
 {
     public ContractExecutableWasm(string hash)
@@ -1325,6 +1458,9 @@ public class ContractExecutableWasm : ContractExecutable
     }
 }
 
+/// <summary>
+///     Represents a contract executable for a built-in Stellar Asset Contract (SAC).
+/// </summary>
 public class ContractExecutableStellarAsset : ContractExecutable
 {
     public override Xdr.ContractExecutable ToXdr()
@@ -1339,6 +1475,9 @@ public class ContractExecutableStellarAsset : ContractExecutable
     }
 }
 
+/// <summary>
+///     Represents a Soroban nonce key used for authorization nonce tracking.
+/// </summary>
 public class SCNonceKey : SCVal
 {
     public SCNonceKey(long value)

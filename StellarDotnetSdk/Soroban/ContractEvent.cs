@@ -2,6 +2,9 @@
 
 namespace StellarDotnetSdk.Soroban;
 
+/// <summary>
+///     Represents an event emitted by a Soroban smart contract during execution.
+/// </summary>
 public class ContractEvent
 {
     private ContractEvent(

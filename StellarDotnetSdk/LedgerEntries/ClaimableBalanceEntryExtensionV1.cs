@@ -1,5 +1,8 @@
 ﻿namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents version 1 extensions to a claimable balance entry, including flags such as clawback enabled.
+/// </summary>
 public class ClaimableBalanceEntryExtensionV1
 {
     private ClaimableBalanceEntryExtensionV1(uint flags)

@@ -2,6 +2,9 @@
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the network configuration setting for the maximum size in bytes of a contract data key.
+/// </summary>
 public class ConfigSettingContractDataKeySizeBytes : LedgerEntryConfigSetting
 {
     private ConfigSettingContractDataKeySizeBytes(uint value)

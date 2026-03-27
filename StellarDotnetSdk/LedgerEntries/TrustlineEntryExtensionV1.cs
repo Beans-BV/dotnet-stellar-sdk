@@ -2,6 +2,9 @@
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents version 1 extensions to a trustline entry, including liabilities (buying and selling).
+/// </summary>
 public class TrustlineEntryExtensionV1
 {
     private TrustlineEntryExtensionV1(Liabilities liabilities)

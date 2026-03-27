@@ -3,6 +3,11 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk;
 
+/// <summary>
+///     Represents an account signer with a signing key and associated weight.
+///     Signers are used to authorize transactions for Stellar accounts, where
+///     the weight contributes toward meeting the required signing thresholds.
+/// </summary>
 public class Signer
 {
     public Signer(SignerKey key, uint weight)

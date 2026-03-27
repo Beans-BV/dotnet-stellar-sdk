@@ -17,18 +17,33 @@ public class
     }
 
 
+    /// <summary>
+    ///     Filters claimable balances by the given asset.
+    /// </summary>
+    /// <param name="asset">The asset to filter claimable balances by.</param>
+    /// <returns>The current <see cref="ClaimableBalancesRequestBuilder" /> instance for chaining.</returns>
     public ClaimableBalancesRequestBuilder ForAsset(Asset asset)
     {
         UriBuilder.SetQueryParam("asset", asset.CanonicalName());
         return this;
     }
 
+    /// <summary>
+    ///     Filters claimable balances by the given claimant account.
+    /// </summary>
+    /// <param name="claimant">The claimant account to filter by.</param>
+    /// <returns>The current <see cref="ClaimableBalancesRequestBuilder" /> instance for chaining.</returns>
     public ClaimableBalancesRequestBuilder ForClaimant(KeyPair claimant)
     {
         UriBuilder.SetQueryParam("claimant", claimant.Address);
         return this;
     }
 
+    /// <summary>
+    ///     Filters claimable balances by the given sponsor account.
+    /// </summary>
+    /// <param name="sponsor">The sponsor account to filter by.</param>
+    /// <returns>The current <see cref="ClaimableBalancesRequestBuilder" /> instance for chaining.</returns>
     public ClaimableBalancesRequestBuilder ForSponsor(KeyPair sponsor)
     {
         UriBuilder.SetQueryParam("sponsor", sponsor.Address);

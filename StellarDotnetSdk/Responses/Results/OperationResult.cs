@@ -4,6 +4,9 @@ using OperationTypeEnum = StellarDotnetSdk.Xdr.OperationType.OperationTypeEnum;
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a Stellar operation. Base class for all operation result types.
+/// </summary>
 public class OperationResult
 {
     /// <summary>

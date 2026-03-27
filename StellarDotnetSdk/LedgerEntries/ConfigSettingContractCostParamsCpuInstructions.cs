@@ -3,6 +3,9 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the network configuration settings for smart contract CPU instruction cost parameters.
+/// </summary>
 public class ConfigSettingContractCostParamsCpuInstructions : LedgerEntryConfigSetting
 {
     private ConfigSettingContractCostParamsCpuInstructions(ConfigSettingContractCostParamEntry[] paramEntries)

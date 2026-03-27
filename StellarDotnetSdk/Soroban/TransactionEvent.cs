@@ -3,6 +3,10 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Soroban;
 
+/// <summary>
+///     Represents an event emitted during a Soroban transaction, including the stage at which the event occurred
+///     and the underlying contract event data.
+/// </summary>
 public class TransactionEvent
 {
     private TransactionEvent(TransactionEventStage stage, ContractEvent @event)

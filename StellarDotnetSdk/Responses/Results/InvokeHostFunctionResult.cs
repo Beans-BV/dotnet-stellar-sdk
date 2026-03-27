@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.InvokeHostFunctionResultCode.InvokeH
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of an invoke host function operation.
+/// </summary>
 public class InvokeHostFunctionResult : OperationResult
 {
     public static InvokeHostFunctionResult FromXdr(Xdr.InvokeHostFunctionResult result)
@@ -26,6 +29,9 @@ public class InvokeHostFunctionResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful invoke host function operation result.
+/// </summary>
 public class InvokeHostFunctionSuccess : InvokeHostFunctionResult
 {
     public override bool IsSuccess => true;

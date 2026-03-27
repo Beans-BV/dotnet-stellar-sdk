@@ -2,6 +2,10 @@
 
 namespace StellarDotnetSdk.Memos;
 
+/// <summary>
+///     Represents a memo containing a 32-byte hash value. This is typically used to attach
+///     an arbitrary hash to a transaction (XDR type <c>MEMO_HASH</c>).
+/// </summary>
 public class MemoHash : MemoHashAbstract
 {
     public MemoHash(byte[] bytes) : base(bytes)

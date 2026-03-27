@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.LiquidityPoolWithdrawResultCode.Liqu
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a liquidity pool withdraw operation.
+/// </summary>
 public class LiquidityPoolWithdrawResult : OperationResult
 {
     public static LiquidityPoolWithdrawResult FromXdr(Xdr.LiquidityPoolWithdrawResult result)
@@ -20,6 +23,9 @@ public class LiquidityPoolWithdrawResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful liquidity pool withdraw operation result.
+/// </summary>
 public class LiquidityPoolWithdrawSuccess : LiquidityPoolWithdrawResult
 {
     public override bool IsSuccess => true;

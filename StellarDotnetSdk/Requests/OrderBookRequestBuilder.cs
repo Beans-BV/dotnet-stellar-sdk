@@ -6,6 +6,10 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Builds requests to the Horizon <c>/order_book</c> endpoint for retrieving
+///     the current order book for a given asset pair.
+/// </summary>
 public class OrderBookRequestBuilder : RequestBuilder<OrderBookRequestBuilder>
 {
     public OrderBookRequestBuilder(Uri serverUri, HttpClient httpClient)
@@ -13,6 +17,11 @@ public class OrderBookRequestBuilder : RequestBuilder<OrderBookRequestBuilder>
     {
     }
 
+    /// <summary>
+    ///     Sets the asset being bought (the ask side of the order book).
+    /// </summary>
+    /// <param name="asset">The asset being bought.</param>
+    /// <returns>The current <see cref="OrderBookRequestBuilder" /> instance for chaining.</returns>
     public OrderBookRequestBuilder BuyingAsset(Asset asset)
     {
         UriBuilder.SetQueryParam("buying_asset_type", asset.Type);
@@ -25,6 +34,11 @@ public class OrderBookRequestBuilder : RequestBuilder<OrderBookRequestBuilder>
         return this;
     }
 
+    /// <summary>
+    ///     Sets the asset being sold (the bid side of the order book).
+    /// </summary>
+    /// <param name="asset">The asset being sold.</param>
+    /// <returns>The current <see cref="OrderBookRequestBuilder" /> instance for chaining.</returns>
     public OrderBookRequestBuilder SellingAsset(Asset asset)
     {
         UriBuilder.SetQueryParam("selling_asset_type", asset.Type);

@@ -57,6 +57,9 @@ public abstract class ExtensionPoint
     }
 }
 
+/// <summary>
+///     Represents the default (zero-discriminant) extension point, indicating no additional extensions are present.
+/// </summary>
 public class ExtensionPointZero : ExtensionPoint
 {
     public Xdr.ExtensionPoint ToExtensionPointXdr()

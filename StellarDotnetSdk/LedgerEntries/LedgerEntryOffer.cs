@@ -5,6 +5,9 @@ using Asset = StellarDotnetSdk.Assets.Asset;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents an offer ledger entry on the Stellar decentralized exchange (DEX).
+/// </summary>
 public class LedgerEntryOffer : LedgerEntry
 {
     private LedgerEntryOffer(

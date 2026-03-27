@@ -73,6 +73,11 @@ public abstract class TrustlineAsset
 
     public abstract int CompareTo(TrustlineAsset asset);
 
+    /// <summary>
+    ///     Converts this trustline asset to its XDR <see cref="TrustLineAsset" /> representation.
+    /// </summary>
+    /// <returns>A <see cref="TrustLineAsset" /> XDR object corresponding to the concrete asset type.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the trustline asset type is not recognized.</exception>
     public TrustLineAsset ToXdr()
     {
         return this switch
@@ -83,6 +88,10 @@ public abstract class TrustlineAsset
         };
     }
 
+    /// <summary>
+    ///     Wraps a standard <see cref="Asset" /> instance as a <see cref="TrustlineAsset" />,
+    ///     enabling non-pool-share assets to be used where a trustline asset is required.
+    /// </summary>
     public class Wrapper : TrustlineAsset
     {
         public Wrapper(Asset asset)
@@ -112,6 +121,10 @@ public abstract class TrustlineAsset
             return Asset.CompareTo(((Wrapper)asset).Asset);
         }
 
+        /// <summary>
+        ///     Converts the wrapped asset to its XDR <see cref="TrustLineAsset" /> representation.
+        /// </summary>
+        /// <returns>A <see cref="TrustLineAsset" /> XDR object with the discriminant and asset data from the wrapped asset.</returns>
         public TrustLineAsset ToXdrTrustLineAsset()
         {
             var trustlineAssetXdr = new TrustLineAsset();

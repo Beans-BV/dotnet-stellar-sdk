@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.SetOptionsResultCode.SetOptionsResul
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a set options operation.
+/// </summary>
 public class SetOptionsResult : OperationResult
 {
     public static SetOptionsResult FromXdr(Xdr.SetOptionsResult result)
@@ -25,6 +28,9 @@ public class SetOptionsResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful set options operation result.
+/// </summary>
 public class SetOptionsSuccess : SetOptionsResult
 {
     public override bool IsSuccess => true;

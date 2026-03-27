@@ -5,9 +5,15 @@ using System.Threading.Tasks;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Specifies the ordering direction for paginated Horizon responses.
+/// </summary>
 public enum OrderDirection
 {
+    /// <summary>Ascending order (oldest first).</summary>
     ASC,
+
+    /// <summary>Descending order (newest first).</summary>
     DESC,
 }
 
@@ -94,6 +100,9 @@ public class RequestBuilder<T> : IRequestBuilder<T> where T : class
         return await responseHandler.HandleResponse(response);
     }
 
+    /// <summary>
+    ///     Gets the fully resolved request URI as a string.
+    /// </summary>
     public string Uri => BuildUri().ToString();
 
     /// <summary>

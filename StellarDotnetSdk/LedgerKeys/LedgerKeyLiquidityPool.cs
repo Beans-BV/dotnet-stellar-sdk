@@ -4,6 +4,10 @@ using Assets_Asset = StellarDotnetSdk.Assets.Asset;
 
 namespace StellarDotnetSdk.LedgerKeys;
 
+/// <summary>
+///     Represents a ledger key for a liquidity pool entry on the Stellar network.
+///     Used to look up liquidity pool data from the ledger by its pool ID.
+/// </summary>
 public class LedgerKeyLiquidityPool : LedgerKey
 {
     public LedgerKeyLiquidityPool(LiquidityPoolId poolId)

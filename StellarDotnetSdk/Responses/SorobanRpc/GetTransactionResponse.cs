@@ -2,6 +2,10 @@
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;
 
+/// <summary>
+///     Represents the response from the Soroban RPC <c>getTransaction</c> method.
+///     Extends <see cref="TransactionInfo" /> with additional ledger context about when the request was handled.
+/// </summary>
 public class GetTransactionResponse : TransactionInfo
 {
     /// <summary>

@@ -2,6 +2,10 @@
 
 namespace StellarDotnetSdk.Soroban;
 
+/// <summary>
+///     Represents the resource limits for a Soroban transaction, including the ledger footprint,
+///     CPU instructions, and I/O byte limits.
+/// </summary>
 public class SorobanResources
 {
     public SorobanResources(LedgerFootprint footprint, uint instructions, uint diskReadBytes, uint writeBytes)

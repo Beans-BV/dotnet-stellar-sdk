@@ -5,6 +5,10 @@ using Asset = StellarDotnetSdk.Assets.Asset;
 
 namespace StellarDotnetSdk.LiquidityPool;
 
+/// <summary>
+///     Represents the unique identifier of a Stellar liquidity pool, derived from
+///     the SHA-256 hash of the pool's parameters (type, assets, and fee).
+/// </summary>
 public class LiquidityPoolId
 {
     public LiquidityPoolId(LiquidityPoolType.LiquidityPoolTypeEnum type, Asset assetA, Asset assetB, int fee)
@@ -47,6 +51,10 @@ public class LiquidityPoolId
         return Util.BytesToHex(Hash).ToLowerInvariant();
     }
 
+    /// <summary>
+    ///     Converts this liquidity pool ID to its XDR <see cref="PoolID" /> representation.
+    /// </summary>
+    /// <returns>A <see cref="PoolID" /> XDR object containing the pool hash.</returns>
     public PoolID ToXdr()
     {
         return new PoolID(new Hash(Hash));

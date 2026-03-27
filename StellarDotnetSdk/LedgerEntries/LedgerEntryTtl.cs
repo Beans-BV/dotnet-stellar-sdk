@@ -3,6 +3,9 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents a TTL (time-to-live) ledger entry that tracks the expiration ledger sequence for a Soroban state entry.
+/// </summary>
 public class LedgerEntryTtl : LedgerEntry
 {
     private LedgerEntryTtl(byte[] keyHash, uint liveUntilLedgerSequence)

@@ -5,6 +5,10 @@ using Asset = StellarDotnetSdk.Assets.Asset;
 
 namespace StellarDotnetSdk.LedgerKeys;
 
+/// <summary>
+///     Represents a ledger key for a trustline entry on the Stellar network.
+///     Used to look up an account's trust relationship with a specific asset or liquidity pool.
+/// </summary>
 public class LedgerKeyTrustline : LedgerKey
 {
     public LedgerKeyTrustline(string accountId, Asset asset) : this(KeyPair.FromAccountId(accountId),

@@ -2,6 +2,9 @@
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the network configuration settings for smart contract event size limits and fees.
+/// </summary>
 public class ConfigSettingContractEvents : LedgerEntryConfigSetting
 {
     private ConfigSettingContractEvents(uint txMaxContractEventsSizeBytes, long feeContractEvents1Kb)

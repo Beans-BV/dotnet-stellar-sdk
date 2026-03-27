@@ -8,6 +8,10 @@ namespace StellarDotnetSdk.LiquidityPool;
 using Asset = Asset;
 using Int32 = Int32;
 
+/// <summary>
+///     Represents the parameters for a constant-product liquidity pool (x * y = k).
+///     The two assets must be in lexicographic order (Asset A &lt; Asset B).
+/// </summary>
 public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
 {
     public LiquidityPoolConstantProductParameters(Asset assetA, Asset assetB, int feeBp)

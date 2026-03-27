@@ -1,5 +1,9 @@
 ﻿namespace StellarDotnetSdk.Responses.SorobanRpc;
 
+/// <summary>
+///     Represents the response from the Soroban RPC <c>getHealth</c> method.
+///     Contains the health status, ledger information, and retention window of the Soroban RPC server.
+/// </summary>
 public class GetHealthResponse
 {
     /// <summary>

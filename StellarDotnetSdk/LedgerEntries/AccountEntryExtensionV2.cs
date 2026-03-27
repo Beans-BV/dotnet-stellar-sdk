@@ -3,6 +3,9 @@ using StellarDotnetSdk.Accounts;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents version 2 extensions to a Stellar account entry, including sponsorship counts and signer sponsoring IDs.
+/// </summary>
 public class AccountEntryExtensionV2
 {
     private AccountEntryExtensionV2(uint numberSponsored, uint numberSponsoring, KeyPair?[] signerSponsoringIDs)

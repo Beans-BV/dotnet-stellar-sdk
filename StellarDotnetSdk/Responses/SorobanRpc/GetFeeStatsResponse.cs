@@ -24,6 +24,10 @@ public class GetFeeStatsResponse
     public long LatestLedger { get; init; }
 }
 
+/// <summary>
+///     Represents inclusion fee distribution statistics, including percentile breakdowns,
+///     for transactions over a range of recent ledgers.
+/// </summary>
 public class InclusionFee
 {
     /// Maximum fee

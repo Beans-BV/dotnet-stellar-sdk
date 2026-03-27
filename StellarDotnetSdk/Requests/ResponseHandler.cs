@@ -9,6 +9,11 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Deserializes Horizon HTTP responses into strongly-typed objects and translates
+///     HTTP error status codes into appropriate SDK exceptions.
+/// </summary>
+/// <typeparam name="T">The response type to deserialize into.</typeparam>
 public class ResponseHandler<T> where T : class
 {
     public async Task<T> HandleResponse(HttpResponseMessage response)

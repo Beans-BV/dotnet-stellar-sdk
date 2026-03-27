@@ -6,6 +6,10 @@ using Int64 = StellarDotnetSdk.Xdr.Int64;
 
 namespace StellarDotnetSdk.Soroban;
 
+/// <summary>
+///     Represents Soroban-specific transaction data, including resource allocation, resource fees,
+///     and optional resource extensions. This is attached to transactions that invoke Soroban smart contracts.
+/// </summary>
 public class SorobanTransactionData
 {
     /// <summary>

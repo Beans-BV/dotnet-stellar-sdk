@@ -2,6 +2,9 @@
 
 namespace StellarDotnetSdk.Soroban;
 
+/// <summary>
+///     Represents the version 0 body of a Soroban contract event, containing topics and data.
+/// </summary>
 public class ContractEventV0
 {
     private ContractEventV0(SCVal[] topics, SCVal data)

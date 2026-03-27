@@ -2,6 +2,10 @@
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the network configuration settings for smart contract ledger access costs, including read/write limits,
+///     fees, and rent parameters.
+/// </summary>
 public class ConfigSettingContractLedgerCost : LedgerEntryConfigSetting
 {
     private ConfigSettingContractLedgerCost(

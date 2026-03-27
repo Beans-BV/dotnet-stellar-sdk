@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.ChangeTrustResultCode.ChangeTrustRes
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a change trust operation.
+/// </summary>
 public class ChangeTrustResult : OperationResult
 {
     public static ChangeTrustResult FromXdr(Xdr.ChangeTrustResult result)
@@ -23,6 +26,9 @@ public class ChangeTrustResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful change trust operation result.
+/// </summary>
 public class ChangeTrustSuccess : ChangeTrustResult
 {
     public override bool IsSuccess => true;

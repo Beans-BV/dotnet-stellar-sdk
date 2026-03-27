@@ -1,5 +1,9 @@
 ﻿namespace StellarDotnetSdk.Responses.SorobanRpc;
 
+/// <summary>
+///     Represents the response from the Soroban RPC <c>getLatestLedger</c> method.
+///     Contains the hash, sequence number, and protocol version of the most recent ledger.
+/// </summary>
 public class GetLatestLedgerResponse
 {
     /// <summary>

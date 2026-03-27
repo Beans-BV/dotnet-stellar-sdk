@@ -4,6 +4,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.SetTrustLineFlagsResultCode.SetTrust
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a set trustline flags operation.
+/// </summary>
 public class SetTrustlineFlagsResult : OperationResult
 {
     public static SetTrustlineFlagsResult FromXdr(SetTrustLineFlagsResult result)
@@ -21,6 +24,9 @@ public class SetTrustlineFlagsResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful set trustline flags operation result.
+/// </summary>
 public class SetTrustlineFlagsSuccess : SetTrustlineFlagsResult
 {
     public override bool IsSuccess => true;

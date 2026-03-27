@@ -5,6 +5,9 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of an inflation operation.
+/// </summary>
 public class InflationResult : OperationResult
 {
     public static InflationResult FromXdr(Xdr.InflationResult result)
@@ -20,6 +23,9 @@ public class InflationResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful inflation operation result.
+/// </summary>
 public class InflationSuccess : InflationResult
 {
     public InflationSuccess(InflationPayout[] payouts)
@@ -34,6 +40,9 @@ public class InflationSuccess : InflationResult
     /// </summary>
     public InflationPayout[] Payouts { get; }
 
+    /// <summary>
+    ///     Represents a single inflation payout to a destination account.
+    /// </summary>
     public class InflationPayout
     {
         private InflationPayout(KeyPair destination, string amount)

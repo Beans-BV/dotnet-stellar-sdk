@@ -3,6 +3,9 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents a Soroban smart contract code (WASM) ledger entry, identified by its hash.
+/// </summary>
 public class LedgerEntryContractCode : LedgerEntry
 {
     private LedgerEntryContractCode(byte[] hash, byte[] code)

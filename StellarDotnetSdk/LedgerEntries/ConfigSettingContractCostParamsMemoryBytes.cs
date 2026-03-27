@@ -3,6 +3,9 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the network configuration settings for smart contract memory byte cost parameters.
+/// </summary>
 public class ConfigSettingContractCostParamsMemoryBytes : LedgerEntryConfigSetting
 {
     private ConfigSettingContractCostParamsMemoryBytes(ConfigSettingContractCostParamEntry[] paramEntries)

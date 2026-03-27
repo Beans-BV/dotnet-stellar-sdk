@@ -3,6 +3,10 @@ using System.Runtime.Serialization;
 
 namespace StellarDotnetSdk.Exceptions;
 
+/// <summary>
+///     The exception that is thrown when a Stellar transaction has more signatures than the maximum
+///     number allowed (20 signatures per transaction).
+/// </summary>
 [Serializable]
 public class TooManySignaturesException : Exception
 {

@@ -1,5 +1,10 @@
 ﻿namespace StellarDotnetSdk.Accounts;
 
+/// <summary>
+///     Represents a Stellar account used for building transactions. Provides access to the account's
+///     key pair, sequence number management, and muxed account information needed by
+///     <see cref="StellarDotnetSdk.Transactions.TransactionBuilder" />.
+/// </summary>
 public interface ITransactionBuilderAccount
 {
     string AccountId { get; }

@@ -3,6 +3,9 @@ using ExtensionPoint = StellarDotnetSdk.Soroban.ExtensionPoint;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents version 1 extensions to a contract code ledger entry, containing cost inputs for fee estimation.
+/// </summary>
 public class ContractCodeEntryExtensionV1
 {
     private ContractCodeEntryExtensionV1(ExtensionPoint extensionPoint, ContractCodeCostInputs costInputs)

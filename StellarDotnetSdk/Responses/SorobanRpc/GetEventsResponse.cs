@@ -33,6 +33,9 @@ public class GetEventsResponse
     [JsonPropertyName("cursor")]
     public string? Cursor { get; init; }
 
+    /// <summary>
+    ///     Represents a single event emitted by a Soroban smart contract, including its metadata and payload.
+    /// </summary>
     public class EventInfo
     {
         /// <summary>

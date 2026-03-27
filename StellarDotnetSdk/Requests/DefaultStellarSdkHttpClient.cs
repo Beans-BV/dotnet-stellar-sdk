@@ -4,6 +4,11 @@ using System.Reflection;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     A preconfigured <see cref="HttpClient" /> for communicating with Stellar Horizon and Soroban RPC servers.
+///     Sets default request headers (client name, version, and optional bearer token) and optionally
+///     wraps the handler pipeline with <see cref="RetryingHttpMessageHandler" /> for connection-level retries.
+/// </summary>
 public class DefaultStellarSdkHttpClient : HttpClient
 {
     /// <summary>

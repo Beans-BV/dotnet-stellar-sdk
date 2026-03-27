@@ -1,5 +1,9 @@
 ﻿namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents version 0 extensions to the contract ledger cost configuration, including footprint entry limits and
+///     write fees.
+/// </summary>
 public class ConfigSettingContractLedgerCostExtV0 : LedgerEntryConfigSetting
 {
     private ConfigSettingContractLedgerCostExtV0(

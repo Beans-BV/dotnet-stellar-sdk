@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.ManageDataResultCode.ManageDataResul
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a manage data operation.
+/// </summary>
 public class ManageDataResult : OperationResult
 {
     public static ManageDataResult FromXdr(Xdr.ManageDataResult result)
@@ -19,6 +22,9 @@ public class ManageDataResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful manage data operation result.
+/// </summary>
 public class ManageDataSuccess : ManageDataResult
 {
     public override bool IsSuccess => true;

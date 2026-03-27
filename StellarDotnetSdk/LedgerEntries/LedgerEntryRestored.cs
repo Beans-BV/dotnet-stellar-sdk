@@ -1,5 +1,8 @@
 ﻿namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents a ledger entry change where a previously archived Soroban entry was restored.
+/// </summary>
 public class LedgerEntryRestored : LedgerEntryChange
 {
     /// <summary>

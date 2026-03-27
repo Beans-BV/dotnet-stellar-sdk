@@ -3,6 +3,9 @@ using StellarDotnetSdk.Assets;
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a simple payment, containing the destination, asset, and amount.
+/// </summary>
 public class SimplePaymentResult
 {
     private SimplePaymentResult(KeyPair destination, Asset asset, string amount)

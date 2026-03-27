@@ -13,6 +13,10 @@ using Int64 = StellarDotnetSdk.Xdr.Int64;
 
 namespace StellarDotnetSdk.Transactions;
 
+/// <summary>
+///     Represents a Stellar transaction containing one or more operations, a source account, memo, and optional
+///     preconditions.
+/// </summary>
 public class Transaction : TransactionBase
 {
     internal Transaction(IAccountId sourceAccount, uint fee, long sequenceNumber,
@@ -56,11 +60,19 @@ public class Transaction : TransactionBase
 
     public SorobanTransactionData? SorobanTransactionData { get; private set; }
 
+    /// <summary>
+    ///     Adds an additional resource fee (in stroops) to the transaction fee, typically from Soroban simulation results.
+    /// </summary>
+    /// <param name="resourceFee">The resource fee in stroops to add.</param>
     public void AddResourceFee(uint resourceFee)
     {
         Fee += resourceFee;
     }
 
+    /// <summary>
+    ///     Sets the Soroban authorization entries on all invoke host function operations within this transaction.
+    /// </summary>
+    /// <param name="auth">The authorization entries to set.</param>
     public void SetSorobanAuthorization(SorobanAuthorizationEntry[] auth)
     {
         foreach (var operation in Operations)
@@ -72,6 +84,11 @@ public class Transaction : TransactionBase
         }
     }
 
+    /// <summary>
+    ///     Sets the Soroban transaction data (resource footprint and fees) on this transaction, typically from simulation
+    ///     results.
+    /// </summary>
+    /// <param name="sorobanTransactionData">The Soroban transaction data to set.</param>
     public void SetSorobanTransactionData(SorobanTransactionData sorobanTransactionData)
     {
         SorobanTransactionData = sorobanTransactionData;

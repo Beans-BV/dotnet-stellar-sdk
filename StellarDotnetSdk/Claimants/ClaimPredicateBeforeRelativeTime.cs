@@ -4,6 +4,10 @@ using xdr_Int64 = StellarDotnetSdk.Xdr.Int64;
 
 namespace StellarDotnetSdk.Claimants;
 
+/// <summary>
+///     Represents a claim predicate that is valid only before a specified duration has elapsed
+///     since the claimable balance was created. The duration is measured in seconds.
+/// </summary>
 public class ClaimPredicateBeforeRelativeTime : ClaimPredicate
 {
     [Obsolete("Use the ClaimPredicateBeforeRelativeTime(long duration) constructor instead.")]

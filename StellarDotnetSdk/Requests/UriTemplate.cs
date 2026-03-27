@@ -20,6 +20,14 @@ internal class UriTemplate
         _template = template;
     }
 
+    /// <summary>
+    ///     Resolves the URI template by reflecting over the public properties of the supplied object.
+    /// </summary>
+    /// <param name="parameters">
+    ///     An object whose public properties are used as template variable values, or <c>null</c> to resolve without
+    ///     variables.
+    /// </param>
+    /// <returns>A fully resolved <see cref="Uri" />.</returns>
     public Uri Resolve(object? parameters)
     {
         if (parameters is null)
@@ -37,6 +45,13 @@ internal class UriTemplate
         return Resolve(parametersDict);
     }
 
+    /// <summary>
+    ///     Resolves the URI template by substituting the provided dictionary of variable values.
+    /// </summary>
+    /// <param name="parameters">
+    ///     A dictionary mapping template variable names to their values, or <c>null</c> to resolve without variables.
+    /// </param>
+    /// <returns>A fully resolved <see cref="Uri" />.</returns>
     public Uri Resolve(IDictionary<string, object>? parameters = null)
     {
         var currentState = States.COPYING_LITERALS;

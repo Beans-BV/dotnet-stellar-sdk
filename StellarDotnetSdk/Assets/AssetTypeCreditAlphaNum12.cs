@@ -5,6 +5,9 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Assets;
 
+/// <summary>
+///     Represents a Stellar credit asset with an alphanumeric code between 5 and 12 characters long.
+/// </summary>
 public class AssetTypeCreditAlphaNum12 : AssetTypeCreditAlphaNum
 {
     public const string RestApiType = "credit_alphanum12";

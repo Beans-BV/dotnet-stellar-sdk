@@ -4,6 +4,9 @@ using ResultCodeEnum =
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of an end sponsoring future reserves operation.
+/// </summary>
 public class EndSponsoringFutureReservesResult : OperationResult
 {
     public static EndSponsoringFutureReservesResult FromXdr(Xdr.EndSponsoringFutureReservesResult result)
@@ -20,6 +23,9 @@ public class EndSponsoringFutureReservesResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful end sponsoring future reserves operation result.
+/// </summary>
 public class EndSponsoringFutureReservesSuccess : EndSponsoringFutureReservesResult
 {
     public override bool IsSuccess => true;

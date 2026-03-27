@@ -2,6 +2,10 @@
 
 namespace StellarDotnetSdk.LedgerKeys;
 
+/// <summary>
+///     Represents a ledger key for a network configuration setting entry.
+///     Used to look up protocol-level configuration values from the ledger.
+/// </summary>
 public class LedgerKeyConfigSetting : LedgerKey
 {
     public LedgerKeyConfigSetting(ConfigSettingID settingId)

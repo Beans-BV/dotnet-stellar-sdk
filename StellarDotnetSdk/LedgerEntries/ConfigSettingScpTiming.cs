@@ -2,6 +2,10 @@
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the network configuration settings for Stellar Consensus Protocol (SCP) timing parameters, including
+///     target close time and timeout values.
+/// </summary>
 public class ConfigSettingScpTiming : LedgerEntryConfigSetting
 {
     private ConfigSettingScpTiming(

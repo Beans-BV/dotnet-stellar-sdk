@@ -1,5 +1,8 @@
 ﻿namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the eviction iterator state used to track progress of Soroban state entry eviction across ledger closes.
+/// </summary>
 public class EvictionIterator : LedgerEntryConfigSetting
 {
     private EvictionIterator(

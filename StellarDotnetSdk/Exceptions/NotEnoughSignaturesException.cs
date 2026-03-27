@@ -3,6 +3,10 @@ using System.Runtime.Serialization;
 
 namespace StellarDotnetSdk.Exceptions;
 
+/// <summary>
+///     The exception that is thrown when a Stellar transaction does not have enough signatures
+///     to meet the required threshold for the operation(s) it contains.
+/// </summary>
 [Serializable]
 public class NotEnoughSignaturesException : Exception
 {

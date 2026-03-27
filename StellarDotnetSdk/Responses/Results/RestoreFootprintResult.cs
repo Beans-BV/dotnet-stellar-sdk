@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.RestoreFootprintResultCode.RestoreFo
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a restore footprint operation.
+/// </summary>
 public class RestoreFootprintResult : OperationResult
 {
     public static RestoreFootprintResult FromXdr(Xdr.RestoreFootprintResult result)
@@ -22,6 +25,9 @@ public class RestoreFootprintResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful restore footprint operation result.
+/// </summary>
 public class RestoreFootprintSuccess : RestoreFootprintResult
 {
     public override bool IsSuccess => true;

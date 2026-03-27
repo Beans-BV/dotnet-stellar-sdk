@@ -15,18 +15,33 @@ public class
     {
     }
 
+    /// <summary>
+    ///     Sets the destination account for the path payment.
+    /// </summary>
+    /// <param name="account">The destination account ID.</param>
+    /// <returns>The current <see cref="PathStrictSendRequestBuilder" /> instance for chaining.</returns>
     public PathStrictSendRequestBuilder DestinationAccount(string account)
     {
         UriBuilder.SetQueryParam("destination_account", account);
         return this;
     }
 
+    /// <summary>
+    ///     Sets the amount of the source asset to be sent.
+    /// </summary>
+    /// <param name="amount">The source amount.</param>
+    /// <returns>The current <see cref="PathStrictSendRequestBuilder" /> instance for chaining.</returns>
     public PathStrictSendRequestBuilder SourceAmount(string amount)
     {
         UriBuilder.SetQueryParam("source_amount", amount);
         return this;
     }
 
+    /// <summary>
+    ///     Sets the source asset to be sent in the path payment.
+    /// </summary>
+    /// <param name="asset">The source asset.</param>
+    /// <returns>The current <see cref="PathStrictSendRequestBuilder" /> instance for chaining.</returns>
     public PathStrictSendRequestBuilder SourceAsset(Asset asset)
     {
         UriBuilder.SetQueryParam("source_asset_type", asset.Type);
@@ -41,6 +56,11 @@ public class
         return this;
     }
 
+    /// <summary>
+    ///     Sets the list of destination assets to consider for the path payment.
+    /// </summary>
+    /// <param name="sources">The destination assets to consider.</param>
+    /// <returns>The current <see cref="PathStrictSendRequestBuilder" /> instance for chaining.</returns>
     public PathStrictSendRequestBuilder DestinationAssets(IEnumerable<Asset> sources)
     {
         var encodedAssets = sources.Select(a => a.ToQueryParameterEncodedString());

@@ -5,6 +5,9 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents a trustline ledger entry, which tracks an account's trust and balance for a non-native asset.
+/// </summary>
 public class LedgerEntryTrustline : LedgerEntry
 {
     private LedgerEntryTrustline(KeyPair account, TrustlineAsset asset, long balance, long limit, uint flags)

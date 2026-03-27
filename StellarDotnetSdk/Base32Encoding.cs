@@ -139,8 +139,15 @@ public static class Base32Encoding
         throw new ArgumentException("Byte is not a value Base32 value.", "b");
     }
 
+    /// <summary>
+    ///     Options for controlling Base32 encoding behavior.
+    /// </summary>
     public class Base32EncodingOptions
     {
+        /// <summary>
+        ///     Gets or sets a value indicating whether to omit trailing '=' padding characters
+        ///     from the Base32-encoded output.
+        /// </summary>
         public bool OmitPadding { get; set; }
     }
 }

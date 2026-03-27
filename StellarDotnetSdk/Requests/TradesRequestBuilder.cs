@@ -15,6 +15,11 @@ public class TradesRequestBuilder : RequestBuilderExecutePageable<TradesRequestB
     {
     }
 
+    /// <summary>
+    ///     Filters trades by the specified base asset.
+    /// </summary>
+    /// <param name="asset">The base asset to filter trades by.</param>
+    /// <returns>The current <see cref="TradesRequestBuilder" /> instance for chaining.</returns>
     public TradesRequestBuilder BaseAsset(Asset asset)
     {
         UriBuilder.SetQueryParam("base_asset_type", asset.Type);
@@ -27,12 +32,22 @@ public class TradesRequestBuilder : RequestBuilderExecutePageable<TradesRequestB
         return this;
     }
 
+    /// <summary>
+    ///     Filters trades by the specified offer ID.
+    /// </summary>
+    /// <param name="offerId">The offer ID to filter trades by.</param>
+    /// <returns>The current <see cref="TradesRequestBuilder" /> instance for chaining.</returns>
     public TradesRequestBuilder OfferId(string offerId)
     {
         UriBuilder.SetQueryParam("offer_id", offerId);
         return this;
     }
 
+    /// <summary>
+    ///     Filters trades by the specified counter asset.
+    /// </summary>
+    /// <param name="asset">The counter asset to filter trades by.</param>
+    /// <returns>The current <see cref="TradesRequestBuilder" /> instance for chaining.</returns>
     public TradesRequestBuilder CounterAsset(Asset asset)
     {
         UriBuilder.SetQueryParam("counter_asset_type", asset.Type);

@@ -3,6 +3,10 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerKeys;
 
+/// <summary>
+///     Represents a ledger key for an account entry on the Stellar network.
+///     Used to look up account data from the ledger.
+/// </summary>
 public class LedgerKeyAccount : LedgerKey
 {
     public LedgerKeyAccount(string accountId) : this(KeyPair.FromAccountId(accountId))

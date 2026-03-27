@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.AllowTrustResultCode.AllowTrustResul
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of an allow trust operation.
+/// </summary>
 public class AllowTrustResult : OperationResult
 {
     public static AllowTrustResult FromXdr(Xdr.AllowTrustResult result)

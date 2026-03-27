@@ -79,6 +79,10 @@ public abstract class ChangeTrustAsset
 
     public abstract Xdr.ChangeTrustAsset ToXdr();
 
+    /// <summary>
+    ///     Wraps a standard <see cref="Asset" /> instance as a <see cref="ChangeTrustAsset" />,
+    ///     enabling non-pool-share assets to be used in change trust operations.
+    /// </summary>
     public class Wrapper : ChangeTrustAsset
     {
         public Wrapper(Asset asset)

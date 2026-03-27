@@ -6,6 +6,9 @@ using static System.String;
 
 namespace StellarDotnetSdk.Assets;
 
+/// <summary>
+///     Represents a Stellar credit asset with an alphanumeric code between 1 and 4 characters long.
+/// </summary>
 public class AssetTypeCreditAlphaNum4 : AssetTypeCreditAlphaNum
 {
     public const string RestApiType = "credit_alphanum4";

@@ -6,10 +6,19 @@ using LaunchDarkly.EventSource;
 namespace StellarDotnetSdk.EventSources;
 #nullable disable
 
+/// <summary>
+/// Provides a Server-Sent Events (SSE) event source implementation for streaming events from a Stellar Horizon server.
+/// This class wraps the LaunchDarkly EventSource library to provide SSE connectivity.
+/// </summary>
 public class SseEventSource : IEventSource, IDisposable
 {
     private readonly LaunchDarkly.EventSource.EventSource _eventSource;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SseEventSource"/> class with the specified URI and optional configuration.
+    /// </summary>
+    /// <param name="uri">The URI of the SSE endpoint to connect to.</param>
+    /// <param name="configureEventSource">An optional action to configure the underlying event source connection settings.</param>
     public SseEventSource(Uri uri, Action<ConfigurationBuilder> configureEventSource = null)
     {
         Url = uri;
@@ -49,11 +58,18 @@ public class SseEventSource : IEventSource, IDisposable
         await _eventSource.StartAsync().ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Releases all resources used by the <see cref="SseEventSource"/>, including the underlying SSE connection.
+    /// </summary>
     public void Dispose()
     {
         _eventSource?.Dispose();
     }
 
+    /// <summary>
+    /// Gracefully shuts down the SSE connection. Unlike <see cref="Dispose"/>, this signals the event source
+    /// to close without disposing the underlying resources immediately.
+    /// </summary>
     public void Shutdown()
     {
         _eventSource.Close();

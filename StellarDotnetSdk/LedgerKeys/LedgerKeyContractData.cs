@@ -4,6 +4,11 @@ using SCVal = StellarDotnetSdk.Soroban.SCVal;
 
 namespace StellarDotnetSdk.LedgerKeys;
 
+/// <summary>
+///     Represents a ledger key for a Soroban smart contract data entry.
+///     Used to look up contract storage data from the ledger, identified by
+///     the contract address, data key, and durability (persistent or temporary).
+/// </summary>
 public class LedgerKeyContractData : LedgerKey
 {
     public LedgerKeyContractData(ScAddress contractId, SCVal key, ContractDataDurability durability)

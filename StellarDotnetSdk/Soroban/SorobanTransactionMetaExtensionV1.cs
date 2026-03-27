@@ -2,6 +2,10 @@
 
 namespace StellarDotnetSdk.Soroban;
 
+/// <summary>
+///     Represents version 1 extension metadata for a Soroban transaction, containing fee breakdowns
+///     for non-refundable resources, refundable resources, and rent charges.
+/// </summary>
 public class SorobanTransactionMetaExtensionV1
 {
     private SorobanTransactionMetaExtensionV1(

@@ -57,6 +57,9 @@ public abstract class ScAddress : SCVal
     public abstract SCAddress ToXdr();
 }
 
+/// <summary>
+///     Represents a Soroban address wrapping a Stellar account ID (Ed25519 public key).
+/// </summary>
 public class ScAccountId : ScAddress
 {
     /// <summary>
@@ -95,6 +98,9 @@ public class ScAccountId : ScAddress
     }
 }
 
+/// <summary>
+///     Represents a Soroban address wrapping a claimable balance ID.
+/// </summary>
 public class ScClaimableBalanceId : ScAddress
 {
     /// <summary>
@@ -130,6 +136,9 @@ public class ScClaimableBalanceId : ScAddress
     }
 }
 
+/// <summary>
+///     Represents a Soroban address wrapping a smart contract ID.
+/// </summary>
 public class ScContractId : ScAddress
 {
     /// <summary>
@@ -170,6 +179,9 @@ public class ScContractId : ScAddress
     }
 }
 
+/// <summary>
+///     Represents a Soroban address wrapping a liquidity pool ID.
+/// </summary>
 public class ScLiquidityPoolId : ScAddress
 {
     /// <summary>
@@ -210,6 +222,9 @@ public class ScLiquidityPoolId : ScAddress
     }
 }
 
+/// <summary>
+///     Represents a Soroban address wrapping a muxed account ID (M... address).
+/// </summary>
 public class ScMuxedAccountId : ScAddress
 {
     /// <summary>

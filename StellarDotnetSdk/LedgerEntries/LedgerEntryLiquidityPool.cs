@@ -4,6 +4,9 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents a liquidity pool ledger entry, which holds the pool's parameters and reserves.
+/// </summary>
 public class LedgerEntryLiquidityPool : LedgerEntry
 {
     private LedgerEntryLiquidityPool(LiquidityPoolId liquidityPoolId, LiquidityPoolEntryBody liquidityPoolBody)

@@ -1,5 +1,9 @@
 ﻿namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the network configuration settings for parallel smart contract transaction execution, including the
+///     maximum number of dependent transaction clusters per ledger.
+/// </summary>
 public class ConfigSettingContractParallelComputeV0 : LedgerEntryConfigSetting
 {
     private ConfigSettingContractParallelComputeV0(uint ledgerMaxDependentTxClusters)

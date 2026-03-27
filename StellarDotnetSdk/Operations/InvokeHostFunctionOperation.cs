@@ -124,6 +124,11 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
     }
 }
 
+/// <summary>
+///     Operation that invokes a Soroban host function to deploy a new smart contract on the Stellar network.
+///     Supports creating contracts from a Wasm hash with an address-derived contract ID, or deploying
+///     the builtin Soroban Asset Contract from a Stellar asset.
+/// </summary>
 public class CreateContractOperation : InvokeHostFunctionOperation
 {
     private CreateContractOperation(
@@ -226,6 +231,11 @@ public class CreateContractOperation : InvokeHostFunctionOperation
     }
 }
 
+/// <summary>
+///     Operation that invokes a Soroban host function to upload compiled smart contract Wasm bytecode
+///     to the Stellar network. The uploaded Wasm can subsequently be used to create contract instances
+///     via <see cref="CreateContractOperation" />.
+/// </summary>
 public class UploadContractOperation : InvokeHostFunctionOperation
 {
     /// <summary>
@@ -276,6 +286,10 @@ public class UploadContractOperation : InvokeHostFunctionOperation
 
 public abstract class HostFunction;
 
+/// <summary>
+///     Represents a host function that invokes a method on an existing Soroban smart contract.
+///     Encapsulates the contract address, function name, and arguments required for the invocation.
+/// </summary>
 public class InvokeContractHostFunction : HostFunction
 {
     public InvokeContractHostFunction(
@@ -307,6 +321,11 @@ public class InvokeContractHostFunction : HostFunction
         );
     }
 
+    /// <summary>
+    ///     Converts this <see cref="InvokeContractHostFunction" /> to its XDR <see cref="InvokeContractArgs" />
+    ///     representation.
+    /// </summary>
+    /// <returns>An <see cref="InvokeContractArgs" /> XDR object.</returns>
     public InvokeContractArgs ToXdr()
     {
         return new InvokeContractArgs
@@ -355,6 +374,11 @@ public class CreateContractHostFunction : HostFunction
         );
     }
 
+    /// <summary>
+    ///     Converts this <see cref="CreateContractHostFunction" /> to its XDR <see cref="CreateContractArgs" />
+    ///     representation.
+    /// </summary>
+    /// <returns>A <see cref="CreateContractArgs" /> XDR object.</returns>
     public CreateContractArgs ToXdr()
     {
         return new CreateContractArgs
@@ -412,6 +436,11 @@ public class CreateContractV2HostFunction : HostFunction
         );
     }
 
+    /// <summary>
+    ///     Converts this <see cref="CreateContractV2HostFunction" /> to its XDR <see cref="CreateContractArgsV2" />
+    ///     representation.
+    /// </summary>
+    /// <returns>A <see cref="CreateContractArgsV2" /> XDR object.</returns>
     public CreateContractArgsV2 ToXdr()
     {
         return new CreateContractArgsV2
@@ -423,6 +452,10 @@ public class CreateContractV2HostFunction : HostFunction
     }
 }
 
+/// <summary>
+///     Represents a host function that uploads compiled smart contract Wasm bytecode to the Stellar network.
+///     The uploaded Wasm is stored on-chain and can be referenced by its hash when creating new contract instances.
+/// </summary>
 public class UploadContractHostFunction : HostFunction
 {
     public UploadContractHostFunction(byte[] wasm)
@@ -525,6 +558,10 @@ public class SorobanSourceAccountCredentials : SorobanCredentials
     }
 }
 
+/// <summary>
+///     Represents Soroban credentials that authenticate a specific address for contract invocation authorization.
+///     Contains the authorizing address, a unique nonce, a signature expiration ledger, and the cryptographic signature.
+/// </summary>
 public class SorobanAddressCredentials : SorobanCredentials
 {
     public SorobanAddressCredentials(ScAddress address, long nonce, uint signatureExpirationLedger, SCVal signature)
@@ -587,6 +624,11 @@ public class SorobanAddressCredentials : SorobanCredentials
     }
 }
 
+/// <summary>
+///     Represents a single authorized Soroban invocation within an authorization tree.
+///     Each invocation consists of the authorized function being called and an array of sub-invocations
+///     that represent nested contract calls requiring the same authorization.
+/// </summary>
 public class SorobanAuthorizedInvocation
 {
     public SorobanAuthorizedInvocation(
@@ -653,6 +695,11 @@ public abstract class SorobanAuthorizedFunction
     }
 }
 
+/// <summary>
+///     Represents an authorized function that invokes a method on an existing Soroban smart contract.
+///     Wraps an <see cref="InvokeContractHostFunction" /> for use within a <see cref="SorobanAuthorizedInvocation" />
+///     tree.
+/// </summary>
 public class SorobanAuthorizedContractFunction : SorobanAuthorizedFunction
 {
     public SorobanAuthorizedContractFunction(InvokeContractHostFunction hostFunction)
@@ -690,6 +737,10 @@ public class SorobanAuthorizedContractFunction : SorobanAuthorizedFunction
     }
 }
 
+/// <summary>
+///     Represents an authorized function that creates a new Soroban smart contract.
+///     Wraps a <see cref="CreateContractHostFunction" /> for use within a <see cref="SorobanAuthorizedInvocation" /> tree.
+/// </summary>
 public class SorobanAuthorizedCreateContractFunction : SorobanAuthorizedFunction
 {
     public SorobanAuthorizedCreateContractFunction(CreateContractHostFunction hostFunction)
@@ -727,6 +778,12 @@ public class SorobanAuthorizedCreateContractFunction : SorobanAuthorizedFunction
     }
 }
 
+/// <summary>
+///     Represents an authorized function that creates a new Soroban smart contract using the V2 protocol,
+///     which supports passing constructor arguments during contract deployment.
+///     Wraps a <see cref="CreateContractV2HostFunction" /> for use within a <see cref="SorobanAuthorizedInvocation" />
+///     tree.
+/// </summary>
 public class SorobanAuthorizedCreateContractV2Function : SorobanAuthorizedFunction
 {
     public SorobanAuthorizedCreateContractV2Function(CreateContractV2HostFunction hostFunction)
@@ -766,6 +823,10 @@ public class SorobanAuthorizedCreateContractV2Function : SorobanAuthorizedFuncti
 
 public abstract class ContractIdPreimage
 {
+    /// <summary>
+    ///     Converts this <see cref="ContractIdPreimage" /> to its XDR <see cref="ContractIDPreimage" /> representation.
+    /// </summary>
+    /// <returns>A <see cref="ContractIDPreimage" /> XDR object.</returns>
     public ContractIDPreimage ToXdr()
     {
         return this switch
@@ -789,6 +850,10 @@ public abstract class ContractIdPreimage
     }
 }
 
+/// <summary>
+///     Represents a contract ID preimage derived from an account address and a 32-byte salt.
+///     The contract ID is deterministically computed from the address and salt combination.
+/// </summary>
 public class ContractIdAddressPreimage : ContractIdPreimage
 {
     public ContractIdAddressPreimage(string address, byte[]? salt = null)
@@ -827,6 +892,11 @@ public class ContractIdAddressPreimage : ContractIdPreimage
         );
     }
 
+    /// <summary>
+    ///     Converts this <see cref="ContractIdAddressPreimage" /> to its XDR <see cref="ContractIDPreimage" /> representation
+    ///     using the <c>CONTRACT_ID_PREIMAGE_FROM_ADDRESS</c> variant.
+    /// </summary>
+    /// <returns>A <see cref="ContractIDPreimage" /> XDR object.</returns>
     public ContractIDPreimage ToContractIdPreimageXdr()
     {
         return new ContractIDPreimage
@@ -844,6 +914,10 @@ public class ContractIdAddressPreimage : ContractIdPreimage
     }
 }
 
+/// <summary>
+///     Represents a contract ID preimage derived from a Stellar asset.
+///     Used when deploying the builtin Soroban Asset Contract for a given Stellar asset.
+/// </summary>
 public class ContractIdAssetPreimage : ContractIdPreimage
 {
     public ContractIdAssetPreimage(Asset asset)
@@ -863,6 +937,11 @@ public class ContractIdAssetPreimage : ContractIdPreimage
         return new ContractIdAssetPreimage(Asset.FromXdr(xdrContractIdPreimage.FromAsset));
     }
 
+    /// <summary>
+    ///     Converts this <see cref="ContractIdAssetPreimage" /> to its XDR <see cref="ContractIDPreimage" /> representation
+    ///     using the <c>CONTRACT_ID_PREIMAGE_FROM_ASSET</c> variant.
+    /// </summary>
+    /// <returns>A <see cref="ContractIDPreimage" /> XDR object.</returns>
     public ContractIDPreimage ToContractIdPreimageXdr()
     {
         return new ContractIDPreimage

@@ -5,6 +5,10 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents an account ledger entry containing balance, sequence number, signers, thresholds, and other account
+///     properties.
+/// </summary>
 public class LedgerEntryAccount : LedgerEntry
 {
     private LedgerEntryAccount(
