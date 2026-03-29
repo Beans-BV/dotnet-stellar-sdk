@@ -7,7 +7,7 @@ namespace StellarDotnetSdk.Requests;
 
 /// <summary>
 ///     Builds requests to the Stellar Testnet Friendbot service, which funds accounts
-///     with test Lumens. Only available on the Testnet network.
+///     with test Lumens. Only available on test networks (not the public network).
 /// </summary>
 public class FriendBotRequestBuilder : RequestBuilder<FriendBotRequestBuilder>
 {

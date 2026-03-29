@@ -45,7 +45,7 @@ public class TransactionPreconditions
     ///     Validates that the preconditions are well-formed. Throws if constraints are violated (e.g., too many extra
     ///     signers).
     /// </summary>
-    /// <exception cref="Exceptions.FormatException">Thrown when preconditions are invalid.</exception>
+    /// <exception cref="StellarDotnetSdk.Exceptions.FormatException">Thrown when preconditions are invalid.</exception>
     public void IsValid()
     {
         if (ExtraSigners?.Count > MaxExtraSignersCount)

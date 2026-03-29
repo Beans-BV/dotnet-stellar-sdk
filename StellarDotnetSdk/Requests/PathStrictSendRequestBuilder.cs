@@ -59,11 +59,11 @@ public class
     /// <summary>
     ///     Sets the list of destination assets to consider for the path payment.
     /// </summary>
-    /// <param name="sources">The destination assets to consider.</param>
+    /// <param name="destinationAssets">The destination assets to consider.</param>
     /// <returns>The current <see cref="PathStrictSendRequestBuilder" /> instance for chaining.</returns>
-    public PathStrictSendRequestBuilder DestinationAssets(IEnumerable<Asset> sources)
+    public PathStrictSendRequestBuilder DestinationAssets(IEnumerable<Asset> destinationAssets)
     {
-        var encodedAssets = sources.Select(a => a.ToQueryParameterEncodedString());
+        var encodedAssets = destinationAssets.Select(a => a.ToQueryParameterEncodedString());
         UriBuilder.SetQueryParam("destination_assets", string.Join(",", encodedAssets));
         return this;
     }

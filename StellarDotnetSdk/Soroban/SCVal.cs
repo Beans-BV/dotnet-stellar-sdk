@@ -1348,7 +1348,7 @@ public class SCLedgerKeyContractInstance : SCVal
 }
 
 /// <summary>
-///     Represents a Soroban contract instance, containing the executable and optional persistent storage.
+///     Represents a Soroban contract instance, containing the executable and optional instance storage.
 /// </summary>
 public class SCContractInstance : SCVal
 {
