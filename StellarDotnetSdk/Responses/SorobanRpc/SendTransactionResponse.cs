@@ -60,12 +60,12 @@ public class SendTransactionResponse
     public string Hash { get; init; }
 
     /// <summary>
-    ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.
+    ///     The sequence number of the latest ledger known to Stellar RPC at the time it handled the request.
     /// </summary>
     public long? LatestLedger { get; init; }
 
     /// <summary>
-    ///     The unix timestamp of the close time of the latest ledger known to Soroban RPC at the time it handled the request.
+    ///     The unix timestamp of the close time of the latest ledger known to Stellar RPC at the time it handled the request.
     /// </summary>
     public long? LatestLedgerCloseTime { get; init; }
 

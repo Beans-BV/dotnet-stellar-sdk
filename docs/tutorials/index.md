@@ -1,6 +1,6 @@
 # Stellar .NET SDK Examples
 
-This section contains working examples demonstrating how to use the Stellar .NET SDK for both Horizon API and Soroban RPC. Each example is taken directly from our test code and thoroughly documented to help you understand how to implement similar functionality in your own applications.
+This section contains working examples demonstrating how to use the Stellar .NET SDK for both Horizon API and Stellar RPC. Each example is taken directly from our test code and thoroughly documented to help you understand how to implement similar functionality in your own applications.
 
 If you are missing one example or guide, just write an issue in the [GitHub](https://github.com/Beans-BV/dotnet-stellar-sdk/issues) repository.
 
@@ -17,7 +17,7 @@ Examples for working with Stellar's core network functionality:
 - [**Sponsored Reserves**](examples/horizon/sponsored-reserves.md) - Working with Stellar's sponsorship features
 - [**Fee-bump Transactions**](examples/horizon/fee-bump.md) - Working with Stellar's fee-bump transactions
 
-### Soroban RPC Examples
+### Stellar RPC Examples
 
 Examples for working with Stellar's smart contract platform:
 

@@ -226,7 +226,7 @@ public static class HttpResilienceOptionsPresets
     }
 
     /// <summary>
-    ///     Creates options tuned for Soroban RPC polling workflows.
+    ///     Creates options tuned for Stellar RPC polling workflows.
     ///     Uses more retries and longer delays for connection failures to accommodate network instability.
     ///     Note: HTTP error status codes are still not retried automatically.
     /// </summary>

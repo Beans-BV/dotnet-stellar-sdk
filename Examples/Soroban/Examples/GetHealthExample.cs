@@ -3,7 +3,7 @@ using StellarDotnetSdk.Examples.Soroban.Helpers;
 namespace StellarDotnetSdk.Examples.Soroban.Examples;
 
 /// <summary>
-///     Demonstrates how to check the health status of a Soroban RPC server.
+///     Demonstrates how to check the health status of a Stellar RPC server.
 /// </summary>
 internal static class GetHealthExample
 {

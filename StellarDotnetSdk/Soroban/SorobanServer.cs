@@ -19,7 +19,7 @@ using StellarDotnetSdk.Transactions;
 namespace StellarDotnetSdk.Soroban;
 
 /// <summary>
-///     This class helps you to connect to a local or remote Soroban RPC server
+///     This class helps you to connect to a local or remote Stellar RPC server
 ///     and send requests to the server. It parses the results and provides
 ///     corresponding response objects.
 /// </summary>
@@ -34,7 +34,7 @@ public class SorobanServer : IDisposable
     /// <summary>
     ///     Constructs a new instance that will interact with the provided URL.
     /// </summary>
-    /// <param name="uri">URL of the Soroban RPC server.</param>
+    /// <param name="uri">URL of the Stellar RPC server.</param>
     /// <param name="httpClient">HttpClient instance to use for requests.</param>
     public SorobanServer(string uri, HttpClient httpClient)
     {
@@ -46,7 +46,7 @@ public class SorobanServer : IDisposable
     /// <summary>
     ///     Constructs a new instance that will interact with the provided URL.
     /// </summary>
-    /// <param name="uri">URL of the Soroban RPC server.</param>
+    /// <param name="uri">URL of the Stellar RPC server.</param>
     /// <param name="bearerToken">(Optional) Bearer token in case the server requires it.</param>
     public SorobanServer(string uri, string? bearerToken = null)
     {
@@ -58,7 +58,7 @@ public class SorobanServer : IDisposable
     /// <summary>
     ///     Constructs a new instance that will interact with the provided URL.
     /// </summary>
-    /// <param name="uri">URL of the Soroban RPC server.</param>
+    /// <param name="uri">URL of the Stellar RPC server.</param>
     /// <param name="resilienceOptions">Resilience options for HTTP requests. If null, default retry configuration is used.</param>
     /// <param name="bearerToken">(Optional) Bearer token in case the server requires it.</param>
     public SorobanServer(string uri, HttpResilienceOptions? resilienceOptions, string? bearerToken = null)

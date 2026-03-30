@@ -1,10 +1,10 @@
 # Connecting to and Querying Soroban Server Information
 
-This guide demonstrates how to connect to the Soroban RPC server and query basic information using the Stellar .NET SDK.
+This guide demonstrates how to connect to the Stellar RPC server and query basic information using the Stellar .NET SDK.
 
 ## Understanding Soroban Servers
 
-Soroban is Stellar's smart contract platform. To interact with Soroban, you need to connect to a Soroban RPC server, which provides specialized endpoints for smart contract operations beyond what Horizon offers.
+Soroban is Stellar's smart contract platform. To interact with Soroban, you need to connect to a Stellar RPC server, which provides specialized endpoints for smart contract operations beyond what Horizon offers.
 
 ## Setting Up a Soroban Server Connection
 
@@ -288,5 +288,5 @@ This function:
 ## Additional Resources
 
 - [RPC Introduction](https://developers.stellar.org/docs/data/apis/rpc)
-- [Soroban RPC API Reference](https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods)
+- [Stellar RPC API Reference](https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods)
 - [Stellar Developers Docs](https://developers.stellar.org/docs)

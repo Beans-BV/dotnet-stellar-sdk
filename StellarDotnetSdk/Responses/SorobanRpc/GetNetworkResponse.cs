@@ -13,7 +13,7 @@ public class GetNetworkResponse
     public string FriendbotUrl { get; init; }
 
     /// <summary>
-    ///     Network passphrase configured for this Soroban RPC node.
+    ///     Network passphrase configured for this Stellar RPC node.
     /// </summary>
     public string Passphrase { get; init; }
 

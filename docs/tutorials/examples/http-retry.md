@@ -330,4 +330,4 @@ If you're being rate limited:
 - [Java SDK](https://github.com/lightsail-network/java-stellar-sdk)
 - [Stellar Network Status](https://status.stellar.org/)
 - [Horizon API Documentation](https://developers.stellar.org/docs/data/apis/horizon)
-- [Soroban RPC Documentation](https://developers.stellar.org/docs/data/apis/rpc)
+- [Stellar RPC Documentation](https://developers.stellar.org/docs/data/apis/rpc)

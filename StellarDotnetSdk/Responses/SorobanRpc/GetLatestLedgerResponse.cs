@@ -7,7 +7,7 @@
 public class GetLatestLedgerResponse
 {
     /// <summary>
-    ///     Hash identifier of the latest ledger (as a hex-encoded string) known to Soroban RPC at the time it handled the
+    ///     Hash identifier of the latest ledger (as a hex-encoded string) known to Stellar RPC at the time it handled the
     ///     request.
     /// </summary>
     public string Id { get; init; }
@@ -18,7 +18,7 @@ public class GetLatestLedgerResponse
     public int ProtocolVersion { get; init; }
 
     /// <summary>
-    ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.
+    ///     The sequence number of the latest ledger known to Stellar RPC at the time it handled the request.
     /// </summary>
     public int Sequence { get; init; }
 }

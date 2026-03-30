@@ -13,11 +13,11 @@ The Stellar ledger stores different types of data entries that represent various
 - **Contract Code**: Smart contract code uploaded to the Soroban platform
 - **Contract Data**: Data associated with deployed smart contracts
 
-The Soroban RPC server provides specialized endpoints to query these ledger entries directly.
+The Stellar RPC server provides specialized endpoints to query these ledger entries directly.
 
 ## Setting Up the Connection
 
-First, establish a connection to the Soroban RPC server:
+First, establish a connection to the Stellar RPC server:
 
 ```csharp
 // Define the Soroban testnet URL
@@ -27,7 +27,7 @@ private const string TestNetSorobanUrl = "https://soroban-testnet.stellar.org";
 SorobanServer server = new(TestNetSorobanUrl);
 ```
 
-> 📝 **Note**: For Horizon-related ledger entries, you can also use a Horizon server connection, but Soroban RPC provides more comprehensive ledger entry access.
+> 📝 **Note**: For Horizon-related ledger entries, you can also use a Horizon server connection, but Stellar RPC provides more comprehensive ledger entry access.
 
 ## Querying Account Entries
 
@@ -337,4 +337,4 @@ This powerful approach allows you to efficiently retrieve multiple ledger entrie
 ## Additional Resources
 
 - [Stellar Ledger Documentation](https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/ledgers)
-- [Soroban RPC API Reference](https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods)
+- [Stellar RPC API Reference](https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods)

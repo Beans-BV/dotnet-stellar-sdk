@@ -6,7 +6,7 @@ using LedgerKey = StellarDotnetSdk.LedgerKeys.LedgerKey;
 namespace StellarDotnetSdk.Examples.Soroban.Examples;
 
 /// <summary>
-///     Demonstrates how to retrieve contract code ledger entries from the Soroban RPC server.
+///     Demonstrates how to retrieve contract code ledger entries from the Stellar RPC server.
 /// </summary>
 internal static class GetLedgerEntryContractCodeExample
 {
