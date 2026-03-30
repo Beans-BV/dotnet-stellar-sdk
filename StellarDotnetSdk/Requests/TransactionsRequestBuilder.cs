@@ -96,7 +96,7 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
 
     /// <summary>
     ///     Builds request to <code>GET /liquidity_pools/{liquidity_pool_id}/transactions</code>
-    ///     <a href="https://developers.stellar.org/docs/data/horizon/api-reference/list-transactions-by-liquidity-pool">
+    ///     <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/lp-retrieve-related-transactions">
     ///         Retrieve a Liquidity Pool's Transactions
     ///     </a>
     /// </summary>

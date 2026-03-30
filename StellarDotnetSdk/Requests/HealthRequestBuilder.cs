@@ -17,7 +17,6 @@ public class HealthRequestBuilder : RequestBuilder<HealthRequestBuilder>
 
     /// <summary>
     ///     Requests <code>GET /health</code>
-    ///     <a href="https://developers.stellar.org/docs/data/horizon/api-reference/aggregations/health">Health</a>
     /// </summary>
     public async Task<HealthResponse> Execute()
     {

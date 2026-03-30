@@ -78,7 +78,7 @@ public class TradesRequestBuilder : RequestBuilderExecutePageable<TradesRequestB
 
     /// <summary>
     ///     Builds request to <code>GET /liquidity_pools/{liquidity_pool_id}/trades</code>
-    ///     <a href="https://developers.stellar.org/docs/data/horizon/api-reference/list-trades-by-liquidity-pool">
+    ///     <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-related-trades">
     ///         Trades for
     ///         Liquidity Pool
     ///     </a>
@@ -96,7 +96,7 @@ public class TradesRequestBuilder : RequestBuilderExecutePageable<TradesRequestB
 
     /// <summary>
     ///     Builds request to <code>GET /offers/{offer_id}/trades</code>
-    ///     <a href="https://developers.stellar.org/docs/data/horizon/api-reference/get-trades-by-offer-id">Trades for Offer</a>
+    ///     <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-trades-by-offer-id">Trades for Offer</a>
     /// </summary>
     /// <param name="offerId">Offer for which to get trades</param>
     public TradesRequestBuilder ForOffer(string offerId)
