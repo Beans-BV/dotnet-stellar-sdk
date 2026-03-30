@@ -16,7 +16,7 @@ public class LedgerInfo
     public long Sequence { get; init; }
 
     /// <summary>
-    ///     The ISO 8601 timestamp at which the ledger was closed.
+    ///     The unix timestamp of the close time of the ledger, encoded as a string.
     /// </summary>
     public string? LedgerCloseTime { get; init; }
 

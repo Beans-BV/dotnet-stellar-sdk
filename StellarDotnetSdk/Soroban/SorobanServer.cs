@@ -149,7 +149,7 @@ public class SorobanServer : IDisposable
     /// <summary>
     ///     The <c>getLedgers</c> method returns a detailed list of ledgers starting from the user specified starting point
     ///     that you can paginate as long as the pages fall within the history retention of their corresponding RPC provider.
-    ///     See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgers
+    ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLedgers
     /// </summary>
     /// <param name="request">The request parameters including start ledger and pagination options.</param>
     /// <returns>A <see cref="GetLedgersResponse" /> object containing the ledger details.</returns>

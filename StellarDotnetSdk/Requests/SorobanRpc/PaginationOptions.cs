@@ -1,4 +1,6 @@
-﻿namespace StellarDotnetSdk.Requests.SorobanRpc;
+﻿using System.Text.Json.Serialization;
+
+namespace StellarDotnetSdk.Requests.SorobanRpc;
 
 /// <summary>
 ///     Pagination in RPC is similar to pagination in Horizon.
@@ -11,10 +13,12 @@ public class PaginationOptions
     ///     pulled from the paging_token value of a record. When a cursor is provided, RPC will not include the element whose
     ///     ID matches the cursor in the response: only elements which appear after the cursor will be included.
     /// </summary>
+    [JsonPropertyName("cursor")]
     public string? Cursor { get; set; }
 
     /// <summary>
     ///     The maximum number of records returned. For getTransactions, this ranges from 1 to 200 and defaults to 50.
     /// </summary>
+    [JsonPropertyName("limit")]
     public long? Limit { get; set; }
 }
