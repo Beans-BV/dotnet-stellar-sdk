@@ -113,7 +113,7 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
 
     /// <summary>
     ///     Requests <code>GET /offers/{offerId}</code>
-    ///     <a href="https://developers.stellar.org/docs/data/horizon/api-reference/get-offer-by-offer-id">Retrieve an Offer</a>
+    ///     <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-offer-by-offer-id">Retrieve an Offer</a>
     /// </summary>
     /// <param name="offerId">ID of the offer to fetch.</param>
     public async Task<OfferResponse> Offer(string offerId)

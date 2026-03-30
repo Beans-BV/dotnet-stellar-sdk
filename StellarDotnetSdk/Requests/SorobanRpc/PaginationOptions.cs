@@ -2,7 +2,7 @@
 
 /// <summary>
 ///     Pagination in RPC is similar to pagination in Horizon.
-///     See: <a href="https://developers.stellar.org/docs/data/rpc/api-reference/pagination">Pagination</a>
+///     See: <a href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/pagination">Pagination</a>
 /// </summary>
 public class PaginationOptions
 {

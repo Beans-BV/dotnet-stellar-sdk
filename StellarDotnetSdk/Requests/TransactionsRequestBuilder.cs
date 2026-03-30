@@ -26,7 +26,7 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
 
     /// <summary>
     ///     Requests <code>GET /transactions/{transactionId}</code>
-    ///     <a href="https://developers.stellar.org/network/horizon/resources/retrieve-a-transaction">Retrieve a Transaction</a>
+    ///     <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-transaction">Retrieve a Transaction</a>
     /// </summary>
     /// <param name="transactionId">ID of the transaction to fetch.</param>
     public Task<TransactionResponse> Transaction(string transactionId)
@@ -37,7 +37,7 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
 
     /// <Summary>
     ///     Builds request to <code>GET /accounts/{account}/transactions</code>
-    ///     <a href="https://developers.stellar.org/network/horizon/resources/get-transactions-by-account-id">
+    ///     <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-transactions-by-account-id">
     ///         Retrieve an
     ///         Account's Transactions
     ///     </a>
@@ -58,7 +58,7 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
     /// <summary>
     ///     Builds request to <code>GET /claimable_balances/{claimable_balance_id}/transactions</code>
     ///     See:
-    ///     <a href="https://developers.stellar.org/network/horizon/resources/cb-retrieve-related-transactions">
+    ///     <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/cb-retrieve-related-transactions">
     ///         Retrieve
     ///         related transactions
     ///     </a>
@@ -78,7 +78,7 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
 
     /// <summary>
     ///     Builds request to <code>GET /ledgers/{ledgerSeq}/transactions</code>
-    ///     <a href="https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-transactions">
+    ///     <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-ledgers-transactions">
     ///         Retrieve a
     ///         Ledger's Transactions
     ///     </a>

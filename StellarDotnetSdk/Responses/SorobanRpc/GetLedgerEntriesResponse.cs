@@ -22,7 +22,7 @@ public class GetLedgerEntriesResponse
     /// <summary>
     ///     Represents a single entry fetched from Soroban server by method getLedgerEntries().
     /// </summary>
-    /// <seealso href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgerEntries" />
+    /// <seealso href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLedgerEntries" />
     public class LedgerEntryResult
     {
         /// <summary>

@@ -8,7 +8,7 @@ public interface IPaymentsRequestInitialBuilder : IPaymentsRequestBuilder
 {
     /// <Summary>
     ///     Builds request to <code>GET /accounts/{account}/payments</code>
-    ///     <a href="https://developers.stellar.org/network/horizon/resources/get-payments-by-account-id">Payments for Account</a>
+    ///     <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-payments-by-account-id">Payments for Account</a>
     /// </Summary>
     /// <param name="account">Account for which to get payments</param>
     /// <returns>The <see cref="PaymentsRequestBuilder" /> instance.</returns>
@@ -16,7 +16,7 @@ public interface IPaymentsRequestInitialBuilder : IPaymentsRequestBuilder
 
     /// <Summary>
     ///     Builds request to <code>GET /ledgers/{ledgerSeq}/payments</code>
-    ///     <a href="https://developers.stellar.org/network/horizon/resources/retrieve-a-ledgers-payments">Payments for Ledger</a>
+    ///     <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-ledgers-payments">Payments for Ledger</a>
     /// </Summary>
     /// <param name="ledgerSeq">Ledger for which to get payments</param>
     /// <returns>The <see cref="PaymentsRequestBuilder" /> instance.</returns>

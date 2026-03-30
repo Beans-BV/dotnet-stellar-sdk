@@ -10,7 +10,7 @@ namespace StellarDotnetSdk.Responses.SorobanRpc;
 ///         The response will include the anticipated affects the given transaction will have on the network. Additionally,
 ///         information needed to build, sign, and actually submit the transaction will be provided.
 ///     </para>
-///     See https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction/
+///     See https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction/
 /// </summary>
 public class SimulateTransactionResponse
 {
@@ -140,7 +140,7 @@ public class SimulateTransactionResponse
 
     /// <summary>
     ///     Used as a part of simulate transaction.
-    ///     See https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction
+    ///     See https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction
     /// </summary>
     public class SimulateInvokeHostFunctionResult
     {
