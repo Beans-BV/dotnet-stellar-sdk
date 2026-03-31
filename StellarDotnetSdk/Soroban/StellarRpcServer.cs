@@ -80,6 +80,10 @@ public class StellarRpcServer : IDisposable
         }
     }
 
+    /// <summary>
+    ///     Creates a default <see cref="HttpClient" /> with SDK headers configured.
+    /// </summary>
+    /// <returns>A configured <see cref="HttpClient" /> instance.</returns>
     [Obsolete(
         "Pass your own HttpClient instance to StellarRpcServer(string uri, HttpClient httpClient) instead. Otherwise call StellarRpcServer(string uri). Will be removed in the next major version.")]
     public static HttpClient CreateHttpClient()
@@ -87,6 +91,11 @@ public class StellarRpcServer : IDisposable
         return CreateHttpClient(new HttpClientHandler());
     }
 
+    /// <summary>
+    ///     Creates an <see cref="HttpClient" /> with the specified handler and SDK headers configured.
+    /// </summary>
+    /// <param name="handler">The HTTP message handler to use.</param>
+    /// <returns>A configured <see cref="HttpClient" /> instance.</returns>
     [Obsolete(
         "Pass your own HttpClient instance to StellarRpcServer(string uri, HttpClient httpClient) instead. Otherwise call StellarRpcServer(string uri). Will be removed in the next major version.")]
     public static HttpClient CreateHttpClient(HttpMessageHandler handler)
@@ -250,6 +259,11 @@ public class StellarRpcServer : IDisposable
         return SendRequest<object, GetEventsResponse>("getEvents", request);
     }
 
+    /// <summary>
+    ///     Reads the current value of a single ledger entry directly.
+    /// </summary>
+    /// <param name="key">The <see cref="LedgerKey" /> of the ledger entry to retrieve.</param>
+    /// <returns>A <see cref="GetLedgerEntriesResponse" /> object containing the current value.</returns>
     public Task<GetLedgerEntriesResponse> GetLedgerEntry(LedgerKey key)
     {
         var xdrBase64Keys = new[] { key.ToXdrBase64() };
