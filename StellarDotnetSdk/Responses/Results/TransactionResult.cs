@@ -252,7 +252,7 @@ public class TransactionResultMalformed : TransactionResult
 }
 
 /// <summary>
-///     An unknown error occured.
+///     An unknown error occurred.
 /// </summary>
 public class TransactionResultInternalError : TransactionResult
 {
