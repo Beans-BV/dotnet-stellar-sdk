@@ -34,7 +34,7 @@
 	    - Can now use a Bip39 Seed to generate a KeyPair (SEP-0005)
             - Stream Fixes
             - .NET Core 2.1
-            - Horizon Release 12.3 Compatability
+            - Horizon Release 12.3 Compatibility
             - Nett version 0.10.0 upgrade
             - Newtonsoft.Json 12.0.1 upgrade
             - Fix for AccountResponse missing ITransactionBuilderAccount interface.

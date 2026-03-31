@@ -75,7 +75,7 @@ public class FederationServer : IDisposable
     }
 
     /// <summary>
-    ///     reates a <see cref="FederationServer" /> instance for a given domain.
+    ///     Creates a <see cref="FederationServer" /> instance for a given domain.
     ///     It tries to find a federation server URL in stellar.toml file.
     ///     See: https://www.stellar.org/developers/learn/concepts/stellar-toml.html
     /// </summary>
