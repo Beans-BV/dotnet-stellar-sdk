@@ -1,6 +1,10 @@
-name-template: 'Release $NEXT_PATCH_VERSION'
-tag-template: '$NEXT_PATCH_VERSION'
+name-template: 'Release $RESOLVED_VERSION'
+tag-template: '$RESOLVED_VERSION'
 categories:
+  - title: 'Breaking Changes'
+    labels:
+      - 'breaking'
+      - 'major'
   - title: 'Features'
     labels:
       - 'feature'
@@ -10,11 +14,36 @@ categories:
       - 'fix'
       - 'bugfix'
       - 'bug'
+  - title: 'Documentation'
+    labels:
+      - 'documentation'
   - title: 'Maintenance'
     label: 'chore'
   - title: 'Build Changes'
     label: 'build'
+exclude-labels:
+  - 'skip-changelog'
+version-resolver:
+  major:
+    labels:
+      - 'major'
+      - 'breaking'
+  minor:
+    labels:
+      - 'feature'
+      - 'enhancement'
+  patch:
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+      - 'chore'
+      - 'build'
+  default: patch
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 template: |
   ## Changes
   $CHANGES
+
+  ## Contributors
+  $CONTRIBUTORS
