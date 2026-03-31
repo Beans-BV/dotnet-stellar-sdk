@@ -5,7 +5,7 @@ using StellarDotnetSdk.LedgerKeys;
 namespace StellarDotnetSdk.Examples.Soroban.Examples;
 
 /// <summary>
-///     Demonstrates how to retrieve account ledger entries from the Soroban RPC server.
+///     Demonstrates how to retrieve account ledger entries from the Stellar RPC server.
 /// </summary>
 internal static class GetLedgerEntryAccountExample
 {

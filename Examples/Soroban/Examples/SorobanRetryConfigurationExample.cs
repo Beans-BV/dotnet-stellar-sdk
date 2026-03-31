@@ -6,7 +6,7 @@ using StellarDotnetSdk.Soroban;
 namespace StellarDotnetSdk.Examples.Soroban.Examples;
 
 /// <summary>
-///     Demonstrates HTTP retry configuration for SorobanServer.
+///     Demonstrates HTTP retry configuration for StellarRpcServer.
 ///     Shows various retry strategies for different use cases.
 /// </summary>
 internal static class SorobanRetryConfigurationExample
@@ -29,7 +29,7 @@ internal static class SorobanRetryConfigurationExample
     }
 
     /// <summary>
-    ///     Uses default settings with SorobanServer.
+    ///     Uses default settings with StellarRpcServer.
     /// </summary>
     private static async Task UseSorobanDefaultRetry()
     {
@@ -69,7 +69,7 @@ internal static class SorobanRetryConfigurationExample
         };
 
         var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
-        var server = new SorobanServer(SorobanHelpers.TestNetSorobanUrl, httpClient);
+        var server = new StellarRpcServer(SorobanHelpers.TestNetSorobanUrl, httpClient);
 
         Console.WriteLine("   Using custom retry: 5 retries, 300ms base delay, 8s max");
         Console.WriteLine("   Only connection failures are retried, not HTTP status codes");
@@ -106,7 +106,7 @@ internal static class SorobanRetryConfigurationExample
         // Create client with optional bearer token for authenticated endpoints
         var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 
-        var server = new SorobanServer(SorobanHelpers.TestNetSorobanUrl, httpClient);
+        var server = new StellarRpcServer(SorobanHelpers.TestNetSorobanUrl, httpClient);
 
         Console.WriteLine("   Production config: 5 retries, 500ms base, 15s max");
         Console.WriteLine("   Socket exceptions are retriable");

@@ -70,7 +70,7 @@ By default, the SDK does not retry any requests:
 ```csharp
 // No retries - requests fail immediately on connection errors
 var server = new Server("https://horizon-testnet.stellar.org");
-var sorobanServer = new SorobanServer("https://soroban-testnet.stellar.org");
+var sorobanServer = new StellarRpcServer("https://soroban-testnet.stellar.org");
 ```
 
 This matches the Java SDK's default behavior. HTTP error responses (4xx/5xx) are returned immediately, and connection failures throw exceptions immediately.
@@ -283,7 +283,7 @@ var httpClient = new DefaultStellarSdkHttpClient(
 var horizonServer = new Server("https://horizon.stellar.org", httpClient);
 
 // Use with Soroban
-var sorobanServer = new SorobanServer("https://soroban.stellar.org", httpClient);
+var sorobanServer = new StellarRpcServer("https://soroban.stellar.org", httpClient);
 
 // Make requests - connection failures are retried automatically
 try
@@ -330,4 +330,4 @@ If you're being rate limited:
 - [Java SDK](https://github.com/lightsail-network/java-stellar-sdk)
 - [Stellar Network Status](https://status.stellar.org/)
 - [Horizon API Documentation](https://developers.stellar.org/docs/data/apis/horizon)
-- [Soroban RPC Documentation](https://developers.stellar.org/docs/data/apis/rpc)
+- [Stellar RPC Documentation](https://developers.stellar.org/docs/data/apis/rpc)

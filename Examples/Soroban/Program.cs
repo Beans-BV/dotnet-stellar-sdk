@@ -7,7 +7,7 @@ namespace StellarDotnetSdk.Examples.Soroban;
 
 /// <summary>
 ///     Main entry point and orchestrator for all Soroban examples.
-///     Demonstrates various Soroban RPC and smart contract functionalities.
+///     Demonstrates various Stellar RPC and smart contract functionalities.
 /// </summary>
 internal static class Program
 {
@@ -31,7 +31,7 @@ internal static class Program
         Console.WriteLine("\nCreate an issuer account");
         var (issuerKeyPair, _) = await HorizonExamples.CreateChildAccountWithSponsorship(keyPair);
 
-        // Basic Soroban RPC Examples
+        // Basic Stellar RPC Examples
         await RunBasicRpcExamples(keyPair, childKeyPair);
 
         // Contract Operations Examples
@@ -42,13 +42,13 @@ internal static class Program
     }
 
     /// <summary>
-    ///     Runs basic Soroban RPC examples demonstrating server queries and ledger entries.
+    ///     Runs basic Stellar RPC examples demonstrating server queries and ledger entries.
     /// </summary>
     private static async Task RunBasicRpcExamples(
         IAccountId keyPair,
         IAccountId childKeyPair)
     {
-        Console.WriteLine("\n=== Basic Soroban RPC Examples ===");
+        Console.WriteLine("\n=== Basic Stellar RPC Examples ===");
 
         Console.WriteLine();
         await GetLedgerEntryAccountExample.Run(keyPair.AccountId);

@@ -3,7 +3,7 @@ using StellarDotnetSdk.Examples.Soroban.Helpers;
 namespace StellarDotnetSdk.Examples.Soroban.Examples;
 
 /// <summary>
-///     Demonstrates how to retrieve the latest ledger information from a Soroban RPC server.
+///     Demonstrates how to retrieve the latest ledger information from a Stellar RPC server.
 /// </summary>
 internal static class GetLatestLedgerExample
 {

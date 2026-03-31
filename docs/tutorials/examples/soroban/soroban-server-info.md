@@ -1,10 +1,10 @@
 # Connecting to and Querying Soroban Server Information
 
-This guide demonstrates how to connect to the Soroban RPC server and query basic information using the Stellar .NET SDK.
+This guide demonstrates how to connect to the Stellar RPC server and query basic information using the Stellar .NET SDK.
 
 ## Understanding Soroban Servers
 
-Soroban is Stellar's smart contract platform. To interact with Soroban, you need to connect to a Soroban RPC server, which provides specialized endpoints for smart contract operations beyond what Horizon offers.
+Soroban is Stellar's smart contract platform. To interact with Soroban, you need to connect to a Stellar RPC server, which provides specialized endpoints for smart contract operations beyond what Horizon offers.
 
 ## Setting Up a Soroban Server Connection
 
@@ -15,7 +15,7 @@ To start interacting with Soroban, you first need to define the server URL and c
 private const string TestNetSorobanUrl = "https://soroban-testnet.stellar.org";
 
 // Create a new Soroban server instance
-SorobanServer server = new(TestNetSorobanUrl);
+StellarRpcServer server = new(TestNetSorobanUrl);
 ```
 
 > 📝 **Note**: For development purposes, the Soroban testnet is recommended. In production, you would connect to the mainnet or a private Soroban-enabled network.
@@ -27,7 +27,7 @@ Before performing any operations, it's a good practice to check if the Soroban s
 ```csharp
 private static async Task GetHealth()
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     var response = await server.GetHealth();
     Console.WriteLine($"Server health: {response.Status}");
 }
@@ -42,7 +42,7 @@ You can retrieve information about the Soroban network you're connected to:
 ```csharp
 private static async Task GetNetwork()
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     var response = await server.GetNetwork();
     Console.WriteLine($"Server passphrase: {response.Passphrase}");
     Console.WriteLine($"Server Friend Bot URL: {response.FriendbotUrl}");
@@ -60,7 +60,7 @@ Getting the latest ledger information helps you understand the current state of 
 ```csharp
 private static async Task GetLatestLedger()
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     var response = await server.GetLatestLedger();
     Console.WriteLine($"Server protocol version: {response.ProtocolVersion}");
     Console.WriteLine($"Server latest ledger: {response.Sequence}");
@@ -92,7 +92,7 @@ Soroban provides specific methods to query different types of ledger entries. He
 ```csharp
 private static async Task GetLedgerEntryAccount(string accountId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     var ledgerKeyAccount = new LedgerKeyAccount(accountId);
     var ledgerEntriesResponse = await server.GetLedgerEntries([ledgerKeyAccount]);
@@ -136,7 +136,7 @@ You can also query information about claimable balances:
 ```csharp
 private static async Task GetLedgerEntryClaimableBalance(string balanceId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     var ledgerKeyClaimableBalance = new LedgerKeyClaimableBalance(balanceId);
     Console.WriteLine($"Get ledger entry details for claimable balance {balanceId}");
@@ -172,7 +172,7 @@ Once a smart contract is uploaded to the Soroban network, you can query informat
 ```csharp
 private static async Task GetLedgerEntryContractCode(string contractWasmId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     var ledgerKeyContractCodes = new LedgerKey[]
     {
@@ -204,7 +204,7 @@ You can also query data associated with a deployed smart contract:
 ```csharp
 private static async Task<(uint ledgerSeq, uint ttl)> GetLedgerEntryContractData(string contractId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     var ledgerKeyContractData = CreateLedgerKeyContractData(contractId);
     var contractCodeResponse = await server.GetLedgerEntries([ledgerKeyContractData]);
@@ -251,7 +251,7 @@ When submitting transactions to Soroban, you may need to continuously check for 
 // Keep querying for the transaction using `GetTransaction` endpoint until success or error
 private static async Task<GetTransactionResponse> PollTransaction(string transactionHash)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     var status = TransactionInfo.TransactionStatus.NOT_FOUND;
     GetTransactionResponse? transactionResponse = null;
     while (status == TransactionInfo.TransactionStatus.NOT_FOUND)
@@ -288,5 +288,5 @@ This function:
 ## Additional Resources
 
 - [RPC Introduction](https://developers.stellar.org/docs/data/apis/rpc)
-- [Soroban RPC API Reference](https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods)
+- [Stellar RPC API Reference](https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods)
 - [Stellar Developers Docs](https://developers.stellar.org/docs)

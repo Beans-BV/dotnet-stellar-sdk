@@ -30,7 +30,7 @@ The first step is to upload your contract's WebAssembly bytecode to the network:
 public static async Task<string> UploadContract(IAccountId sourceKeyPair)
 {
     // Initialize the Soroban server connection
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     
     // Load the WASM bytecode
     var wasm = await File.ReadAllBytesAsync("path/to/your/contract.wasm");
@@ -74,7 +74,7 @@ After uploading the contract, you can create an instance:
 ```csharp
 public static async Task<string> CreateContract(IAccountId keyPair, string wasmId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     
     // Get the account with the latest sequence number
     var account = await server.GetAccount(keyPair.AccountId);
@@ -110,7 +110,7 @@ Once you have a contract instance, you can call its functions:
 ```csharp
 public static async Task InvokeContract(IAccountId keyPair, string contractId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     
     // Get the account with latest sequence number
     var account = await server.GetAccount(keyPair.AccountId);
@@ -155,7 +155,7 @@ public static async Task ExtendContractFootprintTtl(
     uint ledgerSequence,
     uint currentTtl)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     
     // Get the account with latest sequence number
     var account = await server.GetAccount(keyPair.AccountId);
@@ -202,7 +202,7 @@ private static async Task<SimulateTransactionResponse> SimulateAndUpdateTransact
     Transaction tx,
     IAccountId signer)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     
     // Simulate the transaction to get Soroban-specific details
     var simulateResponse = await server.SimulateTransaction(tx);
@@ -232,7 +232,7 @@ private static async Task<SimulateTransactionResponse> SimulateAndUpdateTransact
 ```csharp
 private static async Task<GetTransactionResponse> PollTransaction(string transactionHash)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     var status = TransactionInfo.TransactionStatus.NOT_FOUND;
     GetTransactionResponse? transactionResponse = null;
     

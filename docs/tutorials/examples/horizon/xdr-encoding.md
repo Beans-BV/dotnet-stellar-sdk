@@ -6,7 +6,7 @@ This guide demonstrates how to work with XDR (External Data Representation) enco
 
 XDR (External Data Representation) is a standardized data serialization format used by Stellar to represent network objects like transactions, operations, and ledger entries. When interacting with the Stellar network, you'll frequently need to:
 
-- Decode XDR strings received from Horizon or Soroban RPC servers
+- Decode XDR strings received from Horizon or Stellar RPC servers
 - Encode Stellar objects to XDR for submission or storage
 - Inspect and modify XDR data for debugging or advanced use cases
 

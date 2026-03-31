@@ -222,7 +222,7 @@ private static async Task<SimulateTransactionResponse> SimulateAndUpdateTransact
     Transaction tx,
     IAccountId signer)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     var simulateResponse = await server.SimulateTransaction(tx);
 
     if (simulateResponse.SorobanTransactionData != null)
@@ -251,7 +251,7 @@ For Soroban transactions especially, you may need to poll for completion:
 // Keep querying for the transaction using `GetTransaction` endpoint until success or error
 private static async Task<GetTransactionResponse> PollTransaction(string transactionHash)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
     var status = TransactionInfo.TransactionStatus.NOT_FOUND;
     GetTransactionResponse? transactionResponse = null;
     while (status == TransactionInfo.TransactionStatus.NOT_FOUND)

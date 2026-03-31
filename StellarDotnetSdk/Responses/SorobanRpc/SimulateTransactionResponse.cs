@@ -34,7 +34,7 @@ public class SimulateTransactionResponse
     public string[]? Events { get; init; }
 
     /// <summary>
-    ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.
+    ///     The sequence number of the latest ledger known to Stellar RPC at the time it handled the request.
     /// </summary>
     public long? LatestLedger { get; init; }
 

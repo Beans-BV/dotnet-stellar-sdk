@@ -38,7 +38,7 @@ _The SEP (Stellar Ecosystem Proposal) protocol implementations were ported from 
 
 - **Optional Connection Retry** - Opt-in retry mechanism for connection failures (network errors, DNS failures)
 - **Configurable** - Customize retry count, delays, and jitter when retries are enabled
-- **Full Stellar Support** - Works with both Horizon API and Soroban RPC servers
+- **Full Stellar Support** - Works with both Horizon API and Stellar RPC servers
 
 ## Installation
 

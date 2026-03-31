@@ -95,7 +95,7 @@ internal static class AtomicSwapExample
     }
 
     private static async Task MintTokens(
-        SorobanServer server,
+        StellarRpcServer server,
         IAccountId minter,
         IAccountId recipient,
         string tokenContractId,
@@ -120,7 +120,7 @@ internal static class AtomicSwapExample
     }
 
     private static async Task ApproveSwapContract(
-        SorobanServer server,
+        StellarRpcServer server,
         IAccountId owner,
         string tokenContractId,
         string swapContractId,
@@ -148,7 +148,7 @@ internal static class AtomicSwapExample
     }
 
     private static async Task ExecuteSwap(
-        SorobanServer server,
+        StellarRpcServer server,
         IAccountId partyA,
         IAccountId partyB,
         string tokenAContractId,
@@ -186,7 +186,7 @@ internal static class AtomicSwapExample
     }
 
     private static async Task VerifySwapResults(
-        SorobanServer server,
+        StellarRpcServer server,
         IAccountId partyA,
         IAccountId partyB,
         string tokenAContractId,

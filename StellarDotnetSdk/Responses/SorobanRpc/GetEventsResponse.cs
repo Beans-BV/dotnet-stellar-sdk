@@ -16,7 +16,7 @@ public class GetEventsResponse
     public EventInfo[]? Events { get; init; }
 
     /// <summary>
-    ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.
+    ///     The sequence number of the latest ledger known to Stellar RPC at the time it handled the request.
     /// </summary>
     [JsonPropertyName("latestLedger")]
     public long? LatestLedger { get; init; }
