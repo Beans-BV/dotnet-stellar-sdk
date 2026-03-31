@@ -42,6 +42,10 @@ public class ClawbackOperation : Operation
     /// </summary>
     public IAccountId From { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         return new Xdr.Operation.OperationBody
@@ -56,6 +60,11 @@ public class ClawbackOperation : Operation
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="ClawbackOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="clawbackOp">The XDR ClawbackOp object.</param>
+    /// <returns>A new <see cref="ClawbackOperation" /> instance.</returns>
     public static ClawbackOperation FromXdr(ClawbackOp clawbackOp)
     {
         return new ClawbackOperation(

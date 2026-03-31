@@ -27,6 +27,12 @@ public class SorobanTransactionData
         Resources = new SorobanResources(footprint, 0, 0, 0);
     }
 
+    /// <summary>
+    ///     Initializes a new <see cref="SorobanTransactionData" /> with the specified resources, fee, and optional extension.
+    /// </summary>
+    /// <param name="resources">The Soroban resource allocation for this transaction.</param>
+    /// <param name="resourceFee">The resource fee in stroops to be charged for this transaction.</param>
+    /// <param name="extension">Optional extension data for archived Soroban entries.</param>
     public SorobanTransactionData(
         SorobanResources resources,
         long resourceFee,
@@ -38,10 +44,25 @@ public class SorobanTransactionData
         Extension = extension;
     }
 
+    /// <summary>
+    ///     Optional extension data containing references to archived Soroban ledger entries.
+    /// </summary>
     public SorobanResourceExtensionV0? Extension { get; private set; }
+
+    /// <summary>
+    ///     The Soroban resource allocation for this transaction (footprint, instructions, I/O limits).
+    /// </summary>
     public SorobanResources Resources { get; }
+
+    /// <summary>
+    ///     The resource fee in stroops to be charged for this transaction.
+    /// </summary>
     public long ResourceFee { get; }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.SorobanTransactionData" /> XDR object.</returns>
     public Xdr.SorobanTransactionData ToXdr()
     {
         var data = new Xdr.SorobanTransactionData

@@ -6,6 +6,14 @@ using Asset = StellarDotnetSdk.Assets.Asset;
 
 namespace StellarDotnetSdk;
 
+/// <summary>
+///     Represents a single trade that was executed during a path payment or offer operation on the Stellar network.
+///     Each claim atom contains the assets and amounts exchanged.
+/// </summary>
+/// <param name="assetSold">The asset taken from the owner.</param>
+/// <param name="amountSold">The amount taken from the owner.</param>
+/// <param name="assetBought">The asset sent to the owner.</param>
+/// <param name="amountBought">The amount sent to the owner.</param>
 public abstract class ClaimAtom(
     Asset assetSold,
     string amountSold,
@@ -32,6 +40,12 @@ public abstract class ClaimAtom(
     /// </summary>
     public string AmountBought { get; } = amountBought;
 
+    /// <summary>
+    ///     Creates a <see cref="ClaimAtom" /> from an XDR claim atom, dispatching to the correct subclass
+    ///     based on the discriminant type.
+    /// </summary>
+    /// <param name="xdrClaimAtom">The XDR claim atom to convert.</param>
+    /// <returns>A concrete <see cref="ClaimAtom" /> subclass instance.</returns>
     public static ClaimAtom FromXdr(Xdr.ClaimAtom xdrClaimAtom)
     {
         return xdrClaimAtom.Discriminant.InnerValue switch
@@ -73,6 +87,11 @@ public class ClaimAtomOrderBook : ClaimAtom
     /// </summary>
     public long OfferId { get; }
 
+    /// <summary>
+    ///     Creates a <see cref="ClaimAtomOrderBook" /> from an XDR claim atom containing order book data.
+    /// </summary>
+    /// <param name="xdrClaimAtom">The XDR claim atom to convert.</param>
+    /// <returns>A new <see cref="ClaimAtomOrderBook" /> instance.</returns>
     public static ClaimAtomOrderBook FromXdr(Xdr.ClaimAtom xdrClaimAtom)
     {
         var offer = xdrClaimAtom.OrderBook;
@@ -105,9 +124,17 @@ public class ClaimAtomV0 : ClaimAtom
         OfferId = offerId;
     }
 
+    /// <summary>Account that owns the offer, identified by Ed25519 public key.</summary>
     public KeyPair Seller { get; }
+
+    /// <summary>The offer ID involved in the trade.</summary>
     public long OfferId { get; }
 
+    /// <summary>
+    ///     Creates a <see cref="ClaimAtomV0" /> from an XDR claim atom containing V0 data.
+    /// </summary>
+    /// <param name="xdrClaimAtom">The XDR claim atom to convert.</param>
+    /// <returns>A new <see cref="ClaimAtomV0" /> instance.</returns>
     public static ClaimAtomV0 FromXdr(Xdr.ClaimAtom xdrClaimAtom)
     {
         var claimOfferAtomV0Xdr = xdrClaimAtom.V0;

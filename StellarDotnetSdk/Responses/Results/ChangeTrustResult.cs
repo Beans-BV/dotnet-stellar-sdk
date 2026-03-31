@@ -8,6 +8,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class ChangeTrustResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="ChangeTrustResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR change trust result.</param>
+    /// <returns>A <see cref="ChangeTrustResult" /> instance representing the operation outcome.</returns>
     public static ChangeTrustResult FromXdr(Xdr.ChangeTrustResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -31,6 +36,7 @@ public class ChangeTrustResult : OperationResult
 /// </summary>
 public class ChangeTrustSuccess : ChangeTrustResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 

@@ -11,6 +11,7 @@ namespace StellarDotnetSdk.Converters;
 /// </summary>
 public class SendTransactionStatusEnumJsonConverter : JsonConverter<SendTransactionResponse.SendTransactionStatus>
 {
+    /// <inheritdoc />
     public override SendTransactionResponse.SendTransactionStatus Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
@@ -26,6 +27,7 @@ public class SendTransactionStatusEnumJsonConverter : JsonConverter<SendTransact
         };
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, SendTransactionResponse.SendTransactionStatus value,
         JsonSerializerOptions options)
     {

@@ -8,6 +8,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class RevokeSponsorshipResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="RevokeSponsorshipResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR revoke sponsorship result.</param>
+    /// <returns>A <see cref="RevokeSponsorshipResult" /> instance representing the operation outcome.</returns>
     public static RevokeSponsorshipResult FromXdr(Xdr.RevokeSponsorshipResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -28,6 +33,7 @@ public class RevokeSponsorshipResult : OperationResult
 /// </summary>
 public class RevokeSponsorshipSuccess : RevokeSponsorshipResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 

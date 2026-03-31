@@ -10,18 +10,22 @@ namespace StellarDotnetSdk.Exceptions;
 [Serializable]
 public class NoNetworkSelectedException : Exception
 {
+    /// <inheritdoc />
     public NoNetworkSelectedException()
     {
     }
 
+    /// <inheritdoc />
     public NoNetworkSelectedException(string message) : base(message)
     {
     }
 
+    /// <inheritdoc />
     public NoNetworkSelectedException(string message, Exception innerException) : base(message, innerException)
     {
     }
 
+    /// <inheritdoc />
     protected NoNetworkSelectedException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }

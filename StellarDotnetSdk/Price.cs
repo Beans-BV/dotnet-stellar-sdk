@@ -120,6 +120,7 @@ public class Price
         return new Price(price.N.InnerValue, price.D.InnerValue);
     }
 
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (obj is not Price price)
@@ -130,6 +131,7 @@ public class Price
         return Numerator == price.Numerator && Denominator == price.Denominator;
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return (Numerator << 2) ^ Denominator;

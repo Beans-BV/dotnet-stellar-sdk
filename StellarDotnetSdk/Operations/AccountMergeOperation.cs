@@ -42,6 +42,9 @@ public class AccountMergeOperation : Operation
     /// </summary>
     public IAccountId Destination { get; }
 
+    /// <summary>
+    ///     The threshold level for this operation. AccountMerge is a high-threshold operation.
+    /// </summary>
     public override OperationThreshold Threshold => OperationThreshold.HIGH;
 
     /// <summary>

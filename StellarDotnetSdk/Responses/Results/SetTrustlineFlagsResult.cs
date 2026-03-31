@@ -9,6 +9,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class SetTrustlineFlagsResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="SetTrustlineFlagsResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR set trustline flags result.</param>
+    /// <returns>A <see cref="SetTrustlineFlagsResult" /> instance representing the operation outcome.</returns>
     public static SetTrustlineFlagsResult FromXdr(SetTrustLineFlagsResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -29,6 +34,7 @@ public class SetTrustlineFlagsResult : OperationResult
 /// </summary>
 public class SetTrustlineFlagsSuccess : SetTrustlineFlagsResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 

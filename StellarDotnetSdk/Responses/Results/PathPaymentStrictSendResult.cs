@@ -10,6 +10,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class PathPaymentStrictSendResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="PathPaymentStrictSendResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR path payment strict send result.</param>
+    /// <returns>A <see cref="PathPaymentStrictSendResult" /> instance representing the operation outcome.</returns>
     public static PathPaymentStrictSendResult FromXdr(Xdr.PathPaymentStrictSendResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -52,12 +57,18 @@ public class PathPaymentStrictSendResult : OperationResult
 /// </summary>
 public class PathPaymentStrictSendSuccess : PathPaymentStrictSendResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="PathPaymentStrictSendSuccess" /> class.
+    /// </summary>
+    /// <param name="offers">The offers claimed during the path payment.</param>
+    /// <param name="last">The final payment result to the destination.</param>
     public PathPaymentStrictSendSuccess(ClaimAtom[] offers, SimplePaymentResult last)
     {
         Offers = offers;
         Last = last;
     }
 
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 
     /// <summary>
@@ -124,6 +135,10 @@ public class PathPaymentStrictSendTooFewOffers : PathPaymentStrictSendResult;
 /// </summary>
 public class PathPaymentStrictSendNoIssuer : PathPaymentStrictSendResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="PathPaymentStrictSendNoIssuer" /> class.
+    /// </summary>
+    /// <param name="noIssuer">The asset whose issuer was not found.</param>
     public PathPaymentStrictSendNoIssuer(Asset noIssuer)
     {
         NoIssuer = noIssuer;

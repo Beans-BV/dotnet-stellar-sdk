@@ -40,6 +40,10 @@ public class ExtendFootprintOperation : Operation
     /// </summary>
     public ExtensionPoint ExtensionPoint { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         return new Xdr.Operation.OperationBody
@@ -53,6 +57,11 @@ public class ExtendFootprintOperation : Operation
         };
     }
 
+    /// <summary>
+    ///     Creates an <see cref="ExtendFootprintOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="extendFootprintTtlOp">The XDR ExtendFootprintTTLOp object.</param>
+    /// <returns>A new <see cref="ExtendFootprintOperation" /> instance.</returns>
     public static ExtendFootprintOperation FromXdr(ExtendFootprintTTLOp extendFootprintTtlOp)
     {
         return new ExtendFootprintOperation(

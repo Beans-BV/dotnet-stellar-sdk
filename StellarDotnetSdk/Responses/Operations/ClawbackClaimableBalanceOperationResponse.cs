@@ -10,6 +10,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class ClawbackClaimableBalanceOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 20;
 
     /// <summary>

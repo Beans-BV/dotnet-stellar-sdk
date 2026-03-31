@@ -15,13 +15,32 @@ public class AccountEntryExtensionV2
         SignerSponsoringIDs = signerSponsoringIDs;
     }
 
+    /// <summary>
+    ///     The number of entries this account is sponsoring (reserves are being paid by this account).
+    /// </summary>
     public uint NumberSponsored { get; }
 
+    /// <summary>
+    ///     The number of entries sponsoring this account (reserves paid by other accounts).
+    /// </summary>
     public uint NumberSponsoring { get; }
 
+    /// <summary>
+    ///     The sponsoring account IDs for each of this account's signers. A <c>null</c> entry means no sponsor.
+    /// </summary>
     public KeyPair?[] SignerSponsoringIDs { get; }
+
+    /// <summary>
+    ///     Version 3 extension fields for this account entry, if present.
+    /// </summary>
     public AccountEntryExtensionV3? ExtensionV3 { get; private set; }
 
+    /// <summary>
+    ///     Creates an <see cref="AccountEntryExtensionV2" /> from an XDR
+    ///     <see cref="Xdr.AccountEntryExtensionV2" /> object.
+    /// </summary>
+    /// <param name="xdrExtensionV2">The XDR extension object.</param>
+    /// <returns>An <see cref="AccountEntryExtensionV2" /> instance.</returns>
     public static AccountEntryExtensionV2 FromXdr(Xdr.AccountEntryExtensionV2 xdrExtensionV2)
     {
         var entryExtensionV2 = new AccountEntryExtensionV2(

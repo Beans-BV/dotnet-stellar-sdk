@@ -9,6 +9,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class CreateClaimableBalanceOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 14;
 
     /// <summary>

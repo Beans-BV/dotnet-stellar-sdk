@@ -8,6 +8,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class CreateClaimableBalanceResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="CreateClaimableBalanceResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR create claimable balance result.</param>
+    /// <returns>A <see cref="CreateClaimableBalanceResult" /> instance representing the operation outcome.</returns>
     public static CreateClaimableBalanceResult FromXdr(Xdr.CreateClaimableBalanceResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -47,6 +52,7 @@ public class CreateClaimableBalanceSuccess : CreateClaimableBalanceResult
         BalanceId = balanceId;
     }
 
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 
     /// <summary>

@@ -33,6 +33,10 @@ public class RestoreFootprintOperation : Operation
     /// </summary>
     public ExtensionPoint ExtensionPoint { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         return new Xdr.Operation.OperationBody
@@ -45,6 +49,11 @@ public class RestoreFootprintOperation : Operation
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="RestoreFootprintOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="restoreFootprintOp">The XDR RestoreFootprintOp object.</param>
+    /// <returns>A new <see cref="RestoreFootprintOperation" /> instance.</returns>
     public static RestoreFootprintOperation FromXdr(RestoreFootprintOp restoreFootprintOp)
     {
         return new RestoreFootprintOperation(

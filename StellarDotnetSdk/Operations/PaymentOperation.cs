@@ -44,6 +44,10 @@ public class PaymentOperation : Operation
     /// </summary>
     public string Amount { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         return new Xdr.Operation.OperationBody
@@ -58,6 +62,11 @@ public class PaymentOperation : Operation
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="PaymentOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="paymentOp">The XDR PaymentOp object.</param>
+    /// <returns>A new <see cref="PaymentOperation" /> instance.</returns>
     public static PaymentOperation FromXdr(PaymentOp paymentOp)
     {
         return new PaymentOperation(

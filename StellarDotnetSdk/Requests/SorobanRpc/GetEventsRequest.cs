@@ -23,6 +23,9 @@ public class GetEventsRequest
     [JsonPropertyName("filters")]
     public EventFilter[]? Filters { get; set; }
 
+    /// <summary>
+    ///     Pagination options for controlling the cursor position and page size of event results.
+    /// </summary>
     [JsonPropertyName("pagination")]
     public PaginationOptions? Pagination { get; set; }
 
@@ -58,9 +61,15 @@ public class GetEventsRequest
     /// </summary>
     public class PaginationOptions
     {
+        /// <summary>
+        ///     A cursor value for pagination. When provided, returns results after this cursor.
+        /// </summary>
         [JsonPropertyName("cursor")]
         public string? Cursor;
 
+        /// <summary>
+        ///     The maximum number of events to return in a single response.
+        /// </summary>
         [JsonPropertyName("limit")]
         public long? Limit;
     }

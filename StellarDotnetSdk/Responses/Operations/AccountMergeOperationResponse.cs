@@ -8,6 +8,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class AccountMergeOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 8;
 
     /// <summary>

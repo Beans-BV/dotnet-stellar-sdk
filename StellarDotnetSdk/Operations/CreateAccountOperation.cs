@@ -41,6 +41,10 @@ public class CreateAccountOperation : Operation
     /// </summary>
     public string StartingBalance { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         return new Xdr.Operation.OperationBody
@@ -54,6 +58,11 @@ public class CreateAccountOperation : Operation
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="CreateAccountOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="createAccountOp">The XDR CreateAccountOp object.</param>
+    /// <returns>A new <see cref="CreateAccountOperation" /> instance.</returns>
     public static CreateAccountOperation FromXdr(CreateAccountOp createAccountOp)
     {
         return new CreateAccountOperation(

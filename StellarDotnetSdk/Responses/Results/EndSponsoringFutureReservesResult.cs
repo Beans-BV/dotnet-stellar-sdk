@@ -9,6 +9,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class EndSponsoringFutureReservesResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="EndSponsoringFutureReservesResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR end sponsoring future reserves result.</param>
+    /// <returns>An <see cref="EndSponsoringFutureReservesResult" /> instance representing the operation outcome.</returns>
     public static EndSponsoringFutureReservesResult FromXdr(Xdr.EndSponsoringFutureReservesResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -28,6 +33,7 @@ public class EndSponsoringFutureReservesResult : OperationResult
 /// </summary>
 public class EndSponsoringFutureReservesSuccess : EndSponsoringFutureReservesResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 

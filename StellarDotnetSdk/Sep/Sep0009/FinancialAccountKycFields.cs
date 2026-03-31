@@ -10,20 +10,74 @@ namespace StellarDotnetSdk.Sep.Sep0009;
 /// </summary>
 public sealed record FinancialAccountKycFields
 {
-    // Field keys
+    /// <summary>
+    ///     Field key for the <c>bank_name</c> field as defined in SEP-0009.
+    /// </summary>
     public const string BankNameFieldKey = "bank_name";
+
+    /// <summary>
+    ///     Field key for the <c>bank_account_type</c> field (e.g., checking or savings) as defined in SEP-0009.
+    /// </summary>
     public const string BankAccountTypeFieldKey = "bank_account_type";
+
+    /// <summary>
+    ///     Field key for the <c>bank_account_number</c> field as defined in SEP-0009.
+    /// </summary>
     public const string BankAccountNumberFieldKey = "bank_account_number";
+
+    /// <summary>
+    ///     Field key for the <c>bank_number</c> field (routing number in the US) as defined in SEP-0009.
+    /// </summary>
     public const string BankNumberFieldKey = "bank_number";
+
+    /// <summary>
+    ///     Field key for the <c>bank_phone_number</c> field as defined in SEP-0009.
+    /// </summary>
     public const string BankPhoneNumberFieldKey = "bank_phone_number";
+
+    /// <summary>
+    ///     Field key for the <c>bank_branch_number</c> field as defined in SEP-0009.
+    /// </summary>
     public const string BankBranchNumberFieldKey = "bank_branch_number";
+
+    /// <summary>
+    ///     Field key for the <c>external_transfer_memo</c> field (destination tag/memo) as defined in SEP-0009.
+    /// </summary>
     public const string ExternalTransferMemoFieldKey = "external_transfer_memo";
+
+    /// <summary>
+    ///     Field key for the <c>clabe_number</c> field (Mexico bank account number) as defined in SEP-0009.
+    /// </summary>
     public const string ClabeNumberFieldKey = "clabe_number";
+
+    /// <summary>
+    ///     Field key for the <c>cbu_number</c> field (CBU/CVU for Argentina) as defined in SEP-0009.
+    /// </summary>
     public const string CbuNumberFieldKey = "cbu_number";
+
+    /// <summary>
+    ///     Field key for the <c>cbu_alias</c> field (alias for CBU/CVU) as defined in SEP-0009.
+    /// </summary>
     public const string CbuAliasFieldKey = "cbu_alias";
+
+    /// <summary>
+    ///     Field key for the <c>mobile_money_number</c> field (E.164 format) as defined in SEP-0009.
+    /// </summary>
     public const string MobileMoneyNumberFieldKey = "mobile_money_number";
+
+    /// <summary>
+    ///     Field key for the <c>mobile_money_provider</c> field as defined in SEP-0009.
+    /// </summary>
     public const string MobileMoneyProviderFieldKey = "mobile_money_provider";
+
+    /// <summary>
+    ///     Field key for the <c>crypto_address</c> field as defined in SEP-0009.
+    /// </summary>
     public const string CryptoAddressFieldKey = "crypto_address";
+
+    /// <summary>
+    ///     Field key for the <c>crypto_memo</c> field as defined in SEP-0009. Deprecated: use <c>external_transfer_memo</c>.
+    /// </summary>
     public const string CryptoMemoFieldKey = "crypto_memo";
 
     /// <summary>

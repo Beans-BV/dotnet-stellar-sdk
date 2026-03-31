@@ -29,53 +29,88 @@ namespace StellarDotnetSdk.Claimants;
 /// <seealso cref="Predicate" />
 public abstract class ClaimPredicate
 {
+    /// <summary>Converts this claim predicate to its XDR representation.</summary>
+    /// <returns>An XDR <see cref="Xdr.ClaimPredicate" /> object.</returns>
     public abstract Xdr.ClaimPredicate ToXdr();
 
+    /// <summary>Creates a predicate requiring both sub-predicates to be satisfied.</summary>
+    /// <param name="leftPredicate">The first predicate.</param>
+    /// <param name="rightPredicate">The second predicate.</param>
+    /// <returns>A new <see cref="ClaimPredicateOr" /> instance.</returns>
     public static ClaimPredicate Or(ClaimPredicate leftPredicate, ClaimPredicate rightPredicate)
     {
         return new ClaimPredicateOr(leftPredicate, rightPredicate);
     }
 
+    /// <summary>Creates a predicate requiring both sub-predicates to be satisfied.</summary>
+    /// <param name="leftPredicate">The first predicate.</param>
+    /// <param name="rightPredicate">The second predicate.</param>
+    /// <returns>A new <see cref="ClaimPredicateAnd" /> instance.</returns>
     public static ClaimPredicate And(ClaimPredicate leftPredicate, ClaimPredicate rightPredicate)
     {
         return new ClaimPredicateAnd(leftPredicate, rightPredicate);
     }
 
+    /// <summary>Creates a predicate that negates the given predicate.</summary>
+    /// <param name="predicate">The predicate to negate.</param>
+    /// <returns>A new <see cref="ClaimPredicateNot" /> instance.</returns>
     public static ClaimPredicate Not(ClaimPredicate predicate)
     {
         return new ClaimPredicateNot(predicate);
     }
 
+    /// <summary>Creates an unconditional predicate that is always satisfied.</summary>
+    /// <returns>A new <see cref="ClaimPredicateUnconditional" /> instance.</returns>
     public static ClaimPredicate Unconditional()
     {
         return new ClaimPredicateUnconditional();
     }
 
+    /// <summary>Creates a predicate valid only before the given absolute time point.</summary>
+    /// <param name="timePoint">The XDR time point representing the deadline.</param>
+    /// <returns>A new <see cref="ClaimPredicateBeforeAbsoluteTime" /> instance.</returns>
     public static ClaimPredicate BeforeAbsoluteTime(TimePoint timePoint)
     {
         return new ClaimPredicateBeforeAbsoluteTime(timePoint);
     }
 
+    /// <summary>Creates a predicate valid only before the given Unix timestamp.</summary>
+    /// <param name="timePoint">The Unix timestamp in seconds.</param>
+    /// <returns>A new <see cref="ClaimPredicateBeforeAbsoluteTime" /> instance.</returns>
     public static ClaimPredicate BeforeAbsoluteTime(ulong timePoint)
     {
         return new ClaimPredicateBeforeAbsoluteTime(timePoint);
     }
 
+    /// <summary>Creates a predicate valid only before the given date and time.</summary>
+    /// <param name="dateTime">The absolute deadline.</param>
+    /// <returns>A new <see cref="ClaimPredicateBeforeAbsoluteTime" /> instance.</returns>
     public static ClaimPredicate BeforeAbsoluteTime(DateTimeOffset dateTime)
     {
         return new ClaimPredicateBeforeAbsoluteTime(dateTime);
     }
 
+    /// <summary>Creates a predicate valid only before the given relative duration has elapsed.</summary>
+    /// <param name="duration">The XDR duration in seconds.</param>
+    /// <returns>A new <see cref="ClaimPredicateBeforeRelativeTime" /> instance.</returns>
     public static ClaimPredicate BeforeRelativeTime(Duration duration)
     {
         return new ClaimPredicateBeforeRelativeTime(duration);
     }
 
+    /// <summary>Creates a predicate valid only before the given number of seconds has elapsed.</summary>
+    /// <param name="duration">The duration in seconds.</param>
+    /// <returns>A new <see cref="ClaimPredicateBeforeRelativeTime" /> instance.</returns>
     public static ClaimPredicate BeforeRelativeTime(ulong duration)
     {
         return new ClaimPredicateBeforeRelativeTime(duration);
     }
 
+    /// <summary>
+    ///     Creates a <see cref="ClaimPredicate" /> from an XDR claim predicate, dispatching to the correct subclass.
+    /// </summary>
+    /// <param name="xdr">The XDR claim predicate to convert.</param>
+    /// <returns>A concrete <see cref="ClaimPredicate" /> subclass instance.</returns>
     public static ClaimPredicate FromXdr(Xdr.ClaimPredicate xdr)
     {
         switch (xdr.Discriminant.InnerValue)

@@ -32,6 +32,14 @@ public class TimeBounds
         _maxTime = maxTime;
     }
 
+    /// <summary>
+    ///     Initializes time bounds from signed 64-bit Unix timestamps. Values must be non-negative,
+    ///     and <paramref name="minTime" /> must be less than <paramref name="maxTime" /> unless
+    ///     <paramref name="maxTime" /> is 0 (infinite).
+    /// </summary>
+    /// <param name="minTime">The minimum time as a Unix timestamp in seconds (must be &gt;= 0).</param>
+    /// <param name="maxTime">The maximum time as a Unix timestamp in seconds (must be &gt;= 0; 0 means no upper bound).</param>
+    /// <exception cref="ArgumentException">Thrown when time values are negative or minTime &gt;= maxTime.</exception>
     public TimeBounds(long minTime, long maxTime)
     {
         if (minTime < 0)
@@ -92,6 +100,11 @@ public class TimeBounds
     /// <summary>Gets the maximum time (latest valid time) as a Unix timestamp in seconds. 0 if unset (infinite).</summary>
     public long MaxTime => (long)_maxTime;
 
+    /// <summary>
+    ///     Creates a <see cref="TimeBounds" /> from its XDR representation.
+    /// </summary>
+    /// <param name="timeBounds">The XDR time bounds object.</param>
+    /// <returns>A new <see cref="TimeBounds" /> instance.</returns>
     public static TimeBounds FromXdr(Xdr.TimeBounds timeBounds)
     {
         return new TimeBounds(
@@ -100,6 +113,10 @@ public class TimeBounds
         );
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR <see cref="Xdr.TimeBounds" /> representation.
+    /// </summary>
+    /// <returns>An XDR time bounds object.</returns>
     public Xdr.TimeBounds ToXdr()
     {
         return new Xdr.TimeBounds
@@ -109,6 +126,7 @@ public class TimeBounds
         };
     }
 
+    /// <inheritdoc />
     public override bool Equals(object? o)
     {
         if (this == o)
@@ -129,6 +147,7 @@ public class TimeBounds
         return MaxTime == that.MaxTime;
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Start.Hash(MinTime).Hash(MaxTime);

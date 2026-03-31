@@ -14,9 +14,22 @@ public class ContractCodeEntryExtensionV1
         CostInputs = costInputs;
     }
 
+    /// <summary>
+    ///     Reserved for future use.
+    /// </summary>
     public ExtensionPoint ExtensionPoint { get; }
+
+    /// <summary>
+    ///     The cost inputs derived from the contract WASM, used for fee estimation.
+    /// </summary>
     public ContractCodeCostInputs CostInputs { get; }
 
+    /// <summary>
+    ///     Creates a <see cref="ContractCodeEntryExtensionV1" /> from an XDR
+    ///     <see cref="ContractCodeEntry.ContractCodeEntryExt.ContractCodeEntryV1" /> object.
+    /// </summary>
+    /// <param name="xdrExtensionV1">The XDR extension object.</param>
+    /// <returns>A <see cref="ContractCodeEntryExtensionV1" /> instance.</returns>
     public static ContractCodeEntryExtensionV1 FromXdr(
         ContractCodeEntry.ContractCodeEntryExt.ContractCodeEntryV1 xdrExtensionV1)
     {

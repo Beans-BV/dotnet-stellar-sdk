@@ -5,6 +5,11 @@ namespace StellarDotnetSdk.Sep.Sep0010.Exceptions;
 /// </summary>
 public class SubmitChallengeUnknownResponseException : WebAuthException
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="SubmitChallengeUnknownResponseException" /> class.
+    /// </summary>
+    /// <param name="code">The HTTP status code received.</param>
+    /// <param name="body">The HTTP response body.</param>
     public SubmitChallengeUnknownResponseException(int code, string body)
         : base($"Unknown response - code: {code} - body: {body}")
     {

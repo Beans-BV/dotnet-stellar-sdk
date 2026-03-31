@@ -33,12 +33,14 @@ namespace StellarDotnetSdk.Converters;
 /// </remarks>
 public class OperationResponseJsonConverter : JsonConverter<OperationResponse>
 {
+    /// <inheritdoc />
     public override bool CanConvert(Type typeToConvert)
     {
         // Only handle the base type, not concrete subclasses
         return typeToConvert == typeof(OperationResponse);
     }
 
+    /// <inheritdoc />
     public override OperationResponse? Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
@@ -96,6 +98,7 @@ public class OperationResponseJsonConverter : JsonConverter<OperationResponse>
         };
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, OperationResponse value, JsonSerializerOptions options)
     {
         JsonSerializer.Serialize(writer, value, value.GetType(), options);

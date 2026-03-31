@@ -13,6 +13,9 @@ namespace StellarDotnetSdk.Requests;
 /// <typeparam name="TResponse">The type of response objects received from the event stream.</typeparam>
 public interface IRequestBuilderStreamable<TResponse> where TResponse : class
 {
+    /// <summary>
+    ///     Gets or sets the SSE event source used for streaming. If null, a default one is created on first stream.
+    /// </summary>
     IEventSource? EventSource { get; set; }
 
     /// <Summary>
@@ -40,11 +43,24 @@ public class RequestBuilderStreamable<T, TResponse>
     : RequestBuilderExecutePageable<T, TResponse>, IRequestBuilderStreamable<TResponse>
     where T : class where TResponse : class
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="RequestBuilderStreamable{T, TResponse}" /> class.
+    /// </summary>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="defaultSegment">The default URL path segment for this endpoint.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public RequestBuilderStreamable(Uri serverUri, string defaultSegment, HttpClient httpClient)
         : base(serverUri, defaultSegment, httpClient)
     {
     }
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="RequestBuilderStreamable{T, TResponse}" /> class with a custom event source.
+    /// </summary>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="defaultSegment">The default URL path segment for this endpoint.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
+    /// <param name="eventSource">A custom SSE event source implementation.</param>
     public RequestBuilderStreamable(Uri serverUri, string defaultSegment, HttpClient httpClient,
         IEventSource eventSource)
         : base(serverUri, defaultSegment, httpClient)

@@ -10,18 +10,22 @@ namespace StellarDotnetSdk.Exceptions;
 [Serializable]
 public class MemoTooLongException : Exception
 {
+    /// <inheritdoc />
     public MemoTooLongException()
     {
     }
 
+    /// <inheritdoc />
     public MemoTooLongException(string message) : base(message)
     {
     }
 
+    /// <inheritdoc />
     public MemoTooLongException(string message, Exception innerException) : base(message, innerException)
     {
     }
 
+    /// <inheritdoc />
     protected MemoTooLongException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }

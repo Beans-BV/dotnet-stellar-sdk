@@ -8,6 +8,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class ClawbackResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="ClawbackResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR clawback result.</param>
+    /// <returns>A <see cref="ClawbackResult" /> instance representing the operation outcome.</returns>
     public static ClawbackResult FromXdr(Xdr.ClawbackResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -27,6 +32,7 @@ public class ClawbackResult : OperationResult
 /// </summary>
 public class ClawbackSuccess : ClawbackResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 

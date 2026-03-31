@@ -7,15 +7,21 @@ namespace StellarDotnetSdk.Assets;
 /// </summary>
 public class AssetTypeNative : Asset
 {
+    /// <summary>
+    ///     The Horizon REST API type identifier for the native asset.
+    /// </summary>
     public const string RestApiType = "native";
 
+    /// <inheritdoc />
     public override string Type => RestApiType;
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return 0;
     }
 
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (obj is not AssetTypeNative)
@@ -25,6 +31,7 @@ public class AssetTypeNative : Asset
         return GetHashCode() == obj.GetHashCode();
     }
 
+    /// <inheritdoc />
     public override Xdr.Asset ToXdr()
     {
         var thisXdr = new Xdr.Asset
@@ -40,6 +47,7 @@ public class AssetTypeNative : Asset
         return "native";
     }
 
+    /// <inheritdoc />
     public override int CompareTo(Asset asset)
     {
         if (asset.Type == RestApiType)

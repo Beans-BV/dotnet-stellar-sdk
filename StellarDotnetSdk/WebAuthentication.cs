@@ -171,6 +171,18 @@ public static class WebAuthentication
             now);
     }
 
+    /// <summary>
+    ///     Verifies that the signers of a SEP-10 challenge transaction meet the specified threshold.
+    /// </summary>
+    /// <param name="transaction">The signed challenge transaction to verify.</param>
+    /// <param name="serverAccountId">The server's Stellar account ID.</param>
+    /// <param name="threshold">The required signing threshold to meet.</param>
+    /// <param name="signerSummary">A dictionary mapping signer account IDs to their weights.</param>
+    /// <param name="homeDomain">The home domain used in the challenge.</param>
+    /// <param name="webAuthDomain">The web auth domain used in the challenge.</param>
+    /// <param name="network">The Stellar network to use. Defaults to the current network if null.</param>
+    /// <param name="now">The reference time for validation. Defaults to current time if null.</param>
+    /// <returns>A collection of signer account IDs that signed the transaction.</returns>
     public static ICollection<string> VerifyChallengeTransactionThreshold(
         Transaction transaction,
         string serverAccountId,

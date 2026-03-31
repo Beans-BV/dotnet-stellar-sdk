@@ -8,12 +8,20 @@ namespace StellarDotnetSdk.Sep.Sep0006.Exceptions;
 /// </summary>
 public class CustomerInformationNeededException : TransferServerException
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="CustomerInformationNeededException" /> class
+    ///     with the anchor's response detailing the required fields.
+    /// </summary>
+    /// <param name="response">The response containing the list of required customer information fields.</param>
     public CustomerInformationNeededException(CustomerInformationNeededResponse response)
         : base(BuildMessage(response))
     {
         Response = response;
     }
 
+    /// <summary>
+    ///     The anchor's response indicating which customer information fields are required.
+    /// </summary>
     public CustomerInformationNeededResponse Response { get; }
 
     private static string BuildMessage(CustomerInformationNeededResponse response)

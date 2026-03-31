@@ -14,6 +14,13 @@ using Int32 = Int32;
 /// </summary>
 public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
 {
+    /// <summary>
+    ///     Constructs a <c>LiquidityPoolConstantProductParameters</c> with the two assets and fee.
+    ///     Assets must be in lexicographic order (Asset A &lt; Asset B).
+    /// </summary>
+    /// <param name="assetA">The first asset in the pool (must be lexicographically less than assetB).</param>
+    /// <param name="assetB">The second asset in the pool.</param>
+    /// <param name="feeBp">The fee charged per trade in basis points (typically 30).</param>
     public LiquidityPoolConstantProductParameters(Asset assetA, Asset assetB, int feeBp)
     {
         AssetA = assetA ?? throw new ArgumentNullException(nameof(assetA), "assetA cannot be null");
@@ -27,10 +34,22 @@ public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
         Fee = feeBp;
     }
 
+    /// <summary>
+    ///     The first asset in the pool (lexicographically smaller).
+    /// </summary>
     public Asset AssetA { get; }
+
+    /// <summary>
+    ///     The second asset in the pool (lexicographically larger).
+    /// </summary>
     public Asset AssetB { get; }
+
+    /// <summary>
+    ///     The fee charged per trade in basis points (1 bp = 0.01%).
+    /// </summary>
     public new int Fee { get; }
 
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (obj is not LiquidityPoolConstantProductParameters other)
@@ -40,11 +59,15 @@ public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
         return Equals(AssetA, other.AssetA) && Equals(AssetB, other.AssetB) && Equals(Fee, other.Fee);
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return AssetA.GetHashCode() ^ AssetB.GetHashCode() ^ Fee;
     }
 
+    /// <summary>
+    ///     Serializes this constant product parameters object to its XDR representation.
+    /// </summary>
     public override Xdr.LiquidityPoolParameters ToXdr()
     {
         var liquidityPoolParametersXdr = new Xdr.LiquidityPoolParameters
@@ -67,6 +90,10 @@ public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
         return liquidityPoolParametersXdr;
     }
 
+    /// <summary>
+    ///     Deserializes a <see cref="LiquidityPoolConstantProductParameters" /> from its XDR representation.
+    /// </summary>
+    /// <param name="liquidityPoolConstantProductParametersXdr">The XDR constant product parameters object.</param>
     public static LiquidityPoolConstantProductParameters FromXdr(
         Xdr.LiquidityPoolConstantProductParameters liquidityPoolConstantProductParametersXdr)
     {
@@ -76,6 +103,9 @@ public class LiquidityPoolConstantProductParameters : LiquidityPoolParameters
             liquidityPoolConstantProductParametersXdr.Fee.InnerValue);
     }
 
+    /// <summary>
+    ///     Computes and returns the liquidity pool ID for these parameters.
+    /// </summary>
     public override LiquidityPoolId GetId()
     {
         return new LiquidityPoolId(LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT, AssetA,

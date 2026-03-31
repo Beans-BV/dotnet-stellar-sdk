@@ -31,6 +31,11 @@ public abstract class LedgerEntryChange
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="LedgerEntryChange" /> from a base-64 encoded XDR string.
+    /// </summary>
+    /// <param name="xdrBase64">A base-64 encoded XDR string of a <c>LedgerEntryChange</c>.</param>
+    /// <returns>A <see cref="LedgerEntryChange" /> subclass instance.</returns>
     public static LedgerEntryChange FromXdrBase64(string xdrBase64)
     {
         var bytes = Convert.FromBase64String(xdrBase64);

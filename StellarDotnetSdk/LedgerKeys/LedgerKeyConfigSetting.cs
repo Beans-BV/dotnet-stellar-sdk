@@ -8,13 +8,23 @@ namespace StellarDotnetSdk.LedgerKeys;
 /// </summary>
 public class LedgerKeyConfigSetting : LedgerKey
 {
+    /// <summary>
+    ///     Constructs a <c>LedgerKeyConfigSetting</c> from a configuration setting identifier.
+    /// </summary>
+    /// <param name="settingId">The configuration setting identifier.</param>
     public LedgerKeyConfigSetting(ConfigSettingID settingId)
     {
         ConfigSettingId = settingId;
     }
 
+    /// <summary>
+    ///     The configuration setting identifier.
+    /// </summary>
     public ConfigSettingID ConfigSettingId { get; }
 
+    /// <summary>
+    ///     Serializes this ledger key to its XDR representation.
+    /// </summary>
     public override Xdr.LedgerKey ToXdr()
     {
         return new Xdr.LedgerKey
@@ -28,6 +38,10 @@ public class LedgerKeyConfigSetting : LedgerKey
         };
     }
 
+    /// <summary>
+    ///     Deserializes a <see cref="LedgerKeyConfigSetting" /> from its XDR representation.
+    /// </summary>
+    /// <param name="xdr">The XDR ledger key config setting object.</param>
     public static LedgerKeyConfigSetting FromXdr(Xdr.LedgerKey.LedgerKeyConfigSetting xdr)
     {
         return new LedgerKeyConfigSetting(xdr.ConfigSettingID);

@@ -287,6 +287,13 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
         return FromPublicKey(decoded);
     }
 
+    /// <summary>
+    ///     Derives a Stellar <see cref="KeyPair" /> from a BIP-39 mnemonic seed using the
+    ///     standard Stellar derivation path (<c>m/44'/148'/{accountIndex}'</c>).
+    /// </summary>
+    /// <param name="seed">The hex-encoded BIP-39 seed.</param>
+    /// <param name="accountIndex">The account index in the derivation path.</param>
+    /// <returns>A <see cref="KeyPair" /> derived from the given seed and account index.</returns>
     public static KeyPair FromBIP39Seed(string seed, uint accountIndex)
     {
         var bip32 = new BIP32();
@@ -295,6 +302,13 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
         return FromSecretSeed(bip32.DerivePath(path, seed).Key);
     }
 
+    /// <summary>
+    ///     Derives a Stellar <see cref="KeyPair" /> from a BIP-39 mnemonic seed using the
+    ///     standard Stellar derivation path (<c>m/44'/148'/{accountIndex}'</c>).
+    /// </summary>
+    /// <param name="seedBytes">The raw BIP-39 seed bytes.</param>
+    /// <param name="accountIndex">The account index in the derivation path.</param>
+    /// <returns>A <see cref="KeyPair" /> derived from the given seed and account index.</returns>
     public static KeyPair FromBIP39Seed(byte[] seedBytes, uint accountIndex)
     {
         var seed = seedBytes.ToStringHex();

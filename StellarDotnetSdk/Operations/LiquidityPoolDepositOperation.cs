@@ -41,6 +41,14 @@ public class LiquidityPoolDepositOperation : Operation
         MaxPrice = maxPrice ?? throw new ArgumentNullException(nameof(maxPrice), "maxPrice cannot be null");
     }
 
+    /// <summary>
+    ///     Constructs a new <c>LiquidityPoolDepositOperation</c> from asset amounts, automatically deriving the pool ID.
+    /// </summary>
+    /// <param name="assetAmountA">The first asset and its maximum deposit amount.</param>
+    /// <param name="assetAmountB">The second asset and its maximum deposit amount.</param>
+    /// <param name="minPrice">Minimum depositA/depositB price.</param>
+    /// <param name="maxPrice">Maximum depositA/depositB price.</param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public LiquidityPoolDepositOperation(AssetAmount assetAmountA,
         AssetAmount assetAmountB,
         Price minPrice,
@@ -84,6 +92,10 @@ public class LiquidityPoolDepositOperation : Operation
     /// </summary>
     public Price MaxPrice { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         return new Xdr.Operation.OperationBody
@@ -100,6 +112,11 @@ public class LiquidityPoolDepositOperation : Operation
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="LiquidityPoolDepositOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="liquidityPoolDepositOp">The XDR LiquidityPoolDepositOp object.</param>
+    /// <returns>A new <see cref="LiquidityPoolDepositOperation" /> instance.</returns>
     public static LiquidityPoolDepositOperation FromXdr(LiquidityPoolDepositOp liquidityPoolDepositOp)
     {
         return new LiquidityPoolDepositOperation(

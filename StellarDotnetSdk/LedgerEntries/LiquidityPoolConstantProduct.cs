@@ -24,12 +24,37 @@ public class LiquidityPoolConstantProduct : LiquidityPoolEntryBody
         PoolSharesTrustLineCount = poolSharesTrustLineCount;
     }
 
+    /// <summary>
+    ///     The constant-product pool parameters (asset pair and fee).
+    /// </summary>
     public LiquidityPoolConstantProductParameters Parameters { get; }
+
+    /// <summary>
+    ///     The amount of asset A held in reserve by this pool, in stroops.
+    /// </summary>
     public long ReserveA { get; }
+
+    /// <summary>
+    ///     The amount of asset B held in reserve by this pool, in stroops.
+    /// </summary>
     public long ReserveB { get; }
+
+    /// <summary>
+    ///     The total number of pool share tokens that have been issued.
+    /// </summary>
     public long TotalPoolShares { get; }
+
+    /// <summary>
+    ///     The number of trust lines that hold shares in this pool.
+    /// </summary>
     public long PoolSharesTrustLineCount { get; }
 
+    /// <summary>
+    ///     Creates a <see cref="LiquidityPoolConstantProduct" /> from an XDR
+    ///     <see cref="LiquidityPoolEntry.LiquidityPoolEntryBody.LiquidityPoolEntryConstantProduct" /> object.
+    /// </summary>
+    /// <param name="xdrConstantProduct">The XDR constant product object.</param>
+    /// <returns>A <see cref="LiquidityPoolConstantProduct" /> instance.</returns>
     public static LiquidityPoolConstantProduct FromXdr(
         LiquidityPoolEntry.LiquidityPoolEntryBody.LiquidityPoolEntryConstantProduct xdrConstantProduct)
     {
@@ -42,6 +67,13 @@ public class LiquidityPoolConstantProduct : LiquidityPoolEntryBody
             poolSharesTrustLineCount);
     }
 
+    /// <summary>
+    ///     Creates a <see cref="LiquidityPoolConstantProduct" /> from an XDR
+    ///     <see cref="LiquidityPoolEntry.LiquidityPoolEntryBody" /> object.
+    /// </summary>
+    /// <param name="xdrBody">The XDR liquidity pool entry body.</param>
+    /// <returns>A <see cref="LiquidityPoolConstantProduct" /> instance.</returns>
+    /// <exception cref="ArgumentException">Thrown when the body is not a constant-product pool.</exception>
     public static LiquidityPoolConstantProduct FromXdrLiquidityPoolEntryBody(
         LiquidityPoolEntry.LiquidityPoolEntryBody xdrBody)
     {

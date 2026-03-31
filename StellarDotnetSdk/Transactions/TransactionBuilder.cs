@@ -42,6 +42,14 @@ public class TransactionBuilder
     /// <summary>Gets the number of operations added to this builder so far.</summary>
     public int OperationsCount => _operations.Count;
 
+    /// <summary>
+    ///     Builds a fee bump transaction using the inner transaction's per-operation fee.
+    ///     The total fee is calculated as <c>innerPerOpFee * (numOps + 1)</c>.
+    /// </summary>
+    /// <param name="feeSource">The account paying the fee.</param>
+    /// <param name="inner">The inner transaction to wrap.</param>
+    /// <returns>A new <see cref="FeeBumpTransaction" />.</returns>
+    /// <exception cref="Exception">Thrown when the inner transaction has no operations.</exception>
     public static FeeBumpTransaction BuildFeeBumpTransaction(IAccountId feeSource, Transaction inner)
     {
         if (inner.Operations.Length == 0)
@@ -55,6 +63,15 @@ public class TransactionBuilder
         return new FeeBumpTransaction(feeSource, inner, feeBumpFee);
     }
 
+    /// <summary>
+    ///     Builds a fee bump transaction with an explicit per-operation fee.
+    ///     The total fee is calculated as <c>fee * (numOps + 1)</c>.
+    /// </summary>
+    /// <param name="feeSource">The account paying the fee.</param>
+    /// <param name="inner">The inner transaction to wrap.</param>
+    /// <param name="fee">The per-operation fee in stroops (must be at least the inner transaction's per-operation fee).</param>
+    /// <returns>A new <see cref="FeeBumpTransaction" />.</returns>
+    /// <exception cref="Exception">Thrown when the inner transaction has no operations or the fee is too low.</exception>
     public static FeeBumpTransaction BuildFeeBumpTransaction(IAccountId feeSource, Transaction inner, long fee)
     {
         if (inner.Operations.Length == 0)
@@ -193,6 +210,12 @@ public class TransactionBuilder
         return transaction;
     }
 
+    /// <summary>
+    ///     Decodes a <see cref="TransactionBase" /> (either <see cref="Transaction" /> or <see cref="FeeBumpTransaction" />)
+    ///     from a base64-encoded XDR transaction envelope string.
+    /// </summary>
+    /// <param name="envelope">The base64-encoded XDR transaction envelope.</param>
+    /// <returns>The decoded transaction.</returns>
     public static TransactionBase FromEnvelopeXdr(string envelope)
     {
         var bytes = Convert.FromBase64String(envelope);
@@ -201,6 +224,13 @@ public class TransactionBuilder
         return FromEnvelopeXdr(transactionEnvelope);
     }
 
+    /// <summary>
+    ///     Decodes a <see cref="TransactionBase" /> from a <see cref="TransactionEnvelope" /> XDR object.
+    ///     Supports V0, V1, and fee bump envelope types.
+    /// </summary>
+    /// <param name="envelope">The XDR transaction envelope.</param>
+    /// <returns>The decoded transaction.</returns>
+    /// <exception cref="ArgumentException">Thrown when the envelope type is unknown.</exception>
     public static TransactionBase FromEnvelopeXdr(TransactionEnvelope envelope)
     {
         return envelope.Discriminant.InnerValue switch

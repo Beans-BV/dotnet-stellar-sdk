@@ -16,6 +16,9 @@ public class GetTransactionsRequest
     [JsonPropertyName("startLedger")]
     public long? StartLedger { get; set; }
 
+    /// <summary>
+    ///     Pagination options for controlling the cursor position and page size of transaction results.
+    /// </summary>
     [JsonPropertyName("pagination")]
     public PaginationOptions? Pagination { get; set; }
 }

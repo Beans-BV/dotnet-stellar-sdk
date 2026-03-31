@@ -42,6 +42,13 @@ public class LiquidityPoolWithdrawOperation : Operation
     }
 
 
+    /// <summary>
+    ///     Constructs a new <c>LiquidityPoolWithdrawOperation</c> from asset amounts, automatically deriving the pool ID.
+    /// </summary>
+    /// <param name="assetA">The first asset and its minimum withdrawal amount.</param>
+    /// <param name="assetB">The second asset and its minimum withdrawal amount.</param>
+    /// <param name="amount">Amount of pool shares to withdraw.</param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public LiquidityPoolWithdrawOperation(
         AssetAmount assetA,
         AssetAmount assetB,
@@ -79,6 +86,10 @@ public class LiquidityPoolWithdrawOperation : Operation
     /// </summary>
     public string MinAmountB { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         var body = new Xdr.Operation.OperationBody
@@ -95,6 +106,11 @@ public class LiquidityPoolWithdrawOperation : Operation
         return body;
     }
 
+    /// <summary>
+    ///     Creates a <see cref="LiquidityPoolWithdrawOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="liquidityPoolWithdrawOp">The XDR LiquidityPoolWithdrawOp object.</param>
+    /// <returns>A new <see cref="LiquidityPoolWithdrawOperation" /> instance.</returns>
     public static LiquidityPoolWithdrawOperation FromXdr(LiquidityPoolWithdrawOp liquidityPoolWithdrawOp)
     {
         return new LiquidityPoolWithdrawOperation(

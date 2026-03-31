@@ -7,8 +7,14 @@ namespace StellarDotnetSdk.Soroban;
 /// </summary>
 public class SorobanTransactionMeta
 {
+    /// <summary>
+    ///     The optional version 1 extension containing fee breakdowns, or <c>null</c> if not present.
+    /// </summary>
     public SorobanTransactionMetaExtensionV1? SorobanTransactionMetaExtensionV1 { get; private set; }
 
+    /// <summary>
+    ///     The return value of the Soroban contract invocation.
+    /// </summary>
     public SCVal ReturnValue { get; private init; } = new SCVoid();
 
     /// <summary>

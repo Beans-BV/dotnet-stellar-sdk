@@ -42,6 +42,14 @@ public class ManageDataOperation : Operation
         Value = value;
     }
 
+    /// <summary>
+    ///     Constructs a new <c>ManageDataOperation</c> with a string value that is UTF-8 encoded.
+    /// </summary>
+    /// <param name="name">The name of the data entry (up to 64 characters).</param>
+    /// <param name="value">
+    ///     (Optional) The string value to set. If null, the data entry is deleted. Up to 64 bytes when encoded.
+    /// </param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public ManageDataOperation(string name, string? value, IAccountId? sourceAccount = null)
         : this(name, value != null ? Encoding.UTF8.GetBytes(value) : null, sourceAccount)
     {
@@ -57,6 +65,10 @@ public class ManageDataOperation : Operation
     /// </summary>
     public byte[]? Value { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override xdr_Operation.OperationBody ToOperationBody()
     {
         var body = new xdr_Operation.OperationBody
@@ -71,6 +83,11 @@ public class ManageDataOperation : Operation
         return body;
     }
 
+    /// <summary>
+    ///     Creates a <see cref="ManageDataOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="manageDataOp">The XDR ManageDataOp object.</param>
+    /// <returns>A new <see cref="ManageDataOperation" /> instance.</returns>
     public static ManageDataOperation FromXdr(ManageDataOp manageDataOp)
     {
         return new ManageDataOperation(manageDataOp.DataName.InnerValue, manageDataOp.DataValue?.InnerValue);

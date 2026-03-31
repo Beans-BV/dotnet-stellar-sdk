@@ -8,6 +8,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class AccountMergeResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="AccountMergeResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR account merge result.</param>
+    /// <returns>An <see cref="AccountMergeResult" /> instance representing the operation outcome.</returns>
     public static AccountMergeResult FromXdr(Xdr.AccountMergeResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -38,11 +43,16 @@ public class AccountMergeResult : OperationResult
 /// </summary>
 public class AccountMergeSuccess : AccountMergeResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="AccountMergeSuccess" /> class.
+    /// </summary>
+    /// <param name="sourceAccountBalance">The amount transferred from the source account.</param>
     public AccountMergeSuccess(string sourceAccountBalance)
     {
         SourceAccountBalance = sourceAccountBalance;
     }
 
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 
     /// <summary>

@@ -11,6 +11,7 @@ namespace StellarDotnetSdk.Converters;
 /// </summary>
 public class AssetJsonConverter : JsonConverter<Asset>
 {
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, Asset value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
@@ -24,6 +25,7 @@ public class AssetJsonConverter : JsonConverter<Asset>
         writer.WriteEndObject();
     }
 
+    /// <inheritdoc />
     public override Asset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         // Asset is non-nullable, only check for expected token type

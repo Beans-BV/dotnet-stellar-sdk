@@ -9,18 +9,22 @@ namespace StellarDotnetSdk.Exceptions;
 /// </summary>
 public class FormatException : Exception
 {
+    /// <inheritdoc />
     public FormatException()
     {
     }
 
+    /// <inheritdoc />
     public FormatException(string message) : base(message)
     {
     }
 
+    /// <inheritdoc />
     public FormatException(string message, Exception innerException) : base(message, innerException)
     {
     }
 
+    /// <inheritdoc />
     protected FormatException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }

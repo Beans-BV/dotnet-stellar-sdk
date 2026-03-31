@@ -7,6 +7,7 @@ namespace StellarDotnetSdk.Memos;
 /// </summary>
 public class MemoNone : Memo
 {
+    /// <inheritdoc />
     public override Xdr.Memo ToXdr()
     {
         var memo = new Xdr.Memo
@@ -16,11 +17,13 @@ public class MemoNone : Memo
         return memo;
     }
 
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         return obj is MemoNone;
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return GetType().GetHashCode();

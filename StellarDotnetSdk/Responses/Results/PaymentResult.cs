@@ -8,6 +8,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class PaymentResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="PaymentResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR payment result.</param>
+    /// <returns>A <see cref="PaymentResult" /> instance representing the operation outcome.</returns>
     public static PaymentResult FromXdr(Xdr.PaymentResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -32,6 +37,7 @@ public class PaymentResult : OperationResult
 /// </summary>
 public class PaymentSuccess : PaymentResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 

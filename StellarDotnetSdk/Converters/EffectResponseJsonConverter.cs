@@ -40,12 +40,14 @@ namespace StellarDotnetSdk.Converters;
 /// </remarks>
 public class EffectResponseJsonConverter : JsonConverter<EffectResponse>
 {
+    /// <inheritdoc />
     public override bool CanConvert(Type typeToConvert)
     {
         // Only handle the base type, not concrete subclasses
         return typeToConvert == typeof(EffectResponse);
     }
 
+    /// <inheritdoc />
     public override EffectResponse? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         // Parse JSON once into document
@@ -125,6 +127,7 @@ public class EffectResponseJsonConverter : JsonConverter<EffectResponse>
         };
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, EffectResponse value, JsonSerializerOptions options)
     {
         JsonSerializer.Serialize(writer, value, value.GetType(), options);

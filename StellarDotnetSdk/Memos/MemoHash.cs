@@ -8,14 +8,23 @@ namespace StellarDotnetSdk.Memos;
 /// </summary>
 public class MemoHash : MemoHashAbstract
 {
+    /// <summary>
+    ///     Initializes a new <see cref="MemoHash" /> from a 32-byte array.
+    /// </summary>
+    /// <param name="bytes">The 32-byte hash value.</param>
     public MemoHash(byte[] bytes) : base(bytes)
     {
     }
 
+    /// <summary>
+    ///     Initializes a new <see cref="MemoHash" /> from a hex-encoded string.
+    /// </summary>
+    /// <param name="hexString">The hex-encoded hash value.</param>
     public MemoHash(string hexString) : base(hexString)
     {
     }
 
+    /// <inheritdoc />
     public override Xdr.Memo ToXdr()
     {
         var memo = new Xdr.Memo

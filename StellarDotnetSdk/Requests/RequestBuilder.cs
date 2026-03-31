@@ -22,7 +22,17 @@ public enum OrderDirection
 /// </summary>
 public interface IRequestBuilder<T> where T : class
 {
+    /// <summary>
+    ///     Gets the fully resolved request URI as a string.
+    /// </summary>
     string Uri { get; }
+
+    /// <summary>
+    ///     Executes an HTTP GET request to the specified URI and deserializes the response.
+    /// </summary>
+    /// <typeparam name="TZ">The response type to deserialize into.</typeparam>
+    /// <param name="uri">The URI to send the request to.</param>
+    /// <returns>The deserialized response object.</returns>
     Task<TZ> Execute<TZ>(Uri uri) where TZ : class;
 
     /// <summary>
@@ -71,9 +81,18 @@ public class RequestBuilder<T> : IRequestBuilder<T> where T : class
 {
     private readonly List<string> _segments;
     private readonly Uri _serverUri;
+    /// <summary>
+    ///     The URI builder used to construct the request URL with path segments and query parameters.
+    /// </summary>
     protected readonly UriBuilder UriBuilder;
     private bool _segmentsAdded;
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="RequestBuilder{T}" /> class.
+    /// </summary>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="defaultSegment">The default URL path segment for this endpoint.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public RequestBuilder(Uri serverUri, string defaultSegment, HttpClient httpClient)
     {
         _serverUri = serverUri;
@@ -90,8 +109,12 @@ public class RequestBuilder<T> : IRequestBuilder<T> where T : class
         HttpClient = httpClient;
     }
 
+    /// <summary>
+    ///     Gets or sets the HTTP client shared across all request builder instances.
+    /// </summary>
     public static HttpClient HttpClient { get; set; }
 
+    /// <inheritdoc />
     public async Task<TZ> Execute<TZ>(Uri uri) where TZ : class
     {
         var responseHandler = new ResponseHandler<TZ>();
@@ -181,6 +204,12 @@ public class RequestBuilder<T> : IRequestBuilder<T> where T : class
         return UriBuilder.Uri;
     }
 
+    /// <summary>
+    ///     Sets the URL path segments for this request, replacing any default segment.
+    /// </summary>
+    /// <param name="segments">The path segments to set.</param>
+    /// <returns>The current <see cref="RequestBuilder{T}" /> instance.</returns>
+    /// <exception cref="Exception">Thrown if segments have already been added.</exception>
     protected RequestBuilder<T> SetSegments(params string[] segments)
     {
         if (_segmentsAdded)

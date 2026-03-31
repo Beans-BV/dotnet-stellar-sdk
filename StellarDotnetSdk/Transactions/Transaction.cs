@@ -44,20 +44,48 @@ public class Transaction : TransactionBase
         SorobanTransactionData = sorobanData;
     }
 
+    /// <summary>
+    ///     Gets the total fee (in stroops) for this transaction. This is the per-operation fee multiplied by the number
+    ///     of operations, plus any additional resource fees.
+    /// </summary>
     public uint Fee { get; private set; }
 
+    /// <summary>
+    ///     Gets the source account that initiated this transaction and whose sequence number is consumed.
+    /// </summary>
     public IAccountId SourceAccount { get; }
 
+    /// <summary>
+    ///     Gets the sequence number of this transaction. Each transaction must use the next sequential value from the
+    ///     source account.
+    /// </summary>
     public long SequenceNumber { get; }
 
+    /// <summary>
+    ///     Gets the array of operations included in this transaction (1 to 100 operations).
+    /// </summary>
     public Operation[] Operations { get; }
 
+    /// <summary>
+    ///     Gets the memo attached to this transaction.
+    /// </summary>
     public Memo Memo { get; }
 
+    /// <summary>
+    ///     Gets the optional preconditions (time bounds, ledger bounds, sequence constraints, extra signers) for this
+    ///     transaction.
+    /// </summary>
     public TransactionPreconditions? Preconditions { get; }
 
+    /// <summary>
+    ///     Gets the time bounds from the preconditions, if set. This is a convenience accessor.
+    /// </summary>
     public TimeBounds? TimeBounds => Preconditions?.TimeBounds;
 
+    /// <summary>
+    ///     Gets or sets the Soroban-specific transaction data (resource footprint and fees), typically populated from
+    ///     simulation results.
+    /// </summary>
     public SorobanTransactionData? SorobanTransactionData { get; private set; }
 
     /// <summary>
@@ -226,6 +254,11 @@ public class Transaction : TransactionBase
         };
     }
 
+    /// <summary>
+    ///     Decodes a <see cref="Transaction" /> from a base64-encoded transaction envelope XDR string.
+    /// </summary>
+    /// <param name="envelope">The base64-encoded XDR transaction envelope.</param>
+    /// <returns>The decoded <see cref="Transaction" />.</returns>
     public static Transaction FromEnvelopeXdr(string envelope)
     {
         var bytes = Convert.FromBase64String(envelope);
@@ -234,6 +267,13 @@ public class Transaction : TransactionBase
         return FromEnvelopeXdr(transactionEnvelope);
     }
 
+    /// <summary>
+    ///     Decodes a <see cref="Transaction" /> from a <see cref="TransactionEnvelope" /> XDR object.
+    ///     Supports both V0 and V1 envelope types.
+    /// </summary>
+    /// <param name="envelope">The XDR transaction envelope.</param>
+    /// <returns>The decoded <see cref="Transaction" />.</returns>
+    /// <exception cref="ArgumentException">Thrown when the envelope type is not V0 or V1.</exception>
     public static Transaction FromEnvelopeXdr(TransactionEnvelope envelope)
     {
         {
@@ -247,6 +287,11 @@ public class Transaction : TransactionBase
         }
     }
 
+    /// <summary>
+    ///     Decodes a <see cref="Transaction" /> from a V0 transaction envelope.
+    /// </summary>
+    /// <param name="envelope">The V0 transaction envelope XDR object.</param>
+    /// <returns>The decoded <see cref="Transaction" /> with its signatures.</returns>
     public static Transaction FromEnvelopeXdrV0(TransactionV0Envelope envelope)
     {
         var transactionXdr = envelope.Tx;
@@ -274,6 +319,12 @@ public class Transaction : TransactionBase
         return transaction;
     }
 
+    /// <summary>
+    ///     Decodes a <see cref="Transaction" /> from a V1 transaction envelope.
+    ///     V1 envelopes support muxed accounts and full preconditions.
+    /// </summary>
+    /// <param name="envelope">The V1 transaction envelope XDR object.</param>
+    /// <returns>The decoded <see cref="Transaction" /> with its signatures and Soroban data if present.</returns>
     public static Transaction FromEnvelopeXdrV1(TransactionV1Envelope envelope)
     {
         var transactionXdr = envelope.Tx;

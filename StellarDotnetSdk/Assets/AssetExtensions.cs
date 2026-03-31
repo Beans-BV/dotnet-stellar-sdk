@@ -1,5 +1,8 @@
 namespace StellarDotnetSdk.Assets;
 
+/// <summary>
+///     Provides extension methods for the <see cref="Asset" /> class.
+/// </summary>
 public static class AssetExtensions
 {
     /// <summary>

@@ -28,20 +28,44 @@ public class LedgerEntryOffer : LedgerEntry
         Flags = flags;
     }
 
+    /// <summary>
+    ///     The account ID of the offer creator (seller).
+    /// </summary>
     public KeyPair SellerId { get; }
 
+    /// <summary>
+    ///     The unique identifier of this offer.
+    /// </summary>
     public long OfferId { get; }
 
+    /// <summary>
+    ///     The amount of the <see cref="Selling" /> asset being offered, in stroops.
+    /// </summary>
     public long Amount { get; }
 
+    /// <summary>
+    ///     The asset the offer creator wants to buy.
+    /// </summary>
     public Asset Buying { get; }
 
+    /// <summary>
+    ///     The asset the offer creator is selling.
+    /// </summary>
     public Asset Selling { get; }
 
+    /// <summary>
+    ///     The price as a ratio of selling to buying: price = selling / buying.
+    /// </summary>
     public Price Price { get; }
 
+    /// <summary>
+    ///     Offer flags (e.g. PASSIVE flag for passive offers).
+    /// </summary>
     public uint Flags { get; }
 
+    /// <summary>
+    ///     Extension fields for this offer entry, if present.
+    /// </summary>
     public OfferEntryExtension? OfferExtension { get; private set; }
 
     /// <summary>

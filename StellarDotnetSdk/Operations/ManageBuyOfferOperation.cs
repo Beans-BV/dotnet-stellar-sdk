@@ -43,16 +43,35 @@ public class ManageBuyOfferOperation : Operation
         OfferId = offerId;
     }
 
+    /// <summary>
+    ///     The asset being sold in this operation.
+    /// </summary>
     public Asset Selling { get; }
 
+    /// <summary>
+    ///     The asset being bought in this operation.
+    /// </summary>
     public Asset Buying { get; }
 
+    /// <summary>
+    ///     Amount of <see cref="Buying" /> being bought.
+    /// </summary>
     public string BuyAmount { get; }
 
+    /// <summary>
+    ///     Price of 1 unit of <see cref="Buying" /> in terms of <see cref="Selling" />.
+    /// </summary>
     public string Price { get; }
 
+    /// <summary>
+    ///     The ID of the offer. 0 for new offer. Set to existing offer ID to update or delete.
+    /// </summary>
     public long OfferId { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override xdr_Operation.OperationBody ToOperationBody()
     {
         var body = new xdr_Operation.OperationBody
@@ -70,6 +89,11 @@ public class ManageBuyOfferOperation : Operation
         return body;
     }
 
+    /// <summary>
+    ///     Creates a <see cref="ManageBuyOfferOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="manageBuyOfferOp">The XDR ManageBuyOfferOp object.</param>
+    /// <returns>A new <see cref="ManageBuyOfferOperation" /> instance.</returns>
     public static ManageBuyOfferOperation FromXdr(ManageBuyOfferOp manageBuyOfferOp)
     {
         return new ManageBuyOfferOperation(

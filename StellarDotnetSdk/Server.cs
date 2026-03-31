@@ -32,6 +32,11 @@ public class Server : IDisposable
     private readonly bool _internalHttpClient;
     private readonly Uri _serverUri;
 
+    /// <summary>
+    ///     Constructs a new instance with the provided URI and a custom <see cref="HttpClient" />.
+    /// </summary>
+    /// <param name="uri">URL of the Horizon server.</param>
+    /// <param name="httpClient">A custom <see cref="HttpClient" /> to use for requests.</param>
     public Server(string uri, HttpClient httpClient)
     {
         _httpClient = httpClient;
@@ -39,6 +44,10 @@ public class Server : IDisposable
         _internalHttpClient = false;
     }
 
+    /// <summary>
+    ///     Constructs a new instance with the provided URI and a default <see cref="HttpClient" />.
+    /// </summary>
+    /// <param name="uri">URL of the Horizon server.</param>
     public Server(string uri)
         : this(uri, CreateHttpClient())
     {
@@ -139,6 +148,10 @@ public class Server : IDisposable
         return RootAsync().Result;
     }
 
+    /// <summary>
+    ///     Fetches the root information from the Horizon server asynchronously.
+    /// </summary>
+    /// <returns>The root response containing server metadata and supported protocol version.</returns>
     public async Task<RootResponse> RootAsync()
     {
         var responseHandler = new ResponseHandler<RootResponse>();
@@ -178,12 +191,21 @@ public class Server : IDisposable
         return SubmitTransaction(transactionEnvelopeBase64, options);
     }
 
+    /// <summary>
+    ///     Submit a fee bump transaction to the network.
+    /// </summary>
+    /// <param name="feeBump">A signed fee bump transaction object.</param>
     public Task<SubmitTransactionResponse?> SubmitTransaction(FeeBumpTransaction feeBump)
     {
         var options = new SubmitTransactionOptions { FeeBumpTransaction = true };
         return SubmitTransaction(feeBump.ToEnvelopeXdrBase64(), options);
     }
 
+    /// <summary>
+    ///     Submit a fee bump transaction to the network with the given options.
+    /// </summary>
+    /// <param name="feeBump">A signed fee bump transaction object.</param>
+    /// <param name="options">Options controlling memo-required checks and other submission behavior.</param>
     public Task<SubmitTransactionResponse?> SubmitTransaction(
         FeeBumpTransaction feeBump,
         SubmitTransactionOptions options
@@ -309,12 +331,21 @@ public class Server : IDisposable
         return SubmitTransactionAsync(transactionEnvelopeBase64, options);
     }
 
+    /// <summary>
+    ///     Submit a fee bump transaction asynchronously to the network.
+    /// </summary>
+    /// <param name="feeBump">A signed fee bump transaction object.</param>
     public Task<SubmitTransactionAsyncResponse?> SubmitTransactionAsync(FeeBumpTransaction feeBump)
     {
         var options = new SubmitTransactionOptions { FeeBumpTransaction = true };
         return SubmitTransactionAsync(feeBump.ToEnvelopeXdrBase64(), options);
     }
 
+    /// <summary>
+    ///     Submit a fee bump transaction asynchronously to the network with the given options.
+    /// </summary>
+    /// <param name="feeBump">A signed fee bump transaction object.</param>
+    /// <param name="options">Options controlling memo-required checks and other submission behavior.</param>
     public Task<SubmitTransactionAsyncResponse?> SubmitTransactionAsync(
         FeeBumpTransaction feeBump,
         SubmitTransactionOptions options
@@ -416,6 +447,10 @@ public class Server : IDisposable
         }
     }
 
+    /// <summary>
+    ///     Creates an <see cref="HttpClient" /> pre-configured with Stellar SDK client headers.
+    /// </summary>
+    /// <returns>A configured <see cref="HttpClient" />.</returns>
     [Obsolete(
         "Pass your own HttpClient instance to Server(string uri, HttpClient httpClient) instead. Otherwise call Server(string uri). Will be removed in the next major version.")]
     public static HttpClient CreateHttpClient()
@@ -423,6 +458,11 @@ public class Server : IDisposable
         return CreateHttpClient(new HttpClientHandler());
     }
 
+    /// <summary>
+    ///     Creates an <see cref="HttpClient" /> pre-configured with Stellar SDK client headers using the given handler.
+    /// </summary>
+    /// <param name="handler">The HTTP message handler to use.</param>
+    /// <returns>A configured <see cref="HttpClient" />.</returns>
     [Obsolete(
         "Pass your own HttpClient instance to Server(string uri, HttpClient httpClient) instead. Otherwise call Server(string uri). Will be removed in the next major version.")]
     public static HttpClient CreateHttpClient(HttpMessageHandler handler)

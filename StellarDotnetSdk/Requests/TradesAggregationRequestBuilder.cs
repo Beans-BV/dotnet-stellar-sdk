@@ -5,10 +5,19 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Builds requests to the Horizon <c>/trade_aggregations</c> endpoint for retrieving
+///     aggregated trade statistics for a given asset pair.
+/// </summary>
 public class
     TradesAggregationRequestBuilder : RequestBuilderExecutePageable<TradesAggregationRequestBuilder,
     TradeAggregationResponse>
 {
+    /// <summary>
+    ///     Initializes a new <see cref="TradesAggregationRequestBuilder" />.
+    /// </summary>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public TradesAggregationRequestBuilder(Uri serverUri, HttpClient httpClient)
         : base(serverUri, "trade_aggregations", httpClient)
     {

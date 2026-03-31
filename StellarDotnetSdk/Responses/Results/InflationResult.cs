@@ -10,6 +10,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class InflationResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="InflationResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR inflation result.</param>
+    /// <returns>An <see cref="InflationResult" /> instance representing the operation outcome.</returns>
     public static InflationResult FromXdr(Xdr.InflationResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -28,11 +33,16 @@ public class InflationResult : OperationResult
 /// </summary>
 public class InflationSuccess : InflationResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="InflationSuccess" /> class.
+    /// </summary>
+    /// <param name="payouts">The array of inflation payouts distributed to destination accounts.</param>
     public InflationSuccess(InflationPayout[] payouts)
     {
         Payouts = payouts;
     }
 
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 
     /// <summary>
@@ -61,6 +71,11 @@ public class InflationSuccess : InflationResult
         /// </summary>
         public string Amount { get; }
 
+        /// <summary>
+        ///     Creates a new <see cref="InflationPayout" /> from the given XDR representation.
+        /// </summary>
+        /// <param name="payout">The XDR inflation payout.</param>
+        /// <returns>A new <see cref="InflationPayout" /> instance.</returns>
         public static InflationPayout FromXdr(Xdr.InflationPayout payout)
         {
             return new InflationPayout(

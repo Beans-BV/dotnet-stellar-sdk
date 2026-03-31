@@ -8,6 +8,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class CreateAccountResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="CreateAccountResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR create account result.</param>
+    /// <returns>A <see cref="CreateAccountResult" /> instance representing the operation outcome.</returns>
     public static CreateAccountResult FromXdr(Xdr.CreateAccountResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -27,6 +32,7 @@ public class CreateAccountResult : OperationResult
 /// </summary>
 public class CreateAccountSuccess : CreateAccountResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 

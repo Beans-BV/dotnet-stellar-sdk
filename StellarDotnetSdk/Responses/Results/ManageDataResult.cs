@@ -8,6 +8,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class ManageDataResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="ManageDataResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR manage data result.</param>
+    /// <returns>A <see cref="ManageDataResult" /> instance representing the operation outcome.</returns>
     public static ManageDataResult FromXdr(Xdr.ManageDataResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -27,6 +32,7 @@ public class ManageDataResult : OperationResult
 /// </summary>
 public class ManageDataSuccess : ManageDataResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 

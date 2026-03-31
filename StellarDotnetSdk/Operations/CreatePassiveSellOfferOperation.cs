@@ -56,6 +56,10 @@ public class CreatePassiveSellOfferOperation : Operation
     /// </summary>
     public string Price { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override xdr_Operation.OperationBody ToOperationBody()
     {
         return new xdr_Operation.OperationBody
@@ -72,6 +76,11 @@ public class CreatePassiveSellOfferOperation : Operation
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="CreatePassiveSellOfferOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="createPassiveSellOfferOp">The XDR CreatePassiveSellOfferOp object.</param>
+    /// <returns>A new <see cref="CreatePassiveSellOfferOperation" /> instance.</returns>
     public static CreatePassiveSellOfferOperation FromXdr(CreatePassiveSellOfferOp createPassiveSellOfferOp)
     {
         return new CreatePassiveSellOfferOperation(

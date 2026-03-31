@@ -31,6 +31,12 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         _pipeline = BuildPipeline(opts);
     }
 
+    /// <summary>
+    ///     Sends an HTTP request through the resilience pipeline, which handles retries for connection failures.
+    /// </summary>
+    /// <param name="request">The HTTP request message to send.</param>
+    /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
+    /// <returns>The HTTP response message.</returns>
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken)

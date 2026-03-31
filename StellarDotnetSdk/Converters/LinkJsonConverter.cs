@@ -15,6 +15,7 @@ namespace StellarDotnetSdk.Converters;
 /// </remarks>
 public class LinkJsonConverter<T> : JsonConverter<Link<T>> where T : Response
 {
+    /// <inheritdoc />
     public override Link<T>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         // Expect object
@@ -46,6 +47,7 @@ public class LinkJsonConverter<T> : JsonConverter<Link<T>> where T : Response
         return Link<T>.Create(href, templated);
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, Link<T> value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();

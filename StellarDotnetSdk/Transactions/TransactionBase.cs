@@ -6,6 +6,10 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Transactions;
 
+/// <summary>
+///     Base class for all Stellar transaction types (<see cref="Transaction" /> and <see cref="FeeBumpTransaction" />),
+///     providing common signing and envelope serialization functionality.
+/// </summary>
 public abstract class TransactionBase
 {
     /// <summary>
@@ -13,15 +17,28 @@ public abstract class TransactionBase
     /// </summary>
     public enum TransactionXdrVersion
     {
+        /// <summary>
+        ///     V0 transaction envelope format (legacy, Ed25519 public key only).
+        /// </summary>
         V0,
+
+        /// <summary>
+        ///     V1 transaction envelope format (supports muxed accounts and full preconditions).
+        /// </summary>
         V1,
     }
 
+    /// <summary>
+    ///     Initializes a new <see cref="TransactionBase" /> with an empty signature list.
+    /// </summary>
     public TransactionBase()
     {
         Signatures = new List<DecoratedSignature>();
     }
 
+    /// <summary>
+    ///     Gets the list of <see cref="DecoratedSignature" /> instances attached to this transaction.
+    /// </summary>
     public List<DecoratedSignature> Signatures { get; }
 
     /// <summary>

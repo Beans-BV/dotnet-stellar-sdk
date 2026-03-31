@@ -22,8 +22,14 @@ namespace StellarDotnetSdk.Transactions;
 public class TransactionPreconditions
 {
     private const long MaxExtraSignersCount = 2;
+    /// <summary>
+    ///     Constant representing an infinite timeout (no time bound restriction). Value is 0.
+    /// </summary>
     public const ulong TimeoutInfinite = 0;
 
+    /// <summary>
+    ///     Gets the optional ledger bounds, restricting the transaction to a range of ledger sequence numbers.
+    /// </summary>
     public LedgerBounds? LedgerBounds { get; init; }
 
     /// <summary>
@@ -32,8 +38,20 @@ public class TransactionPreconditions
     /// </summary>
     public ulong? MinSequenceAge { get; init; } = 0UL;
 
+    /// <summary>
+    ///     Gets the optional minimum source account sequence number this transaction requires to be valid.
+    /// </summary>
     public long? MinSequenceNumber { get; init; }
+
+    /// <summary>
+    ///     Gets the optional minimum number of ledgers that must have elapsed since the source account's sequence number
+    ///     changed.
+    /// </summary>
     public uint? MinSequenceLedgerGap { get; init; } = 0U;
+
+    /// <summary>
+    ///     Gets the optional list of extra signer keys that must have signed the transaction (maximum 2).
+    /// </summary>
     public List<SignerKey>? ExtraSigners { get; init; }
 
     /// <summary>
@@ -69,6 +87,12 @@ public class TransactionPreconditions
                (ExtraSigners != null && ExtraSigners.Count != 0);
     }
 
+    /// <summary>
+    ///     Creates a <see cref="TransactionPreconditions" /> from its XDR <see cref="Preconditions" /> representation.
+    ///     Returns <c>null</c> for <c>PRECOND_NONE</c>.
+    /// </summary>
+    /// <param name="preconditions">The XDR preconditions object.</param>
+    /// <returns>The deserialized preconditions, or <c>null</c> if none are set.</returns>
     public static TransactionPreconditions? FromXdr(Preconditions preconditions)
     {
         return preconditions.Discriminant.InnerValue switch
@@ -98,6 +122,12 @@ public class TransactionPreconditions
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR <see cref="Preconditions" /> representation.
+    ///     Uses <c>PRECOND_V2</c> when any V2 fields are set, <c>PRECOND_TIME</c> when only time bounds are present,
+    ///     or <c>PRECOND_NONE</c> otherwise.
+    /// </summary>
+    /// <returns>A <see cref="Preconditions" /> XDR object corresponding to the active precondition fields.</returns>
     public Preconditions ToXdr()
     {
         if (HasV2())

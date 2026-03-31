@@ -67,6 +67,9 @@ public class Account : ITransactionBuilderAccount
         }
     }
 
+    /// <summary>
+    ///     Gets the muxed account identifier associated with this account.
+    /// </summary>
     public IAccountId MuxedAccount { get; }
 
     /// <summary>

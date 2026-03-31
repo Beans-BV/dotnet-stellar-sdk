@@ -6,8 +6,15 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.TransactionResultCode.TransactionRes
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a Stellar transaction, indicating whether it succeeded or the reason for failure.
+/// </summary>
 public abstract class TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResult" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     protected TransactionResult(string feeCharged)
     {
         FeeCharged = feeCharged;
@@ -18,6 +25,9 @@ public abstract class TransactionResult
     /// </summary>
     public string? FeeCharged { get; }
 
+    /// <summary>
+    ///     Indicates whether the transaction was successful.
+    /// </summary>
     public virtual bool IsSuccess => false;
 
     /// <summary>
@@ -75,6 +85,10 @@ public abstract class TransactionResult
 /// </summary>
 public class TransactionResultTooEarly : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultTooEarly" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultTooEarly(string feeCharged) : base(feeCharged)
     {
     }
@@ -85,6 +99,10 @@ public class TransactionResultTooEarly : TransactionResult
 /// </summary>
 public class TransactionResultTooLate : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultTooLate" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultTooLate(string feeCharged) : base(feeCharged)
     {
     }
@@ -95,11 +113,19 @@ public class TransactionResultTooLate : TransactionResult
 /// </summary>
 public class TransactionResultFailed : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultFailed" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
+    /// <param name="results">The list of individual operation results.</param>
     public TransactionResultFailed(string feeCharged, IList<OperationResult> results) : base(feeCharged)
     {
         Results = results;
     }
 
+    /// <summary>
+    ///     The list of individual operation results. At least one operation will have failed.
+    /// </summary>
     public IList<OperationResult> Results { get; }
 }
 
@@ -108,13 +134,22 @@ public class TransactionResultFailed : TransactionResult
 /// </summary>
 public class TransactionResultSuccess : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultSuccess" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
+    /// <param name="results">The list of individual operation results.</param>
     public TransactionResultSuccess(string feeCharged, List<OperationResult> results) : base(feeCharged)
     {
         Results = results;
     }
 
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 
+    /// <summary>
+    ///     The list of individual operation results. All operations succeeded.
+    /// </summary>
     public List<OperationResult> Results { get; }
 }
 
@@ -123,6 +158,10 @@ public class TransactionResultSuccess : TransactionResult
 /// </summary>
 public class TransactionResultInsufficientBalance : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultInsufficientBalance" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultInsufficientBalance(string feeCharged) : base(feeCharged)
     {
     }
@@ -133,6 +172,10 @@ public class TransactionResultInsufficientBalance : TransactionResult
 /// </summary>
 public class TransactionResultBadAuth : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultBadAuth" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultBadAuth(string feeCharged) : base(feeCharged)
     {
     }
@@ -143,6 +186,10 @@ public class TransactionResultBadAuth : TransactionResult
 /// </summary>
 public class TransactionResultSorobanInvalid : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultSorobanInvalid" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultSorobanInvalid(string feeCharged) : base(feeCharged)
     {
     }
@@ -153,6 +200,10 @@ public class TransactionResultSorobanInvalid : TransactionResult
 /// </summary>
 public class TransactionResultNotSupported : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultNotSupported" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultNotSupported(string feeCharged) : base(feeCharged)
     {
     }
@@ -163,6 +214,10 @@ public class TransactionResultNotSupported : TransactionResult
 /// </summary>
 public class TransactionResultNoAccount : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultNoAccount" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultNoAccount(string feeCharged) : base(feeCharged)
     {
     }
@@ -173,6 +228,10 @@ public class TransactionResultNoAccount : TransactionResult
 /// </summary>
 public class TransactionResultMissingOperation : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultMissingOperation" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultMissingOperation(string feeCharged) : base(feeCharged)
     {
     }
@@ -183,6 +242,10 @@ public class TransactionResultMissingOperation : TransactionResult
 /// </summary>
 public class TransactionResultMalformed : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultMalformed" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultMalformed(string feeCharged) : base(feeCharged)
     {
     }
@@ -193,6 +256,10 @@ public class TransactionResultMalformed : TransactionResult
 /// </summary>
 public class TransactionResultInternalError : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultInternalError" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultInternalError(string feeCharged) : base(feeCharged)
     {
     }
@@ -203,6 +270,10 @@ public class TransactionResultInternalError : TransactionResult
 /// </summary>
 public class TransactionResultInsufficientFee : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultInsufficientFee" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultInsufficientFee(string feeCharged) : base(feeCharged)
     {
     }
@@ -213,6 +284,10 @@ public class TransactionResultInsufficientFee : TransactionResult
 /// </summary>
 public class TransactionResultBadSponsorship : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultBadSponsorship" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultBadSponsorship(string feeCharged) : base(feeCharged)
     {
     }
@@ -223,6 +298,10 @@ public class TransactionResultBadSponsorship : TransactionResult
 /// </summary>
 public class TransactionResultBadSeq : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultBadSeq" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultBadSeq(string feeCharged) : base(feeCharged)
     {
     }
@@ -233,6 +312,10 @@ public class TransactionResultBadSeq : TransactionResult
 /// </summary>
 public class TransactionResultBadMinSeqAgeOrGap : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultBadMinSeqAgeOrGap" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultBadMinSeqAgeOrGap(string feeCharged) : base(feeCharged)
     {
     }
@@ -243,6 +326,10 @@ public class TransactionResultBadMinSeqAgeOrGap : TransactionResult
 /// </summary>
 public class TransactionResultBadAuthExtra : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultBadAuthExtra" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultBadAuthExtra(string feeCharged) : base(feeCharged)
     {
     }
@@ -253,12 +340,20 @@ public class TransactionResultBadAuthExtra : TransactionResult
 /// </summary>
 public class FeeBumpTransactionResultFailed : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="FeeBumpTransactionResultFailed" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
+    /// <param name="innerResultPair">The inner transaction result pair.</param>
     public FeeBumpTransactionResultFailed(string feeCharged, InnerTransactionResultPair innerResultPair) :
         base(feeCharged)
     {
         InnerResultPair = innerResultPair;
     }
 
+    /// <summary>
+    ///     The inner transaction result pair containing the inner transaction hash and its result.
+    /// </summary>
     public InnerTransactionResultPair InnerResultPair { get; }
 }
 
@@ -267,14 +362,23 @@ public class FeeBumpTransactionResultFailed : TransactionResult
 /// </summary>
 public class FeeBumpTransactionResultSuccess : TransactionResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="FeeBumpTransactionResultSuccess" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
+    /// <param name="innerResultPair">The inner transaction result pair.</param>
     public FeeBumpTransactionResultSuccess(string feeCharged, InnerTransactionResultPair innerResultPair) :
         base(feeCharged)
     {
         InnerResultPair = innerResultPair;
     }
 
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 
+    /// <summary>
+    ///     The inner transaction result pair containing the inner transaction hash and its result.
+    /// </summary>
     public InnerTransactionResultPair InnerResultPair { get; }
 }
 
@@ -284,16 +388,32 @@ public class FeeBumpTransactionResultSuccess : TransactionResult
 /// </summary>
 public class InnerTransactionResultPair
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="InnerTransactionResultPair" /> class.
+    /// </summary>
+    /// <param name="transactionHash">The hash of the inner transaction.</param>
+    /// <param name="result">The result of the inner transaction.</param>
     public InnerTransactionResultPair(string transactionHash, TransactionResult result)
     {
         TransactionHash = transactionHash;
         Result = result;
     }
 
+    /// <summary>
+    ///     The hash of the inner transaction (base64 encoded).
+    /// </summary>
     public string TransactionHash { get; }
 
+    /// <summary>
+    ///     The result of the inner transaction.
+    /// </summary>
     public TransactionResult Result { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="InnerTransactionResultPair" /> from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR inner transaction result pair.</param>
+    /// <returns>A new <see cref="InnerTransactionResultPair" /> instance.</returns>
     public static InnerTransactionResultPair FromXdr(Xdr.InnerTransactionResultPair result)
     {
         var writer = new XdrDataOutputStream();

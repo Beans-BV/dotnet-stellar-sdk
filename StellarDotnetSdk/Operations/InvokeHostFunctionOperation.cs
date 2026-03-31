@@ -26,6 +26,10 @@ namespace StellarDotnetSdk.Operations;
 /// </summary>
 public abstract class InvokeHostFunctionOperation : Operation
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="InvokeHostFunctionOperation" /> class.
+    /// </summary>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     protected InvokeHostFunctionOperation(IAccountId? sourceAccount = null) : base(sourceAccount)
     {
     }
@@ -88,8 +92,12 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
             new ScContractId(contractAddress), new SCSymbol(functionName), args);
     }
 
+    /// <summary>
+    ///     The host function containing the contract address, function name, and arguments for the invocation.
+    /// </summary>
     public InvokeContractHostFunction HostFunction { get; }
 
+    /// <inheritdoc />
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         return new Xdr.Operation.OperationBody
@@ -110,6 +118,11 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="InvokeContractOperation" /> from the given XDR <see cref="InvokeHostFunctionOp" />.
+    /// </summary>
+    /// <param name="invokeHostFunctionOp">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="InvokeContractOperation" /> instance.</returns>
     public static InvokeContractOperation FromXdr(InvokeHostFunctionOp invokeHostFunctionOp)
     {
         var invokeContractArgs = invokeHostFunctionOp.HostFunction.InvokeContract;
@@ -195,6 +208,7 @@ public class CreateContractOperation : InvokeHostFunctionOperation
             sourceAccount);
     }
 
+    /// <inheritdoc />
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         return new Xdr.Operation.OperationBody
@@ -215,6 +229,11 @@ public class CreateContractOperation : InvokeHostFunctionOperation
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="CreateContractOperation" /> from the given XDR <see cref="InvokeHostFunctionOp" />.
+    /// </summary>
+    /// <param name="invokeHostFunctionOp">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="CreateContractOperation" /> instance.</returns>
     public static CreateContractOperation FromXdr(InvokeHostFunctionOp invokeHostFunctionOp)
     {
         var createContractArgs = invokeHostFunctionOp.HostFunction.CreateContractV2;
@@ -248,6 +267,9 @@ public class UploadContractOperation : InvokeHostFunctionOperation
         HostFunction = new UploadContractHostFunction(wasm);
     }
 
+    /// <summary>
+    ///     The host function that holds the compiled Wasm bytecode to be uploaded.
+    /// </summary>
     public UploadContractHostFunction HostFunction { get; }
 
     /// <summary>
@@ -255,6 +277,7 @@ public class UploadContractOperation : InvokeHostFunctionOperation
     /// </summary>
     public byte[] Wasm => HostFunction.Wasm;
 
+    /// <inheritdoc />
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         return new Xdr.Operation.OperationBody
@@ -275,6 +298,11 @@ public class UploadContractOperation : InvokeHostFunctionOperation
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="UploadContractOperation" /> from the given XDR <see cref="InvokeHostFunctionOp" />.
+    /// </summary>
+    /// <param name="invokeHostFunctionOp">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="UploadContractOperation" /> instance.</returns>
     public static UploadContractOperation FromXdr(InvokeHostFunctionOp invokeHostFunctionOp)
     {
         return new UploadContractOperation(invokeHostFunctionOp.HostFunction.Wasm)
@@ -284,6 +312,10 @@ public class UploadContractOperation : InvokeHostFunctionOperation
     }
 }
 
+/// <summary>
+///     Abstract base class for Soroban host functions that can be invoked via an
+///     <see cref="InvokeHostFunctionOperation" />.
+/// </summary>
 public abstract class HostFunction;
 
 /// <summary>
@@ -292,6 +324,12 @@ public abstract class HostFunction;
 /// </summary>
 public class InvokeContractHostFunction : HostFunction
 {
+    /// <summary>
+    ///     Constructs a new <see cref="InvokeContractHostFunction" />.
+    /// </summary>
+    /// <param name="contractAddress">The address of the contract to invoke.</param>
+    /// <param name="functionName">The name of the contract function to invoke.</param>
+    /// <param name="args">The arguments to pass to the contract function.</param>
     public InvokeContractHostFunction(
         ScAddress contractAddress,
         SCSymbol functionName,
@@ -308,10 +346,27 @@ public class InvokeContractHostFunction : HostFunction
         Args = args;
     }
 
+    /// <summary>
+    ///     The address of the contract to invoke.
+    /// </summary>
     public ScAddress ContractAddress { get; }
+
+    /// <summary>
+    ///     The name of the contract function to invoke.
+    /// </summary>
     public SCSymbol FunctionName { get; }
+
+    /// <summary>
+    ///     The arguments to pass to the contract function.
+    /// </summary>
     public SCVal[] Args { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="InvokeContractHostFunction" /> from the given XDR
+    ///     <see cref="InvokeContractArgs" />.
+    /// </summary>
+    /// <param name="xdrInvokeContractArgs">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="InvokeContractHostFunction" /> instance.</returns>
     public static InvokeContractHostFunction FromXdr(InvokeContractArgs xdrInvokeContractArgs)
     {
         return new InvokeContractHostFunction(
@@ -342,6 +397,11 @@ public class InvokeContractHostFunction : HostFunction
 /// </summary>
 public class CreateContractHostFunction : HostFunction
 {
+    /// <summary>
+    ///     Constructs a new <see cref="CreateContractHostFunction" />.
+    /// </summary>
+    /// <param name="contractIdPreimage">The preimage used to derive the contract ID.</param>
+    /// <param name="executable">The contract executable (Wasm reference or builtin Stellar asset contract).</param>
     public CreateContractHostFunction(
         ContractIdPreimage contractIdPreimage,
         ContractExecutable executable
@@ -363,9 +423,22 @@ public class CreateContractHostFunction : HostFunction
         Executable = new ContractExecutableWasm(wasmHash);
     }
 
+    /// <summary>
+    ///     The preimage used to derive the contract ID.
+    /// </summary>
     public ContractIdPreimage ContractIdPreimage { get; }
+
+    /// <summary>
+    ///     The contract executable (Wasm reference or builtin Stellar asset contract).
+    /// </summary>
     public ContractExecutable Executable { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="CreateContractHostFunction" /> from the given XDR
+    ///     <see cref="CreateContractArgs" />.
+    /// </summary>
+    /// <param name="xdrCreateContractArgs">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="CreateContractHostFunction" /> instance.</returns>
     public static CreateContractHostFunction FromXdr(CreateContractArgs xdrCreateContractArgs)
     {
         return new CreateContractHostFunction(
@@ -394,6 +467,12 @@ public class CreateContractHostFunction : HostFunction
 /// </summary>
 public class CreateContractV2HostFunction : HostFunction
 {
+    /// <summary>
+    ///     Constructs a new <see cref="CreateContractV2HostFunction" />.
+    /// </summary>
+    /// <param name="contractIdPreimage">The preimage used to derive the contract ID.</param>
+    /// <param name="executable">The contract executable (Wasm reference or builtin Stellar asset contract).</param>
+    /// <param name="arguments">The arguments to pass to the contract constructor during deployment.</param>
     public CreateContractV2HostFunction(
         ContractIdPreimage contractIdPreimage,
         ContractExecutable executable,
@@ -423,10 +502,27 @@ public class CreateContractV2HostFunction : HostFunction
         Arguments = arguments;
     }
 
+    /// <summary>
+    ///     The preimage used to derive the contract ID.
+    /// </summary>
     public ContractIdPreimage ContractIdPreimage { get; }
+
+    /// <summary>
+    ///     The contract executable (Wasm reference or builtin Stellar asset contract).
+    /// </summary>
     public ContractExecutable Executable { get; }
+
+    /// <summary>
+    ///     The arguments to pass to the contract constructor during deployment.
+    /// </summary>
     public SCVal[] Arguments { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="CreateContractV2HostFunction" /> from the given XDR
+    ///     <see cref="CreateContractArgsV2" />.
+    /// </summary>
+    /// <param name="xdrCreateContractArgs">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="CreateContractV2HostFunction" /> instance.</returns>
     public static CreateContractV2HostFunction FromXdr(CreateContractArgsV2 xdrCreateContractArgs)
     {
         return new CreateContractV2HostFunction(
@@ -458,11 +554,18 @@ public class CreateContractV2HostFunction : HostFunction
 /// </summary>
 public class UploadContractHostFunction : HostFunction
 {
+    /// <summary>
+    ///     Constructs a new <see cref="UploadContractHostFunction" />.
+    /// </summary>
+    /// <param name="wasm">The compiled smart contract Wasm bytecode.</param>
     public UploadContractHostFunction(byte[] wasm)
     {
         Wasm = wasm;
     }
 
+    /// <summary>
+    ///     The compiled smart contract Wasm bytecode to be uploaded.
+    /// </summary>
     public byte[] Wasm { get; }
 }
 
@@ -473,6 +576,11 @@ public class UploadContractHostFunction : HostFunction
 /// </summary>
 public class SorobanAuthorizationEntry
 {
+    /// <summary>
+    ///     Constructs a new <see cref="SorobanAuthorizationEntry" />.
+    /// </summary>
+    /// <param name="credentials">The credentials identifying and authenticating the authorizing entity.</param>
+    /// <param name="rootInvocation">The root of the authorized invocation tree.</param>
     public SorobanAuthorizationEntry(SorobanCredentials credentials, SorobanAuthorizedInvocation rootInvocation)
     {
         Credentials = credentials;
@@ -484,8 +592,16 @@ public class SorobanAuthorizationEntry
     /// </summary>
     public SorobanCredentials Credentials { get; }
 
+    /// <summary>
+    ///     The root of the authorized invocation tree.
+    /// </summary>
     public SorobanAuthorizedInvocation RootInvocation { get; }
 
+    /// <summary>
+    ///     Converts this <see cref="SorobanAuthorizationEntry" /> to its XDR
+    ///     <see cref="Xdr.SorobanAuthorizationEntry" /> representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.SorobanAuthorizationEntry" /> XDR object.</returns>
     public Xdr.SorobanAuthorizationEntry ToXdr()
     {
         return new Xdr.SorobanAuthorizationEntry
@@ -495,6 +611,12 @@ public class SorobanAuthorizationEntry
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SorobanAuthorizationEntry" /> from the given XDR
+    ///     <see cref="Xdr.SorobanAuthorizationEntry" />.
+    /// </summary>
+    /// <param name="xdr">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="SorobanAuthorizationEntry" /> instance.</returns>
     public static SorobanAuthorizationEntry FromXdr(Xdr.SorobanAuthorizationEntry xdr)
     {
         return new SorobanAuthorizationEntry(
@@ -515,8 +637,18 @@ public class SorobanAuthorizationEntry
     }
 }
 
+/// <summary>
+///     Abstract base class for Soroban authorization credentials.
+///     Credentials identify and authenticate the entity authorizing a contract invocation.
+/// </summary>
+/// <seealso cref="SorobanSourceAccountCredentials" />
+/// <seealso cref="SorobanAddressCredentials" />
 public abstract class SorobanCredentials
 {
+    /// <summary>
+    ///     Converts this <see cref="SorobanCredentials" /> to its XDR <see cref="Xdr.SorobanCredentials" /> representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.SorobanCredentials" /> XDR object.</returns>
     public Xdr.SorobanCredentials ToXdr()
     {
         return this switch
@@ -527,6 +659,14 @@ public abstract class SorobanCredentials
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="SorobanCredentials" /> subclass instance from the given XDR
+    ///     <see cref="Xdr.SorobanCredentials" />.
+    /// </summary>
+    /// <param name="xdrSorobanCredentials">The XDR object to deserialize.</param>
+    /// <returns>
+    ///     A <see cref="SorobanSourceAccountCredentials" /> or <see cref="SorobanAddressCredentials" /> instance.
+    /// </returns>
     public static SorobanCredentials FromXdr(Xdr.SorobanCredentials xdrSorobanCredentials)
     {
         return xdrSorobanCredentials.Discriminant.InnerValue switch
@@ -546,6 +686,11 @@ public abstract class SorobanCredentials
 /// </summary>
 public class SorobanSourceAccountCredentials : SorobanCredentials
 {
+    /// <summary>
+    ///     Converts this <see cref="SorobanSourceAccountCredentials" /> to its XDR
+    ///     <see cref="Xdr.SorobanCredentials" /> representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.SorobanCredentials" /> XDR object.</returns>
     public Xdr.SorobanCredentials ToSorobanCredentialsXdr()
     {
         return new Xdr.SorobanCredentials
@@ -564,6 +709,16 @@ public class SorobanSourceAccountCredentials : SorobanCredentials
 /// </summary>
 public class SorobanAddressCredentials : SorobanCredentials
 {
+    /// <summary>
+    ///     Constructs a new <see cref="SorobanAddressCredentials" />.
+    /// </summary>
+    /// <param name="address">The address that authorizes the invocation.</param>
+    /// <param name="nonce">
+    ///     An arbitrary value that must be unique for all signatures performed by <paramref name="address" />
+    ///     until <paramref name="signatureExpirationLedger" />.
+    /// </param>
+    /// <param name="signatureExpirationLedger">The ledger sequence number on which the signature expires.</param>
+    /// <param name="signature">The cryptographic signature authenticating the authorization.</param>
     public SorobanAddressCredentials(ScAddress address, long nonce, uint signatureExpirationLedger, SCVal signature)
     {
         Address = address ?? throw new ArgumentNullException(nameof(address), "Address cannot be null.");
@@ -588,8 +743,17 @@ public class SorobanAddressCredentials : SorobanCredentials
     /// </summary>
     public uint SignatureExpirationLedger { get; }
 
+    /// <summary>
+    ///     The cryptographic signature authenticating the authorization.
+    /// </summary>
     public SCVal Signature { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="SorobanAddressCredentials" /> from the given XDR
+    ///     <see cref="Xdr.SorobanCredentials" />.
+    /// </summary>
+    /// <param name="xdrSorobanCredentials">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="SorobanAddressCredentials" /> instance.</returns>
     public static SorobanAddressCredentials FromSorobanCredentialsXdr(Xdr.SorobanCredentials xdrSorobanCredentials)
     {
         if (xdrSorobanCredentials.Discriminant.InnerValue != CredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
@@ -605,6 +769,11 @@ public class SorobanAddressCredentials : SorobanCredentials
         );
     }
 
+    /// <summary>
+    ///     Converts this <see cref="SorobanAddressCredentials" /> to its XDR <see cref="Xdr.SorobanCredentials" />
+    ///     representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.SorobanCredentials" /> XDR object.</returns>
     public Xdr.SorobanCredentials ToSorobanCredentialsXdr()
     {
         return new Xdr.SorobanCredentials
@@ -631,6 +800,11 @@ public class SorobanAddressCredentials : SorobanCredentials
 /// </summary>
 public class SorobanAuthorizedInvocation
 {
+    /// <summary>
+    ///     Constructs a new <see cref="SorobanAuthorizedInvocation" />.
+    /// </summary>
+    /// <param name="function">The authorized function being invoked.</param>
+    /// <param name="subInvocations">Nested contract calls requiring the same authorization.</param>
     public SorobanAuthorizedInvocation(
         SorobanAuthorizedFunction function,
         SorobanAuthorizedInvocation[] subInvocations
@@ -640,9 +814,21 @@ public class SorobanAuthorizedInvocation
         SubInvocations = subInvocations;
     }
 
+    /// <summary>
+    ///     The authorized function being invoked at this node of the invocation tree.
+    /// </summary>
     public SorobanAuthorizedFunction Function { get; }
+
+    /// <summary>
+    ///     Nested sub-invocations that are authorized under the same credentials as this invocation.
+    /// </summary>
     public SorobanAuthorizedInvocation[] SubInvocations { get; }
 
+    /// <summary>
+    ///     Converts this <see cref="SorobanAuthorizedInvocation" /> to its XDR
+    ///     <see cref="Xdr.SorobanAuthorizedInvocation" /> representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.SorobanAuthorizedInvocation" /> XDR object.</returns>
     public Xdr.SorobanAuthorizedInvocation ToXdr()
     {
         return new Xdr.SorobanAuthorizedInvocation
@@ -652,6 +838,12 @@ public class SorobanAuthorizedInvocation
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SorobanAuthorizedInvocation" /> from the given XDR
+    ///     <see cref="Xdr.SorobanAuthorizedInvocation" />.
+    /// </summary>
+    /// <param name="xdr">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="SorobanAuthorizedInvocation" /> instance.</returns>
     public static SorobanAuthorizedInvocation FromXdr(Xdr.SorobanAuthorizedInvocation xdr)
     {
         return new SorobanAuthorizedInvocation(
@@ -661,8 +853,20 @@ public class SorobanAuthorizedInvocation
     }
 }
 
+/// <summary>
+///     Abstract base class for authorized Soroban functions used within a
+///     <see cref="SorobanAuthorizedInvocation" /> tree.
+/// </summary>
+/// <seealso cref="SorobanAuthorizedContractFunction" />
+/// <seealso cref="SorobanAuthorizedCreateContractFunction" />
+/// <seealso cref="SorobanAuthorizedCreateContractV2Function" />
 public abstract class SorobanAuthorizedFunction
 {
+    /// <summary>
+    ///     Converts this <see cref="SorobanAuthorizedFunction" /> to its XDR
+    ///     <see cref="Xdr.SorobanAuthorizedFunction" /> representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.SorobanAuthorizedFunction" /> XDR object.</returns>
     public Xdr.SorobanAuthorizedFunction ToXdr()
     {
         return this switch
@@ -677,6 +881,12 @@ public abstract class SorobanAuthorizedFunction
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="SorobanAuthorizedFunction" /> subclass instance from the given XDR
+    ///     <see cref="Xdr.SorobanAuthorizedFunction" />.
+    /// </summary>
+    /// <param name="xdrSorobanAuthorizedFunction">The XDR object to deserialize.</param>
+    /// <returns>A concrete <see cref="SorobanAuthorizedFunction" /> subclass instance.</returns>
     public static SorobanAuthorizedFunction FromXdr(Xdr.SorobanAuthorizedFunction xdrSorobanAuthorizedFunction)
     {
         return xdrSorobanAuthorizedFunction.Discriminant.InnerValue switch
@@ -702,13 +912,26 @@ public abstract class SorobanAuthorizedFunction
 /// </summary>
 public class SorobanAuthorizedContractFunction : SorobanAuthorizedFunction
 {
+    /// <summary>
+    ///     Constructs a new <see cref="SorobanAuthorizedContractFunction" />.
+    /// </summary>
+    /// <param name="hostFunction">The contract invocation host function being authorized.</param>
     public SorobanAuthorizedContractFunction(InvokeContractHostFunction hostFunction)
     {
         HostFunction = hostFunction;
     }
 
+    /// <summary>
+    ///     The contract invocation host function being authorized.
+    /// </summary>
     public InvokeContractHostFunction HostFunction { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="SorobanAuthorizedContractFunction" /> from the given XDR
+    ///     <see cref="Xdr.SorobanAuthorizedFunction" />.
+    /// </summary>
+    /// <param name="xdrSorobanAuthorizedFunction">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="SorobanAuthorizedContractFunction" /> instance.</returns>
     public static SorobanAuthorizedFunction FromSorobanAuthorizedFunctionXdr(
         Xdr.SorobanAuthorizedFunction xdrSorobanAuthorizedFunction
     )
@@ -724,6 +947,11 @@ public class SorobanAuthorizedContractFunction : SorobanAuthorizedFunction
         );
     }
 
+    /// <summary>
+    ///     Converts this <see cref="SorobanAuthorizedContractFunction" /> to its XDR
+    ///     <see cref="Xdr.SorobanAuthorizedFunction" /> representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.SorobanAuthorizedFunction" /> XDR object.</returns>
     public Xdr.SorobanAuthorizedFunction ToSorobanAuthorizedFunctionXdr()
     {
         return new Xdr.SorobanAuthorizedFunction
@@ -743,13 +971,26 @@ public class SorobanAuthorizedContractFunction : SorobanAuthorizedFunction
 /// </summary>
 public class SorobanAuthorizedCreateContractFunction : SorobanAuthorizedFunction
 {
+    /// <summary>
+    ///     Constructs a new <see cref="SorobanAuthorizedCreateContractFunction" />.
+    /// </summary>
+    /// <param name="hostFunction">The create contract host function being authorized.</param>
     public SorobanAuthorizedCreateContractFunction(CreateContractHostFunction hostFunction)
     {
         HostFunction = hostFunction;
     }
 
+    /// <summary>
+    ///     The create contract host function being authorized.
+    /// </summary>
     public CreateContractHostFunction HostFunction { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="SorobanAuthorizedCreateContractFunction" /> from the given XDR
+    ///     <see cref="Xdr.SorobanAuthorizedFunction" />.
+    /// </summary>
+    /// <param name="xdrSorobanAuthorizedFunction">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="SorobanAuthorizedCreateContractFunction" /> instance.</returns>
     public static SorobanAuthorizedFunction FromSorobanAuthorizedFunctionXdr(
         Xdr.SorobanAuthorizedFunction xdrSorobanAuthorizedFunction
     )
@@ -765,6 +1006,11 @@ public class SorobanAuthorizedCreateContractFunction : SorobanAuthorizedFunction
         );
     }
 
+    /// <summary>
+    ///     Converts this <see cref="SorobanAuthorizedCreateContractFunction" /> to its XDR
+    ///     <see cref="Xdr.SorobanAuthorizedFunction" /> representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.SorobanAuthorizedFunction" /> XDR object.</returns>
     public Xdr.SorobanAuthorizedFunction ToSorobanAuthorizedFunctionXdr()
     {
         return new Xdr.SorobanAuthorizedFunction
@@ -786,13 +1032,26 @@ public class SorobanAuthorizedCreateContractFunction : SorobanAuthorizedFunction
 /// </summary>
 public class SorobanAuthorizedCreateContractV2Function : SorobanAuthorizedFunction
 {
+    /// <summary>
+    ///     Constructs a new <see cref="SorobanAuthorizedCreateContractV2Function" />.
+    /// </summary>
+    /// <param name="hostFunction">The create contract V2 host function being authorized.</param>
     public SorobanAuthorizedCreateContractV2Function(CreateContractV2HostFunction hostFunction)
     {
         HostFunction = hostFunction;
     }
 
+    /// <summary>
+    ///     The create contract V2 host function being authorized.
+    /// </summary>
     public CreateContractV2HostFunction HostFunction { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="SorobanAuthorizedCreateContractV2Function" /> from the given XDR
+    ///     <see cref="Xdr.SorobanAuthorizedFunction" />.
+    /// </summary>
+    /// <param name="xdrSorobanAuthorizedFunction">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="SorobanAuthorizedCreateContractV2Function" /> instance.</returns>
     public static SorobanAuthorizedFunction FromSorobanAuthorizedFunctionXdr(
         Xdr.SorobanAuthorizedFunction xdrSorobanAuthorizedFunction
     )
@@ -808,6 +1067,11 @@ public class SorobanAuthorizedCreateContractV2Function : SorobanAuthorizedFuncti
         );
     }
 
+    /// <summary>
+    ///     Converts this <see cref="SorobanAuthorizedCreateContractV2Function" /> to its XDR
+    ///     <see cref="Xdr.SorobanAuthorizedFunction" /> representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.SorobanAuthorizedFunction" /> XDR object.</returns>
     public Xdr.SorobanAuthorizedFunction ToSorobanAuthorizedFunctionXdr()
     {
         return new Xdr.SorobanAuthorizedFunction
@@ -821,6 +1085,12 @@ public class SorobanAuthorizedCreateContractV2Function : SorobanAuthorizedFuncti
     }
 }
 
+/// <summary>
+///     Abstract base class for contract ID preimages used to deterministically derive a contract ID
+///     when deploying a new Soroban smart contract.
+/// </summary>
+/// <seealso cref="ContractIdAddressPreimage" />
+/// <seealso cref="ContractIdAssetPreimage" />
 public abstract class ContractIdPreimage
 {
     /// <summary>
@@ -837,6 +1107,14 @@ public abstract class ContractIdPreimage
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="ContractIdPreimage" /> subclass instance from the given XDR
+    ///     <see cref="ContractIDPreimage" />.
+    /// </summary>
+    /// <param name="xdrContractIdPreimage">The XDR object to deserialize.</param>
+    /// <returns>
+    ///     A <see cref="ContractIdAddressPreimage" /> or <see cref="ContractIdAssetPreimage" /> instance.
+    /// </returns>
     public static ContractIdPreimage FromXdr(ContractIDPreimage xdrContractIdPreimage)
     {
         return xdrContractIdPreimage.Discriminant.InnerValue switch
@@ -856,6 +1134,13 @@ public abstract class ContractIdPreimage
 /// </summary>
 public class ContractIdAddressPreimage : ContractIdPreimage
 {
+    /// <summary>
+    ///     Constructs a new <see cref="ContractIdAddressPreimage" />.
+    /// </summary>
+    /// <param name="address">The account address used to derive the contract ID.</param>
+    /// <param name="salt">
+    ///     (Optional) A 32-byte salt. If not provided, a cryptographically random salt is generated.
+    /// </param>
     public ContractIdAddressPreimage(string address, byte[]? salt = null)
     {
         Address = new ScAccountId(address);
@@ -876,9 +1161,22 @@ public class ContractIdAddressPreimage : ContractIdPreimage
         Salt = salt;
     }
 
+    /// <summary>
+    ///     The account address used to derive the contract ID.
+    /// </summary>
     public ScAddress Address { get; }
+
+    /// <summary>
+    ///     The 32-byte salt used together with <see cref="Address" /> to derive the contract ID.
+    /// </summary>
     public byte[] Salt { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="ContractIdAddressPreimage" /> from the given XDR
+    ///     <see cref="ContractIDPreimage" />.
+    /// </summary>
+    /// <param name="xdrContractIdPreimage">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="ContractIdAddressPreimage" /> instance.</returns>
     public static ContractIdPreimage FromContractIdPreimageXdr(ContractIDPreimage xdrContractIdPreimage)
     {
         if (xdrContractIdPreimage.Discriminant.InnerValue != PreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
@@ -920,13 +1218,26 @@ public class ContractIdAddressPreimage : ContractIdPreimage
 /// </summary>
 public class ContractIdAssetPreimage : ContractIdPreimage
 {
+    /// <summary>
+    ///     Constructs a new <see cref="ContractIdAssetPreimage" />.
+    /// </summary>
+    /// <param name="asset">The Stellar asset from which the contract ID is derived.</param>
     public ContractIdAssetPreimage(Asset asset)
     {
         Asset = asset;
     }
 
+    /// <summary>
+    ///     The Stellar asset from which the contract ID is derived.
+    /// </summary>
     public Asset Asset { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="ContractIdAssetPreimage" /> from the given XDR
+    ///     <see cref="ContractIDPreimage" />.
+    /// </summary>
+    /// <param name="xdrContractIdPreimage">The XDR object to deserialize.</param>
+    /// <returns>A new <see cref="ContractIdAssetPreimage" /> instance.</returns>
     public static ContractIdPreimage FromContractIdPreimageXdr(ContractIDPreimage xdrContractIdPreimage)
     {
         if (xdrContractIdPreimage.Discriminant.InnerValue != PreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET)

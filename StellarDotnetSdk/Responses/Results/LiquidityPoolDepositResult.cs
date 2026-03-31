@@ -8,6 +8,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class LiquidityPoolDepositResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="LiquidityPoolDepositResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR liquidity pool deposit result.</param>
+    /// <returns>A <see cref="LiquidityPoolDepositResult" /> instance representing the operation outcome.</returns>
     public static LiquidityPoolDepositResult FromXdr(Xdr.LiquidityPoolDepositResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -30,6 +35,7 @@ public class LiquidityPoolDepositResult : OperationResult
 /// </summary>
 public class LiquidityPoolDepositSuccess : LiquidityPoolDepositResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 

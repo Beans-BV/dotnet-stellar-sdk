@@ -6,6 +6,10 @@ namespace StellarDotnetSdk.Sep.Sep0010.Exceptions;
 /// </summary>
 public class ChallengeValidationErrorInvalidNonceValue : ChallengeValidationException
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="ChallengeValidationErrorInvalidNonceValue" /> class.
+    /// </summary>
+    /// <param name="message">The error message describing the invalid nonce value.</param>
     public ChallengeValidationErrorInvalidNonceValue(string message)
         : base(message)
     {

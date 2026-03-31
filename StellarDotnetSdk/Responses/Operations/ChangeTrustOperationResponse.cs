@@ -9,6 +9,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class ChangeTrustOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 6;
 
     /// <summary>

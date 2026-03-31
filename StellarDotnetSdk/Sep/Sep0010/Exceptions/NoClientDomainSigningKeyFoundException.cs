@@ -5,6 +5,10 @@ namespace StellarDotnetSdk.Sep.Sep0010.Exceptions;
 /// </summary>
 public class NoClientDomainSigningKeyFoundException : WebAuthException
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="NoClientDomainSigningKeyFoundException" /> class.
+    /// </summary>
+    /// <param name="domain">The client domain where SIGNING_KEY was not found.</param>
     public NoClientDomainSigningKeyFoundException(string domain)
         : base($"No client domain SIGNING_KEY found in stellar.toml for domain: {domain}")
     {

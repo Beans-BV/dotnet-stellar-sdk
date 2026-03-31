@@ -6,6 +6,9 @@ namespace StellarDotnetSdk.Sep.Sep0006.Exceptions;
 /// </summary>
 public class AuthenticationRequiredException : TransferServerException
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="AuthenticationRequiredException" /> class.
+    /// </summary>
     public AuthenticationRequiredException()
         : base("The endpoint requires authentication.")
     {

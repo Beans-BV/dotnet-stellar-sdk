@@ -14,6 +14,10 @@ public sealed partial class EventSource
     /// </summary>
     public sealed class ServerSentEventArgs : EventArgs
     {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ServerSentEventArgs" /> class with the event data.
+        /// </summary>
+        /// <param name="data">The event data payload.</param>
         public ServerSentEventArgs(string data)
         {
             Data = data;

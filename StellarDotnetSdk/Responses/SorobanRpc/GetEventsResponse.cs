@@ -21,15 +21,27 @@ public class GetEventsResponse
     [JsonPropertyName("latestLedger")]
     public long? LatestLedger { get; init; }
 
+    /// <summary>
+    ///     The sequence number of the oldest ledger ingested by Soroban RPC at the time it handled the request.
+    /// </summary>
     [JsonPropertyName("oldestLedger")]
     public long? OldestLedger { get; init; }
 
+    /// <summary>
+    ///     The unix timestamp of the close time of the latest ledger known to Soroban RPC at the time it handled the request.
+    /// </summary>
     [JsonPropertyName("latestLedgerCloseTime")]
     public long? LatestLedgerCloseTime { get; init; }
 
+    /// <summary>
+    ///     The unix timestamp of the close time of the oldest ledger ingested by Soroban RPC at the time it handled the request.
+    /// </summary>
     [JsonPropertyName("oldestLedgerCloseTime")]
     public long? OldestLedgerCloseTime { get; init; }
 
+    /// <summary>
+    ///     The cursor corresponding to the last returned event. Use this cursor to paginate forward.
+    /// </summary>
     [JsonPropertyName("cursor")]
     public string? Cursor { get; init; }
 
@@ -110,6 +122,9 @@ public class GetEventsResponse
         [JsonPropertyName("operationIndex")]
         public uint OperationIndex { get; init; }
 
+        /// <summary>
+        ///     The hex-encoded hash of the transaction that emitted this event.
+        /// </summary>
         [JsonPropertyName("txHash")]
         public string TransactionHash { get; init; }
     }

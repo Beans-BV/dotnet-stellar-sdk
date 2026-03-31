@@ -13,6 +13,10 @@ namespace StellarDotnetSdk.Soroban;
 /// </summary>
 public abstract class SCVal
 {
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object.</returns>
     public Xdr.SCVal ToXdr()
     {
         return this switch
@@ -43,6 +47,11 @@ public abstract class SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCVal" /> subclass from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>The appropriate <see cref="SCVal" /> subclass instance.</returns>
     public static SCVal FromXdr(Xdr.SCVal xdrVal)
     {
         return xdrVal.Discriminant.InnerValue switch
@@ -104,18 +113,33 @@ public abstract class SCVal
 /// </summary>
 public class SCBool : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCBool" /> with the specified boolean value.
+    /// </summary>
+    /// <param name="value">The boolean value.</param>
     public SCBool(bool value)
     {
         InnerValue = value;
     }
 
+    /// <summary>
+    ///     The boolean value.
+    /// </summary>
     public bool InnerValue { get; set; }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>The boolean value.</returns>
     public new bool ToXdr()
     {
         return InnerValue;
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_BOOL</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -128,11 +152,21 @@ public class SCBool : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCBool" /> from a boolean value.
+    /// </summary>
+    /// <param name="xdrBool">The boolean value.</param>
+    /// <returns>An <see cref="SCBool" /> instance.</returns>
     public static SCBool FromXdr(bool xdrBool)
     {
         return new SCBool(xdrBool);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCBool" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCBool" /> instance.</returns>
     public static SCBool FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_BOOL)
@@ -149,10 +183,17 @@ public class SCBool : SCVal
 /// </summary>
 public class SCVoid : SCVal
 {
+    /// <summary>
+    ///     No-op conversion; void values carry no data.
+    /// </summary>
     public new void ToXdr()
     {
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_VOID</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -164,6 +205,11 @@ public class SCVoid : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCVoid" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCVoid" /> instance.</returns>
     public static SCVoid FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_VOID)
@@ -174,16 +220,30 @@ public class SCVoid : SCVal
         return FromXdr();
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCVoid" /> instance.
+    /// </summary>
+    /// <returns>An <see cref="SCVoid" /> instance.</returns>
     public static SCVoid FromXdr()
     {
         return new SCVoid();
     }
 }
 
+/// <summary>
+///     Base class for Soroban runtime errors, discriminated by <see cref="SCErrorType" />.
+/// </summary>
 public abstract class SCError : SCVal
 {
+    /// <summary>
+    ///     The error code within the specific error type.
+    /// </summary>
     public SCErrorCode.SCErrorCodeEnum Code { get; set; }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCError" /> XDR object.</returns>
     public Xdr.SCError ToXdr()
     {
         return this switch
@@ -202,6 +262,10 @@ public abstract class SCError : SCVal
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_ERROR</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -214,6 +278,11 @@ public abstract class SCError : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCError" /> subclass from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>The appropriate <see cref="SCError" /> subclass instance.</returns>
     public static SCError FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_ERROR)
@@ -224,6 +293,11 @@ public abstract class SCError : SCVal
         return FromXdr(xdrVal.Error);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCError" /> subclass from an XDR <see cref="Xdr.SCError" /> object.
+    /// </summary>
+    /// <param name="xdrSCError">The XDR error to convert.</param>
+    /// <returns>The appropriate <see cref="SCError" /> subclass instance.</returns>
     public static SCError FromXdr(Xdr.SCError xdrSCError)
     {
         return xdrSCError.Discriminant.InnerValue switch
@@ -248,18 +322,34 @@ public abstract class SCError : SCVal
 /// </summary>
 public class SCContractError : SCError
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCContractError" /> with the specified contract-defined error code.
+    /// </summary>
+    /// <param name="value">The contract-defined error code.</param>
     public SCContractError(uint value)
     {
         ContractCode = value;
     }
 
+    /// <summary>
+    ///     The contract-defined error code.
+    /// </summary>
     public uint ContractCode { get; set; }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCContractError" /> from an XDR <see cref="Xdr.SCError" /> object.
+    /// </summary>
+    /// <param name="xdrSCError">The XDR error to convert.</param>
+    /// <returns>An <see cref="SCContractError" /> instance.</returns>
     public static SCContractError FromSCErrorXdr(Xdr.SCError xdrSCError)
     {
         return new SCContractError(xdrSCError.ContractCode.InnerValue);
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCError" /> XDR object.</returns>
     public Xdr.SCError ToSCErrorXdr()
     {
         return new Xdr.SCError
@@ -278,6 +368,11 @@ public class SCContractError : SCError
 /// </summary>
 public class SCWasmVmError : SCError
 {
+    /// <summary>
+    ///     Creates a new <see cref="SCWasmVmError" /> from an XDR <see cref="Xdr.SCError" /> object.
+    /// </summary>
+    /// <param name="xdrSCError">The XDR error to convert.</param>
+    /// <returns>An <see cref="SCWasmVmError" /> instance.</returns>
     public static SCWasmVmError FromSCErrorXdr(Xdr.SCError xdrSCError)
     {
         return new SCWasmVmError
@@ -286,6 +381,10 @@ public class SCWasmVmError : SCError
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCError" /> XDR object.</returns>
     public Xdr.SCError ToSCErrorXdr()
     {
         return new Xdr.SCError
@@ -304,6 +403,11 @@ public class SCWasmVmError : SCError
 /// </summary>
 public class SCContextError : SCError
 {
+    /// <summary>
+    ///     Creates a new <see cref="SCContextError" /> from an XDR <see cref="Xdr.SCError" /> object.
+    /// </summary>
+    /// <param name="xdrSCError">The XDR error to convert.</param>
+    /// <returns>An <see cref="SCContextError" /> instance.</returns>
     public static SCContextError FromSCErrorXdr(Xdr.SCError xdrSCError)
     {
         return new SCContextError
@@ -312,6 +416,10 @@ public class SCContextError : SCError
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCError" /> XDR object.</returns>
     public Xdr.SCError ToSCErrorXdr()
     {
         return new Xdr.SCError
@@ -330,6 +438,11 @@ public class SCContextError : SCError
 /// </summary>
 public class SCStorageError : SCError
 {
+    /// <summary>
+    ///     Creates a new <see cref="SCStorageError" /> from an XDR <see cref="Xdr.SCError" /> object.
+    /// </summary>
+    /// <param name="xdrSCError">The XDR error to convert.</param>
+    /// <returns>An <see cref="SCStorageError" /> instance.</returns>
     public static SCStorageError FromSCErrorXdr(Xdr.SCError xdrSCError)
     {
         return new SCStorageError
@@ -338,6 +451,10 @@ public class SCStorageError : SCError
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCError" /> XDR object.</returns>
     public Xdr.SCError ToSCErrorXdr()
     {
         return new Xdr.SCError
@@ -356,6 +473,11 @@ public class SCStorageError : SCError
 /// </summary>
 public class SCObjectError : SCError
 {
+    /// <summary>
+    ///     Creates a new <see cref="SCObjectError" /> from an XDR <see cref="Xdr.SCError" /> object.
+    /// </summary>
+    /// <param name="xdrSCError">The XDR error to convert.</param>
+    /// <returns>An <see cref="SCObjectError" /> instance.</returns>
     public static SCObjectError FromSCErrorXdr(Xdr.SCError xdrSCError)
     {
         return new SCObjectError
@@ -364,6 +486,10 @@ public class SCObjectError : SCError
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCError" /> XDR object.</returns>
     public Xdr.SCError ToSCErrorXdr()
     {
         return new Xdr.SCError
@@ -382,6 +508,11 @@ public class SCObjectError : SCError
 /// </summary>
 public class SCCryptoError : SCError
 {
+    /// <summary>
+    ///     Creates a new <see cref="SCCryptoError" /> from an XDR <see cref="Xdr.SCError" /> object.
+    /// </summary>
+    /// <param name="xdrSCError">The XDR error to convert.</param>
+    /// <returns>An <see cref="SCCryptoError" /> instance.</returns>
     public static SCCryptoError FromSCErrorXdr(Xdr.SCError xdrSCError)
     {
         return new SCCryptoError
@@ -390,6 +521,10 @@ public class SCCryptoError : SCError
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCError" /> XDR object.</returns>
     public Xdr.SCError ToSCErrorXdr()
     {
         return new Xdr.SCError
@@ -408,6 +543,11 @@ public class SCCryptoError : SCError
 /// </summary>
 public class SCEventsError : SCError
 {
+    /// <summary>
+    ///     Creates a new <see cref="SCEventsError" /> from an XDR <see cref="Xdr.SCError" /> object.
+    /// </summary>
+    /// <param name="xdrSCError">The XDR error to convert.</param>
+    /// <returns>An <see cref="SCEventsError" /> instance.</returns>
     public static SCEventsError FromSCErrorXdr(Xdr.SCError xdrSCError)
     {
         return new SCEventsError
@@ -416,6 +556,10 @@ public class SCEventsError : SCError
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCError" /> XDR object.</returns>
     public Xdr.SCError ToSCErrorXdr()
     {
         return new Xdr.SCError
@@ -434,6 +578,11 @@ public class SCEventsError : SCError
 /// </summary>
 public class SCBudgetError : SCError
 {
+    /// <summary>
+    ///     Creates a new <see cref="SCBudgetError" /> from an XDR <see cref="Xdr.SCError" /> object.
+    /// </summary>
+    /// <param name="xdrSCError">The XDR error to convert.</param>
+    /// <returns>An <see cref="SCBudgetError" /> instance.</returns>
     public static SCBudgetError FromSCErrorXdr(Xdr.SCError xdrSCError)
     {
         return new SCBudgetError
@@ -442,6 +591,10 @@ public class SCBudgetError : SCError
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCError" /> XDR object.</returns>
     public Xdr.SCError ToSCErrorXdr()
     {
         return new Xdr.SCError
@@ -460,6 +613,11 @@ public class SCBudgetError : SCError
 /// </summary>
 public class SCValueError : SCError
 {
+    /// <summary>
+    ///     Creates a new <see cref="SCValueError" /> from an XDR <see cref="Xdr.SCError" /> object.
+    /// </summary>
+    /// <param name="xdrSCError">The XDR error to convert.</param>
+    /// <returns>An <see cref="SCValueError" /> instance.</returns>
     public static SCValueError FromSCErrorXdr(Xdr.SCError xdrSCError)
     {
         return new SCValueError
@@ -468,6 +626,10 @@ public class SCValueError : SCError
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCError" /> XDR object.</returns>
     public Xdr.SCError ToSCErrorXdr()
     {
         return new Xdr.SCError
@@ -486,6 +648,11 @@ public class SCValueError : SCError
 /// </summary>
 public class SCAuthError : SCError
 {
+    /// <summary>
+    ///     Creates a new <see cref="SCAuthError" /> from an XDR <see cref="Xdr.SCError" /> object.
+    /// </summary>
+    /// <param name="xdrSCError">The XDR error to convert.</param>
+    /// <returns>An <see cref="SCAuthError" /> instance.</returns>
     public static SCAuthError FromSCErrorXdr(Xdr.SCError xdrSCError)
     {
         return new SCAuthError
@@ -494,6 +661,10 @@ public class SCAuthError : SCError
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCError" /> XDR object.</returns>
     public Xdr.SCError ToSCErrorXdr()
     {
         return new Xdr.SCError
@@ -512,11 +683,18 @@ public class SCAuthError : SCError
 /// </summary>
 public class SCUint32 : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCUint32" /> with the specified value.
+    /// </summary>
+    /// <param name="value">The unsigned 32-bit integer value.</param>
     public SCUint32(uint value)
     {
         InnerValue = value;
     }
 
+    /// <summary>
+    ///     The unsigned 32-bit integer value.
+    /// </summary>
     public uint InnerValue { get; set; }
 
     /// <summary>
@@ -528,6 +706,10 @@ public class SCUint32 : SCVal
         return new Uint32(InnerValue);
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_U32</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -540,11 +722,21 @@ public class SCUint32 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCUint32" /> from an XDR <see cref="Uint32" /> object.
+    /// </summary>
+    /// <param name="xdrUint32">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCUint32" /> instance.</returns>
     public static SCUint32 FromXdr(Uint32 xdrUint32)
     {
         return new SCUint32(xdrUint32.InnerValue);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCUint32" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCUint32" /> instance.</returns>
     public static SCUint32 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_U32)
@@ -561,11 +753,18 @@ public class SCUint32 : SCVal
 /// </summary>
 public class SCInt32 : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCInt32" /> with the specified value.
+    /// </summary>
+    /// <param name="value">The signed 32-bit integer value.</param>
     public SCInt32(int value)
     {
         InnerValue = value;
     }
 
+    /// <summary>
+    ///     The signed 32-bit integer value.
+    /// </summary>
     public int InnerValue { get; set; }
 
     /// <summary>
@@ -577,6 +776,10 @@ public class SCInt32 : SCVal
         return new Int32(InnerValue);
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_I32</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -589,11 +792,21 @@ public class SCInt32 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCInt32" /> from an XDR <see cref="Int32" /> object.
+    /// </summary>
+    /// <param name="xdrInt32">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCInt32" /> instance.</returns>
     public static SCInt32 FromXdr(Int32 xdrInt32)
     {
         return new SCInt32(xdrInt32.InnerValue);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCInt32" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCInt32" /> instance.</returns>
     public static SCInt32 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_I32)
@@ -610,11 +823,18 @@ public class SCInt32 : SCVal
 /// </summary>
 public class SCUint64 : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCUint64" /> with the specified value.
+    /// </summary>
+    /// <param name="value">The unsigned 64-bit integer value.</param>
     public SCUint64(ulong value)
     {
         InnerValue = value;
     }
 
+    /// <summary>
+    ///     The unsigned 64-bit integer value.
+    /// </summary>
     public ulong InnerValue { get; set; }
 
     /// <summary>
@@ -626,6 +846,10 @@ public class SCUint64 : SCVal
         return new Uint64(InnerValue);
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_U64</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -638,11 +862,21 @@ public class SCUint64 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCUint64" /> from an XDR <see cref="Uint64" /> object.
+    /// </summary>
+    /// <param name="xdrUint64">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCUint64" /> instance.</returns>
     public static SCUint64 FromXdr(Uint64 xdrUint64)
     {
         return new SCUint64(xdrUint64.InnerValue);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCUint64" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCUint64" /> instance.</returns>
     public static SCUint64 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_U64)
@@ -659,11 +893,18 @@ public class SCUint64 : SCVal
 /// </summary>
 public class SCInt64 : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCInt64" /> with the specified value.
+    /// </summary>
+    /// <param name="value">The signed 64-bit integer value.</param>
     public SCInt64(long value)
     {
         InnerValue = value;
     }
 
+    /// <summary>
+    ///     The signed 64-bit integer value.
+    /// </summary>
     public long InnerValue { get; set; }
 
     /// <summary>
@@ -675,6 +916,10 @@ public class SCInt64 : SCVal
         return new Int64(InnerValue);
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_I64</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -687,11 +932,21 @@ public class SCInt64 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCInt64" /> from an XDR <see cref="Int64" /> object.
+    /// </summary>
+    /// <param name="xdrInt64">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCInt64" /> instance.</returns>
     public static SCInt64 FromXdr(Int64 xdrInt64)
     {
         return new SCInt64(xdrInt64.InnerValue);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCInt64" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCInt64" /> instance.</returns>
     public static SCInt64 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_I64)
@@ -708,11 +963,18 @@ public class SCInt64 : SCVal
 /// </summary>
 public class SCTimePoint : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCTimePoint" /> with the specified UNIX timestamp.
+    /// </summary>
+    /// <param name="value">A UNIX timestamp as an unsigned 64-bit integer.</param>
     public SCTimePoint(ulong value)
     {
         InnerValue = value;
     }
 
+    /// <summary>
+    ///     The UNIX timestamp as an unsigned 64-bit integer.
+    /// </summary>
     public ulong InnerValue { get; set; }
 
     /// <summary>
@@ -724,6 +986,10 @@ public class SCTimePoint : SCVal
         return new TimePoint(new Uint64(InnerValue));
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_TIMEPOINT</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -736,11 +1002,21 @@ public class SCTimePoint : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCTimePoint" /> from an XDR <see cref="TimePoint" /> object.
+    /// </summary>
+    /// <param name="xdrTimePoint">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCTimePoint" /> instance.</returns>
     public static SCTimePoint FromXdr(TimePoint xdrTimePoint)
     {
         return new SCTimePoint(xdrTimePoint.InnerValue.InnerValue);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCTimePoint" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCTimePoint" /> instance.</returns>
     public static SCTimePoint FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_TIMEPOINT)
@@ -757,11 +1033,18 @@ public class SCTimePoint : SCVal
 /// </summary>
 public class SCDuration : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCDuration" /> with the specified duration.
+    /// </summary>
+    /// <param name="value">A time span as an unsigned 64-bit integer.</param>
     public SCDuration(ulong value)
     {
         InnerValue = value;
     }
 
+    /// <summary>
+    ///     The duration as an unsigned 64-bit integer.
+    /// </summary>
     public ulong InnerValue { get; set; }
 
     /// <summary>
@@ -773,6 +1056,10 @@ public class SCDuration : SCVal
         return new Duration(new Uint64(InnerValue));
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_DURATION</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -785,11 +1072,21 @@ public class SCDuration : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCDuration" /> from an XDR <see cref="Duration" /> object.
+    /// </summary>
+    /// <param name="xdrDuration">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCDuration" /> instance.</returns>
     public static SCDuration FromXdr(Duration xdrDuration)
     {
         return new SCDuration(xdrDuration.InnerValue.InnerValue);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCDuration" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCDuration" /> instance.</returns>
     public static SCDuration FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_DURATION)
@@ -806,13 +1103,25 @@ public class SCDuration : SCVal
 /// </summary>
 public class SCUint128 : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCUint128" /> from low and high 64-bit parts.
+    /// </summary>
+    /// <param name="lo">The low 64 bits.</param>
+    /// <param name="hi">The high 64 bits.</param>
     public SCUint128(ulong lo, ulong hi)
     {
         Hi = hi;
         Lo = lo;
     }
 
+    /// <summary>
+    ///     The low 64 bits of the 128-bit value.
+    /// </summary>
     public ulong Lo { get; set; }
+
+    /// <summary>
+    ///     The high 64 bits of the 128-bit value.
+    /// </summary>
     public ulong Hi { get; set; }
 
     /// <summary>
@@ -828,6 +1137,10 @@ public class SCUint128 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_U128</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -840,11 +1153,21 @@ public class SCUint128 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCUint128" /> from an XDR <see cref="UInt128Parts" /> object.
+    /// </summary>
+    /// <param name="xdrUInt128Parts">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCUint128" /> instance.</returns>
     public static SCUint128 FromXdr(UInt128Parts xdrUInt128Parts)
     {
         return new SCUint128(xdrUInt128Parts.Lo.InnerValue, xdrUInt128Parts.Hi.InnerValue);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCUint128" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCUint128" /> instance.</returns>
     public static SCUint128 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_U128)
@@ -892,7 +1215,14 @@ public class SCInt128 : SCVal
         Lo = low;
     }
 
+    /// <summary>
+    ///     The low 64 bits of the 128-bit value.
+    /// </summary>
     public ulong Lo { get; set; }
+
+    /// <summary>
+    ///     The high 64 bits of the 128-bit value (signed).
+    /// </summary>
     public long Hi { get; set; }
 
     /// <summary>
@@ -908,6 +1238,10 @@ public class SCInt128 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_I128</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -924,11 +1258,21 @@ public class SCInt128 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCInt128" /> from an XDR <see cref="Int128Parts" /> object.
+    /// </summary>
+    /// <param name="xdrInt128Parts">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCInt128" /> instance.</returns>
     public static SCInt128 FromXdr(Int128Parts xdrInt128Parts)
     {
         return new SCInt128(xdrInt128Parts.Hi.InnerValue, xdrInt128Parts.Lo.InnerValue);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCInt128" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCInt128" /> instance.</returns>
     public static SCInt128 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_I128)
@@ -945,9 +1289,24 @@ public class SCInt128 : SCVal
 /// </summary>
 public class SCUint256 : SCVal
 {
+    /// <summary>
+    ///     The most significant 64 bits (bits 192-255).
+    /// </summary>
     public ulong HiHi { get; set; }
+
+    /// <summary>
+    ///     The second most significant 64 bits (bits 128-191).
+    /// </summary>
     public ulong HiLo { get; set; }
+
+    /// <summary>
+    ///     The second least significant 64 bits (bits 64-127).
+    /// </summary>
     public ulong LoHi { get; set; }
+
+    /// <summary>
+    ///     The least significant 64 bits (bits 0-63).
+    /// </summary>
     public ulong LoLo { get; set; }
 
     /// <summary>
@@ -965,6 +1324,10 @@ public class SCUint256 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_U256</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -977,6 +1340,11 @@ public class SCUint256 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCUint256" /> from an XDR <see cref="UInt256Parts" /> object.
+    /// </summary>
+    /// <param name="xdrUInt256Parts">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCUint256" /> instance.</returns>
     public static SCUint256 FromXdr(UInt256Parts xdrUInt256Parts)
     {
         return new SCUint256
@@ -988,6 +1356,11 @@ public class SCUint256 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCUint256" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCUint256" /> instance.</returns>
     public static SCUint256 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_U256)
@@ -1004,9 +1377,24 @@ public class SCUint256 : SCVal
 /// </summary>
 public class SCInt256 : SCVal
 {
+    /// <summary>
+    ///     The most significant 64 bits (bits 192-255, signed).
+    /// </summary>
     public long HiHi { get; set; }
+
+    /// <summary>
+    ///     The second most significant 64 bits (bits 128-191).
+    /// </summary>
     public ulong HiLo { get; set; }
+
+    /// <summary>
+    ///     The second least significant 64 bits (bits 64-127).
+    /// </summary>
     public ulong LoHi { get; set; }
+
+    /// <summary>
+    ///     The least significant 64 bits (bits 0-63).
+    /// </summary>
     public ulong LoLo { get; set; }
 
     /// <summary>
@@ -1024,6 +1412,10 @@ public class SCInt256 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_I256</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -1036,6 +1428,11 @@ public class SCInt256 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCInt256" /> from an XDR <see cref="Int256Parts" /> object.
+    /// </summary>
+    /// <param name="xdrInt256Parts">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCInt256" /> instance.</returns>
     public static SCInt256 FromXdr(Int256Parts xdrInt256Parts)
     {
         return new SCInt256
@@ -1047,6 +1444,11 @@ public class SCInt256 : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCInt256" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCInt256" /> instance.</returns>
     public static SCInt256 FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_I256)
@@ -1063,18 +1465,33 @@ public class SCInt256 : SCVal
 /// </summary>
 public class SCBytes : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCBytes" /> with the specified byte array.
+    /// </summary>
+    /// <param name="value">The byte array.</param>
     public SCBytes(byte[] value)
     {
         InnerValue = value;
     }
 
+    /// <summary>
+    ///     The byte array value.
+    /// </summary>
     public byte[] InnerValue { get; set; }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCBytes" /> XDR object.</returns>
     public Xdr.SCBytes ToXdr()
     {
         return new Xdr.SCBytes(InnerValue);
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_BYTES</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -1087,11 +1504,21 @@ public class SCBytes : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCBytes" /> from an XDR <see cref="Xdr.SCBytes" /> object.
+    /// </summary>
+    /// <param name="xdrSCBytes">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCBytes" /> instance.</returns>
     public static SCBytes FromXdr(Xdr.SCBytes xdrSCBytes)
     {
         return new SCBytes(xdrSCBytes.InnerValue);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCBytes" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCBytes" /> instance.</returns>
     public static SCBytes FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_BYTES)
@@ -1108,18 +1535,33 @@ public class SCBytes : SCVal
 /// </summary>
 public class SCString : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCString" /> with the specified string value.
+    /// </summary>
+    /// <param name="value">The string value.</param>
     public SCString(string value)
     {
         InnerValue = value;
     }
 
+    /// <summary>
+    ///     The string value.
+    /// </summary>
     public string InnerValue { get; set; }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCString" /> XDR object.</returns>
     public Xdr.SCString ToXdr()
     {
         return new Xdr.SCString(InnerValue);
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_STRING</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -1132,11 +1574,21 @@ public class SCString : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCString" /> from an XDR <see cref="Xdr.SCString" /> object.
+    /// </summary>
+    /// <param name="xdrSCString">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCString" /> instance.</returns>
     public static SCString FromXdr(Xdr.SCString xdrSCString)
     {
         return new SCString(xdrSCString.InnerValue);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCString" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCString" /> instance.</returns>
     public static SCString FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_STRING)
@@ -1153,18 +1605,33 @@ public class SCString : SCVal
 /// </summary>
 public class SCSymbol : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCSymbol" /> with the specified symbol string.
+    /// </summary>
+    /// <param name="innerValue">The symbol string (up to 32 characters of [a-zA-Z0-9_]).</param>
     public SCSymbol(string innerValue)
     {
         InnerValue = innerValue;
     }
 
+    /// <summary>
+    ///     The symbol string value.
+    /// </summary>
     public string InnerValue { get; }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCSymbol" /> XDR object.</returns>
     public Xdr.SCSymbol ToXdr()
     {
         return new Xdr.SCSymbol(InnerValue);
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_SYMBOL</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -1177,11 +1644,21 @@ public class SCSymbol : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCSymbol" /> from an XDR <see cref="Xdr.SCSymbol" /> object.
+    /// </summary>
+    /// <param name="xdrSCSymbol">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCSymbol" /> instance.</returns>
     public static SCSymbol FromXdr(Xdr.SCSymbol xdrSCSymbol)
     {
         return new SCSymbol(xdrSCSymbol.InnerValue);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCSymbol" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCSymbol" /> instance.</returns>
     public static SCSymbol FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_SYMBOL)
@@ -1198,18 +1675,33 @@ public class SCSymbol : SCVal
 /// </summary>
 public class SCVec : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCVec" /> with the specified array of elements.
+    /// </summary>
+    /// <param name="value">The array of <see cref="SCVal" /> elements.</param>
     public SCVec(SCVal[] value)
     {
         InnerValue = value;
     }
 
+    /// <summary>
+    ///     The array of <see cref="SCVal" /> elements in this vector.
+    /// </summary>
     public SCVal[] InnerValue { get; }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVec" /> XDR object.</returns>
     public Xdr.SCVec ToXdr()
     {
         return new Xdr.SCVec(InnerValue.Select(a => a.ToXdr()).ToArray());
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_VEC</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -1222,11 +1714,21 @@ public class SCVec : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCVec" /> from an XDR <see cref="Xdr.SCVec" /> object.
+    /// </summary>
+    /// <param name="xdrSCVec">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCVec" /> instance.</returns>
     public static SCVec FromXdr(Xdr.SCVec xdrSCVec)
     {
         return new SCVec(xdrSCVec.InnerValue.Select(FromXdr).ToArray());
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCVec" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCVec" /> instance.</returns>
     public static SCVec FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_VEC)
@@ -1243,14 +1745,25 @@ public class SCVec : SCVal
 /// </summary>
 public class SCMap : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCMap" /> with the specified entries.
+    /// </summary>
+    /// <param name="entries">The array of key-value entries, or <c>null</c> for an empty map.</param>
     public SCMap(SCMapEntry[]? entries = null)
     {
         entries ??= Array.Empty<SCMapEntry>();
         Entries = entries;
     }
 
+    /// <summary>
+    ///     The array of key-value entries in this map.
+    /// </summary>
     public SCMapEntry[] Entries { get; }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCMap" /> XDR object.</returns>
     public Xdr.SCMap ToXdr()
     {
         return Entries.Length == 0
@@ -1258,6 +1771,10 @@ public class SCMap : SCVal
             : new Xdr.SCMap(Entries.Select(a => a.ToXdr()).ToArray());
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_MAP</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -1270,11 +1787,21 @@ public class SCMap : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCMap" /> from an XDR <see cref="Xdr.SCMap" /> object.
+    /// </summary>
+    /// <param name="xdrSCMap">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCMap" /> instance.</returns>
     public static SCMap FromXdr(Xdr.SCMap xdrSCMap)
     {
         return new SCMap(xdrSCMap.InnerValue.Select(SCMapEntry.FromXdr).ToArray());
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCMap" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCMap" /> instance.</returns>
     public static SCMap FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_MAP)
@@ -1291,20 +1818,41 @@ public class SCMap : SCVal
 /// </summary>
 public class SCMapEntry
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCMapEntry" /> with the specified key and value.
+    /// </summary>
+    /// <param name="key">The map entry key.</param>
+    /// <param name="value">The map entry value.</param>
     public SCMapEntry(SCVal key, SCVal value)
     {
         Key = key;
         Value = value;
     }
 
+    /// <summary>
+    ///     The key of this map entry.
+    /// </summary>
     public SCVal Key { get; init; }
+
+    /// <summary>
+    ///     The value of this map entry.
+    /// </summary>
     public SCVal Value { get; init; }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCMapEntry" /> from an XDR <see cref="Xdr.SCMapEntry" /> object.
+    /// </summary>
+    /// <param name="xdr">The XDR map entry to convert.</param>
+    /// <returns>An <see cref="SCMapEntry" /> instance.</returns>
     public static SCMapEntry FromXdr(Xdr.SCMapEntry xdr)
     {
         return new SCMapEntry(SCVal.FromXdr(xdr.Key), SCVal.FromXdr(xdr.Val));
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCMapEntry" /> XDR object.</returns>
     public Xdr.SCMapEntry ToXdr()
     {
         return new Xdr.SCMapEntry
@@ -1320,6 +1868,10 @@ public class SCMapEntry
 /// </summary>
 public class SCLedgerKeyContractInstance : SCVal
 {
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_LEDGER_KEY_CONTRACT_INSTANCE</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -1331,11 +1883,20 @@ public class SCLedgerKeyContractInstance : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCLedgerKeyContractInstance" /> instance.
+    /// </summary>
+    /// <returns>An <see cref="SCLedgerKeyContractInstance" /> instance.</returns>
     public static SCLedgerKeyContractInstance FromXdr()
     {
         return new SCLedgerKeyContractInstance();
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCLedgerKeyContractInstance" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCLedgerKeyContractInstance" /> instance.</returns>
     public static SCLedgerKeyContractInstance FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_LEDGER_KEY_CONTRACT_INSTANCE)
@@ -1352,12 +1913,20 @@ public class SCLedgerKeyContractInstance : SCVal
 /// </summary>
 public class SCContractInstance : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCContractInstance" /> with the specified executable and optional storage.
+    /// </summary>
+    /// <param name="executable">The contract executable (Wasm or Stellar Asset Contract).</param>
+    /// <param name="storage">Optional instance storage as a map.</param>
     public SCContractInstance(ContractExecutable executable, SCMap? storage)
     {
         Executable = executable;
         Storage = storage;
     }
 
+    /// <summary>
+    ///     The contract executable (Wasm or Stellar Asset Contract).
+    /// </summary>
     public ContractExecutable Executable { get; }
 
     /// <summary>
@@ -1372,6 +1941,11 @@ public class SCContractInstance : SCVal
     }
 
 
+    /// <summary>
+    ///     Creates a new <see cref="SCContractInstance" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCContractInstance" /> instance.</returns>
     public static SCContractInstance FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_CONTRACT_INSTANCE)
@@ -1382,6 +1956,10 @@ public class SCContractInstance : SCVal
         return FromXdr(xdrVal.Instance);
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCContractInstance" /> XDR object.</returns>
     public Xdr.SCContractInstance ToXdr()
     {
         return new Xdr.SCContractInstance
@@ -1391,6 +1969,10 @@ public class SCContractInstance : SCVal
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_CONTRACT_INSTANCE</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -1409,6 +1991,12 @@ public class SCContractInstance : SCVal
 /// </summary>
 public abstract class ContractExecutable
 {
+    /// <summary>
+    ///     Creates a new <see cref="ContractExecutable" /> subclass from an XDR
+    ///     <see cref="Xdr.ContractExecutable" /> object.
+    /// </summary>
+    /// <param name="xdrContractExecutable">The XDR contract executable to convert.</param>
+    /// <returns>The appropriate <see cref="ContractExecutable" /> subclass instance.</returns>
     public static ContractExecutable FromXdr(Xdr.ContractExecutable xdrContractExecutable)
     {
         return xdrContractExecutable.Discriminant.InnerValue switch
@@ -1422,6 +2010,10 @@ public abstract class ContractExecutable
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.ContractExecutable" /> XDR object.</returns>
     public abstract Xdr.ContractExecutable ToXdr();
 }
 
@@ -1430,6 +2022,10 @@ public abstract class ContractExecutable
 /// </summary>
 public class ContractExecutableWasm : ContractExecutable
 {
+    /// <summary>
+    ///     Initializes a new <see cref="ContractExecutableWasm" /> with the specified Wasm hash.
+    /// </summary>
+    /// <param name="hash">A hex-encoded hash of the compiled Wasm module.</param>
     public ContractExecutableWasm(string hash)
     {
         WasmHash = hash;
@@ -1440,11 +2036,20 @@ public class ContractExecutableWasm : ContractExecutable
     /// </summary>
     public string WasmHash { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="ContractExecutableWasm" /> from an XDR <see cref="Xdr.ContractExecutable" /> object.
+    /// </summary>
+    /// <param name="xdr">The XDR contract executable to convert.</param>
+    /// <returns>A <see cref="ContractExecutableWasm" /> instance.</returns>
     public static ContractExecutableWasm FromXdr(Xdr.ContractExecutable xdr)
     {
         return new ContractExecutableWasm(Convert.ToHexString(xdr.WasmHash.InnerValue));
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.ContractExecutable" /> XDR object.</returns>
     public override Xdr.ContractExecutable ToXdr()
     {
         return new Xdr.ContractExecutable
@@ -1463,6 +2068,10 @@ public class ContractExecutableWasm : ContractExecutable
 /// </summary>
 public class ContractExecutableStellarAsset : ContractExecutable
 {
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.ContractExecutable" /> XDR object.</returns>
     public override Xdr.ContractExecutable ToXdr()
     {
         return new Xdr.ContractExecutable
@@ -1480,13 +2089,24 @@ public class ContractExecutableStellarAsset : ContractExecutable
 /// </summary>
 public class SCNonceKey : SCVal
 {
+    /// <summary>
+    ///     Initializes a new <see cref="SCNonceKey" /> with the specified nonce value.
+    /// </summary>
+    /// <param name="value">The nonce value used for authorization tracking.</param>
     public SCNonceKey(long value)
     {
         Nonce = value;
     }
 
+    /// <summary>
+    ///     The nonce value used for authorization tracking.
+    /// </summary>
     public long Nonce { get; set; }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCNonceKey" /> XDR object.</returns>
     public Xdr.SCNonceKey ToXdr()
     {
         return new Xdr.SCNonceKey
@@ -1495,6 +2115,10 @@ public class SCNonceKey : SCVal
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_LEDGER_KEY_NONCE</c>.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -1507,11 +2131,21 @@ public class SCNonceKey : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCNonceKey" /> from an XDR <see cref="Xdr.SCNonceKey" /> object.
+    /// </summary>
+    /// <param name="xdr">The XDR nonce key to convert.</param>
+    /// <returns>An <see cref="SCNonceKey" /> instance.</returns>
     public static SCNonceKey FromXdr(Xdr.SCNonceKey xdr)
     {
         return new SCNonceKey(xdr.Nonce.InnerValue);
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="SCNonceKey" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCNonceKey" /> instance.</returns>
     public static SCNonceKey FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_LEDGER_KEY_NONCE)

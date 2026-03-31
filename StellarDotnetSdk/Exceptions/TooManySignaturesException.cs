@@ -10,18 +10,22 @@ namespace StellarDotnetSdk.Exceptions;
 [Serializable]
 public class TooManySignaturesException : Exception
 {
+    /// <inheritdoc />
     public TooManySignaturesException()
     {
     }
 
+    /// <inheritdoc />
     public TooManySignaturesException(string message) : base(message)
     {
     }
 
+    /// <inheritdoc />
     public TooManySignaturesException(string message, Exception innerException) : base(message, innerException)
     {
     }
 
+    /// <inheritdoc />
     protected TooManySignaturesException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }

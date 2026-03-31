@@ -11,6 +11,7 @@ namespace StellarDotnetSdk.Converters;
 /// </summary>
 public class LiquidityPoolIdJsonConverter : JsonConverter<LiquidityPoolId>
 {
+    /// <inheritdoc />
     public override LiquidityPoolId? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         // Then check for expected token type
@@ -26,6 +27,7 @@ public class LiquidityPoolIdJsonConverter : JsonConverter<LiquidityPoolId>
         return liquidityPoolId is null ? null : new LiquidityPoolId(liquidityPoolId);
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, LiquidityPoolId? value, JsonSerializerOptions options)
     {
         writer.WriteStringValue(value?.ToString());

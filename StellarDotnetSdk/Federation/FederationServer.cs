@@ -21,6 +21,12 @@ public class FederationServer : IDisposable
 {
     private static HttpClient _httpClient;
 
+    /// <summary>
+    ///     Initializes a new <see cref="FederationServer" /> with the given server URI and domain.
+    ///     The URI must use HTTPS.
+    /// </summary>
+    /// <param name="serverUri">The URI of the federation server (must be HTTPS).</param>
+    /// <param name="domain">The internet domain associated with this federation server.</param>
     public FederationServer(Uri serverUri, string domain)
     {
         if (serverUri.Scheme != "https")
@@ -38,15 +44,23 @@ public class FederationServer : IDisposable
         Domain = domain;
     }
 
+    /// <summary>
+    ///     Initializes a new <see cref="FederationServer" /> with the given server URI string and domain.
+    /// </summary>
+    /// <param name="serverUri">The URI string of the federation server (must be HTTPS).</param>
+    /// <param name="domain">The internet domain associated with this federation server.</param>
     public FederationServer(string serverUri, string domain)
         : this(new Uri(serverUri), domain)
     {
     }
 
+    /// <summary>Gets the URI of the federation server.</summary>
     public Uri ServerUri { get; }
 
+    /// <summary>Gets the internet domain associated with this federation server.</summary>
     public string Domain { get; }
 
+    /// <summary>Sets the <see cref="System.Net.Http.HttpClient" /> used for making requests to the federation server.</summary>
     public HttpClient HttpClient
     {
         set => _httpClient = value;
@@ -104,6 +118,11 @@ public class FederationServer : IDisposable
         return new FederationServer(federationServer, domain);
     }
 
+    /// <summary>
+    ///     Resolves a Stellar federation address (e.g., <c>bob*stellar.org</c>) to a <see cref="FederationResponse" />.
+    /// </summary>
+    /// <param name="address">The Stellar federation address to resolve.</param>
+    /// <returns>A <see cref="FederationResponse" /> containing the resolved account information.</returns>
     public async Task<FederationResponse> ResolveAddress(string address)
     {
         var tokens = Regex.Split(address, "\\*");

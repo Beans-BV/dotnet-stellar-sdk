@@ -8,6 +8,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class RestoreFootprintResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="RestoreFootprintResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR restore footprint result.</param>
+    /// <returns>A <see cref="RestoreFootprintResult" /> instance representing the operation outcome.</returns>
     public static RestoreFootprintResult FromXdr(Xdr.RestoreFootprintResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -30,6 +35,7 @@ public class RestoreFootprintResult : OperationResult
 /// </summary>
 public class RestoreFootprintSuccess : RestoreFootprintResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 

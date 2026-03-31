@@ -5,6 +5,9 @@ namespace StellarDotnetSdk.Sep.Sep0010.Exceptions;
 /// </summary>
 public class NoMemoForMuxedAccountsException : WebAuthException
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="NoMemoForMuxedAccountsException" /> class.
+    /// </summary>
     public NoMemoForMuxedAccountsException()
         : base("Memo cannot be used if account is a muxed account")
     {

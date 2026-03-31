@@ -10,6 +10,10 @@ public class LedgerEntryRestored : LedgerEntryChange
     /// </summary>
     public readonly LedgerEntry RestoredEntry;
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="LedgerEntryRestored" /> class from an XDR ledger entry.
+    /// </summary>
+    /// <param name="restoredEntry">The XDR ledger entry that was restored.</param>
     public LedgerEntryRestored(Xdr.LedgerEntry restoredEntry)
     {
         RestoredEntry = LedgerEntry.FromXdr(restoredEntry);

@@ -29,10 +29,29 @@ public class LedgerEntryClaimableBalance : LedgerEntry
         Amount = amount;
     }
 
+    /// <summary>
+    ///     The unique identifier of this claimable balance.
+    /// </summary>
     public string BalanceId { get; }
+
+    /// <summary>
+    ///     The list of claimants who can claim this balance, along with their claiming conditions.
+    /// </summary>
     public claimant_Claimant[] Claimants { get; }
+
+    /// <summary>
+    ///     The asset held in this claimable balance.
+    /// </summary>
     public Assets_Asset Asset { get; }
+
+    /// <summary>
+    ///     The amount of the asset held in this claimable balance, in stroops.
+    /// </summary>
     public long Amount { get; }
+
+    /// <summary>
+    ///     Version 1 extension fields for this claimable balance entry, if present.
+    /// </summary>
     public ClaimableBalanceEntryExtensionV1? ClaimableBalanceEntryExtensionV1 { get; private set; }
 
     /// <summary>

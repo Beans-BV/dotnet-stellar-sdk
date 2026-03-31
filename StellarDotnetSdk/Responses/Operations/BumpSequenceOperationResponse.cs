@@ -8,6 +8,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class BumpSequenceOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 11;
 
     /// <summary>

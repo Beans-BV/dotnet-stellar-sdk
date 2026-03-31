@@ -11,12 +11,14 @@ namespace StellarDotnetSdk.Converters;
 /// </summary>
 public class KeyPairJsonConverter : JsonConverter<KeyPair>
 {
+    /// <inheritdoc />
     public override KeyPair? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var accountId = reader.GetString();
         return accountId is null ? null : KeyPair.FromAccountId(accountId);
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, KeyPair value, JsonSerializerOptions options)
     {
         writer.WriteStringValue(value?.AccountId);

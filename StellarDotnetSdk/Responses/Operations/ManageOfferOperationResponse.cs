@@ -90,6 +90,7 @@ public abstract class ManageOfferOperationResponse : OperationResponse
 /// </summary>
 public class ManageBuyOfferOperationResponse : ManageOfferOperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 12;
 }
 
@@ -99,5 +100,6 @@ public class ManageBuyOfferOperationResponse : ManageOfferOperationResponse
 /// </summary>
 public class ManageSellOfferOperationResponse : ManageOfferOperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 3;
 }

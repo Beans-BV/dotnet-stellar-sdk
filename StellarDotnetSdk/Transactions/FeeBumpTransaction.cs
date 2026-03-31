@@ -20,12 +20,22 @@ public class FeeBumpTransaction : TransactionBase
         Fee = fee;
     }
 
+    /// <summary>
+    ///     Gets the total fee (in stroops) for the fee bump transaction, covering all operations in the inner transaction.
+    /// </summary>
     public long Fee { get; }
 
+    /// <summary>
+    ///     Gets the account that pays the fee for this fee bump transaction.
+    /// </summary>
     public IAccountId FeeSource { get; }
 
+    /// <summary>
+    ///     Gets the original inner transaction being wrapped by this fee bump.
+    /// </summary>
     public Transaction InnerTransaction { get; }
 
+    /// <inheritdoc />
     public override byte[] SignatureBase(Network network)
     {
         if (network == null)
@@ -52,6 +62,10 @@ public class FeeBumpTransaction : TransactionBase
         return writer.ToArray();
     }
 
+    /// <summary>
+    ///     Serializes this fee bump transaction to its XDR representation.
+    /// </summary>
+    /// <returns>An XDR <see cref="Xdr.FeeBumpTransaction" /> object.</returns>
     public Xdr.FeeBumpTransaction ToXdr()
     {
         var fee = new xdr_Int64(Fee);
@@ -78,6 +92,7 @@ public class FeeBumpTransaction : TransactionBase
         };
     }
 
+    /// <inheritdoc />
     public override TransactionEnvelope ToEnvelopeXdr(TransactionXdrVersion version = TransactionXdrVersion.V1)
     {
         if (Signatures.Count == 0)
@@ -89,6 +104,7 @@ public class FeeBumpTransaction : TransactionBase
         return ToEnvelopeXdr(Signatures.ToArray());
     }
 
+    /// <inheritdoc />
     public override TransactionEnvelope ToUnsignedEnvelopeXdr(TransactionXdrVersion version = TransactionXdrVersion.V1)
     {
         if (Signatures.Count > 0)
@@ -107,6 +123,11 @@ public class FeeBumpTransaction : TransactionBase
         };
     }
 
+    /// <summary>
+    ///     Decodes a <see cref="FeeBumpTransaction" /> from a base64-encoded transaction envelope XDR string.
+    /// </summary>
+    /// <param name="envelope">The base64-encoded XDR transaction envelope.</param>
+    /// <returns>The decoded <see cref="FeeBumpTransaction" />.</returns>
     public static FeeBumpTransaction FromEnvelopeXdr(string envelope)
     {
         var bytes = Convert.FromBase64String(envelope);
@@ -115,6 +136,12 @@ public class FeeBumpTransaction : TransactionBase
         return FromEnvelopeXdr(transactionEnvelope);
     }
 
+    /// <summary>
+    ///     Decodes a <see cref="FeeBumpTransaction" /> from a <see cref="TransactionEnvelope" /> XDR object.
+    /// </summary>
+    /// <param name="envelope">The XDR transaction envelope (must be <c>ENVELOPE_TYPE_TX_FEE_BUMP</c>).</param>
+    /// <returns>The decoded <see cref="FeeBumpTransaction" /> with its signatures.</returns>
+    /// <exception cref="ArgumentException">Thrown when the envelope type is not a fee bump.</exception>
     public static FeeBumpTransaction FromEnvelopeXdr(TransactionEnvelope envelope)
     {
         {

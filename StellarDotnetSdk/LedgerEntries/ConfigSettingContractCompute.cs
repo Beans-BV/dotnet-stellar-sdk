@@ -17,11 +17,32 @@ public class ConfigSettingContractCompute : LedgerEntryConfigSetting
         TxMemoryLimit = txMemoryLimit;
     }
 
+    /// <summary>
+    ///     Maximum instructions per ledger.
+    /// </summary>
     public long LedgerMaxInstructions { get; }
+
+    /// <summary>
+    ///     Maximum instructions per transaction.
+    /// </summary>
     public long TxMaxInstructions { get; }
+
+    /// <summary>
+    ///     Cost of 10,000 instructions (fee rate per instructions increment).
+    /// </summary>
     public long FeeRatePerInstructionsIncrement { get; }
+
+    /// <summary>
+    ///     Memory limit per transaction in bytes. Unlike instructions, there is no fee for memory, only a limit.
+    /// </summary>
     public uint TxMemoryLimit { get; }
 
+    /// <summary>
+    ///     Creates a <see cref="ConfigSettingContractCompute" /> from an XDR
+    ///     <see cref="ConfigSettingContractComputeV0" /> object.
+    /// </summary>
+    /// <param name="xdrConfig">The XDR config setting object.</param>
+    /// <returns>A <see cref="ConfigSettingContractCompute" /> instance.</returns>
     public static ConfigSettingContractCompute FromXdr(ConfigSettingContractComputeV0 xdrConfig)
     {
         return new ConfigSettingContractCompute(

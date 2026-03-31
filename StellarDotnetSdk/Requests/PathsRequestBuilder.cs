@@ -10,6 +10,11 @@ namespace StellarDotnetSdk.Requests;
 /// </summary>
 public class PathsRequestBuilder : RequestBuilderExecutePageable<PathsRequestBuilder, PathResponse>
 {
+    /// <summary>
+    ///     Initializes a new <see cref="PathsRequestBuilder" />.
+    /// </summary>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public PathsRequestBuilder(Uri serverUri, HttpClient httpClient)
         : base(serverUri, "paths", httpClient)
     {

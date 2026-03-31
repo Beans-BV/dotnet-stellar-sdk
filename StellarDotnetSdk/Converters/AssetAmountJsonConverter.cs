@@ -11,6 +11,7 @@ namespace StellarDotnetSdk.Converters;
 /// </summary>
 public class AssetAmountJsonConverter : JsonConverter<AssetAmount>
 {
+    /// <inheritdoc />
     public override AssetAmount Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         // AssetAmount is non-nullable, only check for expected token type
@@ -50,6 +51,7 @@ public class AssetAmountJsonConverter : JsonConverter<AssetAmount>
         return new AssetAmount(asset, amount);
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, AssetAmount value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();

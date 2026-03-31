@@ -9,6 +9,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class SetTrustlineFlagsOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 21;
 
     /// <summary>

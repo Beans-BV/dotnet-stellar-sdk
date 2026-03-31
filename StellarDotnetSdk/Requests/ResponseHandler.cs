@@ -16,6 +16,12 @@ namespace StellarDotnetSdk.Requests;
 /// <typeparam name="T">The response type to deserialize into.</typeparam>
 public class ResponseHandler<T> where T : class
 {
+    /// <summary>
+    ///     Processes an HTTP response, throwing appropriate exceptions for error status codes
+    ///     and deserializing the response body for successful responses.
+    /// </summary>
+    /// <param name="response">The HTTP response message to process.</param>
+    /// <returns>The deserialized response object of type <typeparamref name="T" />.</returns>
     public async Task<T> HandleResponse(HttpResponseMessage response)
     {
         var statusCode = response.StatusCode;
