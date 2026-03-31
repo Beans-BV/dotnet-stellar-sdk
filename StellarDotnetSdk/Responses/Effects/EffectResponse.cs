@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Responses.Effects;
 /// <summary>
 ///     Base class for all effect responses.
 ///     Effects represent changes that occur in the ledger as a result of operations.
-///     See: <a href="https://developers.stellar.org/network/horizon/resources/list-all-effects">All effects</a>
+///     See: <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/list-all-effects">All effects</a>
 ///     <seealso cref="Requests.EffectsRequestBuilder" />
 ///     <seealso cref="Server" />
 /// </summary>

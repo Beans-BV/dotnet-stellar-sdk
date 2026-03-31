@@ -100,7 +100,7 @@ public class SorobanServer : IDisposable
 
     /// <summary>
     ///     General node health check.
-    ///     See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/getHealth
+    ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getHealth
     /// </summary>
     /// <returns>The <see cref="GetHealthResponse" /> object containing the health check result.</returns>
     public Task<GetHealthResponse> GetHealth()
@@ -111,7 +111,7 @@ public class SorobanServer : IDisposable
     /// <summary>
     ///     General information about the currently configured network. This response will contain all the information needed
     ///     to successfully submit transactions to the network this node serves.
-    ///     See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/getNetwork
+    ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getNetwork
     /// </summary>
     /// <returns>The <see cref="GetNetworkResponse" /> object containing the network metadata.</returns>
     public Task<GetNetworkResponse> GetNetwork()
@@ -123,7 +123,7 @@ public class SorobanServer : IDisposable
     ///     Fetch the details of a submitted transaction.
     ///     When submitting a transaction, client should poll this to tell when the transaction has
     ///     completed.
-    ///     See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransaction
+    ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransaction
     /// </summary>
     /// <param name="hash">
     ///     The hash of the transaction to check. Encoded as a hex string.
@@ -141,7 +141,7 @@ public class SorobanServer : IDisposable
     ///     The <c>getTransactions</c> method return a detailed list of transactions starting from the user specified starting
     ///     point that you can paginate as long as the pages fall within the history retention of their corresponding RPC
     ///     provider.
-    ///     See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransactions
+    ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransactions
     /// </summary>
     /// <param name="txHash"></param>
     /// <returns></returns>
@@ -153,7 +153,7 @@ public class SorobanServer : IDisposable
     /// <summary>
     ///     Version information about the RPC and Captive core. RPC manages its own, pared-down version of Stellar Core
     ///     optimized for its own subset of needs. we'll refer to this as a "Captive Core" instance.
-    ///     See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/getVersionInfo
+    ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getVersionInfo
     /// </summary>
     /// <returns></returns>
     public Task<GetVersionInfoResponse> GetVersionInfo()
@@ -166,7 +166,7 @@ public class SorobanServer : IDisposable
     ///     were paid for the transactions to be included onto the ledger. For Soroban transactions and Stellar transactions,
     ///     they each have their own inclusion fees and own surge pricing. Inclusion fees are used to prevent spam and
     ///     prioritize transactions during network traffic surge.
-    ///     See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/getFeeStats
+    ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getFeeStats
     /// </summary>
     /// <returns></returns>
     public Task<GetFeeStatsResponse> GetFeeStats()
@@ -198,7 +198,7 @@ public class SorobanServer : IDisposable
 
     /// <summary>
     ///     For finding out the current latest known ledger of this node. This is a subset of the ledger info from Horizon.
-    ///     See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLatestLedger
+    ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLatestLedger
     /// </summary>
     /// <returns></returns>
     public Task<GetLatestLedgerResponse> GetLatestLedger()
@@ -214,7 +214,7 @@ public class SorobanServer : IDisposable
     ///         not be available via events or simulateTransaction.
     ///         To fetch contract wasm byte-code, use the ContractCode ledger entry key.
     ///     </para>
-    ///     See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgerEntries
+    ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLedgerEntries
     /// </summary>
     /// <param name="keys">
     ///     Array of <see cref="LedgerKey" /> containing the keys of the ledger entries you wish to retrieve, at
@@ -229,7 +229,7 @@ public class SorobanServer : IDisposable
 
     /// <summary>
     ///     Get a filtered list of events emitted by a given ledger range.
-    ///     See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/getEvents
+    ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getEvents
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
@@ -249,7 +249,7 @@ public class SorobanServer : IDisposable
     ///     Submit a trial contract invocation to simulate how it would be executed by the network. This endpoint calculates
     ///     the effective transaction data, required authorizations, and minimal resource fee. It provides a way to test and
     ///     analyze the potential outcomes of a transaction without actually submitting it to the network.
-    ///     See: https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction
+    ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction
     /// </summary>
     /// <param name="transaction">
     ///     The transaction object to be simulated.
@@ -308,7 +308,7 @@ public class SorobanServer : IDisposable
     ///     this does not wait for transaction completion. It simply validates and enqueues the transaction. Clients should
     ///     call getTransactionStatus to learn about transaction success/failure. This supports all transactions, not only
     ///     smart contract-related transactions.
-    ///     See https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction.
+    ///     See https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/sendTransaction.
     /// </summary>
     /// <param name="transaction">The transaction object to be submitted.</param>
     /// <returns>A <see cref="SendTransactionResponse" /> response.</returns>
@@ -323,7 +323,7 @@ public class SorobanServer : IDisposable
     ///     Unlike Horizon, this does not wait for transaction completion. It simply validates and enqueues the transaction.
     ///     Clients should call getTransactionStatus to learn about transaction success/failure.
     ///     This supports all transactions, not only smart contract-related transactions.
-    ///     See https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction.
+    ///     See https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/sendTransaction.
     /// </summary>
     /// <param name="feeBumpTransaction">The FeeBumpTransaction object to be submitted.</param>
     /// <returns>A <see cref="T:StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse" /> response.</returns>

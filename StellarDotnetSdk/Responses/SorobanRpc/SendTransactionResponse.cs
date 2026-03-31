@@ -4,7 +4,7 @@
 ///     Transaction status and network state. The result will include if the transaction was successfully enqueued, and
 ///     information about the current ledger.
 /// </summary>
-/// <seealso href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction" />
+/// <seealso href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/sendTransaction" />
 public class SendTransactionResponse
 {
     /// <summary>
