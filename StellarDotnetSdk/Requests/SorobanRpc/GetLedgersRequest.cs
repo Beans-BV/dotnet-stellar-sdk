@@ -1,12 +1,8 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Requests.SorobanRpc;
 
-/// <summary>
-///     Represents the request parameters for the Soroban RPC <c>getTransactions</c> method,
-///     which retrieves a list of transactions from the network.
-/// </summary>
-public class GetTransactionsRequest
+public class GetLedgersRequest
 {
     /// <summary>
     ///     Ledger sequence number to start fetching responses from (inclusive). This method will return an error if

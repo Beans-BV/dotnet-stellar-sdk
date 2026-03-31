@@ -28,4 +28,10 @@ public class GetTransactionsResponse
     ///     request.
     /// </summary>
     public long OldestLedgerCloseTimestamp { get; init; }
+
+    /// <summary>
+    ///     The cursor corresponding to the last returned transaction. Use this cursor to paginate forward by setting it
+    ///     as the cursor in the next request.
+    /// </summary>
+    public string? Cursor { get; init; }
 }
