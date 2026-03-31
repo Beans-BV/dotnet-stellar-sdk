@@ -391,6 +391,9 @@
         <None Update="TestData\Responses\feeStats.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="TestData\Responses\health.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="TestData\Responses\root.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

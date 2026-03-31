@@ -3,8 +3,8 @@
 **Horizon Version:** v25.0.0 (released 2025-12-11)  
 **Horizon Source:** [v25.0.0](https://github.com/stellar/stellar-horizon/releases/tag/v25.0.0)  
 **SDK:** `StellarDotnetSdk`  
-**SDK Version:** 12.0.0  
-**Updated:** 2026-01-07
+**SDK Version:** 14.0.0  
+**Updated:** 2026-03-27
 
 **Public API Endpoints (in matrix):** 50
 
@@ -14,11 +14,11 @@
 
 ## Overall Coverage
 
-**Coverage:** 92.0% (46/50 fully supported)
+**Coverage:** 100.0% (50/50 fully supported)
 
-- ✅ **Fully Supported:** 46/50
-- ⚠️ **Partially Supported:** 1/50
-- ❌ **Not Supported:** 3/50
+- ✅ **Fully Supported:** 50/50
+- ⚠️ **Partially Supported:** 0/50
+- ❌ **Not Supported:** 0/50
 - 🔄 **Deprecated:** 0/50 (deprecated endpoints are excluded; see note above)
 
 ## Coverage by Category
@@ -32,10 +32,10 @@
 | effects | 100.0% | 1 | 0 | 0 | 1 |
 | fee_stats | 100.0% | 1 | 0 | 0 | 1 |
 | friendbot | 100.0% | 1 | 0 | 0 | 1 |
-| health | 0.0% | 0 | 0 | 1 | 1 |
+| health | 100.0% | 1 | 0 | 0 | 1 |
 | ledgers | 100.0% | 6 | 0 | 0 | 6 |
-| liquidity_pools | 66.7% | 4 | 0 | 2 | 6 |
-| offers | 66.7% | 2 | 1 | 0 | 3 |
+| liquidity_pools | 100.0% | 6 | 0 | 0 | 6 |
+| offers | 100.0% | 3 | 0 | 0 | 3 |
 | operations | 100.0% | 3 | 0 | 0 | 3 |
 | order_book | 100.0% | 1 | 0 | 0 | 1 |
 | paths | 100.0% | 2 | 0 | 0 | 2 |
@@ -113,7 +113,7 @@
 
 | Endpoint | Method | Status | SDK Method | Streaming | Notes |
 |----------|--------|--------|------------|-----------|-------|
-| `/health` | GET | ❌ |  |  | Not implemented: no `HealthRequestBuilder` and no `Server.Health` |
+| `/health` | GET | ✅ | `Server.Health.Execute()` |  | Direct execute via `HealthRequestBuilder` |
 
 ### Ledgers
 
@@ -134,8 +134,8 @@
 | `/liquidity_pools/{liquidity_pool_id}` | GET | ✅ | `Server.LiquidityPools.LiquidityPool(liquidityPoolId)` |  | Direct single-resource fetch |
 | `/liquidity_pools/{liquidity_pool_id}/effects` | GET | ✅ | `Server.Effects.ForLiquidityPool(liquidityPoolId).Execute()` | ✓ | Streamable via `EffectsRequestBuilder` |
 | `/liquidity_pools/{liquidity_pool_id}/operations` | GET | ✅ | `Server.Operations.ForLiquidityPool(liquidityPoolId).Execute()` | ✓ | Streamable via `OperationsRequestBuilder` |
-| `/liquidity_pools/{liquidity_pool_id}/trades` | GET | ❌ |  |  | No request builder method to target this endpoint |
-| `/liquidity_pools/{liquidity_pool_id}/transactions` | GET | ❌ |  |  | No request builder method to target this endpoint |
+| `/liquidity_pools/{liquidity_pool_id}/trades` | GET | ✅ | `Server.Trades.ForLiquidityPool(liquidityPoolId).Execute()` |  | Pageable via `RequestBuilderExecutePageable` |
+| `/liquidity_pools/{liquidity_pool_id}/transactions` | GET | ✅ | `Server.Transactions.ForLiquidityPool(liquidityPoolId).Execute()` | ✓ | Streamable via `TransactionsRequestBuilder` |
 
 ### Offers
 
@@ -143,7 +143,7 @@
 |----------|--------|--------|------------|-----------|-------|
 | `/offers` | GET | ✅ | `Server.Offers.Execute()` |  | Pageable via `RequestBuilderExecutePageable` |
 | `/offers/{offer_id}` | GET | ✅ | `Server.Offers.Offer(offerId)` |  | Direct single-resource fetch |
-| `/offers/{offer_id}/trades` | GET | ⚠️ | `Server.Trades.OfferId(offerId).Execute()` |  | Achievable via `/trades?offer_id=...` (no direct `/offers/{id}/trades` support) |
+| `/offers/{offer_id}/trades` | GET | ✅ | `Server.Trades.ForOffer(offerId).Execute()` |  | Direct sub-resource via `TradesRequestBuilder.ForOffer()` |
 
 ### Operations
 
