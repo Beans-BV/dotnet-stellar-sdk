@@ -171,14 +171,14 @@ public static class Utils
         return new Server(uri, httpClient);
     }
 
-    public static SorobanServer CreateTestSorobanServerWithContent(
+    public static StellarRpcServer CreateTestStellarRpcServerWithContent(
         string? content,
         HttpStatusCode statusCode = HttpStatusCode.OK,
         string uri = "https://soroban-testnet.stellar.org")
     {
         Network.UseTestNetwork();
         var httpClient = CreateFakeHttpClient(content, statusCode);
-        return new SorobanServer(uri, httpClient);
+        return new StellarRpcServer(uri, httpClient);
     }
 
     public static Server CreateTestServerWithHeaders(

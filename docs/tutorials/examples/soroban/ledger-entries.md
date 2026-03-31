@@ -24,7 +24,7 @@ First, establish a connection to the Stellar RPC server:
 private const string TestNetSorobanUrl = "https://soroban-testnet.stellar.org";
 
 // Create a new Soroban server instance
-SorobanServer server = new(TestNetSorobanUrl);
+StellarRpcServer server = new(TestNetSorobanUrl);
 ```
 
 > 📝 **Note**: For Horizon-related ledger entries, you can also use a Horizon server connection, but Stellar RPC provides more comprehensive ledger entry access.
@@ -36,7 +36,7 @@ Account entries contain fundamental information about accounts on the Stellar ne
 ```csharp
 private static async Task GetLedgerEntryAccount(string accountId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     var ledgerKeyAccount = new LedgerKeyAccount(accountId);
     var ledgerEntriesResponse = await server.GetLedgerEntries([ledgerKeyAccount]);
@@ -81,7 +81,7 @@ Claimable balances are funds set aside for specific claimants to claim under cer
 ```csharp
 private static async Task GetLedgerEntryClaimableBalance(string balanceId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     var ledgerKeyClaimableBalance = new LedgerKeyClaimableBalance(balanceId);
     Console.WriteLine($"Get ledger entry details for claimable balance {balanceId}");
@@ -119,7 +119,7 @@ Contract code entries contain the WebAssembly (WASM) code of uploaded smart cont
 ```csharp
 private static async Task GetLedgerEntryContractCode(string contractWasmId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     var ledgerKeyContractCodes = new LedgerKey[]
     {
@@ -151,7 +151,7 @@ Contract data entries store the state data of deployed smart contract instances:
 ```csharp
 private static async Task GetLedgerEntryContractData(string contractId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     var ledgerKeyContractData = CreateLedgerKeyContractData(contractId);
     var contractCodeResponse = await server.GetLedgerEntries([ledgerKeyContractData]);
@@ -193,7 +193,7 @@ Trustlines represent relationships between accounts and assets they trust. Here'
 ```csharp
 private static async Task GetLedgerEntryTrustline(string accountId, string assetCode, string issuerAccountId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     // Create a non-native asset object
     var asset = Asset.CreateNonNativeAsset(assetCode, issuerAccountId);
@@ -248,7 +248,7 @@ Offers represent orders on Stellar's decentralized exchange. Here's how to query
 ```csharp
 private static async Task GetLedgerEntryOffer(string sellerAccountId, string offerId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     
     // Create an offer ledger key
@@ -288,7 +288,7 @@ You can also query multiple ledger entries of different types in a single reques
 ```csharp
 private static async Task GetMultipleLedgerEntries(string accountId, string contractId, string balanceId)
 {
-    SorobanServer server = new(TestNetSorobanUrl);
+    StellarRpcServer server = new(TestNetSorobanUrl);
 
     // Create multiple ledger keys of different types
     var ledgerKeys = new LedgerKey[]

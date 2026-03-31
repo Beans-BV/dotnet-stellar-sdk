@@ -17,11 +17,11 @@ internal static class SorobanHelpers
     public const string TestNetSorobanUrl = "https://soroban-testnet.stellar.org";
 
     /// <summary>
-    ///     Creates a new SorobanServer instance configured for testnet.
+    ///     Creates a new StellarRpcServer instance configured for testnet.
     /// </summary>
-    public static SorobanServer CreateServer()
+    public static StellarRpcServer CreateServer()
     {
-        return new SorobanServer(TestNetSorobanUrl);
+        return new StellarRpcServer(TestNetSorobanUrl);
     }
 
     /// <summary>

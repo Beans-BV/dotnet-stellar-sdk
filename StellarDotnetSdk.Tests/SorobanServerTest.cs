@@ -32,10 +32,10 @@ using TransactionMetaV3 = StellarDotnetSdk.Soroban.TransactionMetaV3;
 namespace StellarDotnetSdk.Tests;
 
 /// <summary>
-///     Unit tests for <see cref="SorobanServer" /> class.
+///     Unit tests for <see cref="StellarRpcServer" /> class.
 /// </summary>
 [TestClass]
-public class SorobanServerTest
+public class StellarRpcServerTest
 {
     private const string HelloContractWasmHash = "c1a650506f7c20c8f4d16aae73f894f302cd011d7ef33adef572f20b34f7653e";
 
@@ -46,7 +46,7 @@ public class SorobanServerTest
     private string AccountId => _account.AccountId;
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetHealth returns health status with correct ledger information.
+    ///     Verifies that StellarRpcServer.GetHealth returns health status with correct ledger information.
     /// </summary>
     [TestMethod]
     public async Task GetHealth_WithValidResponse_ReturnsHealthStatus()
@@ -66,7 +66,7 @@ public class SorobanServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(getNetworkResponseJson);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(getNetworkResponseJson);
 
         // Act
         var response = await sorobanServer.GetHealth();
@@ -79,7 +79,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetNetwork returns network information with correct properties.
+    ///     Verifies that StellarRpcServer.GetNetwork returns network information with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetNetwork_WithValidResponse_ReturnsNetworkInformation()
@@ -98,7 +98,7 @@ public class SorobanServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(getNetworkResponseJson);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(getNetworkResponseJson);
 
         // Act
         var response = await sorobanServer.GetNetwork();
@@ -110,7 +110,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetLatestLedger returns latest ledger information with correct properties.
+    ///     Verifies that StellarRpcServer.GetLatestLedger returns latest ledger information with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLatestLedger_WithValidResponse_ReturnsLatestLedgerInformation()
@@ -129,7 +129,7 @@ public class SorobanServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(getLatestLedgerResponseJson);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(getLatestLedgerResponseJson);
 
         // Act
         var response = await sorobanServer.GetLatestLedger();
@@ -141,7 +141,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.SendTransaction returns response with PENDING status when transaction is pending.
+    ///     Verifies that StellarRpcServer.SendTransaction returns response with PENDING status when transaction is pending.
     /// </summary>
     [TestMethod]
     public async Task SendTransaction_WithPendingStatus_ReturnsPendingResponse()
@@ -161,7 +161,7 @@ public class SorobanServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(sendTransactionResponseJson);
 
         // Act
         var response = await sorobanServer.SendTransaction(CreateDummyTransaction());
@@ -176,7 +176,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.SendTransaction returns response with TRY_AGAIN_LATER status when server requests
+    ///     Verifies that StellarRpcServer.SendTransaction returns response with TRY_AGAIN_LATER status when server requests
     ///     retry.
     /// </summary>
     [TestMethod]
@@ -197,7 +197,7 @@ public class SorobanServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(sendTransactionResponseJson);
 
         // Act
         var response = await sorobanServer.SendTransaction(CreateDummyTransaction());
@@ -212,7 +212,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.SendTransaction returns response with ERROR status and error result XDR when
+    ///     Verifies that StellarRpcServer.SendTransaction returns response with ERROR status and error result XDR when
     ///     transaction fails.
     /// </summary>
     [TestMethod]
@@ -234,7 +234,7 @@ public class SorobanServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(sendTransactionResponseJson);
 
         // Act
         var response = await sorobanServer.SendTransaction(CreateDummyTransaction());
@@ -249,7 +249,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.SendTransaction returns response with DUPLICATE status when transaction is duplicate.
+    ///     Verifies that StellarRpcServer.SendTransaction returns response with DUPLICATE status when transaction is duplicate.
     /// </summary>
     [TestMethod]
     public async Task SendTransaction_WithDuplicateStatus_ReturnsDuplicateResponse()
@@ -269,7 +269,7 @@ public class SorobanServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(sendTransactionResponseJson);
 
         // Act
         var response = await sorobanServer.SendTransaction(CreateDummyTransaction());
@@ -284,7 +284,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with PENDING status.
+    ///     Verifies that StellarRpcServer.SendTransaction with fee bump transaction returns response with PENDING status.
     /// </summary>
     [TestMethod]
     public async Task SendTransaction_WithFeeBumpTransactionPending_ReturnsPendingResponse()
@@ -304,7 +304,7 @@ public class SorobanServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(sendTransactionResponseJson);
 
         // Act
         var response = await sorobanServer.SendTransaction(CreateDummyFeeBumpTransaction());
@@ -319,7 +319,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with TRY_AGAIN_LATER status.
+    ///     Verifies that StellarRpcServer.SendTransaction with fee bump transaction returns response with TRY_AGAIN_LATER status.
     /// </summary>
     [TestMethod]
     public async Task SendTransaction_WithFeeBumpTransactionTryAgainLater_ReturnsTryAgainLaterResponse()
@@ -339,7 +339,7 @@ public class SorobanServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(sendTransactionResponseJson);
 
         // Act
         var response = await sorobanServer.SendTransaction(CreateDummyFeeBumpTransaction());
@@ -354,7 +354,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with ERROR status and error
+    ///     Verifies that StellarRpcServer.SendTransaction with fee bump transaction returns response with ERROR status and error
     ///     result XDR.
     /// </summary>
     [TestMethod]
@@ -376,7 +376,7 @@ public class SorobanServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(sendTransactionResponseJson);
 
         // Act
         var response = await sorobanServer.SendTransaction(CreateDummyFeeBumpTransaction());
@@ -391,7 +391,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.SendTransaction with fee bump transaction returns response with DUPLICATE status.
+    ///     Verifies that StellarRpcServer.SendTransaction with fee bump transaction returns response with DUPLICATE status.
     /// </summary>
     [TestMethod]
     public async Task SendTransaction_WithFeeBumpTransactionDuplicate_ReturnsDuplicateResponse()
@@ -411,7 +411,7 @@ public class SorobanServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(sendTransactionResponseJson);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(sendTransactionResponseJson);
 
         // Act
         var response = await sorobanServer.SendTransaction(CreateDummyFeeBumpTransaction());
@@ -426,13 +426,13 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.SimulateTransaction throws TooManySignaturesException when transaction is signed.
+    ///     Verifies that StellarRpcServer.SimulateTransaction throws TooManySignaturesException when transaction is signed.
     /// </summary>
     [TestMethod]
     public async Task SimulateTransaction_WithSignedTransaction_ThrowsTooManySignaturesException()
     {
         // Arrange
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent("");
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent("");
 
         // Act & Assert
         await Assert.ThrowsExceptionAsync<TooManySignaturesException>(() =>
@@ -440,7 +440,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.SimulateTransaction returns response with error and diagnostic events when simulation
+    ///     Verifies that StellarRpcServer.SimulateTransaction returns response with error and diagnostic events when simulation
     ///     fails.
     /// </summary>
     [TestMethod]
@@ -463,7 +463,7 @@ public class SorobanServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(simulateTransactionResponseJson);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(simulateTransactionResponseJson);
 
         // Act
         var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
@@ -486,7 +486,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetEvents returns events response with correct event properties.
+    ///     Verifies that StellarRpcServer.GetEvents returns events response with correct event properties.
     /// </summary>
     [TestMethod]
     public async Task GetEvents_WithValidRequest_ReturnsEventsResponse()
@@ -575,7 +575,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var eventsResponse = await sorobanServer.GetEvents(new GetEventsRequest());
@@ -661,7 +661,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetAccount throws AccountNotFoundException when account is not found.
+    ///     Verifies that StellarRpcServer.GetAccount throws AccountNotFoundException when account is not found.
     /// </summary>
     [TestMethod]
     public async Task GetAccount_WithNonExistentAccount_ThrowsAccountNotFoundException()
@@ -678,7 +678,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act & Assert
         await Assert.ThrowsExceptionAsync<AccountNotFoundException>(() =>
@@ -686,7 +686,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetAccount returns account with correct properties.
+    ///     Verifies that StellarRpcServer.GetAccount returns account with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetAccount_WithValidAccountId_ReturnsAccount()
@@ -709,7 +709,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var account = await sorobanServer.GetAccount("GDPNJ4YFMQYSNWMSF6XZEDXS4M4ECTQHMVXBISQA4U7DEHRGUY3EGDSB");
@@ -720,7 +720,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetLedgerEntries returns contract data ledger entries with correct properties.
+    ///     Verifies that StellarRpcServer.GetLedgerEntries returns contract data ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithContractDataEntries_ReturnsContractDataEntries()
@@ -744,7 +744,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetLedgerEntries([]);
@@ -780,7 +780,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetLedgerEntries returns contract code ledger entries with correct properties.
+    ///     Verifies that StellarRpcServer.GetLedgerEntries returns contract code ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithContractCodeEntries_ReturnsContractCodeEntries()
@@ -805,7 +805,7 @@ public class SorobanServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(getLedgerEntriesResponseJson);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(getLedgerEntriesResponseJson);
 
         // Act
         var response = await sorobanServer.GetLedgerEntries([]);
@@ -849,7 +849,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetLedgerEntries returns account ledger entries with correct properties.
+    ///     Verifies that StellarRpcServer.GetLedgerEntries returns account ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithAccountEntries_ReturnsAccountEntries()
@@ -872,7 +872,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetLedgerEntries([]);
@@ -917,7 +917,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetLedgerEntries returns data ledger entries with correct properties.
+    ///     Verifies that StellarRpcServer.GetLedgerEntries returns data ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithDataEntries_ReturnsDataEntries()
@@ -940,7 +940,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetLedgerEntries([]);
@@ -967,7 +967,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetLedgerEntries returns offer ledger entries with correct properties.
+    ///     Verifies that StellarRpcServer.GetLedgerEntries returns offer ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithOfferEntries_ReturnsOfferEntries()
@@ -990,7 +990,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetLedgerEntries([]);
@@ -1021,7 +1021,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetLedgerEntries returns claimable balance ledger entries with correct properties.
+    ///     Verifies that StellarRpcServer.GetLedgerEntries returns claimable balance ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithClaimableBalanceEntries_ReturnsClaimableBalanceEntries()
@@ -1044,7 +1044,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetLedgerEntries([]);
@@ -1072,7 +1072,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetLedgerEntries returns liquidity pool ledger entries with correct properties.
+    ///     Verifies that StellarRpcServer.GetLedgerEntries returns liquidity pool ledger entries with correct properties.
     /// </summary>
     // TODO Test liquidity pool with some deposits/withdrawals
     [TestMethod]
@@ -1096,7 +1096,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetLedgerEntries([]);
@@ -1132,7 +1132,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetLedgerEntries returns trustline ledger entries with correct properties.
+    ///     Verifies that StellarRpcServer.GetLedgerEntries returns trustline ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithTrustlineEntries_ReturnsTrustlineEntries()
@@ -1155,7 +1155,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetLedgerEntries([]);
@@ -1183,7 +1183,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetTransaction returns NOT_FOUND status when transaction is not found.
+    ///     Verifies that StellarRpcServer.GetTransaction returns NOT_FOUND status when transaction is not found.
     /// </summary>
     [TestMethod]
     public async Task GetTransaction_WithNonExistentTransaction_ReturnsNotFoundStatus()
@@ -1203,7 +1203,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetTransaction("");
@@ -1217,7 +1217,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.SimulateTransaction returns successful simulation response with transaction data,
+    ///     Verifies that StellarRpcServer.SimulateTransaction returns successful simulation response with transaction data,
     ///     events, and state changes.
     /// </summary>
     [TestMethod]
@@ -1256,7 +1256,7 @@ public class SorobanServerTest
                 }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.SimulateTransaction(
@@ -1362,7 +1362,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.SimulateTransaction returns successful simulation response with Protocol 23 extension
+    ///     Verifies that StellarRpcServer.SimulateTransaction returns successful simulation response with Protocol 23 extension
     ///     data.
     /// </summary>
     // This test only focuses on testing the SorobanTransactionDataExt
@@ -1402,7 +1402,7 @@ public class SorobanServerTest
                 }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.SimulateTransaction(
@@ -1425,7 +1425,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetFeeStats returns fee statistics with inclusion fee and Soroban inclusion fee data.
+    ///     Verifies that StellarRpcServer.GetFeeStats returns fee statistics with inclusion fee and Soroban inclusion fee data.
     /// </summary>
     [TestMethod]
     public async Task GetFeeStats_WithValidRequest_ReturnsFeeStatistics()
@@ -1477,7 +1477,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetFeeStats();
@@ -1527,7 +1527,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetVersionInfo returns version information with Protocol 22 data.
+    ///     Verifies that StellarRpcServer.GetVersionInfo returns version information with Protocol 22 data.
     /// </summary>
     [TestMethod]
     public async Task GetVersionInfo_WithProtocol22Server_ReturnsVersionInfoWithProtocol22()
@@ -1551,7 +1551,7 @@ public class SorobanServerTest
                 }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetVersionInfo();
@@ -1567,7 +1567,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetVersionInfo returns version information for servers prior to Protocol 22.
+    ///     Verifies that StellarRpcServer.GetVersionInfo returns version information for servers prior to Protocol 22.
     /// </summary>
     [TestMethod]
     public async Task GetVersionInfo_WithServerPriorToProtocol22_ReturnsVersionInfo()
@@ -1587,7 +1587,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetVersionInfo();
@@ -1603,7 +1603,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetTransaction returns transaction with SUCCESS status and all transaction details
+    ///     Verifies that StellarRpcServer.GetTransaction returns transaction with SUCCESS status and all transaction details
     ///     including events.
     /// </summary>
     [TestMethod]
@@ -1647,7 +1647,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetTransaction("");
@@ -1715,7 +1715,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetTransactions returns transactions response with multiple transactions including
+    ///     Verifies that StellarRpcServer.GetTransactions returns transactions response with multiple transactions including
     ///     success and failed statuses.
     /// </summary>
     [TestMethod]
@@ -1830,7 +1830,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetTransactions(new GetTransactionsRequest());
@@ -2027,7 +2027,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetLedgers returns ledger details with correct properties.
+    ///     Verifies that StellarRpcServer.GetLedgers returns ledger details with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgers_WithValidRequest_ReturnsLedgersResponse()
@@ -2063,7 +2063,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetLedgers(new GetLedgersRequest { StartLedger = 50 });
@@ -2096,7 +2096,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetLedgerEntries returns config setting ledger entries with correct properties.
+    ///     Verifies that StellarRpcServer.GetLedgerEntries returns config setting ledger entries with correct properties.
     /// </summary>
     [TestMethod]
     public async Task GetLedgerEntries_WithConfigSettingEntries_ReturnsConfigSettingEntries()
@@ -2199,7 +2199,7 @@ public class SorobanServerTest
               }
             }
             """;
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetLedgerEntries([]);
@@ -2372,7 +2372,7 @@ public class SorobanServerTest
     }
 
     /// <summary>
-    ///     Verifies that SorobanServer.GetLedgerEntries returns null when querying TTL ledger entries directly, as they cannot
+    ///     Verifies that StellarRpcServer.GetLedgerEntries returns null when querying TTL ledger entries directly, as they cannot
     ///     be queried.
     /// </summary>
     [TestMethod]
@@ -2395,7 +2395,7 @@ public class SorobanServerTest
         {
             new LedgerKeyTtl("fsh67B45yRcC/gKPI2ky8EPbFMtc8y0fnjUDaI36OKc="),
         };
-        using var sorobanServer = Utils.CreateTestSorobanServerWithContent(json);
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
         var response = await sorobanServer.GetLedgerEntries(ledgerKeyTtl);
@@ -2437,7 +2437,7 @@ public class SorobanServerTest
     }
 
     [TestMethod]
-    public void Constructor_WithHttpResilienceOptions_CreatesSorobanServerWithResilience()
+    public void Constructor_WithHttpResilienceOptions_CreatesStellarRpcServerWithResilience()
     {
         // Arrange
         var resilienceOptions = new HttpResilienceOptions
@@ -2448,14 +2448,14 @@ public class SorobanServerTest
         };
 
         // Act
-        using var server = new SorobanServer("https://soroban-testnet.stellar.org", resilienceOptions);
+        using var server = new StellarRpcServer("https://soroban-testnet.stellar.org", resilienceOptions);
 
         // Assert - Server should be created successfully
         Assert.IsNotNull(server);
     }
 
     [TestMethod]
-    public void Constructor_WithBearerTokenAndHttpResilienceOptions_CreatesSorobanServerWithBoth()
+    public void Constructor_WithBearerTokenAndHttpResilienceOptions_CreatesStellarRpcServerWithBoth()
     {
         // Arrange
         var resilienceOptions = new HttpResilienceOptions
@@ -2466,17 +2466,17 @@ public class SorobanServerTest
         };
 
         // Act
-        using var server = new SorobanServer("https://soroban-testnet.stellar.org", resilienceOptions, "test-token");
+        using var server = new StellarRpcServer("https://soroban-testnet.stellar.org", resilienceOptions, "test-token");
 
         // Assert - Server should be created successfully
         Assert.IsNotNull(server);
     }
 
     [TestMethod]
-    public void Constructor_WithNullHttpResilienceOptions_CreatesSorobanServerWithDefaultResilience()
+    public void Constructor_WithNullHttpResilienceOptions_CreatesStellarRpcServerWithDefaultResilience()
     {
         // Act
-        using var server = new SorobanServer("https://soroban-testnet.stellar.org", null, null);
+        using var server = new StellarRpcServer("https://soroban-testnet.stellar.org", null, null);
 
         // Assert - Server should be created successfully with default resilience (no retries)
         Assert.IsNotNull(server);
@@ -2494,7 +2494,7 @@ public class SorobanServerTest
         };
 
         // Act
-        using var sorobanServer = new SorobanServer("https://soroban-testnet.stellar.org", resilienceOptions);
+        using var sorobanServer = new StellarRpcServer("https://soroban-testnet.stellar.org", resilienceOptions);
         // Note: This test verifies the constructor accepts the parameter
         // Actual resilience behavior is tested in DefaultStellarSdkHttpClientTests
 

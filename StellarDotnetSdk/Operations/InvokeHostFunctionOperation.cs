@@ -572,7 +572,7 @@ public class UploadContractHostFunction : HostFunction
 /// <summary>
 ///     Contains a tree of invocations with <c>rootInvocation</c> as a root.
 ///     Building SorobanAuthorizedInvocation trees may be simplified by using the recording auth mode in Soroban's
-///     <see cref="SorobanServer.SimulateTransaction" /> mechanism.
+///     <see cref="StellarRpcServer.SimulateTransaction" /> mechanism.
 /// </summary>
 public class SorobanAuthorizationEntry
 {

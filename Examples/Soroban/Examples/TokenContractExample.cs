@@ -63,7 +63,7 @@ internal static class TokenContractExample
     }
 
     private static async Task MintTokens(
-        SorobanServer server,
+        StellarRpcServer server,
         IAccountId admin,
         IAccountId recipient,
         string tokenContractId)
@@ -88,7 +88,7 @@ internal static class TokenContractExample
     }
 
     private static async Task CheckBalance(
-        SorobanServer server,
+        StellarRpcServer server,
         IAccountId admin,
         IAccountId recipient,
         string tokenContractId)
@@ -114,7 +114,7 @@ internal static class TokenContractExample
     }
 
     private static async Task TransferTokens(
-        SorobanServer server,
+        StellarRpcServer server,
         IAccountId admin,
         IAccountId recipient,
         string tokenContractId)
@@ -145,7 +145,7 @@ internal static class TokenContractExample
     }
 
     private static async Task ApproveAllowance(
-        SorobanServer server,
+        StellarRpcServer server,
         IAccountId admin,
         IAccountId recipient,
         string tokenContractId)
@@ -174,7 +174,7 @@ internal static class TokenContractExample
         Console.WriteLine($"Approved {approveAmount} tokens for admin to spend from recipient's account");
     }
 
-    private static async Task BurnTokens(SorobanServer server, IAccountId admin, string tokenContractId)
+    private static async Task BurnTokens(StellarRpcServer server, IAccountId admin, string tokenContractId)
     {
         var adminAccount = await server.GetAccount(admin.AccountId);
         var burnAmount = 50000L;
