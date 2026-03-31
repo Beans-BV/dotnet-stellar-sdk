@@ -12,9 +12,9 @@ namespace StellarDotnetSdk.Tests.Federation;
 ///     Tests for FederationServer class functionality.
 /// </summary>
 [TestClass]
-public abstract class FederationServerTest
+public class FederationServerTest
 {
-    private const string StellarToml = "FEDERATIONserver = \"https://api.stellar.org/federation\"";
+    private const string StellarToml = "FEDERATION_SERVER = \"https://api.stellar.org/federation\"";
 
     /// <summary>
     ///     Verifies that CreateForDomain creates a FederationServer with correct server URI and domain.
@@ -24,11 +24,16 @@ public abstract class FederationServerTest
     {
         // Arrange
         var fakeHttpMessageHandler = new Mock<Utils.FakeHttpMessageHandler> { CallBase = true };
+        var httpClient = new HttpClient(fakeHttpMessageHandler.Object);
         fakeHttpMessageHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>())).Returns(new HttpResponseMessage
         {
             StatusCode = HttpStatusCode.OK,
             Content = new StringContent(StellarToml),
         });
+
+        // Set the static HttpClient before calling CreateForDomain
+        var tempServer = new FederationServer("https://api.stellar.org/federation", "stellar.org");
+        tempServer.HttpClient = httpClient;
 
         // Act
         using (var server = await FederationServer.CreateForDomain("stellar.org"))

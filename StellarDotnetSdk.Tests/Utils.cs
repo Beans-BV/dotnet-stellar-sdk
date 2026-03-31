@@ -9,14 +9,28 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses.Results;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
+using BeginSponsoringFutureReservesResult = StellarDotnetSdk.Xdr.BeginSponsoringFutureReservesResult;
+using ChangeTrustResult = StellarDotnetSdk.Xdr.ChangeTrustResult;
+using CreateClaimableBalanceResult = StellarDotnetSdk.Xdr.CreateClaimableBalanceResult;
+using EndSponsoringFutureReservesResult = StellarDotnetSdk.Xdr.EndSponsoringFutureReservesResult;
+using Int32 = StellarDotnetSdk.Xdr.Int32;
 using XdrTransactionResult = StellarDotnetSdk.Xdr.TransactionResult;
+using XdrInnerTransactionResult = StellarDotnetSdk.Xdr.InnerTransactionResult;
+using XdrInnerTransactionResultPair = StellarDotnetSdk.Xdr.InnerTransactionResultPair;
 using Int64 = StellarDotnetSdk.Xdr.Int64;
+using ManageDataResult = StellarDotnetSdk.Xdr.ManageDataResult;
+using ManageSellOfferResult = StellarDotnetSdk.Xdr.ManageSellOfferResult;
+using OfferEntry = StellarDotnetSdk.Xdr.OfferEntry;
 using OperationResult = StellarDotnetSdk.Xdr.OperationResult;
+using PaymentResult = StellarDotnetSdk.Xdr.PaymentResult;
+using RevokeSponsorshipResult = StellarDotnetSdk.Xdr.RevokeSponsorshipResult;
 using TransactionResult = StellarDotnetSdk.Responses.Results.TransactionResult;
+using TransactionResultCodeEnum = StellarDotnetSdk.Xdr.TransactionResultCode.TransactionResultCodeEnum;
 
 namespace StellarDotnetSdk.Tests;
 
@@ -109,7 +123,7 @@ public static class Utils
             {
                 Discriminant =
                 {
-                    InnerValue = TransactionResultCode.TransactionResultCodeEnum.txFAILED,
+                    InnerValue = TransactionResultCodeEnum.txFAILED,
                 },
                 Results = new OperationResult[1],
             },
@@ -123,6 +137,375 @@ public static class Utils
         var outputStream = new XdrDataOutputStream();
         XdrTransactionResult.Encode(outputStream, transactionResult);
         return Convert.ToBase64String(outputStream.ToArray());
+    }
+
+    public static string CreateTransactionResultXdr(
+        OperationResult.OperationResultTr[] operationResults,
+        TransactionResultCodeEnum code = TransactionResultCodeEnum.txSUCCESS)
+    {
+        var transactionResult = new XdrTransactionResult
+        {
+            Ext = new XdrTransactionResult.TransactionResultExt(),
+            FeeCharged = new Int64(100L),
+            Result = new XdrTransactionResult.TransactionResultResult
+            {
+                Discriminant = { InnerValue = code },
+                Results = new OperationResult[operationResults.Length],
+            },
+        };
+
+        for (var i = 0; i < operationResults.Length; i++)
+        {
+            transactionResult.Result.Results[i] = new OperationResult
+            {
+                Discriminant =
+                {
+                    InnerValue = OperationResultCode.OperationResultCodeEnum.opINNER,
+                },
+                Tr = operationResults[i],
+            };
+        }
+
+        var outputStream = new XdrDataOutputStream();
+        XdrTransactionResult.Encode(outputStream, transactionResult);
+        return Convert.ToBase64String(outputStream.ToArray());
+    }
+
+    public static string CreateFeeBumpTransactionResultXdr(
+        OperationResult.OperationResultTr[] innerOperationResults,
+        TransactionResultCodeEnum innerCode =
+            TransactionResultCodeEnum.txSUCCESS)
+    {
+        var outerCode = innerCode == TransactionResultCodeEnum.txSUCCESS
+            ? TransactionResultCodeEnum.txFEE_BUMP_INNER_SUCCESS
+            : TransactionResultCodeEnum.txFEE_BUMP_INNER_FAILED;
+
+        var innerResults = new OperationResult[innerOperationResults.Length];
+        for (var i = 0; i < innerOperationResults.Length; i++)
+        {
+            innerResults[i] = new OperationResult
+            {
+                Discriminant =
+                {
+                    InnerValue = OperationResultCode.OperationResultCodeEnum.opINNER,
+                },
+                Tr = innerOperationResults[i],
+            };
+        }
+
+        var innerResult = new XdrInnerTransactionResult
+        {
+            Ext = new InnerTransactionResult.InnerTransactionResultExt(),
+            FeeCharged = new Int64(100L),
+            Result = new InnerTransactionResult.InnerTransactionResultResult
+            {
+                Discriminant = { InnerValue = innerCode },
+                Results = innerResults,
+            },
+        };
+
+        var innerResultPair = new XdrInnerTransactionResultPair
+        {
+            TransactionHash = new Hash { InnerValue = new byte[32] },
+            Result = innerResult,
+        };
+
+        var transactionResult = new XdrTransactionResult
+        {
+            Ext = new XdrTransactionResult.TransactionResultExt(),
+            FeeCharged = new Int64(100L),
+            Result = new XdrTransactionResult.TransactionResultResult
+            {
+                Discriminant = { InnerValue = outerCode },
+                InnerResultPair = innerResultPair,
+            },
+        };
+
+        var outputStream = new XdrDataOutputStream();
+        XdrTransactionResult.Encode(outputStream, transactionResult);
+        return Convert.ToBase64String(outputStream.ToArray());
+    }
+
+    public static string BuildSubmitTransactionResponseJson(string resultXdr)
+    {
+        return $$"""
+                 {
+                   "hash": "abc123",
+                   "ledger": 100,
+                   "envelope_xdr": "AAAA",
+                   "result_xdr": "{{resultXdr}}",
+                   "result_meta_xdr": "AAAAAAAAAAAAAAAA"
+                 }
+                 """;
+    }
+
+    public static string BuildSubmitFailureResponseJson(
+        string resultXdr,
+        string txResultCode = "tx_failed",
+        string[]? opResultCodes = null)
+    {
+        var opsJson = opResultCodes != null
+            ? "[" + string.Join(",", opResultCodes.Select(c => $"\"{c}\"")) + "]"
+            : "[]";
+
+        return $$"""
+                 {
+                   "type": "https://stellar.org/horizon-errors/transaction_failed",
+                   "title": "Transaction Failed",
+                   "status": 400,
+                   "extras": {
+                     "envelope_xdr": "AAAA",
+                     "result_codes": {
+                       "transaction": "{{txResultCode}}",
+                       "operations": {{opsJson}}
+                     },
+                     "result_xdr": "{{resultXdr}}"
+                   }
+                 }
+                 """;
+    }
+
+    public static string BuildAccountResponseJson(string accountId, long sequence)
+    {
+        return $$"""
+                 {
+                   "_links": {
+                     "self": { "href": "https://horizon-testnet.stellar.org/accounts/{{accountId}}" },
+                     "transactions": { "href": "https://horizon-testnet.stellar.org/accounts/{{accountId}}/transactions", "templated": true },
+                     "operations": { "href": "https://horizon-testnet.stellar.org/accounts/{{accountId}}/operations", "templated": true },
+                     "payments": { "href": "https://horizon-testnet.stellar.org/accounts/{{accountId}}/payments", "templated": true },
+                     "effects": { "href": "https://horizon-testnet.stellar.org/accounts/{{accountId}}/effects", "templated": true },
+                     "offers": { "href": "https://horizon-testnet.stellar.org/accounts/{{accountId}}/offers", "templated": true },
+                     "trades": { "href": "https://horizon-testnet.stellar.org/accounts/{{accountId}}/trades", "templated": true },
+                     "data": { "href": "https://horizon-testnet.stellar.org/accounts/{{accountId}}/data/{key}", "templated": true }
+                   },
+                   "id": "{{accountId}}",
+                   "account_id": "{{accountId}}",
+                   "sequence": "{{sequence}}",
+                   "sequence_ledger": 1234,
+                   "sequence_time": "1755199978",
+                   "subentry_count": 0,
+                   "thresholds": { "low_threshold": 0, "med_threshold": 0, "high_threshold": 0 },
+                   "last_modified_ledger": 1234,
+                   "last_modified_time": "2025-01-01T00:00:00Z",
+                   "flags": { "auth_required": false, "auth_revocable": false, "auth_immutable": false, "auth_clawback_enabled": false },
+                   "balances": [{ "asset_type": "native", "balance": "10000.0000000", "buying_liabilities": "0.0000000", "selling_liabilities": "0.0000000" }],
+                   "signers": [{ "key": "{{accountId}}", "weight": 1, "type": "ed25519_public_key" }],
+                   "data": {},
+                   "num_sponsoring": 0,
+                   "num_sponsored": 0,
+                   "paging_token": "{{accountId}}"
+                 }
+                 """;
+    }
+
+    public static OperationResult.OperationResultTr CreatePaymentResult(
+        PaymentResultCode.PaymentResultCodeEnum code =
+            PaymentResultCode.PaymentResultCodeEnum.PAYMENT_SUCCESS)
+    {
+        return new OperationResult.OperationResultTr
+        {
+            Discriminant = { InnerValue = OperationType.OperationTypeEnum.PAYMENT },
+            PaymentResult = new PaymentResult
+            {
+                Discriminant = PaymentResultCode.Create(code),
+            },
+        };
+    }
+
+    public static OperationResult.OperationResultTr CreateBeginSponsoringResult()
+    {
+        return new OperationResult.OperationResultTr
+        {
+            Discriminant =
+            {
+                InnerValue = OperationType.OperationTypeEnum.BEGIN_SPONSORING_FUTURE_RESERVES,
+            },
+            BeginSponsoringFutureReservesResult = new BeginSponsoringFutureReservesResult
+            {
+                Discriminant = BeginSponsoringFutureReservesResultCode.Create(
+                    BeginSponsoringFutureReservesResultCode.BeginSponsoringFutureReservesResultCodeEnum
+                        .BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS),
+            },
+        };
+    }
+
+    public static OperationResult.OperationResultTr CreateEndSponsoringResult()
+    {
+        return new OperationResult.OperationResultTr
+        {
+            Discriminant =
+            {
+                InnerValue = OperationType.OperationTypeEnum.END_SPONSORING_FUTURE_RESERVES,
+            },
+            EndSponsoringFutureReservesResult = new EndSponsoringFutureReservesResult
+            {
+                Discriminant = EndSponsoringFutureReservesResultCode.Create(
+                    EndSponsoringFutureReservesResultCode.EndSponsoringFutureReservesResultCodeEnum
+                        .END_SPONSORING_FUTURE_RESERVES_SUCCESS),
+            },
+        };
+    }
+
+    public static OperationResult.OperationResultTr CreateRevokeSponsorshipResult()
+    {
+        return new OperationResult.OperationResultTr
+        {
+            Discriminant =
+            {
+                InnerValue = OperationType.OperationTypeEnum.REVOKE_SPONSORSHIP,
+            },
+            RevokeSponsorshipResult = new RevokeSponsorshipResult
+            {
+                Discriminant = RevokeSponsorshipResultCode.Create(
+                    RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum.REVOKE_SPONSORSHIP_SUCCESS),
+            },
+        };
+    }
+
+    public static OperationResult.OperationResultTr CreateChangeTrustResult()
+    {
+        return new OperationResult.OperationResultTr
+        {
+            Discriminant =
+            {
+                InnerValue = OperationType.OperationTypeEnum.CHANGE_TRUST,
+            },
+            ChangeTrustResult = new ChangeTrustResult
+            {
+                Discriminant = ChangeTrustResultCode.Create(
+                    ChangeTrustResultCode.ChangeTrustResultCodeEnum.CHANGE_TRUST_SUCCESS),
+            },
+        };
+    }
+
+    public static OperationResult.OperationResultTr CreateManageDataResult()
+    {
+        return new OperationResult.OperationResultTr
+        {
+            Discriminant =
+            {
+                InnerValue = OperationType.OperationTypeEnum.MANAGE_DATA,
+            },
+            ManageDataResult = new ManageDataResult
+            {
+                Discriminant = ManageDataResultCode.Create(
+                    ManageDataResultCode.ManageDataResultCodeEnum.MANAGE_DATA_SUCCESS),
+            },
+        };
+    }
+
+    public static OperationResult.OperationResultTr CreateClaimableBalanceResult(byte[]? balanceIdHash = null)
+    {
+        return new OperationResult.OperationResultTr
+        {
+            Discriminant =
+            {
+                InnerValue = OperationType.OperationTypeEnum.CREATE_CLAIMABLE_BALANCE,
+            },
+            CreateClaimableBalanceResult = new CreateClaimableBalanceResult
+            {
+                Discriminant = CreateClaimableBalanceResultCode.Create(
+                    CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum
+                        .CREATE_CLAIMABLE_BALANCE_SUCCESS),
+                BalanceID = new ClaimableBalanceID
+                {
+                    Discriminant =
+                    {
+                        InnerValue = ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum
+                            .CLAIMABLE_BALANCE_ID_TYPE_V0,
+                    },
+                    V0 = new Hash { InnerValue = balanceIdHash ?? new byte[32] },
+                },
+            },
+        };
+    }
+
+    public static OperationResult.OperationResultTr CreateManageSellOfferCreatedResult(
+        long offerId,
+        string sellerAccountId)
+    {
+        var sellerKeyPair = KeyPair.FromAccountId(sellerAccountId);
+        return new OperationResult.OperationResultTr
+        {
+            Discriminant =
+            {
+                InnerValue = OperationType.OperationTypeEnum.MANAGE_SELL_OFFER,
+            },
+            ManageSellOfferResult = new ManageSellOfferResult
+            {
+                Discriminant = ManageSellOfferResultCode.Create(
+                    ManageSellOfferResultCode.ManageSellOfferResultCodeEnum.MANAGE_SELL_OFFER_SUCCESS),
+                Success = new ManageOfferSuccessResult
+                {
+                    OffersClaimed = Array.Empty<StellarDotnetSdk.Xdr.ClaimAtom>(),
+                    Offer = new ManageOfferSuccessResult.ManageOfferSuccessResultOffer
+                    {
+                        Discriminant =
+                        {
+                            InnerValue = ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_CREATED,
+                        },
+                        Offer = new OfferEntry
+                        {
+                            SellerID = new AccountID(sellerKeyPair.XdrPublicKey),
+                            OfferID = new Int64(offerId),
+                            Selling = new Asset
+                            {
+                                Discriminant =
+                                {
+                                    InnerValue = AssetType.AssetTypeEnum.ASSET_TYPE_NATIVE,
+                                },
+                            },
+                            Buying = new Asset
+                            {
+                                Discriminant =
+                                {
+                                    InnerValue = AssetType.AssetTypeEnum.ASSET_TYPE_NATIVE,
+                                },
+                            },
+                            Amount = new Int64(10000000L),
+                            Price = new StellarDotnetSdk.Xdr.Price
+                            {
+                                N = new Int32(3),
+                                D = new Int32(2),
+                            },
+                            Flags = new Uint32(0),
+                            Ext = new OfferEntry.OfferEntryExt { Discriminant = 0 },
+                        },
+                    },
+                },
+            },
+        };
+    }
+
+    public static HttpResponseMessage BuildHttpResponse(
+        string content,
+        HttpStatusCode statusCode = HttpStatusCode.OK)
+    {
+        var response = new HttpResponseMessage
+        {
+            StatusCode = statusCode,
+            Content = new StringContent(content),
+        };
+        response.Headers.Add("X-Ratelimit-Limit", "-1");
+        response.Headers.Add("X-Ratelimit-Remaining", "-1");
+        response.Headers.Add("X-Ratelimit-Reset", "-1");
+        return response;
+    }
+
+    public static Server CreateTestServerWithResponses(params HttpResponseMessage[] responses)
+    {
+        Network.UseTestNetwork();
+        var mockHandler = new Mock<FakeHttpMessageHandler> { CallBase = true };
+        var httpClient = new HttpClient(mockHandler.Object);
+        var setup = mockHandler.SetupSequence(a => a.Send(It.IsAny<HttpRequestMessage>()));
+        foreach (var response in responses)
+        {
+            setup = setup.Returns(response);
+        }
+
+        var server = new Server("https://horizon-testnet.stellar.org", httpClient);
+        return server;
     }
 
     public static async Task CheckAndCreateAccountOnTestnet(string accountId)

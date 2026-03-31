@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
@@ -7,15 +8,37 @@ using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Responses.Results;
 using StellarDotnetSdk.Transactions;
+using StellarDotnetSdk.Xdr;
+using FeeBumpTransaction = StellarDotnetSdk.Transactions.FeeBumpTransaction;
 
 namespace StellarDotnetSdk.Tests.Operations;
 
 /// <summary>
-///     Tests for FeeBumpTransaction functionality.
+///     Tests for FeeBumpTransaction result parsing and fee validation.
 /// </summary>
 [TestClass]
 public class FeeBumpOperationTest
 {
+    private static readonly KeyPair Source =
+        KeyPair.FromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
+
+    private static readonly KeyPair Sponsor =
+        KeyPair.FromSecretSeed("SB7ZMPZB3YMMK5CUWENXVLZWBK4KYX4YU5JBXQNZSK2DP2Q7V3LVTO5V");
+
+    private static FeeBumpTransaction CreateDummyFeeBumpTransaction(uint fee = 200)
+    {
+        var account = new Account(Source.AccountId, 0L);
+
+        var tx = new TransactionBuilder(account)
+            .AddOperation(new PaymentOperation(Sponsor, new AssetTypeNative(), "10"))
+            .Build();
+        tx.Sign(Source);
+
+        var feeBumpTx = TransactionBuilder.BuildFeeBumpTransaction(Sponsor, tx, fee);
+        feeBumpTx.Sign(Sponsor);
+        return feeBumpTx;
+    }
+
     /// <summary>
     ///     Verifies that fee bump transaction with successful inner transaction submits successfully.
     /// </summary>
@@ -23,40 +46,18 @@ public class FeeBumpOperationTest
     public async Task SubmitTransaction_WithSuccessfulInnerTransaction_ReturnsSuccessResult()
     {
         // Arrange
-        Network.UseTestNetwork();
-        using var server = new Server("https://horizon-testnet.stellar.org");
-
-        var sourceKeyPair = KeyPair.Random();
-        var sponsorKeyPair = KeyPair.Random();
-
-        await Task.WhenAll(
-            server.TestNetFriendBot
-                .FundAccount(sourceKeyPair.AccountId)
-                .Execute(),
-            server.TestNetFriendBot
-                .FundAccount(sponsorKeyPair.AccountId)
-                .Execute()
+        var resultXdr = Utils.CreateFeeBumpTransactionResultXdr(
+            [Utils.CreatePaymentResult()]
         );
-
-        var sourceAccount = await server.Accounts.Account(sourceKeyPair.AccountId);
-        var transactionBuilder = new TransactionBuilder(sourceAccount);
-        var paymentOperation = new PaymentOperation(
-            sponsorKeyPair,
-            new AssetTypeNative(),
-            "10"
+        using var server = Utils.CreateTestServerWithContent(
+            Utils.BuildSubmitTransactionResponseJson(resultXdr)
         );
-        transactionBuilder.AddOperation(paymentOperation);
-        var transaction = transactionBuilder.Build();
-        transaction.Sign(sourceKeyPair);
-
-        var feeBumpTransaction = TransactionBuilder.BuildFeeBumpTransaction(
-            sponsorKeyPair,
-            transaction
-        );
-        feeBumpTransaction.Sign(sponsorKeyPair);
 
         // Act
-        var response = await server.SubmitTransaction(feeBumpTransaction);
+        var response = await server.SubmitTransaction(
+            CreateDummyFeeBumpTransaction(),
+            new SubmitTransactionOptions { SkipMemoRequiredCheck = true }
+        );
 
         // Assert
         Assert.IsNotNull(response);
@@ -81,40 +82,24 @@ public class FeeBumpOperationTest
     public async Task SubmitTransaction_WithFailedInnerTransaction_ReturnsFailureResult()
     {
         // Arrange
-        Network.UseTestNetwork();
-        using var server = new Server("https://horizon-testnet.stellar.org");
-
-        var sourceKeyPair = KeyPair.Random();
-        var sponsorKeyPair = KeyPair.Random();
-
-        await Task.WhenAll(
-            server.TestNetFriendBot
-                .FundAccount(sourceKeyPair.AccountId)
-                .Execute(),
-            server.TestNetFriendBot
-                .FundAccount(sponsorKeyPair.AccountId)
-                .Execute()
+        var resultXdr = Utils.CreateFeeBumpTransactionResultXdr(
+            [
+                Utils.CreatePaymentResult(
+                    PaymentResultCode.PaymentResultCodeEnum.PAYMENT_UNDERFUNDED),
+            ],
+            TransactionResultCode.TransactionResultCodeEnum.txFAILED);
+        var json = Utils.BuildSubmitFailureResponseJson(
+            resultXdr,
+            "tx_failed",
+            ["op_underfunded"]
         );
-
-        var sourceAccount = await server.Accounts.Account(sourceKeyPair.AccountId);
-        var transactionBuilder = new TransactionBuilder(sourceAccount);
-        var paymentOperation = new PaymentOperation(
-            sponsorKeyPair,
-            new AssetTypeNative(),
-            "100000"
-        );
-        transactionBuilder.AddOperation(paymentOperation);
-        var transaction = transactionBuilder.Build();
-        transaction.Sign(sourceKeyPair);
-
-        var feeBumpTransaction = TransactionBuilder.BuildFeeBumpTransaction(
-            sponsorKeyPair,
-            transaction
-        );
-        feeBumpTransaction.Sign(sponsorKeyPair);
+        using var server = Utils.CreateTestServerWithContent(json, HttpStatusCode.BadRequest);
 
         // Act
-        var response = await server.SubmitTransaction(feeBumpTransaction);
+        var response = await server.SubmitTransaction(
+            CreateDummyFeeBumpTransaction(),
+            new SubmitTransactionOptions { SkipMemoRequiredCheck = true }
+        );
 
         // Assert
         Assert.IsNotNull(response);
@@ -132,49 +117,22 @@ public class FeeBumpOperationTest
     ///     Verifies that BuildFeeBumpTransaction throws Exception when fee is insufficient.
     /// </summary>
     [TestMethod]
-    public async Task BuildFeeBumpTransaction_WithInsufficientFee_ThrowsException()
+    public void BuildFeeBumpTransaction_WithInsufficientFee_ThrowsException()
     {
         // Arrange
-        Network.UseTestNetwork();
-        using var server = new Server("https://horizon-testnet.stellar.org");
-
-        var sourceKeyPair = KeyPair.Random();
-        var sponsorKeyPair = KeyPair.Random();
-
-        await Task.WhenAll(
-            server.TestNetFriendBot
-                .FundAccount(sourceKeyPair.AccountId)
-                .Execute(),
-            server.TestNetFriendBot
-                .FundAccount(sponsorKeyPair.AccountId)
-                .Execute()
-        );
-
-        var sourceAccount = await server.Accounts.Account(sourceKeyPair.AccountId);
+        var account = new Account(Source.AccountId, 0L);
         const uint maxFee = 2000000u;
 
-        var transactionBuilder = new TransactionBuilder(sourceAccount);
-        transactionBuilder.SetFee(maxFee);
-
-        var paymentOperation = new PaymentOperation(
-            sponsorKeyPair,
-            new AssetTypeNative(),
-            "1000"
-        );
-        transactionBuilder.AddOperation(paymentOperation);
-        transactionBuilder.AddOperation(paymentOperation);
-        var transaction = transactionBuilder.Build();
-        transaction.Sign(sourceKeyPair);
+        var tx = new TransactionBuilder(account)
+            .SetFee(maxFee)
+            .AddOperation(new PaymentOperation(Sponsor, new AssetTypeNative(), "1000"))
+            .AddOperation(new PaymentOperation(Sponsor, new AssetTypeNative(), "1000"))
+            .Build();
+        tx.Sign(Source);
 
         // Act & Assert
         var exception = Assert.ThrowsException<Exception>(() =>
-        {
-            TransactionBuilder.BuildFeeBumpTransaction(
-                sponsorKeyPair,
-                transaction,
-                maxFee / 2
-            );
-        });
+            TransactionBuilder.BuildFeeBumpTransaction(Sponsor, tx, maxFee / 2));
 
         Assert.AreEqual($"Invalid fee, it should be at least {maxFee} stroops", exception.Message);
     }
@@ -186,46 +144,31 @@ public class FeeBumpOperationTest
     public async Task BuildFeeBumpTransaction_WithSufficientFee_SubmitsSuccessfully()
     {
         // Arrange
-        Network.UseTestNetwork();
-        using var server = new Server("https://horizon-testnet.stellar.org");
-
-        var sourceKeyPair = KeyPair.Random();
-        var sponsorKeyPair = KeyPair.Random();
-
-        await Task.WhenAll(
-            server.TestNetFriendBot
-                .FundAccount(sourceKeyPair.AccountId)
-                .Execute(),
-            server.TestNetFriendBot
-                .FundAccount(sponsorKeyPair.AccountId)
-                .Execute()
+        var resultXdr = Utils.CreateFeeBumpTransactionResultXdr(
+        [
+            Utils.CreatePaymentResult(),
+            Utils.CreatePaymentResult(),
+        ]);
+        using var server = Utils.CreateTestServerWithContent(
+            Utils.BuildSubmitTransactionResponseJson(resultXdr)
         );
 
-        var sourceAccount = await server.Accounts.Account(sourceKeyPair.AccountId);
+        var account = new Account(Source.AccountId, 0L);
         const uint maxFee = 2000000u;
 
-        var transactionBuilder = new TransactionBuilder(sourceAccount);
-        transactionBuilder.SetFee(maxFee);
+        var tx = new TransactionBuilder(account)
+            .SetFee(maxFee)
+            .AddOperation(new PaymentOperation(Sponsor, new AssetTypeNative(), "1000"))
+            .AddOperation(new PaymentOperation(Sponsor, new AssetTypeNative(), "1000"))
+            .Build();
+        tx.Sign(Source);
 
-        var paymentOperation = new PaymentOperation(
-            sponsorKeyPair,
-            new AssetTypeNative(),
-            "1000"
-        );
-        transactionBuilder.AddOperation(paymentOperation);
-        transactionBuilder.AddOperation(paymentOperation);
-        var transaction = transactionBuilder.Build();
-        transaction.Sign(sourceKeyPair);
-
-        var feeBumpTransaction = TransactionBuilder.BuildFeeBumpTransaction(
-            sponsorKeyPair,
-            transaction,
-            maxFee
-        );
-        feeBumpTransaction.Sign(sponsorKeyPair);
+        var feeBumpTx = TransactionBuilder.BuildFeeBumpTransaction(Sponsor, tx, maxFee);
+        feeBumpTx.Sign(Sponsor);
 
         // Act
-        var response = await server.SubmitTransaction(feeBumpTransaction);
+        var response = await server.SubmitTransaction(feeBumpTx,
+            new SubmitTransactionOptions { SkipMemoRequiredCheck = true });
 
         // Assert
         Assert.IsNotNull(response);
