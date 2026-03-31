@@ -24,6 +24,7 @@ namespace StellarDotnetSdk.Converters;
 /// </remarks>
 public class PredicateJsonConverter : JsonConverter<Predicate>
 {
+    /// <inheritdoc />
     public override Predicate? Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
@@ -107,6 +108,7 @@ public class PredicateJsonConverter : JsonConverter<Predicate>
             "Expected one of: 'and', 'or', 'not', 'unconditional', 'abs_before', or 'rel_before'.");
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, Predicate value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();

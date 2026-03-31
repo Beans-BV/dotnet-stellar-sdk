@@ -10,6 +10,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class ManageSellOfferResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="ManageSellOfferResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR manage sell offer result.</param>
+    /// <returns>A <see cref="ManageSellOfferResult" /> instance representing the operation outcome.</returns>
     public static ManageSellOfferResult FromXdr(Xdr.ManageSellOfferResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -37,11 +42,16 @@ public class ManageSellOfferResult : OperationResult
 /// </summary>
 public class ManageSellOfferSuccess : ManageSellOfferResult
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="ManageSellOfferSuccess" /> class.
+    /// </summary>
+    /// <param name="offersClaimed">The offers that were claimed while executing this operation.</param>
     protected ManageSellOfferSuccess(ClaimAtom[] offersClaimed)
     {
         OffersClaimed = offersClaimed;
     }
 
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 
     /// <summary>
@@ -49,6 +59,11 @@ public class ManageSellOfferSuccess : ManageSellOfferResult
     /// </summary>
     public ClaimAtom[] OffersClaimed { get; }
 
+    /// <summary>
+    ///     Creates the appropriate <see cref="ManageSellOfferSuccess" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR manage offer success result.</param>
+    /// <returns>A <see cref="ManageSellOfferSuccess" /> instance (Created, Updated, or Deleted).</returns>
     public static ManageSellOfferSuccess FromXdr(ManageOfferSuccessResult result)
     {
         return result.Offer.Discriminant.InnerValue switch
@@ -70,6 +85,11 @@ public class ManageSellOfferDeleted : ManageSellOfferSuccess
     {
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="ManageSellOfferDeleted" /> from the given XDR representation.
+    /// </summary>
+    /// <param name="successResult">The XDR manage offer success result.</param>
+    /// <returns>A new <see cref="ManageSellOfferDeleted" /> instance.</returns>
     public static ManageSellOfferDeleted FromXdr(ManageOfferSuccessResult successResult)
     {
         return new ManageSellOfferDeleted(successResult.OffersClaimed.Select(ClaimAtom.FromXdr).ToArray());
@@ -91,6 +111,11 @@ public class ManageSellOfferCreated : ManageSellOfferSuccess
     /// </summary>
     public OfferEntry Offer { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="ManageSellOfferCreated" /> from the given XDR representation.
+    /// </summary>
+    /// <param name="successResult">The XDR manage offer success result.</param>
+    /// <returns>A new <see cref="ManageSellOfferCreated" /> instance.</returns>
     public static ManageSellOfferCreated FromXdr(ManageOfferSuccessResult successResult)
     {
         return new ManageSellOfferCreated(
@@ -114,6 +139,11 @@ public class ManageSellOfferUpdated : ManageSellOfferSuccess
     /// </summary>
     public OfferEntry Offer { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="ManageSellOfferUpdated" /> from the given XDR representation.
+    /// </summary>
+    /// <param name="successResult">The XDR manage offer success result.</param>
+    /// <returns>A new <see cref="ManageSellOfferUpdated" /> instance.</returns>
     public static ManageSellOfferUpdated FromXdr(ManageOfferSuccessResult successResult)
     {
         return new ManageSellOfferUpdated(

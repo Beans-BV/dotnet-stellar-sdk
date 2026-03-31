@@ -5,10 +5,19 @@ using System.Text;
 
 namespace StellarDotnetSdk;
 
+/// <summary>
+///     General-purpose utility methods for byte/hex conversion, hashing, and array manipulation
+///     used throughout the Stellar SDK.
+/// </summary>
 public static class Util
 {
     private static readonly char[] HexArray = "0123456789ABCDEF".ToCharArray();
 
+    /// <summary>
+    ///     Converts a byte array to its uppercase hexadecimal string representation.
+    /// </summary>
+    /// <param name="bytes">The byte array to convert.</param>
+    /// <returns>The hexadecimal string representation.</returns>
     public static string BytesToHex(byte[] bytes)
     {
         var hexChars = new char[bytes.Length * 2];
@@ -22,6 +31,11 @@ public static class Util
         return new string(hexChars);
     }
 
+    /// <summary>
+    ///     Converts a hexadecimal string to its byte array representation.
+    /// </summary>
+    /// <param name="s">The hexadecimal string to convert.</param>
+    /// <returns>The decoded byte array.</returns>
     public static byte[] HexToBytes(string s)
     {
         var len = s.Length;
@@ -82,6 +96,12 @@ public static class Util
         return Encoding.Default.GetString(bytes).Split('\0')[0];
     }
 
+    /// <summary>
+    ///     Determines whether two byte arrays are identical (same length and content).
+    /// </summary>
+    /// <param name="a1">The first byte array.</param>
+    /// <param name="a2">The second byte array.</param>
+    /// <returns><c>true</c> if the arrays are identical; otherwise, <c>false</c>.</returns>
     public static bool IsIdentical(this byte[] a1, byte[] a2)
     {
         if (a1.Length != a2.Length)
@@ -100,6 +120,11 @@ public static class Util
         }
     }
 
+    /// <summary>
+    ///     Converts a 64-bit unsigned integer to a big-endian byte array.
+    /// </summary>
+    /// <param name="value">The unsigned 64-bit integer to convert.</param>
+    /// <returns>An 8-byte big-endian byte array.</returns>
     public static byte[] ToByteArray(ulong value)
     {
         var result = new byte[8];
@@ -112,6 +137,11 @@ public static class Util
         return result;
     }
 
+    /// <summary>
+    ///     Computes an FNV-1a hash of the given byte array.
+    /// </summary>
+    /// <param name="data">The byte array to hash.</param>
+    /// <returns>A 32-bit hash code.</returns>
     public static int ComputeByteArrayHash(params byte[] data)
     {
         unchecked

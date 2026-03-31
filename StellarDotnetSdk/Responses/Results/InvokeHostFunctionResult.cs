@@ -8,6 +8,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class InvokeHostFunctionResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="InvokeHostFunctionResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR invoke host function result.</param>
+    /// <returns>An <see cref="InvokeHostFunctionResult" /> instance representing the operation outcome.</returns>
     public static InvokeHostFunctionResult FromXdr(Xdr.InvokeHostFunctionResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -34,6 +39,7 @@ public class InvokeHostFunctionResult : OperationResult
 /// </summary>
 public class InvokeHostFunctionSuccess : InvokeHostFunctionResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 

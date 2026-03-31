@@ -48,6 +48,10 @@ public class RevokeSignerSponsorshipOperation : Operation
     /// </summary>
     public SignerKey SignerKey { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         return new Xdr.Operation.OperationBody
@@ -66,6 +70,11 @@ public class RevokeSignerSponsorshipOperation : Operation
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="RevokeSignerSponsorshipOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="revokeSignerSponsorshipOp">The XDR RevokeSponsorshipOpSigner object.</param>
+    /// <returns>A new <see cref="RevokeSignerSponsorshipOperation" /> instance.</returns>
     public static RevokeSignerSponsorshipOperation FromXdr(
         RevokeSponsorshipOp.RevokeSponsorshipOpSigner revokeSignerSponsorshipOp)
     {

@@ -14,7 +14,14 @@ public class LedgerEntryTtl : LedgerEntry
         LiveUntilLedgerSequence = liveUntilLedgerSequence;
     }
 
+    /// <summary>
+    ///     The SHA-256 hash of the ledger key for the entry this TTL tracks.
+    /// </summary>
     public byte[] KeyHash { get; }
+
+    /// <summary>
+    ///     The ledger sequence number until which the associated entry is live.
+    /// </summary>
     public uint LiveUntilLedgerSequence { get; }
 
     /// <summary>

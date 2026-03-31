@@ -6,6 +6,9 @@
 /// </summary>
 public class GetTransactionsResponse
 {
+    /// <summary>
+    ///     The array of transactions matching the query criteria.
+    /// </summary>
     public TransactionInfo[]? Transactions { get; init; }
 
     /// <summary>

@@ -15,8 +15,14 @@ public class DiagnosticEvent
         Event = @event;
     }
 
+    /// <summary>
+    ///     Indicates whether this diagnostic event was emitted during a successful contract call.
+    /// </summary>
     public bool InSuccessfulContractCall { get; }
 
+    /// <summary>
+    ///     The underlying contract event data.
+    /// </summary>
     public ContractEvent Event { get; }
 
     /// <summary>

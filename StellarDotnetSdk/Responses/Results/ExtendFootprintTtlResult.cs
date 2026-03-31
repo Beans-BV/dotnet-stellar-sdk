@@ -9,6 +9,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class ExtendFootprintTtlResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="ExtendFootprintTtlResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR extend footprint TTL result.</param>
+    /// <returns>An <see cref="ExtendFootprintTtlResult" /> instance representing the operation outcome.</returns>
     public static ExtendFootprintTtlResult FromXdr(ExtendFootprintTTLResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -31,6 +36,7 @@ public class ExtendFootprintTtlResult : OperationResult
 /// </summary>
 public class ExtendFootprintTtlSuccess : ExtendFootprintTtlResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 

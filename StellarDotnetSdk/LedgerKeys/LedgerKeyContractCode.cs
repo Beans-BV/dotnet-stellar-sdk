@@ -31,8 +31,14 @@ public class LedgerKeyContractCode : LedgerKey
         Hash = hash;
     }
 
+    /// <summary>
+    ///     The 32-byte SHA-256 hash of the contract WASM bytecode.
+    /// </summary>
     public byte[] Hash { get; }
 
+    /// <summary>
+    ///     Serializes this ledger key to its XDR representation.
+    /// </summary>
     public override Xdr.LedgerKey ToXdr()
     {
         return new Xdr.LedgerKey
@@ -46,6 +52,10 @@ public class LedgerKeyContractCode : LedgerKey
         };
     }
 
+    /// <summary>
+    ///     Deserializes a <see cref="LedgerKeyContractCode" /> from its XDR representation.
+    /// </summary>
+    /// <param name="xdr">The XDR ledger key contract code object.</param>
     public static LedgerKeyContractCode FromXdr(Xdr.LedgerKey.LedgerKeyContractCode xdr)
     {
         return new LedgerKeyContractCode(Convert.ToHexString(xdr.Hash.InnerValue));

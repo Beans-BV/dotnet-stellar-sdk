@@ -15,10 +15,26 @@ public class SimplePaymentResult
         Amount = amount;
     }
 
+    /// <summary>
+    ///     The destination account that received the payment.
+    /// </summary>
     public KeyPair Destination { get; }
+
+    /// <summary>
+    ///     The asset that was sent.
+    /// </summary>
     public Asset Asset { get; }
+
+    /// <summary>
+    ///     The amount of the asset that was sent.
+    /// </summary>
     public string Amount { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="SimplePaymentResult" /> from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR simple payment result.</param>
+    /// <returns>A new <see cref="SimplePaymentResult" /> instance.</returns>
     public static SimplePaymentResult FromXdr(Xdr.SimplePaymentResult result)
     {
         return new SimplePaymentResult(

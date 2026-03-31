@@ -13,8 +13,17 @@ public class ConfigSettingContractCostParamsMemoryBytes : LedgerEntryConfigSetti
         ParamEntries = paramEntries;
     }
 
+    /// <summary>
+    ///     The array of cost parameter entries, one per cost type, defining the memory byte cost model.
+    /// </summary>
     public ConfigSettingContractCostParamEntry[] ParamEntries { get; }
 
+    /// <summary>
+    ///     Creates a <see cref="ConfigSettingContractCostParamsMemoryBytes" /> from an XDR
+    ///     <see cref="ContractCostParams" /> object.
+    /// </summary>
+    /// <param name="xdrParams">The XDR contract cost parameters.</param>
+    /// <returns>A <see cref="ConfigSettingContractCostParamsMemoryBytes" /> instance.</returns>
     public static ConfigSettingContractCostParamsMemoryBytes FromXdr(ContractCostParams xdrParams)
     {
         return new ConfigSettingContractCostParamsMemoryBytes(xdrParams.InnerValue

@@ -20,9 +20,13 @@ public class ClaimPredicateOr : ClaimPredicate
         RightPredicate = rightPredicate;
     }
 
+    /// <summary>Gets the first predicate.</summary>
     public ClaimPredicate LeftPredicate { get; }
+
+    /// <summary>Gets the second predicate.</summary>
     public ClaimPredicate RightPredicate { get; }
 
+    /// <inheritdoc />
     public override Xdr.ClaimPredicate ToXdr()
     {
         return new Xdr.ClaimPredicate

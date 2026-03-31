@@ -23,6 +23,9 @@ namespace StellarDotnetSdk.Operations;
 /// </summary>
 public class ChangeTrustOperation : Operation
 {
+    /// <summary>
+    ///     The maximum trustline limit, equal to the maximum value of a signed 64-bit integer in stroops.
+    /// </summary>
     public const string MaxLimit = "922337203685.4775807";
 
     /// <summary>
@@ -102,6 +105,10 @@ public class ChangeTrustOperation : Operation
     /// </summary>
     public string Limit { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override xdr_Operation.OperationBody ToOperationBody()
     {
         return new xdr_Operation.OperationBody
@@ -115,6 +122,11 @@ public class ChangeTrustOperation : Operation
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="ChangeTrustOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="changeTrustOp">The XDR ChangeTrustOp object.</param>
+    /// <returns>A new <see cref="ChangeTrustOperation" /> instance.</returns>
     public static ChangeTrustOperation FromXdr(ChangeTrustOp changeTrustOp)
     {
         switch (changeTrustOp.Line.Discriminant.InnerValue)

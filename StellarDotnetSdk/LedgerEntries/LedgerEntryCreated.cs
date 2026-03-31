@@ -10,6 +10,10 @@ public class LedgerEntryCreated : LedgerEntryChange
     /// </summary>
     public readonly LedgerEntry CreatedEntry;
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="LedgerEntryCreated" /> class from an XDR ledger entry.
+    /// </summary>
+    /// <param name="createdEntry">The XDR ledger entry that was created.</param>
     public LedgerEntryCreated(Xdr.LedgerEntry createdEntry)
     {
         CreatedEntry = LedgerEntry.FromXdr(createdEntry);

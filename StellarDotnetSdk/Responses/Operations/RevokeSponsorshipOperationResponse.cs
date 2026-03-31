@@ -10,6 +10,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class RevokeSponsorshipOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 18;
 
     /// <summary>

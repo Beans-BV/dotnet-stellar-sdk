@@ -16,10 +16,27 @@ public class ConfigSettingContractCostParamEntry
         LinearTerm = linearTerm;
     }
 
+    /// <summary>
+    ///     Reserved for future use (e.g. higher-order polynomial terms).
+    /// </summary>
     public ExtensionPoint ExtensionPoint { get; }
+
+    /// <summary>
+    ///     The constant term of the cost model for this cost type.
+    /// </summary>
     public long ConstTerm { get; }
+
+    /// <summary>
+    ///     The linear term of the cost model for this cost type.
+    /// </summary>
     public long LinearTerm { get; }
 
+    /// <summary>
+    ///     Creates a <see cref="ConfigSettingContractCostParamEntry" /> from an XDR
+    ///     <see cref="ContractCostParamEntry" /> object.
+    /// </summary>
+    /// <param name="xdrEntry">The XDR cost parameter entry.</param>
+    /// <returns>A <see cref="ConfigSettingContractCostParamEntry" /> instance.</returns>
     public static ConfigSettingContractCostParamEntry FromXdr(ContractCostParamEntry xdrEntry)
     {
         return new ConfigSettingContractCostParamEntry(

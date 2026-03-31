@@ -90,6 +90,10 @@ public class PathPaymentStrictReceiveOperation : Operation
     /// </summary>
     public Asset[] Path { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override xdr_Operation.OperationBody ToOperationBody()
     {
         return new xdr_Operation.OperationBody
@@ -108,6 +112,11 @@ public class PathPaymentStrictReceiveOperation : Operation
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="PathPaymentStrictReceiveOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="paymentStrictReceiveOp">The XDR PathPaymentStrictReceiveOp object.</param>
+    /// <returns>A new <see cref="PathPaymentStrictReceiveOperation" /> instance.</returns>
     public static PathPaymentStrictReceiveOperation FromXdr(PathPaymentStrictReceiveOp paymentStrictReceiveOp)
     {
         return new PathPaymentStrictReceiveOperation(

@@ -12,6 +12,7 @@ namespace StellarDotnetSdk.Converters;
 /// </summary>
 public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<LiquidityPoolClaimableAssetAmount>
 {
+    /// <inheritdoc />
     public override LiquidityPoolClaimableAssetAmount Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
@@ -64,6 +65,7 @@ public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<Liqu
         };
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, LiquidityPoolClaimableAssetAmount value,
         JsonSerializerOptions options)
     {

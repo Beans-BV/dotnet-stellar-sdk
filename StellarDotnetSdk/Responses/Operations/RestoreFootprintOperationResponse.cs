@@ -6,5 +6,6 @@
 /// </summary>
 public class RestoreFootprintOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 26;
 }

@@ -23,44 +23,184 @@ namespace StellarDotnetSdk.Sep.Sep0009;
 /// </remarks>
 public sealed record NaturalPersonKycFields
 {
-    // Field keys
+    /// <summary>
+    ///     Field key for the <c>last_name</c> field as defined in SEP-0009.
+    /// </summary>
     public const string LastNameFieldKey = "last_name";
+
+    /// <summary>
+    ///     Field key for the <c>family_name</c> field as defined in SEP-0009. Alias for <see cref="LastNameFieldKey" />.
+    /// </summary>
     public const string FamilyNameFieldKey = "family_name";
+
+    /// <summary>
+    ///     Field key for the <c>first_name</c> field as defined in SEP-0009.
+    /// </summary>
     public const string FirstNameFieldKey = "first_name";
+
+    /// <summary>
+    ///     Field key for the <c>given_name</c> field as defined in SEP-0009. Alias for <see cref="FirstNameFieldKey" />.
+    /// </summary>
     public const string GivenNameFieldKey = "given_name";
+
+    /// <summary>
+    ///     Field key for the <c>additional_name</c> field (middle name or other additional name) as defined in SEP-0009.
+    /// </summary>
     public const string AdditionalNameFieldKey = "additional_name";
+
+    /// <summary>
+    ///     Field key for the <c>address_country_code</c> field (ISO 3166-1 alpha-3 country code) as defined in SEP-0009.
+    /// </summary>
     public const string AddressCountryCodeFieldKey = "address_country_code";
+
+    /// <summary>
+    ///     Field key for the <c>state_or_province</c> field as defined in SEP-0009.
+    /// </summary>
     public const string StateOrProvinceFieldKey = "state_or_province";
+
+    /// <summary>
+    ///     Field key for the <c>city</c> field as defined in SEP-0009.
+    /// </summary>
     public const string CityFieldKey = "city";
+
+    /// <summary>
+    ///     Field key for the <c>postal_code</c> field as defined in SEP-0009.
+    /// </summary>
     public const string PostalCodeFieldKey = "postal_code";
+
+    /// <summary>
+    ///     Field key for the <c>address</c> field (full address as multi-line string) as defined in SEP-0009.
+    /// </summary>
     public const string AddressFieldKey = "address";
+
+    /// <summary>
+    ///     Field key for the <c>mobile_number</c> field (E.164 format) as defined in SEP-0009.
+    /// </summary>
     public const string MobileNumberFieldKey = "mobile_number";
+
+    /// <summary>
+    ///     Field key for the <c>mobile_number_format</c> field as defined in SEP-0009.
+    /// </summary>
     public const string MobileNumberFormatFieldKey = "mobile_number_format";
+
+    /// <summary>
+    ///     Field key for the <c>email_address</c> field as defined in SEP-0009.
+    /// </summary>
     public const string EmailAddressFieldKey = "email_address";
+
+    /// <summary>
+    ///     Field key for the <c>birth_date</c> field (date of birth in YYYY-MM-DD format) as defined in SEP-0009.
+    /// </summary>
     public const string BirthDateFieldKey = "birth_date";
+
+    /// <summary>
+    ///     Field key for the <c>birth_place</c> field as defined in SEP-0009.
+    /// </summary>
     public const string BirthPlaceFieldKey = "birth_place";
+
+    /// <summary>
+    ///     Field key for the <c>birth_country_code</c> field (ISO 3166-1 alpha-3 code) as defined in SEP-0009.
+    /// </summary>
     public const string BirthCountryCodeFieldKey = "birth_country_code";
+
+    /// <summary>
+    ///     Field key for the <c>tax_id</c> field (e.g., SSN in the US) as defined in SEP-0009.
+    /// </summary>
     public const string TaxIdFieldKey = "tax_id";
+
+    /// <summary>
+    ///     Field key for the <c>tax_id_name</c> field (e.g., SSN or ITIN in the US) as defined in SEP-0009.
+    /// </summary>
     public const string TaxIdNameFieldKey = "tax_id_name";
+
+    /// <summary>
+    ///     Field key for the <c>occupation</c> field (ISCO code) as defined in SEP-0009.
+    /// </summary>
     public const string OccupationFieldKey = "occupation";
+
+    /// <summary>
+    ///     Field key for the <c>employer_name</c> field as defined in SEP-0009.
+    /// </summary>
     public const string EmployerNameFieldKey = "employer_name";
+
+    /// <summary>
+    ///     Field key for the <c>employer_address</c> field as defined in SEP-0009.
+    /// </summary>
     public const string EmployerAddressFieldKey = "employer_address";
+
+    /// <summary>
+    ///     Field key for the <c>language_code</c> field (ISO 639-1 code) as defined in SEP-0009.
+    /// </summary>
     public const string LanguageCodeFieldKey = "language_code";
+
+    /// <summary>
+    ///     Field key for the <c>id_type</c> field (e.g., passport, drivers_license) as defined in SEP-0009.
+    /// </summary>
     public const string IdTypeFieldKey = "id_type";
+
+    /// <summary>
+    ///     Field key for the <c>id_country_code</c> field (ISO 3166-1 alpha-3 code) as defined in SEP-0009.
+    /// </summary>
     public const string IdCountryCodeFieldKey = "id_country_code";
+
+    /// <summary>
+    ///     Field key for the <c>id_issue_date</c> field as defined in SEP-0009.
+    /// </summary>
     public const string IdIssueDateFieldKey = "id_issue_date";
+
+    /// <summary>
+    ///     Field key for the <c>id_expiration_date</c> field as defined in SEP-0009.
+    /// </summary>
     public const string IdExpirationDateFieldKey = "id_expiration_date";
+
+    /// <summary>
+    ///     Field key for the <c>id_number</c> field (passport or ID number) as defined in SEP-0009.
+    /// </summary>
     public const string IdNumberFieldKey = "id_number";
+
+    /// <summary>
+    ///     Field key for the <c>ip_address</c> field as defined in SEP-0009.
+    /// </summary>
     public const string IpAddressFieldKey = "ip_address";
+
+    /// <summary>
+    ///     Field key for the <c>sex</c> field (male, female, or other) as defined in SEP-0009.
+    /// </summary>
     public const string SexFieldKey = "sex";
+
+    /// <summary>
+    ///     Field key for the <c>referral_id</c> field as defined in SEP-0009.
+    /// </summary>
     public const string ReferralIdFieldKey = "referral_id";
 
-    // File keys
+    /// <summary>
+    ///     File key for the <c>photo_id_front</c> attachment (front of photo ID or passport) as defined in SEP-0009.
+    /// </summary>
     public const string PhotoIdFrontFileKey = "photo_id_front";
+
+    /// <summary>
+    ///     File key for the <c>photo_id_back</c> attachment (back of photo ID or passport) as defined in SEP-0009.
+    /// </summary>
     public const string PhotoIdBackFileKey = "photo_id_back";
+
+    /// <summary>
+    ///     File key for the <c>notary_approval_of_photo_id</c> attachment as defined in SEP-0009.
+    /// </summary>
     public const string NotaryApprovalOfPhotoIdFileKey = "notary_approval_of_photo_id";
+
+    /// <summary>
+    ///     File key for the <c>photo_proof_residence</c> attachment (utility bill or bank statement) as defined in SEP-0009.
+    /// </summary>
     public const string PhotoProofResidenceFileKey = "photo_proof_residence";
+
+    /// <summary>
+    ///     File key for the <c>proof_of_income</c> attachment as defined in SEP-0009.
+    /// </summary>
     public const string ProofOfIncomeFileKey = "proof_of_income";
+
+    /// <summary>
+    ///     File key for the <c>proof_of_liveness</c> attachment (video or image liveness proof) as defined in SEP-0009.
+    /// </summary>
     public const string ProofOfLivenessFileKey = "proof_of_liveness";
 
     /// <summary>

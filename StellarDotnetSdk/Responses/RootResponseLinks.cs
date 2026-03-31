@@ -4,6 +4,9 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Responses;
 
+/// <summary>
+///     Contains the navigational links returned by the Horizon root endpoint, providing URIs for all available API resources.
+/// </summary>
 public sealed class RootResponseLinks
 {
     /// <summary>

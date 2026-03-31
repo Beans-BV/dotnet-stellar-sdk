@@ -10,6 +10,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class CreatePassiveOfferOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 4;
 
     /// <summary>

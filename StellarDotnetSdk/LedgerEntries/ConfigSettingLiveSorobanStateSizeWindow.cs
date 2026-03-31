@@ -14,8 +14,16 @@ public class ConfigSettingLiveSorobanStateSizeWindow : LedgerEntryConfigSetting
         InnerValue = value;
     }
 
+    /// <summary>
+    ///     The array of live Soroban state size snapshots used in rent fee calculations.
+    /// </summary>
     public ulong[] InnerValue { get; }
 
+    /// <summary>
+    ///     Creates a <see cref="ConfigSettingLiveSorobanStateSizeWindow" /> from an XDR <c>Uint64[]</c> array.
+    /// </summary>
+    /// <param name="xdrConfig">The XDR array of Uint64 values.</param>
+    /// <returns>A <see cref="ConfigSettingLiveSorobanStateSizeWindow" /> instance.</returns>
     public static ConfigSettingLiveSorobanStateSizeWindow FromXdr(Uint64[] xdrConfig)
     {
         return new ConfigSettingLiveSorobanStateSizeWindow(

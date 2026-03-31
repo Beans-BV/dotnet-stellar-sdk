@@ -14,6 +14,11 @@ public class OperationResult
     /// </summary>
     public virtual bool IsSuccess => false;
 
+    /// <summary>
+    ///     Creates the appropriate <see cref="OperationResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR operation result.</param>
+    /// <returns>An <see cref="OperationResult" /> instance representing the operation outcome.</returns>
     public static OperationResult FromXdr(Xdr.OperationResult result)
     {
         return result.Discriminant.InnerValue switch

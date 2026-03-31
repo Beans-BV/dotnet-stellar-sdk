@@ -10,18 +10,64 @@ namespace StellarDotnetSdk.Sep.Sep0009;
 /// </summary>
 public sealed record CardKycFields
 {
-    // Field keys
+    /// <summary>
+    ///     Key prefix for all card fields (<c>"card."</c>) as defined in SEP-0009.
+    /// </summary>
     public const string KeyPrefix = "card.";
+
+    /// <summary>
+    ///     Field key for the <c>card.number</c> field as defined in SEP-0009.
+    /// </summary>
     public const string NumberFieldKey = KeyPrefix + "number";
+
+    /// <summary>
+    ///     Field key for the <c>card.expiration_date</c> field (YY-MM format) as defined in SEP-0009.
+    /// </summary>
     public const string ExpirationDateFieldKey = KeyPrefix + "expiration_date";
+
+    /// <summary>
+    ///     Field key for the <c>card.cvc</c> field (digits on the back of the card) as defined in SEP-0009.
+    /// </summary>
     public const string CvcFieldKey = KeyPrefix + "cvc";
+
+    /// <summary>
+    ///     Field key for the <c>card.holder_name</c> field as defined in SEP-0009.
+    /// </summary>
     public const string HolderNameFieldKey = KeyPrefix + "holder_name";
+
+    /// <summary>
+    ///     Field key for the <c>card.network</c> field (e.g., Visa, Mastercard) as defined in SEP-0009.
+    /// </summary>
     public const string NetworkFieldKey = KeyPrefix + "network";
+
+    /// <summary>
+    ///     Field key for the <c>card.postal_code</c> field (billing address postal code) as defined in SEP-0009.
+    /// </summary>
     public const string PostalCodeFieldKey = KeyPrefix + "postal_code";
+
+    /// <summary>
+    ///     Field key for the <c>card.country_code</c> field (ISO 3166-1 alpha-2 code) as defined in SEP-0009.
+    /// </summary>
     public const string CountryCodeFieldKey = KeyPrefix + "country_code";
+
+    /// <summary>
+    ///     Field key for the <c>card.state_or_province</c> field (ISO 3166-2 format) as defined in SEP-0009.
+    /// </summary>
     public const string StateOrProvinceFieldKey = KeyPrefix + "state_or_province";
+
+    /// <summary>
+    ///     Field key for the <c>card.city</c> field as defined in SEP-0009.
+    /// </summary>
     public const string CityFieldKey = KeyPrefix + "city";
+
+    /// <summary>
+    ///     Field key for the <c>card.address</c> field (full billing address) as defined in SEP-0009.
+    /// </summary>
     public const string AddressFieldKey = KeyPrefix + "address";
+
+    /// <summary>
+    ///     Field key for the <c>card.token</c> field (external payment system token) as defined in SEP-0009.
+    /// </summary>
     public const string TokenFieldKey = KeyPrefix + "token";
 
     /// <summary>

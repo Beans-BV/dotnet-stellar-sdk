@@ -38,9 +38,16 @@ public class Claimant
         Predicate = predicate;
     }
 
+    /// <summary>Gets the destination account that can claim the balance.</summary>
     public KeyPair Destination { get; }
+
+    /// <summary>Gets the predicate defining when this claimant can claim the balance.</summary>
     public ClaimPredicate Predicate { get; }
 
+    /// <summary>
+    ///     Converts this claimant to its XDR representation.
+    /// </summary>
+    /// <returns>An XDR <see cref="Xdr.Claimant" /> object.</returns>
     public Xdr.Claimant ToXdr()
     {
         return new Xdr.Claimant
@@ -54,6 +61,11 @@ public class Claimant
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="Claimant" /> from an XDR claimant object.
+    /// </summary>
+    /// <param name="xdr">The XDR claimant to convert.</param>
+    /// <returns>A new <see cref="Claimant" /> instance.</returns>
     public static Claimant FromXdr(Xdr.Claimant xdr)
     {
         var destination = KeyPair.FromXdrPublicKey(xdr.V0.Destination.InnerValue);

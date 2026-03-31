@@ -50,23 +50,54 @@ public class LedgerEntryAccount : LedgerEntry
         Thresholds = thresholds;
     }
 
+    /// <summary>
+    ///     The master public key for this account.
+    /// </summary>
     public KeyPair Account { get; }
+
+    /// <summary>
+    ///     The account balance in stroops (1 XLM = 10,000,000 stroops).
+    /// </summary>
     public long Balance { get; }
+
+    /// <summary>
+    ///     The last sequence number used for this account.
+    /// </summary>
     public long SequenceNumber { get; }
+
+    /// <summary>
+    ///     The number of sub-entries this account has, which drives the reserve requirement.
+    /// </summary>
     public uint NumberSubEntries { get; }
 
     /// <summary>
-    ///     The generated <see cref="Xdr.AccountEntry.InflationDest" /> field may in fact be null.
+    ///     The account to vote for during inflation. May be <c>null</c>.
     /// </summary>
     public KeyPair? InflationDest { get; }
 
+    /// <summary>
+    ///     Account flags (see <c>AccountFlags</c>), such as AUTH_REQUIRED, AUTH_REVOCABLE, and AUTH_IMMUTABLE.
+    /// </summary>
     public uint Flags { get; }
+
+    /// <summary>
+    ///     Version 1 extension fields for this account entry, if present.
+    /// </summary>
     public AccountEntryExtensionV1? AccountExtensionV1 { get; private set; }
 
+    /// <summary>
+    ///     The home domain of the account, used for reverse federation and memo lookup (max 32 characters).
+    /// </summary>
     public string HomeDomain { get; }
 
+    /// <summary>
+    ///     Thresholds stored as unsigned bytes: [weight of master | low | medium | high].
+    /// </summary>
     public byte[] Thresholds { get; }
 
+    /// <summary>
+    ///     The list of additional signers for this account.
+    /// </summary>
     public Signer[] Signers { get; }
 
     /// <summary>

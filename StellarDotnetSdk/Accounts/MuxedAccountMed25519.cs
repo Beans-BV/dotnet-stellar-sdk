@@ -22,8 +22,13 @@ public class MuxedAccountMed25519 : IAccountId
         Key = key ?? throw new ArgumentNullException(nameof(key));
     }
 
+    /// <summary>Gets the 64-bit numeric identifier that distinguishes this muxed account.</summary>
     public ulong Id { get; }
+
+    /// <summary>Gets the underlying Ed25519 <see cref="KeyPair" /> of the muxed account.</summary>
     public KeyPair Key { get; }
+
+    /// <summary>Gets the raw Ed25519 public key bytes of the underlying account.</summary>
     public byte[] PublicKey => Key.PublicKey;
 
     /// <summary>

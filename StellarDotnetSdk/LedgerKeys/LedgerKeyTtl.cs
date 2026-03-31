@@ -26,8 +26,14 @@ public class LedgerKeyTtl : LedgerKey
         Key = key;
     }
 
+    /// <summary>
+    ///     The 32-byte hash of the associated Soroban contract data or code entry.
+    /// </summary>
     public byte[] Key { get; }
 
+    /// <summary>
+    ///     Serializes this ledger key to its XDR representation.
+    /// </summary>
     public override Xdr.LedgerKey ToXdr()
     {
         return new Xdr.LedgerKey
@@ -41,6 +47,10 @@ public class LedgerKeyTtl : LedgerKey
         };
     }
 
+    /// <summary>
+    ///     Deserializes a <see cref="LedgerKeyTtl" /> from its XDR representation.
+    /// </summary>
+    /// <param name="xdr">The XDR ledger key TTL object.</param>
     public static LedgerKeyTtl FromXdr(Xdr.LedgerKey.LedgerKeyTtl xdr)
     {
         return new LedgerKeyTtl(Convert.ToBase64String(xdr.KeyHash.InnerValue));

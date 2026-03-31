@@ -7,10 +7,19 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Builds requests to the Horizon <c>/claimable_balances</c> endpoint for retrieving
+///     claimable balance details and listing claimable balances.
+/// </summary>
 public class
     ClaimableBalancesRequestBuilder : RequestBuilderExecutePageable<ClaimableBalancesRequestBuilder,
     ClaimableBalanceResponse>
 {
+    /// <summary>
+    ///     Initializes a new <see cref="ClaimableBalancesRequestBuilder" />.
+    /// </summary>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public ClaimableBalancesRequestBuilder(Uri serverUri, HttpClient httpClient)
         : base(serverUri, "claimable_balances", httpClient)
     {
@@ -50,6 +59,11 @@ public class
         return this;
     }
 
+    /// <summary>
+    ///     Requests a single claimable balance resource from the specified URI.
+    /// </summary>
+    /// <param name="uri">The URI of the claimable balance resource.</param>
+    /// <returns>The <see cref="ClaimableBalanceResponse" />.</returns>
     public async Task<ClaimableBalanceResponse> ClaimableBalance(Uri uri)
     {
         var responseHandler = new ResponseHandler<ClaimableBalanceResponse>();
@@ -57,6 +71,11 @@ public class
         return await responseHandler.HandleResponse(response);
     }
 
+    /// <summary>
+    ///     Requests <c>GET /claimable_balances/{balanceId}</c>.
+    /// </summary>
+    /// <param name="balanceId">The ID of the claimable balance to fetch.</param>
+    /// <returns>The <see cref="ClaimableBalanceResponse" />.</returns>
     public Task<ClaimableBalanceResponse> ClaimableBalance(string balanceId)
     {
         SetSegments("claimable_balances", balanceId);

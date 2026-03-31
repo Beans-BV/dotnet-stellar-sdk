@@ -15,8 +15,14 @@ public class TransactionEvent
         Event = @event;
     }
 
+    /// <summary>
+    ///     The stage during transaction processing at which this event was emitted.
+    /// </summary>
     public TransactionEventStage Stage { get; }
 
+    /// <summary>
+    ///     The underlying contract event data.
+    /// </summary>
     public ContractEvent Event { get; }
 
     /// <summary>

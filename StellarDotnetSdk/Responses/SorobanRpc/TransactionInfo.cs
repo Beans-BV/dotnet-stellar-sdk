@@ -80,6 +80,9 @@ public class TransactionInfo
     [Obsolete("Deprecated in favor of Events.DiagnosticEventsXdr. Will be removed in the next version.")]
     public string[]? DiagnosticEventsXdr { get; init; }
 
+    /// <summary>
+    ///     (optional) The events emitted during the transaction execution, including diagnostic, transaction, and contract events.
+    /// </summary>
     public Events? Events { get; init; }
 
     /// <summary>
@@ -87,6 +90,10 @@ public class TransactionInfo
     /// </summary>
     public string? TxHash { get; init; }
 
+    /// <summary>
+    ///     (optional) The return value of the Soroban contract invocation, extracted from the transaction metadata.
+    ///     Only present for successful transactions that invoked a contract.
+    /// </summary>
     public SCVal? ResultValue
     {
         get
@@ -125,6 +132,10 @@ public class TransactionInfo
         }
     }
 
+    /// <summary>
+    ///     (optional) The hex-encoded WASM hash returned from a contract deployment transaction.
+    ///     Only present when the result value is of type SCBytes.
+    /// </summary>
     public string? WasmHash
     {
         get
@@ -138,6 +149,10 @@ public class TransactionInfo
         }
     }
 
+    /// <summary>
+    ///     (optional) The StrKey contract ID (C...) of a newly created contract.
+    ///     Only present when the result value is of type ScContractId.
+    /// </summary>
     public string? CreatedContractId
     {
         get

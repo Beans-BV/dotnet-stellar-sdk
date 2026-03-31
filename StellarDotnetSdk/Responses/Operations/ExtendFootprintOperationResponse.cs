@@ -8,6 +8,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class ExtendFootprintOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 25;
 
     /// <summary>

@@ -33,26 +33,39 @@ public class SseEventSource : IEventSource, IDisposable
         _eventSource.MessageReceived += MessageReceivedEventHandler;
     }
 
+    /// <summary>Gets the custom HTTP headers (obsolete, not supported by the underlying implementation).</summary>
     [Obsolete]
     public NameValueCollection Headers { get; }
 
+    /// <summary>Gets the last event ID received from the server, used for reconnection.</summary>
     public string LastEventId { get; private set; }
 
+    /// <summary>Gets the message types to filter (obsolete, not supported by the underlying implementation).</summary>
     [Obsolete]
     public string[] MessageTypes { get; }
 
+    /// <summary>Gets the current connection state of the event source.</summary>
     public EventSource.EventSourceState ReadyState { get; private set; }
 
+    /// <summary>Gets or sets the connection timeout in milliseconds.</summary>
     public int Timeout { get; set; }
 
+    /// <summary>Gets or sets the URI of the SSE endpoint.</summary>
     public Uri Url { get; set; }
 
+    /// <summary>Occurs when an error is encountered during the SSE connection.</summary>
     public event EventHandler<EventSource.ServerSentErrorEventArgs> Error;
 
+    /// <summary>Occurs when a message is received from the SSE endpoint.</summary>
     public event EventHandler<EventSource.ServerSentEventArgs> Message;
 
+    /// <summary>Occurs when the connection state changes.</summary>
     public event EventHandler<EventSource.StateChangeEventArgs> StateChange;
 
+    /// <summary>
+    ///     Initiates the SSE connection to the server asynchronously.
+    /// </summary>
+    /// <returns>A task that completes when the connection is established.</returns>
     public async Task Connect()
     {
         await _eventSource.StartAsync().ConfigureAwait(false);

@@ -3,8 +3,18 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Accounts;
 
+/// <summary>
+///     Provides factory methods for creating account identifiers from XDR muxed account representations.
+/// </summary>
 public static class MuxedAccount
 {
+    /// <summary>
+    ///     Creates an <see cref="IAccountId" /> from an XDR <see cref="Xdr.MuxedAccount" />.
+    ///     Returns a <see cref="KeyPair" /> for standard Ed25519 accounts, or a
+    ///     <see cref="MuxedAccountMed25519" /> for multiplexed accounts.
+    /// </summary>
+    /// <param name="muxedAccount">The XDR muxed account to convert.</param>
+    /// <returns>An <see cref="IAccountId" /> representing the account.</returns>
     public static IAccountId FromXdrMuxedAccount(Xdr.MuxedAccount muxedAccount)
     {
         return muxedAccount.Discriminant.InnerValue switch

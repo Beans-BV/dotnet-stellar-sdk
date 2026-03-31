@@ -40,5 +40,6 @@ public class TooManyRequestsException : Exception
         }
     }
 
+    /// <summary>Gets the number of seconds to wait before retrying, parsed from the Retry-After header.</summary>
     public int? RetryAfter { get; }
 }

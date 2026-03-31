@@ -9,6 +9,11 @@ namespace StellarDotnetSdk.Requests;
 /// <inheritdoc />
 public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestBuilder, OfferResponse>
 {
+    /// <summary>
+    ///     Initializes a new <see cref="OffersRequestBuilder" />.
+    /// </summary>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public OffersRequestBuilder(Uri serverUri, HttpClient httpClient) :
         base(serverUri, "offers", httpClient)
     {

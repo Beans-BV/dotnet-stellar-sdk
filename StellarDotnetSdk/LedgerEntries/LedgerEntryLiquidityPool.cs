@@ -15,7 +15,14 @@ public class LedgerEntryLiquidityPool : LedgerEntry
         LiquidityPoolBody = liquidityPoolBody;
     }
 
+    /// <summary>
+    ///     The unique identifier of this liquidity pool.
+    /// </summary>
     public LiquidityPoolId LiquidityPoolId { get; }
+
+    /// <summary>
+    ///     The body of the liquidity pool entry, containing the pool type-specific parameters and reserves.
+    /// </summary>
     public LiquidityPoolEntryBody LiquidityPoolBody { get; }
 
     /// <summary>

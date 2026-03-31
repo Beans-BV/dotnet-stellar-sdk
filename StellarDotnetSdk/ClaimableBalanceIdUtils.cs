@@ -4,6 +4,10 @@ using ClaimableVersion = StellarDotnetSdk.Xdr.ClaimableBalanceIDType.ClaimableBa
 
 namespace StellarDotnetSdk;
 
+/// <summary>
+///     Utility methods for converting between different representations of Stellar claimable balance IDs
+///     (base32 B..., hex 0000..., and XDR).
+/// </summary>
 public static class ClaimableBalanceIdUtils
 {
     internal static ClaimableBalanceID ToXdr(string claimableBalanceId)

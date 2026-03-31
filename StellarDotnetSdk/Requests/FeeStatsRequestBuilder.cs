@@ -11,11 +11,20 @@ namespace StellarDotnetSdk.Requests;
 /// </summary>
 public class FeeStatsRequestBuilder : RequestBuilder<FeeStatsRequestBuilder>
 {
+    /// <summary>
+    ///     Initializes a new <see cref="FeeStatsRequestBuilder" />.
+    /// </summary>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public FeeStatsRequestBuilder(Uri serverUri, HttpClient httpClient)
         : base(serverUri, "fee_stats", httpClient)
     {
     }
 
+    /// <summary>
+    ///     Executes the request to <c>GET /fee_stats</c> and returns the fee statistics response.
+    /// </summary>
+    /// <returns>The <see cref="FeeStatsResponse" /> containing fee statistics.</returns>
     public async Task<FeeStatsResponse> Execute()
     {
         return await Execute<FeeStatsResponse>(BuildUri());

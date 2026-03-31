@@ -79,6 +79,11 @@ public abstract class Memo
         return new MemoReturnHash(hexString);
     }
 
+    /// <summary>
+    ///     Creates a <see cref="Memo" /> from an XDR memo, dispatching to the correct subclass.
+    /// </summary>
+    /// <param name="memo">The XDR memo to convert.</param>
+    /// <returns>A concrete <see cref="Memo" /> subclass instance.</returns>
     public static Memo FromXdr(Xdr.Memo memo)
     {
         return memo.Discriminant.InnerValue switch
@@ -98,6 +103,9 @@ public abstract class Memo
     /// <returns>A memo object.</returns>
     public abstract Xdr.Memo ToXdr();
 
+    /// <inheritdoc />
     public abstract override bool Equals(object? obj);
+
+    /// <inheritdoc />
     public abstract override int GetHashCode();
 }

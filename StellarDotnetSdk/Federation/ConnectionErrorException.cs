@@ -7,6 +7,7 @@ namespace StellarDotnetSdk.Federation;
 /// </summary>
 public class ConnectionErrorException : Exception
 {
+    /// <inheritdoc />
     public ConnectionErrorException(string message)
         : base(message)
     {

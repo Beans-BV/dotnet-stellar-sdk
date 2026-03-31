@@ -25,12 +25,24 @@ public class LedgerEntryData : LedgerEntry
         DataValue = dataValue;
     }
 
+    /// <summary>
+    ///     The data value, up to 64 bytes.
+    /// </summary>
     public byte[] DataValue { get; }
 
+    /// <summary>
+    ///     The account this data entry belongs to.
+    /// </summary>
     public new KeyPair Account { get; }
 
+    /// <summary>
+    ///     The name (key) of this data entry, up to 64 characters.
+    /// </summary>
     public string DataName { get; }
 
+    /// <summary>
+    ///     Extension fields for this data entry, if present.
+    /// </summary>
     public DataEntryExtension? DataExtension { get; private set; }
 
     /// <summary>

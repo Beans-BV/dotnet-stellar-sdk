@@ -16,28 +16,62 @@ namespace StellarDotnetSdk.Operations;
 /// </summary>
 public class SetOptionsOperation : Operation
 {
+    /// <summary>
+    ///     Constructs a new <c>SetOptionsOperation</c>.
+    /// </summary>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public SetOptionsOperation(IAccountId? sourceAccount = null) : base(sourceAccount)
     {
     }
 
+    /// <summary>
+    ///     Account that is set as the inflation destination for the source account.
+    /// </summary>
     public KeyPair? InflationDestination { get; private set; }
 
+    /// <summary>
+    ///     The account flags to clear (combined via bitwise-OR).
+    /// </summary>
     public uint? ClearFlags { get; private set; }
 
+    /// <summary>
+    ///     The account flags to set (combined via bitwise-OR).
+    /// </summary>
     public uint? SetFlags { get; private set; }
 
+    /// <summary>
+    ///     Weight of the master key (0-255). Setting to 0 disables the master key.
+    /// </summary>
     public uint? MasterKeyWeight { get; private set; }
 
+    /// <summary>
+    ///     A number from 0-255 representing the threshold for low-security operations.
+    /// </summary>
     public uint? LowThreshold { get; private set; }
 
+    /// <summary>
+    ///     A number from 0-255 representing the threshold for medium-security operations.
+    /// </summary>
     public uint? MediumThreshold { get; private set; }
 
+    /// <summary>
+    ///     A number from 0-255 representing the threshold for high-security operations.
+    /// </summary>
     public uint? HighThreshold { get; private set; }
 
+    /// <summary>
+    ///     The home domain of the account, used for federation and SEP lookups (up to 32 characters).
+    /// </summary>
     public string? HomeDomain { get; private set; }
 
+    /// <summary>
+    ///     The signer to add, update, or remove from the account.
+    /// </summary>
     public Signer? Signer { get; private set; }
 
+    /// <summary>
+    ///     The threshold level for this operation. SetOptions is a high-threshold operation.
+    /// </summary>
     public override OperationThreshold Threshold => OperationThreshold.HIGH;
 
     /// <summary>
@@ -198,6 +232,10 @@ public class SetOptionsOperation : Operation
         return this;
     }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override xdr_Operation.OperationBody ToOperationBody()
     {
         var op = new SetOptionsOp();
@@ -253,6 +291,11 @@ public class SetOptionsOperation : Operation
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="SetOptionsOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="setOptionsOp">The XDR SetOptionsOp object.</param>
+    /// <returns>A new <see cref="SetOptionsOperation" /> instance.</returns>
     public static SetOptionsOperation FromXdr(SetOptionsOp setOptionsOp)
     {
         var operation = new SetOptionsOperation();

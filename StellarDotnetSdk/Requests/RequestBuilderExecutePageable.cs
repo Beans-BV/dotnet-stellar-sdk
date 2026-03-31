@@ -27,6 +27,12 @@ public interface IRequestBuilderExecutePageable<T, TResponse> : IRequestBuilder<
 public class RequestBuilderExecutePageable<T, TResponse> : RequestBuilder<T>,
     IRequestBuilderExecutePageable<T, TResponse> where T : class where TResponse : class
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="RequestBuilderExecutePageable{T, TResponse}" /> class.
+    /// </summary>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="defaultSegment">The default URL path segment for this endpoint.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     protected RequestBuilderExecutePageable(Uri serverUri, string defaultSegment, HttpClient httpClient)
         : base(serverUri, defaultSegment, httpClient)
     {

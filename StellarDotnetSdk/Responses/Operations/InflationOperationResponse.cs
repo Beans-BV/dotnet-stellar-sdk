@@ -9,5 +9,6 @@
 /// </remarks>
 public class InflationOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 9;
 }

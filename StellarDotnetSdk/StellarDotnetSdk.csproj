@@ -17,11 +17,11 @@
         <PackageTags>'.NET Core' 'Stellar' 'Horizon' 'Blockchain' 'Crypto' 'Distributed Ledger'</PackageTags>
         <ReleaseNotes>https://github.com/Beans-BV/dotnet-stellar-sdk/releases</ReleaseNotes>
         <Nullable>enable</Nullable>
-        <WarningLevel>1</WarningLevel>
+        <WarningLevel>4</WarningLevel>
         <LangVersion>12</LangVersion>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <WarningsAsErrors>CS1591</WarningsAsErrors>
     </PropertyGroup>
     <PropertyGroup>
         <PackageReadmeFile>nugetreadme.md</PackageReadmeFile>

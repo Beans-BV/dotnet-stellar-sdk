@@ -14,6 +14,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 [Obsolete("This operation is deprecated as of Protocol 17. Prefer SetTrustLineFlags instead.")]
 public class AllowTrustOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 7;
 
     /// <summary>

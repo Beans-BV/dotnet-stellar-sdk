@@ -9,6 +9,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class InvokeHostFunctionOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 24;
 
     /// <summary>

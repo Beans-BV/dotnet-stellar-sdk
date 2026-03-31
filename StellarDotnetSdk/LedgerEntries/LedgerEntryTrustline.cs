@@ -19,16 +19,34 @@ public class LedgerEntryTrustline : LedgerEntry
         Flags = flags;
     }
 
+    /// <summary>
+    ///     The account that established this trustline.
+    /// </summary>
     public KeyPair Account { get; }
 
+    /// <summary>
+    ///     The asset this trustline is for (credit asset or liquidity pool share).
+    /// </summary>
     public TrustlineAsset Asset { get; }
 
+    /// <summary>
+    ///     The current balance of the trusted asset held by the account, in stroops.
+    /// </summary>
     public long Balance { get; }
 
+    /// <summary>
+    ///     The maximum amount of this asset the account is willing to hold, in stroops.
+    /// </summary>
     public long Limit { get; }
 
+    /// <summary>
+    ///     Trustline flags (e.g. AUTHORIZED, AUTHORIZED_TO_MAINTAIN_LIABILITIES, TRUSTLINE_CLAWBACK_ENABLED).
+    /// </summary>
     public uint Flags { get; }
 
+    /// <summary>
+    ///     Version 1 extension fields for this trustline entry, if present.
+    /// </summary>
     public TrustlineEntryExtensionV1? TrustlineExtensionV1 { get; private set; }
 
     /// <summary>

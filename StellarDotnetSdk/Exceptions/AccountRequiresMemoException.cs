@@ -9,6 +9,10 @@ namespace StellarDotnetSdk.Exceptions;
 /// </summary>
 public class AccountRequiresMemoException : Exception
 {
+    /// <summary>
+    ///     Initializes a new instance with a message describing the memo requirement.
+    /// </summary>
+    /// <param name="message">The error message.</param>
     public AccountRequiresMemoException(string message) : base(message)
     {
     }

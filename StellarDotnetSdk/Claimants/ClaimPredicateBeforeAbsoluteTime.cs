@@ -45,8 +45,10 @@ public class ClaimPredicateBeforeAbsoluteTime : ClaimPredicate
     /// </summary>
     public DateTimeOffset DateTime => DateTimeOffset.FromUnixTimeSeconds((long)TimePoint.InnerValue.InnerValue);
 
+    /// <summary>Gets the XDR time point representing the absolute deadline as a Unix timestamp.</summary>
     public TimePoint TimePoint { get; } = new();
 
+    /// <inheritdoc />
     public override Xdr.ClaimPredicate ToXdr()
     {
         return new Xdr.ClaimPredicate

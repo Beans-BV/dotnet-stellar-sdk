@@ -23,26 +23,94 @@ namespace StellarDotnetSdk.Sep.Sep0009;
 /// </remarks>
 public sealed record OrganizationKycFields
 {
-    // Field keys
+    /// <summary>
+    ///     Key prefix for all organization fields (<c>"organization."</c>) as defined in SEP-0009.
+    /// </summary>
     public const string KeyPrefix = "organization.";
+
+    /// <summary>
+    ///     Field key for the <c>organization.name</c> field (full organization name) as defined in SEP-0009.
+    /// </summary>
     public const string NameFieldKey = KeyPrefix + "name";
+
+    /// <summary>
+    ///     Field key for the <c>organization.VAT_number</c> field as defined in SEP-0009.
+    /// </summary>
     public const string VatNumberFieldKey = KeyPrefix + "VAT_number";
+
+    /// <summary>
+    ///     Field key for the <c>organization.registration_number</c> field as defined in SEP-0009.
+    /// </summary>
     public const string RegistrationNumberFieldKey = KeyPrefix + "registration_number";
+
+    /// <summary>
+    ///     Field key for the <c>organization.registration_date</c> field as defined in SEP-0009.
+    /// </summary>
     public const string RegistrationDateFieldKey = KeyPrefix + "registration_date";
+
+    /// <summary>
+    ///     Field key for the <c>organization.registered_address</c> field as defined in SEP-0009.
+    /// </summary>
     public const string RegisteredAddressFieldKey = KeyPrefix + "registered_address";
+
+    /// <summary>
+    ///     Field key for the <c>organization.number_of_shareholders</c> field as defined in SEP-0009.
+    /// </summary>
     public const string NumberOfShareholdersFieldKey = KeyPrefix + "number_of_shareholders";
+
+    /// <summary>
+    ///     Field key for the <c>organization.shareholder_name</c> field as defined in SEP-0009.
+    /// </summary>
     public const string ShareholderNameFieldKey = KeyPrefix + "shareholder_name";
+
+    /// <summary>
+    ///     Field key for the <c>organization.address_country_code</c> field (ISO 3166-1 alpha-3 code) as defined in SEP-0009.
+    /// </summary>
     public const string AddressCountryCodeFieldKey = KeyPrefix + "address_country_code";
+
+    /// <summary>
+    ///     Field key for the <c>organization.state_or_province</c> field as defined in SEP-0009.
+    /// </summary>
     public const string StateOrProvinceFieldKey = KeyPrefix + "state_or_province";
+
+    /// <summary>
+    ///     Field key for the <c>organization.city</c> field as defined in SEP-0009.
+    /// </summary>
     public const string CityFieldKey = KeyPrefix + "city";
+
+    /// <summary>
+    ///     Field key for the <c>organization.postal_code</c> field as defined in SEP-0009.
+    /// </summary>
     public const string PostalCodeFieldKey = KeyPrefix + "postal_code";
+
+    /// <summary>
+    ///     Field key for the <c>organization.director_name</c> field as defined in SEP-0009.
+    /// </summary>
     public const string DirectorNameFieldKey = KeyPrefix + "director_name";
+
+    /// <summary>
+    ///     Field key for the <c>organization.website</c> field as defined in SEP-0009.
+    /// </summary>
     public const string WebsiteFieldKey = KeyPrefix + "website";
+
+    /// <summary>
+    ///     Field key for the <c>organization.email</c> field as defined in SEP-0009.
+    /// </summary>
     public const string EmailFieldKey = KeyPrefix + "email";
+
+    /// <summary>
+    ///     Field key for the <c>organization.phone</c> field as defined in SEP-0009.
+    /// </summary>
     public const string PhoneFieldKey = KeyPrefix + "phone";
 
-    // File keys
+    /// <summary>
+    ///     File key for the <c>organization.photo_incorporation_doc</c> attachment as defined in SEP-0009.
+    /// </summary>
     public const string PhotoIncorporationDocFileKey = KeyPrefix + "photo_incorporation_doc";
+
+    /// <summary>
+    ///     File key for the <c>organization.photo_proof_address</c> attachment as defined in SEP-0009.
+    /// </summary>
     public const string PhotoProofAddressFileKey = KeyPrefix + "photo_proof_address";
 
     /// <summary>

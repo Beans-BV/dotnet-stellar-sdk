@@ -27,6 +27,9 @@ public class LedgerKeyClaimableBalance : LedgerKey
     /// </summary>
     public string BalanceId { get; }
 
+    /// <summary>
+    ///     Serializes this ledger key to its XDR representation.
+    /// </summary>
     public override Xdr.LedgerKey ToXdr()
     {
         return new Xdr.LedgerKey
@@ -40,6 +43,10 @@ public class LedgerKeyClaimableBalance : LedgerKey
         };
     }
 
+    /// <summary>
+    ///     Deserializes a <see cref="LedgerKeyClaimableBalance" /> from its XDR representation.
+    /// </summary>
+    /// <param name="xdr">The XDR ledger key claimable balance object.</param>
     public static LedgerKeyClaimableBalance FromXdr(Xdr.LedgerKey.LedgerKeyClaimableBalance xdr)
     {
         return new LedgerKeyClaimableBalance(

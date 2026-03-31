@@ -22,6 +22,16 @@ public class OfferEntry
         PASSIVE = 1,
     }
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="OfferEntry" /> class.
+    /// </summary>
+    /// <param name="seller">The account that created the offer.</param>
+    /// <param name="offerId">The unique identifier of the offer.</param>
+    /// <param name="selling">The asset being sold.</param>
+    /// <param name="buying">The asset being bought.</param>
+    /// <param name="amount">The amount of the selling asset.</param>
+    /// <param name="price">The price of selling in terms of buying.</param>
+    /// <param name="flags">The flags set on the offer.</param>
     public OfferEntry(
         KeyPair seller,
         long offerId,
@@ -77,6 +87,11 @@ public class OfferEntry
     /// </summary>
     public OfferEntryFlags Flags { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="OfferEntry" /> from the given XDR representation.
+    /// </summary>
+    /// <param name="entry">The XDR offer entry.</param>
+    /// <returns>A new <see cref="OfferEntry" /> instance.</returns>
     public static OfferEntry FromXdr(Xdr.OfferEntry entry)
     {
         return new OfferEntry(
@@ -89,6 +104,11 @@ public class OfferEntry
             FlagsFromXdr(entry.Flags.InnerValue));
     }
 
+    /// <summary>
+    ///     Converts a raw XDR flags value to the corresponding <see cref="OfferEntryFlags" /> enum.
+    /// </summary>
+    /// <param name="flags">The raw XDR flags value.</param>
+    /// <returns>The corresponding <see cref="OfferEntryFlags" /> value.</returns>
     public static OfferEntryFlags FlagsFromXdr(uint flags)
     {
         return flags switch

@@ -5,6 +5,11 @@ namespace StellarDotnetSdk.Sep.Sep0010.Exceptions;
 /// </summary>
 public class ChallengeRequestErrorException : WebAuthException
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="ChallengeRequestErrorException" /> class.
+    /// </summary>
+    /// <param name="statusCode">The HTTP status code from the error response.</param>
+    /// <param name="responseBody">The optional response body content.</param>
     public ChallengeRequestErrorException(int statusCode, string? responseBody = null)
         : base($"Challenge request failed with status code {statusCode}")
     {

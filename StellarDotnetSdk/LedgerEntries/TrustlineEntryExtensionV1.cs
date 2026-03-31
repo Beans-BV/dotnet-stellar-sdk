@@ -12,10 +12,22 @@ public class TrustlineEntryExtensionV1
         Liabilities = liabilities;
     }
 
+    /// <summary>
+    ///     The buying and selling liabilities for this trustline.
+    /// </summary>
     public Liabilities Liabilities { get; }
 
+    /// <summary>
+    ///     Version 2 extension fields for this trustline entry, if present.
+    /// </summary>
     public TrustLineEntryExtensionV2? TrustlineExtensionV2 { get; private set; }
 
+    /// <summary>
+    ///     Creates a <see cref="TrustlineEntryExtensionV1" /> from an XDR
+    ///     <see cref="TrustLineEntry.TrustLineEntryExt.TrustLineEntryV1" /> object.
+    /// </summary>
+    /// <param name="xdrExtensionV1">The XDR extension object.</param>
+    /// <returns>A <see cref="TrustlineEntryExtensionV1" /> instance.</returns>
     public static TrustlineEntryExtensionV1 FromXdr(TrustLineEntry.TrustLineEntryExt.TrustLineEntryV1 xdrExtensionV1)
     {
         var entryExtensionV1 = new TrustlineEntryExtensionV1(Liabilities.FromXdr(xdrExtensionV1.Liabilities));

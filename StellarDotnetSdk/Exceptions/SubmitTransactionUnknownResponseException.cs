@@ -22,6 +22,9 @@ public class SubmitTransactionUnknownResponseException : Exception
         Code = code;
     }
 
+    /// <summary>Gets the HTTP status code returned by the Horizon server.</summary>
     public HttpStatusCode Code { get; }
+
+    /// <summary>Gets the response body returned by the Horizon server.</summary>
     public string Body { get; }
 }

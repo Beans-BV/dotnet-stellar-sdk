@@ -10,6 +10,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class LiquidityPoolWithdrawOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 23;
 
     /// <summary>

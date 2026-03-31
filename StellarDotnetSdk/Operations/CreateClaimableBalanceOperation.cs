@@ -46,6 +46,10 @@ public class CreateClaimableBalanceOperation : Operation
     /// </summary>
     public SdkClaimant[] Claimants { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         return new Xdr.Operation.OperationBody
@@ -60,6 +64,11 @@ public class CreateClaimableBalanceOperation : Operation
         };
     }
 
+    /// <summary>
+    ///     Creates a <see cref="CreateClaimableBalanceOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="createClaimableBalanceOp">The XDR CreateClaimableBalanceOp object.</param>
+    /// <returns>A new <see cref="CreateClaimableBalanceOperation" /> instance.</returns>
     public static CreateClaimableBalanceOperation FromXdr(CreateClaimableBalanceOp createClaimableBalanceOp)
     {
         return new CreateClaimableBalanceOperation(

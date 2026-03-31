@@ -17,8 +17,10 @@ public class ClaimPredicateNot : ClaimPredicate
         Predicate = predicate;
     }
 
+    /// <summary>Gets the inner predicate that is negated.</summary>
     public ClaimPredicate Predicate { get; }
 
+    /// <inheritdoc />
     public override Xdr.ClaimPredicate ToXdr()
     {
         return new Xdr.ClaimPredicate

@@ -34,8 +34,15 @@ public class BumpSequenceOperation : Operation
     /// </summary>
     public long BumpTo { get; }
 
+    /// <summary>
+    ///     The threshold level for this operation. BumpSequence is a low-threshold operation.
+    /// </summary>
     public override OperationThreshold Threshold => OperationThreshold.LOW;
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override OperationBody ToOperationBody()
     {
         return new OperationBody

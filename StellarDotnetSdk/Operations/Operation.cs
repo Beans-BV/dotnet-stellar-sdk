@@ -14,6 +14,10 @@ namespace StellarDotnetSdk.Operations;
 /// </summary>
 public abstract class Operation
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="Operation" /> class.
+    /// </summary>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     protected Operation(IAccountId? sourceAccount)
     {
         SourceAccount = sourceAccount;
@@ -29,11 +33,21 @@ public abstract class Operation
     /// </summary>
     public virtual OperationThreshold Threshold => OperationThreshold.MEDIUM;
 
+    /// <summary>
+    ///     Converts a decimal string amount to the XDR 64-bit integer representation (amount * 10^7).
+    /// </summary>
+    /// <param name="value">The decimal string amount to convert.</param>
+    /// <returns>The amount as a 64-bit integer in stroops (1 stroop = 0.0000001).</returns>
     public static long ToXdrAmount(string value)
     {
         return Amount.ToXdr(value);
     }
 
+    /// <summary>
+    ///     Converts an XDR 64-bit integer amount (stroops) to its decimal string representation.
+    /// </summary>
+    /// <param name="value">The amount in stroops (1 stroop = 0.0000001).</param>
+    /// <returns>The human-readable decimal string amount.</returns>
     public static string FromXdrAmount(long value)
     {
         return Amount.FromXdr(value);

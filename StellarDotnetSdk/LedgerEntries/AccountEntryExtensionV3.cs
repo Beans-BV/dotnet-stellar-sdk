@@ -14,12 +14,27 @@ public class AccountEntryExtensionV3
         SequenceTime = sequenceTime;
     }
 
+    /// <summary>
+    ///     Reserved for future use.
+    /// </summary>
     public ExtensionPoint ExtensionPoint { get; }
 
+    /// <summary>
+    ///     The ledger number at which the sequence number was last consumed.
+    /// </summary>
     public uint SequenceLedger { get; }
 
+    /// <summary>
+    ///     The time at which the sequence number was last consumed.
+    /// </summary>
     public ulong SequenceTime { get; }
 
+    /// <summary>
+    ///     Creates an <see cref="AccountEntryExtensionV3" /> from an XDR
+    ///     <see cref="Xdr.AccountEntryExtensionV3" /> object.
+    /// </summary>
+    /// <param name="xdr">The XDR extension object.</param>
+    /// <returns>An <see cref="AccountEntryExtensionV3" /> instance.</returns>
     public static AccountEntryExtensionV3 FromXdr(Xdr.AccountEntryExtensionV3 xdr)
     {
         return new AccountEntryExtensionV3(ExtensionPoint.FromXdr(xdr.Ext),

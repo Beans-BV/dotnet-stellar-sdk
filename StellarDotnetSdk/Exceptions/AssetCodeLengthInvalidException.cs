@@ -10,18 +10,22 @@ namespace StellarDotnetSdk.Exceptions;
 [Serializable]
 public class AssetCodeLengthInvalidException : Exception
 {
+    /// <inheritdoc />
     public AssetCodeLengthInvalidException()
     {
     }
 
+    /// <inheritdoc />
     public AssetCodeLengthInvalidException(string message) : base(message)
     {
     }
 
+    /// <inheritdoc />
     public AssetCodeLengthInvalidException(string message, Exception innerException) : base(message, innerException)
     {
     }
 
+    /// <inheritdoc />
     protected AssetCodeLengthInvalidException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }

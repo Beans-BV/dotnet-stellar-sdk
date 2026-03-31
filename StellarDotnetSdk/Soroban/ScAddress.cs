@@ -14,6 +14,11 @@ namespace StellarDotnetSdk.Soroban;
 /// </summary>
 public abstract class ScAddress : SCVal
 {
+    /// <summary>
+    ///     Creates a new <see cref="ScAddress" /> subclass from an XDR <see cref="SCAddress" /> object.
+    /// </summary>
+    /// <param name="xdrScAddress">The XDR address to convert.</param>
+    /// <returns>The appropriate <see cref="ScAddress" /> subclass instance.</returns>
     public static ScAddress FromXdr(SCAddress xdrScAddress)
     {
         return xdrScAddress.Discriminant.InnerValue switch
@@ -32,6 +37,11 @@ public abstract class ScAddress : SCVal
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="ScAddress" /> from an XDR <see cref="Xdr.SCVal" /> object of type <c>SCV_ADDRESS</c>.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>The appropriate <see cref="ScAddress" /> subclass instance.</returns>
     public static ScAddress FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_ADDRESS)
@@ -42,6 +52,10 @@ public abstract class ScAddress : SCVal
         return FromXdr(xdrVal.Address);
     }
 
+    /// <summary>
+    ///     Converts this address to an XDR <see cref="Xdr.SCVal" /> object of type <c>SCV_ADDRESS</c>.
+    /// </summary>
+    /// <returns>An XDR <see cref="Xdr.SCVal" /> representing this address.</returns>
     public Xdr.SCVal ToSCValXdr()
     {
         return new Xdr.SCVal
@@ -54,6 +68,10 @@ public abstract class ScAddress : SCVal
         };
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="SCAddress" /> XDR object.</returns>
     public abstract SCAddress ToXdr();
 }
 
@@ -76,8 +94,16 @@ public class ScAccountId : ScAddress
         InnerValue = publicKey;
     }
 
+    /// <summary>
+    ///     The Ed25519 public key (G...) of the account.
+    /// </summary>
     public string InnerValue { get; set; }
 
+    /// <summary>
+    ///     Creates a new <see cref="ScAccountId" /> from an XDR <see cref="SCAddress" /> object.
+    /// </summary>
+    /// <param name="xdr">The XDR address to convert.</param>
+    /// <returns>A <see cref="ScAccountId" /> instance.</returns>
     public static ScAccountId FromXdr(SCAddress xdr)
     {
         return new ScAccountId(
@@ -85,6 +111,10 @@ public class ScAccountId : ScAddress
         );
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="SCAddress" /> XDR object.</returns>
     public override SCAddress ToXdr()
     {
         return new SCAddress
@@ -117,8 +147,16 @@ public class ScClaimableBalanceId : ScAddress
         InnerValue = claimableBalanceId;
     }
 
+    /// <summary>
+    ///     The claimable balance ID (B...).
+    /// </summary>
     public string InnerValue { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="ScClaimableBalanceId" /> from an XDR <see cref="SCAddress" /> object.
+    /// </summary>
+    /// <param name="xdr">The XDR address to convert.</param>
+    /// <returns>A <see cref="ScClaimableBalanceId" /> instance.</returns>
     public static ScClaimableBalanceId FromXdr(SCAddress xdr)
     {
         return new ScClaimableBalanceId(
@@ -126,6 +164,10 @@ public class ScClaimableBalanceId : ScAddress
         );
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="SCAddress" /> XDR object.</returns>
     public override SCAddress ToXdr()
     {
         return new SCAddress
@@ -155,8 +197,16 @@ public class ScContractId : ScAddress
         InnerValue = contractId;
     }
 
+    /// <summary>
+    ///     The contract ID (C...).
+    /// </summary>
     public string InnerValue { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="ScContractId" /> from an XDR <see cref="SCAddress" /> object.
+    /// </summary>
+    /// <param name="xdr">The XDR address to convert.</param>
+    /// <returns>A <see cref="ScContractId" /> instance.</returns>
     public static ScContractId FromXdr(SCAddress xdr)
     {
         return new ScContractId(
@@ -164,6 +214,10 @@ public class ScContractId : ScAddress
         );
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="SCAddress" /> XDR object.</returns>
     public override SCAddress ToXdr()
     {
         return new SCAddress
@@ -197,8 +251,16 @@ public class ScLiquidityPoolId : ScAddress
         InnerLiquidityPoolId = liquidityPoolId;
     }
 
+    /// <summary>
+    ///     The liquidity pool ID (L...).
+    /// </summary>
     public string InnerLiquidityPoolId { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="ScLiquidityPoolId" /> from an XDR <see cref="SCAddress" /> object.
+    /// </summary>
+    /// <param name="xdr">The XDR address to convert.</param>
+    /// <returns>A <see cref="ScLiquidityPoolId" /> instance.</returns>
     public static ScLiquidityPoolId FromXdr(SCAddress xdr)
     {
         return new ScLiquidityPoolId(
@@ -206,6 +268,10 @@ public class ScLiquidityPoolId : ScAddress
         );
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="SCAddress" /> XDR object.</returns>
     public override SCAddress ToXdr()
     {
         return new SCAddress
@@ -241,8 +307,16 @@ public class ScMuxedAccountId : ScAddress
         InnerValue = publicKey;
     }
 
+    /// <summary>
+    ///     The muxed account ID (M...).
+    /// </summary>
     public string InnerValue { get; set; }
 
+    /// <summary>
+    ///     Creates a new <see cref="ScMuxedAccountId" /> from an XDR <see cref="SCAddress" /> object.
+    /// </summary>
+    /// <param name="xdr">The XDR address to convert.</param>
+    /// <returns>A <see cref="ScMuxedAccountId" /> instance.</returns>
     public static ScMuxedAccountId FromXdr(SCAddress xdr)
     {
         var writer = new XdrDataOutputStream();
@@ -253,6 +327,10 @@ public class ScMuxedAccountId : ScAddress
         );
     }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="SCAddress" /> XDR object.</returns>
     public override SCAddress ToXdr()
     {
         var decoded = StrKey.DecodeMed25519PublicKey(InnerValue);

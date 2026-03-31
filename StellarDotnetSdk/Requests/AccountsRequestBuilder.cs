@@ -34,6 +34,11 @@ public class AccountsRequestBuilder : RequestBuilderExecutePageable<AccountsRequ
         return await responseHandler.HandleResponse(response);
     }
 
+    /// <summary>
+    ///     Requests account data from the specified URI and returns an <see cref="AccountDataResponse" />.
+    /// </summary>
+    /// <param name="uri">The URI of the account data resource.</param>
+    /// <returns>The <see cref="AccountDataResponse" />.</returns>
     public async Task<AccountDataResponse> AccountData(Uri uri)
     {
         var responseHandler = new ResponseHandler<AccountDataResponse>();

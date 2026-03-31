@@ -3,6 +3,9 @@ using System.Web;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Extension methods for <see cref="UriBuilder" /> to simplify query parameter and path manipulation.
+/// </summary>
 public static class UriBuilderExtensions
 {
     /// <summary>
@@ -40,6 +43,12 @@ public static class UriBuilderExtensions
         return uriBuilder;
     }
 
+    /// <summary>
+    ///     Sets the path of the URI, ensuring it starts with a forward slash.
+    /// </summary>
+    /// <param name="uri">The URI builder.</param>
+    /// <param name="path">The path to set.</param>
+    /// <returns>The <see cref="UriBuilder" /> with the path set.</returns>
     public static UriBuilder SetPath(this UriBuilder uri, string path)
     {
         uri.Path = path.StartsWith("/") ? path : $"/{path}";

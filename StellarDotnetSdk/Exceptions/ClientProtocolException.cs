@@ -7,6 +7,7 @@ namespace StellarDotnetSdk.Exceptions;
 /// </summary>
 public class ClientProtocolException : Exception
 {
+    /// <inheritdoc />
     public ClientProtocolException(string message)
         : base(message)
     {

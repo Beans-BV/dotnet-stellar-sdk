@@ -252,6 +252,22 @@ public static class ServerWebAuth
         return operation.SourceAccount!.Address;
     }
 
+    /// <summary>
+    ///     Verifies that the challenge transaction is signed by signers whose combined weight meets or exceeds the
+    ///     specified threshold, as defined in SEP-0010.
+    /// </summary>
+    /// <param name="transaction">The challenge transaction to verify.</param>
+    /// <param name="serverAccountId">The server's Stellar account ID used as the transaction source.</param>
+    /// <param name="threshold">The minimum required signer weight threshold.</param>
+    /// <param name="signerSummary">A mapping of signer account IDs to their weights.</param>
+    /// <param name="homeDomain">The home domain expected in the challenge's first ManageData operation.</param>
+    /// <param name="webAuthDomain">The expected web auth domain.</param>
+    /// <param name="network">The Stellar network to use for signature verification. Defaults to the current network.</param>
+    /// <param name="now">The time to use for time bounds validation. Defaults to the current time.</param>
+    /// <returns>A collection of signer account IDs that were found to have signed the transaction.</returns>
+    /// <exception cref="Exceptions.InvalidWebAuthenticationException">
+    ///     Thrown when the combined weight of valid signers does not meet the threshold.
+    /// </exception>
     public static ICollection<string> VerifyChallengeTransactionThreshold(
         Transaction transaction,
         string serverAccountId,

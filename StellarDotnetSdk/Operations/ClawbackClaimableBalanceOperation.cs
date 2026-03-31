@@ -34,6 +34,10 @@ public class ClawbackClaimableBalanceOperation : Operation
     /// </summary>
     public string BalanceId { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         return new Xdr.Operation.OperationBody

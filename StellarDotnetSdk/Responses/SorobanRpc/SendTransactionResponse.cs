@@ -25,6 +25,14 @@ public class SendTransactionResponse
         ERROR,
     }
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="SendTransactionResponse" /> class.
+    /// </summary>
+    /// <param name="errorResultXdr">Base64-encoded XDR string of the TransactionResult if status is ERROR.</param>
+    /// <param name="hash">The hex-encoded transaction hash.</param>
+    /// <param name="latestLedger">The latest ledger sequence number known to the server.</param>
+    /// <param name="latestLedgerCloseTime">The close time of the latest ledger.</param>
+    /// <param name="status">The status of the submitted transaction.</param>
     public SendTransactionResponse(
         string? errorResultXdr,
         string hash,

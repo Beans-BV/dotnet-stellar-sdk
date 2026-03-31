@@ -11,6 +11,11 @@ namespace StellarDotnetSdk.Requests;
 /// </summary>
 public class EffectsRequestBuilder : RequestBuilderStreamable<EffectsRequestBuilder, EffectResponse>
 {
+    /// <summary>
+    ///     Initializes a new <see cref="EffectsRequestBuilder" />.
+    /// </summary>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public EffectsRequestBuilder(Uri serverUri, HttpClient httpClient)
         : base(serverUri, "effects", httpClient)
     {

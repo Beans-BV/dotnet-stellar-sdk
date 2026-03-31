@@ -26,6 +26,13 @@ public abstract class Asset
     /// </summary>
     public abstract string Type { get; }
 
+    /// <summary>
+    ///     Creates an <see cref="Asset" /> from its canonical string form.
+    ///     Native assets use <c>"native"</c>; credit assets use <c>"CODE:ISSUER"</c>.
+    /// </summary>
+    /// <param name="canonicalForm">The canonical asset string (e.g., <c>"native"</c> or <c>"USD:GABC..."</c>).</param>
+    /// <returns>The corresponding <see cref="Asset" /> instance.</returns>
+    /// <exception cref="ArgumentException">Thrown when the canonical form is invalid.</exception>
     public static Asset Create(string canonicalForm)
     {
         if (canonicalForm == "native")
@@ -119,5 +126,11 @@ public abstract class Asset
     /// </summary>
     public abstract string CanonicalName();
 
+    /// <summary>
+    ///     Compares this asset to another <see cref="Asset" /> for ordering.
+    ///     Assets are ordered: native &lt; credit_alphanum4 &lt; credit_alphanum12.
+    /// </summary>
+    /// <param name="asset">The asset to compare with.</param>
+    /// <returns>A negative value, zero, or positive value if this asset is less than, equal to, or greater than <paramref name="asset" />.</returns>
     public abstract int CompareTo(Asset asset);
 }

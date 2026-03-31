@@ -11,6 +11,11 @@ namespace StellarDotnetSdk.Requests;
 /// </summary>
 public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsRequestBuilder, TransactionResponse>
 {
+    /// <summary>
+    ///     Initializes a new <see cref="TransactionsRequestBuilder" />.
+    /// </summary>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public TransactionsRequestBuilder(Uri serverUri, HttpClient httpClient)
         : base(serverUri, "transactions", httpClient)
     {

@@ -12,6 +12,7 @@ namespace StellarDotnetSdk.Converters;
 /// </summary>
 public class ReserveJsonConverter : JsonConverter<Reserve>
 {
+    /// <inheritdoc />
     public override Reserve Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         // Reserve is non-nullable, only check for expected token type
@@ -68,6 +69,7 @@ public class ReserveJsonConverter : JsonConverter<Reserve>
         };
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, Reserve value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();

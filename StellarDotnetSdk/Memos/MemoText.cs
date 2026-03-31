@@ -10,6 +10,10 @@ namespace StellarDotnetSdk.Memos;
 /// </summary>
 public class MemoText : Memo
 {
+    /// <summary>
+    ///     Initializes a new <see cref="MemoText" /> with the given UTF-8 string (max 28 bytes).
+    /// </summary>
+    /// <param name="text">The text content (must be at most 28 bytes when UTF-8 encoded).</param>
     public MemoText(string text)
     {
         if (text is null)
@@ -26,6 +30,10 @@ public class MemoText : Memo
         MemoBytesValue = bytes;
     }
 
+    /// <summary>
+    ///     Initializes a new <see cref="MemoText" /> with the given raw bytes (max 28 bytes).
+    /// </summary>
+    /// <param name="text">The raw byte content (max 28 bytes).</param>
     public MemoText(byte[] text)
     {
         if (text is null)
@@ -45,8 +53,10 @@ public class MemoText : Memo
     /// </summary>
     public string MemoTextValue => Encoding.UTF8.GetString(MemoBytesValue);
 
+    /// <summary>Gets the raw byte content of this text memo.</summary>
     public byte[] MemoBytesValue { get; }
 
+    /// <inheritdoc />
     public override Xdr.Memo ToXdr()
     {
         return new Xdr.Memo
@@ -56,11 +66,13 @@ public class MemoText : Memo
         };
     }
 
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         return obj is MemoText memoText && Equals(MemoTextValue, memoText.MemoTextValue);
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Start

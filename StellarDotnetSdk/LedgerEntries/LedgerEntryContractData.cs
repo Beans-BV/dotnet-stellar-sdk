@@ -25,14 +25,29 @@ public class LedgerEntryContractData : LedgerEntry
         ExtensionPoint = extensionPoint;
     }
 
+    /// <summary>
+    ///     The key of this contract data entry (a Soroban value).
+    /// </summary>
     public SCVal Key { get; }
 
+    /// <summary>
+    ///     The value stored in this contract data entry (a Soroban value).
+    /// </summary>
     public SCVal Value { get; }
 
+    /// <summary>
+    ///     The address of the contract that owns this data entry.
+    /// </summary>
     public ScAddress Contract { get; }
 
+    /// <summary>
+    ///     The durability type of this entry: <c>Persistent</c> or <c>Temporary</c>.
+    /// </summary>
     public ContractDataDurability Durability { get; }
 
+    /// <summary>
+    ///     Reserved for future use.
+    /// </summary>
     public ExtensionPoint ExtensionPoint { get; }
 
     /// <summary>

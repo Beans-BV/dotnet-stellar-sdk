@@ -56,6 +56,10 @@ public class SetTrustlineFlagsOperation : Operation
     /// </summary>
     public uint ClearFlags { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override Xdr.Operation.OperationBody ToOperationBody()
     {
         var body = new Xdr.Operation.OperationBody
@@ -72,6 +76,11 @@ public class SetTrustlineFlagsOperation : Operation
         return body;
     }
 
+    /// <summary>
+    ///     Creates a <see cref="SetTrustlineFlagsOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="setTrustLineFlagsOp">The XDR SetTrustLineFlagsOp object.</param>
+    /// <returns>A new <see cref="SetTrustlineFlagsOperation" /> instance.</returns>
     public static SetTrustlineFlagsOperation FromXdr(SetTrustLineFlagsOp setTrustLineFlagsOp)
     {
         return new SetTrustlineFlagsOperation(

@@ -12,6 +12,11 @@ namespace StellarDotnetSdk.Requests;
 /// </summary>
 public class OrderBookRequestBuilder : RequestBuilder<OrderBookRequestBuilder>
 {
+    /// <summary>
+    ///     Initializes a new <see cref="OrderBookRequestBuilder" />.
+    /// </summary>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public OrderBookRequestBuilder(Uri serverUri, HttpClient httpClient)
         : base(serverUri, "order_book", httpClient)
     {
@@ -51,11 +56,19 @@ public class OrderBookRequestBuilder : RequestBuilder<OrderBookRequestBuilder>
         return this;
     }
 
+    /// <summary>
+    ///     Not supported for the order book endpoint.
+    /// </summary>
+    /// <exception cref="NotImplementedException">Always thrown; order book does not support cursor pagination.</exception>
     public override OrderBookRequestBuilder Cursor(string token)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    ///     Not supported for the order book endpoint.
+    /// </summary>
+    /// <exception cref="NotImplementedException">Always thrown; order book does not support ordering.</exception>
     public override OrderBookRequestBuilder Order(OrderDirection direction)
     {
         throw new NotImplementedException();

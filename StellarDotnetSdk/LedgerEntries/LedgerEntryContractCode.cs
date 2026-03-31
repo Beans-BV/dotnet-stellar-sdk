@@ -14,6 +14,9 @@ public class LedgerEntryContractCode : LedgerEntry
         Code = code;
     }
 
+    /// <summary>
+    ///     Version 1 extension fields for this contract code entry, if present.
+    /// </summary>
     public ContractCodeEntryExtensionV1? ContractCodeExtensionV1 { get; private set; }
 
     /// <summary>

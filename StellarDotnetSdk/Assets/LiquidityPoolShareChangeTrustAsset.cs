@@ -12,8 +12,16 @@ namespace StellarDotnetSdk.Assets;
 /// </summary>
 public class LiquidityPoolShareChangeTrustAsset : ChangeTrustAsset
 {
+    /// <summary>
+    ///     The Horizon REST API type identifier for liquidity pool share assets.
+    /// </summary>
     public const string RestApiType = "pool_share";
 
+    /// <summary>
+    ///     Initializes a new instance from existing liquidity pool parameters.
+    /// </summary>
+    /// <param name="parameters">The liquidity pool parameters. Must not be null.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameters" /> is null.</exception>
     public LiquidityPoolShareChangeTrustAsset(LiquidityPoolParameters parameters)
     {
         Parameters = parameters ?? throw new ArgumentNullException(nameof(parameters), "parameters cannot be null");
@@ -30,8 +38,12 @@ public class LiquidityPoolShareChangeTrustAsset : ChangeTrustAsset
         Parameters = new LiquidityPoolConstantProductParameters(assetA, assetB, feeBp);
     }
 
+    /// <summary>
+    ///     Gets or sets the liquidity pool parameters that define this pool share asset.
+    /// </summary>
     public LiquidityPoolParameters Parameters { get; set; }
 
+    /// <inheritdoc />
     public override string Type => RestApiType;
 
     /// <summary>
@@ -43,21 +55,25 @@ public class LiquidityPoolShareChangeTrustAsset : ChangeTrustAsset
         return Parameters.GetId();
     }
 
+    /// <inheritdoc />
     public override string ToString()
     {
         return GetLiquidityPoolId().ToString();
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return Parameters.GetHashCode();
     }
 
+    /// <inheritdoc />
     public override bool Equals(object obj)
     {
         return obj is LiquidityPoolShareChangeTrustAsset other && Parameters.Equals(other.Parameters);
     }
 
+    /// <inheritdoc />
     public override int CompareTo(ChangeTrustAsset asset)
     {
         return asset.Type != RestApiType
@@ -66,6 +82,7 @@ public class LiquidityPoolShareChangeTrustAsset : ChangeTrustAsset
                 StringComparison.Ordinal);
     }
 
+    /// <inheritdoc />
     public override Xdr.ChangeTrustAsset ToXdr()
     {
         var xdr = new Xdr.ChangeTrustAsset

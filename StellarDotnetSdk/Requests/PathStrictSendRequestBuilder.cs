@@ -7,9 +7,18 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Builds requests to the Horizon <c>/paths/strict-send</c> endpoint for finding
+///     payment paths that send a specified amount of a source asset.
+/// </summary>
 public class
     PathStrictSendRequestBuilder : RequestBuilderExecutePageable<PathStrictSendRequestBuilder, PathResponse>
 {
+    /// <summary>
+    ///     Initializes a new <see cref="PathStrictSendRequestBuilder" />.
+    /// </summary>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public PathStrictSendRequestBuilder(Uri serverUri, HttpClient httpClient)
         : base(serverUri, "paths/strict-send", httpClient)
     {

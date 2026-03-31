@@ -8,6 +8,10 @@ namespace StellarDotnetSdk.Soroban;
 /// </summary>
 public abstract class ExtensionPoint
 {
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.ExtensionPoint" /> XDR object.</returns>
     public Xdr.ExtensionPoint ToXdr()
     {
         return this switch
@@ -62,6 +66,10 @@ public abstract class ExtensionPoint
 /// </summary>
 public class ExtensionPointZero : ExtensionPoint
 {
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.ExtensionPoint" /> XDR object with discriminant 0.</returns>
     public Xdr.ExtensionPoint ToExtensionPointXdr()
     {
         return new Xdr.ExtensionPoint
@@ -70,6 +78,12 @@ public class ExtensionPointZero : ExtensionPoint
         };
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="ExtensionPointZero" /> from an XDR <see cref="Xdr.ExtensionPoint" /> object.
+    /// </summary>
+    /// <param name="xdrExtensionPoint">The XDR extension point to convert.</param>
+    /// <returns>An <see cref="ExtensionPointZero" /> instance.</returns>
+    /// <exception cref="ArgumentException">Thrown when the discriminant is not 0.</exception>
     public static ExtensionPointZero FromExtensionPointXdr(Xdr.ExtensionPoint xdrExtensionPoint)
     {
         if (xdrExtensionPoint.Discriminant != 0)
@@ -80,6 +94,10 @@ public class ExtensionPointZero : ExtensionPoint
         return FromXdr();
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="ExtensionPointZero" /> instance.
+    /// </summary>
+    /// <returns>An <see cref="ExtensionPointZero" /> instance.</returns>
     public static ExtensionPointZero FromXdr()
     {
         return new ExtensionPointZero();

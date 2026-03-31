@@ -8,12 +8,20 @@ namespace StellarDotnetSdk.Sep.Sep0006.Exceptions;
 /// </summary>
 public class CustomerInformationStatusException : TransferServerException
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="CustomerInformationStatusException" /> class
+    ///     with the anchor's status response.
+    /// </summary>
+    /// <param name="response">The response containing the customer information processing status.</param>
     public CustomerInformationStatusException(CustomerInformationStatusResponse response)
         : base(BuildMessage(response))
     {
         Response = response;
     }
 
+    /// <summary>
+    ///     The anchor's response containing the customer information processing status (pending or denied).
+    /// </summary>
     public CustomerInformationStatusResponse Response { get; }
 
     private static string BuildMessage(CustomerInformationStatusResponse response)

@@ -7,10 +7,16 @@
 /// </summary>
 public interface ITransactionBuilderAccount
 {
+    /// <summary>Gets the StrKey-encoded account ID.</summary>
     string AccountId { get; }
 
+    /// <summary>Gets the <see cref="Accounts.KeyPair" /> of the account.</summary>
     KeyPair KeyPair { get; }
+
+    /// <summary>Gets the muxed account identifier associated with this account.</summary>
     IAccountId MuxedAccount { get; }
+
+    /// <summary>Gets the current sequence number of the account on the Stellar ledger.</summary>
     long SequenceNumber { get; }
 
     /// <summary>

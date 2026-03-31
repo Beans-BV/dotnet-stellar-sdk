@@ -66,6 +66,10 @@ public class ManageSellOfferOperation : Operation
     /// </summary>
     public long OfferId { get; }
 
+    /// <summary>
+    ///     Generates the XDR operation body for this operation.
+    /// </summary>
+    /// <returns>The XDR operation body.</returns>
     public override xdr_Operation.OperationBody ToOperationBody()
     {
         var body = new xdr_Operation.OperationBody
@@ -83,6 +87,11 @@ public class ManageSellOfferOperation : Operation
         return body;
     }
 
+    /// <summary>
+    ///     Creates a <see cref="ManageSellOfferOperation" /> from its XDR representation.
+    /// </summary>
+    /// <param name="manageSellOfferOp">The XDR ManageSellOfferOp object.</param>
+    /// <returns>A new <see cref="ManageSellOfferOperation" /> instance.</returns>
     public static ManageSellOfferOperation FromXdr(ManageSellOfferOp manageSellOfferOp)
     {
         return new ManageSellOfferOperation(

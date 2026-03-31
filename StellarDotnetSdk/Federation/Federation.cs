@@ -3,6 +3,11 @@ using System.Threading.Tasks;
 
 namespace StellarDotnetSdk.Federation;
 
+/// <summary>
+///     Provides a helper for resolving Stellar federation addresses (e.g., <c>bob*stellar.org</c>)
+///     to account IDs via the Stellar federation protocol.
+///     See <a href="https://developers.stellar.org/docs/learn/encyclopedia/federation">Federation</a>.
+/// </summary>
 public static class Federation
 {
     /// <summary>

@@ -10,18 +10,22 @@ namespace StellarDotnetSdk.Exceptions;
 [Serializable]
 public class NotEnoughSignaturesException : Exception
 {
+    /// <inheritdoc />
     public NotEnoughSignaturesException()
     {
     }
 
+    /// <inheritdoc />
     public NotEnoughSignaturesException(string message) : base(message)
     {
     }
 
+    /// <inheritdoc />
     public NotEnoughSignaturesException(string message, Exception innerException) : base(message, innerException)
     {
     }
 
+    /// <inheritdoc />
     protected NotEnoughSignaturesException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }

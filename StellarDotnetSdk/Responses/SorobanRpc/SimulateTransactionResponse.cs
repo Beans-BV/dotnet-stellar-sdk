@@ -61,6 +61,9 @@ public class SimulateTransactionResponse
     [JsonPropertyName("restorePreamble")]
     public RestorePreamble? RestorePreambleInfo { get; init; } // TODO Unit test
 
+    /// <summary>
+    ///     (optional) An array of state changes that would result from executing the simulated transaction.
+    /// </summary>
     [JsonPropertyName("stateChanges")]
     public LedgerEntryChange[]? StateChanges { get; init; }
 
@@ -81,6 +84,10 @@ public class SimulateTransactionResponse
         TransactionData != null ? SorobanTransactionData.FromXdrBase64(TransactionData) : null;
 
 
+    /// <summary>
+    ///     (optional) Array of Soroban authorization entries required for the simulated transaction.
+    ///     Derived from the first result's auth entries.
+    /// </summary>
     public SorobanAuthorizationEntry[]? SorobanAuthorization
     {
         get
@@ -161,9 +168,24 @@ public class SimulateTransactionResponse
     /// </summary>
     public class LedgerEntryChange
     {
+        /// <summary>
+        ///     The type of ledger entry change (e.g., "created", "updated", "deleted").
+        /// </summary>
         public string Type { get; init; }
+
+        /// <summary>
+        ///     The base64-encoded XDR key of the affected ledger entry.
+        /// </summary>
         public string Key { get; init; }
+
+        /// <summary>
+        ///     The base64-encoded XDR of the ledger entry before the change, or null for created entries.
+        /// </summary>
         public string? Before { get; init; }
+
+        /// <summary>
+        ///     The base64-encoded XDR of the ledger entry after the change, or null for deleted entries.
+        /// </summary>
         public string? After { get; init; }
     }
 }

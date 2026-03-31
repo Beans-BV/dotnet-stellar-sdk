@@ -8,6 +8,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class BumpSequenceResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="BumpSequenceResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR bump sequence result.</param>
+    /// <returns>A <see cref="BumpSequenceResult" /> instance representing the operation outcome.</returns>
     public static BumpSequenceResult FromXdr(Xdr.BumpSequenceResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -24,6 +29,7 @@ public class BumpSequenceResult : OperationResult
 /// </summary>
 public class BumpSequenceSuccess : BumpSequenceResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 

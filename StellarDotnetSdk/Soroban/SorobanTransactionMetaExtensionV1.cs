@@ -20,11 +20,32 @@ public class SorobanTransactionMetaExtensionV1
         RentFeeCharged = rentFeeCharged;
     }
 
+    /// <summary>
+    ///     The total non-refundable resource fee in stroops charged for the transaction.
+    /// </summary>
     public long TotalNonRefundableResourceFeeCharged { get; }
+
+    /// <summary>
+    ///     The total refundable resource fee in stroops charged for the transaction.
+    /// </summary>
     public long TotalRefundableResourceFeeCharged { get; }
+
+    /// <summary>
+    ///     The rent fee in stroops charged for the transaction.
+    /// </summary>
     public long RentFeeCharged { get; }
+
+    /// <summary>
+    ///     Reserved for future use.
+    /// </summary>
     public ExtensionPoint ExtensionPoint { get; }
 
+    /// <summary>
+    ///     Creates a new <see cref="SorobanTransactionMetaExtensionV1" /> from an XDR
+    ///     <see cref="SorobanTransactionMetaExtV1" /> object.
+    /// </summary>
+    /// <param name="xdrMetaExtV1">The XDR metadata extension to convert.</param>
+    /// <returns>A <see cref="SorobanTransactionMetaExtensionV1" /> instance.</returns>
     public static SorobanTransactionMetaExtensionV1 FromXdr(SorobanTransactionMetaExtV1 xdrMetaExtV1)
     {
         return new SorobanTransactionMetaExtensionV1(

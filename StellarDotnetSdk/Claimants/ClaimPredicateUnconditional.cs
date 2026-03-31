@@ -8,6 +8,7 @@ namespace StellarDotnetSdk.Claimants;
 /// </summary>
 public class ClaimPredicateUnconditional : ClaimPredicate
 {
+    /// <inheritdoc />
     public override Xdr.ClaimPredicate ToXdr()
     {
         return new Xdr.ClaimPredicate

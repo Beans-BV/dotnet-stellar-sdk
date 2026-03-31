@@ -15,11 +15,20 @@ public class GetLedgerEntriesResponse
     [JsonPropertyName("entries")]
     private LedgerEntryResult[]? EntryResults { get; init; }
 
+    /// <summary>
+    ///     The sequence number of the latest ledger known to Soroban RPC at the time it handled the request.
+    /// </summary>
     public long? LatestLedger { get; init; }
 
+    /// <summary>
+    ///     The array of ledger entries matching the requested keys. Null if no entries were found.
+    /// </summary>
     public LedgerEntry[]? LedgerEntries =>
         EntryResults?.Select(x => x.LedgerEntry).ToArray();
 
+    /// <summary>
+    ///     The array of ledger keys corresponding to the requested entries. Null if no entries were found.
+    /// </summary>
     public LedgerKey[]? LedgerKeys =>
         EntryResults?.Select(x => x.LedgerKey).ToArray();
 

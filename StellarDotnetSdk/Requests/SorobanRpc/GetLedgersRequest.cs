@@ -2,6 +2,10 @@ using System.Text.Json.Serialization;
 
 namespace StellarDotnetSdk.Requests.SorobanRpc;
 
+/// <summary>
+///     Represents the request parameters for the Soroban RPC <c>getLedgers</c> method,
+///     which retrieves a range of ledgers from the network.
+/// </summary>
 public class GetLedgersRequest
 {
     /// <summary>
@@ -12,6 +16,9 @@ public class GetLedgersRequest
     [JsonPropertyName("startLedger")]
     public long? StartLedger { get; set; }
 
+    /// <summary>
+    ///     Pagination options for controlling the cursor position and page size of ledger results.
+    /// </summary>
     [JsonPropertyName("pagination")]
     public PaginationOptions? Pagination { get; set; }
 }

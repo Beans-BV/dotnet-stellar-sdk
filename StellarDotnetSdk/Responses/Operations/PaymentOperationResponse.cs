@@ -9,6 +9,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class PaymentOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 1;
 
     /// <summary>

@@ -8,6 +8,11 @@ namespace StellarDotnetSdk;
 
 using MuxedAccount = xdrSDK.MuxedAccount;
 
+/// <summary>
+///     Provides methods for encoding and decoding Stellar keys using StrKey format (RFC 4648 base32 with a
+///     version byte prefix and CRC16-XModem checksum). This format is used for all human-readable Stellar
+///     identifiers including account IDs (G...), secret seeds (S...), contract IDs (C...), and muxed accounts (M...).
+/// </summary>
 public static class StrKey
 {
     /// <summary>
@@ -57,6 +62,11 @@ public static class StrKey
         return EncodeCheck(VersionByte.ACCOUNT_ID, data);
     }
 
+    /// <summary>
+    ///     Encodes raw bytes to a Stellar account ID (G...).
+    /// </summary>
+    /// <param name="data">A raw byte array.</param>
+    /// <returns>Base32-encoded representation (G...) of the provided data.</returns>
     [Obsolete("Deprecated. Use EncodeEd25519PublicKey instead.")]
     public static string EncodeStellarAccountId(byte[] data)
     {
@@ -103,6 +113,11 @@ public static class StrKey
         return EncodeCheck(VersionByte.SHA256_HASH, data);
     }
 
+    /// <summary>
+    ///     Encodes raw bytes to a Stellar secret seed (S...).
+    /// </summary>
+    /// <param name="data">A raw byte array.</param>
+    /// <returns>Base32-encoded representation (S...) of the provided data.</returns>
     [Obsolete("Deprecated. Use EncodeEd25519SecretSeed instead.")]
     public static string EncodeStellarSecretSeed(byte[] data)
     {
@@ -165,6 +180,11 @@ public static class StrKey
         return EncodeCheck(VersionByte.CLAIMABLE_BALANCE, data);
     }
 
+    /// <summary>
+    ///     Encodes an XDR muxed account to its StrKey string representation.
+    /// </summary>
+    /// <param name="muxedAccount">The XDR muxed account to encode.</param>
+    /// <returns>A StrKey-encoded string (G... for Ed25519, M... for muxed Ed25519).</returns>
     [Obsolete("Deprecated. Use EncodeMed25519PublicKey instead.")]
     public static string EncodeStellarMuxedAccount(MuxedAccount muxedAccount)
     {
@@ -184,16 +204,33 @@ public static class StrKey
         }
     }
 
+    /// <summary>
+    ///     Attempts to decode an Ed25519 public key (G...) to raw bytes.
+    /// </summary>
+    /// <param name="publicKey">The StrKey-encoded public key.</param>
+    /// <param name="decoded">When this method returns, contains the decoded bytes if successful.</param>
+    /// <returns><c>true</c> if the decoding succeeded; otherwise, <c>false</c>.</returns>
     public static bool TryDecodeEd25519PublicKey(string publicKey, out byte[] decoded)
     {
         return TryDecode(VersionByte.ACCOUNT_ID, publicKey, out decoded);
     }
 
+    /// <summary>
+    ///     Attempts to decode a muxed Ed25519 public key (M...) to raw bytes.
+    /// </summary>
+    /// <param name="publicKey">The StrKey-encoded muxed public key.</param>
+    /// <param name="decoded">When this method returns, contains the decoded bytes if successful.</param>
+    /// <returns><c>true</c> if the decoding succeeded; otherwise, <c>false</c>.</returns>
     public static bool TryDecodeMed25519PublicKey(string publicKey, out byte[] decoded)
     {
         return TryDecode(VersionByte.MUXED_ED25519, publicKey, out decoded);
     }
 
+    /// <summary>
+    ///     Extracts the version byte from a StrKey-encoded string to determine the key type.
+    /// </summary>
+    /// <param name="encoded">The StrKey-encoded string.</param>
+    /// <returns>The <see cref="VersionByte" /> indicating the type of key.</returns>
     public static VersionByte DecodeVersionByte(string encoded)
     {
         var decoded = Base32Encoding.ToBytes(encoded);
@@ -215,6 +252,11 @@ public static class StrKey
         return DecodeCheck(VersionByte.ACCOUNT_ID, publicKey);
     }
 
+    /// <summary>
+    ///     Decodes a Stellar account ID (G...) to raw bytes.
+    /// </summary>
+    /// <param name="data">A StrKey-encoded account ID.</param>
+    /// <returns>Raw bytes of the decoded account ID.</returns>
     [Obsolete("Deprecated. Use DecodeEd25519PublicKey instead.")]
     public static byte[] DecodeStellarAccountId(string data)
     {
@@ -241,6 +283,11 @@ public static class StrKey
         return DecodeCheck(VersionByte.SEED, data);
     }
 
+    /// <summary>
+    ///     Decodes a Stellar secret seed (S...) to raw bytes.
+    /// </summary>
+    /// <param name="data">A StrKey-encoded secret seed.</param>
+    /// <returns>Raw bytes of the decoded secret seed.</returns>
     [Obsolete("Deprecated. Use DecodeEd25519SecretSeed instead.")]
     public static byte[] DecodeStellarSecretSeed(string data)
     {
@@ -319,6 +366,12 @@ public static class StrKey
         return DecodeCheck(VersionByte.CLAIMABLE_BALANCE, data);
     }
 
+    /// <summary>
+    ///     Decodes a StrKey-encoded string to an XDR <see cref="MuxedAccount" />.
+    ///     Supports both Ed25519 (G...) and muxed Ed25519 (M...) addresses.
+    /// </summary>
+    /// <param name="data">A StrKey-encoded account address.</param>
+    /// <returns>The decoded XDR <see cref="MuxedAccount" />.</returns>
     [Obsolete("Deprecated. Use DecodeMuxedEd25519PublicKey instead.")]
     public static MuxedAccount DecodeStellarMuxedAccount(string data)
     {
@@ -429,12 +482,23 @@ public static class StrKey
         return IsValid(VersionByte.CLAIMABLE_BALANCE, claimableBalanceId);
     }
 
+    /// <summary>
+    ///     Checks validity of a muxed account address (M...).
+    /// </summary>
+    /// <param name="publicKey">The muxed account address to check.</param>
+    /// <returns><c>true</c> if the given address is a valid muxed account; otherwise, <c>false</c>.</returns>
     [Obsolete("Deprecated. Use IsValidMed25519PublicKey instead.")]
     public static bool IsValidMuxedAccount(string publicKey)
     {
         return IsValid(VersionByte.MUXED_ED25519, publicKey);
     }
 
+    /// <summary>
+    ///     Encodes raw data with a version byte prefix and CRC16-XModem checksum in base32.
+    /// </summary>
+    /// <param name="versionByte">The version byte indicating the key type.</param>
+    /// <param name="data">The raw data bytes to encode.</param>
+    /// <returns>A StrKey-encoded string.</returns>
     public static string EncodeCheck(VersionByte versionByte, byte[] data)
     {
         var bytes = new List<byte>
@@ -448,6 +512,12 @@ public static class StrKey
         return Base32Encoding.ToString(bytes.ToArray(), options => options.OmitPadding = true);
     }
 
+    /// <summary>
+    ///     Decodes a StrKey-encoded string, verifying the version byte and CRC16-XModem checksum.
+    /// </summary>
+    /// <param name="versionByte">The expected version byte.</param>
+    /// <param name="encoded">The StrKey-encoded string to decode.</param>
+    /// <returns>The raw data bytes (without the version byte or checksum).</returns>
     public static byte[] DecodeCheck(VersionByte versionByte, string encoded)
     {
         // The minimal length is 3 bytes (version byte and 2-byte CRC) which,

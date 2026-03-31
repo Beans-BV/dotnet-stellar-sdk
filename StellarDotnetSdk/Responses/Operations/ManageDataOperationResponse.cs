@@ -8,6 +8,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class ManageDataOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 10;
 
     /// <summary>

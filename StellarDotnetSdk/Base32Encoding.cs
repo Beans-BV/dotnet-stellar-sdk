@@ -3,8 +3,17 @@ using dotnetstandard_bip32;
 
 namespace StellarDotnetSdk;
 
+/// <summary>
+///     Provides RFC 4648 Base32 encoding and decoding methods. Used internally by <see cref="StrKey" />
+///     for encoding and decoding Stellar keys and identifiers.
+/// </summary>
 public static class Base32Encoding
 {
+    /// <summary>
+    ///     Decodes a Base32-encoded string to its raw byte representation.
+    /// </summary>
+    /// <param name="input">The Base32-encoded string to decode.</param>
+    /// <returns>The decoded byte array.</returns>
     public static byte[] ToBytes(string input)
     {
         if (string.IsNullOrEmpty(input))
@@ -48,6 +57,12 @@ public static class Base32Encoding
         return returnArray;
     }
 
+    /// <summary>
+    ///     Encodes a byte array to a Base32 string with optional configuration.
+    /// </summary>
+    /// <param name="input">The byte array to encode.</param>
+    /// <param name="optionsFunc">An optional action to configure encoding options (e.g., padding).</param>
+    /// <returns>The Base32-encoded string.</returns>
     public static string ToString(byte[] input, Action<Base32EncodingOptions>? optionsFunc = null)
     {
         var defaultOptions = new Base32EncodingOptions { OmitPadding = false };
@@ -56,6 +71,12 @@ public static class Base32Encoding
         return ToString(input, defaultOptions);
     }
 
+    /// <summary>
+    ///     Encodes a byte array to a Base32 string using the specified options.
+    /// </summary>
+    /// <param name="input">The byte array to encode.</param>
+    /// <param name="options">The encoding options controlling padding behavior.</param>
+    /// <returns>The Base32-encoded string.</returns>
     public static string ToString(byte[] input, Base32EncodingOptions options)
     {
         if (input == null || input.Length == 0)

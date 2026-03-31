@@ -11,32 +11,52 @@ namespace StellarDotnetSdk.Assets;
 /// </summary>
 public class LiquidityPoolShareTrustlineAsset : TrustlineAsset
 {
+    /// <summary>
+    ///     The Horizon REST API type identifier for liquidity pool share trustline assets.
+    /// </summary>
     public const string RestApiType = "pool_share";
 
+    /// <summary>
+    ///     Initializes a new instance from liquidity pool parameters, deriving the pool ID.
+    /// </summary>
+    /// <param name="parameters">The liquidity pool parameters.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the derived pool ID is null.</exception>
     public LiquidityPoolShareTrustlineAsset(LiquidityPoolParameters parameters)
     {
         Id = parameters.GetId() ?? throw new ArgumentNullException(nameof(parameters), "parameters cannot be null");
     }
 
+    /// <summary>
+    ///     Initializes a new instance from an existing liquidity pool ID.
+    /// </summary>
+    /// <param name="id">The liquidity pool ID. Must not be null.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="id" /> is null.</exception>
     public LiquidityPoolShareTrustlineAsset(LiquidityPoolId id)
     {
         Id = id ?? throw new ArgumentNullException(nameof(id), "id cannot be null");
     }
 
+    /// <summary>
+    ///     Gets the unique identifier of the liquidity pool this trustline references.
+    /// </summary>
     public LiquidityPoolId Id { get; }
 
+    /// <inheritdoc />
     public override string Type => RestApiType;
 
+    /// <inheritdoc />
     public override string ToString()
     {
         return Id.ToString();
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return Id.GetHashCode();
     }
 
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (obj is not LiquidityPoolShareTrustlineAsset other)
@@ -47,6 +67,7 @@ public class LiquidityPoolShareTrustlineAsset : TrustlineAsset
         return obj.ToString() == other.ToString();
     }
 
+    /// <inheritdoc />
     public override int CompareTo(TrustlineAsset asset)
     {
         return asset.Type != RestApiType

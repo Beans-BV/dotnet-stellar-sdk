@@ -10,8 +10,17 @@ namespace StellarDotnetSdk.Assets;
 /// </summary>
 public class AssetTypeCreditAlphaNum12 : AssetTypeCreditAlphaNum
 {
+    /// <summary>
+    ///     The Horizon REST API type identifier for alphanumeric 12-character assets.
+    /// </summary>
     public const string RestApiType = "credit_alphanum12";
 
+    /// <summary>
+    ///     Initializes a new instance of <see cref="AssetTypeCreditAlphaNum12" /> with the specified asset code and issuer.
+    /// </summary>
+    /// <param name="code">The asset code (5-12 alphanumeric characters).</param>
+    /// <param name="issuer">The Stellar account ID of the asset issuer.</param>
+    /// <exception cref="StellarDotnetSdk.Exceptions.AssetCodeLengthInvalidException">Thrown when the code length is not between 5 and 12.</exception>
     public AssetTypeCreditAlphaNum12(string code, string issuer) : base(code, issuer)
     {
         if (code.Length is < 5 or > 12)
@@ -20,8 +29,10 @@ public class AssetTypeCreditAlphaNum12 : AssetTypeCreditAlphaNum
         }
     }
 
+    /// <inheritdoc />
     public override string Type => RestApiType;
 
+    /// <inheritdoc />
     public override Xdr.Asset ToXdr()
     {
         var thisXdr = new Xdr.Asset
@@ -41,6 +52,7 @@ public class AssetTypeCreditAlphaNum12 : AssetTypeCreditAlphaNum
         return thisXdr;
     }
 
+    /// <inheritdoc />
     public override int CompareTo(Asset asset)
     {
         if (asset.Type != RestApiType)

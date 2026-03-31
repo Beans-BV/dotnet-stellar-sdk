@@ -11,6 +11,7 @@ namespace StellarDotnetSdk.Converters;
 /// </summary>
 public class LiquidityPoolTypeEnumJsonConverter : JsonConverter<LiquidityPoolType.LiquidityPoolTypeEnum>
 {
+    /// <inheritdoc />
     public override LiquidityPoolType.LiquidityPoolTypeEnum Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
@@ -33,6 +34,7 @@ public class LiquidityPoolTypeEnumJsonConverter : JsonConverter<LiquidityPoolTyp
         };
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, LiquidityPoolType.LiquidityPoolTypeEnum value,
         JsonSerializerOptions options)
     {

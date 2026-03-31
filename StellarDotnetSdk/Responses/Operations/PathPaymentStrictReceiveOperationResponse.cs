@@ -11,6 +11,7 @@ namespace StellarDotnetSdk.Responses.Operations;
 /// </summary>
 public class PathPaymentStrictReceiveOperationResponse : OperationResponse
 {
+    /// <inheritdoc />
     public override int TypeId => 2;
 
     /// <summary>

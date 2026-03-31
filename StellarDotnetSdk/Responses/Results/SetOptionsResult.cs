@@ -8,6 +8,11 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class SetOptionsResult : OperationResult
 {
+    /// <summary>
+    ///     Creates the appropriate <see cref="SetOptionsResult" /> subclass from the given XDR representation.
+    /// </summary>
+    /// <param name="result">The XDR set options result.</param>
+    /// <returns>A <see cref="SetOptionsResult" /> instance representing the operation outcome.</returns>
     public static SetOptionsResult FromXdr(Xdr.SetOptionsResult result)
     {
         return result.Discriminant.InnerValue switch
@@ -33,6 +38,7 @@ public class SetOptionsResult : OperationResult
 /// </summary>
 public class SetOptionsSuccess : SetOptionsResult
 {
+    /// <inheritdoc />
     public override bool IsSuccess => true;
 }
 
