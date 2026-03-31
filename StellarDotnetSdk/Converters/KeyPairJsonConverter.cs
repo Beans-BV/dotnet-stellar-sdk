@@ -5,6 +5,10 @@ using StellarDotnetSdk.Accounts;
 
 namespace StellarDotnetSdk.Converters;
 
+/// <summary>
+///     JSON converter for <see cref="KeyPair" /> that serializes and deserializes Stellar account IDs
+///     (public keys in StrKey format) as JSON string values.
+/// </summary>
 public class KeyPairJsonConverter : JsonConverter<KeyPair>
 {
     public override KeyPair? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

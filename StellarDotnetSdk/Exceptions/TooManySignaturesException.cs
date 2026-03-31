@@ -3,6 +3,10 @@ using System.Runtime.Serialization;
 
 namespace StellarDotnetSdk.Exceptions;
 
+/// <summary>
+///     The exception that is thrown when attempting to create an unsigned transaction envelope
+///     from a transaction that already has signatures.
+/// </summary>
 [Serializable]
 public class TooManySignaturesException : Exception
 {

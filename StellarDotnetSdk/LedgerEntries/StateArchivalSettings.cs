@@ -1,5 +1,9 @@
 ﻿namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the network configuration settings for Soroban state archival, including TTL limits, rent rates, and
+///     eviction parameters.
+/// </summary>
 public class StateArchivalSettings : LedgerEntryConfigSetting
 {
     private StateArchivalSettings(

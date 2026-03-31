@@ -136,6 +136,9 @@ public class AccountsRequestBuilder : RequestBuilderExecutePageable<AccountsRequ
         };
     }
 
+    /// <summary>
+    ///     Options for filtering accounts when querying the Horizon <c>/accounts</c> endpoint.
+    /// </summary>
     public class AccountsRequestOptions
     {
         /// <summary>

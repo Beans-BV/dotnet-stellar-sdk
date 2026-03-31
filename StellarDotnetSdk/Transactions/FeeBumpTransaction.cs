@@ -7,6 +7,10 @@ using xdr_Int64 = StellarDotnetSdk.Xdr.Int64;
 
 namespace StellarDotnetSdk.Transactions;
 
+/// <summary>
+///     Represents a fee bump transaction that wraps an inner transaction with a higher fee to prioritize inclusion in a
+///     ledger.
+/// </summary>
 public class FeeBumpTransaction : TransactionBase
 {
     internal FeeBumpTransaction(IAccountId feeSource, Transaction innerTx, long fee)

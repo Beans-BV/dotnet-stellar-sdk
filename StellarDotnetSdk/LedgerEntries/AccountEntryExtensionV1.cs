@@ -1,5 +1,8 @@
 ﻿namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents version 1 extensions to a Stellar account entry, including liabilities.
+/// </summary>
 public class AccountEntryExtensionV1
 {
     private AccountEntryExtensionV1(Liabilities liabilities)

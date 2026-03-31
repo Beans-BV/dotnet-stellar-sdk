@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.CreateAccountResultCode.CreateAccoun
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a create account operation.
+/// </summary>
 public class CreateAccountResult : OperationResult
 {
     public static CreateAccountResult FromXdr(Xdr.CreateAccountResult result)
@@ -19,6 +22,9 @@ public class CreateAccountResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful create account operation result.
+/// </summary>
 public class CreateAccountSuccess : CreateAccountResult
 {
     public override bool IsSuccess => true;

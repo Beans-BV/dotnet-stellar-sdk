@@ -5,6 +5,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.ManageBuyOfferResultCode.ManageBuyOf
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a manage buy offer operation.
+/// </summary>
 public class ManageBuyOfferResult : OperationResult
 {
     public static ManageBuyOfferResult FromXdr(Xdr.ManageBuyOfferResult result)
@@ -29,6 +32,9 @@ public class ManageBuyOfferResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful manage buy offer operation result.
+/// </summary>
 public class ManageBuyOfferSuccess : ManageBuyOfferResult
 {
     protected ManageBuyOfferSuccess(ClaimAtom[] offersClaimed)
@@ -55,6 +61,9 @@ public class ManageBuyOfferSuccess : ManageBuyOfferResult
     }
 }
 
+/// <summary>
+///     Represents a successful manage buy offer result where the offer was deleted.
+/// </summary>
 public class ManageBuyOfferDeleted : ManageBuyOfferSuccess
 {
     private ManageBuyOfferDeleted(ClaimAtom[] offersClaimed) : base(offersClaimed)
@@ -67,6 +76,9 @@ public class ManageBuyOfferDeleted : ManageBuyOfferSuccess
     }
 }
 
+/// <summary>
+///     Represents a successful manage buy offer result where the offer was updated.
+/// </summary>
 public class ManageBuyOfferUpdated : ManageBuyOfferSuccess
 {
     private ManageBuyOfferUpdated(OfferEntry offer, ClaimAtom[] offersClaimed) : base(offersClaimed)
@@ -87,6 +99,9 @@ public class ManageBuyOfferUpdated : ManageBuyOfferSuccess
     }
 }
 
+/// <summary>
+///     Represents a successful manage buy offer result where a new offer was created.
+/// </summary>
 public class ManageBuyOfferCreated : ManageBuyOfferSuccess
 {
     private ManageBuyOfferCreated(OfferEntry offer, ClaimAtom[] offersClaimed) : base(offersClaimed)

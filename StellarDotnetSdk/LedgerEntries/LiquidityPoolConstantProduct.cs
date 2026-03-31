@@ -4,6 +4,9 @@ using LiquidityPoolConstantProductParameters = StellarDotnetSdk.LiquidityPool.Li
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the body of a constant-product liquidity pool entry, including parameters, reserves, and share counts.
+/// </summary>
 public class LiquidityPoolConstantProduct : LiquidityPoolEntryBody
 {
     private LiquidityPoolConstantProduct(

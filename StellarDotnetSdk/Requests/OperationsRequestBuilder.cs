@@ -5,6 +5,10 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Builds requests connected to operations. Provides access to the Horizon <c>/operations</c> endpoint
+///     for retrieving details about individual operations and streaming operation events.
+/// </summary>
 public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsRequestBuilder, OperationResponse>
 {
     /// <summary>

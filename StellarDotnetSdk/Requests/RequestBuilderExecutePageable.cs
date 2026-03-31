@@ -5,6 +5,11 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Extends <see cref="IRequestBuilder{T}" /> with the ability to execute a request and return a paginated response.
+/// </summary>
+/// <typeparam name="T">The concrete request builder type (for fluent chaining).</typeparam>
+/// <typeparam name="TResponse">The response element type contained in each page.</typeparam>
 public interface IRequestBuilderExecutePageable<T, TResponse> : IRequestBuilder<T>
     where T : class where TResponse : class
 {
@@ -14,6 +19,11 @@ public interface IRequestBuilderExecutePageable<T, TResponse> : IRequestBuilder<
     Task<Page<TResponse>> Execute();
 }
 
+/// <summary>
+///     Base class for request builders that execute requests and return a <see cref="Page{T}" /> of results.
+/// </summary>
+/// <typeparam name="T">The concrete request builder type (for fluent chaining).</typeparam>
+/// <typeparam name="TResponse">The response element type contained in each page.</typeparam>
 public class RequestBuilderExecutePageable<T, TResponse> : RequestBuilder<T>,
     IRequestBuilderExecutePageable<T, TResponse> where T : class where TResponse : class
 {

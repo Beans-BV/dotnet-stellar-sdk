@@ -35,6 +35,13 @@ public class
         return await LiquidityPool(liquidityPoolId.ToString());
     }
 
+    /// <summary>
+    ///     Filters liquidity pools that have reserves matching all of the specified assets.
+    /// </summary>
+    /// <param name="reserves">
+    ///     The canonical asset identifiers (e.g. <c>"native"</c> or <c>"USD:GABC..."</c>) to filter by.
+    /// </param>
+    /// <returns>The current <see cref="LiquidityPoolsRequestBuilder" /> instance for chaining.</returns>
     public LiquidityPoolsRequestBuilder ForReserves(params string[] reserves)
     {
         UriBuilder.SetQueryParam(ReservesParameterName, string.Join(",", reserves));

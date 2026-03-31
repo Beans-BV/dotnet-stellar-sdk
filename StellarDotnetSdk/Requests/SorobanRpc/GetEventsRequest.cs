@@ -2,6 +2,10 @@
 
 namespace StellarDotnetSdk.Requests.SorobanRpc;
 
+/// <summary>
+///     Represents the request parameters for the Soroban RPC <c>getEvents</c> method,
+///     which retrieves contract events from the network.
+/// </summary>
 public class GetEventsRequest
 {
     /// <summary>
@@ -22,6 +26,9 @@ public class GetEventsRequest
     [JsonPropertyName("pagination")]
     public PaginationOptions? Pagination { get; set; }
 
+    /// <summary>
+    ///     Defines criteria for filtering contract events by type, contract ID, and topic.
+    /// </summary>
     public class EventFilter
     {
         /// <summary>
@@ -46,6 +53,9 @@ public class GetEventsRequest
         public string[][]? Topics { get; set; }
     }
 
+    /// <summary>
+    ///     Pagination parameters for controlling the cursor position and page size of event results.
+    /// </summary>
     public class PaginationOptions
     {
         [JsonPropertyName("cursor")]

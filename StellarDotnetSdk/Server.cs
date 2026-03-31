@@ -18,6 +18,10 @@ using StellarDotnetSdk.Transactions;
 
 namespace StellarDotnetSdk;
 
+/// <summary>
+///     Provides access to the Stellar Horizon API server. Offers request builders for querying accounts, assets,
+///     transactions, and other Stellar resources, as well as methods for submitting transactions.
+/// </summary>
 public class Server : IDisposable
 {
     private const string ClientNameHeader = "X-Client-Name";
@@ -66,38 +70,58 @@ public class Server : IDisposable
         _internalHttpClient = true;
     }
 
+    /// <summary>Gets a request builder for querying accounts.</summary>
     public AccountsRequestBuilder Accounts => new(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for querying assets.</summary>
     public AssetsRequestBuilder Assets => new(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for querying claimable balances.</summary>
     public ClaimableBalancesRequestBuilder ClaimableBalances => new(_serverUri, _httpClient);
+
+    /// <summary>Gets a request builder for querying effects.</summary>
     public EffectsRequestBuilder Effects => new(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for querying ledgers.</summary>
     public LedgersRequestBuilder Ledgers => new(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for querying offers.</summary>
     public OffersRequestBuilder Offers => new(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for querying operations.</summary>
     public OperationsRequestBuilder Operations => new(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for querying fee statistics.</summary>
     public FeeStatsRequestBuilder FeeStats => new(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for querying the order book.</summary>
     public OrderBookRequestBuilder OrderBook => new(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for querying trades.</summary>
     public TradesRequestBuilder Trades => new(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for strict-send payment path queries.</summary>
     public PathStrictSendRequestBuilder PathStrictSend => new(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for strict-receive payment path queries.</summary>
     public PathStrictReceiveRequestBuilder PathStrictReceive => new(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for querying payments.</summary>
     public IPaymentsRequestInitialBuilder Payments => PaymentsRequestBuilder.Create(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for querying transactions.</summary>
     public TransactionsRequestBuilder Transactions => new(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for the Stellar test network friendbot faucet.</summary>
     public FriendBotRequestBuilder TestNetFriendBot => new(_serverUri, _httpClient);
 
+    /// <summary>Gets a request builder for querying trade aggregations.</summary>
     public TradesAggregationRequestBuilder TradeAggregations => new(_serverUri, _httpClient);
+
+    /// <summary>Gets a request builder for querying liquidity pools.</summary>
     public LiquidityPoolsRequestBuilder LiquidityPools => new(_serverUri, _httpClient);
 
+    /// <inheritdoc />
     public void Dispose()
     {
         if (_internalHttpClient)
@@ -106,6 +130,10 @@ public class Server : IDisposable
         }
     }
 
+    /// <summary>
+    ///     Fetches the root information from the Horizon server synchronously.
+    /// </summary>
+    /// <returns>The root response containing server metadata and supported protocol version.</returns>
     public RootResponse Root()
     {
         return RootAsync().Result;

@@ -1,5 +1,8 @@
 ﻿namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents version 2 extensions to a trustline entry, including the liquidity pool use count.
+/// </summary>
 public class TrustLineEntryExtensionV2
 {
     private TrustLineEntryExtensionV2(int liquidityPoolUseCount)

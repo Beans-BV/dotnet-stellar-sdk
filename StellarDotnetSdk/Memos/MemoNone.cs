@@ -2,6 +2,9 @@
 
 namespace StellarDotnetSdk.Memos;
 
+/// <summary>
+///     Represents the absence of a memo on a transaction (XDR type <c>MEMO_NONE</c>).
+/// </summary>
 public class MemoNone : Memo
 {
     public override Xdr.Memo ToXdr()

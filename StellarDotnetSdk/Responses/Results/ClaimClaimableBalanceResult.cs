@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.ClaimClaimableBalanceResultCode.Clai
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a claim claimable balance operation.
+/// </summary>
 public class ClaimClaimableBalanceResult : OperationResult
 {
     public static ClaimClaimableBalanceResult FromXdr(Xdr.ClaimClaimableBalanceResult result)
@@ -20,6 +23,9 @@ public class ClaimClaimableBalanceResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful claim claimable balance operation result.
+/// </summary>
 public class ClaimClaimableBalanceSuccess : ClaimClaimableBalanceResult
 {
     public override bool IsSuccess => true;

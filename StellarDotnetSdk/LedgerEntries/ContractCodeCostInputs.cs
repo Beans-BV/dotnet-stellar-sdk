@@ -2,6 +2,10 @@
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the cost input metrics for a Soroban smart contract, including counts of WASM module elements used in
+///     fee estimation.
+/// </summary>
 public class ContractCodeCostInputs
 {
     private ContractCodeCostInputs(ExtensionPoint extensionPoint, uint nInstructions, uint nFunctions, uint nGlobals,

@@ -3,6 +3,10 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the network configuration setting for the sliding window of live Soroban state sizes, used in rent fee
+///     calculations.
+/// </summary>
 public class ConfigSettingLiveSorobanStateSizeWindow : LedgerEntryConfigSetting
 {
     private ConfigSettingLiveSorobanStateSizeWindow(ulong[] value)

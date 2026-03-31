@@ -5,6 +5,10 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Builds requests to the Stellar Testnet Friendbot service, which funds accounts
+///     with test Lumens. Only available on test networks (not the public network).
+/// </summary>
 public class FriendBotRequestBuilder : RequestBuilder<FriendBotRequestBuilder>
 {
     /// <summary>
@@ -24,6 +28,11 @@ public class FriendBotRequestBuilder : RequestBuilder<FriendBotRequestBuilder>
         }
     }
 
+    /// <summary>
+    ///     Sets the account to be funded by Friendbot.
+    /// </summary>
+    /// <param name="accountId">The public key of the account to fund with test Lumens.</param>
+    /// <returns>The current <see cref="FriendBotRequestBuilder" /> instance for chaining.</returns>
     public FriendBotRequestBuilder FundAccount(string accountId)
     {
         UriBuilder.SetQueryParam("addr", accountId);

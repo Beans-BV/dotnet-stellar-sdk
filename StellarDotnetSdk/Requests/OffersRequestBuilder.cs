@@ -138,6 +138,9 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
         }
     }
 
+    /// <summary>
+    ///     Options for filtering offers when querying the Horizon <c>/offers</c> endpoint.
+    /// </summary>
     public class OffersRequestOptions
     {
         /// <summary>

@@ -52,6 +52,9 @@ public class FederationServer : IDisposable
         set => _httpClient = value;
     }
 
+    /// <summary>
+    ///     Releases the resources used by the underlying <see cref="HttpClient" />.
+    /// </summary>
     public void Dispose()
     {
         _httpClient.Dispose();

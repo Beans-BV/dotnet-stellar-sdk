@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.RevokeSponsorshipResultCode.RevokeSp
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a revoke sponsorship operation.
+/// </summary>
 public class RevokeSponsorshipResult : OperationResult
 {
     public static RevokeSponsorshipResult FromXdr(Xdr.RevokeSponsorshipResult result)
@@ -20,6 +23,9 @@ public class RevokeSponsorshipResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful revoke sponsorship operation result.
+/// </summary>
 public class RevokeSponsorshipSuccess : RevokeSponsorshipResult
 {
     public override bool IsSuccess => true;

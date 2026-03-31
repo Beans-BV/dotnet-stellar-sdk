@@ -5,6 +5,10 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LiquidityPool;
 
+/// <summary>
+///     Represents a Stellar liquidity pool, which holds reserves of two assets and allows
+///     decentralized trading based on an automated market maker (AMM) algorithm.
+/// </summary>
 public class LiquidityPool
 {
     public LiquidityPool(LiquidityPoolId id,

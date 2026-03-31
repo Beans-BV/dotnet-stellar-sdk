@@ -2,6 +2,9 @@
 
 namespace StellarDotnetSdk.Assets;
 
+/// <summary>
+///     Represents the native Stellar asset (XLM/Lumens). This is the built-in currency of the Stellar network.
+/// </summary>
 public class AssetTypeNative : Asset
 {
     public const string RestApiType = "native";

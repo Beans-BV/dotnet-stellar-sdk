@@ -5,6 +5,10 @@ using StellarDotnetSdk.Responses.SorobanRpc;
 
 namespace StellarDotnetSdk.Converters;
 
+/// <summary>
+///     JSON converter for <see cref="SendTransactionResponse.SendTransactionStatus" /> that maps between
+///     the Soroban RPC string representations (e.g., "PENDING", "ERROR") and the corresponding enum values.
+/// </summary>
 public class SendTransactionStatusEnumJsonConverter : JsonConverter<SendTransactionResponse.SendTransactionStatus>
 {
     public override SendTransactionResponse.SendTransactionStatus Read(ref Utf8JsonReader reader, Type typeToConvert,

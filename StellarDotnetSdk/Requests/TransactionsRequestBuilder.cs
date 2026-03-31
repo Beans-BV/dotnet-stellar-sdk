@@ -5,6 +5,10 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Builds requests connected to transactions. Provides access to the Horizon <c>/transactions</c> endpoint
+///     for retrieving transaction details and streaming new transactions.
+/// </summary>
 public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsRequestBuilder, TransactionResponse>
 {
     public TransactionsRequestBuilder(Uri serverUri, HttpClient httpClient)

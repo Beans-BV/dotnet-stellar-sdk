@@ -2,6 +2,9 @@
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the network configuration settings for smart contract historical data fees.
+/// </summary>
 public class ConfigSettingContractHistoricalData : LedgerEntryConfigSetting
 {
     private ConfigSettingContractHistoricalData(long feeHistorical1Kb)

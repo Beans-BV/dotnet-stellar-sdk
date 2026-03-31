@@ -3,6 +3,10 @@ using StellarDotnetSdk.LedgerEntries;
 
 namespace StellarDotnetSdk.Soroban;
 
+/// <summary>
+///     Represents version 2 operation metadata containing ledger entry changes and contract events
+///     produced by a Soroban operation.
+/// </summary>
 public class OperationMetaV2
 {
     public ExtensionPoint ExtensionPoint { get; private set; } = new ExtensionPointZero();

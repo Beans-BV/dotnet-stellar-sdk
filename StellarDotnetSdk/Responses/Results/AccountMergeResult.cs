@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.AccountMergeResultCode.AccountMergeR
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of an account merge operation.
+/// </summary>
 public class AccountMergeResult : OperationResult
 {
     public static AccountMergeResult FromXdr(Xdr.AccountMergeResult result)

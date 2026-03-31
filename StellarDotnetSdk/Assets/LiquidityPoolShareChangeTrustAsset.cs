@@ -6,6 +6,10 @@ using LiquidityPoolParameters = StellarDotnetSdk.LiquidityPool.LiquidityPoolPara
 
 namespace StellarDotnetSdk.Assets;
 
+/// <summary>
+///     Represents a liquidity pool share asset used in change trust operations.
+///     This asset type allows accounts to establish trustlines to liquidity pools on the Stellar network.
+/// </summary>
 public class LiquidityPoolShareChangeTrustAsset : ChangeTrustAsset
 {
     public const string RestApiType = "pool_share";
@@ -30,6 +34,10 @@ public class LiquidityPoolShareChangeTrustAsset : ChangeTrustAsset
 
     public override string Type => RestApiType;
 
+    /// <summary>
+    ///     Gets the unique identifier of the liquidity pool associated with this asset.
+    /// </summary>
+    /// <returns>The <see cref="LiquidityPoolId" /> derived from the pool parameters.</returns>
     public LiquidityPoolId GetLiquidityPoolId()
     {
         return Parameters.GetId();

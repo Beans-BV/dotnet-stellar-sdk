@@ -2,6 +2,9 @@
 
 namespace StellarDotnetSdk.Memos;
 
+/// <summary>
+///     Represents a memo containing a 64-bit unsigned integer identifier (XDR type <c>MEMO_ID</c>).
+/// </summary>
 public class MemoId : Memo
 {
     public MemoId(ulong id)

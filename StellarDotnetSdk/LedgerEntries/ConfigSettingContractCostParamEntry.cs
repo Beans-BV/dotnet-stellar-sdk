@@ -3,6 +3,10 @@ using ExtensionPoint = StellarDotnetSdk.Soroban.ExtensionPoint;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents a single cost parameter entry for a smart contract cost type, with constant and linear terms used in fee
+///     calculation.
+/// </summary>
 public class ConfigSettingContractCostParamEntry
 {
     private ConfigSettingContractCostParamEntry(long constTerm, long linearTerm, ExtensionPoint extensionPoint)

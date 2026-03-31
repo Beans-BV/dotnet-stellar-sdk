@@ -3,6 +3,10 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerKeys;
 
+/// <summary>
+///     Represents a ledger key for a Soroban smart contract code (WASM) entry.
+///     Used to look up deployed contract bytecode from the ledger by its hash.
+/// </summary>
 public class LedgerKeyContractCode : LedgerKey
 {
     /// <summary>

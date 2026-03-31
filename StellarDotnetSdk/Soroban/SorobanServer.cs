@@ -68,6 +68,10 @@ public class SorobanServer : IDisposable
         _internalHttpClient = true;
     }
 
+    /// <summary>
+    ///     Releases resources used by this <see cref="SorobanServer" /> instance. If the HTTP client was created
+    ///     internally, it is disposed; externally provided HTTP clients are not affected.
+    /// </summary>
     public void Dispose()
     {
         if (_internalHttpClient)

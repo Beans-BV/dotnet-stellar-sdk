@@ -5,6 +5,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.PathPaymentStrictReceiveResultCode.P
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a path payment strict receive operation.
+/// </summary>
 public class PathPaymentStrictReceiveResult : OperationResult
 {
     public static PathPaymentStrictReceiveResult FromXdr(Xdr.PathPaymentStrictReceiveResult result)
@@ -44,6 +47,9 @@ public class PathPaymentStrictReceiveResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful path payment strict receive operation result.
+/// </summary>
 public class PathPaymentStrictReceiveSuccess : PathPaymentStrictReceiveResult
 {
     public PathPaymentStrictReceiveSuccess(ClaimAtom[] offers, SimplePaymentResult last)

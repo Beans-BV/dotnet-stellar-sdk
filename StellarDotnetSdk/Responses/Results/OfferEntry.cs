@@ -11,6 +11,9 @@ namespace StellarDotnetSdk.Responses.Results;
 /// </summary>
 public class OfferEntry
 {
+    /// <summary>
+    ///     Defines the flags that can be set on an offer entry.
+    /// </summary>
     public enum OfferEntryFlags
     {
         /// <summary>

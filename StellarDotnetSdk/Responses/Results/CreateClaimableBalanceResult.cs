@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.CreateClaimableBalanceResultCode.Cre
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a create claimable balance operation.
+/// </summary>
 public class CreateClaimableBalanceResult : OperationResult
 {
     public static CreateClaimableBalanceResult FromXdr(Xdr.CreateClaimableBalanceResult result)
@@ -26,6 +29,9 @@ public class CreateClaimableBalanceResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful create claimable balance operation result.
+/// </summary>
 public class CreateClaimableBalanceSuccess : CreateClaimableBalanceResult
 {
     /// <summary>

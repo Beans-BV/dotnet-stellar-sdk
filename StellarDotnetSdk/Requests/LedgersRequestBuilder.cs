@@ -5,6 +5,10 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Builds requests connected to ledgers. Provides access to the Horizon <c>/ledgers</c> endpoint
+///     for retrieving ledger details and streaming ledger close events.
+/// </summary>
 public class LedgersRequestBuilder : RequestBuilderStreamable<LedgersRequestBuilder, LedgerResponse>
 {
     public LedgersRequestBuilder(Uri serverUri, HttpClient httpClient)

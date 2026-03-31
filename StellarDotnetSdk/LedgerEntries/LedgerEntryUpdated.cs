@@ -1,5 +1,8 @@
 ﻿namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents a ledger entry change where an existing entry was updated.
+/// </summary>
 public class LedgerEntryUpdated : LedgerEntryChange
 {
     /// <summary>

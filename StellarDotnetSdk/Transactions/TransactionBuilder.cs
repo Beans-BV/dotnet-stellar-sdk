@@ -8,6 +8,10 @@ using Soroban_SorobanTransactionData = StellarDotnetSdk.Soroban.SorobanTransacti
 
 namespace StellarDotnetSdk.Transactions;
 
+/// <summary>
+///     Builds Stellar transactions by accumulating operations, preconditions, and memo before creating a signed-ready
+///     <see cref="Transaction" /> object.
+/// </summary>
 public class TransactionBuilder
 {
     private const uint BaseFee = 100;
@@ -35,6 +39,7 @@ public class TransactionBuilder
         _preconditions = new TransactionPreconditions();
     }
 
+    /// <summary>Gets the number of operations added to this builder so far.</summary>
     public int OperationsCount => _operations.Count;
 
     public static FeeBumpTransaction BuildFeeBumpTransaction(IAccountId feeSource, Transaction inner)
@@ -86,6 +91,11 @@ public class TransactionBuilder
         return this;
     }
 
+    /// <summary>
+    ///     Sets the preconditions for the transaction, such as time bounds, ledger bounds, and extra signers.
+    /// </summary>
+    /// <param name="preconditions">The preconditions to apply.</param>
+    /// <returns>Builder object so you can chain methods.</returns>
     public TransactionBuilder AddPreconditions(TransactionPreconditions preconditions)
     {
         _preconditions = preconditions ??

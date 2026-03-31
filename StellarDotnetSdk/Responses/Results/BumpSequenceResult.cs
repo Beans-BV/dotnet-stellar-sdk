@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.BumpSequenceResultCode.BumpSequenceR
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a bump sequence operation.
+/// </summary>
 public class BumpSequenceResult : OperationResult
 {
     public static BumpSequenceResult FromXdr(Xdr.BumpSequenceResult result)
@@ -16,6 +19,9 @@ public class BumpSequenceResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful bump sequence operation result.
+/// </summary>
 public class BumpSequenceSuccess : BumpSequenceResult
 {
     public override bool IsSuccess => true;

@@ -5,6 +5,10 @@ using StellarDotnetSdk.LedgerKeys;
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;
 
+/// <summary>
+///     Represents the response from the Soroban RPC <c>getLedgerEntries</c> method.
+///     Contains the requested ledger entries and the latest ledger sequence number.
+/// </summary>
 public class GetLedgerEntriesResponse
 {
     [JsonInclude]

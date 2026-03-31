@@ -41,6 +41,11 @@ public class TransactionPreconditions
     /// </summary>
     public TimeBounds? TimeBounds { get; set; }
 
+    /// <summary>
+    ///     Validates that the preconditions are well-formed. Throws if constraints are violated (e.g., too many extra
+    ///     signers).
+    /// </summary>
+    /// <exception cref="StellarDotnetSdk.Exceptions.FormatException">Thrown when preconditions are invalid.</exception>
     public void IsValid()
     {
         if (ExtraSigners?.Count > MaxExtraSignersCount)
@@ -50,6 +55,11 @@ public class TransactionPreconditions
         }
     }
 
+    /// <summary>
+    ///     Determines whether any version 2 precondition fields are set (ledger bounds, sequence constraints, or extra
+    ///     signers).
+    /// </summary>
+    /// <returns><c>true</c> if any V2 precondition is present; otherwise, <c>false</c>.</returns>
     public bool HasV2()
     {
         return LedgerBounds != null ||

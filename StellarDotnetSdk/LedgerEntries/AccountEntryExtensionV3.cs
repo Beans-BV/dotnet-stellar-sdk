@@ -2,6 +2,9 @@
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents version 3 extensions to a Stellar account entry, including sequence ledger and sequence time fields.
+/// </summary>
 public class AccountEntryExtensionV3
 {
     private AccountEntryExtensionV3(ExtensionPoint extensionPoint, uint sequenceLedger, ulong sequenceTime)

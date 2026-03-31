@@ -1,5 +1,9 @@
 ﻿namespace StellarDotnetSdk.Requests.SorobanRpc;
 
+/// <summary>
+///     Represents the request parameters for the Soroban RPC <c>getTransactions</c> method,
+///     which retrieves a list of transactions from the network.
+/// </summary>
 public class GetTransactionsRequest
 {
     /// <summary>

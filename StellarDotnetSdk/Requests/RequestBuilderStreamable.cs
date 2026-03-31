@@ -7,6 +7,10 @@ using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Defines the ability to open a Server-Sent Events (SSE) stream from a Horizon endpoint.
+/// </summary>
+/// <typeparam name="TResponse">The type of response objects received from the event stream.</typeparam>
 public interface IRequestBuilderStreamable<TResponse> where TResponse : class
 {
     IEventSource? EventSource { get; set; }
@@ -27,6 +31,11 @@ public interface IRequestBuilderStreamable<TResponse> where TResponse : class
     IEventSource Stream(EventHandler<TResponse> listener);
 }
 
+/// <summary>
+///     Base class for request builders that support both paginated execution and Server-Sent Events (SSE) streaming.
+/// </summary>
+/// <typeparam name="T">The concrete request builder type (for fluent chaining).</typeparam>
+/// <typeparam name="TResponse">The response element type for both paged results and streamed events.</typeparam>
 public class RequestBuilderStreamable<T, TResponse>
     : RequestBuilderExecutePageable<T, TResponse>, IRequestBuilderStreamable<TResponse>
     where T : class where TResponse : class

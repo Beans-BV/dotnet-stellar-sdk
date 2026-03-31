@@ -2,6 +2,9 @@
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the network configuration settings for smart contract transaction bandwidth limits and fees.
+/// </summary>
 public class ConfigSettingContractBandwidth : LedgerEntryConfigSetting
 {
     private ConfigSettingContractBandwidth(uint ledgerMaxTxsSizeBytes, uint txMaxSizeBytes, long feeTxSize1Kb)

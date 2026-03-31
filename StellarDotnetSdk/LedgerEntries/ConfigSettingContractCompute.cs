@@ -2,6 +2,10 @@
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents the network configuration settings for smart contract compute limits, including instruction caps and
+///     memory limits.
+/// </summary>
 public class ConfigSettingContractCompute : LedgerEntryConfigSetting
 {
     private ConfigSettingContractCompute(long ledgerMaxInstructions, long txMaxInstructions,

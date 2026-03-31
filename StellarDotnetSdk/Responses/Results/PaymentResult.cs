@@ -3,6 +3,9 @@ using PaymentResultCodeEnum = StellarDotnetSdk.Xdr.PaymentResultCode.PaymentResu
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a payment operation.
+/// </summary>
 public class PaymentResult : OperationResult
 {
     public static PaymentResult FromXdr(Xdr.PaymentResult result)
@@ -24,6 +27,9 @@ public class PaymentResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful payment operation result.
+/// </summary>
 public class PaymentSuccess : PaymentResult
 {
     public override bool IsSuccess => true;

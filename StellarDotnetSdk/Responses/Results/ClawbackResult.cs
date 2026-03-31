@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.ClawbackResultCode.ClawbackResultCod
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a clawback operation.
+/// </summary>
 public class ClawbackResult : OperationResult
 {
     public static ClawbackResult FromXdr(Xdr.ClawbackResult result)
@@ -19,6 +22,9 @@ public class ClawbackResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful clawback operation result.
+/// </summary>
 public class ClawbackSuccess : ClawbackResult
 {
     public override bool IsSuccess => true;

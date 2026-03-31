@@ -3,6 +3,10 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerKeys;
 
+/// <summary>
+///     Represents a ledger key for a time-to-live (TTL) entry on the Stellar network.
+///     Used to look up the expiration information for Soroban contract data or code entries.
+/// </summary>
 public class LedgerKeyTtl : LedgerKey
 {
     /// <summary>

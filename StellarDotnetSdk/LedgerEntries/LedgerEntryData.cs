@@ -4,6 +4,9 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents a data entry in the Stellar ledger, which stores a named key-value pair attached to an account.
+/// </summary>
 public class LedgerEntryData : LedgerEntry
 {
     private LedgerEntryData(KeyPair account, string dataName, byte[] dataValue)

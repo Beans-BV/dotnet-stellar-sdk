@@ -3,6 +3,10 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerKeys;
 
+/// <summary>
+///     Represents a ledger key for an offer entry on the Stellar decentralized exchange.
+///     Used to look up offer data from the ledger, identified by the seller and offer ID.
+/// </summary>
 public class LedgerKeyOffer : LedgerKey
 {
     public LedgerKeyOffer(string sellId, long offerId) : this(KeyPair.FromAccountId(sellId), offerId)

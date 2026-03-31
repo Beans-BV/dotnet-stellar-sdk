@@ -7,11 +7,21 @@
 /// <seealso href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction" />
 public class SendTransactionResponse
 {
+    /// <summary>
+    ///     Indicates the status of a submitted transaction after being processed by the Soroban RPC server.
+    /// </summary>
     public enum SendTransactionStatus
     {
+        /// <summary>The transaction has been accepted and is pending inclusion in a ledger.</summary>
         PENDING,
+
+        /// <summary>The transaction is a duplicate of an already submitted transaction.</summary>
         DUPLICATE,
+
+        /// <summary>The server is busy; the client should retry the submission later.</summary>
         TRY_AGAIN_LATER,
+
+        /// <summary>The transaction was rejected due to an error.</summary>
         ERROR,
     }
 

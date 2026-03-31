@@ -4,6 +4,10 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerKeys;
 
+/// <summary>
+///     Represents a ledger key for a data entry attached to a Stellar account.
+///     Used to look up named key-value data associated with an account.
+/// </summary>
 public class LedgerKeyData : LedgerKey
 {
     public LedgerKeyData(string accountId, string dataName) : this(KeyPair.FromAccountId(accountId), dataName)

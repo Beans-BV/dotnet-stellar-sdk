@@ -3,6 +3,9 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Soroban;
 
+/// <summary>
+///     Represents the version 0 extension for Soroban resources, containing references to archived Soroban ledger entries.
+/// </summary>
 public class SorobanResourceExtensionV0
 {
     public SorobanResourceExtensionV0(uint[] archivedSorobanEntries)
@@ -12,6 +15,10 @@ public class SorobanResourceExtensionV0
 
     public uint[] ArchivedSorobanEntries { get; }
 
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>A <see cref="SorobanResourcesExtV0" /> XDR object.</returns>
     public SorobanResourcesExtV0 ToXdr()
     {
         return new SorobanResourcesExtV0

@@ -5,6 +5,9 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Memos;
 
+/// <summary>
+///     Represents a memo containing a UTF-8 text string of up to 28 bytes (XDR type <c>MEMO_TEXT</c>).
+/// </summary>
 public class MemoText : Memo
 {
     public MemoText(string text)
@@ -37,7 +40,11 @@ public class MemoText : Memo
         MemoBytesValue = text;
     }
 
+    /// <summary>
+    ///     Gets the memo content decoded as a UTF-8 string.
+    /// </summary>
     public string MemoTextValue => Encoding.UTF8.GetString(MemoBytesValue);
+
     public byte[] MemoBytesValue { get; }
 
     public override Xdr.Memo ToXdr()

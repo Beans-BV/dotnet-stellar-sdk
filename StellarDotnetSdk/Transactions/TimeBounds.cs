@@ -86,7 +86,10 @@ public class TimeBounds
     {
     }
 
+    /// <summary>Gets the minimum time (earliest valid time) as a Unix timestamp in seconds. 0 if unset.</summary>
     public long MinTime => (long)_minTime;
+
+    /// <summary>Gets the maximum time (latest valid time) as a Unix timestamp in seconds. 0 if unset (infinite).</summary>
     public long MaxTime => (long)_maxTime;
 
     public static TimeBounds FromXdr(Xdr.TimeBounds timeBounds)

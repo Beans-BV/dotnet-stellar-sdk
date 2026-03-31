@@ -4,6 +4,10 @@ using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Extends <see cref="IPaymentsRequestBuilder" /> with methods to scope payment queries
+///     by account, ledger, or transaction before execution.
+/// </summary>
 public interface IPaymentsRequestInitialBuilder : IPaymentsRequestBuilder
 {
     /// <Summary>
@@ -32,6 +36,10 @@ public interface IPaymentsRequestInitialBuilder : IPaymentsRequestBuilder
     IPaymentsRequestBuilder ForTransaction(string transactionId);
 }
 
+/// <summary>
+///     Defines the streaming and pagination capabilities for payment requests,
+///     including the option to join transaction data in the response.
+/// </summary>
 public interface IPaymentsRequestBuilder : IRequestBuilderStreamable<OperationResponse>,
     IRequestBuilderExecutePageable<IPaymentsRequestBuilder, OperationResponse>
 {

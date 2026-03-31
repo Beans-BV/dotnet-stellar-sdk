@@ -10,16 +10,38 @@ using MuxedAccount = xdrSDK.MuxedAccount;
 
 public static class StrKey
 {
+    /// <summary>
+    ///     Specifies the type of Stellar key, encoded as the first byte of a StrKey-encoded string.
+    ///     Each version byte determines the prefix character of the encoded key
+    ///     (e.g., 'G' for accounts, 'S' for seeds, 'C' for contracts).
+    /// </summary>
     public enum VersionByte : byte
     {
+        /// <summary>Ed25519 public key (encoded with 'G' prefix).</summary>
         ACCOUNT_ID = 6 << 3,
+
+        /// <summary>Muxed Ed25519 account (encoded with 'M' prefix).</summary>
         MUXED_ED25519 = 12 << 3,
+
+        /// <summary>Ed25519 secret seed (encoded with 'S' prefix).</summary>
         SEED = 18 << 3,
+
+        /// <summary>Pre-authorized transaction hash (encoded with 'T' prefix).</summary>
         PRE_AUTH_TX = 19 << 3,
+
+        /// <summary>SHA-256 hash (encoded with 'X' prefix).</summary>
         SHA256_HASH = 23 << 3,
+
+        /// <summary>Ed25519 signed payload signer (encoded with 'P' prefix).</summary>
         SIGNED_PAYLOAD = 15 << 3,
+
+        /// <summary>Soroban smart contract ID (encoded with 'C' prefix).</summary>
         CONTRACT = 2 << 3,
+
+        /// <summary>Liquidity pool ID (encoded with 'L' prefix).</summary>
         LIQUIDITY_POOL = 11 << 3,
+
+        /// <summary>Claimable balance ID (encoded with 'B' prefix).</summary>
         CLAIMABLE_BALANCE = 1 << 3,
     }
 

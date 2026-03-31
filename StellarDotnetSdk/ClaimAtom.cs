@@ -45,6 +45,10 @@ public abstract class ClaimAtom(
     }
 }
 
+/// <summary>
+///     Represents a claim atom from an order book trade on the Stellar decentralized exchange.
+///     Contains the seller, offer ID, and the assets and amounts exchanged.
+/// </summary>
 public class ClaimAtomOrderBook : ClaimAtom
 {
     private ClaimAtomOrderBook(
@@ -82,6 +86,11 @@ public class ClaimAtomOrderBook : ClaimAtom
     }
 }
 
+/// <summary>
+///     Represents a V0 claim atom from a trade on the Stellar network.
+///     This is the original format that identifies the seller by their Ed25519 public key
+///     rather than a full account ID.
+/// </summary>
 public class ClaimAtomV0 : ClaimAtom
 {
     private ClaimAtomV0(
@@ -112,6 +121,10 @@ public class ClaimAtomV0 : ClaimAtom
     }
 }
 
+/// <summary>
+///     Represents a claim atom from a liquidity pool trade on the Stellar network.
+///     Contains the liquidity pool ID and the assets and amounts exchanged.
+/// </summary>
 public class ClaimAtomLiquidityPool : ClaimAtom
 {
     private ClaimAtomLiquidityPool(

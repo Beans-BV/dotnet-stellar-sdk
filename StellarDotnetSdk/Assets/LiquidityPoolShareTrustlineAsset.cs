@@ -5,6 +5,10 @@ using LiquidityPoolParameters = StellarDotnetSdk.LiquidityPool.LiquidityPoolPara
 
 namespace StellarDotnetSdk.Assets;
 
+/// <summary>
+///     Represents a liquidity pool share as a trustline asset.
+///     This is used to reference an existing liquidity pool trustline by its pool ID.
+/// </summary>
 public class LiquidityPoolShareTrustlineAsset : TrustlineAsset
 {
     public const string RestApiType = "pool_share";
@@ -51,6 +55,10 @@ public class LiquidityPoolShareTrustlineAsset : TrustlineAsset
                 StringComparison.Ordinal);
     }
 
+    /// <summary>
+    ///     Converts this liquidity pool share trustline asset to its XDR <see cref="TrustLineAsset" /> representation.
+    /// </summary>
+    /// <returns>A <see cref="TrustLineAsset" /> XDR object with the pool share discriminant and pool ID.</returns>
     public TrustLineAsset ToXdrTrustLineAsset()
     {
         var xdr = new TrustLineAsset

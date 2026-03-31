@@ -3,6 +3,11 @@ using System.Text;
 
 namespace StellarDotnetSdk;
 
+/// <summary>
+///     Represents a Stellar network identified by its unique passphrase.
+///     The passphrase is hashed to produce the network ID, which is used to distinguish
+///     transactions on different networks (e.g., public mainnet vs. testnet).
+/// </summary>
 public class Network
 {
     public const string PublicPassphrase = "Public Global Stellar Network ; September 2015";

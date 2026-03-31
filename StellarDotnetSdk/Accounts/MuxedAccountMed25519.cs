@@ -3,6 +3,12 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Accounts;
 
+/// <summary>
+///     Represents a multiplexed (muxed) Stellar account that combines an Ed25519 public key with
+///     a 64-bit numeric identifier. Muxed accounts allow a single Stellar account to distinguish
+///     between multiple virtual accounts (e.g., for custodial services) without requiring separate
+///     on-ledger accounts. Addresses for muxed accounts start with "M".
+/// </summary>
 public class MuxedAccountMed25519 : IAccountId
 {
     /// <summary>
@@ -57,6 +63,10 @@ public class MuxedAccountMed25519 : IAccountId
     /// </summary>
     public KeyPair SigningKey => Key;
 
+    /// <summary>
+    ///     Gets a value indicating whether this account is a muxed (multiplexed) account.
+    ///     Always returns <c>true</c> for <see cref="MuxedAccountMed25519" />.
+    /// </summary>
     public bool IsMuxedAccount => true;
 
     /// <summary>

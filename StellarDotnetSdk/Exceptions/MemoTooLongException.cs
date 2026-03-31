@@ -3,6 +3,10 @@ using System.Runtime.Serialization;
 
 namespace StellarDotnetSdk.Exceptions;
 
+/// <summary>
+///     The exception that is thrown when a transaction memo exceeds the maximum allowed length
+///     (28 bytes for text memos, 32 bytes for hash and return memos).
+/// </summary>
 [Serializable]
 public class MemoTooLongException : Exception
 {

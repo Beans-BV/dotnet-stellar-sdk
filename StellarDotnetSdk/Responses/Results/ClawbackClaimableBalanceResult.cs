@@ -3,6 +3,9 @@ using ResultCodeEnum = StellarDotnetSdk.Xdr.ClawbackClaimableBalanceResultCode.C
 
 namespace StellarDotnetSdk.Responses.Results;
 
+/// <summary>
+///     Represents the result of a clawback claimable balance operation.
+/// </summary>
 public class ClawbackClaimableBalanceResult : OperationResult
 {
     public static ClawbackClaimableBalanceResult FromXdr(Xdr.ClawbackClaimableBalanceResult result)
@@ -22,6 +25,9 @@ public class ClawbackClaimableBalanceResult : OperationResult
     }
 }
 
+/// <summary>
+///     Represents a successful clawback claimable balance operation result.
+/// </summary>
 public class ClawbackClaimableBalanceSuccess : ClawbackClaimableBalanceResult
 {
     public override bool IsSuccess => true;

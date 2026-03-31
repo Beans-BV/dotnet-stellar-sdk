@@ -155,6 +155,10 @@ public class SimulateTransactionResponse
         public string? Xdr { get; init; } // TODO Unit test on error
     }
 
+    /// <summary>
+    ///     Represents a change to a ledger entry that would result from executing the simulated transaction,
+    ///     including the entry's state before and after the change.
+    /// </summary>
     public class LedgerEntryChange
     {
         public string Type { get; init; }

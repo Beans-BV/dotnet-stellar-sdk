@@ -6,6 +6,9 @@ using ExtensionPoint = StellarDotnetSdk.Soroban.ExtensionPoint;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents a Soroban smart contract data ledger entry, storing key-value data associated with a contract.
+/// </summary>
 public class LedgerEntryContractData : LedgerEntry
 {
     private LedgerEntryContractData(

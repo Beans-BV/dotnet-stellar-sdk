@@ -7,12 +7,24 @@ using TransactionMeta = StellarDotnetSdk.Soroban.TransactionMeta;
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;
 
+/// <summary>
+///     Represents detailed information about a Stellar transaction as returned by the Soroban RPC server,
+///     including its status, ledger context, and XDR-encoded envelope, result, and metadata.
+/// </summary>
 public class TransactionInfo
 {
+    /// <summary>
+    ///     Indicates the current status of a transaction retrieved from the Soroban RPC server.
+    /// </summary>
     public enum TransactionStatus
     {
+        /// <summary>The transaction was not found in the ledger history.</summary>
         NOT_FOUND,
+
+        /// <summary>The transaction was successfully included in a ledger.</summary>
         SUCCESS,
+
+        /// <summary>The transaction failed during execution.</summary>
         FAILED,
     }
 

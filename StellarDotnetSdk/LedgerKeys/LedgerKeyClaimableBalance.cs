@@ -3,6 +3,10 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.LedgerKeys;
 
+/// <summary>
+///     Represents a ledger key for a claimable balance entry on the Stellar network.
+///     Used to look up claimable balance data from the ledger by its unique balance ID.
+/// </summary>
 public class LedgerKeyClaimableBalance : LedgerKey
 {
     /// <summary>

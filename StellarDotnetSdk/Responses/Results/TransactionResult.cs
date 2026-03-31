@@ -70,6 +70,9 @@ public abstract class TransactionResult
     }
 }
 
+/// <summary>
+///     The ledger closeTime was before the minTime value in the transaction's time bounds.
+/// </summary>
 public class TransactionResultTooEarly : TransactionResult
 {
     public TransactionResultTooEarly(string feeCharged) : base(feeCharged)
@@ -77,6 +80,9 @@ public class TransactionResultTooEarly : TransactionResult
     }
 }
 
+/// <summary>
+///     The ledger closeTime was after the maxTime value in the transaction's time bounds.
+/// </summary>
 public class TransactionResultTooLate : TransactionResult
 {
     public TransactionResultTooLate(string feeCharged) : base(feeCharged)
@@ -272,6 +278,10 @@ public class FeeBumpTransactionResultSuccess : TransactionResult
     public InnerTransactionResultPair InnerResultPair { get; }
 }
 
+/// <summary>
+///     Represents the result pair of an inner transaction within a fee bump transaction, containing the transaction hash
+///     and its result.
+/// </summary>
 public class InnerTransactionResultPair
 {
     public InnerTransactionResultPair(string transactionHash, TransactionResult result)

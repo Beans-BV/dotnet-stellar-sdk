@@ -3,6 +3,10 @@ using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Soroban;
 
+/// <summary>
+///     Represents a diagnostic event emitted during Soroban smart contract execution,
+///     including whether it occurred within a successful contract call.
+/// </summary>
 public class DiagnosticEvent
 {
     private DiagnosticEvent(bool inSuccessfulContractCall, ContractEvent @event)

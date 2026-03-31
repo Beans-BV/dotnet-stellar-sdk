@@ -12,10 +12,15 @@ using xdr_PublicKey = StellarDotnetSdk.Xdr.PublicKey;
 namespace StellarDotnetSdk.Accounts;
 
 /// <summary>
-///     <see cref="KeyPair" /> represents public (and secret) keys of the account.
-///     Currently <see cref="KeyPair" /> only supports ed25519 but in a future this class can be abstraction layer for
-///     other public-key signature systems.
+///     Represents the public (and optionally secret) keys of a Stellar account, providing methods
+///     for signing data, verifying signatures, and encoding/decoding account identifiers.
 /// </summary>
+/// <remarks>
+///     Currently only supports Ed25519 keys, but is designed to serve as an abstraction layer for
+///     other public-key signature systems in the future. Use factory methods such as
+///     <see cref="FromSecretSeed(string)" />, <see cref="FromAccountId" />, or <see cref="Random" />
+///     to create instances.
+/// </remarks>
 [JsonConverter(typeof(KeyPairJsonConverter))]
 public class KeyPair : IAccountId, IEquatable<KeyPair>
 {
@@ -154,7 +159,8 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     public string Address => StrKey.EncodeCheck(StrKey.VersionByte.ACCOUNT_ID, PublicKey);
 
     /// <summary>
-    ///     The signing key.
+    ///     Gets the <see cref="KeyPair" /> used for signing transactions. For a standard (non-muxed) account,
+    ///     this returns the current instance itself, since the key pair is its own signing key.
     /// </summary>
     [JsonIgnore]
     public KeyPair SigningKey => this;
@@ -176,8 +182,20 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
         }
     }
 
+    /// <summary>
+    ///     Gets a value indicating whether this account is a muxed (multiplexed) account.
+    ///     Always returns <c>false</c> for <see cref="KeyPair" />; muxed accounts are represented
+    ///     by <see cref="MuxedAccountMed25519" />.
+    /// </summary>
     public bool IsMuxedAccount => false;
 
+    /// <summary>
+    ///     Determines whether the specified <see cref="KeyPair" /> is equal to this instance.
+    ///     Two key pairs are considered equal if they share the same public key and both either
+    ///     contain or lack a secret seed.
+    /// </summary>
+    /// <param name="other">The <see cref="KeyPair" /> to compare with this instance.</param>
+    /// <returns><c>true</c> if the key pairs are equal; otherwise, <c>false</c>.</returns>
     public bool Equals(KeyPair? other)
     {
         if (other == null)

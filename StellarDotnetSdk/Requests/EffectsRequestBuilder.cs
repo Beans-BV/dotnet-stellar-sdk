@@ -5,6 +5,10 @@ using StellarDotnetSdk.Responses.Effects;
 
 namespace StellarDotnetSdk.Requests;
 
+/// <summary>
+///     Builds requests connected to effects. Effects represent specific changes that occur in the ledger
+///     as a result of successful operations.
+/// </summary>
 public class EffectsRequestBuilder : RequestBuilderStreamable<EffectsRequestBuilder, EffectResponse>
 {
     public EffectsRequestBuilder(Uri serverUri, HttpClient httpClient)
@@ -64,11 +68,21 @@ public class EffectsRequestBuilder : RequestBuilderStreamable<EffectsRequestBuil
         return this;
     }
 
+    /// <summary>
+    ///     Builds request to <code>GET /liquidity_pools/{poolId}/effects</code>.
+    /// </summary>
+    /// <param name="liquidityPoolId">The liquidity pool for which to get effects.</param>
+    /// <returns>The current <see cref="EffectsRequestBuilder" /> instance for chaining.</returns>
     public EffectsRequestBuilder ForLiquidityPool(LiquidityPoolId liquidityPoolId)
     {
         return ForLiquidityPool(liquidityPoolId.ToString());
     }
 
+    /// <summary>
+    ///     Builds request to <code>GET /liquidity_pools/{poolId}/effects</code>.
+    /// </summary>
+    /// <param name="liquidityPoolId">The ID of the liquidity pool for which to get effects.</param>
+    /// <returns>The current <see cref="EffectsRequestBuilder" /> instance for chaining.</returns>
     public EffectsRequestBuilder ForLiquidityPool(string liquidityPoolId)
     {
         ArgumentException.ThrowIfNullOrEmpty(liquidityPoolId);

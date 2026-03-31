@@ -6,6 +6,10 @@ using claimant_Claimant = StellarDotnetSdk.Claimants.Claimant;
 
 namespace StellarDotnetSdk.LedgerEntries;
 
+/// <summary>
+///     Represents a claimable balance ledger entry, which holds an amount of an asset that can be claimed by specified
+///     claimants.
+/// </summary>
 public class LedgerEntryClaimableBalance : LedgerEntry
 {
     private LedgerEntryClaimableBalance(
