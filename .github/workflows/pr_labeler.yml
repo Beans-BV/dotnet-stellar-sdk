@@ -1,0 +1,34 @@
+name: PR Labeler
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v8
+        with:
+          script: |
+            const title = context.payload.pull_request.title;
+            const labels = [];
+
+            if (/^feature(\!)?:/i.test(title)) labels.push('feature');
+            if (/^fix:/i.test(title)) labels.push('fix');
+            if (/^chore:/i.test(title)) labels.push('chore');
+            if (/^docs:/i.test(title)) labels.push('documentation');
+            if (/^build:/i.test(title)) labels.push('build');
+            if (/^feature\!:/i.test(title)) labels.push('breaking');
+
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                labels: labels
+              });
+            }
