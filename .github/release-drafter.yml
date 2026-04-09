@@ -18,7 +18,9 @@ categories:
     labels:
       - 'documentation'
   - title: 'Maintenance'
-    label: 'chore'
+    labels:
+      - 'chore'
+      - 'refactor'
   - title: 'Build Changes'
     label: 'build'
 exclude-labels:

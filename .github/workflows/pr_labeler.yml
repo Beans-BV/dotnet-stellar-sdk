@@ -17,12 +17,15 @@ jobs:
             const title = context.payload.pull_request.title;
             const labels = [];
 
-            if (/^feature(\!)?:/i.test(title)) labels.push('feature');
-            if (/^fix:/i.test(title)) labels.push('fix');
-            if (/^chore:/i.test(title)) labels.push('chore');
-            if (/^docs:/i.test(title)) labels.push('documentation');
-            if (/^build:/i.test(title)) labels.push('build');
-            if (/^feature\!:/i.test(title)) labels.push('breaking');
+            // Type labels
+            if (/^(feat|feature)(!)?:/i.test(title)) labels.push('feature');
+            if (/^fix(!)?:/i.test(title)) labels.push('fix');
+            if (/^(chore|refactor|perf|test|ci)(!)?:/i.test(title)) labels.push('chore');
+            if (/^docs(!)?:/i.test(title)) labels.push('documentation');
+            if (/^build(!)?:/i.test(title)) labels.push('build');
+
+            // Breaking change detection (any type with !)
+            if (/^[a-z]+!:/i.test(title)) labels.push('breaking');
 
             if (labels.length > 0) {
               await github.rest.issues.addLabels({
