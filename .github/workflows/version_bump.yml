@@ -1,0 +1,59 @@
+name: Version Bump
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
+
+jobs:
+  bump_version:
+    runs-on: ubuntu-latest
+    # Skip pre-releases to avoid bumping version for alpha/beta/rc tags
+    if: ${{ !github.event.release.prerelease }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Extract version from tag
+        id: version
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          # Strip leading 'v' if present
+          VERSION="${TAG#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Update csproj versions
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          # Find all packable csproj files containing a <Version> tag
+          # (skip projects explicitly marked as non-packable)
+          for csproj in $(grep -rl '<Version>' --include='*.csproj' .); do
+            if grep -q '<IsPackable>false</IsPackable>' "$csproj"; then
+              echo "Skipping non-packable: $csproj"
+              continue
+            fi
+            echo "Updating $csproj to $VERSION"
+            sed -i "s|<Version>.*</Version>|<Version>${VERSION}</Version>|" "$csproj"
+          done
+
+      - name: Commit and push
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- '*.csproj'
+          # Only commit if there are changes
+          if git diff --cached --quiet; then
+            echo "No version changes needed"
+          else
+            git commit -m "chore: bump version to $VERSION"
+            git push origin "$DEFAULT_BRANCH"
+          fi
