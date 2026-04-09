@@ -20,15 +20,17 @@ jobs:
 
       - name: Extract version from tag
         id: version
+        env:
+          TAG: ${{ github.event.release.tag_name }}
         run: |
-          TAG="${{ github.event.release.tag_name }}"
           # Strip leading 'v' if present
           VERSION="${TAG#v}"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Update csproj versions
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
           # Find all packable csproj files containing a <Version> tag
           # (skip projects explicitly marked as non-packable)
           for csproj in $(grep -rl '<Version>' --include='*.csproj' .); do
@@ -41,6 +43,9 @@ jobs:
           done
 
       - name: Commit and push
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -49,6 +54,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No version changes needed"
           else
-            git commit -m "chore: bump version to ${{ steps.version.outputs.version }}"
-            git push origin ${{ github.event.repository.default_branch }}
+            git commit -m "chore: bump version to $VERSION"
+            git push origin "$DEFAULT_BRANCH"
           fi
