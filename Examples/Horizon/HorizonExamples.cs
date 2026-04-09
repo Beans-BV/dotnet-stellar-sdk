@@ -77,6 +77,12 @@ public static class HorizonExamples
 
         Console.WriteLine("\nGet created claimable balance details");
         await GetClaimableBalanceDetails(balanceId.ToLower());
+
+        Console.WriteLine("\n=== Sponsorship Revocation Examples ===");
+        await RevokeSponsorshipExamples.Run();
+
+        Console.WriteLine("\n=== Fee Bump Transaction Examples ===");
+        await FeeBumpExamples.Run();
     }
 
     public static KeyPair CreateKeyPair()
