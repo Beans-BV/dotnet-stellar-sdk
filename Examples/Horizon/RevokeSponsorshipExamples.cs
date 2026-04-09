@@ -10,6 +10,12 @@ namespace StellarDotnetSdk.Examples.Horizon;
 /// <summary>
 ///     Examples demonstrating how to revoke sponsorship of various ledger entries
 ///     on the Stellar test network.
+///     Sponsorship revocation behaves differently depending on the ledger entry type:
+///     - Account, data, offer, and trustline entries: the current sponsor can simply revoke
+///     the sponsorship in a single operation - the sponsored account then pays its own reserves.
+///     - Claimable balance entries: sponsorship can only be TRANSFERRED to another account,
+///     never removed outright. This requires wrapping the revoke operation in a
+///     BeginSponsoringFutureReserves/EndSponsoringFutureReserves block.
 /// </summary>
 public static class RevokeSponsorshipExamples
 {
@@ -36,6 +42,7 @@ public static class RevokeSponsorshipExamples
 
     /// <summary>
     ///     Revokes account sponsorship. The sponsor revokes its own account entry's sponsorship.
+    ///     Account entries allow simple revocation - no transfer needed.
     /// </summary>
     public static async Task RevokeAccountSponsorship(KeyPair sponsorKeyPair)
     {
@@ -43,6 +50,8 @@ public static class RevokeSponsorshipExamples
         var server = new Server(TestNetUrl);
 
         var account = await server.Accounts.Account(sponsorKeyPair.AccountId);
+
+        // A single revoke operation is enough for account entries.
         var revokeOperation = RevokeLedgerEntrySponsorshipOperation.ForAccount(sponsorKeyPair);
 
         var tx = new TransactionBuilder(account)
@@ -65,7 +74,13 @@ public static class RevokeSponsorshipExamples
     }
 
     /// <summary>
-    ///     Creates a sponsored claimable balance and then revokes its sponsorship.
+    ///     Creates a sponsored claimable balance and then transfers its sponsorship.
+    ///     Unlike other ledger entry types, claimable balance sponsorship cannot be simply
+    ///     revoked - it can only be transferred to another account (Stellar will return
+    ///     "REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE" error if the user tries a plain revoke).
+    ///     To transfer, wrap the revoke operation in a
+    ///     BeginSponsoringFutureReserves/EndSponsoringFutureReserves block where the
+    ///     new sponsor agrees to take over.
     /// </summary>
     public static async Task RevokeClaimableBalanceSponsorship(
         KeyPair sponsorKeyPair,
@@ -73,10 +88,22 @@ public static class RevokeSponsorshipExamples
     {
         Console.WriteLine("\n--- Revoke Claimable Balance Sponsorship ---");
 
+        // Step 1: Create a claimable balance sponsored by sponsorKeyPair.
         var balanceId = await CreateSponsoredClaimableBalance(sponsorKeyPair, sponsoredKeyPair);
         Console.WriteLine($"  Created sponsored claimable balance: {balanceId}");
         await Task.Delay(2000);
 
+        // Step 2: Transfer sponsorship from sponsorKeyPair → sponsoredKeyPair.
+        //
+        // The Begin/End block establishes sponsoredKeyPair as the new sponsor.
+        // Note the argument order - it looks counterintuitive but is correct:
+        //   - BeginSponsoring(sponsoredId: sponsorKeyPair, sourceAccount: sponsoredKeyPair)
+        //     means: sponsoredKeyPair (source) will sponsor future reserves for sponsorKeyPair.
+        //     This sets up sponsoredKeyPair as the NEW sponsor to receive the transferred entry.
+        //   - The revoke operation (submitted by the tx source = sponsorKeyPair, the current
+        //     sponsor) releases the claimable balance sponsorship.
+        //   - EndSponsoring finalizes the transfer. No sourceAccount is needed because the
+        //     tx source (sponsorKeyPair) is the account whose sponsoring relationship ends.
         var server = new Server(TestNetUrl);
         var account = await server.Accounts.Account(sponsorKeyPair.AccountId);
 
@@ -90,6 +117,8 @@ public static class RevokeSponsorshipExamples
             .AddOperation(revokeOperation)
             .AddOperation(endSponsoringOperation)
             .Build();
+        // Both accounts must sign: sponsorKeyPair is the tx source and current sponsor,
+        // sponsoredKeyPair agrees to become the new sponsor via BeginSponsoring.
         tx.Sign(sponsorKeyPair);
         tx.Sign(sponsoredKeyPair);
 
@@ -111,6 +140,7 @@ public static class RevokeSponsorshipExamples
 
     /// <summary>
     ///     Creates a sponsored data entry and then revokes its sponsorship.
+    ///     Data entries allow simple revocation - the sponsored account pays its own reserves afterward.
     /// </summary>
     public static async Task RevokeDataSponsorship(
         KeyPair sponsorKeyPair,
@@ -125,6 +155,7 @@ public static class RevokeSponsorshipExamples
         var server = new Server(TestNetUrl);
         var account = await server.Accounts.Account(sponsorKeyPair.AccountId);
 
+        // Simple revoke - no Begin/End block needed for data entries.
         var revokeOperation =
             RevokeLedgerEntrySponsorshipOperation.ForData(sponsoredKeyPair.AccountId, DataName);
 
@@ -159,6 +190,7 @@ public static class RevokeSponsorshipExamples
 
     /// <summary>
     ///     Creates a sponsored offer and then revokes its sponsorship.
+    ///     Offer entries allow simple revocation — the sponsored account pays its own reserves afterward.
     /// </summary>
     public static async Task RevokeOfferSponsorship(
         KeyPair sponsorKeyPair,
@@ -174,6 +206,7 @@ public static class RevokeSponsorshipExamples
         var server = new Server(TestNetUrl);
         var account = await server.Accounts.Account(sponsorKeyPair.AccountId);
 
+        // Simple revoke — no Begin/End block needed for offer entries.
         var revokeOperation =
             RevokeLedgerEntrySponsorshipOperation.ForOffer(sponsoredKeyPair.AccountId, offerId);
 
@@ -212,6 +245,7 @@ public static class RevokeSponsorshipExamples
 
     /// <summary>
     ///     Creates a sponsored trustline and then revokes its sponsorship.
+    ///     Trustline entries allow simple revocation - the sponsored account pays its own reserves afterward.
     /// </summary>
     public static async Task RevokeTrustlineSponsorship(
         KeyPair sponsorKeyPair,
@@ -227,6 +261,7 @@ public static class RevokeSponsorshipExamples
         var server = new Server(TestNetUrl);
         var account = await server.Accounts.Account(sponsorKeyPair.AccountId);
 
+        // Simple revoke - no Begin/End block needed for trustline entries.
         var revokeOperation =
             RevokeLedgerEntrySponsorshipOperation.ForTrustline(sponsoredKeyPair.AccountId, asset);
 
@@ -260,6 +295,10 @@ public static class RevokeSponsorshipExamples
         Console.WriteLine("  Cleaned up trustline");
     }
 
+    /// <summary>
+    ///     Creates a claimable balance where sponsorKeyPair sponsors the reserves for an entry
+    ///     created by sponsoredKeyPair. Returns the claimable balance ID.
+    /// </summary>
     private static async Task<string> CreateSponsoredClaimableBalance(
         KeyPair sponsorKeyPair,
         KeyPair sponsoredKeyPair)
@@ -271,6 +310,8 @@ public static class RevokeSponsorshipExamples
         var createClaimableBalanceOperation =
             new CreateClaimableBalanceOperation(new AssetTypeNative(), "10", claimants, sponsoredKeyPair);
 
+        // sponsorKeyPair (tx source, no explicit sourceAccount) sponsors future reserves
+        // for sponsoredKeyPair, covering the claimable balance creation.
         var beginSponsoringOperation = new BeginSponsoringFutureReservesOperation(sponsoredKeyPair.AccountId);
         var endSponsoringOperation = new EndSponsoringFutureReservesOperation(sponsoredKeyPair);
 
@@ -297,6 +338,9 @@ public static class RevokeSponsorshipExamples
         return balanceId;
     }
 
+    /// <summary>
+    ///     Creates a data entry on sponsoredKeyPair's account, with sponsorKeyPair paying the reserves.
+    /// </summary>
     private static async Task CreateSponsoredData(
         KeyPair sponsorKeyPair,
         KeyPair sponsoredKeyPair)
@@ -306,6 +350,7 @@ public static class RevokeSponsorshipExamples
 
         var manageDataOperation = new ManageDataOperation(DataName, "it's a secret");
 
+        // sponsorKeyPair (explicit sourceAccount) sponsors future reserves for sponsoredKeyPair.
         var beginSponsoringOperation =
             new BeginSponsoringFutureReservesOperation(sponsoredKeyPair.AccountId, sponsorKeyPair);
         var endSponsoringOperation = new EndSponsoringFutureReservesOperation(sponsoredKeyPair);
@@ -328,6 +373,11 @@ public static class RevokeSponsorshipExamples
         }
     }
 
+    /// <summary>
+    ///     Creates a sell offer on sponsoredKeyPair's account, with sponsorKeyPair paying the reserves.
+    ///     Also sets up a trustline for the asset (unsponsored) before the offer.
+    ///     Returns the created offer ID.
+    /// </summary>
     private static async Task<long> CreateSponsoredOffer(
         KeyPair sponsorKeyPair,
         KeyPair sponsoredKeyPair,
@@ -336,8 +386,10 @@ public static class RevokeSponsorshipExamples
         var server = new Server(TestNetUrl);
         var account = await server.Accounts.Account(sponsoredKeyPair.AccountId);
 
+        // Trustline must exist before placing an offer. This one is NOT sponsored.
         var trustOperation = new ChangeTrustOperation(asset, null, sponsoredKeyPair);
 
+        // Only the offer itself is sponsored by sponsorKeyPair.
         var beginSponsoringOperation =
             new BeginSponsoringFutureReservesOperation(sponsoredKeyPair.AccountId, sponsorKeyPair);
         var nativeAsset = new AssetTypeNative();
@@ -369,6 +421,9 @@ public static class RevokeSponsorshipExamples
         return offerId;
     }
 
+    /// <summary>
+    ///     Creates a trustline on sponsoredKeyPair's account, with sponsorKeyPair paying the reserves.
+    /// </summary>
     private static async Task CreateSponsoredTrustline(
         KeyPair sponsorKeyPair,
         KeyPair sponsoredKeyPair,
@@ -376,6 +431,7 @@ public static class RevokeSponsorshipExamples
     {
         var server = new Server(TestNetUrl);
 
+        // sponsorKeyPair (explicit sourceAccount) sponsors the trustline reserve for sponsoredKeyPair.
         var beginSponsoringOperation =
             new BeginSponsoringFutureReservesOperation(sponsoredKeyPair.AccountId, sponsorKeyPair);
         var trustOperation = new ChangeTrustOperation(asset, null, sponsoredKeyPair);
