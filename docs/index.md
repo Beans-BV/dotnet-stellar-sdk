@@ -1,11 +1,11 @@
 <p align="center">
-    <img height="200" src="https://raw.githubusercontent.com/Beans-BV/dotnet-stellar-sdk/master/docfx/images/logo.svg">
+    <img height="200" src="https://raw.githubusercontent.com/Beans-BV/dotnet-stellar-sdk/main/docfx/images/logo.svg">
     <h3 align="center">dotnet-stellar-sdk</h3>
     <p align="center">
         Stellar API SDK for .NET
         <br /> 
         <a href="https://github.com/Beans-BV/dotnet-stellar-sdk/actions/workflows/pack_and_test.yml">
-            <img src="https://github.com/Beans-BV/dotnet-stellar-sdk/actions/workflows/pack_and_test.yml/badge.svg?branch=master">
+            <img src="https://github.com/Beans-BV/dotnet-stellar-sdk/actions/workflows/pack_and_test.yml/badge.svg?branch=main">
         </a>
         <a href="https://www.nuget.org/packages/stellar-dotnet-sdk">
             <img src="https://img.shields.io/nuget/v/stellar-dotnet-sdk.svg" />

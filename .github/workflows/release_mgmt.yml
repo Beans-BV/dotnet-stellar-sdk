@@ -3,7 +3,7 @@ name: Create Draft Release
 on:
   push:
     branches:
-      - master
+      - main
 
 permissions:
   contents: write
@@ -12,7 +12,7 @@ jobs:
   update_draft_release:
     runs-on: ubuntu-latest
     steps:
-      # Drafts your next Release notes as Pull Requests are merged into "master"
+      # Drafts your next Release notes as Pull Requests are merged into "main"
       - uses: release-drafter/release-drafter@v7.1.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
