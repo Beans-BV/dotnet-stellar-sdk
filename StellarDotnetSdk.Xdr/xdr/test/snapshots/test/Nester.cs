@@ -70,15 +70,15 @@ public class Nester
 
         public nestedEnumEnum InnerValue { get; set; }
 
-        public static NestedEnum Create(nestedEnumEnum v)
+        public static NesterNestedEnum Create(nestedEnumEnum v)
         {
-            return new NestedEnum
+            return new NesterNestedEnum
             {
                 InnerValue = v,
             };
         }
 
-        public static NestedEnum Decode(XdrDataInputStream stream, int maxDepth)
+        public static NesterNestedEnum Decode(XdrDataInputStream stream, int maxDepth)
         {
             // maxDepth is intentionally not checked - enums are leaf types
             var value = stream.ReadInt();
@@ -91,12 +91,12 @@ public class Nester
             }
         }
 
-        public static NestedEnum Decode(XdrDataInputStream stream)
+        public static NesterNestedEnum Decode(XdrDataInputStream stream)
         {
             return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
         }
 
-        public static void Encode(XdrDataOutputStream stream, NestedEnum value)
+        public static void Encode(XdrDataOutputStream stream, NesterNestedEnum value)
         {
             stream.WriteInt((int)value.InnerValue);
         }

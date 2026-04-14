@@ -146,10 +146,10 @@ class CsharpGenerator < Xdrgen::Generators::Base
     out.puts
     out.puts "public #{enumname} InnerValue { get; set; }"
     out.puts
-    out.puts "public static #{name_string enum.name} Create(#{enumname} v)"
+    out.puts "public static #{name enum} Create(#{enumname} v)"
     out.puts '{'
     out.indent do
-      out.puts "return new #{name_string enum.name}"
+      out.puts "return new #{name enum}"
       out.puts '{'
       out.indent do
         out.puts 'InnerValue = v,'
@@ -158,7 +158,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
     end
     out.puts '}'
     out.puts
-    out.puts "public static #{name_string enum.name} Decode(XdrDataInputStream stream, int maxDepth)"
+    out.puts "public static #{name enum} Decode(XdrDataInputStream stream, int maxDepth)"
     out.puts '{'
     out.indent do
       out.puts '// maxDepth is intentionally not checked - enums are leaf types'
@@ -178,14 +178,14 @@ class CsharpGenerator < Xdrgen::Generators::Base
     end
     out.puts '}'
     out.puts
-    out.puts "public static #{name_string enum.name} Decode(XdrDataInputStream stream)"
+    out.puts "public static #{name enum} Decode(XdrDataInputStream stream)"
     out.puts '{'
     out.indent do
       out.puts "return Decode(stream, XdrDataInputStream.DefaultMaxDepth);"
     end
     out.puts '}'
     out.puts
-    out.puts "public static void Encode(XdrDataOutputStream stream, #{name_string enum.name} value)"
+    out.puts "public static void Encode(XdrDataOutputStream stream, #{name enum} value)"
     out.puts '{'
     out.indent do
       out.puts 'stream.WriteInt((int)value.InnerValue);'
