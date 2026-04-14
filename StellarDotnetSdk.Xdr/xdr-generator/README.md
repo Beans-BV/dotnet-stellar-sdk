@@ -13,16 +13,16 @@ From the repo root:
 
 ```bash
 # Linux / macOS
-./StellarDotnetSdk.Xdr/generate.sh
+./StellarDotnetSdk.Xdr/xdr-generator/generate.sh
 
 # Windows
-StellarDotnetSdk.Xdr\generate.bat
+StellarDotnetSdk.Xdr\xdr-generator\generate.bat
 ```
 
 Or manually:
 
 ```bash
-cd StellarDotnetSdk.Xdr/xdr
+cd StellarDotnetSdk.Xdr/xdr-generator
 bundle install
 bundle exec ruby generate.rb
 ```
@@ -38,7 +38,7 @@ Replace the `.x` files in `StellarDotnetSdk.Xdr/schemes/` with the new versions 
 Snapshot tests verify the generator output against expected files:
 
 ```bash
-cd StellarDotnetSdk.Xdr/xdr
+cd StellarDotnetSdk.Xdr/xdr-generator
 bundle install
 bundle exec ruby -Itest test/generator_snapshot_test.rb
 ```
@@ -52,16 +52,17 @@ UPDATE_SNAPSHOTS=1 bundle exec ruby -Itest test/generator_snapshot_test.rb
 ## Directory layout
 
 ```
-xdr/
-  generate.rb                  # Entry point
-  Gemfile                      # Ruby dependencies (xdrgen gem)
+xdr-generator/
+  generate.sh / generate.bat    # Shell wrappers
+  generate.rb                   # Entry point
+  Gemfile                       # Ruby dependencies (xdrgen gem)
   generator/
-    generator.rb               # C# code generator (~700 lines)
+    generator.rb                # C# code generator (~700 lines)
     templates/
-      XdrDataInputStream.erb   # Binary input stream template
-      XdrDataOutputStream.erb  # Binary output stream template
+      XdrDataInputStream.erb    # Binary input stream template
+      XdrDataOutputStream.erb   # Binary output stream template
   test/
-    generator_snapshot_test.rb # Minitest snapshot tests
-    fixtures/xdrgen/*.x        # XDR test fixtures
-    snapshots/*/               # Expected output per fixture
+    generator_snapshot_test.rb  # Minitest snapshot tests
+    fixtures/xdrgen/*.x         # XDR test fixtures
+    snapshots/*/                # Expected output per fixture
 ```
