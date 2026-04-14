@@ -1,1 +1,5 @@
-xdrgen -o ./ ./schemes/*.x --language=csharp --namespace=StellarDotnetSdk.Xdr
+@echo off
+pushd %~dp0xdr
+call bundle install --quiet
+call bundle exec ruby generate_xdr.rb "%~dp0schemes" "%~dp0." "StellarDotnetSdk.Xdr"
+popd
