@@ -64,7 +64,7 @@ public class SCPStatement
     public static SCPStatement Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCPStatement = new SCPStatement();
         decodedSCPStatement.NodeID = NodeID.Decode(stream, maxDepth);
@@ -110,7 +110,7 @@ public class SCPStatement
         public static SCPStatementPledges Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedSCPStatementPledges = new SCPStatementPledges();
             var discriminant = SCPStatementType.Decode(stream, maxDepth);
@@ -130,7 +130,7 @@ public class SCPStatement
                     decodedSCPStatementPledges.Nominate = SCPNomination.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedSCPStatementPledges;
@@ -179,7 +179,7 @@ public class SCPStatement
             public static SCPStatementPrepare Decode(XdrDataInputStream stream, int maxDepth)
             {
                 if (maxDepth <= 0)
-                    throw new IOException("Maximum decoding depth reached");
+                    throw new InvalidDataException("Maximum decoding depth reached");
                 maxDepth -= 1;
                 var decodedSCPStatementPrepare = new SCPStatementPrepare();
                 decodedSCPStatementPrepare.QuorumSetHash = Hash.Decode(stream, maxDepth);
@@ -225,7 +225,7 @@ public class SCPStatement
             public static SCPStatementConfirm Decode(XdrDataInputStream stream, int maxDepth)
             {
                 if (maxDepth <= 0)
-                    throw new IOException("Maximum decoding depth reached");
+                    throw new InvalidDataException("Maximum decoding depth reached");
                 maxDepth -= 1;
                 var decodedSCPStatementConfirm = new SCPStatementConfirm();
                 decodedSCPStatementConfirm.Ballot = SCPBallot.Decode(stream, maxDepth);
@@ -258,7 +258,7 @@ public class SCPStatement
             public static SCPStatementExternalize Decode(XdrDataInputStream stream, int maxDepth)
             {
                 if (maxDepth <= 0)
-                    throw new IOException("Maximum decoding depth reached");
+                    throw new InvalidDataException("Maximum decoding depth reached");
                 maxDepth -= 1;
                 var decodedSCPStatementExternalize = new SCPStatementExternalize();
                 decodedSCPStatementExternalize.Commit = SCPBallot.Decode(stream, maxDepth);

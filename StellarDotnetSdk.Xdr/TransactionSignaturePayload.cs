@@ -37,7 +37,7 @@ public class TransactionSignaturePayload
     public static TransactionSignaturePayload Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTransactionSignaturePayload = new TransactionSignaturePayload();
         decodedTransactionSignaturePayload.NetworkId = Hash.Decode(stream, maxDepth);
@@ -74,7 +74,7 @@ public class TransactionSignaturePayload
         public static TransactionSignaturePayloadTaggedTransaction Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedTransactionSignaturePayloadTaggedTransaction = new TransactionSignaturePayloadTaggedTransaction();
             var discriminant = EnvelopeType.Decode(stream, maxDepth);
@@ -88,7 +88,7 @@ public class TransactionSignaturePayload
                     decodedTransactionSignaturePayloadTaggedTransaction.FeeBump = FeeBumpTransaction.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedTransactionSignaturePayloadTaggedTransaction;

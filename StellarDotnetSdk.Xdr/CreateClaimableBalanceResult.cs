@@ -48,7 +48,7 @@ public class CreateClaimableBalanceResult
     public static CreateClaimableBalanceResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedCreateClaimableBalanceResult = new CreateClaimableBalanceResult();
         var discriminant = CreateClaimableBalanceResultCode.Decode(stream, maxDepth);
@@ -65,7 +65,7 @@ public class CreateClaimableBalanceResult
             case CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum.CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedCreateClaimableBalanceResult;

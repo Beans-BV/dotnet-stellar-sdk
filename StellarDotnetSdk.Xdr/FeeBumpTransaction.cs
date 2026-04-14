@@ -45,7 +45,7 @@ public class FeeBumpTransaction
     public static FeeBumpTransaction Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedFeeBumpTransaction = new FeeBumpTransaction();
         decodedFeeBumpTransaction.FeeSource = MuxedAccount.Decode(stream, maxDepth);
@@ -80,7 +80,7 @@ public class FeeBumpTransaction
         public static FeeBumpTransactionInnerTx Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedFeeBumpTransactionInnerTx = new FeeBumpTransactionInnerTx();
             var discriminant = EnvelopeType.Decode(stream, maxDepth);
@@ -91,7 +91,7 @@ public class FeeBumpTransaction
                     decodedFeeBumpTransactionInnerTx.V1 = TransactionV1Envelope.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedFeeBumpTransactionInnerTx;
@@ -120,7 +120,7 @@ public class FeeBumpTransaction
         public static FeeBumpTransactionExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedFeeBumpTransactionExt = new FeeBumpTransactionExt();
             var discriminant = stream.ReadInt();
@@ -130,7 +130,7 @@ public class FeeBumpTransaction
                 case 0:
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedFeeBumpTransactionExt;

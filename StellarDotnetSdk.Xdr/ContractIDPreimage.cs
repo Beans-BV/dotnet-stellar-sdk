@@ -45,7 +45,7 @@ public class ContractIDPreimage
     public static ContractIDPreimage Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedContractIDPreimage = new ContractIDPreimage();
         var discriminant = ContractIDPreimageType.Decode(stream, maxDepth);
@@ -59,7 +59,7 @@ public class ContractIDPreimage
                 decodedContractIDPreimage.FromAsset = Asset.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedContractIDPreimage;
@@ -84,7 +84,7 @@ public class ContractIDPreimage
         public static ContractIDPreimageFromAddress Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedContractIDPreimageFromAddress = new ContractIDPreimageFromAddress();
             decodedContractIDPreimageFromAddress.Address = SCAddress.Decode(stream, maxDepth);

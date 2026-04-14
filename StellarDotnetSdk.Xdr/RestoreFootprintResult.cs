@@ -40,7 +40,7 @@ public class RestoreFootprintResult
     public static RestoreFootprintResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedRestoreFootprintResult = new RestoreFootprintResult();
         var discriminant = RestoreFootprintResultCode.Decode(stream, maxDepth);
@@ -54,7 +54,7 @@ public class RestoreFootprintResult
             case RestoreFootprintResultCode.RestoreFootprintResultCodeEnum.RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedRestoreFootprintResult;

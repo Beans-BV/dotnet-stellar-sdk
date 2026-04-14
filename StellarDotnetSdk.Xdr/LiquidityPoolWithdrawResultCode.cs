@@ -60,7 +60,7 @@ public class LiquidityPoolWithdrawResultCode
             case -4: return Create(LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_LINE_FULL);
             case -5: return Create(LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

@@ -54,7 +54,7 @@ public class CreateClaimableBalanceResultCode
             case -4: return Create(CreateClaimableBalanceResultCodeEnum.CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED);
             case -5: return Create(CreateClaimableBalanceResultCodeEnum.CREATE_CLAIMABLE_BALANCE_UNDERFUNDED);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

@@ -35,7 +35,7 @@ public class ClaimableBalanceEntryExtensionV1
     public static ClaimableBalanceEntryExtensionV1 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedClaimableBalanceEntryExtensionV1 = new ClaimableBalanceEntryExtensionV1();
         decodedClaimableBalanceEntryExtensionV1.Ext = ClaimableBalanceEntryExtensionV1Ext.Decode(stream, maxDepth);
@@ -65,7 +65,7 @@ public class ClaimableBalanceEntryExtensionV1
         public static ClaimableBalanceEntryExtensionV1Ext Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedClaimableBalanceEntryExtensionV1Ext = new ClaimableBalanceEntryExtensionV1Ext();
             var discriminant = stream.ReadInt();
@@ -75,7 +75,7 @@ public class ClaimableBalanceEntryExtensionV1
                 case 0:
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedClaimableBalanceEntryExtensionV1Ext;

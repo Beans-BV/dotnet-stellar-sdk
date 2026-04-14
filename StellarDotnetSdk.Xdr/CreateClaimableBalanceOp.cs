@@ -28,7 +28,7 @@ public class CreateClaimableBalanceOp
         Int64.Encode(stream, encodedCreateClaimableBalanceOp.Amount);
         var claimantssize = encodedCreateClaimableBalanceOp.Claimants.Length;
         if (claimantssize > 10)
-            throw new IOException("claimants size " + claimantssize + " exceeds max size 10");
+            throw new ArgumentException("claimants size " + claimantssize + " exceeds max size 10");
         stream.WriteInt(claimantssize);
         for (var i = 0; i < claimantssize; i++)
         {
@@ -39,19 +39,19 @@ public class CreateClaimableBalanceOp
     public static CreateClaimableBalanceOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedCreateClaimableBalanceOp = new CreateClaimableBalanceOp();
         decodedCreateClaimableBalanceOp.Asset = Asset.Decode(stream, maxDepth);
         decodedCreateClaimableBalanceOp.Amount = Int64.Decode(stream, maxDepth);
         var claimantssize = stream.ReadInt();
         if (claimantssize < 0)
-            throw new IOException("claimants size " + claimantssize + " is negative");
+            throw new InvalidDataException("claimants size " + claimantssize + " is negative");
         if (claimantssize > 10)
-            throw new IOException("claimants size " + claimantssize + " exceeds max size 10");
+            throw new InvalidDataException("claimants size " + claimantssize + " exceeds max size 10");
         var claimantsRemainingInputLen = stream.GetRemainingInputLen();
         if (claimantsRemainingInputLen >= 0 && claimantsRemainingInputLen < claimantssize)
-            throw new IOException("claimants size " + claimantssize + " exceeds remaining input length " + claimantsRemainingInputLen);
+            throw new InvalidDataException("claimants size " + claimantssize + " exceeds remaining input length " + claimantsRemainingInputLen);
         decodedCreateClaimableBalanceOp.Claimants = new Claimant[claimantssize];
         for (var i = 0; i < claimantssize; i++)
         {

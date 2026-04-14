@@ -31,15 +31,15 @@ public class TransactionResultSet
     public static TransactionResultSet Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTransactionResultSet = new TransactionResultSet();
         var resultssize = stream.ReadInt();
         if (resultssize < 0)
-            throw new IOException("results size " + resultssize + " is negative");
+            throw new InvalidDataException("results size " + resultssize + " is negative");
         var resultsRemainingInputLen = stream.GetRemainingInputLen();
         if (resultsRemainingInputLen >= 0 && resultsRemainingInputLen < resultssize)
-            throw new IOException("results size " + resultssize + " exceeds remaining input length " + resultsRemainingInputLen);
+            throw new InvalidDataException("results size " + resultssize + " exceeds remaining input length " + resultsRemainingInputLen);
         decodedTransactionResultSet.Results = new TransactionResultPair[resultssize];
         for (var i = 0; i < resultssize; i++)
         {

@@ -51,7 +51,7 @@ public class SCAddressType
             case 3: return Create(SCAddressTypeEnum.SC_ADDRESS_TYPE_CLAIMABLE_BALANCE);
             case 4: return Create(SCAddressTypeEnum.SC_ADDRESS_TYPE_LIQUIDITY_POOL);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

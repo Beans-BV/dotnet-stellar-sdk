@@ -54,7 +54,7 @@ public class ClaimPredicateType
             case 4: return Create(ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME);
             case 5: return Create(ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_RELATIVE_TIME);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

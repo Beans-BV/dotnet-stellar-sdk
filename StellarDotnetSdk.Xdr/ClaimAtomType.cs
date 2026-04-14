@@ -45,7 +45,7 @@ public class ClaimAtomType
             case 1: return Create(ClaimAtomTypeEnum.CLAIM_ATOM_TYPE_ORDER_BOOK);
             case 2: return Create(ClaimAtomTypeEnum.CLAIM_ATOM_TYPE_LIQUIDITY_POOL);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

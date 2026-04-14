@@ -46,7 +46,7 @@ public class ClaimOfferAtomV0
     public static ClaimOfferAtomV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedClaimOfferAtomV0 = new ClaimOfferAtomV0();
         decodedClaimOfferAtomV0.SellerEd25519 = Uint256.Decode(stream, maxDepth);

@@ -47,7 +47,7 @@ public class SorobanTransactionData
     public static SorobanTransactionData Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSorobanTransactionData = new SorobanTransactionData();
         decodedSorobanTransactionData.Ext = SorobanTransactionDataExt.Decode(stream, maxDepth);
@@ -83,7 +83,7 @@ public class SorobanTransactionData
         public static SorobanTransactionDataExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedSorobanTransactionDataExt = new SorobanTransactionDataExt();
             var discriminant = stream.ReadInt();
@@ -96,7 +96,7 @@ public class SorobanTransactionData
                     decodedSorobanTransactionDataExt.ResourceExt = SorobanResourcesExtV0.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedSorobanTransactionDataExt;

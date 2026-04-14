@@ -47,7 +47,7 @@ public class LedgerCloseMeta
     public static LedgerCloseMeta Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedLedgerCloseMeta = new LedgerCloseMeta();
         var discriminant = stream.ReadInt();
@@ -64,7 +64,7 @@ public class LedgerCloseMeta
                 decodedLedgerCloseMeta.V2 = LedgerCloseMetaV2.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedLedgerCloseMeta;

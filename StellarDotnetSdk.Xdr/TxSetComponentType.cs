@@ -41,7 +41,7 @@ public class TxSetComponentType
         {
             case 0: return Create(TxSetComponentTypeEnum.TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

@@ -38,7 +38,7 @@ public class AccountEntryExtensionV2
         Uint32.Encode(stream, encodedAccountEntryExtensionV2.NumSponsoring);
         var signerSponsoringIDssize = encodedAccountEntryExtensionV2.SignerSponsoringIDs.Length;
         if (signerSponsoringIDssize > 20)
-            throw new IOException("signerSponsoringIDs size " + signerSponsoringIDssize + " exceeds max size 20");
+            throw new ArgumentException("signerSponsoringIDs size " + signerSponsoringIDssize + " exceeds max size 20");
         stream.WriteInt(signerSponsoringIDssize);
         for (var i = 0; i < signerSponsoringIDssize; i++)
         {
@@ -50,19 +50,19 @@ public class AccountEntryExtensionV2
     public static AccountEntryExtensionV2 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedAccountEntryExtensionV2 = new AccountEntryExtensionV2();
         decodedAccountEntryExtensionV2.NumSponsored = Uint32.Decode(stream, maxDepth);
         decodedAccountEntryExtensionV2.NumSponsoring = Uint32.Decode(stream, maxDepth);
         var signerSponsoringIDssize = stream.ReadInt();
         if (signerSponsoringIDssize < 0)
-            throw new IOException("signerSponsoringIDs size " + signerSponsoringIDssize + " is negative");
+            throw new InvalidDataException("signerSponsoringIDs size " + signerSponsoringIDssize + " is negative");
         if (signerSponsoringIDssize > 20)
-            throw new IOException("signerSponsoringIDs size " + signerSponsoringIDssize + " exceeds max size 20");
+            throw new InvalidDataException("signerSponsoringIDs size " + signerSponsoringIDssize + " exceeds max size 20");
         var signerSponsoringIDsRemainingInputLen = stream.GetRemainingInputLen();
         if (signerSponsoringIDsRemainingInputLen >= 0 && signerSponsoringIDsRemainingInputLen < signerSponsoringIDssize)
-            throw new IOException("signerSponsoringIDs size " + signerSponsoringIDssize + " exceeds remaining input length " + signerSponsoringIDsRemainingInputLen);
+            throw new InvalidDataException("signerSponsoringIDs size " + signerSponsoringIDssize + " exceeds remaining input length " + signerSponsoringIDsRemainingInputLen);
         decodedAccountEntryExtensionV2.SignerSponsoringIDs = new SponsorshipDescriptor[signerSponsoringIDssize];
         for (var i = 0; i < signerSponsoringIDssize; i++)
         {
@@ -99,7 +99,7 @@ public class AccountEntryExtensionV2
         public static AccountEntryExtensionV2Ext Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedAccountEntryExtensionV2Ext = new AccountEntryExtensionV2Ext();
             var discriminant = stream.ReadInt();
@@ -112,7 +112,7 @@ public class AccountEntryExtensionV2
                     decodedAccountEntryExtensionV2Ext.V3 = AccountEntryExtensionV3.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedAccountEntryExtensionV2Ext;

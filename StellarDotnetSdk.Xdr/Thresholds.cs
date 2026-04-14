@@ -28,14 +28,14 @@ public class Thresholds
     {
         var Thresholdssize = encodedThresholds.InnerValue.Length;
         if (Thresholdssize != 4)
-            throw new IOException("Thresholds size " + Thresholdssize + " does not match fixed size 4");
+            throw new ArgumentException("Thresholds size " + Thresholdssize + " does not match fixed size 4");
         stream.Write(encodedThresholds.InnerValue, 0, Thresholdssize);
     }
 
     public static Thresholds Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedThresholds = new Thresholds();
         var Thresholdssize = 4;

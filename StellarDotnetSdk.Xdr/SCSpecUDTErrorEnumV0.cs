@@ -31,7 +31,7 @@ public class SCSpecUDTErrorEnumV0
         stream.WriteString(encodedSCSpecUDTErrorEnumV0.Name);
         var casessize = encodedSCSpecUDTErrorEnumV0.Cases.Length;
         if (casessize > 50)
-            throw new IOException("cases size " + casessize + " exceeds max size 50");
+            throw new ArgumentException("cases size " + casessize + " exceeds max size 50");
         stream.WriteInt(casessize);
         for (var i = 0; i < casessize; i++)
         {
@@ -42,7 +42,7 @@ public class SCSpecUDTErrorEnumV0
     public static SCSpecUDTErrorEnumV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCSpecUDTErrorEnumV0 = new SCSpecUDTErrorEnumV0();
         decodedSCSpecUDTErrorEnumV0.Doc = stream.ReadString();
@@ -50,12 +50,12 @@ public class SCSpecUDTErrorEnumV0
         decodedSCSpecUDTErrorEnumV0.Name = stream.ReadString();
         var casessize = stream.ReadInt();
         if (casessize < 0)
-            throw new IOException("cases size " + casessize + " is negative");
+            throw new InvalidDataException("cases size " + casessize + " is negative");
         if (casessize > 50)
-            throw new IOException("cases size " + casessize + " exceeds max size 50");
+            throw new InvalidDataException("cases size " + casessize + " exceeds max size 50");
         var casesRemainingInputLen = stream.GetRemainingInputLen();
         if (casesRemainingInputLen >= 0 && casesRemainingInputLen < casessize)
-            throw new IOException("cases size " + casessize + " exceeds remaining input length " + casesRemainingInputLen);
+            throw new InvalidDataException("cases size " + casessize + " exceeds remaining input length " + casesRemainingInputLen);
         decodedSCSpecUDTErrorEnumV0.Cases = new SCSpecUDTErrorEnumCaseV0[casessize];
         for (var i = 0; i < casessize; i++)
         {

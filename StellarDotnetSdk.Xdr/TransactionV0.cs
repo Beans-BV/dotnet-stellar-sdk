@@ -52,7 +52,7 @@ public class TransactionV0
         Memo.Encode(stream, encodedTransactionV0.Memo);
         var operationssize = encodedTransactionV0.Operations.Length;
         if (operationssize > 100)
-            throw new IOException("operations size " + operationssize + " exceeds max size 100");
+            throw new ArgumentException("operations size " + operationssize + " exceeds max size 100");
         stream.WriteInt(operationssize);
         for (var i = 0; i < operationssize; i++)
         {
@@ -64,7 +64,7 @@ public class TransactionV0
     public static TransactionV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTransactionV0 = new TransactionV0();
         decodedTransactionV0.SourceAccountEd25519 = Uint256.Decode(stream, maxDepth);
@@ -78,12 +78,12 @@ public class TransactionV0
         decodedTransactionV0.Memo = Memo.Decode(stream, maxDepth);
         var operationssize = stream.ReadInt();
         if (operationssize < 0)
-            throw new IOException("operations size " + operationssize + " is negative");
+            throw new InvalidDataException("operations size " + operationssize + " is negative");
         if (operationssize > 100)
-            throw new IOException("operations size " + operationssize + " exceeds max size 100");
+            throw new InvalidDataException("operations size " + operationssize + " exceeds max size 100");
         var operationsRemainingInputLen = stream.GetRemainingInputLen();
         if (operationsRemainingInputLen >= 0 && operationsRemainingInputLen < operationssize)
-            throw new IOException("operations size " + operationssize + " exceeds remaining input length " + operationsRemainingInputLen);
+            throw new InvalidDataException("operations size " + operationssize + " exceeds remaining input length " + operationsRemainingInputLen);
         decodedTransactionV0.Operations = new Operation[operationssize];
         for (var i = 0; i < operationssize; i++)
         {
@@ -115,7 +115,7 @@ public class TransactionV0
         public static TransactionV0Ext Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedTransactionV0Ext = new TransactionV0Ext();
             var discriminant = stream.ReadInt();
@@ -125,7 +125,7 @@ public class TransactionV0
                 case 0:
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedTransactionV0Ext;

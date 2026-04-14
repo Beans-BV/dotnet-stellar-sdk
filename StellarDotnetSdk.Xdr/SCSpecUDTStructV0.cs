@@ -31,7 +31,7 @@ public class SCSpecUDTStructV0
         stream.WriteString(encodedSCSpecUDTStructV0.Name);
         var fieldssize = encodedSCSpecUDTStructV0.Fields.Length;
         if (fieldssize > 40)
-            throw new IOException("fields size " + fieldssize + " exceeds max size 40");
+            throw new ArgumentException("fields size " + fieldssize + " exceeds max size 40");
         stream.WriteInt(fieldssize);
         for (var i = 0; i < fieldssize; i++)
         {
@@ -42,7 +42,7 @@ public class SCSpecUDTStructV0
     public static SCSpecUDTStructV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCSpecUDTStructV0 = new SCSpecUDTStructV0();
         decodedSCSpecUDTStructV0.Doc = stream.ReadString();
@@ -50,12 +50,12 @@ public class SCSpecUDTStructV0
         decodedSCSpecUDTStructV0.Name = stream.ReadString();
         var fieldssize = stream.ReadInt();
         if (fieldssize < 0)
-            throw new IOException("fields size " + fieldssize + " is negative");
+            throw new InvalidDataException("fields size " + fieldssize + " is negative");
         if (fieldssize > 40)
-            throw new IOException("fields size " + fieldssize + " exceeds max size 40");
+            throw new InvalidDataException("fields size " + fieldssize + " exceeds max size 40");
         var fieldsRemainingInputLen = stream.GetRemainingInputLen();
         if (fieldsRemainingInputLen >= 0 && fieldsRemainingInputLen < fieldssize)
-            throw new IOException("fields size " + fieldssize + " exceeds remaining input length " + fieldsRemainingInputLen);
+            throw new InvalidDataException("fields size " + fieldssize + " exceeds remaining input length " + fieldsRemainingInputLen);
         decodedSCSpecUDTStructV0.Fields = new SCSpecUDTStructFieldV0[fieldssize];
         for (var i = 0; i < fieldssize; i++)
         {

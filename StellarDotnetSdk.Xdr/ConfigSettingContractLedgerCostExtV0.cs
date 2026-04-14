@@ -33,7 +33,7 @@ public class ConfigSettingContractLedgerCostExtV0
     public static ConfigSettingContractLedgerCostExtV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedConfigSettingContractLedgerCostExtV0 = new ConfigSettingContractLedgerCostExtV0();
         decodedConfigSettingContractLedgerCostExtV0.TxMaxFootprintEntries = Uint32.Decode(stream, maxDepth);

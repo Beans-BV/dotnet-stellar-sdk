@@ -97,7 +97,7 @@ public class TransactionResultCode
             case -16: return Create(TransactionResultCodeEnum.txMALFORMED);
             case -17: return Create(TransactionResultCodeEnum.txSOROBAN_INVALID);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

@@ -45,7 +45,7 @@ public class StellarValue
         TimePoint.Encode(stream, encodedStellarValue.CloseTime);
         var upgradessize = encodedStellarValue.Upgrades.Length;
         if (upgradessize > 6)
-            throw new IOException("upgrades size " + upgradessize + " exceeds max size 6");
+            throw new ArgumentException("upgrades size " + upgradessize + " exceeds max size 6");
         stream.WriteInt(upgradessize);
         for (var i = 0; i < upgradessize; i++)
         {
@@ -57,19 +57,19 @@ public class StellarValue
     public static StellarValue Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedStellarValue = new StellarValue();
         decodedStellarValue.TxSetHash = Hash.Decode(stream, maxDepth);
         decodedStellarValue.CloseTime = TimePoint.Decode(stream, maxDepth);
         var upgradessize = stream.ReadInt();
         if (upgradessize < 0)
-            throw new IOException("upgrades size " + upgradessize + " is negative");
+            throw new InvalidDataException("upgrades size " + upgradessize + " is negative");
         if (upgradessize > 6)
-            throw new IOException("upgrades size " + upgradessize + " exceeds max size 6");
+            throw new InvalidDataException("upgrades size " + upgradessize + " exceeds max size 6");
         var upgradesRemainingInputLen = stream.GetRemainingInputLen();
         if (upgradesRemainingInputLen >= 0 && upgradesRemainingInputLen < upgradessize)
-            throw new IOException("upgrades size " + upgradessize + " exceeds remaining input length " + upgradesRemainingInputLen);
+            throw new InvalidDataException("upgrades size " + upgradessize + " exceeds remaining input length " + upgradesRemainingInputLen);
         decodedStellarValue.Upgrades = new UpgradeType[upgradessize];
         for (var i = 0; i < upgradessize; i++)
         {
@@ -106,7 +106,7 @@ public class StellarValue
         public static StellarValueExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedStellarValueExt = new StellarValueExt();
             var discriminant = StellarValueType.Decode(stream, maxDepth);
@@ -119,7 +119,7 @@ public class StellarValue
                     decodedStellarValueExt.LcValueSignature = LedgerCloseValueSignature.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedStellarValueExt;

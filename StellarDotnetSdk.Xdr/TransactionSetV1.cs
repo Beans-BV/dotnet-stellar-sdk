@@ -34,16 +34,16 @@ public class TransactionSetV1
     public static TransactionSetV1 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTransactionSetV1 = new TransactionSetV1();
         decodedTransactionSetV1.PreviousLedgerHash = Hash.Decode(stream, maxDepth);
         var phasessize = stream.ReadInt();
         if (phasessize < 0)
-            throw new IOException("phases size " + phasessize + " is negative");
+            throw new InvalidDataException("phases size " + phasessize + " is negative");
         var phasesRemainingInputLen = stream.GetRemainingInputLen();
         if (phasesRemainingInputLen >= 0 && phasesRemainingInputLen < phasessize)
-            throw new IOException("phases size " + phasessize + " exceeds remaining input length " + phasesRemainingInputLen);
+            throw new InvalidDataException("phases size " + phasessize + " exceeds remaining input length " + phasesRemainingInputLen);
         decodedTransactionSetV1.Phases = new TransactionPhase[phasessize];
         for (var i = 0; i < phasessize; i++)
         {

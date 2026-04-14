@@ -45,7 +45,7 @@ public class SCSpecEventDataFormat
             case 1: return Create(SCSpecEventDataFormatEnum.SC_SPEC_EVENT_DATA_FORMAT_VEC);
             case 2: return Create(SCSpecEventDataFormatEnum.SC_SPEC_EVENT_DATA_FORMAT_MAP);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

@@ -37,15 +37,15 @@ public class ParallelTxExecutionStage
     public static ParallelTxExecutionStage Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedParallelTxExecutionStage = new ParallelTxExecutionStage();
         var ParallelTxExecutionStagesize = stream.ReadInt();
         if (ParallelTxExecutionStagesize < 0)
-            throw new IOException("ParallelTxExecutionStage size " + ParallelTxExecutionStagesize + " is negative");
+            throw new InvalidDataException("ParallelTxExecutionStage size " + ParallelTxExecutionStagesize + " is negative");
         var ParallelTxExecutionStageRemainingInputLen = stream.GetRemainingInputLen();
         if (ParallelTxExecutionStageRemainingInputLen >= 0 && ParallelTxExecutionStageRemainingInputLen < ParallelTxExecutionStagesize)
-            throw new IOException("ParallelTxExecutionStage size " + ParallelTxExecutionStagesize + " exceeds remaining input length " + ParallelTxExecutionStageRemainingInputLen);
+            throw new InvalidDataException("ParallelTxExecutionStage size " + ParallelTxExecutionStagesize + " exceeds remaining input length " + ParallelTxExecutionStageRemainingInputLen);
         decodedParallelTxExecutionStage.InnerValue = new DependentTxCluster[ParallelTxExecutionStagesize];
         for (var i = 0; i < ParallelTxExecutionStagesize; i++)
         {

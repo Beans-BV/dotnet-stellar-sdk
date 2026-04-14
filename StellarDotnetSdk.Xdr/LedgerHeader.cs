@@ -84,7 +84,7 @@ public class LedgerHeader
         Uint32.Encode(stream, encodedLedgerHeader.MaxTxSetSize);
         var skipListsize = encodedLedgerHeader.SkipList.Length;
         if (skipListsize != 4)
-            throw new IOException("skipList size " + skipListsize + " does not match fixed size 4");
+            throw new ArgumentException("skipList size " + skipListsize + " does not match fixed size 4");
         for (var i = 0; i < skipListsize; i++)
         {
             Hash.Encode(stream, encodedLedgerHeader.SkipList[i]);
@@ -95,7 +95,7 @@ public class LedgerHeader
     public static LedgerHeader Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedLedgerHeader = new LedgerHeader();
         decodedLedgerHeader.LedgerVersion = Uint32.Decode(stream, maxDepth);
@@ -148,7 +148,7 @@ public class LedgerHeader
         public static LedgerHeaderExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedLedgerHeaderExt = new LedgerHeaderExt();
             var discriminant = stream.ReadInt();
@@ -161,7 +161,7 @@ public class LedgerHeader
                     decodedLedgerHeaderExt.V1 = LedgerHeaderExtensionV1.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedLedgerHeaderExt;

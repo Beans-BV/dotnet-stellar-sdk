@@ -69,7 +69,7 @@ public class PaymentResultCode
             case -8: return Create(PaymentResultCodeEnum.PAYMENT_LINE_FULL);
             case -9: return Create(PaymentResultCodeEnum.PAYMENT_NO_ISSUER);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

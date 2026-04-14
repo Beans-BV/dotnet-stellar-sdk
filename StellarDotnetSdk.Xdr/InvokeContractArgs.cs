@@ -36,17 +36,17 @@ public class InvokeContractArgs
     public static InvokeContractArgs Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedInvokeContractArgs = new InvokeContractArgs();
         decodedInvokeContractArgs.ContractAddress = SCAddress.Decode(stream, maxDepth);
         decodedInvokeContractArgs.FunctionName = SCSymbol.Decode(stream, maxDepth);
         var argssize = stream.ReadInt();
         if (argssize < 0)
-            throw new IOException("args size " + argssize + " is negative");
+            throw new InvalidDataException("args size " + argssize + " is negative");
         var argsRemainingInputLen = stream.GetRemainingInputLen();
         if (argsRemainingInputLen >= 0 && argsRemainingInputLen < argssize)
-            throw new IOException("args size " + argssize + " exceeds remaining input length " + argsRemainingInputLen);
+            throw new InvalidDataException("args size " + argssize + " exceeds remaining input length " + argsRemainingInputLen);
         decodedInvokeContractArgs.Args = new SCVal[argssize];
         for (var i = 0; i < argssize; i++)
         {

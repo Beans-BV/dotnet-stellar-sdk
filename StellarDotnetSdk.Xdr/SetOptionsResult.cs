@@ -54,7 +54,7 @@ public class SetOptionsResult
     public static SetOptionsResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSetOptionsResult = new SetOptionsResult();
         var discriminant = SetOptionsResultCode.Decode(stream, maxDepth);
@@ -75,7 +75,7 @@ public class SetOptionsResult
             case SetOptionsResultCode.SetOptionsResultCodeEnum.SET_OPTIONS_AUTH_REVOCABLE_REQUIRED:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedSetOptionsResult;

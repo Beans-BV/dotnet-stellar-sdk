@@ -39,7 +39,7 @@ public class SurveyMessageCommandType
         {
             case 1: return Create(SurveyMessageCommandTypeEnum.TIME_SLICED_SURVEY_TOPOLOGY);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

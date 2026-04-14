@@ -57,7 +57,7 @@ public class LedgerUpgradeType
             case 6: return Create(LedgerUpgradeTypeEnum.LEDGER_UPGRADE_CONFIG);
             case 7: return Create(LedgerUpgradeTypeEnum.LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

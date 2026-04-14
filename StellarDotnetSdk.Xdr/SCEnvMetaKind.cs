@@ -39,7 +39,7 @@ public class SCEnvMetaKind
         {
             case 0: return Create(SCEnvMetaKindEnum.SC_ENV_META_KIND_INTERFACE_VERSION);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

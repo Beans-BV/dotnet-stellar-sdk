@@ -22,7 +22,7 @@ public class SCSpecTypeTuple
     {
         var valueTypessize = encodedSCSpecTypeTuple.ValueTypes.Length;
         if (valueTypessize > 12)
-            throw new IOException("valueTypes size " + valueTypessize + " exceeds max size 12");
+            throw new ArgumentException("valueTypes size " + valueTypessize + " exceeds max size 12");
         stream.WriteInt(valueTypessize);
         for (var i = 0; i < valueTypessize; i++)
         {
@@ -33,17 +33,17 @@ public class SCSpecTypeTuple
     public static SCSpecTypeTuple Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCSpecTypeTuple = new SCSpecTypeTuple();
         var valueTypessize = stream.ReadInt();
         if (valueTypessize < 0)
-            throw new IOException("valueTypes size " + valueTypessize + " is negative");
+            throw new InvalidDataException("valueTypes size " + valueTypessize + " is negative");
         if (valueTypessize > 12)
-            throw new IOException("valueTypes size " + valueTypessize + " exceeds max size 12");
+            throw new InvalidDataException("valueTypes size " + valueTypessize + " exceeds max size 12");
         var valueTypesRemainingInputLen = stream.GetRemainingInputLen();
         if (valueTypesRemainingInputLen >= 0 && valueTypesRemainingInputLen < valueTypessize)
-            throw new IOException("valueTypes size " + valueTypessize + " exceeds remaining input length " + valueTypesRemainingInputLen);
+            throw new InvalidDataException("valueTypes size " + valueTypessize + " exceeds remaining input length " + valueTypesRemainingInputLen);
         decodedSCSpecTypeTuple.ValueTypes = new SCSpecTypeDef[valueTypessize];
         for (var i = 0; i < valueTypessize; i++)
         {

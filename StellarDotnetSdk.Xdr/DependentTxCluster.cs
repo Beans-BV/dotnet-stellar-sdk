@@ -37,15 +37,15 @@ public class DependentTxCluster
     public static DependentTxCluster Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedDependentTxCluster = new DependentTxCluster();
         var DependentTxClustersize = stream.ReadInt();
         if (DependentTxClustersize < 0)
-            throw new IOException("DependentTxCluster size " + DependentTxClustersize + " is negative");
+            throw new InvalidDataException("DependentTxCluster size " + DependentTxClustersize + " is negative");
         var DependentTxClusterRemainingInputLen = stream.GetRemainingInputLen();
         if (DependentTxClusterRemainingInputLen >= 0 && DependentTxClusterRemainingInputLen < DependentTxClustersize)
-            throw new IOException("DependentTxCluster size " + DependentTxClustersize + " exceeds remaining input length " + DependentTxClusterRemainingInputLen);
+            throw new InvalidDataException("DependentTxCluster size " + DependentTxClustersize + " exceeds remaining input length " + DependentTxClusterRemainingInputLen);
         decodedDependentTxCluster.InnerValue = new TransactionEnvelope[DependentTxClustersize];
         for (var i = 0; i < DependentTxClustersize; i++)
         {

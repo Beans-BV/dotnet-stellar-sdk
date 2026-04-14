@@ -30,7 +30,7 @@ public class SCSpecFunctionV0
         SCSymbol.Encode(stream, encodedSCSpecFunctionV0.Name);
         var inputssize = encodedSCSpecFunctionV0.Inputs.Length;
         if (inputssize > 10)
-            throw new IOException("inputs size " + inputssize + " exceeds max size 10");
+            throw new ArgumentException("inputs size " + inputssize + " exceeds max size 10");
         stream.WriteInt(inputssize);
         for (var i = 0; i < inputssize; i++)
         {
@@ -38,7 +38,7 @@ public class SCSpecFunctionV0
         }
         var outputssize = encodedSCSpecFunctionV0.Outputs.Length;
         if (outputssize > 1)
-            throw new IOException("outputs size " + outputssize + " exceeds max size 1");
+            throw new ArgumentException("outputs size " + outputssize + " exceeds max size 1");
         stream.WriteInt(outputssize);
         for (var i = 0; i < outputssize; i++)
         {
@@ -49,19 +49,19 @@ public class SCSpecFunctionV0
     public static SCSpecFunctionV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCSpecFunctionV0 = new SCSpecFunctionV0();
         decodedSCSpecFunctionV0.Doc = stream.ReadString();
         decodedSCSpecFunctionV0.Name = SCSymbol.Decode(stream, maxDepth);
         var inputssize = stream.ReadInt();
         if (inputssize < 0)
-            throw new IOException("inputs size " + inputssize + " is negative");
+            throw new InvalidDataException("inputs size " + inputssize + " is negative");
         if (inputssize > 10)
-            throw new IOException("inputs size " + inputssize + " exceeds max size 10");
+            throw new InvalidDataException("inputs size " + inputssize + " exceeds max size 10");
         var inputsRemainingInputLen = stream.GetRemainingInputLen();
         if (inputsRemainingInputLen >= 0 && inputsRemainingInputLen < inputssize)
-            throw new IOException("inputs size " + inputssize + " exceeds remaining input length " + inputsRemainingInputLen);
+            throw new InvalidDataException("inputs size " + inputssize + " exceeds remaining input length " + inputsRemainingInputLen);
         decodedSCSpecFunctionV0.Inputs = new SCSpecFunctionInputV0[inputssize];
         for (var i = 0; i < inputssize; i++)
         {
@@ -69,12 +69,12 @@ public class SCSpecFunctionV0
         }
         var outputssize = stream.ReadInt();
         if (outputssize < 0)
-            throw new IOException("outputs size " + outputssize + " is negative");
+            throw new InvalidDataException("outputs size " + outputssize + " is negative");
         if (outputssize > 1)
-            throw new IOException("outputs size " + outputssize + " exceeds max size 1");
+            throw new InvalidDataException("outputs size " + outputssize + " exceeds max size 1");
         var outputsRemainingInputLen = stream.GetRemainingInputLen();
         if (outputsRemainingInputLen >= 0 && outputsRemainingInputLen < outputssize)
-            throw new IOException("outputs size " + outputssize + " exceeds remaining input length " + outputsRemainingInputLen);
+            throw new InvalidDataException("outputs size " + outputssize + " exceeds remaining input length " + outputsRemainingInputLen);
         decodedSCSpecFunctionV0.Outputs = new SCSpecTypeDef[outputssize];
         for (var i = 0; i < outputssize; i++)
         {

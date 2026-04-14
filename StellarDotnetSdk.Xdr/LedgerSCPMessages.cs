@@ -34,16 +34,16 @@ public class LedgerSCPMessages
     public static LedgerSCPMessages Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedLedgerSCPMessages = new LedgerSCPMessages();
         decodedLedgerSCPMessages.LedgerSeq = Uint32.Decode(stream, maxDepth);
         var messagessize = stream.ReadInt();
         if (messagessize < 0)
-            throw new IOException("messages size " + messagessize + " is negative");
+            throw new InvalidDataException("messages size " + messagessize + " is negative");
         var messagesRemainingInputLen = stream.GetRemainingInputLen();
         if (messagesRemainingInputLen >= 0 && messagesRemainingInputLen < messagessize)
-            throw new IOException("messages size " + messagessize + " exceeds remaining input length " + messagesRemainingInputLen);
+            throw new InvalidDataException("messages size " + messagessize + " exceeds remaining input length " + messagesRemainingInputLen);
         decodedLedgerSCPMessages.Messages = new SCPEnvelope[messagessize];
         for (var i = 0; i < messagessize; i++)
         {

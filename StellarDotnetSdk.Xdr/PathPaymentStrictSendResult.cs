@@ -71,7 +71,7 @@ public class PathPaymentStrictSendResult
     public static PathPaymentStrictSendResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedPathPaymentStrictSendResult = new PathPaymentStrictSendResult();
         var discriminant = PathPaymentStrictSendResultCode.Decode(stream, maxDepth);
@@ -98,7 +98,7 @@ public class PathPaymentStrictSendResult
             case PathPaymentStrictSendResultCode.PathPaymentStrictSendResultCodeEnum.PATH_PAYMENT_STRICT_SEND_UNDER_DESTMIN:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedPathPaymentStrictSendResult;
@@ -128,15 +128,15 @@ public class PathPaymentStrictSendResult
         public static PathPaymentStrictSendResultSuccess Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedPathPaymentStrictSendResultSuccess = new PathPaymentStrictSendResultSuccess();
             var offerssize = stream.ReadInt();
             if (offerssize < 0)
-                throw new IOException("offers size " + offerssize + " is negative");
+                throw new InvalidDataException("offers size " + offerssize + " is negative");
             var offersRemainingInputLen = stream.GetRemainingInputLen();
             if (offersRemainingInputLen >= 0 && offersRemainingInputLen < offerssize)
-                throw new IOException("offers size " + offerssize + " exceeds remaining input length " + offersRemainingInputLen);
+                throw new InvalidDataException("offers size " + offerssize + " exceeds remaining input length " + offersRemainingInputLen);
             decodedPathPaymentStrictSendResultSuccess.Offers = new ClaimAtom[offerssize];
             for (var i = 0; i < offerssize; i++)
             {

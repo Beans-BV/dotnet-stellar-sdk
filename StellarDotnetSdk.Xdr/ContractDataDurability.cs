@@ -41,7 +41,7 @@ public class ContractDataDurability
             case 0: return Create(ContractDataDurabilityEnum.TEMPORARY);
             case 1: return Create(ContractDataDurabilityEnum.PERSISTENT);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

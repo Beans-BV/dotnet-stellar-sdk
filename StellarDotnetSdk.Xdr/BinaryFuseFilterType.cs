@@ -45,7 +45,7 @@ public class BinaryFuseFilterType
             case 1: return Create(BinaryFuseFilterTypeEnum.BINARY_FUSE_FILTER_16_BIT);
             case 2: return Create(BinaryFuseFilterTypeEnum.BINARY_FUSE_FILTER_32_BIT);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

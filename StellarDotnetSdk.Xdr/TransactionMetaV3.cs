@@ -55,17 +55,17 @@ public class TransactionMetaV3
     public static TransactionMetaV3 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTransactionMetaV3 = new TransactionMetaV3();
         decodedTransactionMetaV3.Ext = ExtensionPoint.Decode(stream, maxDepth);
         decodedTransactionMetaV3.TxChangesBefore = LedgerEntryChanges.Decode(stream, maxDepth);
         var operationssize = stream.ReadInt();
         if (operationssize < 0)
-            throw new IOException("operations size " + operationssize + " is negative");
+            throw new InvalidDataException("operations size " + operationssize + " is negative");
         var operationsRemainingInputLen = stream.GetRemainingInputLen();
         if (operationsRemainingInputLen >= 0 && operationsRemainingInputLen < operationssize)
-            throw new IOException("operations size " + operationssize + " exceeds remaining input length " + operationsRemainingInputLen);
+            throw new InvalidDataException("operations size " + operationssize + " exceeds remaining input length " + operationsRemainingInputLen);
         decodedTransactionMetaV3.Operations = new OperationMeta[operationssize];
         for (var i = 0; i < operationssize; i++)
         {

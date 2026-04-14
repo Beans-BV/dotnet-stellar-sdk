@@ -32,7 +32,7 @@ public class Uint64
     public static Uint64 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedUint64 = new Uint64();
         decodedUint64.InnerValue = stream.ReadULong();

@@ -29,7 +29,7 @@ public class DontHave
     public static DontHave Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedDontHave = new DontHave();
         decodedDontHave.Type = MessageType.Decode(stream, maxDepth);

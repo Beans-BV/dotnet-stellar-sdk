@@ -58,7 +58,7 @@ public class OperationResultCode
             case -5: return Create(OperationResultCodeEnum.opEXCEEDED_WORK_LIMIT);
             case -6: return Create(OperationResultCodeEnum.opTOO_MANY_SPONSORING);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

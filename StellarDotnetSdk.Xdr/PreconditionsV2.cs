@@ -84,7 +84,7 @@ public class PreconditionsV2
         Uint32.Encode(stream, encodedPreconditionsV2.MinSeqLedgerGap);
         var extraSignerssize = encodedPreconditionsV2.ExtraSigners.Length;
         if (extraSignerssize > 2)
-            throw new IOException("extraSigners size " + extraSignerssize + " exceeds max size 2");
+            throw new ArgumentException("extraSigners size " + extraSignerssize + " exceeds max size 2");
         stream.WriteInt(extraSignerssize);
         for (var i = 0; i < extraSignerssize; i++)
         {
@@ -95,7 +95,7 @@ public class PreconditionsV2
     public static PreconditionsV2 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedPreconditionsV2 = new PreconditionsV2();
         var TimeBoundsPresent = stream.ReadInt();
@@ -117,12 +117,12 @@ public class PreconditionsV2
         decodedPreconditionsV2.MinSeqLedgerGap = Uint32.Decode(stream, maxDepth);
         var extraSignerssize = stream.ReadInt();
         if (extraSignerssize < 0)
-            throw new IOException("extraSigners size " + extraSignerssize + " is negative");
+            throw new InvalidDataException("extraSigners size " + extraSignerssize + " is negative");
         if (extraSignerssize > 2)
-            throw new IOException("extraSigners size " + extraSignerssize + " exceeds max size 2");
+            throw new InvalidDataException("extraSigners size " + extraSignerssize + " exceeds max size 2");
         var extraSignersRemainingInputLen = stream.GetRemainingInputLen();
         if (extraSignersRemainingInputLen >= 0 && extraSignersRemainingInputLen < extraSignerssize)
-            throw new IOException("extraSigners size " + extraSignerssize + " exceeds remaining input length " + extraSignersRemainingInputLen);
+            throw new InvalidDataException("extraSigners size " + extraSignerssize + " exceeds remaining input length " + extraSignersRemainingInputLen);
         decodedPreconditionsV2.ExtraSigners = new SignerKey[extraSignerssize];
         for (var i = 0; i < extraSignerssize; i++)
         {

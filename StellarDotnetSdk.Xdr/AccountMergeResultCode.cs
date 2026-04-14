@@ -63,7 +63,7 @@ public class AccountMergeResultCode
             case -6: return Create(AccountMergeResultCodeEnum.ACCOUNT_MERGE_DEST_FULL);
             case -7: return Create(AccountMergeResultCodeEnum.ACCOUNT_MERGE_IS_SPONSOR);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

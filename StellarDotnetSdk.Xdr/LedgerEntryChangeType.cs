@@ -51,7 +51,7 @@ public class LedgerEntryChangeType
             case 3: return Create(LedgerEntryChangeTypeEnum.LEDGER_ENTRY_STATE);
             case 4: return Create(LedgerEntryChangeTypeEnum.LEDGER_ENTRY_RESTORED);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

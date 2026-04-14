@@ -44,7 +44,7 @@ public class BumpSequenceResultCode
             case 0: return Create(BumpSequenceResultCodeEnum.BUMP_SEQUENCE_SUCCESS);
             case -1: return Create(BumpSequenceResultCodeEnum.BUMP_SEQUENCE_BAD_SEQ);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

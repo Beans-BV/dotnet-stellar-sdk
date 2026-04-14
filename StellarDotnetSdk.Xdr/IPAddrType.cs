@@ -42,7 +42,7 @@ public class IPAddrType
             case 0: return Create(IPAddrTypeEnum.IPv4);
             case 1: return Create(IPAddrTypeEnum.IPv6);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

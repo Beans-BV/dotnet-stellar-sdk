@@ -39,7 +39,7 @@ public class PeerAddress
     public static PeerAddress Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedPeerAddress = new PeerAddress();
         decodedPeerAddress.Ip = PeerAddressIp.Decode(stream, maxDepth);
@@ -68,13 +68,13 @@ public class PeerAddress
                 case IPAddrType.IPAddrTypeEnum.IPv4:
                     var ipv4size = encodedPeerAddressIp.Ipv4.Length;
                     if (ipv4size != 4)
-                        throw new IOException("ipv4 size " + ipv4size + " does not match fixed size 4");
+                        throw new ArgumentException("ipv4 size " + ipv4size + " does not match fixed size 4");
                     stream.Write(encodedPeerAddressIp.Ipv4, 0, ipv4size);
                     break;
                 case IPAddrType.IPAddrTypeEnum.IPv6:
                     var ipv6size = encodedPeerAddressIp.Ipv6.Length;
                     if (ipv6size != 16)
-                        throw new IOException("ipv6 size " + ipv6size + " does not match fixed size 16");
+                        throw new ArgumentException("ipv6 size " + ipv6size + " does not match fixed size 16");
                     stream.Write(encodedPeerAddressIp.Ipv6, 0, ipv6size);
                     break;
             }
@@ -83,7 +83,7 @@ public class PeerAddress
         public static PeerAddressIp Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedPeerAddressIp = new PeerAddressIp();
             var discriminant = IPAddrType.Decode(stream, maxDepth);
@@ -101,7 +101,7 @@ public class PeerAddress
                     stream.Read(decodedPeerAddressIp.Ipv6, 0, ipv6size);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedPeerAddressIp;

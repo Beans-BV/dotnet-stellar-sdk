@@ -48,7 +48,7 @@ public class AssetType
             case 2: return Create(AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM12);
             case 3: return Create(AssetTypeEnum.ASSET_TYPE_POOL_SHARE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

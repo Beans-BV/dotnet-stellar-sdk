@@ -57,7 +57,7 @@ public class SCError
     public static SCError Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCError = new SCError();
         var discriminant = SCErrorType.Decode(stream, maxDepth);
@@ -79,7 +79,7 @@ public class SCError
                 decodedSCError.Code = SCErrorCode.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedSCError;

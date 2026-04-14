@@ -42,7 +42,7 @@ public class ContractIDPreimageType
             case 0: return Create(ContractIDPreimageTypeEnum.CONTRACT_ID_PREIMAGE_FROM_ADDRESS);
             case 1: return Create(ContractIDPreimageTypeEnum.CONTRACT_ID_PREIMAGE_FROM_ASSET);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

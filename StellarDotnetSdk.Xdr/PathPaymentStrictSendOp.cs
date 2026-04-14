@@ -41,7 +41,7 @@ public class PathPaymentStrictSendOp
         Int64.Encode(stream, encodedPathPaymentStrictSendOp.DestMin);
         var pathsize = encodedPathPaymentStrictSendOp.Path.Length;
         if (pathsize > 5)
-            throw new IOException("path size " + pathsize + " exceeds max size 5");
+            throw new ArgumentException("path size " + pathsize + " exceeds max size 5");
         stream.WriteInt(pathsize);
         for (var i = 0; i < pathsize; i++)
         {
@@ -52,7 +52,7 @@ public class PathPaymentStrictSendOp
     public static PathPaymentStrictSendOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedPathPaymentStrictSendOp = new PathPaymentStrictSendOp();
         decodedPathPaymentStrictSendOp.SendAsset = Asset.Decode(stream, maxDepth);
@@ -62,12 +62,12 @@ public class PathPaymentStrictSendOp
         decodedPathPaymentStrictSendOp.DestMin = Int64.Decode(stream, maxDepth);
         var pathsize = stream.ReadInt();
         if (pathsize < 0)
-            throw new IOException("path size " + pathsize + " is negative");
+            throw new InvalidDataException("path size " + pathsize + " is negative");
         if (pathsize > 5)
-            throw new IOException("path size " + pathsize + " exceeds max size 5");
+            throw new InvalidDataException("path size " + pathsize + " exceeds max size 5");
         var pathRemainingInputLen = stream.GetRemainingInputLen();
         if (pathRemainingInputLen >= 0 && pathRemainingInputLen < pathsize)
-            throw new IOException("path size " + pathsize + " exceeds remaining input length " + pathRemainingInputLen);
+            throw new InvalidDataException("path size " + pathsize + " exceeds remaining input length " + pathRemainingInputLen);
         decodedPathPaymentStrictSendOp.Path = new Asset[pathsize];
         for (var i = 0; i < pathsize; i++)
         {

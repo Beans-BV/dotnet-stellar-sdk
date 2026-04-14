@@ -117,7 +117,7 @@ public class OperationType
             case 25: return Create(OperationTypeEnum.EXTEND_FOOTPRINT_TTL);
             case 26: return Create(OperationTypeEnum.RESTORE_FOOTPRINT);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

@@ -31,7 +31,7 @@ public class SCSpecUDTUnionV0
         stream.WriteString(encodedSCSpecUDTUnionV0.Name);
         var casessize = encodedSCSpecUDTUnionV0.Cases.Length;
         if (casessize > 50)
-            throw new IOException("cases size " + casessize + " exceeds max size 50");
+            throw new ArgumentException("cases size " + casessize + " exceeds max size 50");
         stream.WriteInt(casessize);
         for (var i = 0; i < casessize; i++)
         {
@@ -42,7 +42,7 @@ public class SCSpecUDTUnionV0
     public static SCSpecUDTUnionV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCSpecUDTUnionV0 = new SCSpecUDTUnionV0();
         decodedSCSpecUDTUnionV0.Doc = stream.ReadString();
@@ -50,12 +50,12 @@ public class SCSpecUDTUnionV0
         decodedSCSpecUDTUnionV0.Name = stream.ReadString();
         var casessize = stream.ReadInt();
         if (casessize < 0)
-            throw new IOException("cases size " + casessize + " is negative");
+            throw new InvalidDataException("cases size " + casessize + " is negative");
         if (casessize > 50)
-            throw new IOException("cases size " + casessize + " exceeds max size 50");
+            throw new InvalidDataException("cases size " + casessize + " exceeds max size 50");
         var casesRemainingInputLen = stream.GetRemainingInputLen();
         if (casesRemainingInputLen >= 0 && casesRemainingInputLen < casessize)
-            throw new IOException("cases size " + casessize + " exceeds remaining input length " + casesRemainingInputLen);
+            throw new InvalidDataException("cases size " + casessize + " exceeds remaining input length " + casesRemainingInputLen);
         decodedSCSpecUDTUnionV0.Cases = new SCSpecUDTUnionCaseV0[casessize];
         for (var i = 0; i < casessize; i++)
         {

@@ -113,7 +113,7 @@ public class MessageType
             case 23: return Create(MessageTypeEnum.TIME_SLICED_SURVEY_START_COLLECTING);
             case 24: return Create(MessageTypeEnum.TIME_SLICED_SURVEY_STOP_COLLECTING);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

@@ -34,16 +34,16 @@ public class TransactionSet
     public static TransactionSet Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTransactionSet = new TransactionSet();
         decodedTransactionSet.PreviousLedgerHash = Hash.Decode(stream, maxDepth);
         var txssize = stream.ReadInt();
         if (txssize < 0)
-            throw new IOException("txs size " + txssize + " is negative");
+            throw new InvalidDataException("txs size " + txssize + " is negative");
         var txsRemainingInputLen = stream.GetRemainingInputLen();
         if (txsRemainingInputLen >= 0 && txsRemainingInputLen < txssize)
-            throw new IOException("txs size " + txssize + " exceeds remaining input length " + txsRemainingInputLen);
+            throw new InvalidDataException("txs size " + txssize + " exceeds remaining input length " + txsRemainingInputLen);
         decodedTransactionSet.Txs = new TransactionEnvelope[txssize];
         for (var i = 0; i < txssize; i++)
         {

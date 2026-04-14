@@ -85,7 +85,7 @@ public class ManageSellOfferResultCode
             case -11: return Create(ManageSellOfferResultCodeEnum.MANAGE_SELL_OFFER_NOT_FOUND);
             case -12: return Create(ManageSellOfferResultCodeEnum.MANAGE_SELL_OFFER_LOW_RESERVE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

@@ -66,7 +66,7 @@ public class TransactionResult
     public static TransactionResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTransactionResult = new TransactionResult();
         decodedTransactionResult.FeeCharged = Int64.Decode(stream, maxDepth);
@@ -127,7 +127,7 @@ public class TransactionResult
         public static TransactionResultResult Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedTransactionResultResult = new TransactionResultResult();
             var discriminant = TransactionResultCode.Decode(stream, maxDepth);
@@ -142,10 +142,10 @@ public class TransactionResult
                 case TransactionResultCode.TransactionResultCodeEnum.txFAILED:
                     var resultssize = stream.ReadInt();
                     if (resultssize < 0)
-                        throw new IOException("results size " + resultssize + " is negative");
+                        throw new InvalidDataException("results size " + resultssize + " is negative");
                     var resultsRemainingInputLen = stream.GetRemainingInputLen();
                     if (resultsRemainingInputLen >= 0 && resultsRemainingInputLen < resultssize)
-                        throw new IOException("results size " + resultssize + " exceeds remaining input length " + resultsRemainingInputLen);
+                        throw new InvalidDataException("results size " + resultssize + " exceeds remaining input length " + resultsRemainingInputLen);
                     decodedTransactionResultResult.Results = new OperationResult[resultssize];
                     for (var i = 0; i < resultssize; i++)
                     {
@@ -169,7 +169,7 @@ public class TransactionResult
                 case TransactionResultCode.TransactionResultCodeEnum.txSOROBAN_INVALID:
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedTransactionResultResult;
@@ -198,7 +198,7 @@ public class TransactionResult
         public static TransactionResultExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedTransactionResultExt = new TransactionResultExt();
             var discriminant = stream.ReadInt();
@@ -208,7 +208,7 @@ public class TransactionResult
                 case 0:
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedTransactionResultExt;

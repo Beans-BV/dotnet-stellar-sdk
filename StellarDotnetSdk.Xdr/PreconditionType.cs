@@ -45,7 +45,7 @@ public class PreconditionType
             case 1: return Create(PreconditionTypeEnum.PRECOND_TIME);
             case 2: return Create(PreconditionTypeEnum.PRECOND_V2);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

@@ -35,7 +35,7 @@ public class LedgerEntryExtensionV1
     public static LedgerEntryExtensionV1 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedLedgerEntryExtensionV1 = new LedgerEntryExtensionV1();
         decodedLedgerEntryExtensionV1.SponsoringID = SponsorshipDescriptor.Decode(stream, maxDepth);
@@ -65,7 +65,7 @@ public class LedgerEntryExtensionV1
         public static LedgerEntryExtensionV1Ext Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedLedgerEntryExtensionV1Ext = new LedgerEntryExtensionV1Ext();
             var discriminant = stream.ReadInt();
@@ -75,7 +75,7 @@ public class LedgerEntryExtensionV1
                 case 0:
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedLedgerEntryExtensionV1Ext;

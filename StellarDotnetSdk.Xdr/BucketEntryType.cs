@@ -50,7 +50,7 @@ public class BucketEntryType
             case 1: return Create(BucketEntryTypeEnum.DEADENTRY);
             case 2: return Create(BucketEntryTypeEnum.INITENTRY);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

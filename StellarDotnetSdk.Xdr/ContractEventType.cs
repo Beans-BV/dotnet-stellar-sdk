@@ -45,7 +45,7 @@ public class ContractEventType
             case 1: return Create(ContractEventTypeEnum.CONTRACT);
             case 2: return Create(ContractEventTypeEnum.DIAGNOSTIC);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

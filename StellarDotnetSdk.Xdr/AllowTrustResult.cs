@@ -46,7 +46,7 @@ public class AllowTrustResult
     public static AllowTrustResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedAllowTrustResult = new AllowTrustResult();
         var discriminant = AllowTrustResultCode.Decode(stream, maxDepth);
@@ -63,7 +63,7 @@ public class AllowTrustResult
             case AllowTrustResultCode.AllowTrustResultCodeEnum.ALLOW_TRUST_LOW_RESERVE:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedAllowTrustResult;

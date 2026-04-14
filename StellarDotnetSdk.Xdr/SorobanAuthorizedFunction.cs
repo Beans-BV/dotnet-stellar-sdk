@@ -55,7 +55,7 @@ public class SorobanAuthorizedFunction
     public static SorobanAuthorizedFunction Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSorobanAuthorizedFunction = new SorobanAuthorizedFunction();
         var discriminant = SorobanAuthorizedFunctionType.Decode(stream, maxDepth);
@@ -72,7 +72,7 @@ public class SorobanAuthorizedFunction
                 decodedSorobanAuthorizedFunction.CreateContractV2HostFn = CreateContractArgsV2.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedSorobanAuthorizedFunction;

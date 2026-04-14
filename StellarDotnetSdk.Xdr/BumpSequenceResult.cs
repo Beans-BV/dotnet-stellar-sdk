@@ -36,7 +36,7 @@ public class BumpSequenceResult
     public static BumpSequenceResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedBumpSequenceResult = new BumpSequenceResult();
         var discriminant = BumpSequenceResultCode.Decode(stream, maxDepth);
@@ -48,7 +48,7 @@ public class BumpSequenceResult
             case BumpSequenceResultCode.BumpSequenceResultCodeEnum.BUMP_SEQUENCE_BAD_SEQ:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedBumpSequenceResult;

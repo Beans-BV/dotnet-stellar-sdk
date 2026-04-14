@@ -61,7 +61,7 @@ public class AllowTrustResultCode
             case -5: return Create(AllowTrustResultCodeEnum.ALLOW_TRUST_SELF_NOT_ALLOWED);
             case -6: return Create(AllowTrustResultCodeEnum.ALLOW_TRUST_LOW_RESERVE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

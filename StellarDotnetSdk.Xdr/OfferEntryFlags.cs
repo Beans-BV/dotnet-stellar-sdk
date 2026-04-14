@@ -41,7 +41,7 @@ public class OfferEntryFlags
         {
             case 1: return Create(OfferEntryFlagsEnum.PASSIVE_FLAG);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

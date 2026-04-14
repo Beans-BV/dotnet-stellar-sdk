@@ -58,7 +58,7 @@ public class SerializedBinaryFuseFilter
     public static SerializedBinaryFuseFilter Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSerializedBinaryFuseFilter = new SerializedBinaryFuseFilter();
         decodedSerializedBinaryFuseFilter.Type = BinaryFuseFilterType.Decode(stream, maxDepth);
@@ -71,10 +71,10 @@ public class SerializedBinaryFuseFilter
         decodedSerializedBinaryFuseFilter.FingerprintLength = Uint32.Decode(stream, maxDepth);
         var fingerprintssize = stream.ReadInt();
         if (fingerprintssize < 0)
-            throw new IOException("fingerprints size " + fingerprintssize + " is negative");
+            throw new InvalidDataException("fingerprints size " + fingerprintssize + " is negative");
         var fingerprintsRemainingInputLen = stream.GetRemainingInputLen();
         if (fingerprintsRemainingInputLen >= 0 && fingerprintsRemainingInputLen < fingerprintssize)
-            throw new IOException("fingerprints size " + fingerprintssize + " exceeds remaining input length " + fingerprintsRemainingInputLen);
+            throw new InvalidDataException("fingerprints size " + fingerprintssize + " exceeds remaining input length " + fingerprintsRemainingInputLen);
         decodedSerializedBinaryFuseFilter.Fingerprints = new byte[fingerprintssize];
         stream.Read(decodedSerializedBinaryFuseFilter.Fingerprints, 0, fingerprintssize);
         return decodedSerializedBinaryFuseFilter;

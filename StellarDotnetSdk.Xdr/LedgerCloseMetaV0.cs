@@ -62,17 +62,17 @@ public class LedgerCloseMetaV0
     public static LedgerCloseMetaV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedLedgerCloseMetaV0 = new LedgerCloseMetaV0();
         decodedLedgerCloseMetaV0.LedgerHeader = LedgerHeaderHistoryEntry.Decode(stream, maxDepth);
         decodedLedgerCloseMetaV0.TxSet = TransactionSet.Decode(stream, maxDepth);
         var txProcessingsize = stream.ReadInt();
         if (txProcessingsize < 0)
-            throw new IOException("txProcessing size " + txProcessingsize + " is negative");
+            throw new InvalidDataException("txProcessing size " + txProcessingsize + " is negative");
         var txProcessingRemainingInputLen = stream.GetRemainingInputLen();
         if (txProcessingRemainingInputLen >= 0 && txProcessingRemainingInputLen < txProcessingsize)
-            throw new IOException("txProcessing size " + txProcessingsize + " exceeds remaining input length " + txProcessingRemainingInputLen);
+            throw new InvalidDataException("txProcessing size " + txProcessingsize + " exceeds remaining input length " + txProcessingRemainingInputLen);
         decodedLedgerCloseMetaV0.TxProcessing = new TransactionResultMeta[txProcessingsize];
         for (var i = 0; i < txProcessingsize; i++)
         {
@@ -80,10 +80,10 @@ public class LedgerCloseMetaV0
         }
         var upgradesProcessingsize = stream.ReadInt();
         if (upgradesProcessingsize < 0)
-            throw new IOException("upgradesProcessing size " + upgradesProcessingsize + " is negative");
+            throw new InvalidDataException("upgradesProcessing size " + upgradesProcessingsize + " is negative");
         var upgradesProcessingRemainingInputLen = stream.GetRemainingInputLen();
         if (upgradesProcessingRemainingInputLen >= 0 && upgradesProcessingRemainingInputLen < upgradesProcessingsize)
-            throw new IOException("upgradesProcessing size " + upgradesProcessingsize + " exceeds remaining input length " + upgradesProcessingRemainingInputLen);
+            throw new InvalidDataException("upgradesProcessing size " + upgradesProcessingsize + " exceeds remaining input length " + upgradesProcessingRemainingInputLen);
         decodedLedgerCloseMetaV0.UpgradesProcessing = new UpgradeEntryMeta[upgradesProcessingsize];
         for (var i = 0; i < upgradesProcessingsize; i++)
         {
@@ -91,10 +91,10 @@ public class LedgerCloseMetaV0
         }
         var scpInfosize = stream.ReadInt();
         if (scpInfosize < 0)
-            throw new IOException("scpInfo size " + scpInfosize + " is negative");
+            throw new InvalidDataException("scpInfo size " + scpInfosize + " is negative");
         var scpInfoRemainingInputLen = stream.GetRemainingInputLen();
         if (scpInfoRemainingInputLen >= 0 && scpInfoRemainingInputLen < scpInfosize)
-            throw new IOException("scpInfo size " + scpInfosize + " exceeds remaining input length " + scpInfoRemainingInputLen);
+            throw new InvalidDataException("scpInfo size " + scpInfosize + " exceeds remaining input length " + scpInfoRemainingInputLen);
         decodedLedgerCloseMetaV0.ScpInfo = new SCPHistoryEntry[scpInfosize];
         for (var i = 0; i < scpInfosize; i++)
         {

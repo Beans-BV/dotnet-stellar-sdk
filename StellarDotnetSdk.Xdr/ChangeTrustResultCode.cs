@@ -69,7 +69,7 @@ public class ChangeTrustResultCode
             case -7: return Create(ChangeTrustResultCodeEnum.CHANGE_TRUST_CANNOT_DELETE);
             case -8: return Create(ChangeTrustResultCodeEnum.CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

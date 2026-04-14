@@ -28,7 +28,7 @@ public class EncryptedBody
     {
         var EncryptedBodysize = encodedEncryptedBody.InnerValue.Length;
         if (EncryptedBodysize > 64000)
-            throw new IOException("EncryptedBody size " + EncryptedBodysize + " exceeds max size 64000");
+            throw new ArgumentException("EncryptedBody size " + EncryptedBodysize + " exceeds max size 64000");
         stream.WriteInt(EncryptedBodysize);
         stream.Write(encodedEncryptedBody.InnerValue, 0, EncryptedBodysize);
     }
@@ -36,17 +36,17 @@ public class EncryptedBody
     public static EncryptedBody Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedEncryptedBody = new EncryptedBody();
         var EncryptedBodysize = stream.ReadInt();
         if (EncryptedBodysize < 0)
-            throw new IOException("EncryptedBody size " + EncryptedBodysize + " is negative");
+            throw new InvalidDataException("EncryptedBody size " + EncryptedBodysize + " is negative");
         if (EncryptedBodysize > 64000)
-            throw new IOException("EncryptedBody size " + EncryptedBodysize + " exceeds max size 64000");
+            throw new InvalidDataException("EncryptedBody size " + EncryptedBodysize + " exceeds max size 64000");
         var EncryptedBodyRemainingInputLen = stream.GetRemainingInputLen();
         if (EncryptedBodyRemainingInputLen >= 0 && EncryptedBodyRemainingInputLen < EncryptedBodysize)
-            throw new IOException("EncryptedBody size " + EncryptedBodysize + " exceeds remaining input length " + EncryptedBodyRemainingInputLen);
+            throw new InvalidDataException("EncryptedBody size " + EncryptedBodysize + " exceeds remaining input length " + EncryptedBodyRemainingInputLen);
         decodedEncryptedBody.InnerValue = new byte[EncryptedBodysize];
         stream.Read(decodedEncryptedBody.InnerValue, 0, EncryptedBodysize);
         return decodedEncryptedBody;

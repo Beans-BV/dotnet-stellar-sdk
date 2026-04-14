@@ -28,14 +28,14 @@ public class SignatureHint
     {
         var SignatureHintsize = encodedSignatureHint.InnerValue.Length;
         if (SignatureHintsize != 4)
-            throw new IOException("SignatureHint size " + SignatureHintsize + " does not match fixed size 4");
+            throw new ArgumentException("SignatureHint size " + SignatureHintsize + " does not match fixed size 4");
         stream.Write(encodedSignatureHint.InnerValue, 0, SignatureHintsize);
     }
 
     public static SignatureHint Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSignatureHint = new SignatureHint();
         var SignatureHintsize = 4;

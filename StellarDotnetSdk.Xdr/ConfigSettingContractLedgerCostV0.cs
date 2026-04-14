@@ -85,7 +85,7 @@ public class ConfigSettingContractLedgerCostV0
     public static ConfigSettingContractLedgerCostV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedConfigSettingContractLedgerCostV0 = new ConfigSettingContractLedgerCostV0();
         decodedConfigSettingContractLedgerCostV0.LedgerMaxDiskReadEntries = Uint32.Decode(stream, maxDepth);

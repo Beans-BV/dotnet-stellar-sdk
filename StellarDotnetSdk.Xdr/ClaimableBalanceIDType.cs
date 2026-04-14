@@ -39,7 +39,7 @@ public class ClaimableBalanceIDType
         {
             case 0: return Create(ClaimableBalanceIDTypeEnum.CLAIMABLE_BALANCE_ID_TYPE_V0);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

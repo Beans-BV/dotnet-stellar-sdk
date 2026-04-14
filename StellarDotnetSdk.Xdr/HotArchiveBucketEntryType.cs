@@ -47,7 +47,7 @@ public class HotArchiveBucketEntryType
             case 0: return Create(HotArchiveBucketEntryTypeEnum.HOT_ARCHIVE_ARCHIVED);
             case 1: return Create(HotArchiveBucketEntryTypeEnum.HOT_ARCHIVE_LIVE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

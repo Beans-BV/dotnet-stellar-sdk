@@ -42,7 +42,7 @@ public class ContractExecutableType
             case 0: return Create(ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_WASM);
             case 1: return Create(ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_STELLAR_ASSET);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

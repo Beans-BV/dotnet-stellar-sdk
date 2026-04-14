@@ -42,7 +42,7 @@ public class SCSpecEventParamLocationV0
             case 0: return Create(SCSpecEventParamLocationV0Enum.SC_SPEC_EVENT_PARAM_LOCATION_DATA);
             case 1: return Create(SCSpecEventParamLocationV0Enum.SC_SPEC_EVENT_PARAM_LOCATION_TOPIC_LIST);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

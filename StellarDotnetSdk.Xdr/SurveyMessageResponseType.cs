@@ -39,7 +39,7 @@ public class SurveyMessageResponseType
         {
             case 2: return Create(SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V2);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

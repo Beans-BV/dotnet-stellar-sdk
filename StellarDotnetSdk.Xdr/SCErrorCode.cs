@@ -66,7 +66,7 @@ public class SCErrorCode
             case 8: return Create(SCErrorCodeEnum.SCEC_UNEXPECTED_TYPE);
             case 9: return Create(SCErrorCodeEnum.SCEC_UNEXPECTED_SIZE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

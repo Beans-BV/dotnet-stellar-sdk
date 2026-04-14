@@ -39,17 +39,17 @@ public class OperationMetaV2
     public static OperationMetaV2 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedOperationMetaV2 = new OperationMetaV2();
         decodedOperationMetaV2.Ext = ExtensionPoint.Decode(stream, maxDepth);
         decodedOperationMetaV2.Changes = LedgerEntryChanges.Decode(stream, maxDepth);
         var eventssize = stream.ReadInt();
         if (eventssize < 0)
-            throw new IOException("events size " + eventssize + " is negative");
+            throw new InvalidDataException("events size " + eventssize + " is negative");
         var eventsRemainingInputLen = stream.GetRemainingInputLen();
         if (eventsRemainingInputLen >= 0 && eventsRemainingInputLen < eventssize)
-            throw new IOException("events size " + eventssize + " exceeds remaining input length " + eventsRemainingInputLen);
+            throw new InvalidDataException("events size " + eventssize + " exceeds remaining input length " + eventsRemainingInputLen);
         decodedOperationMetaV2.Events = new ContractEvent[eventssize];
         for (var i = 0; i < eventssize; i++)
         {

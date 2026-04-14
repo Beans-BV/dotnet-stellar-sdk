@@ -51,7 +51,7 @@ public class ClawbackClaimableBalanceResultCode
             case -2: return Create(ClawbackClaimableBalanceResultCodeEnum.CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER);
             case -3: return Create(ClawbackClaimableBalanceResultCodeEnum.CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

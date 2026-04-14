@@ -48,7 +48,7 @@ public class SCPStatementType
             case 2: return Create(SCPStatementTypeEnum.SCP_ST_EXTERNALIZE);
             case 3: return Create(SCPStatementTypeEnum.SCP_ST_NOMINATE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

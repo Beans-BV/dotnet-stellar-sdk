@@ -50,7 +50,7 @@ public class TransactionEventStage
             case 1: return Create(TransactionEventStageEnum.TRANSACTION_EVENT_STAGE_AFTER_TX);
             case 2: return Create(TransactionEventStageEnum.TRANSACTION_EVENT_STAGE_AFTER_ALL_TXS);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

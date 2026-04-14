@@ -39,7 +39,7 @@ public class TransactionHistoryResultEntry
     public static TransactionHistoryResultEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTransactionHistoryResultEntry = new TransactionHistoryResultEntry();
         decodedTransactionHistoryResultEntry.LedgerSeq = Uint32.Decode(stream, maxDepth);
@@ -70,7 +70,7 @@ public class TransactionHistoryResultEntry
         public static TransactionHistoryResultEntryExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedTransactionHistoryResultEntryExt = new TransactionHistoryResultEntryExt();
             var discriminant = stream.ReadInt();
@@ -80,7 +80,7 @@ public class TransactionHistoryResultEntry
                 case 0:
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedTransactionHistoryResultEntryExt;

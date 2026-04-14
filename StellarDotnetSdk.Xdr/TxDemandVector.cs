@@ -28,7 +28,7 @@ public class TxDemandVector
     {
         var TxDemandVectorsize = encodedTxDemandVector.InnerValue.Length;
         if (TxDemandVectorsize > 1000)
-            throw new IOException("TxDemandVector size " + TxDemandVectorsize + " exceeds max size 1000");
+            throw new ArgumentException("TxDemandVector size " + TxDemandVectorsize + " exceeds max size 1000");
         stream.WriteInt(TxDemandVectorsize);
         for (var i = 0; i < TxDemandVectorsize; i++)
         {
@@ -39,17 +39,17 @@ public class TxDemandVector
     public static TxDemandVector Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTxDemandVector = new TxDemandVector();
         var TxDemandVectorsize = stream.ReadInt();
         if (TxDemandVectorsize < 0)
-            throw new IOException("TxDemandVector size " + TxDemandVectorsize + " is negative");
+            throw new InvalidDataException("TxDemandVector size " + TxDemandVectorsize + " is negative");
         if (TxDemandVectorsize > 1000)
-            throw new IOException("TxDemandVector size " + TxDemandVectorsize + " exceeds max size 1000");
+            throw new InvalidDataException("TxDemandVector size " + TxDemandVectorsize + " exceeds max size 1000");
         var TxDemandVectorRemainingInputLen = stream.GetRemainingInputLen();
         if (TxDemandVectorRemainingInputLen >= 0 && TxDemandVectorRemainingInputLen < TxDemandVectorsize)
-            throw new IOException("TxDemandVector size " + TxDemandVectorsize + " exceeds remaining input length " + TxDemandVectorRemainingInputLen);
+            throw new InvalidDataException("TxDemandVector size " + TxDemandVectorsize + " exceeds remaining input length " + TxDemandVectorRemainingInputLen);
         decodedTxDemandVector.InnerValue = new Hash[TxDemandVectorsize];
         for (var i = 0; i < TxDemandVectorsize; i++)
         {

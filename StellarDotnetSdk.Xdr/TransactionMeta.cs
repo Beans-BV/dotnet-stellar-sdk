@@ -64,7 +64,7 @@ public class TransactionMeta
     public static TransactionMeta Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTransactionMeta = new TransactionMeta();
         var discriminant = stream.ReadInt();
@@ -74,10 +74,10 @@ public class TransactionMeta
             case 0:
                 var operationssize = stream.ReadInt();
                 if (operationssize < 0)
-                    throw new IOException("operations size " + operationssize + " is negative");
+                    throw new InvalidDataException("operations size " + operationssize + " is negative");
                 var operationsRemainingInputLen = stream.GetRemainingInputLen();
                 if (operationsRemainingInputLen >= 0 && operationsRemainingInputLen < operationssize)
-                    throw new IOException("operations size " + operationssize + " exceeds remaining input length " + operationsRemainingInputLen);
+                    throw new InvalidDataException("operations size " + operationssize + " exceeds remaining input length " + operationsRemainingInputLen);
                 decodedTransactionMeta.Operations = new OperationMeta[operationssize];
                 for (var i = 0; i < operationssize; i++)
                 {
@@ -97,7 +97,7 @@ public class TransactionMeta
                 decodedTransactionMeta.V4 = TransactionMetaV4.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedTransactionMeta;

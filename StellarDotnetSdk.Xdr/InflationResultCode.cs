@@ -44,7 +44,7 @@ public class InflationResultCode
             case 0: return Create(InflationResultCodeEnum.INFLATION_SUCCESS);
             case -1: return Create(InflationResultCodeEnum.INFLATION_NOT_TIME);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

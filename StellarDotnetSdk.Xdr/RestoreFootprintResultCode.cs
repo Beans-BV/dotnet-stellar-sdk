@@ -51,7 +51,7 @@ public class RestoreFootprintResultCode
             case -2: return Create(RestoreFootprintResultCodeEnum.RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED);
             case -3: return Create(RestoreFootprintResultCodeEnum.RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

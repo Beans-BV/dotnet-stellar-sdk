@@ -40,7 +40,7 @@ public class ExtendFootprintTTLResult
     public static ExtendFootprintTTLResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedExtendFootprintTTLResult = new ExtendFootprintTTLResult();
         var discriminant = ExtendFootprintTTLResultCode.Decode(stream, maxDepth);
@@ -54,7 +54,7 @@ public class ExtendFootprintTTLResult
             case ExtendFootprintTTLResultCode.ExtendFootprintTTLResultCodeEnum.EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedExtendFootprintTTLResult;

@@ -87,7 +87,7 @@ public class PathPaymentStrictReceiveResultCode
             case -11: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_OFFER_CROSS_SELF);
             case -12: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

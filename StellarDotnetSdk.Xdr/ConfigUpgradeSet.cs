@@ -30,15 +30,15 @@ public class ConfigUpgradeSet
     public static ConfigUpgradeSet Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedConfigUpgradeSet = new ConfigUpgradeSet();
         var updatedEntrysize = stream.ReadInt();
         if (updatedEntrysize < 0)
-            throw new IOException("updatedEntry size " + updatedEntrysize + " is negative");
+            throw new InvalidDataException("updatedEntry size " + updatedEntrysize + " is negative");
         var updatedEntryRemainingInputLen = stream.GetRemainingInputLen();
         if (updatedEntryRemainingInputLen >= 0 && updatedEntryRemainingInputLen < updatedEntrysize)
-            throw new IOException("updatedEntry size " + updatedEntrysize + " exceeds remaining input length " + updatedEntryRemainingInputLen);
+            throw new InvalidDataException("updatedEntry size " + updatedEntrysize + " exceeds remaining input length " + updatedEntryRemainingInputLen);
         decodedConfigUpgradeSet.UpdatedEntry = new ConfigSettingEntry[updatedEntrysize];
         for (var i = 0; i < updatedEntrysize; i++)
         {

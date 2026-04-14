@@ -55,7 +55,7 @@ public class HostFunction
     public static HostFunction Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedHostFunction = new HostFunction();
         var discriminant = HostFunctionType.Decode(stream, maxDepth);
@@ -71,10 +71,10 @@ public class HostFunction
             case HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM:
                 var wasmsize = stream.ReadInt();
                 if (wasmsize < 0)
-                    throw new IOException("wasm size " + wasmsize + " is negative");
+                    throw new InvalidDataException("wasm size " + wasmsize + " is negative");
                 var wasmRemainingInputLen = stream.GetRemainingInputLen();
                 if (wasmRemainingInputLen >= 0 && wasmRemainingInputLen < wasmsize)
-                    throw new IOException("wasm size " + wasmsize + " exceeds remaining input length " + wasmRemainingInputLen);
+                    throw new InvalidDataException("wasm size " + wasmsize + " exceeds remaining input length " + wasmRemainingInputLen);
                 decodedHostFunction.Wasm = new byte[wasmsize];
                 stream.Read(decodedHostFunction.Wasm, 0, wasmsize);
                 break;
@@ -82,7 +82,7 @@ public class HostFunction
                 decodedHostFunction.CreateContractV2 = CreateContractArgsV2.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedHostFunction;

@@ -34,15 +34,15 @@ public class SCBytes
     public static SCBytes Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCBytes = new SCBytes();
         var SCBytessize = stream.ReadInt();
         if (SCBytessize < 0)
-            throw new IOException("SCBytes size " + SCBytessize + " is negative");
+            throw new InvalidDataException("SCBytes size " + SCBytessize + " is negative");
         var SCBytesRemainingInputLen = stream.GetRemainingInputLen();
         if (SCBytesRemainingInputLen >= 0 && SCBytesRemainingInputLen < SCBytessize)
-            throw new IOException("SCBytes size " + SCBytessize + " exceeds remaining input length " + SCBytesRemainingInputLen);
+            throw new InvalidDataException("SCBytes size " + SCBytessize + " exceeds remaining input length " + SCBytesRemainingInputLen);
         decodedSCBytes.InnerValue = new byte[SCBytessize];
         stream.Read(decodedSCBytes.InnerValue, 0, SCBytessize);
         return decodedSCBytes;

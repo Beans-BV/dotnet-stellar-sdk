@@ -131,7 +131,7 @@ public class SCValType
             case 20: return Create(SCValTypeEnum.SCV_LEDGER_KEY_CONTRACT_INSTANCE);
             case 21: return Create(SCValTypeEnum.SCV_LEDGER_KEY_NONCE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

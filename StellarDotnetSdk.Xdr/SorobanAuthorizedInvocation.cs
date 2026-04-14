@@ -34,16 +34,16 @@ public class SorobanAuthorizedInvocation
     public static SorobanAuthorizedInvocation Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSorobanAuthorizedInvocation = new SorobanAuthorizedInvocation();
         decodedSorobanAuthorizedInvocation.Function = SorobanAuthorizedFunction.Decode(stream, maxDepth);
         var subInvocationssize = stream.ReadInt();
         if (subInvocationssize < 0)
-            throw new IOException("subInvocations size " + subInvocationssize + " is negative");
+            throw new InvalidDataException("subInvocations size " + subInvocationssize + " is negative");
         var subInvocationsRemainingInputLen = stream.GetRemainingInputLen();
         if (subInvocationsRemainingInputLen >= 0 && subInvocationsRemainingInputLen < subInvocationssize)
-            throw new IOException("subInvocations size " + subInvocationssize + " exceeds remaining input length " + subInvocationsRemainingInputLen);
+            throw new InvalidDataException("subInvocations size " + subInvocationssize + " exceeds remaining input length " + subInvocationsRemainingInputLen);
         decodedSorobanAuthorizedInvocation.SubInvocations = new SorobanAuthorizedInvocation[subInvocationssize];
         for (var i = 0; i < subInvocationssize; i++)
         {

@@ -58,7 +58,7 @@ public class AccountFlags
             case 4: return Create(AccountFlagsEnum.AUTH_IMMUTABLE_FLAG);
             case 8: return Create(AccountFlagsEnum.AUTH_CLAWBACK_ENABLED_FLAG);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

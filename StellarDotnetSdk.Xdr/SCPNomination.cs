@@ -42,16 +42,16 @@ public class SCPNomination
     public static SCPNomination Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCPNomination = new SCPNomination();
         decodedSCPNomination.QuorumSetHash = Hash.Decode(stream, maxDepth);
         var votessize = stream.ReadInt();
         if (votessize < 0)
-            throw new IOException("votes size " + votessize + " is negative");
+            throw new InvalidDataException("votes size " + votessize + " is negative");
         var votesRemainingInputLen = stream.GetRemainingInputLen();
         if (votesRemainingInputLen >= 0 && votesRemainingInputLen < votessize)
-            throw new IOException("votes size " + votessize + " exceeds remaining input length " + votesRemainingInputLen);
+            throw new InvalidDataException("votes size " + votessize + " exceeds remaining input length " + votesRemainingInputLen);
         decodedSCPNomination.Votes = new Value[votessize];
         for (var i = 0; i < votessize; i++)
         {
@@ -59,10 +59,10 @@ public class SCPNomination
         }
         var acceptedsize = stream.ReadInt();
         if (acceptedsize < 0)
-            throw new IOException("accepted size " + acceptedsize + " is negative");
+            throw new InvalidDataException("accepted size " + acceptedsize + " is negative");
         var acceptedRemainingInputLen = stream.GetRemainingInputLen();
         if (acceptedRemainingInputLen >= 0 && acceptedRemainingInputLen < acceptedsize)
-            throw new IOException("accepted size " + acceptedsize + " exceeds remaining input length " + acceptedRemainingInputLen);
+            throw new InvalidDataException("accepted size " + acceptedsize + " exceeds remaining input length " + acceptedRemainingInputLen);
         decodedSCPNomination.Accepted = new Value[acceptedsize];
         for (var i = 0; i < acceptedsize; i++)
         {

@@ -112,7 +112,7 @@ public class StellarMessage
             case MessageType.MessageTypeEnum.PEERS:
                 var peerssize = encodedStellarMessage.Peers.Length;
                 if (peerssize > 100)
-                    throw new IOException("peers size " + peerssize + " exceeds max size 100");
+                    throw new ArgumentException("peers size " + peerssize + " exceeds max size 100");
                 stream.WriteInt(peerssize);
                 for (var i = 0; i < peerssize; i++)
                 {
@@ -173,7 +173,7 @@ public class StellarMessage
     public static StellarMessage Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedStellarMessage = new StellarMessage();
         var discriminant = MessageType.Decode(stream, maxDepth);
@@ -195,12 +195,12 @@ public class StellarMessage
             case MessageType.MessageTypeEnum.PEERS:
                 var peerssize = stream.ReadInt();
                 if (peerssize < 0)
-                    throw new IOException("peers size " + peerssize + " is negative");
+                    throw new InvalidDataException("peers size " + peerssize + " is negative");
                 if (peerssize > 100)
-                    throw new IOException("peers size " + peerssize + " exceeds max size 100");
+                    throw new InvalidDataException("peers size " + peerssize + " exceeds max size 100");
                 var peersRemainingInputLen = stream.GetRemainingInputLen();
                 if (peersRemainingInputLen >= 0 && peersRemainingInputLen < peerssize)
-                    throw new IOException("peers size " + peerssize + " exceeds remaining input length " + peersRemainingInputLen);
+                    throw new InvalidDataException("peers size " + peerssize + " exceeds remaining input length " + peersRemainingInputLen);
                 decodedStellarMessage.Peers = new PeerAddress[peerssize];
                 for (var i = 0; i < peerssize; i++)
                 {
@@ -256,7 +256,7 @@ public class StellarMessage
                 decodedStellarMessage.FloodDemand = FloodDemand.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedStellarMessage;

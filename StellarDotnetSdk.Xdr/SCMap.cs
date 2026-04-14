@@ -37,15 +37,15 @@ public class SCMap
     public static SCMap Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCMap = new SCMap();
         var SCMapsize = stream.ReadInt();
         if (SCMapsize < 0)
-            throw new IOException("SCMap size " + SCMapsize + " is negative");
+            throw new InvalidDataException("SCMap size " + SCMapsize + " is negative");
         var SCMapRemainingInputLen = stream.GetRemainingInputLen();
         if (SCMapRemainingInputLen >= 0 && SCMapRemainingInputLen < SCMapsize)
-            throw new IOException("SCMap size " + SCMapsize + " exceeds remaining input length " + SCMapRemainingInputLen);
+            throw new InvalidDataException("SCMap size " + SCMapsize + " exceeds remaining input length " + SCMapRemainingInputLen);
         decodedSCMap.InnerValue = new SCMapEntry[SCMapsize];
         for (var i = 0; i < SCMapsize; i++)
         {

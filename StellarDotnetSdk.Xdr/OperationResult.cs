@@ -106,7 +106,7 @@ public class OperationResult
     public static OperationResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedOperationResult = new OperationResult();
         var discriminant = OperationResultCode.Decode(stream, maxDepth);
@@ -124,7 +124,7 @@ public class OperationResult
             case OperationResultCode.OperationResultCodeEnum.opTOO_MANY_SPONSORING:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedOperationResult;
@@ -259,7 +259,7 @@ public class OperationResult
         public static OperationResultTr Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedOperationResultTr = new OperationResultTr();
             var discriminant = OperationType.Decode(stream, maxDepth);
@@ -348,7 +348,7 @@ public class OperationResult
                     decodedOperationResultTr.RestoreFootprintResult = RestoreFootprintResult.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedOperationResultTr;

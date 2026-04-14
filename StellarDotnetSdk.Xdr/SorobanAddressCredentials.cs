@@ -35,7 +35,7 @@ public class SorobanAddressCredentials
     public static SorobanAddressCredentials Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSorobanAddressCredentials = new SorobanAddressCredentials();
         decodedSorobanAddressCredentials.Address = SCAddress.Decode(stream, maxDepth);

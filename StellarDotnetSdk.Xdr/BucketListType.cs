@@ -42,7 +42,7 @@ public class BucketListType
             case 0: return Create(BucketListTypeEnum.LIVE);
             case 1: return Create(BucketListTypeEnum.HOT_ARCHIVE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

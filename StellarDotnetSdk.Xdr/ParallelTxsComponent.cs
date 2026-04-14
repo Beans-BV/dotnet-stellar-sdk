@@ -45,7 +45,7 @@ public class ParallelTxsComponent
     public static ParallelTxsComponent Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedParallelTxsComponent = new ParallelTxsComponent();
         var BaseFeePresent = stream.ReadInt();
@@ -55,10 +55,10 @@ public class ParallelTxsComponent
         }
         var executionStagessize = stream.ReadInt();
         if (executionStagessize < 0)
-            throw new IOException("executionStages size " + executionStagessize + " is negative");
+            throw new InvalidDataException("executionStages size " + executionStagessize + " is negative");
         var executionStagesRemainingInputLen = stream.GetRemainingInputLen();
         if (executionStagesRemainingInputLen >= 0 && executionStagesRemainingInputLen < executionStagessize)
-            throw new IOException("executionStages size " + executionStagessize + " exceeds remaining input length " + executionStagesRemainingInputLen);
+            throw new InvalidDataException("executionStages size " + executionStagessize + " exceeds remaining input length " + executionStagesRemainingInputLen);
         decodedParallelTxsComponent.ExecutionStages = new ParallelTxExecutionStage[executionStagessize];
         for (var i = 0; i < executionStagessize; i++)
         {

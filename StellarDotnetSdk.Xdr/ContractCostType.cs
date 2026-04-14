@@ -325,7 +325,7 @@ public class ContractCostType
             case 68: return Create(ContractCostTypeEnum.Bls12381FrPow);
             case 69: return Create(ContractCostTypeEnum.Bls12381FrInv);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

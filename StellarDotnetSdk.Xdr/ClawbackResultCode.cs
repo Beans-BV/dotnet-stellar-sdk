@@ -54,7 +54,7 @@ public class ClawbackResultCode
             case -3: return Create(ClawbackResultCodeEnum.CLAWBACK_NO_TRUST);
             case -4: return Create(ClawbackResultCodeEnum.CLAWBACK_UNDERFUNDED);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

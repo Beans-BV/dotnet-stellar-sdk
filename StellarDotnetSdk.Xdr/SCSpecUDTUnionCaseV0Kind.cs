@@ -42,7 +42,7 @@ public class SCSpecUDTUnionCaseV0Kind
             case 0: return Create(SCSpecUDTUnionCaseV0KindEnum.SC_SPEC_UDT_UNION_CASE_VOID_V0);
             case 1: return Create(SCSpecUDTUnionCaseV0KindEnum.SC_SPEC_UDT_UNION_CASE_TUPLE_V0);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

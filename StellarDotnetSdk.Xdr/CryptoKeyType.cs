@@ -53,7 +53,7 @@ public class CryptoKeyType
             case 3: return Create(CryptoKeyTypeEnum.KEY_TYPE_ED25519_SIGNED_PAYLOAD);
             case 256: return Create(CryptoKeyTypeEnum.KEY_TYPE_MUXED_ED25519);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

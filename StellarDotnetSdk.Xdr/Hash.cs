@@ -28,14 +28,14 @@ public class Hash
     {
         var Hashsize = encodedHash.InnerValue.Length;
         if (Hashsize != 32)
-            throw new IOException("Hash size " + Hashsize + " does not match fixed size 32");
+            throw new ArgumentException("Hash size " + Hashsize + " does not match fixed size 32");
         stream.Write(encodedHash.InnerValue, 0, Hashsize);
     }
 
     public static Hash Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedHash = new Hash();
         var Hashsize = 32;

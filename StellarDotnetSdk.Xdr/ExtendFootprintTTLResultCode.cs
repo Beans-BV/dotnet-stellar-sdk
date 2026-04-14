@@ -51,7 +51,7 @@ public class ExtendFootprintTTLResultCode
             case -2: return Create(ExtendFootprintTTLResultCodeEnum.EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED);
             case -3: return Create(ExtendFootprintTTLResultCodeEnum.EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

@@ -32,7 +32,7 @@ public class ExtensionPoint
     public static ExtensionPoint Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedExtensionPoint = new ExtensionPoint();
         var discriminant = stream.ReadInt();
@@ -42,7 +42,7 @@ public class ExtensionPoint
             case 0:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedExtensionPoint;

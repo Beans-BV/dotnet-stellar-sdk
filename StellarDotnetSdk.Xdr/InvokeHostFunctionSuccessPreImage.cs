@@ -34,16 +34,16 @@ public class InvokeHostFunctionSuccessPreImage
     public static InvokeHostFunctionSuccessPreImage Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedInvokeHostFunctionSuccessPreImage = new InvokeHostFunctionSuccessPreImage();
         decodedInvokeHostFunctionSuccessPreImage.ReturnValue = SCVal.Decode(stream, maxDepth);
         var eventssize = stream.ReadInt();
         if (eventssize < 0)
-            throw new IOException("events size " + eventssize + " is negative");
+            throw new InvalidDataException("events size " + eventssize + " is negative");
         var eventsRemainingInputLen = stream.GetRemainingInputLen();
         if (eventsRemainingInputLen >= 0 && eventsRemainingInputLen < eventssize)
-            throw new IOException("events size " + eventssize + " exceeds remaining input length " + eventsRemainingInputLen);
+            throw new InvalidDataException("events size " + eventssize + " exceeds remaining input length " + eventsRemainingInputLen);
         decodedInvokeHostFunctionSuccessPreImage.Events = new ContractEvent[eventssize];
         for (var i = 0; i < eventssize; i++)
         {

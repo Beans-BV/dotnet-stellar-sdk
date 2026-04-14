@@ -46,7 +46,7 @@ public class ClaimPredicate
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_AND:
                 var andPredicatessize = encodedClaimPredicate.AndPredicates.Length;
                 if (andPredicatessize > 2)
-                    throw new IOException("andPredicates size " + andPredicatessize + " exceeds max size 2");
+                    throw new ArgumentException("andPredicates size " + andPredicatessize + " exceeds max size 2");
                 stream.WriteInt(andPredicatessize);
                 for (var i = 0; i < andPredicatessize; i++)
                 {
@@ -56,7 +56,7 @@ public class ClaimPredicate
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_OR:
                 var orPredicatessize = encodedClaimPredicate.OrPredicates.Length;
                 if (orPredicatessize > 2)
-                    throw new IOException("orPredicates size " + orPredicatessize + " exceeds max size 2");
+                    throw new ArgumentException("orPredicates size " + orPredicatessize + " exceeds max size 2");
                 stream.WriteInt(orPredicatessize);
                 for (var i = 0; i < orPredicatessize; i++)
                 {
@@ -86,7 +86,7 @@ public class ClaimPredicate
     public static ClaimPredicate Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedClaimPredicate = new ClaimPredicate();
         var discriminant = ClaimPredicateType.Decode(stream, maxDepth);
@@ -98,12 +98,12 @@ public class ClaimPredicate
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_AND:
                 var andPredicatessize = stream.ReadInt();
                 if (andPredicatessize < 0)
-                    throw new IOException("andPredicates size " + andPredicatessize + " is negative");
+                    throw new InvalidDataException("andPredicates size " + andPredicatessize + " is negative");
                 if (andPredicatessize > 2)
-                    throw new IOException("andPredicates size " + andPredicatessize + " exceeds max size 2");
+                    throw new InvalidDataException("andPredicates size " + andPredicatessize + " exceeds max size 2");
                 var andPredicatesRemainingInputLen = stream.GetRemainingInputLen();
                 if (andPredicatesRemainingInputLen >= 0 && andPredicatesRemainingInputLen < andPredicatessize)
-                    throw new IOException("andPredicates size " + andPredicatessize + " exceeds remaining input length " + andPredicatesRemainingInputLen);
+                    throw new InvalidDataException("andPredicates size " + andPredicatessize + " exceeds remaining input length " + andPredicatesRemainingInputLen);
                 decodedClaimPredicate.AndPredicates = new ClaimPredicate[andPredicatessize];
                 for (var i = 0; i < andPredicatessize; i++)
                 {
@@ -113,12 +113,12 @@ public class ClaimPredicate
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_OR:
                 var orPredicatessize = stream.ReadInt();
                 if (orPredicatessize < 0)
-                    throw new IOException("orPredicates size " + orPredicatessize + " is negative");
+                    throw new InvalidDataException("orPredicates size " + orPredicatessize + " is negative");
                 if (orPredicatessize > 2)
-                    throw new IOException("orPredicates size " + orPredicatessize + " exceeds max size 2");
+                    throw new InvalidDataException("orPredicates size " + orPredicatessize + " exceeds max size 2");
                 var orPredicatesRemainingInputLen = stream.GetRemainingInputLen();
                 if (orPredicatesRemainingInputLen >= 0 && orPredicatesRemainingInputLen < orPredicatessize)
-                    throw new IOException("orPredicates size " + orPredicatessize + " exceeds remaining input length " + orPredicatesRemainingInputLen);
+                    throw new InvalidDataException("orPredicates size " + orPredicatessize + " exceeds remaining input length " + orPredicatesRemainingInputLen);
                 decodedClaimPredicate.OrPredicates = new ClaimPredicate[orPredicatessize];
                 for (var i = 0; i < orPredicatessize; i++)
                 {
@@ -139,7 +139,7 @@ public class ClaimPredicate
                 decodedClaimPredicate.RelBefore = Int64.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedClaimPredicate;

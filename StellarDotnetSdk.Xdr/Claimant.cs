@@ -39,7 +39,7 @@ public class Claimant
     public static Claimant Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedClaimant = new Claimant();
         var discriminant = ClaimantType.Decode(stream, maxDepth);
@@ -50,7 +50,7 @@ public class Claimant
                 decodedClaimant.V0 = ClaimantV0.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedClaimant;
@@ -75,7 +75,7 @@ public class Claimant
         public static ClaimantV0 Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedClaimantV0 = new ClaimantV0();
             decodedClaimantV0.Destination = AccountID.Decode(stream, maxDepth);

@@ -28,7 +28,7 @@ public class SCSpecUDTUnionCaseTupleV0
         stream.WriteString(encodedSCSpecUDTUnionCaseTupleV0.Name);
         var typesize = encodedSCSpecUDTUnionCaseTupleV0.Type.Length;
         if (typesize > 12)
-            throw new IOException("type size " + typesize + " exceeds max size 12");
+            throw new ArgumentException("type size " + typesize + " exceeds max size 12");
         stream.WriteInt(typesize);
         for (var i = 0; i < typesize; i++)
         {
@@ -39,19 +39,19 @@ public class SCSpecUDTUnionCaseTupleV0
     public static SCSpecUDTUnionCaseTupleV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCSpecUDTUnionCaseTupleV0 = new SCSpecUDTUnionCaseTupleV0();
         decodedSCSpecUDTUnionCaseTupleV0.Doc = stream.ReadString();
         decodedSCSpecUDTUnionCaseTupleV0.Name = stream.ReadString();
         var typesize = stream.ReadInt();
         if (typesize < 0)
-            throw new IOException("type size " + typesize + " is negative");
+            throw new InvalidDataException("type size " + typesize + " is negative");
         if (typesize > 12)
-            throw new IOException("type size " + typesize + " exceeds max size 12");
+            throw new InvalidDataException("type size " + typesize + " exceeds max size 12");
         var typeRemainingInputLen = stream.GetRemainingInputLen();
         if (typeRemainingInputLen >= 0 && typeRemainingInputLen < typesize)
-            throw new IOException("type size " + typesize + " exceeds remaining input length " + typeRemainingInputLen);
+            throw new InvalidDataException("type size " + typesize + " exceeds remaining input length " + typeRemainingInputLen);
         decodedSCSpecUDTUnionCaseTupleV0.Type = new SCSpecTypeDef[typesize];
         for (var i = 0; i < typesize; i++)
         {

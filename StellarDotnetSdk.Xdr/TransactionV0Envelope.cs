@@ -27,7 +27,7 @@ public class TransactionV0Envelope
         TransactionV0.Encode(stream, encodedTransactionV0Envelope.Tx);
         var signaturessize = encodedTransactionV0Envelope.Signatures.Length;
         if (signaturessize > 20)
-            throw new IOException("signatures size " + signaturessize + " exceeds max size 20");
+            throw new ArgumentException("signatures size " + signaturessize + " exceeds max size 20");
         stream.WriteInt(signaturessize);
         for (var i = 0; i < signaturessize; i++)
         {
@@ -38,18 +38,18 @@ public class TransactionV0Envelope
     public static TransactionV0Envelope Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTransactionV0Envelope = new TransactionV0Envelope();
         decodedTransactionV0Envelope.Tx = TransactionV0.Decode(stream, maxDepth);
         var signaturessize = stream.ReadInt();
         if (signaturessize < 0)
-            throw new IOException("signatures size " + signaturessize + " is negative");
+            throw new InvalidDataException("signatures size " + signaturessize + " is negative");
         if (signaturessize > 20)
-            throw new IOException("signatures size " + signaturessize + " exceeds max size 20");
+            throw new InvalidDataException("signatures size " + signaturessize + " exceeds max size 20");
         var signaturesRemainingInputLen = stream.GetRemainingInputLen();
         if (signaturesRemainingInputLen >= 0 && signaturesRemainingInputLen < signaturessize)
-            throw new IOException("signatures size " + signaturessize + " exceeds remaining input length " + signaturesRemainingInputLen);
+            throw new InvalidDataException("signatures size " + signaturessize + " exceeds remaining input length " + signaturesRemainingInputLen);
         decodedTransactionV0Envelope.Signatures = new DecoratedSignature[signaturessize];
         for (var i = 0; i < signaturessize; i++)
         {

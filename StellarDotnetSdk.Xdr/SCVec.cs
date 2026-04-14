@@ -37,15 +37,15 @@ public class SCVec
     public static SCVec Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCVec = new SCVec();
         var SCVecsize = stream.ReadInt();
         if (SCVecsize < 0)
-            throw new IOException("SCVec size " + SCVecsize + " is negative");
+            throw new InvalidDataException("SCVec size " + SCVecsize + " is negative");
         var SCVecRemainingInputLen = stream.GetRemainingInputLen();
         if (SCVecRemainingInputLen >= 0 && SCVecRemainingInputLen < SCVecsize)
-            throw new IOException("SCVec size " + SCVecsize + " exceeds remaining input length " + SCVecRemainingInputLen);
+            throw new InvalidDataException("SCVec size " + SCVecsize + " exceeds remaining input length " + SCVecRemainingInputLen);
         decodedSCVec.InnerValue = new SCVal[SCVecsize];
         for (var i = 0; i < SCVecsize; i++)
         {

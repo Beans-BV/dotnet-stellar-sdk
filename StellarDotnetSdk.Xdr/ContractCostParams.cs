@@ -28,7 +28,7 @@ public class ContractCostParams
     {
         var ContractCostParamssize = encodedContractCostParams.InnerValue.Length;
         if (ContractCostParamssize > 1024)
-            throw new IOException("ContractCostParams size " + ContractCostParamssize + " exceeds max size 1024");
+            throw new ArgumentException("ContractCostParams size " + ContractCostParamssize + " exceeds max size 1024");
         stream.WriteInt(ContractCostParamssize);
         for (var i = 0; i < ContractCostParamssize; i++)
         {
@@ -39,17 +39,17 @@ public class ContractCostParams
     public static ContractCostParams Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedContractCostParams = new ContractCostParams();
         var ContractCostParamssize = stream.ReadInt();
         if (ContractCostParamssize < 0)
-            throw new IOException("ContractCostParams size " + ContractCostParamssize + " is negative");
+            throw new InvalidDataException("ContractCostParams size " + ContractCostParamssize + " is negative");
         if (ContractCostParamssize > 1024)
-            throw new IOException("ContractCostParams size " + ContractCostParamssize + " exceeds max size 1024");
+            throw new InvalidDataException("ContractCostParams size " + ContractCostParamssize + " exceeds max size 1024");
         var ContractCostParamsRemainingInputLen = stream.GetRemainingInputLen();
         if (ContractCostParamsRemainingInputLen >= 0 && ContractCostParamsRemainingInputLen < ContractCostParamssize)
-            throw new IOException("ContractCostParams size " + ContractCostParamssize + " exceeds remaining input length " + ContractCostParamsRemainingInputLen);
+            throw new InvalidDataException("ContractCostParams size " + ContractCostParamssize + " exceeds remaining input length " + ContractCostParamsRemainingInputLen);
         decodedContractCostParams.InnerValue = new ContractCostParamEntry[ContractCostParamssize];
         for (var i = 0; i < ContractCostParamssize; i++)
         {

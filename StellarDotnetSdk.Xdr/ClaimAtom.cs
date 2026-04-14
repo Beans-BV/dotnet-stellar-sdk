@@ -47,7 +47,7 @@ public class ClaimAtom
     public static ClaimAtom Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedClaimAtom = new ClaimAtom();
         var discriminant = ClaimAtomType.Decode(stream, maxDepth);
@@ -64,7 +64,7 @@ public class ClaimAtom
                 decodedClaimAtom.LiquidityPool = ClaimLiquidityAtom.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedClaimAtom;

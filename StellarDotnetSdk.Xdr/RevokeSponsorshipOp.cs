@@ -45,7 +45,7 @@ public class RevokeSponsorshipOp
     public static RevokeSponsorshipOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedRevokeSponsorshipOp = new RevokeSponsorshipOp();
         var discriminant = RevokeSponsorshipType.Decode(stream, maxDepth);
@@ -59,7 +59,7 @@ public class RevokeSponsorshipOp
                 decodedRevokeSponsorshipOp.Signer = RevokeSponsorshipOpSigner.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedRevokeSponsorshipOp;
@@ -84,7 +84,7 @@ public class RevokeSponsorshipOp
         public static RevokeSponsorshipOpSigner Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedRevokeSponsorshipOpSigner = new RevokeSponsorshipOpSigner();
             decodedRevokeSponsorshipOpSigner.AccountID = AccountID.Decode(stream, maxDepth);

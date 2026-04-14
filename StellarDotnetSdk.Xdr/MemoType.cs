@@ -51,7 +51,7 @@ public class MemoType
             case 3: return Create(MemoTypeEnum.MEMO_HASH);
             case 4: return Create(MemoTypeEnum.MEMO_RETURN);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

@@ -47,7 +47,7 @@ public class ClaimableBalanceEntry
         ClaimableBalanceID.Encode(stream, encodedClaimableBalanceEntry.BalanceID);
         var claimantssize = encodedClaimableBalanceEntry.Claimants.Length;
         if (claimantssize > 10)
-            throw new IOException("claimants size " + claimantssize + " exceeds max size 10");
+            throw new ArgumentException("claimants size " + claimantssize + " exceeds max size 10");
         stream.WriteInt(claimantssize);
         for (var i = 0; i < claimantssize; i++)
         {
@@ -61,18 +61,18 @@ public class ClaimableBalanceEntry
     public static ClaimableBalanceEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedClaimableBalanceEntry = new ClaimableBalanceEntry();
         decodedClaimableBalanceEntry.BalanceID = ClaimableBalanceID.Decode(stream, maxDepth);
         var claimantssize = stream.ReadInt();
         if (claimantssize < 0)
-            throw new IOException("claimants size " + claimantssize + " is negative");
+            throw new InvalidDataException("claimants size " + claimantssize + " is negative");
         if (claimantssize > 10)
-            throw new IOException("claimants size " + claimantssize + " exceeds max size 10");
+            throw new InvalidDataException("claimants size " + claimantssize + " exceeds max size 10");
         var claimantsRemainingInputLen = stream.GetRemainingInputLen();
         if (claimantsRemainingInputLen >= 0 && claimantsRemainingInputLen < claimantssize)
-            throw new IOException("claimants size " + claimantssize + " exceeds remaining input length " + claimantsRemainingInputLen);
+            throw new InvalidDataException("claimants size " + claimantssize + " exceeds remaining input length " + claimantsRemainingInputLen);
         decodedClaimableBalanceEntry.Claimants = new Claimant[claimantssize];
         for (var i = 0; i < claimantssize; i++)
         {
@@ -111,7 +111,7 @@ public class ClaimableBalanceEntry
         public static ClaimableBalanceEntryExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedClaimableBalanceEntryExt = new ClaimableBalanceEntryExt();
             var discriminant = stream.ReadInt();
@@ -124,7 +124,7 @@ public class ClaimableBalanceEntry
                     decodedClaimableBalanceEntryExt.V1 = ClaimableBalanceEntryExtensionV1.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedClaimableBalanceEntryExt;

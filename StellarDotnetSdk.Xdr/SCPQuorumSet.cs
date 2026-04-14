@@ -42,16 +42,16 @@ public class SCPQuorumSet
     public static SCPQuorumSet Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCPQuorumSet = new SCPQuorumSet();
         decodedSCPQuorumSet.Threshold = Uint32.Decode(stream, maxDepth);
         var validatorssize = stream.ReadInt();
         if (validatorssize < 0)
-            throw new IOException("validators size " + validatorssize + " is negative");
+            throw new InvalidDataException("validators size " + validatorssize + " is negative");
         var validatorsRemainingInputLen = stream.GetRemainingInputLen();
         if (validatorsRemainingInputLen >= 0 && validatorsRemainingInputLen < validatorssize)
-            throw new IOException("validators size " + validatorssize + " exceeds remaining input length " + validatorsRemainingInputLen);
+            throw new InvalidDataException("validators size " + validatorssize + " exceeds remaining input length " + validatorsRemainingInputLen);
         decodedSCPQuorumSet.Validators = new NodeID[validatorssize];
         for (var i = 0; i < validatorssize; i++)
         {
@@ -59,10 +59,10 @@ public class SCPQuorumSet
         }
         var innerSetssize = stream.ReadInt();
         if (innerSetssize < 0)
-            throw new IOException("innerSets size " + innerSetssize + " is negative");
+            throw new InvalidDataException("innerSets size " + innerSetssize + " is negative");
         var innerSetsRemainingInputLen = stream.GetRemainingInputLen();
         if (innerSetsRemainingInputLen >= 0 && innerSetsRemainingInputLen < innerSetssize)
-            throw new IOException("innerSets size " + innerSetssize + " exceeds remaining input length " + innerSetsRemainingInputLen);
+            throw new InvalidDataException("innerSets size " + innerSetssize + " exceeds remaining input length " + innerSetsRemainingInputLen);
         decodedSCPQuorumSet.InnerSets = new SCPQuorumSet[innerSetssize];
         for (var i = 0; i < innerSetssize; i++)
         {

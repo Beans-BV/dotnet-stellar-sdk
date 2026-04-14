@@ -28,7 +28,7 @@ public class TxAdvertVector
     {
         var TxAdvertVectorsize = encodedTxAdvertVector.InnerValue.Length;
         if (TxAdvertVectorsize > 1000)
-            throw new IOException("TxAdvertVector size " + TxAdvertVectorsize + " exceeds max size 1000");
+            throw new ArgumentException("TxAdvertVector size " + TxAdvertVectorsize + " exceeds max size 1000");
         stream.WriteInt(TxAdvertVectorsize);
         for (var i = 0; i < TxAdvertVectorsize; i++)
         {
@@ -39,17 +39,17 @@ public class TxAdvertVector
     public static TxAdvertVector Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTxAdvertVector = new TxAdvertVector();
         var TxAdvertVectorsize = stream.ReadInt();
         if (TxAdvertVectorsize < 0)
-            throw new IOException("TxAdvertVector size " + TxAdvertVectorsize + " is negative");
+            throw new InvalidDataException("TxAdvertVector size " + TxAdvertVectorsize + " is negative");
         if (TxAdvertVectorsize > 1000)
-            throw new IOException("TxAdvertVector size " + TxAdvertVectorsize + " exceeds max size 1000");
+            throw new InvalidDataException("TxAdvertVector size " + TxAdvertVectorsize + " exceeds max size 1000");
         var TxAdvertVectorRemainingInputLen = stream.GetRemainingInputLen();
         if (TxAdvertVectorRemainingInputLen >= 0 && TxAdvertVectorRemainingInputLen < TxAdvertVectorsize)
-            throw new IOException("TxAdvertVector size " + TxAdvertVectorsize + " exceeds remaining input length " + TxAdvertVectorRemainingInputLen);
+            throw new InvalidDataException("TxAdvertVector size " + TxAdvertVectorsize + " exceeds remaining input length " + TxAdvertVectorRemainingInputLen);
         decodedTxAdvertVector.InnerValue = new Hash[TxAdvertVectorsize];
         for (var i = 0; i < TxAdvertVectorsize; i++)
         {

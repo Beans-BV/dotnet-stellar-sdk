@@ -41,7 +41,7 @@ public class ClawbackClaimableBalanceResult
     public static ClawbackClaimableBalanceResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedClawbackClaimableBalanceResult = new ClawbackClaimableBalanceResult();
         var discriminant = ClawbackClaimableBalanceResultCode.Decode(stream, maxDepth);
@@ -55,7 +55,7 @@ public class ClawbackClaimableBalanceResult
             case ClawbackClaimableBalanceResultCode.ClawbackClaimableBalanceResultCodeEnum.CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedClawbackClaimableBalanceResult;

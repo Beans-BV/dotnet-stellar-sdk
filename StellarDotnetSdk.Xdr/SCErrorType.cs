@@ -66,7 +66,7 @@ public class SCErrorType
             case 8: return Create(SCErrorTypeEnum.SCE_VALUE);
             case 9: return Create(SCErrorTypeEnum.SCE_AUTH);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

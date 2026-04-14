@@ -41,7 +41,7 @@ public class ClaimableBalanceFlags
         {
             case 1: return Create(ClaimableBalanceFlagsEnum.CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

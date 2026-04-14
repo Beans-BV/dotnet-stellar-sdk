@@ -44,7 +44,7 @@ public class LiquidityPoolEntry
     public static LiquidityPoolEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedLiquidityPoolEntry = new LiquidityPoolEntry();
         decodedLiquidityPoolEntry.LiquidityPoolID = PoolID.Decode(stream, maxDepth);
@@ -77,7 +77,7 @@ public class LiquidityPoolEntry
         public static LiquidityPoolEntryBody Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedLiquidityPoolEntryBody = new LiquidityPoolEntryBody();
             var discriminant = LiquidityPoolType.Decode(stream, maxDepth);
@@ -88,7 +88,7 @@ public class LiquidityPoolEntry
                     decodedLiquidityPoolEntryBody.ConstantProduct = LiquidityPoolEntryConstantProduct.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedLiquidityPoolEntryBody;
@@ -119,7 +119,7 @@ public class LiquidityPoolEntry
             public static LiquidityPoolEntryConstantProduct Decode(XdrDataInputStream stream, int maxDepth)
             {
                 if (maxDepth <= 0)
-                    throw new IOException("Maximum decoding depth reached");
+                    throw new InvalidDataException("Maximum decoding depth reached");
                 maxDepth -= 1;
                 var decodedLiquidityPoolEntryConstantProduct = new LiquidityPoolEntryConstantProduct();
                 decodedLiquidityPoolEntryConstantProduct.Params = LiquidityPoolConstantProductParameters.Decode(stream, maxDepth);

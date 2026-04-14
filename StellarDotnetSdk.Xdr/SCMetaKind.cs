@@ -39,7 +39,7 @@ public class SCMetaKind
         {
             case 0: return Create(SCMetaKindEnum.SC_META_V0);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

@@ -38,17 +38,17 @@ public class CreateContractArgsV2
     public static CreateContractArgsV2 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedCreateContractArgsV2 = new CreateContractArgsV2();
         decodedCreateContractArgsV2.ContractIDPreimage = ContractIDPreimage.Decode(stream, maxDepth);
         decodedCreateContractArgsV2.Executable = ContractExecutable.Decode(stream, maxDepth);
         var constructorArgssize = stream.ReadInt();
         if (constructorArgssize < 0)
-            throw new IOException("constructorArgs size " + constructorArgssize + " is negative");
+            throw new InvalidDataException("constructorArgs size " + constructorArgssize + " is negative");
         var constructorArgsRemainingInputLen = stream.GetRemainingInputLen();
         if (constructorArgsRemainingInputLen >= 0 && constructorArgsRemainingInputLen < constructorArgssize)
-            throw new IOException("constructorArgs size " + constructorArgssize + " exceeds remaining input length " + constructorArgsRemainingInputLen);
+            throw new InvalidDataException("constructorArgs size " + constructorArgssize + " exceeds remaining input length " + constructorArgsRemainingInputLen);
         decodedCreateContractArgsV2.ConstructorArgs = new SCVal[constructorArgssize];
         for (var i = 0; i < constructorArgssize; i++)
         {

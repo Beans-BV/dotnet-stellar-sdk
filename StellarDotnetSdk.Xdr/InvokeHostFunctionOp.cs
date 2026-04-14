@@ -36,16 +36,16 @@ public class InvokeHostFunctionOp
     public static InvokeHostFunctionOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedInvokeHostFunctionOp = new InvokeHostFunctionOp();
         decodedInvokeHostFunctionOp.HostFunction = HostFunction.Decode(stream, maxDepth);
         var authsize = stream.ReadInt();
         if (authsize < 0)
-            throw new IOException("auth size " + authsize + " is negative");
+            throw new InvalidDataException("auth size " + authsize + " is negative");
         var authRemainingInputLen = stream.GetRemainingInputLen();
         if (authRemainingInputLen >= 0 && authRemainingInputLen < authsize)
-            throw new IOException("auth size " + authsize + " exceeds remaining input length " + authRemainingInputLen);
+            throw new InvalidDataException("auth size " + authsize + " exceeds remaining input length " + authRemainingInputLen);
         decodedInvokeHostFunctionOp.Auth = new SorobanAuthorizationEntry[authsize];
         for (var i = 0; i < authsize; i++)
         {

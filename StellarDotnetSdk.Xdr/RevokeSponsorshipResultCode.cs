@@ -57,7 +57,7 @@ public class RevokeSponsorshipResultCode
             case -4: return Create(RevokeSponsorshipResultCodeEnum.REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE);
             case -5: return Create(RevokeSponsorshipResultCodeEnum.REVOKE_SPONSORSHIP_MALFORMED);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

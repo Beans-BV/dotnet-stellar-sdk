@@ -72,7 +72,7 @@ public class SetOptionsResultCode
             case -9: return Create(SetOptionsResultCodeEnum.SET_OPTIONS_INVALID_HOME_DOMAIN);
             case -10: return Create(SetOptionsResultCodeEnum.SET_OPTIONS_AUTH_REVOCABLE_REQUIRED);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

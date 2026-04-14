@@ -65,7 +65,7 @@ public class SCSpecEntry
     public static SCSpecEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCSpecEntry = new SCSpecEntry();
         var discriminant = SCSpecEntryKind.Decode(stream, maxDepth);
@@ -91,7 +91,7 @@ public class SCSpecEntry
                 decodedSCSpecEntry.EventV0 = SCSpecEventV0.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedSCSpecEntry;

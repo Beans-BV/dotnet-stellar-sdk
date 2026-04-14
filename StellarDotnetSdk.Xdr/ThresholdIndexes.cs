@@ -48,7 +48,7 @@ public class ThresholdIndexes
             case 2: return Create(ThresholdIndexesEnum.THRESHOLD_MED);
             case 3: return Create(ThresholdIndexesEnum.THRESHOLD_HIGH);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

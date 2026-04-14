@@ -34,15 +34,15 @@ public class Value
     public static Value Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedValue = new Value();
         var Valuesize = stream.ReadInt();
         if (Valuesize < 0)
-            throw new IOException("Value size " + Valuesize + " is negative");
+            throw new InvalidDataException("Value size " + Valuesize + " is negative");
         var ValueRemainingInputLen = stream.GetRemainingInputLen();
         if (ValueRemainingInputLen >= 0 && ValueRemainingInputLen < Valuesize)
-            throw new IOException("Value size " + Valuesize + " exceeds remaining input length " + ValueRemainingInputLen);
+            throw new InvalidDataException("Value size " + Valuesize + " exceeds remaining input length " + ValueRemainingInputLen);
         decodedValue.InnerValue = new byte[Valuesize];
         stream.Read(decodedValue.InnerValue, 0, Valuesize);
         return decodedValue;

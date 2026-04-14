@@ -39,7 +39,7 @@ public class LiquidityPoolType
         {
             case 0: return Create(LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

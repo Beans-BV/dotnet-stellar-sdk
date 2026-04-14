@@ -42,7 +42,7 @@ public class ManageDataResult
     public static ManageDataResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedManageDataResult = new ManageDataResult();
         var discriminant = ManageDataResultCode.Decode(stream, maxDepth);
@@ -57,7 +57,7 @@ public class ManageDataResult
             case ManageDataResultCode.ManageDataResultCodeEnum.MANAGE_DATA_INVALID_NAME:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedManageDataResult;

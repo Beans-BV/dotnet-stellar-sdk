@@ -42,17 +42,17 @@ public class LedgerCloseMetaBatch
     public static LedgerCloseMetaBatch Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedLedgerCloseMetaBatch = new LedgerCloseMetaBatch();
         decodedLedgerCloseMetaBatch.StartSequence = Uint32.Decode(stream, maxDepth);
         decodedLedgerCloseMetaBatch.EndSequence = Uint32.Decode(stream, maxDepth);
         var ledgerCloseMetassize = stream.ReadInt();
         if (ledgerCloseMetassize < 0)
-            throw new IOException("ledgerCloseMetas size " + ledgerCloseMetassize + " is negative");
+            throw new InvalidDataException("ledgerCloseMetas size " + ledgerCloseMetassize + " is negative");
         var ledgerCloseMetasRemainingInputLen = stream.GetRemainingInputLen();
         if (ledgerCloseMetasRemainingInputLen >= 0 && ledgerCloseMetasRemainingInputLen < ledgerCloseMetassize)
-            throw new IOException("ledgerCloseMetas size " + ledgerCloseMetassize + " exceeds remaining input length " + ledgerCloseMetasRemainingInputLen);
+            throw new InvalidDataException("ledgerCloseMetas size " + ledgerCloseMetassize + " exceeds remaining input length " + ledgerCloseMetasRemainingInputLen);
         decodedLedgerCloseMetaBatch.LedgerCloseMetas = new LedgerCloseMeta[ledgerCloseMetassize];
         for (var i = 0; i < ledgerCloseMetassize; i++)
         {

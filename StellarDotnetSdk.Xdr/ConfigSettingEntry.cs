@@ -136,7 +136,7 @@ public class ConfigSettingEntry
     public static ConfigSettingEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedConfigSettingEntry = new ConfigSettingEntry();
         var discriminant = ConfigSettingID.Decode(stream, maxDepth);
@@ -182,10 +182,10 @@ public class ConfigSettingEntry
             case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW:
                 var liveSorobanStateSizeWindowsize = stream.ReadInt();
                 if (liveSorobanStateSizeWindowsize < 0)
-                    throw new IOException("liveSorobanStateSizeWindow size " + liveSorobanStateSizeWindowsize + " is negative");
+                    throw new InvalidDataException("liveSorobanStateSizeWindow size " + liveSorobanStateSizeWindowsize + " is negative");
                 var liveSorobanStateSizeWindowRemainingInputLen = stream.GetRemainingInputLen();
                 if (liveSorobanStateSizeWindowRemainingInputLen >= 0 && liveSorobanStateSizeWindowRemainingInputLen < liveSorobanStateSizeWindowsize)
-                    throw new IOException("liveSorobanStateSizeWindow size " + liveSorobanStateSizeWindowsize + " exceeds remaining input length " + liveSorobanStateSizeWindowRemainingInputLen);
+                    throw new InvalidDataException("liveSorobanStateSizeWindow size " + liveSorobanStateSizeWindowsize + " exceeds remaining input length " + liveSorobanStateSizeWindowRemainingInputLen);
                 decodedConfigSettingEntry.LiveSorobanStateSizeWindow = new Uint64[liveSorobanStateSizeWindowsize];
                 for (var i = 0; i < liveSorobanStateSizeWindowsize; i++)
                 {
@@ -205,7 +205,7 @@ public class ConfigSettingEntry
                 decodedConfigSettingEntry.ContractSCPTiming = ConfigSettingSCPTiming.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedConfigSettingEntry;

@@ -57,7 +57,7 @@ public class InvokeHostFunctionResultCode
             case -4: return Create(InvokeHostFunctionResultCodeEnum.INVOKE_HOST_FUNCTION_ENTRY_ARCHIVED);
             case -5: return Create(InvokeHostFunctionResultCodeEnum.INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

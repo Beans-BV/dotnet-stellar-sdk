@@ -45,7 +45,7 @@ public class LedgerHeaderFlags
             case 2: return Create(LedgerHeaderFlagsEnum.DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG);
             case 4: return Create(LedgerHeaderFlagsEnum.DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

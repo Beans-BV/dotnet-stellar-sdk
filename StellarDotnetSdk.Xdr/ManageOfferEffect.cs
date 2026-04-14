@@ -45,7 +45,7 @@ public class ManageOfferEffect
             case 1: return Create(ManageOfferEffectEnum.MANAGE_OFFER_UPDATED);
             case 2: return Create(ManageOfferEffectEnum.MANAGE_OFFER_DELETED);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

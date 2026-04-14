@@ -37,15 +37,15 @@ public class LedgerEntryChanges
     public static LedgerEntryChanges Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedLedgerEntryChanges = new LedgerEntryChanges();
         var LedgerEntryChangessize = stream.ReadInt();
         if (LedgerEntryChangessize < 0)
-            throw new IOException("LedgerEntryChanges size " + LedgerEntryChangessize + " is negative");
+            throw new InvalidDataException("LedgerEntryChanges size " + LedgerEntryChangessize + " is negative");
         var LedgerEntryChangesRemainingInputLen = stream.GetRemainingInputLen();
         if (LedgerEntryChangesRemainingInputLen >= 0 && LedgerEntryChangesRemainingInputLen < LedgerEntryChangessize)
-            throw new IOException("LedgerEntryChanges size " + LedgerEntryChangessize + " exceeds remaining input length " + LedgerEntryChangesRemainingInputLen);
+            throw new InvalidDataException("LedgerEntryChanges size " + LedgerEntryChangessize + " exceeds remaining input length " + LedgerEntryChangesRemainingInputLen);
         decodedLedgerEntryChanges.InnerValue = new LedgerEntryChange[LedgerEntryChangessize];
         for (var i = 0; i < LedgerEntryChangessize; i++)
         {

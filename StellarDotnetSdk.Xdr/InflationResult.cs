@@ -44,7 +44,7 @@ public class InflationResult
     public static InflationResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedInflationResult = new InflationResult();
         var discriminant = InflationResultCode.Decode(stream, maxDepth);
@@ -54,10 +54,10 @@ public class InflationResult
             case InflationResultCode.InflationResultCodeEnum.INFLATION_SUCCESS:
                 var payoutssize = stream.ReadInt();
                 if (payoutssize < 0)
-                    throw new IOException("payouts size " + payoutssize + " is negative");
+                    throw new InvalidDataException("payouts size " + payoutssize + " is negative");
                 var payoutsRemainingInputLen = stream.GetRemainingInputLen();
                 if (payoutsRemainingInputLen >= 0 && payoutsRemainingInputLen < payoutssize)
-                    throw new IOException("payouts size " + payoutssize + " exceeds remaining input length " + payoutsRemainingInputLen);
+                    throw new InvalidDataException("payouts size " + payoutssize + " exceeds remaining input length " + payoutsRemainingInputLen);
                 decodedInflationResult.Payouts = new InflationPayout[payoutssize];
                 for (var i = 0; i < payoutssize; i++)
                 {
@@ -67,7 +67,7 @@ public class InflationResult
             case InflationResultCode.InflationResultCodeEnum.INFLATION_NOT_TIME:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedInflationResult;

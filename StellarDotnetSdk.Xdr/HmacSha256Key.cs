@@ -22,14 +22,14 @@ public class HmacSha256Key
     {
         var keysize = encodedHmacSha256Key.Key.Length;
         if (keysize != 32)
-            throw new IOException("key size " + keysize + " does not match fixed size 32");
+            throw new ArgumentException("key size " + keysize + " does not match fixed size 32");
         stream.Write(encodedHmacSha256Key.Key, 0, keysize);
     }
 
     public static HmacSha256Key Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedHmacSha256Key = new HmacSha256Key();
         var keysize = 32;

@@ -42,7 +42,7 @@ public class StellarValueType
             case 0: return Create(StellarValueTypeEnum.STELLAR_VALUE_BASIC);
             case 1: return Create(StellarValueTypeEnum.STELLAR_VALUE_SIGNED);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

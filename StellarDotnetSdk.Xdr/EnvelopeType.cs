@@ -66,7 +66,7 @@ public class EnvelopeType
             case 8: return Create(EnvelopeTypeEnum.ENVELOPE_TYPE_CONTRACT_ID);
             case 9: return Create(EnvelopeTypeEnum.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

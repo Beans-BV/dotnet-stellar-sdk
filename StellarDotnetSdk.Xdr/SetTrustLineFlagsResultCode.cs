@@ -58,7 +58,7 @@ public class SetTrustLineFlagsResultCode
             case -4: return Create(SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_INVALID_STATE);
             case -5: return Create(SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_LOW_RESERVE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

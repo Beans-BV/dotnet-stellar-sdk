@@ -44,15 +44,15 @@ public class ManageOfferSuccessResult
     public static ManageOfferSuccessResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedManageOfferSuccessResult = new ManageOfferSuccessResult();
         var offersClaimedsize = stream.ReadInt();
         if (offersClaimedsize < 0)
-            throw new IOException("offersClaimed size " + offersClaimedsize + " is negative");
+            throw new InvalidDataException("offersClaimed size " + offersClaimedsize + " is negative");
         var offersClaimedRemainingInputLen = stream.GetRemainingInputLen();
         if (offersClaimedRemainingInputLen >= 0 && offersClaimedRemainingInputLen < offersClaimedsize)
-            throw new IOException("offersClaimed size " + offersClaimedsize + " exceeds remaining input length " + offersClaimedRemainingInputLen);
+            throw new InvalidDataException("offersClaimed size " + offersClaimedsize + " exceeds remaining input length " + offersClaimedRemainingInputLen);
         decodedManageOfferSuccessResult.OffersClaimed = new ClaimAtom[offersClaimedsize];
         for (var i = 0; i < offersClaimedsize; i++)
         {
@@ -90,7 +90,7 @@ public class ManageOfferSuccessResult
         public static ManageOfferSuccessResultOffer Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedManageOfferSuccessResultOffer = new ManageOfferSuccessResultOffer();
             var discriminant = ManageOfferEffect.Decode(stream, maxDepth);
@@ -104,7 +104,7 @@ public class ManageOfferSuccessResult
                 case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_DELETED:
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedManageOfferSuccessResultOffer;

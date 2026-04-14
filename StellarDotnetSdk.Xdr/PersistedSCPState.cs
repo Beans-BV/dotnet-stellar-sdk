@@ -41,7 +41,7 @@ public class PersistedSCPState
     public static PersistedSCPState Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedPersistedSCPState = new PersistedSCPState();
         var discriminant = stream.ReadInt();
@@ -55,7 +55,7 @@ public class PersistedSCPState
                 decodedPersistedSCPState.V1 = PersistedSCPStateV1.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedPersistedSCPState;

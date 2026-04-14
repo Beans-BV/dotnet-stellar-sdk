@@ -35,7 +35,7 @@ public class SCMetaEntry
     public static SCMetaEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCMetaEntry = new SCMetaEntry();
         var discriminant = SCMetaKind.Decode(stream, maxDepth);
@@ -46,7 +46,7 @@ public class SCMetaEntry
                 decodedSCMetaEntry.V0 = SCMetaV0.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedSCMetaEntry;

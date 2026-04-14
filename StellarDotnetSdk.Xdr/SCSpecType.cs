@@ -120,7 +120,7 @@ public class SCSpecType
             case 1006: return Create(SCSpecTypeEnum.SC_SPEC_TYPE_BYTES_N);
             case 2000: return Create(SCSpecTypeEnum.SC_SPEC_TYPE_UDT);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

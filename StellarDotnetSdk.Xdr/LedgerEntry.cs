@@ -65,7 +65,7 @@ public class LedgerEntry
     public static LedgerEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedLedgerEntry = new LedgerEntry();
         decodedLedgerEntry.LastModifiedLedgerSeq = Uint32.Decode(stream, maxDepth);
@@ -135,7 +135,7 @@ public class LedgerEntry
         public static LedgerEntryData Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedLedgerEntryData = new LedgerEntryData();
             var discriminant = LedgerEntryType.Decode(stream, maxDepth);
@@ -173,7 +173,7 @@ public class LedgerEntry
                     decodedLedgerEntryData.Ttl = TTLEntry.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedLedgerEntryData;
@@ -207,7 +207,7 @@ public class LedgerEntry
         public static LedgerEntryExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedLedgerEntryExt = new LedgerEntryExt();
             var discriminant = stream.ReadInt();
@@ -220,7 +220,7 @@ public class LedgerEntry
                     decodedLedgerEntryExt.V1 = LedgerEntryExtensionV1.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedLedgerEntryExt;

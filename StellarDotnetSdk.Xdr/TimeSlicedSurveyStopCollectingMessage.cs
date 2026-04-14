@@ -32,7 +32,7 @@ public class TimeSlicedSurveyStopCollectingMessage
     public static TimeSlicedSurveyStopCollectingMessage Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTimeSlicedSurveyStopCollectingMessage = new TimeSlicedSurveyStopCollectingMessage();
         decodedTimeSlicedSurveyStopCollectingMessage.SurveyorID = NodeID.Decode(stream, maxDepth);

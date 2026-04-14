@@ -26,7 +26,7 @@ public class ConfigSettingContractHistoricalDataV0
     public static ConfigSettingContractHistoricalDataV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedConfigSettingContractHistoricalDataV0 = new ConfigSettingContractHistoricalDataV0();
         decodedConfigSettingContractHistoricalDataV0.FeeHistorical1KB = Int64.Decode(stream, maxDepth);

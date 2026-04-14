@@ -28,7 +28,7 @@ public class UInt128Parts
     public static UInt128Parts Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedUInt128Parts = new UInt128Parts();
         decodedUInt128Parts.Hi = Uint64.Decode(stream, maxDepth);

@@ -66,7 +66,7 @@ public class LedgerEntryType
             case 8: return Create(LedgerEntryTypeEnum.CONFIG_SETTING);
             case 9: return Create(LedgerEntryTypeEnum.TTL);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

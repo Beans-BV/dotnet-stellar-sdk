@@ -32,7 +32,7 @@ public class SCSpecUDTEnumCaseV0
     public static SCSpecUDTEnumCaseV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCSpecUDTEnumCaseV0 = new SCSpecUDTEnumCaseV0();
         decodedSCSpecUDTEnumCaseV0.Doc = stream.ReadString();

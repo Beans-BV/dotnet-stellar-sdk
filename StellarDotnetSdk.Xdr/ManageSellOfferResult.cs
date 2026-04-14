@@ -61,7 +61,7 @@ public class ManageSellOfferResult
     public static ManageSellOfferResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedManageSellOfferResult = new ManageSellOfferResult();
         var discriminant = ManageSellOfferResultCode.Decode(stream, maxDepth);
@@ -85,7 +85,7 @@ public class ManageSellOfferResult
             case ManageSellOfferResultCode.ManageSellOfferResultCodeEnum.MANAGE_SELL_OFFER_LOW_RESERVE:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedManageSellOfferResult;

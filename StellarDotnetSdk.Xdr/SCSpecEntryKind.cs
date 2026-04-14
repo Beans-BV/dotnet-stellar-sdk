@@ -54,7 +54,7 @@ public class SCSpecEntryKind
             case 4: return Create(SCSpecEntryKindEnum.SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0);
             case 5: return Create(SCSpecEntryKindEnum.SC_SPEC_ENTRY_EVENT_V0);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

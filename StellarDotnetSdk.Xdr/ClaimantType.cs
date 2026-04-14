@@ -39,7 +39,7 @@ public class ClaimantType
         {
             case 0: return Create(ClaimantTypeEnum.CLAIMANT_TYPE_V0);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

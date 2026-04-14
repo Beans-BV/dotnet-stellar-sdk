@@ -28,14 +28,14 @@ public class AssetCode4
     {
         var AssetCode4size = encodedAssetCode4.InnerValue.Length;
         if (AssetCode4size != 4)
-            throw new IOException("AssetCode4 size " + AssetCode4size + " does not match fixed size 4");
+            throw new ArgumentException("AssetCode4 size " + AssetCode4size + " does not match fixed size 4");
         stream.Write(encodedAssetCode4.InnerValue, 0, AssetCode4size);
     }
 
     public static AssetCode4 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedAssetCode4 = new AssetCode4();
         var AssetCode4size = 4;

@@ -50,7 +50,7 @@ public class TrustLineFlags
             case 2: return Create(TrustLineFlagsEnum.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG);
             case 4: return Create(TrustLineFlagsEnum.TRUSTLINE_CLAWBACK_ENABLED_FLAG);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

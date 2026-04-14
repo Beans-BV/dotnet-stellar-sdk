@@ -42,7 +42,7 @@ public class CreateAccountResult
     public static CreateAccountResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedCreateAccountResult = new CreateAccountResult();
         var discriminant = CreateAccountResultCode.Decode(stream, maxDepth);
@@ -57,7 +57,7 @@ public class CreateAccountResult
             case CreateAccountResultCode.CreateAccountResultCodeEnum.CREATE_ACCOUNT_ALREADY_EXIST:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedCreateAccountResult;

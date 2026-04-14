@@ -39,7 +39,7 @@ public class TxSetComponent
     public static TxSetComponent Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTxSetComponent = new TxSetComponent();
         var discriminant = TxSetComponentType.Decode(stream, maxDepth);
@@ -50,7 +50,7 @@ public class TxSetComponent
                 decodedTxSetComponent.TxsMaybeDiscountedFee = TxSetComponentTxsMaybeDiscountedFee.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedTxSetComponent;
@@ -88,7 +88,7 @@ public class TxSetComponent
         public static TxSetComponentTxsMaybeDiscountedFee Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedTxSetComponentTxsMaybeDiscountedFee = new TxSetComponentTxsMaybeDiscountedFee();
             var BaseFeePresent = stream.ReadInt();
@@ -98,10 +98,10 @@ public class TxSetComponent
             }
             var txssize = stream.ReadInt();
             if (txssize < 0)
-                throw new IOException("txs size " + txssize + " is negative");
+                throw new InvalidDataException("txs size " + txssize + " is negative");
             var txsRemainingInputLen = stream.GetRemainingInputLen();
             if (txsRemainingInputLen >= 0 && txsRemainingInputLen < txssize)
-                throw new IOException("txs size " + txssize + " exceeds remaining input length " + txsRemainingInputLen);
+                throw new InvalidDataException("txs size " + txssize + " exceeds remaining input length " + txsRemainingInputLen);
             decodedTxSetComponentTxsMaybeDiscountedFee.Txs = new TransactionEnvelope[txssize];
             for (var i = 0; i < txssize; i++)
             {

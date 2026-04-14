@@ -34,15 +34,15 @@ public class SCPHistoryEntryV0
     public static SCPHistoryEntryV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCPHistoryEntryV0 = new SCPHistoryEntryV0();
         var quorumSetssize = stream.ReadInt();
         if (quorumSetssize < 0)
-            throw new IOException("quorumSets size " + quorumSetssize + " is negative");
+            throw new InvalidDataException("quorumSets size " + quorumSetssize + " is negative");
         var quorumSetsRemainingInputLen = stream.GetRemainingInputLen();
         if (quorumSetsRemainingInputLen >= 0 && quorumSetsRemainingInputLen < quorumSetssize)
-            throw new IOException("quorumSets size " + quorumSetssize + " exceeds remaining input length " + quorumSetsRemainingInputLen);
+            throw new InvalidDataException("quorumSets size " + quorumSetssize + " exceeds remaining input length " + quorumSetsRemainingInputLen);
         decodedSCPHistoryEntryV0.QuorumSets = new SCPQuorumSet[quorumSetssize];
         for (var i = 0; i < quorumSetssize; i++)
         {

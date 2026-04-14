@@ -55,7 +55,7 @@ public class CreateAccountResultCode
             case -3: return Create(CreateAccountResultCodeEnum.CREATE_ACCOUNT_LOW_RESERVE);
             case -4: return Create(CreateAccountResultCodeEnum.CREATE_ACCOUNT_ALREADY_EXIST);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

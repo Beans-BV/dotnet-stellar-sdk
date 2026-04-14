@@ -46,7 +46,7 @@ public class TransactionPhase
     public static TransactionPhase Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTransactionPhase = new TransactionPhase();
         var discriminant = stream.ReadInt();
@@ -56,10 +56,10 @@ public class TransactionPhase
             case 0:
                 var v0Componentssize = stream.ReadInt();
                 if (v0Componentssize < 0)
-                    throw new IOException("v0Components size " + v0Componentssize + " is negative");
+                    throw new InvalidDataException("v0Components size " + v0Componentssize + " is negative");
                 var v0ComponentsRemainingInputLen = stream.GetRemainingInputLen();
                 if (v0ComponentsRemainingInputLen >= 0 && v0ComponentsRemainingInputLen < v0Componentssize)
-                    throw new IOException("v0Components size " + v0Componentssize + " exceeds remaining input length " + v0ComponentsRemainingInputLen);
+                    throw new InvalidDataException("v0Components size " + v0Componentssize + " exceeds remaining input length " + v0ComponentsRemainingInputLen);
                 decodedTransactionPhase.V0Components = new TxSetComponent[v0Componentssize];
                 for (var i = 0; i < v0Componentssize; i++)
                 {
@@ -70,7 +70,7 @@ public class TransactionPhase
                 decodedTransactionPhase.ParallelTxsComponent = ParallelTxsComponent.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedTransactionPhase;

@@ -48,7 +48,7 @@ public class HostFunctionType
             case 2: return Create(HostFunctionTypeEnum.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM);
             case 3: return Create(HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

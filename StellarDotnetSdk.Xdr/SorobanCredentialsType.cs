@@ -42,7 +42,7 @@ public class SorobanCredentialsType
             case 0: return Create(SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT);
             case 1: return Create(SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

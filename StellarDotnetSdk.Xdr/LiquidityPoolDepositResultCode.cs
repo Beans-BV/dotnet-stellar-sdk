@@ -67,7 +67,7 @@ public class LiquidityPoolDepositResultCode
             case -6: return Create(LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_BAD_PRICE);
             case -7: return Create(LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_POOL_FULL);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

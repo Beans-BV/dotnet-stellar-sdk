@@ -22,14 +22,14 @@ public class Curve25519Secret
     {
         var keysize = encodedCurve25519Secret.Key.Length;
         if (keysize != 32)
-            throw new IOException("key size " + keysize + " does not match fixed size 32");
+            throw new ArgumentException("key size " + keysize + " does not match fixed size 32");
         stream.Write(encodedCurve25519Secret.Key, 0, keysize);
     }
 
     public static Curve25519Secret Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedCurve25519Secret = new Curve25519Secret();
         var keysize = 32;

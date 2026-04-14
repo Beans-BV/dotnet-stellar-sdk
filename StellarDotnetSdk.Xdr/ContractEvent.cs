@@ -56,7 +56,7 @@ public class ContractEvent
     public static ContractEvent Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedContractEvent = new ContractEvent();
         decodedContractEvent.Ext = ExtensionPoint.Decode(stream, maxDepth);
@@ -95,7 +95,7 @@ public class ContractEvent
         public static ContractEventBody Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new IOException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached");
             maxDepth -= 1;
             var decodedContractEventBody = new ContractEventBody();
             var discriminant = stream.ReadInt();
@@ -106,7 +106,7 @@ public class ContractEvent
                     decodedContractEventBody.V0 = ContractEventV0.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new IOException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
             }
 
             return decodedContractEventBody;
@@ -136,15 +136,15 @@ public class ContractEvent
             public static ContractEventV0 Decode(XdrDataInputStream stream, int maxDepth)
             {
                 if (maxDepth <= 0)
-                    throw new IOException("Maximum decoding depth reached");
+                    throw new InvalidDataException("Maximum decoding depth reached");
                 maxDepth -= 1;
                 var decodedContractEventV0 = new ContractEventV0();
                 var topicssize = stream.ReadInt();
                 if (topicssize < 0)
-                    throw new IOException("topics size " + topicssize + " is negative");
+                    throw new InvalidDataException("topics size " + topicssize + " is negative");
                 var topicsRemainingInputLen = stream.GetRemainingInputLen();
                 if (topicsRemainingInputLen >= 0 && topicsRemainingInputLen < topicssize)
-                    throw new IOException("topics size " + topicssize + " exceeds remaining input length " + topicsRemainingInputLen);
+                    throw new InvalidDataException("topics size " + topicssize + " exceeds remaining input length " + topicsRemainingInputLen);
                 decodedContractEventV0.Topics = new SCVal[topicssize];
                 for (var i = 0; i < topicssize; i++)
                 {

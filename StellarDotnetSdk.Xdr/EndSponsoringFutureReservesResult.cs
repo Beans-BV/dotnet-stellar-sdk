@@ -37,7 +37,7 @@ public class EndSponsoringFutureReservesResult
     public static EndSponsoringFutureReservesResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedEndSponsoringFutureReservesResult = new EndSponsoringFutureReservesResult();
         var discriminant = EndSponsoringFutureReservesResultCode.Decode(stream, maxDepth);
@@ -49,7 +49,7 @@ public class EndSponsoringFutureReservesResult
             case EndSponsoringFutureReservesResultCode.EndSponsoringFutureReservesResultCodeEnum.END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedEndSponsoringFutureReservesResult;

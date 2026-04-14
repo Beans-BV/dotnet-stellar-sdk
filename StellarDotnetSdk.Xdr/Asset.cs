@@ -49,7 +49,7 @@ public class Asset
     public static Asset Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedAsset = new Asset();
         var discriminant = AssetType.Decode(stream, maxDepth);
@@ -65,7 +65,7 @@ public class Asset
                 decodedAsset.AlphaNum12 = AlphaNum12.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedAsset;

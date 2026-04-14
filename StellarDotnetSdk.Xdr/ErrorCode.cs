@@ -51,7 +51,7 @@ public class ErrorCode
             case 3: return Create(ErrorCodeEnum.ERR_AUTH);
             case 4: return Create(ErrorCodeEnum.ERR_LOAD);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

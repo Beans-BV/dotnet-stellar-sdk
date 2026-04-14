@@ -48,7 +48,7 @@ public class SignerKeyType
             case 2: return Create(SignerKeyTypeEnum.SIGNER_KEY_TYPE_HASH_X);
             case 3: return Create(SignerKeyTypeEnum.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

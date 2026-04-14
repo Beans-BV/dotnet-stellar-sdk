@@ -47,7 +47,7 @@ public class InvokeHostFunctionResult
     public static InvokeHostFunctionResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedInvokeHostFunctionResult = new InvokeHostFunctionResult();
         var discriminant = InvokeHostFunctionResultCode.Decode(stream, maxDepth);
@@ -64,7 +64,7 @@ public class InvokeHostFunctionResult
             case InvokeHostFunctionResultCode.InvokeHostFunctionResultCodeEnum.INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedInvokeHostFunctionResult;

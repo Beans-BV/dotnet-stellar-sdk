@@ -41,7 +41,7 @@ public class SCSpecUDTUnionCaseV0
     public static SCSpecUDTUnionCaseV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSCSpecUDTUnionCaseV0 = new SCSpecUDTUnionCaseV0();
         var discriminant = SCSpecUDTUnionCaseV0Kind.Decode(stream, maxDepth);
@@ -55,7 +55,7 @@ public class SCSpecUDTUnionCaseV0
                 decodedSCSpecUDTUnionCaseV0.TupleCase = SCSpecUDTUnionCaseTupleV0.Decode(stream, maxDepth);
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedSCSpecUDTUnionCaseV0;

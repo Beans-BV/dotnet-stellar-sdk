@@ -51,7 +51,7 @@ public class AccountMergeResult
     public static AccountMergeResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedAccountMergeResult = new AccountMergeResult();
         var discriminant = AccountMergeResultCode.Decode(stream, maxDepth);
@@ -70,7 +70,7 @@ public class AccountMergeResult
             case AccountMergeResultCode.AccountMergeResultCodeEnum.ACCOUNT_MERGE_IS_SPONSOR:
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedAccountMergeResult;

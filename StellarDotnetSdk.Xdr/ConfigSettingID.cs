@@ -87,7 +87,7 @@ public class ConfigSettingID
             case 15: return Create(ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0);
             case 16: return Create(ConfigSettingIDEnum.CONFIG_SETTING_SCP_TIMING);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

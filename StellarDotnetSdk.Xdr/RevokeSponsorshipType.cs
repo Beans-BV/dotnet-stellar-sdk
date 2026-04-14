@@ -42,7 +42,7 @@ public class RevokeSponsorshipType
             case 0: return Create(RevokeSponsorshipTypeEnum.REVOKE_SPONSORSHIP_LEDGER_ENTRY);
             case 1: return Create(RevokeSponsorshipTypeEnum.REVOKE_SPONSORSHIP_SIGNER);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

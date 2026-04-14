@@ -51,16 +51,16 @@ public class SorobanTransactionMeta
     public static SorobanTransactionMeta Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedSorobanTransactionMeta = new SorobanTransactionMeta();
         decodedSorobanTransactionMeta.Ext = SorobanTransactionMetaExt.Decode(stream, maxDepth);
         var eventssize = stream.ReadInt();
         if (eventssize < 0)
-            throw new IOException("events size " + eventssize + " is negative");
+            throw new InvalidDataException("events size " + eventssize + " is negative");
         var eventsRemainingInputLen = stream.GetRemainingInputLen();
         if (eventsRemainingInputLen >= 0 && eventsRemainingInputLen < eventssize)
-            throw new IOException("events size " + eventssize + " exceeds remaining input length " + eventsRemainingInputLen);
+            throw new InvalidDataException("events size " + eventssize + " exceeds remaining input length " + eventsRemainingInputLen);
         decodedSorobanTransactionMeta.Events = new ContractEvent[eventssize];
         for (var i = 0; i < eventssize; i++)
         {
@@ -69,10 +69,10 @@ public class SorobanTransactionMeta
         decodedSorobanTransactionMeta.ReturnValue = SCVal.Decode(stream, maxDepth);
         var diagnosticEventssize = stream.ReadInt();
         if (diagnosticEventssize < 0)
-            throw new IOException("diagnosticEvents size " + diagnosticEventssize + " is negative");
+            throw new InvalidDataException("diagnosticEvents size " + diagnosticEventssize + " is negative");
         var diagnosticEventsRemainingInputLen = stream.GetRemainingInputLen();
         if (diagnosticEventsRemainingInputLen >= 0 && diagnosticEventsRemainingInputLen < diagnosticEventssize)
-            throw new IOException("diagnosticEvents size " + diagnosticEventssize + " exceeds remaining input length " + diagnosticEventsRemainingInputLen);
+            throw new InvalidDataException("diagnosticEvents size " + diagnosticEventssize + " exceeds remaining input length " + diagnosticEventsRemainingInputLen);
         decodedSorobanTransactionMeta.DiagnosticEvents = new DiagnosticEvent[diagnosticEventssize];
         for (var i = 0; i < diagnosticEventssize; i++)
         {
