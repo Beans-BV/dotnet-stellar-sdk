@@ -28,7 +28,7 @@ public class Uint513
     {
         var uint513size = encodedUint513.InnerValue.Length;
         if (uint513size > 64)
-            throw new IOException("uint513 size " + uint513size + " exceeds max size 64");
+            throw new ArgumentException("uint513 size " + uint513size + " exceeds max size 64");
         stream.WriteInt(uint513size);
         stream.Write(encodedUint513.InnerValue, 0, uint513size);
     }
@@ -36,17 +36,17 @@ public class Uint513
     public static Uint513 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedUint513 = new Uint513();
         var uint513size = stream.ReadInt();
         if (uint513size < 0)
-            throw new IOException("uint513 size " + uint513size + " is negative");
+            throw new InvalidDataException("uint513 size " + uint513size + " is negative");
         if (uint513size > 64)
-            throw new IOException("uint513 size " + uint513size + " exceeds max size 64");
+            throw new InvalidDataException("uint513 size " + uint513size + " exceeds max size 64");
         var uint513RemainingInputLen = stream.GetRemainingInputLen();
         if (uint513RemainingInputLen >= 0 && uint513RemainingInputLen < uint513size)
-            throw new IOException("uint513 size " + uint513size + " exceeds remaining input length " + uint513RemainingInputLen);
+            throw new InvalidDataException("uint513 size " + uint513size + " exceeds remaining input length " + uint513RemainingInputLen);
         decodedUint513.InnerValue = new byte[uint513size];
         stream.Read(decodedUint513.InnerValue, 0, uint513size);
         return decodedUint513;

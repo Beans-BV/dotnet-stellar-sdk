@@ -44,7 +44,7 @@ public class UnionKey
             case 2: return Create(UnionKeyEnum.TWO);
             case 3: return Create(UnionKeyEnum.OFFER);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

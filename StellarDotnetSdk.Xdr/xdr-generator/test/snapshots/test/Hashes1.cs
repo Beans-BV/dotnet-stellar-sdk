@@ -28,7 +28,7 @@ public class Hashes1
     {
         var Hashes1size = encodedHashes1.InnerValue.Length;
         if (Hashes1size != 12)
-            throw new IOException("Hashes1 size " + Hashes1size + " does not match fixed size 12");
+            throw new ArgumentException("Hashes1 size " + Hashes1size + " does not match fixed size 12");
         for (var i = 0; i < Hashes1size; i++)
         {
             Hash.Encode(stream, encodedHashes1.InnerValue[i]);
@@ -38,7 +38,7 @@ public class Hashes1
     public static Hashes1 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedHashes1 = new Hashes1();
         var Hashes1size = 12;

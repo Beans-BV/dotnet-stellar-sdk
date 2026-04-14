@@ -48,7 +48,7 @@ public class MyUnion
     public static MyUnion Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedMyUnion = new MyUnion();
         var discriminant = UnionKey.Decode(stream, maxDepth);
@@ -61,10 +61,10 @@ public class MyUnion
             case UnionKey.UnionKeyEnum.MULTI:
                 var thingssize = stream.ReadInt();
                 if (thingssize < 0)
-                    throw new IOException("things size " + thingssize + " is negative");
+                    throw new InvalidDataException("things size " + thingssize + " is negative");
                 var thingsRemainingInputLen = stream.GetRemainingInputLen();
                 if (thingsRemainingInputLen >= 0 && thingsRemainingInputLen < thingssize)
-                    throw new IOException("things size " + thingssize + " exceeds remaining input length " + thingsRemainingInputLen);
+                    throw new InvalidDataException("things size " + thingssize + " exceeds remaining input length " + thingsRemainingInputLen);
                 decodedMyUnion.Things = new Multi[thingssize];
                 for (var i = 0; i < thingssize; i++)
                 {
@@ -72,7 +72,7 @@ public class MyUnion
                 }
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedMyUnion;

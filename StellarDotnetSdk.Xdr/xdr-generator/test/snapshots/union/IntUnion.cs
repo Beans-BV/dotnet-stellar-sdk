@@ -47,7 +47,7 @@ public class IntUnion
     public static IntUnion Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedIntUnion = new IntUnion();
         var discriminant = stream.ReadInt();
@@ -60,10 +60,10 @@ public class IntUnion
             case 1:
                 var thingssize = stream.ReadInt();
                 if (thingssize < 0)
-                    throw new IOException("things size " + thingssize + " is negative");
+                    throw new InvalidDataException("things size " + thingssize + " is negative");
                 var thingsRemainingInputLen = stream.GetRemainingInputLen();
                 if (thingsRemainingInputLen >= 0 && thingsRemainingInputLen < thingssize)
-                    throw new IOException("things size " + thingssize + " exceeds remaining input length " + thingsRemainingInputLen);
+                    throw new InvalidDataException("things size " + thingssize + " exceeds remaining input length " + thingsRemainingInputLen);
                 decodedIntUnion.Things = new Multi[thingssize];
                 for (var i = 0; i < thingssize; i++)
                 {
@@ -71,7 +71,7 @@ public class IntUnion
                 }
                 break;
             default:
-                throw new IOException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
         }
 
         return decodedIntUnion;

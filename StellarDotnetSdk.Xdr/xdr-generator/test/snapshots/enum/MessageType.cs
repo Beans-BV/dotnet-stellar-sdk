@@ -84,7 +84,7 @@ public class MessageType
             case 12: return Create(MessageTypeEnum.FBA_QUORUMSET);
             case 13: return Create(MessageTypeEnum.FBA_MESSAGE);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

@@ -32,7 +32,7 @@ public class MyStruct
         Int64.Encode(stream, encodedMyStruct.ABigInt);
         var someOpaquesize = encodedMyStruct.SomeOpaque.Length;
         if (someOpaquesize != 10)
-            throw new IOException("someOpaque size " + someOpaquesize + " does not match fixed size 10");
+            throw new ArgumentException("someOpaque size " + someOpaquesize + " does not match fixed size 10");
         stream.Write(encodedMyStruct.SomeOpaque, 0, someOpaquesize);
         stream.WriteString(encodedMyStruct.SomeString);
         stream.WriteString(encodedMyStruct.MaxString);
@@ -41,7 +41,7 @@ public class MyStruct
     public static MyStruct Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedMyStruct = new MyStruct();
         decodedMyStruct.SomeInt = stream.ReadInt();

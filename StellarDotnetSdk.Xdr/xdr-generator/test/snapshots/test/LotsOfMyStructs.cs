@@ -31,15 +31,15 @@ public class LotsOfMyStructs
     public static LotsOfMyStructs Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedLotsOfMyStructs = new LotsOfMyStructs();
         var memberssize = stream.ReadInt();
         if (memberssize < 0)
-            throw new IOException("members size " + memberssize + " is negative");
+            throw new InvalidDataException("members size " + memberssize + " is negative");
         var membersRemainingInputLen = stream.GetRemainingInputLen();
         if (membersRemainingInputLen >= 0 && membersRemainingInputLen < memberssize)
-            throw new IOException("members size " + memberssize + " exceeds remaining input length " + membersRemainingInputLen);
+            throw new InvalidDataException("members size " + memberssize + " exceeds remaining input length " + membersRemainingInputLen);
         decodedLotsOfMyStructs.Members = new MyStruct[memberssize];
         for (var i = 0; i < memberssize; i++)
         {

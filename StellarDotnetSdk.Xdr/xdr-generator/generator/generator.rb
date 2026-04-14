@@ -171,7 +171,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
         end
         out.puts 'default:'
         out.indent do
-          out.puts 'throw new IOException("Unknown enum value: " + value);'
+          out.puts 'throw new InvalidDataException("Unknown enum value: " + value);'
         end
       end
       out.puts '}'
@@ -219,7 +219,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
     out.indent do
       out.puts 'if (maxDepth <= 0)'
       out.indent do
-        out.puts 'throw new IOException("Maximum decoding depth reached");'
+        out.puts 'throw new InvalidDataException("Maximum decoding depth reached");'
       end
       out.puts 'maxDepth -= 1;'
       out.puts "var decoded#{name struct} = new #{name struct}();"
@@ -273,7 +273,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
     out.indent do
       out.puts 'if (maxDepth <= 0)'
       out.indent do
-        out.puts 'throw new IOException("Maximum decoding depth reached");'
+        out.puts 'throw new InvalidDataException("Maximum decoding depth reached");'
       end
       out.puts 'maxDepth -= 1;'
       out.puts "var decoded#{name typedef} = new #{name typedef}();"
@@ -360,7 +360,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
     out.indent do
       out.puts 'if (maxDepth <= 0)'
       out.indent do
-        out.puts 'throw new IOException("Maximum decoding depth reached");'
+        out.puts 'throw new InvalidDataException("Maximum decoding depth reached");'
       end
       out.puts 'maxDepth -= 1;'
       out.puts "var decoded#{name union} = new #{name union}();"
@@ -401,7 +401,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
         unless has_default_arm
           out.puts 'default:'
           out.indent do
-            out.puts 'throw new IOException("Unknown discriminant value: " + discriminant);'
+            out.puts 'throw new InvalidDataException("Unknown discriminant value: " + discriminant);'
           end
         end
       end
@@ -481,14 +481,14 @@ class CsharpGenerator < Xdrgen::Generators::Base
       if member.declaration.fixed?
         out.puts "if (#{member.name}size != #{convert_constant member.declaration.size})"
         out.indent do
-          out.puts "throw new IOException(\"#{member.name} size \" + #{member.name}size + \" does not match fixed size #{member.declaration.size}\");"
+          out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" does not match fixed size #{member.declaration.size}\");"
         end
       else
         max_size = member.declaration.resolved_size
         if max_size
           out.puts "if (#{member.name}size > #{convert_constant max_size})"
           out.indent do
-            out.puts "throw new IOException(\"#{member.name} size \" + #{member.name}size + \" exceeds max size #{max_size}\");"
+            out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" exceeds max size #{max_size}\");"
           end
         end
         out.puts "stream.WriteInt(#{member.name}size);"
@@ -499,14 +499,14 @@ class CsharpGenerator < Xdrgen::Generators::Base
       if member.declaration.fixed?
         out.puts "if (#{member.name}size != #{convert_constant member.declaration.size})"
         out.indent do
-          out.puts "throw new IOException(\"#{member.name} size \" + #{member.name}size + \" does not match fixed size #{member.declaration.size}\");"
+          out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" does not match fixed size #{member.declaration.size}\");"
         end
       else
         max_size = member.declaration.resolved_size
         if max_size
           out.puts "if (#{member.name}size > #{convert_constant max_size})"
           out.indent do
-            out.puts "throw new IOException(\"#{member.name} size \" + #{member.name}size + \" exceeds max size #{max_size}\");"
+            out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" exceeds max size #{max_size}\");"
           end
         end
         out.puts "stream.WriteInt(#{member.name}size);"
@@ -556,14 +556,14 @@ class CsharpGenerator < Xdrgen::Generators::Base
       if member.declaration.fixed?
         out.puts "if (#{member.name}size != #{convert_constant member.declaration.size})"
         out.indent do
-          out.puts "throw new IOException(\"#{member.name} size \" + #{member.name}size + \" does not match fixed size #{member.declaration.size}\");"
+          out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" does not match fixed size #{member.declaration.size}\");"
         end
       else
         max_size = member.declaration.resolved_size
         if max_size
           out.puts "if (#{member.name}size > #{convert_constant max_size})"
           out.indent do
-            out.puts "throw new IOException(\"#{member.name} size \" + #{member.name}size + \" exceeds max size #{max_size}\");"
+            out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" exceeds max size #{max_size}\");"
           end
         end
         out.puts "stream.WriteInt(#{member.name}size);"
@@ -574,14 +574,14 @@ class CsharpGenerator < Xdrgen::Generators::Base
       if member.declaration.fixed?
         out.puts "if (#{member.name}size != #{convert_constant member.declaration.size})"
         out.indent do
-          out.puts "throw new IOException(\"#{member.name} size \" + #{member.name}size + \" does not match fixed size #{member.declaration.size}\");"
+          out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" does not match fixed size #{member.declaration.size}\");"
         end
       else
         max_size = member.declaration.resolved_size
         if max_size
           out.puts "if (#{member.name}size > #{convert_constant max_size})"
           out.indent do
-            out.puts "throw new IOException(\"#{member.name} size \" + #{member.name}size + \" exceeds max size #{max_size}\");"
+            out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" exceeds max size #{max_size}\");"
           end
         end
         out.puts "stream.WriteInt(#{member.name}size);"
@@ -733,19 +733,19 @@ class CsharpGenerator < Xdrgen::Generators::Base
   def emit_decode_size_validation(member_name, declaration, out)
     out.puts "if (#{member_name}size < 0)"
     out.indent do
-      out.puts "throw new IOException(\"#{member_name} size \" + #{member_name}size + \" is negative\");"
+      out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{member_name}size + \" is negative\");"
     end
     max_size = declaration.resolved_size
     if max_size
       out.puts "if (#{member_name}size > #{convert_constant max_size})"
       out.indent do
-        out.puts "throw new IOException(\"#{member_name} size \" + #{member_name}size + \" exceeds max size #{max_size}\");"
+        out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{member_name}size + \" exceeds max size #{max_size}\");"
       end
     end
     out.puts "var #{member_name}RemainingInputLen = stream.GetRemainingInputLen();"
     out.puts "if (#{member_name}RemainingInputLen >= 0 && #{member_name}RemainingInputLen < #{member_name}size)"
     out.indent do
-      out.puts "throw new IOException(\"#{member_name} size \" + #{member_name}size + \" exceeds remaining input length \" + #{member_name}RemainingInputLen);"
+      out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{member_name}size + \" exceeds remaining input length \" + #{member_name}RemainingInputLen);"
     end
   end
 

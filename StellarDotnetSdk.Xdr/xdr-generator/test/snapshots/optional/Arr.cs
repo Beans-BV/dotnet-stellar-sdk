@@ -28,7 +28,7 @@ public class Arr
     {
         var Arrsize = encodedArr.InnerValue.Length;
         if (Arrsize != 2)
-            throw new IOException("Arr size " + Arrsize + " does not match fixed size 2");
+            throw new ArgumentException("Arr size " + Arrsize + " does not match fixed size 2");
         for (var i = 0; i < Arrsize; i++)
         {
             stream.WriteInt(encodedArr.InnerValue[i]);
@@ -38,7 +38,7 @@ public class Arr
     public static Arr Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedArr = new Arr();
         var Arrsize = 2;

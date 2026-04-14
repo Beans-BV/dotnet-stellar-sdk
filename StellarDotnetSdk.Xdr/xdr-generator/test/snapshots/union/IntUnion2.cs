@@ -32,7 +32,7 @@ public class IntUnion2
     public static IntUnion2 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedIntUnion2 = new IntUnion2();
         decodedIntUnion2.InnerValue = IntUnion.Decode(stream, maxDepth);

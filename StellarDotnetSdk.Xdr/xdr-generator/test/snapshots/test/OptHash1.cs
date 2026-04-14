@@ -40,7 +40,7 @@ public class OptHash1
     public static OptHash1 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedOptHash1 = new OptHash1();
         var OptHash1Present = stream.ReadInt();

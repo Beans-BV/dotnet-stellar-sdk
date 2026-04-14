@@ -39,7 +39,7 @@ public class AccountFlags
         {
             case 1: return Create(AccountFlagsEnum.AUTH_REQUIRED_FLAG);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

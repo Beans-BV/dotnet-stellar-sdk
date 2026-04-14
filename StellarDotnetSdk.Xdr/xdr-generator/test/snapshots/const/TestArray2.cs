@@ -28,7 +28,7 @@ public class TestArray2
     {
         var TestArray2size = encodedTestArray2.InnerValue.Length;
         if (TestArray2size > 1)
-            throw new IOException("TestArray2 size " + TestArray2size + " exceeds max size 1");
+            throw new ArgumentException("TestArray2 size " + TestArray2size + " exceeds max size 1");
         stream.WriteInt(TestArray2size);
         for (var i = 0; i < TestArray2size; i++)
         {
@@ -39,17 +39,17 @@ public class TestArray2
     public static TestArray2 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedTestArray2 = new TestArray2();
         var TestArray2size = stream.ReadInt();
         if (TestArray2size < 0)
-            throw new IOException("TestArray2 size " + TestArray2size + " is negative");
+            throw new InvalidDataException("TestArray2 size " + TestArray2size + " is negative");
         if (TestArray2size > 1)
-            throw new IOException("TestArray2 size " + TestArray2size + " exceeds max size 1");
+            throw new InvalidDataException("TestArray2 size " + TestArray2size + " exceeds max size 1");
         var TestArray2RemainingInputLen = stream.GetRemainingInputLen();
         if (TestArray2RemainingInputLen >= 0 && TestArray2RemainingInputLen < TestArray2size)
-            throw new IOException("TestArray2 size " + TestArray2size + " exceeds remaining input length " + TestArray2RemainingInputLen);
+            throw new InvalidDataException("TestArray2 size " + TestArray2size + " exceeds remaining input length " + TestArray2RemainingInputLen);
         decodedTestArray2.InnerValue = new int[TestArray2size];
         for (var i = 0; i < TestArray2size; i++)
         {

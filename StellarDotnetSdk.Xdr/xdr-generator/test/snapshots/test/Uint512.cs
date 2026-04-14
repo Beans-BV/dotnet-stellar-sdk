@@ -28,14 +28,14 @@ public class Uint512
     {
         var uint512size = encodedUint512.InnerValue.Length;
         if (uint512size != 64)
-            throw new IOException("uint512 size " + uint512size + " does not match fixed size 64");
+            throw new ArgumentException("uint512 size " + uint512size + " does not match fixed size 64");
         stream.Write(encodedUint512.InnerValue, 0, uint512size);
     }
 
     public static Uint512 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new IOException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached");
         maxDepth -= 1;
         var decodedUint512 = new Uint512();
         var uint512size = 64;

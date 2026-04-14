@@ -41,7 +41,7 @@ public class UnionKey
             case 0: return Create(UnionKeyEnum.ERROR);
             case 1: return Create(UnionKeyEnum.MULTI);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 

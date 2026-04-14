@@ -44,7 +44,7 @@ public class Color3
             case 2: return Create(Color3Enum.RED_2_TWO);
             case 3: return Create(Color3Enum.RED_3);
             default:
-                throw new IOException("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
     }
 
