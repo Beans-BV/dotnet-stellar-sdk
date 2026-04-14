@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -40,8 +41,9 @@ public class CreateClaimableBalanceResultCode
         };
     }
 
-    public static CreateClaimableBalanceResultCode Decode(XdrDataInputStream stream)
+    public static CreateClaimableBalanceResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -52,8 +54,13 @@ public class CreateClaimableBalanceResultCode
             case -4: return Create(CreateClaimableBalanceResultCodeEnum.CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED);
             case -5: return Create(CreateClaimableBalanceResultCodeEnum.CREATE_CLAIMABLE_BALANCE_UNDERFUNDED);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static CreateClaimableBalanceResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, CreateClaimableBalanceResultCode value)

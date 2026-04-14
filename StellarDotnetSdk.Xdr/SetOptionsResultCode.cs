@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -53,8 +54,9 @@ public class SetOptionsResultCode
         };
     }
 
-    public static SetOptionsResultCode Decode(XdrDataInputStream stream)
+    public static SetOptionsResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -70,8 +72,13 @@ public class SetOptionsResultCode
             case -9: return Create(SetOptionsResultCodeEnum.SET_OPTIONS_INVALID_HOME_DOMAIN);
             case -10: return Create(SetOptionsResultCodeEnum.SET_OPTIONS_AUTH_REVOCABLE_REQUIRED);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static SetOptionsResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, SetOptionsResultCode value)

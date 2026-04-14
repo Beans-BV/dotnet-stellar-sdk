@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -47,8 +48,9 @@ public class AccountMergeResultCode
         };
     }
 
-    public static AccountMergeResultCode Decode(XdrDataInputStream stream)
+    public static AccountMergeResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -61,8 +63,13 @@ public class AccountMergeResultCode
             case -6: return Create(AccountMergeResultCodeEnum.ACCOUNT_MERGE_DEST_FULL);
             case -7: return Create(AccountMergeResultCodeEnum.ACCOUNT_MERGE_IS_SPONSOR);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static AccountMergeResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, AccountMergeResultCode value)

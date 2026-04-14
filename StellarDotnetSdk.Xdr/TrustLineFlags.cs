@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -39,8 +40,9 @@ public class TrustLineFlags
         };
     }
 
-    public static TrustLineFlags Decode(XdrDataInputStream stream)
+    public static TrustLineFlags Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -48,8 +50,13 @@ public class TrustLineFlags
             case 2: return Create(TrustLineFlagsEnum.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG);
             case 4: return Create(TrustLineFlagsEnum.TRUSTLINE_CLAWBACK_ENABLED_FLAG);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static TrustLineFlags Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, TrustLineFlags value)

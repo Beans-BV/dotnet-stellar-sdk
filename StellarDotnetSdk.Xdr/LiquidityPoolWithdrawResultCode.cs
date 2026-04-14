@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -46,8 +47,9 @@ public class LiquidityPoolWithdrawResultCode
         };
     }
 
-    public static LiquidityPoolWithdrawResultCode Decode(XdrDataInputStream stream)
+    public static LiquidityPoolWithdrawResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -58,8 +60,13 @@ public class LiquidityPoolWithdrawResultCode
             case -4: return Create(LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_LINE_FULL);
             case -5: return Create(LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static LiquidityPoolWithdrawResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, LiquidityPoolWithdrawResultCode value)

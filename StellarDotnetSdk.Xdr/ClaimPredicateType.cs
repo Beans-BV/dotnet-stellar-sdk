@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -40,8 +41,9 @@ public class ClaimPredicateType
         };
     }
 
-    public static ClaimPredicateType Decode(XdrDataInputStream stream)
+    public static ClaimPredicateType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -52,8 +54,13 @@ public class ClaimPredicateType
             case 4: return Create(ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME);
             case 5: return Create(ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_RELATIVE_TIME);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static ClaimPredicateType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, ClaimPredicateType value)

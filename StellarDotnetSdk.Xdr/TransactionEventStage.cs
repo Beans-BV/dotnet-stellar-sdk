@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -39,8 +40,9 @@ public class TransactionEventStage
         };
     }
 
-    public static TransactionEventStage Decode(XdrDataInputStream stream)
+    public static TransactionEventStage Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -48,8 +50,13 @@ public class TransactionEventStage
             case 1: return Create(TransactionEventStageEnum.TRANSACTION_EVENT_STAGE_AFTER_TX);
             case 2: return Create(TransactionEventStageEnum.TRANSACTION_EVENT_STAGE_AFTER_ALL_TXS);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static TransactionEventStage Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, TransactionEventStage value)

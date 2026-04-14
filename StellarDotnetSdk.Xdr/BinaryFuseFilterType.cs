@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -34,8 +35,9 @@ public class BinaryFuseFilterType
         };
     }
 
-    public static BinaryFuseFilterType Decode(XdrDataInputStream stream)
+    public static BinaryFuseFilterType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -43,8 +45,13 @@ public class BinaryFuseFilterType
             case 1: return Create(BinaryFuseFilterTypeEnum.BINARY_FUSE_FILTER_16_BIT);
             case 2: return Create(BinaryFuseFilterTypeEnum.BINARY_FUSE_FILTER_32_BIT);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static BinaryFuseFilterType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, BinaryFuseFilterType value)

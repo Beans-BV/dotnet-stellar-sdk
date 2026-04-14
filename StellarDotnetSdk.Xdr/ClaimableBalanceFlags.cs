@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -32,15 +33,21 @@ public class ClaimableBalanceFlags
         };
     }
 
-    public static ClaimableBalanceFlags Decode(XdrDataInputStream stream)
+    public static ClaimableBalanceFlags Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
             case 1: return Create(ClaimableBalanceFlagsEnum.CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static ClaimableBalanceFlags Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, ClaimableBalanceFlags value)

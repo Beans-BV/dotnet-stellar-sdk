@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -38,8 +39,9 @@ public class SCAddressType
         };
     }
 
-    public static SCAddressType Decode(XdrDataInputStream stream)
+    public static SCAddressType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -49,8 +51,13 @@ public class SCAddressType
             case 3: return Create(SCAddressTypeEnum.SC_ADDRESS_TYPE_CLAIMABLE_BALANCE);
             case 4: return Create(SCAddressTypeEnum.SC_ADDRESS_TYPE_LIQUIDITY_POOL);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static SCAddressType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, SCAddressType value)

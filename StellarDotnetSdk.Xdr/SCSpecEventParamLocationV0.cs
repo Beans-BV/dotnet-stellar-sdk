@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -32,16 +33,22 @@ public class SCSpecEventParamLocationV0
         };
     }
 
-    public static SCSpecEventParamLocationV0 Decode(XdrDataInputStream stream)
+    public static SCSpecEventParamLocationV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
             case 0: return Create(SCSpecEventParamLocationV0Enum.SC_SPEC_EVENT_PARAM_LOCATION_DATA);
             case 1: return Create(SCSpecEventParamLocationV0Enum.SC_SPEC_EVENT_PARAM_LOCATION_TOPIC_LIST);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static SCSpecEventParamLocationV0 Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, SCSpecEventParamLocationV0 value)

@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -32,16 +33,22 @@ public class RevokeSponsorshipType
         };
     }
 
-    public static RevokeSponsorshipType Decode(XdrDataInputStream stream)
+    public static RevokeSponsorshipType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
             case 0: return Create(RevokeSponsorshipTypeEnum.REVOKE_SPONSORSHIP_LEDGER_ENTRY);
             case 1: return Create(RevokeSponsorshipTypeEnum.REVOKE_SPONSORSHIP_SIGNER);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static RevokeSponsorshipType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, RevokeSponsorshipType value)

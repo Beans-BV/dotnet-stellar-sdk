@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -30,15 +31,21 @@ public class SCEnvMetaKind
         };
     }
 
-    public static SCEnvMetaKind Decode(XdrDataInputStream stream)
+    public static SCEnvMetaKind Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
             case 0: return Create(SCEnvMetaKindEnum.SC_ENV_META_KIND_INTERFACE_VERSION);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static SCEnvMetaKind Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, SCEnvMetaKind value)

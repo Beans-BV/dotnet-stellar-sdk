@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -46,8 +47,9 @@ public class AllowTrustResultCode
         };
     }
 
-    public static AllowTrustResultCode Decode(XdrDataInputStream stream)
+    public static AllowTrustResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -59,8 +61,13 @@ public class AllowTrustResultCode
             case -5: return Create(AllowTrustResultCodeEnum.ALLOW_TRUST_SELF_NOT_ALLOWED);
             case -6: return Create(AllowTrustResultCodeEnum.ALLOW_TRUST_LOW_RESERVE);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static AllowTrustResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, AllowTrustResultCode value)

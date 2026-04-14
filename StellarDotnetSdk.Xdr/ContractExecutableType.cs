@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -32,16 +33,22 @@ public class ContractExecutableType
         };
     }
 
-    public static ContractExecutableType Decode(XdrDataInputStream stream)
+    public static ContractExecutableType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
             case 0: return Create(ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_WASM);
             case 1: return Create(ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_STELLAR_ASSET);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static ContractExecutableType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, ContractExecutableType value)

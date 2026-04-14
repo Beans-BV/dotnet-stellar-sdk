@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -39,8 +40,9 @@ public class ExtendFootprintTTLResultCode
         };
     }
 
-    public static ExtendFootprintTTLResultCode Decode(XdrDataInputStream stream)
+    public static ExtendFootprintTTLResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -49,8 +51,13 @@ public class ExtendFootprintTTLResultCode
             case -2: return Create(ExtendFootprintTTLResultCodeEnum.EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED);
             case -3: return Create(ExtendFootprintTTLResultCodeEnum.EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static ExtendFootprintTTLResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, ExtendFootprintTTLResultCode value)

@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -30,15 +31,21 @@ public class ClaimableBalanceIDType
         };
     }
 
-    public static ClaimableBalanceIDType Decode(XdrDataInputStream stream)
+    public static ClaimableBalanceIDType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
             case 0: return Create(ClaimableBalanceIDTypeEnum.CLAIMABLE_BALANCE_ID_TYPE_V0);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static ClaimableBalanceIDType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, ClaimableBalanceIDType value)

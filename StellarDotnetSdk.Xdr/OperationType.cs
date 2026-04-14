@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -82,8 +83,9 @@ public class OperationType
         };
     }
 
-    public static OperationType Decode(XdrDataInputStream stream)
+    public static OperationType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -115,8 +117,13 @@ public class OperationType
             case 25: return Create(OperationTypeEnum.EXTEND_FOOTPRINT_TTL);
             case 26: return Create(OperationTypeEnum.RESTORE_FOOTPRINT);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static OperationType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, OperationType value)

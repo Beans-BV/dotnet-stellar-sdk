@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -34,16 +35,22 @@ public class BumpSequenceResultCode
         };
     }
 
-    public static BumpSequenceResultCode Decode(XdrDataInputStream stream)
+    public static BumpSequenceResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
             case 0: return Create(BumpSequenceResultCodeEnum.BUMP_SEQUENCE_SUCCESS);
             case -1: return Create(BumpSequenceResultCodeEnum.BUMP_SEQUENCE_BAD_SEQ);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static BumpSequenceResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, BumpSequenceResultCode value)

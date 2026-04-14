@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -84,8 +85,9 @@ public class MessageType
         };
     }
 
-    public static MessageType Decode(XdrDataInputStream stream)
+    public static MessageType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -111,8 +113,13 @@ public class MessageType
             case 23: return Create(MessageTypeEnum.TIME_SLICED_SURVEY_START_COLLECTING);
             case 24: return Create(MessageTypeEnum.TIME_SLICED_SURVEY_STOP_COLLECTING);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static MessageType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, MessageType value)

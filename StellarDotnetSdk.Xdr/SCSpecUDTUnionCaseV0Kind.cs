@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -32,16 +33,22 @@ public class SCSpecUDTUnionCaseV0Kind
         };
     }
 
-    public static SCSpecUDTUnionCaseV0Kind Decode(XdrDataInputStream stream)
+    public static SCSpecUDTUnionCaseV0Kind Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
             case 0: return Create(SCSpecUDTUnionCaseV0KindEnum.SC_SPEC_UDT_UNION_CASE_VOID_V0);
             case 1: return Create(SCSpecUDTUnionCaseV0KindEnum.SC_SPEC_UDT_UNION_CASE_TUPLE_V0);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static SCSpecUDTUnionCaseV0Kind Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, SCSpecUDTUnionCaseV0Kind value)

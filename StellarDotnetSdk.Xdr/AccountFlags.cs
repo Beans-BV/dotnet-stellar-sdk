@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -46,8 +47,9 @@ public class AccountFlags
         };
     }
 
-    public static AccountFlags Decode(XdrDataInputStream stream)
+    public static AccountFlags Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -56,8 +58,13 @@ public class AccountFlags
             case 4: return Create(AccountFlagsEnum.AUTH_IMMUTABLE_FLAG);
             case 8: return Create(AccountFlagsEnum.AUTH_CLAWBACK_ENABLED_FLAG);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static AccountFlags Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, AccountFlags value)

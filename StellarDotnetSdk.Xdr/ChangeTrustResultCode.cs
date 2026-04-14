@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -52,8 +53,9 @@ public class ChangeTrustResultCode
         };
     }
 
-    public static ChangeTrustResultCode Decode(XdrDataInputStream stream)
+    public static ChangeTrustResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -67,8 +69,13 @@ public class ChangeTrustResultCode
             case -7: return Create(ChangeTrustResultCodeEnum.CHANGE_TRUST_CANNOT_DELETE);
             case -8: return Create(ChangeTrustResultCodeEnum.CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static ChangeTrustResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, ChangeTrustResultCode value)

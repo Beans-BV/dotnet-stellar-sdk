@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -66,8 +67,9 @@ public class PathPaymentStrictReceiveResultCode
         };
     }
 
-    public static PathPaymentStrictReceiveResultCode Decode(XdrDataInputStream stream)
+    public static PathPaymentStrictReceiveResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -75,20 +77,23 @@ public class PathPaymentStrictReceiveResultCode
             case -1: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_MALFORMED);
             case -2: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_UNDERFUNDED);
             case -3: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_SRC_NO_TRUST);
-            case -4:
-                return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_SRC_NOT_AUTHORIZED);
+            case -4: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_SRC_NOT_AUTHORIZED);
             case -5: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_NO_DESTINATION);
             case -6: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_NO_TRUST);
             case -7: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_NOT_AUTHORIZED);
             case -8: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_LINE_FULL);
             case -9: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_NO_ISSUER);
             case -10: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_TOO_FEW_OFFERS);
-            case -11:
-                return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_OFFER_CROSS_SELF);
+            case -11: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_OFFER_CROSS_SELF);
             case -12: return Create(PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static PathPaymentStrictReceiveResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, PathPaymentStrictReceiveResultCode value)

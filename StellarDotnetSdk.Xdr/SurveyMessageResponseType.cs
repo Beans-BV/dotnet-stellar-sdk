@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -30,15 +31,21 @@ public class SurveyMessageResponseType
         };
     }
 
-    public static SurveyMessageResponseType Decode(XdrDataInputStream stream)
+    public static SurveyMessageResponseType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
             case 2: return Create(SurveyMessageResponseTypeEnum.SURVEY_TOPOLOGY_RESPONSE_V2);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static SurveyMessageResponseType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, SurveyMessageResponseType value)

@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -51,8 +52,9 @@ public class PaymentResultCode
         };
     }
 
-    public static PaymentResultCode Decode(XdrDataInputStream stream)
+    public static PaymentResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
         var value = stream.ReadInt();
         switch (value)
         {
@@ -67,8 +69,13 @@ public class PaymentResultCode
             case -8: return Create(PaymentResultCodeEnum.PAYMENT_LINE_FULL);
             case -9: return Create(PaymentResultCodeEnum.PAYMENT_NO_ISSUER);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new IOException("Unknown enum value: " + value);
         }
+    }
+
+    public static PaymentResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, PaymentResultCode value)
