@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -253,5 +254,35 @@ public class OperationResponseJsonConverterTest
 
         // Act & Assert
         JsonSerializer.Deserialize<OperationResponse>(json, _options);
+    }
+
+    /// <summary>
+    ///     Verifies that the converter's static FrozenDictionary dispatch table registers exactly the expected
+    ///     27 operation discriminators (type_i 0-26). Guards against accidental entry removal when the static
+    ///     lookup table is edited.
+    /// </summary>
+    [TestMethod]
+    public void Deserializers_ContainsAllExpectedTypeIDiscriminators()
+    {
+        // Arrange - access the private FrozenDictionary dispatch table via reflection.
+        var deserializersField = typeof(OperationResponseJsonConverter)
+            .GetField("Deserializers",
+                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+        Assert.IsNotNull(deserializersField, "Deserializers dispatch table field not found.");
+
+        var dispatchTable = deserializersField.GetValue(null);
+        Assert.IsNotNull(dispatchTable, "Deserializers dispatch table is null.");
+
+        // Assert every type_i 0..26 has a dispatch entry.
+        var containsKey = dispatchTable.GetType().GetMethod("ContainsKey")!;
+        for (var typeI = 0; typeI <= 26; typeI++)
+        {
+            var present = (bool)containsKey.Invoke(dispatchTable, new object[] { typeI })!;
+            Assert.IsTrue(present, $"Expected dispatch entry for type_i={typeI}, but none was registered.");
+        }
+
+        // Also sanity-check the count so new types can't be silently added without updating this guard.
+        var countProperty = dispatchTable.GetType().GetProperty("Count")!;
+        Assert.AreEqual(27, countProperty.GetValue(dispatchTable));
     }
 }
