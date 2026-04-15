@@ -1,4 +1,6 @@
+using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
 
@@ -155,10 +157,56 @@ public class JsonOptionsTest
         Assert.AreEqual("test", result.Description);
     }
 
+    /// <summary>
+    ///     The shared options instance reports itself as read-only.
+    /// </summary>
+    [TestMethod]
+    public void DefaultOptions_IsReadOnly()
+    {
+        Assert.IsTrue(JsonOptions.DefaultOptions.IsReadOnly);
+    }
+
+    /// <summary>
+    ///     Attempting to add a converter to the frozen options throws <see cref="InvalidOperationException" />.
+    /// </summary>
+    [TestMethod]
+    public void DefaultOptions_AddConverter_Throws()
+    {
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            JsonOptions.DefaultOptions.Converters.Add(new JsonStringEnumConverter()));
+    }
+
+    /// <summary>
+    ///     Attempting to mutate a scalar setting on the frozen options throws <see cref="InvalidOperationException" />.
+    /// </summary>
+    [TestMethod]
+    public void DefaultOptions_SetPropertyNameCaseInsensitive_Throws()
+    {
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            JsonOptions.DefaultOptions.PropertyNameCaseInsensitive = false);
+    }
+
+    /// <summary>
+    ///     Smoke test: freezing the options does not break basic serialization/deserialization.
+    /// </summary>
+    [TestMethod]
+    public void DefaultOptions_StillSerializesAndDeserializes()
+    {
+        var payload = new SampleDto { Name = "stellar", Count = 42 };
+
+        var json = JsonSerializer.Serialize(payload, JsonOptions.DefaultOptions);
+        var roundTripped = JsonSerializer.Deserialize<SampleDto>(json, JsonOptions.DefaultOptions);
+
+        Assert.IsNotNull(roundTripped);
+        Assert.AreEqual(payload.Name, roundTripped!.Name);
+        Assert.AreEqual(payload.Count, roundTripped.Count);
+    }
+
     private sealed class SampleDto
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
+        public int Count { get; set; }
     }
 
     /// <summary>
