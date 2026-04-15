@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -319,5 +320,47 @@ public class EffectResponseJsonConverterTest
 
         // Act & Assert
         JsonSerializer.Deserialize<EffectResponse>(json, _options);
+    }
+
+    /// <summary>
+    ///     Verifies that the converter's static FrozenDictionary dispatch table registers every expected
+    ///     non-sequential effect discriminator: 0-7, 10-12, 20-26, 30-33, 40-43, 50-52, 60-74, 80, 90-95.
+    ///     Guards against accidental entry removal when the static lookup table is edited.
+    /// </summary>
+    [TestMethod]
+    public void Deserializers_ContainsAllExpectedTypeIDiscriminators()
+    {
+        // Arrange - access the private FrozenDictionary dispatch table via reflection.
+        var deserializersField = typeof(EffectResponseJsonConverter)
+            .GetField("Deserializers",
+                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+        Assert.IsNotNull(deserializersField, "Deserializers dispatch table field not found.");
+
+        var dispatchTable = deserializersField.GetValue(null);
+        Assert.IsNotNull(dispatchTable, "Deserializers dispatch table is null.");
+
+        int[] expected =
+        {
+            0, 1, 2, 3, 4, 5, 6, 7,
+            10, 11, 12,
+            20, 21, 22, 23, 24, 25, 26,
+            30, 31, 32, 33,
+            40, 41, 42, 43,
+            50, 51, 52,
+            60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74,
+            80,
+            90, 91, 92, 93, 94, 95,
+        };
+
+        var containsKey = dispatchTable.GetType().GetMethod("ContainsKey")!;
+        foreach (var typeI in expected)
+        {
+            var present = (bool)containsKey.Invoke(dispatchTable, new object[] { typeI })!;
+            Assert.IsTrue(present, $"Expected dispatch entry for type_i={typeI}, but none was registered.");
+        }
+
+        // Count guard so new types can't be silently added without updating this guard.
+        var countProperty = dispatchTable.GetType().GetProperty("Count")!;
+        Assert.AreEqual(expected.Length, countProperty.GetValue(dispatchTable));
     }
 }
