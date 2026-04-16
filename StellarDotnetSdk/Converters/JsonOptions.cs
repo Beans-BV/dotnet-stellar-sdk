@@ -20,6 +20,8 @@ public static class JsonOptions
     ///     - PropertyNameCaseInsensitive: Allows flexible property matching
     ///     - AllowDuplicateProperties: Rejects JSON payloads that contain the same property more than once,
     ///     preventing silent data corruption from malformed responses (critical for financial data integrity).
+    ///     - RespectNullableAnnotations: Enforces C# nullability annotations during (de)serialization,
+    ///     so malformed API responses that violate the SDK's nullability contract fail fast.
     ///     Registered Converters:
     ///     - Polymorphic converters: OperationResponse, EffectResponse, Predicate
     ///     - Domain type converters: Asset, AssetAmount, KeyPair, LiquidityPoolId, LiquidityPoolClaimableAssetAmount, Reserve
@@ -38,6 +40,9 @@ public static class JsonOptions
         // Malformed or adversarial responses could otherwise overwrite financial fields (amount,
         // balance, destination) with attacker-controlled values without any error.
         AllowDuplicateProperties = false,
+
+        // Enforce C# nullability annotations so null values for non-nullable properties are rejected
+        RespectNullableAnnotations = true,
 
         Converters =
         {
