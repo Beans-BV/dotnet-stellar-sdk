@@ -18,6 +18,8 @@ public static class JsonOptions
     ///     Configuration:
     ///     - NumberHandling: Allows reading numbers from strings (API compatibility)
     ///     - PropertyNameCaseInsensitive: Allows flexible property matching
+    ///     - AllowDuplicateProperties: Rejects JSON payloads that contain the same property more than once,
+    ///     preventing silent data corruption from malformed responses (critical for financial data integrity).
     ///     Registered Converters:
     ///     - Polymorphic converters: OperationResponse, EffectResponse, Predicate
     ///     - Domain type converters: Asset, AssetAmount, KeyPair, LiquidityPoolId, LiquidityPoolClaimableAssetAmount, Reserve
@@ -31,6 +33,11 @@ public static class JsonOptions
 
         // Case-insensitive property matching
         PropertyNameCaseInsensitive = true,
+
+        // Reject JSON payloads with duplicate property names to prevent silent data corruption.
+        // Malformed or adversarial responses could otherwise overwrite financial fields (amount,
+        // balance, destination) with attacker-controlled values without any error.
+        AllowDuplicateProperties = false,
 
         Converters =
         {
