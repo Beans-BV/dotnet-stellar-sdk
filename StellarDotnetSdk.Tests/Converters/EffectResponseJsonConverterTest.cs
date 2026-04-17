@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Assets;
@@ -14,18 +16,19 @@ namespace StellarDotnetSdk.Tests.Converters;
 [TestClass]
 public class EffectResponseJsonConverterTest
 {
-    private const string BaseJson = """
-                                    {
-                                        "id": "0065571265847297-0000000001",
-                                        "paging_token": "65571265847297-1",
-                                        "account": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
-                                        "created_at": "2023-01-01T00:00:00Z",
-                                        "_links": {
-                                            "operation": {"href": "https://horizon.stellar.org/operations/12345"},
-                                            "succeeds": {"href": "https://horizon.stellar.org/effects?order=desc&cursor=12345-1"},
-                                            "precedes": {"href": "https://horizon.stellar.org/effects?order=asc&cursor=12345-1"}
-                                        }
-                                    """;
+    private const string BaseJson =
+        """
+        {
+            "id": "0065571265847297-0000000001",
+            "paging_token": "65571265847297-1",
+            "account": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
+            "created_at": "2023-01-01T00:00:00Z",
+            "_links": {
+                "operation": {"href": "https://horizon.stellar.org/operations/12345"},
+                "succeeds": {"href": "https://horizon.stellar.org/effects?order=desc&cursor=12345-1"},
+                "precedes": {"href": "https://horizon.stellar.org/effects?order=asc&cursor=12345-1"}
+            }
+        """;
 
     private readonly JsonSerializerOptions _options = JsonOptions.DefaultOptions;
 
@@ -37,12 +40,13 @@ public class EffectResponseJsonConverterTest
     public void Deserialize_WithAccountCreatedEffectTypeI0_ReturnsAccountCreatedEffectResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 0,
-                              "type": "account_created",
-                              "starting_balance": "10000.0"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 0,
+                   "type": "account_created",
+                   "starting_balance": "10000.0"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<EffectResponse>(json, _options);
@@ -60,11 +64,12 @@ public class EffectResponseJsonConverterTest
     public void Deserialize_WithAccountRemovedEffectTypeI1_ReturnsAccountRemovedEffectResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 1,
-                              "type": "account_removed"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 1,
+                   "type": "account_removed"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<EffectResponse>(json, _options);
@@ -82,13 +87,14 @@ public class EffectResponseJsonConverterTest
     public void Deserialize_WithSignerCreatedEffectTypeI10_ReturnsSignerCreatedEffectResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 10,
-                              "type": "signer_created",
-                              "public_key": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
-                              "weight": 1
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 10,
+                   "type": "signer_created",
+                   "public_key": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
+                   "weight": 1
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<EffectResponse>(json, _options);
@@ -106,15 +112,16 @@ public class EffectResponseJsonConverterTest
     public void Deserialize_WithTrustlineCreatedEffectTypeI20_ReturnsTrustlineCreatedEffectResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 20,
-                              "type": "trustline_created",
-                              "asset_type": "credit_alphanum4",
-                              "asset_code": "USD",
-                              "asset_issuer": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
-                              "limit": "1000.0"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 20,
+                   "type": "trustline_created",
+                   "asset_type": "credit_alphanum4",
+                   "asset_code": "USD",
+                   "asset_issuer": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
+                   "limit": "1000.0"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<EffectResponse>(json, _options);
@@ -132,11 +139,12 @@ public class EffectResponseJsonConverterTest
     public void Deserialize_WithOfferCreatedEffectTypeI30_ReturnsOfferCreatedEffectResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 30,
-                              "type": "offer_created"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 30,
+                   "type": "offer_created"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<EffectResponse>(json, _options);
@@ -154,13 +162,14 @@ public class EffectResponseJsonConverterTest
     public void Deserialize_WithDataCreatedEffectTypeI40_ReturnsDataCreatedEffectResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 40,
-                              "type": "data_created",
-                              "name": "test_data",
-                              "value": "dGVzdA=="
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 40,
+                   "type": "data_created",
+                   "name": "test_data",
+                   "value": "dGVzdA=="
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<EffectResponse>(json, _options);
@@ -178,14 +187,15 @@ public class EffectResponseJsonConverterTest
     public void Deserialize_WithClaimableBalanceCreatedEffectTypeI50_ReturnsClaimableBalanceCreatedEffectResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 50,
-                              "type": "claimable_balance_created",
-                              "balance_id": "00000000be7e37b24927c095e2292d5d0e6db8b0f2dbeb1355847c7fccb458cbdd61bfd0",
-                              "asset": "native",
-                              "amount": "100.0"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 50,
+                   "type": "claimable_balance_created",
+                   "balance_id": "00000000be7e37b24927c095e2292d5d0e6db8b0f2dbeb1355847c7fccb458cbdd61bfd0",
+                   "asset": "native",
+                   "amount": "100.0"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<EffectResponse>(json, _options);
@@ -203,12 +213,13 @@ public class EffectResponseJsonConverterTest
     public void Deserialize_WithAccountSponsorshipCreatedEffectTypeI60_ReturnsAccountSponsorshipCreatedEffectResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 60,
-                              "type": "account_sponsorship_created",
-                              "sponsor": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 60,
+                   "type": "account_sponsorship_created",
+                   "sponsor": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<EffectResponse>(json, _options);
@@ -227,12 +238,13 @@ public class EffectResponseJsonConverterTest
         Deserialize_WithClaimableBalanceClawedBackEffectTypeI80_ReturnsClaimableBalanceClawedBackEffectResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 80,
-                              "type": "claimable_balance_clawed_back",
-                              "balance_id": "00000000be7e37b24927c095e2292d5d0e6db8b0f2dbeb1355847c7fccb458cbdd61bfd0"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 80,
+                   "type": "claimable_balance_clawed_back",
+                   "balance_id": "00000000be7e37b24927c095e2292d5d0e6db8b0f2dbeb1355847c7fccb458cbdd61bfd0"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<EffectResponse>(json, _options);
@@ -250,12 +262,13 @@ public class EffectResponseJsonConverterTest
     public void Deserialize_WithLiquidityPoolRemovedEffectTypeI94_ReturnsLiquidityPoolRemovedEffectResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 94,
-                              "type": "liquidity_pool_removed",
-                              "liquidity_pool_id": "4f7f29db33ead1a38c2edf17aa0416c369c207ca081de5c686c050c1ad320385"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 94,
+                   "type": "liquidity_pool_removed",
+                   "liquidity_pool_id": "4f7f29db33ead1a38c2edf17aa0416c369c207ca081de5c686c050c1ad320385"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<EffectResponse>(json, _options);
@@ -274,11 +287,12 @@ public class EffectResponseJsonConverterTest
     public void Deserialize_WithUnknownTypeI_ThrowsJsonException()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 999,
-                              "type": "unknown"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 999,
+                   "type": "unknown"
+                   }
+                   """;
 
         // Act & Assert
         JsonSerializer.Deserialize<EffectResponse>(json, _options);
@@ -293,11 +307,12 @@ public class EffectResponseJsonConverterTest
     public void Deserialize_WithGapTypeI_ThrowsJsonException()
     {
         // Arrange - Type 8 is in a gap between account effects (0-7) and signer effects (10-12)
-        var json = BaseJson + """
-                              ,"type_i": 8,
-                              "type": "unknown"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 8,
+                   "type": "unknown"
+                   }
+                   """;
 
         // Act & Assert
         JsonSerializer.Deserialize<EffectResponse>(json, _options);
@@ -467,23 +482,25 @@ public class EffectResponseJsonConverterTest
 
     /// <summary>
     ///     Verifies that the converter's static FrozenDictionary dispatch table registers every expected
-    ///     non-sequential effect discriminator: 0-7, 10-12, 20-26, 30-33, 40-43, 50-52, 60-74, 80, 90-95.
+    ///     non-sequential effect discriminator: 0-7, 10-12, 20-26, 30-33, 40-43, 50-52, 60-74, 80, 90-97.
     ///     Guards against accidental entry removal when the static lookup table is edited.
     /// </summary>
     [TestMethod]
     public void Deserializers_ContainsAllExpectedTypeIDiscriminators()
     {
-        // Arrange - access the private FrozenDictionary dispatch table via reflection.
+        // Arrange - access the private FrozenDictionary dispatch table via reflection, then cast
+        // to IReadOnlyDictionary<,> so ContainsKey / Count resolve through normal generic calls
+        // instead of brittle string-based member lookups.
         var deserializersField = typeof(EffectResponseJsonConverter)
-            .GetField("Deserializers",
-                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            .GetField("Deserializers", BindingFlags.Static | BindingFlags.NonPublic);
         Assert.IsNotNull(deserializersField, "Deserializers dispatch table field not found.");
 
-        var dispatchTable = deserializersField.GetValue(null);
-        Assert.IsNotNull(dispatchTable, "Deserializers dispatch table is null.");
+        var dispatchTable = deserializersField.GetValue(null) as
+            IReadOnlyDictionary<int, Func<JsonElement, JsonSerializerOptions, EffectResponse?>>;
+        Assert.IsNotNull(dispatchTable, "Deserializers dispatch table has unexpected runtime type.");
 
         int[] expected =
-        {
+        [
             0, 1, 2, 3, 4, 5, 6, 7,
             10, 11, 12,
             20, 21, 22, 23, 24, 25, 26,
@@ -493,17 +510,17 @@ public class EffectResponseJsonConverterTest
             60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74,
             80,
             90, 91, 92, 93, 94, 95, 96, 97,
-        };
+        ];
 
-        var containsKey = dispatchTable.GetType().GetMethod("ContainsKey")!;
         foreach (var typeI in expected)
         {
-            var present = (bool)containsKey.Invoke(dispatchTable, new object[] { typeI })!;
-            Assert.IsTrue(present, $"Expected dispatch entry for type_i={typeI}, but none was registered.");
+            Assert.IsTrue(
+                dispatchTable.ContainsKey(typeI),
+                $"Expected dispatch entry for type_i={typeI}, but none was registered."
+            );
         }
 
         // Count guard so new types can't be silently added without updating this guard.
-        var countProperty = dispatchTable.GetType().GetProperty("Count")!;
-        Assert.AreEqual(expected.Length, countProperty.GetValue(dispatchTable));
+        Assert.AreEqual(expected.Length, dispatchTable.Count);
     }
 }

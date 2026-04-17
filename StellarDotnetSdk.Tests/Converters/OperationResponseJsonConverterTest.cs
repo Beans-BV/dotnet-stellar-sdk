@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
@@ -13,21 +15,22 @@ namespace StellarDotnetSdk.Tests.Converters;
 [TestClass]
 public class OperationResponseJsonConverterTest
 {
-    private const string BaseJson = """
-                                    {
-                                        "id": 12345,
-                                        "paging_token": "12345",
-                                        "source_account": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
-                                        "created_at": "2023-01-01T00:00:00Z",
-                                        "transaction_hash": "abc123",
-                                        "_links": {
-                                            "self": {"href": "https://horizon.stellar.org/operations/12345"},
-                                            "transaction": {"href": "https://horizon.stellar.org/transactions/abc123"},
-                                            "effects": {"href": "https://horizon.stellar.org/operations/12345/effects"},
-                                            "succeeds": {"href": "https://horizon.stellar.org/effects?cursor=12345&order=asc"},
-                                            "precedes": {"href": "https://horizon.stellar.org/effects?cursor=12345&order=desc"}
-                                        }
-                                    """;
+    private const string BaseJson =
+        """
+        {
+            "id": 12345,
+            "paging_token": "12345",
+            "source_account": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
+            "created_at": "2023-01-01T00:00:00Z",
+            "transaction_hash": "abc123",
+            "_links": {
+                "self": {"href": "https://horizon.stellar.org/operations/12345"},
+                "transaction": {"href": "https://horizon.stellar.org/transactions/abc123"},
+                "effects": {"href": "https://horizon.stellar.org/operations/12345/effects"},
+                "succeeds": {"href": "https://horizon.stellar.org/effects?cursor=12345&order=asc"},
+                "precedes": {"href": "https://horizon.stellar.org/effects?cursor=12345&order=desc"}
+            }
+        """;
 
     private readonly JsonSerializerOptions _options = JsonOptions.DefaultOptions;
 
@@ -39,14 +42,15 @@ public class OperationResponseJsonConverterTest
     public void Deserialize_WithCreateAccountOperationTypeI0_ReturnsCreateAccountOperationResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 0,
-                              "type": "create_account",
-                              "starting_balance": "10000.0",
-                              "funder": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
-                              "account": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 0,
+                   "type": "create_account",
+                   "starting_balance": "10000.0",
+                   "funder": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
+                   "account": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<OperationResponse>(json, _options);
@@ -64,15 +68,16 @@ public class OperationResponseJsonConverterTest
     public void Deserialize_WithPaymentOperationTypeI1_ReturnsPaymentOperationResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 1,
-                              "type": "payment",
-                              "from": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
-                              "to": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
-                              "amount": "100.0",
-                              "asset_type": "native"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 1,
+                   "type": "payment",
+                   "from": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
+                   "to": "GCKICEQ2SA3KWH3UMQFJE4BFXCBFHW46BCVJBRCLK76ZY5RO6TY5D7Q2",
+                   "amount": "100.0",
+                   "asset_type": "native"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<OperationResponse>(json, _options);
@@ -90,11 +95,12 @@ public class OperationResponseJsonConverterTest
     public void Deserialize_WithSetOptionsOperationTypeI5_ReturnsSetOptionsOperationResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 5,
-                              "type": "set_options"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 5,
+                   "type": "set_options"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<OperationResponse>(json, _options);
@@ -112,11 +118,12 @@ public class OperationResponseJsonConverterTest
     public void Deserialize_WithInflationOperationTypeI9_ReturnsInflationOperationResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 9,
-                              "type": "inflation"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 9,
+                   "type": "inflation"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<OperationResponse>(json, _options);
@@ -134,13 +141,14 @@ public class OperationResponseJsonConverterTest
     public void Deserialize_WithManageDataOperationTypeI10_ReturnsManageDataOperationResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 10,
-                              "type": "manage_data",
-                              "name": "test",
-                              "value": "dGVzdA=="
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 10,
+                   "type": "manage_data",
+                   "name": "test",
+                   "value": "dGVzdA=="
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<OperationResponse>(json, _options);
@@ -158,11 +166,12 @@ public class OperationResponseJsonConverterTest
     public void Deserialize_WithRevokeSponsorshipOperationTypeI18_ReturnsRevokeSponsorshipOperationResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 18,
-                              "type": "revoke_sponsorship"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 18,
+                   "type": "revoke_sponsorship"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<OperationResponse>(json, _options);
@@ -180,12 +189,13 @@ public class OperationResponseJsonConverterTest
     public void Deserialize_WithInvokeHostFunctionOperationTypeI24_ReturnsInvokeHostFunctionOperationResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 24,
-                              "type": "invoke_host_function",
-                              "function": "HostFunctionTypeHostFunctionTypeInvokeContract"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 24,
+                   "type": "invoke_host_function",
+                   "function": "HostFunctionTypeHostFunctionTypeInvokeContract"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<OperationResponse>(json, _options);
@@ -203,11 +213,12 @@ public class OperationResponseJsonConverterTest
     public void Deserialize_WithRestoreFootprintOperationTypeI26_ReturnsRestoreFootprintOperationResponse()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 26,
-                              "type": "restore_footprint"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 26,
+                   "type": "restore_footprint"
+                   }
+                   """;
 
         // Act
         var result = JsonSerializer.Deserialize<OperationResponse>(json, _options);
@@ -226,11 +237,12 @@ public class OperationResponseJsonConverterTest
     public void Deserialize_WithUnknownTypeI_ThrowsJsonException()
     {
         // Arrange
-        var json = BaseJson + """
-                              ,"type_i": 999,
-                              "type": "unknown"
-                              }
-                              """;
+        var json = BaseJson +
+                   """
+                   ,"type_i": 999,
+                   "type": "unknown"
+                   }
+                   """;
 
         // Act & Assert
         JsonSerializer.Deserialize<OperationResponse>(json, _options);
@@ -264,25 +276,27 @@ public class OperationResponseJsonConverterTest
     [TestMethod]
     public void Deserializers_ContainsAllExpectedTypeIDiscriminators()
     {
-        // Arrange - access the private FrozenDictionary dispatch table via reflection.
+        // Arrange - access the private FrozenDictionary dispatch table via reflection, then cast
+        // to IReadOnlyDictionary<,> so ContainsKey / Count resolve through normal generic calls
+        // instead of brittle string-based member lookups.
         var deserializersField = typeof(OperationResponseJsonConverter)
-            .GetField("Deserializers",
-                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            .GetField("Deserializers", BindingFlags.Static | BindingFlags.NonPublic);
         Assert.IsNotNull(deserializersField, "Deserializers dispatch table field not found.");
 
-        var dispatchTable = deserializersField.GetValue(null);
-        Assert.IsNotNull(dispatchTable, "Deserializers dispatch table is null.");
+        var dispatchTable = deserializersField.GetValue(null) as
+            IReadOnlyDictionary<int, Func<JsonElement, JsonSerializerOptions, OperationResponse?>>;
+        Assert.IsNotNull(dispatchTable, "Deserializers dispatch table has unexpected runtime type.");
 
         // Assert every type_i 0..26 has a dispatch entry.
-        var containsKey = dispatchTable.GetType().GetMethod("ContainsKey")!;
         for (var typeI = 0; typeI <= 26; typeI++)
         {
-            var present = (bool)containsKey.Invoke(dispatchTable, new object[] { typeI })!;
-            Assert.IsTrue(present, $"Expected dispatch entry for type_i={typeI}, but none was registered.");
+            Assert.IsTrue(
+                dispatchTable.ContainsKey(typeI),
+                $"Expected dispatch entry for type_i={typeI}, but none was registered."
+            );
         }
 
         // Also sanity-check the count so new types can't be silently added without updating this guard.
-        var countProperty = dispatchTable.GetType().GetProperty("Count")!;
-        Assert.AreEqual(27, countProperty.GetValue(dispatchTable));
+        Assert.AreEqual(27, dispatchTable.Count);
     }
 }

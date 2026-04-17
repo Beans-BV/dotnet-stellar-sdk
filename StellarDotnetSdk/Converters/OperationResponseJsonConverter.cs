@@ -19,7 +19,7 @@ namespace StellarDotnetSdk.Converters;
 ///     etc.
 ///     Performance: Parses JSON once into JsonDocument, then deserializes from JsonElement
 ///     to avoid double-parsing overhead. Dispatches via a <see cref="FrozenDictionary{TKey,TValue}" />
-///     lookup for ~47% faster reads than a switch expression on immutable data.
+///     for an O(1), read-optimized lookup over the immutable discriminator set.
 /// </remarks>
 /// <remarks>
 ///     <p>
@@ -101,7 +101,7 @@ public class OperationResponseJsonConverter : JsonConverter<OperationResponse>
 
         var type = typeProperty.GetInt32();
 
-        // Dispatch via frozen lookup table (O(1), ~47% faster than switch on immutable data)
+        // Dispatch via frozen lookup table (O(1) read-optimized lookup over the immutable discriminator set)
         if (!Deserializers.TryGetValue(type, out var deserializer))
         {
             throw new JsonException(
