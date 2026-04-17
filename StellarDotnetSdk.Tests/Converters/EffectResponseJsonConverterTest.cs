@@ -1,5 +1,7 @@
+using System;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.Effects;
 
@@ -355,18 +357,39 @@ public class EffectResponseJsonConverterTest
         // Act
         var result = JsonSerializer.Deserialize<EffectResponse>(json, _options);
 
-        // Assert - type dispatch + field binding
+        // Assert - type dispatch + full field binding (every wire-format field, including base-class)
         Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result, typeof(ContractCreditedEffectResponse));
 
         var credited = (ContractCreditedEffectResponse)result;
+
+        // Base-class fields (EffectResponse)
+        Assert.AreEqual("0266896217031864321-0000000013", credited.Id);
+        Assert.AreEqual("266896217031864321-13", credited.PagingToken);
+        Assert.AreEqual("GBKDPWX3BY5PWVWY6CJVY57CFD3I54VXJZPEZTUGTBFDNBGMCSWNXTEA", credited.Account);
+        Assert.AreEqual(
+            new DateTimeOffset(2026, 4, 16, 6, 43, 24, TimeSpan.Zero),
+            credited.CreatedAt);
         Assert.AreEqual(96, credited.TypeId);
         Assert.AreEqual("contract_credited", credited.Type);
+        Assert.IsNotNull(credited.Links);
+        Assert.AreEqual("https://horizon.stellar.org/operations/266896217031864321", credited.Links.Operation.Href);
+        Assert.AreEqual(
+            "https://horizon.stellar.org/effects?order=desc&cursor=266896217031864321-13",
+            credited.Links.Succeeds.Href);
+        Assert.AreEqual(
+            "https://horizon.stellar.org/effects?order=asc&cursor=266896217031864321-13",
+            credited.Links.Precedes.Href);
+
+        // Subtype-specific fields (ContractCreditedEffectResponse)
         Assert.AreEqual("CB2TCA23Z3CLTXSVGJB2PAC3MTRNX6NPFETRRDDJEAVBJMAZIUPIKBZL", credited.Contract);
         Assert.AreEqual("1.0152349", credited.Amount);
         Assert.AreEqual("native", credited.AssetType);
         Assert.IsNull(credited.AssetCode);
         Assert.IsNull(credited.AssetIssuer);
+
+        // Computed Asset property - exercises the native branch of Asset.Create(type, code, issuer)
+        Assert.IsInstanceOfType(credited.Asset, typeof(AssetTypeNative));
     }
 
     /// <summary>
@@ -404,17 +427,41 @@ public class EffectResponseJsonConverterTest
         // Act
         var result = JsonSerializer.Deserialize<EffectResponse>(json, _options);
 
-        // Assert - type dispatch + field binding (including nullable asset_code / asset_issuer)
+        // Assert - type dispatch + full field binding (every wire-format field, including base-class)
         Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result, typeof(ContractDebitedEffectResponse));
 
         var debited = (ContractDebitedEffectResponse)result;
+
+        // Base-class fields (EffectResponse)
+        Assert.AreEqual("0266896217031864321-0000000014", debited.Id);
+        Assert.AreEqual("266896217031864321-14", debited.PagingToken);
+        Assert.AreEqual("GBKDPWX3BY5PWVWY6CJVY57CFD3I54VXJZPEZTUGTBFDNBGMCSWNXTEA", debited.Account);
+        Assert.AreEqual(
+            new DateTimeOffset(2026, 4, 16, 6, 43, 24, TimeSpan.Zero),
+            debited.CreatedAt);
         Assert.AreEqual(97, debited.TypeId);
         Assert.AreEqual("contract_debited", debited.Type);
+        Assert.IsNotNull(debited.Links);
+        Assert.AreEqual("https://horizon.stellar.org/operations/266896217031864321", debited.Links.Operation.Href);
+        Assert.AreEqual(
+            "https://horizon.stellar.org/effects?order=desc&cursor=266896217031864321-14",
+            debited.Links.Succeeds.Href);
+        Assert.AreEqual(
+            "https://horizon.stellar.org/effects?order=asc&cursor=266896217031864321-14",
+            debited.Links.Precedes.Href);
+
+        // Subtype-specific fields (ContractDebitedEffectResponse)
         Assert.AreEqual("CB2TCA23Z3CLTXSVGJB2PAC3MTRNX6NPFETRRDDJEAVBJMAZIUPIKBZL", debited.Contract);
         Assert.AreEqual("42.0000000", debited.Amount);
         Assert.AreEqual("credit_alphanum4", debited.AssetType);
         Assert.AreEqual("USDC", debited.AssetCode);
         Assert.AreEqual("GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN", debited.AssetIssuer);
+
+        // Computed Asset property - exercises the non-native branch of Asset.Create(type, code, issuer)
+        Assert.IsInstanceOfType(debited.Asset, typeof(AssetTypeCreditAlphaNum4));
+        var creditAsset = (AssetTypeCreditAlphaNum4)debited.Asset;
+        Assert.AreEqual("USDC", creditAsset.Code);
+        Assert.AreEqual("GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN", creditAsset.Issuer);
     }
 }
