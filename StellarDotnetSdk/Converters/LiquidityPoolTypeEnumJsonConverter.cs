@@ -18,7 +18,8 @@ namespace StellarDotnetSdk.Converters;
 public class LiquidityPoolTypeEnumJsonConverter : JsonConverter<LiquidityPoolType.LiquidityPoolTypeEnum>
 {
     /// <summary>
-    ///     Frozen lookup table mapping the Horizon wire-format strings to <see cref="LiquidityPoolType.LiquidityPoolTypeEnum" />
+    ///     Frozen lookup table mapping the Horizon wire-format strings to
+    ///     <see cref="LiquidityPoolType.LiquidityPoolTypeEnum" />
     ///     values.
     /// </summary>
     private static readonly FrozenDictionary<string, LiquidityPoolType.LiquidityPoolTypeEnum> EnumByName =
