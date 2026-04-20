@@ -250,6 +250,11 @@ public class XdrDataInputStream
 
     private uint CheckedReadLength(uint max)
     {
+        if (max == 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(max));
+        }
+
         uint len;
         try
         {
@@ -263,11 +268,6 @@ public class XdrDataInputStream
         if (len > max)
         {
             throw new FormatException("unexpected length: " + len);
-        }
-
-        if (max == 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(max));
         }
 
         return len;
