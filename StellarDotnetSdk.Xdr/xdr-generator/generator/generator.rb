@@ -401,7 +401,11 @@ class CsharpGenerator < Xdrgen::Generators::Base
         unless has_default_arm
           out.puts 'default:'
           out.indent do
-            out.puts 'throw new InvalidDataException("Unknown discriminant value: " + discriminant);'
+            if union.discriminant.type.is_a?(AST::Typespecs::Int)
+              out.puts 'throw new InvalidDataException("Unknown discriminant value: " + discriminant);'
+            else
+              out.puts 'throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);'
+            end
           end
         end
       end
@@ -612,7 +616,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
     when AST::Typespecs::UnsignedHyper
       "stream.WriteULong(#{value})"
     when AST::Typespecs::Float
-      "stream.WriteFloat(#{value})"
+      "stream.WriteSingle(#{value})"
     when AST::Typespecs::Double
       "stream.WriteDouble(#{value})"
     when AST::Typespecs::Quadruple
@@ -768,7 +772,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
     when AST::Typespecs::UnsignedHyper
       'stream.ReadULong()'
     when AST::Typespecs::Float
-      'stream.ReadFloat()'
+      'stream.ReadSingle()'
     when AST::Typespecs::Double
       'stream.ReadDouble()'
     when AST::Typespecs::Quadruple

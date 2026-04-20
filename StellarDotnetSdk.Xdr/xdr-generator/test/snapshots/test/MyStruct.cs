@@ -36,7 +36,7 @@ public class MyStruct
         OptHash1.Encode(stream, encodedMyStruct.Field2);
         Int1.Encode(stream, encodedMyStruct.Field3);
         stream.WriteUInt(encodedMyStruct.Field4);
-        stream.WriteFloat(encodedMyStruct.Field5);
+        stream.WriteSingle(encodedMyStruct.Field5);
         stream.WriteDouble(encodedMyStruct.Field6);
         stream.WriteInt(encodedMyStruct.Field7 ? 1 : 0);
     }
@@ -51,7 +51,7 @@ public class MyStruct
         decodedMyStruct.Field2 = OptHash1.Decode(stream, maxDepth);
         decodedMyStruct.Field3 = Int1.Decode(stream, maxDepth);
         decodedMyStruct.Field4 = stream.ReadUInt();
-        decodedMyStruct.Field5 = stream.ReadFloat();
+        decodedMyStruct.Field5 = stream.ReadSingle();
         decodedMyStruct.Field6 = stream.ReadDouble();
         decodedMyStruct.Field7 = stream.ReadInt() == 1 ? true : false;
         return decodedMyStruct;

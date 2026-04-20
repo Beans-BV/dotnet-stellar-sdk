@@ -104,22 +104,22 @@ public class XdrDataOutputStream
         Write((byte)(i & 0xff));
     }
 
-    public unsafe void WriteFloat(float v)
+    public unsafe void WriteSingle(float v)
     {
         WriteInt(*(int*)&v);
     }
 
-    public void WriteFloatArray(float[] a)
+    public void WriteSingleArray(float[] a)
     {
         WriteInt(a.Length);
-        WriteFloatArray(a, a.Length);
+        WriteSingleArray(a, a.Length);
     }
 
-    private void WriteFloatArray(float[] a, int l)
+    private void WriteSingleArray(float[] a, int l)
     {
         for (var i = 0; i < l; i++)
         {
-            WriteFloat(a[i]);
+            WriteSingle(a[i]);
         }
     }
 
