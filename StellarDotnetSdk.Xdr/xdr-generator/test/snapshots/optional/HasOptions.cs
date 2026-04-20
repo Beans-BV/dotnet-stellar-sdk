@@ -18,8 +18,8 @@ namespace StellarDotnetSdk.Xdr;
 //  ===========================================================================
 public class HasOptions
 {
-    public int FirstOption { get; set; }
-    public int SecondOption { get; set; }
+    public int? FirstOption { get; set; }
+    public int? SecondOption { get; set; }
     public Arr ThirdOption { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, HasOptions encodedHasOptions)
@@ -27,7 +27,7 @@ public class HasOptions
         if (encodedHasOptions.FirstOption != null)
         {
             stream.WriteInt(1);
-            stream.WriteInt(encodedHasOptions.FirstOption);
+            stream.WriteInt(encodedHasOptions.FirstOption.Value);
         }
         else
         {
@@ -36,7 +36,7 @@ public class HasOptions
         if (encodedHasOptions.SecondOption != null)
         {
             stream.WriteInt(1);
-            stream.WriteInt(encodedHasOptions.SecondOption);
+            stream.WriteInt(encodedHasOptions.SecondOption.Value);
         }
         else
         {

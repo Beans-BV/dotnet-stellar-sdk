@@ -132,7 +132,7 @@ public class XdrDataInputStream
             _bytes[_pos++];
     }
 
-    private unsafe float ReadSingle()
+    public unsafe float ReadFloat()
     {
         var num = ReadInt();
         return *(float*)&num;
@@ -142,24 +142,24 @@ public class XdrDataInputStream
     ///     Read float from stream.
     /// </summary>
     /// <returns></returns>
-    public float[] ReadSingleArray()
+    public float[] ReadFloatArray()
     {
         var l = ReadInt();
-        return ReadSingleArray(l);
+        return ReadFloatArray(l);
     }
 
-    private float[] ReadSingleArray(int l)
+    private float[] ReadFloatArray(int l)
     {
         var arr = new float[l];
         for (var i = 0; i < l; i++)
         {
-            arr[i] = ReadSingle();
+            arr[i] = ReadFloat();
         }
 
         return arr;
     }
 
-    private unsafe double ReadDouble()
+    public unsafe double ReadDouble()
     {
         var num = ReadLong();
         return *(double*)&num;
@@ -257,7 +257,7 @@ public class XdrDataInputStream
         }
         catch (SystemException ex)
         {
-            throw new FormatException("cant't read 'length'", ex);
+            throw new FormatException("can't read 'length'", ex);
         }
 
         if (len > max)

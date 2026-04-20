@@ -593,7 +593,11 @@ class CsharpGenerator < Xdrgen::Generators::Base
       end
       out.puts '}'
     else
-      out.puts "#{encode_type member.declaration.type, "#{value}.#{member.name.camelize}"};"
+      field = "#{value}.#{member.name.camelize}"
+      if member.type.sub_type == :optional && csharp_value_type?(member.declaration.type)
+        field = "#{field}.Value"
+      end
+      out.puts "#{encode_type member.declaration.type, field};"
     end
   end
 
@@ -791,7 +795,8 @@ class CsharpGenerator < Xdrgen::Generators::Base
     when AST::Declarations::Array
       "#{type_string decl.type}[]"
     when AST::Declarations::Optional
-      type_string(decl.type).to_s
+      inner = type_string(decl.type)
+      csharp_value_type?(decl.type) ? "#{inner}?" : inner
     when AST::Declarations::Simple
       type_string(decl.type)
     else
@@ -836,6 +841,18 @@ class CsharpGenerator < Xdrgen::Generators::Base
 
   def name_string(name)
     name.camelize
+  end
+
+  def csharp_value_type?(type)
+    case type
+    when AST::Typespecs::Int, AST::Typespecs::UnsignedInt,
+         AST::Typespecs::Hyper, AST::Typespecs::UnsignedHyper,
+         AST::Typespecs::Float, AST::Typespecs::Double,
+         AST::Typespecs::Bool
+      true
+    else
+      false
+    end
   end
 
   def convert_constant(str)
