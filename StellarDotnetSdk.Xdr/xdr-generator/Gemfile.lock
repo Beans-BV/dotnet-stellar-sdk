@@ -1,0 +1,69 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activesupport (6.1.7.10)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
+      zeitwerk (~> 2.3)
+    base64 (0.3.0)
+    bigdecimal (4.1.1)
+    concurrent-ruby (1.3.4)
+    drb (2.2.3)
+    i18n (1.14.8)
+      concurrent-ruby (~> 1.0)
+    logger (1.7.0)
+    memoist (0.11.0)
+    minitest (6.0.3)
+      drb (~> 2.0)
+      prism (~> 1.5)
+    mutex_m (0.3.0)
+    polyglot (0.3.5)
+    prism (1.9.0)
+    slop (3.6.0)
+    treetop (1.5.3)
+      polyglot (~> 0.3)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
+    xdrgen (0.1.3)
+      activesupport (~> 6)
+      concurrent-ruby (<= 1.3.4)
+      memoist (~> 0.11.0)
+      slop (~> 3.4)
+      treetop (~> 1.5.3)
+    zeitwerk (2.7.5)
+
+PLATFORMS
+  x64-mingw-ucrt
+
+DEPENDENCIES
+  base64
+  bigdecimal
+  drb
+  logger
+  minitest
+  mutex_m
+  xdrgen
+
+CHECKSUMS
+  activesupport (6.1.7.10) sha256=3f8e1f787a7bfbf765959ba509ef70af8293b35cb864078919365a12bf33d470
+  base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
+  bigdecimal (4.1.1) sha256=1c09efab961da45203c8316b0cdaec0ff391dfadb952dd459584b63ebf8054ca
+  concurrent-ruby (1.3.4) sha256=d4aa926339b0a86b5b5054a0a8c580163e6f5dcbdfd0f4bb916b1a2570731c32
+  drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
+  i18n (1.14.8) sha256=285778639134865c5e0f6269e0b818256017e8cde89993fdfcbfb64d088824a5
+  logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
+  memoist (0.11.0) sha256=06a58318f730876621fde8fdb3bac296adf4998c3ae256abe5f8d822b0d850da
+  minitest (6.0.3) sha256=88ac8a1de36c00692420e7cb3cc11a0773bbcb126aee1c249f320160a7d11411
+  mutex_m (0.3.0) sha256=cfcb04ac16b69c4813777022fdceda24e9f798e48092a2b817eb4c0a782b0751
+  polyglot (0.3.5) sha256=59d66ef5e3c166431c39cb8b7c1d02af419051352f27912f6a43981b3def16af
+  prism (1.9.0) sha256=7b530c6a9f92c24300014919c9dcbc055bf4cdf51ec30aed099b06cd6674ef85
+  slop (3.6.0) sha256=76ccab03be66bfcab4838cdc07cab019cd3e192a3538266246749e79e4788803
+  treetop (1.5.3) sha256=ab3c49c3a39e7c9bea88a90524545e39bed032758a130295f8d6a433c62ff472
+  tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
+  xdrgen (0.1.3)
+  zeitwerk (2.7.5) sha256=d8da92128c09ea6ec62c949011b00ed4a20242b255293dd66bf41545398f73dd
+
+BUNDLED WITH
+  4.0.10

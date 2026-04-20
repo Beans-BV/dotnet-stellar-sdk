@@ -132,7 +132,7 @@ public class XdrDataInputStream
             _bytes[_pos++];
     }
 
-    public unsafe float ReadFloat()
+    private unsafe float ReadSingle()
     {
         var num = ReadInt();
         return *(float*)&num;
@@ -142,24 +142,24 @@ public class XdrDataInputStream
     ///     Read float from stream.
     /// </summary>
     /// <returns></returns>
-    public float[] ReadFloatArray()
+    public float[] ReadSingleArray()
     {
         var l = ReadInt();
-        return ReadFloatArray(l);
+        return ReadSingleArray(l);
     }
 
-    private float[] ReadFloatArray(int l)
+    private float[] ReadSingleArray(int l)
     {
         var arr = new float[l];
         for (var i = 0; i < l; i++)
         {
-            arr[i] = ReadFloat();
+            arr[i] = ReadSingle();
         }
 
         return arr;
     }
 
-    public unsafe double ReadDouble()
+    private unsafe double ReadDouble()
     {
         var num = ReadLong();
         return *(double*)&num;
@@ -257,7 +257,7 @@ public class XdrDataInputStream
         }
         catch (SystemException ex)
         {
-            throw new FormatException("can't read 'length'", ex);
+            throw new FormatException("cant't read 'length'", ex);
         }
 
         if (len > max)
@@ -265,7 +265,7 @@ public class XdrDataInputStream
             throw new FormatException("unexpected length: " + len);
         }
 
-        if (max <= 0)
+        if (max == 0)
         {
             throw new ArgumentOutOfRangeException(nameof(max));
         }

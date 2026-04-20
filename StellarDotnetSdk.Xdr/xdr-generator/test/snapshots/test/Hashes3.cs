@@ -43,9 +43,6 @@ public class Hashes3
         var Hashes3size = stream.ReadInt();
         if (Hashes3size < 0)
             throw new InvalidDataException("Hashes3 size " + Hashes3size + " is negative");
-        var Hashes3RemainingInputLen = stream.GetRemainingInputLen();
-        if (Hashes3RemainingInputLen >= 0 && Hashes3RemainingInputLen < Hashes3size)
-            throw new InvalidDataException("Hashes3 size " + Hashes3size + " exceeds remaining input length " + Hashes3RemainingInputLen);
         decodedHashes3.InnerValue = new Hash[Hashes3size];
         for (var i = 0; i < Hashes3size; i++)
         {

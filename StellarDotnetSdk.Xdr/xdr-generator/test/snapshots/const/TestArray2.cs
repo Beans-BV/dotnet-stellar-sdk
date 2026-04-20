@@ -47,9 +47,6 @@ public class TestArray2
             throw new InvalidDataException("TestArray2 size " + TestArray2size + " is negative");
         if (TestArray2size > 1)
             throw new InvalidDataException("TestArray2 size " + TestArray2size + " exceeds max size 1");
-        var TestArray2RemainingInputLen = stream.GetRemainingInputLen();
-        if (TestArray2RemainingInputLen >= 0 && TestArray2RemainingInputLen < TestArray2size)
-            throw new InvalidDataException("TestArray2 size " + TestArray2size + " exceeds remaining input length " + TestArray2RemainingInputLen);
         decodedTestArray2.InnerValue = new int[TestArray2size];
         for (var i = 0; i < TestArray2size; i++)
         {

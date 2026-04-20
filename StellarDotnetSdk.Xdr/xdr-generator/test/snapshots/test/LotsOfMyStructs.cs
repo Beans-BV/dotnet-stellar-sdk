@@ -37,9 +37,6 @@ public class LotsOfMyStructs
         var memberssize = stream.ReadInt();
         if (memberssize < 0)
             throw new InvalidDataException("members size " + memberssize + " is negative");
-        var membersRemainingInputLen = stream.GetRemainingInputLen();
-        if (membersRemainingInputLen >= 0 && membersRemainingInputLen < memberssize)
-            throw new InvalidDataException("members size " + memberssize + " exceeds remaining input length " + membersRemainingInputLen);
         decodedLotsOfMyStructs.Members = new MyStruct[memberssize];
         for (var i = 0; i < memberssize; i++)
         {

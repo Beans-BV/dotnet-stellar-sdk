@@ -62,15 +62,15 @@ public class Nester
 
     public class NesterNestedEnum
     {
-        public enum nestedEnumEnum
+        public enum NestedEnumEnum
         {
             BLAH_1 = 0,
             BLAH_2 = 1,
         }
 
-        public nestedEnumEnum InnerValue { get; set; }
+        public NestedEnumEnum InnerValue { get; set; }
 
-        public static NesterNestedEnum Create(nestedEnumEnum v)
+        public static NesterNestedEnum Create(NestedEnumEnum v)
         {
             return new NesterNestedEnum
             {
@@ -84,8 +84,8 @@ public class Nester
             var value = stream.ReadInt();
             switch (value)
             {
-                case 0: return Create(nestedEnumEnum.BLAH_1);
-                case 1: return Create(nestedEnumEnum.BLAH_2);
+                case 0: return Create(NestedEnumEnum.BLAH_1);
+                case 1: return Create(NestedEnumEnum.BLAH_2);
                 default:
                     throw new InvalidDataException("Unknown enum value: " + value);
             }

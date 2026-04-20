@@ -131,7 +131,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
   # ============================================================================
 
   def render_enum(enum, out)
-    enumname = enum.name + 'Enum'
+    enumname = enum.name.camelize + 'Enum'
 
     out.puts "public enum #{enumname}"
     out.puts '{'
@@ -593,11 +593,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
       end
       out.puts '}'
     else
-      field = "#{value}.#{member.name.camelize}"
-      if member.type.sub_type == :optional && csharp_value_type?(member.declaration.type)
-        field = "#{field}.Value"
-      end
-      out.puts "#{encode_type member.declaration.type, field};"
+      out.puts "#{encode_type member.declaration.type, "#{value}.#{member.name.camelize}"};"
     end
   end
 
@@ -746,10 +742,14 @@ class CsharpGenerator < Xdrgen::Generators::Base
         out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{member_name}size + \" exceeds max size #{max_size}\");"
       end
     end
-    out.puts "var #{member_name}RemainingInputLen = stream.GetRemainingInputLen();"
-    out.puts "if (#{member_name}RemainingInputLen >= 0 && #{member_name}RemainingInputLen < #{member_name}size)"
-    out.indent do
-      out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{member_name}size + \" exceeds remaining input length \" + #{member_name}RemainingInputLen);"
+    # Only compare remaining bytes against size for Opaque (byte-sized) declarations.
+    # For arrays of wider elements, size is an element count, not a byte count.
+    if declaration.is_a?(AST::Declarations::Opaque)
+      out.puts "var #{member_name}RemainingInputLen = stream.GetRemainingInputLen();"
+      out.puts "if (#{member_name}RemainingInputLen >= 0 && #{member_name}RemainingInputLen < #{member_name}size)"
+      out.indent do
+        out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{member_name}size + \" exceeds remaining input length \" + #{member_name}RemainingInputLen);"
+      end
     end
   end
 
@@ -795,8 +795,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
     when AST::Declarations::Array
       "#{type_string decl.type}[]"
     when AST::Declarations::Optional
-      inner = type_string(decl.type)
-      csharp_value_type?(decl.type) ? "#{inner}?" : inner
+      type_string(decl.type).to_s
     when AST::Declarations::Simple
       type_string(decl.type)
     else
@@ -841,18 +840,6 @@ class CsharpGenerator < Xdrgen::Generators::Base
 
   def name_string(name)
     name.camelize
-  end
-
-  def csharp_value_type?(type)
-    case type
-    when AST::Typespecs::Int, AST::Typespecs::UnsignedInt,
-         AST::Typespecs::Hyper, AST::Typespecs::UnsignedHyper,
-         AST::Typespecs::Float, AST::Typespecs::Double,
-         AST::Typespecs::Bool
-      true
-    else
-      false
-    end
   end
 
   def convert_constant(str)

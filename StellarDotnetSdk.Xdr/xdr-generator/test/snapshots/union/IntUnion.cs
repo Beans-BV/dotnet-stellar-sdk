@@ -61,9 +61,6 @@ public class IntUnion
                 var thingssize = stream.ReadInt();
                 if (thingssize < 0)
                     throw new InvalidDataException("things size " + thingssize + " is negative");
-                var thingsRemainingInputLen = stream.GetRemainingInputLen();
-                if (thingsRemainingInputLen >= 0 && thingsRemainingInputLen < thingssize)
-                    throw new InvalidDataException("things size " + thingssize + " exceeds remaining input length " + thingsRemainingInputLen);
                 decodedIntUnion.Things = new Multi[thingssize];
                 for (var i = 0; i < thingssize; i++)
                 {
