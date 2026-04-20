@@ -26,7 +26,7 @@ public class ClaimClaimableBalanceOp
     public static ClaimClaimableBalanceOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ClaimClaimableBalanceOp");
         maxDepth -= 1;
         var decodedClaimClaimableBalanceOp = new ClaimClaimableBalanceOp();
         decodedClaimClaimableBalanceOp.BalanceID = ClaimableBalanceID.Decode(stream, maxDepth);

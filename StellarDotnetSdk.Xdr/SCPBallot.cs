@@ -29,7 +29,7 @@ public class SCPBallot
     public static SCPBallot Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCPBallot");
         maxDepth -= 1;
         var decodedSCPBallot = new SCPBallot();
         decodedSCPBallot.Counter = Uint32.Decode(stream, maxDepth);

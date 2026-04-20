@@ -29,7 +29,7 @@ public class SCMapEntry
     public static SCMapEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCMapEntry");
         maxDepth -= 1;
         var decodedSCMapEntry = new SCMapEntry();
         decodedSCMapEntry.Key = SCVal.Decode(stream, maxDepth);

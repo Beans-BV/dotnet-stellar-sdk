@@ -83,7 +83,7 @@ public class AccountEntry
     public static AccountEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding AccountEntry");
         maxDepth -= 1;
         var decodedAccountEntry = new AccountEntry();
         decodedAccountEntry.AccountID = AccountID.Decode(stream, maxDepth);
@@ -133,13 +133,15 @@ public class AccountEntry
                 case 1:
                     AccountEntryExtensionV1.Encode(stream, encodedAccountEntryExt.V1);
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedAccountEntryExt.Discriminant);
             }
         }
 
         public static AccountEntryExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding AccountEntryExt");
             maxDepth -= 1;
             var decodedAccountEntryExt = new AccountEntryExt();
             var discriminant = stream.ReadInt();

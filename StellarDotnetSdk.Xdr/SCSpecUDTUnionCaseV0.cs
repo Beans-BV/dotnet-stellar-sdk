@@ -35,13 +35,15 @@ public class SCSpecUDTUnionCaseV0
             case SCSpecUDTUnionCaseV0Kind.SCSpecUDTUnionCaseV0KindEnum.SC_SPEC_UDT_UNION_CASE_TUPLE_V0:
                 SCSpecUDTUnionCaseTupleV0.Encode(stream, encodedSCSpecUDTUnionCaseV0.TupleCase);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSCSpecUDTUnionCaseV0.Discriminant.InnerValue);
         }
     }
 
     public static SCSpecUDTUnionCaseV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCSpecUDTUnionCaseV0");
         maxDepth -= 1;
         var decodedSCSpecUDTUnionCaseV0 = new SCSpecUDTUnionCaseV0();
         var discriminant = SCSpecUDTUnionCaseV0Kind.Decode(stream, maxDepth);

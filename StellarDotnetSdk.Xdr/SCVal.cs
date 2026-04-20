@@ -180,13 +180,15 @@ public class SCVal
             case SCValType.SCValTypeEnum.SCV_LEDGER_KEY_NONCE:
                 SCNonceKey.Encode(stream, encodedSCVal.NonceKey);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSCVal.Discriminant.InnerValue);
         }
     }
 
     public static SCVal Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCVal");
         maxDepth -= 1;
         var decodedSCVal = new SCVal();
         var discriminant = SCValType.Decode(stream, maxDepth);

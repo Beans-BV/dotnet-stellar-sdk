@@ -32,7 +32,7 @@ public class SimplePaymentResult
     public static SimplePaymentResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SimplePaymentResult");
         maxDepth -= 1;
         var decodedSimplePaymentResult = new SimplePaymentResult();
         decodedSimplePaymentResult.Destination = AccountID.Decode(stream, maxDepth);

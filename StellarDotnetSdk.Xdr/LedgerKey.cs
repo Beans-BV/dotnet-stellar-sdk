@@ -124,13 +124,15 @@ public class LedgerKey
             case LedgerEntryType.LedgerEntryTypeEnum.TTL:
                 LedgerKeyTtl.Encode(stream, encodedLedgerKey.Ttl);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedLedgerKey.Discriminant.InnerValue);
         }
     }
 
     public static LedgerKey Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerKey");
         maxDepth -= 1;
         var decodedLedgerKey = new LedgerKey();
         var discriminant = LedgerEntryType.Decode(stream, maxDepth);
@@ -191,7 +193,7 @@ public class LedgerKey
         public static LedgerKeyAccount Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerKeyAccount");
             maxDepth -= 1;
             var decodedLedgerKeyAccount = new LedgerKeyAccount();
             decodedLedgerKeyAccount.AccountID = AccountID.Decode(stream, maxDepth);
@@ -218,7 +220,7 @@ public class LedgerKey
         public static LedgerKeyTrustLine Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerKeyTrustLine");
             maxDepth -= 1;
             var decodedLedgerKeyTrustLine = new LedgerKeyTrustLine();
             decodedLedgerKeyTrustLine.AccountID = AccountID.Decode(stream, maxDepth);
@@ -246,7 +248,7 @@ public class LedgerKey
         public static LedgerKeyOffer Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerKeyOffer");
             maxDepth -= 1;
             var decodedLedgerKeyOffer = new LedgerKeyOffer();
             decodedLedgerKeyOffer.SellerID = AccountID.Decode(stream, maxDepth);
@@ -274,7 +276,7 @@ public class LedgerKey
         public static LedgerKeyData Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerKeyData");
             maxDepth -= 1;
             var decodedLedgerKeyData = new LedgerKeyData();
             decodedLedgerKeyData.AccountID = AccountID.Decode(stream, maxDepth);
@@ -300,7 +302,7 @@ public class LedgerKey
         public static LedgerKeyClaimableBalance Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerKeyClaimableBalance");
             maxDepth -= 1;
             var decodedLedgerKeyClaimableBalance = new LedgerKeyClaimableBalance();
             decodedLedgerKeyClaimableBalance.BalanceID = ClaimableBalanceID.Decode(stream, maxDepth);
@@ -325,7 +327,7 @@ public class LedgerKey
         public static LedgerKeyLiquidityPool Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerKeyLiquidityPool");
             maxDepth -= 1;
             var decodedLedgerKeyLiquidityPool = new LedgerKeyLiquidityPool();
             decodedLedgerKeyLiquidityPool.LiquidityPoolID = PoolID.Decode(stream, maxDepth);
@@ -354,7 +356,7 @@ public class LedgerKey
         public static LedgerKeyContractData Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerKeyContractData");
             maxDepth -= 1;
             var decodedLedgerKeyContractData = new LedgerKeyContractData();
             decodedLedgerKeyContractData.Contract = SCAddress.Decode(stream, maxDepth);
@@ -381,7 +383,7 @@ public class LedgerKey
         public static LedgerKeyContractCode Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerKeyContractCode");
             maxDepth -= 1;
             var decodedLedgerKeyContractCode = new LedgerKeyContractCode();
             decodedLedgerKeyContractCode.Hash = Hash.Decode(stream, maxDepth);
@@ -406,7 +408,7 @@ public class LedgerKey
         public static LedgerKeyConfigSetting Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerKeyConfigSetting");
             maxDepth -= 1;
             var decodedLedgerKeyConfigSetting = new LedgerKeyConfigSetting();
             decodedLedgerKeyConfigSetting.ConfigSettingID = ConfigSettingID.Decode(stream, maxDepth);
@@ -431,7 +433,7 @@ public class LedgerKey
         public static LedgerKeyTtl Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerKeyTtl");
             maxDepth -= 1;
             var decodedLedgerKeyTtl = new LedgerKeyTtl();
             decodedLedgerKeyTtl.KeyHash = Hash.Decode(stream, maxDepth);

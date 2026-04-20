@@ -100,13 +100,15 @@ public class OperationResult
             case OperationResultCode.OperationResultCodeEnum.opEXCEEDED_WORK_LIMIT:
             case OperationResultCode.OperationResultCodeEnum.opTOO_MANY_SPONSORING:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedOperationResult.Discriminant.InnerValue);
         }
     }
 
     public static OperationResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding OperationResult");
         maxDepth -= 1;
         var decodedOperationResult = new OperationResult();
         var discriminant = OperationResultCode.Decode(stream, maxDepth);
@@ -253,13 +255,15 @@ public class OperationResult
                 case OperationType.OperationTypeEnum.RESTORE_FOOTPRINT:
                     RestoreFootprintResult.Encode(stream, encodedOperationResultTr.RestoreFootprintResult);
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedOperationResultTr.Discriminant.InnerValue);
             }
         }
 
         public static OperationResultTr Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding OperationResultTr");
             maxDepth -= 1;
             var decodedOperationResultTr = new OperationResultTr();
             var discriminant = OperationType.Decode(stream, maxDepth);

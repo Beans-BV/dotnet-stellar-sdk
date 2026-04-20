@@ -34,7 +34,7 @@ public class TransactionSet
     public static TransactionSet Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionSet");
         maxDepth -= 1;
         var decodedTransactionSet = new TransactionSet();
         decodedTransactionSet.PreviousLedgerHash = Hash.Decode(stream, maxDepth);

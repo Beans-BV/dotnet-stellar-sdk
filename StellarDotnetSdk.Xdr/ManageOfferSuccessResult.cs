@@ -44,7 +44,7 @@ public class ManageOfferSuccessResult
     public static ManageOfferSuccessResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ManageOfferSuccessResult");
         maxDepth -= 1;
         var decodedManageOfferSuccessResult = new ManageOfferSuccessResult();
         var offersClaimedsize = stream.ReadInt();
@@ -81,13 +81,15 @@ public class ManageOfferSuccessResult
                     break;
                 case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_DELETED:
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedManageOfferSuccessResultOffer.Discriminant.InnerValue);
             }
         }
 
         public static ManageOfferSuccessResultOffer Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding ManageOfferSuccessResultOffer");
             maxDepth -= 1;
             var decodedManageOfferSuccessResultOffer = new ManageOfferSuccessResultOffer();
             var discriminant = ManageOfferEffect.Decode(stream, maxDepth);

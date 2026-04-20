@@ -57,7 +57,7 @@ public class StellarValue
     public static StellarValue Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding StellarValue");
         maxDepth -= 1;
         var decodedStellarValue = new StellarValue();
         decodedStellarValue.TxSetHash = Hash.Decode(stream, maxDepth);
@@ -97,13 +97,15 @@ public class StellarValue
                 case StellarValueType.StellarValueTypeEnum.STELLAR_VALUE_SIGNED:
                     LedgerCloseValueSignature.Encode(stream, encodedStellarValueExt.LcValueSignature);
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedStellarValueExt.Discriminant.InnerValue);
             }
         }
 
         public static StellarValueExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding StellarValueExt");
             maxDepth -= 1;
             var decodedStellarValueExt = new StellarValueExt();
             var discriminant = StellarValueType.Decode(stream, maxDepth);

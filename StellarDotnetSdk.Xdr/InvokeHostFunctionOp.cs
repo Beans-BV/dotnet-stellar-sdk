@@ -36,7 +36,7 @@ public class InvokeHostFunctionOp
     public static InvokeHostFunctionOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding InvokeHostFunctionOp");
         maxDepth -= 1;
         var decodedInvokeHostFunctionOp = new InvokeHostFunctionOp();
         decodedInvokeHostFunctionOp.HostFunction = HostFunction.Decode(stream, maxDepth);

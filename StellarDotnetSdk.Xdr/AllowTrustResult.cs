@@ -40,13 +40,15 @@ public class AllowTrustResult
             case AllowTrustResultCode.AllowTrustResultCodeEnum.ALLOW_TRUST_SELF_NOT_ALLOWED:
             case AllowTrustResultCode.AllowTrustResultCodeEnum.ALLOW_TRUST_LOW_RESERVE:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedAllowTrustResult.Discriminant.InnerValue);
         }
     }
 
     public static AllowTrustResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding AllowTrustResult");
         maxDepth -= 1;
         var decodedAllowTrustResult = new AllowTrustResult();
         var discriminant = AllowTrustResultCode.Decode(stream, maxDepth);

@@ -66,13 +66,15 @@ public class PathPaymentStrictReceiveResult
             case PathPaymentStrictReceiveResultCode.PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_OFFER_CROSS_SELF:
             case PathPaymentStrictReceiveResultCode.PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedPathPaymentStrictReceiveResult.Discriminant.InnerValue);
         }
     }
 
     public static PathPaymentStrictReceiveResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding PathPaymentStrictReceiveResult");
         maxDepth -= 1;
         var decodedPathPaymentStrictReceiveResult = new PathPaymentStrictReceiveResult();
         var discriminant = PathPaymentStrictReceiveResultCode.Decode(stream, maxDepth);
@@ -129,7 +131,7 @@ public class PathPaymentStrictReceiveResult
         public static PathPaymentStrictReceiveResultSuccess Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding PathPaymentStrictReceiveResultSuccess");
             maxDepth -= 1;
             var decodedPathPaymentStrictReceiveResultSuccess = new PathPaymentStrictReceiveResultSuccess();
             var offerssize = stream.ReadInt();

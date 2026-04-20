@@ -53,13 +53,15 @@ public class LedgerEntryChange
             case LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_RESTORED:
                 LedgerEntry.Encode(stream, encodedLedgerEntryChange.Restored);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedLedgerEntryChange.Discriminant.InnerValue);
         }
     }
 
     public static LedgerEntryChange Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerEntryChange");
         maxDepth -= 1;
         var decodedLedgerEntryChange = new LedgerEntryChange();
         var discriminant = LedgerEntryChangeType.Decode(stream, maxDepth);

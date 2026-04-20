@@ -42,7 +42,7 @@ public class SCSpecUDTEnumV0
     public static SCSpecUDTEnumV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCSpecUDTEnumV0");
         maxDepth -= 1;
         var decodedSCSpecUDTEnumV0 = new SCSpecUDTEnumV0();
         decodedSCSpecUDTEnumV0.Doc = stream.ReadString();

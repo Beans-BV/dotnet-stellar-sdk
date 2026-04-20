@@ -35,13 +35,15 @@ public class PersistedSCPState
             case 1:
                 PersistedSCPStateV1.Encode(stream, encodedPersistedSCPState.V1);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedPersistedSCPState.Discriminant);
         }
     }
 
     public static PersistedSCPState Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding PersistedSCPState");
         maxDepth -= 1;
         var decodedPersistedSCPState = new PersistedSCPState();
         var discriminant = stream.ReadInt();

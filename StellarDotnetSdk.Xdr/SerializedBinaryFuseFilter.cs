@@ -58,7 +58,7 @@ public class SerializedBinaryFuseFilter
     public static SerializedBinaryFuseFilter Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SerializedBinaryFuseFilter");
         maxDepth -= 1;
         var decodedSerializedBinaryFuseFilter = new SerializedBinaryFuseFilter();
         decodedSerializedBinaryFuseFilter.Type = BinaryFuseFilterType.Decode(stream, maxDepth);

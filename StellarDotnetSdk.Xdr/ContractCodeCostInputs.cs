@@ -55,7 +55,7 @@ public class ContractCodeCostInputs
     public static ContractCodeCostInputs Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ContractCodeCostInputs");
         maxDepth -= 1;
         var decodedContractCodeCostInputs = new ContractCodeCostInputs();
         decodedContractCodeCostInputs.Ext = ExtensionPoint.Decode(stream, maxDepth);

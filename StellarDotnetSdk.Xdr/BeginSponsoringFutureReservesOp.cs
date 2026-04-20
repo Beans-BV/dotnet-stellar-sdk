@@ -26,7 +26,7 @@ public class BeginSponsoringFutureReservesOp
     public static BeginSponsoringFutureReservesOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding BeginSponsoringFutureReservesOp");
         maxDepth -= 1;
         var decodedBeginSponsoringFutureReservesOp = new BeginSponsoringFutureReservesOp();
         decodedBeginSponsoringFutureReservesOp.SponsoredID = AccountID.Decode(stream, maxDepth);

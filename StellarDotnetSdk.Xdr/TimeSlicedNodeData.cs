@@ -59,7 +59,7 @@ public class TimeSlicedNodeData
     public static TimeSlicedNodeData Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TimeSlicedNodeData");
         maxDepth -= 1;
         var decodedTimeSlicedNodeData = new TimeSlicedNodeData();
         decodedTimeSlicedNodeData.AddedAuthenticatedPeers = Uint32.Decode(stream, maxDepth);

@@ -38,13 +38,15 @@ public class SetTrustLineFlagsResult
             case SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_INVALID_STATE:
             case SetTrustLineFlagsResultCode.SetTrustLineFlagsResultCodeEnum.SET_TRUST_LINE_FLAGS_LOW_RESERVE:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSetTrustLineFlagsResult.Discriminant.InnerValue);
         }
     }
 
     public static SetTrustLineFlagsResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SetTrustLineFlagsResult");
         maxDepth -= 1;
         var decodedSetTrustLineFlagsResult = new SetTrustLineFlagsResult();
         var discriminant = SetTrustLineFlagsResultCode.Decode(stream, maxDepth);

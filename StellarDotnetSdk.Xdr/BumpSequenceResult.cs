@@ -30,13 +30,15 @@ public class BumpSequenceResult
                 break;
             case BumpSequenceResultCode.BumpSequenceResultCodeEnum.BUMP_SEQUENCE_BAD_SEQ:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedBumpSequenceResult.Discriminant.InnerValue);
         }
     }
 
     public static BumpSequenceResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding BumpSequenceResult");
         maxDepth -= 1;
         var decodedBumpSequenceResult = new BumpSequenceResult();
         var discriminant = BumpSequenceResultCode.Decode(stream, maxDepth);

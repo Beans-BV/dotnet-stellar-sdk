@@ -29,7 +29,7 @@ public class DecoratedSignature
     public static DecoratedSignature Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding DecoratedSignature");
         maxDepth -= 1;
         var decodedDecoratedSignature = new DecoratedSignature();
         decodedDecoratedSignature.Hint = SignatureHint.Decode(stream, maxDepth);

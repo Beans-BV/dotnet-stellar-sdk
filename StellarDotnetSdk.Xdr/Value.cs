@@ -34,7 +34,7 @@ public class Value
     public static Value Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Value");
         maxDepth -= 1;
         var decodedValue = new Value();
         var Valuesize = stream.ReadInt();

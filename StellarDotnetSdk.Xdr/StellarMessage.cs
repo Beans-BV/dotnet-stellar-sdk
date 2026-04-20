@@ -167,13 +167,15 @@ public class StellarMessage
             case MessageType.MessageTypeEnum.FLOOD_DEMAND:
                 FloodDemand.Encode(stream, encodedStellarMessage.FloodDemand);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedStellarMessage.Discriminant.InnerValue);
         }
     }
 
     public static StellarMessage Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding StellarMessage");
         maxDepth -= 1;
         var decodedStellarMessage = new StellarMessage();
         var discriminant = MessageType.Decode(stream, maxDepth);

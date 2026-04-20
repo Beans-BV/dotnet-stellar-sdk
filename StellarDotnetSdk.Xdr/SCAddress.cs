@@ -53,13 +53,15 @@ public class SCAddress
             case SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_LIQUIDITY_POOL:
                 PoolID.Encode(stream, encodedSCAddress.LiquidityPoolId);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSCAddress.Discriminant.InnerValue);
         }
     }
 
     public static SCAddress Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCAddress");
         maxDepth -= 1;
         var decodedSCAddress = new SCAddress();
         var discriminant = SCAddressType.Decode(stream, maxDepth);

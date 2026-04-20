@@ -33,7 +33,7 @@ public class ContractCostParamEntry
     public static ContractCostParamEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ContractCostParamEntry");
         maxDepth -= 1;
         var decodedContractCostParamEntry = new ContractCostParamEntry();
         decodedContractCostParamEntry.Ext = ExtensionPoint.Decode(stream, maxDepth);

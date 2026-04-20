@@ -42,13 +42,15 @@ public class CreateClaimableBalanceResult
             case CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum.CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
             case CreateClaimableBalanceResultCode.CreateClaimableBalanceResultCodeEnum.CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedCreateClaimableBalanceResult.Discriminant.InnerValue);
         }
     }
 
     public static CreateClaimableBalanceResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding CreateClaimableBalanceResult");
         maxDepth -= 1;
         var decodedCreateClaimableBalanceResult = new CreateClaimableBalanceResult();
         var discriminant = CreateClaimableBalanceResultCode.Decode(stream, maxDepth);

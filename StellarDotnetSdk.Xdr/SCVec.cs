@@ -37,7 +37,7 @@ public class SCVec
     public static SCVec Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCVec");
         maxDepth -= 1;
         var decodedSCVec = new SCVec();
         var SCVecsize = stream.ReadInt();

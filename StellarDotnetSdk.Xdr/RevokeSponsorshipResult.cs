@@ -38,13 +38,15 @@ public class RevokeSponsorshipResult
             case RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum.REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE:
             case RevokeSponsorshipResultCode.RevokeSponsorshipResultCodeEnum.REVOKE_SPONSORSHIP_MALFORMED:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedRevokeSponsorshipResult.Discriminant.InnerValue);
         }
     }
 
     public static RevokeSponsorshipResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding RevokeSponsorshipResult");
         maxDepth -= 1;
         var decodedRevokeSponsorshipResult = new RevokeSponsorshipResult();
         var discriminant = RevokeSponsorshipResultCode.Decode(stream, maxDepth);

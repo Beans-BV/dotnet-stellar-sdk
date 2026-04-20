@@ -45,7 +45,7 @@ public class FeeBumpTransaction
     public static FeeBumpTransaction Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding FeeBumpTransaction");
         maxDepth -= 1;
         var decodedFeeBumpTransaction = new FeeBumpTransaction();
         decodedFeeBumpTransaction.FeeSource = MuxedAccount.Decode(stream, maxDepth);
@@ -74,13 +74,15 @@ public class FeeBumpTransaction
                 case EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX:
                     TransactionV1Envelope.Encode(stream, encodedFeeBumpTransactionInnerTx.V1);
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedFeeBumpTransactionInnerTx.Discriminant.InnerValue);
             }
         }
 
         public static FeeBumpTransactionInnerTx Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding FeeBumpTransactionInnerTx");
             maxDepth -= 1;
             var decodedFeeBumpTransactionInnerTx = new FeeBumpTransactionInnerTx();
             var discriminant = EnvelopeType.Decode(stream, maxDepth);
@@ -114,13 +116,15 @@ public class FeeBumpTransaction
             {
                 case 0:
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedFeeBumpTransactionExt.Discriminant);
             }
         }
 
         public static FeeBumpTransactionExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding FeeBumpTransactionExt");
             maxDepth -= 1;
             var decodedFeeBumpTransactionExt = new FeeBumpTransactionExt();
             var discriminant = stream.ReadInt();

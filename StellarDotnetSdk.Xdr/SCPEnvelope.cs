@@ -29,7 +29,7 @@ public class SCPEnvelope
     public static SCPEnvelope Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCPEnvelope");
         maxDepth -= 1;
         var decodedSCPEnvelope = new SCPEnvelope();
         decodedSCPEnvelope.Statement = SCPStatement.Decode(stream, maxDepth);

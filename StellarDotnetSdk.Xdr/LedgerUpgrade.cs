@@ -68,13 +68,15 @@ public class LedgerUpgrade
             case LedgerUpgradeType.LedgerUpgradeTypeEnum.LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE:
                 Uint32.Encode(stream, encodedLedgerUpgrade.NewMaxSorobanTxSetSize);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedLedgerUpgrade.Discriminant.InnerValue);
         }
     }
 
     public static LedgerUpgrade Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerUpgrade");
         maxDepth -= 1;
         var decodedLedgerUpgrade = new LedgerUpgrade();
         var discriminant = LedgerUpgradeType.Decode(stream, maxDepth);

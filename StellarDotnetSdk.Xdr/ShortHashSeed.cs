@@ -29,7 +29,7 @@ public class ShortHashSeed
     public static ShortHashSeed Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ShortHashSeed");
         maxDepth -= 1;
         var decodedShortHashSeed = new ShortHashSeed();
         var seedsize = 16;

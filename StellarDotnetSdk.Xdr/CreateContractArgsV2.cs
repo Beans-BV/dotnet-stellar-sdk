@@ -38,7 +38,7 @@ public class CreateContractArgsV2
     public static CreateContractArgsV2 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding CreateContractArgsV2");
         maxDepth -= 1;
         var decodedCreateContractArgsV2 = new CreateContractArgsV2();
         decodedCreateContractArgsV2.ContractIDPreimage = ContractIDPreimage.Decode(stream, maxDepth);

@@ -38,7 +38,7 @@ public class TransactionV1Envelope
     public static TransactionV1Envelope Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionV1Envelope");
         maxDepth -= 1;
         var decodedTransactionV1Envelope = new TransactionV1Envelope();
         decodedTransactionV1Envelope.Tx = Transaction.Decode(stream, maxDepth);

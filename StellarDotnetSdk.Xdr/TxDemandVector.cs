@@ -39,7 +39,7 @@ public class TxDemandVector
     public static TxDemandVector Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TxDemandVector");
         maxDepth -= 1;
         var decodedTxDemandVector = new TxDemandVector();
         var TxDemandVectorsize = stream.ReadInt();

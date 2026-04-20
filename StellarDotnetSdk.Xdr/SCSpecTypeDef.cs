@@ -105,13 +105,15 @@ public class SCSpecTypeDef
             case SCSpecType.SCSpecTypeEnum.SC_SPEC_TYPE_UDT:
                 SCSpecTypeUDT.Encode(stream, encodedSCSpecTypeDef.Udt);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSCSpecTypeDef.Discriminant.InnerValue);
         }
     }
 
     public static SCSpecTypeDef Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCSpecTypeDef");
         maxDepth -= 1;
         var decodedSCSpecTypeDef = new SCSpecTypeDef();
         var discriminant = SCSpecType.Decode(stream, maxDepth);

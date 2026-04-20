@@ -36,13 +36,15 @@ public class CreateAccountResult
             case CreateAccountResultCode.CreateAccountResultCodeEnum.CREATE_ACCOUNT_LOW_RESERVE:
             case CreateAccountResultCode.CreateAccountResultCodeEnum.CREATE_ACCOUNT_ALREADY_EXIST:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedCreateAccountResult.Discriminant.InnerValue);
         }
     }
 
     public static CreateAccountResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding CreateAccountResult");
         maxDepth -= 1;
         var decodedCreateAccountResult = new CreateAccountResult();
         var discriminant = CreateAccountResultCode.Decode(stream, maxDepth);

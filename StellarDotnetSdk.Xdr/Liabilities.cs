@@ -29,7 +29,7 @@ public class Liabilities
     public static Liabilities Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Liabilities");
         maxDepth -= 1;
         var decodedLiabilities = new Liabilities();
         decodedLiabilities.Buying = Int64.Decode(stream, maxDepth);

@@ -34,7 +34,7 @@ public class AllowTrustOp
     public static AllowTrustOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding AllowTrustOp");
         maxDepth -= 1;
         var decodedAllowTrustOp = new AllowTrustOp();
         decodedAllowTrustOp.Trustor = AccountID.Decode(stream, maxDepth);

@@ -29,13 +29,15 @@ public class SCMetaEntry
             case SCMetaKind.SCMetaKindEnum.SC_META_V0:
                 SCMetaV0.Encode(stream, encodedSCMetaEntry.V0);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSCMetaEntry.Discriminant.InnerValue);
         }
     }
 
     public static SCMetaEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCMetaEntry");
         maxDepth -= 1;
         var decodedSCMetaEntry = new SCMetaEntry();
         var discriminant = SCMetaKind.Decode(stream, maxDepth);

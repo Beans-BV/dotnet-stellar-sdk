@@ -40,7 +40,7 @@ public class ManageSellOfferOp
     public static ManageSellOfferOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ManageSellOfferOp");
         maxDepth -= 1;
         var decodedManageSellOfferOp = new ManageSellOfferOp();
         decodedManageSellOfferOp.Selling = Asset.Decode(stream, maxDepth);

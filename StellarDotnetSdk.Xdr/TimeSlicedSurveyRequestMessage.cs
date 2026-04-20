@@ -35,7 +35,7 @@ public class TimeSlicedSurveyRequestMessage
     public static TimeSlicedSurveyRequestMessage Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TimeSlicedSurveyRequestMessage");
         maxDepth -= 1;
         var decodedTimeSlicedSurveyRequestMessage = new TimeSlicedSurveyRequestMessage();
         decodedTimeSlicedSurveyRequestMessage.Request = SurveyRequestMessage.Decode(stream, maxDepth);

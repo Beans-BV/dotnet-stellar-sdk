@@ -29,7 +29,7 @@ public class MuxedEd25519Account
     public static MuxedEd25519Account Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding MuxedEd25519Account");
         maxDepth -= 1;
         var decodedMuxedEd25519Account = new MuxedEd25519Account();
         decodedMuxedEd25519Account.Id = Uint64.Decode(stream, maxDepth);

@@ -45,13 +45,15 @@ public class AccountMergeResult
             case AccountMergeResultCode.AccountMergeResultCodeEnum.ACCOUNT_MERGE_DEST_FULL:
             case AccountMergeResultCode.AccountMergeResultCodeEnum.ACCOUNT_MERGE_IS_SPONSOR:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedAccountMergeResult.Discriminant.InnerValue);
         }
     }
 
     public static AccountMergeResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding AccountMergeResult");
         maxDepth -= 1;
         var decodedAccountMergeResult = new AccountMergeResult();
         var discriminant = AccountMergeResultCode.Decode(stream, maxDepth);

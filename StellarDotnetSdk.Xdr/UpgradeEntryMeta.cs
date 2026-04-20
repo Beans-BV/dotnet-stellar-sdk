@@ -29,7 +29,7 @@ public class UpgradeEntryMeta
     public static UpgradeEntryMeta Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding UpgradeEntryMeta");
         maxDepth -= 1;
         var decodedUpgradeEntryMeta = new UpgradeEntryMeta();
         decodedUpgradeEntryMeta.Upgrade = LedgerUpgrade.Decode(stream, maxDepth);

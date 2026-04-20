@@ -29,7 +29,7 @@ public class SignedTimeSlicedSurveyResponseMessage
     public static SignedTimeSlicedSurveyResponseMessage Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SignedTimeSlicedSurveyResponseMessage");
         maxDepth -= 1;
         var decodedSignedTimeSlicedSurveyResponseMessage = new SignedTimeSlicedSurveyResponseMessage();
         decodedSignedTimeSlicedSurveyResponseMessage.ResponseSignature = Signature.Decode(stream, maxDepth);

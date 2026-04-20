@@ -39,7 +39,7 @@ public class LedgerHeaderHistoryEntry
     public static LedgerHeaderHistoryEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerHeaderHistoryEntry");
         maxDepth -= 1;
         var decodedLedgerHeaderHistoryEntry = new LedgerHeaderHistoryEntry();
         decodedLedgerHeaderHistoryEntry.Hash = Hash.Decode(stream, maxDepth);
@@ -64,13 +64,15 @@ public class LedgerHeaderHistoryEntry
             {
                 case 0:
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedLedgerHeaderHistoryEntryExt.Discriminant);
             }
         }
 
         public static LedgerHeaderHistoryEntryExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerHeaderHistoryEntryExt");
             maxDepth -= 1;
             var decodedLedgerHeaderHistoryEntryExt = new LedgerHeaderHistoryEntryExt();
             var discriminant = stream.ReadInt();

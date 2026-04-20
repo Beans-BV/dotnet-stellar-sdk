@@ -38,13 +38,15 @@ public class AssetCode
             case AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM12:
                 AssetCode12.Encode(stream, encodedAssetCode.AssetCode12);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedAssetCode.Discriminant.InnerValue);
         }
     }
 
     public static AssetCode Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding AssetCode");
         maxDepth -= 1;
         var decodedAssetCode = new AssetCode();
         var discriminant = AssetType.Decode(stream, maxDepth);

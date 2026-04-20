@@ -33,13 +33,15 @@ public class Claimant
             case ClaimantType.ClaimantTypeEnum.CLAIMANT_TYPE_V0:
                 ClaimantV0.Encode(stream, encodedClaimant.V0);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedClaimant.Discriminant.InnerValue);
         }
     }
 
     public static Claimant Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Claimant");
         maxDepth -= 1;
         var decodedClaimant = new Claimant();
         var discriminant = ClaimantType.Decode(stream, maxDepth);
@@ -75,7 +77,7 @@ public class Claimant
         public static ClaimantV0 Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding ClaimantV0");
             maxDepth -= 1;
             var decodedClaimantV0 = new ClaimantV0();
             decodedClaimantV0.Destination = AccountID.Decode(stream, maxDepth);

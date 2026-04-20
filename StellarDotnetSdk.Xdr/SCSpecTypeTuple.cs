@@ -33,7 +33,7 @@ public class SCSpecTypeTuple
     public static SCSpecTypeTuple Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCSpecTypeTuple");
         maxDepth -= 1;
         var decodedSCSpecTypeTuple = new SCSpecTypeTuple();
         var valueTypessize = stream.ReadInt();

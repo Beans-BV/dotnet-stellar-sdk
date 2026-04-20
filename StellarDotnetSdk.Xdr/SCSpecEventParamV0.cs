@@ -35,7 +35,7 @@ public class SCSpecEventParamV0
     public static SCSpecEventParamV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCSpecEventParamV0");
         maxDepth -= 1;
         var decodedSCSpecEventParamV0 = new SCSpecEventParamV0();
         decodedSCSpecEventParamV0.Doc = stream.ReadString();

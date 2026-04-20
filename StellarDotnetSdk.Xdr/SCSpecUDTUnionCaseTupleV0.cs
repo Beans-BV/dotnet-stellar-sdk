@@ -39,7 +39,7 @@ public class SCSpecUDTUnionCaseTupleV0
     public static SCSpecUDTUnionCaseTupleV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCSpecUDTUnionCaseTupleV0");
         maxDepth -= 1;
         var decodedSCSpecUDTUnionCaseTupleV0 = new SCSpecUDTUnionCaseTupleV0();
         decodedSCSpecUDTUnionCaseTupleV0.Doc = stream.ReadString();

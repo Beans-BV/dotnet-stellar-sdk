@@ -66,7 +66,7 @@ public class TransactionResult
     public static TransactionResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionResult");
         maxDepth -= 1;
         var decodedTransactionResult = new TransactionResult();
         decodedTransactionResult.FeeCharged = Int64.Decode(stream, maxDepth);
@@ -121,13 +121,15 @@ public class TransactionResult
                 case TransactionResultCode.TransactionResultCodeEnum.txMALFORMED:
                 case TransactionResultCode.TransactionResultCodeEnum.txSOROBAN_INVALID:
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedTransactionResultResult.Discriminant.InnerValue);
             }
         }
 
         public static TransactionResultResult Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionResultResult");
             maxDepth -= 1;
             var decodedTransactionResultResult = new TransactionResultResult();
             var discriminant = TransactionResultCode.Decode(stream, maxDepth);
@@ -189,13 +191,15 @@ public class TransactionResult
             {
                 case 0:
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedTransactionResultExt.Discriminant);
             }
         }
 
         public static TransactionResultExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionResultExt");
             maxDepth -= 1;
             var decodedTransactionResultExt = new TransactionResultExt();
             var discriminant = stream.ReadInt();

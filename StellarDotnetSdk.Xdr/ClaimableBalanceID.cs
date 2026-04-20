@@ -29,13 +29,15 @@ public class ClaimableBalanceID
             case ClaimableBalanceIDType.ClaimableBalanceIDTypeEnum.CLAIMABLE_BALANCE_ID_TYPE_V0:
                 Hash.Encode(stream, encodedClaimableBalanceID.V0);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedClaimableBalanceID.Discriminant.InnerValue);
         }
     }
 
     public static ClaimableBalanceID Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ClaimableBalanceID");
         maxDepth -= 1;
         var decodedClaimableBalanceID = new ClaimableBalanceID();
         var discriminant = ClaimableBalanceIDType.Decode(stream, maxDepth);

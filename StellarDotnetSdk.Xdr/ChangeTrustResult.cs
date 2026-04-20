@@ -44,13 +44,15 @@ public class ChangeTrustResult
             case ChangeTrustResultCode.ChangeTrustResultCodeEnum.CHANGE_TRUST_CANNOT_DELETE:
             case ChangeTrustResultCode.ChangeTrustResultCodeEnum.CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedChangeTrustResult.Discriminant.InnerValue);
         }
     }
 
     public static ChangeTrustResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ChangeTrustResult");
         maxDepth -= 1;
         var decodedChangeTrustResult = new ChangeTrustResult();
         var discriminant = ChangeTrustResultCode.Decode(stream, maxDepth);

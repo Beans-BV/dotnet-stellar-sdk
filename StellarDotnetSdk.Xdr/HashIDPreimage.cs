@@ -69,13 +69,15 @@ public class HashIDPreimage
             case EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
                 HashIDPreimageSorobanAuthorization.Encode(stream, encodedHashIDPreimage.SorobanAuthorization);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedHashIDPreimage.Discriminant.InnerValue);
         }
     }
 
     public static HashIDPreimage Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding HashIDPreimage");
         maxDepth -= 1;
         var decodedHashIDPreimage = new HashIDPreimage();
         var discriminant = EnvelopeType.Decode(stream, maxDepth);
@@ -122,7 +124,7 @@ public class HashIDPreimage
         public static HashIDPreimageOperationID Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding HashIDPreimageOperationID");
             maxDepth -= 1;
             var decodedHashIDPreimageOperationID = new HashIDPreimageOperationID();
             decodedHashIDPreimageOperationID.SourceAccount = AccountID.Decode(stream, maxDepth);
@@ -157,7 +159,7 @@ public class HashIDPreimage
         public static HashIDPreimageRevokeID Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding HashIDPreimageRevokeID");
             maxDepth -= 1;
             var decodedHashIDPreimageRevokeID = new HashIDPreimageRevokeID();
             decodedHashIDPreimageRevokeID.SourceAccount = AccountID.Decode(stream, maxDepth);
@@ -188,7 +190,7 @@ public class HashIDPreimage
         public static HashIDPreimageContractID Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding HashIDPreimageContractID");
             maxDepth -= 1;
             var decodedHashIDPreimageContractID = new HashIDPreimageContractID();
             decodedHashIDPreimageContractID.NetworkID = Hash.Decode(stream, maxDepth);
@@ -220,7 +222,7 @@ public class HashIDPreimage
         public static HashIDPreimageSorobanAuthorization Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding HashIDPreimageSorobanAuthorization");
             maxDepth -= 1;
             var decodedHashIDPreimageSorobanAuthorization = new HashIDPreimageSorobanAuthorization();
             decodedHashIDPreimageSorobanAuthorization.NetworkID = Hash.Decode(stream, maxDepth);

@@ -34,7 +34,7 @@ public class SCBytes
     public static SCBytes Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCBytes");
         maxDepth -= 1;
         var decodedSCBytes = new SCBytes();
         var SCBytessize = stream.ReadInt();

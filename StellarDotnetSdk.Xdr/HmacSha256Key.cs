@@ -29,7 +29,7 @@ public class HmacSha256Key
     public static HmacSha256Key Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding HmacSha256Key");
         maxDepth -= 1;
         var decodedHmacSha256Key = new HmacSha256Key();
         var keysize = 32;

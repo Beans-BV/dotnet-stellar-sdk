@@ -35,13 +35,15 @@ public class StoredTransactionSet
             case 1:
                 GeneralizedTransactionSet.Encode(stream, encodedStoredTransactionSet.GeneralizedTxSet);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedStoredTransactionSet.Discriminant);
         }
     }
 
     public static StoredTransactionSet Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding StoredTransactionSet");
         maxDepth -= 1;
         var decodedStoredTransactionSet = new StoredTransactionSet();
         var discriminant = stream.ReadInt();

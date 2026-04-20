@@ -39,7 +39,7 @@ public class TxAdvertVector
     public static TxAdvertVector Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TxAdvertVector");
         maxDepth -= 1;
         var decodedTxAdvertVector = new TxAdvertVector();
         var TxAdvertVectorsize = stream.ReadInt();

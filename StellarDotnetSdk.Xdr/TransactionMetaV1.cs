@@ -34,7 +34,7 @@ public class TransactionMetaV1
     public static TransactionMetaV1 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionMetaV1");
         maxDepth -= 1;
         var decodedTransactionMetaV1 = new TransactionMetaV1();
         decodedTransactionMetaV1.TxChanges = LedgerEntryChanges.Decode(stream, maxDepth);

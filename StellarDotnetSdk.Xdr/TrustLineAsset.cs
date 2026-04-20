@@ -50,13 +50,15 @@ public class TrustLineAsset
             case AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE:
                 PoolID.Encode(stream, encodedTrustLineAsset.LiquidityPoolID);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedTrustLineAsset.Discriminant.InnerValue);
         }
     }
 
     public static TrustLineAsset Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TrustLineAsset");
         maxDepth -= 1;
         var decodedTrustLineAsset = new TrustLineAsset();
         var discriminant = AssetType.Decode(stream, maxDepth);

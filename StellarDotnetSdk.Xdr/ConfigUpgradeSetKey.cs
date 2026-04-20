@@ -28,7 +28,7 @@ public class ConfigUpgradeSetKey
     public static ConfigUpgradeSetKey Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ConfigUpgradeSetKey");
         maxDepth -= 1;
         var decodedConfigUpgradeSetKey = new ConfigUpgradeSetKey();
         decodedConfigUpgradeSetKey.ContractID = ContractID.Decode(stream, maxDepth);

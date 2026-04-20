@@ -38,7 +38,7 @@ public class SorobanTransactionMetaV2
     public static SorobanTransactionMetaV2 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SorobanTransactionMetaV2");
         maxDepth -= 1;
         var decodedSorobanTransactionMetaV2 = new SorobanTransactionMetaV2();
         decodedSorobanTransactionMetaV2.Ext = SorobanTransactionMetaExt.Decode(stream, maxDepth);

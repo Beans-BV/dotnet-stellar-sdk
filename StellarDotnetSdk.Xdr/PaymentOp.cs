@@ -32,7 +32,7 @@ public class PaymentOp
     public static PaymentOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding PaymentOp");
         maxDepth -= 1;
         var decodedPaymentOp = new PaymentOp();
         decodedPaymentOp.Destination = MuxedAccount.Decode(stream, maxDepth);

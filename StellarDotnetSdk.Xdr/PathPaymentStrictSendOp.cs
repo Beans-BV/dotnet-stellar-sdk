@@ -52,7 +52,7 @@ public class PathPaymentStrictSendOp
     public static PathPaymentStrictSendOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding PathPaymentStrictSendOp");
         maxDepth -= 1;
         var decodedPathPaymentStrictSendOp = new PathPaymentStrictSendOp();
         decodedPathPaymentStrictSendOp.SendAsset = Asset.Decode(stream, maxDepth);

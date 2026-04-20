@@ -34,7 +34,7 @@ public class SCPHistoryEntryV0
     public static SCPHistoryEntryV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCPHistoryEntryV0");
         maxDepth -= 1;
         var decodedSCPHistoryEntryV0 = new SCPHistoryEntryV0();
         var quorumSetssize = stream.ReadInt();

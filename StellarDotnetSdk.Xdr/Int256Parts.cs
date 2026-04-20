@@ -34,7 +34,7 @@ public class Int256Parts
     public static Int256Parts Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Int256Parts");
         maxDepth -= 1;
         var decodedInt256Parts = new Int256Parts();
         decodedInt256Parts.HiHi = Int64.Decode(stream, maxDepth);

@@ -37,7 +37,7 @@ public class TransactionSignaturePayload
     public static TransactionSignaturePayload Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionSignaturePayload");
         maxDepth -= 1;
         var decodedTransactionSignaturePayload = new TransactionSignaturePayload();
         decodedTransactionSignaturePayload.NetworkId = Hash.Decode(stream, maxDepth);
@@ -68,13 +68,15 @@ public class TransactionSignaturePayload
                 case EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_FEE_BUMP:
                     FeeBumpTransaction.Encode(stream, encodedTransactionSignaturePayloadTaggedTransaction.FeeBump);
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedTransactionSignaturePayloadTaggedTransaction.Discriminant.InnerValue);
             }
         }
 
         public static TransactionSignaturePayloadTaggedTransaction Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionSignaturePayloadTaggedTransaction");
             maxDepth -= 1;
             var decodedTransactionSignaturePayloadTaggedTransaction = new TransactionSignaturePayloadTaggedTransaction();
             var discriminant = EnvelopeType.Decode(stream, maxDepth);

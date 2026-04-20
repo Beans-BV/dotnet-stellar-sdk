@@ -33,13 +33,15 @@ public class SorobanTransactionMetaExt
             case 1:
                 SorobanTransactionMetaExtV1.Encode(stream, encodedSorobanTransactionMetaExt.V1);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSorobanTransactionMetaExt.Discriminant);
         }
     }
 
     public static SorobanTransactionMetaExt Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SorobanTransactionMetaExt");
         maxDepth -= 1;
         var decodedSorobanTransactionMetaExt = new SorobanTransactionMetaExt();
         var discriminant = stream.ReadInt();

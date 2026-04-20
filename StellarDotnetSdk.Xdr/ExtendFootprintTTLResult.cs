@@ -34,13 +34,15 @@ public class ExtendFootprintTTLResult
             case ExtendFootprintTTLResultCode.ExtendFootprintTTLResultCodeEnum.EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED:
             case ExtendFootprintTTLResultCode.ExtendFootprintTTLResultCodeEnum.EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedExtendFootprintTTLResult.Discriminant.InnerValue);
         }
     }
 
     public static ExtendFootprintTTLResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ExtendFootprintTTLResult");
         maxDepth -= 1;
         var decodedExtendFootprintTTLResult = new ExtendFootprintTTLResult();
         var discriminant = ExtendFootprintTTLResultCode.Decode(stream, maxDepth);

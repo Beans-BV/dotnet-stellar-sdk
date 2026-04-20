@@ -40,13 +40,15 @@ public class TransactionPhase
             case 1:
                 ParallelTxsComponent.Encode(stream, encodedTransactionPhase.ParallelTxsComponent);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedTransactionPhase.Discriminant);
         }
     }
 
     public static TransactionPhase Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionPhase");
         maxDepth -= 1;
         var decodedTransactionPhase = new TransactionPhase();
         var discriminant = stream.ReadInt();

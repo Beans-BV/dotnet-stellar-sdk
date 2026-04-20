@@ -51,13 +51,15 @@ public class SCError
             case SCErrorType.SCErrorTypeEnum.SCE_AUTH:
                 SCErrorCode.Encode(stream, encodedSCError.Code);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSCError.Discriminant.InnerValue);
         }
     }
 
     public static SCError Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCError");
         maxDepth -= 1;
         var decodedSCError = new SCError();
         var discriminant = SCErrorType.Decode(stream, maxDepth);

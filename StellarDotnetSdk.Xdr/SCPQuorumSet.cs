@@ -42,7 +42,7 @@ public class SCPQuorumSet
     public static SCPQuorumSet Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCPQuorumSet");
         maxDepth -= 1;
         var decodedSCPQuorumSet = new SCPQuorumSet();
         decodedSCPQuorumSet.Threshold = Uint32.Decode(stream, maxDepth);

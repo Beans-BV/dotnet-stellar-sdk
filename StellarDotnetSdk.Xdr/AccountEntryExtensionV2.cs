@@ -50,7 +50,7 @@ public class AccountEntryExtensionV2
     public static AccountEntryExtensionV2 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding AccountEntryExtensionV2");
         maxDepth -= 1;
         var decodedAccountEntryExtensionV2 = new AccountEntryExtensionV2();
         decodedAccountEntryExtensionV2.NumSponsored = Uint32.Decode(stream, maxDepth);
@@ -90,13 +90,15 @@ public class AccountEntryExtensionV2
                 case 3:
                     AccountEntryExtensionV3.Encode(stream, encodedAccountEntryExtensionV2Ext.V3);
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedAccountEntryExtensionV2Ext.Discriminant);
             }
         }
 
         public static AccountEntryExtensionV2Ext Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding AccountEntryExtensionV2Ext");
             maxDepth -= 1;
             var decodedAccountEntryExtensionV2Ext = new AccountEntryExtensionV2Ext();
             var discriminant = stream.ReadInt();

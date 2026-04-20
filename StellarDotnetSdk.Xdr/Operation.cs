@@ -98,7 +98,7 @@ public class Operation
     public static Operation Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Operation");
         maxDepth -= 1;
         var decodedOperation = new Operation();
         var SourceAccountPresent = stream.ReadInt();
@@ -229,13 +229,15 @@ public class Operation
                 case OperationType.OperationTypeEnum.RESTORE_FOOTPRINT:
                     RestoreFootprintOp.Encode(stream, encodedOperationBody.RestoreFootprintOp);
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedOperationBody.Discriminant.InnerValue);
             }
         }
 
         public static OperationBody Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding OperationBody");
             maxDepth -= 1;
             var decodedOperationBody = new OperationBody();
             var discriminant = OperationType.Decode(stream, maxDepth);

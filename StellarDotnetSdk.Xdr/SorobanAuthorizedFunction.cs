@@ -49,13 +49,15 @@ public class SorobanAuthorizedFunction
             case SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN:
                 CreateContractArgsV2.Encode(stream, encodedSorobanAuthorizedFunction.CreateContractV2HostFn);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSorobanAuthorizedFunction.Discriminant.InnerValue);
         }
     }
 
     public static SorobanAuthorizedFunction Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SorobanAuthorizedFunction");
         maxDepth -= 1;
         var decodedSorobanAuthorizedFunction = new SorobanAuthorizedFunction();
         var discriminant = SorobanAuthorizedFunctionType.Decode(stream, maxDepth);

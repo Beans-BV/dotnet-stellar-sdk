@@ -42,13 +42,15 @@ public class HotArchiveBucketEntry
             case HotArchiveBucketEntryType.HotArchiveBucketEntryTypeEnum.HOT_ARCHIVE_METAENTRY:
                 BucketMetadata.Encode(stream, encodedHotArchiveBucketEntry.MetaEntry);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedHotArchiveBucketEntry.Discriminant.InnerValue);
         }
     }
 
     public static HotArchiveBucketEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding HotArchiveBucketEntry");
         maxDepth -= 1;
         var decodedHotArchiveBucketEntry = new HotArchiveBucketEntry();
         var discriminant = HotArchiveBucketEntryType.Decode(stream, maxDepth);

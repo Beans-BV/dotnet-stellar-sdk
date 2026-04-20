@@ -30,7 +30,7 @@ public class ConfigUpgradeSet
     public static ConfigUpgradeSet Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ConfigUpgradeSet");
         maxDepth -= 1;
         var decodedConfigUpgradeSet = new ConfigUpgradeSet();
         var updatedEntrysize = stream.ReadInt();

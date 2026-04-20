@@ -38,13 +38,15 @@ public class InflationResult
                 break;
             case InflationResultCode.InflationResultCodeEnum.INFLATION_NOT_TIME:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedInflationResult.Discriminant.InnerValue);
         }
     }
 
     public static InflationResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding InflationResult");
         maxDepth -= 1;
         var decodedInflationResult = new InflationResult();
         var discriminant = InflationResultCode.Decode(stream, maxDepth);

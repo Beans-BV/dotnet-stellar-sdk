@@ -27,7 +27,7 @@ public class ConfigSettingContractExecutionLanesV0
     public static ConfigSettingContractExecutionLanesV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ConfigSettingContractExecutionLanesV0");
         maxDepth -= 1;
         var decodedConfigSettingContractExecutionLanesV0 = new ConfigSettingContractExecutionLanesV0();
         decodedConfigSettingContractExecutionLanesV0.LedgerMaxTxCount = Uint32.Decode(stream, maxDepth);

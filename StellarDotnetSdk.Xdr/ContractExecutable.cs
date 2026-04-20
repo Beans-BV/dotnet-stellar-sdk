@@ -33,13 +33,15 @@ public class ContractExecutable
                 break;
             case ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_STELLAR_ASSET:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedContractExecutable.Discriminant.InnerValue);
         }
     }
 
     public static ContractExecutable Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ContractExecutable");
         maxDepth -= 1;
         var decodedContractExecutable = new ContractExecutable();
         var discriminant = ContractExecutableType.Decode(stream, maxDepth);

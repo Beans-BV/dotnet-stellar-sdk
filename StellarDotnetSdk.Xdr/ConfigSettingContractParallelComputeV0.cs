@@ -30,7 +30,7 @@ public class ConfigSettingContractParallelComputeV0
     public static ConfigSettingContractParallelComputeV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ConfigSettingContractParallelComputeV0");
         maxDepth -= 1;
         var decodedConfigSettingContractParallelComputeV0 = new ConfigSettingContractParallelComputeV0();
         decodedConfigSettingContractParallelComputeV0.LedgerMaxDependentTxClusters = Uint32.Decode(stream, maxDepth);

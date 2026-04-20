@@ -42,7 +42,7 @@ public class SCSpecUDTUnionV0
     public static SCSpecUDTUnionV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCSpecUDTUnionV0");
         maxDepth -= 1;
         var decodedSCSpecUDTUnionV0 = new SCSpecUDTUnionV0();
         decodedSCSpecUDTUnionV0.Doc = stream.ReadString();

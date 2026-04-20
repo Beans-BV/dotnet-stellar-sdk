@@ -130,13 +130,15 @@ public class ConfigSettingEntry
             case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_SCP_TIMING:
                 ConfigSettingSCPTiming.Encode(stream, encodedConfigSettingEntry.ContractSCPTiming);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedConfigSettingEntry.Discriminant.InnerValue);
         }
     }
 
     public static ConfigSettingEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ConfigSettingEntry");
         maxDepth -= 1;
         var decodedConfigSettingEntry = new ConfigSettingEntry();
         var discriminant = ConfigSettingID.Decode(stream, maxDepth);

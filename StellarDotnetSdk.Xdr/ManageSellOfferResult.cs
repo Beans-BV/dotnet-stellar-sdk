@@ -55,13 +55,15 @@ public class ManageSellOfferResult
             case ManageSellOfferResultCode.ManageSellOfferResultCodeEnum.MANAGE_SELL_OFFER_NOT_FOUND:
             case ManageSellOfferResultCode.ManageSellOfferResultCodeEnum.MANAGE_SELL_OFFER_LOW_RESERVE:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedManageSellOfferResult.Discriminant.InnerValue);
         }
     }
 
     public static ManageSellOfferResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ManageSellOfferResult");
         maxDepth -= 1;
         var decodedManageSellOfferResult = new ManageSellOfferResult();
         var discriminant = ManageSellOfferResultCode.Decode(stream, maxDepth);

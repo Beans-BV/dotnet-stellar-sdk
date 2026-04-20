@@ -41,13 +41,15 @@ public class ClaimAtom
             case ClaimAtomType.ClaimAtomTypeEnum.CLAIM_ATOM_TYPE_LIQUIDITY_POOL:
                 ClaimLiquidityAtom.Encode(stream, encodedClaimAtom.LiquidityPool);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedClaimAtom.Discriminant.InnerValue);
         }
     }
 
     public static ClaimAtom Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ClaimAtom");
         maxDepth -= 1;
         var decodedClaimAtom = new ClaimAtom();
         var discriminant = ClaimAtomType.Decode(stream, maxDepth);

@@ -47,7 +47,7 @@ public class PersistedSCPStateV0
     public static PersistedSCPStateV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding PersistedSCPStateV0");
         maxDepth -= 1;
         var decodedPersistedSCPStateV0 = new PersistedSCPStateV0();
         var scpEnvelopessize = stream.ReadInt();

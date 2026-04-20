@@ -68,7 +68,7 @@ public class Transaction
     public static Transaction Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Transaction");
         maxDepth -= 1;
         var decodedTransaction = new Transaction();
         decodedTransaction.SourceAccount = MuxedAccount.Decode(stream, maxDepth);
@@ -111,13 +111,15 @@ public class Transaction
                 case 1:
                     SorobanTransactionData.Encode(stream, encodedTransactionExt.SorobanData);
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedTransactionExt.Discriminant);
             }
         }
 
         public static TransactionExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionExt");
             maxDepth -= 1;
             var decodedTransactionExt = new TransactionExt();
             var discriminant = stream.ReadInt();

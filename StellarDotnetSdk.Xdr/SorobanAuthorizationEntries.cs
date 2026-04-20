@@ -37,7 +37,7 @@ public class SorobanAuthorizationEntries
     public static SorobanAuthorizationEntries Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SorobanAuthorizationEntries");
         maxDepth -= 1;
         var decodedSorobanAuthorizationEntries = new SorobanAuthorizationEntries();
         var SorobanAuthorizationEntriessize = stream.ReadInt();

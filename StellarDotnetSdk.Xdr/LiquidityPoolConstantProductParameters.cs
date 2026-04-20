@@ -32,7 +32,7 @@ public class LiquidityPoolConstantProductParameters
     public static LiquidityPoolConstantProductParameters Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding LiquidityPoolConstantProductParameters");
         maxDepth -= 1;
         var decodedLiquidityPoolConstantProductParameters = new LiquidityPoolConstantProductParameters();
         decodedLiquidityPoolConstantProductParameters.AssetA = Asset.Decode(stream, maxDepth);

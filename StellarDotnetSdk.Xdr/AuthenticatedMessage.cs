@@ -34,13 +34,15 @@ public class AuthenticatedMessage
             case 0:
                 AuthenticatedMessageV0.Encode(stream, encodedAuthenticatedMessage.V0);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedAuthenticatedMessage.Discriminant.InnerValue);
         }
     }
 
     public static AuthenticatedMessage Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding AuthenticatedMessage");
         maxDepth -= 1;
         var decodedAuthenticatedMessage = new AuthenticatedMessage();
         var discriminant = Uint32.Decode(stream, maxDepth);
@@ -78,7 +80,7 @@ public class AuthenticatedMessage
         public static AuthenticatedMessageV0 Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding AuthenticatedMessageV0");
             maxDepth -= 1;
             var decodedAuthenticatedMessageV0 = new AuthenticatedMessageV0();
             decodedAuthenticatedMessageV0.Sequence = Uint64.Decode(stream, maxDepth);

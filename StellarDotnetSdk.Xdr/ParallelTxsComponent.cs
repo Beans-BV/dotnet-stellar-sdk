@@ -45,7 +45,7 @@ public class ParallelTxsComponent
     public static ParallelTxsComponent Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ParallelTxsComponent");
         maxDepth -= 1;
         var decodedParallelTxsComponent = new ParallelTxsComponent();
         var BaseFeePresent = stream.ReadInt();

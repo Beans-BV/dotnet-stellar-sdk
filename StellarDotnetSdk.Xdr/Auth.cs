@@ -26,7 +26,7 @@ public class Auth
     public static Auth Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Auth");
         maxDepth -= 1;
         var decodedAuth = new Auth();
         decodedAuth.Flags = stream.ReadInt();

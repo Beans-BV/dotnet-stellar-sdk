@@ -42,7 +42,7 @@ public class LedgerCloseMetaBatch
     public static LedgerCloseMetaBatch Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerCloseMetaBatch");
         maxDepth -= 1;
         var decodedLedgerCloseMetaBatch = new LedgerCloseMetaBatch();
         decodedLedgerCloseMetaBatch.StartSequence = Uint32.Decode(stream, maxDepth);

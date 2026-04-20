@@ -35,7 +35,7 @@ public class CreatePassiveSellOfferOp
     public static CreatePassiveSellOfferOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding CreatePassiveSellOfferOp");
         maxDepth -= 1;
         var decodedCreatePassiveSellOfferOp = new CreatePassiveSellOfferOp();
         decodedCreatePassiveSellOfferOp.Selling = Asset.Decode(stream, maxDepth);

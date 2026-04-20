@@ -40,7 +40,7 @@ public class TransactionResultMetaV1
     public static TransactionResultMetaV1 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionResultMetaV1");
         maxDepth -= 1;
         var decodedTransactionResultMetaV1 = new TransactionResultMetaV1();
         decodedTransactionResultMetaV1.Ext = ExtensionPoint.Decode(stream, maxDepth);

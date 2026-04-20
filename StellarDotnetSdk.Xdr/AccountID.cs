@@ -32,7 +32,7 @@ public class AccountID
     public static AccountID Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding AccountID");
         maxDepth -= 1;
         var decodedAccountID = new AccountID();
         decodedAccountID.InnerValue = PublicKey.Decode(stream, maxDepth);

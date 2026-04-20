@@ -59,13 +59,15 @@ public class SCSpecEntry
             case SCSpecEntryKind.SCSpecEntryKindEnum.SC_SPEC_ENTRY_EVENT_V0:
                 SCSpecEventV0.Encode(stream, encodedSCSpecEntry.EventV0);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSCSpecEntry.Discriminant.InnerValue);
         }
     }
 
     public static SCSpecEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCSpecEntry");
         maxDepth -= 1;
         var decodedSCSpecEntry = new SCSpecEntry();
         var discriminant = SCSpecEntryKind.Decode(stream, maxDepth);

@@ -55,13 +55,15 @@ public class SignerKey
             case SignerKeyType.SignerKeyTypeEnum.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD:
                 SignerKeyEd25519SignedPayload.Encode(stream, encodedSignerKey.Ed25519SignedPayload);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSignerKey.Discriminant.InnerValue);
         }
     }
 
     public static SignerKey Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SignerKey");
         maxDepth -= 1;
         var decodedSignerKey = new SignerKey();
         var discriminant = SignerKeyType.Decode(stream, maxDepth);
@@ -110,7 +112,7 @@ public class SignerKey
         public static SignerKeyEd25519SignedPayload Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding SignerKeyEd25519SignedPayload");
             maxDepth -= 1;
             var decodedSignerKeyEd25519SignedPayload = new SignerKeyEd25519SignedPayload();
             decodedSignerKeyEd25519SignedPayload.Ed25519 = Uint256.Decode(stream, maxDepth);

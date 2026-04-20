@@ -36,13 +36,15 @@ public class ManageDataResult
             case ManageDataResultCode.ManageDataResultCodeEnum.MANAGE_DATA_LOW_RESERVE:
             case ManageDataResultCode.ManageDataResultCodeEnum.MANAGE_DATA_INVALID_NAME:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedManageDataResult.Discriminant.InnerValue);
         }
     }
 
     public static ManageDataResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ManageDataResult");
         maxDepth -= 1;
         var decodedManageDataResult = new ManageDataResult();
         var discriminant = ManageDataResultCode.Decode(stream, maxDepth);

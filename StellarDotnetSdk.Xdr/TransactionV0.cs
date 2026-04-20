@@ -64,7 +64,7 @@ public class TransactionV0
     public static TransactionV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionV0");
         maxDepth -= 1;
         var decodedTransactionV0 = new TransactionV0();
         decodedTransactionV0.SourceAccountEd25519 = Uint256.Decode(stream, maxDepth);
@@ -106,13 +106,15 @@ public class TransactionV0
             {
                 case 0:
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedTransactionV0Ext.Discriminant);
             }
         }
 
         public static TransactionV0Ext Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionV0Ext");
             maxDepth -= 1;
             var decodedTransactionV0Ext = new TransactionV0Ext();
             var discriminant = stream.ReadInt();

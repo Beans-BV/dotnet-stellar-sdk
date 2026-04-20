@@ -39,7 +39,7 @@ public class PeerAddress
     public static PeerAddress Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding PeerAddress");
         maxDepth -= 1;
         var decodedPeerAddress = new PeerAddress();
         decodedPeerAddress.Ip = PeerAddressIp.Decode(stream, maxDepth);
@@ -77,13 +77,15 @@ public class PeerAddress
                         throw new ArgumentException("ipv6 size " + ipv6size + " does not match fixed size 16");
                     stream.Write(encodedPeerAddressIp.Ipv6, 0, ipv6size);
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedPeerAddressIp.Discriminant.InnerValue);
             }
         }
 
         public static PeerAddressIp Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding PeerAddressIp");
             maxDepth -= 1;
             var decodedPeerAddressIp = new PeerAddressIp();
             var discriminant = IPAddrType.Decode(stream, maxDepth);

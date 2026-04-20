@@ -38,7 +38,7 @@ public class FeeBumpTransactionEnvelope
     public static FeeBumpTransactionEnvelope Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding FeeBumpTransactionEnvelope");
         maxDepth -= 1;
         var decodedFeeBumpTransactionEnvelope = new FeeBumpTransactionEnvelope();
         decodedFeeBumpTransactionEnvelope.Tx = FeeBumpTransaction.Decode(stream, maxDepth);

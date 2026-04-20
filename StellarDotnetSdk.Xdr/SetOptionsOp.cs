@@ -129,7 +129,7 @@ public class SetOptionsOp
     public static SetOptionsOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SetOptionsOp");
         maxDepth -= 1;
         var decodedSetOptionsOp = new SetOptionsOp();
         var InflationDestPresent = stream.ReadInt();

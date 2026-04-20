@@ -49,7 +49,7 @@ public class SCSpecFunctionV0
     public static SCSpecFunctionV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCSpecFunctionV0");
         maxDepth -= 1;
         var decodedSCSpecFunctionV0 = new SCSpecFunctionV0();
         decodedSCSpecFunctionV0.Doc = stream.ReadString();

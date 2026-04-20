@@ -50,13 +50,15 @@ public class ChangeTrustAsset
             case AssetType.AssetTypeEnum.ASSET_TYPE_POOL_SHARE:
                 LiquidityPoolParameters.Encode(stream, encodedChangeTrustAsset.LiquidityPool);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedChangeTrustAsset.Discriminant.InnerValue);
         }
     }
 
     public static ChangeTrustAsset Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ChangeTrustAsset");
         maxDepth -= 1;
         var decodedChangeTrustAsset = new ChangeTrustAsset();
         var discriminant = AssetType.Decode(stream, maxDepth);

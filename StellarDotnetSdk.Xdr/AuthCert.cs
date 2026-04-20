@@ -32,7 +32,7 @@ public class AuthCert
     public static AuthCert Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding AuthCert");
         maxDepth -= 1;
         var decodedAuthCert = new AuthCert();
         decodedAuthCert.Pubkey = Curve25519Public.Decode(stream, maxDepth);

@@ -33,13 +33,15 @@ public class LedgerCloseMetaExt
             case 1:
                 LedgerCloseMetaExtV1.Encode(stream, encodedLedgerCloseMetaExt.V1);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedLedgerCloseMetaExt.Discriminant);
         }
     }
 
     public static LedgerCloseMetaExt Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerCloseMetaExt");
         maxDepth -= 1;
         var decodedLedgerCloseMetaExt = new LedgerCloseMetaExt();
         var discriminant = stream.ReadInt();

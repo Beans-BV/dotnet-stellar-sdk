@@ -36,7 +36,7 @@ public class SCContractInstance
     public static SCContractInstance Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCContractInstance");
         maxDepth -= 1;
         var decodedSCContractInstance = new SCContractInstance();
         decodedSCContractInstance.Executable = ContractExecutable.Decode(stream, maxDepth);

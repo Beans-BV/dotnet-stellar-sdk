@@ -34,7 +34,7 @@ public class SorobanResourcesExtV0
     public static SorobanResourcesExtV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SorobanResourcesExtV0");
         maxDepth -= 1;
         var decodedSorobanResourcesExtV0 = new SorobanResourcesExtV0();
         var archivedSorobanEntriessize = stream.ReadInt();

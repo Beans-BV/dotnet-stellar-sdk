@@ -35,7 +35,7 @@ public class LiquidityPoolWithdrawOp
     public static LiquidityPoolWithdrawOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding LiquidityPoolWithdrawOp");
         maxDepth -= 1;
         var decodedLiquidityPoolWithdrawOp = new LiquidityPoolWithdrawOp();
         decodedLiquidityPoolWithdrawOp.LiquidityPoolID = PoolID.Decode(stream, maxDepth);

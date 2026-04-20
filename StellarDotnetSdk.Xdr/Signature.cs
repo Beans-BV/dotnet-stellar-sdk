@@ -36,7 +36,7 @@ public class Signature
     public static Signature Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Signature");
         maxDepth -= 1;
         var decodedSignature = new Signature();
         var Signaturesize = stream.ReadInt();

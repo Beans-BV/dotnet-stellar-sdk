@@ -42,7 +42,7 @@ public class DataEntry
     public static DataEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding DataEntry");
         maxDepth -= 1;
         var decodedDataEntry = new DataEntry();
         decodedDataEntry.AccountID = AccountID.Decode(stream, maxDepth);
@@ -68,13 +68,15 @@ public class DataEntry
             {
                 case 0:
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedDataEntryExt.Discriminant);
             }
         }
 
         public static DataEntryExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding DataEntryExt");
             maxDepth -= 1;
             var decodedDataEntryExt = new DataEntryExt();
             var discriminant = stream.ReadInt();

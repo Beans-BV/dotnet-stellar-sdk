@@ -29,13 +29,15 @@ public class PublicKey
             case PublicKeyType.PublicKeyTypeEnum.PUBLIC_KEY_TYPE_ED25519:
                 Uint256.Encode(stream, encodedPublicKey.Ed25519);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedPublicKey.Discriminant.InnerValue);
         }
     }
 
     public static PublicKey Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding PublicKey");
         maxDepth -= 1;
         var decodedPublicKey = new PublicKey();
         var discriminant = PublicKeyType.Decode(stream, maxDepth);

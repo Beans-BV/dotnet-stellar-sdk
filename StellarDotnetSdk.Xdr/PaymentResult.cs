@@ -46,13 +46,15 @@ public class PaymentResult
             case PaymentResultCode.PaymentResultCodeEnum.PAYMENT_LINE_FULL:
             case PaymentResultCode.PaymentResultCodeEnum.PAYMENT_NO_ISSUER:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedPaymentResult.Discriminant.InnerValue);
         }
     }
 
     public static PaymentResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding PaymentResult");
         maxDepth -= 1;
         var decodedPaymentResult = new PaymentResult();
         var discriminant = PaymentResultCode.Decode(stream, maxDepth);

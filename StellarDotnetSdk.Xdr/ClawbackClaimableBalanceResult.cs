@@ -35,13 +35,15 @@ public class ClawbackClaimableBalanceResult
             case ClawbackClaimableBalanceResultCode.ClawbackClaimableBalanceResultCodeEnum.CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER:
             case ClawbackClaimableBalanceResultCode.ClawbackClaimableBalanceResultCodeEnum.CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedClawbackClaimableBalanceResult.Discriminant.InnerValue);
         }
     }
 
     public static ClawbackClaimableBalanceResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ClawbackClaimableBalanceResult");
         maxDepth -= 1;
         var decodedClawbackClaimableBalanceResult = new ClawbackClaimableBalanceResult();
         var discriminant = ClawbackClaimableBalanceResultCode.Decode(stream, maxDepth);

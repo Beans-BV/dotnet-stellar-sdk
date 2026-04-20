@@ -33,13 +33,15 @@ public class TxSetComponent
             case TxSetComponentType.TxSetComponentTypeEnum.TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE:
                 TxSetComponentTxsMaybeDiscountedFee.Encode(stream, encodedTxSetComponent.TxsMaybeDiscountedFee);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedTxSetComponent.Discriminant.InnerValue);
         }
     }
 
     public static TxSetComponent Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TxSetComponent");
         maxDepth -= 1;
         var decodedTxSetComponent = new TxSetComponent();
         var discriminant = TxSetComponentType.Decode(stream, maxDepth);
@@ -88,7 +90,7 @@ public class TxSetComponent
         public static TxSetComponentTxsMaybeDiscountedFee Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding TxSetComponentTxsMaybeDiscountedFee");
             maxDepth -= 1;
             var decodedTxSetComponentTxsMaybeDiscountedFee = new TxSetComponentTxsMaybeDiscountedFee();
             var BaseFeePresent = stream.ReadInt();

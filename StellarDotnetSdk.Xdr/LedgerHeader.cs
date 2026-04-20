@@ -95,7 +95,7 @@ public class LedgerHeader
     public static LedgerHeader Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerHeader");
         maxDepth -= 1;
         var decodedLedgerHeader = new LedgerHeader();
         decodedLedgerHeader.LedgerVersion = Uint32.Decode(stream, maxDepth);
@@ -142,13 +142,15 @@ public class LedgerHeader
                 case 1:
                     LedgerHeaderExtensionV1.Encode(stream, encodedLedgerHeaderExt.V1);
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedLedgerHeaderExt.Discriminant);
             }
         }
 
         public static LedgerHeaderExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerHeaderExt");
             maxDepth -= 1;
             var decodedLedgerHeaderExt = new LedgerHeaderExt();
             var discriminant = stream.ReadInt();

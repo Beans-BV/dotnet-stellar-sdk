@@ -38,7 +38,7 @@ public class SurveyResponseMessage
     public static SurveyResponseMessage Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SurveyResponseMessage");
         maxDepth -= 1;
         var decodedSurveyResponseMessage = new SurveyResponseMessage();
         decodedSurveyResponseMessage.SurveyorPeerID = NodeID.Decode(stream, maxDepth);

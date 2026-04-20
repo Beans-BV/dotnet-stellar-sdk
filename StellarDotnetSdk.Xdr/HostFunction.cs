@@ -49,13 +49,15 @@ public class HostFunction
             case HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2:
                 CreateContractArgsV2.Encode(stream, encodedHostFunction.CreateContractV2);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedHostFunction.Discriminant.InnerValue);
         }
     }
 
     public static HostFunction Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding HostFunction");
         maxDepth -= 1;
         var decodedHostFunction = new HostFunction();
         var discriminant = HostFunctionType.Decode(stream, maxDepth);

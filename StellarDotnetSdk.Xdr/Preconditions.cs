@@ -39,13 +39,15 @@ public class Preconditions
             case PreconditionType.PreconditionTypeEnum.PRECOND_V2:
                 PreconditionsV2.Encode(stream, encodedPreconditions.V2);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedPreconditions.Discriminant.InnerValue);
         }
     }
 
     public static Preconditions Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Preconditions");
         maxDepth -= 1;
         var decodedPreconditions = new Preconditions();
         var discriminant = PreconditionType.Decode(stream, maxDepth);

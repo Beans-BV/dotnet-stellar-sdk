@@ -36,7 +36,7 @@ public class SetTrustLineFlagsOp
     public static SetTrustLineFlagsOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SetTrustLineFlagsOp");
         maxDepth -= 1;
         var decodedSetTrustLineFlagsOp = new SetTrustLineFlagsOp();
         decodedSetTrustLineFlagsOp.Trustor = AccountID.Decode(stream, maxDepth);

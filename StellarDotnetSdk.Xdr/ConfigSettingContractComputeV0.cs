@@ -41,7 +41,7 @@ public class ConfigSettingContractComputeV0
     public static ConfigSettingContractComputeV0 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ConfigSettingContractComputeV0");
         maxDepth -= 1;
         var decodedConfigSettingContractComputeV0 = new ConfigSettingContractComputeV0();
         decodedConfigSettingContractComputeV0.LedgerMaxInstructions = Int64.Decode(stream, maxDepth);

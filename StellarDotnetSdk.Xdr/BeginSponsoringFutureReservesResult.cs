@@ -35,13 +35,15 @@ public class BeginSponsoringFutureReservesResult
             case BeginSponsoringFutureReservesResultCode.BeginSponsoringFutureReservesResultCodeEnum.BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED:
             case BeginSponsoringFutureReservesResultCode.BeginSponsoringFutureReservesResultCodeEnum.BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedBeginSponsoringFutureReservesResult.Discriminant.InnerValue);
         }
     }
 
     public static BeginSponsoringFutureReservesResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding BeginSponsoringFutureReservesResult");
         maxDepth -= 1;
         var decodedBeginSponsoringFutureReservesResult = new BeginSponsoringFutureReservesResult();
         var discriminant = BeginSponsoringFutureReservesResultCode.Decode(stream, maxDepth);

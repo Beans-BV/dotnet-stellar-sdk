@@ -32,7 +32,7 @@ public class Duration
     public static Duration Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Duration");
         maxDepth -= 1;
         var decodedDuration = new Duration();
         decodedDuration.InnerValue = Uint64.Decode(stream, maxDepth);

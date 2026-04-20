@@ -44,7 +44,7 @@ public class ContractCodeEntry
     public static ContractCodeEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ContractCodeEntry");
         maxDepth -= 1;
         var decodedContractCodeEntry = new ContractCodeEntry();
         decodedContractCodeEntry.Ext = ContractCodeEntryExt.Decode(stream, maxDepth);
@@ -81,13 +81,15 @@ public class ContractCodeEntry
                 case 1:
                     ContractCodeEntryV1.Encode(stream, encodedContractCodeEntryExt.V1);
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedContractCodeEntryExt.Discriminant);
             }
         }
 
         public static ContractCodeEntryExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding ContractCodeEntryExt");
             maxDepth -= 1;
             var decodedContractCodeEntryExt = new ContractCodeEntryExt();
             var discriminant = stream.ReadInt();
@@ -125,7 +127,7 @@ public class ContractCodeEntry
             public static ContractCodeEntryV1 Decode(XdrDataInputStream stream, int maxDepth)
             {
                 if (maxDepth <= 0)
-                    throw new InvalidDataException("Maximum decoding depth reached");
+                    throw new InvalidDataException("Maximum decoding depth reached while decoding ContractCodeEntryV1");
                 maxDepth -= 1;
                 var decodedContractCodeEntryV1 = new ContractCodeEntryV1();
                 decodedContractCodeEntryV1.Ext = ExtensionPoint.Decode(stream, maxDepth);

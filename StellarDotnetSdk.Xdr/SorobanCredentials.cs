@@ -33,13 +33,15 @@ public class SorobanCredentials
             case SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS:
                 SorobanAddressCredentials.Encode(stream, encodedSorobanCredentials.Address);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSorobanCredentials.Discriminant.InnerValue);
         }
     }
 
     public static SorobanCredentials Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SorobanCredentials");
         maxDepth -= 1;
         var decodedSorobanCredentials = new SorobanCredentials();
         var discriminant = SorobanCredentialsType.Decode(stream, maxDepth);

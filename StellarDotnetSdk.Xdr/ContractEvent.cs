@@ -56,7 +56,7 @@ public class ContractEvent
     public static ContractEvent Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ContractEvent");
         maxDepth -= 1;
         var decodedContractEvent = new ContractEvent();
         decodedContractEvent.Ext = ExtensionPoint.Decode(stream, maxDepth);
@@ -89,13 +89,15 @@ public class ContractEvent
                 case 0:
                     ContractEventV0.Encode(stream, encodedContractEventBody.V0);
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedContractEventBody.Discriminant);
             }
         }
 
         public static ContractEventBody Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding ContractEventBody");
             maxDepth -= 1;
             var decodedContractEventBody = new ContractEventBody();
             var discriminant = stream.ReadInt();
@@ -136,7 +138,7 @@ public class ContractEvent
             public static ContractEventV0 Decode(XdrDataInputStream stream, int maxDepth)
             {
                 if (maxDepth <= 0)
-                    throw new InvalidDataException("Maximum decoding depth reached");
+                    throw new InvalidDataException("Maximum decoding depth reached while decoding ContractEventV0");
                 maxDepth -= 1;
                 var decodedContractEventV0 = new ContractEventV0();
                 var topicssize = stream.ReadInt();

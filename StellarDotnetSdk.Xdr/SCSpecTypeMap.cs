@@ -29,7 +29,7 @@ public class SCSpecTypeMap
     public static SCSpecTypeMap Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCSpecTypeMap");
         maxDepth -= 1;
         var decodedSCSpecTypeMap = new SCSpecTypeMap();
         decodedSCSpecTypeMap.KeyType = SCSpecTypeDef.Decode(stream, maxDepth);

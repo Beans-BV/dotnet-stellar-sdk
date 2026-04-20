@@ -29,7 +29,7 @@ public class ExtendFootprintTTLOp
     public static ExtendFootprintTTLOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ExtendFootprintTTLOp");
         maxDepth -= 1;
         var decodedExtendFootprintTTLOp = new ExtendFootprintTTLOp();
         decodedExtendFootprintTTLOp.Ext = ExtensionPoint.Decode(stream, maxDepth);

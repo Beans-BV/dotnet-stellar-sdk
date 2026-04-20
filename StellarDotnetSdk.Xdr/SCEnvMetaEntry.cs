@@ -32,13 +32,15 @@ public class SCEnvMetaEntry
             case SCEnvMetaKind.SCEnvMetaKindEnum.SC_ENV_META_KIND_INTERFACE_VERSION:
                 SCEnvMetaEntryInterfaceVersion.Encode(stream, encodedSCEnvMetaEntry.InterfaceVersion);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSCEnvMetaEntry.Discriminant.InnerValue);
         }
     }
 
     public static SCEnvMetaEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCEnvMetaEntry");
         maxDepth -= 1;
         var decodedSCEnvMetaEntry = new SCEnvMetaEntry();
         var discriminant = SCEnvMetaKind.Decode(stream, maxDepth);
@@ -74,7 +76,7 @@ public class SCEnvMetaEntry
         public static SCEnvMetaEntryInterfaceVersion Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding SCEnvMetaEntryInterfaceVersion");
             maxDepth -= 1;
             var decodedSCEnvMetaEntryInterfaceVersion = new SCEnvMetaEntryInterfaceVersion();
             decodedSCEnvMetaEntryInterfaceVersion.Protocol = Uint32.Decode(stream, maxDepth);

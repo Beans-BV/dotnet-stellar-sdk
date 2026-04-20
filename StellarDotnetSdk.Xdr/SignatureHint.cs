@@ -35,7 +35,7 @@ public class SignatureHint
     public static SignatureHint Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SignatureHint");
         maxDepth -= 1;
         var decodedSignatureHint = new SignatureHint();
         var SignatureHintsize = 4;

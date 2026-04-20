@@ -51,13 +51,15 @@ public class Memo
             case MemoType.MemoTypeEnum.MEMO_RETURN:
                 Hash.Encode(stream, encodedMemo.RetHash);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedMemo.Discriminant.InnerValue);
         }
     }
 
     public static Memo Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Memo");
         maxDepth -= 1;
         var decodedMemo = new Memo();
         var discriminant = MemoType.Decode(stream, maxDepth);

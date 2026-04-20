@@ -32,7 +32,7 @@ public class StoredDebugTransactionSet
     public static StoredDebugTransactionSet Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding StoredDebugTransactionSet");
         maxDepth -= 1;
         var decodedStoredDebugTransactionSet = new StoredDebugTransactionSet();
         decodedStoredDebugTransactionSet.TxSet = StoredTransactionSet.Decode(stream, maxDepth);

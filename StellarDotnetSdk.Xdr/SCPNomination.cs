@@ -42,7 +42,7 @@ public class SCPNomination
     public static SCPNomination Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCPNomination");
         maxDepth -= 1;
         var decodedSCPNomination = new SCPNomination();
         decodedSCPNomination.QuorumSetHash = Hash.Decode(stream, maxDepth);

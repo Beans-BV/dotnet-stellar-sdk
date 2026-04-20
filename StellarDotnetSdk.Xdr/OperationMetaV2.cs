@@ -39,7 +39,7 @@ public class OperationMetaV2
     public static OperationMetaV2 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding OperationMetaV2");
         maxDepth -= 1;
         var decodedOperationMetaV2 = new OperationMetaV2();
         decodedOperationMetaV2.Ext = ExtensionPoint.Decode(stream, maxDepth);

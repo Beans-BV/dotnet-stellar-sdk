@@ -41,13 +41,15 @@ public class TransactionEnvelope
             case EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_TX_FEE_BUMP:
                 FeeBumpTransactionEnvelope.Encode(stream, encodedTransactionEnvelope.FeeBump);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedTransactionEnvelope.Discriminant.InnerValue);
         }
     }
 
     public static TransactionEnvelope Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionEnvelope");
         maxDepth -= 1;
         var decodedTransactionEnvelope = new TransactionEnvelope();
         var discriminant = EnvelopeType.Decode(stream, maxDepth);

@@ -32,7 +32,7 @@ public class SCSymbol
     public static SCSymbol Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCSymbol");
         maxDepth -= 1;
         var decodedSCSymbol = new SCSymbol();
         decodedSCSymbol.InnerValue = stream.ReadString();

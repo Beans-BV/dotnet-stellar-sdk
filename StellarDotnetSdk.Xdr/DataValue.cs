@@ -36,7 +36,7 @@ public class DataValue
     public static DataValue Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding DataValue");
         maxDepth -= 1;
         var decodedDataValue = new DataValue();
         var DataValuesize = stream.ReadInt();

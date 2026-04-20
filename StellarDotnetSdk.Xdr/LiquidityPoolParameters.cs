@@ -29,13 +29,15 @@ public class LiquidityPoolParameters
             case LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT:
                 LiquidityPoolConstantProductParameters.Encode(stream, encodedLiquidityPoolParameters.ConstantProduct);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedLiquidityPoolParameters.Discriminant.InnerValue);
         }
     }
 
     public static LiquidityPoolParameters Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding LiquidityPoolParameters");
         maxDepth -= 1;
         var decodedLiquidityPoolParameters = new LiquidityPoolParameters();
         var discriminant = LiquidityPoolType.Decode(stream, maxDepth);

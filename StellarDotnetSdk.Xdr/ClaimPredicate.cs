@@ -80,13 +80,15 @@ public class ClaimPredicate
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
                 Int64.Encode(stream, encodedClaimPredicate.RelBefore);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedClaimPredicate.Discriminant.InnerValue);
         }
     }
 
     public static ClaimPredicate Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ClaimPredicate");
         maxDepth -= 1;
         var decodedClaimPredicate = new ClaimPredicate();
         var discriminant = ClaimPredicateType.Decode(stream, maxDepth);

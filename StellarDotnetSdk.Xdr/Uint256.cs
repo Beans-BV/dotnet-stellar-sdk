@@ -35,7 +35,7 @@ public class Uint256
     public static Uint256 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Uint256");
         maxDepth -= 1;
         var decodedUint256 = new Uint256();
         var uint256size = 32;

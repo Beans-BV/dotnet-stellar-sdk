@@ -92,7 +92,7 @@ public class LedgerCloseMetaV1
     public static LedgerCloseMetaV1 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerCloseMetaV1");
         maxDepth -= 1;
         var decodedLedgerCloseMetaV1 = new LedgerCloseMetaV1();
         decodedLedgerCloseMetaV1.Ext = LedgerCloseMetaExt.Decode(stream, maxDepth);

@@ -58,13 +58,15 @@ public class TransactionMeta
             case 4:
                 TransactionMetaV4.Encode(stream, encodedTransactionMeta.V4);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedTransactionMeta.Discriminant);
         }
     }
 
     public static TransactionMeta Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionMeta");
         maxDepth -= 1;
         var decodedTransactionMeta = new TransactionMeta();
         var discriminant = stream.ReadInt();

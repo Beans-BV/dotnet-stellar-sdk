@@ -29,7 +29,7 @@ public class Curve25519Public
     public static Curve25519Public Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Curve25519Public");
         maxDepth -= 1;
         var decodedCurve25519Public = new Curve25519Public();
         var keysize = 32;

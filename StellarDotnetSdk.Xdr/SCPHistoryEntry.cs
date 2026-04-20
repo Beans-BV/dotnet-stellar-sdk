@@ -29,13 +29,15 @@ public class SCPHistoryEntry
             case 0:
                 SCPHistoryEntryV0.Encode(stream, encodedSCPHistoryEntry.V0);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedSCPHistoryEntry.Discriminant);
         }
     }
 
     public static SCPHistoryEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCPHistoryEntry");
         maxDepth -= 1;
         var decodedSCPHistoryEntry = new SCPHistoryEntry();
         var discriminant = stream.ReadInt();

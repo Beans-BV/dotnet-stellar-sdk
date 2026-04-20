@@ -39,7 +39,7 @@ public class BucketMetadata
     public static BucketMetadata Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding BucketMetadata");
         maxDepth -= 1;
         var decodedBucketMetadata = new BucketMetadata();
         decodedBucketMetadata.LedgerVersion = Uint32.Decode(stream, maxDepth);
@@ -68,13 +68,15 @@ public class BucketMetadata
                 case 1:
                     BucketListType.Encode(stream, encodedBucketMetadataExt.BucketListType);
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedBucketMetadataExt.Discriminant);
             }
         }
 
         public static BucketMetadataExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding BucketMetadataExt");
             maxDepth -= 1;
             var decodedBucketMetadataExt = new BucketMetadataExt();
             var discriminant = stream.ReadInt();

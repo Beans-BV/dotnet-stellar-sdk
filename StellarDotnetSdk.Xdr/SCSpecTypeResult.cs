@@ -29,7 +29,7 @@ public class SCSpecTypeResult
     public static SCSpecTypeResult Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding SCSpecTypeResult");
         maxDepth -= 1;
         var decodedSCSpecTypeResult = new SCSpecTypeResult();
         decodedSCSpecTypeResult.OkType = SCSpecTypeDef.Decode(stream, maxDepth);

@@ -29,7 +29,7 @@ public class TimeBounds
     public static TimeBounds Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TimeBounds");
         maxDepth -= 1;
         var decodedTimeBounds = new TimeBounds();
         decodedTimeBounds.MinTime = TimePoint.Decode(stream, maxDepth);

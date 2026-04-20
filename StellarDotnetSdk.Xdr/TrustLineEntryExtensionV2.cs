@@ -35,7 +35,7 @@ public class TrustLineEntryExtensionV2
     public static TrustLineEntryExtensionV2 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TrustLineEntryExtensionV2");
         maxDepth -= 1;
         var decodedTrustLineEntryExtensionV2 = new TrustLineEntryExtensionV2();
         decodedTrustLineEntryExtensionV2.LiquidityPoolUseCount = Int32.Decode(stream, maxDepth);
@@ -59,13 +59,15 @@ public class TrustLineEntryExtensionV2
             {
                 case 0:
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedTrustLineEntryExtensionV2Ext.Discriminant);
             }
         }
 
         public static TrustLineEntryExtensionV2Ext Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding TrustLineEntryExtensionV2Ext");
             maxDepth -= 1;
             var decodedTrustLineEntryExtensionV2Ext = new TrustLineEntryExtensionV2Ext();
             var discriminant = stream.ReadInt();

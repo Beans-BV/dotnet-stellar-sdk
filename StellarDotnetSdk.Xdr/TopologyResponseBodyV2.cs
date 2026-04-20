@@ -32,7 +32,7 @@ public class TopologyResponseBodyV2
     public static TopologyResponseBodyV2 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TopologyResponseBodyV2");
         maxDepth -= 1;
         var decodedTopologyResponseBodyV2 = new TopologyResponseBodyV2();
         decodedTopologyResponseBodyV2.InboundPeers = TimeSlicedPeerDataList.Decode(stream, maxDepth);

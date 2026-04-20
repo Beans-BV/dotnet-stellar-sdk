@@ -39,13 +39,15 @@ public class ContractIDPreimage
             case ContractIDPreimageType.ContractIDPreimageTypeEnum.CONTRACT_ID_PREIMAGE_FROM_ASSET:
                 Asset.Encode(stream, encodedContractIDPreimage.FromAsset);
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedContractIDPreimage.Discriminant.InnerValue);
         }
     }
 
     public static ContractIDPreimage Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding ContractIDPreimage");
         maxDepth -= 1;
         var decodedContractIDPreimage = new ContractIDPreimage();
         var discriminant = ContractIDPreimageType.Decode(stream, maxDepth);
@@ -84,7 +86,7 @@ public class ContractIDPreimage
         public static ContractIDPreimageFromAddress Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding ContractIDPreimageFromAddress");
             maxDepth -= 1;
             var decodedContractIDPreimageFromAddress = new ContractIDPreimageFromAddress();
             decodedContractIDPreimageFromAddress.Address = SCAddress.Decode(stream, maxDepth);

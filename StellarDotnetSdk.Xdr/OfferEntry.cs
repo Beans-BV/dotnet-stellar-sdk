@@ -60,7 +60,7 @@ public class OfferEntry
     public static OfferEntry Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding OfferEntry");
         maxDepth -= 1;
         var decodedOfferEntry = new OfferEntry();
         decodedOfferEntry.SellerID = AccountID.Decode(stream, maxDepth);
@@ -90,13 +90,15 @@ public class OfferEntry
             {
                 case 0:
                     break;
+                default:
+                    throw new InvalidDataException("Unknown discriminant value: " + encodedOfferEntryExt.Discriminant);
             }
         }
 
         public static OfferEntryExt Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding OfferEntryExt");
             maxDepth -= 1;
             var decodedOfferEntryExt = new OfferEntryExt();
             var discriminant = stream.ReadInt();

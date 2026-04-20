@@ -36,7 +36,7 @@ public class EncryptedBody
     public static EncryptedBody Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding EncryptedBody");
         maxDepth -= 1;
         var decodedEncryptedBody = new EncryptedBody();
         var EncryptedBodysize = stream.ReadInt();

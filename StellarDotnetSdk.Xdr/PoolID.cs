@@ -32,7 +32,7 @@ public class PoolID
     public static PoolID Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding PoolID");
         maxDepth -= 1;
         var decodedPoolID = new PoolID();
         decodedPoolID.InnerValue = Hash.Decode(stream, maxDepth);

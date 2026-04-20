@@ -35,7 +35,7 @@ public class AssetCode4
     public static AssetCode4 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding AssetCode4");
         maxDepth -= 1;
         var decodedAssetCode4 = new AssetCode4();
         var AssetCode4size = 4;

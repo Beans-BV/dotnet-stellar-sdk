@@ -26,7 +26,7 @@ public class BumpSequenceOp
     public static BumpSequenceOp Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding BumpSequenceOp");
         maxDepth -= 1;
         var decodedBumpSequenceOp = new BumpSequenceOp();
         decodedBumpSequenceOp.BumpTo = SequenceNumber.Decode(stream, maxDepth);

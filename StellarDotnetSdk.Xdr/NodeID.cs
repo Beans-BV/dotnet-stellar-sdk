@@ -32,7 +32,7 @@ public class NodeID
     public static NodeID Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding NodeID");
         maxDepth -= 1;
         var decodedNodeID = new NodeID();
         decodedNodeID.InnerValue = PublicKey.Decode(stream, maxDepth);

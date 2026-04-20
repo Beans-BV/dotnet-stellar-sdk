@@ -29,7 +29,7 @@ public class InflationPayout
     public static InflationPayout Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding InflationPayout");
         maxDepth -= 1;
         var decodedInflationPayout = new InflationPayout();
         decodedInflationPayout.Destination = AccountID.Decode(stream, maxDepth);
