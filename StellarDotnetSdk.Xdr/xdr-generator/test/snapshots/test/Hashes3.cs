@@ -37,7 +37,7 @@ public class Hashes3
     public static Hashes3 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Hashes3");
         maxDepth -= 1;
         var decodedHashes3 = new Hashes3();
         var Hashes3size = stream.ReadInt();

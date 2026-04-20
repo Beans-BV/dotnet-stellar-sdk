@@ -32,7 +32,7 @@ public class Str
     public static Str Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Str");
         maxDepth -= 1;
         var decodedStr = new Str();
         decodedStr.InnerValue = stream.ReadString();

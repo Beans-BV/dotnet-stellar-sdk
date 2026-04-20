@@ -219,7 +219,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
     out.indent do
       out.puts 'if (maxDepth <= 0)'
       out.indent do
-        out.puts 'throw new InvalidDataException("Maximum decoding depth reached");'
+        out.puts "throw new InvalidDataException(\"Maximum decoding depth reached while decoding #{name struct}\");"
       end
       out.puts 'maxDepth -= 1;'
       out.puts "var decoded#{name struct} = new #{name struct}();"
@@ -273,7 +273,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
     out.indent do
       out.puts 'if (maxDepth <= 0)'
       out.indent do
-        out.puts 'throw new InvalidDataException("Maximum decoding depth reached");'
+        out.puts "throw new InvalidDataException(\"Maximum decoding depth reached while decoding #{name typedef}\");"
       end
       out.puts 'maxDepth -= 1;'
       out.puts "var decoded#{name typedef} = new #{name typedef}();"
@@ -360,7 +360,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
     out.indent do
       out.puts 'if (maxDepth <= 0)'
       out.indent do
-        out.puts 'throw new InvalidDataException("Maximum decoding depth reached");'
+        out.puts "throw new InvalidDataException(\"Maximum decoding depth reached while decoding #{name union}\");"
       end
       out.puts 'maxDepth -= 1;'
       out.puts "var decoded#{name union} = new #{name union}();"

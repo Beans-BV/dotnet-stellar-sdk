@@ -32,7 +32,7 @@ public class Error
     public static Error Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Error");
         maxDepth -= 1;
         var decodedError = new Error();
         decodedError.InnerValue = stream.ReadInt();

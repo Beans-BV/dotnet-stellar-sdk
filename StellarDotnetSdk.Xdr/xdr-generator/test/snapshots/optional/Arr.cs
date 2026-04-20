@@ -38,7 +38,7 @@ public class Arr
     public static Arr Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Arr");
         maxDepth -= 1;
         var decodedArr = new Arr();
         var Arrsize = 2;

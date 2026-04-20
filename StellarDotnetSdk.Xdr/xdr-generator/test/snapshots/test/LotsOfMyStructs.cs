@@ -31,7 +31,7 @@ public class LotsOfMyStructs
     public static LotsOfMyStructs Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding LotsOfMyStructs");
         maxDepth -= 1;
         var decodedLotsOfMyStructs = new LotsOfMyStructs();
         var memberssize = stream.ReadInt();

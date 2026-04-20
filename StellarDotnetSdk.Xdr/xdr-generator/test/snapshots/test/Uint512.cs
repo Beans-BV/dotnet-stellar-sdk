@@ -35,7 +35,7 @@ public class Uint512
     public static Uint512 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Uint512");
         maxDepth -= 1;
         var decodedUint512 = new Uint512();
         var uint512size = 64;

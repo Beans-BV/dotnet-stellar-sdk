@@ -46,7 +46,7 @@ public class Nester
     public static Nester Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Nester");
         maxDepth -= 1;
         var decodedNester = new Nester();
         decodedNester.NestedEnum = NesterNestedEnum.Decode(stream, maxDepth);
@@ -114,7 +114,7 @@ public class Nester
         public static NesterNestedStruct Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding NesterNestedStruct");
             maxDepth -= 1;
             var decodedNesterNestedStruct = new NesterNestedStruct();
             decodedNesterNestedStruct.Blah = stream.ReadInt();
@@ -149,7 +149,7 @@ public class Nester
         public static NesterNestedUnion Decode(XdrDataInputStream stream, int maxDepth)
         {
             if (maxDepth <= 0)
-                throw new InvalidDataException("Maximum decoding depth reached");
+                throw new InvalidDataException("Maximum decoding depth reached while decoding NesterNestedUnion");
             maxDepth -= 1;
             var decodedNesterNestedUnion = new NesterNestedUnion();
             var discriminant = Color.Decode(stream, maxDepth);

@@ -47,7 +47,7 @@ public class IntUnion
     public static IntUnion Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding IntUnion");
         maxDepth -= 1;
         var decodedIntUnion = new IntUnion();
         var discriminant = stream.ReadInt();

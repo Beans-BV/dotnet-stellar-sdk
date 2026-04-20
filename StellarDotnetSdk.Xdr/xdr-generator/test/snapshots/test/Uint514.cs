@@ -34,7 +34,7 @@ public class Uint514
     public static Uint514 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Uint514");
         maxDepth -= 1;
         var decodedUint514 = new Uint514();
         var uint514size = stream.ReadInt();

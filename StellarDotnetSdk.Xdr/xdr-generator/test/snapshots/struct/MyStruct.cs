@@ -41,7 +41,7 @@ public class MyStruct
     public static MyStruct Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding MyStruct");
         maxDepth -= 1;
         var decodedMyStruct = new MyStruct();
         decodedMyStruct.SomeInt = stream.ReadInt();

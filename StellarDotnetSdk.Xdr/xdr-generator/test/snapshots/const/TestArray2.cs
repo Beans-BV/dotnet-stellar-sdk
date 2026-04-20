@@ -39,7 +39,7 @@ public class TestArray2
     public static TestArray2 Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding TestArray2");
         maxDepth -= 1;
         var decodedTestArray2 = new TestArray2();
         var TestArray2size = stream.ReadInt();

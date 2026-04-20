@@ -32,7 +32,7 @@ public class Multi
     public static Multi Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding Multi");
         maxDepth -= 1;
         var decodedMulti = new Multi();
         decodedMulti.InnerValue = stream.ReadInt();

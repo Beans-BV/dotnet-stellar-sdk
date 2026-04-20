@@ -56,7 +56,7 @@ public class HasOptions
     public static HasOptions Decode(XdrDataInputStream stream, int maxDepth)
     {
         if (maxDepth <= 0)
-            throw new InvalidDataException("Maximum decoding depth reached");
+            throw new InvalidDataException("Maximum decoding depth reached while decoding HasOptions");
         maxDepth -= 1;
         var decodedHasOptions = new HasOptions();
         var FirstOptionPresent = stream.ReadInt();
