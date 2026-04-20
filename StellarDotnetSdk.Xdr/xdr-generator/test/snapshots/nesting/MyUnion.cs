@@ -46,6 +46,8 @@ public class MyUnion
                 break;
             case UnionKey.UnionKeyEnum.OFFER:
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedMyUnion.Discriminant.InnerValue);
         }
     }
 

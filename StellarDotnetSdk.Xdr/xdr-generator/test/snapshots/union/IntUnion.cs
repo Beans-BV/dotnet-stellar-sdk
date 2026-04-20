@@ -41,6 +41,8 @@ public class IntUnion
                     Multi.Encode(stream, encodedIntUnion.Things[i]);
                 }
                 break;
+            default:
+                throw new InvalidDataException("Unknown discriminant value: " + encodedIntUnion.Discriminant);
         }
     }
 

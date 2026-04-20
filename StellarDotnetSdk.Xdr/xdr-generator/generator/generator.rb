@@ -326,6 +326,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
       end
       out.puts '{'
       out.indent do
+        has_default_arm = union.arms.any? { |arm| arm.is_a?(AST::Definitions::UnionDefaultArm) }
         union.arms.each do |arm|
           case arm
           when AST::Definitions::UnionDefaultArm
@@ -346,6 +347,16 @@ class CsharpGenerator < Xdrgen::Generators::Base
           out.indent do
             encode_member "encoded#{name union}", arm, out
             out.puts 'break;'
+          end
+        end
+        unless has_default_arm
+          out.puts 'default:'
+          out.indent do
+            if union.discriminant.type.is_a?(AST::Typespecs::Int)
+              out.puts "throw new InvalidDataException(\"Unknown discriminant value: \" + encoded#{name union}.Discriminant);"
+            else
+              out.puts "throw new InvalidDataException(\"Unknown discriminant value: \" + encoded#{name union}.Discriminant.InnerValue);"
+            end
           end
         end
       end
