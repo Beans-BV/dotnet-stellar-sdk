@@ -50,7 +50,7 @@ public class TxSetComponent
                 decodedTxSetComponent.TxsMaybeDiscountedFee = TxSetComponentTxsMaybeDiscountedFee.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedTxSetComponent;
@@ -99,9 +99,6 @@ public class TxSetComponent
             var txssize = stream.ReadInt();
             if (txssize < 0)
                 throw new InvalidDataException("txs size " + txssize + " is negative");
-            var txsRemainingInputLen = stream.GetRemainingInputLen();
-            if (txsRemainingInputLen >= 0 && txsRemainingInputLen < txssize)
-                throw new InvalidDataException("txs size " + txssize + " exceeds remaining input length " + txsRemainingInputLen);
             decodedTxSetComponentTxsMaybeDiscountedFee.Txs = new TransactionEnvelope[txssize];
             for (var i = 0; i < txssize; i++)
             {

@@ -133,9 +133,6 @@ public class InnerTransactionResult
                     var resultssize = stream.ReadInt();
                     if (resultssize < 0)
                         throw new InvalidDataException("results size " + resultssize + " is negative");
-                    var resultsRemainingInputLen = stream.GetRemainingInputLen();
-                    if (resultsRemainingInputLen >= 0 && resultsRemainingInputLen < resultssize)
-                        throw new InvalidDataException("results size " + resultssize + " exceeds remaining input length " + resultsRemainingInputLen);
                     decodedInnerTransactionResultResult.Results = new OperationResult[resultssize];
                     for (var i = 0; i < resultssize; i++)
                     {
@@ -159,7 +156,7 @@ public class InnerTransactionResult
                 case TransactionResultCode.TransactionResultCodeEnum.txSOROBAN_INVALID:
                     break;
                 default:
-                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
             }
 
             return decodedInnerTransactionResultResult;

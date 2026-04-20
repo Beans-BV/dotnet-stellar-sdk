@@ -41,9 +41,6 @@ public class SorobanAuthorizedInvocation
         var subInvocationssize = stream.ReadInt();
         if (subInvocationssize < 0)
             throw new InvalidDataException("subInvocations size " + subInvocationssize + " is negative");
-        var subInvocationsRemainingInputLen = stream.GetRemainingInputLen();
-        if (subInvocationsRemainingInputLen >= 0 && subInvocationsRemainingInputLen < subInvocationssize)
-            throw new InvalidDataException("subInvocations size " + subInvocationssize + " exceeds remaining input length " + subInvocationsRemainingInputLen);
         decodedSorobanAuthorizedInvocation.SubInvocations = new SorobanAuthorizedInvocation[subInvocationssize];
         for (var i = 0; i < subInvocationssize; i++)
         {

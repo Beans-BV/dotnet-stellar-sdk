@@ -82,7 +82,7 @@ public class LedgerEntryChange
                 decodedLedgerEntryChange.Restored = LedgerEntry.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedLedgerEntryChange;

@@ -52,7 +52,7 @@ public class ContractExecutable
             case ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_STELLAR_ASSET:
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedContractExecutable;

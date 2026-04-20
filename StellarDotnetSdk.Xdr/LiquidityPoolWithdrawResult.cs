@@ -60,7 +60,7 @@ public class LiquidityPoolWithdrawResult
             case LiquidityPoolWithdrawResultCode.LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedLiquidityPoolWithdrawResult;

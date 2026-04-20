@@ -43,9 +43,6 @@ public class ParallelTxExecutionStage
         var ParallelTxExecutionStagesize = stream.ReadInt();
         if (ParallelTxExecutionStagesize < 0)
             throw new InvalidDataException("ParallelTxExecutionStage size " + ParallelTxExecutionStagesize + " is negative");
-        var ParallelTxExecutionStageRemainingInputLen = stream.GetRemainingInputLen();
-        if (ParallelTxExecutionStageRemainingInputLen >= 0 && ParallelTxExecutionStageRemainingInputLen < ParallelTxExecutionStagesize)
-            throw new InvalidDataException("ParallelTxExecutionStage size " + ParallelTxExecutionStagesize + " exceeds remaining input length " + ParallelTxExecutionStageRemainingInputLen);
         decodedParallelTxExecutionStage.InnerValue = new DependentTxCluster[ParallelTxExecutionStagesize];
         for (var i = 0; i < ParallelTxExecutionStagesize; i++)
         {

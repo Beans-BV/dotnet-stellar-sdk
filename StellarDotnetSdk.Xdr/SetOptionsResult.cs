@@ -75,7 +75,7 @@ public class SetOptionsResult
             case SetOptionsResultCode.SetOptionsResultCodeEnum.SET_OPTIONS_AUTH_REVOCABLE_REQUIRED:
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedSetOptionsResult;

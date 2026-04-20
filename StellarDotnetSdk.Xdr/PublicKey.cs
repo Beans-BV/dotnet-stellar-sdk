@@ -46,7 +46,7 @@ public class PublicKey
                 decodedPublicKey.Ed25519 = Uint256.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedPublicKey;

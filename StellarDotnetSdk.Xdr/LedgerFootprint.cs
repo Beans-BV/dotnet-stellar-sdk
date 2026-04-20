@@ -45,9 +45,6 @@ public class LedgerFootprint
         var readOnlysize = stream.ReadInt();
         if (readOnlysize < 0)
             throw new InvalidDataException("readOnly size " + readOnlysize + " is negative");
-        var readOnlyRemainingInputLen = stream.GetRemainingInputLen();
-        if (readOnlyRemainingInputLen >= 0 && readOnlyRemainingInputLen < readOnlysize)
-            throw new InvalidDataException("readOnly size " + readOnlysize + " exceeds remaining input length " + readOnlyRemainingInputLen);
         decodedLedgerFootprint.ReadOnly = new LedgerKey[readOnlysize];
         for (var i = 0; i < readOnlysize; i++)
         {
@@ -56,9 +53,6 @@ public class LedgerFootprint
         var readWritesize = stream.ReadInt();
         if (readWritesize < 0)
             throw new InvalidDataException("readWrite size " + readWritesize + " is negative");
-        var readWriteRemainingInputLen = stream.GetRemainingInputLen();
-        if (readWriteRemainingInputLen >= 0 && readWriteRemainingInputLen < readWritesize)
-            throw new InvalidDataException("readWrite size " + readWritesize + " exceeds remaining input length " + readWriteRemainingInputLen);
         decodedLedgerFootprint.ReadWrite = new LedgerKey[readWritesize];
         for (var i = 0; i < readWritesize; i++)
         {

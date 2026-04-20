@@ -72,7 +72,7 @@ public class PaymentResult
             case PaymentResultCode.PaymentResultCodeEnum.PAYMENT_NO_ISSUER:
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedPaymentResult;

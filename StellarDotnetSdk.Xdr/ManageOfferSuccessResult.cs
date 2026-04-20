@@ -50,9 +50,6 @@ public class ManageOfferSuccessResult
         var offersClaimedsize = stream.ReadInt();
         if (offersClaimedsize < 0)
             throw new InvalidDataException("offersClaimed size " + offersClaimedsize + " is negative");
-        var offersClaimedRemainingInputLen = stream.GetRemainingInputLen();
-        if (offersClaimedRemainingInputLen >= 0 && offersClaimedRemainingInputLen < offersClaimedsize)
-            throw new InvalidDataException("offersClaimed size " + offersClaimedsize + " exceeds remaining input length " + offersClaimedRemainingInputLen);
         decodedManageOfferSuccessResult.OffersClaimed = new ClaimAtom[offersClaimedsize];
         for (var i = 0; i < offersClaimedsize; i++)
         {
@@ -104,7 +101,7 @@ public class ManageOfferSuccessResult
                 case ManageOfferEffect.ManageOfferEffectEnum.MANAGE_OFFER_DELETED:
                     break;
                 default:
-                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
             }
 
             return decodedManageOfferSuccessResultOffer;

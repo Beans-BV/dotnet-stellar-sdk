@@ -58,9 +58,6 @@ public class SorobanTransactionMeta
         var eventssize = stream.ReadInt();
         if (eventssize < 0)
             throw new InvalidDataException("events size " + eventssize + " is negative");
-        var eventsRemainingInputLen = stream.GetRemainingInputLen();
-        if (eventsRemainingInputLen >= 0 && eventsRemainingInputLen < eventssize)
-            throw new InvalidDataException("events size " + eventssize + " exceeds remaining input length " + eventsRemainingInputLen);
         decodedSorobanTransactionMeta.Events = new ContractEvent[eventssize];
         for (var i = 0; i < eventssize; i++)
         {
@@ -70,9 +67,6 @@ public class SorobanTransactionMeta
         var diagnosticEventssize = stream.ReadInt();
         if (diagnosticEventssize < 0)
             throw new InvalidDataException("diagnosticEvents size " + diagnosticEventssize + " is negative");
-        var diagnosticEventsRemainingInputLen = stream.GetRemainingInputLen();
-        if (diagnosticEventsRemainingInputLen >= 0 && diagnosticEventsRemainingInputLen < diagnosticEventssize)
-            throw new InvalidDataException("diagnosticEvents size " + diagnosticEventssize + " exceeds remaining input length " + diagnosticEventsRemainingInputLen);
         decodedSorobanTransactionMeta.DiagnosticEvents = new DiagnosticEvent[diagnosticEventssize];
         for (var i = 0; i < diagnosticEventssize; i++)
         {

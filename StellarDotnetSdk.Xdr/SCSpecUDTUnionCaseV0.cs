@@ -55,7 +55,7 @@ public class SCSpecUDTUnionCaseV0
                 decodedSCSpecUDTUnionCaseV0.TupleCase = SCSpecUDTUnionCaseTupleV0.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedSCSpecUDTUnionCaseV0;

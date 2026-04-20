@@ -64,7 +64,7 @@ public class InvokeHostFunctionResult
             case InvokeHostFunctionResultCode.InvokeHostFunctionResultCodeEnum.INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE:
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedInvokeHostFunctionResult;

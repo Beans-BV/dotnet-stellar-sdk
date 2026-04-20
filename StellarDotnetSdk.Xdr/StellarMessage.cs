@@ -198,9 +198,6 @@ public class StellarMessage
                     throw new InvalidDataException("peers size " + peerssize + " is negative");
                 if (peerssize > 100)
                     throw new InvalidDataException("peers size " + peerssize + " exceeds max size 100");
-                var peersRemainingInputLen = stream.GetRemainingInputLen();
-                if (peersRemainingInputLen >= 0 && peersRemainingInputLen < peerssize)
-                    throw new InvalidDataException("peers size " + peerssize + " exceeds remaining input length " + peersRemainingInputLen);
                 decodedStellarMessage.Peers = new PeerAddress[peerssize];
                 for (var i = 0; i < peerssize; i++)
                 {
@@ -256,7 +253,7 @@ public class StellarMessage
                 decodedStellarMessage.FloodDemand = FloodDemand.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedStellarMessage;

@@ -168,7 +168,7 @@ public class LedgerKey
                 decodedLedgerKey.Ttl = LedgerKeyTtl.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedLedgerKey;

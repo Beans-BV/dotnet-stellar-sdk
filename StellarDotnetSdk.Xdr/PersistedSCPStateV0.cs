@@ -53,9 +53,6 @@ public class PersistedSCPStateV0
         var scpEnvelopessize = stream.ReadInt();
         if (scpEnvelopessize < 0)
             throw new InvalidDataException("scpEnvelopes size " + scpEnvelopessize + " is negative");
-        var scpEnvelopesRemainingInputLen = stream.GetRemainingInputLen();
-        if (scpEnvelopesRemainingInputLen >= 0 && scpEnvelopesRemainingInputLen < scpEnvelopessize)
-            throw new InvalidDataException("scpEnvelopes size " + scpEnvelopessize + " exceeds remaining input length " + scpEnvelopesRemainingInputLen);
         decodedPersistedSCPStateV0.ScpEnvelopes = new SCPEnvelope[scpEnvelopessize];
         for (var i = 0; i < scpEnvelopessize; i++)
         {
@@ -64,9 +61,6 @@ public class PersistedSCPStateV0
         var quorumSetssize = stream.ReadInt();
         if (quorumSetssize < 0)
             throw new InvalidDataException("quorumSets size " + quorumSetssize + " is negative");
-        var quorumSetsRemainingInputLen = stream.GetRemainingInputLen();
-        if (quorumSetsRemainingInputLen >= 0 && quorumSetsRemainingInputLen < quorumSetssize)
-            throw new InvalidDataException("quorumSets size " + quorumSetssize + " exceeds remaining input length " + quorumSetsRemainingInputLen);
         decodedPersistedSCPStateV0.QuorumSets = new SCPQuorumSet[quorumSetssize];
         for (var i = 0; i < quorumSetssize; i++)
         {
@@ -75,9 +69,6 @@ public class PersistedSCPStateV0
         var txSetssize = stream.ReadInt();
         if (txSetssize < 0)
             throw new InvalidDataException("txSets size " + txSetssize + " is negative");
-        var txSetsRemainingInputLen = stream.GetRemainingInputLen();
-        if (txSetsRemainingInputLen >= 0 && txSetsRemainingInputLen < txSetssize)
-            throw new InvalidDataException("txSets size " + txSetssize + " exceeds remaining input length " + txSetsRemainingInputLen);
         decodedPersistedSCPStateV0.TxSets = new StoredTransactionSet[txSetssize];
         for (var i = 0; i < txSetssize; i++)
         {

@@ -49,9 +49,6 @@ public class SCPNomination
         var votessize = stream.ReadInt();
         if (votessize < 0)
             throw new InvalidDataException("votes size " + votessize + " is negative");
-        var votesRemainingInputLen = stream.GetRemainingInputLen();
-        if (votesRemainingInputLen >= 0 && votesRemainingInputLen < votessize)
-            throw new InvalidDataException("votes size " + votessize + " exceeds remaining input length " + votesRemainingInputLen);
         decodedSCPNomination.Votes = new Value[votessize];
         for (var i = 0; i < votessize; i++)
         {
@@ -60,9 +57,6 @@ public class SCPNomination
         var acceptedsize = stream.ReadInt();
         if (acceptedsize < 0)
             throw new InvalidDataException("accepted size " + acceptedsize + " is negative");
-        var acceptedRemainingInputLen = stream.GetRemainingInputLen();
-        if (acceptedRemainingInputLen >= 0 && acceptedRemainingInputLen < acceptedsize)
-            throw new InvalidDataException("accepted size " + acceptedsize + " exceeds remaining input length " + acceptedRemainingInputLen);
         decodedSCPNomination.Accepted = new Value[acceptedsize];
         for (var i = 0; i < acceptedsize; i++)
         {

@@ -59,7 +59,7 @@ public class MuxedAccount
                 decodedMuxedAccount.Med25519 = MuxedAccountMed25519.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedMuxedAccount;

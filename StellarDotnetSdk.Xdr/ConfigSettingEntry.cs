@@ -183,9 +183,6 @@ public class ConfigSettingEntry
                 var liveSorobanStateSizeWindowsize = stream.ReadInt();
                 if (liveSorobanStateSizeWindowsize < 0)
                     throw new InvalidDataException("liveSorobanStateSizeWindow size " + liveSorobanStateSizeWindowsize + " is negative");
-                var liveSorobanStateSizeWindowRemainingInputLen = stream.GetRemainingInputLen();
-                if (liveSorobanStateSizeWindowRemainingInputLen >= 0 && liveSorobanStateSizeWindowRemainingInputLen < liveSorobanStateSizeWindowsize)
-                    throw new InvalidDataException("liveSorobanStateSizeWindow size " + liveSorobanStateSizeWindowsize + " exceeds remaining input length " + liveSorobanStateSizeWindowRemainingInputLen);
                 decodedConfigSettingEntry.LiveSorobanStateSizeWindow = new Uint64[liveSorobanStateSizeWindowsize];
                 for (var i = 0; i < liveSorobanStateSizeWindowsize; i++)
                 {
@@ -205,7 +202,7 @@ public class ConfigSettingEntry
                 decodedConfigSettingEntry.ContractSCPTiming = ConfigSettingSCPTiming.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedConfigSettingEntry;

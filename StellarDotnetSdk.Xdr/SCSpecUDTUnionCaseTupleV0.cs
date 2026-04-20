@@ -49,9 +49,6 @@ public class SCSpecUDTUnionCaseTupleV0
             throw new InvalidDataException("type size " + typesize + " is negative");
         if (typesize > 12)
             throw new InvalidDataException("type size " + typesize + " exceeds max size 12");
-        var typeRemainingInputLen = stream.GetRemainingInputLen();
-        if (typeRemainingInputLen >= 0 && typeRemainingInputLen < typesize)
-            throw new InvalidDataException("type size " + typesize + " exceeds remaining input length " + typeRemainingInputLen);
         decodedSCSpecUDTUnionCaseTupleV0.Type = new SCSpecTypeDef[typesize];
         for (var i = 0; i < typesize; i++)
         {

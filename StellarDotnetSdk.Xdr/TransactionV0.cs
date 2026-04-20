@@ -81,9 +81,6 @@ public class TransactionV0
             throw new InvalidDataException("operations size " + operationssize + " is negative");
         if (operationssize > 100)
             throw new InvalidDataException("operations size " + operationssize + " exceeds max size 100");
-        var operationsRemainingInputLen = stream.GetRemainingInputLen();
-        if (operationsRemainingInputLen >= 0 && operationsRemainingInputLen < operationssize)
-            throw new InvalidDataException("operations size " + operationssize + " exceeds remaining input length " + operationsRemainingInputLen);
         decodedTransactionV0.Operations = new Operation[operationssize];
         for (var i = 0; i < operationssize; i++)
         {

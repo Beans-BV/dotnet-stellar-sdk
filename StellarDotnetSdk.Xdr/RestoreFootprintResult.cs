@@ -54,7 +54,7 @@ public class RestoreFootprintResult
             case RestoreFootprintResultCode.RestoreFootprintResultCodeEnum.RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE:
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedRestoreFootprintResult;

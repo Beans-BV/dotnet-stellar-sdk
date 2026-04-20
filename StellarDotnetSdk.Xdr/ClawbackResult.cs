@@ -57,7 +57,7 @@ public class ClawbackResult
             case ClawbackResultCode.ClawbackResultCodeEnum.CLAWBACK_UNDERFUNDED:
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedClawbackResult;

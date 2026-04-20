@@ -46,9 +46,6 @@ public class PersistedSCPStateV1
         var scpEnvelopessize = stream.ReadInt();
         if (scpEnvelopessize < 0)
             throw new InvalidDataException("scpEnvelopes size " + scpEnvelopessize + " is negative");
-        var scpEnvelopesRemainingInputLen = stream.GetRemainingInputLen();
-        if (scpEnvelopesRemainingInputLen >= 0 && scpEnvelopesRemainingInputLen < scpEnvelopessize)
-            throw new InvalidDataException("scpEnvelopes size " + scpEnvelopessize + " exceeds remaining input length " + scpEnvelopesRemainingInputLen);
         decodedPersistedSCPStateV1.ScpEnvelopes = new SCPEnvelope[scpEnvelopessize];
         for (var i = 0; i < scpEnvelopessize; i++)
         {
@@ -57,9 +54,6 @@ public class PersistedSCPStateV1
         var quorumSetssize = stream.ReadInt();
         if (quorumSetssize < 0)
             throw new InvalidDataException("quorumSets size " + quorumSetssize + " is negative");
-        var quorumSetsRemainingInputLen = stream.GetRemainingInputLen();
-        if (quorumSetsRemainingInputLen >= 0 && quorumSetsRemainingInputLen < quorumSetssize)
-            throw new InvalidDataException("quorumSets size " + quorumSetssize + " exceeds remaining input length " + quorumSetsRemainingInputLen);
         decodedPersistedSCPStateV1.QuorumSets = new SCPQuorumSet[quorumSetssize];
         for (var i = 0; i < quorumSetssize; i++)
         {

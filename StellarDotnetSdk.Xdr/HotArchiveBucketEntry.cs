@@ -65,7 +65,7 @@ public class HotArchiveBucketEntry
                 decodedHotArchiveBucketEntry.MetaEntry = BucketMetadata.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedHotArchiveBucketEntry;

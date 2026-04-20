@@ -40,9 +40,6 @@ public class SorobanResourcesExtV0
         var archivedSorobanEntriessize = stream.ReadInt();
         if (archivedSorobanEntriessize < 0)
             throw new InvalidDataException("archivedSorobanEntries size " + archivedSorobanEntriessize + " is negative");
-        var archivedSorobanEntriesRemainingInputLen = stream.GetRemainingInputLen();
-        if (archivedSorobanEntriesRemainingInputLen >= 0 && archivedSorobanEntriesRemainingInputLen < archivedSorobanEntriessize)
-            throw new InvalidDataException("archivedSorobanEntries size " + archivedSorobanEntriessize + " exceeds remaining input length " + archivedSorobanEntriesRemainingInputLen);
         decodedSorobanResourcesExtV0.ArchivedSorobanEntries = new Uint32[archivedSorobanEntriessize];
         for (var i = 0; i < archivedSorobanEntriessize; i++)
         {

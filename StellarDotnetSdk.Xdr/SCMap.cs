@@ -43,9 +43,6 @@ public class SCMap
         var SCMapsize = stream.ReadInt();
         if (SCMapsize < 0)
             throw new InvalidDataException("SCMap size " + SCMapsize + " is negative");
-        var SCMapRemainingInputLen = stream.GetRemainingInputLen();
-        if (SCMapRemainingInputLen >= 0 && SCMapRemainingInputLen < SCMapsize)
-            throw new InvalidDataException("SCMap size " + SCMapsize + " exceeds remaining input length " + SCMapRemainingInputLen);
         decodedSCMap.InnerValue = new SCMapEntry[SCMapsize];
         for (var i = 0; i < SCMapsize; i++)
         {

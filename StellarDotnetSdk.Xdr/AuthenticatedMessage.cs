@@ -51,7 +51,7 @@ public class AuthenticatedMessage
                 decodedAuthenticatedMessage.V0 = AuthenticatedMessageV0.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedAuthenticatedMessage;

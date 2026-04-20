@@ -103,7 +103,7 @@ public class LedgerUpgrade
                 decodedLedgerUpgrade.NewMaxSorobanTxSetSize = Uint32.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedLedgerUpgrade;

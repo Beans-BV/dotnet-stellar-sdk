@@ -55,9 +55,6 @@ public class InflationResult
                 var payoutssize = stream.ReadInt();
                 if (payoutssize < 0)
                     throw new InvalidDataException("payouts size " + payoutssize + " is negative");
-                var payoutsRemainingInputLen = stream.GetRemainingInputLen();
-                if (payoutsRemainingInputLen >= 0 && payoutsRemainingInputLen < payoutssize)
-                    throw new InvalidDataException("payouts size " + payoutssize + " exceeds remaining input length " + payoutsRemainingInputLen);
                 decodedInflationResult.Payouts = new InflationPayout[payoutssize];
                 for (var i = 0; i < payoutssize; i++)
                 {
@@ -67,7 +64,7 @@ public class InflationResult
             case InflationResultCode.InflationResultCodeEnum.INFLATION_NOT_TIME:
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedInflationResult;

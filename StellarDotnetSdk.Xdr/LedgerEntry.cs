@@ -173,7 +173,7 @@ public class LedgerEntry
                     decodedLedgerEntryData.Ttl = TTLEntry.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
             }
 
             return decodedLedgerEntryData;

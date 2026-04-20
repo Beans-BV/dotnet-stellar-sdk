@@ -80,9 +80,6 @@ public class TransactionMetaV4
         var operationssize = stream.ReadInt();
         if (operationssize < 0)
             throw new InvalidDataException("operations size " + operationssize + " is negative");
-        var operationsRemainingInputLen = stream.GetRemainingInputLen();
-        if (operationsRemainingInputLen >= 0 && operationsRemainingInputLen < operationssize)
-            throw new InvalidDataException("operations size " + operationssize + " exceeds remaining input length " + operationsRemainingInputLen);
         decodedTransactionMetaV4.Operations = new OperationMetaV2[operationssize];
         for (var i = 0; i < operationssize; i++)
         {
@@ -97,9 +94,6 @@ public class TransactionMetaV4
         var eventssize = stream.ReadInt();
         if (eventssize < 0)
             throw new InvalidDataException("events size " + eventssize + " is negative");
-        var eventsRemainingInputLen = stream.GetRemainingInputLen();
-        if (eventsRemainingInputLen >= 0 && eventsRemainingInputLen < eventssize)
-            throw new InvalidDataException("events size " + eventssize + " exceeds remaining input length " + eventsRemainingInputLen);
         decodedTransactionMetaV4.Events = new TransactionEvent[eventssize];
         for (var i = 0; i < eventssize; i++)
         {
@@ -108,9 +102,6 @@ public class TransactionMetaV4
         var diagnosticEventssize = stream.ReadInt();
         if (diagnosticEventssize < 0)
             throw new InvalidDataException("diagnosticEvents size " + diagnosticEventssize + " is negative");
-        var diagnosticEventsRemainingInputLen = stream.GetRemainingInputLen();
-        if (diagnosticEventsRemainingInputLen >= 0 && diagnosticEventsRemainingInputLen < diagnosticEventssize)
-            throw new InvalidDataException("diagnosticEvents size " + diagnosticEventssize + " exceeds remaining input length " + diagnosticEventsRemainingInputLen);
         decodedTransactionMetaV4.DiagnosticEvents = new DiagnosticEvent[diagnosticEventssize];
         for (var i = 0; i < diagnosticEventssize; i++)
         {

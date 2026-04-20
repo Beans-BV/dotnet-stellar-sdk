@@ -101,7 +101,7 @@ public class PeerAddress
                     stream.Read(decodedPeerAddressIp.Ipv6, 0, ipv6size);
                     break;
                 default:
-                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
             }
 
             return decodedPeerAddressIp;

@@ -53,9 +53,6 @@ public class SCSpecUDTEnumV0
             throw new InvalidDataException("cases size " + casessize + " is negative");
         if (casessize > 50)
             throw new InvalidDataException("cases size " + casessize + " exceeds max size 50");
-        var casesRemainingInputLen = stream.GetRemainingInputLen();
-        if (casesRemainingInputLen >= 0 && casesRemainingInputLen < casessize)
-            throw new InvalidDataException("cases size " + casessize + " exceeds remaining input length " + casesRemainingInputLen);
         decodedSCSpecUDTEnumV0.Cases = new SCSpecUDTEnumCaseV0[casessize];
         for (var i = 0; i < casessize; i++)
         {

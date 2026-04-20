@@ -41,9 +41,6 @@ public class InvokeHostFunctionSuccessPreImage
         var eventssize = stream.ReadInt();
         if (eventssize < 0)
             throw new InvalidDataException("events size " + eventssize + " is negative");
-        var eventsRemainingInputLen = stream.GetRemainingInputLen();
-        if (eventsRemainingInputLen >= 0 && eventsRemainingInputLen < eventssize)
-            throw new InvalidDataException("events size " + eventssize + " exceeds remaining input length " + eventsRemainingInputLen);
         decodedInvokeHostFunctionSuccessPreImage.Events = new ContractEvent[eventssize];
         for (var i = 0; i < eventssize; i++)
         {

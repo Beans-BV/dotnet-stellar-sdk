@@ -43,9 +43,6 @@ public class DependentTxCluster
         var DependentTxClustersize = stream.ReadInt();
         if (DependentTxClustersize < 0)
             throw new InvalidDataException("DependentTxCluster size " + DependentTxClustersize + " is negative");
-        var DependentTxClusterRemainingInputLen = stream.GetRemainingInputLen();
-        if (DependentTxClusterRemainingInputLen >= 0 && DependentTxClusterRemainingInputLen < DependentTxClustersize)
-            throw new InvalidDataException("DependentTxCluster size " + DependentTxClustersize + " exceeds remaining input length " + DependentTxClusterRemainingInputLen);
         decodedDependentTxCluster.InnerValue = new TransactionEnvelope[DependentTxClustersize];
         for (var i = 0; i < DependentTxClustersize; i++)
         {

@@ -67,9 +67,6 @@ public class StellarValue
             throw new InvalidDataException("upgrades size " + upgradessize + " is negative");
         if (upgradessize > 6)
             throw new InvalidDataException("upgrades size " + upgradessize + " exceeds max size 6");
-        var upgradesRemainingInputLen = stream.GetRemainingInputLen();
-        if (upgradesRemainingInputLen >= 0 && upgradesRemainingInputLen < upgradessize)
-            throw new InvalidDataException("upgrades size " + upgradessize + " exceeds remaining input length " + upgradesRemainingInputLen);
         decodedStellarValue.Upgrades = new UpgradeType[upgradessize];
         for (var i = 0; i < upgradessize; i++)
         {
@@ -119,7 +116,7 @@ public class StellarValue
                     decodedStellarValueExt.LcValueSignature = LedgerCloseValueSignature.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
             }
 
             return decodedStellarValueExt;

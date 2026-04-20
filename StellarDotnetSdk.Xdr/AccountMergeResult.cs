@@ -70,7 +70,7 @@ public class AccountMergeResult
             case AccountMergeResultCode.AccountMergeResultCodeEnum.ACCOUNT_MERGE_IS_SPONSOR:
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedAccountMergeResult;

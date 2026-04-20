@@ -79,7 +79,7 @@ public class Memo
                 decodedMemo.RetHash = Hash.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedMemo;

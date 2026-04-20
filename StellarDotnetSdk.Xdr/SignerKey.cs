@@ -81,7 +81,7 @@ public class SignerKey
                 decodedSignerKey.Ed25519SignedPayload = SignerKeyEd25519SignedPayload.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedSignerKey;

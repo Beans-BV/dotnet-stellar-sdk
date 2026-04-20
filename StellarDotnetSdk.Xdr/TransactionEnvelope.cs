@@ -64,7 +64,7 @@ public class TransactionEnvelope
                 decodedTransactionEnvelope.FeeBump = FeeBumpTransactionEnvelope.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedTransactionEnvelope;

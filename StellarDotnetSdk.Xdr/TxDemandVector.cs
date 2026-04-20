@@ -47,9 +47,6 @@ public class TxDemandVector
             throw new InvalidDataException("TxDemandVector size " + TxDemandVectorsize + " is negative");
         if (TxDemandVectorsize > 1000)
             throw new InvalidDataException("TxDemandVector size " + TxDemandVectorsize + " exceeds max size 1000");
-        var TxDemandVectorRemainingInputLen = stream.GetRemainingInputLen();
-        if (TxDemandVectorRemainingInputLen >= 0 && TxDemandVectorRemainingInputLen < TxDemandVectorsize)
-            throw new InvalidDataException("TxDemandVector size " + TxDemandVectorsize + " exceeds remaining input length " + TxDemandVectorRemainingInputLen);
         decodedTxDemandVector.InnerValue = new Hash[TxDemandVectorsize];
         for (var i = 0; i < TxDemandVectorsize; i++)
         {

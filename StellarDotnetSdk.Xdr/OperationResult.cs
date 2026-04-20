@@ -124,7 +124,7 @@ public class OperationResult
             case OperationResultCode.OperationResultCodeEnum.opTOO_MANY_SPONSORING:
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedOperationResult;
@@ -348,7 +348,7 @@ public class OperationResult
                     decodedOperationResultTr.RestoreFootprintResult = RestoreFootprintResult.Decode(stream, maxDepth);
                     break;
                 default:
-                    throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                    throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
             }
 
             return decodedOperationResultTr;

@@ -40,9 +40,6 @@ public class SCPHistoryEntryV0
         var quorumSetssize = stream.ReadInt();
         if (quorumSetssize < 0)
             throw new InvalidDataException("quorumSets size " + quorumSetssize + " is negative");
-        var quorumSetsRemainingInputLen = stream.GetRemainingInputLen();
-        if (quorumSetsRemainingInputLen >= 0 && quorumSetsRemainingInputLen < quorumSetssize)
-            throw new InvalidDataException("quorumSets size " + quorumSetssize + " exceeds remaining input length " + quorumSetsRemainingInputLen);
         decodedSCPHistoryEntryV0.QuorumSets = new SCPQuorumSet[quorumSetssize];
         for (var i = 0; i < quorumSetssize; i++)
         {

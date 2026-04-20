@@ -41,9 +41,6 @@ public class SCSpecTypeTuple
             throw new InvalidDataException("valueTypes size " + valueTypessize + " is negative");
         if (valueTypessize > 12)
             throw new InvalidDataException("valueTypes size " + valueTypessize + " exceeds max size 12");
-        var valueTypesRemainingInputLen = stream.GetRemainingInputLen();
-        if (valueTypesRemainingInputLen >= 0 && valueTypesRemainingInputLen < valueTypessize)
-            throw new InvalidDataException("valueTypes size " + valueTypessize + " exceeds remaining input length " + valueTypesRemainingInputLen);
         decodedSCSpecTypeTuple.ValueTypes = new SCSpecTypeDef[valueTypessize];
         for (var i = 0; i < valueTypessize; i++)
         {

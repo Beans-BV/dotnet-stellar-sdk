@@ -91,7 +91,7 @@ public class SCSpecEntry
                 decodedSCSpecEntry.EventV0 = SCSpecEventV0.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedSCSpecEntry;

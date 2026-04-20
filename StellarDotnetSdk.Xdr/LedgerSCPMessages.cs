@@ -41,9 +41,6 @@ public class LedgerSCPMessages
         var messagessize = stream.ReadInt();
         if (messagessize < 0)
             throw new InvalidDataException("messages size " + messagessize + " is negative");
-        var messagesRemainingInputLen = stream.GetRemainingInputLen();
-        if (messagesRemainingInputLen >= 0 && messagesRemainingInputLen < messagessize)
-            throw new InvalidDataException("messages size " + messagessize + " exceeds remaining input length " + messagesRemainingInputLen);
         decodedLedgerSCPMessages.Messages = new SCPEnvelope[messagessize];
         for (var i = 0; i < messagessize; i++)
         {

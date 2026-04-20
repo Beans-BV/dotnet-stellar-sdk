@@ -99,7 +99,7 @@ public class PathPaymentStrictReceiveResult
             case PathPaymentStrictReceiveResultCode.PathPaymentStrictReceiveResultCodeEnum.PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX:
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedPathPaymentStrictReceiveResult;
@@ -135,9 +135,6 @@ public class PathPaymentStrictReceiveResult
             var offerssize = stream.ReadInt();
             if (offerssize < 0)
                 throw new InvalidDataException("offers size " + offerssize + " is negative");
-            var offersRemainingInputLen = stream.GetRemainingInputLen();
-            if (offersRemainingInputLen >= 0 && offersRemainingInputLen < offerssize)
-                throw new InvalidDataException("offers size " + offerssize + " exceeds remaining input length " + offersRemainingInputLen);
             decodedPathPaymentStrictReceiveResultSuccess.Offers = new ClaimAtom[offerssize];
             for (var i = 0; i < offerssize; i++)
             {

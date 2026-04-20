@@ -58,7 +58,7 @@ public class AssetCode
                 decodedAssetCode.AssetCode12 = AssetCode12.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedAssetCode;

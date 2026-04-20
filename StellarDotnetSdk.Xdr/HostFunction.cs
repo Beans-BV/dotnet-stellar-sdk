@@ -82,7 +82,7 @@ public class HostFunction
                 decodedHostFunction.CreateContractV2 = CreateContractArgsV2.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedHostFunction;

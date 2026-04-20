@@ -101,9 +101,6 @@ public class ClaimPredicate
                     throw new InvalidDataException("andPredicates size " + andPredicatessize + " is negative");
                 if (andPredicatessize > 2)
                     throw new InvalidDataException("andPredicates size " + andPredicatessize + " exceeds max size 2");
-                var andPredicatesRemainingInputLen = stream.GetRemainingInputLen();
-                if (andPredicatesRemainingInputLen >= 0 && andPredicatesRemainingInputLen < andPredicatessize)
-                    throw new InvalidDataException("andPredicates size " + andPredicatessize + " exceeds remaining input length " + andPredicatesRemainingInputLen);
                 decodedClaimPredicate.AndPredicates = new ClaimPredicate[andPredicatessize];
                 for (var i = 0; i < andPredicatessize; i++)
                 {
@@ -116,9 +113,6 @@ public class ClaimPredicate
                     throw new InvalidDataException("orPredicates size " + orPredicatessize + " is negative");
                 if (orPredicatessize > 2)
                     throw new InvalidDataException("orPredicates size " + orPredicatessize + " exceeds max size 2");
-                var orPredicatesRemainingInputLen = stream.GetRemainingInputLen();
-                if (orPredicatesRemainingInputLen >= 0 && orPredicatesRemainingInputLen < orPredicatessize)
-                    throw new InvalidDataException("orPredicates size " + orPredicatessize + " exceeds remaining input length " + orPredicatesRemainingInputLen);
                 decodedClaimPredicate.OrPredicates = new ClaimPredicate[orPredicatessize];
                 for (var i = 0; i < orPredicatessize; i++)
                 {
@@ -139,7 +133,7 @@ public class ClaimPredicate
                 decodedClaimPredicate.RelBefore = Int64.Decode(stream, maxDepth);
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedClaimPredicate;

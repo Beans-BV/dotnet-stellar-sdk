@@ -47,9 +47,6 @@ public class ContractCostParams
             throw new InvalidDataException("ContractCostParams size " + ContractCostParamssize + " is negative");
         if (ContractCostParamssize > 1024)
             throw new InvalidDataException("ContractCostParams size " + ContractCostParamssize + " exceeds max size 1024");
-        var ContractCostParamsRemainingInputLen = stream.GetRemainingInputLen();
-        if (ContractCostParamsRemainingInputLen >= 0 && ContractCostParamsRemainingInputLen < ContractCostParamssize)
-            throw new InvalidDataException("ContractCostParams size " + ContractCostParamssize + " exceeds remaining input length " + ContractCostParamsRemainingInputLen);
         decodedContractCostParams.InnerValue = new ContractCostParamEntry[ContractCostParamssize];
         for (var i = 0; i < ContractCostParamssize; i++)
         {

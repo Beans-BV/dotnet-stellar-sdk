@@ -55,7 +55,7 @@ public class BeginSponsoringFutureReservesResult
             case BeginSponsoringFutureReservesResultCode.BeginSponsoringFutureReservesResultCodeEnum.BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedBeginSponsoringFutureReservesResult;

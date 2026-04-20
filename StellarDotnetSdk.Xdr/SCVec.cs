@@ -43,9 +43,6 @@ public class SCVec
         var SCVecsize = stream.ReadInt();
         if (SCVecsize < 0)
             throw new InvalidDataException("SCVec size " + SCVecsize + " is negative");
-        var SCVecRemainingInputLen = stream.GetRemainingInputLen();
-        if (SCVecRemainingInputLen >= 0 && SCVecRemainingInputLen < SCVecsize)
-            throw new InvalidDataException("SCVec size " + SCVecsize + " exceeds remaining input length " + SCVecRemainingInputLen);
         decodedSCVec.InnerValue = new SCVal[SCVecsize];
         for (var i = 0; i < SCVecsize; i++)
         {

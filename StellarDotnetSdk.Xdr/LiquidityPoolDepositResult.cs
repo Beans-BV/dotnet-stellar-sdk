@@ -66,7 +66,7 @@ public class LiquidityPoolDepositResult
             case LiquidityPoolDepositResultCode.LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
                 break;
             default:
-                throw new InvalidDataException("Unknown discriminant value: " + discriminant);
+                throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
         }
 
         return decodedLiquidityPoolDepositResult;

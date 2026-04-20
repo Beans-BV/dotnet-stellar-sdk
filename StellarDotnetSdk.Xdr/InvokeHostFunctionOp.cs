@@ -43,9 +43,6 @@ public class InvokeHostFunctionOp
         var authsize = stream.ReadInt();
         if (authsize < 0)
             throw new InvalidDataException("auth size " + authsize + " is negative");
-        var authRemainingInputLen = stream.GetRemainingInputLen();
-        if (authRemainingInputLen >= 0 && authRemainingInputLen < authsize)
-            throw new InvalidDataException("auth size " + authsize + " exceeds remaining input length " + authRemainingInputLen);
         decodedInvokeHostFunctionOp.Auth = new SorobanAuthorizationEntry[authsize];
         for (var i = 0; i < authsize; i++)
         {
