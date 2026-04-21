@@ -223,6 +223,11 @@ public class XdrDataInputStream
     /// <exception cref="IOException"></exception>
     public byte[] ReadFixOpaque(uint len)
     {
+        if (len > int.MaxValue)
+        {
+            throw new ArgumentOutOfRangeException(nameof(len));
+        }
+
         var result = new byte[len];
         Array.Copy(_bytes, _pos, result, 0, (int)len);
 
