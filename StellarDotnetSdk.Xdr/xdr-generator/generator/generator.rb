@@ -161,6 +161,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
     out.puts '{'
     out.indent do
       out.puts '// maxDepth is intentionally not checked - enums are leaf types'
+      out.puts '_ = maxDepth;'
       out.puts 'var value = stream.ReadInt();'
       out.puts 'switch (value)'
       out.puts '{'

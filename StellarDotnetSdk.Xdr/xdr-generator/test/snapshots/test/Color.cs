@@ -37,6 +37,7 @@ public class Color
     public static Color Decode(XdrDataInputStream stream, int maxDepth)
     {
         // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {

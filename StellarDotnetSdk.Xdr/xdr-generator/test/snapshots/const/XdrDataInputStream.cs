@@ -230,10 +230,11 @@ public class XdrDataInputStream
 
         var tail = len % 4u;
         var tailLength = tail == 0 ? 0 : (int)(4u - tail);
+        var needed = (long)len + tailLength;
         var remaining = GetRemainingInputLen();
-        if (remaining >= 0 && remaining < (int)len + tailLength)
+        if (remaining >= 0 && remaining < needed)
         {
-            throw new InvalidDataException("Truncated input: need " + ((int)len + tailLength) + " bytes but only " + remaining + " remaining");
+            throw new InvalidDataException("Truncated input: need " + needed + " bytes but only " + remaining + " remaining");
         }
 
         var result = new byte[len];
