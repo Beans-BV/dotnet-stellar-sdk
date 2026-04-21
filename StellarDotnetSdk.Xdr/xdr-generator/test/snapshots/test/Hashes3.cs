@@ -26,9 +26,9 @@ public class Hashes3
 
     public static void Encode(XdrDataOutputStream stream, Hashes3 encodedHashes3)
     {
-        var Hashes3size = encodedHashes3.InnerValue.Length;
-        stream.WriteInt(Hashes3size);
-        for (var i = 0; i < Hashes3size; i++)
+        var hashes3Size = encodedHashes3.InnerValue.Length;
+        stream.WriteInt(hashes3Size);
+        for (var i = 0; i < hashes3Size; i++)
         {
             Hash.Encode(stream, encodedHashes3.InnerValue[i]);
         }
@@ -40,11 +40,11 @@ public class Hashes3
             throw new InvalidDataException("Maximum decoding depth reached while decoding Hashes3");
         maxDepth -= 1;
         var decodedHashes3 = new Hashes3();
-        var Hashes3size = stream.ReadInt();
-        if (Hashes3size < 0)
-            throw new InvalidDataException("Hashes3 size " + Hashes3size + " is negative");
-        decodedHashes3.InnerValue = new Hash[Hashes3size];
-        for (var i = 0; i < Hashes3size; i++)
+        var hashes3Size = stream.ReadInt();
+        if (hashes3Size < 0)
+            throw new InvalidDataException("Hashes3 size " + hashes3Size + " is negative");
+        decodedHashes3.InnerValue = new Hash[hashes3Size];
+        for (var i = 0; i < hashes3Size; i++)
         {
             decodedHashes3.InnerValue[i] = Hash.Decode(stream, maxDepth);
         }

@@ -59,18 +59,18 @@ public class HasOptions
             throw new InvalidDataException("Maximum decoding depth reached while decoding HasOptions");
         maxDepth -= 1;
         var decodedHasOptions = new HasOptions();
-        var FirstOptionPresent = stream.ReadInt();
-        if (FirstOptionPresent != 0)
+        var firstOptionPresent = stream.ReadInt();
+        if (firstOptionPresent != 0)
         {
             decodedHasOptions.FirstOption = stream.ReadInt();
         }
-        var SecondOptionPresent = stream.ReadInt();
-        if (SecondOptionPresent != 0)
+        var secondOptionPresent = stream.ReadInt();
+        if (secondOptionPresent != 0)
         {
             decodedHasOptions.SecondOption = stream.ReadInt();
         }
-        var ThirdOptionPresent = stream.ReadInt();
-        if (ThirdOptionPresent != 0)
+        var thirdOptionPresent = stream.ReadInt();
+        if (thirdOptionPresent != 0)
         {
             decodedHasOptions.ThirdOption = Arr.Decode(stream, maxDepth);
         }

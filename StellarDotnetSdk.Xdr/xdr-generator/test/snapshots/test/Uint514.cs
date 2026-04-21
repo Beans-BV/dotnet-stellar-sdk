@@ -26,9 +26,9 @@ public class Uint514
 
     public static void Encode(XdrDataOutputStream stream, Uint514 encodedUint514)
     {
-        var uint514size = encodedUint514.InnerValue.Length;
-        stream.WriteInt(uint514size);
-        stream.Write(encodedUint514.InnerValue, 0, uint514size);
+        var uint514Size = encodedUint514.InnerValue.Length;
+        stream.WriteInt(uint514Size);
+        stream.Write(encodedUint514.InnerValue, 0, uint514Size);
     }
 
     public static Uint514 Decode(XdrDataInputStream stream, int maxDepth)
@@ -37,14 +37,14 @@ public class Uint514
             throw new InvalidDataException("Maximum decoding depth reached while decoding Uint514");
         maxDepth -= 1;
         var decodedUint514 = new Uint514();
-        var uint514size = stream.ReadInt();
-        if (uint514size < 0)
-            throw new InvalidDataException("uint514 size " + uint514size + " is negative");
+        var uint514Size = stream.ReadInt();
+        if (uint514Size < 0)
+            throw new InvalidDataException("uint514 size " + uint514Size + " is negative");
         var uint514RemainingInputLen = stream.GetRemainingInputLen();
-        if (uint514RemainingInputLen >= 0 && uint514RemainingInputLen < uint514size)
-            throw new InvalidDataException("uint514 size " + uint514size + " exceeds remaining input length " + uint514RemainingInputLen);
-        decodedUint514.InnerValue = new byte[uint514size];
-        stream.Read(decodedUint514.InnerValue, 0, uint514size);
+        if (uint514RemainingInputLen >= 0 && uint514RemainingInputLen < uint514Size)
+            throw new InvalidDataException("uint514 size " + uint514Size + " exceeds remaining input length " + uint514RemainingInputLen);
+        decodedUint514.InnerValue = new byte[uint514Size];
+        stream.Read(decodedUint514.InnerValue, 0, uint514Size);
         return decodedUint514;
     }
 

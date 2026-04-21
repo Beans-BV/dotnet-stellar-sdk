@@ -26,10 +26,10 @@ public class TestArray
 
     public static void Encode(XdrDataOutputStream stream, TestArray encodedTestArray)
     {
-        var TestArraysize = encodedTestArray.InnerValue.Length;
-        if (TestArraysize != Constants.FOO)
-            throw new ArgumentException("TestArray size " + TestArraysize + " does not match fixed size FOO");
-        for (var i = 0; i < TestArraysize; i++)
+        var testArraySize = encodedTestArray.InnerValue.Length;
+        if (testArraySize != Constants.FOO)
+            throw new ArgumentException("TestArray size " + testArraySize + " does not match fixed size FOO");
+        for (var i = 0; i < testArraySize; i++)
         {
             stream.WriteInt(encodedTestArray.InnerValue[i]);
         }
@@ -41,9 +41,9 @@ public class TestArray
             throw new InvalidDataException("Maximum decoding depth reached while decoding TestArray");
         maxDepth -= 1;
         var decodedTestArray = new TestArray();
-        var TestArraysize = Constants.FOO;
-        decodedTestArray.InnerValue = new int[TestArraysize];
-        for (var i = 0; i < TestArraysize; i++)
+        var testArraySize = Constants.FOO;
+        decodedTestArray.InnerValue = new int[testArraySize];
+        for (var i = 0; i < testArraySize; i++)
         {
             decodedTestArray.InnerValue[i] = stream.ReadInt();
         }

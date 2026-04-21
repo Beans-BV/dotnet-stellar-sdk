@@ -20,9 +20,9 @@ public class LotsOfMyStructs
 
     public static void Encode(XdrDataOutputStream stream, LotsOfMyStructs encodedLotsOfMyStructs)
     {
-        var memberssize = encodedLotsOfMyStructs.Members.Length;
-        stream.WriteInt(memberssize);
-        for (var i = 0; i < memberssize; i++)
+        var membersSize = encodedLotsOfMyStructs.Members.Length;
+        stream.WriteInt(membersSize);
+        for (var i = 0; i < membersSize; i++)
         {
             MyStruct.Encode(stream, encodedLotsOfMyStructs.Members[i]);
         }
@@ -34,11 +34,11 @@ public class LotsOfMyStructs
             throw new InvalidDataException("Maximum decoding depth reached while decoding LotsOfMyStructs");
         maxDepth -= 1;
         var decodedLotsOfMyStructs = new LotsOfMyStructs();
-        var memberssize = stream.ReadInt();
-        if (memberssize < 0)
-            throw new InvalidDataException("members size " + memberssize + " is negative");
-        decodedLotsOfMyStructs.Members = new MyStruct[memberssize];
-        for (var i = 0; i < memberssize; i++)
+        var membersSize = stream.ReadInt();
+        if (membersSize < 0)
+            throw new InvalidDataException("members size " + membersSize + " is negative");
+        decodedLotsOfMyStructs.Members = new MyStruct[membersSize];
+        for (var i = 0; i < membersSize; i++)
         {
             decodedLotsOfMyStructs.Members[i] = MyStruct.Decode(stream, maxDepth);
         }

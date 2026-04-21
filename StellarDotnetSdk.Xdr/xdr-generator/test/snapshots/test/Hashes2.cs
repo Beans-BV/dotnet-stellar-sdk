@@ -26,11 +26,11 @@ public class Hashes2
 
     public static void Encode(XdrDataOutputStream stream, Hashes2 encodedHashes2)
     {
-        var Hashes2size = encodedHashes2.InnerValue.Length;
-        if (Hashes2size > 12)
-            throw new ArgumentException("Hashes2 size " + Hashes2size + " exceeds max size 12");
-        stream.WriteInt(Hashes2size);
-        for (var i = 0; i < Hashes2size; i++)
+        var hashes2Size = encodedHashes2.InnerValue.Length;
+        if (hashes2Size > 12)
+            throw new ArgumentException("Hashes2 size " + hashes2Size + " exceeds max size 12");
+        stream.WriteInt(hashes2Size);
+        for (var i = 0; i < hashes2Size; i++)
         {
             Hash.Encode(stream, encodedHashes2.InnerValue[i]);
         }
@@ -42,13 +42,13 @@ public class Hashes2
             throw new InvalidDataException("Maximum decoding depth reached while decoding Hashes2");
         maxDepth -= 1;
         var decodedHashes2 = new Hashes2();
-        var Hashes2size = stream.ReadInt();
-        if (Hashes2size < 0)
-            throw new InvalidDataException("Hashes2 size " + Hashes2size + " is negative");
-        if (Hashes2size > 12)
-            throw new InvalidDataException("Hashes2 size " + Hashes2size + " exceeds max size 12");
-        decodedHashes2.InnerValue = new Hash[Hashes2size];
-        for (var i = 0; i < Hashes2size; i++)
+        var hashes2Size = stream.ReadInt();
+        if (hashes2Size < 0)
+            throw new InvalidDataException("Hashes2 size " + hashes2Size + " is negative");
+        if (hashes2Size > 12)
+            throw new InvalidDataException("Hashes2 size " + hashes2Size + " exceeds max size 12");
+        decodedHashes2.InnerValue = new Hash[hashes2Size];
+        for (var i = 0; i < hashes2Size; i++)
         {
             decodedHashes2.InnerValue[i] = Hash.Decode(stream, maxDepth);
         }

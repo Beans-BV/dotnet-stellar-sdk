@@ -35,9 +35,9 @@ public class MyUnion
                 Error.Encode(stream, encodedMyUnion.Error);
                 break;
             case UnionKey.UnionKeyEnum.MULTI:
-                var thingssize = encodedMyUnion.Things.Length;
-                stream.WriteInt(thingssize);
-                for (var i = 0; i < thingssize; i++)
+                var thingsSize = encodedMyUnion.Things.Length;
+                stream.WriteInt(thingsSize);
+                for (var i = 0; i < thingsSize; i++)
                 {
                     Multi.Encode(stream, encodedMyUnion.Things[i]);
                 }
@@ -61,11 +61,11 @@ public class MyUnion
                 decodedMyUnion.Error = Error.Decode(stream, maxDepth);
                 break;
             case UnionKey.UnionKeyEnum.MULTI:
-                var thingssize = stream.ReadInt();
-                if (thingssize < 0)
-                    throw new InvalidDataException("things size " + thingssize + " is negative");
-                decodedMyUnion.Things = new Multi[thingssize];
-                for (var i = 0; i < thingssize; i++)
+                var thingsSize = stream.ReadInt();
+                if (thingsSize < 0)
+                    throw new InvalidDataException("things size " + thingsSize + " is negative");
+                decodedMyUnion.Things = new Multi[thingsSize];
+                for (var i = 0; i < thingsSize; i++)
                 {
                     decodedMyUnion.Things[i] = Multi.Decode(stream, maxDepth);
                 }

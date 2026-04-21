@@ -1,4 +1,3 @@
-require 'set'
 require 'erb'
 
 module Xdrgen::Generators; end
@@ -7,7 +6,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
   AST = Xdrgen::AST
 
   def generate
-    constants_container = Set[]
+    constants_container = []
     render_lib
     render_definitions(@top, constants_container)
     render_constants constants_container
@@ -47,7 +46,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
         render_typedef defn, out
       end
     when AST::Definitions::Const
-      constants_container.add([defn.name, defn.value])
+      constants_container << [defn.name, defn.value]
     end
   end
 
@@ -119,7 +118,7 @@ class CsharpGenerator < Xdrgen::Generators::Base
     out.puts 'public static class Constants'
     out.puts '{'
     out.indent do
-      constants_container.sort_by { |const_name, _| const_name }.each do |const_name, const_value|
+      constants_container.each do |const_name, const_value|
         out.puts "public const int #{const_name} = #{const_value};"
       end
     end
@@ -492,41 +491,41 @@ class CsharpGenerator < Xdrgen::Generators::Base
   def encode_innervalue_body(value, member, out)
     case member.declaration
     when AST::Declarations::Opaque
-      out.puts "var #{member.name}size = #{value}.InnerValue.Length;"
+      out.puts "var #{member.name.camelize(:lower)}Size = #{value}.InnerValue.Length;"
       if member.declaration.fixed?
-        out.puts "if (#{member.name}size != #{convert_constant member.declaration.size})"
+        out.puts "if (#{member.name.camelize(:lower)}Size != #{convert_constant member.declaration.size})"
         out.indent do
-          out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" does not match fixed size #{member.declaration.size}\");"
+          out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name.camelize(:lower)}Size + \" does not match fixed size #{member.declaration.size}\");"
         end
       else
         max_size = member.declaration.resolved_size
         if max_size
-          out.puts "if (#{member.name}size > #{convert_constant max_size})"
+          out.puts "if (#{member.name.camelize(:lower)}Size > #{convert_constant max_size})"
           out.indent do
-            out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" exceeds max size #{max_size}\");"
+            out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name.camelize(:lower)}Size + \" exceeds max size #{max_size}\");"
           end
         end
-        out.puts "stream.WriteInt(#{member.name}size);"
+        out.puts "stream.WriteInt(#{member.name.camelize(:lower)}Size);"
       end
-      out.puts "stream.Write(#{value}.InnerValue, 0, #{member.name}size);"
+      out.puts "stream.Write(#{value}.InnerValue, 0, #{member.name.camelize(:lower)}Size);"
     when AST::Declarations::Array
-      out.puts "var #{member.name}size = #{value}.InnerValue.Length;"
+      out.puts "var #{member.name.camelize(:lower)}Size = #{value}.InnerValue.Length;"
       if member.declaration.fixed?
-        out.puts "if (#{member.name}size != #{convert_constant member.declaration.size})"
+        out.puts "if (#{member.name.camelize(:lower)}Size != #{convert_constant member.declaration.size})"
         out.indent do
-          out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" does not match fixed size #{member.declaration.size}\");"
+          out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name.camelize(:lower)}Size + \" does not match fixed size #{member.declaration.size}\");"
         end
       else
         max_size = member.declaration.resolved_size
         if max_size
-          out.puts "if (#{member.name}size > #{convert_constant max_size})"
+          out.puts "if (#{member.name.camelize(:lower)}Size > #{convert_constant max_size})"
           out.indent do
-            out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" exceeds max size #{max_size}\");"
+            out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name.camelize(:lower)}Size + \" exceeds max size #{max_size}\");"
           end
         end
-        out.puts "stream.WriteInt(#{member.name}size);"
+        out.puts "stream.WriteInt(#{member.name.camelize(:lower)}Size);"
       end
-      out.puts "for (var i = 0; i < #{member.name}size; i++)"
+      out.puts "for (var i = 0; i < #{member.name.camelize(:lower)}Size; i++)"
       out.puts '{'
       out.indent do
         out.puts "#{encode_type member.declaration.type, "#{value}.InnerValue[i]"};"
@@ -567,41 +566,41 @@ class CsharpGenerator < Xdrgen::Generators::Base
     when AST::Declarations::Void
       return
     when AST::Declarations::Opaque
-      out.puts "var #{member.name}size = #{value}.#{member.name.camelize}.Length;"
+      out.puts "var #{member.name.camelize(:lower)}Size = #{value}.#{member.name.camelize}.Length;"
       if member.declaration.fixed?
-        out.puts "if (#{member.name}size != #{convert_constant member.declaration.size})"
+        out.puts "if (#{member.name.camelize(:lower)}Size != #{convert_constant member.declaration.size})"
         out.indent do
-          out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" does not match fixed size #{member.declaration.size}\");"
+          out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name.camelize(:lower)}Size + \" does not match fixed size #{member.declaration.size}\");"
         end
       else
         max_size = member.declaration.resolved_size
         if max_size
-          out.puts "if (#{member.name}size > #{convert_constant max_size})"
+          out.puts "if (#{member.name.camelize(:lower)}Size > #{convert_constant max_size})"
           out.indent do
-            out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" exceeds max size #{max_size}\");"
+            out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name.camelize(:lower)}Size + \" exceeds max size #{max_size}\");"
           end
         end
-        out.puts "stream.WriteInt(#{member.name}size);"
+        out.puts "stream.WriteInt(#{member.name.camelize(:lower)}Size);"
       end
-      out.puts "stream.Write(#{value}.#{member.name.camelize}, 0, #{member.name}size);"
+      out.puts "stream.Write(#{value}.#{member.name.camelize}, 0, #{member.name.camelize(:lower)}Size);"
     when AST::Declarations::Array
-      out.puts "var #{member.name}size = #{value}.#{member.name.camelize}.Length;"
+      out.puts "var #{member.name.camelize(:lower)}Size = #{value}.#{member.name.camelize}.Length;"
       if member.declaration.fixed?
-        out.puts "if (#{member.name}size != #{convert_constant member.declaration.size})"
+        out.puts "if (#{member.name.camelize(:lower)}Size != #{convert_constant member.declaration.size})"
         out.indent do
-          out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" does not match fixed size #{member.declaration.size}\");"
+          out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name.camelize(:lower)}Size + \" does not match fixed size #{member.declaration.size}\");"
         end
       else
         max_size = member.declaration.resolved_size
         if max_size
-          out.puts "if (#{member.name}size > #{convert_constant max_size})"
+          out.puts "if (#{member.name.camelize(:lower)}Size > #{convert_constant max_size})"
           out.indent do
-            out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name}size + \" exceeds max size #{max_size}\");"
+            out.puts "throw new ArgumentException(\"#{member.name} size \" + #{member.name.camelize(:lower)}Size + \" exceeds max size #{max_size}\");"
           end
         end
-        out.puts "stream.WriteInt(#{member.name}size);"
+        out.puts "stream.WriteInt(#{member.name.camelize(:lower)}Size);"
       end
-      out.puts "for (var i = 0; i < #{member.name}size; i++)"
+      out.puts "for (var i = 0; i < #{member.name.camelize(:lower)}Size; i++)"
       out.puts '{'
       out.indent do
         out.puts "#{encode_type member.declaration.type, "#{value}.#{member.name.camelize}[i]"};"
@@ -656,8 +655,8 @@ class CsharpGenerator < Xdrgen::Generators::Base
     end
 
     if member.type.sub_type == :optional
-      out.puts "var #{member.name.camelize}Present = stream.ReadInt();"
-      out.puts "if (#{member.name.camelize}Present != 0)"
+      out.puts "var #{member.name.camelize(:lower)}Present = stream.ReadInt();"
+      out.puts "if (#{member.name.camelize(:lower)}Present != 0)"
       out.puts '{'
       out.indent do
         decode_innervalue_body value, member, out, depth_var
@@ -672,22 +671,22 @@ class CsharpGenerator < Xdrgen::Generators::Base
     case member.declaration
     when AST::Declarations::Opaque
       if member.declaration.fixed?
-        out.puts "var #{member.name}size = #{convert_constant member.declaration.size};"
+        out.puts "var #{member.name.camelize(:lower)}Size = #{convert_constant member.declaration.size};"
       else
-        out.puts "var #{member.name}size = stream.ReadInt();"
+        out.puts "var #{member.name.camelize(:lower)}Size = stream.ReadInt();"
         emit_decode_size_validation(member.name, member.declaration, out)
       end
-      out.puts "#{value}.InnerValue = new byte[#{member.name}size];"
-      out.puts "stream.Read(#{value}.InnerValue, 0, #{member.name}size);"
+      out.puts "#{value}.InnerValue = new byte[#{member.name.camelize(:lower)}Size];"
+      out.puts "stream.Read(#{value}.InnerValue, 0, #{member.name.camelize(:lower)}Size);"
     when AST::Declarations::Array
       if member.declaration.fixed?
-        out.puts "var #{member.name}size = #{convert_constant member.declaration.size};"
+        out.puts "var #{member.name.camelize(:lower)}Size = #{convert_constant member.declaration.size};"
       else
-        out.puts "var #{member.name}size = stream.ReadInt();"
+        out.puts "var #{member.name.camelize(:lower)}Size = stream.ReadInt();"
         emit_decode_size_validation(member.name, member.declaration, out)
       end
-      out.puts "#{value}.InnerValue = new #{type_string member.type}[#{member.name}size];"
-      out.puts "for (var i = 0; i < #{member.name}size; i++)"
+      out.puts "#{value}.InnerValue = new #{type_string member.type}[#{member.name.camelize(:lower)}Size];"
+      out.puts "for (var i = 0; i < #{member.name.camelize(:lower)}Size; i++)"
       out.puts '{'
       out.indent do
         out.puts "#{value}.InnerValue[i] = #{decode_type member.declaration, depth_var};"
@@ -705,8 +704,8 @@ class CsharpGenerator < Xdrgen::Generators::Base
     end
 
     if member.type.sub_type == :optional
-      out.puts "var #{member.name.camelize}Present = stream.ReadInt();"
-      out.puts "if (#{member.name.camelize}Present != 0)"
+      out.puts "var #{member.name.camelize(:lower)}Present = stream.ReadInt();"
+      out.puts "if (#{member.name.camelize(:lower)}Present != 0)"
       out.puts '{'
       out.indent do
         decode_member_value value, member, out, depth_var
@@ -723,22 +722,22 @@ class CsharpGenerator < Xdrgen::Generators::Base
       return
     when AST::Declarations::Opaque
       if member.declaration.fixed?
-        out.puts "var #{member.name}size = #{convert_constant member.declaration.size};"
+        out.puts "var #{member.name.camelize(:lower)}Size = #{convert_constant member.declaration.size};"
       else
-        out.puts "var #{member.name}size = stream.ReadInt();"
+        out.puts "var #{member.name.camelize(:lower)}Size = stream.ReadInt();"
         emit_decode_size_validation(member.name, member.declaration, out)
       end
-      out.puts "#{value}.#{member.name.camelize} = new byte[#{member.name}size];"
-      out.puts "stream.Read(#{value}.#{member.name.camelize}, 0, #{member.name}size);"
+      out.puts "#{value}.#{member.name.camelize} = new byte[#{member.name.camelize(:lower)}Size];"
+      out.puts "stream.Read(#{value}.#{member.name.camelize}, 0, #{member.name.camelize(:lower)}Size);"
     when AST::Declarations::Array
       if member.declaration.fixed?
-        out.puts "var #{member.name}size = #{convert_constant member.declaration.size};"
+        out.puts "var #{member.name.camelize(:lower)}Size = #{convert_constant member.declaration.size};"
       else
-        out.puts "var #{member.name}size = stream.ReadInt();"
+        out.puts "var #{member.name.camelize(:lower)}Size = stream.ReadInt();"
         emit_decode_size_validation(member.name, member.declaration, out)
       end
-      out.puts "#{value}.#{member.name.camelize} = new #{type_string member.type}[#{member.name}size];"
-      out.puts "for (var i = 0; i < #{member.name}size; i++)"
+      out.puts "#{value}.#{member.name.camelize} = new #{type_string member.type}[#{member.name.camelize(:lower)}Size];"
+      out.puts "for (var i = 0; i < #{member.name.camelize(:lower)}Size; i++)"
       out.puts '{'
       out.indent do
         out.puts "#{value}.#{member.name.camelize}[i] = #{decode_type member.declaration, depth_var};"
@@ -750,24 +749,26 @@ class CsharpGenerator < Xdrgen::Generators::Base
   end
 
   def emit_decode_size_validation(member_name, declaration, out)
-    out.puts "if (#{member_name}size < 0)"
+    size_var = "#{member_name.camelize(:lower)}Size"
+    out.puts "if (#{size_var} < 0)"
     out.indent do
-      out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{member_name}size + \" is negative\");"
+      out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{size_var} + \" is negative\");"
     end
     max_size = declaration.resolved_size
     if max_size
-      out.puts "if (#{member_name}size > #{convert_constant max_size})"
+      out.puts "if (#{size_var} > #{convert_constant max_size})"
       out.indent do
-        out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{member_name}size + \" exceeds max size #{max_size}\");"
+        out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{size_var} + \" exceeds max size #{max_size}\");"
       end
     end
     # Only compare remaining bytes against size for Opaque (byte-sized) declarations.
     # For arrays of wider elements, size is an element count, not a byte count.
     if declaration.is_a?(AST::Declarations::Opaque)
-      out.puts "var #{member_name}RemainingInputLen = stream.GetRemainingInputLen();"
-      out.puts "if (#{member_name}RemainingInputLen >= 0 && #{member_name}RemainingInputLen < #{member_name}size)"
+      remaining_var = "#{member_name.camelize(:lower)}RemainingInputLen"
+      out.puts "var #{remaining_var} = stream.GetRemainingInputLen();"
+      out.puts "if (#{remaining_var} >= 0 && #{remaining_var} < #{size_var})"
       out.indent do
-        out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{member_name}size + \" exceeds remaining input length \" + #{member_name}RemainingInputLen);"
+        out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{size_var} + \" exceeds remaining input length \" + #{remaining_var});"
       end
     end
   end

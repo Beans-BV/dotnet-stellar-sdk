@@ -43,8 +43,8 @@ public class OptHash1
             throw new InvalidDataException("Maximum decoding depth reached while decoding OptHash1");
         maxDepth -= 1;
         var decodedOptHash1 = new OptHash1();
-        var OptHash1Present = stream.ReadInt();
-        if (OptHash1Present != 0)
+        var optHash1Present = stream.ReadInt();
+        if (optHash1Present != 0)
         {
             decodedOptHash1.InnerValue = Hash.Decode(stream, maxDepth);
         }

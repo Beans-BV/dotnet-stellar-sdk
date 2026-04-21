@@ -5,6 +5,6 @@ namespace StellarDotnetSdk.Xdr;
 
 public static class Constants
 {
-    public const int BAR = FOO;
     public const int FOO = 1244;
+    public const int BAR = FOO;
 }

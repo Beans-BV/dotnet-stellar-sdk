@@ -30,10 +30,10 @@ public class MyStruct
     {
         stream.WriteInt(encodedMyStruct.SomeInt);
         Int64.Encode(stream, encodedMyStruct.ABigInt);
-        var someOpaquesize = encodedMyStruct.SomeOpaque.Length;
-        if (someOpaquesize != 10)
-            throw new ArgumentException("someOpaque size " + someOpaquesize + " does not match fixed size 10");
-        stream.Write(encodedMyStruct.SomeOpaque, 0, someOpaquesize);
+        var someOpaqueSize = encodedMyStruct.SomeOpaque.Length;
+        if (someOpaqueSize != 10)
+            throw new ArgumentException("someOpaque size " + someOpaqueSize + " does not match fixed size 10");
+        stream.Write(encodedMyStruct.SomeOpaque, 0, someOpaqueSize);
         stream.WriteString(encodedMyStruct.SomeString);
         stream.WriteString(encodedMyStruct.MaxString);
     }
@@ -46,9 +46,9 @@ public class MyStruct
         var decodedMyStruct = new MyStruct();
         decodedMyStruct.SomeInt = stream.ReadInt();
         decodedMyStruct.ABigInt = Int64.Decode(stream, maxDepth);
-        var someOpaquesize = 10;
-        decodedMyStruct.SomeOpaque = new byte[someOpaquesize];
-        stream.Read(decodedMyStruct.SomeOpaque, 0, someOpaquesize);
+        var someOpaqueSize = 10;
+        decodedMyStruct.SomeOpaque = new byte[someOpaqueSize];
+        stream.Read(decodedMyStruct.SomeOpaque, 0, someOpaqueSize);
         decodedMyStruct.SomeString = stream.ReadString();
         decodedMyStruct.MaxString = stream.ReadString();
         return decodedMyStruct;

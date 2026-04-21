@@ -26,11 +26,11 @@ public class Uint513
 
     public static void Encode(XdrDataOutputStream stream, Uint513 encodedUint513)
     {
-        var uint513size = encodedUint513.InnerValue.Length;
-        if (uint513size > 64)
-            throw new ArgumentException("uint513 size " + uint513size + " exceeds max size 64");
-        stream.WriteInt(uint513size);
-        stream.Write(encodedUint513.InnerValue, 0, uint513size);
+        var uint513Size = encodedUint513.InnerValue.Length;
+        if (uint513Size > 64)
+            throw new ArgumentException("uint513 size " + uint513Size + " exceeds max size 64");
+        stream.WriteInt(uint513Size);
+        stream.Write(encodedUint513.InnerValue, 0, uint513Size);
     }
 
     public static Uint513 Decode(XdrDataInputStream stream, int maxDepth)
@@ -39,16 +39,16 @@ public class Uint513
             throw new InvalidDataException("Maximum decoding depth reached while decoding Uint513");
         maxDepth -= 1;
         var decodedUint513 = new Uint513();
-        var uint513size = stream.ReadInt();
-        if (uint513size < 0)
-            throw new InvalidDataException("uint513 size " + uint513size + " is negative");
-        if (uint513size > 64)
-            throw new InvalidDataException("uint513 size " + uint513size + " exceeds max size 64");
+        var uint513Size = stream.ReadInt();
+        if (uint513Size < 0)
+            throw new InvalidDataException("uint513 size " + uint513Size + " is negative");
+        if (uint513Size > 64)
+            throw new InvalidDataException("uint513 size " + uint513Size + " exceeds max size 64");
         var uint513RemainingInputLen = stream.GetRemainingInputLen();
-        if (uint513RemainingInputLen >= 0 && uint513RemainingInputLen < uint513size)
-            throw new InvalidDataException("uint513 size " + uint513size + " exceeds remaining input length " + uint513RemainingInputLen);
-        decodedUint513.InnerValue = new byte[uint513size];
-        stream.Read(decodedUint513.InnerValue, 0, uint513size);
+        if (uint513RemainingInputLen >= 0 && uint513RemainingInputLen < uint513Size)
+            throw new InvalidDataException("uint513 size " + uint513Size + " exceeds remaining input length " + uint513RemainingInputLen);
+        decodedUint513.InnerValue = new byte[uint513Size];
+        stream.Read(decodedUint513.InnerValue, 0, uint513Size);
         return decodedUint513;
     }
 
