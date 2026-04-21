@@ -228,17 +228,23 @@ public class XdrDataInputStream
             throw new ArgumentOutOfRangeException(nameof(len));
         }
 
+        var tail = len % 4u;
+        var tailLength = tail == 0 ? 0 : (int)(4u - tail);
+        var remaining = GetRemainingInputLen();
+        if (remaining >= 0 && remaining < (int)len + tailLength)
+        {
+            throw new InvalidDataException("Truncated input: need " + ((int)len + tailLength) + " bytes but only " + remaining + " remaining");
+        }
+
         var result = new byte[len];
         Array.Copy(_bytes, _pos, result, 0, (int)len);
 
-        var tail = len % 4u;
         if (tail == 0)
         {
             _pos += (int)len;
             return result;
         }
 
-        var tailLength = (int)(4u - tail);
         var tailBytes = new byte[tailLength];
 
         Array.Copy(_bytes, _pos + len, tailBytes, 0, tailLength);
