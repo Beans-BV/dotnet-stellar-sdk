@@ -34,6 +34,11 @@
         <None Include="..\nugetreadme.md" Pack="true" PackagePath=""/>
     </ItemGroup>
     <ItemGroup>
+        <Compile Remove="xdr-generator\**"/>
+        <None Remove="xdr-generator\**"/>
+        <EmbeddedResource Remove="xdr-generator\**"/>
+    </ItemGroup>
+    <ItemGroup>
         <Compile Remove="generated\ClaimPredicateType.cs"/>
         <Compile Remove="generated\ClawbackClaimableBalanceOp.cs"/>
         <Compile Remove="generated\ClawbackClaimableBalanceResult.cs"/>
