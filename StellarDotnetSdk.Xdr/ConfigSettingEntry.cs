@@ -44,6 +44,14 @@ namespace StellarDotnetSdk.Xdr;
 //      ConfigSettingContractLedgerCostExtV0 contractLedgerCostExt;
 //  case CONFIG_SETTING_SCP_TIMING:
 //      ConfigSettingSCPTiming contractSCPTiming;
+//  case CONFIG_SETTING_FROZEN_LEDGER_KEYS:
+//      FrozenLedgerKeys frozenLedgerKeys;
+//  case CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA:
+//      FrozenLedgerKeysDelta frozenLedgerKeysDelta;
+//  case CONFIG_SETTING_FREEZE_BYPASS_TXS:
+//      FreezeBypassTxs freezeBypassTxs;
+//  case CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA:
+//      FreezeBypassTxsDelta freezeBypassTxsDelta;
 //  };
 
 //  ===========================================================================
@@ -68,6 +76,10 @@ public class ConfigSettingEntry
     public ConfigSettingContractParallelComputeV0 ContractParallelCompute { get; set; }
     public ConfigSettingContractLedgerCostExtV0 ContractLedgerCostExt { get; set; }
     public ConfigSettingSCPTiming ContractSCPTiming { get; set; }
+    public FrozenLedgerKeys FrozenLedgerKeys { get; set; }
+    public FrozenLedgerKeysDelta FrozenLedgerKeysDelta { get; set; }
+    public FreezeBypassTxs FreezeBypassTxs { get; set; }
+    public FreezeBypassTxsDelta FreezeBypassTxsDelta { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, ConfigSettingEntry encodedConfigSettingEntry)
     {
@@ -129,6 +141,18 @@ public class ConfigSettingEntry
                 break;
             case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_SCP_TIMING:
                 ConfigSettingSCPTiming.Encode(stream, encodedConfigSettingEntry.ContractSCPTiming);
+                break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FROZEN_LEDGER_KEYS:
+                FrozenLedgerKeys.Encode(stream, encodedConfigSettingEntry.FrozenLedgerKeys);
+                break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA:
+                FrozenLedgerKeysDelta.Encode(stream, encodedConfigSettingEntry.FrozenLedgerKeysDelta);
+                break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FREEZE_BYPASS_TXS:
+                FreezeBypassTxs.Encode(stream, encodedConfigSettingEntry.FreezeBypassTxs);
+                break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA:
+                FreezeBypassTxsDelta.Encode(stream, encodedConfigSettingEntry.FreezeBypassTxsDelta);
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + encodedConfigSettingEntry.Discriminant.InnerValue);
@@ -205,6 +229,18 @@ public class ConfigSettingEntry
                 break;
             case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_SCP_TIMING:
                 decodedConfigSettingEntry.ContractSCPTiming = ConfigSettingSCPTiming.Decode(stream, maxDepth);
+                break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FROZEN_LEDGER_KEYS:
+                decodedConfigSettingEntry.FrozenLedgerKeys = FrozenLedgerKeys.Decode(stream, maxDepth);
+                break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA:
+                decodedConfigSettingEntry.FrozenLedgerKeysDelta = FrozenLedgerKeysDelta.Decode(stream, maxDepth);
+                break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FREEZE_BYPASS_TXS:
+                decodedConfigSettingEntry.FreezeBypassTxs = FreezeBypassTxs.Decode(stream, maxDepth);
+                break;
+            case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA:
+                decodedConfigSettingEntry.FreezeBypassTxsDelta = FreezeBypassTxsDelta.Decode(stream, maxDepth);
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);

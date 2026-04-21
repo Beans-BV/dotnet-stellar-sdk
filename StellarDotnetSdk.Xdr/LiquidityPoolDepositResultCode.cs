@@ -24,7 +24,9 @@ namespace StellarDotnetSdk.Xdr;
 //      LIQUIDITY_POOL_DEPOSIT_LINE_FULL = -5,      // pool share trust line doesn't
 //                                                  // have sufficient limit
 //      LIQUIDITY_POOL_DEPOSIT_BAD_PRICE = -6,      // deposit price outside bounds
-//      LIQUIDITY_POOL_DEPOSIT_POOL_FULL = -7       // pool reserves are full
+//      LIQUIDITY_POOL_DEPOSIT_POOL_FULL = -7,      // pool reserves are full
+//      LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN = -8  // trustline for one of the 
+//                                                    // assets is frozen
 //  };
 
 //  ===========================================================================
@@ -40,6 +42,7 @@ public class LiquidityPoolDepositResultCode
         LIQUIDITY_POOL_DEPOSIT_LINE_FULL = -5,
         LIQUIDITY_POOL_DEPOSIT_BAD_PRICE = -6,
         LIQUIDITY_POOL_DEPOSIT_POOL_FULL = -7,
+        LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN = -8,
     }
 
     public LiquidityPoolDepositResultCodeEnum InnerValue { get; set; }
@@ -67,6 +70,7 @@ public class LiquidityPoolDepositResultCode
             case -5: return Create(LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_LINE_FULL);
             case -6: return Create(LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_BAD_PRICE);
             case -7: return Create(LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_POOL_FULL);
+            case -8: return Create(LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN);
             default:
                 throw new InvalidDataException("Unknown enum value: " + value);
         }

@@ -12,7 +12,7 @@ namespace StellarDotnetSdk.Xdr;
 //  {
 //      string doc<SC_SPEC_DOC_LIMIT>;
 //      string name<60>;
-//      SCSpecTypeDef type<12>;
+//      SCSpecTypeDef type<>;
 //  };
 
 //  ===========================================================================
@@ -27,8 +27,6 @@ public class SCSpecUDTUnionCaseTupleV0
         stream.WriteString(encodedSCSpecUDTUnionCaseTupleV0.Doc);
         stream.WriteString(encodedSCSpecUDTUnionCaseTupleV0.Name);
         var typeSize = encodedSCSpecUDTUnionCaseTupleV0.Type.Length;
-        if (typeSize > 12)
-            throw new ArgumentException("type size " + typeSize + " exceeds max size 12");
         stream.WriteInt(typeSize);
         for (var i = 0; i < typeSize; i++)
         {
@@ -47,8 +45,6 @@ public class SCSpecUDTUnionCaseTupleV0
         var typeSize = stream.ReadInt();
         if (typeSize < 0)
             throw new InvalidDataException("type size " + typeSize + " is negative");
-        if (typeSize > 12)
-            throw new InvalidDataException("type size " + typeSize + " exceeds max size 12");
         var typeRemainingInputLen = stream.GetRemainingInputLen();
         if (typeRemainingInputLen >= 0 && typeRemainingInputLen < typeSize)
             throw new InvalidDataException("type size " + typeSize + " exceeds remaining input length " + typeRemainingInputLen);

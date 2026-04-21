@@ -14,7 +14,7 @@ namespace StellarDotnetSdk.Xdr;
 //      string lib<80>;
 //      SCSymbol name;
 //      SCSymbol prefixTopics<2>;
-//      SCSpecEventParamV0 params<50>;
+//      SCSpecEventParamV0 params<>;
 //      SCSpecEventDataFormat dataFormat;
 //  };
 
@@ -42,8 +42,6 @@ public class SCSpecEventV0
             SCSymbol.Encode(stream, encodedSCSpecEventV0.PrefixTopics[i]);
         }
         var paramsSize = encodedSCSpecEventV0.Params.Length;
-        if (paramsSize > 50)
-            throw new ArgumentException("params size " + paramsSize + " exceeds max size 50");
         stream.WriteInt(paramsSize);
         for (var i = 0; i < paramsSize; i++)
         {
@@ -77,8 +75,6 @@ public class SCSpecEventV0
         var paramsSize = stream.ReadInt();
         if (paramsSize < 0)
             throw new InvalidDataException("params size " + paramsSize + " is negative");
-        if (paramsSize > 50)
-            throw new InvalidDataException("params size " + paramsSize + " exceeds max size 50");
         var paramsRemainingInputLen = stream.GetRemainingInputLen();
         if (paramsRemainingInputLen >= 0 && paramsRemainingInputLen < paramsSize)
             throw new InvalidDataException("params size " + paramsSize + " exceeds remaining input length " + paramsRemainingInputLen);

@@ -17,6 +17,7 @@ namespace StellarDotnetSdk.Xdr;
 //  case LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED:
 //  case LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
 //  case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
+//  case LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN:
 //      void;
 //  };
 
@@ -37,6 +38,7 @@ public class LiquidityPoolWithdrawResult
             case LiquidityPoolWithdrawResultCode.LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED:
             case LiquidityPoolWithdrawResultCode.LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
             case LiquidityPoolWithdrawResultCode.LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
+            case LiquidityPoolWithdrawResultCode.LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN:
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + encodedLiquidityPoolWithdrawResult.Discriminant.InnerValue);
@@ -60,6 +62,7 @@ public class LiquidityPoolWithdrawResult
             case LiquidityPoolWithdrawResultCode.LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED:
             case LiquidityPoolWithdrawResultCode.LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
             case LiquidityPoolWithdrawResultCode.LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
+            case LiquidityPoolWithdrawResultCode.LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN:
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);

@@ -21,7 +21,9 @@ namespace StellarDotnetSdk.Xdr;
 //                                                 // pool share
 //      LIQUIDITY_POOL_WITHDRAW_LINE_FULL = -4,    // would go above limit for one
 //                                                 // of the assets
-//      LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM = -5 // didn't withdraw enough
+//      LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM = -5, // didn't withdraw enough
+//      LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN = -6  // trustline for one of the 
+//                                                     // assets is frozen
 //  };
 
 //  ===========================================================================
@@ -35,6 +37,7 @@ public class LiquidityPoolWithdrawResultCode
         LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED = -3,
         LIQUIDITY_POOL_WITHDRAW_LINE_FULL = -4,
         LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM = -5,
+        LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN = -6,
     }
 
     public LiquidityPoolWithdrawResultCodeEnum InnerValue { get; set; }
@@ -60,6 +63,7 @@ public class LiquidityPoolWithdrawResultCode
             case -3: return Create(LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED);
             case -4: return Create(LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_LINE_FULL);
             case -5: return Create(LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM);
+            case -6: return Create(LiquidityPoolWithdrawResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN);
             default:
                 throw new InvalidDataException("Unknown enum value: " + value);
         }

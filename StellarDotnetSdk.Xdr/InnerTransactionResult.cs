@@ -35,6 +35,7 @@ namespace StellarDotnetSdk.Xdr;
 //      case txBAD_MIN_SEQ_AGE_OR_GAP:
 //      case txMALFORMED:
 //      case txSOROBAN_INVALID:
+//      case txFROZEN_KEY_ACCESSED:
 //          void;
 //      }
 //      result;
@@ -114,6 +115,7 @@ public class InnerTransactionResult
                 case TransactionResultCode.TransactionResultCodeEnum.txBAD_MIN_SEQ_AGE_OR_GAP:
                 case TransactionResultCode.TransactionResultCodeEnum.txMALFORMED:
                 case TransactionResultCode.TransactionResultCodeEnum.txSOROBAN_INVALID:
+                case TransactionResultCode.TransactionResultCodeEnum.txFROZEN_KEY_ACCESSED:
                     break;
                 default:
                     throw new InvalidDataException("Unknown discriminant value: " + encodedInnerTransactionResultResult.Discriminant.InnerValue);
@@ -159,6 +161,7 @@ public class InnerTransactionResult
                 case TransactionResultCode.TransactionResultCodeEnum.txBAD_MIN_SEQ_AGE_OR_GAP:
                 case TransactionResultCode.TransactionResultCodeEnum.txMALFORMED:
                 case TransactionResultCode.TransactionResultCodeEnum.txSOROBAN_INVALID:
+                case TransactionResultCode.TransactionResultCodeEnum.txFROZEN_KEY_ACCESSED:
                     break;
                 default:
                     throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);

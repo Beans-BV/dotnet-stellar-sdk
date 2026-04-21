@@ -19,6 +19,7 @@ namespace StellarDotnetSdk.Xdr;
 //  case LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
 //  case LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
 //  case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
+//  case LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN:
 //      void;
 //  };
 
@@ -41,6 +42,7 @@ public class LiquidityPoolDepositResult
             case LiquidityPoolDepositResultCode.LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
             case LiquidityPoolDepositResultCode.LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
             case LiquidityPoolDepositResultCode.LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
+            case LiquidityPoolDepositResultCode.LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN:
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + encodedLiquidityPoolDepositResult.Discriminant.InnerValue);
@@ -66,6 +68,7 @@ public class LiquidityPoolDepositResult
             case LiquidityPoolDepositResultCode.LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
             case LiquidityPoolDepositResultCode.LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
             case LiquidityPoolDepositResultCode.LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
+            case LiquidityPoolDepositResultCode.LiquidityPoolDepositResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN:
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);

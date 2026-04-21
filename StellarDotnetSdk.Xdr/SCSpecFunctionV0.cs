@@ -12,7 +12,7 @@ namespace StellarDotnetSdk.Xdr;
 //  {
 //      string doc<SC_SPEC_DOC_LIMIT>;
 //      SCSymbol name;
-//      SCSpecFunctionInputV0 inputs<10>;
+//      SCSpecFunctionInputV0 inputs<>;
 //      SCSpecTypeDef outputs<1>;
 //  };
 
@@ -29,8 +29,6 @@ public class SCSpecFunctionV0
         stream.WriteString(encodedSCSpecFunctionV0.Doc);
         SCSymbol.Encode(stream, encodedSCSpecFunctionV0.Name);
         var inputsSize = encodedSCSpecFunctionV0.Inputs.Length;
-        if (inputsSize > 10)
-            throw new ArgumentException("inputs size " + inputsSize + " exceeds max size 10");
         stream.WriteInt(inputsSize);
         for (var i = 0; i < inputsSize; i++)
         {
@@ -57,8 +55,6 @@ public class SCSpecFunctionV0
         var inputsSize = stream.ReadInt();
         if (inputsSize < 0)
             throw new InvalidDataException("inputs size " + inputsSize + " is negative");
-        if (inputsSize > 10)
-            throw new InvalidDataException("inputs size " + inputsSize + " exceeds max size 10");
         var inputsRemainingInputLen = stream.GetRemainingInputLen();
         if (inputsRemainingInputLen >= 0 && inputsRemainingInputLen < inputsSize)
             throw new InvalidDataException("inputs size " + inputsSize + " exceeds remaining input length " + inputsRemainingInputLen);

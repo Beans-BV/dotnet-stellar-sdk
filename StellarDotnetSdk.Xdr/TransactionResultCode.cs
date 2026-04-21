@@ -32,7 +32,8 @@ namespace StellarDotnetSdk.Xdr;
 //      txBAD_SPONSORSHIP = -14,        // sponsorship not confirmed
 //      txBAD_MIN_SEQ_AGE_OR_GAP = -15, // minSeqAge or minSeqLedgerGap conditions not met
 //      txMALFORMED = -16,              // precondition is invalid
-//      txSOROBAN_INVALID = -17         // soroban-specific preconditions were not met
+//      txSOROBAN_INVALID = -17,        // soroban-specific preconditions were not met
+//      txFROZEN_KEY_ACCESSED = -18     // a 'frozen' ledger key is accessed by any operation
 //  };
 
 //  ===========================================================================
@@ -59,6 +60,7 @@ public class TransactionResultCode
         txBAD_MIN_SEQ_AGE_OR_GAP = -15,
         txMALFORMED = -16,
         txSOROBAN_INVALID = -17,
+        txFROZEN_KEY_ACCESSED = -18,
     }
 
     public TransactionResultCodeEnum InnerValue { get; set; }
@@ -97,6 +99,7 @@ public class TransactionResultCode
             case -15: return Create(TransactionResultCodeEnum.txBAD_MIN_SEQ_AGE_OR_GAP);
             case -16: return Create(TransactionResultCodeEnum.txMALFORMED);
             case -17: return Create(TransactionResultCodeEnum.txSOROBAN_INVALID);
+            case -18: return Create(TransactionResultCodeEnum.txFROZEN_KEY_ACCESSED);
             default:
                 throw new InvalidDataException("Unknown enum value: " + value);
         }

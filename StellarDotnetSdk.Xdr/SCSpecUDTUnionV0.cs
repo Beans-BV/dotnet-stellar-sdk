@@ -13,7 +13,7 @@ namespace StellarDotnetSdk.Xdr;
 //      string doc<SC_SPEC_DOC_LIMIT>;
 //      string lib<80>;
 //      string name<60>;
-//      SCSpecUDTUnionCaseV0 cases<50>;
+//      SCSpecUDTUnionCaseV0 cases<>;
 //  };
 
 //  ===========================================================================
@@ -30,8 +30,6 @@ public class SCSpecUDTUnionV0
         stream.WriteString(encodedSCSpecUDTUnionV0.Lib);
         stream.WriteString(encodedSCSpecUDTUnionV0.Name);
         var casesSize = encodedSCSpecUDTUnionV0.Cases.Length;
-        if (casesSize > 50)
-            throw new ArgumentException("cases size " + casesSize + " exceeds max size 50");
         stream.WriteInt(casesSize);
         for (var i = 0; i < casesSize; i++)
         {
@@ -51,8 +49,6 @@ public class SCSpecUDTUnionV0
         var casesSize = stream.ReadInt();
         if (casesSize < 0)
             throw new InvalidDataException("cases size " + casesSize + " is negative");
-        if (casesSize > 50)
-            throw new InvalidDataException("cases size " + casesSize + " exceeds max size 50");
         var casesRemainingInputLen = stream.GetRemainingInputLen();
         if (casesRemainingInputLen >= 0 && casesRemainingInputLen < casesSize)
             throw new InvalidDataException("cases size " + casesSize + " exceeds remaining input length " + casesRemainingInputLen);
