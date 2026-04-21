@@ -1,10 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'xdrgen'
+gem 'xdrgen', git: 'https://github.com/stellar/xdrgen.git', ref: 'b423e1da9504239fb3136cbcc5f9beeb37795837'
 gem 'base64'
+gem 'benchmark'
 gem 'bigdecimal'
+gem 'drb'
 gem 'logger'
 gem 'mutex_m'
-gem 'drb'
 
 gem 'minitest'
