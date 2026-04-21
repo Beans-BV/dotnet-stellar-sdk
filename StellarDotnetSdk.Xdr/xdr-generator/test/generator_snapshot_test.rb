@@ -46,7 +46,7 @@ class GeneratorSnapshotTest < Minitest::Test
 
       assert File.directory?(snapshot_dir), <<~MSG
         Missing snapshot for #{fixture_name}.
-        Run UPDATE_SNAPSHOTS=1 bundle exec ruby test/generator_snapshot_test.rb
+        Run UPDATE_SNAPSHOTS=1 bundle exec ruby -Itest test/generator_snapshot_test.rb
       MSG
 
       assert_files_match(snapshot_dir, generated_dir, fixture_name)
