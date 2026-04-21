@@ -761,15 +761,15 @@ class CsharpGenerator < Xdrgen::Generators::Base
         out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{size_var} + \" exceeds max size #{max_size}\");"
       end
     end
-    # Only compare remaining bytes against size for Opaque (byte-sized) declarations.
-    # For arrays of wider elements, size is an element count, not a byte count.
-    if declaration.is_a?(AST::Declarations::Opaque)
-      remaining_var = "#{member_name.camelize(:lower)}RemainingInputLen"
-      out.puts "var #{remaining_var} = stream.GetRemainingInputLen();"
-      out.puts "if (#{remaining_var} >= 0 && #{remaining_var} < #{size_var})"
-      out.indent do
-        out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{size_var} + \" exceeds remaining input length \" + #{remaining_var});"
-      end
+    # Coarse DoS guard: reject sizes that clearly cannot fit in the remaining input.
+    # For Opaque, size is a byte count (exact). For variable-length arrays, size is an
+    # element count and each XDR element is >= 1 byte, so `remaining < size` still
+    # proves insufficient input. Matches the pattern used by the Go and Java SDKs.
+    remaining_var = "#{member_name.camelize(:lower)}RemainingInputLen"
+    out.puts "var #{remaining_var} = stream.GetRemainingInputLen();"
+    out.puts "if (#{remaining_var} >= 0 && #{remaining_var} < #{size_var})"
+    out.indent do
+      out.puts "throw new InvalidDataException(\"#{member_name} size \" + #{size_var} + \" exceeds remaining input length \" + #{remaining_var});"
     end
   end
 

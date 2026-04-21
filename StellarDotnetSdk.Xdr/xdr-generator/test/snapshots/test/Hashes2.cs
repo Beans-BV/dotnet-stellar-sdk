@@ -47,6 +47,9 @@ public class Hashes2
             throw new InvalidDataException("Hashes2 size " + hashes2Size + " is negative");
         if (hashes2Size > 12)
             throw new InvalidDataException("Hashes2 size " + hashes2Size + " exceeds max size 12");
+        var hashes2RemainingInputLen = stream.GetRemainingInputLen();
+        if (hashes2RemainingInputLen >= 0 && hashes2RemainingInputLen < hashes2Size)
+            throw new InvalidDataException("Hashes2 size " + hashes2Size + " exceeds remaining input length " + hashes2RemainingInputLen);
         decodedHashes2.InnerValue = new Hash[hashes2Size];
         for (var i = 0; i < hashes2Size; i++)
         {
