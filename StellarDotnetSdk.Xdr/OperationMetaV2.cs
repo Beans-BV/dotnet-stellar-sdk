@@ -47,6 +47,9 @@ public class OperationMetaV2
         var eventsSize = stream.ReadInt();
         if (eventsSize < 0)
             throw new InvalidDataException("events size " + eventsSize + " is negative");
+        var eventsRemainingInputLen = stream.GetRemainingInputLen();
+        if (eventsRemainingInputLen >= 0 && eventsRemainingInputLen < eventsSize)
+            throw new InvalidDataException("events size " + eventsSize + " exceeds remaining input length " + eventsRemainingInputLen);
         decodedOperationMetaV2.Events = new ContractEvent[eventsSize];
         for (var i = 0; i < eventsSize; i++)
         {

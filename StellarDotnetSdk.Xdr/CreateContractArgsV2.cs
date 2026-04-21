@@ -46,6 +46,9 @@ public class CreateContractArgsV2
         var constructorArgsSize = stream.ReadInt();
         if (constructorArgsSize < 0)
             throw new InvalidDataException("constructorArgs size " + constructorArgsSize + " is negative");
+        var constructorArgsRemainingInputLen = stream.GetRemainingInputLen();
+        if (constructorArgsRemainingInputLen >= 0 && constructorArgsRemainingInputLen < constructorArgsSize)
+            throw new InvalidDataException("constructorArgs size " + constructorArgsSize + " exceeds remaining input length " + constructorArgsRemainingInputLen);
         decodedCreateContractArgsV2.ConstructorArgs = new SCVal[constructorArgsSize];
         for (var i = 0; i < constructorArgsSize; i++)
         {

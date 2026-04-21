@@ -43,6 +43,9 @@ public class SorobanAuthorizationEntries
         var sorobanAuthorizationEntriesSize = stream.ReadInt();
         if (sorobanAuthorizationEntriesSize < 0)
             throw new InvalidDataException("SorobanAuthorizationEntries size " + sorobanAuthorizationEntriesSize + " is negative");
+        var sorobanAuthorizationEntriesRemainingInputLen = stream.GetRemainingInputLen();
+        if (sorobanAuthorizationEntriesRemainingInputLen >= 0 && sorobanAuthorizationEntriesRemainingInputLen < sorobanAuthorizationEntriesSize)
+            throw new InvalidDataException("SorobanAuthorizationEntries size " + sorobanAuthorizationEntriesSize + " exceeds remaining input length " + sorobanAuthorizationEntriesRemainingInputLen);
         decodedSorobanAuthorizationEntries.InnerValue = new SorobanAuthorizationEntry[sorobanAuthorizationEntriesSize];
         for (var i = 0; i < sorobanAuthorizationEntriesSize; i++)
         {

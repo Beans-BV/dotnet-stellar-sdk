@@ -41,6 +41,9 @@ public class TransactionSetV1
         var phasesSize = stream.ReadInt();
         if (phasesSize < 0)
             throw new InvalidDataException("phases size " + phasesSize + " is negative");
+        var phasesRemainingInputLen = stream.GetRemainingInputLen();
+        if (phasesRemainingInputLen >= 0 && phasesRemainingInputLen < phasesSize)
+            throw new InvalidDataException("phases size " + phasesSize + " exceeds remaining input length " + phasesRemainingInputLen);
         decodedTransactionSetV1.Phases = new TransactionPhase[phasesSize];
         for (var i = 0; i < phasesSize; i++)
         {

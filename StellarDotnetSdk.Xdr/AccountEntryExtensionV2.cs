@@ -60,6 +60,9 @@ public class AccountEntryExtensionV2
             throw new InvalidDataException("signerSponsoringIDs size " + signerSponsoringIDsSize + " is negative");
         if (signerSponsoringIDsSize > 20)
             throw new InvalidDataException("signerSponsoringIDs size " + signerSponsoringIDsSize + " exceeds max size 20");
+        var signerSponsoringIDsRemainingInputLen = stream.GetRemainingInputLen();
+        if (signerSponsoringIDsRemainingInputLen >= 0 && signerSponsoringIDsRemainingInputLen < signerSponsoringIDsSize)
+            throw new InvalidDataException("signerSponsoringIDs size " + signerSponsoringIDsSize + " exceeds remaining input length " + signerSponsoringIDsRemainingInputLen);
         decodedAccountEntryExtensionV2.SignerSponsoringIDs = new SponsorshipDescriptor[signerSponsoringIDsSize];
         for (var i = 0; i < signerSponsoringIDsSize; i++)
         {

@@ -185,6 +185,9 @@ public class ConfigSettingEntry
                 var liveSorobanStateSizeWindowSize = stream.ReadInt();
                 if (liveSorobanStateSizeWindowSize < 0)
                     throw new InvalidDataException("liveSorobanStateSizeWindow size " + liveSorobanStateSizeWindowSize + " is negative");
+                var liveSorobanStateSizeWindowRemainingInputLen = stream.GetRemainingInputLen();
+                if (liveSorobanStateSizeWindowRemainingInputLen >= 0 && liveSorobanStateSizeWindowRemainingInputLen < liveSorobanStateSizeWindowSize)
+                    throw new InvalidDataException("liveSorobanStateSizeWindow size " + liveSorobanStateSizeWindowSize + " exceeds remaining input length " + liveSorobanStateSizeWindowRemainingInputLen);
                 decodedConfigSettingEntry.LiveSorobanStateSizeWindow = new Uint64[liveSorobanStateSizeWindowSize];
                 for (var i = 0; i < liveSorobanStateSizeWindowSize; i++)
                 {

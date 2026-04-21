@@ -49,6 +49,9 @@ public class SCPQuorumSet
         var validatorsSize = stream.ReadInt();
         if (validatorsSize < 0)
             throw new InvalidDataException("validators size " + validatorsSize + " is negative");
+        var validatorsRemainingInputLen = stream.GetRemainingInputLen();
+        if (validatorsRemainingInputLen >= 0 && validatorsRemainingInputLen < validatorsSize)
+            throw new InvalidDataException("validators size " + validatorsSize + " exceeds remaining input length " + validatorsRemainingInputLen);
         decodedSCPQuorumSet.Validators = new NodeID[validatorsSize];
         for (var i = 0; i < validatorsSize; i++)
         {
@@ -57,6 +60,9 @@ public class SCPQuorumSet
         var innerSetsSize = stream.ReadInt();
         if (innerSetsSize < 0)
             throw new InvalidDataException("innerSets size " + innerSetsSize + " is negative");
+        var innerSetsRemainingInputLen = stream.GetRemainingInputLen();
+        if (innerSetsRemainingInputLen >= 0 && innerSetsRemainingInputLen < innerSetsSize)
+            throw new InvalidDataException("innerSets size " + innerSetsSize + " exceeds remaining input length " + innerSetsRemainingInputLen);
         decodedSCPQuorumSet.InnerSets = new SCPQuorumSet[innerSetsSize];
         for (var i = 0; i < innerSetsSize; i++)
         {

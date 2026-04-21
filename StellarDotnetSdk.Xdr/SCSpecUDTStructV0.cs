@@ -53,6 +53,9 @@ public class SCSpecUDTStructV0
             throw new InvalidDataException("fields size " + fieldsSize + " is negative");
         if (fieldsSize > 40)
             throw new InvalidDataException("fields size " + fieldsSize + " exceeds max size 40");
+        var fieldsRemainingInputLen = stream.GetRemainingInputLen();
+        if (fieldsRemainingInputLen >= 0 && fieldsRemainingInputLen < fieldsSize)
+            throw new InvalidDataException("fields size " + fieldsSize + " exceeds remaining input length " + fieldsRemainingInputLen);
         decodedSCSpecUDTStructV0.Fields = new SCSpecUDTStructFieldV0[fieldsSize];
         for (var i = 0; i < fieldsSize; i++)
         {

@@ -137,6 +137,9 @@ public class PathPaymentStrictReceiveResult
             var offersSize = stream.ReadInt();
             if (offersSize < 0)
                 throw new InvalidDataException("offers size " + offersSize + " is negative");
+            var offersRemainingInputLen = stream.GetRemainingInputLen();
+            if (offersRemainingInputLen >= 0 && offersRemainingInputLen < offersSize)
+                throw new InvalidDataException("offers size " + offersSize + " exceeds remaining input length " + offersRemainingInputLen);
             decodedPathPaymentStrictReceiveResultSuccess.Offers = new ClaimAtom[offersSize];
             for (var i = 0; i < offersSize; i++)
             {

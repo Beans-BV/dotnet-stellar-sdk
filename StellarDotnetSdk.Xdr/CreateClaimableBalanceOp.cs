@@ -49,6 +49,9 @@ public class CreateClaimableBalanceOp
             throw new InvalidDataException("claimants size " + claimantsSize + " is negative");
         if (claimantsSize > 10)
             throw new InvalidDataException("claimants size " + claimantsSize + " exceeds max size 10");
+        var claimantsRemainingInputLen = stream.GetRemainingInputLen();
+        if (claimantsRemainingInputLen >= 0 && claimantsRemainingInputLen < claimantsSize)
+            throw new InvalidDataException("claimants size " + claimantsSize + " exceeds remaining input length " + claimantsRemainingInputLen);
         decodedCreateClaimableBalanceOp.Claimants = new Claimant[claimantsSize];
         for (var i = 0; i < claimantsSize; i++)
         {

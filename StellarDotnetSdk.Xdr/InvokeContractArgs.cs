@@ -44,6 +44,9 @@ public class InvokeContractArgs
         var argsSize = stream.ReadInt();
         if (argsSize < 0)
             throw new InvalidDataException("args size " + argsSize + " is negative");
+        var argsRemainingInputLen = stream.GetRemainingInputLen();
+        if (argsRemainingInputLen >= 0 && argsRemainingInputLen < argsSize)
+            throw new InvalidDataException("args size " + argsSize + " exceeds remaining input length " + argsRemainingInputLen);
         decodedInvokeContractArgs.Args = new SCVal[argsSize];
         for (var i = 0; i < argsSize; i++)
         {

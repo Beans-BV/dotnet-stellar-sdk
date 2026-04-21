@@ -144,6 +144,9 @@ public class ContractEvent
                 var topicsSize = stream.ReadInt();
                 if (topicsSize < 0)
                     throw new InvalidDataException("topics size " + topicsSize + " is negative");
+                var topicsRemainingInputLen = stream.GetRemainingInputLen();
+                if (topicsRemainingInputLen >= 0 && topicsRemainingInputLen < topicsSize)
+                    throw new InvalidDataException("topics size " + topicsSize + " exceeds remaining input length " + topicsRemainingInputLen);
                 decodedContractEventV0.Topics = new SCVal[topicsSize];
                 for (var i = 0; i < topicsSize; i++)
                 {

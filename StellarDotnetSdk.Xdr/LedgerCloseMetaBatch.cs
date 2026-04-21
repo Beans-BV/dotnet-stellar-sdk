@@ -50,6 +50,9 @@ public class LedgerCloseMetaBatch
         var ledgerCloseMetasSize = stream.ReadInt();
         if (ledgerCloseMetasSize < 0)
             throw new InvalidDataException("ledgerCloseMetas size " + ledgerCloseMetasSize + " is negative");
+        var ledgerCloseMetasRemainingInputLen = stream.GetRemainingInputLen();
+        if (ledgerCloseMetasRemainingInputLen >= 0 && ledgerCloseMetasRemainingInputLen < ledgerCloseMetasSize)
+            throw new InvalidDataException("ledgerCloseMetas size " + ledgerCloseMetasSize + " exceeds remaining input length " + ledgerCloseMetasRemainingInputLen);
         decodedLedgerCloseMetaBatch.LedgerCloseMetas = new LedgerCloseMeta[ledgerCloseMetasSize];
         for (var i = 0; i < ledgerCloseMetasSize; i++)
         {

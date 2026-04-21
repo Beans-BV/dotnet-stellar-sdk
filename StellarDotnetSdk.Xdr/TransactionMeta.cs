@@ -77,6 +77,9 @@ public class TransactionMeta
                 var operationsSize = stream.ReadInt();
                 if (operationsSize < 0)
                     throw new InvalidDataException("operations size " + operationsSize + " is negative");
+                var operationsRemainingInputLen = stream.GetRemainingInputLen();
+                if (operationsRemainingInputLen >= 0 && operationsRemainingInputLen < operationsSize)
+                    throw new InvalidDataException("operations size " + operationsSize + " exceeds remaining input length " + operationsRemainingInputLen);
                 decodedTransactionMeta.Operations = new OperationMeta[operationsSize];
                 for (var i = 0; i < operationsSize; i++)
                 {

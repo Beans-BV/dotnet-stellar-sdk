@@ -103,6 +103,9 @@ public class ClaimPredicate
                     throw new InvalidDataException("andPredicates size " + andPredicatesSize + " is negative");
                 if (andPredicatesSize > 2)
                     throw new InvalidDataException("andPredicates size " + andPredicatesSize + " exceeds max size 2");
+                var andPredicatesRemainingInputLen = stream.GetRemainingInputLen();
+                if (andPredicatesRemainingInputLen >= 0 && andPredicatesRemainingInputLen < andPredicatesSize)
+                    throw new InvalidDataException("andPredicates size " + andPredicatesSize + " exceeds remaining input length " + andPredicatesRemainingInputLen);
                 decodedClaimPredicate.AndPredicates = new ClaimPredicate[andPredicatesSize];
                 for (var i = 0; i < andPredicatesSize; i++)
                 {
@@ -115,6 +118,9 @@ public class ClaimPredicate
                     throw new InvalidDataException("orPredicates size " + orPredicatesSize + " is negative");
                 if (orPredicatesSize > 2)
                     throw new InvalidDataException("orPredicates size " + orPredicatesSize + " exceeds max size 2");
+                var orPredicatesRemainingInputLen = stream.GetRemainingInputLen();
+                if (orPredicatesRemainingInputLen >= 0 && orPredicatesRemainingInputLen < orPredicatesSize)
+                    throw new InvalidDataException("orPredicates size " + orPredicatesSize + " exceeds remaining input length " + orPredicatesRemainingInputLen);
                 decodedClaimPredicate.OrPredicates = new ClaimPredicate[orPredicatesSize];
                 for (var i = 0; i < orPredicatesSize; i++)
                 {

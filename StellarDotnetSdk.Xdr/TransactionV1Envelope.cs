@@ -47,6 +47,9 @@ public class TransactionV1Envelope
             throw new InvalidDataException("signatures size " + signaturesSize + " is negative");
         if (signaturesSize > 20)
             throw new InvalidDataException("signatures size " + signaturesSize + " exceeds max size 20");
+        var signaturesRemainingInputLen = stream.GetRemainingInputLen();
+        if (signaturesRemainingInputLen >= 0 && signaturesRemainingInputLen < signaturesSize)
+            throw new InvalidDataException("signatures size " + signaturesSize + " exceeds remaining input length " + signaturesRemainingInputLen);
         decodedTransactionV1Envelope.Signatures = new DecoratedSignature[signaturesSize];
         for (var i = 0; i < signaturesSize; i++)
         {

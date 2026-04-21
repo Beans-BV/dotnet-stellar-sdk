@@ -200,6 +200,9 @@ public class StellarMessage
                     throw new InvalidDataException("peers size " + peersSize + " is negative");
                 if (peersSize > 100)
                     throw new InvalidDataException("peers size " + peersSize + " exceeds max size 100");
+                var peersRemainingInputLen = stream.GetRemainingInputLen();
+                if (peersRemainingInputLen >= 0 && peersRemainingInputLen < peersSize)
+                    throw new InvalidDataException("peers size " + peersSize + " exceeds remaining input length " + peersRemainingInputLen);
                 decodedStellarMessage.Peers = new PeerAddress[peersSize];
                 for (var i = 0; i < peersSize; i++)
                 {

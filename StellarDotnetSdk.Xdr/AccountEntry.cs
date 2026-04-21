@@ -103,6 +103,9 @@ public class AccountEntry
             throw new InvalidDataException("signers size " + signersSize + " is negative");
         if (signersSize > 20)
             throw new InvalidDataException("signers size " + signersSize + " exceeds max size 20");
+        var signersRemainingInputLen = stream.GetRemainingInputLen();
+        if (signersRemainingInputLen >= 0 && signersRemainingInputLen < signersSize)
+            throw new InvalidDataException("signers size " + signersSize + " exceeds remaining input length " + signersRemainingInputLen);
         decodedAccountEntry.Signers = new Signer[signersSize];
         for (var i = 0; i < signersSize; i++)
         {

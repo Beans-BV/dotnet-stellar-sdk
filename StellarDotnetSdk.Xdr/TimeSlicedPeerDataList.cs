@@ -47,6 +47,9 @@ public class TimeSlicedPeerDataList
             throw new InvalidDataException("TimeSlicedPeerDataList size " + timeSlicedPeerDataListSize + " is negative");
         if (timeSlicedPeerDataListSize > 25)
             throw new InvalidDataException("TimeSlicedPeerDataList size " + timeSlicedPeerDataListSize + " exceeds max size 25");
+        var timeSlicedPeerDataListRemainingInputLen = stream.GetRemainingInputLen();
+        if (timeSlicedPeerDataListRemainingInputLen >= 0 && timeSlicedPeerDataListRemainingInputLen < timeSlicedPeerDataListSize)
+            throw new InvalidDataException("TimeSlicedPeerDataList size " + timeSlicedPeerDataListSize + " exceeds remaining input length " + timeSlicedPeerDataListRemainingInputLen);
         decodedTimeSlicedPeerDataList.InnerValue = new TimeSlicedPeerData[timeSlicedPeerDataListSize];
         for (var i = 0; i < timeSlicedPeerDataListSize; i++)
         {

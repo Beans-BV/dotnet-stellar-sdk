@@ -65,6 +65,9 @@ public class PathPaymentStrictReceiveOp
             throw new InvalidDataException("path size " + pathSize + " is negative");
         if (pathSize > 5)
             throw new InvalidDataException("path size " + pathSize + " exceeds max size 5");
+        var pathRemainingInputLen = stream.GetRemainingInputLen();
+        if (pathRemainingInputLen >= 0 && pathRemainingInputLen < pathSize)
+            throw new InvalidDataException("path size " + pathSize + " exceeds remaining input length " + pathRemainingInputLen);
         decodedPathPaymentStrictReceiveOp.Path = new Asset[pathSize];
         for (var i = 0; i < pathSize; i++)
         {

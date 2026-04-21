@@ -66,6 +66,9 @@ public class SCSpecEventV0
             throw new InvalidDataException("prefixTopics size " + prefixTopicsSize + " is negative");
         if (prefixTopicsSize > 2)
             throw new InvalidDataException("prefixTopics size " + prefixTopicsSize + " exceeds max size 2");
+        var prefixTopicsRemainingInputLen = stream.GetRemainingInputLen();
+        if (prefixTopicsRemainingInputLen >= 0 && prefixTopicsRemainingInputLen < prefixTopicsSize)
+            throw new InvalidDataException("prefixTopics size " + prefixTopicsSize + " exceeds remaining input length " + prefixTopicsRemainingInputLen);
         decodedSCSpecEventV0.PrefixTopics = new SCSymbol[prefixTopicsSize];
         for (var i = 0; i < prefixTopicsSize; i++)
         {
@@ -76,6 +79,9 @@ public class SCSpecEventV0
             throw new InvalidDataException("params size " + paramsSize + " is negative");
         if (paramsSize > 50)
             throw new InvalidDataException("params size " + paramsSize + " exceeds max size 50");
+        var paramsRemainingInputLen = stream.GetRemainingInputLen();
+        if (paramsRemainingInputLen >= 0 && paramsRemainingInputLen < paramsSize)
+            throw new InvalidDataException("params size " + paramsSize + " exceeds remaining input length " + paramsRemainingInputLen);
         decodedSCSpecEventV0.Params = new SCSpecEventParamV0[paramsSize];
         for (var i = 0; i < paramsSize; i++)
         {

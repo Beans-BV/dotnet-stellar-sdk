@@ -59,6 +59,9 @@ public class TransactionPhase
                 var v0ComponentsSize = stream.ReadInt();
                 if (v0ComponentsSize < 0)
                     throw new InvalidDataException("v0Components size " + v0ComponentsSize + " is negative");
+                var v0ComponentsRemainingInputLen = stream.GetRemainingInputLen();
+                if (v0ComponentsRemainingInputLen >= 0 && v0ComponentsRemainingInputLen < v0ComponentsSize)
+                    throw new InvalidDataException("v0Components size " + v0ComponentsSize + " exceeds remaining input length " + v0ComponentsRemainingInputLen);
                 decodedTransactionPhase.V0Components = new TxSetComponent[v0ComponentsSize];
                 for (var i = 0; i < v0ComponentsSize; i++)
                 {

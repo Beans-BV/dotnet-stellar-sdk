@@ -36,6 +36,9 @@ public class ConfigUpgradeSet
         var updatedEntrySize = stream.ReadInt();
         if (updatedEntrySize < 0)
             throw new InvalidDataException("updatedEntry size " + updatedEntrySize + " is negative");
+        var updatedEntryRemainingInputLen = stream.GetRemainingInputLen();
+        if (updatedEntryRemainingInputLen >= 0 && updatedEntryRemainingInputLen < updatedEntrySize)
+            throw new InvalidDataException("updatedEntry size " + updatedEntrySize + " exceeds remaining input length " + updatedEntryRemainingInputLen);
         decodedConfigUpgradeSet.UpdatedEntry = new ConfigSettingEntry[updatedEntrySize];
         for (var i = 0; i < updatedEntrySize; i++)
         {

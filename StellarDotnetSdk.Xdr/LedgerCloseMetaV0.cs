@@ -70,6 +70,9 @@ public class LedgerCloseMetaV0
         var txProcessingSize = stream.ReadInt();
         if (txProcessingSize < 0)
             throw new InvalidDataException("txProcessing size " + txProcessingSize + " is negative");
+        var txProcessingRemainingInputLen = stream.GetRemainingInputLen();
+        if (txProcessingRemainingInputLen >= 0 && txProcessingRemainingInputLen < txProcessingSize)
+            throw new InvalidDataException("txProcessing size " + txProcessingSize + " exceeds remaining input length " + txProcessingRemainingInputLen);
         decodedLedgerCloseMetaV0.TxProcessing = new TransactionResultMeta[txProcessingSize];
         for (var i = 0; i < txProcessingSize; i++)
         {
@@ -78,6 +81,9 @@ public class LedgerCloseMetaV0
         var upgradesProcessingSize = stream.ReadInt();
         if (upgradesProcessingSize < 0)
             throw new InvalidDataException("upgradesProcessing size " + upgradesProcessingSize + " is negative");
+        var upgradesProcessingRemainingInputLen = stream.GetRemainingInputLen();
+        if (upgradesProcessingRemainingInputLen >= 0 && upgradesProcessingRemainingInputLen < upgradesProcessingSize)
+            throw new InvalidDataException("upgradesProcessing size " + upgradesProcessingSize + " exceeds remaining input length " + upgradesProcessingRemainingInputLen);
         decodedLedgerCloseMetaV0.UpgradesProcessing = new UpgradeEntryMeta[upgradesProcessingSize];
         for (var i = 0; i < upgradesProcessingSize; i++)
         {
@@ -86,6 +92,9 @@ public class LedgerCloseMetaV0
         var scpInfoSize = stream.ReadInt();
         if (scpInfoSize < 0)
             throw new InvalidDataException("scpInfo size " + scpInfoSize + " is negative");
+        var scpInfoRemainingInputLen = stream.GetRemainingInputLen();
+        if (scpInfoRemainingInputLen >= 0 && scpInfoRemainingInputLen < scpInfoSize)
+            throw new InvalidDataException("scpInfo size " + scpInfoSize + " exceeds remaining input length " + scpInfoRemainingInputLen);
         decodedLedgerCloseMetaV0.ScpInfo = new SCPHistoryEntry[scpInfoSize];
         for (var i = 0; i < scpInfoSize; i++)
         {

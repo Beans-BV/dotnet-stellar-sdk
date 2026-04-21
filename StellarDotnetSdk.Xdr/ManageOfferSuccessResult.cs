@@ -50,6 +50,9 @@ public class ManageOfferSuccessResult
         var offersClaimedSize = stream.ReadInt();
         if (offersClaimedSize < 0)
             throw new InvalidDataException("offersClaimed size " + offersClaimedSize + " is negative");
+        var offersClaimedRemainingInputLen = stream.GetRemainingInputLen();
+        if (offersClaimedRemainingInputLen >= 0 && offersClaimedRemainingInputLen < offersClaimedSize)
+            throw new InvalidDataException("offersClaimed size " + offersClaimedSize + " exceeds remaining input length " + offersClaimedRemainingInputLen);
         decodedManageOfferSuccessResult.OffersClaimed = new ClaimAtom[offersClaimedSize];
         for (var i = 0; i < offersClaimedSize; i++)
         {

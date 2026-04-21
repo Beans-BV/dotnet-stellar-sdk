@@ -120,6 +120,9 @@ public class PreconditionsV2
             throw new InvalidDataException("extraSigners size " + extraSignersSize + " is negative");
         if (extraSignersSize > 2)
             throw new InvalidDataException("extraSigners size " + extraSignersSize + " exceeds max size 2");
+        var extraSignersRemainingInputLen = stream.GetRemainingInputLen();
+        if (extraSignersRemainingInputLen >= 0 && extraSignersRemainingInputLen < extraSignersSize)
+            throw new InvalidDataException("extraSigners size " + extraSignersSize + " exceeds remaining input length " + extraSignersRemainingInputLen);
         decodedPreconditionsV2.ExtraSigners = new SignerKey[extraSignersSize];
         for (var i = 0; i < extraSignersSize; i++)
         {

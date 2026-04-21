@@ -41,6 +41,9 @@ public class TransactionSet
         var txsSize = stream.ReadInt();
         if (txsSize < 0)
             throw new InvalidDataException("txs size " + txsSize + " is negative");
+        var txsRemainingInputLen = stream.GetRemainingInputLen();
+        if (txsRemainingInputLen >= 0 && txsRemainingInputLen < txsSize)
+            throw new InvalidDataException("txs size " + txsSize + " exceeds remaining input length " + txsRemainingInputLen);
         decodedTransactionSet.Txs = new TransactionEnvelope[txsSize];
         for (var i = 0; i < txsSize; i++)
         {

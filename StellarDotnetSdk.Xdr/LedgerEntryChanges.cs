@@ -43,6 +43,9 @@ public class LedgerEntryChanges
         var ledgerEntryChangesSize = stream.ReadInt();
         if (ledgerEntryChangesSize < 0)
             throw new InvalidDataException("LedgerEntryChanges size " + ledgerEntryChangesSize + " is negative");
+        var ledgerEntryChangesRemainingInputLen = stream.GetRemainingInputLen();
+        if (ledgerEntryChangesRemainingInputLen >= 0 && ledgerEntryChangesRemainingInputLen < ledgerEntryChangesSize)
+            throw new InvalidDataException("LedgerEntryChanges size " + ledgerEntryChangesSize + " exceeds remaining input length " + ledgerEntryChangesRemainingInputLen);
         decodedLedgerEntryChanges.InnerValue = new LedgerEntryChange[ledgerEntryChangesSize];
         for (var i = 0; i < ledgerEntryChangesSize; i++)
         {

@@ -47,6 +47,9 @@ public class TxAdvertVector
             throw new InvalidDataException("TxAdvertVector size " + txAdvertVectorSize + " is negative");
         if (txAdvertVectorSize > 1000)
             throw new InvalidDataException("TxAdvertVector size " + txAdvertVectorSize + " exceeds max size 1000");
+        var txAdvertVectorRemainingInputLen = stream.GetRemainingInputLen();
+        if (txAdvertVectorRemainingInputLen >= 0 && txAdvertVectorRemainingInputLen < txAdvertVectorSize)
+            throw new InvalidDataException("TxAdvertVector size " + txAdvertVectorSize + " exceeds remaining input length " + txAdvertVectorRemainingInputLen);
         decodedTxAdvertVector.InnerValue = new Hash[txAdvertVectorSize];
         for (var i = 0; i < txAdvertVectorSize; i++)
         {

@@ -67,6 +67,9 @@ public class StellarValue
             throw new InvalidDataException("upgrades size " + upgradesSize + " is negative");
         if (upgradesSize > 6)
             throw new InvalidDataException("upgrades size " + upgradesSize + " exceeds max size 6");
+        var upgradesRemainingInputLen = stream.GetRemainingInputLen();
+        if (upgradesRemainingInputLen >= 0 && upgradesRemainingInputLen < upgradesSize)
+            throw new InvalidDataException("upgrades size " + upgradesSize + " exceeds remaining input length " + upgradesRemainingInputLen);
         decodedStellarValue.Upgrades = new UpgradeType[upgradesSize];
         for (var i = 0; i < upgradesSize; i++)
         {

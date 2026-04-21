@@ -37,6 +37,9 @@ public class TransactionResultSet
         var resultsSize = stream.ReadInt();
         if (resultsSize < 0)
             throw new InvalidDataException("results size " + resultsSize + " is negative");
+        var resultsRemainingInputLen = stream.GetRemainingInputLen();
+        if (resultsRemainingInputLen >= 0 && resultsRemainingInputLen < resultsSize)
+            throw new InvalidDataException("results size " + resultsSize + " exceeds remaining input length " + resultsRemainingInputLen);
         decodedTransactionResultSet.Results = new TransactionResultPair[resultsSize];
         for (var i = 0; i < resultsSize; i++)
         {

@@ -57,6 +57,9 @@ public class InflationResult
                 var payoutsSize = stream.ReadInt();
                 if (payoutsSize < 0)
                     throw new InvalidDataException("payouts size " + payoutsSize + " is negative");
+                var payoutsRemainingInputLen = stream.GetRemainingInputLen();
+                if (payoutsRemainingInputLen >= 0 && payoutsRemainingInputLen < payoutsSize)
+                    throw new InvalidDataException("payouts size " + payoutsSize + " exceeds remaining input length " + payoutsRemainingInputLen);
                 decodedInflationResult.Payouts = new InflationPayout[payoutsSize];
                 for (var i = 0; i < payoutsSize; i++)
                 {
