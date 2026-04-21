@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -34,8 +35,10 @@ public class ManageOfferEffect
         };
     }
 
-    public static ManageOfferEffect Decode(XdrDataInputStream stream)
+    public static ManageOfferEffect Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -43,8 +46,13 @@ public class ManageOfferEffect
             case 1: return Create(ManageOfferEffectEnum.MANAGE_OFFER_UPDATED);
             case 2: return Create(ManageOfferEffectEnum.MANAGE_OFFER_DELETED);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static ManageOfferEffect Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, ManageOfferEffect value)

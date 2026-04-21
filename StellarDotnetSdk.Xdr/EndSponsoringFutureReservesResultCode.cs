@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -35,17 +36,23 @@ public class EndSponsoringFutureReservesResultCode
         };
     }
 
-    public static EndSponsoringFutureReservesResultCode Decode(XdrDataInputStream stream)
+    public static EndSponsoringFutureReservesResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
             case 0: return Create(EndSponsoringFutureReservesResultCodeEnum.END_SPONSORING_FUTURE_RESERVES_SUCCESS);
-            case -1:
-                return Create(EndSponsoringFutureReservesResultCodeEnum.END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED);
+            case -1: return Create(EndSponsoringFutureReservesResultCodeEnum.END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static EndSponsoringFutureReservesResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, EndSponsoringFutureReservesResultCode value)

@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -70,8 +71,10 @@ public class TransactionResultCode
         };
     }
 
-    public static TransactionResultCode Decode(XdrDataInputStream stream)
+    public static TransactionResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -95,8 +98,13 @@ public class TransactionResultCode
             case -16: return Create(TransactionResultCodeEnum.txMALFORMED);
             case -17: return Create(TransactionResultCodeEnum.txSOROBAN_INVALID);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static TransactionResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, TransactionResultCode value)

@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -40,8 +41,10 @@ public class CryptoKeyType
         };
     }
 
-    public static CryptoKeyType Decode(XdrDataInputStream stream)
+    public static CryptoKeyType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -51,8 +54,13 @@ public class CryptoKeyType
             case 3: return Create(CryptoKeyTypeEnum.KEY_TYPE_ED25519_SIGNED_PAYLOAD);
             case 256: return Create(CryptoKeyTypeEnum.KEY_TYPE_MUXED_ED25519);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static CryptoKeyType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, CryptoKeyType value)

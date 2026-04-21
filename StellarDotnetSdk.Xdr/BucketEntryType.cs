@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -38,8 +39,10 @@ public class BucketEntryType
         };
     }
 
-    public static BucketEntryType Decode(XdrDataInputStream stream)
+    public static BucketEntryType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -48,8 +51,13 @@ public class BucketEntryType
             case 1: return Create(BucketEntryTypeEnum.DEADENTRY);
             case 2: return Create(BucketEntryTypeEnum.INITENTRY);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static BucketEntryType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, BucketEntryType value)

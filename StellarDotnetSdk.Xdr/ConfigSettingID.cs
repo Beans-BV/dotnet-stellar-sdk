@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -62,8 +63,10 @@ public class ConfigSettingID
         };
     }
 
-    public static ConfigSettingID Decode(XdrDataInputStream stream)
+    public static ConfigSettingID Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -85,8 +88,13 @@ public class ConfigSettingID
             case 15: return Create(ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0);
             case 16: return Create(ConfigSettingIDEnum.CONFIG_SETTING_SCP_TIMING);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static ConfigSettingID Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, ConfigSettingID value)

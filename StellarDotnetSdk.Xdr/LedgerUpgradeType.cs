@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -42,8 +43,10 @@ public class LedgerUpgradeType
         };
     }
 
-    public static LedgerUpgradeType Decode(XdrDataInputStream stream)
+    public static LedgerUpgradeType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -55,8 +58,13 @@ public class LedgerUpgradeType
             case 6: return Create(LedgerUpgradeTypeEnum.LEDGER_UPGRADE_CONFIG);
             case 7: return Create(LedgerUpgradeTypeEnum.LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static LedgerUpgradeType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, LedgerUpgradeType value)

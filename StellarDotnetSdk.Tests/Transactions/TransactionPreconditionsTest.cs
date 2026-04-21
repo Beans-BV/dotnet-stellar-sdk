@@ -125,7 +125,7 @@ public class TransactionPreconditionsTest
         {
             TimeBounds = new TimeBounds(1, 2),
             MinSequenceNumber = 3,
-            ExtraSigners = new List<xdrSDK.SignerKey> { signerKey, signerKey, signerKey },
+            ExtraSigners = new List<xdrSDK.SignerKey> { signerKey, signerKey },
         };
 
         // Act
@@ -142,7 +142,7 @@ public class TransactionPreconditionsTest
         Assert.AreEqual(xdr.V2.MinSeqNum.InnerValue.InnerValue, 3L);
         Assert.AreEqual(xdr.V2.MinSeqLedgerGap.InnerValue, 0U);
         Assert.AreEqual(xdr.V2.MinSeqAge.InnerValue.InnerValue, 0UL);
-        Assert.AreEqual(xdr.V2.ExtraSigners.Length, 3);
+        Assert.AreEqual(xdr.V2.ExtraSigners.Length, 2);
     }
 
     /// <summary>

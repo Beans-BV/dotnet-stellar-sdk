@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -38,8 +39,10 @@ public class MemoType
         };
     }
 
-    public static MemoType Decode(XdrDataInputStream stream)
+    public static MemoType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -49,8 +52,13 @@ public class MemoType
             case 3: return Create(MemoTypeEnum.MEMO_HASH);
             case 4: return Create(MemoTypeEnum.MEMO_RETURN);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static MemoType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, MemoType value)

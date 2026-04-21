@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -34,16 +35,23 @@ public class InflationResultCode
         };
     }
 
-    public static InflationResultCode Decode(XdrDataInputStream stream)
+    public static InflationResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
             case 0: return Create(InflationResultCodeEnum.INFLATION_SUCCESS);
             case -1: return Create(InflationResultCodeEnum.INFLATION_NOT_TIME);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static InflationResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, InflationResultCode value)

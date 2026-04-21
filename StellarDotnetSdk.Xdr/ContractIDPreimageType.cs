@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -32,16 +33,23 @@ public class ContractIDPreimageType
         };
     }
 
-    public static ContractIDPreimageType Decode(XdrDataInputStream stream)
+    public static ContractIDPreimageType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
             case 0: return Create(ContractIDPreimageTypeEnum.CONTRACT_ID_PREIMAGE_FROM_ADDRESS);
             case 1: return Create(ContractIDPreimageTypeEnum.CONTRACT_ID_PREIMAGE_FROM_ASSET);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static ContractIDPreimageType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, ContractIDPreimageType value)

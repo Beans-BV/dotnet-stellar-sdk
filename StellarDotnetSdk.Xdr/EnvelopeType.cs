@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -48,8 +49,10 @@ public class EnvelopeType
         };
     }
 
-    public static EnvelopeType Decode(XdrDataInputStream stream)
+    public static EnvelopeType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -64,8 +67,13 @@ public class EnvelopeType
             case 8: return Create(EnvelopeTypeEnum.ENVELOPE_TYPE_CONTRACT_ID);
             case 9: return Create(EnvelopeTypeEnum.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static EnvelopeType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, EnvelopeType value)

@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -36,8 +37,10 @@ public class HotArchiveBucketEntryType
         };
     }
 
-    public static HotArchiveBucketEntryType Decode(XdrDataInputStream stream)
+    public static HotArchiveBucketEntryType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -45,8 +48,13 @@ public class HotArchiveBucketEntryType
             case 0: return Create(HotArchiveBucketEntryTypeEnum.HOT_ARCHIVE_ARCHIVED);
             case 1: return Create(HotArchiveBucketEntryTypeEnum.HOT_ARCHIVE_LIVE);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static HotArchiveBucketEntryType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, HotArchiveBucketEntryType value)

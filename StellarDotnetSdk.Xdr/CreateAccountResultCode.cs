@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -42,8 +43,10 @@ public class CreateAccountResultCode
         };
     }
 
-    public static CreateAccountResultCode Decode(XdrDataInputStream stream)
+    public static CreateAccountResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -53,8 +56,13 @@ public class CreateAccountResultCode
             case -3: return Create(CreateAccountResultCodeEnum.CREATE_ACCOUNT_LOW_RESERVE);
             case -4: return Create(CreateAccountResultCodeEnum.CREATE_ACCOUNT_ALREADY_EXIST);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static CreateAccountResultCode Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, CreateAccountResultCode value)

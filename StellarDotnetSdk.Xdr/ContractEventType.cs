@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -34,8 +35,10 @@ public class ContractEventType
         };
     }
 
-    public static ContractEventType Decode(XdrDataInputStream stream)
+    public static ContractEventType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -43,8 +46,13 @@ public class ContractEventType
             case 1: return Create(ContractEventTypeEnum.CONTRACT);
             case 2: return Create(ContractEventTypeEnum.DIAGNOSTIC);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static ContractEventType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, ContractEventType value)

@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -36,8 +37,10 @@ public class ThresholdIndexes
         };
     }
 
-    public static ThresholdIndexes Decode(XdrDataInputStream stream)
+    public static ThresholdIndexes Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -46,8 +49,13 @@ public class ThresholdIndexes
             case 2: return Create(ThresholdIndexesEnum.THRESHOLD_MED);
             case 3: return Create(ThresholdIndexesEnum.THRESHOLD_HIGH);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static ThresholdIndexes Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, ThresholdIndexes value)

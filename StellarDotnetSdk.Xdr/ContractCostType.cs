@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -247,8 +248,10 @@ public class ContractCostType
         };
     }
 
-    public static ContractCostType Decode(XdrDataInputStream stream)
+    public static ContractCostType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -323,8 +326,13 @@ public class ContractCostType
             case 68: return Create(ContractCostTypeEnum.Bls12381FrPow);
             case 69: return Create(ContractCostTypeEnum.Bls12381FrInv);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static ContractCostType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, ContractCostType value)

@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.IO;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -48,8 +49,10 @@ public class SCErrorType
         };
     }
 
-    public static SCErrorType Decode(XdrDataInputStream stream)
+    public static SCErrorType Decode(XdrDataInputStream stream, int maxDepth)
     {
+        // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
@@ -64,8 +67,13 @@ public class SCErrorType
             case 8: return Create(SCErrorTypeEnum.SCE_VALUE);
             case 9: return Create(SCErrorTypeEnum.SCE_AUTH);
             default:
-                throw new Exception("Unknown enum value: " + value);
+                throw new InvalidDataException("Unknown enum value: " + value);
         }
+    }
+
+    public static SCErrorType Decode(XdrDataInputStream stream)
+    {
+        return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
     }
 
     public static void Encode(XdrDataOutputStream stream, SCErrorType value)
