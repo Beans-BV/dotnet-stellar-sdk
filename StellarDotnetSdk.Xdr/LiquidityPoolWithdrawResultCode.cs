@@ -50,6 +50,7 @@ public class LiquidityPoolWithdrawResultCode
     public static LiquidityPoolWithdrawResultCode Decode(XdrDataInputStream stream, int maxDepth)
     {
         // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {

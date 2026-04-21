@@ -251,6 +251,7 @@ public class ContractCostType
     public static ContractCostType Decode(XdrDataInputStream stream, int maxDepth)
     {
         // maxDepth is intentionally not checked - enums are leaf types
+        _ = maxDepth;
         var value = stream.ReadInt();
         switch (value)
         {
