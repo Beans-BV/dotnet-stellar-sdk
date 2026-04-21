@@ -23,9 +23,9 @@ public class TransactionSet
     public static void Encode(XdrDataOutputStream stream, TransactionSet encodedTransactionSet)
     {
         Hash.Encode(stream, encodedTransactionSet.PreviousLedgerHash);
-        var txssize = encodedTransactionSet.Txs.Length;
-        stream.WriteInt(txssize);
-        for (var i = 0; i < txssize; i++)
+        var txsSize = encodedTransactionSet.Txs.Length;
+        stream.WriteInt(txsSize);
+        for (var i = 0; i < txsSize; i++)
         {
             TransactionEnvelope.Encode(stream, encodedTransactionSet.Txs[i]);
         }
@@ -38,11 +38,11 @@ public class TransactionSet
         maxDepth -= 1;
         var decodedTransactionSet = new TransactionSet();
         decodedTransactionSet.PreviousLedgerHash = Hash.Decode(stream, maxDepth);
-        var txssize = stream.ReadInt();
-        if (txssize < 0)
-            throw new InvalidDataException("txs size " + txssize + " is negative");
-        decodedTransactionSet.Txs = new TransactionEnvelope[txssize];
-        for (var i = 0; i < txssize; i++)
+        var txsSize = stream.ReadInt();
+        if (txsSize < 0)
+            throw new InvalidDataException("txs size " + txsSize + " is negative");
+        decodedTransactionSet.Txs = new TransactionEnvelope[txsSize];
+        for (var i = 0; i < txsSize; i++)
         {
             decodedTransactionSet.Txs[i] = TransactionEnvelope.Decode(stream, maxDepth);
         }

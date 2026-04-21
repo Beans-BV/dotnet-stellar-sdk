@@ -60,8 +60,8 @@ public class ContractEvent
         maxDepth -= 1;
         var decodedContractEvent = new ContractEvent();
         decodedContractEvent.Ext = ExtensionPoint.Decode(stream, maxDepth);
-        var ContractIDPresent = stream.ReadInt();
-        if (ContractIDPresent != 0)
+        var contractIDPresent = stream.ReadInt();
+        if (contractIDPresent != 0)
         {
             decodedContractEvent.ContractID = ContractID.Decode(stream, maxDepth);
         }
@@ -126,9 +126,9 @@ public class ContractEvent
 
             public static void Encode(XdrDataOutputStream stream, ContractEventV0 encodedContractEventV0)
             {
-                var topicssize = encodedContractEventV0.Topics.Length;
-                stream.WriteInt(topicssize);
-                for (var i = 0; i < topicssize; i++)
+                var topicsSize = encodedContractEventV0.Topics.Length;
+                stream.WriteInt(topicsSize);
+                for (var i = 0; i < topicsSize; i++)
                 {
                     SCVal.Encode(stream, encodedContractEventV0.Topics[i]);
                 }
@@ -141,11 +141,11 @@ public class ContractEvent
                     throw new InvalidDataException("Maximum decoding depth reached while decoding ContractEventV0");
                 maxDepth -= 1;
                 var decodedContractEventV0 = new ContractEventV0();
-                var topicssize = stream.ReadInt();
-                if (topicssize < 0)
-                    throw new InvalidDataException("topics size " + topicssize + " is negative");
-                decodedContractEventV0.Topics = new SCVal[topicssize];
-                for (var i = 0; i < topicssize; i++)
+                var topicsSize = stream.ReadInt();
+                if (topicsSize < 0)
+                    throw new InvalidDataException("topics size " + topicsSize + " is negative");
+                decodedContractEventV0.Topics = new SCVal[topicsSize];
+                for (var i = 0; i < topicsSize; i++)
                 {
                     decodedContractEventV0.Topics[i] = SCVal.Decode(stream, maxDepth);
                 }

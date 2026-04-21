@@ -25,11 +25,11 @@ public class FeeBumpTransactionEnvelope
     public static void Encode(XdrDataOutputStream stream, FeeBumpTransactionEnvelope encodedFeeBumpTransactionEnvelope)
     {
         FeeBumpTransaction.Encode(stream, encodedFeeBumpTransactionEnvelope.Tx);
-        var signaturessize = encodedFeeBumpTransactionEnvelope.Signatures.Length;
-        if (signaturessize > 20)
-            throw new ArgumentException("signatures size " + signaturessize + " exceeds max size 20");
-        stream.WriteInt(signaturessize);
-        for (var i = 0; i < signaturessize; i++)
+        var signaturesSize = encodedFeeBumpTransactionEnvelope.Signatures.Length;
+        if (signaturesSize > 20)
+            throw new ArgumentException("signatures size " + signaturesSize + " exceeds max size 20");
+        stream.WriteInt(signaturesSize);
+        for (var i = 0; i < signaturesSize; i++)
         {
             DecoratedSignature.Encode(stream, encodedFeeBumpTransactionEnvelope.Signatures[i]);
         }
@@ -42,13 +42,13 @@ public class FeeBumpTransactionEnvelope
         maxDepth -= 1;
         var decodedFeeBumpTransactionEnvelope = new FeeBumpTransactionEnvelope();
         decodedFeeBumpTransactionEnvelope.Tx = FeeBumpTransaction.Decode(stream, maxDepth);
-        var signaturessize = stream.ReadInt();
-        if (signaturessize < 0)
-            throw new InvalidDataException("signatures size " + signaturessize + " is negative");
-        if (signaturessize > 20)
-            throw new InvalidDataException("signatures size " + signaturessize + " exceeds max size 20");
-        decodedFeeBumpTransactionEnvelope.Signatures = new DecoratedSignature[signaturessize];
-        for (var i = 0; i < signaturessize; i++)
+        var signaturesSize = stream.ReadInt();
+        if (signaturesSize < 0)
+            throw new InvalidDataException("signatures size " + signaturesSize + " is negative");
+        if (signaturesSize > 20)
+            throw new InvalidDataException("signatures size " + signaturesSize + " exceeds max size 20");
+        decodedFeeBumpTransactionEnvelope.Signatures = new DecoratedSignature[signaturesSize];
+        for (var i = 0; i < signaturesSize; i++)
         {
             decodedFeeBumpTransactionEnvelope.Signatures[i] = DecoratedSignature.Decode(stream, maxDepth);
         }

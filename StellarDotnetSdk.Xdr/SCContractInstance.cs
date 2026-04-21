@@ -40,8 +40,8 @@ public class SCContractInstance
         maxDepth -= 1;
         var decodedSCContractInstance = new SCContractInstance();
         decodedSCContractInstance.Executable = ContractExecutable.Decode(stream, maxDepth);
-        var StoragePresent = stream.ReadInt();
-        if (StoragePresent != 0)
+        var storagePresent = stream.ReadInt();
+        if (storagePresent != 0)
         {
             decodedSCContractInstance.Storage = SCMap.Decode(stream, maxDepth);
         }

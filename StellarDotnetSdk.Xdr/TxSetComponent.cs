@@ -79,9 +79,9 @@ public class TxSetComponent
             {
                 stream.WriteInt(0);
             }
-            var txssize = encodedTxSetComponentTxsMaybeDiscountedFee.Txs.Length;
-            stream.WriteInt(txssize);
-            for (var i = 0; i < txssize; i++)
+            var txsSize = encodedTxSetComponentTxsMaybeDiscountedFee.Txs.Length;
+            stream.WriteInt(txsSize);
+            for (var i = 0; i < txsSize; i++)
             {
                 TransactionEnvelope.Encode(stream, encodedTxSetComponentTxsMaybeDiscountedFee.Txs[i]);
             }
@@ -93,16 +93,16 @@ public class TxSetComponent
                 throw new InvalidDataException("Maximum decoding depth reached while decoding TxSetComponentTxsMaybeDiscountedFee");
             maxDepth -= 1;
             var decodedTxSetComponentTxsMaybeDiscountedFee = new TxSetComponentTxsMaybeDiscountedFee();
-            var BaseFeePresent = stream.ReadInt();
-            if (BaseFeePresent != 0)
+            var baseFeePresent = stream.ReadInt();
+            if (baseFeePresent != 0)
             {
                 decodedTxSetComponentTxsMaybeDiscountedFee.BaseFee = Int64.Decode(stream, maxDepth);
             }
-            var txssize = stream.ReadInt();
-            if (txssize < 0)
-                throw new InvalidDataException("txs size " + txssize + " is negative");
-            decodedTxSetComponentTxsMaybeDiscountedFee.Txs = new TransactionEnvelope[txssize];
-            for (var i = 0; i < txssize; i++)
+            var txsSize = stream.ReadInt();
+            if (txsSize < 0)
+                throw new InvalidDataException("txs size " + txsSize + " is negative");
+            decodedTxSetComponentTxsMaybeDiscountedFee.Txs = new TransactionEnvelope[txsSize];
+            for (var i = 0; i < txsSize; i++)
             {
                 decodedTxSetComponentTxsMaybeDiscountedFee.Txs[i] = TransactionEnvelope.Decode(stream, maxDepth);
             }

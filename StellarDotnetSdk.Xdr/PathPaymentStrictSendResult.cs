@@ -118,9 +118,9 @@ public class PathPaymentStrictSendResult
 
         public static void Encode(XdrDataOutputStream stream, PathPaymentStrictSendResultSuccess encodedPathPaymentStrictSendResultSuccess)
         {
-            var offerssize = encodedPathPaymentStrictSendResultSuccess.Offers.Length;
-            stream.WriteInt(offerssize);
-            for (var i = 0; i < offerssize; i++)
+            var offersSize = encodedPathPaymentStrictSendResultSuccess.Offers.Length;
+            stream.WriteInt(offersSize);
+            for (var i = 0; i < offersSize; i++)
             {
                 ClaimAtom.Encode(stream, encodedPathPaymentStrictSendResultSuccess.Offers[i]);
             }
@@ -133,11 +133,11 @@ public class PathPaymentStrictSendResult
                 throw new InvalidDataException("Maximum decoding depth reached while decoding PathPaymentStrictSendResultSuccess");
             maxDepth -= 1;
             var decodedPathPaymentStrictSendResultSuccess = new PathPaymentStrictSendResultSuccess();
-            var offerssize = stream.ReadInt();
-            if (offerssize < 0)
-                throw new InvalidDataException("offers size " + offerssize + " is negative");
-            decodedPathPaymentStrictSendResultSuccess.Offers = new ClaimAtom[offerssize];
-            for (var i = 0; i < offerssize; i++)
+            var offersSize = stream.ReadInt();
+            if (offersSize < 0)
+                throw new InvalidDataException("offers size " + offersSize + " is negative");
+            decodedPathPaymentStrictSendResultSuccess.Offers = new ClaimAtom[offersSize];
+            for (var i = 0; i < offersSize; i++)
             {
                 decodedPathPaymentStrictSendResultSuccess.Offers[i] = ClaimAtom.Decode(stream, maxDepth);
             }

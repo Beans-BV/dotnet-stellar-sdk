@@ -20,10 +20,10 @@ public class Curve25519Public
 
     public static void Encode(XdrDataOutputStream stream, Curve25519Public encodedCurve25519Public)
     {
-        var keysize = encodedCurve25519Public.Key.Length;
-        if (keysize != 32)
-            throw new ArgumentException("key size " + keysize + " does not match fixed size 32");
-        stream.Write(encodedCurve25519Public.Key, 0, keysize);
+        var keySize = encodedCurve25519Public.Key.Length;
+        if (keySize != 32)
+            throw new ArgumentException("key size " + keySize + " does not match fixed size 32");
+        stream.Write(encodedCurve25519Public.Key, 0, keySize);
     }
 
     public static Curve25519Public Decode(XdrDataInputStream stream, int maxDepth)
@@ -32,9 +32,9 @@ public class Curve25519Public
             throw new InvalidDataException("Maximum decoding depth reached while decoding Curve25519Public");
         maxDepth -= 1;
         var decodedCurve25519Public = new Curve25519Public();
-        var keysize = 32;
-        decodedCurve25519Public.Key = new byte[keysize];
-        stream.Read(decodedCurve25519Public.Key, 0, keysize);
+        var keySize = 32;
+        decodedCurve25519Public.Key = new byte[keySize];
+        stream.Read(decodedCurve25519Public.Key, 0, keySize);
         return decodedCurve25519Public;
     }
 

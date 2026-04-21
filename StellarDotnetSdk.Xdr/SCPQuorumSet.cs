@@ -25,15 +25,15 @@ public class SCPQuorumSet
     public static void Encode(XdrDataOutputStream stream, SCPQuorumSet encodedSCPQuorumSet)
     {
         Uint32.Encode(stream, encodedSCPQuorumSet.Threshold);
-        var validatorssize = encodedSCPQuorumSet.Validators.Length;
-        stream.WriteInt(validatorssize);
-        for (var i = 0; i < validatorssize; i++)
+        var validatorsSize = encodedSCPQuorumSet.Validators.Length;
+        stream.WriteInt(validatorsSize);
+        for (var i = 0; i < validatorsSize; i++)
         {
             NodeID.Encode(stream, encodedSCPQuorumSet.Validators[i]);
         }
-        var innerSetssize = encodedSCPQuorumSet.InnerSets.Length;
-        stream.WriteInt(innerSetssize);
-        for (var i = 0; i < innerSetssize; i++)
+        var innerSetsSize = encodedSCPQuorumSet.InnerSets.Length;
+        stream.WriteInt(innerSetsSize);
+        for (var i = 0; i < innerSetsSize; i++)
         {
             SCPQuorumSet.Encode(stream, encodedSCPQuorumSet.InnerSets[i]);
         }
@@ -46,19 +46,19 @@ public class SCPQuorumSet
         maxDepth -= 1;
         var decodedSCPQuorumSet = new SCPQuorumSet();
         decodedSCPQuorumSet.Threshold = Uint32.Decode(stream, maxDepth);
-        var validatorssize = stream.ReadInt();
-        if (validatorssize < 0)
-            throw new InvalidDataException("validators size " + validatorssize + " is negative");
-        decodedSCPQuorumSet.Validators = new NodeID[validatorssize];
-        for (var i = 0; i < validatorssize; i++)
+        var validatorsSize = stream.ReadInt();
+        if (validatorsSize < 0)
+            throw new InvalidDataException("validators size " + validatorsSize + " is negative");
+        decodedSCPQuorumSet.Validators = new NodeID[validatorsSize];
+        for (var i = 0; i < validatorsSize; i++)
         {
             decodedSCPQuorumSet.Validators[i] = NodeID.Decode(stream, maxDepth);
         }
-        var innerSetssize = stream.ReadInt();
-        if (innerSetssize < 0)
-            throw new InvalidDataException("innerSets size " + innerSetssize + " is negative");
-        decodedSCPQuorumSet.InnerSets = new SCPQuorumSet[innerSetssize];
-        for (var i = 0; i < innerSetssize; i++)
+        var innerSetsSize = stream.ReadInt();
+        if (innerSetsSize < 0)
+            throw new InvalidDataException("innerSets size " + innerSetsSize + " is negative");
+        decodedSCPQuorumSet.InnerSets = new SCPQuorumSet[innerSetsSize];
+        for (var i = 0; i < innerSetsSize; i++)
         {
             decodedSCPQuorumSet.InnerSets[i] = SCPQuorumSet.Decode(stream, maxDepth);
         }

@@ -33,16 +33,16 @@ public class SorobanTransactionMeta
     public static void Encode(XdrDataOutputStream stream, SorobanTransactionMeta encodedSorobanTransactionMeta)
     {
         SorobanTransactionMetaExt.Encode(stream, encodedSorobanTransactionMeta.Ext);
-        var eventssize = encodedSorobanTransactionMeta.Events.Length;
-        stream.WriteInt(eventssize);
-        for (var i = 0; i < eventssize; i++)
+        var eventsSize = encodedSorobanTransactionMeta.Events.Length;
+        stream.WriteInt(eventsSize);
+        for (var i = 0; i < eventsSize; i++)
         {
             ContractEvent.Encode(stream, encodedSorobanTransactionMeta.Events[i]);
         }
         SCVal.Encode(stream, encodedSorobanTransactionMeta.ReturnValue);
-        var diagnosticEventssize = encodedSorobanTransactionMeta.DiagnosticEvents.Length;
-        stream.WriteInt(diagnosticEventssize);
-        for (var i = 0; i < diagnosticEventssize; i++)
+        var diagnosticEventsSize = encodedSorobanTransactionMeta.DiagnosticEvents.Length;
+        stream.WriteInt(diagnosticEventsSize);
+        for (var i = 0; i < diagnosticEventsSize; i++)
         {
             DiagnosticEvent.Encode(stream, encodedSorobanTransactionMeta.DiagnosticEvents[i]);
         }
@@ -55,20 +55,20 @@ public class SorobanTransactionMeta
         maxDepth -= 1;
         var decodedSorobanTransactionMeta = new SorobanTransactionMeta();
         decodedSorobanTransactionMeta.Ext = SorobanTransactionMetaExt.Decode(stream, maxDepth);
-        var eventssize = stream.ReadInt();
-        if (eventssize < 0)
-            throw new InvalidDataException("events size " + eventssize + " is negative");
-        decodedSorobanTransactionMeta.Events = new ContractEvent[eventssize];
-        for (var i = 0; i < eventssize; i++)
+        var eventsSize = stream.ReadInt();
+        if (eventsSize < 0)
+            throw new InvalidDataException("events size " + eventsSize + " is negative");
+        decodedSorobanTransactionMeta.Events = new ContractEvent[eventsSize];
+        for (var i = 0; i < eventsSize; i++)
         {
             decodedSorobanTransactionMeta.Events[i] = ContractEvent.Decode(stream, maxDepth);
         }
         decodedSorobanTransactionMeta.ReturnValue = SCVal.Decode(stream, maxDepth);
-        var diagnosticEventssize = stream.ReadInt();
-        if (diagnosticEventssize < 0)
-            throw new InvalidDataException("diagnosticEvents size " + diagnosticEventssize + " is negative");
-        decodedSorobanTransactionMeta.DiagnosticEvents = new DiagnosticEvent[diagnosticEventssize];
-        for (var i = 0; i < diagnosticEventssize; i++)
+        var diagnosticEventsSize = stream.ReadInt();
+        if (diagnosticEventsSize < 0)
+            throw new InvalidDataException("diagnosticEvents size " + diagnosticEventsSize + " is negative");
+        decodedSorobanTransactionMeta.DiagnosticEvents = new DiagnosticEvent[diagnosticEventsSize];
+        for (var i = 0; i < diagnosticEventsSize; i++)
         {
             decodedSorobanTransactionMeta.DiagnosticEvents[i] = DiagnosticEvent.Decode(stream, maxDepth);
         }

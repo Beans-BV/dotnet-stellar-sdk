@@ -26,11 +26,11 @@ public class TxAdvertVector
 
     public static void Encode(XdrDataOutputStream stream, TxAdvertVector encodedTxAdvertVector)
     {
-        var TxAdvertVectorsize = encodedTxAdvertVector.InnerValue.Length;
-        if (TxAdvertVectorsize > 1000)
-            throw new ArgumentException("TxAdvertVector size " + TxAdvertVectorsize + " exceeds max size 1000");
-        stream.WriteInt(TxAdvertVectorsize);
-        for (var i = 0; i < TxAdvertVectorsize; i++)
+        var txAdvertVectorSize = encodedTxAdvertVector.InnerValue.Length;
+        if (txAdvertVectorSize > 1000)
+            throw new ArgumentException("TxAdvertVector size " + txAdvertVectorSize + " exceeds max size 1000");
+        stream.WriteInt(txAdvertVectorSize);
+        for (var i = 0; i < txAdvertVectorSize; i++)
         {
             Hash.Encode(stream, encodedTxAdvertVector.InnerValue[i]);
         }
@@ -42,13 +42,13 @@ public class TxAdvertVector
             throw new InvalidDataException("Maximum decoding depth reached while decoding TxAdvertVector");
         maxDepth -= 1;
         var decodedTxAdvertVector = new TxAdvertVector();
-        var TxAdvertVectorsize = stream.ReadInt();
-        if (TxAdvertVectorsize < 0)
-            throw new InvalidDataException("TxAdvertVector size " + TxAdvertVectorsize + " is negative");
-        if (TxAdvertVectorsize > 1000)
-            throw new InvalidDataException("TxAdvertVector size " + TxAdvertVectorsize + " exceeds max size 1000");
-        decodedTxAdvertVector.InnerValue = new Hash[TxAdvertVectorsize];
-        for (var i = 0; i < TxAdvertVectorsize; i++)
+        var txAdvertVectorSize = stream.ReadInt();
+        if (txAdvertVectorSize < 0)
+            throw new InvalidDataException("TxAdvertVector size " + txAdvertVectorSize + " is negative");
+        if (txAdvertVectorSize > 1000)
+            throw new InvalidDataException("TxAdvertVector size " + txAdvertVectorSize + " exceeds max size 1000");
+        decodedTxAdvertVector.InnerValue = new Hash[txAdvertVectorSize];
+        for (var i = 0; i < txAdvertVectorSize; i++)
         {
             decodedTxAdvertVector.InnerValue[i] = Hash.Decode(stream, maxDepth);
         }

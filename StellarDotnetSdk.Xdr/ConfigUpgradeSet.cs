@@ -19,9 +19,9 @@ public class ConfigUpgradeSet
 
     public static void Encode(XdrDataOutputStream stream, ConfigUpgradeSet encodedConfigUpgradeSet)
     {
-        var updatedEntrysize = encodedConfigUpgradeSet.UpdatedEntry.Length;
-        stream.WriteInt(updatedEntrysize);
-        for (var i = 0; i < updatedEntrysize; i++)
+        var updatedEntrySize = encodedConfigUpgradeSet.UpdatedEntry.Length;
+        stream.WriteInt(updatedEntrySize);
+        for (var i = 0; i < updatedEntrySize; i++)
         {
             ConfigSettingEntry.Encode(stream, encodedConfigUpgradeSet.UpdatedEntry[i]);
         }
@@ -33,11 +33,11 @@ public class ConfigUpgradeSet
             throw new InvalidDataException("Maximum decoding depth reached while decoding ConfigUpgradeSet");
         maxDepth -= 1;
         var decodedConfigUpgradeSet = new ConfigUpgradeSet();
-        var updatedEntrysize = stream.ReadInt();
-        if (updatedEntrysize < 0)
-            throw new InvalidDataException("updatedEntry size " + updatedEntrysize + " is negative");
-        decodedConfigUpgradeSet.UpdatedEntry = new ConfigSettingEntry[updatedEntrysize];
-        for (var i = 0; i < updatedEntrysize; i++)
+        var updatedEntrySize = stream.ReadInt();
+        if (updatedEntrySize < 0)
+            throw new InvalidDataException("updatedEntry size " + updatedEntrySize + " is negative");
+        decodedConfigUpgradeSet.UpdatedEntry = new ConfigSettingEntry[updatedEntrySize];
+        for (var i = 0; i < updatedEntrySize; i++)
         {
             decodedConfigUpgradeSet.UpdatedEntry[i] = ConfigSettingEntry.Decode(stream, maxDepth);
         }

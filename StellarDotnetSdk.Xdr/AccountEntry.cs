@@ -69,11 +69,11 @@ public class AccountEntry
         Uint32.Encode(stream, encodedAccountEntry.Flags);
         String32.Encode(stream, encodedAccountEntry.HomeDomain);
         Thresholds.Encode(stream, encodedAccountEntry.Thresholds);
-        var signerssize = encodedAccountEntry.Signers.Length;
-        if (signerssize > 20)
-            throw new ArgumentException("signers size " + signerssize + " exceeds max size 20");
-        stream.WriteInt(signerssize);
-        for (var i = 0; i < signerssize; i++)
+        var signersSize = encodedAccountEntry.Signers.Length;
+        if (signersSize > 20)
+            throw new ArgumentException("signers size " + signersSize + " exceeds max size 20");
+        stream.WriteInt(signersSize);
+        for (var i = 0; i < signersSize; i++)
         {
             Signer.Encode(stream, encodedAccountEntry.Signers[i]);
         }
@@ -90,21 +90,21 @@ public class AccountEntry
         decodedAccountEntry.Balance = Int64.Decode(stream, maxDepth);
         decodedAccountEntry.SeqNum = SequenceNumber.Decode(stream, maxDepth);
         decodedAccountEntry.NumSubEntries = Uint32.Decode(stream, maxDepth);
-        var InflationDestPresent = stream.ReadInt();
-        if (InflationDestPresent != 0)
+        var inflationDestPresent = stream.ReadInt();
+        if (inflationDestPresent != 0)
         {
             decodedAccountEntry.InflationDest = AccountID.Decode(stream, maxDepth);
         }
         decodedAccountEntry.Flags = Uint32.Decode(stream, maxDepth);
         decodedAccountEntry.HomeDomain = String32.Decode(stream, maxDepth);
         decodedAccountEntry.Thresholds = Thresholds.Decode(stream, maxDepth);
-        var signerssize = stream.ReadInt();
-        if (signerssize < 0)
-            throw new InvalidDataException("signers size " + signerssize + " is negative");
-        if (signerssize > 20)
-            throw new InvalidDataException("signers size " + signerssize + " exceeds max size 20");
-        decodedAccountEntry.Signers = new Signer[signerssize];
-        for (var i = 0; i < signerssize; i++)
+        var signersSize = stream.ReadInt();
+        if (signersSize < 0)
+            throw new InvalidDataException("signers size " + signersSize + " is negative");
+        if (signersSize > 20)
+            throw new InvalidDataException("signers size " + signersSize + " exceeds max size 20");
+        decodedAccountEntry.Signers = new Signer[signersSize];
+        for (var i = 0; i < signersSize; i++)
         {
             decodedAccountEntry.Signers[i] = Signer.Decode(stream, maxDepth);
         }

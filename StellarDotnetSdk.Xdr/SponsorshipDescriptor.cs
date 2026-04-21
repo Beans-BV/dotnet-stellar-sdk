@@ -43,8 +43,8 @@ public class SponsorshipDescriptor
             throw new InvalidDataException("Maximum decoding depth reached while decoding SponsorshipDescriptor");
         maxDepth -= 1;
         var decodedSponsorshipDescriptor = new SponsorshipDescriptor();
-        var SponsorshipDescriptorPresent = stream.ReadInt();
-        if (SponsorshipDescriptorPresent != 0)
+        var sponsorshipDescriptorPresent = stream.ReadInt();
+        if (sponsorshipDescriptorPresent != 0)
         {
             decodedSponsorshipDescriptor.InnerValue = AccountID.Decode(stream, maxDepth);
         }

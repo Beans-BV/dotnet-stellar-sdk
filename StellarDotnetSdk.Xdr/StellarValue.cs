@@ -43,11 +43,11 @@ public class StellarValue
     {
         Hash.Encode(stream, encodedStellarValue.TxSetHash);
         TimePoint.Encode(stream, encodedStellarValue.CloseTime);
-        var upgradessize = encodedStellarValue.Upgrades.Length;
-        if (upgradessize > 6)
-            throw new ArgumentException("upgrades size " + upgradessize + " exceeds max size 6");
-        stream.WriteInt(upgradessize);
-        for (var i = 0; i < upgradessize; i++)
+        var upgradesSize = encodedStellarValue.Upgrades.Length;
+        if (upgradesSize > 6)
+            throw new ArgumentException("upgrades size " + upgradesSize + " exceeds max size 6");
+        stream.WriteInt(upgradesSize);
+        for (var i = 0; i < upgradesSize; i++)
         {
             UpgradeType.Encode(stream, encodedStellarValue.Upgrades[i]);
         }
@@ -62,13 +62,13 @@ public class StellarValue
         var decodedStellarValue = new StellarValue();
         decodedStellarValue.TxSetHash = Hash.Decode(stream, maxDepth);
         decodedStellarValue.CloseTime = TimePoint.Decode(stream, maxDepth);
-        var upgradessize = stream.ReadInt();
-        if (upgradessize < 0)
-            throw new InvalidDataException("upgrades size " + upgradessize + " is negative");
-        if (upgradessize > 6)
-            throw new InvalidDataException("upgrades size " + upgradessize + " exceeds max size 6");
-        decodedStellarValue.Upgrades = new UpgradeType[upgradessize];
-        for (var i = 0; i < upgradessize; i++)
+        var upgradesSize = stream.ReadInt();
+        if (upgradesSize < 0)
+            throw new InvalidDataException("upgrades size " + upgradesSize + " is negative");
+        if (upgradesSize > 6)
+            throw new InvalidDataException("upgrades size " + upgradesSize + " exceeds max size 6");
+        decodedStellarValue.Upgrades = new UpgradeType[upgradesSize];
+        for (var i = 0; i < upgradesSize; i++)
         {
             decodedStellarValue.Upgrades[i] = UpgradeType.Decode(stream, maxDepth);
         }

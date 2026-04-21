@@ -26,9 +26,9 @@ public class SCVec
 
     public static void Encode(XdrDataOutputStream stream, SCVec encodedSCVec)
     {
-        var SCVecsize = encodedSCVec.InnerValue.Length;
-        stream.WriteInt(SCVecsize);
-        for (var i = 0; i < SCVecsize; i++)
+        var sCVecSize = encodedSCVec.InnerValue.Length;
+        stream.WriteInt(sCVecSize);
+        for (var i = 0; i < sCVecSize; i++)
         {
             SCVal.Encode(stream, encodedSCVec.InnerValue[i]);
         }
@@ -40,11 +40,11 @@ public class SCVec
             throw new InvalidDataException("Maximum decoding depth reached while decoding SCVec");
         maxDepth -= 1;
         var decodedSCVec = new SCVec();
-        var SCVecsize = stream.ReadInt();
-        if (SCVecsize < 0)
-            throw new InvalidDataException("SCVec size " + SCVecsize + " is negative");
-        decodedSCVec.InnerValue = new SCVal[SCVecsize];
-        for (var i = 0; i < SCVecsize; i++)
+        var sCVecSize = stream.ReadInt();
+        if (sCVecSize < 0)
+            throw new InvalidDataException("SCVec size " + sCVecSize + " is negative");
+        decodedSCVec.InnerValue = new SCVal[sCVecSize];
+        for (var i = 0; i < sCVecSize; i++)
         {
             decodedSCVec.InnerValue[i] = SCVal.Decode(stream, maxDepth);
         }

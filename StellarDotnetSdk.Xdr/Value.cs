@@ -26,9 +26,9 @@ public class Value
 
     public static void Encode(XdrDataOutputStream stream, Value encodedValue)
     {
-        var Valuesize = encodedValue.InnerValue.Length;
-        stream.WriteInt(Valuesize);
-        stream.Write(encodedValue.InnerValue, 0, Valuesize);
+        var valueSize = encodedValue.InnerValue.Length;
+        stream.WriteInt(valueSize);
+        stream.Write(encodedValue.InnerValue, 0, valueSize);
     }
 
     public static Value Decode(XdrDataInputStream stream, int maxDepth)
@@ -37,14 +37,14 @@ public class Value
             throw new InvalidDataException("Maximum decoding depth reached while decoding Value");
         maxDepth -= 1;
         var decodedValue = new Value();
-        var Valuesize = stream.ReadInt();
-        if (Valuesize < 0)
-            throw new InvalidDataException("Value size " + Valuesize + " is negative");
-        var ValueRemainingInputLen = stream.GetRemainingInputLen();
-        if (ValueRemainingInputLen >= 0 && ValueRemainingInputLen < Valuesize)
-            throw new InvalidDataException("Value size " + Valuesize + " exceeds remaining input length " + ValueRemainingInputLen);
-        decodedValue.InnerValue = new byte[Valuesize];
-        stream.Read(decodedValue.InnerValue, 0, Valuesize);
+        var valueSize = stream.ReadInt();
+        if (valueSize < 0)
+            throw new InvalidDataException("Value size " + valueSize + " is negative");
+        var valueRemainingInputLen = stream.GetRemainingInputLen();
+        if (valueRemainingInputLen >= 0 && valueRemainingInputLen < valueSize)
+            throw new InvalidDataException("Value size " + valueSize + " exceeds remaining input length " + valueRemainingInputLen);
+        decodedValue.InnerValue = new byte[valueSize];
+        stream.Read(decodedValue.InnerValue, 0, valueSize);
         return decodedValue;
     }
 

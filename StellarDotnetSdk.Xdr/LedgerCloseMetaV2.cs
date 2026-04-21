@@ -52,28 +52,28 @@ public class LedgerCloseMetaV2
         LedgerCloseMetaExt.Encode(stream, encodedLedgerCloseMetaV2.Ext);
         LedgerHeaderHistoryEntry.Encode(stream, encodedLedgerCloseMetaV2.LedgerHeader);
         GeneralizedTransactionSet.Encode(stream, encodedLedgerCloseMetaV2.TxSet);
-        var txProcessingsize = encodedLedgerCloseMetaV2.TxProcessing.Length;
-        stream.WriteInt(txProcessingsize);
-        for (var i = 0; i < txProcessingsize; i++)
+        var txProcessingSize = encodedLedgerCloseMetaV2.TxProcessing.Length;
+        stream.WriteInt(txProcessingSize);
+        for (var i = 0; i < txProcessingSize; i++)
         {
             TransactionResultMetaV1.Encode(stream, encodedLedgerCloseMetaV2.TxProcessing[i]);
         }
-        var upgradesProcessingsize = encodedLedgerCloseMetaV2.UpgradesProcessing.Length;
-        stream.WriteInt(upgradesProcessingsize);
-        for (var i = 0; i < upgradesProcessingsize; i++)
+        var upgradesProcessingSize = encodedLedgerCloseMetaV2.UpgradesProcessing.Length;
+        stream.WriteInt(upgradesProcessingSize);
+        for (var i = 0; i < upgradesProcessingSize; i++)
         {
             UpgradeEntryMeta.Encode(stream, encodedLedgerCloseMetaV2.UpgradesProcessing[i]);
         }
-        var scpInfosize = encodedLedgerCloseMetaV2.ScpInfo.Length;
-        stream.WriteInt(scpInfosize);
-        for (var i = 0; i < scpInfosize; i++)
+        var scpInfoSize = encodedLedgerCloseMetaV2.ScpInfo.Length;
+        stream.WriteInt(scpInfoSize);
+        for (var i = 0; i < scpInfoSize; i++)
         {
             SCPHistoryEntry.Encode(stream, encodedLedgerCloseMetaV2.ScpInfo[i]);
         }
         Uint64.Encode(stream, encodedLedgerCloseMetaV2.TotalByteSizeOfLiveSorobanState);
-        var evictedKeyssize = encodedLedgerCloseMetaV2.EvictedKeys.Length;
-        stream.WriteInt(evictedKeyssize);
-        for (var i = 0; i < evictedKeyssize; i++)
+        var evictedKeysSize = encodedLedgerCloseMetaV2.EvictedKeys.Length;
+        stream.WriteInt(evictedKeysSize);
+        for (var i = 0; i < evictedKeysSize; i++)
         {
             LedgerKey.Encode(stream, encodedLedgerCloseMetaV2.EvictedKeys[i]);
         }
@@ -88,36 +88,36 @@ public class LedgerCloseMetaV2
         decodedLedgerCloseMetaV2.Ext = LedgerCloseMetaExt.Decode(stream, maxDepth);
         decodedLedgerCloseMetaV2.LedgerHeader = LedgerHeaderHistoryEntry.Decode(stream, maxDepth);
         decodedLedgerCloseMetaV2.TxSet = GeneralizedTransactionSet.Decode(stream, maxDepth);
-        var txProcessingsize = stream.ReadInt();
-        if (txProcessingsize < 0)
-            throw new InvalidDataException("txProcessing size " + txProcessingsize + " is negative");
-        decodedLedgerCloseMetaV2.TxProcessing = new TransactionResultMetaV1[txProcessingsize];
-        for (var i = 0; i < txProcessingsize; i++)
+        var txProcessingSize = stream.ReadInt();
+        if (txProcessingSize < 0)
+            throw new InvalidDataException("txProcessing size " + txProcessingSize + " is negative");
+        decodedLedgerCloseMetaV2.TxProcessing = new TransactionResultMetaV1[txProcessingSize];
+        for (var i = 0; i < txProcessingSize; i++)
         {
             decodedLedgerCloseMetaV2.TxProcessing[i] = TransactionResultMetaV1.Decode(stream, maxDepth);
         }
-        var upgradesProcessingsize = stream.ReadInt();
-        if (upgradesProcessingsize < 0)
-            throw new InvalidDataException("upgradesProcessing size " + upgradesProcessingsize + " is negative");
-        decodedLedgerCloseMetaV2.UpgradesProcessing = new UpgradeEntryMeta[upgradesProcessingsize];
-        for (var i = 0; i < upgradesProcessingsize; i++)
+        var upgradesProcessingSize = stream.ReadInt();
+        if (upgradesProcessingSize < 0)
+            throw new InvalidDataException("upgradesProcessing size " + upgradesProcessingSize + " is negative");
+        decodedLedgerCloseMetaV2.UpgradesProcessing = new UpgradeEntryMeta[upgradesProcessingSize];
+        for (var i = 0; i < upgradesProcessingSize; i++)
         {
             decodedLedgerCloseMetaV2.UpgradesProcessing[i] = UpgradeEntryMeta.Decode(stream, maxDepth);
         }
-        var scpInfosize = stream.ReadInt();
-        if (scpInfosize < 0)
-            throw new InvalidDataException("scpInfo size " + scpInfosize + " is negative");
-        decodedLedgerCloseMetaV2.ScpInfo = new SCPHistoryEntry[scpInfosize];
-        for (var i = 0; i < scpInfosize; i++)
+        var scpInfoSize = stream.ReadInt();
+        if (scpInfoSize < 0)
+            throw new InvalidDataException("scpInfo size " + scpInfoSize + " is negative");
+        decodedLedgerCloseMetaV2.ScpInfo = new SCPHistoryEntry[scpInfoSize];
+        for (var i = 0; i < scpInfoSize; i++)
         {
             decodedLedgerCloseMetaV2.ScpInfo[i] = SCPHistoryEntry.Decode(stream, maxDepth);
         }
         decodedLedgerCloseMetaV2.TotalByteSizeOfLiveSorobanState = Uint64.Decode(stream, maxDepth);
-        var evictedKeyssize = stream.ReadInt();
-        if (evictedKeyssize < 0)
-            throw new InvalidDataException("evictedKeys size " + evictedKeyssize + " is negative");
-        decodedLedgerCloseMetaV2.EvictedKeys = new LedgerKey[evictedKeyssize];
-        for (var i = 0; i < evictedKeyssize; i++)
+        var evictedKeysSize = stream.ReadInt();
+        if (evictedKeysSize < 0)
+            throw new InvalidDataException("evictedKeys size " + evictedKeysSize + " is negative");
+        decodedLedgerCloseMetaV2.EvictedKeys = new LedgerKey[evictedKeysSize];
+        for (var i = 0; i < evictedKeysSize; i++)
         {
             decodedLedgerCloseMetaV2.EvictedKeys[i] = LedgerKey.Decode(stream, maxDepth);
         }

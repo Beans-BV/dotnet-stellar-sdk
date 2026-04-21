@@ -102,11 +102,11 @@ public class SignerKey
         public static void Encode(XdrDataOutputStream stream, SignerKeyEd25519SignedPayload encodedSignerKeyEd25519SignedPayload)
         {
             Uint256.Encode(stream, encodedSignerKeyEd25519SignedPayload.Ed25519);
-            var payloadsize = encodedSignerKeyEd25519SignedPayload.Payload.Length;
-            if (payloadsize > 64)
-                throw new ArgumentException("payload size " + payloadsize + " exceeds max size 64");
-            stream.WriteInt(payloadsize);
-            stream.Write(encodedSignerKeyEd25519SignedPayload.Payload, 0, payloadsize);
+            var payloadSize = encodedSignerKeyEd25519SignedPayload.Payload.Length;
+            if (payloadSize > 64)
+                throw new ArgumentException("payload size " + payloadSize + " exceeds max size 64");
+            stream.WriteInt(payloadSize);
+            stream.Write(encodedSignerKeyEd25519SignedPayload.Payload, 0, payloadSize);
         }
 
         public static SignerKeyEd25519SignedPayload Decode(XdrDataInputStream stream, int maxDepth)
@@ -116,16 +116,16 @@ public class SignerKey
             maxDepth -= 1;
             var decodedSignerKeyEd25519SignedPayload = new SignerKeyEd25519SignedPayload();
             decodedSignerKeyEd25519SignedPayload.Ed25519 = Uint256.Decode(stream, maxDepth);
-            var payloadsize = stream.ReadInt();
-            if (payloadsize < 0)
-                throw new InvalidDataException("payload size " + payloadsize + " is negative");
-            if (payloadsize > 64)
-                throw new InvalidDataException("payload size " + payloadsize + " exceeds max size 64");
+            var payloadSize = stream.ReadInt();
+            if (payloadSize < 0)
+                throw new InvalidDataException("payload size " + payloadSize + " is negative");
+            if (payloadSize > 64)
+                throw new InvalidDataException("payload size " + payloadSize + " exceeds max size 64");
             var payloadRemainingInputLen = stream.GetRemainingInputLen();
-            if (payloadRemainingInputLen >= 0 && payloadRemainingInputLen < payloadsize)
-                throw new InvalidDataException("payload size " + payloadsize + " exceeds remaining input length " + payloadRemainingInputLen);
-            decodedSignerKeyEd25519SignedPayload.Payload = new byte[payloadsize];
-            stream.Read(decodedSignerKeyEd25519SignedPayload.Payload, 0, payloadsize);
+            if (payloadRemainingInputLen >= 0 && payloadRemainingInputLen < payloadSize)
+                throw new InvalidDataException("payload size " + payloadSize + " exceeds remaining input length " + payloadRemainingInputLen);
+            decodedSignerKeyEd25519SignedPayload.Payload = new byte[payloadSize];
+            stream.Read(decodedSignerKeyEd25519SignedPayload.Payload, 0, payloadSize);
             return decodedSignerKeyEd25519SignedPayload;
         }
 

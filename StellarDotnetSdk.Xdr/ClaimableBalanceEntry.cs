@@ -45,11 +45,11 @@ public class ClaimableBalanceEntry
     public static void Encode(XdrDataOutputStream stream, ClaimableBalanceEntry encodedClaimableBalanceEntry)
     {
         ClaimableBalanceID.Encode(stream, encodedClaimableBalanceEntry.BalanceID);
-        var claimantssize = encodedClaimableBalanceEntry.Claimants.Length;
-        if (claimantssize > 10)
-            throw new ArgumentException("claimants size " + claimantssize + " exceeds max size 10");
-        stream.WriteInt(claimantssize);
-        for (var i = 0; i < claimantssize; i++)
+        var claimantsSize = encodedClaimableBalanceEntry.Claimants.Length;
+        if (claimantsSize > 10)
+            throw new ArgumentException("claimants size " + claimantsSize + " exceeds max size 10");
+        stream.WriteInt(claimantsSize);
+        for (var i = 0; i < claimantsSize; i++)
         {
             Claimant.Encode(stream, encodedClaimableBalanceEntry.Claimants[i]);
         }
@@ -65,13 +65,13 @@ public class ClaimableBalanceEntry
         maxDepth -= 1;
         var decodedClaimableBalanceEntry = new ClaimableBalanceEntry();
         decodedClaimableBalanceEntry.BalanceID = ClaimableBalanceID.Decode(stream, maxDepth);
-        var claimantssize = stream.ReadInt();
-        if (claimantssize < 0)
-            throw new InvalidDataException("claimants size " + claimantssize + " is negative");
-        if (claimantssize > 10)
-            throw new InvalidDataException("claimants size " + claimantssize + " exceeds max size 10");
-        decodedClaimableBalanceEntry.Claimants = new Claimant[claimantssize];
-        for (var i = 0; i < claimantssize; i++)
+        var claimantsSize = stream.ReadInt();
+        if (claimantsSize < 0)
+            throw new InvalidDataException("claimants size " + claimantsSize + " is negative");
+        if (claimantsSize > 10)
+            throw new InvalidDataException("claimants size " + claimantsSize + " exceeds max size 10");
+        decodedClaimableBalanceEntry.Claimants = new Claimant[claimantsSize];
+        for (var i = 0; i < claimantsSize; i++)
         {
             decodedClaimableBalanceEntry.Claimants[i] = Claimant.Decode(stream, maxDepth);
         }

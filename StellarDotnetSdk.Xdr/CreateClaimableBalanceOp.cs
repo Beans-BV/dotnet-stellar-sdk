@@ -26,11 +26,11 @@ public class CreateClaimableBalanceOp
     {
         Asset.Encode(stream, encodedCreateClaimableBalanceOp.Asset);
         Int64.Encode(stream, encodedCreateClaimableBalanceOp.Amount);
-        var claimantssize = encodedCreateClaimableBalanceOp.Claimants.Length;
-        if (claimantssize > 10)
-            throw new ArgumentException("claimants size " + claimantssize + " exceeds max size 10");
-        stream.WriteInt(claimantssize);
-        for (var i = 0; i < claimantssize; i++)
+        var claimantsSize = encodedCreateClaimableBalanceOp.Claimants.Length;
+        if (claimantsSize > 10)
+            throw new ArgumentException("claimants size " + claimantsSize + " exceeds max size 10");
+        stream.WriteInt(claimantsSize);
+        for (var i = 0; i < claimantsSize; i++)
         {
             Claimant.Encode(stream, encodedCreateClaimableBalanceOp.Claimants[i]);
         }
@@ -44,13 +44,13 @@ public class CreateClaimableBalanceOp
         var decodedCreateClaimableBalanceOp = new CreateClaimableBalanceOp();
         decodedCreateClaimableBalanceOp.Asset = Asset.Decode(stream, maxDepth);
         decodedCreateClaimableBalanceOp.Amount = Int64.Decode(stream, maxDepth);
-        var claimantssize = stream.ReadInt();
-        if (claimantssize < 0)
-            throw new InvalidDataException("claimants size " + claimantssize + " is negative");
-        if (claimantssize > 10)
-            throw new InvalidDataException("claimants size " + claimantssize + " exceeds max size 10");
-        decodedCreateClaimableBalanceOp.Claimants = new Claimant[claimantssize];
-        for (var i = 0; i < claimantssize; i++)
+        var claimantsSize = stream.ReadInt();
+        if (claimantsSize < 0)
+            throw new InvalidDataException("claimants size " + claimantsSize + " is negative");
+        if (claimantsSize > 10)
+            throw new InvalidDataException("claimants size " + claimantsSize + " exceeds max size 10");
+        decodedCreateClaimableBalanceOp.Claimants = new Claimant[claimantsSize];
+        for (var i = 0; i < claimantsSize; i++)
         {
             decodedCreateClaimableBalanceOp.Claimants[i] = Claimant.Decode(stream, maxDepth);
         }

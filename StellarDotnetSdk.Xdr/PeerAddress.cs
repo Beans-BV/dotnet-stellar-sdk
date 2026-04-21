@@ -66,16 +66,16 @@ public class PeerAddress
             switch (encodedPeerAddressIp.Discriminant.InnerValue)
             {
                 case IPAddrType.IPAddrTypeEnum.IPv4:
-                    var ipv4size = encodedPeerAddressIp.Ipv4.Length;
-                    if (ipv4size != 4)
-                        throw new ArgumentException("ipv4 size " + ipv4size + " does not match fixed size 4");
-                    stream.Write(encodedPeerAddressIp.Ipv4, 0, ipv4size);
+                    var ipv4Size = encodedPeerAddressIp.Ipv4.Length;
+                    if (ipv4Size != 4)
+                        throw new ArgumentException("ipv4 size " + ipv4Size + " does not match fixed size 4");
+                    stream.Write(encodedPeerAddressIp.Ipv4, 0, ipv4Size);
                     break;
                 case IPAddrType.IPAddrTypeEnum.IPv6:
-                    var ipv6size = encodedPeerAddressIp.Ipv6.Length;
-                    if (ipv6size != 16)
-                        throw new ArgumentException("ipv6 size " + ipv6size + " does not match fixed size 16");
-                    stream.Write(encodedPeerAddressIp.Ipv6, 0, ipv6size);
+                    var ipv6Size = encodedPeerAddressIp.Ipv6.Length;
+                    if (ipv6Size != 16)
+                        throw new ArgumentException("ipv6 size " + ipv6Size + " does not match fixed size 16");
+                    stream.Write(encodedPeerAddressIp.Ipv6, 0, ipv6Size);
                     break;
                 default:
                     throw new InvalidDataException("Unknown discriminant value: " + encodedPeerAddressIp.Discriminant.InnerValue);
@@ -93,14 +93,14 @@ public class PeerAddress
             switch (decodedPeerAddressIp.Discriminant.InnerValue)
             {
                 case IPAddrType.IPAddrTypeEnum.IPv4:
-                    var ipv4size = 4;
-                    decodedPeerAddressIp.Ipv4 = new byte[ipv4size];
-                    stream.Read(decodedPeerAddressIp.Ipv4, 0, ipv4size);
+                    var ipv4Size = 4;
+                    decodedPeerAddressIp.Ipv4 = new byte[ipv4Size];
+                    stream.Read(decodedPeerAddressIp.Ipv4, 0, ipv4Size);
                     break;
                 case IPAddrType.IPAddrTypeEnum.IPv6:
-                    var ipv6size = 16;
-                    decodedPeerAddressIp.Ipv6 = new byte[ipv6size];
-                    stream.Read(decodedPeerAddressIp.Ipv6, 0, ipv6size);
+                    var ipv6Size = 16;
+                    decodedPeerAddressIp.Ipv6 = new byte[ipv6Size];
+                    stream.Read(decodedPeerAddressIp.Ipv6, 0, ipv6Size);
                     break;
                 default:
                     throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);

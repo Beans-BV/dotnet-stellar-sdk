@@ -26,10 +26,10 @@ public class Uint256
 
     public static void Encode(XdrDataOutputStream stream, Uint256 encodedUint256)
     {
-        var uint256size = encodedUint256.InnerValue.Length;
-        if (uint256size != 32)
-            throw new ArgumentException("uint256 size " + uint256size + " does not match fixed size 32");
-        stream.Write(encodedUint256.InnerValue, 0, uint256size);
+        var uint256Size = encodedUint256.InnerValue.Length;
+        if (uint256Size != 32)
+            throw new ArgumentException("uint256 size " + uint256Size + " does not match fixed size 32");
+        stream.Write(encodedUint256.InnerValue, 0, uint256Size);
     }
 
     public static Uint256 Decode(XdrDataInputStream stream, int maxDepth)
@@ -38,9 +38,9 @@ public class Uint256
             throw new InvalidDataException("Maximum decoding depth reached while decoding Uint256");
         maxDepth -= 1;
         var decodedUint256 = new Uint256();
-        var uint256size = 32;
-        decodedUint256.InnerValue = new byte[uint256size];
-        stream.Read(decodedUint256.InnerValue, 0, uint256size);
+        var uint256Size = 32;
+        decodedUint256.InnerValue = new byte[uint256Size];
+        stream.Read(decodedUint256.InnerValue, 0, uint256Size);
         return decodedUint256;
     }
 

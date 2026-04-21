@@ -42,8 +42,8 @@ public class SorobanTransactionMetaV2
         maxDepth -= 1;
         var decodedSorobanTransactionMetaV2 = new SorobanTransactionMetaV2();
         decodedSorobanTransactionMetaV2.Ext = SorobanTransactionMetaExt.Decode(stream, maxDepth);
-        var ReturnValuePresent = stream.ReadInt();
-        if (ReturnValuePresent != 0)
+        var returnValuePresent = stream.ReadInt();
+        if (returnValuePresent != 0)
         {
             decodedSorobanTransactionMetaV2.ReturnValue = SCVal.Decode(stream, maxDepth);
         }

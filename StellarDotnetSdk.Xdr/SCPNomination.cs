@@ -25,15 +25,15 @@ public class SCPNomination
     public static void Encode(XdrDataOutputStream stream, SCPNomination encodedSCPNomination)
     {
         Hash.Encode(stream, encodedSCPNomination.QuorumSetHash);
-        var votessize = encodedSCPNomination.Votes.Length;
-        stream.WriteInt(votessize);
-        for (var i = 0; i < votessize; i++)
+        var votesSize = encodedSCPNomination.Votes.Length;
+        stream.WriteInt(votesSize);
+        for (var i = 0; i < votesSize; i++)
         {
             Value.Encode(stream, encodedSCPNomination.Votes[i]);
         }
-        var acceptedsize = encodedSCPNomination.Accepted.Length;
-        stream.WriteInt(acceptedsize);
-        for (var i = 0; i < acceptedsize; i++)
+        var acceptedSize = encodedSCPNomination.Accepted.Length;
+        stream.WriteInt(acceptedSize);
+        for (var i = 0; i < acceptedSize; i++)
         {
             Value.Encode(stream, encodedSCPNomination.Accepted[i]);
         }
@@ -46,19 +46,19 @@ public class SCPNomination
         maxDepth -= 1;
         var decodedSCPNomination = new SCPNomination();
         decodedSCPNomination.QuorumSetHash = Hash.Decode(stream, maxDepth);
-        var votessize = stream.ReadInt();
-        if (votessize < 0)
-            throw new InvalidDataException("votes size " + votessize + " is negative");
-        decodedSCPNomination.Votes = new Value[votessize];
-        for (var i = 0; i < votessize; i++)
+        var votesSize = stream.ReadInt();
+        if (votesSize < 0)
+            throw new InvalidDataException("votes size " + votesSize + " is negative");
+        decodedSCPNomination.Votes = new Value[votesSize];
+        for (var i = 0; i < votesSize; i++)
         {
             decodedSCPNomination.Votes[i] = Value.Decode(stream, maxDepth);
         }
-        var acceptedsize = stream.ReadInt();
-        if (acceptedsize < 0)
-            throw new InvalidDataException("accepted size " + acceptedsize + " is negative");
-        decodedSCPNomination.Accepted = new Value[acceptedsize];
-        for (var i = 0; i < acceptedsize; i++)
+        var acceptedSize = stream.ReadInt();
+        if (acceptedSize < 0)
+            throw new InvalidDataException("accepted size " + acceptedSize + " is negative");
+        decodedSCPNomination.Accepted = new Value[acceptedSize];
+        for (var i = 0; i < acceptedSize; i++)
         {
             decodedSCPNomination.Accepted[i] = Value.Decode(stream, maxDepth);
         }

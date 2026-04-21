@@ -32,9 +32,9 @@ public class ManageOfferSuccessResult
 
     public static void Encode(XdrDataOutputStream stream, ManageOfferSuccessResult encodedManageOfferSuccessResult)
     {
-        var offersClaimedsize = encodedManageOfferSuccessResult.OffersClaimed.Length;
-        stream.WriteInt(offersClaimedsize);
-        for (var i = 0; i < offersClaimedsize; i++)
+        var offersClaimedSize = encodedManageOfferSuccessResult.OffersClaimed.Length;
+        stream.WriteInt(offersClaimedSize);
+        for (var i = 0; i < offersClaimedSize; i++)
         {
             ClaimAtom.Encode(stream, encodedManageOfferSuccessResult.OffersClaimed[i]);
         }
@@ -47,11 +47,11 @@ public class ManageOfferSuccessResult
             throw new InvalidDataException("Maximum decoding depth reached while decoding ManageOfferSuccessResult");
         maxDepth -= 1;
         var decodedManageOfferSuccessResult = new ManageOfferSuccessResult();
-        var offersClaimedsize = stream.ReadInt();
-        if (offersClaimedsize < 0)
-            throw new InvalidDataException("offersClaimed size " + offersClaimedsize + " is negative");
-        decodedManageOfferSuccessResult.OffersClaimed = new ClaimAtom[offersClaimedsize];
-        for (var i = 0; i < offersClaimedsize; i++)
+        var offersClaimedSize = stream.ReadInt();
+        if (offersClaimedSize < 0)
+            throw new InvalidDataException("offersClaimed size " + offersClaimedSize + " is negative");
+        decodedManageOfferSuccessResult.OffersClaimed = new ClaimAtom[offersClaimedSize];
+        for (var i = 0; i < offersClaimedSize; i++)
         {
             decodedManageOfferSuccessResult.OffersClaimed[i] = ClaimAtom.Decode(stream, maxDepth);
         }

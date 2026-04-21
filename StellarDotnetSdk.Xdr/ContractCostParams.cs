@@ -26,11 +26,11 @@ public class ContractCostParams
 
     public static void Encode(XdrDataOutputStream stream, ContractCostParams encodedContractCostParams)
     {
-        var ContractCostParamssize = encodedContractCostParams.InnerValue.Length;
-        if (ContractCostParamssize > 1024)
-            throw new ArgumentException("ContractCostParams size " + ContractCostParamssize + " exceeds max size 1024");
-        stream.WriteInt(ContractCostParamssize);
-        for (var i = 0; i < ContractCostParamssize; i++)
+        var contractCostParamsSize = encodedContractCostParams.InnerValue.Length;
+        if (contractCostParamsSize > 1024)
+            throw new ArgumentException("ContractCostParams size " + contractCostParamsSize + " exceeds max size 1024");
+        stream.WriteInt(contractCostParamsSize);
+        for (var i = 0; i < contractCostParamsSize; i++)
         {
             ContractCostParamEntry.Encode(stream, encodedContractCostParams.InnerValue[i]);
         }
@@ -42,13 +42,13 @@ public class ContractCostParams
             throw new InvalidDataException("Maximum decoding depth reached while decoding ContractCostParams");
         maxDepth -= 1;
         var decodedContractCostParams = new ContractCostParams();
-        var ContractCostParamssize = stream.ReadInt();
-        if (ContractCostParamssize < 0)
-            throw new InvalidDataException("ContractCostParams size " + ContractCostParamssize + " is negative");
-        if (ContractCostParamssize > 1024)
-            throw new InvalidDataException("ContractCostParams size " + ContractCostParamssize + " exceeds max size 1024");
-        decodedContractCostParams.InnerValue = new ContractCostParamEntry[ContractCostParamssize];
-        for (var i = 0; i < ContractCostParamssize; i++)
+        var contractCostParamsSize = stream.ReadInt();
+        if (contractCostParamsSize < 0)
+            throw new InvalidDataException("ContractCostParams size " + contractCostParamsSize + " is negative");
+        if (contractCostParamsSize > 1024)
+            throw new InvalidDataException("ContractCostParams size " + contractCostParamsSize + " exceeds max size 1024");
+        decodedContractCostParams.InnerValue = new ContractCostParamEntry[contractCostParamsSize];
+        for (var i = 0; i < contractCostParamsSize; i++)
         {
             decodedContractCostParams.InnerValue[i] = ContractCostParamEntry.Decode(stream, maxDepth);
         }

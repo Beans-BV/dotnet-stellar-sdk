@@ -27,9 +27,9 @@ public class CreateContractArgsV2
     {
         ContractIDPreimage.Encode(stream, encodedCreateContractArgsV2.ContractIDPreimage);
         ContractExecutable.Encode(stream, encodedCreateContractArgsV2.Executable);
-        var constructorArgssize = encodedCreateContractArgsV2.ConstructorArgs.Length;
-        stream.WriteInt(constructorArgssize);
-        for (var i = 0; i < constructorArgssize; i++)
+        var constructorArgsSize = encodedCreateContractArgsV2.ConstructorArgs.Length;
+        stream.WriteInt(constructorArgsSize);
+        for (var i = 0; i < constructorArgsSize; i++)
         {
             SCVal.Encode(stream, encodedCreateContractArgsV2.ConstructorArgs[i]);
         }
@@ -43,11 +43,11 @@ public class CreateContractArgsV2
         var decodedCreateContractArgsV2 = new CreateContractArgsV2();
         decodedCreateContractArgsV2.ContractIDPreimage = ContractIDPreimage.Decode(stream, maxDepth);
         decodedCreateContractArgsV2.Executable = ContractExecutable.Decode(stream, maxDepth);
-        var constructorArgssize = stream.ReadInt();
-        if (constructorArgssize < 0)
-            throw new InvalidDataException("constructorArgs size " + constructorArgssize + " is negative");
-        decodedCreateContractArgsV2.ConstructorArgs = new SCVal[constructorArgssize];
-        for (var i = 0; i < constructorArgssize; i++)
+        var constructorArgsSize = stream.ReadInt();
+        if (constructorArgsSize < 0)
+            throw new InvalidDataException("constructorArgs size " + constructorArgsSize + " is negative");
+        decodedCreateContractArgsV2.ConstructorArgs = new SCVal[constructorArgsSize];
+        for (var i = 0; i < constructorArgsSize; i++)
         {
             decodedCreateContractArgsV2.ConstructorArgs[i] = SCVal.Decode(stream, maxDepth);
         }

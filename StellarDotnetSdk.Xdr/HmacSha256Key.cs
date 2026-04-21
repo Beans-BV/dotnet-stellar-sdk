@@ -20,10 +20,10 @@ public class HmacSha256Key
 
     public static void Encode(XdrDataOutputStream stream, HmacSha256Key encodedHmacSha256Key)
     {
-        var keysize = encodedHmacSha256Key.Key.Length;
-        if (keysize != 32)
-            throw new ArgumentException("key size " + keysize + " does not match fixed size 32");
-        stream.Write(encodedHmacSha256Key.Key, 0, keysize);
+        var keySize = encodedHmacSha256Key.Key.Length;
+        if (keySize != 32)
+            throw new ArgumentException("key size " + keySize + " does not match fixed size 32");
+        stream.Write(encodedHmacSha256Key.Key, 0, keySize);
     }
 
     public static HmacSha256Key Decode(XdrDataInputStream stream, int maxDepth)
@@ -32,9 +32,9 @@ public class HmacSha256Key
             throw new InvalidDataException("Maximum decoding depth reached while decoding HmacSha256Key");
         maxDepth -= 1;
         var decodedHmacSha256Key = new HmacSha256Key();
-        var keysize = 32;
-        decodedHmacSha256Key.Key = new byte[keysize];
-        stream.Read(decodedHmacSha256Key.Key, 0, keysize);
+        var keySize = 32;
+        decodedHmacSha256Key.Key = new byte[keySize];
+        stream.Read(decodedHmacSha256Key.Key, 0, keySize);
         return decodedHmacSha256Key;
     }
 

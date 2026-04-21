@@ -20,11 +20,11 @@ public class SCSpecTypeTuple
 
     public static void Encode(XdrDataOutputStream stream, SCSpecTypeTuple encodedSCSpecTypeTuple)
     {
-        var valueTypessize = encodedSCSpecTypeTuple.ValueTypes.Length;
-        if (valueTypessize > 12)
-            throw new ArgumentException("valueTypes size " + valueTypessize + " exceeds max size 12");
-        stream.WriteInt(valueTypessize);
-        for (var i = 0; i < valueTypessize; i++)
+        var valueTypesSize = encodedSCSpecTypeTuple.ValueTypes.Length;
+        if (valueTypesSize > 12)
+            throw new ArgumentException("valueTypes size " + valueTypesSize + " exceeds max size 12");
+        stream.WriteInt(valueTypesSize);
+        for (var i = 0; i < valueTypesSize; i++)
         {
             SCSpecTypeDef.Encode(stream, encodedSCSpecTypeTuple.ValueTypes[i]);
         }
@@ -36,13 +36,13 @@ public class SCSpecTypeTuple
             throw new InvalidDataException("Maximum decoding depth reached while decoding SCSpecTypeTuple");
         maxDepth -= 1;
         var decodedSCSpecTypeTuple = new SCSpecTypeTuple();
-        var valueTypessize = stream.ReadInt();
-        if (valueTypessize < 0)
-            throw new InvalidDataException("valueTypes size " + valueTypessize + " is negative");
-        if (valueTypessize > 12)
-            throw new InvalidDataException("valueTypes size " + valueTypessize + " exceeds max size 12");
-        decodedSCSpecTypeTuple.ValueTypes = new SCSpecTypeDef[valueTypessize];
-        for (var i = 0; i < valueTypessize; i++)
+        var valueTypesSize = stream.ReadInt();
+        if (valueTypesSize < 0)
+            throw new InvalidDataException("valueTypes size " + valueTypesSize + " is negative");
+        if (valueTypesSize > 12)
+            throw new InvalidDataException("valueTypes size " + valueTypesSize + " exceeds max size 12");
+        decodedSCSpecTypeTuple.ValueTypes = new SCSpecTypeDef[valueTypesSize];
+        for (var i = 0; i < valueTypesSize; i++)
         {
             decodedSCSpecTypeTuple.ValueTypes[i] = SCSpecTypeDef.Decode(stream, maxDepth);
         }

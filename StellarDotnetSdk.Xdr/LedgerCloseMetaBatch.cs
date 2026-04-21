@@ -31,9 +31,9 @@ public class LedgerCloseMetaBatch
     {
         Uint32.Encode(stream, encodedLedgerCloseMetaBatch.StartSequence);
         Uint32.Encode(stream, encodedLedgerCloseMetaBatch.EndSequence);
-        var ledgerCloseMetassize = encodedLedgerCloseMetaBatch.LedgerCloseMetas.Length;
-        stream.WriteInt(ledgerCloseMetassize);
-        for (var i = 0; i < ledgerCloseMetassize; i++)
+        var ledgerCloseMetasSize = encodedLedgerCloseMetaBatch.LedgerCloseMetas.Length;
+        stream.WriteInt(ledgerCloseMetasSize);
+        for (var i = 0; i < ledgerCloseMetasSize; i++)
         {
             LedgerCloseMeta.Encode(stream, encodedLedgerCloseMetaBatch.LedgerCloseMetas[i]);
         }
@@ -47,11 +47,11 @@ public class LedgerCloseMetaBatch
         var decodedLedgerCloseMetaBatch = new LedgerCloseMetaBatch();
         decodedLedgerCloseMetaBatch.StartSequence = Uint32.Decode(stream, maxDepth);
         decodedLedgerCloseMetaBatch.EndSequence = Uint32.Decode(stream, maxDepth);
-        var ledgerCloseMetassize = stream.ReadInt();
-        if (ledgerCloseMetassize < 0)
-            throw new InvalidDataException("ledgerCloseMetas size " + ledgerCloseMetassize + " is negative");
-        decodedLedgerCloseMetaBatch.LedgerCloseMetas = new LedgerCloseMeta[ledgerCloseMetassize];
-        for (var i = 0; i < ledgerCloseMetassize; i++)
+        var ledgerCloseMetasSize = stream.ReadInt();
+        if (ledgerCloseMetasSize < 0)
+            throw new InvalidDataException("ledgerCloseMetas size " + ledgerCloseMetasSize + " is negative");
+        decodedLedgerCloseMetaBatch.LedgerCloseMetas = new LedgerCloseMeta[ledgerCloseMetasSize];
+        for (var i = 0; i < ledgerCloseMetasSize; i++)
         {
             decodedLedgerCloseMetaBatch.LedgerCloseMetas[i] = LedgerCloseMeta.Decode(stream, maxDepth);
         }

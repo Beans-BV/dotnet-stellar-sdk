@@ -42,9 +42,9 @@ public class HostFunction
                 CreateContractArgs.Encode(stream, encodedHostFunction.CreateContract);
                 break;
             case HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM:
-                var wasmsize = encodedHostFunction.Wasm.Length;
-                stream.WriteInt(wasmsize);
-                stream.Write(encodedHostFunction.Wasm, 0, wasmsize);
+                var wasmSize = encodedHostFunction.Wasm.Length;
+                stream.WriteInt(wasmSize);
+                stream.Write(encodedHostFunction.Wasm, 0, wasmSize);
                 break;
             case HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2:
                 CreateContractArgsV2.Encode(stream, encodedHostFunction.CreateContractV2);
@@ -71,14 +71,14 @@ public class HostFunction
                 decodedHostFunction.CreateContract = CreateContractArgs.Decode(stream, maxDepth);
                 break;
             case HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM:
-                var wasmsize = stream.ReadInt();
-                if (wasmsize < 0)
-                    throw new InvalidDataException("wasm size " + wasmsize + " is negative");
+                var wasmSize = stream.ReadInt();
+                if (wasmSize < 0)
+                    throw new InvalidDataException("wasm size " + wasmSize + " is negative");
                 var wasmRemainingInputLen = stream.GetRemainingInputLen();
-                if (wasmRemainingInputLen >= 0 && wasmRemainingInputLen < wasmsize)
-                    throw new InvalidDataException("wasm size " + wasmsize + " exceeds remaining input length " + wasmRemainingInputLen);
-                decodedHostFunction.Wasm = new byte[wasmsize];
-                stream.Read(decodedHostFunction.Wasm, 0, wasmsize);
+                if (wasmRemainingInputLen >= 0 && wasmRemainingInputLen < wasmSize)
+                    throw new InvalidDataException("wasm size " + wasmSize + " exceeds remaining input length " + wasmRemainingInputLen);
+                decodedHostFunction.Wasm = new byte[wasmSize];
+                stream.Read(decodedHostFunction.Wasm, 0, wasmSize);
                 break;
             case HostFunctionType.HostFunctionTypeEnum.HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2:
                 decodedHostFunction.CreateContractV2 = CreateContractArgsV2.Decode(stream, maxDepth);

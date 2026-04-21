@@ -22,9 +22,9 @@ public class SCPHistoryEntryV0
 
     public static void Encode(XdrDataOutputStream stream, SCPHistoryEntryV0 encodedSCPHistoryEntryV0)
     {
-        var quorumSetssize = encodedSCPHistoryEntryV0.QuorumSets.Length;
-        stream.WriteInt(quorumSetssize);
-        for (var i = 0; i < quorumSetssize; i++)
+        var quorumSetsSize = encodedSCPHistoryEntryV0.QuorumSets.Length;
+        stream.WriteInt(quorumSetsSize);
+        for (var i = 0; i < quorumSetsSize; i++)
         {
             SCPQuorumSet.Encode(stream, encodedSCPHistoryEntryV0.QuorumSets[i]);
         }
@@ -37,11 +37,11 @@ public class SCPHistoryEntryV0
             throw new InvalidDataException("Maximum decoding depth reached while decoding SCPHistoryEntryV0");
         maxDepth -= 1;
         var decodedSCPHistoryEntryV0 = new SCPHistoryEntryV0();
-        var quorumSetssize = stream.ReadInt();
-        if (quorumSetssize < 0)
-            throw new InvalidDataException("quorumSets size " + quorumSetssize + " is negative");
-        decodedSCPHistoryEntryV0.QuorumSets = new SCPQuorumSet[quorumSetssize];
-        for (var i = 0; i < quorumSetssize; i++)
+        var quorumSetsSize = stream.ReadInt();
+        if (quorumSetsSize < 0)
+            throw new InvalidDataException("quorumSets size " + quorumSetsSize + " is negative");
+        decodedSCPHistoryEntryV0.QuorumSets = new SCPQuorumSet[quorumSetsSize];
+        for (var i = 0; i < quorumSetsSize; i++)
         {
             decodedSCPHistoryEntryV0.QuorumSets[i] = SCPQuorumSet.Decode(stream, maxDepth);
         }

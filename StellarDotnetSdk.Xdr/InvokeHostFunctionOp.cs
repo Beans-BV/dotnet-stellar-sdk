@@ -25,9 +25,9 @@ public class InvokeHostFunctionOp
     public static void Encode(XdrDataOutputStream stream, InvokeHostFunctionOp encodedInvokeHostFunctionOp)
     {
         HostFunction.Encode(stream, encodedInvokeHostFunctionOp.HostFunction);
-        var authsize = encodedInvokeHostFunctionOp.Auth.Length;
-        stream.WriteInt(authsize);
-        for (var i = 0; i < authsize; i++)
+        var authSize = encodedInvokeHostFunctionOp.Auth.Length;
+        stream.WriteInt(authSize);
+        for (var i = 0; i < authSize; i++)
         {
             SorobanAuthorizationEntry.Encode(stream, encodedInvokeHostFunctionOp.Auth[i]);
         }
@@ -40,11 +40,11 @@ public class InvokeHostFunctionOp
         maxDepth -= 1;
         var decodedInvokeHostFunctionOp = new InvokeHostFunctionOp();
         decodedInvokeHostFunctionOp.HostFunction = HostFunction.Decode(stream, maxDepth);
-        var authsize = stream.ReadInt();
-        if (authsize < 0)
-            throw new InvalidDataException("auth size " + authsize + " is negative");
-        decodedInvokeHostFunctionOp.Auth = new SorobanAuthorizationEntry[authsize];
-        for (var i = 0; i < authsize; i++)
+        var authSize = stream.ReadInt();
+        if (authSize < 0)
+            throw new InvalidDataException("auth size " + authSize + " is negative");
+        decodedInvokeHostFunctionOp.Auth = new SorobanAuthorizationEntry[authSize];
+        for (var i = 0; i < authSize; i++)
         {
             decodedInvokeHostFunctionOp.Auth[i] = SorobanAuthorizationEntry.Decode(stream, maxDepth);
         }

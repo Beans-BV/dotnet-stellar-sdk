@@ -27,9 +27,9 @@ public class TransactionMetaV2
     public static void Encode(XdrDataOutputStream stream, TransactionMetaV2 encodedTransactionMetaV2)
     {
         LedgerEntryChanges.Encode(stream, encodedTransactionMetaV2.TxChangesBefore);
-        var operationssize = encodedTransactionMetaV2.Operations.Length;
-        stream.WriteInt(operationssize);
-        for (var i = 0; i < operationssize; i++)
+        var operationsSize = encodedTransactionMetaV2.Operations.Length;
+        stream.WriteInt(operationsSize);
+        for (var i = 0; i < operationsSize; i++)
         {
             OperationMeta.Encode(stream, encodedTransactionMetaV2.Operations[i]);
         }
@@ -43,11 +43,11 @@ public class TransactionMetaV2
         maxDepth -= 1;
         var decodedTransactionMetaV2 = new TransactionMetaV2();
         decodedTransactionMetaV2.TxChangesBefore = LedgerEntryChanges.Decode(stream, maxDepth);
-        var operationssize = stream.ReadInt();
-        if (operationssize < 0)
-            throw new InvalidDataException("operations size " + operationssize + " is negative");
-        decodedTransactionMetaV2.Operations = new OperationMeta[operationssize];
-        for (var i = 0; i < operationssize; i++)
+        var operationsSize = stream.ReadInt();
+        if (operationsSize < 0)
+            throw new InvalidDataException("operations size " + operationsSize + " is negative");
+        decodedTransactionMetaV2.Operations = new OperationMeta[operationsSize];
+        for (var i = 0; i < operationsSize; i++)
         {
             decodedTransactionMetaV2.Operations[i] = OperationMeta.Decode(stream, maxDepth);
         }

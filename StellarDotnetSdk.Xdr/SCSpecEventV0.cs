@@ -33,19 +33,19 @@ public class SCSpecEventV0
         stream.WriteString(encodedSCSpecEventV0.Doc);
         stream.WriteString(encodedSCSpecEventV0.Lib);
         SCSymbol.Encode(stream, encodedSCSpecEventV0.Name);
-        var prefixTopicssize = encodedSCSpecEventV0.PrefixTopics.Length;
-        if (prefixTopicssize > 2)
-            throw new ArgumentException("prefixTopics size " + prefixTopicssize + " exceeds max size 2");
-        stream.WriteInt(prefixTopicssize);
-        for (var i = 0; i < prefixTopicssize; i++)
+        var prefixTopicsSize = encodedSCSpecEventV0.PrefixTopics.Length;
+        if (prefixTopicsSize > 2)
+            throw new ArgumentException("prefixTopics size " + prefixTopicsSize + " exceeds max size 2");
+        stream.WriteInt(prefixTopicsSize);
+        for (var i = 0; i < prefixTopicsSize; i++)
         {
             SCSymbol.Encode(stream, encodedSCSpecEventV0.PrefixTopics[i]);
         }
-        var paramssize = encodedSCSpecEventV0.Params.Length;
-        if (paramssize > 50)
-            throw new ArgumentException("params size " + paramssize + " exceeds max size 50");
-        stream.WriteInt(paramssize);
-        for (var i = 0; i < paramssize; i++)
+        var paramsSize = encodedSCSpecEventV0.Params.Length;
+        if (paramsSize > 50)
+            throw new ArgumentException("params size " + paramsSize + " exceeds max size 50");
+        stream.WriteInt(paramsSize);
+        for (var i = 0; i < paramsSize; i++)
         {
             SCSpecEventParamV0.Encode(stream, encodedSCSpecEventV0.Params[i]);
         }
@@ -61,23 +61,23 @@ public class SCSpecEventV0
         decodedSCSpecEventV0.Doc = stream.ReadString();
         decodedSCSpecEventV0.Lib = stream.ReadString();
         decodedSCSpecEventV0.Name = SCSymbol.Decode(stream, maxDepth);
-        var prefixTopicssize = stream.ReadInt();
-        if (prefixTopicssize < 0)
-            throw new InvalidDataException("prefixTopics size " + prefixTopicssize + " is negative");
-        if (prefixTopicssize > 2)
-            throw new InvalidDataException("prefixTopics size " + prefixTopicssize + " exceeds max size 2");
-        decodedSCSpecEventV0.PrefixTopics = new SCSymbol[prefixTopicssize];
-        for (var i = 0; i < prefixTopicssize; i++)
+        var prefixTopicsSize = stream.ReadInt();
+        if (prefixTopicsSize < 0)
+            throw new InvalidDataException("prefixTopics size " + prefixTopicsSize + " is negative");
+        if (prefixTopicsSize > 2)
+            throw new InvalidDataException("prefixTopics size " + prefixTopicsSize + " exceeds max size 2");
+        decodedSCSpecEventV0.PrefixTopics = new SCSymbol[prefixTopicsSize];
+        for (var i = 0; i < prefixTopicsSize; i++)
         {
             decodedSCSpecEventV0.PrefixTopics[i] = SCSymbol.Decode(stream, maxDepth);
         }
-        var paramssize = stream.ReadInt();
-        if (paramssize < 0)
-            throw new InvalidDataException("params size " + paramssize + " is negative");
-        if (paramssize > 50)
-            throw new InvalidDataException("params size " + paramssize + " exceeds max size 50");
-        decodedSCSpecEventV0.Params = new SCSpecEventParamV0[paramssize];
-        for (var i = 0; i < paramssize; i++)
+        var paramsSize = stream.ReadInt();
+        if (paramsSize < 0)
+            throw new InvalidDataException("params size " + paramsSize + " is negative");
+        if (paramsSize > 50)
+            throw new InvalidDataException("params size " + paramsSize + " exceeds max size 50");
+        decodedSCSpecEventV0.Params = new SCSpecEventParamV0[paramsSize];
+        for (var i = 0; i < paramsSize; i++)
         {
             decodedSCSpecEventV0.Params[i] = SCSpecEventParamV0.Decode(stream, maxDepth);
         }

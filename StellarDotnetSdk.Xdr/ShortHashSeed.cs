@@ -20,10 +20,10 @@ public class ShortHashSeed
 
     public static void Encode(XdrDataOutputStream stream, ShortHashSeed encodedShortHashSeed)
     {
-        var seedsize = encodedShortHashSeed.Seed.Length;
-        if (seedsize != 16)
-            throw new ArgumentException("seed size " + seedsize + " does not match fixed size 16");
-        stream.Write(encodedShortHashSeed.Seed, 0, seedsize);
+        var seedSize = encodedShortHashSeed.Seed.Length;
+        if (seedSize != 16)
+            throw new ArgumentException("seed size " + seedSize + " does not match fixed size 16");
+        stream.Write(encodedShortHashSeed.Seed, 0, seedSize);
     }
 
     public static ShortHashSeed Decode(XdrDataInputStream stream, int maxDepth)
@@ -32,9 +32,9 @@ public class ShortHashSeed
             throw new InvalidDataException("Maximum decoding depth reached while decoding ShortHashSeed");
         maxDepth -= 1;
         var decodedShortHashSeed = new ShortHashSeed();
-        var seedsize = 16;
-        decodedShortHashSeed.Seed = new byte[seedsize];
-        stream.Read(decodedShortHashSeed.Seed, 0, seedsize);
+        var seedSize = 16;
+        decodedShortHashSeed.Seed = new byte[seedSize];
+        stream.Read(decodedShortHashSeed.Seed, 0, seedSize);
         return decodedShortHashSeed;
     }
 

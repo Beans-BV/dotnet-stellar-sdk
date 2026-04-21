@@ -34,9 +34,9 @@ public class TransactionMetaV3
     {
         ExtensionPoint.Encode(stream, encodedTransactionMetaV3.Ext);
         LedgerEntryChanges.Encode(stream, encodedTransactionMetaV3.TxChangesBefore);
-        var operationssize = encodedTransactionMetaV3.Operations.Length;
-        stream.WriteInt(operationssize);
-        for (var i = 0; i < operationssize; i++)
+        var operationsSize = encodedTransactionMetaV3.Operations.Length;
+        stream.WriteInt(operationsSize);
+        for (var i = 0; i < operationsSize; i++)
         {
             OperationMeta.Encode(stream, encodedTransactionMetaV3.Operations[i]);
         }
@@ -60,17 +60,17 @@ public class TransactionMetaV3
         var decodedTransactionMetaV3 = new TransactionMetaV3();
         decodedTransactionMetaV3.Ext = ExtensionPoint.Decode(stream, maxDepth);
         decodedTransactionMetaV3.TxChangesBefore = LedgerEntryChanges.Decode(stream, maxDepth);
-        var operationssize = stream.ReadInt();
-        if (operationssize < 0)
-            throw new InvalidDataException("operations size " + operationssize + " is negative");
-        decodedTransactionMetaV3.Operations = new OperationMeta[operationssize];
-        for (var i = 0; i < operationssize; i++)
+        var operationsSize = stream.ReadInt();
+        if (operationsSize < 0)
+            throw new InvalidDataException("operations size " + operationsSize + " is negative");
+        decodedTransactionMetaV3.Operations = new OperationMeta[operationsSize];
+        for (var i = 0; i < operationsSize; i++)
         {
             decodedTransactionMetaV3.Operations[i] = OperationMeta.Decode(stream, maxDepth);
         }
         decodedTransactionMetaV3.TxChangesAfter = LedgerEntryChanges.Decode(stream, maxDepth);
-        var SorobanMetaPresent = stream.ReadInt();
-        if (SorobanMetaPresent != 0)
+        var sorobanMetaPresent = stream.ReadInt();
+        if (sorobanMetaPresent != 0)
         {
             decodedTransactionMetaV3.SorobanMeta = SorobanTransactionMeta.Decode(stream, maxDepth);
         }

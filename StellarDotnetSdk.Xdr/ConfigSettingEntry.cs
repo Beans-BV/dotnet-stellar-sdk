@@ -111,9 +111,9 @@ public class ConfigSettingEntry
                 ConfigSettingContractExecutionLanesV0.Encode(stream, encodedConfigSettingEntry.ContractExecutionLanes);
                 break;
             case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW:
-                var liveSorobanStateSizeWindowsize = encodedConfigSettingEntry.LiveSorobanStateSizeWindow.Length;
-                stream.WriteInt(liveSorobanStateSizeWindowsize);
-                for (var i = 0; i < liveSorobanStateSizeWindowsize; i++)
+                var liveSorobanStateSizeWindowSize = encodedConfigSettingEntry.LiveSorobanStateSizeWindow.Length;
+                stream.WriteInt(liveSorobanStateSizeWindowSize);
+                for (var i = 0; i < liveSorobanStateSizeWindowSize; i++)
                 {
                     Uint64.Encode(stream, encodedConfigSettingEntry.LiveSorobanStateSizeWindow[i]);
                 }
@@ -182,11 +182,11 @@ public class ConfigSettingEntry
                 decodedConfigSettingEntry.ContractExecutionLanes = ConfigSettingContractExecutionLanesV0.Decode(stream, maxDepth);
                 break;
             case ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW:
-                var liveSorobanStateSizeWindowsize = stream.ReadInt();
-                if (liveSorobanStateSizeWindowsize < 0)
-                    throw new InvalidDataException("liveSorobanStateSizeWindow size " + liveSorobanStateSizeWindowsize + " is negative");
-                decodedConfigSettingEntry.LiveSorobanStateSizeWindow = new Uint64[liveSorobanStateSizeWindowsize];
-                for (var i = 0; i < liveSorobanStateSizeWindowsize; i++)
+                var liveSorobanStateSizeWindowSize = stream.ReadInt();
+                if (liveSorobanStateSizeWindowSize < 0)
+                    throw new InvalidDataException("liveSorobanStateSizeWindow size " + liveSorobanStateSizeWindowSize + " is negative");
+                decodedConfigSettingEntry.LiveSorobanStateSizeWindow = new Uint64[liveSorobanStateSizeWindowSize];
+                for (var i = 0; i < liveSorobanStateSizeWindowSize; i++)
                 {
                     decodedConfigSettingEntry.LiveSorobanStateSizeWindow[i] = Uint64.Decode(stream, maxDepth);
                 }

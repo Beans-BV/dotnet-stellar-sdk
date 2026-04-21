@@ -50,9 +50,9 @@ public class SerializedBinaryFuseFilter
         Uint32.Encode(stream, encodedSerializedBinaryFuseFilter.SegmentCount);
         Uint32.Encode(stream, encodedSerializedBinaryFuseFilter.SegmentCountLength);
         Uint32.Encode(stream, encodedSerializedBinaryFuseFilter.FingerprintLength);
-        var fingerprintssize = encodedSerializedBinaryFuseFilter.Fingerprints.Length;
-        stream.WriteInt(fingerprintssize);
-        stream.Write(encodedSerializedBinaryFuseFilter.Fingerprints, 0, fingerprintssize);
+        var fingerprintsSize = encodedSerializedBinaryFuseFilter.Fingerprints.Length;
+        stream.WriteInt(fingerprintsSize);
+        stream.Write(encodedSerializedBinaryFuseFilter.Fingerprints, 0, fingerprintsSize);
     }
 
     public static SerializedBinaryFuseFilter Decode(XdrDataInputStream stream, int maxDepth)
@@ -69,14 +69,14 @@ public class SerializedBinaryFuseFilter
         decodedSerializedBinaryFuseFilter.SegmentCount = Uint32.Decode(stream, maxDepth);
         decodedSerializedBinaryFuseFilter.SegmentCountLength = Uint32.Decode(stream, maxDepth);
         decodedSerializedBinaryFuseFilter.FingerprintLength = Uint32.Decode(stream, maxDepth);
-        var fingerprintssize = stream.ReadInt();
-        if (fingerprintssize < 0)
-            throw new InvalidDataException("fingerprints size " + fingerprintssize + " is negative");
+        var fingerprintsSize = stream.ReadInt();
+        if (fingerprintsSize < 0)
+            throw new InvalidDataException("fingerprints size " + fingerprintsSize + " is negative");
         var fingerprintsRemainingInputLen = stream.GetRemainingInputLen();
-        if (fingerprintsRemainingInputLen >= 0 && fingerprintsRemainingInputLen < fingerprintssize)
-            throw new InvalidDataException("fingerprints size " + fingerprintssize + " exceeds remaining input length " + fingerprintsRemainingInputLen);
-        decodedSerializedBinaryFuseFilter.Fingerprints = new byte[fingerprintssize];
-        stream.Read(decodedSerializedBinaryFuseFilter.Fingerprints, 0, fingerprintssize);
+        if (fingerprintsRemainingInputLen >= 0 && fingerprintsRemainingInputLen < fingerprintsSize)
+            throw new InvalidDataException("fingerprints size " + fingerprintsSize + " exceeds remaining input length " + fingerprintsRemainingInputLen);
+        decodedSerializedBinaryFuseFilter.Fingerprints = new byte[fingerprintsSize];
+        stream.Read(decodedSerializedBinaryFuseFilter.Fingerprints, 0, fingerprintsSize);
         return decodedSerializedBinaryFuseFilter;
     }
 

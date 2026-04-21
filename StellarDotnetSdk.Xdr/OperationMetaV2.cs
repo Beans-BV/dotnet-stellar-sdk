@@ -28,9 +28,9 @@ public class OperationMetaV2
     {
         ExtensionPoint.Encode(stream, encodedOperationMetaV2.Ext);
         LedgerEntryChanges.Encode(stream, encodedOperationMetaV2.Changes);
-        var eventssize = encodedOperationMetaV2.Events.Length;
-        stream.WriteInt(eventssize);
-        for (var i = 0; i < eventssize; i++)
+        var eventsSize = encodedOperationMetaV2.Events.Length;
+        stream.WriteInt(eventsSize);
+        for (var i = 0; i < eventsSize; i++)
         {
             ContractEvent.Encode(stream, encodedOperationMetaV2.Events[i]);
         }
@@ -44,11 +44,11 @@ public class OperationMetaV2
         var decodedOperationMetaV2 = new OperationMetaV2();
         decodedOperationMetaV2.Ext = ExtensionPoint.Decode(stream, maxDepth);
         decodedOperationMetaV2.Changes = LedgerEntryChanges.Decode(stream, maxDepth);
-        var eventssize = stream.ReadInt();
-        if (eventssize < 0)
-            throw new InvalidDataException("events size " + eventssize + " is negative");
-        decodedOperationMetaV2.Events = new ContractEvent[eventssize];
-        for (var i = 0; i < eventssize; i++)
+        var eventsSize = stream.ReadInt();
+        if (eventsSize < 0)
+            throw new InvalidDataException("events size " + eventsSize + " is negative");
+        decodedOperationMetaV2.Events = new ContractEvent[eventsSize];
+        for (var i = 0; i < eventsSize; i++)
         {
             decodedOperationMetaV2.Events[i] = ContractEvent.Decode(stream, maxDepth);
         }

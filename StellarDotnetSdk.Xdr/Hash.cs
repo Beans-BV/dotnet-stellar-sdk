@@ -26,10 +26,10 @@ public class Hash
 
     public static void Encode(XdrDataOutputStream stream, Hash encodedHash)
     {
-        var Hashsize = encodedHash.InnerValue.Length;
-        if (Hashsize != 32)
-            throw new ArgumentException("Hash size " + Hashsize + " does not match fixed size 32");
-        stream.Write(encodedHash.InnerValue, 0, Hashsize);
+        var hashSize = encodedHash.InnerValue.Length;
+        if (hashSize != 32)
+            throw new ArgumentException("Hash size " + hashSize + " does not match fixed size 32");
+        stream.Write(encodedHash.InnerValue, 0, hashSize);
     }
 
     public static Hash Decode(XdrDataInputStream stream, int maxDepth)
@@ -38,9 +38,9 @@ public class Hash
             throw new InvalidDataException("Maximum decoding depth reached while decoding Hash");
         maxDepth -= 1;
         var decodedHash = new Hash();
-        var Hashsize = 32;
-        decodedHash.InnerValue = new byte[Hashsize];
-        stream.Read(decodedHash.InnerValue, 0, Hashsize);
+        var hashSize = 32;
+        decodedHash.InnerValue = new byte[hashSize];
+        stream.Read(decodedHash.InnerValue, 0, hashSize);
         return decodedHash;
     }
 

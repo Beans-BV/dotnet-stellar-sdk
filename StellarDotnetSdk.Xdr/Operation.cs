@@ -101,8 +101,8 @@ public class Operation
             throw new InvalidDataException("Maximum decoding depth reached while decoding Operation");
         maxDepth -= 1;
         var decodedOperation = new Operation();
-        var SourceAccountPresent = stream.ReadInt();
-        if (SourceAccountPresent != 0)
+        var sourceAccountPresent = stream.ReadInt();
+        if (sourceAccountPresent != 0)
         {
             decodedOperation.SourceAccount = MuxedAccount.Decode(stream, maxDepth);
         }

@@ -23,9 +23,9 @@ public class SorobanResourcesExtV0
 
     public static void Encode(XdrDataOutputStream stream, SorobanResourcesExtV0 encodedSorobanResourcesExtV0)
     {
-        var archivedSorobanEntriessize = encodedSorobanResourcesExtV0.ArchivedSorobanEntries.Length;
-        stream.WriteInt(archivedSorobanEntriessize);
-        for (var i = 0; i < archivedSorobanEntriessize; i++)
+        var archivedSorobanEntriesSize = encodedSorobanResourcesExtV0.ArchivedSorobanEntries.Length;
+        stream.WriteInt(archivedSorobanEntriesSize);
+        for (var i = 0; i < archivedSorobanEntriesSize; i++)
         {
             Uint32.Encode(stream, encodedSorobanResourcesExtV0.ArchivedSorobanEntries[i]);
         }
@@ -37,11 +37,11 @@ public class SorobanResourcesExtV0
             throw new InvalidDataException("Maximum decoding depth reached while decoding SorobanResourcesExtV0");
         maxDepth -= 1;
         var decodedSorobanResourcesExtV0 = new SorobanResourcesExtV0();
-        var archivedSorobanEntriessize = stream.ReadInt();
-        if (archivedSorobanEntriessize < 0)
-            throw new InvalidDataException("archivedSorobanEntries size " + archivedSorobanEntriessize + " is negative");
-        decodedSorobanResourcesExtV0.ArchivedSorobanEntries = new Uint32[archivedSorobanEntriessize];
-        for (var i = 0; i < archivedSorobanEntriessize; i++)
+        var archivedSorobanEntriesSize = stream.ReadInt();
+        if (archivedSorobanEntriesSize < 0)
+            throw new InvalidDataException("archivedSorobanEntries size " + archivedSorobanEntriesSize + " is negative");
+        decodedSorobanResourcesExtV0.ArchivedSorobanEntries = new Uint32[archivedSorobanEntriesSize];
+        for (var i = 0; i < archivedSorobanEntriesSize; i++)
         {
             decodedSorobanResourcesExtV0.ArchivedSorobanEntries[i] = Uint32.Decode(stream, maxDepth);
         }

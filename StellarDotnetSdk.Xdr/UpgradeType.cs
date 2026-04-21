@@ -26,11 +26,11 @@ public class UpgradeType
 
     public static void Encode(XdrDataOutputStream stream, UpgradeType encodedUpgradeType)
     {
-        var UpgradeTypesize = encodedUpgradeType.InnerValue.Length;
-        if (UpgradeTypesize > 128)
-            throw new ArgumentException("UpgradeType size " + UpgradeTypesize + " exceeds max size 128");
-        stream.WriteInt(UpgradeTypesize);
-        stream.Write(encodedUpgradeType.InnerValue, 0, UpgradeTypesize);
+        var upgradeTypeSize = encodedUpgradeType.InnerValue.Length;
+        if (upgradeTypeSize > 128)
+            throw new ArgumentException("UpgradeType size " + upgradeTypeSize + " exceeds max size 128");
+        stream.WriteInt(upgradeTypeSize);
+        stream.Write(encodedUpgradeType.InnerValue, 0, upgradeTypeSize);
     }
 
     public static UpgradeType Decode(XdrDataInputStream stream, int maxDepth)
@@ -39,16 +39,16 @@ public class UpgradeType
             throw new InvalidDataException("Maximum decoding depth reached while decoding UpgradeType");
         maxDepth -= 1;
         var decodedUpgradeType = new UpgradeType();
-        var UpgradeTypesize = stream.ReadInt();
-        if (UpgradeTypesize < 0)
-            throw new InvalidDataException("UpgradeType size " + UpgradeTypesize + " is negative");
-        if (UpgradeTypesize > 128)
-            throw new InvalidDataException("UpgradeType size " + UpgradeTypesize + " exceeds max size 128");
-        var UpgradeTypeRemainingInputLen = stream.GetRemainingInputLen();
-        if (UpgradeTypeRemainingInputLen >= 0 && UpgradeTypeRemainingInputLen < UpgradeTypesize)
-            throw new InvalidDataException("UpgradeType size " + UpgradeTypesize + " exceeds remaining input length " + UpgradeTypeRemainingInputLen);
-        decodedUpgradeType.InnerValue = new byte[UpgradeTypesize];
-        stream.Read(decodedUpgradeType.InnerValue, 0, UpgradeTypesize);
+        var upgradeTypeSize = stream.ReadInt();
+        if (upgradeTypeSize < 0)
+            throw new InvalidDataException("UpgradeType size " + upgradeTypeSize + " is negative");
+        if (upgradeTypeSize > 128)
+            throw new InvalidDataException("UpgradeType size " + upgradeTypeSize + " exceeds max size 128");
+        var upgradeTypeRemainingInputLen = stream.GetRemainingInputLen();
+        if (upgradeTypeRemainingInputLen >= 0 && upgradeTypeRemainingInputLen < upgradeTypeSize)
+            throw new InvalidDataException("UpgradeType size " + upgradeTypeSize + " exceeds remaining input length " + upgradeTypeRemainingInputLen);
+        decodedUpgradeType.InnerValue = new byte[upgradeTypeSize];
+        stream.Read(decodedUpgradeType.InnerValue, 0, upgradeTypeSize);
         return decodedUpgradeType;
     }
 

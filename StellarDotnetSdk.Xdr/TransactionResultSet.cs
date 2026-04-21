@@ -20,9 +20,9 @@ public class TransactionResultSet
 
     public static void Encode(XdrDataOutputStream stream, TransactionResultSet encodedTransactionResultSet)
     {
-        var resultssize = encodedTransactionResultSet.Results.Length;
-        stream.WriteInt(resultssize);
-        for (var i = 0; i < resultssize; i++)
+        var resultsSize = encodedTransactionResultSet.Results.Length;
+        stream.WriteInt(resultsSize);
+        for (var i = 0; i < resultsSize; i++)
         {
             TransactionResultPair.Encode(stream, encodedTransactionResultSet.Results[i]);
         }
@@ -34,11 +34,11 @@ public class TransactionResultSet
             throw new InvalidDataException("Maximum decoding depth reached while decoding TransactionResultSet");
         maxDepth -= 1;
         var decodedTransactionResultSet = new TransactionResultSet();
-        var resultssize = stream.ReadInt();
-        if (resultssize < 0)
-            throw new InvalidDataException("results size " + resultssize + " is negative");
-        decodedTransactionResultSet.Results = new TransactionResultPair[resultssize];
-        for (var i = 0; i < resultssize; i++)
+        var resultsSize = stream.ReadInt();
+        if (resultsSize < 0)
+            throw new InvalidDataException("results size " + resultsSize + " is negative");
+        decodedTransactionResultSet.Results = new TransactionResultPair[resultsSize];
+        for (var i = 0; i < resultsSize; i++)
         {
             decodedTransactionResultSet.Results[i] = TransactionResultPair.Decode(stream, maxDepth);
         }

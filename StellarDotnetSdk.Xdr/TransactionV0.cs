@@ -50,11 +50,11 @@ public class TransactionV0
             stream.WriteInt(0);
         }
         Memo.Encode(stream, encodedTransactionV0.Memo);
-        var operationssize = encodedTransactionV0.Operations.Length;
-        if (operationssize > 100)
-            throw new ArgumentException("operations size " + operationssize + " exceeds max size 100");
-        stream.WriteInt(operationssize);
-        for (var i = 0; i < operationssize; i++)
+        var operationsSize = encodedTransactionV0.Operations.Length;
+        if (operationsSize > 100)
+            throw new ArgumentException("operations size " + operationsSize + " exceeds max size 100");
+        stream.WriteInt(operationsSize);
+        for (var i = 0; i < operationsSize; i++)
         {
             Operation.Encode(stream, encodedTransactionV0.Operations[i]);
         }
@@ -70,19 +70,19 @@ public class TransactionV0
         decodedTransactionV0.SourceAccountEd25519 = Uint256.Decode(stream, maxDepth);
         decodedTransactionV0.Fee = Uint32.Decode(stream, maxDepth);
         decodedTransactionV0.SeqNum = SequenceNumber.Decode(stream, maxDepth);
-        var TimeBoundsPresent = stream.ReadInt();
-        if (TimeBoundsPresent != 0)
+        var timeBoundsPresent = stream.ReadInt();
+        if (timeBoundsPresent != 0)
         {
             decodedTransactionV0.TimeBounds = TimeBounds.Decode(stream, maxDepth);
         }
         decodedTransactionV0.Memo = Memo.Decode(stream, maxDepth);
-        var operationssize = stream.ReadInt();
-        if (operationssize < 0)
-            throw new InvalidDataException("operations size " + operationssize + " is negative");
-        if (operationssize > 100)
-            throw new InvalidDataException("operations size " + operationssize + " exceeds max size 100");
-        decodedTransactionV0.Operations = new Operation[operationssize];
-        for (var i = 0; i < operationssize; i++)
+        var operationsSize = stream.ReadInt();
+        if (operationsSize < 0)
+            throw new InvalidDataException("operations size " + operationsSize + " is negative");
+        if (operationsSize > 100)
+            throw new InvalidDataException("operations size " + operationsSize + " exceeds max size 100");
+        decodedTransactionV0.Operations = new Operation[operationsSize];
+        for (var i = 0; i < operationsSize; i++)
         {
             decodedTransactionV0.Operations[i] = Operation.Decode(stream, maxDepth);
         }

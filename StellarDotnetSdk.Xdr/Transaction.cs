@@ -54,11 +54,11 @@ public class Transaction
         SequenceNumber.Encode(stream, encodedTransaction.SeqNum);
         Preconditions.Encode(stream, encodedTransaction.Cond);
         Memo.Encode(stream, encodedTransaction.Memo);
-        var operationssize = encodedTransaction.Operations.Length;
-        if (operationssize > 100)
-            throw new ArgumentException("operations size " + operationssize + " exceeds max size 100");
-        stream.WriteInt(operationssize);
-        for (var i = 0; i < operationssize; i++)
+        var operationsSize = encodedTransaction.Operations.Length;
+        if (operationsSize > 100)
+            throw new ArgumentException("operations size " + operationsSize + " exceeds max size 100");
+        stream.WriteInt(operationsSize);
+        for (var i = 0; i < operationsSize; i++)
         {
             Operation.Encode(stream, encodedTransaction.Operations[i]);
         }
@@ -76,13 +76,13 @@ public class Transaction
         decodedTransaction.SeqNum = SequenceNumber.Decode(stream, maxDepth);
         decodedTransaction.Cond = Preconditions.Decode(stream, maxDepth);
         decodedTransaction.Memo = Memo.Decode(stream, maxDepth);
-        var operationssize = stream.ReadInt();
-        if (operationssize < 0)
-            throw new InvalidDataException("operations size " + operationssize + " is negative");
-        if (operationssize > 100)
-            throw new InvalidDataException("operations size " + operationssize + " exceeds max size 100");
-        decodedTransaction.Operations = new Operation[operationssize];
-        for (var i = 0; i < operationssize; i++)
+        var operationsSize = stream.ReadInt();
+        if (operationsSize < 0)
+            throw new InvalidDataException("operations size " + operationsSize + " is negative");
+        if (operationsSize > 100)
+            throw new InvalidDataException("operations size " + operationsSize + " exceeds max size 100");
+        decodedTransaction.Operations = new Operation[operationsSize];
+        for (var i = 0; i < operationsSize; i++)
         {
             decodedTransaction.Operations[i] = Operation.Decode(stream, maxDepth);
         }

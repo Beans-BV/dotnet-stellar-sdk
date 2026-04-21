@@ -132,48 +132,48 @@ public class SetOptionsOp
             throw new InvalidDataException("Maximum decoding depth reached while decoding SetOptionsOp");
         maxDepth -= 1;
         var decodedSetOptionsOp = new SetOptionsOp();
-        var InflationDestPresent = stream.ReadInt();
-        if (InflationDestPresent != 0)
+        var inflationDestPresent = stream.ReadInt();
+        if (inflationDestPresent != 0)
         {
             decodedSetOptionsOp.InflationDest = AccountID.Decode(stream, maxDepth);
         }
-        var ClearFlagsPresent = stream.ReadInt();
-        if (ClearFlagsPresent != 0)
+        var clearFlagsPresent = stream.ReadInt();
+        if (clearFlagsPresent != 0)
         {
             decodedSetOptionsOp.ClearFlags = Uint32.Decode(stream, maxDepth);
         }
-        var SetFlagsPresent = stream.ReadInt();
-        if (SetFlagsPresent != 0)
+        var setFlagsPresent = stream.ReadInt();
+        if (setFlagsPresent != 0)
         {
             decodedSetOptionsOp.SetFlags = Uint32.Decode(stream, maxDepth);
         }
-        var MasterWeightPresent = stream.ReadInt();
-        if (MasterWeightPresent != 0)
+        var masterWeightPresent = stream.ReadInt();
+        if (masterWeightPresent != 0)
         {
             decodedSetOptionsOp.MasterWeight = Uint32.Decode(stream, maxDepth);
         }
-        var LowThresholdPresent = stream.ReadInt();
-        if (LowThresholdPresent != 0)
+        var lowThresholdPresent = stream.ReadInt();
+        if (lowThresholdPresent != 0)
         {
             decodedSetOptionsOp.LowThreshold = Uint32.Decode(stream, maxDepth);
         }
-        var MedThresholdPresent = stream.ReadInt();
-        if (MedThresholdPresent != 0)
+        var medThresholdPresent = stream.ReadInt();
+        if (medThresholdPresent != 0)
         {
             decodedSetOptionsOp.MedThreshold = Uint32.Decode(stream, maxDepth);
         }
-        var HighThresholdPresent = stream.ReadInt();
-        if (HighThresholdPresent != 0)
+        var highThresholdPresent = stream.ReadInt();
+        if (highThresholdPresent != 0)
         {
             decodedSetOptionsOp.HighThreshold = Uint32.Decode(stream, maxDepth);
         }
-        var HomeDomainPresent = stream.ReadInt();
-        if (HomeDomainPresent != 0)
+        var homeDomainPresent = stream.ReadInt();
+        if (homeDomainPresent != 0)
         {
             decodedSetOptionsOp.HomeDomain = String32.Decode(stream, maxDepth);
         }
-        var SignerPresent = stream.ReadInt();
-        if (SignerPresent != 0)
+        var signerPresent = stream.ReadInt();
+        if (signerPresent != 0)
         {
             decodedSetOptionsOp.Signer = Signer.Decode(stream, maxDepth);
         }

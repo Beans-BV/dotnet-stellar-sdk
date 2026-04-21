@@ -26,9 +26,9 @@ public class SorobanAuthorizationEntries
 
     public static void Encode(XdrDataOutputStream stream, SorobanAuthorizationEntries encodedSorobanAuthorizationEntries)
     {
-        var SorobanAuthorizationEntriessize = encodedSorobanAuthorizationEntries.InnerValue.Length;
-        stream.WriteInt(SorobanAuthorizationEntriessize);
-        for (var i = 0; i < SorobanAuthorizationEntriessize; i++)
+        var sorobanAuthorizationEntriesSize = encodedSorobanAuthorizationEntries.InnerValue.Length;
+        stream.WriteInt(sorobanAuthorizationEntriesSize);
+        for (var i = 0; i < sorobanAuthorizationEntriesSize; i++)
         {
             SorobanAuthorizationEntry.Encode(stream, encodedSorobanAuthorizationEntries.InnerValue[i]);
         }
@@ -40,11 +40,11 @@ public class SorobanAuthorizationEntries
             throw new InvalidDataException("Maximum decoding depth reached while decoding SorobanAuthorizationEntries");
         maxDepth -= 1;
         var decodedSorobanAuthorizationEntries = new SorobanAuthorizationEntries();
-        var SorobanAuthorizationEntriessize = stream.ReadInt();
-        if (SorobanAuthorizationEntriessize < 0)
-            throw new InvalidDataException("SorobanAuthorizationEntries size " + SorobanAuthorizationEntriessize + " is negative");
-        decodedSorobanAuthorizationEntries.InnerValue = new SorobanAuthorizationEntry[SorobanAuthorizationEntriessize];
-        for (var i = 0; i < SorobanAuthorizationEntriessize; i++)
+        var sorobanAuthorizationEntriesSize = stream.ReadInt();
+        if (sorobanAuthorizationEntriesSize < 0)
+            throw new InvalidDataException("SorobanAuthorizationEntries size " + sorobanAuthorizationEntriesSize + " is negative");
+        decodedSorobanAuthorizationEntries.InnerValue = new SorobanAuthorizationEntry[sorobanAuthorizationEntriesSize];
+        for (var i = 0; i < sorobanAuthorizationEntriesSize; i++)
         {
             decodedSorobanAuthorizationEntries.InnerValue[i] = SorobanAuthorizationEntry.Decode(stream, maxDepth);
         }

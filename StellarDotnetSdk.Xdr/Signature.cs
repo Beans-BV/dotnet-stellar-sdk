@@ -26,11 +26,11 @@ public class Signature
 
     public static void Encode(XdrDataOutputStream stream, Signature encodedSignature)
     {
-        var Signaturesize = encodedSignature.InnerValue.Length;
-        if (Signaturesize > 64)
-            throw new ArgumentException("Signature size " + Signaturesize + " exceeds max size 64");
-        stream.WriteInt(Signaturesize);
-        stream.Write(encodedSignature.InnerValue, 0, Signaturesize);
+        var signatureSize = encodedSignature.InnerValue.Length;
+        if (signatureSize > 64)
+            throw new ArgumentException("Signature size " + signatureSize + " exceeds max size 64");
+        stream.WriteInt(signatureSize);
+        stream.Write(encodedSignature.InnerValue, 0, signatureSize);
     }
 
     public static Signature Decode(XdrDataInputStream stream, int maxDepth)
@@ -39,16 +39,16 @@ public class Signature
             throw new InvalidDataException("Maximum decoding depth reached while decoding Signature");
         maxDepth -= 1;
         var decodedSignature = new Signature();
-        var Signaturesize = stream.ReadInt();
-        if (Signaturesize < 0)
-            throw new InvalidDataException("Signature size " + Signaturesize + " is negative");
-        if (Signaturesize > 64)
-            throw new InvalidDataException("Signature size " + Signaturesize + " exceeds max size 64");
-        var SignatureRemainingInputLen = stream.GetRemainingInputLen();
-        if (SignatureRemainingInputLen >= 0 && SignatureRemainingInputLen < Signaturesize)
-            throw new InvalidDataException("Signature size " + Signaturesize + " exceeds remaining input length " + SignatureRemainingInputLen);
-        decodedSignature.InnerValue = new byte[Signaturesize];
-        stream.Read(decodedSignature.InnerValue, 0, Signaturesize);
+        var signatureSize = stream.ReadInt();
+        if (signatureSize < 0)
+            throw new InvalidDataException("Signature size " + signatureSize + " is negative");
+        if (signatureSize > 64)
+            throw new InvalidDataException("Signature size " + signatureSize + " exceeds max size 64");
+        var signatureRemainingInputLen = stream.GetRemainingInputLen();
+        if (signatureRemainingInputLen >= 0 && signatureRemainingInputLen < signatureSize)
+            throw new InvalidDataException("Signature size " + signatureSize + " exceeds remaining input length " + signatureRemainingInputLen);
+        decodedSignature.InnerValue = new byte[signatureSize];
+        stream.Read(decodedSignature.InnerValue, 0, signatureSize);
         return decodedSignature;
     }
 

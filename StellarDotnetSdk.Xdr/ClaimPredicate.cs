@@ -44,21 +44,21 @@ public class ClaimPredicate
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_UNCONDITIONAL:
                 break;
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_AND:
-                var andPredicatessize = encodedClaimPredicate.AndPredicates.Length;
-                if (andPredicatessize > 2)
-                    throw new ArgumentException("andPredicates size " + andPredicatessize + " exceeds max size 2");
-                stream.WriteInt(andPredicatessize);
-                for (var i = 0; i < andPredicatessize; i++)
+                var andPredicatesSize = encodedClaimPredicate.AndPredicates.Length;
+                if (andPredicatesSize > 2)
+                    throw new ArgumentException("andPredicates size " + andPredicatesSize + " exceeds max size 2");
+                stream.WriteInt(andPredicatesSize);
+                for (var i = 0; i < andPredicatesSize; i++)
                 {
                     ClaimPredicate.Encode(stream, encodedClaimPredicate.AndPredicates[i]);
                 }
                 break;
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_OR:
-                var orPredicatessize = encodedClaimPredicate.OrPredicates.Length;
-                if (orPredicatessize > 2)
-                    throw new ArgumentException("orPredicates size " + orPredicatessize + " exceeds max size 2");
-                stream.WriteInt(orPredicatessize);
-                for (var i = 0; i < orPredicatessize; i++)
+                var orPredicatesSize = encodedClaimPredicate.OrPredicates.Length;
+                if (orPredicatesSize > 2)
+                    throw new ArgumentException("orPredicates size " + orPredicatesSize + " exceeds max size 2");
+                stream.WriteInt(orPredicatesSize);
+                for (var i = 0; i < orPredicatesSize; i++)
                 {
                     ClaimPredicate.Encode(stream, encodedClaimPredicate.OrPredicates[i]);
                 }
@@ -98,32 +98,32 @@ public class ClaimPredicate
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_UNCONDITIONAL:
                 break;
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_AND:
-                var andPredicatessize = stream.ReadInt();
-                if (andPredicatessize < 0)
-                    throw new InvalidDataException("andPredicates size " + andPredicatessize + " is negative");
-                if (andPredicatessize > 2)
-                    throw new InvalidDataException("andPredicates size " + andPredicatessize + " exceeds max size 2");
-                decodedClaimPredicate.AndPredicates = new ClaimPredicate[andPredicatessize];
-                for (var i = 0; i < andPredicatessize; i++)
+                var andPredicatesSize = stream.ReadInt();
+                if (andPredicatesSize < 0)
+                    throw new InvalidDataException("andPredicates size " + andPredicatesSize + " is negative");
+                if (andPredicatesSize > 2)
+                    throw new InvalidDataException("andPredicates size " + andPredicatesSize + " exceeds max size 2");
+                decodedClaimPredicate.AndPredicates = new ClaimPredicate[andPredicatesSize];
+                for (var i = 0; i < andPredicatesSize; i++)
                 {
                     decodedClaimPredicate.AndPredicates[i] = ClaimPredicate.Decode(stream, maxDepth);
                 }
                 break;
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_OR:
-                var orPredicatessize = stream.ReadInt();
-                if (orPredicatessize < 0)
-                    throw new InvalidDataException("orPredicates size " + orPredicatessize + " is negative");
-                if (orPredicatessize > 2)
-                    throw new InvalidDataException("orPredicates size " + orPredicatessize + " exceeds max size 2");
-                decodedClaimPredicate.OrPredicates = new ClaimPredicate[orPredicatessize];
-                for (var i = 0; i < orPredicatessize; i++)
+                var orPredicatesSize = stream.ReadInt();
+                if (orPredicatesSize < 0)
+                    throw new InvalidDataException("orPredicates size " + orPredicatesSize + " is negative");
+                if (orPredicatesSize > 2)
+                    throw new InvalidDataException("orPredicates size " + orPredicatesSize + " exceeds max size 2");
+                decodedClaimPredicate.OrPredicates = new ClaimPredicate[orPredicatesSize];
+                for (var i = 0; i < orPredicatesSize; i++)
                 {
                     decodedClaimPredicate.OrPredicates[i] = ClaimPredicate.Decode(stream, maxDepth);
                 }
                 break;
             case ClaimPredicateType.ClaimPredicateTypeEnum.CLAIM_PREDICATE_NOT:
-                var NotPredicatePresent = stream.ReadInt();
-                if (NotPredicatePresent != 0)
+                var notPredicatePresent = stream.ReadInt();
+                if (notPredicatePresent != 0)
                 {
                     decodedClaimPredicate.NotPredicate = ClaimPredicate.Decode(stream, maxDepth);
                 }

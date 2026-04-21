@@ -29,9 +29,9 @@ public class InflationResult
         switch (encodedInflationResult.Discriminant.InnerValue)
         {
             case InflationResultCode.InflationResultCodeEnum.INFLATION_SUCCESS:
-                var payoutssize = encodedInflationResult.Payouts.Length;
-                stream.WriteInt(payoutssize);
-                for (var i = 0; i < payoutssize; i++)
+                var payoutsSize = encodedInflationResult.Payouts.Length;
+                stream.WriteInt(payoutsSize);
+                for (var i = 0; i < payoutsSize; i++)
                 {
                     InflationPayout.Encode(stream, encodedInflationResult.Payouts[i]);
                 }
@@ -54,11 +54,11 @@ public class InflationResult
         switch (decodedInflationResult.Discriminant.InnerValue)
         {
             case InflationResultCode.InflationResultCodeEnum.INFLATION_SUCCESS:
-                var payoutssize = stream.ReadInt();
-                if (payoutssize < 0)
-                    throw new InvalidDataException("payouts size " + payoutssize + " is negative");
-                decodedInflationResult.Payouts = new InflationPayout[payoutssize];
-                for (var i = 0; i < payoutssize; i++)
+                var payoutsSize = stream.ReadInt();
+                if (payoutsSize < 0)
+                    throw new InvalidDataException("payouts size " + payoutsSize + " is negative");
+                decodedInflationResult.Payouts = new InflationPayout[payoutsSize];
+                for (var i = 0; i < payoutsSize; i++)
                 {
                     decodedInflationResult.Payouts[i] = InflationPayout.Decode(stream, maxDepth);
                 }

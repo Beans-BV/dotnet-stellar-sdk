@@ -26,11 +26,11 @@ public class EncryptedBody
 
     public static void Encode(XdrDataOutputStream stream, EncryptedBody encodedEncryptedBody)
     {
-        var EncryptedBodysize = encodedEncryptedBody.InnerValue.Length;
-        if (EncryptedBodysize > 64000)
-            throw new ArgumentException("EncryptedBody size " + EncryptedBodysize + " exceeds max size 64000");
-        stream.WriteInt(EncryptedBodysize);
-        stream.Write(encodedEncryptedBody.InnerValue, 0, EncryptedBodysize);
+        var encryptedBodySize = encodedEncryptedBody.InnerValue.Length;
+        if (encryptedBodySize > 64000)
+            throw new ArgumentException("EncryptedBody size " + encryptedBodySize + " exceeds max size 64000");
+        stream.WriteInt(encryptedBodySize);
+        stream.Write(encodedEncryptedBody.InnerValue, 0, encryptedBodySize);
     }
 
     public static EncryptedBody Decode(XdrDataInputStream stream, int maxDepth)
@@ -39,16 +39,16 @@ public class EncryptedBody
             throw new InvalidDataException("Maximum decoding depth reached while decoding EncryptedBody");
         maxDepth -= 1;
         var decodedEncryptedBody = new EncryptedBody();
-        var EncryptedBodysize = stream.ReadInt();
-        if (EncryptedBodysize < 0)
-            throw new InvalidDataException("EncryptedBody size " + EncryptedBodysize + " is negative");
-        if (EncryptedBodysize > 64000)
-            throw new InvalidDataException("EncryptedBody size " + EncryptedBodysize + " exceeds max size 64000");
-        var EncryptedBodyRemainingInputLen = stream.GetRemainingInputLen();
-        if (EncryptedBodyRemainingInputLen >= 0 && EncryptedBodyRemainingInputLen < EncryptedBodysize)
-            throw new InvalidDataException("EncryptedBody size " + EncryptedBodysize + " exceeds remaining input length " + EncryptedBodyRemainingInputLen);
-        decodedEncryptedBody.InnerValue = new byte[EncryptedBodysize];
-        stream.Read(decodedEncryptedBody.InnerValue, 0, EncryptedBodysize);
+        var encryptedBodySize = stream.ReadInt();
+        if (encryptedBodySize < 0)
+            throw new InvalidDataException("EncryptedBody size " + encryptedBodySize + " is negative");
+        if (encryptedBodySize > 64000)
+            throw new InvalidDataException("EncryptedBody size " + encryptedBodySize + " exceeds max size 64000");
+        var encryptedBodyRemainingInputLen = stream.GetRemainingInputLen();
+        if (encryptedBodyRemainingInputLen >= 0 && encryptedBodyRemainingInputLen < encryptedBodySize)
+            throw new InvalidDataException("EncryptedBody size " + encryptedBodySize + " exceeds remaining input length " + encryptedBodyRemainingInputLen);
+        decodedEncryptedBody.InnerValue = new byte[encryptedBodySize];
+        stream.Read(decodedEncryptedBody.InnerValue, 0, encryptedBodySize);
         return decodedEncryptedBody;
     }
 

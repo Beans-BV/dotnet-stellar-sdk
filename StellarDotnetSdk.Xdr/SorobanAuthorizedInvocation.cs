@@ -23,9 +23,9 @@ public class SorobanAuthorizedInvocation
     public static void Encode(XdrDataOutputStream stream, SorobanAuthorizedInvocation encodedSorobanAuthorizedInvocation)
     {
         SorobanAuthorizedFunction.Encode(stream, encodedSorobanAuthorizedInvocation.Function);
-        var subInvocationssize = encodedSorobanAuthorizedInvocation.SubInvocations.Length;
-        stream.WriteInt(subInvocationssize);
-        for (var i = 0; i < subInvocationssize; i++)
+        var subInvocationsSize = encodedSorobanAuthorizedInvocation.SubInvocations.Length;
+        stream.WriteInt(subInvocationsSize);
+        for (var i = 0; i < subInvocationsSize; i++)
         {
             SorobanAuthorizedInvocation.Encode(stream, encodedSorobanAuthorizedInvocation.SubInvocations[i]);
         }
@@ -38,11 +38,11 @@ public class SorobanAuthorizedInvocation
         maxDepth -= 1;
         var decodedSorobanAuthorizedInvocation = new SorobanAuthorizedInvocation();
         decodedSorobanAuthorizedInvocation.Function = SorobanAuthorizedFunction.Decode(stream, maxDepth);
-        var subInvocationssize = stream.ReadInt();
-        if (subInvocationssize < 0)
-            throw new InvalidDataException("subInvocations size " + subInvocationssize + " is negative");
-        decodedSorobanAuthorizedInvocation.SubInvocations = new SorobanAuthorizedInvocation[subInvocationssize];
-        for (var i = 0; i < subInvocationssize; i++)
+        var subInvocationsSize = stream.ReadInt();
+        if (subInvocationsSize < 0)
+            throw new InvalidDataException("subInvocations size " + subInvocationsSize + " is negative");
+        decodedSorobanAuthorizedInvocation.SubInvocations = new SorobanAuthorizedInvocation[subInvocationsSize];
+        for (var i = 0; i < subInvocationsSize; i++)
         {
             decodedSorobanAuthorizedInvocation.SubInvocations[i] = SorobanAuthorizedInvocation.Decode(stream, maxDepth);
         }

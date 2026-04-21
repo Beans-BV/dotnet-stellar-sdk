@@ -29,11 +29,11 @@ public class SCSpecUDTErrorEnumV0
         stream.WriteString(encodedSCSpecUDTErrorEnumV0.Doc);
         stream.WriteString(encodedSCSpecUDTErrorEnumV0.Lib);
         stream.WriteString(encodedSCSpecUDTErrorEnumV0.Name);
-        var casessize = encodedSCSpecUDTErrorEnumV0.Cases.Length;
-        if (casessize > 50)
-            throw new ArgumentException("cases size " + casessize + " exceeds max size 50");
-        stream.WriteInt(casessize);
-        for (var i = 0; i < casessize; i++)
+        var casesSize = encodedSCSpecUDTErrorEnumV0.Cases.Length;
+        if (casesSize > 50)
+            throw new ArgumentException("cases size " + casesSize + " exceeds max size 50");
+        stream.WriteInt(casesSize);
+        for (var i = 0; i < casesSize; i++)
         {
             SCSpecUDTErrorEnumCaseV0.Encode(stream, encodedSCSpecUDTErrorEnumV0.Cases[i]);
         }
@@ -48,13 +48,13 @@ public class SCSpecUDTErrorEnumV0
         decodedSCSpecUDTErrorEnumV0.Doc = stream.ReadString();
         decodedSCSpecUDTErrorEnumV0.Lib = stream.ReadString();
         decodedSCSpecUDTErrorEnumV0.Name = stream.ReadString();
-        var casessize = stream.ReadInt();
-        if (casessize < 0)
-            throw new InvalidDataException("cases size " + casessize + " is negative");
-        if (casessize > 50)
-            throw new InvalidDataException("cases size " + casessize + " exceeds max size 50");
-        decodedSCSpecUDTErrorEnumV0.Cases = new SCSpecUDTErrorEnumCaseV0[casessize];
-        for (var i = 0; i < casessize; i++)
+        var casesSize = stream.ReadInt();
+        if (casesSize < 0)
+            throw new InvalidDataException("cases size " + casesSize + " is negative");
+        if (casesSize > 50)
+            throw new InvalidDataException("cases size " + casesSize + " exceeds max size 50");
+        decodedSCSpecUDTErrorEnumV0.Cases = new SCSpecUDTErrorEnumCaseV0[casesSize];
+        for (var i = 0; i < casesSize; i++)
         {
             decodedSCSpecUDTErrorEnumV0.Cases[i] = SCSpecUDTErrorEnumCaseV0.Decode(stream, maxDepth);
         }

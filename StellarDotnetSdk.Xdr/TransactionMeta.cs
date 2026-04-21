@@ -39,9 +39,9 @@ public class TransactionMeta
         switch (encodedTransactionMeta.Discriminant)
         {
             case 0:
-                var operationssize = encodedTransactionMeta.Operations.Length;
-                stream.WriteInt(operationssize);
-                for (var i = 0; i < operationssize; i++)
+                var operationsSize = encodedTransactionMeta.Operations.Length;
+                stream.WriteInt(operationsSize);
+                for (var i = 0; i < operationsSize; i++)
                 {
                     OperationMeta.Encode(stream, encodedTransactionMeta.Operations[i]);
                 }
@@ -74,11 +74,11 @@ public class TransactionMeta
         switch (decodedTransactionMeta.Discriminant)
         {
             case 0:
-                var operationssize = stream.ReadInt();
-                if (operationssize < 0)
-                    throw new InvalidDataException("operations size " + operationssize + " is negative");
-                decodedTransactionMeta.Operations = new OperationMeta[operationssize];
-                for (var i = 0; i < operationssize; i++)
+                var operationsSize = stream.ReadInt();
+                if (operationsSize < 0)
+                    throw new InvalidDataException("operations size " + operationsSize + " is negative");
+                decodedTransactionMeta.Operations = new OperationMeta[operationsSize];
+                for (var i = 0; i < operationsSize; i++)
                 {
                     decodedTransactionMeta.Operations[i] = OperationMeta.Decode(stream, maxDepth);
                 }

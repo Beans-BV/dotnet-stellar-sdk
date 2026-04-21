@@ -39,11 +39,11 @@ public class PathPaymentStrictSendOp
         MuxedAccount.Encode(stream, encodedPathPaymentStrictSendOp.Destination);
         Asset.Encode(stream, encodedPathPaymentStrictSendOp.DestAsset);
         Int64.Encode(stream, encodedPathPaymentStrictSendOp.DestMin);
-        var pathsize = encodedPathPaymentStrictSendOp.Path.Length;
-        if (pathsize > 5)
-            throw new ArgumentException("path size " + pathsize + " exceeds max size 5");
-        stream.WriteInt(pathsize);
-        for (var i = 0; i < pathsize; i++)
+        var pathSize = encodedPathPaymentStrictSendOp.Path.Length;
+        if (pathSize > 5)
+            throw new ArgumentException("path size " + pathSize + " exceeds max size 5");
+        stream.WriteInt(pathSize);
+        for (var i = 0; i < pathSize; i++)
         {
             Asset.Encode(stream, encodedPathPaymentStrictSendOp.Path[i]);
         }
@@ -60,13 +60,13 @@ public class PathPaymentStrictSendOp
         decodedPathPaymentStrictSendOp.Destination = MuxedAccount.Decode(stream, maxDepth);
         decodedPathPaymentStrictSendOp.DestAsset = Asset.Decode(stream, maxDepth);
         decodedPathPaymentStrictSendOp.DestMin = Int64.Decode(stream, maxDepth);
-        var pathsize = stream.ReadInt();
-        if (pathsize < 0)
-            throw new InvalidDataException("path size " + pathsize + " is negative");
-        if (pathsize > 5)
-            throw new InvalidDataException("path size " + pathsize + " exceeds max size 5");
-        decodedPathPaymentStrictSendOp.Path = new Asset[pathsize];
-        for (var i = 0; i < pathsize; i++)
+        var pathSize = stream.ReadInt();
+        if (pathSize < 0)
+            throw new InvalidDataException("path size " + pathSize + " is negative");
+        if (pathSize > 5)
+            throw new InvalidDataException("path size " + pathSize + " exceeds max size 5");
+        decodedPathPaymentStrictSendOp.Path = new Asset[pathSize];
+        for (var i = 0; i < pathSize; i++)
         {
             decodedPathPaymentStrictSendOp.Path[i] = Asset.Decode(stream, maxDepth);
         }

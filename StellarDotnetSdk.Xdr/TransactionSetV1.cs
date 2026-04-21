@@ -23,9 +23,9 @@ public class TransactionSetV1
     public static void Encode(XdrDataOutputStream stream, TransactionSetV1 encodedTransactionSetV1)
     {
         Hash.Encode(stream, encodedTransactionSetV1.PreviousLedgerHash);
-        var phasessize = encodedTransactionSetV1.Phases.Length;
-        stream.WriteInt(phasessize);
-        for (var i = 0; i < phasessize; i++)
+        var phasesSize = encodedTransactionSetV1.Phases.Length;
+        stream.WriteInt(phasesSize);
+        for (var i = 0; i < phasesSize; i++)
         {
             TransactionPhase.Encode(stream, encodedTransactionSetV1.Phases[i]);
         }
@@ -38,11 +38,11 @@ public class TransactionSetV1
         maxDepth -= 1;
         var decodedTransactionSetV1 = new TransactionSetV1();
         decodedTransactionSetV1.PreviousLedgerHash = Hash.Decode(stream, maxDepth);
-        var phasessize = stream.ReadInt();
-        if (phasessize < 0)
-            throw new InvalidDataException("phases size " + phasessize + " is negative");
-        decodedTransactionSetV1.Phases = new TransactionPhase[phasessize];
-        for (var i = 0; i < phasessize; i++)
+        var phasesSize = stream.ReadInt();
+        if (phasesSize < 0)
+            throw new InvalidDataException("phases size " + phasesSize + " is negative");
+        decodedTransactionSetV1.Phases = new TransactionPhase[phasesSize];
+        for (var i = 0; i < phasesSize; i++)
         {
             decodedTransactionSetV1.Phases[i] = TransactionPhase.Decode(stream, maxDepth);
         }

@@ -41,8 +41,8 @@ public class ManageDataOp
         maxDepth -= 1;
         var decodedManageDataOp = new ManageDataOp();
         decodedManageDataOp.DataName = String64.Decode(stream, maxDepth);
-        var DataValuePresent = stream.ReadInt();
-        if (DataValuePresent != 0)
+        var dataValuePresent = stream.ReadInt();
+        if (dataValuePresent != 0)
         {
             decodedManageDataOp.DataValue = DataValue.Decode(stream, maxDepth);
         }

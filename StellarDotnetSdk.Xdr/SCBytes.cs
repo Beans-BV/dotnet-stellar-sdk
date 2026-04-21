@@ -26,9 +26,9 @@ public class SCBytes
 
     public static void Encode(XdrDataOutputStream stream, SCBytes encodedSCBytes)
     {
-        var SCBytessize = encodedSCBytes.InnerValue.Length;
-        stream.WriteInt(SCBytessize);
-        stream.Write(encodedSCBytes.InnerValue, 0, SCBytessize);
+        var sCBytesSize = encodedSCBytes.InnerValue.Length;
+        stream.WriteInt(sCBytesSize);
+        stream.Write(encodedSCBytes.InnerValue, 0, sCBytesSize);
     }
 
     public static SCBytes Decode(XdrDataInputStream stream, int maxDepth)
@@ -37,14 +37,14 @@ public class SCBytes
             throw new InvalidDataException("Maximum decoding depth reached while decoding SCBytes");
         maxDepth -= 1;
         var decodedSCBytes = new SCBytes();
-        var SCBytessize = stream.ReadInt();
-        if (SCBytessize < 0)
-            throw new InvalidDataException("SCBytes size " + SCBytessize + " is negative");
-        var SCBytesRemainingInputLen = stream.GetRemainingInputLen();
-        if (SCBytesRemainingInputLen >= 0 && SCBytesRemainingInputLen < SCBytessize)
-            throw new InvalidDataException("SCBytes size " + SCBytessize + " exceeds remaining input length " + SCBytesRemainingInputLen);
-        decodedSCBytes.InnerValue = new byte[SCBytessize];
-        stream.Read(decodedSCBytes.InnerValue, 0, SCBytessize);
+        var sCBytesSize = stream.ReadInt();
+        if (sCBytesSize < 0)
+            throw new InvalidDataException("SCBytes size " + sCBytesSize + " is negative");
+        var sCBytesRemainingInputLen = stream.GetRemainingInputLen();
+        if (sCBytesRemainingInputLen >= 0 && sCBytesRemainingInputLen < sCBytesSize)
+            throw new InvalidDataException("SCBytes size " + sCBytesSize + " exceeds remaining input length " + sCBytesRemainingInputLen);
+        decodedSCBytes.InnerValue = new byte[sCBytesSize];
+        stream.Read(decodedSCBytes.InnerValue, 0, sCBytesSize);
         return decodedSCBytes;
     }
 

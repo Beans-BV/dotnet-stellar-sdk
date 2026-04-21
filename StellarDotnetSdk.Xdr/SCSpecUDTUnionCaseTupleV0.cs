@@ -26,11 +26,11 @@ public class SCSpecUDTUnionCaseTupleV0
     {
         stream.WriteString(encodedSCSpecUDTUnionCaseTupleV0.Doc);
         stream.WriteString(encodedSCSpecUDTUnionCaseTupleV0.Name);
-        var typesize = encodedSCSpecUDTUnionCaseTupleV0.Type.Length;
-        if (typesize > 12)
-            throw new ArgumentException("type size " + typesize + " exceeds max size 12");
-        stream.WriteInt(typesize);
-        for (var i = 0; i < typesize; i++)
+        var typeSize = encodedSCSpecUDTUnionCaseTupleV0.Type.Length;
+        if (typeSize > 12)
+            throw new ArgumentException("type size " + typeSize + " exceeds max size 12");
+        stream.WriteInt(typeSize);
+        for (var i = 0; i < typeSize; i++)
         {
             SCSpecTypeDef.Encode(stream, encodedSCSpecUDTUnionCaseTupleV0.Type[i]);
         }
@@ -44,13 +44,13 @@ public class SCSpecUDTUnionCaseTupleV0
         var decodedSCSpecUDTUnionCaseTupleV0 = new SCSpecUDTUnionCaseTupleV0();
         decodedSCSpecUDTUnionCaseTupleV0.Doc = stream.ReadString();
         decodedSCSpecUDTUnionCaseTupleV0.Name = stream.ReadString();
-        var typesize = stream.ReadInt();
-        if (typesize < 0)
-            throw new InvalidDataException("type size " + typesize + " is negative");
-        if (typesize > 12)
-            throw new InvalidDataException("type size " + typesize + " exceeds max size 12");
-        decodedSCSpecUDTUnionCaseTupleV0.Type = new SCSpecTypeDef[typesize];
-        for (var i = 0; i < typesize; i++)
+        var typeSize = stream.ReadInt();
+        if (typeSize < 0)
+            throw new InvalidDataException("type size " + typeSize + " is negative");
+        if (typeSize > 12)
+            throw new InvalidDataException("type size " + typeSize + " exceeds max size 12");
+        decodedSCSpecUDTUnionCaseTupleV0.Type = new SCSpecTypeDef[typeSize];
+        for (var i = 0; i < typeSize; i++)
         {
             decodedSCSpecUDTUnionCaseTupleV0.Type[i] = SCSpecTypeDef.Decode(stream, maxDepth);
         }

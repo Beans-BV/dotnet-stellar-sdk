@@ -82,11 +82,11 @@ public class PreconditionsV2
         }
         Duration.Encode(stream, encodedPreconditionsV2.MinSeqAge);
         Uint32.Encode(stream, encodedPreconditionsV2.MinSeqLedgerGap);
-        var extraSignerssize = encodedPreconditionsV2.ExtraSigners.Length;
-        if (extraSignerssize > 2)
-            throw new ArgumentException("extraSigners size " + extraSignerssize + " exceeds max size 2");
-        stream.WriteInt(extraSignerssize);
-        for (var i = 0; i < extraSignerssize; i++)
+        var extraSignersSize = encodedPreconditionsV2.ExtraSigners.Length;
+        if (extraSignersSize > 2)
+            throw new ArgumentException("extraSigners size " + extraSignersSize + " exceeds max size 2");
+        stream.WriteInt(extraSignersSize);
+        for (var i = 0; i < extraSignersSize; i++)
         {
             SignerKey.Encode(stream, encodedPreconditionsV2.ExtraSigners[i]);
         }
@@ -98,30 +98,30 @@ public class PreconditionsV2
             throw new InvalidDataException("Maximum decoding depth reached while decoding PreconditionsV2");
         maxDepth -= 1;
         var decodedPreconditionsV2 = new PreconditionsV2();
-        var TimeBoundsPresent = stream.ReadInt();
-        if (TimeBoundsPresent != 0)
+        var timeBoundsPresent = stream.ReadInt();
+        if (timeBoundsPresent != 0)
         {
             decodedPreconditionsV2.TimeBounds = TimeBounds.Decode(stream, maxDepth);
         }
-        var LedgerBoundsPresent = stream.ReadInt();
-        if (LedgerBoundsPresent != 0)
+        var ledgerBoundsPresent = stream.ReadInt();
+        if (ledgerBoundsPresent != 0)
         {
             decodedPreconditionsV2.LedgerBounds = LedgerBounds.Decode(stream, maxDepth);
         }
-        var MinSeqNumPresent = stream.ReadInt();
-        if (MinSeqNumPresent != 0)
+        var minSeqNumPresent = stream.ReadInt();
+        if (minSeqNumPresent != 0)
         {
             decodedPreconditionsV2.MinSeqNum = SequenceNumber.Decode(stream, maxDepth);
         }
         decodedPreconditionsV2.MinSeqAge = Duration.Decode(stream, maxDepth);
         decodedPreconditionsV2.MinSeqLedgerGap = Uint32.Decode(stream, maxDepth);
-        var extraSignerssize = stream.ReadInt();
-        if (extraSignerssize < 0)
-            throw new InvalidDataException("extraSigners size " + extraSignerssize + " is negative");
-        if (extraSignerssize > 2)
-            throw new InvalidDataException("extraSigners size " + extraSignerssize + " exceeds max size 2");
-        decodedPreconditionsV2.ExtraSigners = new SignerKey[extraSignerssize];
-        for (var i = 0; i < extraSignerssize; i++)
+        var extraSignersSize = stream.ReadInt();
+        if (extraSignersSize < 0)
+            throw new InvalidDataException("extraSigners size " + extraSignersSize + " is negative");
+        if (extraSignersSize > 2)
+            throw new InvalidDataException("extraSigners size " + extraSignersSize + " exceeds max size 2");
+        decodedPreconditionsV2.ExtraSigners = new SignerKey[extraSignersSize];
+        for (var i = 0; i < extraSignersSize; i++)
         {
             decodedPreconditionsV2.ExtraSigners[i] = SignerKey.Decode(stream, maxDepth);
         }

@@ -25,9 +25,9 @@ public class InvokeContractArgs
     {
         SCAddress.Encode(stream, encodedInvokeContractArgs.ContractAddress);
         SCSymbol.Encode(stream, encodedInvokeContractArgs.FunctionName);
-        var argssize = encodedInvokeContractArgs.Args.Length;
-        stream.WriteInt(argssize);
-        for (var i = 0; i < argssize; i++)
+        var argsSize = encodedInvokeContractArgs.Args.Length;
+        stream.WriteInt(argsSize);
+        for (var i = 0; i < argsSize; i++)
         {
             SCVal.Encode(stream, encodedInvokeContractArgs.Args[i]);
         }
@@ -41,11 +41,11 @@ public class InvokeContractArgs
         var decodedInvokeContractArgs = new InvokeContractArgs();
         decodedInvokeContractArgs.ContractAddress = SCAddress.Decode(stream, maxDepth);
         decodedInvokeContractArgs.FunctionName = SCSymbol.Decode(stream, maxDepth);
-        var argssize = stream.ReadInt();
-        if (argssize < 0)
-            throw new InvalidDataException("args size " + argssize + " is negative");
-        decodedInvokeContractArgs.Args = new SCVal[argssize];
-        for (var i = 0; i < argssize; i++)
+        var argsSize = stream.ReadInt();
+        if (argsSize < 0)
+            throw new InvalidDataException("args size " + argsSize + " is negative");
+        decodedInvokeContractArgs.Args = new SCVal[argsSize];
+        for (var i = 0; i < argsSize; i++)
         {
             decodedInvokeContractArgs.Args[i] = SCVal.Decode(stream, maxDepth);
         }

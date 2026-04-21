@@ -26,9 +26,9 @@ public class LedgerEntryChanges
 
     public static void Encode(XdrDataOutputStream stream, LedgerEntryChanges encodedLedgerEntryChanges)
     {
-        var LedgerEntryChangessize = encodedLedgerEntryChanges.InnerValue.Length;
-        stream.WriteInt(LedgerEntryChangessize);
-        for (var i = 0; i < LedgerEntryChangessize; i++)
+        var ledgerEntryChangesSize = encodedLedgerEntryChanges.InnerValue.Length;
+        stream.WriteInt(ledgerEntryChangesSize);
+        for (var i = 0; i < ledgerEntryChangesSize; i++)
         {
             LedgerEntryChange.Encode(stream, encodedLedgerEntryChanges.InnerValue[i]);
         }
@@ -40,11 +40,11 @@ public class LedgerEntryChanges
             throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerEntryChanges");
         maxDepth -= 1;
         var decodedLedgerEntryChanges = new LedgerEntryChanges();
-        var LedgerEntryChangessize = stream.ReadInt();
-        if (LedgerEntryChangessize < 0)
-            throw new InvalidDataException("LedgerEntryChanges size " + LedgerEntryChangessize + " is negative");
-        decodedLedgerEntryChanges.InnerValue = new LedgerEntryChange[LedgerEntryChangessize];
-        for (var i = 0; i < LedgerEntryChangessize; i++)
+        var ledgerEntryChangesSize = stream.ReadInt();
+        if (ledgerEntryChangesSize < 0)
+            throw new InvalidDataException("LedgerEntryChanges size " + ledgerEntryChangesSize + " is negative");
+        decodedLedgerEntryChanges.InnerValue = new LedgerEntryChange[ledgerEntryChangesSize];
+        for (var i = 0; i < ledgerEntryChangesSize; i++)
         {
             decodedLedgerEntryChanges.InnerValue[i] = LedgerEntryChange.Decode(stream, maxDepth);
         }

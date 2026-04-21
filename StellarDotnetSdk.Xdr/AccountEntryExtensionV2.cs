@@ -36,11 +36,11 @@ public class AccountEntryExtensionV2
     {
         Uint32.Encode(stream, encodedAccountEntryExtensionV2.NumSponsored);
         Uint32.Encode(stream, encodedAccountEntryExtensionV2.NumSponsoring);
-        var signerSponsoringIDssize = encodedAccountEntryExtensionV2.SignerSponsoringIDs.Length;
-        if (signerSponsoringIDssize > 20)
-            throw new ArgumentException("signerSponsoringIDs size " + signerSponsoringIDssize + " exceeds max size 20");
-        stream.WriteInt(signerSponsoringIDssize);
-        for (var i = 0; i < signerSponsoringIDssize; i++)
+        var signerSponsoringIDsSize = encodedAccountEntryExtensionV2.SignerSponsoringIDs.Length;
+        if (signerSponsoringIDsSize > 20)
+            throw new ArgumentException("signerSponsoringIDs size " + signerSponsoringIDsSize + " exceeds max size 20");
+        stream.WriteInt(signerSponsoringIDsSize);
+        for (var i = 0; i < signerSponsoringIDsSize; i++)
         {
             SponsorshipDescriptor.Encode(stream, encodedAccountEntryExtensionV2.SignerSponsoringIDs[i]);
         }
@@ -55,13 +55,13 @@ public class AccountEntryExtensionV2
         var decodedAccountEntryExtensionV2 = new AccountEntryExtensionV2();
         decodedAccountEntryExtensionV2.NumSponsored = Uint32.Decode(stream, maxDepth);
         decodedAccountEntryExtensionV2.NumSponsoring = Uint32.Decode(stream, maxDepth);
-        var signerSponsoringIDssize = stream.ReadInt();
-        if (signerSponsoringIDssize < 0)
-            throw new InvalidDataException("signerSponsoringIDs size " + signerSponsoringIDssize + " is negative");
-        if (signerSponsoringIDssize > 20)
-            throw new InvalidDataException("signerSponsoringIDs size " + signerSponsoringIDssize + " exceeds max size 20");
-        decodedAccountEntryExtensionV2.SignerSponsoringIDs = new SponsorshipDescriptor[signerSponsoringIDssize];
-        for (var i = 0; i < signerSponsoringIDssize; i++)
+        var signerSponsoringIDsSize = stream.ReadInt();
+        if (signerSponsoringIDsSize < 0)
+            throw new InvalidDataException("signerSponsoringIDs size " + signerSponsoringIDsSize + " is negative");
+        if (signerSponsoringIDsSize > 20)
+            throw new InvalidDataException("signerSponsoringIDs size " + signerSponsoringIDsSize + " exceeds max size 20");
+        decodedAccountEntryExtensionV2.SignerSponsoringIDs = new SponsorshipDescriptor[signerSponsoringIDsSize];
+        for (var i = 0; i < signerSponsoringIDsSize; i++)
         {
             decodedAccountEntryExtensionV2.SignerSponsoringIDs[i] = SponsorshipDescriptor.Decode(stream, maxDepth);
         }

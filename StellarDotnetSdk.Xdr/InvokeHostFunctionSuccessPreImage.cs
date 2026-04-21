@@ -23,9 +23,9 @@ public class InvokeHostFunctionSuccessPreImage
     public static void Encode(XdrDataOutputStream stream, InvokeHostFunctionSuccessPreImage encodedInvokeHostFunctionSuccessPreImage)
     {
         SCVal.Encode(stream, encodedInvokeHostFunctionSuccessPreImage.ReturnValue);
-        var eventssize = encodedInvokeHostFunctionSuccessPreImage.Events.Length;
-        stream.WriteInt(eventssize);
-        for (var i = 0; i < eventssize; i++)
+        var eventsSize = encodedInvokeHostFunctionSuccessPreImage.Events.Length;
+        stream.WriteInt(eventsSize);
+        for (var i = 0; i < eventsSize; i++)
         {
             ContractEvent.Encode(stream, encodedInvokeHostFunctionSuccessPreImage.Events[i]);
         }
@@ -38,11 +38,11 @@ public class InvokeHostFunctionSuccessPreImage
         maxDepth -= 1;
         var decodedInvokeHostFunctionSuccessPreImage = new InvokeHostFunctionSuccessPreImage();
         decodedInvokeHostFunctionSuccessPreImage.ReturnValue = SCVal.Decode(stream, maxDepth);
-        var eventssize = stream.ReadInt();
-        if (eventssize < 0)
-            throw new InvalidDataException("events size " + eventssize + " is negative");
-        decodedInvokeHostFunctionSuccessPreImage.Events = new ContractEvent[eventssize];
-        for (var i = 0; i < eventssize; i++)
+        var eventsSize = stream.ReadInt();
+        if (eventsSize < 0)
+            throw new InvalidDataException("events size " + eventsSize + " is negative");
+        decodedInvokeHostFunctionSuccessPreImage.Events = new ContractEvent[eventsSize];
+        for (var i = 0; i < eventsSize; i++)
         {
             decodedInvokeHostFunctionSuccessPreImage.Events[i] = ContractEvent.Decode(stream, maxDepth);
         }

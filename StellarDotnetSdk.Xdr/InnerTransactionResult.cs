@@ -92,9 +92,9 @@ public class InnerTransactionResult
             {
                 case TransactionResultCode.TransactionResultCodeEnum.txSUCCESS:
                 case TransactionResultCode.TransactionResultCodeEnum.txFAILED:
-                    var resultssize = encodedInnerTransactionResultResult.Results.Length;
-                    stream.WriteInt(resultssize);
-                    for (var i = 0; i < resultssize; i++)
+                    var resultsSize = encodedInnerTransactionResultResult.Results.Length;
+                    stream.WriteInt(resultsSize);
+                    for (var i = 0; i < resultsSize; i++)
                     {
                         OperationResult.Encode(stream, encodedInnerTransactionResultResult.Results[i]);
                     }
@@ -132,11 +132,11 @@ public class InnerTransactionResult
             {
                 case TransactionResultCode.TransactionResultCodeEnum.txSUCCESS:
                 case TransactionResultCode.TransactionResultCodeEnum.txFAILED:
-                    var resultssize = stream.ReadInt();
-                    if (resultssize < 0)
-                        throw new InvalidDataException("results size " + resultssize + " is negative");
-                    decodedInnerTransactionResultResult.Results = new OperationResult[resultssize];
-                    for (var i = 0; i < resultssize; i++)
+                    var resultsSize = stream.ReadInt();
+                    if (resultsSize < 0)
+                        throw new InvalidDataException("results size " + resultsSize + " is negative");
+                    decodedInnerTransactionResultResult.Results = new OperationResult[resultsSize];
+                    for (var i = 0; i < resultsSize; i++)
                     {
                         decodedInnerTransactionResultResult.Results[i] = OperationResult.Decode(stream, maxDepth);
                     }

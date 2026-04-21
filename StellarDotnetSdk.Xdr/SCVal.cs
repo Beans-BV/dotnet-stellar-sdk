@@ -243,15 +243,15 @@ public class SCVal
                 decodedSCVal.Sym = SCSymbol.Decode(stream, maxDepth);
                 break;
             case SCValType.SCValTypeEnum.SCV_VEC:
-                var VecPresent = stream.ReadInt();
-                if (VecPresent != 0)
+                var vecPresent = stream.ReadInt();
+                if (vecPresent != 0)
                 {
                     decodedSCVal.Vec = SCVec.Decode(stream, maxDepth);
                 }
                 break;
             case SCValType.SCValTypeEnum.SCV_MAP:
-                var MapPresent = stream.ReadInt();
-                if (MapPresent != 0)
+                var mapPresent = stream.ReadInt();
+                if (mapPresent != 0)
                 {
                     decodedSCVal.Map = SCMap.Decode(stream, maxDepth);
                 }

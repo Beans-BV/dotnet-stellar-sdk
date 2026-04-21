@@ -110,11 +110,11 @@ public class StellarMessage
                 DontHave.Encode(stream, encodedStellarMessage.DontHave);
                 break;
             case MessageType.MessageTypeEnum.PEERS:
-                var peerssize = encodedStellarMessage.Peers.Length;
-                if (peerssize > 100)
-                    throw new ArgumentException("peers size " + peerssize + " exceeds max size 100");
-                stream.WriteInt(peerssize);
-                for (var i = 0; i < peerssize; i++)
+                var peersSize = encodedStellarMessage.Peers.Length;
+                if (peersSize > 100)
+                    throw new ArgumentException("peers size " + peersSize + " exceeds max size 100");
+                stream.WriteInt(peersSize);
+                for (var i = 0; i < peersSize; i++)
                 {
                     PeerAddress.Encode(stream, encodedStellarMessage.Peers[i]);
                 }
@@ -195,13 +195,13 @@ public class StellarMessage
                 decodedStellarMessage.DontHave = DontHave.Decode(stream, maxDepth);
                 break;
             case MessageType.MessageTypeEnum.PEERS:
-                var peerssize = stream.ReadInt();
-                if (peerssize < 0)
-                    throw new InvalidDataException("peers size " + peerssize + " is negative");
-                if (peerssize > 100)
-                    throw new InvalidDataException("peers size " + peerssize + " exceeds max size 100");
-                decodedStellarMessage.Peers = new PeerAddress[peerssize];
-                for (var i = 0; i < peerssize; i++)
+                var peersSize = stream.ReadInt();
+                if (peersSize < 0)
+                    throw new InvalidDataException("peers size " + peersSize + " is negative");
+                if (peersSize > 100)
+                    throw new InvalidDataException("peers size " + peersSize + " exceeds max size 100");
+                decodedStellarMessage.Peers = new PeerAddress[peersSize];
+                for (var i = 0; i < peersSize; i++)
                 {
                     decodedStellarMessage.Peers[i] = PeerAddress.Decode(stream, maxDepth);
                 }

@@ -26,11 +26,11 @@ public class TxDemandVector
 
     public static void Encode(XdrDataOutputStream stream, TxDemandVector encodedTxDemandVector)
     {
-        var TxDemandVectorsize = encodedTxDemandVector.InnerValue.Length;
-        if (TxDemandVectorsize > 1000)
-            throw new ArgumentException("TxDemandVector size " + TxDemandVectorsize + " exceeds max size 1000");
-        stream.WriteInt(TxDemandVectorsize);
-        for (var i = 0; i < TxDemandVectorsize; i++)
+        var txDemandVectorSize = encodedTxDemandVector.InnerValue.Length;
+        if (txDemandVectorSize > 1000)
+            throw new ArgumentException("TxDemandVector size " + txDemandVectorSize + " exceeds max size 1000");
+        stream.WriteInt(txDemandVectorSize);
+        for (var i = 0; i < txDemandVectorSize; i++)
         {
             Hash.Encode(stream, encodedTxDemandVector.InnerValue[i]);
         }
@@ -42,13 +42,13 @@ public class TxDemandVector
             throw new InvalidDataException("Maximum decoding depth reached while decoding TxDemandVector");
         maxDepth -= 1;
         var decodedTxDemandVector = new TxDemandVector();
-        var TxDemandVectorsize = stream.ReadInt();
-        if (TxDemandVectorsize < 0)
-            throw new InvalidDataException("TxDemandVector size " + TxDemandVectorsize + " is negative");
-        if (TxDemandVectorsize > 1000)
-            throw new InvalidDataException("TxDemandVector size " + TxDemandVectorsize + " exceeds max size 1000");
-        decodedTxDemandVector.InnerValue = new Hash[TxDemandVectorsize];
-        for (var i = 0; i < TxDemandVectorsize; i++)
+        var txDemandVectorSize = stream.ReadInt();
+        if (txDemandVectorSize < 0)
+            throw new InvalidDataException("TxDemandVector size " + txDemandVectorSize + " is negative");
+        if (txDemandVectorSize > 1000)
+            throw new InvalidDataException("TxDemandVector size " + txDemandVectorSize + " exceeds max size 1000");
+        decodedTxDemandVector.InnerValue = new Hash[txDemandVectorSize];
+        for (var i = 0; i < txDemandVectorSize; i++)
         {
             decodedTxDemandVector.InnerValue[i] = Hash.Decode(stream, maxDepth);
         }

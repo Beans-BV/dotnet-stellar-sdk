@@ -36,9 +36,9 @@ public class ContractCodeEntry
     {
         ContractCodeEntryExt.Encode(stream, encodedContractCodeEntry.Ext);
         Hash.Encode(stream, encodedContractCodeEntry.Hash);
-        var codesize = encodedContractCodeEntry.Code.Length;
-        stream.WriteInt(codesize);
-        stream.Write(encodedContractCodeEntry.Code, 0, codesize);
+        var codeSize = encodedContractCodeEntry.Code.Length;
+        stream.WriteInt(codeSize);
+        stream.Write(encodedContractCodeEntry.Code, 0, codeSize);
     }
 
     public static ContractCodeEntry Decode(XdrDataInputStream stream, int maxDepth)
@@ -49,14 +49,14 @@ public class ContractCodeEntry
         var decodedContractCodeEntry = new ContractCodeEntry();
         decodedContractCodeEntry.Ext = ContractCodeEntryExt.Decode(stream, maxDepth);
         decodedContractCodeEntry.Hash = Hash.Decode(stream, maxDepth);
-        var codesize = stream.ReadInt();
-        if (codesize < 0)
-            throw new InvalidDataException("code size " + codesize + " is negative");
+        var codeSize = stream.ReadInt();
+        if (codeSize < 0)
+            throw new InvalidDataException("code size " + codeSize + " is negative");
         var codeRemainingInputLen = stream.GetRemainingInputLen();
-        if (codeRemainingInputLen >= 0 && codeRemainingInputLen < codesize)
-            throw new InvalidDataException("code size " + codesize + " exceeds remaining input length " + codeRemainingInputLen);
-        decodedContractCodeEntry.Code = new byte[codesize];
-        stream.Read(decodedContractCodeEntry.Code, 0, codesize);
+        if (codeRemainingInputLen >= 0 && codeRemainingInputLen < codeSize)
+            throw new InvalidDataException("code size " + codeSize + " exceeds remaining input length " + codeRemainingInputLen);
+        decodedContractCodeEntry.Code = new byte[codeSize];
+        stream.Read(decodedContractCodeEntry.Code, 0, codeSize);
         return decodedContractCodeEntry;
     }
 

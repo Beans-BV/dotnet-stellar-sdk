@@ -29,11 +29,11 @@ public class SCSpecUDTEnumV0
         stream.WriteString(encodedSCSpecUDTEnumV0.Doc);
         stream.WriteString(encodedSCSpecUDTEnumV0.Lib);
         stream.WriteString(encodedSCSpecUDTEnumV0.Name);
-        var casessize = encodedSCSpecUDTEnumV0.Cases.Length;
-        if (casessize > 50)
-            throw new ArgumentException("cases size " + casessize + " exceeds max size 50");
-        stream.WriteInt(casessize);
-        for (var i = 0; i < casessize; i++)
+        var casesSize = encodedSCSpecUDTEnumV0.Cases.Length;
+        if (casesSize > 50)
+            throw new ArgumentException("cases size " + casesSize + " exceeds max size 50");
+        stream.WriteInt(casesSize);
+        for (var i = 0; i < casesSize; i++)
         {
             SCSpecUDTEnumCaseV0.Encode(stream, encodedSCSpecUDTEnumV0.Cases[i]);
         }
@@ -48,13 +48,13 @@ public class SCSpecUDTEnumV0
         decodedSCSpecUDTEnumV0.Doc = stream.ReadString();
         decodedSCSpecUDTEnumV0.Lib = stream.ReadString();
         decodedSCSpecUDTEnumV0.Name = stream.ReadString();
-        var casessize = stream.ReadInt();
-        if (casessize < 0)
-            throw new InvalidDataException("cases size " + casessize + " is negative");
-        if (casessize > 50)
-            throw new InvalidDataException("cases size " + casessize + " exceeds max size 50");
-        decodedSCSpecUDTEnumV0.Cases = new SCSpecUDTEnumCaseV0[casessize];
-        for (var i = 0; i < casessize; i++)
+        var casesSize = stream.ReadInt();
+        if (casesSize < 0)
+            throw new InvalidDataException("cases size " + casesSize + " is negative");
+        if (casesSize > 50)
+            throw new InvalidDataException("cases size " + casesSize + " exceeds max size 50");
+        decodedSCSpecUDTEnumV0.Cases = new SCSpecUDTEnumCaseV0[casesSize];
+        for (var i = 0; i < casesSize; i++)
         {
             decodedSCSpecUDTEnumV0.Cases[i] = SCSpecUDTEnumCaseV0.Decode(stream, maxDepth);
         }

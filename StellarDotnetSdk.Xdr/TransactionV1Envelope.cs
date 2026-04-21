@@ -25,11 +25,11 @@ public class TransactionV1Envelope
     public static void Encode(XdrDataOutputStream stream, TransactionV1Envelope encodedTransactionV1Envelope)
     {
         Transaction.Encode(stream, encodedTransactionV1Envelope.Tx);
-        var signaturessize = encodedTransactionV1Envelope.Signatures.Length;
-        if (signaturessize > 20)
-            throw new ArgumentException("signatures size " + signaturessize + " exceeds max size 20");
-        stream.WriteInt(signaturessize);
-        for (var i = 0; i < signaturessize; i++)
+        var signaturesSize = encodedTransactionV1Envelope.Signatures.Length;
+        if (signaturesSize > 20)
+            throw new ArgumentException("signatures size " + signaturesSize + " exceeds max size 20");
+        stream.WriteInt(signaturesSize);
+        for (var i = 0; i < signaturesSize; i++)
         {
             DecoratedSignature.Encode(stream, encodedTransactionV1Envelope.Signatures[i]);
         }
@@ -42,13 +42,13 @@ public class TransactionV1Envelope
         maxDepth -= 1;
         var decodedTransactionV1Envelope = new TransactionV1Envelope();
         decodedTransactionV1Envelope.Tx = Transaction.Decode(stream, maxDepth);
-        var signaturessize = stream.ReadInt();
-        if (signaturessize < 0)
-            throw new InvalidDataException("signatures size " + signaturessize + " is negative");
-        if (signaturessize > 20)
-            throw new InvalidDataException("signatures size " + signaturessize + " exceeds max size 20");
-        decodedTransactionV1Envelope.Signatures = new DecoratedSignature[signaturessize];
-        for (var i = 0; i < signaturessize; i++)
+        var signaturesSize = stream.ReadInt();
+        if (signaturesSize < 0)
+            throw new InvalidDataException("signatures size " + signaturesSize + " is negative");
+        if (signaturesSize > 20)
+            throw new InvalidDataException("signatures size " + signaturesSize + " exceeds max size 20");
+        decodedTransactionV1Envelope.Signatures = new DecoratedSignature[signaturesSize];
+        for (var i = 0; i < signaturesSize; i++)
         {
             decodedTransactionV1Envelope.Signatures[i] = DecoratedSignature.Decode(stream, maxDepth);
         }

@@ -30,9 +30,9 @@ public class TransactionPhase
         switch (encodedTransactionPhase.Discriminant)
         {
             case 0:
-                var v0Componentssize = encodedTransactionPhase.V0Components.Length;
-                stream.WriteInt(v0Componentssize);
-                for (var i = 0; i < v0Componentssize; i++)
+                var v0ComponentsSize = encodedTransactionPhase.V0Components.Length;
+                stream.WriteInt(v0ComponentsSize);
+                for (var i = 0; i < v0ComponentsSize; i++)
                 {
                     TxSetComponent.Encode(stream, encodedTransactionPhase.V0Components[i]);
                 }
@@ -56,11 +56,11 @@ public class TransactionPhase
         switch (decodedTransactionPhase.Discriminant)
         {
             case 0:
-                var v0Componentssize = stream.ReadInt();
-                if (v0Componentssize < 0)
-                    throw new InvalidDataException("v0Components size " + v0Componentssize + " is negative");
-                decodedTransactionPhase.V0Components = new TxSetComponent[v0Componentssize];
-                for (var i = 0; i < v0Componentssize; i++)
+                var v0ComponentsSize = stream.ReadInt();
+                if (v0ComponentsSize < 0)
+                    throw new InvalidDataException("v0Components size " + v0ComponentsSize + " is negative");
+                decodedTransactionPhase.V0Components = new TxSetComponent[v0ComponentsSize];
+                for (var i = 0; i < v0ComponentsSize; i++)
                 {
                     decodedTransactionPhase.V0Components[i] = TxSetComponent.Decode(stream, maxDepth);
                 }

@@ -22,15 +22,15 @@ public class LedgerFootprint
 
     public static void Encode(XdrDataOutputStream stream, LedgerFootprint encodedLedgerFootprint)
     {
-        var readOnlysize = encodedLedgerFootprint.ReadOnly.Length;
-        stream.WriteInt(readOnlysize);
-        for (var i = 0; i < readOnlysize; i++)
+        var readOnlySize = encodedLedgerFootprint.ReadOnly.Length;
+        stream.WriteInt(readOnlySize);
+        for (var i = 0; i < readOnlySize; i++)
         {
             LedgerKey.Encode(stream, encodedLedgerFootprint.ReadOnly[i]);
         }
-        var readWritesize = encodedLedgerFootprint.ReadWrite.Length;
-        stream.WriteInt(readWritesize);
-        for (var i = 0; i < readWritesize; i++)
+        var readWriteSize = encodedLedgerFootprint.ReadWrite.Length;
+        stream.WriteInt(readWriteSize);
+        for (var i = 0; i < readWriteSize; i++)
         {
             LedgerKey.Encode(stream, encodedLedgerFootprint.ReadWrite[i]);
         }
@@ -42,19 +42,19 @@ public class LedgerFootprint
             throw new InvalidDataException("Maximum decoding depth reached while decoding LedgerFootprint");
         maxDepth -= 1;
         var decodedLedgerFootprint = new LedgerFootprint();
-        var readOnlysize = stream.ReadInt();
-        if (readOnlysize < 0)
-            throw new InvalidDataException("readOnly size " + readOnlysize + " is negative");
-        decodedLedgerFootprint.ReadOnly = new LedgerKey[readOnlysize];
-        for (var i = 0; i < readOnlysize; i++)
+        var readOnlySize = stream.ReadInt();
+        if (readOnlySize < 0)
+            throw new InvalidDataException("readOnly size " + readOnlySize + " is negative");
+        decodedLedgerFootprint.ReadOnly = new LedgerKey[readOnlySize];
+        for (var i = 0; i < readOnlySize; i++)
         {
             decodedLedgerFootprint.ReadOnly[i] = LedgerKey.Decode(stream, maxDepth);
         }
-        var readWritesize = stream.ReadInt();
-        if (readWritesize < 0)
-            throw new InvalidDataException("readWrite size " + readWritesize + " is negative");
-        decodedLedgerFootprint.ReadWrite = new LedgerKey[readWritesize];
-        for (var i = 0; i < readWritesize; i++)
+        var readWriteSize = stream.ReadInt();
+        if (readWriteSize < 0)
+            throw new InvalidDataException("readWrite size " + readWriteSize + " is negative");
+        decodedLedgerFootprint.ReadWrite = new LedgerKey[readWriteSize];
+        for (var i = 0; i < readWriteSize; i++)
         {
             decodedLedgerFootprint.ReadWrite[i] = LedgerKey.Decode(stream, maxDepth);
         }

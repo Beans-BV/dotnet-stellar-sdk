@@ -20,10 +20,10 @@ public class HmacSha256Mac
 
     public static void Encode(XdrDataOutputStream stream, HmacSha256Mac encodedHmacSha256Mac)
     {
-        var macsize = encodedHmacSha256Mac.Mac.Length;
-        if (macsize != 32)
-            throw new ArgumentException("mac size " + macsize + " does not match fixed size 32");
-        stream.Write(encodedHmacSha256Mac.Mac, 0, macsize);
+        var macSize = encodedHmacSha256Mac.Mac.Length;
+        if (macSize != 32)
+            throw new ArgumentException("mac size " + macSize + " does not match fixed size 32");
+        stream.Write(encodedHmacSha256Mac.Mac, 0, macSize);
     }
 
     public static HmacSha256Mac Decode(XdrDataInputStream stream, int maxDepth)
@@ -32,9 +32,9 @@ public class HmacSha256Mac
             throw new InvalidDataException("Maximum decoding depth reached while decoding HmacSha256Mac");
         maxDepth -= 1;
         var decodedHmacSha256Mac = new HmacSha256Mac();
-        var macsize = 32;
-        decodedHmacSha256Mac.Mac = new byte[macsize];
-        stream.Read(decodedHmacSha256Mac.Mac, 0, macsize);
+        var macSize = 32;
+        decodedHmacSha256Mac.Mac = new byte[macSize];
+        stream.Read(decodedHmacSha256Mac.Mac, 0, macSize);
         return decodedHmacSha256Mac;
     }
 

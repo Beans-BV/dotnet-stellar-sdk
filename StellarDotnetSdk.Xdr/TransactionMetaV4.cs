@@ -39,9 +39,9 @@ public class TransactionMetaV4
     {
         ExtensionPoint.Encode(stream, encodedTransactionMetaV4.Ext);
         LedgerEntryChanges.Encode(stream, encodedTransactionMetaV4.TxChangesBefore);
-        var operationssize = encodedTransactionMetaV4.Operations.Length;
-        stream.WriteInt(operationssize);
-        for (var i = 0; i < operationssize; i++)
+        var operationsSize = encodedTransactionMetaV4.Operations.Length;
+        stream.WriteInt(operationsSize);
+        for (var i = 0; i < operationsSize; i++)
         {
             OperationMetaV2.Encode(stream, encodedTransactionMetaV4.Operations[i]);
         }
@@ -55,15 +55,15 @@ public class TransactionMetaV4
         {
             stream.WriteInt(0);
         }
-        var eventssize = encodedTransactionMetaV4.Events.Length;
-        stream.WriteInt(eventssize);
-        for (var i = 0; i < eventssize; i++)
+        var eventsSize = encodedTransactionMetaV4.Events.Length;
+        stream.WriteInt(eventsSize);
+        for (var i = 0; i < eventsSize; i++)
         {
             TransactionEvent.Encode(stream, encodedTransactionMetaV4.Events[i]);
         }
-        var diagnosticEventssize = encodedTransactionMetaV4.DiagnosticEvents.Length;
-        stream.WriteInt(diagnosticEventssize);
-        for (var i = 0; i < diagnosticEventssize; i++)
+        var diagnosticEventsSize = encodedTransactionMetaV4.DiagnosticEvents.Length;
+        stream.WriteInt(diagnosticEventsSize);
+        for (var i = 0; i < diagnosticEventsSize; i++)
         {
             DiagnosticEvent.Encode(stream, encodedTransactionMetaV4.DiagnosticEvents[i]);
         }
@@ -77,33 +77,33 @@ public class TransactionMetaV4
         var decodedTransactionMetaV4 = new TransactionMetaV4();
         decodedTransactionMetaV4.Ext = ExtensionPoint.Decode(stream, maxDepth);
         decodedTransactionMetaV4.TxChangesBefore = LedgerEntryChanges.Decode(stream, maxDepth);
-        var operationssize = stream.ReadInt();
-        if (operationssize < 0)
-            throw new InvalidDataException("operations size " + operationssize + " is negative");
-        decodedTransactionMetaV4.Operations = new OperationMetaV2[operationssize];
-        for (var i = 0; i < operationssize; i++)
+        var operationsSize = stream.ReadInt();
+        if (operationsSize < 0)
+            throw new InvalidDataException("operations size " + operationsSize + " is negative");
+        decodedTransactionMetaV4.Operations = new OperationMetaV2[operationsSize];
+        for (var i = 0; i < operationsSize; i++)
         {
             decodedTransactionMetaV4.Operations[i] = OperationMetaV2.Decode(stream, maxDepth);
         }
         decodedTransactionMetaV4.TxChangesAfter = LedgerEntryChanges.Decode(stream, maxDepth);
-        var SorobanMetaPresent = stream.ReadInt();
-        if (SorobanMetaPresent != 0)
+        var sorobanMetaPresent = stream.ReadInt();
+        if (sorobanMetaPresent != 0)
         {
             decodedTransactionMetaV4.SorobanMeta = SorobanTransactionMetaV2.Decode(stream, maxDepth);
         }
-        var eventssize = stream.ReadInt();
-        if (eventssize < 0)
-            throw new InvalidDataException("events size " + eventssize + " is negative");
-        decodedTransactionMetaV4.Events = new TransactionEvent[eventssize];
-        for (var i = 0; i < eventssize; i++)
+        var eventsSize = stream.ReadInt();
+        if (eventsSize < 0)
+            throw new InvalidDataException("events size " + eventsSize + " is negative");
+        decodedTransactionMetaV4.Events = new TransactionEvent[eventsSize];
+        for (var i = 0; i < eventsSize; i++)
         {
             decodedTransactionMetaV4.Events[i] = TransactionEvent.Decode(stream, maxDepth);
         }
-        var diagnosticEventssize = stream.ReadInt();
-        if (diagnosticEventssize < 0)
-            throw new InvalidDataException("diagnosticEvents size " + diagnosticEventssize + " is negative");
-        decodedTransactionMetaV4.DiagnosticEvents = new DiagnosticEvent[diagnosticEventssize];
-        for (var i = 0; i < diagnosticEventssize; i++)
+        var diagnosticEventsSize = stream.ReadInt();
+        if (diagnosticEventsSize < 0)
+            throw new InvalidDataException("diagnosticEvents size " + diagnosticEventsSize + " is negative");
+        decodedTransactionMetaV4.DiagnosticEvents = new DiagnosticEvent[diagnosticEventsSize];
+        for (var i = 0; i < diagnosticEventsSize; i++)
         {
             decodedTransactionMetaV4.DiagnosticEvents[i] = DiagnosticEvent.Decode(stream, maxDepth);
         }

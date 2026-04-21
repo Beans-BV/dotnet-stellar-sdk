@@ -26,11 +26,11 @@ public class DataValue
 
     public static void Encode(XdrDataOutputStream stream, DataValue encodedDataValue)
     {
-        var DataValuesize = encodedDataValue.InnerValue.Length;
-        if (DataValuesize > 64)
-            throw new ArgumentException("DataValue size " + DataValuesize + " exceeds max size 64");
-        stream.WriteInt(DataValuesize);
-        stream.Write(encodedDataValue.InnerValue, 0, DataValuesize);
+        var dataValueSize = encodedDataValue.InnerValue.Length;
+        if (dataValueSize > 64)
+            throw new ArgumentException("DataValue size " + dataValueSize + " exceeds max size 64");
+        stream.WriteInt(dataValueSize);
+        stream.Write(encodedDataValue.InnerValue, 0, dataValueSize);
     }
 
     public static DataValue Decode(XdrDataInputStream stream, int maxDepth)
@@ -39,16 +39,16 @@ public class DataValue
             throw new InvalidDataException("Maximum decoding depth reached while decoding DataValue");
         maxDepth -= 1;
         var decodedDataValue = new DataValue();
-        var DataValuesize = stream.ReadInt();
-        if (DataValuesize < 0)
-            throw new InvalidDataException("DataValue size " + DataValuesize + " is negative");
-        if (DataValuesize > 64)
-            throw new InvalidDataException("DataValue size " + DataValuesize + " exceeds max size 64");
-        var DataValueRemainingInputLen = stream.GetRemainingInputLen();
-        if (DataValueRemainingInputLen >= 0 && DataValueRemainingInputLen < DataValuesize)
-            throw new InvalidDataException("DataValue size " + DataValuesize + " exceeds remaining input length " + DataValueRemainingInputLen);
-        decodedDataValue.InnerValue = new byte[DataValuesize];
-        stream.Read(decodedDataValue.InnerValue, 0, DataValuesize);
+        var dataValueSize = stream.ReadInt();
+        if (dataValueSize < 0)
+            throw new InvalidDataException("DataValue size " + dataValueSize + " is negative");
+        if (dataValueSize > 64)
+            throw new InvalidDataException("DataValue size " + dataValueSize + " exceeds max size 64");
+        var dataValueRemainingInputLen = stream.GetRemainingInputLen();
+        if (dataValueRemainingInputLen >= 0 && dataValueRemainingInputLen < dataValueSize)
+            throw new InvalidDataException("DataValue size " + dataValueSize + " exceeds remaining input length " + dataValueRemainingInputLen);
+        decodedDataValue.InnerValue = new byte[dataValueSize];
+        stream.Read(decodedDataValue.InnerValue, 0, dataValueSize);
         return decodedDataValue;
     }
 

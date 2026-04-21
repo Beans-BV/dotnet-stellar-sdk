@@ -26,9 +26,9 @@ public class DependentTxCluster
 
     public static void Encode(XdrDataOutputStream stream, DependentTxCluster encodedDependentTxCluster)
     {
-        var DependentTxClustersize = encodedDependentTxCluster.InnerValue.Length;
-        stream.WriteInt(DependentTxClustersize);
-        for (var i = 0; i < DependentTxClustersize; i++)
+        var dependentTxClusterSize = encodedDependentTxCluster.InnerValue.Length;
+        stream.WriteInt(dependentTxClusterSize);
+        for (var i = 0; i < dependentTxClusterSize; i++)
         {
             TransactionEnvelope.Encode(stream, encodedDependentTxCluster.InnerValue[i]);
         }
@@ -40,11 +40,11 @@ public class DependentTxCluster
             throw new InvalidDataException("Maximum decoding depth reached while decoding DependentTxCluster");
         maxDepth -= 1;
         var decodedDependentTxCluster = new DependentTxCluster();
-        var DependentTxClustersize = stream.ReadInt();
-        if (DependentTxClustersize < 0)
-            throw new InvalidDataException("DependentTxCluster size " + DependentTxClustersize + " is negative");
-        decodedDependentTxCluster.InnerValue = new TransactionEnvelope[DependentTxClustersize];
-        for (var i = 0; i < DependentTxClustersize; i++)
+        var dependentTxClusterSize = stream.ReadInt();
+        if (dependentTxClusterSize < 0)
+            throw new InvalidDataException("DependentTxCluster size " + dependentTxClusterSize + " is negative");
+        decodedDependentTxCluster.InnerValue = new TransactionEnvelope[dependentTxClusterSize];
+        for (var i = 0; i < dependentTxClusterSize; i++)
         {
             decodedDependentTxCluster.InnerValue[i] = TransactionEnvelope.Decode(stream, maxDepth);
         }

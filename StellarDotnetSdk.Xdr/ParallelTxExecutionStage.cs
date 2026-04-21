@@ -26,9 +26,9 @@ public class ParallelTxExecutionStage
 
     public static void Encode(XdrDataOutputStream stream, ParallelTxExecutionStage encodedParallelTxExecutionStage)
     {
-        var ParallelTxExecutionStagesize = encodedParallelTxExecutionStage.InnerValue.Length;
-        stream.WriteInt(ParallelTxExecutionStagesize);
-        for (var i = 0; i < ParallelTxExecutionStagesize; i++)
+        var parallelTxExecutionStageSize = encodedParallelTxExecutionStage.InnerValue.Length;
+        stream.WriteInt(parallelTxExecutionStageSize);
+        for (var i = 0; i < parallelTxExecutionStageSize; i++)
         {
             DependentTxCluster.Encode(stream, encodedParallelTxExecutionStage.InnerValue[i]);
         }
@@ -40,11 +40,11 @@ public class ParallelTxExecutionStage
             throw new InvalidDataException("Maximum decoding depth reached while decoding ParallelTxExecutionStage");
         maxDepth -= 1;
         var decodedParallelTxExecutionStage = new ParallelTxExecutionStage();
-        var ParallelTxExecutionStagesize = stream.ReadInt();
-        if (ParallelTxExecutionStagesize < 0)
-            throw new InvalidDataException("ParallelTxExecutionStage size " + ParallelTxExecutionStagesize + " is negative");
-        decodedParallelTxExecutionStage.InnerValue = new DependentTxCluster[ParallelTxExecutionStagesize];
-        for (var i = 0; i < ParallelTxExecutionStagesize; i++)
+        var parallelTxExecutionStageSize = stream.ReadInt();
+        if (parallelTxExecutionStageSize < 0)
+            throw new InvalidDataException("ParallelTxExecutionStage size " + parallelTxExecutionStageSize + " is negative");
+        decodedParallelTxExecutionStage.InnerValue = new DependentTxCluster[parallelTxExecutionStageSize];
+        for (var i = 0; i < parallelTxExecutionStageSize; i++)
         {
             decodedParallelTxExecutionStage.InnerValue[i] = DependentTxCluster.Decode(stream, maxDepth);
         }

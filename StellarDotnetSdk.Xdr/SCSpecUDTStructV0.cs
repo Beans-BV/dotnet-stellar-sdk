@@ -29,11 +29,11 @@ public class SCSpecUDTStructV0
         stream.WriteString(encodedSCSpecUDTStructV0.Doc);
         stream.WriteString(encodedSCSpecUDTStructV0.Lib);
         stream.WriteString(encodedSCSpecUDTStructV0.Name);
-        var fieldssize = encodedSCSpecUDTStructV0.Fields.Length;
-        if (fieldssize > 40)
-            throw new ArgumentException("fields size " + fieldssize + " exceeds max size 40");
-        stream.WriteInt(fieldssize);
-        for (var i = 0; i < fieldssize; i++)
+        var fieldsSize = encodedSCSpecUDTStructV0.Fields.Length;
+        if (fieldsSize > 40)
+            throw new ArgumentException("fields size " + fieldsSize + " exceeds max size 40");
+        stream.WriteInt(fieldsSize);
+        for (var i = 0; i < fieldsSize; i++)
         {
             SCSpecUDTStructFieldV0.Encode(stream, encodedSCSpecUDTStructV0.Fields[i]);
         }
@@ -48,13 +48,13 @@ public class SCSpecUDTStructV0
         decodedSCSpecUDTStructV0.Doc = stream.ReadString();
         decodedSCSpecUDTStructV0.Lib = stream.ReadString();
         decodedSCSpecUDTStructV0.Name = stream.ReadString();
-        var fieldssize = stream.ReadInt();
-        if (fieldssize < 0)
-            throw new InvalidDataException("fields size " + fieldssize + " is negative");
-        if (fieldssize > 40)
-            throw new InvalidDataException("fields size " + fieldssize + " exceeds max size 40");
-        decodedSCSpecUDTStructV0.Fields = new SCSpecUDTStructFieldV0[fieldssize];
-        for (var i = 0; i < fieldssize; i++)
+        var fieldsSize = stream.ReadInt();
+        if (fieldsSize < 0)
+            throw new InvalidDataException("fields size " + fieldsSize + " is negative");
+        if (fieldsSize > 40)
+            throw new InvalidDataException("fields size " + fieldsSize + " exceeds max size 40");
+        decodedSCSpecUDTStructV0.Fields = new SCSpecUDTStructFieldV0[fieldsSize];
+        for (var i = 0; i < fieldsSize; i++)
         {
             decodedSCSpecUDTStructV0.Fields[i] = SCSpecUDTStructFieldV0.Decode(stream, maxDepth);
         }
