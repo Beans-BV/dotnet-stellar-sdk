@@ -23,6 +23,7 @@ public class ClaimClaimableBalanceResult : OperationResult
             ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED => new ClaimClaimableBalanceNotAuthorized(),
             ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_NO_TRUST => new ClaimClaimableBalanceNoTrust(),
             ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_SUCCESS => new ClaimClaimableBalanceSuccess(),
+            ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN => new ClaimClaimableBalanceTrustlineFrozen(),
             _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown ClaimClaimableBalanceResult type."),
         };
     }
@@ -62,3 +63,8 @@ public class ClaimClaimableBalanceNoTrust : ClaimClaimableBalanceResult;
 ///     The source account is not authorized to claim the asset in the ClaimableBalanceEntry.
 /// </summary>
 public class ClaimClaimableBalanceNotAuthorized : ClaimClaimableBalanceResult;
+
+/// <summary>
+///     The trustline for the asset being claimed is frozen.
+/// </summary>
+public class ClaimClaimableBalanceTrustlineFrozen : ClaimClaimableBalanceResult;

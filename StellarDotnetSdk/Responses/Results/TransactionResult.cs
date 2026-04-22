@@ -75,6 +75,7 @@ public abstract class TransactionResult
             ResultCodeEnum.txBAD_MIN_SEQ_AGE_OR_GAP => new TransactionResultBadMinSeqAgeOrGap(feeCharged),
             ResultCodeEnum.txMALFORMED => new TransactionResultMalformed(feeCharged),
             ResultCodeEnum.txSOROBAN_INVALID => new TransactionResultSorobanInvalid(feeCharged),
+            ResultCodeEnum.txFROZEN_KEY_ACCESSED => new TransactionResultFrozenKeyAccessed(feeCharged),
             _ => throw new SystemException("Unknown TransactionResult type"),
         };
     }
@@ -331,6 +332,20 @@ public class TransactionResultBadAuthExtra : TransactionResult
     /// </summary>
     /// <param name="feeCharged">The actual fee charged for the transaction.</param>
     public TransactionResultBadAuthExtra(string feeCharged) : base(feeCharged)
+    {
+    }
+}
+
+/// <summary>
+///     A frozen ledger key was accessed by one of the transaction's operations.
+/// </summary>
+public class TransactionResultFrozenKeyAccessed : TransactionResult
+{
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TransactionResultFrozenKeyAccessed" /> class.
+    /// </summary>
+    /// <param name="feeCharged">The actual fee charged for the transaction.</param>
+    public TransactionResultFrozenKeyAccessed(string feeCharged) : base(feeCharged)
     {
     }
 }

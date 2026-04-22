@@ -25,6 +25,7 @@ public class LiquidityPoolDepositResult : OperationResult
             ResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_LINE_FULL => new LiquidityPoolDepositLineFull(),
             ResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_BAD_PRICE => new LiquidityPoolDepositBadPrice(),
             ResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_POOL_FULL => new LiquidityPoolDepositPoolFull(),
+            ResultCodeEnum.LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN => new LiquidityPoolDepositTrustlineFrozen(),
             _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown LiquidityPoolDepositResult type."),
         };
     }
@@ -73,3 +74,8 @@ public class LiquidityPoolDepositBadPrice : LiquidityPoolDepositResult;
 ///     The liquidity pool reserves are full.
 /// </summary>
 public class LiquidityPoolDepositPoolFull : LiquidityPoolDepositResult;
+
+/// <summary>
+///     The trustline for one of the assets in the pool is frozen.
+/// </summary>
+public class LiquidityPoolDepositTrustlineFrozen : LiquidityPoolDepositResult;

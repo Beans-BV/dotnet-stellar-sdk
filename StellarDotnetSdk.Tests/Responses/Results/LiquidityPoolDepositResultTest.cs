@@ -244,6 +244,34 @@ public class LiquidityPoolDepositResultTest
     }
 
     /// <summary>
+    ///     Verifies that LiquidityPoolDepositTrustlineFrozen result can be deserialized correctly.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithLiquidityPoolDepositTrustlineFrozenXdr_ReturnsLiquidityPoolDepositTrustlineFrozen()
+    {
+        // Arrange
+        var operationResultTr = new XDR.OperationResult.OperationResultTr
+        {
+            Discriminant =
+            {
+                InnerValue = XDR.OperationType.OperationTypeEnum.LIQUIDITY_POOL_DEPOSIT,
+            },
+            LiquidityPoolDepositResult = new XDR.LiquidityPoolDepositResult
+            {
+                Discriminant =
+                {
+                    InnerValue = XDR.LiquidityPoolDepositResultCode.LiquidityPoolDepositResultCodeEnum
+                        .LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN,
+                },
+            },
+        };
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(LiquidityPoolDepositTrustlineFrozen), false);
+    }
+
+    /// <summary>
     ///     Verifies that FromXdr throws ArgumentOutOfRangeException for unknown result code.
     /// </summary>
     [TestMethod]

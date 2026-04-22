@@ -1,3 +1,4 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Responses.Results;
 using StellarDotnetSdk.Xdr;
@@ -95,6 +96,37 @@ public class ClaimClaimableBalanceResultTest
 
         // Act & Assert
         Utils.AssertResultOfType(xdrBase64, typeof(ClaimClaimableBalanceSuccess), true);
+    }
+
+    /// <summary>
+    ///     Verifies that ClaimClaimableBalanceTrustlineFrozen result can be deserialized correctly.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithClaimClaimableBalanceTrustlineFrozenXdr_ReturnsClaimClaimableBalanceTrustlineFrozen()
+    {
+        // Arrange
+        var operationResultTr = CreateOperationResultTr(ResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN);
+        var xdrBase64 = Utils.CreateTransactionResultXdr(operationResultTr);
+
+        // Act & Assert
+        Utils.AssertResultOfType(xdrBase64, typeof(ClaimClaimableBalanceTrustlineFrozen), false);
+    }
+
+    /// <summary>
+    ///     Verifies that FromXdr throws ArgumentOutOfRangeException for unknown result code.
+    /// </summary>
+    [TestMethod]
+    public void FromXdr_WithUnknownResultCode_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        var xdrResult = new ClaimClaimableBalanceResult
+        {
+            Discriminant = { InnerValue = (ResultCodeEnum)999 },
+        };
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            StellarDotnetSdk.Responses.Results.ClaimClaimableBalanceResult.FromXdr(xdrResult));
     }
 
     private static OperationResult.OperationResultTr CreateOperationResultTr(ResultCodeEnum type)

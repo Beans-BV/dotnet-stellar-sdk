@@ -23,6 +23,7 @@ public class LiquidityPoolWithdrawResult : OperationResult
             ResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED => new LiquidityPoolWithdrawUnderfunded(),
             ResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_LINE_FULL => new LiquidityPoolWithdrawLineFull(),
             ResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM => new LiquidityPoolWithdrawUnderMinimum(),
+            ResultCodeEnum.LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN => new LiquidityPoolWithdrawTrustlineFrozen(),
             _ => throw new ArgumentOutOfRangeException(nameof(result), "Unknown LiquidityPoolWithdrawResult type."),
         };
     }
@@ -61,3 +62,8 @@ public class LiquidityPoolWithdrawLineFull : LiquidityPoolWithdrawResult;
 ///     Unable to withdraw enough to satisfy the minimum price.
 /// </summary>
 public class LiquidityPoolWithdrawUnderMinimum : LiquidityPoolWithdrawResult;
+
+/// <summary>
+///     The trustline for one of the assets in the pool is frozen.
+/// </summary>
+public class LiquidityPoolWithdrawTrustlineFrozen : LiquidityPoolWithdrawResult;
