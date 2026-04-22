@@ -1,5 +1,10 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Responses.Results;
+using Int64 = StellarDotnetSdk.Xdr.Int64;
+using XdrDataOutputStream = StellarDotnetSdk.Xdr.XdrDataOutputStream;
+using XdrTransactionResult = StellarDotnetSdk.Xdr.TransactionResult;
+using TransactionResultCodeEnum = StellarDotnetSdk.Xdr.TransactionResultCode.TransactionResultCodeEnum;
 
 namespace StellarDotnetSdk.Tests.Responses.Results;
 
@@ -177,5 +182,39 @@ public class TransactionResultTest
         // Assert
         Assert.AreEqual("0.1", result.FeeCharged);
         Assert.IsInstanceOfType(result, typeof(TransactionResultInternalError));
+    }
+
+    /// <summary>
+    ///     Verifies that TransactionResultFrozenKeyAccessed can be deserialized correctly.
+    /// </summary>
+    [TestMethod]
+    public void FromXdrBase64_WithFrozenKeyAccessedXdr_ReturnsTransactionResultFrozenKeyAccessed()
+    {
+        // Arrange
+        var xdrBase64 = EncodeResultCode(TransactionResultCodeEnum.txFROZEN_KEY_ACCESSED);
+
+        // Act
+        var result = TransactionResult.FromXdrBase64(xdrBase64);
+
+        // Assert
+        Assert.AreEqual("0.1", result.FeeCharged);
+        Assert.IsInstanceOfType(result, typeof(TransactionResultFrozenKeyAccessed));
+        Assert.IsFalse(result.IsSuccess);
+    }
+
+    private static string EncodeResultCode(TransactionResultCodeEnum code)
+    {
+        var xdr = new XdrTransactionResult
+        {
+            Ext = new XdrTransactionResult.TransactionResultExt(),
+            FeeCharged = new Int64(1000000L),
+            Result = new XdrTransactionResult.TransactionResultResult
+            {
+                Discriminant = { InnerValue = code },
+            },
+        };
+        var stream = new XdrDataOutputStream();
+        XdrTransactionResult.Encode(stream, xdr);
+        return Convert.ToBase64String(stream.ToArray());
     }
 }

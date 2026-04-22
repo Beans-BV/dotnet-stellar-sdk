@@ -61,6 +61,14 @@ public class LedgerEntryConfigSetting : LedgerEntry
                 ConfigSettingContractLedgerCostExtV0.FromXdr(xdrConfigSetting.ContractLedgerCostExt),
             CONFIG_SETTING_SCP_TIMING =>
                 ConfigSettingScpTiming.FromXdr(xdrConfigSetting.ContractSCPTiming),
+            CONFIG_SETTING_FROZEN_LEDGER_KEYS =>
+                ConfigSettingFrozenLedgerKeys.FromXdr(xdrConfigSetting.FrozenLedgerKeys),
+            CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA =>
+                ConfigSettingFrozenLedgerKeysDelta.FromXdr(xdrConfigSetting.FrozenLedgerKeysDelta),
+            CONFIG_SETTING_FREEZE_BYPASS_TXS =>
+                ConfigSettingFreezeBypassTxs.FromXdr(xdrConfigSetting.FreezeBypassTxs),
+            CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA =>
+                ConfigSettingFreezeBypassTxsDelta.FromXdr(xdrConfigSetting.FreezeBypassTxsDelta),
             _ => throw new InvalidOperationException("Unknown ConfigSetting type."),
         };
         return ledgerEntryConfigSetting;

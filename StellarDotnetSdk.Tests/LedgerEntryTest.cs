@@ -1864,4 +1864,239 @@ public class LedgerEntryTest
         Assert.AreEqual(xdrTtlEntry.LiveUntilLedgerSeq.InnerValue,
             decodedLedgerEntry.LiveUntilLedgerSequence);
     }
+
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting FrozenLedgerKeys entry.
+    /// </summary>
+    [TestMethod]
+    public void FromXdrBase64_ConfigSettingFrozenLedgerKeys_ReturnsDecodedEntry()
+    {
+        // Arrange
+        var key1 = new byte[] { 0x01, 0x02, 0x03 };
+        var key2 = new byte[] { 0x04, 0x05, 0x06, 0x07 };
+        var xdrConfigSetting = new ConfigSettingEntry
+        {
+            Discriminant =
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FROZEN_LEDGER_KEYS),
+            FrozenLedgerKeys = new FrozenLedgerKeys
+            {
+                Keys = new[]
+                {
+                    new EncodedLedgerKey(key1),
+                    new EncodedLedgerKey(key2),
+                },
+            },
+        };
+        var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
+        {
+            Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING),
+            ConfigSetting = xdrConfigSetting,
+        };
+        var os = new XdrDataOutputStream();
+        StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
+        var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
+        var decoded = (ConfigSettingFrozenLedgerKeys)LedgerEntry.FromXdrBase64(entryXdrBase64);
+
+        // Assert
+        Assert.AreEqual(2, decoded.Keys.Length);
+        CollectionAssert.AreEqual(key1, decoded.Keys[0]);
+        CollectionAssert.AreEqual(key2, decoded.Keys[1]);
+    }
+
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting FrozenLedgerKeysDelta entry.
+    /// </summary>
+    [TestMethod]
+    public void FromXdrBase64_ConfigSettingFrozenLedgerKeysDelta_ReturnsDecodedEntry()
+    {
+        // Arrange
+        var freezeKey = new byte[] { 0x10, 0x11 };
+        var unfreezeKey1 = new byte[] { 0x20, 0x21, 0x22 };
+        var unfreezeKey2 = new byte[] { 0x30 };
+        var xdrConfigSetting = new ConfigSettingEntry
+        {
+            Discriminant =
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA),
+            FrozenLedgerKeysDelta = new FrozenLedgerKeysDelta
+            {
+                KeysToFreeze = new[] { new EncodedLedgerKey(freezeKey) },
+                KeysToUnfreeze = new[]
+                {
+                    new EncodedLedgerKey(unfreezeKey1),
+                    new EncodedLedgerKey(unfreezeKey2),
+                },
+            },
+        };
+        var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
+        {
+            Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING),
+            ConfigSetting = xdrConfigSetting,
+        };
+        var os = new XdrDataOutputStream();
+        StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
+        var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
+        var decoded = (ConfigSettingFrozenLedgerKeysDelta)LedgerEntry.FromXdrBase64(entryXdrBase64);
+
+        // Assert
+        Assert.AreEqual(1, decoded.KeysToFreeze.Length);
+        CollectionAssert.AreEqual(freezeKey, decoded.KeysToFreeze[0]);
+        Assert.AreEqual(2, decoded.KeysToUnfreeze.Length);
+        CollectionAssert.AreEqual(unfreezeKey1, decoded.KeysToUnfreeze[0]);
+        CollectionAssert.AreEqual(unfreezeKey2, decoded.KeysToUnfreeze[1]);
+    }
+
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting FreezeBypassTxs entry.
+    /// </summary>
+    [TestMethod]
+    public void FromXdrBase64_ConfigSettingFreezeBypassTxs_ReturnsDecodedEntry()
+    {
+        // Arrange
+        var hash1 = new byte[32];
+        var hash2 = new byte[32];
+        for (var i = 0; i < 32; i++)
+        {
+            hash1[i] = (byte)i;
+            hash2[i] = (byte)(255 - i);
+        }
+        var xdrConfigSetting = new ConfigSettingEntry
+        {
+            Discriminant =
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FREEZE_BYPASS_TXS),
+            FreezeBypassTxs = new FreezeBypassTxs
+            {
+                TxHashes = new[]
+                {
+                    new Hash(hash1),
+                    new Hash(hash2),
+                },
+            },
+        };
+        var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
+        {
+            Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING),
+            ConfigSetting = xdrConfigSetting,
+        };
+        var os = new XdrDataOutputStream();
+        StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
+        var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
+        var decoded = (ConfigSettingFreezeBypassTxs)LedgerEntry.FromXdrBase64(entryXdrBase64);
+
+        // Assert
+        Assert.AreEqual(2, decoded.TxHashes.Length);
+        CollectionAssert.AreEqual(hash1, decoded.TxHashes[0]);
+        CollectionAssert.AreEqual(hash2, decoded.TxHashes[1]);
+    }
+
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes ConfigSetting FreezeBypassTxsDelta entry.
+    /// </summary>
+    [TestMethod]
+    public void FromXdrBase64_ConfigSettingFreezeBypassTxsDelta_ReturnsDecodedEntry()
+    {
+        // Arrange
+        var addHash = new byte[32];
+        var removeHash = new byte[32];
+        for (var i = 0; i < 32; i++)
+        {
+            addHash[i] = (byte)(i * 2);
+            removeHash[i] = (byte)(i + 10);
+        }
+        var xdrConfigSetting = new ConfigSettingEntry
+        {
+            Discriminant =
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA),
+            FreezeBypassTxsDelta = new FreezeBypassTxsDelta
+            {
+                AddTxs = new[] { new Hash(addHash) },
+                RemoveTxs = new[] { new Hash(removeHash) },
+            },
+        };
+        var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
+        {
+            Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING),
+            ConfigSetting = xdrConfigSetting,
+        };
+        var os = new XdrDataOutputStream();
+        StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
+        var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
+        var decoded = (ConfigSettingFreezeBypassTxsDelta)LedgerEntry.FromXdrBase64(entryXdrBase64);
+
+        // Assert
+        Assert.AreEqual(1, decoded.AddTxs.Length);
+        CollectionAssert.AreEqual(addHash, decoded.AddTxs[0]);
+        Assert.AreEqual(1, decoded.RemoveTxs.Length);
+        CollectionAssert.AreEqual(removeHash, decoded.RemoveTxs[0]);
+    }
+
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes an empty FrozenLedgerKeys entry.
+    /// </summary>
+    [TestMethod]
+    public void FromXdrBase64_ConfigSettingFrozenLedgerKeysEmpty_ReturnsEmptyEntry()
+    {
+        // Arrange
+        var xdrConfigSetting = new ConfigSettingEntry
+        {
+            Discriminant =
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FROZEN_LEDGER_KEYS),
+            FrozenLedgerKeys = new FrozenLedgerKeys { Keys = [] },
+        };
+        var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
+        {
+            Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING),
+            ConfigSetting = xdrConfigSetting,
+        };
+        var os = new XdrDataOutputStream();
+        StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
+        var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
+        var decoded = (ConfigSettingFrozenLedgerKeys)LedgerEntry.FromXdrBase64(entryXdrBase64);
+
+        // Assert
+        Assert.AreEqual(0, decoded.Keys.Length);
+    }
+
+    /// <summary>
+    ///     Verifies that FromXdrBase64 correctly decodes an empty FreezeBypassTxsDelta entry.
+    /// </summary>
+    [TestMethod]
+    public void FromXdrBase64_ConfigSettingFreezeBypassTxsDeltaEmpty_ReturnsEmptyEntry()
+    {
+        // Arrange
+        var xdrConfigSetting = new ConfigSettingEntry
+        {
+            Discriminant =
+                ConfigSettingID.Create(ConfigSettingID.ConfigSettingIDEnum.CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA),
+            FreezeBypassTxsDelta = new FreezeBypassTxsDelta
+            {
+                AddTxs = [],
+                RemoveTxs = [],
+            },
+        };
+        var xdrLedgerEntryData = new StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData
+        {
+            Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONFIG_SETTING),
+            ConfigSetting = xdrConfigSetting,
+        };
+        var os = new XdrDataOutputStream();
+        StellarDotnetSdk.Xdr.LedgerEntry.LedgerEntryData.Encode(os, xdrLedgerEntryData);
+        var entryXdrBase64 = Convert.ToBase64String(os.ToArray());
+
+        // Act
+        var decoded = (ConfigSettingFreezeBypassTxsDelta)LedgerEntry.FromXdrBase64(entryXdrBase64);
+
+        // Assert
+        Assert.AreEqual(0, decoded.AddTxs.Length);
+        Assert.AreEqual(0, decoded.RemoveTxs.Length);
+    }
 }
