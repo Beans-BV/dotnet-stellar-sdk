@@ -27,4 +27,4 @@
 - name: SEP Examples
   items:
   - href: examples/sep-0001-stellar-toml.md
-    name: SEP-0001: stellar.toml
+    name: "SEP-0001: stellar.toml"
