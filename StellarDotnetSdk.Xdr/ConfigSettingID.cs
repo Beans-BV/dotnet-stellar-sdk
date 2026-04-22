@@ -26,7 +26,11 @@ namespace StellarDotnetSdk.Xdr;
 //      CONFIG_SETTING_EVICTION_ITERATOR = 13,
 //      CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0 = 14,
 //      CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0 = 15,
-//      CONFIG_SETTING_SCP_TIMING = 16
+//      CONFIG_SETTING_SCP_TIMING = 16,
+//      CONFIG_SETTING_FROZEN_LEDGER_KEYS = 17,
+//      CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA = 18,
+//      CONFIG_SETTING_FREEZE_BYPASS_TXS = 19,
+//      CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA = 20
 //  };
 
 //  ===========================================================================
@@ -51,6 +55,10 @@ public class ConfigSettingID
         CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0 = 14,
         CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0 = 15,
         CONFIG_SETTING_SCP_TIMING = 16,
+        CONFIG_SETTING_FROZEN_LEDGER_KEYS = 17,
+        CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA = 18,
+        CONFIG_SETTING_FREEZE_BYPASS_TXS = 19,
+        CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA = 20,
     }
 
     public ConfigSettingIDEnum InnerValue { get; set; }
@@ -87,6 +95,10 @@ public class ConfigSettingID
             case 14: return Create(ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0);
             case 15: return Create(ConfigSettingIDEnum.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0);
             case 16: return Create(ConfigSettingIDEnum.CONFIG_SETTING_SCP_TIMING);
+            case 17: return Create(ConfigSettingIDEnum.CONFIG_SETTING_FROZEN_LEDGER_KEYS);
+            case 18: return Create(ConfigSettingIDEnum.CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA);
+            case 19: return Create(ConfigSettingIDEnum.CONFIG_SETTING_FREEZE_BYPASS_TXS);
+            case 20: return Create(ConfigSettingIDEnum.CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA);
             default:
                 throw new InvalidDataException("Unknown enum value: " + value);
         }

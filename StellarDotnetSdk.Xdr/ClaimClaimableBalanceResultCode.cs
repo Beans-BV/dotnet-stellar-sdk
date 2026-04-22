@@ -15,7 +15,8 @@ namespace StellarDotnetSdk.Xdr;
 //      CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM = -2,
 //      CLAIM_CLAIMABLE_BALANCE_LINE_FULL = -3,
 //      CLAIM_CLAIMABLE_BALANCE_NO_TRUST = -4,
-//      CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED = -5
+//      CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED = -5,
+//      CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN = -6
 //  };
 
 //  ===========================================================================
@@ -29,6 +30,7 @@ public class ClaimClaimableBalanceResultCode
         CLAIM_CLAIMABLE_BALANCE_LINE_FULL = -3,
         CLAIM_CLAIMABLE_BALANCE_NO_TRUST = -4,
         CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED = -5,
+        CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN = -6,
     }
 
     public ClaimClaimableBalanceResultCodeEnum InnerValue { get; set; }
@@ -54,6 +56,7 @@ public class ClaimClaimableBalanceResultCode
             case -3: return Create(ClaimClaimableBalanceResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_LINE_FULL);
             case -4: return Create(ClaimClaimableBalanceResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_NO_TRUST);
             case -5: return Create(ClaimClaimableBalanceResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED);
+            case -6: return Create(ClaimClaimableBalanceResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN);
             default:
                 throw new InvalidDataException("Unknown enum value: " + value);
         }

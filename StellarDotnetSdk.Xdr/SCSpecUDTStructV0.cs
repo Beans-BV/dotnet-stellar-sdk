@@ -13,7 +13,7 @@ namespace StellarDotnetSdk.Xdr;
 //      string doc<SC_SPEC_DOC_LIMIT>;
 //      string lib<80>;
 //      string name<60>;
-//      SCSpecUDTStructFieldV0 fields<40>;
+//      SCSpecUDTStructFieldV0 fields<>;
 //  };
 
 //  ===========================================================================
@@ -30,8 +30,6 @@ public class SCSpecUDTStructV0
         stream.WriteString(encodedSCSpecUDTStructV0.Lib);
         stream.WriteString(encodedSCSpecUDTStructV0.Name);
         var fieldsSize = encodedSCSpecUDTStructV0.Fields.Length;
-        if (fieldsSize > 40)
-            throw new ArgumentException("fields size " + fieldsSize + " exceeds max size 40");
         stream.WriteInt(fieldsSize);
         for (var i = 0; i < fieldsSize; i++)
         {
@@ -51,8 +49,6 @@ public class SCSpecUDTStructV0
         var fieldsSize = stream.ReadInt();
         if (fieldsSize < 0)
             throw new InvalidDataException("fields size " + fieldsSize + " is negative");
-        if (fieldsSize > 40)
-            throw new InvalidDataException("fields size " + fieldsSize + " exceeds max size 40");
         var fieldsRemainingInputLen = stream.GetRemainingInputLen();
         if (fieldsRemainingInputLen >= 0 && fieldsRemainingInputLen < fieldsSize)
             throw new InvalidDataException("fields size " + fieldsSize + " exceeds remaining input length " + fieldsRemainingInputLen);

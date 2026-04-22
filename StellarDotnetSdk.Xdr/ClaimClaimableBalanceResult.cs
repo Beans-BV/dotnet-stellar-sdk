@@ -17,6 +17,7 @@ namespace StellarDotnetSdk.Xdr;
 //  case CLAIM_CLAIMABLE_BALANCE_LINE_FULL:
 //  case CLAIM_CLAIMABLE_BALANCE_NO_TRUST:
 //  case CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+//  case CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN:
 //      void;
 //  };
 
@@ -37,6 +38,7 @@ public class ClaimClaimableBalanceResult
             case ClaimClaimableBalanceResultCode.ClaimClaimableBalanceResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_LINE_FULL:
             case ClaimClaimableBalanceResultCode.ClaimClaimableBalanceResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_NO_TRUST:
             case ClaimClaimableBalanceResultCode.ClaimClaimableBalanceResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+            case ClaimClaimableBalanceResultCode.ClaimClaimableBalanceResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN:
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + encodedClaimClaimableBalanceResult.Discriminant.InnerValue);
@@ -60,6 +62,7 @@ public class ClaimClaimableBalanceResult
             case ClaimClaimableBalanceResultCode.ClaimClaimableBalanceResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_LINE_FULL:
             case ClaimClaimableBalanceResultCode.ClaimClaimableBalanceResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_NO_TRUST:
             case ClaimClaimableBalanceResultCode.ClaimClaimableBalanceResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+            case ClaimClaimableBalanceResultCode.ClaimClaimableBalanceResultCodeEnum.CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN:
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
