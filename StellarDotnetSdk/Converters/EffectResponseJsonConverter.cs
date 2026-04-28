@@ -21,7 +21,7 @@ namespace StellarDotnetSdk.Converters;
 ///         60-74 = Sponsorship effects
 ///         80 = Clawback
 ///         90-95 = Liquidity pool effects
-///         96-97 = Soroban SAC contract transfer effects.
+///         96-97 = Soroban SAC contract credited/debited effects.
 ///         Performance: Parses JSON once into JsonDocument, then deserializes from JsonElement
 ///         to avoid double-parsing overhead.
 ///         <br />
