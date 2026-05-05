@@ -20,7 +20,8 @@ namespace StellarDotnetSdk.Converters;
 ///         50-52 = Claimable balance,
 ///         60-74 = Sponsorship effects
 ///         80 = Clawback
-///         90-95 = Liquidity pool effects.
+///         90-95 = Liquidity pool effects
+///         96-97 = Soroban SAC contract credited/debited effects.
 ///         Performance: Parses JSON once into JsonDocument, then deserializes from JsonElement
 ///         to avoid double-parsing overhead.
 ///         <br />
@@ -119,9 +120,11 @@ public class EffectResponseJsonConverter : JsonConverter<EffectResponse>
             93 => root.Deserialize<LiquidityPoolCreatedEffectResponse>(options),
             94 => root.Deserialize<LiquidityPoolRemovedEffectResponse>(options),
             95 => root.Deserialize<LiquidityPoolRevokedEffectResponse>(options),
+            96 => root.Deserialize<ContractCreditedEffectResponse>(options),
+            97 => root.Deserialize<ContractDebitedEffectResponse>(options),
             _ => throw new JsonException(
                 $"Unknown effect type_i: {type}. " +
-                $"Expected value in ranges 0-7, 10-12, 20-26, 30-33, 40-43, 50-52, 60-74, 80, or 90-95. " +
+                $"Expected value in ranges 0-7, 10-12, 20-26, 30-33, 40-43, 50-52, 60-74, 80, 90-95, or 96-97. " +
                 $"This may indicate an API version mismatch or a new effect type. Check if your SDK version supports this effect type."
             ),
         };
