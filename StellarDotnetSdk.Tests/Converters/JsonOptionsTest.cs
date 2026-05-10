@@ -107,7 +107,7 @@ public class JsonOptionsTest
     ///     Verifies that the shared options reject such malformed payloads.
     /// </summary>
     [TestMethod]
-    public void Deserialize_NullValueForNonNullableProperty_Throws()
+    public void Deserialize_NullValueForNonNullableProperty_ThrowsJsonException()
     {
         // Arrange
         const string json = """{"Name":null,"Description":null}""";
