@@ -92,6 +92,76 @@ public class JsonOptionsTest
     }
 
     /// <summary>
+    ///     Verifies that <see cref="JsonOptions.DefaultOptions" /> has
+    ///     <see cref="JsonSerializerOptions.RespectNullableAnnotations" /> enabled.
+    /// </summary>
+    [TestMethod]
+    public void DefaultOptions_RespectNullableAnnotations_IsEnabled()
+    {
+        // Act & Assert
+        Assert.IsTrue(JsonOptions.DefaultOptions.RespectNullableAnnotations);
+    }
+
+    /// <summary>
+    ///     Tests deserialization of JSON where a non-nullable reference property is null.
+    ///     Verifies that the shared options reject such malformed payloads.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_NullValueForNonNullableProperty_ThrowsJsonException()
+    {
+        // Arrange
+        const string json = """{"Name":null,"Description":null}""";
+
+        // Act & Assert
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<SampleDto>(json, JsonOptions.DefaultOptions));
+    }
+
+    /// <summary>
+    ///     Tests deserialization of JSON where a nullable reference property is null.
+    ///     Verifies that the shared options still accept null values for nullable properties.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_NullValueForNullableProperty_Succeeds()
+    {
+        // Arrange
+        const string json = """{"Name":"alice","Description":null}""";
+
+        // Act
+        var result = JsonSerializer.Deserialize<SampleDto>(json, JsonOptions.DefaultOptions);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual("alice", result.Name);
+        Assert.IsNull(result.Description);
+    }
+
+    /// <summary>
+    ///     Tests deserialization of a valid JSON payload with all non-null values.
+    ///     Verifies that normal payloads still deserialize successfully.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_ValidPayload_Succeeds()
+    {
+        // Arrange
+        const string json = """{"Name":"alice","Description":"test"}""";
+
+        // Act
+        var result = JsonSerializer.Deserialize<SampleDto>(json, JsonOptions.DefaultOptions);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual("alice", result.Name);
+        Assert.AreEqual("test", result.Description);
+    }
+
+    private sealed class SampleDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string? Description { get; set; }
+    }
+
+    /// <summary>
     ///     A sample payload shape used to exercise duplicate-property rejection.
     /// </summary>
     private sealed record Payment(
