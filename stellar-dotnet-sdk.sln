@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StellarDotnetSdk", "Stellar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StellarDotnetSdk.Tests", "StellarDotnetSdk.Tests\StellarDotnetSdk.Tests.csproj", "{B005220F-602B-4888-A72F-A4583181773A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StellarDotnetSdk.IntegrationTests", "StellarDotnetSdk.IntegrationTests\StellarDotnetSdk.IntegrationTests.csproj", "{2B5775A5-0A56-46CF-8A1A-EA1FB1FE7B95}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StellarDotnetSdk.Console", "StellarDotnetSdk.Console\StellarDotnetSdk.Console.csproj", "{7BA6DFB8-5736-47EC-8995-E652D221E077}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StellarDotnetSdk.Xdr", "StellarDotnetSdk.Xdr\StellarDotnetSdk.Xdr.csproj", "{DB19EF41-BF22-41D0-B856-858C6FC17068}"
@@ -76,6 +78,10 @@ Global
 		{18FC119D-3D92-47F0-B0F5-F0E87B9D3FD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18FC119D-3D92-47F0-B0F5-F0E87B9D3FD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18FC119D-3D92-47F0-B0F5-F0E87B9D3FD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B5775A5-0A56-46CF-8A1A-EA1FB1FE7B95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B5775A5-0A56-46CF-8A1A-EA1FB1FE7B95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B5775A5-0A56-46CF-8A1A-EA1FB1FE7B95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B5775A5-0A56-46CF-8A1A-EA1FB1FE7B95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

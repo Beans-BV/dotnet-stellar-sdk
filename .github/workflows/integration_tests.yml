@@ -1,0 +1,39 @@
+name: Integration Tests
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+defaults:
+  run:
+    shell: pwsh
+jobs:
+  integration_tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Run integration tests
+        env:
+          INTEGRATION_HORIZON_URL:     ${{ vars.INTEGRATION_HORIZON_URL     || 'https://horizon-testnet.stellar.org' }}
+          INTEGRATION_SOROBAN_RPC_URL: ${{ vars.INTEGRATION_SOROBAN_RPC_URL || 'https://soroban-testnet.stellar.org' }}
+        run: |
+          dotnet test StellarDotnetSdk.IntegrationTests/StellarDotnetSdk.IntegrationTests.csproj `
+            --configuration Release `
+            --logger "console;verbosity=normal" `
+            --logger "trx;LogFileName=integration.trx"
+      - name: Upload TRX
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-trx
+          path: '**/integration.trx'
+          if-no-files-found: warn
