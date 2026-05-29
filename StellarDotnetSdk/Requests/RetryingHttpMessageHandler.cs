@@ -10,12 +10,14 @@ using Polly.Timeout;
 namespace StellarDotnetSdk.Requests;
 
 /// <summary>
-///     HTTP message handler that implements retry logic for connection failures (network errors, DNS failures, etc.).
-///     Similar to OkHttp's <c>retryOnConnectionFailure(true)</c> - only retries connection-level failures, not HTTP error
-///     status codes.
+///     HTTP message handler that implements retry logic for connection failures (network errors, DNS failures, etc.)
+///     and for configured HTTP status codes (see <see cref="HttpResilienceOptions.RetryHttpStatusCodes" />).
+///     Honors the <c>Retry-After</c> response header when <see cref="HttpResilienceOptions.RespectRetryAfter" />
+///     is true. By default, only safe HTTP methods (GET, HEAD, OPTIONS) are retried on status codes.
 /// </summary>
 public class RetryingHttpMessageHandler : DelegatingHandler
 {
+    private static readonly ResiliencePropertyKey<HttpRequestMessage?> RequestKey = new("StellarSdk.HttpRequest");
     private readonly ResiliencePipeline<HttpResponseMessage> _pipeline;
 
     /// <summary>
@@ -32,7 +34,7 @@ public class RetryingHttpMessageHandler : DelegatingHandler
     }
 
     /// <summary>
-    ///     Sends an HTTP request through the resilience pipeline, which handles retries for connection failures.
+    ///     Sends an HTTP request through the resilience pipeline.
     /// </summary>
     /// <param name="request">The HTTP request message to send.</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
@@ -41,10 +43,18 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
-        // No cloning needed - connection failures happen before request is sent
-        return await _pipeline.ExecuteAsync(
-            async ct => await base.SendAsync(request, ct).ConfigureAwait(false),
-            cancellationToken).ConfigureAwait(false);
+        var context = ResilienceContextPool.Shared.Get(cancellationToken);
+        context.Properties.Set(RequestKey, request);
+        try
+        {
+            return await _pipeline.ExecuteAsync(
+                async ctx => await base.SendAsync(request, ctx.CancellationToken).ConfigureAwait(false),
+                context).ConfigureAwait(false);
+        }
+        finally
+        {
+            ResilienceContextPool.Shared.Return(context);
+        }
     }
 
     private static ResiliencePipeline<HttpResponseMessage> BuildPipeline(HttpResilienceOptions options)
@@ -72,13 +82,14 @@ public class RetryingHttpMessageHandler : DelegatingHandler
                 ShouldHandle = args =>
                 {
                     var cancellationRequested = args.Context.CancellationToken.IsCancellationRequested;
-                    return new ValueTask<bool>(ShouldHandleOutcome(args.Outcome, options, cancellationRequested));
+                    var request = args.Context.Properties.GetValue(RequestKey, null);
+                    return new ValueTask<bool>(ShouldHandleOutcome(args.Outcome, request, options,
+                        cancellationRequested));
                 },
             });
         }
 
         // Retry (innermost - executes first)
-        // Retry only on connection failures (exceptions), not HTTP status codes
         if (options.MaxRetryCount > 0)
         {
             var retryOptions = new RetryStrategyOptions<HttpResponseMessage>
@@ -91,7 +102,30 @@ public class RetryingHttpMessageHandler : DelegatingHandler
                 ShouldHandle = args =>
                 {
                     var cancellationRequested = args.Context.CancellationToken.IsCancellationRequested;
-                    return new ValueTask<bool>(ShouldHandleOutcome(args.Outcome, options, cancellationRequested));
+                    var request = args.Context.Properties.GetValue(RequestKey, null);
+                    return new ValueTask<bool>(ShouldHandleOutcome(args.Outcome, request, options,
+                        cancellationRequested));
+                },
+                DelayGenerator = args =>
+                {
+                    if (!options.RespectRetryAfter || options.RetryHttpStatusCodes.Count == 0)
+                    {
+                        return new ValueTask<TimeSpan?>((TimeSpan?)null);
+                    }
+
+                    var retryAfter = args.Outcome.Result?.Headers.RetryAfter;
+                    var parsed = RetryAfterParser.ToTimeSpan(retryAfter);
+                    if (parsed is { } delay)
+                    {
+                        if (delay > options.MaxDelay)
+                        {
+                            delay = options.MaxDelay;
+                        }
+
+                        return new ValueTask<TimeSpan?>(delay);
+                    }
+
+                    return new ValueTask<TimeSpan?>((TimeSpan?)null);
                 },
             };
 
@@ -103,6 +137,7 @@ public class RetryingHttpMessageHandler : DelegatingHandler
 
     private static bool ShouldHandleOutcome(
         Outcome<HttpResponseMessage> outcome,
+        HttpRequestMessage? request,
         HttpResilienceOptions options,
         bool cancellationRequested)
     {
@@ -111,8 +146,24 @@ public class RetryingHttpMessageHandler : DelegatingHandler
             return IsRetriableException(outcome.Exception, options, cancellationRequested);
         }
 
-        // Don't retry HTTP status codes - let them propagate
+        if (outcome.Result is { } response &&
+            options.RetryHttpStatusCodes.Contains(response.StatusCode))
+        {
+            return request == null || IsSafeMethodOrUnsafeAllowed(request, options);
+        }
+
         return false;
+    }
+
+    private static bool IsSafeMethodOrUnsafeAllowed(HttpRequestMessage request, HttpResilienceOptions options)
+    {
+        if (options.RetryUnsafeHttpMethods)
+        {
+            return true;
+        }
+
+        var method = request.Method;
+        return method == HttpMethod.Get || method == HttpMethod.Head || method == HttpMethod.Options;
     }
 
     private static bool IsRetriableException(Exception exception, HttpResilienceOptions options,

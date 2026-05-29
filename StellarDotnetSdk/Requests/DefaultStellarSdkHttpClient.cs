@@ -7,7 +7,8 @@ namespace StellarDotnetSdk.Requests;
 /// <summary>
 ///     A preconfigured <see cref="HttpClient" /> for communicating with Stellar Horizon and Soroban RPC servers.
 ///     Sets default request headers (client name, version, and optional bearer token) and optionally
-///     wraps the handler pipeline with <see cref="RetryingHttpMessageHandler" /> for connection-level retries.
+///     wraps the handler pipeline with <see cref="RetryingHttpMessageHandler" /> when <see cref="HttpResilienceOptions" />
+///     has any feature enabled (retries, circuit breaker, timeout, or status-code retries).
 /// </summary>
 public class DefaultStellarSdkHttpClient : HttpClient
 {
@@ -24,10 +25,10 @@ public class DefaultStellarSdkHttpClient : HttpClient
     ///         and <see cref="HttpResilienceOptions" />) instead of relying on this type directly.
     ///     </para>
     ///     <para>
-    ///         By default, no automatic retries are enabled. To enable retries for connection failures
-    ///         (network errors, DNS failures), pass a custom <see cref="HttpResilienceOptions" /> instance with
-    ///         <c>MaxRetryCount</c> set to a positive value. HTTP error status codes (4xx/5xx) are never retried
-    ///         automatically.
+    ///         By default, no automatic retries are enabled. To enable retries, pass a custom
+    ///         <see cref="HttpResilienceOptions" /> instance with <c>MaxRetryCount</c> set to a positive value
+    ///         (and optionally populate <c>RetryHttpStatusCodes</c> for HTTP status-code retries). The
+    ///         <c>HttpResilienceOptionsPresets.WithStandardRetries()</c> preset matches the .NET industry standard.
     ///     </para>
     /// </summary>
     /// <param name="bearerToken">Bearer token in case the server requires it.</param>

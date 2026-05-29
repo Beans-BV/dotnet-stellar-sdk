@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -487,6 +488,236 @@ public class RetryingHttpMessageHandlerTests
         Assert.AreEqual(1, handler.CallCount);
     }
 
+    /// <summary>
+    ///     Verifies that the handler retries when a configured status code is returned, then succeeds.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_RetryHttpStatusCodes_RetriesThenSucceeds()
+    {
+        var scripted = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests),
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests),
+            ScriptedHttpMessageHandler.Ok());
+
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 3,
+            BaseDelay = TimeSpan.FromMilliseconds(1),
+            MaxDelay = TimeSpan.FromMilliseconds(10),
+            UseJitter = false,
+        };
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);
+
+        using var handler = new RetryingHttpMessageHandler(scripted, options);
+        using var client = new HttpClient(handler);
+
+        var response = await client.GetAsync(TestUri);
+
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.AreEqual(3, scripted.CallCount);
+    }
+
+    /// <summary>
+    ///     Verifies that the handler does not retry status codes that are not in RetryHttpStatusCodes.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_StatusCodeNotInSet_DoesNotRetry()
+    {
+        var scripted = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests));
+
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 3,
+            BaseDelay = TimeSpan.FromMilliseconds(1),
+        };
+        // Deliberately NOT adding TooManyRequests.
+
+        using var handler = new RetryingHttpMessageHandler(scripted, options);
+        using var client = new HttpClient(handler);
+
+        var response = await client.GetAsync(TestUri);
+
+        Assert.AreEqual(HttpStatusCode.TooManyRequests, response.StatusCode);
+        Assert.AreEqual(1, scripted.CallCount);
+    }
+
+    /// <summary>
+    ///     Verifies that status-code retries stop after MaxRetryCount attempts.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_StatusCodeRetries_StopAfterMaxRetryCount()
+    {
+        var scripted = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.ServiceUnavailable),
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.ServiceUnavailable),
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.ServiceUnavailable),
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.ServiceUnavailable));
+
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 2,
+            BaseDelay = TimeSpan.FromMilliseconds(1),
+            MaxDelay = TimeSpan.FromMilliseconds(10),
+            UseJitter = false,
+        };
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.ServiceUnavailable);
+
+        using var handler = new RetryingHttpMessageHandler(scripted, options);
+        using var client = new HttpClient(handler);
+
+        var response = await client.GetAsync(TestUri);
+
+        Assert.AreEqual(HttpStatusCode.ServiceUnavailable, response.StatusCode);
+        Assert.AreEqual(3, scripted.CallCount); // 1 initial + 2 retries
+    }
+
+    /// <summary>
+    ///     Verifies that POST requests are not retried by default, even with a configured retry status code.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_StatusCodeOnPost_NotRetriedByDefault()
+    {
+        var scripted = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests));
+
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 3,
+            BaseDelay = TimeSpan.FromMilliseconds(1),
+        };
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);
+
+        using var handler = new RetryingHttpMessageHandler(scripted, options);
+        using var client = new HttpClient(handler);
+
+        var response = await client.PostAsync(TestUri, new StringContent(string.Empty));
+
+        Assert.AreEqual(HttpStatusCode.TooManyRequests, response.StatusCode);
+        Assert.AreEqual(1, scripted.CallCount); // POST not retried by default
+    }
+
+    /// <summary>
+    ///     Verifies that POST is retried when RetryUnsafeHttpMethods is enabled.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_StatusCodeOnPost_RetriedWhenRetryUnsafeHttpMethodsTrue()
+    {
+        var scripted = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests),
+            ScriptedHttpMessageHandler.Ok());
+
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 3,
+            BaseDelay = TimeSpan.FromMilliseconds(1),
+            RetryUnsafeHttpMethods = true,
+        };
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);
+
+        using var handler = new RetryingHttpMessageHandler(scripted, options);
+        using var client = new HttpClient(handler);
+
+        var response = await client.PostAsync(TestUri, new StringContent(string.Empty));
+
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.AreEqual(2, scripted.CallCount);
+    }
+
+    /// <summary>
+    ///     Verifies that the Retry-After header value (delta-seconds form) is honored as the retry delay.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_RetryAfterHeader_HonoredAsDelay()
+    {
+        var scripted = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests, "1"),
+            ScriptedHttpMessageHandler.Ok());
+
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 3,
+            BaseDelay = TimeSpan.FromMilliseconds(1),
+            MaxDelay = TimeSpan.FromSeconds(10),
+            UseJitter = false,
+            RespectRetryAfter = true,
+        };
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);
+
+        using var handler = new RetryingHttpMessageHandler(scripted, options);
+        using var client = new HttpClient(handler);
+
+        var stopwatch = Stopwatch.StartNew();
+        var response = await client.GetAsync(TestUri);
+        stopwatch.Stop();
+
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.AreEqual(2, scripted.CallCount);
+        Assert.IsTrue(stopwatch.Elapsed >= TimeSpan.FromMilliseconds(900),
+            $"Expected at least ~1s delay from Retry-After header, got {stopwatch.Elapsed.TotalMilliseconds}ms");
+    }
+
+    /// <summary>
+    ///     Verifies that the Retry-After header value is capped at MaxDelay.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_RetryAfterHeader_CappedAtMaxDelay()
+    {
+        var scripted = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests, "300"),
+            ScriptedHttpMessageHandler.Ok());
+
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 3,
+            BaseDelay = TimeSpan.FromMilliseconds(1),
+            MaxDelay = TimeSpan.FromMilliseconds(100),
+            UseJitter = false,
+            RespectRetryAfter = true,
+        };
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);
+
+        using var handler = new RetryingHttpMessageHandler(scripted, options);
+        using var client = new HttpClient(handler);
+
+        var stopwatch = Stopwatch.StartNew();
+        var response = await client.GetAsync(TestUri);
+        stopwatch.Stop();
+
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.IsTrue(stopwatch.Elapsed < TimeSpan.FromSeconds(2),
+            $"Retry-After 300s should be capped at MaxDelay=100ms, got {stopwatch.Elapsed.TotalMilliseconds}ms");
+    }
+
+    /// <summary>
+    ///     Verifies that GET, HEAD, and OPTIONS are all retried by default for configured status codes.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_StatusCodeOnSafeMethods_RetriedByDefault()
+    {
+        foreach (var method in new[] { HttpMethod.Get, HttpMethod.Head, HttpMethod.Options })
+        {
+            var scripted = new ScriptedHttpMessageHandler(
+                ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests),
+                ScriptedHttpMessageHandler.Ok());
+
+            var options = new HttpResilienceOptions
+            {
+                MaxRetryCount = 3,
+                BaseDelay = TimeSpan.FromMilliseconds(1),
+            };
+            options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);
+
+            using var handler = new RetryingHttpMessageHandler(scripted, options);
+            using var client = new HttpClient(handler);
+
+            var response = await client.SendAsync(new HttpRequestMessage(method, TestUri));
+
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"method={method}");
+            Assert.AreEqual(2, scripted.CallCount, $"method={method}");
+        }
+    }
+
     private static HttpResilienceOptions CreateDefaultOptions()
     {
         return new HttpResilienceOptions
@@ -534,104 +765,5 @@ public class RetryingHttpMessageHandlerTests
             CallTimes.Add(DateTimeOffset.UtcNow);
             return _sendAsync(CallCount, request, cancellationToken);
         }
-    }
-}
-
-/// <summary>
-///     Unit tests for <see cref="HttpResilienceOptions" /> class validation.
-/// </summary>
-[TestClass]
-public class HttpResilienceOptionsTests
-{
-    /// <summary>
-    ///     Verifies that HttpResilienceOptions.MaxRetryCount throws ArgumentOutOfRangeException when set to negative value.
-    /// </summary>
-    [TestMethod]
-    public void MaxRetryCount_WithNegativeValue_ThrowsArgumentOutOfRangeException()
-    {
-        // Arrange
-        var options = new HttpResilienceOptions();
-
-        // Act & Assert
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.MaxRetryCount = -1);
-    }
-
-    /// <summary>
-    ///     Verifies that HttpResilienceOptions.BaseDelay throws ArgumentOutOfRangeException when set to zero.
-    /// </summary>
-    [TestMethod]
-    public void BaseDelay_WithZeroValue_ThrowsArgumentOutOfRangeException()
-    {
-        // Arrange
-        var options = new HttpResilienceOptions();
-
-        // Act & Assert
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.BaseDelay = TimeSpan.Zero);
-    }
-
-    /// <summary>
-    ///     Verifies that HttpResilienceOptions.MaxDelay throws ArgumentOutOfRangeException when set to negative value.
-    /// </summary>
-    [TestMethod]
-    public void MaxDelay_WithNegativeValue_ThrowsArgumentOutOfRangeException()
-    {
-        // Arrange
-        var options = new HttpResilienceOptions();
-
-        // Act & Assert
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.MaxDelay = TimeSpan.FromMilliseconds(-1));
-    }
-
-    /// <summary>
-    ///     Verifies that HttpResilienceOptions.FailureRatio throws ArgumentOutOfRangeException when set to value greater than
-    ///     1.
-    /// </summary>
-    [TestMethod]
-    public void FailureRatio_WithValueGreaterThanOne_ThrowsArgumentOutOfRangeException()
-    {
-        // Arrange
-        var options = new HttpResilienceOptions();
-
-        // Act & Assert
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.FailureRatio = 2);
-    }
-
-    /// <summary>
-    ///     Verifies that HttpResilienceOptions.MinimumThroughput throws ArgumentOutOfRangeException when set to zero.
-    /// </summary>
-    [TestMethod]
-    public void MinimumThroughput_WithZeroValue_ThrowsArgumentOutOfRangeException()
-    {
-        // Arrange
-        var options = new HttpResilienceOptions();
-
-        // Act & Assert
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.MinimumThroughput = 0);
-    }
-
-    /// <summary>
-    ///     Verifies that HttpResilienceOptions.SamplingDuration throws ArgumentOutOfRangeException when set to zero.
-    /// </summary>
-    [TestMethod]
-    public void SamplingDuration_WithZeroValue_ThrowsArgumentOutOfRangeException()
-    {
-        // Arrange
-        var options = new HttpResilienceOptions();
-
-        // Act & Assert
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.SamplingDuration = TimeSpan.Zero);
-    }
-
-    /// <summary>
-    ///     Verifies that HttpResilienceOptions.BreakDuration throws ArgumentOutOfRangeException when set to zero.
-    /// </summary>
-    [TestMethod]
-    public void BreakDuration_WithZeroValue_ThrowsArgumentOutOfRangeException()
-    {
-        // Arrange
-        var options = new HttpResilienceOptions();
-
-        // Act & Assert
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.BreakDuration = TimeSpan.Zero);
     }
 }

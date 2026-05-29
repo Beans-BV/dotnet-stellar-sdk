@@ -1,4 +1,5 @@
 using System;
+using StellarDotnetSdk.Requests;
 
 namespace StellarDotnetSdk.Exceptions;
 
@@ -8,6 +9,8 @@ namespace StellarDotnetSdk.Exceptions;
 /// </summary>
 public class ServiceUnavailableException : Exception
 {
+    private readonly object? _retryAfterRaw;
+
     /// <summary>
     ///     Initializes a new instance of the <see cref="ServiceUnavailableException" /> class.
     /// </summary>
@@ -18,6 +21,7 @@ public class ServiceUnavailableException : Exception
         : base(
             "The server is currently unable to handle the request due to a temporary overloading or maintenance of the server.")
     {
+        _retryAfterRaw = retryAfter;
         try
         {
             var retryAfterStringValue = retryAfter?.ToString();
@@ -43,4 +47,11 @@ public class ServiceUnavailableException : Exception
 
     /// <summary>Gets the number of seconds to wait before retrying, parsed from the Retry-After header.</summary>
     public int? RetryAfter { get; }
+
+    /// <summary>
+    ///     The original <c>Retry-After</c> header value parsed as a <see cref="TimeSpan" />, or null if absent or
+    ///     unparseable. Parses the raw header, so it supports both delay-seconds and HTTP-date forms
+    ///     (RFC 7231 §7.1.3) at full precision (unlike <see cref="RetryAfter" />, which is truncated to whole seconds).
+    /// </summary>
+    public TimeSpan? RetryAfterDelay => RetryAfterParser.Parse(_retryAfterRaw);
 }

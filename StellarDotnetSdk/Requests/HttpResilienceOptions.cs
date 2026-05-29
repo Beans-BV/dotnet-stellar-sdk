@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace StellarDotnetSdk.Requests;
 
@@ -18,8 +19,8 @@ public sealed class HttpResilienceOptions
 
     /// <summary>
     ///     Gets or sets the maximum number of retry attempts. Default is 0 (disabled).
-    ///     Set to a positive value to enable retries for connection failures only (network errors, DNS failures, etc.).
-    ///     HTTP error status codes (4xx/5xx) are never retried automatically.
+    ///     Set to a positive value to enable retries for connection failures (network errors, DNS failures, etc.).
+    ///     HTTP error status codes are retried only when added to <see cref="RetryHttpStatusCodes" />.
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when value is negative.</exception>
     public int MaxRetryCount
@@ -174,18 +175,52 @@ public sealed class HttpResilienceOptions
     public TimeSpan? RequestTimeout { get; set; } = null;
 
     /// <summary>
-    ///     Gets whether any resilience feature is enabled (retries, circuit breaker, or timeout).
-    ///     Returns true if MaxRetryCount is greater than 0, EnableCircuitBreaker is true, or RequestTimeout has a value.
+    ///     Gets whether any resilience feature is enabled (retries, circuit breaker, timeout, or status-code retries).
+    ///     Returns true if MaxRetryCount is greater than 0, EnableCircuitBreaker is true, RequestTimeout has a value,
+    ///     or RetryHttpStatusCodes is non-empty.
     /// </summary>
     public bool HasAnyResilienceFeatureEnabled =>
-        MaxRetryCount > 0 || EnableCircuitBreaker || RequestTimeout.HasValue;
+        MaxRetryCount > 0 || EnableCircuitBreaker || RequestTimeout.HasValue || RetryHttpStatusCodes.Count > 0;
 
     /// <summary>
-    ///     Gets additional exception types to consider as retriable.
-    ///     By default, HttpRequestException, TimeoutException, and TaskCanceledException (from timeouts) are retriable.
-    ///     Note: HTTP status codes are never retried automatically. Only connection-level failures (exceptions) are retried.
+    ///     Additional exception types to retry, in addition to the defaults (
+    ///     <see cref="System.Net.Http.HttpRequestException" />,
+    ///     <see cref="TimeoutException" />, and <see cref="System.Threading.Tasks.TaskCanceledException" /> when not
+    ///     user-cancelled).
+    ///     <para>
+    ///         <b>Scope limitation:</b> This applies only to exceptions thrown from within the HTTP message handler
+    ///         chain (i.e., from <c>HttpClient.SendAsync</c>). It does <i>not</i> apply to exceptions thrown by
+    ///         <c>ResponseHandler</c> after the response is received — including <c>TooManyRequestsException</c>,
+    ///         <c>ServiceUnavailableException</c>, and <c>HttpResponseException</c>. To retry those, use
+    ///         <see cref="RetryHttpStatusCodes" /> instead — that mechanism inspects the response before it is
+    ///         translated into a typed exception.
+    ///     </para>
     /// </summary>
     public ISet<Type> AdditionalRetriableExceptionTypes { get; } = new HashSet<Type>();
+
+    /// <summary>
+    ///     HTTP status codes that should trigger a retry when received as a response. Default: empty (no status-code retries).
+    ///     When non-empty and <see cref="MaxRetryCount" /> is greater than 0, the retry pipeline observes
+    ///     <see cref="System.Net.Http.HttpResponseMessage.StatusCode" /> and retries on match.
+    ///     Retries are gated by <see cref="RetryUnsafeHttpMethods" />: by default, only safe HTTP methods
+    ///     (GET, HEAD, OPTIONS) are retried.
+    /// </summary>
+    public ISet<HttpStatusCode> RetryHttpStatusCodes { get; } = new HashSet<HttpStatusCode>();
+
+    /// <summary>
+    ///     When true, status-code retries (see <see cref="RetryHttpStatusCodes" />) apply to all HTTP methods,
+    ///     including unsafe ones (POST, PUT, PATCH, DELETE). Default: false — only safe methods (GET, HEAD, OPTIONS)
+    ///     are retried. Set to true only if your endpoint is genuinely idempotent or tolerates duplicates
+    ///     (e.g., via idempotency keys).
+    /// </summary>
+    public bool RetryUnsafeHttpMethods { get; set; } = false;
+
+    /// <summary>
+    ///     When the server responds with a <c>Retry-After</c> header (RFC 7231) on a retried status code,
+    ///     use that value as the retry delay (capped by <see cref="MaxDelay" />). Default: true.
+    ///     Only takes effect when status-code retries are enabled (see <see cref="RetryHttpStatusCodes" />).
+    /// </summary>
+    public bool RespectRetryAfter { get; set; } = true;
 }
 
 /// <summary>
@@ -227,17 +262,20 @@ public static class HttpResilienceOptionsPresets
 
     /// <summary>
     ///     Creates options tuned for Stellar RPC polling workflows.
-    ///     Uses more retries and longer delays for connection failures to accommodate network instability.
-    ///     Note: HTTP error status codes are still not retried automatically.
+    ///     Retries connection failures and the common transient HTTP status codes (408/429/500/502/503/504)
+    ///     for safe methods, with a higher retry budget and longer delays suited to long-running operations.
     /// </summary>
     public static HttpResilienceOptions ForSorobanPolling()
     {
-        return new HttpResilienceOptions
+        var options = new HttpResilienceOptions
         {
             MaxRetryCount = 5,
             BaseDelay = TimeSpan.FromMilliseconds(500),
             MaxDelay = TimeSpan.FromSeconds(15),
+            RespectRetryAfter = true,
         };
+        SeedStandardRetryStatusCodes(options);
+        return options;
     }
 
     /// <summary>
@@ -252,5 +290,37 @@ public static class HttpResilienceOptionsPresets
             BaseDelay = TimeSpan.FromMilliseconds(50),
             MaxDelay = TimeSpan.FromMilliseconds(200),
         };
+    }
+
+    /// <summary>
+    ///     Creates options matching the .NET industry standard
+    ///     (<c>Microsoft.Extensions.Http.Resilience.AddStandardResilienceHandler</c>):
+    ///     retries 408/429/500/502/503/504 for safe HTTP methods, 3 attempts with exponential backoff
+    ///     (200ms-5s) and jitter, honors the <c>Retry-After</c> header. POST/PUT/PATCH/DELETE are NOT
+    ///     retried by default; set <see cref="HttpResilienceOptions.RetryUnsafeHttpMethods" /> to true
+    ///     to opt in. Recommended for general-purpose Horizon/Soroban clients.
+    /// </summary>
+    public static HttpResilienceOptions WithStandardRetries()
+    {
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 3,
+            BaseDelay = TimeSpan.FromMilliseconds(200),
+            MaxDelay = TimeSpan.FromSeconds(5),
+            UseJitter = true,
+            RespectRetryAfter = true,
+        };
+        SeedStandardRetryStatusCodes(options);
+        return options;
+    }
+
+    private static void SeedStandardRetryStatusCodes(HttpResilienceOptions options)
+    {
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.RequestTimeout);
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.InternalServerError);
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.BadGateway);
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.ServiceUnavailable);
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.GatewayTimeout);
     }
 }
