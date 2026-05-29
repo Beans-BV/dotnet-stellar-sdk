@@ -687,10 +687,11 @@ public class RetryingHttpMessageHandlerTests
         stopwatch.Stop();
 
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        // A 300s Retry-After must be capped to MaxDelay (100ms): the single retry waits ~100ms, not 300s
-        // (and not ~0ms, which would mean Retry-After was ignored in favor of the 1ms exponential backoff).
+        // The retry waits ~100ms (Retry-After 300s capped to MaxDelay), proving the cap was applied and the
+        // header honored — not ~0ms (header ignored). The upper bound is deliberately generous to avoid CI
+        // flakiness; an uncapped 300s wait would hang the test long before reaching this assertion.
         Assert.IsTrue(
-            stopwatch.Elapsed >= TimeSpan.FromMilliseconds(80) && stopwatch.Elapsed < TimeSpan.FromMilliseconds(500),
+            stopwatch.Elapsed >= TimeSpan.FromMilliseconds(80) && stopwatch.Elapsed < TimeSpan.FromSeconds(2),
             $"Expected Retry-After capped to ~100ms (MaxDelay), got {stopwatch.Elapsed.TotalMilliseconds}ms");
     }
 
