@@ -213,13 +213,14 @@ var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOp
 
 ## Request Timeout (Advanced)
 
-You can set a per-request timeout:
+You can set an overall timeout for the whole operation. It is applied as the outermost strategy, so it covers
+all retry attempts and their backoff delays — not each attempt individually:
 
 ```csharp
 var resilienceOptions = new HttpResilienceOptions
 {
     MaxRetryCount = 3,
-    RequestTimeout = TimeSpan.FromSeconds(10),  // Each attempt times out after 10s
+    RequestTimeout = TimeSpan.FromSeconds(10),  // The whole operation (all retries) must finish within 10s
 };
 
 var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);

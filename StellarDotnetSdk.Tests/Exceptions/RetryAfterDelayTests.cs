@@ -86,6 +86,8 @@ public class RetryAfterDelayTests
         var delay = ex.RetryAfterDelay!.Value;
         Assert.IsTrue(delay > TimeSpan.FromSeconds(80) && delay <= TimeSpan.FromSeconds(90),
             $"Expected ~90s, got {delay}.");
+        // RetryAfter (whole seconds) must reflect the full delay, not the 0-59 seconds component
+        Assert.IsTrue(ex.RetryAfter is >= 80 and <= 91, $"Expected RetryAfter ~90, got {ex.RetryAfter}.");
     }
 
     /// <summary>
@@ -100,6 +102,8 @@ public class RetryAfterDelayTests
         var delay = ex.RetryAfterDelay!.Value;
         Assert.IsTrue(delay > TimeSpan.FromSeconds(80) && delay <= TimeSpan.FromSeconds(90),
             $"Expected ~90s, got {delay}.");
+        // RetryAfter (whole seconds) must reflect the full delay, not the 0-59 seconds component
+        Assert.IsTrue(ex.RetryAfter is >= 80 and <= 91, $"Expected RetryAfter ~90, got {ex.RetryAfter}.");
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using StellarDotnetSdk.Requests;
 
 namespace StellarDotnetSdk.Exceptions;
@@ -33,9 +34,14 @@ public class TooManyRequestsException : Exception
             {
                 RetryAfter = retryAfterInt;
             }
-            else if (DateTime.TryParse(retryAfterStringValue, out var retryAfterDateTime))
+            else if (DateTimeOffset.TryParse(retryAfterStringValue, CultureInfo.InvariantCulture,
+                         DateTimeStyles.AssumeUniversal, out var retryAfterDate))
             {
-                RetryAfter = (retryAfterDateTime - DateTime.UtcNow).Seconds;
+                var seconds = (retryAfterDate - DateTimeOffset.UtcNow).TotalSeconds;
+                if (seconds > 0 && seconds <= int.MaxValue)
+                {
+                    RetryAfter = (int)Math.Ceiling(seconds);
+                }
             }
         }
         catch (Exception)
@@ -48,9 +54,9 @@ public class TooManyRequestsException : Exception
     public int? RetryAfter { get; }
 
     /// <summary>
-    ///     The original <c>Retry-After</c> header value parsed as a <see cref="TimeSpan" />, or null if absent or
-    ///     unparseable. Parses the raw header, so it supports both delay-seconds and HTTP-date forms
-    ///     (RFC 7231 §7.1.3) at full precision (unlike <see cref="RetryAfter" />, which is truncated to whole seconds).
+    ///     The <c>Retry-After</c> value parsed as a <see cref="TimeSpan" />, or null if absent or unparseable.
+    ///     Supports both the delay-seconds and HTTP-date forms (RFC 7231 §7.1.3) and preserves the full value,
+    ///     whereas <see cref="RetryAfter" /> exposes whole seconds only.
     /// </summary>
     public TimeSpan? RetryAfterDelay => RetryAfterParser.Parse(_retryAfterRaw);
 }

@@ -43,6 +43,9 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
+        // Polly's ShouldHandle/DelayGenerator callbacks receive only the Outcome and ResilienceContext, not the
+        // original request. Stash the request in the context's property bag so ShouldHandleOutcome can inspect the
+        // HTTP method for safe/unsafe gating. The context is pooled, so it is returned in the finally block below.
         var context = ResilienceContextPool.Shared.Get(cancellationToken);
         context.Properties.Set(RequestKey, request);
         try
@@ -53,6 +56,8 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         }
         finally
         {
+            // Release the request reference before returning the context to the pool.
+            context.Properties.Set(RequestKey, null);
             ResilienceContextPool.Shared.Return(context);
         }
     }
@@ -108,6 +113,8 @@ public class RetryingHttpMessageHandler : DelegatingHandler
                 },
                 DelayGenerator = args =>
                 {
+                    // Returning null tells Polly to fall back to its configured backoff (exponential + jitter),
+                    // not to use a zero delay. We only override that backoff to honor a Retry-After header.
                     if (!options.RespectRetryAfter || options.RetryHttpStatusCodes.Count == 0)
                     {
                         return new ValueTask<TimeSpan?>((TimeSpan?)null);
@@ -117,6 +124,8 @@ public class RetryingHttpMessageHandler : DelegatingHandler
                     var parsed = RetryAfterParser.ToTimeSpan(retryAfter);
                     if (parsed is { } delay)
                     {
+                        // Polly does not apply RetryStrategyOptions.MaxDelay to a value returned from
+                        // DelayGenerator, so cap the server-provided Retry-After against MaxDelay here.
                         if (delay > options.MaxDelay)
                         {
                             delay = options.MaxDelay;
@@ -126,6 +135,13 @@ public class RetryingHttpMessageHandler : DelegatingHandler
                     }
 
                     return new ValueTask<TimeSpan?>((TimeSpan?)null);
+                },
+                OnRetry = args =>
+                {
+                    // Dispose the response we're abandoning so its content/connection isn't held until GC
+                    // across retries. The final response (returned to the caller) never passes through OnRetry.
+                    args.Outcome.Result?.Dispose();
+                    return default;
                 },
             };
 

@@ -34,7 +34,10 @@ public class DefaultStellarSdkHttpClient : HttpClient
     /// <param name="bearerToken">Bearer token in case the server requires it.</param>
     /// <param name="clientName">Name of the client.</param>
     /// <param name="clientVersion">Version of the client.</param>
-    /// <param name="resilienceOptions">Resilience options. If null, default retry configuration is used.</param>
+    /// <param name="resilienceOptions">
+    ///     Resilience options. If null, no resilience handler is added — requests are sent with no retries,
+    ///     circuit breaker, or timeout.
+    /// </param>
     /// <param name="innerHandler">
     ///     Optional inner HTTP message handler. If null, defaults to <see cref="SocketsHttpHandler" />.
     ///     Use this to inject a custom handler for testing, proxies, or custom certificate handling.
@@ -67,7 +70,8 @@ public class DefaultStellarSdkHttpClient : HttpClient
     {
         var handler = innerHandler ?? new SocketsHttpHandler();
 
-        // Add resilience handler if any resilience feature is enabled (retries, circuit breaker, or timeout)
+        // Add resilience handler if any resilience feature is enabled
+        // (retries, status-code retries, circuit breaker, or timeout)
         if (resilienceOptions?.HasAnyResilienceFeatureEnabled == true)
         {
             return new RetryingHttpMessageHandler(handler, resilienceOptions);

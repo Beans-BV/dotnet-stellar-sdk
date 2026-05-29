@@ -44,14 +44,14 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    ///     Verifies that RetryingHttpMessageHandler does not retry HTTP error status codes - only connection failures are
-    ///     retried.
+    ///     Verifies that an HTTP error status code not listed in RetryHttpStatusCodes (empty by default) is returned
+    ///     immediately without retrying.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_HttpErrorStatus_DoesNotRetry()
     {
         // Arrange
-        // HTTP status codes are never retried - only connection failures
+        // 503 is not in RetryHttpStatusCodes (empty by default), so it is returned without retry
         var handler = new TrackingHttpMessageHandler((attempt, _, _) =>
         {
             if (attempt == 1)
@@ -143,7 +143,9 @@ public class RetryingHttpMessageHandlerTests
     public async Task SendAsync_ConnectionFailure_ReusesSameRequest()
     {
         // Arrange
-        // Connection failures happen before request is sent, so same request can be reused
+        // The handler reuses the same HttpRequestMessage across retries (no cloning). This is safe for connection
+        // failures (the body is never read) and for the SDK's status-code retries because its request bodies are
+        // buffered (StringContent / FormUrlEncodedContent) and can be re-sent.
         HttpRequestMessage? firstAttemptRequest = null;
         HttpRequestMessage? secondAttemptRequest = null;
 
@@ -180,19 +182,19 @@ public class RetryingHttpMessageHandlerTests
         Assert.AreEqual(2, handler.CallCount);
         Assert.IsNotNull(firstAttemptRequest);
         Assert.IsNotNull(secondAttemptRequest);
-        // Same request object can be reused for connection failures
+        // The same request instance reaches the inner handler on every attempt
         Assert.AreSame(firstAttemptRequest, secondAttemptRequest);
     }
 
     /// <summary>
-    ///     Verifies that RetryingHttpMessageHandler never retries HTTP status codes, even error codes.
+    ///     Verifies that a status code not present in RetryHttpStatusCodes is returned immediately without retrying,
+    ///     even when retries are enabled. (To retry specific status codes, add them to RetryHttpStatusCodes.)
     /// </summary>
     [TestMethod]
-    public async Task SendAsync_HttpStatusCodes_NeverRetried()
+    public async Task SendAsync_StatusCodeNotInRetryList_DoesNotRetry()
     {
         // Arrange
-        // HTTP status codes are never retried, even if added to additional retriable codes
-        // (that property no longer exists, but this test confirms behavior)
+        // 409 Conflict is not in RetryHttpStatusCodes (empty by default), so it is returned without retry
         var handler = new TrackingHttpMessageHandler((attempt, _, _) =>
         {
             return Task.FromResult(CreateResponse(
@@ -685,8 +687,11 @@ public class RetryingHttpMessageHandlerTests
         stopwatch.Stop();
 
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        Assert.IsTrue(stopwatch.Elapsed < TimeSpan.FromSeconds(2),
-            $"Retry-After 300s should be capped at MaxDelay=100ms, got {stopwatch.Elapsed.TotalMilliseconds}ms");
+        // A 300s Retry-After must be capped to MaxDelay (100ms): the single retry waits ~100ms, not 300s
+        // (and not ~0ms, which would mean Retry-After was ignored in favor of the 1ms exponential backoff).
+        Assert.IsTrue(
+            stopwatch.Elapsed >= TimeSpan.FromMilliseconds(80) && stopwatch.Elapsed < TimeSpan.FromMilliseconds(500),
+            $"Expected Retry-After capped to ~100ms (MaxDelay), got {stopwatch.Elapsed.TotalMilliseconds}ms");
     }
 
     /// <summary>

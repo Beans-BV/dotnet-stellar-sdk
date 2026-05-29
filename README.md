@@ -80,7 +80,7 @@ var server = new Server("https://horizon-testnet.stellar.org", resilience, beare
 ```
 
 `WithStandardRetries()` retries HTTP 408, 429, 500, 502, 503, 504 for safe methods
-(GET, HEAD, OPTIONS) with 3 attempts, exponential backoff with jitter, and respects the
+(GET, HEAD, OPTIONS) with up to 3 retries, exponential backoff with jitter, and respects the
 `Retry-After` response header. POST/PUT/PATCH/DELETE are NOT retried by default — set
 `options.RetryUnsafeHttpMethods = true` to opt in (only if your endpoint is idempotent
 or tolerates duplicates, e.g., via idempotency keys).

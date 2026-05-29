@@ -169,8 +169,9 @@ public sealed class HttpResilienceOptions
     }
 
     /// <summary>
-    ///     Gets or sets the per-request timeout. Default is null (no timeout).
-    ///     When set, each request will timeout after this duration.
+    ///     Gets or sets the overall operation timeout. Default is null (no timeout).
+    ///     When set, the entire send operation — including all retry attempts and their backoff delays — must
+    ///     complete within this duration (applied as the outermost resilience strategy), not each attempt individually.
     /// </summary>
     public TimeSpan? RequestTimeout { get; set; } = null;
 
@@ -295,7 +296,7 @@ public static class HttpResilienceOptionsPresets
     /// <summary>
     ///     Creates options matching the .NET industry standard
     ///     (<c>Microsoft.Extensions.Http.Resilience.AddStandardResilienceHandler</c>):
-    ///     retries 408/429/500/502/503/504 for safe HTTP methods, 3 attempts with exponential backoff
+    ///     retries 408/429/500/502/503/504 for safe HTTP methods, up to 3 retries with exponential backoff
     ///     (200ms-5s) and jitter, honors the <c>Retry-After</c> header. POST/PUT/PATCH/DELETE are NOT
     ///     retried by default; set <see cref="HttpResilienceOptions.RetryUnsafeHttpMethods" /> to true
     ///     to opt in. Recommended for general-purpose Horizon/Soroban clients.

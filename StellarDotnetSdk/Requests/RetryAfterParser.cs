@@ -28,15 +28,14 @@ public static class RetryAfterParser
 
         if (header.Date is { } date)
         {
-            var delay = date - DateTimeOffset.UtcNow;
-            return delay > TimeSpan.Zero ? delay : null;
+            return FromDate(date);
         }
 
         return null;
     }
 
     /// <summary>
-    ///     Parses an arbitrary value (string with seconds, int, long, TimeSpan, or
+    ///     Parses an arbitrary value (a string in delay-seconds or HTTP-date form, int, long, TimeSpan, or
     ///     <see cref="RetryConditionHeaderValue" />) into a positive <see cref="TimeSpan" />,
     ///     or null if unparseable, missing, or non-positive.
     /// </summary>
@@ -53,7 +52,7 @@ public static class RetryAfterParser
                 => FromSeconds(d),
             string s when DateTimeOffset.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal,
                     out var dto)
-                => dto > DateTimeOffset.UtcNow ? dto - DateTimeOffset.UtcNow : null,
+                => FromDate(dto),
             _ => null,
         };
     }
@@ -69,5 +68,15 @@ public static class RetryAfterParser
             return null;
         }
         return TimeSpan.FromSeconds(seconds);
+    }
+
+    /// <summary>
+    ///     Converts an absolute retry time into a positive <see cref="TimeSpan" /> measured from now,
+    ///     or null when the time is in the past. Reads the current time once to avoid a check/use race.
+    /// </summary>
+    private static TimeSpan? FromDate(DateTimeOffset date)
+    {
+        var delay = date - DateTimeOffset.UtcNow;
+        return delay > TimeSpan.Zero ? delay : null;
     }
 }
