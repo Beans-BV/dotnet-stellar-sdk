@@ -13,6 +13,8 @@ public static class JsonOptions
 {
     /// <summary>
     ///     Default JSON serializer options with all custom converters registered.
+    ///     The instance is frozen via <see cref="JsonSerializerOptions.MakeReadOnly()" />
+    ///     to prevent accidental modification at runtime.
     /// </summary>
     /// <remarks>
     ///     Configuration:
@@ -28,45 +30,56 @@ public static class JsonOptions
     ///     - Enum converters: LiquidityPoolTypeEnum, SendTransactionStatusEnum, JsonStringEnumConverter (standard)
     ///     - HATEOAS link converters: LinkJsonConverter for EffectResponse and Response
     /// </remarks>
-    public static JsonSerializerOptions DefaultOptions { get; } = new()
+    public static readonly JsonSerializerOptions DefaultOptions = CreateDefaultOptions();
+
+    private static JsonSerializerOptions CreateDefaultOptions()
     {
-        // Allow deserializing numbers from strings (API sometimes returns "123" instead of 123)
-        NumberHandling = JsonNumberHandling.AllowReadingFromString,
-
-        // Case-insensitive property matching
-        PropertyNameCaseInsensitive = true,
-
-        // Reject JSON payloads with duplicate property names to prevent silent data corruption.
-        // Malformed or adversarial responses could otherwise overwrite financial fields (amount,
-        // balance, destination) with attacker-controlled values without any error.
-        AllowDuplicateProperties = false,
-
-        // Enforce C# nullability annotations so null values for non-nullable properties are rejected
-        RespectNullableAnnotations = true,
-
-        Converters =
+        var options = new JsonSerializerOptions
         {
-            // Polymorphic converters (MUST be registered globally)
-            new OperationResponseJsonConverter(),
-            new EffectResponseJsonConverter(),
-            new PredicateJsonConverter(),
+            // Allow deserializing numbers from strings (API sometimes returns "123" instead of 123)
+            NumberHandling = JsonNumberHandling.AllowReadingFromString,
 
-            // Domain type converters
-            new AssetJsonConverter(),
-            new AssetAmountJsonConverter(),
-            new KeyPairJsonConverter(),
-            new LiquidityPoolTypeEnumJsonConverter(),
-            new LiquidityPoolIdJsonConverter(),
-            new LiquidityPoolClaimableAssetAmountJsonConverter(),
-            new ReserveJsonConverter(),
+            // Case-insensitive property matching
+            PropertyNameCaseInsensitive = true,
 
-            // HATEOAS link converters
-            new LinkJsonConverter<EffectResponse>(),
-            new LinkJsonConverter<Response>(),
+            // Reject JSON payloads with duplicate property names to prevent silent data corruption.
+            // Malformed or adversarial responses could otherwise overwrite financial fields (amount,
+            // balance, destination) with attacker-controlled values without any error.
+            AllowDuplicateProperties = false,
 
-            // Enum converters
-            new JsonStringEnumConverter(),
-            new SendTransactionStatusEnumJsonConverter(),
-        },
-    };
+            // Enforce C# nullability annotations so null values for non-nullable properties are rejected
+            RespectNullableAnnotations = true,
+
+            Converters =
+            {
+                // Polymorphic converters (MUST be registered globally)
+                new OperationResponseJsonConverter(),
+                new EffectResponseJsonConverter(),
+                new PredicateJsonConverter(),
+
+                // Domain type converters
+                new AssetJsonConverter(),
+                new AssetAmountJsonConverter(),
+                new KeyPairJsonConverter(),
+                new LiquidityPoolTypeEnumJsonConverter(),
+                new LiquidityPoolIdJsonConverter(),
+                new LiquidityPoolClaimableAssetAmountJsonConverter(),
+                new ReserveJsonConverter(),
+
+                // HATEOAS link converters
+                new LinkJsonConverter<EffectResponse>(),
+                new LinkJsonConverter<Response>(),
+
+                // Enum converters
+                new JsonStringEnumConverter(),
+                new SendTransactionStatusEnumJsonConverter(),
+            },
+        };
+
+        // Freeze the options to prevent accidental modification of the shared singleton.
+        // populateMissingResolver: true installs the default reflection-based TypeInfoResolver,
+        // which matches the SDK's existing serialization behavior.
+        options.MakeReadOnly(true);
+        return options;
+    }
 }
