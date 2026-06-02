@@ -16,18 +16,18 @@ public class ServerResilienceIntegrationTests
 {
     /// <summary>
     ///     Verifies the full preset wiring end-to-end: a Server backed by a DefaultStellarSdkHttpClient
-    ///     configured with the WithStandardRetries preset retries a 429 and returns the successful
-    ///     deserialized root response on the follow-up call.
+    ///     configured with the ForHorizon preset retries a 429 and returns the successful deserialized
+    ///     root response on the follow-up call.
     /// </summary>
     [TestMethod]
-    public async Task Server_WithStandardRetries_RetriesTooManyRequestsThenReturnsRoot()
+    public async Task Server_ForHorizon_RetriesTooManyRequestsThenReturnsRoot()
     {
         var rootJson = File.ReadAllText(Utils.GetTestDataPath("Responses/root.json"));
         var scripted = new ScriptedHttpMessageHandler(
             ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests, "0"),
             ScriptedHttpMessageHandler.Ok(rootJson));
 
-        var resilience = HttpResilienceOptionsPresets.WithStandardRetries();
+        var resilience = HttpResilienceOptionsPresets.ForHorizon();
         resilience.BaseDelay = TimeSpan.FromMilliseconds(1);
         resilience.MaxDelay = TimeSpan.FromMilliseconds(10);
         resilience.UseJitter = false;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 
 namespace StellarDotnetSdk.Requests;
 
@@ -203,18 +204,31 @@ public sealed class HttpResilienceOptions
     ///     HTTP status codes that should trigger a retry when received as a response. Default: empty (no status-code retries).
     ///     When non-empty and <see cref="MaxRetryCount" /> is greater than 0, the retry pipeline observes
     ///     <see cref="System.Net.Http.HttpResponseMessage.StatusCode" /> and retries on match.
-    ///     Retries are gated by <see cref="RetryUnsafeHttpMethods" />: by default, only safe HTTP methods
-    ///     (GET, HEAD, OPTIONS) are retried.
+    ///     Retries are also gated by <see cref="RetryHttpMethods" />: only requests whose HTTP method is in
+    ///     that set are retried on a configured status code.
     /// </summary>
     public ISet<HttpStatusCode> RetryHttpStatusCodes { get; } = new HashSet<HttpStatusCode>();
 
     /// <summary>
-    ///     When true, status-code retries (see <see cref="RetryHttpStatusCodes" />) apply to all HTTP methods,
-    ///     including unsafe ones (POST, PUT, PATCH, DELETE). Default: false — only safe methods (GET, HEAD, OPTIONS)
-    ///     are retried. Set to true only if your endpoint is genuinely idempotent or tolerates duplicates
-    ///     (e.g., via idempotency keys).
+    ///     HTTP methods that may be retried on a configured status code. Default: <c>GET</c>, <c>HEAD</c>,
+    ///     <c>OPTIONS</c> — the methods that are safe by RFC 9110. To retry POST (e.g. for
+    ///     <c>Server.SubmitTransaction()</c> on Horizon, or every JSON-RPC call on Stellar RPC), add
+    ///     <c>HttpMethod.Post</c> explicitly. Methods not in this set are never retried on a status code,
+    ///     even if the status code is in <see cref="RetryHttpStatusCodes" />.
+    ///     <para>
+    ///         This is an explicit whitelist by design: future SDK methods that introduce <c>PUT</c>,
+    ///         <c>PATCH</c>, or <c>DELETE</c> are not silently retried unless added here. Some Stellar
+    ///         ecosystem endpoints (e.g. SEP-10 <c>POST /auth</c>, SEP-24
+    ///         <c>POST /transactions/{deposit,withdraw}/interactive</c>)
+    ///         are explicitly non-idempotent per spec, so a blanket "retry everything" policy is unsafe.
+    ///     </para>
     /// </summary>
-    public bool RetryUnsafeHttpMethods { get; set; } = false;
+    public ISet<HttpMethod> RetryHttpMethods { get; } = new HashSet<HttpMethod>
+    {
+        HttpMethod.Get,
+        HttpMethod.Head,
+        HttpMethod.Options,
+    };
 
     /// <summary>
     ///     When the server responds with a <c>Retry-After</c> header (RFC 7231) on a retried status code,
@@ -262,11 +276,16 @@ public static class HttpResilienceOptionsPresets
     }
 
     /// <summary>
-    ///     Creates options tuned for Stellar RPC polling workflows.
-    ///     Retries connection failures and the common transient HTTP status codes (408/429/500/502/503/504)
-    ///     for safe methods, with a higher retry budget and longer delays suited to long-running operations.
+    ///     Creates options tuned for Stellar RPC (Soroban). Retries connection failures and transient HTTP
+    ///     status codes (408/429/500/502/503/504) on every request — including POST — because Stellar RPC
+    ///     routes every JSON-RPC call (read and write) through HTTP POST and every Stellar operation is
+    ///     idempotent on the wire (queries are pure reads; <c>sendTransaction</c> is keyed by transaction
+    ///     hash plus source-account sequence number, so a resubmit either returns the cached result or fails
+    ///     with <c>tx_bad_seq</c> — no double-spend). Uses a higher retry budget (5 attempts) and longer
+    ///     delays (up to 15s) suited to long-running polling workflows like <c>getTransaction</c>; one-off
+    ///     interactive calls can override <c>MaxRetryCount</c> / <c>MaxDelay</c> for tighter latency.
     /// </summary>
-    public static HttpResilienceOptions ForSorobanPolling()
+    public static HttpResilienceOptions ForSoroban()
     {
         var options = new HttpResilienceOptions
         {
@@ -275,7 +294,8 @@ public static class HttpResilienceOptionsPresets
             MaxDelay = TimeSpan.FromSeconds(15),
             RespectRetryAfter = true,
         };
-        SeedStandardRetryStatusCodes(options);
+        options.RetryHttpMethods.Add(HttpMethod.Post);
+        SeedTransientHttpStatusCodes(options);
         return options;
     }
 
@@ -294,14 +314,34 @@ public static class HttpResilienceOptionsPresets
     }
 
     /// <summary>
-    ///     Creates options matching the .NET industry standard
-    ///     (<c>Microsoft.Extensions.Http.Resilience.AddStandardResilienceHandler</c>):
-    ///     retries 408/429/500/502/503/504 for safe HTTP methods, up to 3 retries with exponential backoff
-    ///     (200ms-5s) and jitter, honors the <c>Retry-After</c> header. POST/PUT/PATCH/DELETE are NOT
-    ///     retried by default; set <see cref="HttpResilienceOptions.RetryUnsafeHttpMethods" /> to true
-    ///     to opt in. Recommended for general-purpose Horizon/Soroban clients.
+    ///     Creates options tuned for the Stellar Horizon API. Retries connection failures and the transient
+    ///     HTTP status codes (408/429/500/502/503/504 — emitted directly by Horizon for rate-limit, timeout,
+    ///     ingestion, and overload cases, plus 408/502 from the CDN/LB layer fronting Stellar Foundation
+    ///     endpoints) on Horizon's GET queries and POST <c>SubmitTransaction()</c>. Up to 3 retries with
+    ///     exponential backoff (200ms-5s) and jitter; honors the <c>Retry-After</c> header (which Horizon
+    ///     sends on 429).
+    ///     <para>
+    ///         Retrying <c>SubmitTransaction()</c> is safe on Stellar: each envelope is uniquely keyed by
+    ///         transaction hash plus source-account sequence number, so a resubmit either returns the cached
+    ///         server result or fails with <c>tx_bad_seq</c> — there is no double-spend window. If your tx
+    ///         had already committed when the transient failure occurred, the retry surfaces <c>tx_bad_seq</c>
+    ///         and your code should look up the transaction by its hash to recover the original result.
+    ///     </para>
+    ///     <para>
+    ///         <b>Scope:</b> this preset is for <c>Server</c> (Horizon) only. Do NOT wire it into SEP service
+    ///         clients (<c>ClientWebAuth</c>, <c>InteractiveService</c>, <c>TransferServerService</c>):
+    ///         SEP-10 <c>POST /auth</c> consumes a one-shot challenge, SEP-24
+    ///         <c>POST /transactions/{deposit,withdraw}/interactive</c>
+    ///         creates a fresh transaction row per call, and SEP-6 <c>PATCH /transactions/{id}</c> is not in the
+    ///         official spec. For SEP clients, use <see cref="WithConnectionRetries" /> or build a custom
+    ///         <see cref="HttpResilienceOptions" /> whose <see cref="HttpResilienceOptions.RetryHttpMethods" />
+    ///         only contains <c>GET</c>/<c>HEAD</c>/<c>OPTIONS</c>.
+    ///     </para>
+    ///     <para>
+    ///         For Stellar RPC (Soroban) clients, prefer <see cref="ForSoroban" />.
+    ///     </para>
     /// </summary>
-    public static HttpResilienceOptions WithStandardRetries()
+    public static HttpResilienceOptions ForHorizon()
     {
         var options = new HttpResilienceOptions
         {
@@ -311,11 +351,12 @@ public static class HttpResilienceOptionsPresets
             UseJitter = true,
             RespectRetryAfter = true,
         };
-        SeedStandardRetryStatusCodes(options);
+        options.RetryHttpMethods.Add(HttpMethod.Post);
+        SeedTransientHttpStatusCodes(options);
         return options;
     }
 
-    private static void SeedStandardRetryStatusCodes(HttpResilienceOptions options)
+    private static void SeedTransientHttpStatusCodes(HttpResilienceOptions options)
     {
         options.RetryHttpStatusCodes.Add(HttpStatusCode.RequestTimeout);
         options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);

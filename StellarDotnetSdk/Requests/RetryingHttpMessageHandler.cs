@@ -165,21 +165,13 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         if (outcome.Result is { } response &&
             options.RetryHttpStatusCodes.Contains(response.StatusCode))
         {
-            return request == null || IsSafeMethodOrUnsafeAllowed(request, options);
+            // If the request couldn't be observed through the Polly context (e.g. the pipeline was
+            // invoked without one), default to allowing the retry — the upstream method check is the
+            // safety net, not a hard gate.
+            return request == null || options.RetryHttpMethods.Contains(request.Method);
         }
 
         return false;
-    }
-
-    private static bool IsSafeMethodOrUnsafeAllowed(HttpRequestMessage request, HttpResilienceOptions options)
-    {
-        if (options.RetryUnsafeHttpMethods)
-        {
-            return true;
-        }
-
-        var method = request.Method;
-        return method == HttpMethod.Get || method == HttpMethod.Head || method == HttpMethod.Options;
     }
 
     private static bool IsRetriableException(Exception exception, HttpResilienceOptions options,

@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Net.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Requests;
 
@@ -117,34 +118,61 @@ public class HttpResilienceOptionsTests
     }
 
     /// <summary>
-    ///     Verifies that ForSorobanPolling preset includes the standard set of retriable status codes
-    ///     and honors Retry-After while keeping its higher retry budget.
+    ///     Verifies that the default RetryHttpMethods set covers only the RFC-safe methods.
     /// </summary>
     [TestMethod]
-    public void ForSorobanPolling_IncludesStatusCodeRetries()
+    public void RetryHttpMethods_DefaultsToSafeMethods()
     {
-        var options = HttpResilienceOptionsPresets.ForSorobanPolling();
+        var options = new HttpResilienceOptions();
+        Assert.AreEqual(3, options.RetryHttpMethods.Count);
+        Assert.IsTrue(options.RetryHttpMethods.Contains(HttpMethod.Get));
+        Assert.IsTrue(options.RetryHttpMethods.Contains(HttpMethod.Head));
+        Assert.IsTrue(options.RetryHttpMethods.Contains(HttpMethod.Options));
+    }
+
+    /// <summary>
+    ///     Verifies that ForSoroban preset includes the standard transient status codes, honors Retry-After,
+    ///     keeps its higher retry budget, and crucially adds POST to RetryHttpMethods (Stellar RPC routes
+    ///     all JSON-RPC calls through HTTP POST — without this, the preset would silently fail to retry any
+    ///     Soroban call on 429/5xx).
+    /// </summary>
+    [TestMethod]
+    public void ForSoroban_RetriesPostOnTransientCodes()
+    {
+        var options = HttpResilienceOptionsPresets.ForSoroban();
         Assert.IsTrue(options.RetryHttpStatusCodes.Contains(HttpStatusCode.TooManyRequests));
         Assert.IsTrue(options.RetryHttpStatusCodes.Contains(HttpStatusCode.ServiceUnavailable));
         Assert.IsTrue(options.RespectRetryAfter);
+        Assert.IsTrue(options.RetryHttpMethods.Contains(HttpMethod.Post),
+            "ForSoroban must include POST in RetryHttpMethods — every Soroban RPC call is POST.");
         Assert.AreEqual(5, options.MaxRetryCount);
         Assert.AreEqual(TimeSpan.FromSeconds(15), options.MaxDelay);
     }
 
     /// <summary>
-    ///     Verifies that the WithStandardRetries preset matches .NET industry defaults.
+    ///     Verifies that the ForHorizon preset retries the transient HTTP status codes for the methods
+    ///     Horizon actually uses (GET queries + SubmitTransaction's POST) and honors Retry-After. Also
+    ///     guards against silently expanding the set: PATCH/PUT/DELETE must NOT be retried, so a future
+    ///     SDK method using one of those isn't auto-retried until explicitly opted in.
     /// </summary>
     [TestMethod]
-    public void WithStandardRetries_MatchesIndustryDefaults()
+    public void ForHorizon_RetriesHorizonsMethodsOnTransientCodes()
     {
-        var options = HttpResilienceOptionsPresets.WithStandardRetries();
+        var options = HttpResilienceOptionsPresets.ForHorizon();
 
         Assert.AreEqual(3, options.MaxRetryCount);
         Assert.AreEqual(TimeSpan.FromMilliseconds(200), options.BaseDelay);
         Assert.AreEqual(TimeSpan.FromSeconds(5), options.MaxDelay);
         Assert.IsTrue(options.UseJitter);
         Assert.IsTrue(options.RespectRetryAfter);
-        Assert.IsFalse(options.RetryUnsafeHttpMethods);
+
+        Assert.IsTrue(options.RetryHttpMethods.Contains(HttpMethod.Get));
+        Assert.IsTrue(options.RetryHttpMethods.Contains(HttpMethod.Post),
+            "ForHorizon must include POST — Server.SubmitTransaction() is POST and idempotent on Stellar.");
+        Assert.IsFalse(options.RetryHttpMethods.Contains(HttpMethod.Patch),
+            "ForHorizon must NOT include PATCH — the SEP-6 PATCH /transactions/{id} endpoint is not idempotent.");
+        Assert.IsFalse(options.RetryHttpMethods.Contains(HttpMethod.Put));
+        Assert.IsFalse(options.RetryHttpMethods.Contains(HttpMethod.Delete));
 
         Assert.IsTrue(options.RetryHttpStatusCodes.Contains(HttpStatusCode.RequestTimeout));
         Assert.IsTrue(options.RetryHttpStatusCodes.Contains(HttpStatusCode.TooManyRequests));

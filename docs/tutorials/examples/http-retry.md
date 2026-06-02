@@ -4,8 +4,6 @@ This guide explains how to configure optional HTTP retry, circuit breaker, and t
 
 > **Note:** Retries are **disabled by default** (matching the Java SDK's approach). Nothing is retried until you opt in by passing an `HttpResilienceOptions` instance (or a preset). When enabled, the SDK retries connection-level failures (network errors, DNS failures) and — if you configure them — the transient HTTP status codes you list in `RetryHttpStatusCodes`.
 
-> **Behavior change (vs. earlier 2.x releases):** the SDK can now retry HTTP error status codes (e.g. 408/429/500/502/503/504), honor the `Retry-After` response header, and gate retries by HTTP method. Earlier versions retried connection failures only and never retried status codes. The `ForSorobanPolling()` preset now also retries those status codes for safe methods — see [Behavior changes](#behavior-changes-when-upgrading).
-
 ## Overview
 
 The SDK provides an opt-in resilience pipeline (built on [Polly](https://www.pollydocs.org/)) for transient failures:
@@ -24,7 +22,7 @@ When using the SDK without any configuration, **no retries are performed**:
 | Max Delay         | 5000ms                |
 | Jitter            | Enabled               |
 | Status-code retries | None (`RetryHttpStatusCodes` empty) |
-| Retry unsafe methods | Disabled (`false`) |
+| Retry HTTP methods | Safe only (`GET`, `HEAD`, `OPTIONS`) |
 | Respect `Retry-After` | Enabled (`true`)  |
 | Circuit Breaker   | Disabled              |
 | Request Timeout   | None                  |
@@ -38,7 +36,7 @@ When retries are enabled (`MaxRetryCount > 0`):
 - `TimeoutException` — request timeouts
 - `TaskCanceledException` — HTTP client timeouts (not user-initiated cancellation)
 
-**HTTP status codes are retried only when you opt in** by adding them to `RetryHttpStatusCodes`. By default the set is empty, so no status code is retried. Status-code retries are additionally gated by HTTP method (see [Unsafe HTTP methods](#unsafe-http-methods)): by default only safe methods (`GET`, `HEAD`, `OPTIONS`) are retried.
+**HTTP status codes are retried only when you opt in** by adding them to `RetryHttpStatusCodes`. By default the set is empty, so no status code is retried. Status-code retries are additionally gated by HTTP method (see [Controlling which HTTP methods retry](#controlling-which-http-methods-retry)): by default only safe methods (`GET`, `HEAD`, `OPTIONS`) are retried.
 
 ## Quick Start with Presets
 
@@ -50,14 +48,14 @@ using StellarDotnetSdk.Requests;
 // No retries (same as new HttpResilienceOptions())
 var defaultOptions = HttpResilienceOptionsPresets.Default();
 
-// Industry-standard retries: 408/429/5xx for safe methods, honors Retry-After
-var standard = HttpResilienceOptionsPresets.WithStandardRetries();
+// Horizon clients: retries 408/429/5xx on every call including SubmitTransaction(), honors Retry-After
+var horizon = HttpResilienceOptionsPresets.ForHorizon();
 
-// Connection failures only (no status-code retries)
+// Stellar RPC (Soroban): all RPC calls are POST; status-code retries + higher budget and longer delays
+var sorobanOptions = HttpResilienceOptionsPresets.ForSoroban();
+
+// Connection failures only (no status-code retries; RetryHttpMethods stays at GET/HEAD/OPTIONS)
 var connectionOnly = HttpResilienceOptionsPresets.WithConnectionRetries();
-
-// Soroban polling: status-code retries + higher budget and longer delays
-var sorobanOptions = HttpResilienceOptionsPresets.ForSorobanPolling();
 
 // Low latency: fast failure for trading bots (connection failures only)
 var tradingOptions = HttpResilienceOptionsPresets.LowLatency();
@@ -65,17 +63,17 @@ var tradingOptions = HttpResilienceOptionsPresets.LowLatency();
 
 ### Preset Details
 
-| Preset                     | Max Retries | Base Delay | Max Delay | Status-code retries            | `Retry-After` |
-|----------------------------|-------------|------------|-----------|--------------------------------|---------------|
-| `Default()` / `NoRetry()`  | 0           | —          | —         | none                           | —             |
-| `WithConnectionRetries()`  | 3           | 200ms      | 5s        | none (connection failures only)| n/a           |
-| `WithStandardRetries()`    | 3           | 200ms      | 5s        | 408, 429, 500, 502, 503, 504 (safe methods) | honored |
-| `ForSorobanPolling()`      | 5           | 500ms      | 15s       | 408, 429, 500, 502, 503, 504 (safe methods) | honored |
-| `LowLatency()`             | 1           | 50ms       | 200ms     | none (connection failures only)| n/a           |
+| Preset                     | Max Retries | Base Delay | Max Delay | Status-code retries            | `RetryHttpMethods`           | `Retry-After` |
+|----------------------------|-------------|------------|-----------|--------------------------------|------------------------------|---------------|
+| `Default()` / `NoRetry()`  | 0           | —          | —         | none                           | safe (GET/HEAD/OPTIONS)      | —             |
+| `WithConnectionRetries()`  | 3           | 200ms      | 5s        | none (connection failures only)| safe (GET/HEAD/OPTIONS)      | n/a           |
+| `ForHorizon()`             | 3           | 200ms      | 5s        | 408, 429, 500, 502, 503, 504   | safe **+ POST**              | honored       |
+| `ForSoroban()`             | 5           | 500ms      | 15s       | 408, 429, 500, 502, 503, 504   | safe **+ POST**              | honored       |
+| `LowLatency()`             | 1           | 50ms       | 200ms     | none (connection failures only)| safe (GET/HEAD/OPTIONS)      | n/a           |
 
 All retrying presets use exponential backoff with jitter enabled.
 
-`WithStandardRetries()` matches the .NET industry standard (`Microsoft.Extensions.Http.Resilience.AddStandardResilienceHandler`) and is recommended for general-purpose Horizon/Soroban clients.
+`ForHorizon()` and `ForSoroban()` add `POST` to the retry-method whitelist because the Stellar wire layer is idempotent for both: Horizon queries are pure reads; `SubmitTransaction()` is keyed by transaction hash + source-account sequence number, so a resubmit either returns the cached server result or fails with `tx_bad_seq` — there is no double-spend window. The same applies to every Soroban RPC method (all POST). `PATCH`/`PUT`/`DELETE` are *not* in either preset, so future SDK methods that use them are not silently retried.
 
 ## Using the SDK Without Retries (Default)
 
@@ -95,7 +93,7 @@ To enable retries, pass `HttpResilienceOptions` (or a preset) with `MaxRetryCoun
 ```csharp
 using StellarDotnetSdk.Requests;
 
-var resilienceOptions = HttpResilienceOptionsPresets.WithStandardRetries();
+var resilienceOptions = HttpResilienceOptionsPresets.ForHorizon();
 
 var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 var server = new Server("https://horizon-testnet.stellar.org", httpClient);
@@ -123,20 +121,39 @@ var server = new Server("https://horizon-testnet.stellar.org", httpClient);
 
 The retry pipeline observes responses **inside** the HTTP handler chain, so it triggers *before* a status code is translated into a typed exception such as `TooManyRequestsException` or `ServiceUnavailableException`. If all retries are exhausted, the last response is surfaced as the usual typed exception.
 
-### Unsafe HTTP methods
+### Controlling which HTTP methods retry
 
-By default, status-code retries apply only to **safe** methods (`GET`, `HEAD`, `OPTIONS`). Unsafe methods (`POST`, `PUT`, `PATCH`, `DELETE`) are not retried, because replaying them can cause duplicate side effects (for example, submitting a transaction twice).
+Status-code retries are gated by `RetryHttpMethods` — an explicit `ISet<HttpMethod>` that defaults to the RFC-safe methods (`GET`, `HEAD`, `OPTIONS`). Other methods are never retried on a status code unless you add them to the set.
 
-To retry unsafe methods anyway — only if your endpoint is idempotent or tolerates duplicates (e.g. via idempotency keys) — set `RetryUnsafeHttpMethods`:
+`ForHorizon()` and `ForSoroban()` add `POST` to the set because the Stellar wire layer is idempotent for both Horizon's `SubmitTransaction()` (tx hash + source sequence → no double-spend; resubmit yields the cached result or `tx_bad_seq`) and every Soroban JSON-RPC method.
+
+If you're building options manually and need POST retried on Horizon or Soroban (e.g. you're using `WithConnectionRetries()` as a base and want to add status-code retries for `SubmitTransaction()`), add the method explicitly:
 
 ```csharp
 var resilienceOptions = new HttpResilienceOptions
 {
     MaxRetryCount = 3,
-    RetryUnsafeHttpMethods = true, // retry POST/PUT/PATCH/DELETE on configured status codes
 };
 resilienceOptions.RetryHttpStatusCodes.Add(HttpStatusCode.ServiceUnavailable);
+resilienceOptions.RetryHttpMethods.Add(HttpMethod.Post);
 ```
+
+> **⚠️ SEP services are not blanket-safe to retry.** Specific SEP POST endpoints are non-idempotent
+> by spec:
+>
+> - **SEP-10 `POST /auth`** — per spec: *"The Server should not provide more than one JWT for a
+>   specific challenge transaction."* On transient failure, fetch a **fresh** challenge with
+>   `GET /auth` and submit that — do not retry the same body.
+> - **SEP-24 `POST /transactions/{deposit,withdraw}/interactive`** — each call mints a fresh
+>   `transaction_id`; retrying creates duplicate transaction records. No idempotency-key mechanism
+>   is defined.
+> - **SEP-6 `PATCH /transactions/{id}`** — not in the SEP-6 master spec; anchor-vendor extension
+>   that mutates KYC state.
+>
+> Do NOT wire `ForHorizon()` or `ForSoroban()` into a `ClientWebAuth` / `InteractiveService` /
+> `TransferServerService` HttpClient. For SEP HttpClients, use `WithConnectionRetries()`
+> (transport failures only) or build a custom `HttpResilienceOptions` whose `RetryHttpMethods`
+> contains only the safe defaults.
 
 ### Honoring `Retry-After`
 
@@ -236,7 +253,7 @@ delay = min(BaseDelay * 2^attempt, MaxDelay)
 
 With jitter enabled (default), the actual delay is randomized to avoid synchronized retries (thundering herd).
 
-### Example Delays (WithConnectionRetries / WithStandardRetries preset)
+### Example Delays (WithConnectionRetries / ForHorizon preset)
 
 | Attempt | Base Delay |
 |---------|------------|
@@ -249,30 +266,23 @@ With jitter enabled (default), the actual delay is randomized to avoid synchroni
 ### 1. Prefer a preset
 
 ```csharp
-// General purpose, recommended
-var standard = HttpResilienceOptionsPresets.WithStandardRetries();
+// Horizon clients (queries + SubmitTransaction)
+var horizon = HttpResilienceOptionsPresets.ForHorizon();
 
-// Long-running Soroban polling
-var soroban = HttpResilienceOptionsPresets.ForSorobanPolling();
+// Stellar RPC (Soroban) — long-running polling
+var soroban = HttpResilienceOptionsPresets.ForSoroban();
 
 // Latency-sensitive (trading bots)
 var lowLatency = HttpResilienceOptionsPresets.LowLatency();
 ```
 
-### 2. Be careful retrying unsafe methods
+### 2. Handle `tx_bad_seq` after a retried submission
 
-Leave `RetryUnsafeHttpMethods = false` unless the endpoint is idempotent. Retrying a `POST` (such as a transaction submission) can produce duplicate side effects.
+If a transaction was already accepted on the original attempt and the retry surfaces `tx_bad_seq`, look up the transaction by its hash to recover the original server result instead of assuming the submission failed.
 
 ### 3. Keep jitter enabled
 
 Always keep jitter enabled to prevent synchronized retries from multiple clients (thundering herd problem).
-
-## Behavior changes when upgrading
-
-If you are upgrading from a version that retried connection failures only:
-
-- **`ForSorobanPolling()`** now also retries the transient HTTP status codes (408/429/500/502/503/504) for safe methods and honors `Retry-After`, in addition to connection failures. If you want the previous connection-only behavior, use `WithConnectionRetries()` (or build a custom `HttpResilienceOptions` with an empty `RetryHttpStatusCodes`).
-- Default behavior is unchanged: with no `HttpResilienceOptions`, nothing is retried.
 
 ## Complete Example
 
@@ -283,8 +293,8 @@ using StellarDotnetSdk;
 using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Requests;
 
-// Industry-standard retries for production use
-var resilienceOptions = HttpResilienceOptionsPresets.WithStandardRetries();
+// Production-ready resilience for Horizon clients
+var resilienceOptions = HttpResilienceOptionsPresets.ForHorizon();
 
 var httpClient = new DefaultStellarSdkHttpClient(
     bearerToken: "your-api-token",  // Optional
@@ -314,7 +324,7 @@ catch (HttpRequestException ex)
 
 ### HTTP status codes are not being retried
 
-Check that **both** conditions hold: `MaxRetryCount > 0` and the status code is in `RetryHttpStatusCodes`. Also confirm the request uses a safe method, or that `RetryUnsafeHttpMethods = true`.
+Check that **all three** conditions hold: `MaxRetryCount > 0`, the status code is in `RetryHttpStatusCodes`, and the request's HTTP method is in `RetryHttpMethods` (which defaults to `GET`/`HEAD`/`OPTIONS`).
 
 ### Retries take longer than expected
 
@@ -322,7 +332,7 @@ A retried response with a large `Retry-After` value will delay the next attempt 
 
 ### Rate limiting
 
-1. Use a preset that retries 429 (`WithStandardRetries()` / `ForSorobanPolling()`), or add `HttpStatusCode.TooManyRequests` to `RetryHttpStatusCodes`.
+1. Use a preset that retries 429 (`ForHorizon()` / `ForSoroban()`), or add `HttpStatusCode.TooManyRequests` to `RetryHttpStatusCodes`.
 2. Inspect `TooManyRequestsException.RetryAfterDelay` for manual handling.
 3. Reduce request frequency.
 

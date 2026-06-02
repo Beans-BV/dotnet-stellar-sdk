@@ -27,8 +27,9 @@ public class DefaultStellarSdkHttpClient : HttpClient
     ///     <para>
     ///         By default, no automatic retries are enabled. To enable retries, pass a custom
     ///         <see cref="HttpResilienceOptions" /> instance with <c>MaxRetryCount</c> set to a positive value
-    ///         (and optionally populate <c>RetryHttpStatusCodes</c> for HTTP status-code retries). The
-    ///         <c>HttpResilienceOptionsPresets.WithStandardRetries()</c> preset matches the .NET industry standard.
+    ///         (and optionally populate <c>RetryHttpStatusCodes</c> for HTTP status-code retries). For
+    ///         Horizon clients use <c>HttpResilienceOptionsPresets.ForHorizon()</c>; for Stellar RPC (Soroban)
+    ///         use <c>HttpResilienceOptionsPresets.ForSoroban()</c>.
     ///     </para>
     /// </summary>
     /// <param name="bearerToken">Bearer token in case the server requires it.</param>

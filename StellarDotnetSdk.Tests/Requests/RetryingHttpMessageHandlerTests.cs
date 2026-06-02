@@ -600,10 +600,10 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    ///     Verifies that POST is retried when RetryUnsafeHttpMethods is enabled.
+    ///     Verifies that POST is retried when it is added to RetryHttpMethods.
     /// </summary>
     [TestMethod]
-    public async Task SendAsync_StatusCodeOnPost_RetriedWhenRetryUnsafeHttpMethodsTrue()
+    public async Task SendAsync_StatusCodeOnPost_RetriedWhenPostInRetryHttpMethods()
     {
         var scripted = new ScriptedHttpMessageHandler(
             ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests),
@@ -613,9 +613,9 @@ public class RetryingHttpMessageHandlerTests
         {
             MaxRetryCount = 3,
             BaseDelay = TimeSpan.FromMilliseconds(1),
-            RetryUnsafeHttpMethods = true,
         };
         options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);
+        options.RetryHttpMethods.Add(HttpMethod.Post);
 
         using var handler = new RetryingHttpMessageHandler(scripted, options);
         using var client = new HttpClient(handler);
@@ -624,6 +624,92 @@ public class RetryingHttpMessageHandlerTests
 
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         Assert.AreEqual(2, scripted.CallCount);
+    }
+
+    /// <summary>
+    ///     End-to-end regression test: <see cref="HttpResilienceOptionsPresets.ForSoroban" /> must
+    ///     retry a POST that returns 429. Every Stellar RPC JSON-RPC call is POST, so if the preset filtered
+    ///     POSTs out (the previous bug) it would silently provide no resilience for Soroban callers.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_ForSorobanPreset_RetriesPostOn429()
+    {
+        var scripted = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests),
+            ScriptedHttpMessageHandler.Ok());
+
+        var options = HttpResilienceOptionsPresets.ForSoroban();
+        // Use tiny delays so the test runs fast.
+        options.BaseDelay = TimeSpan.FromMilliseconds(1);
+        options.MaxDelay = TimeSpan.FromMilliseconds(10);
+        options.UseJitter = false;
+
+        using var handler = new RetryingHttpMessageHandler(scripted, options);
+        using var client = new HttpClient(handler);
+
+        var response = await client.PostAsync(TestUri, new StringContent("{}"));
+
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.AreEqual(2, scripted.CallCount);
+    }
+
+    /// <summary>
+    ///     End-to-end regression test: <see cref="HttpResilienceOptionsPresets.ForHorizon" /> must retry a
+    ///     POST that returns 429. <c>Server.SubmitTransaction()</c> is POST and is idempotent on Stellar
+    ///     (tx-hash + source-sequence guarantee), so if the preset filtered POSTs out it would silently
+    ///     fail to retry transaction submission on transient HTTP errors.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_ForHorizonPreset_RetriesPostOn429()
+    {
+        var scripted = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests),
+            ScriptedHttpMessageHandler.Ok());
+
+        var options = HttpResilienceOptionsPresets.ForHorizon();
+        // Use tiny delays so the test runs fast.
+        options.BaseDelay = TimeSpan.FromMilliseconds(1);
+        options.MaxDelay = TimeSpan.FromMilliseconds(10);
+        options.UseJitter = false;
+
+        using var handler = new RetryingHttpMessageHandler(scripted, options);
+        using var client = new HttpClient(handler);
+
+        var response = await client.PostAsync(TestUri, new StringContent("tx=AAAA"));
+
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.AreEqual(2, scripted.CallCount);
+    }
+
+    /// <summary>
+    ///     SEP-safety regression: <see cref="HttpResilienceOptionsPresets.ForHorizon" /> must NOT retry a
+    ///     PATCH request, even on a configured retry status code. This guards against a developer wiring
+    ///     <c>ForHorizon()</c> into a <c>TransferServerService</c> (SEP-6) HttpClient and silently
+    ///     replaying <c>PATCH /transactions/{id}</c> — an endpoint that mutates KYC state and is not in
+    ///     the SEP-6 master spec.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_ForHorizonPreset_DoesNotRetryPatchOn429()
+    {
+        var scripted = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests));
+
+        var options = HttpResilienceOptionsPresets.ForHorizon();
+        options.BaseDelay = TimeSpan.FromMilliseconds(1);
+        options.MaxDelay = TimeSpan.FromMilliseconds(10);
+        options.UseJitter = false;
+
+        using var handler = new RetryingHttpMessageHandler(scripted, options);
+        using var client = new HttpClient(handler);
+
+        using var request = new HttpRequestMessage(HttpMethod.Patch, TestUri)
+        {
+            Content = new StringContent("{}"),
+        };
+        var response = await client.SendAsync(request);
+
+        Assert.AreEqual(HttpStatusCode.TooManyRequests, response.StatusCode);
+        Assert.AreEqual(1, scripted.CallCount); // No retry — PATCH not in RetryHttpMethods
     }
 
     /// <summary>
