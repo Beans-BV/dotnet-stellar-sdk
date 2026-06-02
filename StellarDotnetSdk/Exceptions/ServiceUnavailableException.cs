@@ -33,7 +33,12 @@ public class ServiceUnavailableException : Exception
 
             if (int.TryParse(retryAfterStringValue, out var retryAfterInt))
             {
-                RetryAfter = retryAfterInt;
+                // Match RetryAfterParser.FromSeconds: non-positive seconds carry no actionable delay,
+                // so leave RetryAfter null. Keeps this property in sync with RetryAfterDelay.
+                if (retryAfterInt > 0)
+                {
+                    RetryAfter = retryAfterInt;
+                }
             }
             else if (DateTimeOffset.TryParse(retryAfterStringValue, CultureInfo.InvariantCulture,
                          DateTimeStyles.AssumeUniversal, out var retryAfterDate))

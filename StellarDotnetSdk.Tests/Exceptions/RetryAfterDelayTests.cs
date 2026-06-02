@@ -116,4 +116,50 @@ public class RetryAfterDelayTests
         var ex = new TooManyRequestsException(pastDate);
         Assert.IsNull(ex.RetryAfterDelay);
     }
+
+    /// <summary>
+    ///     Regression: RetryAfter and RetryAfterDelay must agree for non-positive delay-seconds values.
+    ///     The RetryAfterParser treats 0 and negative seconds as "no actionable delay" (null), and the
+    ///     RetryAfter property must follow the same contract, otherwise the two accessors disagree.
+    /// </summary>
+    [TestMethod]
+    public void TooManyRequests_RetryAfterAndDelay_AgreeOnZeroString()
+    {
+        var ex = new TooManyRequestsException("0");
+        Assert.IsNull(ex.RetryAfter, "RetryAfter for \"0\" should be null to match RetryAfterDelay.");
+        Assert.IsNull(ex.RetryAfterDelay);
+    }
+
+    /// <summary>
+    ///     Regression: same as above for a negative seconds string.
+    /// </summary>
+    [TestMethod]
+    public void TooManyRequests_RetryAfterAndDelay_AgreeOnNegativeString()
+    {
+        var ex = new TooManyRequestsException("-5");
+        Assert.IsNull(ex.RetryAfter, "RetryAfter for \"-5\" should be null to match RetryAfterDelay.");
+        Assert.IsNull(ex.RetryAfterDelay);
+    }
+
+    /// <summary>
+    ///     Regression: same agreement contract for <see cref="ServiceUnavailableException" />.
+    /// </summary>
+    [TestMethod]
+    public void ServiceUnavailable_RetryAfterAndDelay_AgreeOnZeroString()
+    {
+        var ex = new ServiceUnavailableException("0");
+        Assert.IsNull(ex.RetryAfter, "RetryAfter for \"0\" should be null to match RetryAfterDelay.");
+        Assert.IsNull(ex.RetryAfterDelay);
+    }
+
+    /// <summary>
+    ///     Regression: same as above for a negative seconds string.
+    /// </summary>
+    [TestMethod]
+    public void ServiceUnavailable_RetryAfterAndDelay_AgreeOnNegativeString()
+    {
+        var ex = new ServiceUnavailableException("-5");
+        Assert.IsNull(ex.RetryAfter, "RetryAfter for \"-5\" should be null to match RetryAfterDelay.");
+        Assert.IsNull(ex.RetryAfterDelay);
+    }
 }
