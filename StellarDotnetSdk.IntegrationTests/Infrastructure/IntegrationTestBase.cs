@@ -22,6 +22,10 @@ public abstract class IntegrationTestBase
         TimeSpan.FromSeconds(9),
     };
 
+    // Upper bound on a single honored Retry-After wait, so one server-advised delay
+    // cannot blow a test's [CancelAfter] budget.
+    private static readonly TimeSpan MaxRetryDelay = TimeSpan.FromSeconds(15);
+
     protected Server Server = null!;
 
     [OneTimeSetUp]
@@ -64,6 +68,9 @@ public abstract class IntegrationTestBase
         var totalAttempts = BackoffDelays.Length + 1;
         for (var attempt = 0; attempt < totalAttempts; attempt++)
         {
+            // Server-advised Retry-After for this attempt, if the failure carried one.
+            TimeSpan? retryAfter = null;
+
             try
             {
                 var response = await Server.TestNetFriendBot.FundAccount(accountId).Execute();
@@ -80,10 +87,12 @@ public abstract class IntegrationTestBase
             catch (TooManyRequestsException ex)
             {
                 lastException = ex;
+                retryAfter = ex.RetryAfterDelay;
             }
             catch (ServiceUnavailableException ex)
             {
                 lastException = ex;
+                retryAfter = ex.RetryAfterDelay;
             }
             catch (HttpRequestException ex) // transient network error
             {
@@ -93,7 +102,13 @@ public abstract class IntegrationTestBase
             // Sleep before the next attempt, but not after the final one.
             if (attempt < BackoffDelays.Length)
             {
-                await Task.Delay(BackoffDelays[attempt]);
+                // Honor the server-advised Retry-After when present (RFC 7231), clamped to
+                // MaxRetryDelay; otherwise fall back to the fixed exponential backoff.
+                var backoff = BackoffDelays[attempt];
+                var delay = retryAfter is { } ra && ra > backoff
+                    ? (ra < MaxRetryDelay ? ra : MaxRetryDelay)
+                    : backoff;
+                await Task.Delay(delay);
             }
         }
 
