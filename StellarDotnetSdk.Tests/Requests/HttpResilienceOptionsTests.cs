@@ -107,7 +107,7 @@ public class HttpResilienceOptionsTests
     }
 
     /// <summary>
-    ///     Verifies HasAnyResilienceFeatureEnabled returns true when status-code retries are configured.
+    ///     Verifies HasAnyResilienceFeatureEnabled returns true when retries are configured alongside status codes.
     /// </summary>
     [TestMethod]
     public void HasAnyResilienceFeatureEnabled_TrueWhenStatusCodeRetriesSet()
@@ -115,6 +115,23 @@ public class HttpResilienceOptionsTests
         var options = new HttpResilienceOptions { MaxRetryCount = 3 };
         options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);
         Assert.IsTrue(options.HasAnyResilienceFeatureEnabled);
+    }
+
+    /// <summary>
+    ///     Regression: HasAnyResilienceFeatureEnabled must NOT be true when only RetryHttpStatusCodes is
+    ///     populated without a positive MaxRetryCount. Status-code retries fire from inside the retry strategy,
+    ///     which BuildPipeline only constructs when MaxRetryCount > 0 — so this configuration is a no-op,
+    ///     and the flag should reflect that to avoid DefaultStellarSdkHttpClient wrapping the inner handler
+    ///     in a no-op resilience pipeline.
+    /// </summary>
+    [TestMethod]
+    public void HasAnyResilienceFeatureEnabled_FalseWhenStatusCodesSetButNoRetries()
+    {
+        var options = new HttpResilienceOptions { MaxRetryCount = 0 };
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.ServiceUnavailable);
+        Assert.IsFalse(options.HasAnyResilienceFeatureEnabled,
+            "Status codes without MaxRetryCount > 0 are a no-op — flag should not report resilience enabled.");
     }
 
     /// <summary>

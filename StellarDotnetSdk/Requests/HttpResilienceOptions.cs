@@ -173,12 +173,17 @@ public sealed class HttpResilienceOptions
     public TimeSpan? RequestTimeout { get; set; } = null;
 
     /// <summary>
-    ///     Gets whether any resilience feature is enabled (retries, circuit breaker, timeout, or status-code retries).
-    ///     Returns true if MaxRetryCount is greater than 0, EnableCircuitBreaker is true, RequestTimeout has a value,
-    ///     or RetryHttpStatusCodes is non-empty.
+    ///     Gets whether any resilience feature is enabled (retries, circuit breaker, or timeout).
+    ///     Returns true if <see cref="MaxRetryCount" /> is greater than 0, <see cref="EnableCircuitBreaker" />
+    ///     is true, or <see cref="RequestTimeout" /> has a value.
+    ///     <para>
+    ///         <see cref="RetryHttpStatusCodes" /> is intentionally NOT a separate enabler — status-code retries
+    ///         only fire inside the retry strategy, which itself requires <see cref="MaxRetryCount" /> &gt; 0.
+    ///         Configuring status codes without a positive <see cref="MaxRetryCount" /> is a no-op.
+    ///     </para>
     /// </summary>
     public bool HasAnyResilienceFeatureEnabled =>
-        MaxRetryCount > 0 || EnableCircuitBreaker || RequestTimeout.HasValue || RetryHttpStatusCodes.Count > 0;
+        MaxRetryCount > 0 || EnableCircuitBreaker || RequestTimeout.HasValue;
 
     /// <summary>
     ///     Additional exception types to retry, in addition to the defaults (
