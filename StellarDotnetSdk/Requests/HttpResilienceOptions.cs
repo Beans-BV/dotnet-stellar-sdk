@@ -14,6 +14,7 @@ public sealed class HttpResilienceOptions
     private TimeSpan _breakDuration = TimeSpan.FromSeconds(30);
     private double _failureRatio = 0.5;
     private TimeSpan _maxDelay = TimeSpan.FromSeconds(5);
+    private TimeSpan _maxRetryAfterDelay = TimeSpan.FromMinutes(1);
     private int _maxRetryCount;
     private int _minimumThroughput = 10;
     private TimeSpan _samplingDuration = TimeSpan.FromSeconds(30);
@@ -52,12 +53,10 @@ public sealed class HttpResilienceOptions
                 throw new ArgumentOutOfRangeException(nameof(value), "BaseDelay must be positive.");
             }
 
+            // The BaseDelay <= MaxDelay relationship is validated when the retry pipeline is built (see
+            // RetryingHttpMessageHandler.BuildPipeline), not here, so BaseDelay and MaxDelay can be assigned
+            // in any order via an object initializer without a spurious order-dependent validation failure.
             _baseDelay = value;
-            if (value > _maxDelay)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value),
-                    $"BaseDelay ({value.TotalMilliseconds}ms) cannot exceed MaxDelay ({_maxDelay.TotalMilliseconds}ms).");
-            }
         }
     }
 
@@ -75,12 +74,9 @@ public sealed class HttpResilienceOptions
                 throw new ArgumentOutOfRangeException(nameof(value), "MaxDelay must be positive.");
             }
 
+            // Cross-field validation against BaseDelay is deferred to pipeline-build time so the two
+            // properties are order-independent in an object initializer (see BaseDelay).
             _maxDelay = value;
-            if (value < _baseDelay)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value),
-                    $"MaxDelay ({value.TotalMilliseconds}ms) cannot be less than BaseDelay ({_baseDelay.TotalMilliseconds}ms).");
-            }
         }
     }
 
@@ -232,10 +228,37 @@ public sealed class HttpResilienceOptions
 
     /// <summary>
     ///     When the server responds with a <c>Retry-After</c> header (RFC 7231) on a retried status code,
-    ///     use that value as the retry delay (capped by <see cref="MaxDelay" />). Default: true.
+    ///     use that value as the retry delay (capped by <see cref="MaxRetryAfterDelay" />). Default: true.
     ///     Only takes effect when status-code retries are enabled (see <see cref="RetryHttpStatusCodes" />).
     /// </summary>
     public bool RespectRetryAfter { get; set; } = true;
+
+    /// <summary>
+    ///     Upper bound applied to a server-provided <c>Retry-After</c> delay (RFC 7231) when
+    ///     <see cref="RespectRetryAfter" /> is true: a longer <c>Retry-After</c> is capped to this value.
+    ///     Default is 1 minute.
+    ///     <para>
+    ///         This is intentionally separate from <see cref="MaxDelay" />, which bounds the exponential
+    ///         backoff. Servers commonly ask for tens of seconds on HTTP 429 — longer than a typical backoff
+    ///         cap — and honoring that (rather than retrying early against a server that explicitly asked the
+    ///         client to wait) is the whole point of <c>Retry-After</c>. Keep this at or above
+    ///         <see cref="MaxDelay" />.
+    ///     </para>
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when value is not positive.</exception>
+    public TimeSpan MaxRetryAfterDelay
+    {
+        get => _maxRetryAfterDelay;
+        set
+        {
+            if (value <= TimeSpan.Zero)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), "MaxRetryAfterDelay must be positive.");
+            }
+
+            _maxRetryAfterDelay = value;
+        }
+    }
 }
 
 /// <summary>
@@ -297,6 +320,19 @@ public static class HttpResilienceOptionsPresets
         options.RetryHttpMethods.Add(HttpMethod.Post);
         SeedTransientHttpStatusCodes(options);
         return options;
+    }
+
+    /// <summary>
+    ///     Deprecated alias for <see cref="ForSoroban" />, retained for source compatibility with releases
+    ///     that exposed <c>ForSorobanPolling()</c>. Note that <see cref="ForSoroban" /> additionally retries
+    ///     the transient HTTP status codes (408/429/500/502/503/504) on Soroban's POST calls, which the
+    ///     original connection-failure-only <c>ForSorobanPolling()</c> did not.
+    /// </summary>
+    [Obsolete("Renamed to ForSoroban(). ForSoroban() also retries transient HTTP status codes on POST; " +
+              "update call sites accordingly.")]
+    public static HttpResilienceOptions ForSorobanPolling()
+    {
+        return ForSoroban();
     }
 
     /// <summary>

@@ -97,6 +97,16 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         // Retry (innermost - executes first)
         if (options.MaxRetryCount > 0)
         {
+            // Enforce the BaseDelay <= MaxDelay invariant here (deferred from the property setters so the two
+            // can be assigned in any order via an object initializer). Only relevant when retries are enabled.
+            if (options.BaseDelay > options.MaxDelay)
+            {
+                throw new ArgumentException(
+                    $"BaseDelay ({options.BaseDelay.TotalMilliseconds}ms) cannot exceed " +
+                    $"MaxDelay ({options.MaxDelay.TotalMilliseconds}ms).",
+                    nameof(options));
+            }
+
             var retryOptions = new RetryStrategyOptions<HttpResponseMessage>
             {
                 MaxRetryAttempts = options.MaxRetryCount,
@@ -125,10 +135,12 @@ public class RetryingHttpMessageHandler : DelegatingHandler
                     if (parsed is { } delay)
                     {
                         // Polly does not apply RetryStrategyOptions.MaxDelay to a value returned from
-                        // DelayGenerator, so cap the server-provided Retry-After against MaxDelay here.
-                        if (delay > options.MaxDelay)
+                        // DelayGenerator. Cap the server-provided Retry-After against the dedicated
+                        // MaxRetryAfterDelay ceiling (not the backoff MaxDelay), so a server asking for tens
+                        // of seconds on 429 is honored instead of being truncated to the small backoff cap.
+                        if (delay > options.MaxRetryAfterDelay)
                         {
-                            delay = options.MaxDelay;
+                            delay = options.MaxRetryAfterDelay;
                         }
 
                         return new ValueTask<TimeSpan?>(delay);

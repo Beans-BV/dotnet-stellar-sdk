@@ -713,7 +713,9 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    ///     Verifies that the Retry-After header value (delta-seconds form) is honored as the retry delay.
+    ///     Verifies that the Retry-After header value (delta-seconds form) is honored as the retry delay,
+    ///     even when it exceeds the exponential-backoff <c>MaxDelay</c> — the Retry-After ceiling is the
+    ///     separate <c>MaxRetryAfterDelay</c> (default 1 minute), not <c>MaxDelay</c>.
     /// </summary>
     [TestMethod]
     public async Task SendAsync_RetryAfterHeader_HonoredAsDelay()
@@ -726,7 +728,7 @@ public class RetryingHttpMessageHandlerTests
         {
             MaxRetryCount = 3,
             BaseDelay = TimeSpan.FromMilliseconds(1),
-            MaxDelay = TimeSpan.FromSeconds(10),
+            MaxDelay = TimeSpan.FromMilliseconds(10), // tiny backoff cap; Retry-After (1s) must still be honored
             UseJitter = false,
             RespectRetryAfter = true,
         };
@@ -746,10 +748,11 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    ///     Verifies that the Retry-After header value is capped at MaxDelay.
+    ///     Verifies that the Retry-After header value is capped at MaxRetryAfterDelay (the dedicated ceiling),
+    ///     not at the smaller exponential-backoff MaxDelay.
     /// </summary>
     [TestMethod]
-    public async Task SendAsync_RetryAfterHeader_CappedAtMaxDelay()
+    public async Task SendAsync_RetryAfterHeader_CappedAtMaxRetryAfterDelay()
     {
         var scripted = new ScriptedHttpMessageHandler(
             ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests, "300"),
@@ -759,7 +762,8 @@ public class RetryingHttpMessageHandlerTests
         {
             MaxRetryCount = 3,
             BaseDelay = TimeSpan.FromMilliseconds(1),
-            MaxDelay = TimeSpan.FromMilliseconds(100),
+            MaxDelay = TimeSpan.FromMilliseconds(10),
+            MaxRetryAfterDelay = TimeSpan.FromMilliseconds(100),
             UseJitter = false,
             RespectRetryAfter = true,
         };
@@ -773,12 +777,13 @@ public class RetryingHttpMessageHandlerTests
         stopwatch.Stop();
 
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        // The retry waits ~100ms (Retry-After 300s capped to MaxDelay), proving the cap was applied and the
-        // header honored — not ~0ms (header ignored). The upper bound is deliberately generous to avoid CI
-        // flakiness; an uncapped 300s wait would hang the test long before reaching this assertion.
+        // The retry waits ~100ms (Retry-After 300s capped to MaxRetryAfterDelay), proving the cap was applied
+        // and the header honored — not ~0ms (header ignored) and not ~10ms (the smaller backoff MaxDelay).
+        // The upper bound is deliberately generous to avoid CI flakiness; an uncapped 300s wait would hang
+        // the test long before reaching this assertion.
         Assert.IsTrue(
             stopwatch.Elapsed >= TimeSpan.FromMilliseconds(80) && stopwatch.Elapsed < TimeSpan.FromSeconds(2),
-            $"Expected Retry-After capped to ~100ms (MaxDelay), got {stopwatch.Elapsed.TotalMilliseconds}ms");
+            $"Expected Retry-After capped to ~100ms (MaxRetryAfterDelay), got {stopwatch.Elapsed.TotalMilliseconds}ms");
     }
 
     /// <summary>
@@ -808,6 +813,20 @@ public class RetryingHttpMessageHandlerTests
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"method={method}");
             Assert.AreEqual(2, scripted.CallCount, $"method={method}");
         }
+    }
+
+    /// <summary>
+    ///     Verifies that an inconsistent BaseDelay &gt; MaxDelay (now permitted by the order-independent
+    ///     property setters) is rejected when the retry pipeline is built.
+    /// </summary>
+    [TestMethod]
+    public void Constructor_BaseDelayExceedsMaxDelay_ThrowsArgumentException()
+    {
+        var options = new HttpResilienceOptions { MaxRetryCount = 1 };
+        options.BaseDelay = TimeSpan.FromSeconds(10); // default MaxDelay is 5s — intentionally inconsistent
+
+        using var inner = new ScriptedHttpMessageHandler();
+        Assert.ThrowsException<ArgumentException>(() => new RetryingHttpMessageHandler(inner, options));
     }
 
     private static HttpResilienceOptions CreateDefaultOptions()

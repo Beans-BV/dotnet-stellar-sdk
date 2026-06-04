@@ -24,6 +24,7 @@ When using the SDK without any configuration, **no retries are performed**:
 | Status-code retries | None (`RetryHttpStatusCodes` empty) |
 | Retry HTTP methods | Safe only (`GET`, `HEAD`, `OPTIONS`) |
 | Respect `Retry-After` | Enabled (`true`)  |
+| Max `Retry-After` delay | 1 minute            |
 | Circuit Breaker   | Disabled              |
 | Request Timeout   | None                  |
 
@@ -157,7 +158,7 @@ resilienceOptions.RetryHttpMethods.Add(HttpMethod.Post);
 
 ### Honoring `Retry-After`
 
-When `RespectRetryAfter` is `true` (the default) and a retried response carries a `Retry-After` header, the SDK uses that value as the next delay, **capped by `MaxDelay`**. Both the delay-seconds and HTTP-date forms (RFC 7231 §7.1.3) are supported. If no `Retry-After` header is present, the SDK falls back to exponential backoff.
+When `RespectRetryAfter` is `true` (the default) and a retried response carries a `Retry-After` header, the SDK uses that value as the next delay, **capped by `MaxRetryAfterDelay`** (default 1 minute) — a ceiling that is deliberately separate from the exponential-backoff `MaxDelay`, so a server asking for tens of seconds on a 429 is honored rather than truncated to the (typically small) backoff cap. Both the delay-seconds and HTTP-date forms (RFC 7231 §7.1.3) are supported. If no `Retry-After` header is present, the SDK falls back to exponential backoff.
 
 The `TooManyRequestsException` and `ServiceUnavailableException` types also expose the value directly for manual handling:
 
@@ -328,7 +329,7 @@ Check that **all three** conditions hold: `MaxRetryCount > 0`, the status code i
 
 ### Retries take longer than expected
 
-A retried response with a large `Retry-After` value will delay the next attempt (capped by `MaxDelay`). Lower `MaxDelay` or set `RespectRetryAfter = false` if you prefer pure exponential backoff.
+A retried response with a large `Retry-After` value will delay the next attempt (capped by `MaxRetryAfterDelay`, default 1 minute). Lower `MaxRetryAfterDelay` or set `RespectRetryAfter = false` if you prefer pure exponential backoff.
 
 ### Rate limiting
 

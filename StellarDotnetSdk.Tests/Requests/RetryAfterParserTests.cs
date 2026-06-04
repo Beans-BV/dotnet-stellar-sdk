@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Net.Http.Headers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Requests;
@@ -125,5 +126,37 @@ public class RetryAfterParserTests
     public void Parse_TimeSpan_ReturnsTimeSpan()
     {
         Assert.AreEqual(TimeSpan.FromMinutes(2), RetryAfterParser.Parse(TimeSpan.FromMinutes(2)));
+    }
+
+    /// <summary>
+    ///     Verifies that a long seconds value is parsed correctly.
+    /// </summary>
+    [TestMethod]
+    public void Parse_LongSeconds_ReturnsTimeSpan()
+    {
+        Assert.AreEqual(TimeSpan.FromSeconds(60), RetryAfterParser.Parse(60L));
+    }
+
+    /// <summary>
+    ///     Verifies that an HTTP-date string is parsed into the remaining delay.
+    /// </summary>
+    [TestMethod]
+    public void Parse_HttpDateString_ReturnsPositiveTimeSpan()
+    {
+        var future = DateTimeOffset.UtcNow.AddSeconds(45).ToString("R", CultureInfo.InvariantCulture);
+        var parsed = RetryAfterParser.Parse(future);
+        Assert.IsNotNull(parsed);
+        Assert.IsTrue(parsed!.Value.TotalSeconds is >= 35 and <= 50,
+            $"Expected ~45s, got {parsed.Value.TotalSeconds}s");
+    }
+
+    /// <summary>
+    ///     Verifies that a fractional seconds string is rejected — RFC 7231 delay-seconds is an integer, so a
+    ///     fractional value must not be misread as a sub-second delay.
+    /// </summary>
+    [TestMethod]
+    public void Parse_FractionalSecondsString_ReturnsNull()
+    {
+        Assert.IsNull(RetryAfterParser.Parse("2.5"));
     }
 }

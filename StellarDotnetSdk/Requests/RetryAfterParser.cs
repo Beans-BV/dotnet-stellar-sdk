@@ -48,8 +48,11 @@ public static class RetryAfterParser
             RetryConditionHeaderValue header => ToTimeSpan(header),
             int seconds => FromSeconds(seconds),
             long seconds => FromSeconds(seconds),
-            string s when double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var d)
-                => FromSeconds(d),
+            // RFC 7231 delay-seconds is a non-negative integer; parse strictly as an integer so fractional or
+            // thousands-separated strings are not misread, and to stay consistent with the int/long forms and
+            // the int-based RetryAfter on TooManyRequestsException / ServiceUnavailableException.
+            string s when long.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out var seconds)
+                => FromSeconds(seconds),
             string s when DateTimeOffset.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal,
                     out var dto)
                 => FromDate(dto),

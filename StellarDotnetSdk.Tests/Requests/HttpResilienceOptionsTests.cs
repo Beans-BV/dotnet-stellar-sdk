@@ -181,4 +181,58 @@ public class HttpResilienceOptionsTests
         Assert.IsTrue(options.RetryHttpStatusCodes.Contains(HttpStatusCode.ServiceUnavailable));
         Assert.IsTrue(options.RetryHttpStatusCodes.Contains(HttpStatusCode.GatewayTimeout));
     }
+
+    /// <summary>
+    ///     Verifies that MaxRetryAfterDelay defaults to 1 minute (the dedicated Retry-After ceiling, separate
+    ///     from the exponential-backoff MaxDelay).
+    /// </summary>
+    [TestMethod]
+    public void MaxRetryAfterDelay_DefaultsToOneMinute()
+    {
+        var options = new HttpResilienceOptions();
+        Assert.AreEqual(TimeSpan.FromMinutes(1), options.MaxRetryAfterDelay);
+    }
+
+    /// <summary>
+    ///     Verifies that MaxRetryAfterDelay rejects a non-positive value.
+    /// </summary>
+    [TestMethod]
+    public void MaxRetryAfterDelay_WithZeroValue_ThrowsArgumentOutOfRangeException()
+    {
+        var options = new HttpResilienceOptions();
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.MaxRetryAfterDelay = TimeSpan.Zero);
+    }
+
+    /// <summary>
+    ///     Regression: BaseDelay and MaxDelay must be assignable in any order via an object initializer.
+    ///     Setting BaseDelay (10s) before MaxDelay (30s) previously threw because BaseDelay was validated
+    ///     against the default 5s MaxDelay; the relationship is now enforced at pipeline-build time instead.
+    /// </summary>
+    [TestMethod]
+    public void BaseDelayThenMaxDelay_OrderIndependentInInitializer()
+    {
+        var options = new HttpResilienceOptions
+        {
+            BaseDelay = TimeSpan.FromSeconds(10),
+            MaxDelay = TimeSpan.FromSeconds(30),
+        };
+        Assert.AreEqual(TimeSpan.FromSeconds(10), options.BaseDelay);
+        Assert.AreEqual(TimeSpan.FromSeconds(30), options.MaxDelay);
+    }
+
+    /// <summary>
+    ///     Verifies that the deprecated ForSorobanPolling() alias forwards to ForSoroban().
+    /// </summary>
+    [TestMethod]
+    public void ForSorobanPolling_IsObsoleteAliasForForSoroban()
+    {
+#pragma warning disable CS0618 // intentionally exercising the obsolete alias
+        var legacy = HttpResilienceOptionsPresets.ForSorobanPolling();
+#pragma warning restore CS0618
+        var current = HttpResilienceOptionsPresets.ForSoroban();
+        Assert.AreEqual(current.MaxRetryCount, legacy.MaxRetryCount);
+        Assert.AreEqual(current.MaxDelay, legacy.MaxDelay);
+        Assert.IsTrue(legacy.RetryHttpMethods.Contains(HttpMethod.Post));
+        Assert.IsTrue(legacy.RetryHttpStatusCodes.Contains(HttpStatusCode.TooManyRequests));
+    }
 }
