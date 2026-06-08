@@ -3,10 +3,17 @@ using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Soroban;
+using StellarDotnetSdk.Xdr;
+using SCString = StellarDotnetSdk.Soroban.SCString;
+using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
+using SCVal = StellarDotnetSdk.Soroban.SCVal;
 using SorobanAddressCredentials = StellarDotnetSdk.Operations.SorobanAddressCredentials;
+using SorobanAddressCredentialsV2 = StellarDotnetSdk.Operations.SorobanAddressCredentialsV2;
+using SorobanAddressCredentialsWithDelegates = StellarDotnetSdk.Operations.SorobanAddressCredentialsWithDelegates;
 using SorobanAuthorizationEntry = StellarDotnetSdk.Operations.SorobanAuthorizationEntry;
 using SorobanAuthorizedInvocation = StellarDotnetSdk.Operations.SorobanAuthorizedInvocation;
 using SorobanCredentials = StellarDotnetSdk.Operations.SorobanCredentials;
+using SorobanDelegateSignature = StellarDotnetSdk.Operations.SorobanDelegateSignature;
 
 namespace StellarDotnetSdk.Tests;
 
@@ -52,6 +59,56 @@ public class SorobanAuthorizationTest
         Assert.AreEqual(((SCString)sorobanCredentials.Signature).InnerValue,
             ((SCString)decodedCredentials.Signature).InnerValue);
         Assert.AreEqual(sorobanCredentials.SignatureExpirationLedger, decodedCredentials.SignatureExpirationLedger);
+    }
+
+    /// <summary>
+    ///     Verifies that SorobanAddressCredentialsV2 round-trips correctly through XDR serialization,
+    ///     and that the decoded instance has the V2 discriminant and concrete type.
+    /// </summary>
+    [TestMethod]
+    public void FromXdr_SorobanAddressCredentialsV2_RoundTripsCorrectly()
+    {
+        // Arrange
+        var credentials =
+            new SorobanAddressCredentialsV2(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
+
+        // Act
+        var xdr = credentials.ToXdr();
+        var decoded = SorobanCredentials.FromXdr(xdr);
+
+        // Assert: discriminant is V2 and the concrete wrapper type is V2 (not V1)
+        Assert.AreEqual(
+            SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS_V2,
+            xdr.Discriminant.InnerValue);
+        Assert.IsInstanceOfType(decoded, typeof(SorobanAddressCredentialsV2));
+        var d = (SorobanAddressCredentialsV2)decoded;
+        Assert.AreEqual(((ScAccountId)credentials.Address).InnerValue, ((ScAccountId)d.Address).InnerValue);
+        Assert.AreEqual(credentials.Nonce, d.Nonce);
+        Assert.AreEqual(credentials.SignatureExpirationLedger, d.SignatureExpirationLedger);
+        Assert.AreEqual(((SCString)credentials.Signature).InnerValue, ((SCString)d.Signature).InnerValue);
+    }
+
+    /// <summary>
+    ///     Verifies that SorobanAddressCredentialsV2 constructor throws ArgumentNullException when address is null
+    ///     (the null guard lives in the shared base, so V2 is covered too).
+    /// </summary>
+    [TestMethod]
+    public void Constructor_SorobanAddressCredentialsV2WithMissingAddress_ThrowsArgumentNullException()
+    {
+        var ex = Assert.ThrowsException<ArgumentNullException>(() =>
+            new SorobanAddressCredentialsV2(null, Nonce, SignatureExpirationLedger, _signature));
+        Assert.IsTrue(ex.Message.Contains("Address cannot be null."));
+    }
+
+    /// <summary>
+    ///     Verifies that SorobanAddressCredentialsV2 constructor throws ArgumentNullException when signature is null.
+    /// </summary>
+    [TestMethod]
+    public void Constructor_SorobanAddressCredentialsV2WithMissingSignature_ThrowsArgumentNullException()
+    {
+        var ex = Assert.ThrowsException<ArgumentNullException>(() =>
+            new SorobanAddressCredentialsV2(_accountAddress, Nonce, SignatureExpirationLedger, null));
+        Assert.IsTrue(ex.Message.Contains("Signature cannot be null."));
     }
 
     /// <summary>
@@ -384,5 +441,99 @@ public class SorobanAuthorizationTest
         Assert.AreEqual(args.Length, decodedSubFunction.Args.Length);
         Assert.AreEqual(((SCBool)args[0]).InnerValue, ((SCBool)decodedSubFunction.Args[0]).InnerValue);
         Assert.AreEqual(((SCString)args[1]).InnerValue, ((SCString)decodedSubFunction.Args[1]).InnerValue);
+    }
+
+    /// <summary>
+    ///     Verifies that SorobanAddressCredentialsWithDelegates round-trips correctly through XDR serialization
+    ///     including nested delegates.
+    /// </summary>
+    [TestMethod]
+    public void FromXdr_SorobanAddressCredentialsWithDelegates_RoundTripsWithNestedDelegates()
+    {
+        // Arrange
+        var contractAddress = new ScContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
+        var root = new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
+        var nested = new SorobanDelegateSignature(contractAddress, new SCString("nested-sig"), []);
+        var top = new SorobanDelegateSignature(_accountAddress, new SCString("top-sig"), [nested]);
+        var credentials = new SorobanAddressCredentialsWithDelegates(root, [top]);
+
+        // Act
+        var xdr = credentials.ToXdr();
+        var decoded = SorobanCredentials.FromXdr(xdr);
+
+        // Assert
+        Assert.AreEqual(
+            SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES,
+            xdr.Discriminant.InnerValue);
+        Assert.IsInstanceOfType(decoded, typeof(SorobanAddressCredentialsWithDelegates));
+        var d = (SorobanAddressCredentialsWithDelegates)decoded;
+        Assert.AreEqual(((ScAccountId)root.Address).InnerValue, ((ScAccountId)d.AddressCredentials.Address).InnerValue);
+        Assert.AreEqual(1, d.Delegates.Length);
+        Assert.AreEqual("top-sig", ((SCString)d.Delegates[0].Signature).InnerValue);
+        Assert.AreEqual(_accountAddress.InnerValue, ((ScAccountId)d.Delegates[0].Address).InnerValue);
+        Assert.AreEqual(1, d.Delegates[0].NestedDelegates.Length);
+        Assert.AreEqual("nested-sig", ((SCString)d.Delegates[0].NestedDelegates[0].Signature).InnerValue);
+        Assert.AreEqual(contractAddress.InnerValue,
+            ((ScContractId)d.Delegates[0].NestedDelegates[0].Address).InnerValue);
+    }
+
+    /// <summary>
+    ///     Verifies that SorobanCredentials.FromXdr throws InvalidOperationException for an unknown discriminant value.
+    /// </summary>
+    [TestMethod]
+    public void FromXdr_UnknownCredentialsDiscriminant_Throws()
+    {
+        var xdr = new StellarDotnetSdk.Xdr.SorobanCredentials
+        {
+            Discriminant = new SorobanCredentialsType
+            {
+                InnerValue = (SorobanCredentialsType.SorobanCredentialsTypeEnum)4,
+            },
+        };
+
+        var ex = Assert.ThrowsException<InvalidOperationException>(() => SorobanCredentials.FromXdr(xdr));
+        Assert.IsTrue(ex.Message.Contains("Unknown SorobanCredentials type"));
+    }
+
+    /// <summary>
+    ///     Verifies that SorobanAuthorizationEntry correctly decodes both V2 and delegated credentials via FromXdr.
+    /// </summary>
+    [TestMethod]
+    public void FromXdr_V2AndDelegatedAuthEntries_DecodeWithoutThrowing()
+    {
+        var v2Entry = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentialsV2(_accountAddress, Nonce, SignatureExpirationLedger, _signature),
+            new SorobanAuthorizedInvocation(
+                new SorobanAuthorizedContractFunction(new InvokeContractHostFunction(
+                    new ScContractId("CDJ4RICANSXXZ275W2OY2U7RO73HYURBGBRHVW2UUXZNGEBIVBNRKEF7"),
+                    new SCSymbol("hello"), [])),
+                []));
+        var delegatedEntry = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentialsWithDelegates(
+                new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature),
+                [new SorobanDelegateSignature(_accountAddress, _signature, [])]),
+            v2Entry.RootInvocation);
+
+        Assert.IsInstanceOfType(
+            SorobanAuthorizationEntry.FromXdr(v2Entry.ToXdr()).Credentials, typeof(SorobanAddressCredentialsV2));
+        Assert.IsInstanceOfType(
+            SorobanAuthorizationEntry.FromXdr(delegatedEntry.ToXdr()).Credentials,
+            typeof(SorobanAddressCredentialsWithDelegates));
+    }
+
+    /// <summary>
+    ///     Verifies that SorobanAddressCredentialsWithDelegates round-trips correctly when the delegates array is empty.
+    /// </summary>
+    [TestMethod]
+    public void FromXdr_DelegatedCredentialsWithEmptyDelegates_RoundTrips()
+    {
+        var credentials = new SorobanAddressCredentialsWithDelegates(
+            new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature),
+            []);
+
+        var decoded = SorobanCredentials.FromXdr(credentials.ToXdr());
+
+        Assert.IsInstanceOfType(decoded, typeof(SorobanAddressCredentialsWithDelegates));
+        Assert.AreEqual(0, ((SorobanAddressCredentialsWithDelegates)decoded).Delegates.Length);
     }
 }
