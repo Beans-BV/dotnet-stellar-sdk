@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -11,21 +12,32 @@ public class TestnetConfigTests
     [SetUp]
     public void SetUp()
     {
-        _originalHorizonUrl = Environment.GetEnvironmentVariable("INTEGRATION_HORIZON_URL");
-        _originalSorobanRpcUrl = Environment.GetEnvironmentVariable("INTEGRATION_SOROBAN_RPC_URL");
-        Environment.SetEnvironmentVariable("INTEGRATION_HORIZON_URL", null);
-        Environment.SetEnvironmentVariable("INTEGRATION_SOROBAN_RPC_URL", null);
+        foreach (var key in ManagedVars)
+        {
+            _originalValues[key] = Environment.GetEnvironmentVariable(key);
+            Environment.SetEnvironmentVariable(key, null);
+        }
     }
 
     [TearDown]
     public void TearDown()
     {
-        Environment.SetEnvironmentVariable("INTEGRATION_HORIZON_URL", _originalHorizonUrl);
-        Environment.SetEnvironmentVariable("INTEGRATION_SOROBAN_RPC_URL", _originalSorobanRpcUrl);
+        foreach (var key in ManagedVars)
+        {
+            Environment.SetEnvironmentVariable(key, _originalValues[key]);
+        }
     }
 
-    private string? _originalHorizonUrl;
-    private string? _originalSorobanRpcUrl;
+    private static readonly string[] ManagedVars =
+    {
+        "INTEGRATION_HORIZON_URL",
+        "INTEGRATION_HORIZON_TOKEN",
+        "INTEGRATION_FRIENDBOT_URL",
+        "INTEGRATION_STELLAR_RPC_URL",
+        "INTEGRATION_STELLAR_RPC_TOKEN",
+    };
+
+    private readonly Dictionary<string, string?> _originalValues = new();
 
     [Test]
     public void HorizonUrl_WhenEnvVarUnset_ReturnsPublicTestnetDefault()
@@ -48,16 +60,55 @@ public class TestnetConfigTests
     }
 
     [Test]
-    public void SorobanRpcUrl_WhenEnvVarUnset_ReturnsPublicTestnetDefault()
+    public void HorizonToken_WhenEnvVarUnset_ReturnsNull()
     {
-        TestnetConfig.SorobanRpcUrl.Should().Be("https://soroban-testnet.stellar.org");
+        TestnetConfig.HorizonToken.Should().BeNull();
     }
 
     [Test]
-    public void SorobanRpcUrl_WhenEnvVarSet_ReturnsConfiguredValue()
+    public void HorizonToken_WhenEnvVarSet_ReturnsConfiguredValue()
     {
-        Environment.SetEnvironmentVariable("INTEGRATION_SOROBAN_RPC_URL", "https://soroban.example.com");
-        TestnetConfig.SorobanRpcUrl.Should().Be("https://soroban.example.com");
+        Environment.SetEnvironmentVariable("INTEGRATION_HORIZON_TOKEN", "secret-token");
+        TestnetConfig.HorizonToken.Should().Be("secret-token");
+    }
+
+    [Test]
+    public void FriendbotUrl_WhenEnvVarUnset_ReturnsPublicTestnetDefault()
+    {
+        TestnetConfig.FriendbotUrl.Should().Be("https://horizon-testnet.stellar.org");
+    }
+
+    [Test]
+    public void FriendbotUrl_WhenEnvVarSet_ReturnsConfiguredValue()
+    {
+        Environment.SetEnvironmentVariable("INTEGRATION_FRIENDBOT_URL", "https://friendbot.example.com");
+        TestnetConfig.FriendbotUrl.Should().Be("https://friendbot.example.com");
+    }
+
+    [Test]
+    public void StellarRpcUrl_WhenEnvVarUnset_ReturnsPublicTestnetDefault()
+    {
+        TestnetConfig.StellarRpcUrl.Should().Be("https://soroban-testnet.stellar.org");
+    }
+
+    [Test]
+    public void StellarRpcUrl_WhenEnvVarSet_ReturnsConfiguredValue()
+    {
+        Environment.SetEnvironmentVariable("INTEGRATION_STELLAR_RPC_URL", "https://rpc.example.com");
+        TestnetConfig.StellarRpcUrl.Should().Be("https://rpc.example.com");
+    }
+
+    [Test]
+    public void StellarRpcToken_WhenEnvVarUnset_ReturnsNull()
+    {
+        TestnetConfig.StellarRpcToken.Should().BeNull();
+    }
+
+    [Test]
+    public void StellarRpcToken_WhenEnvVarSet_ReturnsConfiguredValue()
+    {
+        Environment.SetEnvironmentVariable("INTEGRATION_STELLAR_RPC_TOKEN", "rpc-token");
+        TestnetConfig.StellarRpcToken.Should().Be("rpc-token");
     }
 
     [Test]
