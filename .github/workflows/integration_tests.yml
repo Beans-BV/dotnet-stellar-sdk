@@ -1,6 +1,8 @@
 name: Integration Tests
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
   workflow_dispatch:
@@ -23,8 +25,10 @@ jobs:
           dotnet-version: '8.0.x'
       - name: Run integration tests
         env:
-          INTEGRATION_HORIZON_URL:     ${{ vars.INTEGRATION_HORIZON_URL     || 'https://horizon-testnet.stellar.org' }}
-          INTEGRATION_SOROBAN_RPC_URL: ${{ vars.INTEGRATION_SOROBAN_RPC_URL || 'https://soroban-testnet.stellar.org' }}
+          INTEGRATION_HORIZON_URL:       ${{ vars.INTEGRATION_HORIZON_URL       || 'https://horizon-testnet.stellar.org' }}
+          INTEGRATION_HORIZON_TOKEN:     ${{ secrets.INTEGRATION_HORIZON_TOKEN }}
+          INTEGRATION_STELLAR_RPC_URL:   ${{ vars.INTEGRATION_STELLAR_RPC_URL   || 'https://soroban-testnet.stellar.org' }}
+          INTEGRATION_STELLAR_RPC_TOKEN: ${{ secrets.INTEGRATION_STELLAR_RPC_TOKEN }}
         run: |
           dotnet test StellarDotnetSdk.IntegrationTests/StellarDotnetSdk.IntegrationTests.csproj `
             --configuration Release `

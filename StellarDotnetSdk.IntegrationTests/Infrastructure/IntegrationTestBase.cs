@@ -9,9 +9,15 @@ using StellarDotnetSdk.Responses;
 namespace StellarDotnetSdk.IntegrationTests.Infrastructure;
 
 /// <summary>
-///     Base class for Testnet integration tests. Owns a single Server instance per
-///     test class lifecycle, configures the Testnet network, and exposes helpers
-///     for funding fresh keypairs via Friendbot with bounded retries.
+///     Base class for Testnet integration tests. Owns the Server clients per test-class
+///     lifecycle and configures the Testnet network.
+///     <para>
+///         <see cref="Server" /> handles all reads and submissions and may be routed to an
+///         authenticated provider (e.g. Blockdaemon) via <c>INTEGRATION_HORIZON_URL</c> +
+///         <c>INTEGRATION_HORIZON_TOKEN</c>. Friendbot funding uses a separate client
+///         (<see cref="_fundingServer" />) pinned to Stellar's public Testnet, because the
+///         Friendbot faucet is SDF-only and not hosted by most providers.
+///     </para>
 /// </summary>
 public abstract class IntegrationTestBase
 {
@@ -26,19 +32,25 @@ public abstract class IntegrationTestBase
     // cannot blow a test's [CancelAfter] budget.
     private static readonly TimeSpan MaxRetryDelay = TimeSpan.FromSeconds(15);
 
+    /// <summary>Client used solely for Friendbot funding, pinned to a faucet-capable Horizon.</summary>
+    private Server _fundingServer = null!;
+
+    /// <summary>Client for reads and submissions; honors the optional Horizon bearer token.</summary>
     protected Server Server = null!;
 
     [OneTimeSetUp]
     public void BaseOneTimeSetUp()
     {
         Network.UseTestNetwork();
-        Server = new Server(TestnetConfig.HorizonUrl);
+        Server = new Server(TestnetConfig.HorizonUrl, TestnetConfig.HorizonToken);
+        _fundingServer = new Server(TestnetConfig.FriendbotUrl);
     }
 
     [OneTimeTearDown]
     public void BaseOneTimeTearDown()
     {
         Server.Dispose();
+        _fundingServer.Dispose();
     }
 
     /// <summary>
@@ -73,7 +85,7 @@ public abstract class IntegrationTestBase
 
             try
             {
-                var response = await Server.TestNetFriendBot.FundAccount(accountId).Execute();
+                var response = await _fundingServer.TestNetFriendBot.FundAccount(accountId).Execute();
                 if (!string.IsNullOrEmpty(response.Hash))
                 {
                     return;
@@ -106,7 +118,7 @@ public abstract class IntegrationTestBase
                 // MaxRetryDelay; otherwise fall back to the fixed exponential backoff.
                 var backoff = BackoffDelays[attempt];
                 var delay = retryAfter is { } ra && ra > backoff
-                    ? (ra < MaxRetryDelay ? ra : MaxRetryDelay)
+                    ? ra < MaxRetryDelay ? ra : MaxRetryDelay
                     : backoff;
                 await Task.Delay(delay);
             }
