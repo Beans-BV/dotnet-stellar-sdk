@@ -536,4 +536,108 @@ public class SorobanAuthorizationTest
         Assert.IsInstanceOfType(decoded, typeof(SorobanAddressCredentialsWithDelegates));
         Assert.AreEqual(0, ((SorobanAddressCredentialsWithDelegates)decoded).Delegates.Length);
     }
+
+    /// <summary>
+    ///     CAP-71 requires delegate arrays to be sorted by increasing address; encoding an
+    ///     out-of-order array must throw rather than produce host-invalid wire data.
+    /// </summary>
+    [TestMethod]
+    public void ToXdr_DelegatesNotSortedByAddress_Throws()
+    {
+        var root = new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
+        var (first, second) = DescendingAddressPair();
+        var credentials = new SorobanAddressCredentialsWithDelegates(root, new[]
+        {
+            new SorobanDelegateSignature(first, _signature, []),
+            new SorobanDelegateSignature(second, _signature, []),
+        });
+
+        var ex = Assert.ThrowsException<InvalidOperationException>(() => credentials.ToXdr());
+        Assert.IsTrue(ex.Message.Contains("sorted"));
+    }
+
+    /// <summary>
+    ///     CAP-71 forbids duplicate delegate addresses; encoding a duplicated array must throw.
+    /// </summary>
+    [TestMethod]
+    public void ToXdr_DuplicateDelegateAddresses_Throws()
+    {
+        var root = new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
+        var credentials = new SorobanAddressCredentialsWithDelegates(root, new[]
+        {
+            new SorobanDelegateSignature(_accountAddress, _signature, []),
+            new SorobanDelegateSignature(_accountAddress, _signature, []),
+        });
+
+        var ex = Assert.ThrowsException<InvalidOperationException>(() => credentials.ToXdr());
+        Assert.IsTrue(ex.Message.Contains("duplicate"));
+    }
+
+    /// <summary>
+    ///     The sort/no-duplicate rule applies recursively: an out-of-order nested delegate array must also throw.
+    /// </summary>
+    [TestMethod]
+    public void ToXdr_NestedDelegatesNotSortedByAddress_Throws()
+    {
+        var root = new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
+        var (first, second) = DescendingAddressPair();
+        var top = new SorobanDelegateSignature(_accountAddress, _signature, new[]
+        {
+            new SorobanDelegateSignature(first, _signature, []),
+            new SorobanDelegateSignature(second, _signature, []),
+        });
+        var credentials = new SorobanAddressCredentialsWithDelegates(root, new[] { top });
+
+        Assert.ThrowsException<InvalidOperationException>(() => credentials.ToXdr());
+    }
+
+    /// <summary>
+    ///     A correctly sorted, duplicate-free delegate array must encode without throwing.
+    /// </summary>
+    [TestMethod]
+    public void ToXdr_DelegatesSortedByAddress_DoesNotThrow()
+    {
+        var root = new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
+        var (first, second) = DescendingAddressPair();
+        var credentials = new SorobanAddressCredentialsWithDelegates(root, new[]
+        {
+            new SorobanDelegateSignature(second, _signature, []),
+            new SorobanDelegateSignature(first, _signature, []),
+        });
+
+        // second < first by construction, so this array is ascending and must round-trip.
+        var decoded = SorobanCredentials.FromXdr(credentials.ToXdr());
+        Assert.AreEqual(2, ((SorobanAddressCredentialsWithDelegates)decoded).Delegates.Length);
+    }
+
+    /// <summary>Returns two distinct addresses ordered so that <c>first</c> &gt; <c>second</c> by XDR bytes.</summary>
+    private static (ScAddress first, ScAddress second) DescendingAddressPair()
+    {
+        ScAddress a = new ScContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
+        ScAddress b = new ScContractId("CDJ4RICANSXXZ275W2OY2U7RO73HYURBGBRHVW2UUXZNGEBIVBNRKEF7");
+        return CompareAddress(a, b) < 0 ? (b, a) : (a, b);
+    }
+
+    private static int CompareAddress(ScAddress a, ScAddress b)
+    {
+        var x = AddressXdrBytes(a);
+        var y = AddressXdrBytes(b);
+        var min = Math.Min(x.Length, y.Length);
+        for (var i = 0; i < min; i++)
+        {
+            if (x[i] != y[i])
+            {
+                return x[i].CompareTo(y[i]);
+            }
+        }
+
+        return x.Length.CompareTo(y.Length);
+    }
+
+    private static byte[] AddressXdrBytes(ScAddress address)
+    {
+        var stream = new XdrDataOutputStream();
+        SCAddress.Encode(stream, address.ToXdr());
+        return stream.ToArray();
+    }
 }

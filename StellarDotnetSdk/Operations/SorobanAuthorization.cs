@@ -15,13 +15,23 @@ using SCVec = StellarDotnetSdk.Soroban.SCVec;
 
 namespace StellarDotnetSdk.Operations;
 
-/// <summary>Selects which address-credential variant a signing operation produces.</summary>
+/// <summary>
+///     Selects which address-credential variant a signing operation produces. Signing helpers
+///     default to <see cref="V1" /> because it is accepted on every protocol version; <see cref="V2" />
+///     is opt-in until Protocol 27 is live on the target network and is expected to replace V1 in
+///     Protocol 28.
+/// </summary>
 public enum SorobanCredentialsVersion
 {
-    /// <summary>Legacy <c>SOROBAN_CREDENTIALS_ADDRESS</c> (CAP-0046).</summary>
+    /// <summary>
+    ///     Legacy <c>SOROBAN_CREDENTIALS_ADDRESS</c> (CAP-0046). Accepted on all networks; the default.
+    /// </summary>
     V1,
 
-    /// <summary>Protocol 27 address-bound <c>SOROBAN_CREDENTIALS_ADDRESS_V2</c> (CAP-0071-02).</summary>
+    /// <summary>
+    ///     Protocol 27 address-bound <c>SOROBAN_CREDENTIALS_ADDRESS_V2</c> (CAP-0071-02). Rejected by
+    ///     pre-Protocol-27 networks. Expected to replace V1 in Protocol 28.
+    /// </summary>
     V2,
 }
 
@@ -99,7 +109,10 @@ public static class SorobanAuthorization
     /// <param name="invocation">The authorized invocation tree to sign.</param>
     /// <returns>A 32-byte SHA-256 hash of the XDR-encoded preimage.</returns>
     public static byte[] BuildAuthPreimageHash(
-        Network network, long nonce, uint signatureExpirationLedger, SorobanAuthorizedInvocation invocation)
+        Network network,
+        long nonce,
+        uint signatureExpirationLedger,
+        SorobanAuthorizedInvocation invocation)
     {
         var preimage = new HashIDPreimage
         {
@@ -154,47 +167,54 @@ public static class SorobanAuthorization
 
     /// <summary>
     ///     Signs an authorization entry with a classic Ed25519 <see cref="KeyPair" />. Produces
-    ///     V2 (address-bound) credentials by default.
+    ///     V1 credentials by default (see <see cref="SorobanCredentialsVersion" />).
     /// </summary>
     /// <param name="entry">The (typically simulation-produced) entry to sign. Its credentials must be address credentials.</param>
     /// <param name="signer">The Ed25519 key pair authorizing the invocation.</param>
     /// <param name="validUntilLedgerSeq">The ledger sequence number on which the signature expires.</param>
     /// <param name="network">The network the transaction is submitted to.</param>
-    /// <param name="version">Which credential variant to produce. Defaults to V2 (address-bound, replay-safe).</param>
+    /// <param name="version">
+    ///     Which credential variant to produce. Defaults to V1 (accepted on all networks); pass
+    ///     <see cref="SorobanCredentialsVersion.V2" /> for address-bound, replay-safe credentials once
+    ///     Protocol 27 is live on the target network.
+    /// </param>
     /// <returns>A new signed <see cref="SorobanAuthorizationEntry" />.</returns>
     public static SorobanAuthorizationEntry AuthorizeEntry(
         SorobanAuthorizationEntry entry,
         KeyPair signer,
         uint validUntilLedgerSeq,
         Network network,
-        SorobanCredentialsVersion version = SorobanCredentialsVersion.V2)
+        SorobanCredentialsVersion version = SorobanCredentialsVersion.V1)
     {
         return AuthorizeEntry(entry, new KeyPairEntrySigner(signer), validUntilLedgerSeq, network, version);
     }
 
     /// <summary>
     ///     Signs an authorization entry with a custom <see cref="ISorobanEntrySigner" /> (for
-    ///     smart-contract accounts). Produces V2 (address-bound) credentials by default.
+    ///     smart-contract accounts). Produces V1 credentials by default (see
+    ///     <see cref="SorobanCredentialsVersion" />).
     /// </summary>
     /// <param name="entry">The (typically simulation-produced) entry to sign. Its credentials must be address credentials.</param>
     /// <param name="signer">The signer authorizing the invocation.</param>
     /// <param name="validUntilLedgerSeq">The ledger sequence number on which the signature expires.</param>
     /// <param name="network">The network the transaction is submitted to.</param>
-    /// <param name="version">Which credential variant to produce. Defaults to V2 (address-bound, replay-safe).</param>
+    /// <param name="version">
+    ///     Which credential variant to produce. Defaults to V1 (accepted on all networks); pass
+    ///     <see cref="SorobanCredentialsVersion.V2" /> for address-bound, replay-safe credentials once
+    ///     Protocol 27 is live on the target network.
+    /// </param>
     /// <returns>A new signed <see cref="SorobanAuthorizationEntry" />.</returns>
     /// <remarks>
-    ///     The produced credential's <c>Address</c> is set to
-    ///     <see cref="ISorobanEntrySigner.SignerAddress" />, overwriting any address on the
-    ///     incoming entry. This is intentional: callers typically pass a simulation-produced
-    ///     entry and sign it with the matching signer. If the two addresses differ, the on-chain
-    ///     <c>__check_auth</c> will reject the transaction.
+    ///     The credential address is taken from <paramref name="entry" /> (matching the Java and JS
+    ///     SDKs); <paramref name="signer" /> only supplies the signature. Signing with a key that does
+    ///     not correspond to the entry's address yields an entry the on-chain <c>__check_auth</c> rejects.
     /// </remarks>
     public static SorobanAuthorizationEntry AuthorizeEntry(
         SorobanAuthorizationEntry entry,
         ISorobanEntrySigner signer,
         uint validUntilLedgerSeq,
         Network network,
-        SorobanCredentialsVersion version = SorobanCredentialsVersion.V2)
+        SorobanCredentialsVersion version = SorobanCredentialsVersion.V1)
     {
         ArgumentNullException.ThrowIfNull(entry);
         ArgumentNullException.ThrowIfNull(signer);
@@ -207,7 +227,8 @@ public static class SorobanAuthorization
         }
 
         var nonce = existing.Nonce;
-        var address = signer.SignerAddress;
+        // The credential address comes from the entry, not the signer
+        var address = existing.Address;
 
         var payloadHash = version == SorobanCredentialsVersion.V2
             ? BuildAddressAuthPreimageHash(network, address, nonce, validUntilLedgerSeq, entry.RootInvocation)
@@ -237,13 +258,21 @@ public static class SorobanAuthorization
     /// <param name="network">The network the transaction is submitted to.</param>
     /// <returns>A new signed <see cref="SorobanAuthorizationEntry" /> with delegated credentials.</returns>
     /// <remarks>
-    ///     Each delegate signs the address-bound payload
-    ///     (<c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS</c>) bound to its own address, with
-    ///     no nested delegates. The XDR encoding is stable, but the exact per-delegate payload
-    ///     defined by CAP-0071-01 has not yet been confirmed against a reference implementation;
-    ///     verify with a cross-SDK known-answer vector before relying on delegated signing on a
-    ///     live network. To build deeper delegation chains, construct
-    ///     <see cref="SorobanDelegateSignature" /> values manually.
+    ///     <para>
+    ///         EXPERIMENTAL. Each delegate signs the address-bound payload
+    ///         (<c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS</c>) bound to its own address, with
+    ///         no nested delegates. The XDR encoding is stable, but the exact per-delegate payload
+    ///         defined by CAP-0071-01 has not yet been confirmed against a reference implementation;
+    ///         verify with a cross-SDK known-answer vector before relying on delegated signing on a
+    ///         live network. To build deeper delegation chains, construct
+    ///         <see cref="SorobanDelegateSignature" /> values manually.
+    ///     </para>
+    ///     <para>
+    ///         The root credential address is taken from the entry; the
+    ///         root signer only supplies the root signature. Delegates are emitted sorted by increasing
+    ///         address as required by CAP-71; passing two signers with the same address yields a
+    ///         duplicate that is rejected when the entry is serialized.
+    ///     </para>
     /// </remarks>
     public static SorobanAuthorizationEntry AuthorizeEntryWithDelegates(
         SorobanAuthorizationEntry entry, ISorobanEntrySigner rootSigner,
@@ -260,7 +289,8 @@ public static class SorobanAuthorization
         }
 
         var nonce = existing.Nonce;
-        var rootAddress = rootSigner.SignerAddress;
+        // The root credential address comes from the entry, not rootSigner
+        var rootAddress = existing.Address;
 
         var rootHash =
             BuildAddressAuthPreimageHash(network, rootAddress, nonce, validUntilLedgerSeq, entry.RootInvocation);
@@ -277,6 +307,11 @@ public static class SorobanAuthorization
             delegates[i] =
                 new SorobanDelegateSignature(delegateSigner.SignerAddress, delegateSigner.Sign(delegateHash), []);
         }
+
+        // CAP-71 requires delegate arrays sorted by increasing address. Per-delegate signatures are
+        // bound to each delegate's own address and are independent of array order, so sorting after
+        // signing is safe and guarantees the produced entry serializes to valid wire data.
+        Array.Sort(delegates, (left, right) => left.Address.CompareByXdr(right.Address));
 
         return new SorobanAuthorizationEntry(
             new SorobanAddressCredentialsWithDelegates(root, delegates),

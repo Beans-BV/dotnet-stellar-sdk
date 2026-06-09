@@ -345,3 +345,41 @@ public class ScMuxedAccountId : ScAddress
         };
     }
 }
+
+/// <summary>
+///     Internal helpers for ordering <see cref="ScAddress" /> values by their canonical XDR
+///     encoding (type discriminant first, then body bytes). This is the ordering the host uses for
+///     CAP-71 delegate arrays, where "increasing address" is defined over the encoded
+///     <see cref="Xdr.SCAddress" />.
+/// </summary>
+internal static class ScAddressExtensions
+{
+    /// <summary>Returns the canonical XDR encoding of this address.</summary>
+    internal static byte[] ToXdrByteArray(this ScAddress address)
+    {
+        var stream = new XdrDataOutputStream();
+        SCAddress.Encode(stream, address.ToXdr());
+        return stream.ToArray();
+    }
+
+    /// <summary>
+    ///     Compares two addresses by their XDR encoding. Returns a negative value if
+    ///     <paramref name="left" /> sorts before <paramref name="right" />, zero if they encode
+    ///     identically, and a positive value otherwise.
+    /// </summary>
+    internal static int CompareByXdr(this ScAddress left, ScAddress right)
+    {
+        var x = left.ToXdrByteArray();
+        var y = right.ToXdrByteArray();
+        var min = Math.Min(x.Length, y.Length);
+        for (var i = 0; i < min; i++)
+        {
+            if (x[i] != y[i])
+            {
+                return x[i].CompareTo(y[i]);
+            }
+        }
+
+        return x.Length.CompareTo(y.Length);
+    }
+}

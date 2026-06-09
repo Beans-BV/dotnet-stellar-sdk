@@ -201,6 +201,11 @@ public class SorobanAddressCredentials : SorobanAddressCredentialsBase
 ///     address-bound preimage (<c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS</c>),
 ///     preventing signature replay between accounts that share a private key.
 /// </summary>
+/// <remarks>
+///     V1 (<see cref="SorobanAddressCredentials" />) and V2 are both valid on Protocol 27, so V2 is
+///     opt-in for now. V2 is expected to replace V1 in Protocol 28. Until Protocol 27 is live on the
+///     target network, prefer V1, as pre-P27 networks reject V2 credentials.
+/// </remarks>
 public class SorobanAddressCredentialsV2 : SorobanAddressCredentialsBase
 {
     /// <summary>
@@ -292,8 +297,14 @@ public class SorobanDelegateSignature
     public SorobanDelegateSignature[] NestedDelegates { get; }
 
     /// <summary>Converts this wrapper to its XDR <see cref="Xdr.SorobanDelegateSignature" /> representation.</summary>
+    /// <exception cref="InvalidOperationException">
+    ///     Thrown when <see cref="NestedDelegates" /> is not sorted by increasing address or contains
+    ///     duplicate addresses, as required by CAP-71.
+    /// </exception>
     public Xdr.SorobanDelegateSignature ToXdr()
     {
+        ValidateOrder(NestedDelegates);
+
         var nested = new Xdr.SorobanDelegateSignature[NestedDelegates.Length];
         for (var i = 0; i < NestedDelegates.Length; i++)
         {
@@ -322,6 +333,32 @@ public class SorobanDelegateSignature
             SCVal.FromXdr(xdr.Signature),
             nested
         );
+    }
+
+    /// <summary>
+    ///     Validates that a delegate array is strictly increasing by address — i.e. sorted by
+    ///     increasing address with no duplicates, as required by CAP-71.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    ///     Thrown when the array is out of order or contains duplicate addresses.
+    /// </exception>
+    internal static void ValidateOrder(SorobanDelegateSignature[] delegates)
+    {
+        for (var i = 1; i < delegates.Length; i++)
+        {
+            var comparison = delegates[i - 1].Address.CompareByXdr(delegates[i].Address);
+            if (comparison > 0)
+            {
+                throw new InvalidOperationException(
+                    "Delegate signatures must be sorted by increasing address (CAP-71).");
+            }
+
+            if (comparison == 0)
+            {
+                throw new InvalidOperationException(
+                    "Delegate signatures must not contain duplicate addresses (CAP-71).");
+            }
+        }
     }
 }
 
@@ -380,8 +417,14 @@ public class SorobanAddressCredentialsWithDelegates : SorobanCredentials
     }
 
     /// <summary>Converts this wrapper to its XDR <see cref="Xdr.SorobanCredentials" /> representation.</summary>
+    /// <exception cref="InvalidOperationException">
+    ///     Thrown when <see cref="Delegates" /> (or any nested delegate array) is not sorted by
+    ///     increasing address or contains duplicate addresses, as required by CAP-71.
+    /// </exception>
     public Xdr.SorobanCredentials ToSorobanCredentialsXdr()
     {
+        SorobanDelegateSignature.ValidateOrder(Delegates);
+
         var delegatesXdr = new Xdr.SorobanDelegateSignature[Delegates.Length];
         for (var i = 0; i < Delegates.Length; i++)
         {
