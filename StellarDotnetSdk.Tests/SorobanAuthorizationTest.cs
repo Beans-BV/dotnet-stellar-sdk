@@ -540,6 +540,24 @@ public class SorobanAuthorizationTest
     }
 
     /// <summary>
+    ///     The delegated wrapper's root is a discriminant-free bare struct, so either a V1 or a V2
+    ///     address-credential wrapper may serve as the root.
+    /// </summary>
+    [TestMethod]
+    public void SorobanAddressCredentialsWithDelegates_AcceptsV2Root_RoundTrips()
+    {
+        var v2Root = new SorobanAddressCredentialsV2(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
+        var credentials = new SorobanAddressCredentialsWithDelegates(v2Root, []);
+
+        var decoded = (SorobanAddressCredentialsWithDelegates)SorobanCredentials.FromXdr(credentials.ToXdr());
+
+        Assert.AreEqual(
+            ((ScAccountId)v2Root.Address).InnerValue,
+            ((ScAccountId)decoded.AddressCredentials.Address).InnerValue);
+        Assert.AreEqual(0, decoded.Delegates.Length);
+    }
+
+    /// <summary>
     ///     CAP-71 requires delegate arrays to be sorted by increasing address; encoding an
     ///     out-of-order array must throw rather than produce host-invalid wire data.
     /// </summary>

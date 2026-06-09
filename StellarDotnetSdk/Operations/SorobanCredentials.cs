@@ -382,10 +382,15 @@ public class SorobanDelegateSignature
 public class SorobanAddressCredentialsWithDelegates : SorobanCredentials
 {
     /// <summary>Constructs a new <see cref="SorobanAddressCredentialsWithDelegates" />.</summary>
-    /// <param name="addressCredentials">The root address credential being delegated.</param>
+    /// <param name="addressCredentials">
+    ///     The root address credential being delegated. The embedded XDR is the bare,
+    ///     discriminant-free <c>SorobanAddressCredentials</c> struct, so either a V1
+    ///     (<see cref="SorobanAddressCredentials" />) or V2 (<see cref="SorobanAddressCredentialsV2" />)
+    ///     wrapper may be supplied; only the shared address/nonce/expiration/signature fields are used.
+    /// </param>
     /// <param name="delegates">The ordered delegate signatures authorizing on behalf of the root.</param>
     public SorobanAddressCredentialsWithDelegates(
-        SorobanAddressCredentials addressCredentials,
+        SorobanAddressCredentialsBase addressCredentials,
         SorobanDelegateSignature[] delegates)
     {
         AddressCredentials = addressCredentials ??
@@ -394,8 +399,11 @@ public class SorobanAddressCredentialsWithDelegates : SorobanCredentials
         Delegates = delegates ?? throw new ArgumentNullException(nameof(delegates), "Delegates cannot be null.");
     }
 
-    /// <summary>The root address credential being delegated.</summary>
-    public SorobanAddressCredentials AddressCredentials { get; }
+    /// <summary>
+    ///     The root address credential being delegated. Variant-agnostic: the wire form is the bare
+    ///     <c>SorobanAddressCredentials</c> struct without a V1/V2 discriminant.
+    /// </summary>
+    public SorobanAddressCredentialsBase AddressCredentials { get; }
 
     /// <summary>The ordered delegate signatures authorizing on behalf of the root.</summary>
     public SorobanDelegateSignature[] Delegates { get; }

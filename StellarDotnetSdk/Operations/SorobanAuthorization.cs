@@ -302,7 +302,8 @@ public static class SorobanAuthorization
         var rootHash =
             BuildAddressAuthPreimageHash(network, rootAddress, nonce, validUntilLedgerSeq, entry.RootInvocation);
         // The WITH_DELEGATES XDR embeds a bare SorobanAddressCredentials struct (no V1/V2 discriminant),
-        // so the V1 wrapper is used here even though the signature is over the V2 address-bound payload.
+        // so the concrete wrapper variant is irrelevant here; a V1 instance carries the fields even
+        // though the signature is computed over the V2 address-bound payload.
         var root = new SorobanAddressCredentials(rootAddress, nonce, validUntilLedgerSeq, rootSigner.Sign(rootHash));
 
         var delegates = new SorobanDelegateSignature[delegateSigners.Count];
