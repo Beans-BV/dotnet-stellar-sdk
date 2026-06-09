@@ -114,6 +114,9 @@ public static class SorobanAuthorization
         uint signatureExpirationLedger,
         SorobanAuthorizedInvocation invocation)
     {
+        ArgumentNullException.ThrowIfNull(network);
+        ArgumentNullException.ThrowIfNull(invocation);
+
         var preimage = new HashIDPreimage
         {
             Discriminant = new EnvelopeType { InnerValue = EnvelopeTypeEnum.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION },
@@ -149,6 +152,10 @@ public static class SorobanAuthorization
         uint signatureExpirationLedger,
         SorobanAuthorizedInvocation invocation)
     {
+        ArgumentNullException.ThrowIfNull(network);
+        ArgumentNullException.ThrowIfNull(address);
+        ArgumentNullException.ThrowIfNull(invocation);
+
         var preimage = new HashIDPreimage
         {
             Discriminant = new EnvelopeType
@@ -302,6 +309,11 @@ public static class SorobanAuthorization
         for (var i = 0; i < delegateSigners.Count; i++)
         {
             var delegateSigner = delegateSigners[i];
+            if (delegateSigner is null)
+            {
+                throw new ArgumentException($"Delegate signer at index {i} is null.", nameof(delegateSigners));
+            }
+
             var delegateHash = BuildAddressAuthPreimageHash(
                 network, delegateSigner.SignerAddress, nonce, validUntilLedgerSeq, entry.RootInvocation);
             delegates[i] =

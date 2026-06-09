@@ -271,6 +271,42 @@ public class SorobanAuthorizationSigningTest
     }
 
     [TestMethod]
+    public void BuildAuthPreimageHash_NullArguments_ThrowArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            SorobanAuthorization.BuildAuthPreimageHash(null!, Nonce, ValidUntil, SampleInvocation()));
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            SorobanAuthorization.BuildAuthPreimageHash(Network.Public(), Nonce, ValidUntil, null!));
+    }
+
+    [TestMethod]
+    public void BuildAddressAuthPreimageHash_NullArguments_ThrowArgumentNullException()
+    {
+        var network = Network.Public();
+        var address = new ScAccountId(KeyPair.Random().AccountId);
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            SorobanAuthorization.BuildAddressAuthPreimageHash(null!, address, Nonce, ValidUntil, SampleInvocation()));
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            SorobanAuthorization.BuildAddressAuthPreimageHash(network, null!, Nonce, ValidUntil, SampleInvocation()));
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            SorobanAuthorization.BuildAddressAuthPreimageHash(network, address, Nonce, ValidUntil, null!));
+    }
+
+    [TestMethod]
+    public void AuthorizeEntryWithDelegates_NullDelegateElement_ThrowsArgumentException()
+    {
+        var network = Network.Public();
+        var rootKp = KeyPair.Random();
+        var unsigned = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentials(new ScAccountId(rootKp.AccountId), Nonce, 0, new SCString("")),
+            SampleInvocation());
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            SorobanAuthorization.AuthorizeEntryWithDelegates(
+                unsigned, new KeyPairEntrySigner(rootKp), new ISorobanEntrySigner[] { null! }, ValidUntil, network));
+    }
+
+    [TestMethod]
     [Ignore(
         "Add a cross-SDK known-answer vector (expected SHA-256 from JS/Rust) for the V2 WITH_ADDRESS preimage once a Protocol 27 reference SDK publishes one. Tracked by issue #186.")]
     public void BuildAddressAuthPreimageHash_MatchesCrossSdkKnownAnswerVector()

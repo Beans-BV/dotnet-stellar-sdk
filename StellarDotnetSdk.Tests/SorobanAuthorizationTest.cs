@@ -493,6 +493,8 @@ public class SorobanAuthorizationTest
 
         var ex = Assert.ThrowsException<InvalidOperationException>(() => SorobanCredentials.FromXdr(xdr));
         Assert.IsTrue(ex.Message.Contains("Unknown SorobanCredentials type"));
+        // The unexpected discriminant value must be included to aid forward-compat diagnostics.
+        Assert.IsTrue(ex.Message.Contains("4"));
     }
 
     /// <summary>
@@ -608,6 +610,29 @@ public class SorobanAuthorizationTest
         // second < first by construction, so this array is ascending and must round-trip.
         var decoded = SorobanCredentials.FromXdr(credentials.ToXdr());
         Assert.AreEqual(2, ((SorobanAddressCredentialsWithDelegates)decoded).Delegates.Length);
+    }
+
+    /// <summary>A null delegate entry must surface a clear validation error, not a NullReferenceException.</summary>
+    [TestMethod]
+    public void ToXdr_NullDelegateElement_Throws()
+    {
+        var root = new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
+        var credentials =
+            new SorobanAddressCredentialsWithDelegates(root, new SorobanDelegateSignature[] { null! });
+
+        Assert.ThrowsException<InvalidOperationException>(() => credentials.ToXdr());
+    }
+
+    /// <summary>The base ToXdr fallback must name the offending CLR type to aid diagnosis.</summary>
+    [TestMethod]
+    public void ToXdr_UnknownCredentialsSubtype_MessageIncludesTypeName()
+    {
+        var ex = Assert.ThrowsException<InvalidOperationException>(() => new UnknownCredentials().ToXdr());
+        Assert.IsTrue(ex.Message.Contains(nameof(UnknownCredentials)));
+    }
+
+    private sealed class UnknownCredentials : SorobanCredentials
+    {
     }
 
     /// <summary>Returns two distinct addresses ordered so that <c>first</c> &gt; <c>second</c> by XDR bytes.</summary>

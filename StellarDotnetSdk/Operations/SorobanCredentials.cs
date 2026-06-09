@@ -29,7 +29,7 @@ public abstract class SorobanCredentials
             SorobanAddressCredentialsV2 addressV2 => addressV2.ToSorobanCredentialsXdr(),
             SorobanAddressCredentials address => address.ToSorobanCredentialsXdr(),
             SorobanAddressCredentialsWithDelegates withDelegates => withDelegates.ToSorobanCredentialsXdr(),
-            _ => throw new InvalidOperationException("Unknown SorobanCredentials type"),
+            _ => throw new InvalidOperationException($"Unknown SorobanCredentials type: {GetType()}"),
         };
     }
 
@@ -54,7 +54,8 @@ public abstract class SorobanCredentials
                 SorobanAddressCredentialsV2.FromSorobanCredentialsXdr(xdrSorobanCredentials),
             CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES =>
                 SorobanAddressCredentialsWithDelegates.FromSorobanCredentialsXdr(xdrSorobanCredentials),
-            _ => throw new InvalidOperationException("Unknown SorobanCredentials type"),
+            _ => throw new InvalidOperationException(
+                $"Unknown SorobanCredentials type: {(int)xdrSorobanCredentials.Discriminant.InnerValue}"),
         };
     }
 }
@@ -340,10 +341,18 @@ public class SorobanDelegateSignature
     ///     increasing address with no duplicates, as required by CAP-71.
     /// </summary>
     /// <exception cref="InvalidOperationException">
-    ///     Thrown when the array is out of order or contains duplicate addresses.
+    ///     Thrown when the array contains a null entry, is out of order, or contains duplicate addresses.
     /// </exception>
     internal static void ValidateOrder(SorobanDelegateSignature[] delegates)
     {
+        foreach (var delegateSignature in delegates)
+        {
+            if (delegateSignature is null)
+            {
+                throw new InvalidOperationException("Delegate signatures must not contain null entries.");
+            }
+        }
+
         for (var i = 1; i < delegates.Length; i++)
         {
             var comparison = delegates[i - 1].Address.CompareByXdr(delegates[i].Address);
