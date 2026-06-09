@@ -322,8 +322,17 @@ public static class SorobanAuthorization
 
         // CAP-71 requires delegate arrays sorted by increasing address. Per-delegate signatures are
         // bound to each delegate's own address and are independent of array order, so sorting after
-        // signing is safe and guarantees the produced entry serializes to valid wire data.
-        Array.Sort(delegates, (left, right) => left.Address.CompareByXdr(right.Address));
+        // signing is safe and guarantees the produced entry serializes to valid wire data. Encode each
+        // address to its canonical XDR key once, then sort the delegates by those cached keys.
+        var sortKeys = new byte[delegates.Length][];
+        for (var i = 0; i < delegates.Length; i++)
+        {
+            sortKeys[i] = delegates[i].Address.ToXdrByteArray();
+        }
+
+        Array.Sort(
+            sortKeys, delegates,
+            Comparer<byte[]>.Create((left, right) => left.AsSpan().SequenceCompareTo(right)));
 
         return new SorobanAuthorizationEntry(
             new SorobanAddressCredentialsWithDelegates(root, delegates),

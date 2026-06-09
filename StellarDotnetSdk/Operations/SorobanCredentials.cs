@@ -345,17 +345,21 @@ public class SorobanDelegateSignature
     /// </exception>
     internal static void ValidateOrder(SorobanDelegateSignature[] delegates)
     {
-        foreach (var delegateSignature in delegates)
+        // Encode each address to its canonical XDR key exactly once, then compare the cached keys.
+        var keys = new byte[delegates.Length][];
+        for (var i = 0; i < delegates.Length; i++)
         {
-            if (delegateSignature is null)
+            if (delegates[i] is null)
             {
                 throw new InvalidOperationException("Delegate signatures must not contain null entries.");
             }
+
+            keys[i] = delegates[i].Address.ToXdrByteArray();
         }
 
         for (var i = 1; i < delegates.Length; i++)
         {
-            var comparison = delegates[i - 1].Address.CompareByXdr(delegates[i].Address);
+            var comparison = keys[i - 1].AsSpan().SequenceCompareTo(keys[i]);
             if (comparison > 0)
             {
                 throw new InvalidOperationException(
