@@ -183,8 +183,7 @@ public static class SorobanAuthorization
     ///     (root) credential address. Use this to obtain the exact payload for external signers (e.g.
     ///     hardware wallets) without going through
     ///     <see
-    ///         cref="AuthorizeEntry(SorobanAuthorizationEntry,
-    ///     ISorobanEntrySigner, uint, Network, SorobanCredentialsVersion, ScAddress?)" />
+    ///         cref="AuthorizeEntry(SorobanAuthorizationEntry, ISorobanEntrySigner, uint, Network, SorobanCredentialsVersion, ScAddress?)" />
     ///     .
     /// </summary>
     /// <param name="entry">The entry whose signing payload to compute. Its credentials must be address credentials.</param>
@@ -526,8 +525,7 @@ public static class SorobanAuthorization
     ///     <c>buildWithDelegatesEntry</c>): the root credential and every delegate node carry an
     ///     <see cref="SCVoid" /> placeholder signature, ready for incremental signing via
     ///     <see
-    ///         cref="AuthorizeEntry(SorobanAuthorizationEntry, ISorobanEntrySigner, uint, Network,
-    ///     SorobanCredentialsVersion, ScAddress?)" />
+    ///         cref="AuthorizeEntry(SorobanAuthorizationEntry, ISorobanEntrySigner, uint, Network, SorobanCredentialsVersion, ScAddress?)" />
     ///     with <c>forAddress</c>.
     /// </summary>
     /// <param name="entry">

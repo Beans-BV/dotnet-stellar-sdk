@@ -541,7 +541,7 @@ public class SorobanAuthorizationSigningTest
         var entry = new SorobanAuthorizationEntry(new SorobanSourceAccountCredentials(), SampleInvocation());
         var ex = Assert.ThrowsException<InvalidOperationException>(() =>
             SorobanAuthorization.BuildAuthorizationEntryPreimageHash(entry, ValidUntil, Network.Public()));
-        Assert.IsTrue(ex.Message.Contains("ource-account"));
+        Assert.IsTrue(ex.Message.Contains("Source-account", StringComparison.OrdinalIgnoreCase));
     }
 
     [TestMethod]
