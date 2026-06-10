@@ -251,6 +251,8 @@ public static class SorobanAuthorization
         SorobanCredentialsVersion version = SorobanCredentialsVersion.V2,
         ScAddress? forAddress = null)
     {
+        ArgumentNullException.ThrowIfNull(signer);
+
         return AuthorizeEntry(entry, new KeyPairEntrySigner(signer), validUntilLedgerSeq, network, version,
             forAddress);
     }
@@ -409,6 +411,12 @@ public static class SorobanAuthorization
         for (var i = 0; i < delegates.Length; i++)
         {
             var current = delegates[i];
+            if (current is null)
+            {
+                // Same rule SorobanDelegateSignature.ValidateOrder enforces at serialization time.
+                throw new InvalidOperationException("Delegate signatures must not contain null entries.");
+            }
+
             var nested = RouteDelegateSignature(current.NestedDelegates, forAddressKey, signature, ref matched);
             if (forAddressKey.AsSpan().SequenceEqual(current.Address.ToXdrByteArray()))
             {

@@ -14,6 +14,7 @@ using SorobanAddressCredentials = StellarDotnetSdk.Operations.SorobanAddressCred
 using SorobanAddressCredentialsWithDelegates = StellarDotnetSdk.Operations.SorobanAddressCredentialsWithDelegates;
 using SorobanAuthorizationEntry = StellarDotnetSdk.Operations.SorobanAuthorizationEntry;
 using SorobanAuthorizedInvocation = StellarDotnetSdk.Operations.SorobanAuthorizedInvocation;
+using SorobanCredentials = StellarDotnetSdk.Operations.SorobanCredentials;
 using SorobanDelegateSignature = StellarDotnetSdk.Operations.SorobanDelegateSignature;
 
 namespace StellarDotnetSdk.Tests;
@@ -538,8 +539,31 @@ public class SorobanAuthorizationSigningTest
     public void BuildAuthorizationEntryPreimageHash_SourceAccountCredentials_Throws()
     {
         var entry = new SorobanAuthorizationEntry(new SorobanSourceAccountCredentials(), SampleInvocation());
-        Assert.ThrowsException<InvalidOperationException>(() =>
+        var ex = Assert.ThrowsException<InvalidOperationException>(() =>
             SorobanAuthorization.BuildAuthorizationEntryPreimageHash(entry, ValidUntil, Network.Public()));
+        Assert.IsTrue(ex.Message.Contains("ource-account"));
+    }
+
+    [TestMethod]
+    public void BuildAuthorizationEntryPreimageHash_UnknownCredentialsSubtype_MessageIncludesTypeName()
+    {
+        var entry = new SorobanAuthorizationEntry(new UnknownCredentials(), SampleInvocation());
+
+        // An unrecognized credential subtype must not be reported as source-account credentials;
+        // the message must name the offending CLR type to aid diagnosis.
+        var ex = Assert.ThrowsException<InvalidOperationException>(() =>
+            SorobanAuthorization.BuildAuthorizationEntryPreimageHash(entry, ValidUntil, Network.Public()));
+        Assert.IsTrue(ex.Message.Contains(nameof(UnknownCredentials)));
+    }
+
+    [TestMethod]
+    public void AuthorizeEntry_UnknownCredentialsSubtype_MessageIncludesTypeName()
+    {
+        var entry = new SorobanAuthorizationEntry(new UnknownCredentials(), SampleInvocation());
+
+        var ex = Assert.ThrowsException<InvalidOperationException>(() =>
+            SorobanAuthorization.AuthorizeEntry(entry, KeyPair.Random(), ValidUntil, Network.Public()));
+        Assert.IsTrue(ex.Message.Contains(nameof(UnknownCredentials)));
     }
 
     [TestMethod]
@@ -619,6 +643,40 @@ public class SorobanAuthorizationSigningTest
     }
 
     [TestMethod]
+    public void AuthorizeEntry_NullKeyPair_ThrowsWithSignerParamName()
+    {
+        var unsigned = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentials(new ScAccountId(KeyPair.Random().AccountId), Nonce, 0, new SCString("")),
+            SampleInvocation());
+
+        // The exception must reference the public API parameter ("signer"), not the parameter name
+        // of the KeyPairEntrySigner constructor the key pair is forwarded to ("keyPair").
+        var ex = Assert.ThrowsException<ArgumentNullException>(() =>
+            SorobanAuthorization.AuthorizeEntry(unsigned, (KeyPair)null!, ValidUntil, Network.Public()));
+        Assert.AreEqual("signer", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void AuthorizeEntry_ForAddressWithNullDelegateElement_ThrowsInvalidOperation()
+    {
+        var network = Network.Public();
+        var signerKp = KeyPair.Random();
+        var unsigned = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentialsWithDelegates(
+                new SorobanAddressCredentials(
+                    new ScAccountId(KeyPair.Random().AccountId), Nonce, 0, new SCString("")),
+                new SorobanDelegateSignature[] { null! }),
+            SampleInvocation());
+
+        // A null delegate element must surface the clear CAP-71 validation error during signature
+        // routing, not a NullReferenceException.
+        var ex = Assert.ThrowsException<InvalidOperationException>(() =>
+            SorobanAuthorization.AuthorizeEntry(unsigned, signerKp, ValidUntil, network,
+                forAddress: new ScAccountId(signerKp.AccountId)));
+        Assert.IsTrue(ex.Message.Contains("null"));
+    }
+
+    [TestMethod]
     [Ignore(
         "Enable after Protocol 27 Testnet upgrade (2026-06-18): submit a V2-signed InvokeHostFunction and assert success. Tracked by issue #186 AC4.")]
     public void AuthorizeEntry_AgainstP27Testnet_SubmitsSuccessfully()
@@ -647,5 +705,9 @@ public class SorobanAuthorizationSigningTest
         }
 
         return x.Length.CompareTo(y.Length);
+    }
+
+    private sealed class UnknownCredentials : SorobanCredentials
+    {
     }
 }
