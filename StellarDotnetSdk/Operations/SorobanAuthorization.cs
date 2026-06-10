@@ -193,7 +193,7 @@ public static class SorobanAuthorization
     /// <returns>A 32-byte SHA-256 hash of the XDR-encoded preimage.</returns>
     /// <exception cref="InvalidOperationException">
     ///     Thrown for source-account credentials, which have no signature payload (they are signed via
-    ///     the transaction source account).
+    ///     the transaction source account), and for unrecognized credential subtypes.
     /// </exception>
     public static byte[] BuildAuthorizationEntryPreimageHash(
         SorobanAuthorizationEntry entry,
@@ -212,8 +212,10 @@ public static class SorobanAuthorization
                 network, v2.Address, v2.Nonce, validUntilLedgerSeq, entry.RootInvocation),
             SorobanAddressCredentials v1 => BuildAuthPreimageHash(
                 network, v1.Nonce, validUntilLedgerSeq, entry.RootInvocation),
-            _ => throw new InvalidOperationException(
+            SorobanSourceAccountCredentials => throw new InvalidOperationException(
                 "Source-account credentials have no signature payload; they are signed via the transaction source account."),
+            _ => throw new InvalidOperationException(
+                $"Unknown SorobanCredentials type: {entry.Credentials.GetType()}"),
         };
     }
 
@@ -322,8 +324,10 @@ public static class SorobanAuthorization
                 AuthorizeDelegatedEntry(entry, withDelegates, signer, validUntilLedgerSeq, network, forAddress),
             SorobanAddressCredentialsBase existing =>
                 AuthorizeAddressEntry(entry, existing, signer, validUntilLedgerSeq, network, version, forAddress),
-            _ => throw new InvalidOperationException(
+            SorobanSourceAccountCredentials => throw new InvalidOperationException(
                 "AuthorizeEntry requires address credentials; source-account credentials are signed via the transaction source account."),
+            _ => throw new InvalidOperationException(
+                $"Unknown SorobanCredentials type: {entry.Credentials.GetType()}"),
         };
     }
 

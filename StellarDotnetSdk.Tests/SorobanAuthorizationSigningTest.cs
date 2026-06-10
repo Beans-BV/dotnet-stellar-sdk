@@ -83,7 +83,7 @@ public class SorobanAuthorizationSigningTest
             SampleInvocation());
 
         var signed = SorobanAuthorization.AuthorizeEntry(
-            unsigned, keyPair, ValidUntil, network, SorobanCredentialsVersion.V2);
+            unsigned, keyPair, ValidUntil, network);
 
         Assert.IsInstanceOfType(signed.Credentials, typeof(SorobanAddressCredentialsV2));
         var cred = (SorobanAddressCredentialsV2)signed.Credentials;
@@ -195,7 +195,7 @@ public class SorobanAuthorizationSigningTest
         // Matching the Java and JS SDKs: the credential address is taken from the entry, not the
         // signer. Signing with a mismatched key does not throw; the on-chain __check_auth rejects it.
         var signed = SorobanAuthorization.AuthorizeEntry(
-            unsigned, signerKeyPair, ValidUntil, network, SorobanCredentialsVersion.V2);
+            unsigned, signerKeyPair, ValidUntil, network);
 
         var cred = (SorobanAddressCredentialsV2)signed.Credentials;
         Assert.AreEqual(entryKeyPair.AccountId, ((ScAccountId)cred.Address).InnerValue);
