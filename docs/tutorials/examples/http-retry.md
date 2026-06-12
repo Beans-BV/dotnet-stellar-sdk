@@ -8,7 +8,7 @@ This guide explains how to configure optional HTTP retry, circuit breaker, and t
 
 The SDK provides an opt-in resilience pipeline (built on [Polly](https://www.pollydocs.org/)) for transient failures:
 
-- **Connection failures** — `HttpRequestException`, timeouts, and HTTP-client `TaskCanceledException` (not user cancellation), similar to OkHttp's `retryOnConnectionFailure(true)`.
+- **Connection failures** — `HttpRequestException` and timeout-shaped exceptions thrown inside the handler chain, similar to OkHttp's `retryOnConnectionFailure(true)`. These retries apply to **all** HTTP methods. A `TaskCanceledException` caused by `HttpClient.Timeout` firing is **not** retried (see [What Gets Retried](#what-gets-retried)).
 - **HTTP status codes** — only the codes you add to `RetryHttpStatusCodes` (empty by default), and only for safe methods unless you opt in to unsafe ones.
 
 ### Default Behavior
@@ -32,10 +32,21 @@ When using the SDK without any configuration, **no retries are performed**:
 
 When retries are enabled (`MaxRetryCount > 0`):
 
-**Connection failures (exceptions) are always retried:**
+**Connection failures (exceptions) are retried — for every HTTP method, including POST:**
 - `HttpRequestException` — network errors, DNS failures
-- `TimeoutException` — request timeouts
-- `TaskCanceledException` — HTTP client timeouts (not user-initiated cancellation)
+- `TimeoutException` — timeouts surfaced by custom/inner handlers
+- `TaskCanceledException` — only when the request's `CancellationToken` is **not** signaled (e.g. thrown by a custom inner handler)
+
+> **Timeouts are not retried.** When `HttpClient.Timeout` fires, it cancels the token that flows through the
+> handler chain, so the resulting `TaskCanceledException` is treated exactly like user cancellation and
+> propagates immediately. Likewise `RequestTimeout` (below) is the outermost strategy, so its
+> `TimeoutRejectedException` is never seen by the retry strategy. There is no per-attempt retried timeout;
+> use `RequestTimeout` or `HttpClient.Timeout` to bound the whole operation.
+
+Because connection failures are retried for all methods, a request whose response was lost mid-flight (e.g.
+a connection reset after the server already processed it) can be re-executed. For Horizon and Stellar RPC
+this is safe (see the idempotency notes below); for strictly one-shot endpoints, see the SEP warning further
+down.
 
 **HTTP status codes are retried only when you opt in** by adding them to `RetryHttpStatusCodes`. By default the set is empty, so no status code is retried. Status-code retries are additionally gated by HTTP method (see [Controlling which HTTP methods retry](#controlling-which-http-methods-retry)): by default only safe methods (`GET`, `HEAD`, `OPTIONS`) are retried.
 
@@ -122,6 +133,8 @@ var server = new Server("https://horizon-testnet.stellar.org", httpClient);
 
 The retry pipeline observes responses **inside** the HTTP handler chain, so it triggers *before* a status code is translated into a typed exception such as `TooManyRequestsException` or `ServiceUnavailableException`. If all retries are exhausted, the last response is surfaced as the usual typed exception.
 
+A retried request is re-sent with the **same** `HttpRequestMessage` instance, so its body must be re-readable, buffered content (`StringContent`, `ByteArrayContent`, `FormUrlEncodedContent` — all of the SDK's own requests qualify). A non-seekable `StreamContent` fails on the second attempt with `InvalidOperationException: "The stream was already consumed."`.
+
 ### Controlling which HTTP methods retry
 
 Status-code retries are gated by `RetryHttpMethods` — an explicit `ISet<HttpMethod>` that defaults to the RFC-safe methods (`GET`, `HEAD`, `OPTIONS`). Other methods are never retried on a status code unless you add them to the set.
@@ -155,6 +168,11 @@ resilienceOptions.RetryHttpMethods.Add(HttpMethod.Post);
 > `TransferServerService` HttpClient. For SEP HttpClients, use `WithConnectionRetries()`
 > (transport failures only) or build a custom `HttpResilienceOptions` whose `RetryHttpMethods`
 > contains only the safe defaults.
+>
+> Be aware that connection-failure retries apply to **all** HTTP methods: a POST whose response was
+> lost may already have been processed by the server, so even `WithConnectionRetries()` carries a
+> small replay window on these endpoints. If that window is unacceptable, use `NoRetry()` for the
+> SEP client and recover at the application level (e.g. request a fresh SEP-10 challenge).
 
 ### Honoring `Retry-After`
 
@@ -213,7 +231,7 @@ var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOp
 
 The circuit breaker prevents cascading failures by temporarily blocking requests to an unhealthy service. It's **disabled by default**.
 
-> **Warning:** When the circuit is open, requests throw `BrokenCircuitException` instead of the underlying HTTP error. The circuit breaker counts the same outcomes the retry pipeline handles — including any configured `RetryHttpStatusCodes` — as failures, so a sustained burst of 429/503 responses can open it.
+> **Warning:** When the circuit is open, requests throw `BrokenCircuitException` instead of the underlying HTTP error. The circuit breaker counts connection failures and any configured `RetryHttpStatusCodes` as failures — for **every** HTTP method (`RetryHttpMethods` limits which requests are *retried*, not which failures are *counted*), and even when `MaxRetryCount` is 0. Failures are sampled per logical request: when retries are enabled, one fully-exhausted request sequence counts once, so with the default `MinimumThroughput` of 10 the breaker needs ten failed *requests* (not ten failed attempts) inside `SamplingDuration` before it can open.
 
 ```csharp
 var resilienceOptions = new HttpResilienceOptions
@@ -243,6 +261,12 @@ var resilienceOptions = new HttpResilienceOptions
 
 var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 ```
+
+> **Note:** `HttpClient.Timeout` (default 100 seconds) independently caps the whole operation too — all
+> attempts plus their backoff and `Retry-After` waits — and surfaces as a **non-retried**
+> `TaskCanceledException`. Two honored 60-second `Retry-After` waits under `ForHorizon()` would exceed the
+> default; raise `HttpClient.Timeout` (or lower `MaxRetryAfterDelay`) if you expect long server-directed
+> waits. Neither timeout is retried: timeout exhaustion is terminal by design.
 
 ## Exponential Backoff
 
@@ -325,7 +349,11 @@ catch (HttpRequestException ex)
 
 ### HTTP status codes are not being retried
 
-Check that **all three** conditions hold: `MaxRetryCount > 0`, the status code is in `RetryHttpStatusCodes`, and the request's HTTP method is in `RetryHttpMethods` (which defaults to `GET`/`HEAD`/`OPTIONS`).
+Check that **all three** conditions hold: `MaxRetryCount > 0`, the status code is in `RetryHttpStatusCodes`, and the request's HTTP method is in `RetryHttpMethods` (which defaults to `GET`/`HEAD`/`OPTIONS`). Also note that the options are snapshotted when the handler/client is constructed — changes made to the options instance afterwards have no effect.
+
+### Requests time out instead of retrying
+
+That is by design: `HttpClient.Timeout` and `RequestTimeout` failures are terminal, not retried (see [What Gets Retried](#what-gets-retried)). If slow individual attempts are eating your budget, lower the per-call latency at the server selection level or bound the operation with `RequestTimeout` and surface the failure.
 
 ### Retries take longer than expected
 

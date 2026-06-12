@@ -159,4 +159,80 @@ public class RetryAfterParserTests
     {
         Assert.IsNull(RetryAfterParser.Parse("2.5"));
     }
+
+    /// <summary>
+    ///     Regression for the date-fallback trap: a fractional-seconds string whose digits also form a
+    ///     month.day pattern must NOT fall through to the HTTP-date parser. "12.25" used to be read as
+    ///     December 25 of the current year, yielding a delay of months instead of null — and made the
+    ///     "2.5" rejection above calendar-dependent (it only held while February 5 lay in the past).
+    /// </summary>
+    [TestMethod]
+    public void Parse_FractionalSecondsString_NeverParsesAsDate()
+    {
+        Assert.IsNull(RetryAfterParser.Parse("12.25"));
+        Assert.IsNull(RetryAfterParser.Parse("1.5"));
+        Assert.IsNull(RetryAfterParser.Parse("12,25"));
+    }
+
+    /// <summary>
+    ///     Pins the lenient HTTP-date acceptance: an ISO-8601 timestamp (as emitted by some proxies/CDNs)
+    ///     must keep parsing after the decimal-number guard was added in front of the date fallback.
+    /// </summary>
+    [TestMethod]
+    public void Parse_IsoDateString_StillParsesAsDate()
+    {
+        var future = DateTimeOffset.UtcNow.AddSeconds(45).ToString("o", CultureInfo.InvariantCulture);
+        var parsed = RetryAfterParser.Parse(future);
+        Assert.IsNotNull(parsed);
+        Assert.IsTrue(parsed!.Value.TotalSeconds is >= 35 and <= 50,
+            $"Expected ~45s, got {parsed.Value.TotalSeconds}s");
+    }
+
+    /// <summary>
+    ///     Strings that are neither valid delay-seconds nor a complete RFC 1123 / ISO 8601 date must be
+    ///     rejected. The lenient date fallback used to read "12.25.2030" as December 25, 2030 (a
+    ///     years-long delay), "12-25"/"Dec 25" as the next December 25, and "13:45" as a time of day
+    ///     whose result flipped with the wall clock.
+    /// </summary>
+    [TestMethod]
+    public void Parse_MultiSeparatorOrPartialDateStrings_ReturnNull()
+    {
+        Assert.IsNull(RetryAfterParser.Parse("12.25.2030"));
+        Assert.IsNull(RetryAfterParser.Parse("1.2.3"));
+        Assert.IsNull(RetryAfterParser.Parse("12-25"));
+        Assert.IsNull(RetryAfterParser.Parse("Dec 25"));
+        Assert.IsNull(RetryAfterParser.Parse("13:45"));
+    }
+
+    /// <summary>
+    ///     Delay-seconds beyond Task.Delay's representable range clamp to
+    ///     <see cref="RetryAfterParser.MaxRepresentableDelay" /> instead of producing a TimeSpan that
+    ///     crashes the documented <c>Task.Delay(ex.RetryAfterDelay ?? ...)</c> pattern.
+    /// </summary>
+    [TestMethod]
+    public void Parse_HugeSecondsString_ClampsToMaxRepresentableDelay()
+    {
+        Assert.AreEqual(RetryAfterParser.MaxRepresentableDelay, RetryAfterParser.Parse("99999999999"));
+        Assert.AreEqual(RetryAfterParser.MaxRepresentableDelay, RetryAfterParser.Parse("922337203685"));
+    }
+
+    /// <summary>
+    ///     Typed DateTime/DateTimeOffset values are parsed directly — no culture-sensitive ToString round
+    ///     trip. An Unspecified-kind DateTime is treated as UTC, mirroring the string path.
+    /// </summary>
+    [TestMethod]
+    public void Parse_TypedDateValues_ReturnRemainingDelay()
+    {
+        AssertAboutTwoMinutes(RetryAfterParser.Parse(DateTimeOffset.UtcNow.AddSeconds(120)));
+        AssertAboutTwoMinutes(RetryAfterParser.Parse(DateTime.UtcNow.AddSeconds(120)));
+        AssertAboutTwoMinutes(RetryAfterParser.Parse(
+            DateTime.SpecifyKind(DateTime.UtcNow.AddSeconds(120), DateTimeKind.Unspecified)));
+
+        static void AssertAboutTwoMinutes(TimeSpan? parsed)
+        {
+            Assert.IsNotNull(parsed);
+            Assert.IsTrue(parsed!.Value.TotalSeconds is >= 110 and <= 125,
+                $"Expected ~120s, got {parsed.Value.TotalSeconds}s");
+        }
+    }
 }

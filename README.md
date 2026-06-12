@@ -36,7 +36,7 @@ _The SEP (Stellar Ecosystem Proposal) protocol implementations were ported from 
 
 ## Features
 
-- **Built-in HTTP resilience for Stellar** - Opt-in retries for 408/429/5xx tuned for Horizon (`ForHorizon()`) and Stellar RPC / Soroban (`ForSoroban()`), with `Retry-After` honored
+- **Built-in HTTP resilience for Stellar** - Opt-in retries for 408/429/5xx tuned for Horizon (`ForHorizon()`) and Stellar RPC / Soroban (`ForSoroban()`), with `Retry-After` honored (capped by `MaxRetryAfterDelay`, default 1 minute)
 - **Configurable** - Customize retry count, delays, jitter, status codes, and method filter
 - **Full Stellar Support** - Works with both Horizon API and Stellar RPC servers
 
@@ -86,8 +86,8 @@ var rpcServer = new StellarRpcServer("https://soroban-testnet.stellar.org", rpcC
 ```
 
 Both retry HTTP 408, 429, 500, 502, 503, 504 on the Stellar requests they're scoped to (see the
-matrix below) with exponential backoff, jitter, and `Retry-After` honored. They differ in retry
-budget and delay range.
+matrix below) with exponential backoff, jitter, and `Retry-After` honored (capped by
+`MaxRetryAfterDelay`, default 1 minute). They differ in retry budget and delay range.
 
 #### Which Stellar operations are retried?
 
@@ -123,7 +123,11 @@ original result.
 >   that mutates KYC state. Treat as non-idempotent.
 >
 > For SEP HttpClients, use `WithConnectionRetries()` (transport retries only) or build a custom
-> `HttpResilienceOptions` whose `RetryHttpMethods` contains only `GET`/`HEAD`/`OPTIONS`.
+> `HttpResilienceOptions` whose `RetryHttpMethods` contains only `GET`/`HEAD`/`OPTIONS`. Note that
+> transport (connection-failure) retries apply to **all** HTTP methods: a POST whose response was
+> lost may already have been processed server-side, so even `WithConnectionRetries()` carries a
+> small replay window. If that window is unacceptable, use `NoRetry()` and recover at the
+> application level (e.g. request a fresh SEP-10 challenge).
 
 #### Presets
 
@@ -134,8 +138,10 @@ original result.
   to the retry-method whitelist (every JSON-RPC call is POST). Higher retry budget (5) and longer
   delays (up to 15s) — tuned for long-running polling workflows like `getTransaction(hash)`. For
   latency-sensitive one-off calls (e.g. `simulateTransaction`), override `MaxRetryCount`/`MaxDelay`.
-- `WithConnectionRetries()` — transport-level retries only (`HttpRequestException`, timeouts).
-  No status-code retries on any method. Safe for any HttpClient, including SEP services.
+- `WithConnectionRetries()` — transport-level retries only (`HttpRequestException` and timeouts
+  thrown inside the handler chain; an `HttpClient.Timeout` cancellation is never retried). No
+  status-code retries, but transport retries apply to **all** HTTP methods — see the SEP warning
+  above for the replay window this implies on one-shot endpoints.
 - `LowLatency()` — minimal retries and short delays (trading bots, latency-sensitive workloads).
 - `NoRetry()` — no retries at all.
 

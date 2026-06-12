@@ -17,6 +17,7 @@ public sealed class HttpResilienceOptions
     private TimeSpan _maxRetryAfterDelay = TimeSpan.FromMinutes(1);
     private int _maxRetryCount;
     private int _minimumThroughput = 10;
+    private TimeSpan? _requestTimeout;
     private TimeSpan _samplingDuration = TimeSpan.FromSeconds(30);
 
     /// <summary>
@@ -41,16 +42,18 @@ public sealed class HttpResilienceOptions
 
     /// <summary>
     ///     Gets or sets the base delay for exponential backoff. Default is 200ms.
+    ///     Must be between 1 tick and 1 day (the range Polly's retry strategy accepts).
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when value is not positive.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when value is not positive or exceeds 1 day.</exception>
     public TimeSpan BaseDelay
     {
         get => _baseDelay;
         set
         {
-            if (value <= TimeSpan.Zero)
+            if (value <= TimeSpan.Zero || value > TimeSpan.FromDays(1))
             {
-                throw new ArgumentOutOfRangeException(nameof(value), "BaseDelay must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    "BaseDelay must be positive and at most 1 day (Polly's retry delay bound).");
             }
 
             // The BaseDelay <= MaxDelay relationship is validated when the retry pipeline is built (see
@@ -62,16 +65,18 @@ public sealed class HttpResilienceOptions
 
     /// <summary>
     ///     Gets or sets the maximum delay for exponential backoff. Default is 5 seconds.
+    ///     Must be between 1 tick and 1 day (the range Polly's retry strategy accepts).
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when value is not positive.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when value is not positive or exceeds 1 day.</exception>
     public TimeSpan MaxDelay
     {
         get => _maxDelay;
         set
         {
-            if (value <= TimeSpan.Zero)
+            if (value <= TimeSpan.Zero || value > TimeSpan.FromDays(1))
             {
-                throw new ArgumentOutOfRangeException(nameof(value), "MaxDelay must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    "MaxDelay must be positive and at most 1 day (Polly's retry delay bound).");
             }
 
             // Cross-field validation against BaseDelay is deferred to pipeline-build time so the two
@@ -112,16 +117,18 @@ public sealed class HttpResilienceOptions
     /// <summary>
     ///     Gets or sets the minimum throughput required before circuit breaker can trip. Default is 10.
     ///     The circuit breaker will not open unless at least this many requests have been made.
+    ///     Must be at least 2 (Polly's circuit-breaker minimum).
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when value is not positive.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when value is less than 2.</exception>
     public int MinimumThroughput
     {
         get => _minimumThroughput;
         set
         {
-            if (value <= 0)
+            if (value < 2)
             {
-                throw new ArgumentOutOfRangeException(nameof(value), "MinimumThroughput must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    "MinimumThroughput must be at least 2 (Polly's circuit-breaker minimum).");
             }
 
             _minimumThroughput = value;
@@ -131,16 +138,18 @@ public sealed class HttpResilienceOptions
     /// <summary>
     ///     Gets or sets the sampling duration for circuit breaker. Default is 30 seconds.
     ///     The circuit breaker evaluates failures over this time window.
+    ///     Must be between 500 milliseconds and 1 day (the range Polly's circuit breaker accepts).
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when value is not positive.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when value is below 500ms or exceeds 1 day.</exception>
     public TimeSpan SamplingDuration
     {
         get => _samplingDuration;
         set
         {
-            if (value <= TimeSpan.Zero)
+            if (value < TimeSpan.FromMilliseconds(500) || value > TimeSpan.FromDays(1))
             {
-                throw new ArgumentOutOfRangeException(nameof(value), "SamplingDuration must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    "SamplingDuration must be between 500 milliseconds and 1 day (Polly's circuit-breaker bounds).");
             }
 
             _samplingDuration = value;
@@ -149,16 +158,18 @@ public sealed class HttpResilienceOptions
 
     /// <summary>
     ///     Gets or sets the duration the circuit breaker stays open before attempting to close. Default is 30 seconds.
+    ///     Must be between 500 milliseconds and 1 day (the range Polly's circuit breaker accepts).
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when value is not positive.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when value is below 500ms or exceeds 1 day.</exception>
     public TimeSpan BreakDuration
     {
         get => _breakDuration;
         set
         {
-            if (value <= TimeSpan.Zero)
+            if (value < TimeSpan.FromMilliseconds(500) || value > TimeSpan.FromDays(1))
             {
-                throw new ArgumentOutOfRangeException(nameof(value), "BreakDuration must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    "BreakDuration must be between 500 milliseconds and 1 day (Polly's circuit-breaker bounds).");
             }
 
             _breakDuration = value;
@@ -169,8 +180,25 @@ public sealed class HttpResilienceOptions
     ///     Gets or sets the overall operation timeout. Default is null (no timeout).
     ///     When set, the entire send operation — including all retry attempts and their backoff delays — must
     ///     complete within this duration (applied as the outermost resilience strategy), not each attempt individually.
+    ///     When non-null, must be between 10 milliseconds and 1 day (the range Polly's timeout strategy accepts).
     /// </summary>
-    public TimeSpan? RequestTimeout { get; set; } = null;
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown when a non-null value is below 10ms or exceeds 1 day.
+    /// </exception>
+    public TimeSpan? RequestTimeout
+    {
+        get => _requestTimeout;
+        set
+        {
+            if (value is { } v && (v < TimeSpan.FromMilliseconds(10) || v > TimeSpan.FromDays(1)))
+            {
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    "RequestTimeout must be between 10 milliseconds and 1 day (Polly's timeout bounds), or null to disable.");
+            }
+
+            _requestTimeout = value;
+        }
+    }
 
     /// <summary>
     ///     Gets whether any resilience feature is enabled (retries, circuit breaker, or timeout).
@@ -179,7 +207,9 @@ public sealed class HttpResilienceOptions
     ///     <para>
     ///         <see cref="RetryHttpStatusCodes" /> is intentionally NOT a separate enabler — status-code retries
     ///         only fire inside the retry strategy, which itself requires <see cref="MaxRetryCount" /> &gt; 0.
-    ///         Configuring status codes without a positive <see cref="MaxRetryCount" /> is a no-op.
+    ///         Configuring status codes without a positive <see cref="MaxRetryCount" /> causes no retries;
+    ///         however, when <see cref="EnableCircuitBreaker" /> is true those status codes still count as
+    ///         failures toward opening the circuit.
     ///     </para>
     /// </summary>
     public bool HasAnyResilienceFeatureEnabled =>
@@ -188,8 +218,11 @@ public sealed class HttpResilienceOptions
     /// <summary>
     ///     Additional exception types to retry, in addition to the defaults (
     ///     <see cref="System.Net.Http.HttpRequestException" />,
-    ///     <see cref="TimeoutException" />, and <see cref="System.Threading.Tasks.TaskCanceledException" /> when not
-    ///     user-cancelled).
+    ///     <see cref="TimeoutException" />, and <see cref="System.Threading.Tasks.TaskCanceledException" /> when the
+    ///     request's <see cref="System.Threading.CancellationToken" /> is not signaled — note that an
+    ///     <c>HttpClient.Timeout</c> cancellation signals that token and is therefore NOT retried).
+    ///     A requested cancellation is never retried or counted as a failure, even when its exception type
+    ///     is registered here — the cancellation check takes precedence.
     ///     <para>
     ///         <b>Scope limitation:</b> This applies only to exceptions thrown from within the HTTP message handler
     ///         chain (i.e., from <c>HttpClient.SendAsync</c>). It does <i>not</i> apply to exceptions thrown by
@@ -264,6 +297,46 @@ public sealed class HttpResilienceOptions
             _maxRetryAfterDelay = value;
         }
     }
+
+    /// <summary>
+    ///     Creates a copy of this instance, including the contents of the three set-typed properties.
+    ///     <see cref="RetryingHttpMessageHandler" /> snapshots its options with this at construction, so
+    ///     mutations of the original instance after the handler is built have no effect on it.
+    ///     When adding a property to this class, copy it here as well.
+    /// </summary>
+    internal HttpResilienceOptions Clone()
+    {
+        var copy = new HttpResilienceOptions
+        {
+            MaxRetryCount = MaxRetryCount,
+            BaseDelay = BaseDelay,
+            MaxDelay = MaxDelay,
+            UseJitter = UseJitter,
+            EnableCircuitBreaker = EnableCircuitBreaker,
+            FailureRatio = FailureRatio,
+            MinimumThroughput = MinimumThroughput,
+            SamplingDuration = SamplingDuration,
+            BreakDuration = BreakDuration,
+            RequestTimeout = RequestTimeout,
+            RespectRetryAfter = RespectRetryAfter,
+            MaxRetryAfterDelay = MaxRetryAfterDelay,
+        };
+        foreach (var type in AdditionalRetriableExceptionTypes)
+        {
+            copy.AdditionalRetriableExceptionTypes.Add(type);
+        }
+        // Clear the defaults first so deliberate removals (e.g. a set without GET) survive the copy.
+        copy.RetryHttpMethods.Clear();
+        foreach (var method in RetryHttpMethods)
+        {
+            copy.RetryHttpMethods.Add(method);
+        }
+        foreach (var statusCode in RetryHttpStatusCodes)
+        {
+            copy.RetryHttpStatusCodes.Add(statusCode);
+        }
+        return copy;
+    }
 }
 
 /// <summary>
@@ -283,6 +356,12 @@ public static class HttpResilienceOptionsPresets
     /// <summary>
     ///     Creates options with connection retries enabled (similar to OkHttp's retryOnConnectionFailure).
     ///     Retries connection failures (network errors, DNS failures) but not HTTP error status codes.
+    ///     <para>
+    ///         Connection-failure retries apply to <b>all</b> HTTP methods. A POST whose response was lost
+    ///         (e.g. connection reset after the server processed it) may be re-executed; for strictly
+    ///         one-shot endpoints (such as SEP-10 <c>POST /auth</c>) prefer <see cref="NoRetry" /> and
+    ///         recover at the application level instead.
+    ///     </para>
     /// </summary>
     public static HttpResilienceOptions WithConnectionRetries()
     {
@@ -374,8 +453,9 @@ public static class HttpResilienceOptionsPresets
     ///         SEP-10 <c>POST /auth</c> consumes a one-shot challenge, SEP-24
     ///         <c>POST /transactions/{deposit,withdraw}/interactive</c>
     ///         creates a fresh transaction row per call, and SEP-6 <c>PATCH /transactions/{id}</c> is not in the
-    ///         official spec. For SEP clients, use <see cref="WithConnectionRetries" /> or build a custom
-    ///         <see cref="HttpResilienceOptions" /> whose <see cref="HttpResilienceOptions.RetryHttpMethods" />
+    ///         official spec. For SEP clients, use <see cref="WithConnectionRetries" /> (mind its all-methods
+    ///         connection-retry caveat) or build a custom <see cref="HttpResilienceOptions" /> whose
+    ///         <see cref="HttpResilienceOptions.RetryHttpMethods" />
     ///         only contains <c>GET</c>/<c>HEAD</c>/<c>OPTIONS</c>.
     ///     </para>
     ///     <para>

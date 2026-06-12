@@ -252,4 +252,41 @@ public class HttpResilienceOptionsTests
         Assert.IsTrue(legacy.RetryHttpMethods.Contains(HttpMethod.Post));
         Assert.IsTrue(legacy.RetryHttpStatusCodes.Contains(HttpStatusCode.TooManyRequests));
     }
+
+    /// <summary>
+    ///     RequestTimeout outside Polly's accepted range (10ms–1 day) must fail at assignment with a clear
+    ///     exception instead of surfacing Polly's ValidationException from a constructor later.
+    /// </summary>
+    [TestMethod]
+    public void RequestTimeout_OutsidePollyBounds_ThrowsArgumentOutOfRangeException()
+    {
+        var options = new HttpResilienceOptions();
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            options.RequestTimeout = TimeSpan.FromMilliseconds(5));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.RequestTimeout = TimeSpan.Zero);
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            options.RequestTimeout = TimeSpan.FromSeconds(-1));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.RequestTimeout = TimeSpan.FromDays(2));
+
+        options.RequestTimeout = TimeSpan.FromSeconds(10); // valid
+        options.RequestTimeout = null; // null disables the timeout — always allowed
+        Assert.IsNull(options.RequestTimeout);
+    }
+
+    /// <summary>
+    ///     Values below Polly's minimums (MinimumThroughput 2, Sampling/BreakDuration 500ms) or above its
+    ///     1-day delay ceiling fail at assignment rather than at handler construction.
+    /// </summary>
+    [TestMethod]
+    public void CircuitBreakerAndDelaySetters_OutsidePollyBounds_ThrowArgumentOutOfRangeException()
+    {
+        var options = new HttpResilienceOptions();
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.MinimumThroughput = 1);
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            options.SamplingDuration = TimeSpan.FromMilliseconds(100));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            options.BreakDuration = TimeSpan.FromMilliseconds(100));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.BaseDelay = TimeSpan.FromHours(25));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.MaxDelay = TimeSpan.FromHours(25));
+    }
 }

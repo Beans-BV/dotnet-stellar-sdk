@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using StellarDotnetSdk.Requests;
 
 namespace StellarDotnetSdk.Exceptions;
@@ -10,48 +9,34 @@ namespace StellarDotnetSdk.Exceptions;
 /// </summary>
 public class TooManyRequestsException : Exception
 {
-    private readonly object? _retryAfterRaw;
-
     /// <summary>
     ///     Initializes a new instance of the <see cref="TooManyRequestsException" /> class.
     /// </summary>
     /// <param name="retryAfter">
-    ///     The value of the Retry-After header from the HTTP response. Can be an integer (seconds) or a date-time string.
+    ///     The value of the Retry-After header from the HTTP response. Can be an int/long (delay-seconds), a
+    ///     string in delay-seconds or HTTP-date (RFC 1123 / ISO 8601) form, or a typed TimeSpan, DateTime,
+    ///     DateTimeOffset, or RetryConditionHeaderValue; any other object is parsed from its ToString() form.
+    ///     Non-positive or unparseable values leave both properties null.
     /// </param>
     public TooManyRequestsException(object? retryAfter = null)
         : base("The rate limit for the requesting IP address is over its allowed limit.")
     {
-        _retryAfterRaw = retryAfter;
+        TimeSpan? delay = null;
         try
         {
-            var retryAfterStringValue = retryAfter?.ToString();
-            if (string.IsNullOrWhiteSpace(retryAfterStringValue))
-            {
-                return;
-            }
-
-            if (int.TryParse(retryAfterStringValue, out var retryAfterInt))
-            {
-                // Match RetryAfterParser.FromSeconds: non-positive seconds carry no actionable delay,
-                // so leave RetryAfter null. Keeps this property in sync with RetryAfterDelay.
-                if (retryAfterInt > 0)
-                {
-                    RetryAfter = retryAfterInt;
-                }
-            }
-            else if (DateTimeOffset.TryParse(retryAfterStringValue, CultureInfo.InvariantCulture,
-                         DateTimeStyles.AssumeUniversal, out var retryAfterDate))
-            {
-                var seconds = (retryAfterDate - DateTimeOffset.UtcNow).TotalSeconds;
-                if (seconds > 0 && seconds <= int.MaxValue)
-                {
-                    RetryAfter = (int)Math.Ceiling(seconds);
-                }
-            }
+            // Parse the typed value directly; fall back to its string form so callers passing any other
+            // object keep the pre-existing ToString-based behavior.
+            delay = RetryAfterParser.Parse(retryAfter) ?? RetryAfterParser.Parse(retryAfter?.ToString());
         }
         catch (Exception)
         {
-            RetryAfter = null;
+            // A throwing ToString() must not break exception construction; treat as no Retry-After.
+        }
+
+        RetryAfterDelay = delay;
+        if (delay is { } d && d.TotalSeconds <= int.MaxValue)
+        {
+            RetryAfter = (int)Math.Ceiling(d.TotalSeconds);
         }
     }
 
@@ -61,7 +46,8 @@ public class TooManyRequestsException : Exception
     /// <summary>
     ///     The <c>Retry-After</c> value parsed as a <see cref="TimeSpan" />, or null if absent or unparseable.
     ///     Supports both the delay-seconds and HTTP-date forms (RFC 7231 §7.1.3) and preserves the full value,
-    ///     whereas <see cref="RetryAfter" /> exposes whole seconds only.
+    ///     whereas <see cref="RetryAfter" /> exposes whole seconds only. Parsed once when the exception is
+    ///     created; for the HTTP-date form this is the delay that remained at that moment.
     /// </summary>
-    public TimeSpan? RetryAfterDelay => RetryAfterParser.Parse(_retryAfterRaw);
+    public TimeSpan? RetryAfterDelay { get; }
 }

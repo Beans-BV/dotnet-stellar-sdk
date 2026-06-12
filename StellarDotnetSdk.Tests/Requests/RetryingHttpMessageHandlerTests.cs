@@ -334,17 +334,21 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    ///     Verifies that RetryingHttpMessageHandler retries TaskCanceledException from HttpClient timeout.
+    ///     Verifies that a TaskCanceledException thrown by an inner handler WITHOUT the request token being
+    ///     signaled is retried as a presumed timeout. Note this state cannot be produced by HttpClient.Timeout
+    ///     itself — a real client timeout cancels the request token and is NOT retried (see
+    ///     <see cref="SendAsync_RealHttpClientTimeout_NotRetried" />); it models custom inner handlers that
+    ///     throw TaskCanceledException from their own internal timeout.
     /// </summary>
     [TestMethod]
-    public async Task SendAsync_TaskCanceledFromTimeout_Retried()
+    public async Task SendAsync_TaskCanceledWithoutTokenSignal_Retried()
     {
         // Arrange
         var handler = new TrackingHttpMessageHandler((attempt, _, _) =>
         {
             if (attempt == 1)
             {
-                throw new TaskCanceledException("HttpClient timeout");
+                throw new TaskCanceledException("inner handler timeout (request token not signaled)");
             }
 
             return Task.FromResult(CreateResponse(HttpStatusCode.OK));
@@ -816,6 +820,97 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
+    ///     The options instance is snapshotted at construction: mutations made to it afterwards (here:
+    ///     registering a retryable status code) must have no effect on an already-built handler.
+    /// </summary>
+    [TestMethod]
+    public async Task Constructor_SnapshotsOptions_LaterMutationsHaveNoEffect()
+    {
+        var scripted = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests),
+            ScriptedHttpMessageHandler.Ok());
+
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 2,
+            BaseDelay = TimeSpan.FromMilliseconds(1),
+            MaxDelay = TimeSpan.FromMilliseconds(10),
+            UseJitter = false,
+        };
+
+        using var handler = new RetryingHttpMessageHandler(scripted, options);
+        using var client = new HttpClient(handler);
+
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests); // after construction — must be ignored
+
+        var response = await client.GetAsync(TestUri);
+
+        Assert.AreEqual(HttpStatusCode.TooManyRequests, response.StatusCode);
+        Assert.AreEqual(1, scripted.CallCount);
+    }
+
+    /// <summary>
+    ///     Regression pin for real HttpClient.Timeout semantics: the timeout cancels the linked token that
+    ///     flows through the handler chain, so the resulting TaskCanceledException is treated as cancellation
+    ///     and is NOT retried — regardless of MaxRetryCount. Only a TaskCanceledException thrown without the
+    ///     request token being signaled (e.g. by a custom inner handler) is retried as a presumed timeout.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_RealHttpClientTimeout_NotRetried()
+    {
+        var handler = new TrackingHttpMessageHandler(async (_, _, token) =>
+        {
+            await Task.Delay(TimeSpan.FromSeconds(5), token);
+            return CreateResponse(HttpStatusCode.OK);
+        });
+
+        var options = CreateDefaultOptions();
+        options.MaxRetryCount = 3;
+        options.BaseDelay = TimeSpan.FromMilliseconds(10);
+
+        using var retryHandler = new RetryingHttpMessageHandler(handler, options);
+        using var httpClient = new HttpClient(retryHandler);
+        httpClient.Timeout = TimeSpan.FromMilliseconds(200);
+
+        await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => httpClient.GetAsync(TestUri));
+        Assert.AreEqual(1, handler.CallCount);
+    }
+
+    /// <summary>
+    ///     Verifies that RespectRetryAfter = false ignores the Retry-After header and uses the configured
+    ///     exponential backoff instead.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_RespectRetryAfterFalse_IgnoresHeader()
+    {
+        var scripted = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests, "2"),
+            ScriptedHttpMessageHandler.Ok());
+
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 2,
+            BaseDelay = TimeSpan.FromMilliseconds(1),
+            MaxDelay = TimeSpan.FromMilliseconds(10),
+            UseJitter = false,
+            RespectRetryAfter = false,
+        };
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);
+
+        using var handler = new RetryingHttpMessageHandler(scripted, options);
+        using var client = new HttpClient(handler);
+
+        var stopwatch = Stopwatch.StartNew();
+        var response = await client.GetAsync(TestUri);
+        stopwatch.Stop();
+
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.AreEqual(2, scripted.CallCount);
+        Assert.IsTrue(stopwatch.Elapsed < TimeSpan.FromMilliseconds(1500),
+            $"Expected the ~1ms backoff, not the 2s Retry-After; got {stopwatch.Elapsed.TotalMilliseconds}ms");
+    }
+
+    /// <summary>
     ///     Verifies that an inconsistent BaseDelay &gt; MaxDelay (now permitted by the order-independent
     ///     property setters) is rejected when the retry pipeline is built.
     /// </summary>
@@ -827,6 +922,161 @@ public class RetryingHttpMessageHandlerTests
 
         using var inner = new ScriptedHttpMessageHandler();
         Assert.ThrowsException<ArgumentException>(() => new RetryingHttpMessageHandler(inner, options));
+    }
+
+    /// <summary>
+    ///     The BaseDelay/MaxDelay invariant must hold whenever a handler is built — also with retries
+    ///     disabled, so an invalid pair cannot hide until retries are enabled later.
+    /// </summary>
+    [TestMethod]
+    public void Constructor_BaseDelayExceedsMaxDelay_ThrowsEvenWithRetriesDisabled()
+    {
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 0,
+            RequestTimeout = TimeSpan.FromSeconds(5),
+            BaseDelay = TimeSpan.FromSeconds(10), // default MaxDelay is 5s — intentionally inconsistent
+        };
+
+        using var inner = new ScriptedHttpMessageHandler();
+        Assert.ThrowsException<ArgumentException>(() => new RetryingHttpMessageHandler(inner, options));
+    }
+
+    /// <summary>
+    ///     The synchronous HttpClient.Send path must run through the same resilience pipeline as SendAsync
+    ///     instead of silently bypassing it via the inherited DelegatingHandler.Send.
+    /// </summary>
+    [TestMethod]
+    public void Send_SynchronousPath_RetriesThroughPipeline()
+    {
+        var inner = new SyncCapableFlakyHandler();
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 2,
+            BaseDelay = TimeSpan.FromMilliseconds(1),
+            MaxDelay = TimeSpan.FromMilliseconds(10),
+            UseJitter = false,
+        };
+
+        using var handler = new RetryingHttpMessageHandler(inner, options);
+        using var client = new HttpClient(handler);
+
+        using var response = client.Send(new HttpRequestMessage(HttpMethod.Get, TestUri));
+
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.AreEqual(2, inner.CallCount); // first attempt threw, the synchronous retry succeeded
+    }
+
+    /// <summary>
+    ///     Circuit-breaker failure counting is not limited by the RetryHttpMethods whitelist: a sustained
+    ///     503 storm on POST (not retried — replay safety) must still open the circuit.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_CircuitBreaker_CountsFailuresOnNonRetriedMethods()
+    {
+        var handler = new TrackingHttpMessageHandler((_, _, _) =>
+            Task.FromResult(CreateResponse(HttpStatusCode.ServiceUnavailable)));
+
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 0,
+            EnableCircuitBreaker = true,
+            FailureRatio = 0.5,
+            MinimumThroughput = 2,
+            SamplingDuration = TimeSpan.FromSeconds(5),
+            BreakDuration = TimeSpan.FromSeconds(5),
+        };
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.ServiceUnavailable);
+        // RetryHttpMethods stays at the safe defaults: POST is never retried, but its failures must count.
+
+        using var retryHandler = new RetryingHttpMessageHandler(handler, options);
+        using var httpClient = new HttpClient(retryHandler);
+
+        var first = await httpClient.PostAsync(TestUri, new StringContent("{}"));
+        Assert.AreEqual(HttpStatusCode.ServiceUnavailable, first.StatusCode);
+        var second = await httpClient.PostAsync(TestUri, new StringContent("{}"));
+        Assert.AreEqual(HttpStatusCode.ServiceUnavailable, second.StatusCode);
+
+        await Assert.ThrowsExceptionAsync<BrokenCircuitException>(() =>
+            httpClient.PostAsync(TestUri, new StringContent("{}")));
+        Assert.AreEqual(2, handler.CallCount); // the POSTs were counted, never retried
+    }
+
+    /// <summary>
+    ///     A requested cancellation is never counted as a breaker failure, even when
+    ///     TaskCanceledException is registered in AdditionalRetriableExceptionTypes — the cancellation
+    ///     check takes precedence over the registered-types list.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_UserCancellation_NotCountedAsBreakerFailure_WhenTypeRegistered()
+    {
+        var handler = new TrackingHttpMessageHandler(async (_, _, token) =>
+        {
+            await Task.Delay(TimeSpan.FromSeconds(5), token);
+            return CreateResponse(HttpStatusCode.OK);
+        });
+
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 0,
+            EnableCircuitBreaker = true,
+            FailureRatio = 1.0,
+            MinimumThroughput = 2,
+            SamplingDuration = TimeSpan.FromSeconds(5),
+            BreakDuration = TimeSpan.FromSeconds(5),
+        };
+        options.AdditionalRetriableExceptionTypes.Add(typeof(TaskCanceledException));
+
+        using var retryHandler = new RetryingHttpMessageHandler(handler, options);
+        using var httpClient = new HttpClient(retryHandler);
+
+        for (var i = 0; i < 3; i++)
+        {
+            using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(50));
+            // Were cancellations counted, the breaker (MinimumThroughput = 2, FailureRatio = 1.0) would
+            // open after the second request and the third would throw BrokenCircuitException instead.
+            await Assert.ThrowsExceptionAsync<TaskCanceledException>(() =>
+                httpClient.GetAsync(TestUri, cts.Token));
+        }
+
+        Assert.AreEqual(3, handler.CallCount);
+    }
+
+    /// <summary>
+    ///     A Retry-After value the BCL typed header cannot represent (delta-seconds beyond int.MaxValue)
+    ///     must still be honored via the raw header string — and capped by MaxRetryAfterDelay — instead of
+    ///     silently falling back to the exponential backoff.
+    /// </summary>
+    [TestMethod]
+    public async Task SendAsync_RetryAfterBeyondTypedHeaderRange_ParsedFromRawAndCapped()
+    {
+        var scripted = new ScriptedHttpMessageHandler(
+            ScriptedHttpMessageHandler.Status(HttpStatusCode.TooManyRequests, "4294967295"),
+            ScriptedHttpMessageHandler.Ok());
+
+        var options = new HttpResilienceOptions
+        {
+            MaxRetryCount = 2,
+            BaseDelay = TimeSpan.FromMilliseconds(1),
+            MaxDelay = TimeSpan.FromMilliseconds(10),
+            UseJitter = false,
+            MaxRetryAfterDelay = TimeSpan.FromMilliseconds(200),
+        };
+        options.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);
+
+        using var handler = new RetryingHttpMessageHandler(scripted, options);
+        using var client = new HttpClient(handler);
+
+        var stopwatch = Stopwatch.StartNew();
+        var response = await client.GetAsync(TestUri);
+        stopwatch.Stop();
+
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        Assert.AreEqual(2, scripted.CallCount);
+        // The raw value (~136 years) must be capped to MaxRetryAfterDelay (200ms) — not used verbatim and
+        // not ignored in favor of the ~1ms exponential backoff.
+        Assert.IsTrue(stopwatch.Elapsed >= TimeSpan.FromMilliseconds(100),
+            $"Expected the capped 200ms Retry-After wait, got {stopwatch.Elapsed.TotalMilliseconds}ms");
     }
 
     private static HttpResilienceOptions CreateDefaultOptions()
@@ -875,6 +1125,36 @@ public class RetryingHttpMessageHandlerTests
             CallCount++;
             CallTimes.Add(DateTimeOffset.UtcNow);
             return _sendAsync(CallCount, request, cancellationToken);
+        }
+    }
+
+    /// <summary>
+    ///     Handler supporting both sync and async send: fails the first attempt with a transient
+    ///     HttpRequestException, succeeds afterwards. Used to verify the synchronous Send path retries.
+    /// </summary>
+    private sealed class SyncCapableFlakyHandler : HttpMessageHandler
+    {
+        public int CallCount { get; private set; }
+
+        protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken ct)
+        {
+            return Handle();
+        }
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
+        {
+            return Task.FromResult(Handle());
+        }
+
+        private HttpResponseMessage Handle()
+        {
+            CallCount++;
+            if (CallCount == 1)
+            {
+                throw new HttpRequestException("transient failure on first attempt");
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
     }
 }

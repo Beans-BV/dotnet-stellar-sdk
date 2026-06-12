@@ -1,7 +1,9 @@
 using System;
 using System.Globalization;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Exceptions;
+using StellarDotnetSdk.Requests;
 
 namespace StellarDotnetSdk.Tests.Exceptions;
 
@@ -161,5 +163,81 @@ public class RetryAfterDelayTests
         var ex = new ServiceUnavailableException("-5");
         Assert.IsNull(ex.RetryAfter, "RetryAfter for \"-5\" should be null to match RetryAfterDelay.");
         Assert.IsNull(ex.RetryAfterDelay);
+    }
+
+    /// <summary>
+    ///     RetryAfterDelay must be parsed once at construction and stable across reads, like RetryAfter.
+    ///     It was previously re-parsed against the current clock on every access, so two reads of the same
+    ///     exception disagreed and the value eventually flipped to null.
+    /// </summary>
+    [TestMethod]
+    public async Task TooManyRequests_RetryAfterDelay_StableAcrossReads()
+    {
+        var httpDate = DateTimeOffset.UtcNow.AddSeconds(90).ToString("R", CultureInfo.InvariantCulture);
+        var ex = new TooManyRequestsException(httpDate);
+        var first = ex.RetryAfterDelay;
+        await Task.Delay(300);
+        var second = ex.RetryAfterDelay;
+        Assert.IsNotNull(first);
+        Assert.AreEqual(first, second, "RetryAfterDelay must not change between reads of the same exception.");
+    }
+
+    /// <summary>
+    ///     A fractional-seconds Retry-After ("12.25") is malformed per RFC 7231 and must not be misread as a
+    ///     month.day HTTP-date (December 25), which previously produced a months-long RetryAfter/RetryAfterDelay.
+    /// </summary>
+    [TestMethod]
+    public void TooManyRequests_FractionalSecondsString_YieldsNull()
+    {
+        var ex = new TooManyRequestsException("12.25");
+        Assert.IsNull(ex.RetryAfter);
+        Assert.IsNull(ex.RetryAfterDelay);
+    }
+
+    /// <summary>
+    ///     Same fractional-seconds rejection contract for <see cref="ServiceUnavailableException" />.
+    /// </summary>
+    [TestMethod]
+    public void ServiceUnavailable_FractionalSecondsString_YieldsNull()
+    {
+        var ex = new ServiceUnavailableException("12.25");
+        Assert.IsNull(ex.RetryAfter);
+        Assert.IsNull(ex.RetryAfterDelay);
+    }
+
+    /// <summary>
+    ///     A typed DateTime passed to the constructor is parsed culture-invariantly. The old ToString
+    ///     round trip under de-DE formatted a 1-hour-out instant as "11.06.2026 15:28" and invariant-parsed
+    ///     it as November 6 — turning a 1-hour Retry-After into ~148 days.
+    /// </summary>
+    [TestMethod]
+    public void TooManyRequests_DateTimeValue_ParsesCultureInvariantly()
+    {
+        var savedCulture = CultureInfo.CurrentCulture;
+        try
+        {
+            CultureInfo.CurrentCulture = new CultureInfo("de-DE");
+            var ex = new TooManyRequestsException(DateTime.UtcNow.AddHours(1));
+            Assert.IsNotNull(ex.RetryAfter);
+            Assert.IsTrue(ex.RetryAfter is >= 3590 and <= 3601,
+                $"Expected ~3600s, got {ex.RetryAfter}s");
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = savedCulture;
+        }
+    }
+
+    /// <summary>
+    ///     Huge delay-seconds clamp to <see cref="RetryAfterParser.MaxRepresentableDelay" />, so RetryAfter
+    ///     and RetryAfterDelay stay in agreement (previously the delay was ~29,000 years while RetryAfter
+    ///     was null) and the documented Task.Delay pattern cannot throw.
+    /// </summary>
+    [TestMethod]
+    public void TooManyRequests_HugeSeconds_PropertiesAgreeOnClampedValue()
+    {
+        var ex = new TooManyRequestsException("922337203685");
+        Assert.AreEqual(RetryAfterParser.MaxRepresentableDelay, ex.RetryAfterDelay);
+        Assert.AreEqual((int)Math.Ceiling(RetryAfterParser.MaxRepresentableDelay.TotalSeconds), ex.RetryAfter);
     }
 }

@@ -8,7 +8,8 @@ namespace StellarDotnetSdk.Requests;
 ///     A preconfigured <see cref="HttpClient" /> for communicating with Stellar Horizon and Soroban RPC servers.
 ///     Sets default request headers (client name, version, and optional bearer token) and optionally
 ///     wraps the handler pipeline with <see cref="RetryingHttpMessageHandler" /> when <see cref="HttpResilienceOptions" />
-///     has any feature enabled (retries, circuit breaker, timeout, or status-code retries).
+///     has any feature enabled (retries, circuit breaker, or timeout — see
+///     <see cref="HttpResilienceOptions.HasAnyResilienceFeatureEnabled" />; status codes alone enable nothing).
 /// </summary>
 public class DefaultStellarSdkHttpClient : HttpClient
 {
@@ -71,8 +72,8 @@ public class DefaultStellarSdkHttpClient : HttpClient
     {
         var handler = innerHandler ?? new SocketsHttpHandler();
 
-        // Add resilience handler if any resilience feature is enabled
-        // (retries, status-code retries, circuit breaker, or timeout)
+        // Add resilience handler if any resilience feature is enabled (retries, circuit breaker, or
+        // timeout). Status codes alone enable nothing — see HasAnyResilienceFeatureEnabled's remarks.
         if (resilienceOptions?.HasAnyResilienceFeatureEnabled == true)
         {
             return new RetryingHttpMessageHandler(handler, resilienceOptions);
