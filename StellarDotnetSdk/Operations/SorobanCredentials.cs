@@ -21,17 +21,7 @@ public abstract class SorobanCredentials
     ///     Converts this <see cref="SorobanCredentials" /> to its XDR <see cref="Xdr.SorobanCredentials" /> representation.
     /// </summary>
     /// <returns>A <see cref="Xdr.SorobanCredentials" /> XDR object.</returns>
-    public Xdr.SorobanCredentials ToXdr()
-    {
-        return this switch
-        {
-            SorobanSourceAccountCredentials sourceAccount => sourceAccount.ToSorobanCredentialsXdr(),
-            SorobanAddressCredentialsV2 addressV2 => addressV2.ToSorobanCredentialsXdr(),
-            SorobanAddressCredentials address => address.ToSorobanCredentialsXdr(),
-            SorobanAddressCredentialsWithDelegates withDelegates => withDelegates.ToSorobanCredentialsXdr(),
-            _ => throw new InvalidOperationException($"Unknown SorobanCredentials type: {GetType()}"),
-        };
-    }
+    public abstract Xdr.SorobanCredentials ToXdr();
 
     /// <summary>
     ///     Creates a <see cref="SorobanCredentials" /> subclass instance from the given XDR
@@ -71,7 +61,7 @@ public class SorobanSourceAccountCredentials : SorobanCredentials
     ///     <see cref="Xdr.SorobanCredentials" /> representation.
     /// </summary>
     /// <returns>A <see cref="Xdr.SorobanCredentials" /> XDR object.</returns>
-    public Xdr.SorobanCredentials ToSorobanCredentialsXdr()
+    public override Xdr.SorobanCredentials ToXdr()
     {
         return new Xdr.SorobanCredentials
         {
@@ -124,6 +114,37 @@ public abstract class SorobanAddressCredentialsBase : SorobanCredentials
 
     /// <summary>The cryptographic signature authenticating the authorization.</summary>
     public SCVal Signature { get; }
+
+    /// <summary>
+    ///     Encodes the shared address/nonce/expiration/signature fields into the bare XDR
+    ///     <see cref="Xdr.SorobanAddressCredentials" /> struct used by every address-bearing variant
+    ///     (V1, V2, and the delegated wrapper's root). The discriminant and union arm are the caller's
+    ///     responsibility.
+    /// </summary>
+    internal Xdr.SorobanAddressCredentials ToAddressCredentialsXdr()
+    {
+        return new Xdr.SorobanAddressCredentials
+        {
+            Address = Address.ToXdr(),
+            Nonce = new Int64(Nonce),
+            SignatureExpirationLedger = new Uint32(SignatureExpirationLedger),
+            Signature = Signature.ToXdr(),
+        };
+    }
+
+    /// <summary>
+    ///     Decodes the shared fields from a bare XDR <see cref="Xdr.SorobanAddressCredentials" /> struct.
+    ///     The caller selects which concrete wrapper (V1, V2, or root) to construct from them.
+    /// </summary>
+    internal static (ScAddress Address, long Nonce, uint SignatureExpirationLedger, SCVal Signature)
+        FromAddressCredentialsXdr(Xdr.SorobanAddressCredentials xdr)
+    {
+        return (
+            ScAddress.FromXdr(xdr.Address),
+            xdr.Nonce.InnerValue,
+            xdr.SignatureExpirationLedger.InnerValue,
+            SCVal.FromXdr(xdr.Signature));
+    }
 }
 
 /// <summary>
@@ -164,12 +185,9 @@ public class SorobanAddressCredentials : SorobanAddressCredentialsBase
             throw new InvalidOperationException("Invalid SorobanCredentials type");
         }
 
-        return new SorobanAddressCredentials(
-            ScAddress.FromXdr(xdrSorobanCredentials.Address.Address),
-            xdrSorobanCredentials.Address.Nonce.InnerValue,
-            xdrSorobanCredentials.Address.SignatureExpirationLedger.InnerValue,
-            SCVal.FromXdr(xdrSorobanCredentials.Address.Signature)
-        );
+        var (address, nonce, expiration, signature) =
+            FromAddressCredentialsXdr(xdrSorobanCredentials.Address);
+        return new SorobanAddressCredentials(address, nonce, expiration, signature);
     }
 
     /// <summary>
@@ -177,7 +195,7 @@ public class SorobanAddressCredentials : SorobanAddressCredentialsBase
     ///     representation.
     /// </summary>
     /// <returns>A <see cref="Xdr.SorobanCredentials" /> XDR object.</returns>
-    public Xdr.SorobanCredentials ToSorobanCredentialsXdr()
+    public override Xdr.SorobanCredentials ToXdr()
     {
         return new Xdr.SorobanCredentials
         {
@@ -185,13 +203,7 @@ public class SorobanAddressCredentials : SorobanAddressCredentialsBase
             {
                 InnerValue = CredentialsType.SOROBAN_CREDENTIALS_ADDRESS,
             },
-            Address = new Xdr.SorobanAddressCredentials
-            {
-                Address = Address.ToXdr(),
-                Nonce = new Int64(Nonce),
-                SignatureExpirationLedger = new Uint32(SignatureExpirationLedger),
-                Signature = Signature.ToXdr(),
-            },
+            Address = ToAddressCredentialsXdr(),
         };
     }
 }
@@ -204,9 +216,10 @@ public class SorobanAddressCredentials : SorobanAddressCredentialsBase
 /// </summary>
 /// <remarks>
 ///     V1 (<see cref="SorobanAddressCredentials" />) and V2 are both valid on Protocol 27; the
-///     signing helpers default to V2, matching the JS reference SDK, and V2 is expected to replace
-///     V1 in Protocol 28. Pre-Protocol-27 networks reject V2 credentials — use V1 when targeting
-///     them.
+///     signing helpers preserve the entry's existing variant by default (matching the JS reference
+///     SDK), and V2 is expected to replace V1 in Protocol 28. Pass
+///     <see cref="SorobanCredentialsVersion.V2" /> to upgrade a legacy entry. Pre-Protocol-27 networks
+///     reject V2 credentials — keep V1 when targeting them.
 /// </remarks>
 public class SorobanAddressCredentialsV2 : SorobanAddressCredentialsBase
 {
@@ -242,12 +255,9 @@ public class SorobanAddressCredentialsV2 : SorobanAddressCredentialsBase
             throw new InvalidOperationException("Invalid SorobanCredentials type");
         }
 
-        return new SorobanAddressCredentialsV2(
-            ScAddress.FromXdr(xdrSorobanCredentials.AddressV2.Address),
-            xdrSorobanCredentials.AddressV2.Nonce.InnerValue,
-            xdrSorobanCredentials.AddressV2.SignatureExpirationLedger.InnerValue,
-            SCVal.FromXdr(xdrSorobanCredentials.AddressV2.Signature)
-        );
+        var (address, nonce, expiration, signature) =
+            FromAddressCredentialsXdr(xdrSorobanCredentials.AddressV2);
+        return new SorobanAddressCredentialsV2(address, nonce, expiration, signature);
     }
 
     /// <summary>
@@ -255,18 +265,12 @@ public class SorobanAddressCredentialsV2 : SorobanAddressCredentialsBase
     ///     representation.
     /// </summary>
     /// <returns>A <see cref="Xdr.SorobanCredentials" /> XDR object.</returns>
-    public Xdr.SorobanCredentials ToSorobanCredentialsXdr()
+    public override Xdr.SorobanCredentials ToXdr()
     {
         return new Xdr.SorobanCredentials
         {
             Discriminant = new SorobanCredentialsType { InnerValue = CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2 },
-            AddressV2 = new Xdr.SorobanAddressCredentials
-            {
-                Address = Address.ToXdr(),
-                Nonce = new Int64(Nonce),
-                SignatureExpirationLedger = new Uint32(SignatureExpirationLedger),
-                Signature = Signature.ToXdr(),
-            },
+            AddressV2 = ToAddressCredentialsXdr(),
         };
     }
 }
@@ -299,17 +303,25 @@ public class SorobanDelegateSignature
     public SorobanDelegateSignature[] NestedDelegates { get; }
 
     /// <summary>Converts this wrapper to its XDR <see cref="Xdr.SorobanDelegateSignature" /> representation.</summary>
-    /// <exception cref="InvalidOperationException">
-    ///     Thrown when <see cref="NestedDelegates" /> is not sorted by increasing address or contains
-    ///     duplicate addresses, as required by CAP-71.
-    /// </exception>
+    /// <remarks>
+    ///     Encoding is order-faithful: it serializes <see cref="NestedDelegates" /> as-is and does NOT
+    ///     enforce the CAP-71 ascending-address / no-duplicate rule, so any wire data decoded by
+    ///     <see cref="FromXdr" /> can always be re-encoded. The signing helpers
+    ///     (<c>AuthorizeEntryWithDelegates</c> / <c>BuildWithDelegatesEntry</c>) emit sorted,
+    ///     duplicate-free arrays; when building delegate trees manually, order them yourself or the
+    ///     network rejects the entry at invocation time.
+    /// </remarks>
+    /// <exception cref="InvalidOperationException">Thrown when a nested delegate entry is null.</exception>
     public Xdr.SorobanDelegateSignature ToXdr()
     {
-        ValidateOrder(NestedDelegates);
-
         var nested = new Xdr.SorobanDelegateSignature[NestedDelegates.Length];
         for (var i = 0; i < NestedDelegates.Length; i++)
         {
+            if (NestedDelegates[i] is null)
+            {
+                throw new InvalidOperationException("Delegate signatures must not contain null entries.");
+            }
+
             nested[i] = NestedDelegates[i].ToXdr();
         }
 
@@ -335,44 +347,6 @@ public class SorobanDelegateSignature
             SCVal.FromXdr(xdr.Signature),
             nested
         );
-    }
-
-    /// <summary>
-    ///     Validates that a delegate array is strictly increasing by address — i.e. sorted by
-    ///     increasing address with no duplicates, as required by CAP-71.
-    /// </summary>
-    /// <exception cref="InvalidOperationException">
-    ///     Thrown when the array contains a null entry, is out of order, or contains duplicate addresses.
-    /// </exception>
-    internal static void ValidateOrder(SorobanDelegateSignature[] delegates)
-    {
-        // Encode each address to its canonical XDR key exactly once, then compare the cached keys.
-        var keys = new byte[delegates.Length][];
-        for (var i = 0; i < delegates.Length; i++)
-        {
-            if (delegates[i] is null)
-            {
-                throw new InvalidOperationException("Delegate signatures must not contain null entries.");
-            }
-
-            keys[i] = delegates[i].Address.ToXdrByteArray();
-        }
-
-        for (var i = 1; i < delegates.Length; i++)
-        {
-            var comparison = keys[i - 1].AsSpan().SequenceCompareTo(keys[i]);
-            if (comparison > 0)
-            {
-                throw new InvalidOperationException(
-                    "Delegate signatures must be sorted by increasing address (CAP-71).");
-            }
-
-            if (comparison == 0)
-            {
-                throw new InvalidOperationException(
-                    "Delegate signatures must not contain duplicate addresses (CAP-71).");
-            }
-        }
     }
 }
 
@@ -404,6 +378,14 @@ public class SorobanAddressCredentialsWithDelegates : SorobanCredentials
     ///     The root address credential being delegated. Variant-agnostic: the wire form is the bare
     ///     <c>SorobanAddressCredentials</c> struct without a V1/V2 discriminant.
     /// </summary>
+    /// <remarks>
+    ///     WARNING: this is typed as the serializable <see cref="SorobanAddressCredentialsBase" />, so
+    ///     <c>AddressCredentials.ToXdr()</c> compiles — but it emits a <b>standalone</b> V1/V2 credential
+    ///     whose signature was computed over the delegated (address-bound) payload, which fails
+    ///     on-chain signature verification. Treat this property as the source of the root
+    ///     address/nonce/expiration/signature fields only; never serialize it on its own to downgrade a
+    ///     delegated entry to a plain one.
+    /// </remarks>
     public SorobanAddressCredentialsBase AddressCredentials { get; }
 
     /// <summary>The ordered delegate signatures authorizing on behalf of the root.</summary>
@@ -422,12 +404,9 @@ public class SorobanAddressCredentialsWithDelegates : SorobanCredentials
         }
 
         var xdrWithDelegates = xdrSorobanCredentials.AddressWithDelegates;
-        var xdrRoot = xdrWithDelegates.AddressCredentials;
-        var root = new SorobanAddressCredentials(
-            ScAddress.FromXdr(xdrRoot.Address),
-            xdrRoot.Nonce.InnerValue,
-            xdrRoot.SignatureExpirationLedger.InnerValue,
-            SCVal.FromXdr(xdrRoot.Signature));
+        var (address, nonce, expiration, signature) =
+            SorobanAddressCredentialsBase.FromAddressCredentialsXdr(xdrWithDelegates.AddressCredentials);
+        var root = new SorobanAddressCredentials(address, nonce, expiration, signature);
 
         var delegates = new SorobanDelegateSignature[xdrWithDelegates.Delegates.Length];
         for (var i = 0; i < xdrWithDelegates.Delegates.Length; i++)
@@ -439,17 +418,24 @@ public class SorobanAddressCredentialsWithDelegates : SorobanCredentials
     }
 
     /// <summary>Converts this wrapper to its XDR <see cref="Xdr.SorobanCredentials" /> representation.</summary>
-    /// <exception cref="InvalidOperationException">
-    ///     Thrown when <see cref="Delegates" /> (or any nested delegate array) is not sorted by
-    ///     increasing address or contains duplicate addresses, as required by CAP-71.
-    /// </exception>
-    public Xdr.SorobanCredentials ToSorobanCredentialsXdr()
+    /// <remarks>
+    ///     Encoding is order-faithful: it serializes <see cref="Delegates" /> as-is and does NOT enforce
+    ///     the CAP-71 ascending-address / no-duplicate rule, so any wire data decoded by
+    ///     <see cref="FromSorobanCredentialsXdr" /> can always be re-encoded. The signing helpers emit
+    ///     sorted, duplicate-free arrays; when building delegate trees manually, order them yourself or
+    ///     the network rejects the entry at invocation time.
+    /// </remarks>
+    /// <exception cref="InvalidOperationException">Thrown when a delegate entry is null.</exception>
+    public override Xdr.SorobanCredentials ToXdr()
     {
-        SorobanDelegateSignature.ValidateOrder(Delegates);
-
         var delegatesXdr = new Xdr.SorobanDelegateSignature[Delegates.Length];
         for (var i = 0; i < Delegates.Length; i++)
         {
+            if (Delegates[i] is null)
+            {
+                throw new InvalidOperationException("Delegate signatures must not contain null entries.");
+            }
+
             delegatesXdr[i] = Delegates[i].ToXdr();
         }
 
@@ -459,13 +445,7 @@ public class SorobanAddressCredentialsWithDelegates : SorobanCredentials
                 { InnerValue = CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES },
             AddressWithDelegates = new Xdr.SorobanAddressCredentialsWithDelegates
             {
-                AddressCredentials = new Xdr.SorobanAddressCredentials
-                {
-                    Address = AddressCredentials.Address.ToXdr(),
-                    Nonce = new Int64(AddressCredentials.Nonce),
-                    SignatureExpirationLedger = new Uint32(AddressCredentials.SignatureExpirationLedger),
-                    Signature = AddressCredentials.Signature.ToXdr(),
-                },
+                AddressCredentials = AddressCredentials.ToAddressCredentialsXdr(),
                 Delegates = delegatesXdr,
             },
         };

@@ -83,8 +83,9 @@ public class SorobanAuthorizationSigningTest
             new SorobanAddressCredentials(address, Nonce, 0, new SCString("")),
             SampleInvocation());
 
+        // Explicit V2 upgrades the legacy entry to the address-bound credential.
         var signed = SorobanAuthorization.AuthorizeEntry(
-            unsigned, keyPair, ValidUntil, network);
+            unsigned, keyPair, ValidUntil, network, SorobanCredentialsVersion.V2);
 
         Assert.IsInstanceOfType(signed.Credentials, typeof(SorobanAddressCredentialsV2));
         var cred = (SorobanAddressCredentialsV2)signed.Credentials;
@@ -123,11 +124,16 @@ public class SorobanAuthorizationSigningTest
     }
 
     [TestMethod]
-    public void AuthorizeEntry_WithSourceAccountCredentials_Throws()
+    public void AuthorizeEntry_WithSourceAccountCredentials_ReturnsEntryUnchanged()
     {
+        // Source-account credentials are authorized by the transaction source-account signature, so
+        // AuthorizeEntry is a no-op and returns the entry unchanged (matching the JS/Java SDKs). This
+        // lets callers authorize every entry from a simulation result without special-casing the mix.
         var entry = new SorobanAuthorizationEntry(new SorobanSourceAccountCredentials(), SampleInvocation());
-        Assert.ThrowsException<InvalidOperationException>(() =>
-            SorobanAuthorization.AuthorizeEntry(entry, KeyPair.Random(), ValidUntil, Network.Public()));
+
+        var result = SorobanAuthorization.AuthorizeEntry(entry, KeyPair.Random(), ValidUntil, Network.Public());
+
+        Assert.AreSame(entry, result);
     }
 
     [TestMethod]
@@ -166,20 +172,25 @@ public class SorobanAuthorizationSigningTest
     }
 
     [TestMethod]
-    public void AuthorizeEntry_DefaultVersion_ProducesV2Credential()
+    public void AuthorizeEntry_DefaultVersion_PreservesInputVariant()
     {
         var network = Network.Public();
         var keyPair = KeyPair.Random();
         var address = new ScAccountId(keyPair.AccountId);
-        var unsigned = new SorobanAuthorizationEntry(
-            new SorobanAddressCredentials(address, Nonce, 0, new SCString("")),
-            SampleInvocation());
 
-        // No version argument: the default is the address-bound V2 credential, matching the JS
-        // reference SDK (v16). Pass V1 explicitly when targeting a network not yet on Protocol 27.
-        var signed = SorobanAuthorization.AuthorizeEntry(unsigned, keyPair, ValidUntil, network);
+        // No version argument: the default preserves the entry's existing variant, matching the JS
+        // reference SDK whose authorizeEntry never changes the credential type. A V1 entry stays V1...
+        var v1Entry = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentials(address, Nonce, 0, new SCString("")), SampleInvocation());
+        var signedV1 = SorobanAuthorization.AuthorizeEntry(v1Entry, keyPair, ValidUntil, network);
+        Assert.IsInstanceOfType(signedV1.Credentials, typeof(SorobanAddressCredentials));
+        Assert.IsNotInstanceOfType(signedV1.Credentials, typeof(SorobanAddressCredentialsV2));
 
-        Assert.IsInstanceOfType(signed.Credentials, typeof(SorobanAddressCredentialsV2));
+        // ...and a V2 entry stays V2.
+        var v2Entry = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentialsV2(address, Nonce, 0, new SCString("")), SampleInvocation());
+        var signedV2 = SorobanAuthorization.AuthorizeEntry(v2Entry, keyPair, ValidUntil, network);
+        Assert.IsInstanceOfType(signedV2.Credentials, typeof(SorobanAddressCredentialsV2));
     }
 
     [TestMethod]
@@ -198,7 +209,8 @@ public class SorobanAuthorizationSigningTest
         var signed = SorobanAuthorization.AuthorizeEntry(
             unsigned, signerKeyPair, ValidUntil, network);
 
-        var cred = (SorobanAddressCredentialsV2)signed.Credentials;
+        // Variant-agnostic: the default preserves the entry's V1 credential; assert on the shared base.
+        var cred = (SorobanAddressCredentialsBase)signed.Credentials;
         Assert.AreEqual(entryKeyPair.AccountId, ((ScAccountId)cred.Address).InnerValue);
     }
 
@@ -217,7 +229,7 @@ public class SorobanAuthorizationSigningTest
         var dA = new KeyPairEntrySigner(kpA);
         var dB = new KeyPairEntrySigner(kpB);
         // Deliberately pass the delegates in descending address order so the helper has to reorder them.
-        var descending = CompareAddress(dA.SignerAddress, dB.SignerAddress) < 0
+        var descending = SorobanAuthTestHelpers.CompareAddressXdr(dA.SignerAddress, dB.SignerAddress) < 0
             ? new ISorobanEntrySigner[] { dB, dA }
             : new ISorobanEntrySigner[] { dA, dB };
 
@@ -227,7 +239,7 @@ public class SorobanAuthorizationSigningTest
         var cred = (SorobanAddressCredentialsWithDelegates)signed.Credentials;
         Assert.AreEqual(2, cred.Delegates.Length);
         Assert.IsTrue(
-            CompareAddress(cred.Delegates[0].Address, cred.Delegates[1].Address) < 0,
+            SorobanAuthTestHelpers.CompareAddressXdr(cred.Delegates[0].Address, cred.Delegates[1].Address) < 0,
             "Delegates must be emitted sorted by increasing address.");
 
         // Sorting must not mis-pair addresses and signatures, and every delegate signs the same
@@ -413,7 +425,7 @@ public class SorobanAuthorizationSigningTest
         var nestedAddress = new ScAccountId(nestedKp.AccountId);
         var unsigned = new SorobanAuthorizationEntry(
             new SorobanAddressCredentialsWithDelegates(
-                new SorobanAddressCredentials(rootAddress, Nonce, 0, new SCString("root-placeholder")),
+                new SorobanAddressCredentials(rootAddress, Nonce, 0, new SCVoid()),
                 [
                     new SorobanDelegateSignature(outerAddress, new SCString("outer-placeholder"),
                         [new SorobanDelegateSignature(nestedAddress, new SCString("nested-placeholder"), [])]),
@@ -429,8 +441,9 @@ public class SorobanAuthorizationSigningTest
             network, rootAddress, Nonce, ValidUntil, unsigned.RootInvocation);
         Assert.AreEqual(new KeyPairEntrySigner(nestedKp).Sign(rootHash).ToXdrBase64(),
             cred.Delegates[0].NestedDelegates[0].Signature.ToXdrBase64());
-        // Root and outer-delegate signatures are preserved; root expiration is still bumped.
-        Assert.AreEqual("root-placeholder", ((SCString)cred.AddressCredentials.Signature).InnerValue);
+        // Root (still an unsigned placeholder) and the outer-delegate signature are preserved; the root
+        // expiration is still bumped.
+        Assert.IsInstanceOfType(cred.AddressCredentials.Signature, typeof(SCVoid));
         Assert.AreEqual("outer-placeholder", ((SCString)cred.Delegates[0].Signature).InnerValue);
         Assert.AreEqual(ValidUntil, cred.AddressCredentials.SignatureExpirationLedger);
     }
@@ -465,7 +478,9 @@ public class SorobanAuthorizationSigningTest
         var signed = SorobanAuthorization.AuthorizeEntry(
             unsigned, keyPair, ValidUntil, network, forAddress: new ScAccountId(keyPair.AccountId));
 
-        Assert.IsInstanceOfType(signed.Credentials, typeof(SorobanAddressCredentialsV2));
+        // Default version preserves the entry's V1 variant.
+        Assert.IsInstanceOfType(signed.Credentials, typeof(SorobanAddressCredentials));
+        Assert.IsNotInstanceOfType(signed.Credentials, typeof(SorobanAddressCredentialsV2));
     }
 
     [TestMethod]
@@ -480,10 +495,10 @@ public class SorobanAuthorizationSigningTest
         var outerB = new ScAccountId(KeyPair.Random().AccountId);
         // Keep the top-level delegate array sorted so it serializes; the shared address appears as
         // a nested delegate under both outer delegates.
-        var (first, second) = CompareAddress(outerA, outerB) < 0 ? (outerA, outerB) : (outerB, outerA);
+        var (first, second) = SorobanAuthTestHelpers.CompareAddressXdr(outerA, outerB) < 0 ? (outerA, outerB) : (outerB, outerA);
         var unsigned = new SorobanAuthorizationEntry(
             new SorobanAddressCredentialsWithDelegates(
-                new SorobanAddressCredentials(rootAddress, Nonce, 0, new SCString("root-placeholder")),
+                new SorobanAddressCredentials(rootAddress, Nonce, 0, new SCVoid()),
                 [
                     new SorobanDelegateSignature(first, new SCString("outer-placeholder"),
                         [new SorobanDelegateSignature(sharedAddress, new SCString("nested-placeholder"), [])]),
@@ -503,7 +518,7 @@ public class SorobanAuthorizationSigningTest
         Assert.AreEqual(expected, cred.Delegates[0].NestedDelegates[0].Signature.ToXdrBase64());
         Assert.AreEqual(expected, cred.Delegates[1].NestedDelegates[0].Signature.ToXdrBase64());
         Assert.AreEqual("outer-placeholder", ((SCString)cred.Delegates[0].Signature).InnerValue);
-        Assert.AreEqual("root-placeholder", ((SCString)cred.AddressCredentials.Signature).InnerValue);
+        Assert.IsInstanceOfType(cred.AddressCredentials.Signature, typeof(SCVoid));
     }
 
     [TestMethod]
@@ -577,7 +592,7 @@ public class SorobanAuthorizationSigningTest
         var a = new ScAccountId(KeyPair.Random().AccountId);
         var b = new ScAccountId(KeyPair.Random().AccountId);
         // Deliberately descending input order; the builder must sort ascending.
-        var descending = CompareAddress(a, b) < 0 ? new ScAddress[] { b, a } : new ScAddress[] { a, b };
+        var descending = SorobanAuthTestHelpers.CompareAddressXdr(a, b) < 0 ? new ScAddress[] { b, a } : new ScAddress[] { a, b };
 
         var built = SorobanAuthorization.BuildWithDelegatesEntry(unsigned, descending, ValidUntil);
 
@@ -587,7 +602,7 @@ public class SorobanAuthorizationSigningTest
         Assert.AreEqual(ValidUntil, cred.AddressCredentials.SignatureExpirationLedger);
         Assert.IsInstanceOfType(cred.AddressCredentials.Signature, typeof(SCVoid));
         Assert.AreEqual(2, cred.Delegates.Length);
-        Assert.IsTrue(CompareAddress(cred.Delegates[0].Address, cred.Delegates[1].Address) < 0,
+        Assert.IsTrue(SorobanAuthTestHelpers.CompareAddressXdr(cred.Delegates[0].Address, cred.Delegates[1].Address) < 0,
             "Delegates must be sorted by increasing address.");
         foreach (var d in cred.Delegates)
         {
@@ -664,7 +679,7 @@ public class SorobanAuthorizationSigningTest
         var unsigned = new SorobanAuthorizationEntry(
             new SorobanAddressCredentialsWithDelegates(
                 new SorobanAddressCredentials(
-                    new ScAccountId(KeyPair.Random().AccountId), Nonce, 0, new SCString("")),
+                    new ScAccountId(KeyPair.Random().AccountId), Nonce, 0, new SCVoid()),
                 new SorobanDelegateSignature[] { null! }),
             SampleInvocation());
 
@@ -677,37 +692,41 @@ public class SorobanAuthorizationSigningTest
     }
 
     [TestMethod]
+    public void AuthorizeEntry_DelegateSignWithExpirationDifferingFromSignedRoot_Throws()
+    {
+        var network = Network.Public();
+        var rootKp = KeyPair.Random();
+        var delegateKp = KeyPair.Random();
+        var delegateAddress = new ScAccountId(delegateKp.AccountId);
+        var unsigned = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentials(new ScAccountId(rootKp.AccountId), Nonce, 0, new SCString("")),
+            SampleInvocation());
+
+        // Root + delegate are signed committing to expiration 1000.
+        var signed = SorobanAuthorization.AuthorizeEntryWithDelegates(
+            unsigned, new KeyPairEntrySigner(rootKp), [new KeyPairEntrySigner(delegateKp)], 1000, network);
+
+        // Re-signing only the delegate with a DIFFERENT expiration (2000) would rewrite the root
+        // expiration while keeping the root signature taken over 1000, silently producing an entry the
+        // network rejects. The guard fails fast instead.
+        var ex = Assert.ThrowsException<InvalidOperationException>(() =>
+            SorobanAuthorization.AuthorizeEntry(signed, delegateKp, 2000, network, forAddress: delegateAddress));
+        Assert.IsTrue(ex.Message.Contains("expiration", StringComparison.OrdinalIgnoreCase));
+
+        // Re-signing the delegate with the SAME expiration (1000) is the correct flow and must succeed.
+        var reSigned = SorobanAuthorization.AuthorizeEntry(
+            signed, delegateKp, 1000, network, forAddress: delegateAddress);
+        Assert.IsInstanceOfType(reSigned.Credentials, typeof(SorobanAddressCredentialsWithDelegates));
+    }
+
+    [TestMethod]
     [Ignore(
         "Enable after Protocol 27 Testnet upgrade (2026-06-18): submit a V2-signed InvokeHostFunction and assert success. Tracked by issue #186 AC4.")]
     public void AuthorizeEntry_AgainstP27Testnet_SubmitsSuccessfully()
     {
-        // Intentionally empty until P27 testnet is live (2026-06-18).
-    }
-
-    private static byte[] AddressXdrBytes(ScAddress address)
-    {
-        var stream = new XdrDataOutputStream();
-        SCAddress.Encode(stream, address.ToXdr());
-        return stream.ToArray();
-    }
-
-    private static int CompareAddress(ScAddress a, ScAddress b)
-    {
-        var x = AddressXdrBytes(a);
-        var y = AddressXdrBytes(b);
-        var min = Math.Min(x.Length, y.Length);
-        for (var i = 0; i < min; i++)
-        {
-            if (x[i] != y[i])
-            {
-                return x[i].CompareTo(y[i]);
-            }
-        }
-
-        return x.Length.CompareTo(y.Length);
-    }
-
-    private sealed class UnknownCredentials : SorobanCredentials
-    {
+        // Not yet implemented: until the P27 testnet is live (2026-06-18) there is no network to submit
+        // to. Fail loudly if enabled before the body exists, so it cannot silently pass and be mistaken
+        // for verified coverage of issue #186 AC4.
+        Assert.Inconclusive("Pending Protocol 27 Testnet upgrade (2026-06-18); submission test not yet implemented.");
     }
 }

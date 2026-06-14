@@ -6,12 +6,10 @@ using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
 using Asset = StellarDotnetSdk.Assets.Asset;
 using ContractExecutable = StellarDotnetSdk.Soroban.ContractExecutable;
-using Int64 = StellarDotnetSdk.Xdr.Int64;
 using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 using FunctionType = StellarDotnetSdk.Xdr.SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum;
 using PreimageType = StellarDotnetSdk.Xdr.ContractIDPreimageType.ContractIDPreimageTypeEnum;
-using CredentialsType = StellarDotnetSdk.Xdr.SorobanCredentialsType.SorobanCredentialsTypeEnum;
 
 namespace StellarDotnetSdk.Operations;
 

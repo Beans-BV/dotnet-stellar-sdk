@@ -558,11 +558,12 @@ public class SorobanAuthorizationTest
     }
 
     /// <summary>
-    ///     CAP-71 requires delegate arrays to be sorted by increasing address; encoding an
-    ///     out-of-order array must throw rather than produce host-invalid wire data.
+    ///     Encoding is order-faithful: CAP-71 ordering is enforced by the signing helpers, not the
+    ///     codec, so an out-of-order delegate array round-trips rather than throwing. This keeps decode
+    ///     and encode symmetric — any wire data that decodes can be re-encoded.
     /// </summary>
     [TestMethod]
-    public void ToXdr_DelegatesNotSortedByAddress_Throws()
+    public void ToXdr_DelegatesNotSortedByAddress_RoundTripsLeniently()
     {
         var root = new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
         var (first, second) = DescendingAddressPair();
@@ -572,15 +573,20 @@ public class SorobanAuthorizationTest
             new SorobanDelegateSignature(second, _signature, []),
         });
 
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => credentials.ToXdr());
-        Assert.IsTrue(ex.Message.Contains("sorted"));
+        var decoded = (SorobanAddressCredentialsWithDelegates)SorobanCredentials.FromXdr(credentials.ToXdr());
+
+        // The supplied (descending) order is preserved verbatim — no reordering, no throw.
+        Assert.AreEqual(2, decoded.Delegates.Length);
+        Assert.AreEqual(0, SorobanAuthTestHelpers.CompareAddressXdr(first, decoded.Delegates[0].Address));
+        Assert.AreEqual(0, SorobanAuthTestHelpers.CompareAddressXdr(second, decoded.Delegates[1].Address));
     }
 
     /// <summary>
-    ///     CAP-71 forbids duplicate delegate addresses; encoding a duplicated array must throw.
+    ///     Encoding does not enforce the CAP-71 no-duplicate rule (the signing helpers do): a duplicated
+    ///     delegate array round-trips rather than throwing, keeping decode and encode symmetric.
     /// </summary>
     [TestMethod]
-    public void ToXdr_DuplicateDelegateAddresses_Throws()
+    public void ToXdr_DuplicateDelegateAddresses_RoundTripsLeniently()
     {
         var root = new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
         var credentials = new SorobanAddressCredentialsWithDelegates(root, new[]
@@ -589,15 +595,16 @@ public class SorobanAuthorizationTest
             new SorobanDelegateSignature(_accountAddress, _signature, []),
         });
 
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => credentials.ToXdr());
-        Assert.IsTrue(ex.Message.Contains("duplicate"));
+        var decoded = (SorobanAddressCredentialsWithDelegates)SorobanCredentials.FromXdr(credentials.ToXdr());
+        Assert.AreEqual(2, decoded.Delegates.Length);
     }
 
     /// <summary>
-    ///     The sort/no-duplicate rule applies recursively: an out-of-order nested delegate array must also throw.
+    ///     Order-faithful encoding applies recursively: an out-of-order nested delegate array also
+    ///     round-trips rather than throwing.
     /// </summary>
     [TestMethod]
-    public void ToXdr_NestedDelegatesNotSortedByAddress_Throws()
+    public void ToXdr_NestedDelegatesNotSortedByAddress_RoundTripsLeniently()
     {
         var root = new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
         var (first, second) = DescendingAddressPair();
@@ -608,7 +615,8 @@ public class SorobanAuthorizationTest
         });
         var credentials = new SorobanAddressCredentialsWithDelegates(root, new[] { top });
 
-        Assert.ThrowsException<InvalidOperationException>(() => credentials.ToXdr());
+        var decoded = (SorobanAddressCredentialsWithDelegates)SorobanCredentials.FromXdr(credentials.ToXdr());
+        Assert.AreEqual(2, decoded.Delegates[0].NestedDelegates.Length);
     }
 
     /// <summary>
@@ -641,16 +649,32 @@ public class SorobanAuthorizationTest
         Assert.ThrowsException<InvalidOperationException>(() => credentials.ToXdr());
     }
 
-    /// <summary>The base ToXdr fallback must name the offending CLR type to aid diagnosis.</summary>
+    /// <summary>
+    ///     Regression for the decode/encode asymmetry: wire data carrying descending (CAP-71-invalid)
+    ///     delegates must decode AND re-encode without throwing, so parse-then-reserialize pipelines
+    ///     (relayers, transaction inspectors) do not crash on data the codec already accepted.
+    /// </summary>
     [TestMethod]
-    public void ToXdr_UnknownCredentialsSubtype_MessageIncludesTypeName()
+    public void FromXdrThenToXdr_UnsortedDelegates_RoundTripsWithoutThrowing()
     {
-        var ex = Assert.ThrowsException<InvalidOperationException>(() => new UnknownCredentials().ToXdr());
-        Assert.IsTrue(ex.Message.Contains(nameof(UnknownCredentials)));
-    }
+        var root = new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
+        var (first, second) = DescendingAddressPair();
+        var unsorted = new SorobanAddressCredentialsWithDelegates(root, new[]
+        {
+            new SorobanDelegateSignature(first, _signature, []),
+            new SorobanDelegateSignature(second, _signature, []),
+        });
 
-    private sealed class UnknownCredentials : SorobanCredentials
-    {
+        // Serialize to real wire bytes and decode them back, proving this is reachable from network data.
+        var outputStream = new XdrDataOutputStream();
+        StellarDotnetSdk.Xdr.SorobanCredentials.Encode(outputStream, unsorted.ToXdr());
+        var decodedXdr =
+            StellarDotnetSdk.Xdr.SorobanCredentials.Decode(new XdrDataInputStream(outputStream.ToArray()));
+
+        var decoded = SorobanCredentials.FromXdr(decodedXdr);
+
+        // Re-encoding the decoded value must not throw (previously ToXdr validated order, FromXdr did not).
+        Assert.IsNotNull(decoded.ToXdr());
     }
 
     /// <summary>Returns two distinct addresses ordered so that <c>first</c> &gt; <c>second</c> by XDR bytes.</summary>
@@ -658,29 +682,6 @@ public class SorobanAuthorizationTest
     {
         ScAddress a = new ScContractId("CAC2UYJQMC4ISUZ5REYB2AMDC44YKBNZWG4JB6N6GBL66CEKQO3RDSAB");
         ScAddress b = new ScContractId("CDJ4RICANSXXZ275W2OY2U7RO73HYURBGBRHVW2UUXZNGEBIVBNRKEF7");
-        return CompareAddress(a, b) < 0 ? (b, a) : (a, b);
-    }
-
-    private static int CompareAddress(ScAddress a, ScAddress b)
-    {
-        var x = AddressXdrBytes(a);
-        var y = AddressXdrBytes(b);
-        var min = Math.Min(x.Length, y.Length);
-        for (var i = 0; i < min; i++)
-        {
-            if (x[i] != y[i])
-            {
-                return x[i].CompareTo(y[i]);
-            }
-        }
-
-        return x.Length.CompareTo(y.Length);
-    }
-
-    private static byte[] AddressXdrBytes(ScAddress address)
-    {
-        var stream = new XdrDataOutputStream();
-        SCAddress.Encode(stream, address.ToXdr());
-        return stream.ToArray();
+        return SorobanAuthTestHelpers.CompareAddressXdr(a, b) < 0 ? (b, a) : (a, b);
     }
 }
