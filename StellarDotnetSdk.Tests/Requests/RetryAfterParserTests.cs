@@ -217,9 +217,58 @@ public class RetryAfterParserTests
     }
 
     /// <summary>
+    ///     <c>TooManyRequestsException.RetryAfter</c> (int seconds) and <c>RetryAfterDelay</c> (TimeSpan)
+    ///     agree only because every delay this parser yields fits in int seconds — the exception
+    ///     constructors guard with <c>TotalSeconds &lt;= int.MaxValue</c>, which is currently always true.
+    ///     Pin the assumption so a future increase to <see cref="RetryAfterParser.MaxRepresentableDelay" />
+    ///     can't silently make that guard reachable and the two properties disagree.
+    /// </summary>
+    [TestMethod]
+    public void MaxRepresentableDelay_FitsWithinIntSeconds()
+    {
+        Assert.IsTrue(RetryAfterParser.MaxRepresentableDelay.TotalSeconds <= int.MaxValue,
+            "MaxRepresentableDelay must stay within int seconds, or the exception RetryAfter/RetryAfterDelay agreement breaks.");
+    }
+
+    /// <summary>
     ///     Typed DateTime/DateTimeOffset values are parsed directly — no culture-sensitive ToString round
     ///     trip. An Unspecified-kind DateTime is treated as UTC, mirroring the string path.
     /// </summary>
+    /// <summary>
+    ///     RFC 7231 §7.1.1.1 requires recipients to accept all three HTTP-date forms. The strict parser must
+    ///     accept RFC 850 and asctime (including asctime's space-padded single-digit day) as well as RFC 1123,
+    ///     so the exception path agrees with the BCL header the handler reads. The malformed-numeric guard
+    ///     must still hold against these formats.
+    /// </summary>
+    [TestMethod]
+    public void Parse_LegacyHttpDateForms_AreAccepted()
+    {
+        var when = DateTimeOffset.UtcNow.AddSeconds(120);
+        var rfc850 = when.ToString("dddd, dd-MMM-yy HH:mm:ss 'GMT'", CultureInfo.InvariantCulture);
+        var asctime = when.ToString("ddd MMM d HH:mm:ss yyyy", CultureInfo.InvariantCulture);
+        // Space-padded single-digit-day asctime ("Fri Jun  5 ...") with the weekday derived from the date,
+        // never hardcoded — a hardcoded weekday makes the test calendar-fragile, since TryParseExact
+        // validates the weekday name against the date.
+        var singleDigitDay = new DateTimeOffset(DateTime.UtcNow.Year + 2, 6, 5, 9, 10, 11, TimeSpan.Zero);
+        var asctimePaddedDay = singleDigitDay.ToString("ddd MMM", CultureInfo.InvariantCulture) + "  " +
+                               singleDigitDay.ToString("d HH:mm:ss yyyy", CultureInfo.InvariantCulture);
+
+        foreach (var (label, s) in new[] { ("RFC850", rfc850), ("asctime", asctime) })
+        {
+            var parsed = RetryAfterParser.Parse(s);
+            Assert.IsNotNull(parsed, $"{label} (\"{s}\") should parse");
+            Assert.IsTrue(parsed!.Value.TotalSeconds is >= 110 and <= 125,
+                $"{label}: expected ~120s, got {parsed.Value.TotalSeconds}s");
+        }
+
+        Assert.IsNotNull(RetryAfterParser.Parse(asctimePaddedDay), "space-padded single-digit asctime day must parse");
+
+        // The malformed-numeric guard still holds — adding the legacy formats must not reopen the trap.
+        Assert.IsNull(RetryAfterParser.Parse("12.25"));
+        Assert.IsNull(RetryAfterParser.Parse("Dec 25"));
+        Assert.IsNull(RetryAfterParser.Parse("13:45"));
+    }
+
     [TestMethod]
     public void Parse_TypedDateValues_ReturnRemainingDelay()
     {

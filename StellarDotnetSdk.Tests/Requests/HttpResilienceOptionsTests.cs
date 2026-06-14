@@ -289,4 +289,20 @@ public class HttpResilienceOptionsTests
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.BaseDelay = TimeSpan.FromHours(25));
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.MaxDelay = TimeSpan.FromHours(25));
     }
+
+    /// <summary>
+    ///     MaxRetryAfterDelay is not a Polly-bound field, so its ceiling is the parser's representable-delay
+    ///     limit (~49.7 days) rather than Polly's 1 day: multi-day values are accepted, but a value beyond
+    ///     the representable ceiling (which a parsed Retry-After could never exceed) is rejected at assignment.
+    /// </summary>
+    [TestMethod]
+    public void MaxRetryAfterDelay_BoundedByRepresentableDelayCeiling()
+    {
+        var options = new HttpResilienceOptions { MaxRetryAfterDelay = TimeSpan.FromDays(2) }; // within ceiling
+        Assert.AreEqual(TimeSpan.FromDays(2), options.MaxRetryAfterDelay);
+
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => options.MaxRetryAfterDelay = TimeSpan.Zero);
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+            options.MaxRetryAfterDelay = RetryAfterParser.MaxRepresentableDelay + TimeSpan.FromDays(1));
+    }
 }

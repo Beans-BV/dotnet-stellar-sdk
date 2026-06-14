@@ -42,7 +42,8 @@ public sealed class HttpResilienceOptions
 
     /// <summary>
     ///     Gets or sets the base delay for exponential backoff. Default is 200ms.
-    ///     Must be between 1 tick and 1 day (the range Polly's retry strategy accepts).
+    ///     Must be positive and at most 1 day (Polly's retry strategy accepts up to 1 day; the SDK additionally
+    ///     requires a positive value).
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when value is not positive or exceeds 1 day.</exception>
     public TimeSpan BaseDelay
@@ -65,7 +66,8 @@ public sealed class HttpResilienceOptions
 
     /// <summary>
     ///     Gets or sets the maximum delay for exponential backoff. Default is 5 seconds.
-    ///     Must be between 1 tick and 1 day (the range Polly's retry strategy accepts).
+    ///     Must be positive and at most 1 day (Polly's retry strategy accepts up to 1 day; the SDK additionally
+    ///     requires a positive value).
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when value is not positive or exceeds 1 day.</exception>
     public TimeSpan MaxDelay
@@ -93,7 +95,7 @@ public sealed class HttpResilienceOptions
     /// <summary>
     ///     Gets or sets whether to enable circuit breaker. Default is false.
     /// </summary>
-    public bool EnableCircuitBreaker { get; set; } = false;
+    public bool EnableCircuitBreaker { get; set; }
 
     /// <summary>
     ///     Gets or sets the failure ratio threshold for circuit breaker (0.0 to 1.0). Default is 0.5 (50%).
@@ -282,16 +284,25 @@ public sealed class HttpResilienceOptions
     ///         client to wait) is the whole point of <c>Retry-After</c>. Keep this at or above
     ///         <see cref="MaxDelay" />.
     ///     </para>
+    ///     <para>
+    ///         Unlike the backoff/circuit-breaker durations this is not a Polly-bound field (it is applied in
+    ///         the SDK's own delay generator), so its upper bound is <see cref="RetryAfterParser" />'s
+    ///         representable-delay ceiling (~49.7 days) rather than Polly's 1 day — a larger cap can never
+    ///         bind, since a parsed <c>Retry-After</c> is itself clamped to that ceiling.
+    ///     </para>
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when value is not positive.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown when value is not positive or exceeds <see cref="RetryAfterParser.MaxRepresentableDelay" />.
+    /// </exception>
     public TimeSpan MaxRetryAfterDelay
     {
         get => _maxRetryAfterDelay;
         set
         {
-            if (value <= TimeSpan.Zero)
+            if (value <= TimeSpan.Zero || value > RetryAfterParser.MaxRepresentableDelay)
             {
-                throw new ArgumentOutOfRangeException(nameof(value), "MaxRetryAfterDelay must be positive.");
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    "MaxRetryAfterDelay must be positive and at most RetryAfterParser.MaxRepresentableDelay (~49.7 days).");
             }
 
             _maxRetryAfterDelay = value;

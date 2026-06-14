@@ -42,9 +42,11 @@ public class RetryingHttpMessageHandler : DelegatingHandler
     /// </param>
     /// <exception cref="ArgumentNullException">Thrown when innerHandler is null.</exception>
     /// <exception cref="ArgumentException">
-    ///     Thrown when <see cref="HttpResilienceOptions.BaseDelay" /> exceeds
-    ///     <see cref="HttpResilienceOptions.MaxDelay" /> (validated here rather than in the property setters so
-    ///     the two can be assigned in any order via an object initializer).
+    ///     Thrown when retries are enabled (<see cref="HttpResilienceOptions.MaxRetryCount" /> &gt; 0) and
+    ///     <see cref="HttpResilienceOptions.BaseDelay" /> exceeds <see cref="HttpResilienceOptions.MaxDelay" />
+    ///     (validated here rather than in the property setters so the two can be assigned in any order via an
+    ///     object initializer). A breaker-only or timeout-only handler never consults these fields and is not
+    ///     subject to this check.
     /// </exception>
     public RetryingHttpMessageHandler(HttpMessageHandler innerHandler, HttpResilienceOptions? options = null)
         : base(innerHandler ?? throw new ArgumentNullException(nameof(innerHandler)))
@@ -116,18 +118,6 @@ public class RetryingHttpMessageHandler : DelegatingHandler
     {
         var builder = new ResiliencePipelineBuilder<HttpResponseMessage>();
 
-        // Enforce the BaseDelay <= MaxDelay invariant whenever a handler is built — even with retries
-        // disabled, the pair is invalid together and accepting it would let an invalid configuration go
-        // unnoticed until retries are enabled later. (Deferred from the property setters so the two can be
-        // assigned in any order via an object initializer.)
-        if (options.BaseDelay > options.MaxDelay)
-        {
-            throw new ArgumentException(
-                $"BaseDelay ({options.BaseDelay.TotalMilliseconds}ms) cannot exceed " +
-                $"MaxDelay ({options.MaxDelay.TotalMilliseconds}ms).",
-                nameof(options));
-        }
-
         // Timeout (outermost - applies to entire operation)
         if (options.RequestTimeout.HasValue)
         {
@@ -158,6 +148,19 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         // Retry (innermost - executes first)
         if (options.MaxRetryCount > 0)
         {
+            // Enforce the BaseDelay <= MaxDelay invariant here, where the backoff actually uses both values
+            // (deferred from the property setters so the two can be assigned in any order via an object
+            // initializer). Only retry-enabled handlers consult these fields, so a breaker-only or
+            // timeout-only handler is not subject to backoff-pair validation; and because options are
+            // snapshotted at construction, any handler that will run backoff validates at its own build.
+            if (options.BaseDelay > options.MaxDelay)
+            {
+                throw new ArgumentException(
+                    $"BaseDelay ({options.BaseDelay.TotalMilliseconds}ms) cannot exceed " +
+                    $"MaxDelay ({options.MaxDelay.TotalMilliseconds}ms).",
+                    nameof(options));
+            }
+
             var retryOptions = new RetryStrategyOptions<HttpResponseMessage>
             {
                 MaxRetryAttempts = options.MaxRetryCount,
@@ -242,9 +245,9 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         if (outcome.Result is { } response &&
             options.RetryHttpStatusCodes.Contains(response.StatusCode))
         {
-            // The request is observed via the Polly context property bag (see SendAsync, which always sets
-            // it). Should it ever be absent — the pipeline executed some way other than SendAsync — fail
-            // closed rather than risk replaying a non-idempotent method on a status code.
+            // The request is observed via the Polly context property bag (both SendAsync and Send always set
+            // it). Should it ever be absent — the pipeline executed some way other than those — fail closed
+            // rather than risk replaying a non-idempotent method on a status code.
             return request != null && options.RetryHttpMethods.Contains(request.Method);
         }
 

@@ -133,7 +133,7 @@ var server = new Server("https://horizon-testnet.stellar.org", httpClient);
 
 The retry pipeline observes responses **inside** the HTTP handler chain, so it triggers *before* a status code is translated into a typed exception such as `TooManyRequestsException` or `ServiceUnavailableException`. If all retries are exhausted, the last response is surfaced as the usual typed exception.
 
-A retried request is re-sent with the **same** `HttpRequestMessage` instance, so its body must be re-readable, buffered content (`StringContent`, `ByteArrayContent`, `FormUrlEncodedContent` — all of the SDK's own requests qualify). A non-seekable `StreamContent` fails on the second attempt with `InvalidOperationException: "The stream was already consumed."`.
+A retried request is re-sent with the **same** `HttpRequestMessage` instance, so its body must be re-readable, buffered content (`StringContent`, `ByteArrayContent`, `FormUrlEncodedContent` — all of the SDK's own requests qualify). A non-seekable `StreamContent` fails on the second attempt with `InvalidOperationException: "The stream was already consumed. It cannot be read again."`.
 
 ### Controlling which HTTP methods retry
 

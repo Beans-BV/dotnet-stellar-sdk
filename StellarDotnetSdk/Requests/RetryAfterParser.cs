@@ -18,14 +18,19 @@ public static class RetryAfterParser
     /// </summary>
     public static readonly TimeSpan MaxRepresentableDelay = TimeSpan.FromMilliseconds(uint.MaxValue - 1);
 
-    // Accepted HTTP-date shapes: RFC 1123 / RFC 9110 ("Tue, 25 Dec 2030 00:00:00 GMT") and ISO 8601 with a
-    // time part ("2030-12-25T00:00:00Z", fractional seconds optional), which proxies/CDNs emit in practice.
-    // Parsing is deliberately TryParseExact: a lenient DateTimeOffset.TryParse fallback used to read
-    // malformed numerics ("12.25", "12-25", "Dec 25", "13:45") as month.day dates or times of day,
-    // yielding delays of months — or a result that flipped with the wall clock.
+    // Accepted HTTP-date shapes: the three RFC 7231 §7.1.1.1 forms a recipient MUST accept — IMF-fixdate /
+    // RFC 1123 ("Tue, 25 Dec 2030 00:00:00 GMT"), obsolete RFC 850 ("Tuesday, 25-Dec-30 00:00:00 GMT"), and
+    // asctime ("Tue Dec 25 00:00:00 2030") — plus ISO 8601 with a time part ("2030-12-25T00:00:00Z",
+    // fractional seconds optional), which proxies/CDNs emit in practice.
+    // Parsing is deliberately TryParseExact (not a lenient DateTimeOffset.TryParse, which used to read
+    // malformed numerics "12.25"/"12-25"/"Dec 25"/"13:45" as month.day dates or times of day, yielding
+    // delays of months — or a result that flipped with the wall clock). AllowWhiteSpaces handles asctime's
+    // space-padded single-digit day ("Tue Dec  5 ...").
     private static readonly string[] HttpDateFormats =
     {
         "r",
+        "dddd, dd-MMM-yy HH:mm:ss 'GMT'",
+        "ddd MMM d HH:mm:ss yyyy",
         "yyyy-MM-dd'T'HH:mm:ss.FFFFFFFK",
     };
 

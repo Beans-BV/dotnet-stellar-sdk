@@ -925,21 +925,24 @@ public class RetryingHttpMessageHandlerTests
     }
 
     /// <summary>
-    ///     The BaseDelay/MaxDelay invariant must hold whenever a handler is built — also with retries
-    ///     disabled, so an invalid pair cannot hide until retries are enabled later.
+    ///     The BaseDelay/MaxDelay invariant governs only the exponential backoff, which runs solely when
+    ///     retries are enabled. A breaker-only or timeout-only handler never consults those fields, so an
+    ///     inconsistent (and inert) pair must NOT be rejected. Because options are snapshotted at
+    ///     construction, any handler that later runs backoff validates the pair at its own construction.
     /// </summary>
     [TestMethod]
-    public void Constructor_BaseDelayExceedsMaxDelay_ThrowsEvenWithRetriesDisabled()
+    public void Constructor_BaseDelayExceedsMaxDelay_RetriesDisabled_DoesNotThrow()
     {
         var options = new HttpResilienceOptions
         {
             MaxRetryCount = 0,
+            EnableCircuitBreaker = true,
             RequestTimeout = TimeSpan.FromSeconds(5),
-            BaseDelay = TimeSpan.FromSeconds(10), // default MaxDelay is 5s — intentionally inconsistent
+            BaseDelay = TimeSpan.FromSeconds(10), // default MaxDelay is 5s — inconsistent but never consulted
         };
 
         using var inner = new ScriptedHttpMessageHandler();
-        Assert.ThrowsException<ArgumentException>(() => new RetryingHttpMessageHandler(inner, options));
+        using var handler = new RetryingHttpMessageHandler(inner, options); // must not throw
     }
 
     /// <summary>
@@ -1047,7 +1050,11 @@ public class RetryingHttpMessageHandlerTests
     ///     must still be honored via the raw header string — and capped by MaxRetryAfterDelay — instead of
     ///     silently falling back to the exponential backoff.
     /// </summary>
+    // Timeout bounds the method: if the MaxRetryAfterDelay cap regressed, the raw ~136-year header would be
+    // parsed (clamped to ~49.7 days) and awaited verbatim, hanging until the suite-wide timeout. The 30s cap
+    // turns that into a clean failure — generous enough never to flake on the real ~200ms wait.
     [TestMethod]
+    [Timeout(30000)]
     public async Task SendAsync_RetryAfterBeyondTypedHeaderRange_ParsedFromRawAndCapped()
     {
         var scripted = new ScriptedHttpMessageHandler(
