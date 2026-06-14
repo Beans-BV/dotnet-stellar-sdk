@@ -36,8 +36,8 @@ internal static class SorobanRetryConfigurationExample
         // Default constructor - no retries enabled
         var server = SorobanHelpers.CreateServer();
 
-        Console.WriteLine("   No retries enabled - requests fail immediately on connection errors");
-        Console.WriteLine("   HTTP status codes are never retried automatically");
+        Console.WriteLine("   No retries enabled - connection errors and HTTP error responses surface immediately");
+        Console.WriteLine("   Opt in via HttpResilienceOptions or the ForSoroban() preset");
 
         try
         {
@@ -72,7 +72,7 @@ internal static class SorobanRetryConfigurationExample
         var server = new StellarRpcServer(SorobanHelpers.TestNetSorobanUrl, httpClient);
 
         Console.WriteLine("   Using custom retry: 5 retries, 300ms base delay, 8s max");
-        Console.WriteLine("   Only connection failures are retried, not HTTP status codes");
+        Console.WriteLine("   This configuration retries connection failures only (RetryHttpStatusCodes is empty)");
 
         try
         {
@@ -87,18 +87,15 @@ internal static class SorobanRetryConfigurationExample
     }
 
     /// <summary>
-    ///     Production-ready configuration with comprehensive retry settings for connection failures.
+    ///     Production-ready configuration using the ForSoroban preset: connection-failure retries plus
+    ///     transient HTTP status-code retries (408/429/500/502/503/504) on Stellar RPC's POST calls,
+    ///     with the Retry-After header honored.
     /// </summary>
     private static async Task UseSorobanProductionRetry()
     {
-        // Production configuration with robust connection retry
-        var resilienceOptions = new HttpResilienceOptions
-        {
-            MaxRetryCount = 5,
-            BaseDelay = TimeSpan.FromMilliseconds(500),
-            MaxDelay = TimeSpan.FromMilliseconds(15000),
-            UseJitter = true,
-        };
+        // ForSoroban(): 5 retries, 500ms-15s exponential backoff with jitter, transient HTTP status
+        // codes retried on POST (every Stellar RPC call is POST), Retry-After honored.
+        var resilienceOptions = HttpResilienceOptionsPresets.ForSoroban();
 
         // Add additional retriable exceptions for network issues
         resilienceOptions.AdditionalRetriableExceptionTypes.Add(typeof(SocketException));
@@ -108,9 +105,9 @@ internal static class SorobanRetryConfigurationExample
 
         var server = new StellarRpcServer(SorobanHelpers.TestNetSorobanUrl, httpClient);
 
-        Console.WriteLine("   Production config: 5 retries, 500ms base, 15s max");
-        Console.WriteLine("   Socket exceptions are retriable");
-        Console.WriteLine("   HTTP status codes are never retried automatically");
+        Console.WriteLine("   Production config: ForSoroban() preset (5 retries, 500ms-15s backoff with jitter)");
+        Console.WriteLine("   Retries 408/429/5xx on RPC POST calls; honors Retry-After");
+        Console.WriteLine("   Socket exceptions are also retriable");
 
         try
         {

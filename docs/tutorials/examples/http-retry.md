@@ -1,38 +1,55 @@
 # HTTP Resilience Configuration
 
-This guide explains how to configure optional HTTP retry logic for connection failures in the SDK.
+This guide explains how to configure optional HTTP retry, circuit breaker, and timeout behavior in the SDK.
 
-> **Note:** By default, retries are **disabled** (matching the Java SDK's approach). Only connection-level failures (network errors, DNS failures) are retried when enabled. HTTP error status codes (4xx/5xx) are **never** retried automatically.
+> **Note:** Retries are **disabled by default** (matching the Java SDK's approach). Nothing is retried until you opt in by passing an `HttpResilienceOptions` instance (or a preset). When enabled, the SDK retries connection-level failures (network errors, DNS failures) and — if you configure them — the transient HTTP status codes you list in `RetryHttpStatusCodes`.
 
 ## Overview
 
-The SDK provides an optional retry mechanism for connection failures, similar to OkHttp's `retryOnConnectionFailure(true)`. This helps handle transient network issues like DNS failures, connection timeouts, and socket errors.
+The SDK provides an opt-in resilience pipeline (built on [Polly](https://www.pollydocs.org/)) for transient failures:
+
+- **Connection failures** — `HttpRequestException` and timeout-shaped exceptions thrown inside the handler chain, similar to OkHttp's `retryOnConnectionFailure(true)`. These retries apply to **all** HTTP methods. A `TaskCanceledException` caused by `HttpClient.Timeout` firing is **not** retried (see [What Gets Retried](#what-gets-retried)).
+- **HTTP status codes** — only the codes you add to `RetryHttpStatusCodes` (empty by default), and only for safe methods unless you opt in to unsafe ones.
 
 ### Default Behavior
 
 When using the SDK without any configuration, **no retries are performed**:
 
-| Setting           | Default Value |
-|-------------------|---------------|
-| Max Retry Count   | 0 (disabled)  |
-| Base Delay        | 200ms         |
-| Max Delay         | 5000ms        |
-| Jitter            | Enabled       |
-| Circuit Breaker   | Disabled      |
-| Request Timeout   | None          |
+| Setting           | Default Value         |
+|-------------------|-----------------------|
+| Max Retry Count   | 0 (disabled)          |
+| Base Delay        | 200ms                 |
+| Max Delay         | 5000ms                |
+| Jitter            | Enabled               |
+| Status-code retries | None (`RetryHttpStatusCodes` empty) |
+| Retry HTTP methods | Safe only (`GET`, `HEAD`, `OPTIONS`) |
+| Respect `Retry-After` | Enabled (`true`)  |
+| Max `Retry-After` delay | 1 minute            |
+| Circuit Breaker   | Disabled              |
+| Request Timeout   | None                  |
 
 ### What Gets Retried
 
-**Connection failures (exceptions) are retried** when retries are enabled:
-- `HttpRequestException` - Network errors, DNS failures
-- `TimeoutException` - Request timeouts
-- `TaskCanceledException` - HTTP client timeouts (not user-initiated cancellation)
+When retries are enabled (`MaxRetryCount > 0`):
 
-**HTTP status codes are never retried**:
-- `408`, `429`, `500`, `502`, `503`, `504` - These return immediately without retry
-- All 4xx and 5xx responses - Handled by your application code
+**Connection failures (exceptions) are retried — for every HTTP method, including POST:**
+- `HttpRequestException` — network errors, DNS failures
+- `TimeoutException` — timeouts surfaced by custom/inner handlers
+- `TaskCanceledException` — only when the request's `CancellationToken` is **not** signaled (e.g. thrown by a custom inner handler)
 
-This matches the Java SDK's behavior: only connection-level failures trigger retries.
+> **`HttpClient.Timeout` and `RequestTimeout` are not retried** — in contrast to a `TimeoutException` thrown
+> by a custom inner handler (listed above), which is. When `HttpClient.Timeout` fires, it cancels the token
+> that flows through the handler chain, so the resulting `TaskCanceledException` is treated exactly like user
+> cancellation and propagates immediately. Likewise `RequestTimeout` (below) is the outermost strategy, so its
+> `TimeoutRejectedException` is never seen by the retry strategy. There is no per-attempt retried timeout;
+> use `RequestTimeout` or `HttpClient.Timeout` to bound the whole operation.
+
+Because connection failures are retried for all methods, a request whose response was lost mid-flight (e.g.
+a connection reset after the server already processed it) can be re-executed. For Horizon and Stellar RPC
+this is safe (see the idempotency notes below); for strictly one-shot endpoints, see the SEP warning further
+down.
+
+**HTTP status codes are retried only when you opt in** by adding them to `RetryHttpStatusCodes`. By default the set is empty, so no status code is retried. Status-code retries are additionally gated by HTTP method (see [Controlling which HTTP methods retry](#controlling-which-http-methods-retry)): by default only safe methods (`GET`, `HEAD`, `OPTIONS`) are retried.
 
 ## Quick Start with Presets
 
@@ -41,65 +58,154 @@ The SDK provides preset configurations for common use cases:
 ```csharp
 using StellarDotnetSdk.Requests;
 
-// Default: No retries (same as new HttpResilienceOptions())
+// No retries (same as new HttpResilienceOptions())
 var defaultOptions = HttpResilienceOptionsPresets.Default();
 
-// Enable connection retries (similar to OkHttp's retryOnConnectionFailure)
-var withRetries = HttpResilienceOptionsPresets.WithConnectionRetries();
+// Horizon clients: retries 408/429/5xx on every call including SubmitTransaction(), honors Retry-After
+var horizon = HttpResilienceOptionsPresets.ForHorizon();
 
-// Soroban polling: more retries for network instability
-var sorobanOptions = HttpResilienceOptionsPresets.ForSorobanPolling();
+// Stellar RPC (Soroban): all RPC calls are POST; status-code retries + higher budget and longer delays
+var sorobanOptions = HttpResilienceOptionsPresets.ForSoroban();
 
-// Low latency: fast failure for trading bots
+// Connection failures only (no status-code retries; RetryHttpMethods stays at GET/HEAD/OPTIONS)
+var connectionOnly = HttpResilienceOptionsPresets.WithConnectionRetries();
+
+// Low latency: fast failure for trading bots (connection failures only)
 var tradingOptions = HttpResilienceOptionsPresets.LowLatency();
 ```
 
 ### Preset Details
 
-| Preset                      | MaxRetryCount | BaseDelay | MaxDelay |
-|----------------------------|---------------|-----------|----------|
-| `Default()`                | 0 (disabled)  | -         | -        |
-| `WithConnectionRetries()`  | 3             | 200ms     | 5s       |
-| `ForSorobanPolling()`      | 5             | 500ms     | 15s      |
-| `LowLatency()`             | 1             | 50ms      | 200ms    |
+| Preset                     | Max Retries | Base Delay | Max Delay | Status-code retries            | `RetryHttpMethods`           | `Retry-After` |
+|----------------------------|-------------|------------|-----------|--------------------------------|------------------------------|---------------|
+| `Default()` / `NoRetry()`  | 0           | —          | —         | none                           | safe (GET/HEAD/OPTIONS)      | —             |
+| `WithConnectionRetries()`  | 3           | 200ms      | 5s        | none (connection failures only)| safe (GET/HEAD/OPTIONS)      | n/a           |
+| `ForHorizon()`             | 3           | 200ms      | 5s        | 408, 429, 500, 502, 503, 504   | safe **+ POST**              | honored       |
+| `ForSoroban()`             | 5           | 500ms      | 15s       | 408, 429, 500, 502, 503, 504   | safe **+ POST**              | honored       |
+| `LowLatency()`             | 1           | 50ms       | 200ms     | none (connection failures only)| safe (GET/HEAD/OPTIONS)      | n/a           |
+
+All retrying presets use exponential backoff with jitter enabled.
+
+`ForHorizon()` and `ForSoroban()` add `POST` to the retry-method whitelist because the Stellar wire layer is idempotent for both: Horizon queries are pure reads; `SubmitTransaction()` is keyed by transaction hash + source-account sequence number, so a resubmit either returns the cached server result or fails with `tx_bad_seq` — there is no double-spend window. The same applies to every Soroban RPC method (all POST). `PATCH`/`PUT`/`DELETE` are *not* in either preset, so future SDK methods that use them are not silently retried.
 
 ## Using the SDK Without Retries (Default)
 
 By default, the SDK does not retry any requests:
 
 ```csharp
-// No retries - requests fail immediately on connection errors
+// No retries - requests fail immediately on connection errors,
+// and HTTP error responses are surfaced immediately.
 var server = new Server("https://horizon-testnet.stellar.org");
 var sorobanServer = new StellarRpcServer("https://soroban-testnet.stellar.org");
 ```
 
-This matches the Java SDK's default behavior. HTTP error responses (4xx/5xx) are returned immediately, and connection failures throw exceptions immediately.
+## Enabling Retries
 
-## Enabling Connection Retries
-
-To enable retries for connection failures, pass `HttpResilienceOptions` with `MaxRetryCount > 0`:
+To enable retries, pass `HttpResilienceOptions` (or a preset) with `MaxRetryCount > 0`:
 
 ```csharp
 using StellarDotnetSdk.Requests;
 
-// Enable connection retries (3 attempts, 200ms base delay)
-var resilienceOptions = HttpResilienceOptionsPresets.WithConnectionRetries();
+var resilienceOptions = HttpResilienceOptionsPresets.ForHorizon();
 
 var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 var server = new Server("https://horizon-testnet.stellar.org", httpClient);
 ```
 
-### Custom Retry Configuration
+## Retrying HTTP Status Codes
 
-You can customize retry behavior:
+To retry HTTP error status codes, set `MaxRetryCount > 0` **and** add the codes to `RetryHttpStatusCodes`. (Setting status codes without a positive `MaxRetryCount` has no effect — there is no retry loop to enter.)
+
+```csharp
+using System.Net;
+using StellarDotnetSdk.Requests;
+
+var resilienceOptions = new HttpResilienceOptions
+{
+    MaxRetryCount = 3,
+    RespectRetryAfter = true, // honor Retry-After on retried responses (default true)
+};
+resilienceOptions.RetryHttpStatusCodes.Add(HttpStatusCode.TooManyRequests);   // 429
+resilienceOptions.RetryHttpStatusCodes.Add(HttpStatusCode.ServiceUnavailable); // 503
+
+var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+var server = new Server("https://horizon-testnet.stellar.org", httpClient);
+```
+
+The retry pipeline observes responses **inside** the HTTP handler chain, so it triggers *before* a status code is translated into a typed exception such as `TooManyRequestsException` or `ServiceUnavailableException`. If all retries are exhausted, the last response is surfaced as the usual typed exception.
+
+A retried request is re-sent with the **same** `HttpRequestMessage` instance, so its body must be re-readable, buffered content (`StringContent`, `ByteArrayContent`, `FormUrlEncodedContent` — all of the SDK's own requests qualify). A non-seekable `StreamContent` fails on the second attempt with `InvalidOperationException: "The stream was already consumed. It cannot be read again."`.
+
+### Controlling which HTTP methods retry
+
+Status-code retries are gated by `RetryHttpMethods` — an explicit `ISet<HttpMethod>` that defaults to the RFC-safe methods (`GET`, `HEAD`, `OPTIONS`). Other methods are never retried on a status code unless you add them to the set.
+
+`ForHorizon()` and `ForSoroban()` add `POST` to the set because the Stellar wire layer is idempotent for both Horizon's `SubmitTransaction()` (tx hash + source sequence → no double-spend; resubmit yields the cached result or `tx_bad_seq`) and every Soroban JSON-RPC method.
+
+If you're building options manually and need POST retried on Horizon or Soroban (e.g. you're using `WithConnectionRetries()` as a base and want to add status-code retries for `SubmitTransaction()`), add the method explicitly:
+
+```csharp
+var resilienceOptions = new HttpResilienceOptions
+{
+    MaxRetryCount = 3,
+};
+resilienceOptions.RetryHttpStatusCodes.Add(HttpStatusCode.ServiceUnavailable);
+resilienceOptions.RetryHttpMethods.Add(HttpMethod.Post);
+```
+
+> **⚠️ SEP services are not blanket-safe to retry.** Specific SEP POST endpoints are non-idempotent
+> by spec:
+>
+> - **SEP-10 `POST /auth`** — per spec: *"The Server should not provide more than one JWT for a
+>   specific challenge transaction."* On transient failure, fetch a **fresh** challenge with
+>   `GET /auth` and submit that — do not retry the same body.
+> - **SEP-24 `POST /transactions/{deposit,withdraw}/interactive`** — each call mints a fresh
+>   `transaction_id`; retrying creates duplicate transaction records. No idempotency-key mechanism
+>   is defined.
+> - **SEP-6 `PATCH /transactions/{id}`** — not in the SEP-6 master spec; anchor-vendor extension
+>   that mutates KYC state.
+>
+> Do NOT wire `ForHorizon()` or `ForSoroban()` into a `ClientWebAuth` / `InteractiveService` /
+> `TransferServerService` HttpClient. For SEP HttpClients, use `WithConnectionRetries()`
+> (transport failures only) or build a custom `HttpResilienceOptions` whose `RetryHttpMethods`
+> contains only the safe defaults.
+>
+> Be aware that connection-failure retries apply to **all** HTTP methods: a POST whose response was
+> lost may already have been processed by the server, so even `WithConnectionRetries()` carries a
+> small replay window on these endpoints. If that window is unacceptable, use `NoRetry()` for the
+> SEP client and recover at the application level (e.g. request a fresh SEP-10 challenge).
+
+### Honoring `Retry-After`
+
+When `RespectRetryAfter` is `true` (the default) and a retried response carries a `Retry-After` header, the SDK uses that value as the next delay, **capped by `MaxRetryAfterDelay`** (default 1 minute) — a ceiling that is deliberately separate from the exponential-backoff `MaxDelay`, so a server asking for tens of seconds on a 429 is honored rather than truncated to the (typically small) backoff cap. Both the delay-seconds and HTTP-date forms (RFC 7231 §7.1.3) are supported. If no `Retry-After` header is present, the SDK falls back to exponential backoff.
+
+The `TooManyRequestsException` and `ServiceUnavailableException` types also expose the value directly for manual handling:
+
+```csharp
+try
+{
+    var account = await server.Accounts.Account(accountId);
+}
+catch (TooManyRequestsException ex)
+{
+    // RetryAfter is whole seconds (int?); RetryAfterDelay is a TimeSpan? parsed from
+    // the raw header at full precision and supports the HTTP-date form too.
+    var delay = ex.RetryAfterDelay ?? TimeSpan.FromSeconds(5);
+    await Task.Delay(delay);
+}
+```
+
+**A note on `Retry-After` for Stellar services.** Horizon sends `Retry-After` only on HTTP 429 (always as an integer number of seconds); on HTTP 503 it relies on the client's configured backoff. Stellar RPC (Soroban) does not send `Retry-After` at all — overload is reported via HTTP 503/504 or JSON-RPC error bodies, so the pipeline falls back to exponential backoff. The parser still accepts the RFC 7231 HTTP-date form because upstream proxies and CDNs (Cloudflare, nginx, API gateways) may rewrite the header.
+
+## Custom Retry Configuration
 
 ```csharp
 var resilienceOptions = new HttpResilienceOptions
 {
     MaxRetryCount = 5,                           // Retry up to 5 times
     BaseDelay = TimeSpan.FromMilliseconds(500),  // Start with 500ms delay
-    MaxDelay = TimeSpan.FromMilliseconds(10000), // Cap delay at 10 seconds
-    UseJitter = true                             // Add randomness to prevent thundering herd
+    MaxDelay = TimeSpan.FromSeconds(10),         // Cap delay at 10 seconds
+    UseJitter = true,                            // Add randomness to prevent thundering herd
 };
 
 var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
@@ -108,54 +214,25 @@ var server = new Server("https://horizon-testnet.stellar.org", httpClient);
 
 ### Adding Custom Retriable Exception Types
 
-You can add additional exception types that should trigger retries:
+You can add additional exception types that should trigger retries (in addition to the defaults):
 
 ```csharp
 var resilienceOptions = new HttpResilienceOptions
 {
-    MaxRetryCount = 3
+    MaxRetryCount = 3,
 };
 resilienceOptions.AdditionalRetriableExceptionTypes.Add(typeof(SocketException));
 
 var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 ```
 
-## Important: HTTP Status Codes Are Not Retried
-
-Unlike some HTTP client libraries, this SDK **does not retry HTTP error status codes**. This matches the Java SDK's behavior.
-
-```csharp
-// Example: 429 Too Many Requests
-var server = new Server("https://horizon-testnet.stellar.org");
-
-try
-{
-    var account = await server.Accounts.Account(accountId);
-}
-catch (TooManyRequestsException ex)
-{
-    // This exception is thrown immediately - no retries
-    // You must handle rate limiting in your application code
-    if (ex.RetryAfter.HasValue)
-    {
-        await Task.Delay(TimeSpan.FromSeconds(ex.RetryAfter.Value));
-        // Retry manually if needed
-    }
-}
-```
-
-If you need automatic retries for HTTP status codes, you can:
-1. Implement custom retry logic in your application
-2. Use a library like Polly to wrap SDK calls
-3. Handle specific status codes in your error handling
+> **Scope:** `AdditionalRetriableExceptionTypes` applies only to exceptions thrown from within the HTTP handler chain (`HttpClient.SendAsync`). It does **not** apply to typed exceptions thrown after a response is received (`TooManyRequestsException`, `ServiceUnavailableException`, `HttpResponseException`). To retry those, use `RetryHttpStatusCodes` instead.
 
 ## Circuit Breaker (Advanced)
 
-The circuit breaker pattern prevents cascading failures by temporarily blocking requests to an unhealthy service. It's **disabled by default**.
+The circuit breaker prevents cascading failures by temporarily blocking requests to an unhealthy service. It's **disabled by default**.
 
-> **Warning:** When the circuit is open, requests throw `BrokenCircuitException` instead of the underlying HTTP error.
-
-### Enabling Circuit Breaker
+> **Warning:** When the circuit is open, requests throw `BrokenCircuitException` instead of the underlying HTTP error. The circuit breaker counts connection failures and any configured `RetryHttpStatusCodes` as failures — for **every** HTTP method (`RetryHttpMethods` limits which requests are *retried*, not which failures are *counted*), and even when `MaxRetryCount` is 0. Failures are sampled per logical request: when retries are enabled, one fully-exhausted request sequence counts once, so with the default `MinimumThroughput` of 10 the breaker needs ten failed *requests* (not ten failed attempts) inside `SamplingDuration` before it can open.
 
 ```csharp
 var resilienceOptions = new HttpResilienceOptions
@@ -165,7 +242,7 @@ var resilienceOptions = new HttpResilienceOptions
     FailureRatio = 0.5,           // Open circuit when 50% of requests fail
     MinimumThroughput = 10,        // Require at least 10 requests before evaluating
     SamplingDuration = TimeSpan.FromSeconds(30),
-    BreakDuration = TimeSpan.FromSeconds(30)
+    BreakDuration = TimeSpan.FromSeconds(30),
 };
 
 var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
@@ -173,161 +250,126 @@ var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOp
 
 ## Request Timeout (Advanced)
 
-You can set a per-request timeout:
+You can set an overall timeout for the whole operation. It is applied as the outermost strategy, so it covers
+all retry attempts and their backoff delays — not each attempt individually:
 
 ```csharp
 var resilienceOptions = new HttpResilienceOptions
 {
     MaxRetryCount = 3,
-    RequestTimeout = TimeSpan.FromSeconds(10)  // Each request times out after 10s
+    RequestTimeout = TimeSpan.FromSeconds(10),  // The whole operation (all retries) must finish within 10s
 };
 
 var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 ```
 
+> **Note:** `HttpClient.Timeout` (default 100 seconds) independently caps the whole operation too — all
+> attempts plus their backoff and `Retry-After` waits — and surfaces as a **non-retried**
+> `TaskCanceledException`. Two honored 60-second `Retry-After` waits under `ForHorizon()` would exceed the
+> default; raise `HttpClient.Timeout` (or lower `MaxRetryAfterDelay`) if you expect long server-directed
+> waits. Neither timeout is retried: timeout exhaustion is terminal by design.
+
 ## Exponential Backoff
 
-When retries are enabled, the SDK uses exponential backoff:
+When retries are enabled and no `Retry-After` header applies, the SDK uses exponential backoff:
 
 ```
 delay = min(BaseDelay * 2^attempt, MaxDelay)
 ```
 
-With jitter enabled (default), the actual delay varies by ±20%:
+With jitter enabled (default), the actual delay is randomized to avoid synchronized retries (thundering herd).
 
-```
-actual_delay = delay * random(0.8, 1.2)
-```
+### Example Delays (WithConnectionRetries / ForHorizon preset)
 
-### Example Delays (WithConnectionRetries preset)
-
-| Attempt | Base Delay | With Jitter (range) |
-|---------|------------|---------------------|
-| 1       | 200ms      | 160-240ms           |
-| 2       | 400ms      | 320-480ms           |
-| 3       | 800ms      | 640-960ms           |
+| Attempt | Base Delay |
+|---------|------------|
+| 1       | ~200ms     |
+| 2       | ~400ms     |
+| 3       | ~800ms     |
 
 ## Best Practices
 
-### 1. Use Retries for Connection Failures Only
-
-Retries are most useful for transient network issues. Don't enable retries if you need immediate feedback on HTTP errors.
+### 1. Prefer a preset
 
 ```csharp
-// Good: Enable retries for background jobs
-var backgroundOptions = HttpResilienceOptionsPresets.WithConnectionRetries();
+// Horizon clients (queries + SubmitTransaction)
+var horizon = HttpResilienceOptionsPresets.ForHorizon();
 
-// Good: Disable retries for user-facing apps that need fast feedback
-var userOptions = HttpResilienceOptionsPresets.Default(); // No retries
+// Stellar RPC (Soroban) — long-running polling
+var soroban = HttpResilienceOptionsPresets.ForSoroban();
+
+// Latency-sensitive (trading bots)
+var lowLatency = HttpResilienceOptionsPresets.LowLatency();
 ```
 
-### 2. Handle HTTP Errors in Your Code
+### 2. Handle `tx_bad_seq` after a retried submission
 
-Since HTTP status codes aren't retried, handle them explicitly:
+If a transaction was already accepted on the original attempt and the retry surfaces `tx_bad_seq`, look up the transaction by its hash to recover the original server result instead of assuming the submission failed.
 
-```csharp
-try
-{
-    var account = await server.Accounts.Account(accountId);
-}
-catch (TooManyRequestsException ex)
-{
-    // Handle rate limiting
-    if (ex.RetryAfter.HasValue)
-    {
-        await Task.Delay(TimeSpan.FromSeconds(ex.RetryAfter.Value));
-        // Retry manually
-    }
-}
-catch (HttpResponseException ex) when (ex.StatusCode == 503)
-{
-    // Handle service unavailable - retry manually if needed
-}
-```
-
-### 3. Use Presets When Possible
-
-The built-in presets are tuned for common scenarios:
-
-```csharp
-// For Soroban transaction polling
-var sorobanClient = new DefaultStellarSdkHttpClient(
-    resilienceOptions: HttpResilienceOptionsPresets.ForSorobanPolling());
-
-// For trading applications
-var tradingClient = new DefaultStellarSdkHttpClient(
-    resilienceOptions: HttpResilienceOptionsPresets.LowLatency());
-```
-
-### 4. Keep Jitter Enabled
+### 3. Keep jitter enabled
 
 Always keep jitter enabled to prevent synchronized retries from multiple clients (thundering herd problem).
 
 ## Complete Example
 
 ```csharp
+using System;
+using System.Threading.Tasks;
 using StellarDotnetSdk;
+using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Requests;
-using StellarDotnetSdk.Soroban;
 
-// Enable connection retries for production use
-var resilienceOptions = HttpResilienceOptionsPresets.WithConnectionRetries();
+// Production-ready resilience for Horizon clients
+var resilienceOptions = HttpResilienceOptionsPresets.ForHorizon();
 
-// Create HTTP client with bearer token and resilience options
 var httpClient = new DefaultStellarSdkHttpClient(
     bearerToken: "your-api-token",  // Optional
     resilienceOptions: resilienceOptions
 );
 
-// Use with Horizon
 var horizonServer = new Server("https://horizon.stellar.org", httpClient);
 
-// Use with Soroban
-var sorobanServer = new StellarRpcServer("https://soroban.stellar.org", httpClient);
-
-// Make requests - connection failures are retried automatically
 try
 {
     var account = await horizonServer.Accounts.Account("GABC...");
     Console.WriteLine($"Account balance: {account.Balances[0].BalanceString}");
 }
-catch (HttpRequestException ex)
-{
-    // All retries exhausted for connection failures
-    Console.WriteLine($"Connection failed after all retries: {ex.Message}");
-}
 catch (TooManyRequestsException ex)
 {
-    // HTTP 429 - not retried automatically
-    Console.WriteLine($"Rate limited. Retry after: {ex.RetryAfter} seconds");
+    // Surfaced only after retries are exhausted (or when 429 is not in RetryHttpStatusCodes)
+    var delay = ex.RetryAfterDelay ?? TimeSpan.FromSeconds(5);
+    Console.WriteLine($"Rate limited. Suggested wait: {delay}.");
+}
+catch (HttpRequestException ex)
+{
+    Console.WriteLine($"Connection failed after all retries: {ex.Message}");
 }
 ```
 
 ## Troubleshooting
 
-### Connection Failures Still Happening
+### HTTP status codes are not being retried
 
-If connection failures persist after retries:
-1. Check network connectivity
-2. Verify DNS resolution
-3. Check firewall/proxy settings
-4. Increase `MaxRetryCount` if needed
+Check that **all three** conditions hold: `MaxRetryCount > 0`, the status code is in `RetryHttpStatusCodes`, and the request's HTTP method is in `RetryHttpMethods` (which defaults to `GET`/`HEAD`/`OPTIONS`). Also note that the options are snapshotted when the handler/client is constructed — changes made to the options instance afterwards have no effect.
 
-### HTTP Errors Not Being Retried
+### Requests time out instead of retrying
 
-This is expected behavior. HTTP status codes (4xx/5xx) are never retried automatically. Handle them in your application code.
+That is by design: `HttpClient.Timeout` and `RequestTimeout` failures are terminal, not retried (see [What Gets Retried](#what-gets-retried)). If slow individual attempts are eating your budget, lower the per-call latency at the server selection level or bound the operation with `RequestTimeout` and surface the failure.
 
-### Rate Limiting
+### Retries take longer than expected
 
-If you're being rate limited:
-1. Handle `TooManyRequestsException` in your code
-2. Check the `RetryAfter` property
-3. Implement exponential backoff in your application
-4. Reduce request frequency
+A retried response with a large `Retry-After` value will delay the next attempt (capped by `MaxRetryAfterDelay`, default 1 minute). Lower `MaxRetryAfterDelay` or set `RespectRetryAfter = false` if you prefer pure exponential backoff.
+
+### Rate limiting
+
+1. Use a preset that retries 429 (`ForHorizon()` / `ForSoroban()`), or add `HttpStatusCode.TooManyRequests` to `RetryHttpStatusCodes`.
+2. Inspect `TooManyRequestsException.RetryAfterDelay` for manual handling.
+3. Reduce request frequency.
 
 ## Additional Resources
 
 - [Java SDK](https://github.com/lightsail-network/java-stellar-sdk)
+- [Polly resilience library](https://www.pollydocs.org/)
 - [Stellar Network Status](https://status.stellar.org/)
 - [Horizon API Documentation](https://developers.stellar.org/docs/data/apis/horizon)
 - [Stellar RPC Documentation](https://developers.stellar.org/docs/data/apis/rpc)

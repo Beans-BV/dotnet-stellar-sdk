@@ -439,6 +439,10 @@ public static class HorizonExamples
         // Example 4: Add custom retriable exception types
         Console.WriteLine("\n4. Custom retriable exception types:");
         await UseCustomRetriableExceptions();
+
+        // Example 5: The ForHorizon preset - status-code retries tuned for Horizon
+        Console.WriteLine("\n5. ForHorizon preset (recommended for Horizon):");
+        await UseForHorizonPreset();
     }
 
     /// <summary>
@@ -449,8 +453,8 @@ public static class HorizonExamples
         // Default constructor - no retries enabled
         var server = new Server(TestNetUrl);
 
-        Console.WriteLine("   No retries enabled - requests fail immediately on connection errors");
-        Console.WriteLine("   HTTP status codes (4xx/5xx) are never retried automatically");
+        Console.WriteLine("   No retries enabled - connection errors and HTTP error responses surface immediately");
+        Console.WriteLine("   Opt in via HttpResilienceOptions or a preset such as ForHorizon()");
 
         try
         {
@@ -475,8 +479,8 @@ public static class HorizonExamples
         var server = new Server(TestNetUrl, httpClient);
 
         Console.WriteLine("   Connection retries enabled: 3 retries, 200ms base delay");
-        Console.WriteLine("   Only connection failures (network errors) are retried");
-        Console.WriteLine("   HTTP status codes (4xx/5xx) are never retried");
+        Console.WriteLine("   This preset retries connection failures (network errors) on all HTTP methods");
+        Console.WriteLine("   It does not retry HTTP status codes - use ForHorizon() for that");
 
         try
         {
@@ -510,7 +514,7 @@ public static class HorizonExamples
         var server = new Server(TestNetUrl, httpClient);
 
         Console.WriteLine("   Using custom retry: 5 retries, 500ms base delay, 10s max delay");
-        Console.WriteLine("   Only connection failures are retried, not HTTP status codes");
+        Console.WriteLine("   This configuration retries connection failures only (RetryHttpStatusCodes is empty)");
 
         try
         {
@@ -552,6 +556,33 @@ public static class HorizonExamples
         catch (Exception ex)
         {
             Console.WriteLine($"   Request failed: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    ///     Uses the ForHorizon preset: connection-failure retries plus transient HTTP status-code retries
+    ///     (408/429/500/502/503/504) on Horizon's GET queries and SubmitTransaction() POST, with the
+    ///     Retry-After header honored on 429.
+    /// </summary>
+    private static async Task UseForHorizonPreset()
+    {
+        var resilienceOptions = HttpResilienceOptionsPresets.ForHorizon();
+
+        var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+        var server = new Server(TestNetUrl, httpClient);
+
+        Console.WriteLine("   ForHorizon(): 3 retries, 200ms-5s exponential backoff with jitter");
+        Console.WriteLine("   Retries 408/429/5xx on GET queries and SubmitTransaction() POST; honors Retry-After");
+        Console.WriteLine("   Do not reuse for SEP service clients - see the HTTP retry tutorial");
+
+        try
+        {
+            var response = await server.RootAsync();
+            Console.WriteLine($"   Server version: {response.HorizonVersion}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"   Request failed after all retries: {ex.Message}");
         }
     }
 

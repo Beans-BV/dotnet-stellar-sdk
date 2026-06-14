@@ -122,7 +122,10 @@ public class StellarToml
     ///     `https://DOMAIN/.well-known/stellar.toml`
     /// </summary>
     /// <param name="domain">The domain name (without protocol). E.g., "example.com"</param>
-    /// <param name="resilienceOptions">Resilience options for HTTP requests. If null, default retry configuration is used.</param>
+    /// <param name="resilienceOptions">
+    ///     Resilience options for HTTP requests. If null, no resilience handler is added — requests are sent
+    ///     with no retries, circuit breaker, or timeout.
+    /// </param>
     /// <param name="bearerToken">(Optional) Bearer token in case the server requires it.</param>
     /// <param name="httpClient">
     ///     Optional HTTP client instance. <strong>Recommended:</strong> Pass a shared HttpClient instance
@@ -229,7 +232,10 @@ public class StellarToml
     ///     organizations can link to separate TOML files for each currency.
     /// </summary>
     /// <param name="tomlUrl">The full URL to the currency TOML file</param>
-    /// <param name="resilienceOptions">Resilience options for HTTP requests. If null, default retry configuration is used.</param>
+    /// <param name="resilienceOptions">
+    ///     Resilience options for HTTP requests. If null, no resilience handler is added — requests are sent
+    ///     with no retries, circuit breaker, or timeout.
+    /// </param>
     /// <param name="bearerToken">(Optional) Bearer token in case the server requires it.</param>
     /// <param name="httpClient">
     ///     Optional HTTP client instance. <strong>Recommended:</strong> Pass a shared HttpClient instance
