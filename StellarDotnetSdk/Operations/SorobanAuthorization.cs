@@ -107,6 +107,10 @@ public class KeyPairEntrySigner : ISorobanEntrySigner
 /// </summary>
 public static class SorobanAuthorization
 {
+    /// <summary>The single canonical-XDR-key comparer used to order and de-duplicate delegate addresses.</summary>
+    private static readonly IComparer<byte[]> XdrKeyComparer =
+        Comparer<byte[]>.Create((left, right) => left.AsSpan().SequenceCompareTo(right));
+
     /// <summary>
     ///     Builds and SHA-256-hashes the legacy V1 signing payload
     ///     (<c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION</c>).
@@ -316,7 +320,7 @@ public static class SorobanAuthorization
     ///         CAP-0071-01 root-bound preimage shared by the top-level account and every delegate, the
     ///         root expiration is updated to <paramref name="validUntilLedgerSeq" />, and the signatures
     ///         of all non-target nodes are preserved — mirroring the JS SDK's
-    ///         <c>authorizeEntry(..., forAddress)</c>. Throws <see cref="InvalidOperationException" />
+    ///         <c>authorizeEntry(..., forAddress)</c>. Throws <see cref="ArgumentException" />
     ///         when <paramref name="forAddress" /> matches no credential node.
     ///     </para>
     ///     <para>
@@ -329,8 +333,9 @@ public static class SorobanAuthorization
     ///         partial safety net this method throws an <see cref="InvalidOperationException" /> when the
     ///         expiration would change out from under an existing real (non-placeholder) signature it must
     ///         preserve — both when signing a delegate while the root already holds a signature over a
-    ///         different expiration, and when re-signing the root (without <paramref name="forAddress" />)
-    ///         while a delegate already holds one. Delegate-vs-delegate mismatches (re-signing one delegate
+    ///         different expiration, and when re-signing the root (whether <paramref name="forAddress" />
+    ///         is omitted or names the root address) while a delegate already holds one. Delegate-vs-delegate
+    ///         mismatches (re-signing one delegate
     ///         while a sibling is signed over a different expiration) cannot be detected here, because a
     ///         delegate node carries no expiration of its own; fix the expiration once (e.g. via
     ///         <see cref="BuildWithDelegatesEntry" />) before collecting signatures.
@@ -380,8 +385,9 @@ public static class SorobanAuthorization
 
         if (forAddress is not null && !KeyEqualsAddress(forAddress.ToXdrByteArray(), address))
         {
-            throw new InvalidOperationException(
-                "The authorization entry has no credential node for the requested forAddress.");
+            throw new ArgumentException(
+                "The authorization entry has no credential node for the requested forAddress.",
+                nameof(forAddress));
         }
 
         // Preserve the entry's existing variant unless the caller forces V1/V2 (matching the JS SDK,
@@ -440,13 +446,15 @@ public static class SorobanAuthorization
                 "entry (for example via BuildWithDelegatesEntry) so every party signs the same expiration.");
         }
 
-        // Symmetric guard for the opposite direction: re-signing only the root (no forAddress) rewrites
-        // the root expiration below while every delegate signature is preserved untouched. If any
-        // delegate already holds a real (non-SCVoid) signature, it was taken over the old expiration and
-        // would be silently invalidated. Fail fast for the same reason as above. (Delegate-vs-delegate
+        // Symmetric guard for the opposite direction: re-signing the root rewrites the root expiration
+        // below while every delegate signature is preserved untouched. If any delegate already holds a
+        // real (non-SCVoid) signature, it was taken over the old expiration and would be silently
+        // invalidated. Fail fast for the same reason as above. This keys on signRoot, not "forAddress is
+        // null", so it also fires when the caller targets the root by passing its address explicitly
+        // (forAddress == root.Address) — both paths re-sign the root identically. (Delegate-vs-delegate
         // mismatches — re-signing one delegate while a sibling is signed over a different expiration —
         // still cannot be detected here, as a delegate node carries no expiration of its own.)
-        if (forAddress is null && root.SignatureExpirationLedger != validUntilLedgerSeq &&
+        if (signRoot && root.SignatureExpirationLedger != validUntilLedgerSeq &&
             AnyDelegateHasRealSignature(withDelegates.Delegates))
         {
             throw new InvalidOperationException(
@@ -464,8 +472,9 @@ public static class SorobanAuthorization
 
         if (!matched)
         {
-            throw new InvalidOperationException(
-                "The authorization entry has no credential node for the requested forAddress.");
+            throw new ArgumentException(
+                "The authorization entry has no credential node for the requested forAddress.",
+                nameof(forAddress));
         }
 
         var newRoot = new SorobanAddressCredentials(
@@ -589,16 +598,18 @@ public static class SorobanAuthorization
         // such an entry incrementally with AuthorizeEntry(..., forAddress) instead.
         if (entry.Credentials is SorobanAddressCredentialsWithDelegates)
         {
-            throw new InvalidOperationException(
+            throw new ArgumentException(
                 "AuthorizeEntryWithDelegates expects ADDRESS or ADDRESS_V2 credentials, but the entry already " +
                 "carries delegated (WITH_DELEGATES) credentials. Sign an existing delegated entry incrementally " +
-                "with AuthorizeEntry(..., forAddress).");
+                "with AuthorizeEntry(..., forAddress).",
+                nameof(entry));
         }
 
         if (entry.Credentials is not SorobanAddressCredentialsBase existing)
         {
-            throw new InvalidOperationException(
-                "AuthorizeEntryWithDelegates requires address credentials (ADDRESS or ADDRESS_V2).");
+            throw new ArgumentException(
+                "AuthorizeEntryWithDelegates requires address credentials (ADDRESS or ADDRESS_V2).",
+                nameof(entry));
         }
 
         var nonce = existing.Nonce;
@@ -659,10 +670,11 @@ public static class SorobanAuthorization
     /// <param name="entry">
     ///     The (typically simulation-produced) entry to convert. Its ADDRESS or ADDRESS_V2 credentials
     ///     supply the root address and nonce. An entry that already carries delegated (WITH_DELEGATES)
-    ///     credentials is rejected with an <see cref="InvalidOperationException" /> (matching the JS
+    ///     credentials is rejected with an <see cref="ArgumentException" /> (matching the JS
     ///     SDK), because rebuilding it would discard every signature already collected on the existing
     ///     delegate tree; sign such an entry incrementally with
-    ///     <see cref="AuthorizeEntry(SorobanAuthorizationEntry, ISorobanEntrySigner, uint, Network, SorobanCredentialsVersion, ScAddress?)" />
+    ///     <see
+    ///         cref="AuthorizeEntry(SorobanAuthorizationEntry, ISorobanEntrySigner, uint, Network, SorobanCredentialsVersion, ScAddress?)" />
     ///     instead.
     /// </param>
     /// <param name="delegateAddresses">
@@ -689,13 +701,15 @@ public static class SorobanAuthorization
         {
             // Rebuilding an already-delegated entry would reset every collected signature to a
             // placeholder. Reject it (matching the JS SDK) rather than silently discarding signatures.
-            SorobanAddressCredentialsWithDelegates => throw new InvalidOperationException(
+            SorobanAddressCredentialsWithDelegates => throw new ArgumentException(
                 "BuildWithDelegatesEntry expects ADDRESS or ADDRESS_V2 credentials, but the entry already carries " +
                 "delegated (WITH_DELEGATES) credentials; rebuilding it would discard all collected signatures. " +
-                "Sign the existing entry incrementally with AuthorizeEntry(..., forAddress) instead."),
+                "Sign the existing entry incrementally with AuthorizeEntry(..., forAddress) instead.",
+                nameof(entry)),
             SorobanAddressCredentialsBase address => (address.Address, address.Nonce),
-            _ => throw new InvalidOperationException(
-                "BuildWithDelegatesEntry requires address credentials (ADDRESS or ADDRESS_V2)."),
+            _ => throw new ArgumentException(
+                "BuildWithDelegatesEntry requires address credentials (ADDRESS or ADDRESS_V2).",
+                nameof(entry)),
         };
 
         var delegates = new SorobanDelegateSignature[delegateAddresses.Count];
@@ -766,10 +780,6 @@ public static class SorobanAuthorization
             }
         }
     }
-
-    /// <summary>The single canonical-XDR-key comparer used to order and de-duplicate delegate addresses.</summary>
-    private static readonly IComparer<byte[]> XdrKeyComparer =
-        Comparer<byte[]>.Create((left, right) => left.AsSpan().SequenceCompareTo(right));
 
     private static ArgumentException DuplicateDelegateAddressException(string paramName)
     {

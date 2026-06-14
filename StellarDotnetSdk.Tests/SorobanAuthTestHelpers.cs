@@ -32,3 +32,27 @@ internal sealed class UnknownCredentials : SorobanCredentials
         throw new NotImplementedException();
     }
 }
+
+/// <summary>
+///     An <see cref="ISorobanEntrySigner" /> that authorizes as an arbitrary <see cref="ScAddress" />
+///     (e.g. a contract address) and returns a fixed signature payload. Exercises the non-Ed25519
+///     custom-account signer path end-to-end, which <see cref="KeyPairEntrySigner" /> (always an
+///     account address) cannot reach.
+/// </summary>
+internal sealed class FixedAddressSigner : ISorobanEntrySigner
+{
+    private readonly SCVal _signature;
+
+    public FixedAddressSigner(ScAddress address, SCVal signature)
+    {
+        SignerAddress = address;
+        _signature = signature;
+    }
+
+    public ScAddress SignerAddress { get; }
+
+    public SCVal Sign(byte[] payloadHash)
+    {
+        return _signature;
+    }
+}
