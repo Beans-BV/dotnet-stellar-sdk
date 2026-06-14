@@ -220,7 +220,8 @@ app — not a full sample yet (that's Q4 with the Wallet SDK).
 
 ### D6 — Protocol Evolution (15h)
 
-Protocol 27 may land Q3/Q4 — capacity reserved.
+Protocol 27 (CAP-71) Soroban authorization support was pulled forward and implemented ahead of
+schedule (PR #187), freeing the Q3/Q4 capacity originally reserved here.
 
 ### D7 — Developer Support (25h)
 
@@ -298,7 +299,8 @@ Q1 2027 investment.
 
 ### D6 — Protocol Evolution (15h)
 
-Protocol 27 expected in this window.
+Protocol 27 (CAP-71) Soroban authorization shipped early in Q3 (PR #187); this window now covers
+any follow-on protocol changes.
 
 ### D7 — Developer Support (25h)
 
@@ -412,7 +414,7 @@ netstandard2.1.
 | Wallet SDK scope creep | Medium | High | Follow Flutter SDK architecture strictly; SEPs done in Q3 |
 | MAUI libsodium fails on iOS AOT | Medium | Medium | Managed crypto fallback; validate in Q3 before Wallet SDK |
 | Unity IL2CPP strips required types | Medium | Medium | link.xml; test IL2CPP early in Q4 |
-| Protocol 27 lands unexpectedly | Low | Medium | 15h reserved Q3/Q4 |
+| Protocol 27 lands unexpectedly | Resolved | — | Implemented ahead of schedule (PR #187) |
 | SnakeCaseLower mismatch with Horizon fields | Low | Medium | Audit all 900 attributes; keep exceptions |
 | System.Linq.AsyncEnumerable conflict on net10.0 | High | Low | Remove System.Linq.Async NuGet |
 

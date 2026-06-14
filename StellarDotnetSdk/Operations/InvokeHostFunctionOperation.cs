@@ -6,12 +6,10 @@ using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
 using Asset = StellarDotnetSdk.Assets.Asset;
 using ContractExecutable = StellarDotnetSdk.Soroban.ContractExecutable;
-using Int64 = StellarDotnetSdk.Xdr.Int64;
 using SCSymbol = StellarDotnetSdk.Soroban.SCSymbol;
 using SCVal = StellarDotnetSdk.Soroban.SCVal;
 using FunctionType = StellarDotnetSdk.Xdr.SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum;
 using PreimageType = StellarDotnetSdk.Xdr.ContractIDPreimageType.ContractIDPreimageTypeEnum;
-using CredentialsType = StellarDotnetSdk.Xdr.SorobanCredentialsType.SorobanCredentialsTypeEnum;
 
 namespace StellarDotnetSdk.Operations;
 
@@ -634,162 +632,6 @@ public class SorobanAuthorizationEntry
         var reader = new XdrDataInputStream(bytes);
         var thisXdr = Xdr.SorobanAuthorizationEntry.Decode(reader);
         return FromXdr(thisXdr);
-    }
-}
-
-/// <summary>
-///     Abstract base class for Soroban authorization credentials.
-///     Credentials identify and authenticate the entity authorizing a contract invocation.
-/// </summary>
-/// <seealso cref="SorobanSourceAccountCredentials" />
-/// <seealso cref="SorobanAddressCredentials" />
-public abstract class SorobanCredentials
-{
-    /// <summary>
-    ///     Converts this <see cref="SorobanCredentials" /> to its XDR <see cref="Xdr.SorobanCredentials" /> representation.
-    /// </summary>
-    /// <returns>A <see cref="Xdr.SorobanCredentials" /> XDR object.</returns>
-    public Xdr.SorobanCredentials ToXdr()
-    {
-        return this switch
-        {
-            SorobanSourceAccountCredentials sourceAccount => sourceAccount.ToSorobanCredentialsXdr(),
-            SorobanAddressCredentials address => address.ToSorobanCredentialsXdr(),
-            _ => throw new InvalidOperationException("Unknown SorobanCredentials type"),
-        };
-    }
-
-    /// <summary>
-    ///     Creates a <see cref="SorobanCredentials" /> subclass instance from the given XDR
-    ///     <see cref="Xdr.SorobanCredentials" />.
-    /// </summary>
-    /// <param name="xdrSorobanCredentials">The XDR object to deserialize.</param>
-    /// <returns>
-    ///     A <see cref="SorobanSourceAccountCredentials" /> or <see cref="SorobanAddressCredentials" /> instance.
-    /// </returns>
-    public static SorobanCredentials FromXdr(Xdr.SorobanCredentials xdrSorobanCredentials)
-    {
-        return xdrSorobanCredentials.Discriminant.InnerValue switch
-        {
-            CredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT =>
-                new SorobanSourceAccountCredentials(),
-            CredentialsType.SOROBAN_CREDENTIALS_ADDRESS =>
-                SorobanAddressCredentials.FromSorobanCredentialsXdr(xdrSorobanCredentials),
-            _ => throw new InvalidOperationException("Unknown SorobanCredentials type"),
-        };
-    }
-}
-
-/// <summary>
-///     This simply uses the signature of the transaction (or operation, if any) source account and hence doesn't require
-///     any additional payload.
-/// </summary>
-public class SorobanSourceAccountCredentials : SorobanCredentials
-{
-    /// <summary>
-    ///     Converts this <see cref="SorobanSourceAccountCredentials" /> to its XDR
-    ///     <see cref="Xdr.SorobanCredentials" /> representation.
-    /// </summary>
-    /// <returns>A <see cref="Xdr.SorobanCredentials" /> XDR object.</returns>
-    public Xdr.SorobanCredentials ToSorobanCredentialsXdr()
-    {
-        return new Xdr.SorobanCredentials
-        {
-            Discriminant = new SorobanCredentialsType
-            {
-                InnerValue = CredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT,
-            },
-        };
-    }
-}
-
-/// <summary>
-///     Represents Soroban credentials that authenticate a specific address for contract invocation authorization.
-///     Contains the authorizing address, a unique nonce, a signature expiration ledger, and the cryptographic signature.
-/// </summary>
-public class SorobanAddressCredentials : SorobanCredentials
-{
-    /// <summary>
-    ///     Constructs a new <see cref="SorobanAddressCredentials" />.
-    /// </summary>
-    /// <param name="address">The address that authorizes the invocation.</param>
-    /// <param name="nonce">
-    ///     An arbitrary value that must be unique for all signatures performed by <paramref name="address" />
-    ///     until <paramref name="signatureExpirationLedger" />.
-    /// </param>
-    /// <param name="signatureExpirationLedger">The ledger sequence number on which the signature expires.</param>
-    /// <param name="signature">The cryptographic signature authenticating the authorization.</param>
-    public SorobanAddressCredentials(ScAddress address, long nonce, uint signatureExpirationLedger, SCVal signature)
-    {
-        Address = address ?? throw new ArgumentNullException(nameof(address), "Address cannot be null.");
-        Nonce = nonce;
-        SignatureExpirationLedger = signatureExpirationLedger;
-        Signature = signature ?? throw new ArgumentNullException(nameof(signature), "Signature cannot be null.");
-    }
-
-    /// <summary>
-    ///     The address that authorizes invocation.
-    /// </summary>
-    public ScAddress Address { get; }
-
-    /// <summary>
-    ///     Is an arbitrary value that is unique for all the signatures performed by <c>address</c> until
-    ///     <c>signatureExpirationLedger</c>. A good approach to generating this is to just use a random value.
-    /// </summary>
-    public long Nonce { get; }
-
-    /// <summary>
-    ///     The ledger sequence number on which the signature expires.
-    /// </summary>
-    public uint SignatureExpirationLedger { get; }
-
-    /// <summary>
-    ///     The cryptographic signature authenticating the authorization.
-    /// </summary>
-    public SCVal Signature { get; }
-
-    /// <summary>
-    ///     Creates a new <see cref="SorobanAddressCredentials" /> from the given XDR
-    ///     <see cref="Xdr.SorobanCredentials" />.
-    /// </summary>
-    /// <param name="xdrSorobanCredentials">The XDR object to deserialize.</param>
-    /// <returns>A new <see cref="SorobanAddressCredentials" /> instance.</returns>
-    public static SorobanAddressCredentials FromSorobanCredentialsXdr(Xdr.SorobanCredentials xdrSorobanCredentials)
-    {
-        if (xdrSorobanCredentials.Discriminant.InnerValue != CredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
-        {
-            throw new InvalidOperationException("Invalid SorobanCredentials type");
-        }
-
-        return new SorobanAddressCredentials(
-            ScAddress.FromXdr(xdrSorobanCredentials.Address.Address),
-            xdrSorobanCredentials.Address.Nonce.InnerValue,
-            xdrSorobanCredentials.Address.SignatureExpirationLedger.InnerValue,
-            SCVal.FromXdr(xdrSorobanCredentials.Address.Signature)
-        );
-    }
-
-    /// <summary>
-    ///     Converts this <see cref="SorobanAddressCredentials" /> to its XDR <see cref="Xdr.SorobanCredentials" />
-    ///     representation.
-    /// </summary>
-    /// <returns>A <see cref="Xdr.SorobanCredentials" /> XDR object.</returns>
-    public Xdr.SorobanCredentials ToSorobanCredentialsXdr()
-    {
-        return new Xdr.SorobanCredentials
-        {
-            Discriminant = new SorobanCredentialsType
-            {
-                InnerValue = CredentialsType.SOROBAN_CREDENTIALS_ADDRESS,
-            },
-            Address = new Xdr.SorobanAddressCredentials
-            {
-                Address = Address.ToXdr(),
-                Nonce = new Int64(Nonce),
-                SignatureExpirationLedger = new Uint32(SignatureExpirationLedger),
-                Signature = Signature.ToXdr(),
-            },
-        };
     }
 }
 

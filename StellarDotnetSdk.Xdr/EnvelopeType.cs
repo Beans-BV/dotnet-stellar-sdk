@@ -19,7 +19,8 @@ namespace StellarDotnetSdk.Xdr;
 //      ENVELOPE_TYPE_OP_ID = 6,
 //      ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7,
 //      ENVELOPE_TYPE_CONTRACT_ID = 8,
-//      ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9
+//      ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9,
+//      ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS = 10
 //  };
 
 //  ===========================================================================
@@ -37,6 +38,7 @@ public class EnvelopeType
         ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7,
         ENVELOPE_TYPE_CONTRACT_ID = 8,
         ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9,
+        ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS = 10,
     }
 
     public EnvelopeTypeEnum InnerValue { get; set; }
@@ -66,6 +68,7 @@ public class EnvelopeType
             case 7: return Create(EnvelopeTypeEnum.ENVELOPE_TYPE_POOL_REVOKE_OP_ID);
             case 8: return Create(EnvelopeTypeEnum.ENVELOPE_TYPE_CONTRACT_ID);
             case 9: return Create(EnvelopeTypeEnum.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION);
+            case 10: return Create(EnvelopeTypeEnum.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS);
             default:
                 throw new InvalidDataException("Unknown enum value: " + value);
         }
