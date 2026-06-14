@@ -286,6 +286,60 @@ public class Sep45ChallengeTest
             new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
     }
 
+    [TestMethod]
+    public void ReadChallenge_NeverThrowsRawException_OnMalformedInput()
+    {
+        // Decode trust boundary: a hostile/buggy server response must always surface as a
+        // WebAuthContractException, never a raw FormatException / ArgumentOutOfRangeException /
+        // IndexOutOfRangeException, etc. Sweeps a real challenge — every truncation offset, plus a
+        // length-prefix corrupted to 0x80000000 (> int.MaxValue) and 0x7FFFFFFF at every 4-byte word.
+        var result = TestChallengeBuilder.Build();
+        var server = result.ServerKeyPair.AccountId;
+        var homeDomains = new[] { TestChallengeBuilder.DefaultHomeDomain };
+        var bytes = System.Convert.FromBase64String(TestChallengeBuilder.EncodeEntries(result.Entries));
+
+        var leaks = new System.Collections.Generic.List<string>();
+
+        void Probe(byte[] payload, string label)
+        {
+            try
+            {
+                Sep45Challenge.ReadChallenge(
+                    System.Convert.ToBase64String(payload), server,
+                    TestChallengeBuilder.DefaultWebAuthContractId, homeDomains,
+                    TestChallengeBuilder.DefaultWebAuthDomain);
+            }
+            catch (WebAuthContractException)
+            {
+                // documented SEP-45 exception — acceptable
+            }
+            catch (System.Exception ex)
+            {
+                leaks.Add($"{label}: {ex.GetType().FullName}");
+            }
+        }
+
+        for (var len = 1; len < bytes.Length; len++)
+            Probe(bytes[..len], $"truncate@{len}");
+
+        var lengthWords = new[]
+        {
+            new byte[] { 0x80, 0x00, 0x00, 0x00 }, // > int.MaxValue  (would be ArgumentOutOfRangeException)
+            new byte[] { 0x7F, 0xFF, 0xFF, 0xFF }, // == int.MaxValue (huge but a valid int length)
+        };
+        foreach (var word in lengthWords)
+            for (var o = 0; o + 4 <= bytes.Length; o++)
+            {
+                var copy = (byte[])bytes.Clone();
+                System.Array.Copy(word, 0, copy, o, 4);
+                Probe(copy, $"corrupt@{o}");
+            }
+
+        Assert.AreEqual(0, leaks.Count,
+            "ReadChallenge leaked non-WebAuthContractException(s): " +
+            string.Join(", ", leaks.Take(8).Distinct()));
+    }
+
     private static SorobanAuthorizationEntry BuildMinimalEntry()
     {
         var serverKp = KeyPair.Random();

@@ -290,21 +290,35 @@ public class ClientWebAuthContract : IDisposable
     ///     The client account (C... contract address) being authenticated. The entry whose credentials
     ///     address equals this value is signed with every keypair in <paramref name="signers"/>.
     /// </param>
-    /// <param name="signers">Keypairs that authorize the client entry (a contract may require several).</param>
-    /// <param name="clientDomainAccountKeyPair">Optional local client-domain signing keypair.</param>
+    /// <param name="signers">
+    ///     Keypairs that authorize the client (contract) entry; a contract may require several. May be
+    ///     empty for a contract whose <c>__check_auth</c> requires no signatures (per SEP-45): the client
+    ///     entry is then returned with its signature-expiration ledger stamped but no signatures appended.
+    ///     An empty collection is intentional and is deliberately not rejected.
+    /// </param>
+    /// <param name="clientDomainAccountKeyPair">
+    ///     Optional local client-domain signing keypair. Self-sufficient: it carries its own account id,
+    ///     so <paramref name="clientDomainAccountId"/> is not needed when this is supplied.
+    /// </param>
     /// <param name="clientDomainSigningDelegate">
     ///     Optional async delegate invoked to sign the client-domain entry when the keypair isn't
-    ///     available locally (typically for remote signing). Requires <paramref name="clientDomainAccountId"/>
-    ///     so the correct entry can be located. Ignored if <paramref name="clientDomainAccountKeyPair"/> is provided.
+    ///     available locally (typically for remote signing). Must be paired with
+    ///     <paramref name="clientDomainAccountId"/> (which locates the entry to sign, since it cannot be
+    ///     derived from the delegate) — supplying one without the other throws
+    ///     <see cref="InvalidArgumentsException"/>. Ignored if <paramref name="clientDomainAccountKeyPair"/>
+    ///     is provided.
     /// </param>
     /// <param name="clientDomainAccountId">
     ///     The client-domain signing account (G... address) used to locate the client-domain entry when
-    ///     signing it via <paramref name="clientDomainSigningDelegate"/>.
+    ///     signing it via <paramref name="clientDomainSigningDelegate"/>. Required with — and only
+    ///     meaningful alongside — that delegate.
     /// </param>
     /// <returns>Base64 XDR of the re-encoded, signed authorization entries.</returns>
     /// <exception cref="InvalidArgumentsException">
-    ///     Thrown if an authorization entry's address matches neither the server, the client account, nor
-    ///     the client-domain account — i.e. no supplied signer can cover it. Failing here surfaces a clear
+    ///     Thrown if <paramref name="clientDomainSigningDelegate"/> and
+    ///     <paramref name="clientDomainAccountId"/> are not supplied together (absent a local keypair), or
+    ///     if an authorization entry's address matches neither the server, the client account, nor the
+    ///     client-domain account — i.e. no supplied signer can cover it. Failing here surfaces a clear
     ///     local error instead of letting the server reject the half-signed challenge with an opaque message.
     /// </exception>
     public async Task<string> SignAuthorizationEntriesAsync(
@@ -318,6 +332,21 @@ public class ClientWebAuthContract : IDisposable
         ArgumentException.ThrowIfNullOrEmpty(authorizationEntriesXdr);
         ArgumentException.ThrowIfNullOrEmpty(clientAccountId);
         ArgumentNullException.ThrowIfNull(signers);
+
+        // The client-domain entry is signed either locally (clientDomainAccountKeyPair, which carries its
+        // own account id) or remotely (clientDomainSigningDelegate). Remote signing additionally needs
+        // clientDomainAccountId because that is what locates the entry to hand to the delegate — it cannot
+        // be derived from the delegate. So, absent a local keypair, the delegate and the account id are a
+        // required pair; supplying exactly one would silently leave the client-domain entry unsigned, so
+        // reject that mismatch up front rather than emitting a half-signed challenge the server rejects.
+        if (clientDomainAccountKeyPair == null &&
+            (clientDomainSigningDelegate != null) != (clientDomainAccountId != null))
+        {
+            throw new InvalidArgumentsException(
+                "clientDomainSigningDelegate and clientDomainAccountId must be supplied together " +
+                "(the delegate signs the client-domain entry; the account id locates it); " +
+                "provide both, or use clientDomainAccountKeyPair for local signing.");
+        }
 
         var entries = Sep45Challenge.DecodeAuthorizationEntries(authorizationEntriesXdr);
         var latest = await GetLatestLedgerSequenceAsync().ConfigureAwait(false);
@@ -359,9 +388,9 @@ public class ClientWebAuthContract : IDisposable
                      entryAddress == clientDomainAccountId)
             {
                 entry.Credentials.Address.SignatureExpirationLedger = new Xdr.Uint32(expiration);
-                var signedEntry = await clientDomainSigningDelegate(entry).ConfigureAwait(false);
-                entries[i] = signedEntry
-                    ?? throw new InvalidArgumentsException("clientDomainSigningDelegate returned null.");
+                // The delegate's return is non-nullable by contract (see ClientDomainEntrySigningDelegate),
+                // so we trust that annotation rather than re-guarding its result here.
+                entries[i] = await clientDomainSigningDelegate(entry).ConfigureAwait(false);
             }
             else
             {
@@ -483,7 +512,10 @@ public class ClientWebAuthContract : IDisposable
     ///     End-to-end SEP-45 flow: fetch challenge, validate, sign, submit, return JWT.
     /// </summary>
     /// <param name="clientAccountId">Contract account being authenticated (C... address).</param>
-    /// <param name="signers">Keypairs whose account IDs cover the client entries in the challenge.</param>
+    /// <param name="signers">
+    ///     Keypairs that authorize the client (contract) entry. May be empty for a contract whose
+    ///     <c>__check_auth</c> requires no signatures (per SEP-45).
+    /// </param>
     /// <param name="homeDomain">Optional home domain override (for auth servers serving multiple home domains).</param>
     /// <param name="clientDomain">Optional client domain.</param>
     /// <param name="clientDomainAccountKeyPair">Optional local client-domain signing keypair.</param>

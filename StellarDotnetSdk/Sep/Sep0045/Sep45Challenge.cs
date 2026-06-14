@@ -140,7 +140,7 @@ public static class Sep45Challenge
     ///     Parse a base64-XDR encoded array of SorobanAuthorizationEntries, enforcing all SEP-45
     ///     structural rules (entry count, sub-invocations, contract id, function name, arg shape,
     ///     credentials type, shared invocation) and the web_auth_verify args map invariants
-    ///     (required keys, value types, nonce length, home domain allowlist, web_auth_domain,
+    ///     (required keys, value types, non-empty nonce, home domain allowlist, web_auth_domain,
     ///     web_auth_domain_account, paired client domain keys).
     /// </summary>
     /// <param name="authorizationEntriesXdr">
@@ -386,10 +386,17 @@ public static class Sep45Challenge
         }
         catch (Exception ex) when (
             ex is System.IO.InvalidDataException or System.IO.IOException or
-                IndexOutOfRangeException or System.IO.EndOfStreamException)
+                IndexOutOfRangeException or System.IO.EndOfStreamException or
+                FormatException or ArgumentOutOfRangeException)
         {
-            // XdrDataInputStream signals truncated/corrupt input with these; surface them as the
-            // documented SEP-45 exception type instead of letting raw decode exceptions escape.
+            // XdrDataInputStream signals truncated/corrupt input with these, so surface them all as the
+            // documented SEP-45 exception type instead of letting raw decode exceptions escape:
+            //   - a fixed-width read past the end -> IndexOutOfRange / EndOfStream / InvalidData;
+            //   - non-zero opaque padding         -> IOException;
+            //   - a var-length or string length prefix that runs off the buffer -> FormatException
+            //     ("can't read 'length'"), and a length prefix > int.MaxValue -> ArgumentOutOfRangeException.
+            // Unknown enum discriminants, over-large element counts, and excessive nesting are already
+            // raised as InvalidDataException by the generated XDR decoders, covered by the cases above.
             throw new Exceptions.InvalidArgumentsException(
                 "Malformed authorization entries XDR: " + ex.Message, ex);
         }

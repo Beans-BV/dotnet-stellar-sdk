@@ -296,6 +296,27 @@ public class ClientWebAuthContractTest
     }
 
     [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public async Task SignAuthorizationEntries_Throws_WhenDelegateSuppliedWithoutAccountId()
+    {
+        // A remote client-domain delegate is useless without clientDomainAccountId (which locates the
+        // entry to hand it) and with no local keypair fallback. The paired-null guard must reject this
+        // up front rather than silently leaving the client-domain entry unsigned.
+        var cdKp = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(clientDomain: "c.example", clientDomainKeyPair: cdKp);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            httpClient: new HttpClient(), latestLedgerOverride: 500);
+
+        await auth.SignAuthorizationEntriesAsync(
+            xdr, result.ClientContractId, new[] { KeyPair.Random() },
+            clientDomainSigningDelegate: e => Task.FromResult(e)); // clientDomainAccountId omitted
+    }
+
+    [TestMethod]
     public async Task SignAuthorizationEntries_SignsClientDomain_WithLocalKeyPair()
     {
         var clientSigner = KeyPair.Random();
