@@ -398,11 +398,11 @@ public class SorobanAuthorizationSigningTest
         var unsigned = new SorobanAuthorizationEntry(
             new SorobanAddressCredentialsWithDelegates(
                 new SorobanAddressCredentials(rootAddress, Nonce, 0, new SCString("")),
-                [new SorobanDelegateSignature(delegateAddress, new SCString("placeholder"), [])]),
+                [new SorobanDelegateSignature(delegateAddress, new SCVoid(), [])]),
             SampleInvocation());
 
-        // No forAddress: the signature goes to the root node; the delegate placeholder is preserved
-        // and the credential type stays WITH_DELEGATES (the version parameter is ignored).
+        // No forAddress: the signature goes to the root node; the unsigned (SCVoid) delegate placeholder
+        // is preserved and the credential type stays WITH_DELEGATES (the version parameter is ignored).
         var signed = SorobanAuthorization.AuthorizeEntry(unsigned, rootKp, ValidUntil, network);
 
         var cred = (SorobanAddressCredentialsWithDelegates)signed.Credentials;
@@ -411,7 +411,7 @@ public class SorobanAuthorizationSigningTest
         Assert.AreEqual(ValidUntil, cred.AddressCredentials.SignatureExpirationLedger);
         Assert.AreEqual(new KeyPairEntrySigner(rootKp).Sign(rootHash).ToXdrBase64(),
             cred.AddressCredentials.Signature.ToXdrBase64());
-        Assert.AreEqual("placeholder", ((SCString)cred.Delegates[0].Signature).InnerValue);
+        Assert.IsInstanceOfType(cred.Delegates[0].Signature, typeof(SCVoid));
     }
 
     [TestMethod]
@@ -716,6 +716,32 @@ public class SorobanAuthorizationSigningTest
         // Re-signing the delegate with the SAME expiration (1000) is the correct flow and must succeed.
         var reSigned = SorobanAuthorization.AuthorizeEntry(
             signed, delegateKp, 1000, network, forAddress: delegateAddress);
+        Assert.IsInstanceOfType(reSigned.Credentials, typeof(SorobanAddressCredentialsWithDelegates));
+    }
+
+    [TestMethod]
+    public void AuthorizeEntry_RootSignWithExpirationDifferingFromSignedDelegates_Throws()
+    {
+        var network = Network.Public();
+        var rootKp = KeyPair.Random();
+        var delegateKp = KeyPair.Random();
+        var unsigned = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentials(new ScAccountId(rootKp.AccountId), Nonce, 0, new SCString("")),
+            SampleInvocation());
+
+        // Root + delegate are signed committing to expiration 1000.
+        var signed = SorobanAuthorization.AuthorizeEntryWithDelegates(
+            unsigned, new KeyPairEntrySigner(rootKp), [new KeyPairEntrySigner(delegateKp)], 1000, network);
+
+        // Re-signing only the ROOT (no forAddress) with a DIFFERENT expiration (2000) bumps the root
+        // expiration while preserving the delegate signature taken over 1000, silently producing an
+        // entry the network rejects. The guard fails fast — symmetric to the delegate-side guard above.
+        var ex = Assert.ThrowsException<InvalidOperationException>(() =>
+            SorobanAuthorization.AuthorizeEntry(signed, rootKp, 2000, network));
+        Assert.IsTrue(ex.Message.Contains("expiration", StringComparison.OrdinalIgnoreCase));
+
+        // Re-signing the root with the SAME expiration (1000) is the correct flow and must succeed.
+        var reSigned = SorobanAuthorization.AuthorizeEntry(signed, rootKp, 1000, network);
         Assert.IsInstanceOfType(reSigned.Credentials, typeof(SorobanAddressCredentialsWithDelegates));
     }
 

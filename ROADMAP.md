@@ -220,8 +220,8 @@ app — not a full sample yet (that's Q4 with the Wallet SDK).
 
 ### D6 — Protocol Evolution (15h)
 
-Protocol 27 (CAP-71) Soroban authorization support is being implemented in Q2 2026 (PR #187),
-ahead of the originally reserved Q3/Q4 capacity.
+Protocol 27 (CAP-71) Soroban authorization support was pulled forward and implemented ahead of
+schedule (PR #187), freeing the Q3/Q4 capacity originally reserved here.
 
 ### D7 — Developer Support (25h)
 

@@ -29,19 +29,21 @@ public enum SorobanCredentialsVersion
     ///     signing helpers, matching the JS reference SDK, which preserves the credential type. Safe
     ///     for networks not yet on Protocol 27 when the input entry is itself V1.
     /// </summary>
-    Preserve,
+    // Explicit values: this enum's members are positional defaults (Preserve = default(T)); pin the
+    // numeric values so reordering the members cannot silently change a persisted/serialized value.
+    Preserve = 0,
 
     /// <summary>
     ///     Legacy <c>SOROBAN_CREDENTIALS_ADDRESS</c> (CAP-0046). Accepted on all protocol versions;
     ///     force this when targeting a network not yet on Protocol 27.
     /// </summary>
-    V1,
+    V1 = 1,
 
     /// <summary>
     ///     Protocol 27 address-bound <c>SOROBAN_CREDENTIALS_ADDRESS_V2</c> (CAP-0071-02); rejected by
     ///     pre-Protocol-27 networks. Expected to replace V1 in Protocol 28.
     /// </summary>
-    V2,
+    V2 = 2,
 }
 
 /// <summary>
@@ -231,8 +233,9 @@ public static class SorobanAuthorization
     /// </summary>
     /// <param name="entry">
     ///     The (typically simulation-produced) entry to sign. Address or delegated credentials are
-    ///     signed; source-account credentials are returned unchanged (a no-op), so callers can
-    ///     authorize every entry from a simulation result without special-casing the mix.
+    ///     signed; source-account credentials are returned unchanged (a no-op — <paramref name="forAddress" />
+    ///     and <paramref name="version" /> are ignored for them), so callers can authorize every entry
+    ///     from a simulation result without special-casing the mix.
     /// </param>
     /// <param name="signer">The Ed25519 key pair authorizing the invocation.</param>
     /// <param name="validUntilLedgerSeq">
@@ -276,8 +279,9 @@ public static class SorobanAuthorization
     /// </summary>
     /// <param name="entry">
     ///     The (typically simulation-produced) entry to sign. Address or delegated credentials are
-    ///     signed; source-account credentials are returned unchanged (a no-op), so callers can
-    ///     authorize every entry from a simulation result without special-casing the mix.
+    ///     signed; source-account credentials are returned unchanged (a no-op — <paramref name="forAddress" />
+    ///     and <paramref name="version" /> are ignored for them), so callers can authorize every entry
+    ///     from a simulation result without special-casing the mix.
     /// </param>
     /// <param name="signer">The signer authorizing the invocation.</param>
     /// <param name="validUntilLedgerSeq">
@@ -322,11 +326,14 @@ public static class SorobanAuthorization
     ///         signing the same delegated entry must therefore pass the <b>same</b>
     ///         <paramref name="validUntilLedgerSeq" />: re-signing with a different value invalidates the
     ///         signatures already attached, because their payloads embedded the old expiration. As a
-    ///         partial safety net this method throws an <see cref="InvalidOperationException" /> when
-    ///         asked to sign a delegate while the root already holds a real (non-placeholder) signature
-    ///         over a different expiration; delegate-only mismatches cannot be detected here, so fix the
-    ///         expiration once (e.g. via <see cref="BuildWithDelegatesEntry" />) before collecting
-    ///         signatures.
+    ///         partial safety net this method throws an <see cref="InvalidOperationException" /> when the
+    ///         expiration would change out from under an existing real (non-placeholder) signature it must
+    ///         preserve — both when signing a delegate while the root already holds a signature over a
+    ///         different expiration, and when re-signing the root (without <paramref name="forAddress" />)
+    ///         while a delegate already holds one. Delegate-vs-delegate mismatches (re-signing one delegate
+    ///         while a sibling is signed over a different expiration) cannot be detected here, because a
+    ///         delegate node carries no expiration of its own; fix the expiration once (e.g. via
+    ///         <see cref="BuildWithDelegatesEntry" />) before collecting signatures.
     ///     </para>
     /// </remarks>
     public static SorobanAuthorizationEntry AuthorizeEntry(
@@ -348,8 +355,10 @@ public static class SorobanAuthorization
             SorobanAddressCredentialsBase existing =>
                 AuthorizeAddressEntry(entry, existing, signer, validUntilLedgerSeq, network, version, forAddress),
             // Source-account credentials are authorized by the transaction source-account signature, so
-            // there is nothing to sign here; return the entry unchanged, matching the JS and Java SDKs.
-            // This lets callers authorize every entry from simulation without special-casing the mix.
+            // there is nothing to sign here; return the entry unchanged (forAddress and version have no
+            // effect and are ignored), matching the JS and Java SDKs. This lets callers authorize every
+            // entry from simulation — passing a uniform version/forAddress across a mixed list — without
+            // special-casing the source-account entries.
             SorobanSourceAccountCredentials => entry,
             _ => throw new InvalidOperationException(
                 $"Unknown SorobanCredentials type: {entry.Credentials.GetType()}"),
@@ -431,6 +440,22 @@ public static class SorobanAuthorization
                 "entry (for example via BuildWithDelegatesEntry) so every party signs the same expiration.");
         }
 
+        // Symmetric guard for the opposite direction: re-signing only the root (no forAddress) rewrites
+        // the root expiration below while every delegate signature is preserved untouched. If any
+        // delegate already holds a real (non-SCVoid) signature, it was taken over the old expiration and
+        // would be silently invalidated. Fail fast for the same reason as above. (Delegate-vs-delegate
+        // mismatches — re-signing one delegate while a sibling is signed over a different expiration —
+        // still cannot be detected here, as a delegate node carries no expiration of its own.)
+        if (forAddress is null && root.SignatureExpirationLedger != validUntilLedgerSeq &&
+            AnyDelegateHasRealSignature(withDelegates.Delegates))
+        {
+            throw new InvalidOperationException(
+                "Cannot re-sign the root with a validUntilLedgerSeq that differs from the entry's current " +
+                "expiration while delegates already hold signatures over the old expiration; those preserved " +
+                "delegate signatures would be invalid. Re-build the entry (for example via " +
+                "BuildWithDelegatesEntry) so every party signs the same expiration.");
+        }
+
         var delegates = withDelegates.Delegates;
         if (forAddressKey is not null)
         {
@@ -488,6 +513,30 @@ public static class SorobanAuthorization
     private static bool KeyEqualsAddress(byte[] key, ScAddress address)
     {
         return key.AsSpan().SequenceEqual(address.ToXdrByteArray());
+    }
+
+    /// <summary>
+    ///     Whether any node in the delegate forest (including nested delegates) carries a real
+    ///     (non-<see cref="SCVoid" />) signature. Used to fail fast when re-signing the root would bump
+    ///     the expiration out from under an already-signed delegate. Null nodes are ignored here; they
+    ///     are rejected later by <see cref="RouteDelegateSignature" /> or serialization.
+    /// </summary>
+    private static bool AnyDelegateHasRealSignature(SorobanDelegateSignature[] delegates)
+    {
+        foreach (var current in delegates)
+        {
+            if (current is null)
+            {
+                continue;
+            }
+
+            if (current.Signature is not SCVoid || AnyDelegateHasRealSignature(current.NestedDelegates))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
