@@ -25,6 +25,7 @@ public class ClientWebAuthContract : IDisposable
     private readonly Network _network;
     private readonly string _serverSigningKey;
     private readonly string _serverHomeDomain;
+    private readonly string _webAuthDomain;
     private readonly string _sorobanRpcUrl;
     private readonly HttpClient _httpClient;
     private readonly Dictionary<string, string>? _httpRequestHeaders;
@@ -32,6 +33,12 @@ public class ClientWebAuthContract : IDisposable
     private readonly bool _ownsHttpClient;
 
     /// <summary>Creates a new instance with explicit configuration.</summary>
+    /// <param name="webAuthDomain">
+    ///     The <c>web_auth_domain</c> the server binds challenges to. Servers configure this independently
+    ///     of the endpoint URL (the reference server uses the home domain; anchor-platform uses a dedicated
+    ///     config value), so it is taken as configuration here rather than derived from
+    ///     <paramref name="authEndpoint"/>. Defaults to <paramref name="serverHomeDomain"/> when null.
+    /// </param>
     public ClientWebAuthContract(
         string authEndpoint,
         string webAuthContractId,
@@ -39,6 +46,7 @@ public class ClientWebAuthContract : IDisposable
         string serverSigningKey,
         string serverHomeDomain,
         string sorobanRpcUrl,
+        string? webAuthDomain = null,
         HttpClient? httpClient = null,
         Dictionary<string, string>? httpRequestHeaders = null,
         uint? signatureExpirationLedgers = null,
@@ -56,6 +64,7 @@ public class ClientWebAuthContract : IDisposable
         _network = network;
         _serverSigningKey = serverSigningKey;
         _serverHomeDomain = serverHomeDomain;
+        _webAuthDomain = string.IsNullOrEmpty(webAuthDomain) ? serverHomeDomain : webAuthDomain;
         _sorobanRpcUrl = sorobanRpcUrl;
         _httpRequestHeaders = httpRequestHeaders;
         _signatureExpirationLedgers = signatureExpirationLedgers ?? DefaultSignatureExpirationLedgers;
@@ -80,7 +89,8 @@ public class ClientWebAuthContract : IDisposable
         HttpResilienceOptions? resilienceOptions = null,
         string? bearerToken = null,
         HttpClient? httpClient = null,
-        Dictionary<string, string>? httpRequestHeaders = null)
+        Dictionary<string, string>? httpRequestHeaders = null,
+        string? webAuthDomain = null)
     {
         var toml = await StellarToml
             .FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient, httpRequestHeaders)
@@ -102,6 +112,7 @@ public class ClientWebAuthContract : IDisposable
             toml.GeneralInformation.SigningKey!,
             domain,
             sorobanRpcUrl,
+            webAuthDomain,
             httpClient,
             httpRequestHeaders,
             resilienceOptions: resilienceOptions);
@@ -170,9 +181,15 @@ public class ClientWebAuthContract : IDisposable
         {
             resp = await _httpClient.SendAsync(req).ConfigureAwait(false);
         }
+        catch (TaskCanceledException ex)
+        {
+            throw new ChallengeForContractsRequestErrorException(
+                0, $"Request to '{_authEndpoint}' timed out before a response was received.", ex);
+        }
         catch (HttpRequestException ex)
         {
-            throw new ChallengeForContractsRequestErrorException(0, ex.Message);
+            throw new ChallengeForContractsRequestErrorException(
+                0, $"Failed to reach '{_authEndpoint}': {ex.Message}", ex);
         }
 
         using (resp)
@@ -190,7 +207,7 @@ public class ClientWebAuthContract : IDisposable
             catch (System.Text.Json.JsonException ex)
             {
                 throw new ChallengeForContractsRequestErrorException(
-                    (int)resp.StatusCode, "Malformed JSON: " + ex.Message);
+                    (int)resp.StatusCode, "Response body was not valid JSON: " + ex.Message, ex);
             }
 
             if (parsed == null || string.IsNullOrEmpty(parsed.AuthorizationEntries))
@@ -211,21 +228,26 @@ public class ClientWebAuthContract : IDisposable
     ///     Optional expected client-domain signing account. If null, the challenge must not contain
     ///     client-domain keys.
     /// </param>
+    /// <param name="homeDomain">
+    ///     Optional home domain the challenge was requested for. Defaults to the configured server home
+    ///     domain; supply this when the auth server serves multiple home domains so the challenge's
+    ///     <c>home_domain</c> is validated against the one actually requested.
+    /// </param>
     public void ValidateChallenge(
         string authorizationEntriesXdr,
         string clientAccountId,
-        string? clientDomainAccountId = null)
+        string? clientDomainAccountId = null,
+        string? homeDomain = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(authorizationEntriesXdr);
         ArgumentException.ThrowIfNullOrEmpty(clientAccountId);
 
-        var webAuthHost = new Uri(_authEndpoint).Host;
         var parsed = Sep45Challenge.ReadChallenge(
             authorizationEntriesXdr,
             _serverSigningKey,
             _webAuthContractId,
-            new[] { _serverHomeDomain },
-            webAuthHost);
+            new[] { string.IsNullOrEmpty(homeDomain) ? _serverHomeDomain : homeDomain },
+            _webAuthDomain);
 
         if (parsed.ClientAccountId != clientAccountId)
             throw new InvalidClientAccountException(
@@ -260,34 +282,46 @@ public class ClientWebAuthContract : IDisposable
     }
 
     /// <summary>
-    ///     Signs SEP-45 authorization entries for the supplied signers and optionally the client-domain account.
+    ///     Signs SEP-45 authorization entries: the client (contract) entry with every supplied signer,
+    ///     and optionally the client-domain entry with a local keypair or a remote signing delegate.
     /// </summary>
     /// <param name="authorizationEntriesXdr">Base64 XDR of the challenge's authorization entries.</param>
-    /// <param name="signers">Keypairs whose account IDs match client-entry credentials addresses.</param>
+    /// <param name="clientAccountId">
+    ///     The client account (C... contract address) being authenticated. The entry whose credentials
+    ///     address equals this value is signed with every keypair in <paramref name="signers"/>.
+    /// </param>
+    /// <param name="signers">Keypairs that authorize the client entry (a contract may require several).</param>
     /// <param name="clientDomainAccountKeyPair">Optional local client-domain signing keypair.</param>
     /// <param name="clientDomainSigningDelegate">
     ///     Optional async delegate invoked to sign the client-domain entry when the keypair isn't
-    ///     available locally (typically for remote signing). Ignored if <paramref name="clientDomainAccountKeyPair"/> is provided.
+    ///     available locally (typically for remote signing). Requires <paramref name="clientDomainAccountId"/>
+    ///     so the correct entry can be located. Ignored if <paramref name="clientDomainAccountKeyPair"/> is provided.
+    /// </param>
+    /// <param name="clientDomainAccountId">
+    ///     The client-domain signing account (G... address) used to locate the client-domain entry when
+    ///     signing it via <paramref name="clientDomainSigningDelegate"/>.
     /// </param>
     /// <returns>Base64 XDR of the re-encoded, signed authorization entries.</returns>
+    /// <exception cref="InvalidArgumentsException">
+    ///     Thrown if an authorization entry's address matches neither the server, the client account, nor
+    ///     the client-domain account — i.e. no supplied signer can cover it. Failing here surfaces a clear
+    ///     local error instead of letting the server reject the half-signed challenge with an opaque message.
+    /// </exception>
     public async Task<string> SignAuthorizationEntriesAsync(
         string authorizationEntriesXdr,
+        string clientAccountId,
         ICollection<KeyPair> signers,
         KeyPair? clientDomainAccountKeyPair = null,
-        ClientDomainEntrySigningDelegate? clientDomainSigningDelegate = null)
+        ClientDomainEntrySigningDelegate? clientDomainSigningDelegate = null,
+        string? clientDomainAccountId = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(authorizationEntriesXdr);
+        ArgumentException.ThrowIfNullOrEmpty(clientAccountId);
         ArgumentNullException.ThrowIfNull(signers);
 
         var entries = Sep45Challenge.DecodeAuthorizationEntries(authorizationEntriesXdr);
         var latest = await GetLatestLedgerSequenceAsync().ConfigureAwait(false);
         var expiration = latest + _signatureExpirationLedgers;
-
-        // Build lookup keyed by account id. Client-domain kp (if any) joins same map.
-        var signerMap = new Dictionary<string, KeyPair>();
-        foreach (var kp in signers) signerMap[kp.AccountId] = kp;
-        if (clientDomainAccountKeyPair != null)
-            signerMap[clientDomainAccountKeyPair.AccountId] = clientDomainAccountKeyPair;
 
         for (var i = 0; i < entries.Length; i++)
         {
@@ -299,22 +333,45 @@ public class ClientWebAuthContract : IDisposable
             }
 
             var entryAddress = CredentialsAddressToStrKey(entry);
-            if (entryAddress == _serverSigningKey)
-                continue; // server entry is already signed — do not touch
 
-            if (signerMap.TryGetValue(entryAddress, out var kp))
+            if (entryAddress == _serverSigningKey)
+            {
+                continue; // server entry is already signed by the server — do not touch
+            }
+
+            if (entryAddress == clientAccountId)
+            {
+                // Client (contract) entry: authorize with every supplied signer. The signature
+                // expiration must be stamped before hashing because it is part of the signed preimage.
+                entry.Credentials.Address.SignatureExpirationLedger = new Xdr.Uint32(expiration);
+                var hash = Sep45Challenge.ComputeAuthorizationHash(entry, _network);
+                foreach (var kp in signers)
+                    Sep45Challenge.AppendSignature(entry, kp.PublicKey, kp.Sign(hash));
+            }
+            else if (clientDomainAccountKeyPair != null && entryAddress == clientDomainAccountKeyPair.AccountId)
             {
                 entry.Credentials.Address.SignatureExpirationLedger = new Xdr.Uint32(expiration);
                 var hash = Sep45Challenge.ComputeAuthorizationHash(entry, _network);
-                var sig = kp.Sign(hash);
-                Sep45Challenge.InstallSignatureVector(entry, kp.PublicKey, sig);
+                Sep45Challenge.AppendSignature(
+                    entry, clientDomainAccountKeyPair.PublicKey, clientDomainAccountKeyPair.Sign(hash));
             }
-            else if (clientDomainSigningDelegate != null)
+            else if (clientDomainSigningDelegate != null && clientDomainAccountId != null &&
+                     entryAddress == clientDomainAccountId)
             {
                 entry.Credentials.Address.SignatureExpirationLedger = new Xdr.Uint32(expiration);
-                entries[i] = await clientDomainSigningDelegate(entry).ConfigureAwait(false);
+                var signedEntry = await clientDomainSigningDelegate(entry).ConfigureAwait(false);
+                entries[i] = signedEntry
+                    ?? throw new InvalidArgumentsException("clientDomainSigningDelegate returned null.");
             }
-            // else: leave the entry alone; the server will reject it on submit
+            else
+            {
+                throw new InvalidArgumentsException(
+                    $"No signer available for authorization entry with address '{entryAddress}'. " +
+                    $"Expected the client account '{clientAccountId}'" +
+                    (clientDomainAccountKeyPair != null || clientDomainAccountId != null
+                        ? $" or the client-domain account '{clientDomainAccountKeyPair?.AccountId ?? clientDomainAccountId}'."
+                        : "."));
+            }
         }
 
         return Sep45Challenge.EncodeAuthorizationEntries(entries);
@@ -363,9 +420,14 @@ public class ClientWebAuthContract : IDisposable
         {
             resp = await _httpClient.SendAsync(req).ConfigureAwait(false);
         }
+        catch (TaskCanceledException ex)
+        {
+            throw new SubmitSignedChallengeForContractsTimeoutResponseException(ex);
+        }
         catch (HttpRequestException ex)
         {
-            throw new SubmitSignedChallengeForContractsUnknownResponseException(0, ex.Message);
+            throw new SubmitSignedChallengeForContractsUnknownResponseException(
+                0, $"Failed to reach '{_authEndpoint}': {ex.Message}", ex);
         }
 
         using (resp)
@@ -382,9 +444,9 @@ public class ClientWebAuthContract : IDisposable
                         parsed = System.Text.Json.JsonSerializer.Deserialize<SubmitChallengeForContractsResponse>(
                             body, StellarDotnetSdk.Converters.JsonOptions.DefaultOptions);
                     }
-                    catch (System.Text.Json.JsonException)
+                    catch (System.Text.Json.JsonException ex)
                     {
-                        throw new SubmitSignedChallengeForContractsUnknownResponseException(status, body);
+                        throw new SubmitSignedChallengeForContractsUnknownResponseException(status, body, ex);
                     }
 
                     if (parsed == null)
@@ -411,7 +473,9 @@ public class ClientWebAuthContract : IDisposable
         {
             ScAccountId acc => acc.InnerValue,
             ScContractId con => con.InnerValue,
-            _ => throw new InvalidOperationException("Unsupported credential address type"),
+            _ => throw new InvalidSep45ChallengeException(
+                $"Unsupported credentials address type '{soroban.GetType().Name}'; " +
+                "only account (G...) and contract (C...) addresses are valid in SEP-45 challenges."),
         };
     }
 
@@ -445,8 +509,10 @@ public class ClientWebAuthContract : IDisposable
             if (string.IsNullOrEmpty(clientDomain))
                 throw new MissingClientDomainException();
 
+            // Do not forward the auth server's request headers (which may carry credentials) to the
+            // client domain — it is a different origin.
             var clientToml = await StellarToml
-                .FromDomainAsync(clientDomain, null, null, _httpClient, _httpRequestHeaders)
+                .FromDomainAsync(clientDomain, null, null, _httpClient)
                 .ConfigureAwait(false);
             if (string.IsNullOrEmpty(clientToml.GeneralInformation.SigningKey))
                 throw new NoClientDomainSigningKeyFoundException(clientDomain);
@@ -457,10 +523,11 @@ public class ClientWebAuthContract : IDisposable
             .ConfigureAwait(false);
         var xdr = challenge.AuthorizationEntries!;
 
-        ValidateChallenge(xdr, clientAccountId, resolvedClientDomainAccountId);
+        ValidateChallenge(xdr, clientAccountId, resolvedClientDomainAccountId, homeDomain);
 
         var signed = await SignAuthorizationEntriesAsync(
-            xdr, signers, clientDomainAccountKeyPair, clientDomainSigningDelegate).ConfigureAwait(false);
+            xdr, clientAccountId, signers, clientDomainAccountKeyPair,
+            clientDomainSigningDelegate, resolvedClientDomainAccountId).ConfigureAwait(false);
 
         return await SendSignedChallengeAsync(signed).ConfigureAwait(false);
     }

@@ -11,7 +11,7 @@ namespace StellarDotnetSdk.Sep.Sep0045;
 /// <param name="HomeDomain">The home domain the challenge was issued for.</param>
 /// <param name="WebAuthDomain">The web auth domain binding the challenge.</param>
 /// <param name="WebAuthDomainAccountId">The server account that signed the web auth domain commitment (G... address).</param>
-/// <param name="Nonce">The 32-byte nonce embedded in the challenge.</param>
+/// <param name="Nonce">The server-generated nonce string embedded in the challenge.</param>
 /// <param name="ClientDomain">Optional client domain the challenge was requested from.</param>
 /// <param name="ClientDomainAccountId">Optional client domain's signing account (G... address); paired with <paramref name="ClientDomain" />.</param>
 public sealed record ChallengeAuthorizationEntries(
@@ -20,6 +20,6 @@ public sealed record ChallengeAuthorizationEntries(
     string HomeDomain,
     string WebAuthDomain,
     string WebAuthDomainAccountId,
-    byte[] Nonce,
+    string Nonce,
     string? ClientDomain,
     string? ClientDomainAccountId);

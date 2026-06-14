@@ -153,7 +153,7 @@ public class Sep45ChallengeTest
         Assert.AreEqual(TestChallengeBuilder.DefaultHomeDomain, parsed.HomeDomain);
         Assert.AreEqual(TestChallengeBuilder.DefaultWebAuthDomain, parsed.WebAuthDomain);
         Assert.AreEqual(result.ServerKeyPair.AccountId, parsed.WebAuthDomainAccountId);
-        Assert.AreEqual(32, parsed.Nonce.Length);
+        Assert.AreEqual(result.Nonce, parsed.Nonce);
         Assert.IsNull(parsed.ClientDomain);
         Assert.IsNull(parsed.ClientDomainAccountId);
     }
@@ -177,9 +177,9 @@ public class Sep45ChallengeTest
 
     [TestMethod]
     [ExpectedException(typeof(InvalidNonceException))]
-    public void ReadChallenge_Throws_WhenNonceWrongLength()
+    public void ReadChallenge_Throws_WhenNonceEmpty()
     {
-        var result = TestChallengeBuilder.Build(nonce: new byte[16]);
+        var result = TestChallengeBuilder.Build(nonce: "");
         var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
         Sep45Challenge.ReadChallenge(
             xdr, result.ServerKeyPair.AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
@@ -219,6 +219,71 @@ public class Sep45ChallengeTest
             new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
         Assert.AreEqual("wallet.example", parsed.ClientDomain);
         Assert.AreEqual(cdKp.AccountId, parsed.ClientDomainAccountId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public void ReadChallenge_Throws_OnInvalidBase64()
+    {
+        Sep45Challenge.ReadChallenge(
+            "not valid base64!!", KeyPair.Random().AccountId,
+            TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public void ReadChallenge_Throws_OnTruncatedXdr()
+    {
+        // Valid base64, but the XDR is cut in half — decode hits EOF. Must surface as the documented
+        // SEP-45 exception type, not a raw IndexOutOfRangeException/InvalidDataException.
+        var result = TestChallengeBuilder.Build();
+        var bytes = System.Convert.FromBase64String(TestChallengeBuilder.EncodeEntries(result.Entries));
+        var truncated = System.Convert.ToBase64String(bytes[..(bytes.Length / 2)]);
+        Sep45Challenge.ReadChallenge(
+            truncated, result.ServerKeyPair.AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public void ReadChallenge_Throws_OnImplausibleEntryCount()
+    {
+        // 4-byte payload claiming 100,000,000 entries — must be rejected before allocating, not OOM.
+        var stream = new XdrDataOutputStream();
+        stream.WriteInt(100_000_000);
+        var b64 = System.Convert.ToBase64String(stream.ToArray());
+        Sep45Challenge.ReadChallenge(
+            b64, KeyPair.Random().AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public void ReadChallenge_Throws_OnTrailingBytes()
+    {
+        var result = TestChallengeBuilder.Build();
+        var bytes = System.Convert.FromBase64String(TestChallengeBuilder.EncodeEntries(result.Entries));
+        var withTrailing = bytes.Concat(new byte[] { 1, 2, 3, 4 }).ToArray();
+        Sep45Challenge.ReadChallenge(
+            System.Convert.ToBase64String(withTrailing), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public void ReadChallenge_Throws_WhenEntryHasUnexpectedCredentialsAddress()
+    {
+        // Replace the client entry's credentials address with a foreign account not named anywhere in
+        // the args map. The allowlist check must reject it.
+        var result = TestChallengeBuilder.Build();
+        var foreign = KeyPair.Random();
+        result.Entries[1].Credentials.Address.Address = new ScAccountId(foreign.AccountId).ToXdr();
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        Sep45Challenge.ReadChallenge(
+            xdr, result.ServerKeyPair.AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
     }
 
     private static SorobanAuthorizationEntry BuildMinimalEntry()

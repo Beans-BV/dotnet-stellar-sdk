@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -10,6 +11,8 @@ using Moq.Protected;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Sep.Sep0045;
 using StellarDotnetSdk.Sep.Sep0045.Exceptions;
+using StellarDotnetSdk.Soroban;
+using StellarDotnetSdk.Xdr;
 
 namespace StellarDotnetSdk.Tests.Sep.Sep0045;
 
@@ -157,6 +160,7 @@ public class ClientWebAuthContractTest
             AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
             Network.Test(), result.ServerKeyPair.AccountId,
             TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            webAuthDomain: TestChallengeBuilder.DefaultWebAuthDomain,
             httpClient: new HttpClient());
         auth.ValidateChallenge(xdr, result.ClientContractId);
     }
@@ -171,6 +175,7 @@ public class ClientWebAuthContractTest
             AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
             Network.Test(), result.ServerKeyPair.AccountId,
             TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            webAuthDomain: TestChallengeBuilder.DefaultWebAuthDomain,
             httpClient: new HttpClient());
         // Use an all-zero contract id as a definitely-different client account
         var differentClientCid = StellarDotnetSdk.StrKey.EncodeContractId(new byte[32]);
@@ -188,6 +193,7 @@ public class ClientWebAuthContractTest
             AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
             Network.Test(), result.ServerKeyPair.AccountId,
             TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            webAuthDomain: TestChallengeBuilder.DefaultWebAuthDomain,
             httpClient: new HttpClient());
         var differentKp = KeyPair.Random();
         auth.ValidateChallenge(xdr, result.ClientContractId, differentKp.AccountId);
@@ -204,18 +210,19 @@ public class ClientWebAuthContractTest
             AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
             Network.Test(), result.ServerKeyPair.AccountId,
             TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            webAuthDomain: TestChallengeBuilder.DefaultWebAuthDomain,
             httpClient: new HttpClient());
         // Caller passes null (no client domain expected) but challenge contains one → must throw
         auth.ValidateChallenge(xdr, result.ClientContractId);
     }
 
     [TestMethod]
-    public async Task SignAuthorizationEntries_ProducesVerifiableSignature_ForClientSigner()
+    public async Task SignAuthorizationEntries_SignsClientContractEntry_Verifiably()
     {
-        // Use the client account's G-address as the client-contract identifier so that the
-        // signer's AccountId matches the credentials address.
+        // Realistic SEP-45: the client account is a C... contract; the wallet signs its entry
+        // with a G... ed25519 keypair that is a signer of that contract.
         var signer = KeyPair.Random();
-        var result = TestChallengeBuilder.Build(clientContractId: signer.AccountId);
+        var result = TestChallengeBuilder.Build(); // default: random C... client account
         var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
 
         using var auth = new TestableClientWebAuthContract(
@@ -224,21 +231,76 @@ public class ClientWebAuthContractTest
             TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
             httpClient: new HttpClient(), latestLedgerOverride: 500);
 
-        var signed = await auth.SignAuthorizationEntriesAsync(xdr, new[] { signer });
+        var signed = await auth.SignAuthorizationEntriesAsync(xdr, result.ClientContractId, new[] { signer });
         var entries = TestChallengeBuilder.DecodeEntries(signed);
-        // Client entry (index 1) should now carry a non-empty signature vector.
-        Assert.IsTrue(entries[1].Credentials.Address.Signature.Vec!.InnerValue.Length > 0);
+        var clientEntry = entries[1]; // order: [server, client, (client-domain)]
+
+        // Expiration stamped to latestLedger (500) + DefaultSignatureExpirationLedgers (10).
+        Assert.AreEqual(510u, clientEntry.Credentials.Address.SignatureExpirationLedger.InnerValue);
+
+        var sigs = ReadSignatures(clientEntry);
+        Assert.AreEqual(1, sigs.Length);
+        CollectionAssert.AreEqual(signer.PublicKey, sigs[0].PublicKey);
+        // Signature must verify against the hash of the FINAL stamped entry (catches sign-before-stamp).
+        var hash = Sep45Challenge.ComputeAuthorizationHash(clientEntry, Network.Test());
+        Assert.IsTrue(signer.Verify(hash, sigs[0].Signature));
+
+        // The server entry must be left untouched.
+        Sep45Challenge.VerifyServerSignature(entries[0], result.ServerKeyPair.AccountId, Network.Test());
+    }
+
+    [TestMethod]
+    public async Task SignAuthorizationEntries_Multisig_AppendsVerifiableSignatures()
+    {
+        // A contract account requiring M-of-N: every signer must produce a distinct, verifiable map.
+        var s1 = KeyPair.Random();
+        var s2 = KeyPair.Random();
+        var result = TestChallengeBuilder.Build();
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            httpClient: new HttpClient(), latestLedgerOverride: 500);
+
+        var signed = await auth.SignAuthorizationEntriesAsync(xdr, result.ClientContractId, new[] { s1, s2 });
+        var clientEntry = TestChallengeBuilder.DecodeEntries(signed)[1];
+        var sigs = ReadSignatures(clientEntry);
+
+        Assert.AreEqual(2, sigs.Length);
+        var hash = Sep45Challenge.ComputeAuthorizationHash(clientEntry, Network.Test());
+        foreach (var kp in new[] { s1, s2 })
+        {
+            var match = sigs.FirstOrDefault(x => x.PublicKey.SequenceEqual(kp.PublicKey));
+            Assert.IsNotNull(match.Signature, $"no signature found for {kp.AccountId}");
+            Assert.IsTrue(kp.Verify(hash, match.Signature), $"signature does not verify for {kp.AccountId}");
+        }
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public async Task SignAuthorizationEntries_Throws_WhenEntryHasNoSigner()
+    {
+        // Challenge carries a client-domain entry, but the caller supplies no way to sign it.
+        // The old code silently skipped it and let the server reject the half-signed challenge.
+        var cdKp = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(clientDomain: "c.example", clientDomainKeyPair: cdKp);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            httpClient: new HttpClient(), latestLedgerOverride: 500);
+
+        await auth.SignAuthorizationEntriesAsync(xdr, result.ClientContractId, new[] { KeyPair.Random() });
     }
 
     [TestMethod]
     public async Task SignAuthorizationEntries_SignsClientDomain_WithLocalKeyPair()
     {
+        var clientSigner = KeyPair.Random();
         var cdKp = KeyPair.Random();
-        var clientKp = KeyPair.Random();
-        var result = TestChallengeBuilder.Build(
-            clientContractId: clientKp.AccountId,
-            clientDomain: "c.example",
-            clientDomainKeyPair: cdKp);
+        var result = TestChallengeBuilder.Build(clientDomain: "c.example", clientDomainKeyPair: cdKp);
         var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
         using var auth = new TestableClientWebAuthContract(
             AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
@@ -246,20 +308,30 @@ public class ClientWebAuthContractTest
             TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
             httpClient: new HttpClient(), latestLedgerOverride: 500);
 
-        var signed = await auth.SignAuthorizationEntriesAsync(xdr, new[] { clientKp }, cdKp);
+        var signed = await auth.SignAuthorizationEntriesAsync(
+            xdr, result.ClientContractId, new[] { clientSigner }, cdKp);
         var entries = TestChallengeBuilder.DecodeEntries(signed);
-        Assert.IsTrue(entries[2].Credentials.Address.Signature.Vec!.InnerValue.Length > 0);
+
+        // Client (contract) entry signed by clientSigner.
+        var clientSigs = ReadSignatures(entries[1]);
+        Assert.AreEqual(1, clientSigs.Length);
+        CollectionAssert.AreEqual(clientSigner.PublicKey, clientSigs[0].PublicKey);
+
+        // Client-domain entry (index 2) signed by cdKp, verifiably.
+        var cdEntry = entries[2];
+        var cdSigs = ReadSignatures(cdEntry);
+        Assert.AreEqual(1, cdSigs.Length);
+        CollectionAssert.AreEqual(cdKp.PublicKey, cdSigs[0].PublicKey);
+        var cdHash = Sep45Challenge.ComputeAuthorizationHash(cdEntry, Network.Test());
+        Assert.IsTrue(cdKp.Verify(cdHash, cdSigs[0].Signature));
     }
 
     [TestMethod]
     public async Task SignAuthorizationEntries_SignsClientDomain_WithRemoteDelegate()
     {
+        var clientSigner = KeyPair.Random();
         var cdKp = KeyPair.Random();
-        var clientKp = KeyPair.Random();
-        var result = TestChallengeBuilder.Build(
-            clientContractId: clientKp.AccountId,
-            clientDomain: "c.example",
-            clientDomainKeyPair: cdKp);
+        var result = TestChallengeBuilder.Build(clientDomain: "c.example", clientDomainKeyPair: cdKp);
         var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
         using var auth = new TestableClientWebAuthContract(
             AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
@@ -267,17 +339,26 @@ public class ClientWebAuthContractTest
             TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
             httpClient: new HttpClient(), latestLedgerOverride: 500);
 
+        var delegated = new List<string>();
         ClientDomainEntrySigningDelegate del = e =>
         {
-            // Reuse TestChallengeBuilder's in-place signer to install a signature.
+            delegated.Add(CredentialsAddress(e));
             TestChallengeBuilder.SignEntryInPlace(e, cdKp, Network.Test());
             return Task.FromResult(e);
         };
 
         var signed = await auth.SignAuthorizationEntriesAsync(
-            xdr, new[] { clientKp }, clientDomainSigningDelegate: del);
+            xdr, result.ClientContractId, new[] { clientSigner },
+            clientDomainSigningDelegate: del, clientDomainAccountId: cdKp.AccountId);
+
+        // The delegate must be invoked exactly once, and only for the client-domain entry —
+        // never for the client contract entry (the old exclusion-based routing did the latter).
+        Assert.AreEqual(1, delegated.Count);
+        Assert.AreEqual(cdKp.AccountId, delegated[0]);
         var entries = TestChallengeBuilder.DecodeEntries(signed);
-        Assert.IsTrue(entries[2].Credentials.Address.Signature.Vec!.InnerValue.Length > 0);
+        Assert.AreEqual(1, ReadSignatures(entries[2]).Length);
+        // Client entry still signed locally by clientSigner.
+        Assert.AreEqual(1, ReadSignatures(entries[1]).Length);
     }
 
     [TestMethod]
@@ -399,6 +480,186 @@ public class ClientWebAuthContractTest
         await auth.SendSignedChallengeAsync("x");
     }
 
+    [TestMethod]
+    public void ValidateChallenge_Passes_WhenHomeDomainOverrideMatches()
+    {
+        // Auth server serves multiple home domains; the challenge carries a non-default one.
+        var result = TestChallengeBuilder.Build(homeDomain: "other.example");
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            webAuthDomain: TestChallengeBuilder.DefaultWebAuthDomain,
+            httpClient: new HttpClient());
+
+        auth.ValidateChallenge(xdr, result.ClientContractId, null, homeDomain: "other.example");
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidHomeDomainException))]
+    public void ValidateChallenge_Throws_WhenHomeDomainNotDefaultAndNoOverride()
+    {
+        var result = TestChallengeBuilder.Build(homeDomain: "other.example");
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            webAuthDomain: TestChallengeBuilder.DefaultWebAuthDomain,
+            httpClient: new HttpClient());
+
+        auth.ValidateChallenge(xdr, result.ClientContractId); // no override → "other.example" not allowed
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidWebAuthDomainException))]
+    public void ValidateChallenge_Throws_WhenWebAuthDomainDoesNotMatchConfigured()
+    {
+        // Proves web_auth_domain is validated against the configured value (not the endpoint host
+        // and not the home domain): the challenge's web_auth_domain differs from the configured one.
+        var result = TestChallengeBuilder.Build();
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            webAuthDomain: "different.example",
+            httpClient: new HttpClient());
+
+        auth.ValidateChallenge(xdr, result.ClientContractId);
+    }
+
+    [TestMethod]
+    public async Task GetChallengeAsync_WrapsTimeout_WithInnerException()
+    {
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ThrowsAsync(new TaskCanceledException("timed out"));
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, ContractId, Network.Test(), KeyPair.Random().AccountId,
+            HomeDomain, SorobanRpcUrl, httpClient: client);
+
+        var ex = await Assert.ThrowsExceptionAsync<ChallengeForContractsRequestErrorException>(() =>
+            auth.GetChallengeAsync(TestChallengeBuilder.DefaultWebAuthContractId));
+        Assert.IsInstanceOfType(ex.InnerException, typeof(TaskCanceledException));
+        Assert.AreEqual(0, ex.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task GetChallengeAsync_PreservesInnerException_OnTransportFailure()
+    {
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ThrowsAsync(new HttpRequestException("connection refused"));
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, ContractId, Network.Test(), KeyPair.Random().AccountId,
+            HomeDomain, SorobanRpcUrl, httpClient: client);
+
+        var ex = await Assert.ThrowsExceptionAsync<ChallengeForContractsRequestErrorException>(() =>
+            auth.GetChallengeAsync(TestChallengeBuilder.DefaultWebAuthContractId));
+        Assert.IsInstanceOfType(ex.InnerException, typeof(HttpRequestException));
+    }
+
+    [TestMethod]
+    public async Task SendSignedChallengeAsync_WrapsClientTimeout_AsTimeoutException()
+    {
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ThrowsAsync(new TaskCanceledException("timed out"));
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, ContractId, Network.Test(), KeyPair.Random().AccountId,
+            HomeDomain, SorobanRpcUrl, httpClient: client);
+
+        var ex = await Assert.ThrowsExceptionAsync<SubmitSignedChallengeForContractsTimeoutResponseException>(
+            () => auth.SendSignedChallengeAsync("aGk="));
+        Assert.IsInstanceOfType(ex.InnerException, typeof(TaskCanceledException));
+    }
+
+    [TestMethod]
+    public async Task JwtTokenAsync_DoesNotLeakAuthHeaders_ToClientDomainToml()
+    {
+        // The auth server's request headers (which may carry credentials) must not be forwarded to
+        // the client domain — a different origin — when resolving its stellar.toml SIGNING_KEY.
+        var cdKp = KeyPair.Random();
+        HttpRequestMessage? tomlRequest = null;
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(r => r.RequestUri!.AbsolutePath.EndsWith("stellar.toml")),
+                ItExpr.IsAny<CancellationToken>())
+            .Callback<HttpRequestMessage, CancellationToken>((r, _) => tomlRequest = r)
+            .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent($"SIGNING_KEY=\"{cdKp.AccountId}\"\n", Encoding.UTF8, "text/plain"),
+            });
+        // Any non-toml request (the challenge GET) fails fast — we only care that the toml fetch above
+        // already happened without the auth header.
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.Is<HttpRequestMessage>(r => !r.RequestUri!.AbsolutePath.EndsWith("stellar.toml")),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.BadRequest)
+            {
+                Content = new StringContent("stop"),
+            });
+
+        using var client = new HttpClient(handler.Object);
+        var headers = new Dictionary<string, string> { ["Authorization"] = "Bearer super-secret" };
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, ContractId, Network.Test(), KeyPair.Random().AccountId,
+            HomeDomain, SorobanRpcUrl, httpClient: client, httpRequestHeaders: headers);
+
+        await Assert.ThrowsExceptionAsync<ChallengeForContractsRequestErrorException>(() =>
+            auth.JwtTokenAsync(
+                TestChallengeBuilder.DefaultWebAuthContractId, new[] { KeyPair.Random() },
+                clientDomain: "wallet.example",
+                clientDomainSigningDelegate: e => Task.FromResult(e)));
+
+        Assert.IsNotNull(tomlRequest);
+        Assert.IsFalse(tomlRequest!.Headers.Contains("Authorization"),
+            "auth-server Authorization header must not be forwarded to the client-domain toml fetch");
+    }
+
+    /// <summary>Extracts the (public_key, signature) byte pairs from an entry's SCV_VEC signature.</summary>
+    private static (byte[] PublicKey, byte[] Signature)[] ReadSignatures(SorobanAuthorizationEntry entry)
+    {
+        var vec = entry.Credentials.Address.Signature.Vec!.InnerValue;
+        var result = new (byte[] PublicKey, byte[] Signature)[vec.Length];
+        for (var i = 0; i < vec.Length; i++)
+        {
+            byte[]? pub = null, sig = null;
+            foreach (var kv in vec[i].Map!.InnerValue)
+            {
+                var name = kv.Key.Sym.InnerValue;
+                if (name == "public_key") pub = kv.Val.Bytes.InnerValue;
+                else if (name == "signature") sig = kv.Val.Bytes.InnerValue;
+            }
+            result[i] = (pub!, sig!);
+        }
+        return result;
+    }
+
+    /// <summary>Returns the strkey of an entry's credentials address (mirrors the production helper).</summary>
+    private static string CredentialsAddress(SorobanAuthorizationEntry entry)
+    {
+        return ScAddress.FromXdr(entry.Credentials.Address.Address) switch
+        {
+            ScAccountId acc => acc.InnerValue,
+            ScContractId con => con.InnerValue,
+            _ => "?",
+        };
+    }
+
     private static Mock<HttpMessageHandler> BuildTomlHandler(string tomlBody)
     {
         var handler = new Mock<HttpMessageHandler>();
@@ -417,7 +678,7 @@ public class ClientWebAuthContractTest
     public async Task JwtTokenAsync_FullFlow_ReturnsToken()
     {
         var signer = KeyPair.Random();
-        var result = TestChallengeBuilder.Build(clientContractId: signer.AccountId);
+        var result = TestChallengeBuilder.Build(); // C... client account, signed by a G... signer
         var challengeXdr = TestChallengeBuilder.EncodeEntries(result.Entries);
 
         var handler = new Mock<HttpMessageHandler>();
@@ -438,9 +699,10 @@ public class ClientWebAuthContractTest
             AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
             Network.Test(), result.ServerKeyPair.AccountId,
             TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
-            httpClient: client, latestLedgerOverride: 500);
+            httpClient: client, latestLedgerOverride: 500,
+            webAuthDomain: TestChallengeBuilder.DefaultWebAuthDomain);
 
-        var jwt = await auth.JwtTokenAsync(signer.AccountId, new[] { signer });
+        var jwt = await auth.JwtTokenAsync(result.ClientContractId, new[] { signer });
         Assert.AreEqual("final.jwt.token", jwt);
     }
 
@@ -466,9 +728,9 @@ internal sealed class TestableClientWebAuthContract : ClientWebAuthContract
     public TestableClientWebAuthContract(
         string authEndpoint, string webAuthContractId, Network network,
         string serverSigningKey, string serverHomeDomain, string sorobanRpcUrl,
-        HttpClient httpClient, uint latestLedgerOverride)
+        HttpClient httpClient, uint latestLedgerOverride, string? webAuthDomain = null)
         : base(authEndpoint, webAuthContractId, network, serverSigningKey, serverHomeDomain,
-            sorobanRpcUrl, httpClient)
+            sorobanRpcUrl, webAuthDomain: webAuthDomain, httpClient: httpClient)
     {
         _override = latestLedgerOverride;
     }

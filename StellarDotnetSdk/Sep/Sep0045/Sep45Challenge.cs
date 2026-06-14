@@ -241,6 +241,36 @@ public static class Sep45Challenge
         var firstArgs = entries[0].RootInvocation.Function.ContractFn.Args[0].Map!;
         var extracted = ExtractAndValidateArgs(firstArgs, homeDomains, webAuthDomain, serverAccountId);
 
+        // Every entry's credentials address must belong to the known participant set, and entries for
+        // both the server and the client account must be present. This rejects a server that injects an
+        // extra entry with an arbitrary credentials address.
+        var allowedAddresses = new System.Collections.Generic.HashSet<string>
+        {
+            serverAccountId,
+            extracted.ClientAccount,
+        };
+        if (extracted.ClientDomainAccount != null)
+            allowedAddresses.Add(extracted.ClientDomainAccount);
+
+        var sawClientEntry = false;
+        var sawServerEntry = false;
+        foreach (var entry in entries)
+        {
+            var credAddress = AddressToStrKey(entry.Credentials.Address.Address);
+            if (!allowedAddresses.Contains(credAddress))
+                throw new Exceptions.InvalidArgumentsException(
+                    $"Authorization entry has unexpected credentials address '{credAddress}'.");
+            if (credAddress == extracted.ClientAccount) sawClientEntry = true;
+            if (credAddress == serverAccountId) sawServerEntry = true;
+        }
+
+        if (!sawServerEntry)
+            throw new Exceptions.InvalidServerSignatureException(
+                $"No authorization entry found for the server account '{serverAccountId}'.");
+        if (!sawClientEntry)
+            throw new Exceptions.InvalidClientAccountException(
+                $"No authorization entry found for the client account '{extracted.ClientAccount}'.");
+
         return new ChallengeAuthorizationEntries(
             entries,
             extracted.ClientAccount,
@@ -267,26 +297,43 @@ public static class Sep45Challenge
     }
 
     /// <summary>
-    ///     Install a signature into an entry's credentials. Uses the SEP-45 convention: the
+    ///     Append a signature to an entry's credentials. Uses the SEP-45 convention: the
     ///     <c>Signature</c> SCVal is an SCV_VEC of SCV_MAPs each containing public_key / signature bytes.
+    ///     Appending (rather than replacing) lets a contract account that requires an M-of-N signer
+    ///     set accumulate one map per signer in a single entry.
     /// </summary>
-    internal static void InstallSignatureVector(
+    internal static void AppendSignature(
         SorobanAuthorizationEntry entry, byte[] publicKey, byte[] signature)
     {
         var sigMap = new SCVal
         {
             Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_MAP },
+            // "public_key" < "signature" in symbol order, so this 2-key map is already canonical.
             Map = new SCMap(new[]
             {
                 MakeSymbolBytesEntry("public_key", publicKey),
                 MakeSymbolBytesEntry("signature", signature),
             }),
         };
-        entry.Credentials.Address.Signature = new SCVal
+
+        var creds = entry.Credentials.Address;
+        if (creds.Signature?.Discriminant?.InnerValue == SCValType.SCValTypeEnum.SCV_VEC &&
+            creds.Signature.Vec != null)
         {
-            Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_VEC },
-            Vec = new SCVec(new[] { sigMap }),
-        };
+            var existing = creds.Signature.Vec.InnerValue;
+            var combined = new SCVal[existing.Length + 1];
+            Array.Copy(existing, combined, existing.Length);
+            combined[existing.Length] = sigMap;
+            creds.Signature.Vec = new SCVec(combined);
+        }
+        else
+        {
+            creds.Signature = new SCVal
+            {
+                Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_VEC },
+                Vec = new SCVec(new[] { sigMap }),
+            };
+        }
     }
 
     private static SCMapEntry MakeSymbolBytesEntry(string key, byte[] value) => new()
@@ -305,21 +352,46 @@ public static class Sep45Challenge
 
     private static SorobanAuthorizationEntry[] DecodeEntriesFromBase64(string b64)
     {
+        byte[] bytes;
         try
         {
-            var bytes = Convert.FromBase64String(b64);
-            var stream = new XdrDataInputStream(bytes);
-            var count = stream.ReadInt();
-            if (count < 0)
-                throw new Exceptions.InvalidArgumentsException("Negative entry count in XDR.");
-            var result = new SorobanAuthorizationEntry[count];
-            for (var i = 0; i < count; i++)
-                result[i] = SorobanAuthorizationEntry.Decode(stream);
-            return result;
+            bytes = Convert.FromBase64String(b64);
         }
         catch (FormatException ex)
         {
-            throw new Exceptions.InvalidArgumentsException("Invalid base64 XDR: " + ex.Message);
+            throw new Exceptions.InvalidArgumentsException("authorizationEntries is not valid base64.", ex);
+        }
+
+        try
+        {
+            var stream = new XdrDataInputStream(bytes);
+            var count = stream.ReadInt();
+            // Bound the count by the bytes actually remaining before allocating: each entry needs at
+            // least one byte, so a count larger than what is left is necessarily malformed. This stops a
+            // tiny hostile payload from forcing a huge array allocation (memory-exhaustion DoS).
+            var remaining = stream.GetRemainingInputLen();
+            if (count < 0 || count > remaining)
+                throw new Exceptions.InvalidArgumentsException(
+                    $"Implausible authorization entry count {count} for {remaining} remaining byte(s).");
+
+            var result = new SorobanAuthorizationEntry[count];
+            for (var i = 0; i < count; i++)
+                result[i] = SorobanAuthorizationEntry.Decode(stream);
+
+            if (stream.GetRemainingInputLen() != 0)
+                throw new Exceptions.InvalidArgumentsException(
+                    $"{stream.GetRemainingInputLen()} unexpected trailing byte(s) after {count} authorization entries.");
+
+            return result;
+        }
+        catch (Exception ex) when (
+            ex is System.IO.InvalidDataException or System.IO.IOException or
+                IndexOutOfRangeException or System.IO.EndOfStreamException)
+        {
+            // XdrDataInputStream signals truncated/corrupt input with these; surface them as the
+            // documented SEP-45 exception type instead of letting raw decode exceptions escape.
+            throw new Exceptions.InvalidArgumentsException(
+                "Malformed authorization entries XDR: " + ex.Message, ex);
         }
     }
 
@@ -345,7 +417,7 @@ public static class Sep45Challenge
     private sealed record ExtractedArgs(
         string ClientAccount,
         string HomeDomain,
-        byte[] Nonce,
+        string Nonce,
         string WebAuthDomain,
         string WebAuthDomainAccount,
         string? ClientDomain,
@@ -360,7 +432,7 @@ public static class Sep45Challenge
         string? wadAccount = null;
         string? clientDomain = null;
         string? clientDomainAccount = null;
-        byte[]? nonce = null;
+        string? nonce = null;
 
         foreach (var entry in map.InnerValue)
         {
@@ -369,30 +441,32 @@ public static class Sep45Challenge
             var k = entry.Key.Sym.InnerValue;
             var v = entry.Val;
 
+            // The reference web_auth_verify contract declares args as Map<Symbol, String>, so
+            // every value — including the addresses and nonce — is an SCV_STRING on the wire.
             switch (k)
             {
                 case "account":
-                    account = RequireAddress(v, "account");
+                    account = RequireStrKeyAddress(v, "account");
                     break;
                 case "home_domain":
                     homeDomain = RequireString(v, "home_domain");
                     break;
                 case "nonce":
-                    nonce = RequireBytes(v, "nonce");
-                    if (nonce.Length != 32)
-                        throw new Exceptions.InvalidNonceException($"nonce must be 32 bytes, got {nonce.Length}");
+                    nonce = RequireString(v, "nonce");
+                    if (nonce.Length == 0)
+                        throw new Exceptions.InvalidNonceException("nonce must not be empty.");
                     break;
                 case "web_auth_domain":
                     wad = RequireString(v, "web_auth_domain");
                     break;
                 case "web_auth_domain_account":
-                    wadAccount = RequireAddress(v, "web_auth_domain_account");
+                    wadAccount = RequireStrKeyAddress(v, "web_auth_domain_account");
                     break;
                 case "client_domain":
                     clientDomain = RequireString(v, "client_domain");
                     break;
                 case "client_domain_account":
-                    clientDomainAccount = RequireAddress(v, "client_domain_account");
+                    clientDomainAccount = RequireStrKeyAddress(v, "client_domain_account");
                     break;
                 default:
                     // ignore unknown for forward-compatibility
@@ -433,13 +507,6 @@ public static class Sep45Challenge
         return new ExtractedArgs(account, homeDomain, nonce, wad, wadAccount, clientDomain, clientDomainAccount);
     }
 
-    private static string RequireAddress(SCVal v, string keyName)
-    {
-        if (v.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_ADDRESS || v.Address == null)
-            throw new Exceptions.InvalidArgumentsException($"{keyName} must be SCV_ADDRESS.");
-        return AddressToStrKey(v.Address);
-    }
-
     private static string RequireString(SCVal v, string keyName)
     {
         if (v.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_STRING || v.Str == null)
@@ -447,10 +514,17 @@ public static class Sep45Challenge
         return v.Str.InnerValue;
     }
 
-    private static byte[] RequireBytes(SCVal v, string keyName)
+    /// <summary>
+    ///     Reads an address argument. Per the reference web_auth_verify contract the value is an
+    ///     SCV_STRING holding the strkey text (the contract calls <c>Address::from_string</c> on it),
+    ///     so we validate it is a well-formed contract (C...) or ed25519 account (G...) strkey.
+    /// </summary>
+    private static string RequireStrKeyAddress(SCVal v, string keyName)
     {
-        if (v.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_BYTES || v.Bytes == null)
-            throw new Exceptions.InvalidArgumentsException($"{keyName} must be SCV_BYTES.");
-        return v.Bytes.InnerValue;
+        var s = RequireString(v, keyName);
+        if (!StrKey.IsValidContractId(s) && !StrKey.IsValidEd25519PublicKey(s))
+            throw new Exceptions.InvalidArgumentsException(
+                $"{keyName} is not a valid account (G...) or contract (C...) address: '{s}'.");
+        return s;
     }
 }

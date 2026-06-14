@@ -38,7 +38,7 @@ internal static class TestChallengeBuilder
         public string ClientContractId = "";
         public string? ClientDomain;
         public KeyPair? ClientDomainKeyPair;
-        public byte[] Nonce = Array.Empty<byte>();
+        public string Nonce = "";
         public uint SignatureExpirationLedger;
     }
 
@@ -50,7 +50,7 @@ internal static class TestChallengeBuilder
         string? clientDomain = null,
         KeyPair? clientDomainKeyPair = null,
         uint signatureExpirationLedger = 1000,
-        byte[]? nonce = null,
+        string? nonce = null,
         long? serverNonce = null,
         long? clientNonce = null,
         long? clientDomainNonce = null,
@@ -64,23 +64,27 @@ internal static class TestChallengeBuilder
 
         var serverKp = KeyPair.Random();
         var clientCid = clientContractId ?? GenerateRandomContractId();
-        var nonceBytes = nonce ?? RandomNumberGenerator.GetBytes(32);
+        // SEP-45 reference server emits the nonce as an SCV_STRING (base64 of 48 random bytes).
+        var nonceStr = nonce ?? Convert.ToBase64String(RandomNumberGenerator.GetBytes(48));
 
         if (clientDomain != null && clientDomainKeyPair == null)
             throw new ArgumentException("clientDomainKeyPair required when clientDomain supplied");
 
+        // Per the reference web_auth_verify contract the args map is Map<Symbol, String>:
+        // every value — including the addresses and nonce — is an SCV_STRING (strkey text
+        // for the addresses), not SCV_ADDRESS / SCV_BYTES.
         var map = new List<SCMapEntry>
         {
-            MapEntry("account", AddressToSCVal(clientCid)),
+            MapEntry("account", SCValString(clientCid)),
             MapEntry("home_domain", SCValString(homeDomain)),
-            MapEntry("nonce", SCValBytes(nonceBytes)),
+            MapEntry("nonce", SCValString(nonceStr)),
             MapEntry("web_auth_domain", SCValString(webAuthDomain)),
-            MapEntry("web_auth_domain_account", AddressToSCVal(serverKp.AccountId)),
+            MapEntry("web_auth_domain_account", SCValString(serverKp.AccountId)),
         };
         if (clientDomain != null)
         {
             map.Add(MapEntry("client_domain", SCValString(clientDomain)));
-            map.Add(MapEntry("client_domain_account", AddressToSCVal(clientDomainKeyPair!.AccountId)));
+            map.Add(MapEntry("client_domain_account", SCValString(clientDomainKeyPair!.AccountId)));
         }
 
         var args = new SCVal
@@ -128,7 +132,7 @@ internal static class TestChallengeBuilder
             ClientContractId = clientCid,
             ClientDomain = clientDomain,
             ClientDomainKeyPair = clientDomainKeyPair,
-            Nonce = nonceBytes,
+            Nonce = nonceStr,
             SignatureExpirationLedger = signatureExpirationLedger,
         };
     }
@@ -220,12 +224,6 @@ internal static class TestChallengeBuilder
     {
         Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_BYTES },
         Bytes = new SCBytes(b),
-    };
-
-    private static SCVal AddressToSCVal(string addr) => new()
-    {
-        Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_ADDRESS },
-        Address = AddressToXdr(addr),
     };
 
     private static SCAddress AddressToXdr(string addr)
