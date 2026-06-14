@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Text;
 
@@ -66,47 +67,35 @@ public class XdrDataOutputStream
 
     public void WriteLong(long v)
     {
-        Write((byte)((v >> 56) & 0xff));
-        Write((byte)((v >> 48) & 0xff));
-        Write((byte)((v >> 40) & 0xff));
-        Write((byte)((v >> 32) & 0xff));
-        Write((byte)((v >> 24) & 0xff));
-        Write((byte)((v >> 16) & 0xff));
-        Write((byte)((v >> 8) & 0xff));
-        Write((byte)(v & 0xff));
+        Span<byte> buffer = stackalloc byte[sizeof(long)];
+        BinaryPrimitives.WriteInt64BigEndian(buffer, v);
+        _bytes.AddRange(buffer);
     }
 
     public void WriteULong(ulong v)
     {
-        Write((byte)((v >> 56) & 0xff));
-        Write((byte)((v >> 48) & 0xff));
-        Write((byte)((v >> 40) & 0xff));
-        Write((byte)((v >> 32) & 0xff));
-        Write((byte)((v >> 24) & 0xff));
-        Write((byte)((v >> 16) & 0xff));
-        Write((byte)((v >> 8) & 0xff));
-        Write((byte)(v & 0xff));
+        Span<byte> buffer = stackalloc byte[sizeof(ulong)];
+        BinaryPrimitives.WriteUInt64BigEndian(buffer, v);
+        _bytes.AddRange(buffer);
     }
 
     public void WriteInt(int i)
     {
-        Write((byte)((i >> 0x18) & 0xff));
-        Write((byte)((i >> 0x10) & 0xff));
-        Write((byte)((i >> 8) & 0xff));
-        Write((byte)(i & 0xff));
+        Span<byte> buffer = stackalloc byte[sizeof(int)];
+        BinaryPrimitives.WriteInt32BigEndian(buffer, i);
+        _bytes.AddRange(buffer);
     }
 
     public void WriteUInt(uint i)
     {
-        Write((byte)((i >> 0x18) & 0xff));
-        Write((byte)((i >> 0x10) & 0xff));
-        Write((byte)((i >> 8) & 0xff));
-        Write((byte)(i & 0xff));
+        Span<byte> buffer = stackalloc byte[sizeof(uint)];
+        BinaryPrimitives.WriteUInt32BigEndian(buffer, i);
+        _bytes.AddRange(buffer);
     }
 
-    public unsafe void WriteSingle(float v)
+    public void WriteSingle(float v)
     {
-        WriteInt(*(int*)&v);
+        WriteInt(BitConverter.SingleToInt32Bits(v));
     }
 
     public void WriteSingleArray(float[] a)
@@ -123,9 +112,9 @@ public class XdrDataOutputStream
         }
     }
 
-    public unsafe void WriteDouble(double v)
+    public void WriteDouble(double v)
     {
-        WriteLong(*(long*)&v);
+        WriteLong(BitConverter.DoubleToInt64Bits(v));
     }
 
     public void WriteDoubleArray(double[] a)
