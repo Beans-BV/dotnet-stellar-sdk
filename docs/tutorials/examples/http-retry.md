@@ -37,9 +37,10 @@ When retries are enabled (`MaxRetryCount > 0`):
 - `TimeoutException` — timeouts surfaced by custom/inner handlers
 - `TaskCanceledException` — only when the request's `CancellationToken` is **not** signaled (e.g. thrown by a custom inner handler)
 
-> **Timeouts are not retried.** When `HttpClient.Timeout` fires, it cancels the token that flows through the
-> handler chain, so the resulting `TaskCanceledException` is treated exactly like user cancellation and
-> propagates immediately. Likewise `RequestTimeout` (below) is the outermost strategy, so its
+> **`HttpClient.Timeout` and `RequestTimeout` are not retried** — in contrast to a `TimeoutException` thrown
+> by a custom inner handler (listed above), which is. When `HttpClient.Timeout` fires, it cancels the token
+> that flows through the handler chain, so the resulting `TaskCanceledException` is treated exactly like user
+> cancellation and propagates immediately. Likewise `RequestTimeout` (below) is the outermost strategy, so its
 > `TimeoutRejectedException` is never seen by the retry strategy. There is no per-attempt retried timeout;
 > use `RequestTimeout` or `HttpClient.Timeout` to bound the whole operation.
 

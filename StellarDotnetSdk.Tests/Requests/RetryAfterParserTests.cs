@@ -189,9 +189,9 @@ public class RetryAfterParserTests
     }
 
     /// <summary>
-    ///     Strings that are neither valid delay-seconds nor a complete RFC 1123 / ISO 8601 date must be
-    ///     rejected. The lenient date fallback used to read "12.25.2030" as December 25, 2030 (a
-    ///     years-long delay), "12-25"/"Dec 25" as the next December 25, and "13:45" as a time of day
+    ///     Strings that are neither valid delay-seconds nor a complete HTTP-date (RFC 1123, RFC 850, asctime,
+    ///     or ISO 8601) must be rejected. The lenient date fallback used to read "12.25.2030" as December 25,
+    ///     2030 (a years-long delay), "12-25"/"Dec 25" as the next December 25, and "13:45" as a time of day
     ///     whose result flipped with the wall clock.
     /// </summary>
     [TestMethod]
@@ -231,10 +231,6 @@ public class RetryAfterParserTests
     }
 
     /// <summary>
-    ///     Typed DateTime/DateTimeOffset values are parsed directly — no culture-sensitive ToString round
-    ///     trip. An Unspecified-kind DateTime is treated as UTC, mirroring the string path.
-    /// </summary>
-    /// <summary>
     ///     RFC 7231 §7.1.1.1 requires recipients to accept all three HTTP-date forms. The strict parser must
     ///     accept RFC 850 and asctime (including asctime's space-padded single-digit day) as well as RFC 1123,
     ///     so the exception path agrees with the BCL header the handler reads. The malformed-numeric guard
@@ -269,6 +265,10 @@ public class RetryAfterParserTests
         Assert.IsNull(RetryAfterParser.Parse("13:45"));
     }
 
+    /// <summary>
+    ///     Typed DateTime/DateTimeOffset values are parsed directly — no culture-sensitive ToString round
+    ///     trip. An Unspecified-kind DateTime is treated as UTC, mirroring the string path.
+    /// </summary>
     [TestMethod]
     public void Parse_TypedDateValues_ReturnRemainingDelay()
     {

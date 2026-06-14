@@ -19,8 +19,8 @@ public static class RetryAfterParser
     public static readonly TimeSpan MaxRepresentableDelay = TimeSpan.FromMilliseconds(uint.MaxValue - 1);
 
     // Accepted HTTP-date shapes: the three RFC 7231 §7.1.1.1 forms a recipient MUST accept — IMF-fixdate /
-    // RFC 1123 ("Tue, 25 Dec 2030 00:00:00 GMT"), obsolete RFC 850 ("Tuesday, 25-Dec-30 00:00:00 GMT"), and
-    // asctime ("Tue Dec 25 00:00:00 2030") — plus ISO 8601 with a time part ("2030-12-25T00:00:00Z",
+    // RFC 1123 ("Wed, 25 Dec 2030 00:00:00 GMT"), obsolete RFC 850 ("Wednesday, 25-Dec-30 00:00:00 GMT"), and
+    // asctime ("Wed Dec 25 00:00:00 2030") — plus ISO 8601 with a time part ("2030-12-25T00:00:00Z",
     // fractional seconds optional), which proxies/CDNs emit in practice.
     // Parsing is deliberately TryParseExact (not a lenient DateTimeOffset.TryParse, which used to read
     // malformed numerics "12.25"/"12-25"/"Dec 25"/"13:45" as month.day dates or times of day, yielding
@@ -64,7 +64,7 @@ public static class RetryAfterParser
     ///     <see cref="DateTime" />, <see cref="DateTimeOffset" />, or <see cref="RetryConditionHeaderValue" />)
     ///     into a positive <see cref="TimeSpan" />, or null if unparseable, missing, or non-positive.
     ///     Delays longer than <see cref="MaxRepresentableDelay" /> are clamped to it. Date strings are
-    ///     accepted in RFC 1123 or ISO 8601 (with a time part) form only.
+    ///     accepted in any RFC 7231 HTTP-date form (RFC 1123, RFC 850, or asctime) or ISO 8601 with a time part.
     /// </summary>
     public static TimeSpan? Parse(object? raw)
     {

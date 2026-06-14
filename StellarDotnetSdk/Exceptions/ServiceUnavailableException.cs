@@ -14,8 +14,9 @@ public class ServiceUnavailableException : Exception
     /// </summary>
     /// <param name="retryAfter">
     ///     The value of the Retry-After header from the HTTP response. Can be an int/long (delay-seconds), a
-    ///     string in delay-seconds or HTTP-date (RFC 1123 / ISO 8601) form, or a typed TimeSpan, DateTime,
-    ///     DateTimeOffset, or RetryConditionHeaderValue; any other object is parsed from its ToString() form.
+    ///     string in delay-seconds or HTTP-date (RFC 1123, RFC 850, asctime, or ISO 8601) form, or a typed
+    ///     TimeSpan, DateTime, DateTimeOffset, or RetryConditionHeaderValue; any other object is parsed from
+    ///     its ToString() form.
     ///     Non-positive or unparseable values leave both properties null.
     /// </param>
     public ServiceUnavailableException(object? retryAfter = null)

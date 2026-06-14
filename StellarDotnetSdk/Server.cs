@@ -75,7 +75,7 @@ public class Server : IDisposable
     ///     with no retries, circuit breaker, or timeout.
     /// </param>
     /// <param name="bearerToken">(Optional) Bearer token in case the server requires it.</param>
-    public Server(string uri, HttpResilienceOptions? resilienceOptions, string? bearerToken)
+    public Server(string uri, HttpResilienceOptions? resilienceOptions, string? bearerToken = null)
     {
         _serverUri = new Uri(uri);
         _httpClient = new DefaultStellarSdkHttpClient(bearerToken, resilienceOptions: resilienceOptions);
