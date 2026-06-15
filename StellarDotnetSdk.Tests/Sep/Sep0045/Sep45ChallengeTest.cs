@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -67,7 +69,7 @@ public class Sep45ChallengeTest
     {
         var result = TestChallengeBuilder.Build();
         // Tamper with expiration ledger to invalidate the preimage hash
-        result.Entries[0].Credentials.Address.SignatureExpirationLedger = new StellarDotnetSdk.Xdr.Uint32(9999);
+        result.Entries[0].Credentials.Address.SignatureExpirationLedger = new Uint32(9999);
         Sep45Challenge.VerifyServerSignature(
             result.Entries[0], result.ServerKeyPair.AccountId, Network.Test());
     }
@@ -103,10 +105,10 @@ public class Sep45ChallengeTest
                     ContractAddress = new ScContractId(
                         TestChallengeBuilder.DefaultWebAuthContractId).ToXdr(),
                     FunctionName = new SCSymbol("other_fn"),
-                    Args = System.Array.Empty<SCVal>(),
+                    Args = Array.Empty<SCVal>(),
                 },
             },
-            SubInvocations = System.Array.Empty<SorobanAuthorizedInvocation>(),
+            SubInvocations = Array.Empty<SorobanAuthorizedInvocation>(),
         };
         result.Entries[0].RootInvocation.SubInvocations = new[] { leaf };
         var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
@@ -133,7 +135,9 @@ public class Sep45ChallengeTest
     {
         var result = TestChallengeBuilder.Build();
         foreach (var e in result.Entries)
+        {
             e.RootInvocation.Function.ContractFn.FunctionName = new SCSymbol("wrong_fn");
+        }
         var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
         Sep45Challenge.ReadChallenge(
             xdr, result.ServerKeyPair.AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
@@ -190,7 +194,7 @@ public class Sep45ChallengeTest
     [ExpectedException(typeof(InvalidHomeDomainException))]
     public void ReadChallenge_Throws_WhenHomeDomainNotAllowed()
     {
-        var result = TestChallengeBuilder.Build(homeDomain: "evil.com");
+        var result = TestChallengeBuilder.Build("evil.com");
         var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
         Sep45Challenge.ReadChallenge(
             xdr, result.ServerKeyPair.AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
@@ -222,6 +226,24 @@ public class Sep45ChallengeTest
     }
 
     [TestMethod]
+    [ExpectedException(typeof(InvalidClientDomainException))]
+    public void ReadChallenge_Throws_WhenClientDomainAccountInArgsButNoEntry()
+    {
+        // The args map declares client_domain_account, but the corresponding authorization entry is
+        // absent. Both peer SDKs (Flutter, Java) reject this; the validator must too, otherwise the
+        // client cannot supply the client-domain signature and the server rejects it opaquely.
+        var cdKp = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(clientDomain: "wallet.example", clientDomainKeyPair: cdKp);
+        // Drop the client-domain entry (index 2); keep [server, client]. The shared invocation's args
+        // still name client_domain_account, so the args/entries are now inconsistent.
+        var withoutClientDomainEntry = new[] { result.Entries[0], result.Entries[1] };
+        var xdr = TestChallengeBuilder.EncodeEntries(withoutClientDomainEntry);
+        Sep45Challenge.ReadChallenge(
+            xdr, result.ServerKeyPair.AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+    }
+
+    [TestMethod]
     [ExpectedException(typeof(InvalidArgumentsException))]
     public void ReadChallenge_Throws_OnInvalidBase64()
     {
@@ -238,8 +260,8 @@ public class Sep45ChallengeTest
         // Valid base64, but the XDR is cut in half — decode hits EOF. Must surface as the documented
         // SEP-45 exception type, not a raw IndexOutOfRangeException/InvalidDataException.
         var result = TestChallengeBuilder.Build();
-        var bytes = System.Convert.FromBase64String(TestChallengeBuilder.EncodeEntries(result.Entries));
-        var truncated = System.Convert.ToBase64String(bytes[..(bytes.Length / 2)]);
+        var bytes = Convert.FromBase64String(TestChallengeBuilder.EncodeEntries(result.Entries));
+        var truncated = Convert.ToBase64String(bytes[..(bytes.Length / 2)]);
         Sep45Challenge.ReadChallenge(
             truncated, result.ServerKeyPair.AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
             new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
@@ -252,7 +274,7 @@ public class Sep45ChallengeTest
         // 4-byte payload claiming 100,000,000 entries — must be rejected before allocating, not OOM.
         var stream = new XdrDataOutputStream();
         stream.WriteInt(100_000_000);
-        var b64 = System.Convert.ToBase64String(stream.ToArray());
+        var b64 = Convert.ToBase64String(stream.ToArray());
         Sep45Challenge.ReadChallenge(
             b64, KeyPair.Random().AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
             new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
@@ -263,10 +285,10 @@ public class Sep45ChallengeTest
     public void ReadChallenge_Throws_OnTrailingBytes()
     {
         var result = TestChallengeBuilder.Build();
-        var bytes = System.Convert.FromBase64String(TestChallengeBuilder.EncodeEntries(result.Entries));
+        var bytes = Convert.FromBase64String(TestChallengeBuilder.EncodeEntries(result.Entries));
         var withTrailing = bytes.Concat(new byte[] { 1, 2, 3, 4 }).ToArray();
         Sep45Challenge.ReadChallenge(
-            System.Convert.ToBase64String(withTrailing), result.ServerKeyPair.AccountId,
+            Convert.ToBase64String(withTrailing), result.ServerKeyPair.AccountId,
             TestChallengeBuilder.DefaultWebAuthContractId,
             new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
     }
@@ -296,16 +318,16 @@ public class Sep45ChallengeTest
         var result = TestChallengeBuilder.Build();
         var server = result.ServerKeyPair.AccountId;
         var homeDomains = new[] { TestChallengeBuilder.DefaultHomeDomain };
-        var bytes = System.Convert.FromBase64String(TestChallengeBuilder.EncodeEntries(result.Entries));
+        var bytes = Convert.FromBase64String(TestChallengeBuilder.EncodeEntries(result.Entries));
 
-        var leaks = new System.Collections.Generic.List<string>();
+        var leaks = new List<string>();
 
         void Probe(byte[] payload, string label)
         {
             try
             {
                 Sep45Challenge.ReadChallenge(
-                    System.Convert.ToBase64String(payload), server,
+                    Convert.ToBase64String(payload), server,
                     TestChallengeBuilder.DefaultWebAuthContractId, homeDomains,
                     TestChallengeBuilder.DefaultWebAuthDomain);
             }
@@ -313,14 +335,16 @@ public class Sep45ChallengeTest
             {
                 // documented SEP-45 exception — acceptable
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 leaks.Add($"{label}: {ex.GetType().FullName}");
             }
         }
 
         for (var len = 1; len < bytes.Length; len++)
+        {
             Probe(bytes[..len], $"truncate@{len}");
+        }
 
         var lengthWords = new[]
         {
@@ -328,12 +352,14 @@ public class Sep45ChallengeTest
             new byte[] { 0x7F, 0xFF, 0xFF, 0xFF }, // == int.MaxValue (huge but a valid int length)
         };
         foreach (var word in lengthWords)
+        {
             for (var o = 0; o + 4 <= bytes.Length; o++)
             {
                 var copy = (byte[])bytes.Clone();
-                System.Array.Copy(word, 0, copy, o, 4);
+                Array.Copy(word, 0, copy, o, 4);
                 Probe(copy, $"corrupt@{o}");
             }
+        }
 
         Assert.AreEqual(0, leaks.Count,
             "ReadChallenge leaked non-WebAuthContractException(s): " +
@@ -359,10 +385,10 @@ public class Sep45ChallengeTest
                     ContractAddress = new ScContractId(
                         StrKey.EncodeContractId(new byte[32])).ToXdr(),
                     FunctionName = new SCSymbol(Sep45Challenge.WebAuthVerifyFunctionName),
-                    Args = System.Array.Empty<SCVal>(),
+                    Args = Array.Empty<SCVal>(),
                 },
             },
-            SubInvocations = System.Array.Empty<SorobanAuthorizedInvocation>(),
+            SubInvocations = Array.Empty<SorobanAuthorizedInvocation>(),
         };
 
         return new SorobanAuthorizationEntry
@@ -381,7 +407,7 @@ public class Sep45ChallengeTest
                     Signature = new SCVal
                     {
                         Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_VEC },
-                        Vec = new SCVec(System.Array.Empty<SCVal>()),
+                        Vec = new SCVec(Array.Empty<SCVal>()),
                     },
                 },
             },

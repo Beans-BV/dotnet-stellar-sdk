@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Sep.Sep0045.Exceptions;
 using StellarDotnetSdk.Xdr;
 using Int64 = StellarDotnetSdk.Xdr.Int64;
 using Uint32 = StellarDotnetSdk.Xdr.Uint32;
@@ -60,7 +63,7 @@ public static class Sep45Challenge
 
     /// <summary>
     ///     Verify the Ed25519 signature on the server's SorobanAuthorizationEntry.
-    ///     Throws <see cref="Exceptions.InvalidServerSignatureException"/> if the server
+    ///     Throws <see cref="Exceptions.InvalidServerSignatureException" /> if the server
     ///     did not sign, or if the signature does not verify against the expected server account.
     /// </summary>
     /// <param name="serverEntry">The authorization entry whose credentials should be signed by the server.</param>
@@ -78,7 +81,7 @@ public static class Sep45Challenge
         if (serverEntry.Credentials.Discriminant.InnerValue !=
             SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS)
         {
-            throw new Exceptions.InvalidServerSignatureException(
+            throw new InvalidServerSignatureException(
                 "Server entry credentials are not SOROBAN_CREDENTIALS_ADDRESS.");
         }
 
@@ -89,7 +92,7 @@ public static class Sep45Challenge
             signatureContainer.Vec == null ||
             signatureContainer.Vec.InnerValue.Length == 0)
         {
-            throw new Exceptions.InvalidServerSignatureException(
+            throw new InvalidServerSignatureException(
                 "Server entry has no signatures in credentials.");
         }
 
@@ -109,7 +112,10 @@ public static class Sep45Challenge
             byte[]? sig = null;
             foreach (var kv in sigVal.Map.InnerValue)
             {
-                if (kv.Key.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_SYMBOL) continue;
+                if (kv.Key.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_SYMBOL)
+                {
+                    continue;
+                }
                 var keyName = kv.Key.Sym.InnerValue;
                 if (keyName == "public_key" &&
                     kv.Val.Discriminant.InnerValue == SCValType.SCValTypeEnum.SCV_BYTES)
@@ -125,14 +131,14 @@ public static class Sep45Challenge
 
             if (pub != null && sig != null &&
                 pub.Length == expectedPubKey.Length &&
-                System.Linq.Enumerable.SequenceEqual(pub, expectedPubKey) &&
+                pub.SequenceEqual(expectedPubKey) &&
                 serverKeyPair.Verify(hash, sig))
             {
                 return;
             }
         }
 
-        throw new Exceptions.InvalidServerSignatureException(
+        throw new InvalidServerSignatureException(
             "No valid signature for the server account was found in the server entry.");
     }
 
@@ -144,14 +150,14 @@ public static class Sep45Challenge
     ///     web_auth_domain_account, paired client domain keys).
     /// </summary>
     /// <param name="authorizationEntriesXdr">
-    ///     Base64 encoding of an <see cref="XdrDataOutputStream"/> stream containing an int32
-    ///     entry count followed by that many XDR-encoded <see cref="SorobanAuthorizationEntry"/>.
+    ///     Base64 encoding of an <see cref="XdrDataOutputStream" /> stream containing an int32
+    ///     entry count followed by that many XDR-encoded <see cref="SorobanAuthorizationEntry" />.
     /// </param>
     /// <param name="serverAccountId">Expected server signing account (G... strkey).</param>
     /// <param name="webAuthContractId">Expected web auth contract id (C... strkey).</param>
     /// <param name="homeDomains">Allowed home domains.</param>
     /// <param name="webAuthDomain">Expected web auth domain binding the challenge.</param>
-    /// <returns>The populated <see cref="ChallengeAuthorizationEntries"/>.</returns>
+    /// <returns>The populated <see cref="ChallengeAuthorizationEntries" />.</returns>
     public static ChallengeAuthorizationEntries ReadChallenge(
         string authorizationEntriesXdr,
         string serverAccountId,
@@ -160,7 +166,9 @@ public static class Sep45Challenge
         string webAuthDomain)
     {
         if (string.IsNullOrEmpty(authorizationEntriesXdr))
-            throw new Exceptions.InvalidArgumentsException("authorizationEntriesXdr must not be empty");
+        {
+            throw new InvalidArgumentsException("authorizationEntriesXdr must not be empty");
+        }
         ArgumentException.ThrowIfNullOrEmpty(serverAccountId);
         ArgumentException.ThrowIfNullOrEmpty(webAuthContractId);
         ArgumentNullException.ThrowIfNull(homeDomains);
@@ -169,7 +177,7 @@ public static class Sep45Challenge
         var entries = DecodeEntriesFromBase64(authorizationEntriesXdr);
         if (entries.Length < 2)
         {
-            throw new Exceptions.InvalidEntryCountException(
+            throw new InvalidEntryCountException(
                 $"At least 2 authorization entries required, got {entries.Length}.");
         }
 
@@ -179,16 +187,17 @@ public static class Sep45Challenge
             // 1) No sub-invocations
             if (entry.RootInvocation.SubInvocations != null && entry.RootInvocation.SubInvocations.Length > 0)
             {
-                throw new Exceptions.SubInvocationsNotAllowedException(
+                throw new SubInvocationsNotAllowedException(
                     "Sub-invocations are not allowed in SEP-45 challenges.");
             }
 
             // 2) Function is InvokeContract
             var fn = entry.RootInvocation.Function;
             if (fn.Discriminant.InnerValue !=
-                SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
+                SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum
+                    .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
             {
-                throw new Exceptions.InvalidContractIdException("Entry is not a contract function invocation.");
+                throw new InvalidContractIdException("Entry is not a contract function invocation.");
             }
 
             var contractFn = fn.ContractFn;
@@ -197,32 +206,34 @@ public static class Sep45Challenge
             var contractIdStr = AddressToStrKey(contractFn.ContractAddress);
             if (contractIdStr != webAuthContractId)
             {
-                throw new Exceptions.InvalidContractIdException(
+                throw new InvalidContractIdException(
                     $"Contract id mismatch. Expected {webAuthContractId}, got {contractIdStr}.");
             }
 
             // 4) Function name matches
             if (contractFn.FunctionName.InnerValue != WebAuthVerifyFunctionName)
             {
-                throw new Exceptions.InvalidFunctionNameException(
+                throw new InvalidFunctionNameException(
                     $"Function name must be '{WebAuthVerifyFunctionName}', got '{contractFn.FunctionName.InnerValue}'.");
             }
 
             // 5) Args shape
             if (contractFn.Args == null || contractFn.Args.Length != 1)
-                throw new Exceptions.InvalidArgumentsException("Expected exactly one argument.");
+            {
+                throw new InvalidArgumentsException("Expected exactly one argument.");
+            }
 
             if (contractFn.Args[0].Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_MAP ||
                 contractFn.Args[0].Map == null)
             {
-                throw new Exceptions.InvalidArgumentsException("Argument must be an SCMap.");
+                throw new InvalidArgumentsException("Argument must be an SCMap.");
             }
 
             // 6) Credentials type
             if (entry.Credentials.Discriminant.InnerValue !=
                 SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS)
             {
-                throw new Exceptions.InvalidArgumentsException("Credentials must be SOROBAN_CREDENTIALS_ADDRESS.");
+                throw new InvalidArgumentsException("Credentials must be SOROBAN_CREDENTIALS_ADDRESS.");
             }
 
             // 7) All entries share the same invocation
@@ -232,7 +243,7 @@ public static class Sep45Challenge
             }
             else if (!InvocationsEqual(firstInvocation, entry.RootInvocation))
             {
-                throw new Exceptions.MismatchedInvocationsException(
+                throw new MismatchedInvocationsException(
                     "All entries must share the same root invocation.");
             }
         }
@@ -244,32 +255,60 @@ public static class Sep45Challenge
         // Every entry's credentials address must belong to the known participant set, and entries for
         // both the server and the client account must be present. This rejects a server that injects an
         // extra entry with an arbitrary credentials address.
-        var allowedAddresses = new System.Collections.Generic.HashSet<string>
+        var allowedAddresses = new HashSet<string>
         {
             serverAccountId,
             extracted.ClientAccount,
         };
         if (extracted.ClientDomainAccount != null)
+        {
             allowedAddresses.Add(extracted.ClientDomainAccount);
+        }
 
         var sawClientEntry = false;
         var sawServerEntry = false;
+        var sawClientDomainEntry = false;
         foreach (var entry in entries)
         {
             var credAddress = AddressToStrKey(entry.Credentials.Address.Address);
             if (!allowedAddresses.Contains(credAddress))
-                throw new Exceptions.InvalidArgumentsException(
+            {
+                throw new InvalidArgumentsException(
                     $"Authorization entry has unexpected credentials address '{credAddress}'.");
-            if (credAddress == extracted.ClientAccount) sawClientEntry = true;
-            if (credAddress == serverAccountId) sawServerEntry = true;
+            }
+            if (credAddress == extracted.ClientAccount)
+            {
+                sawClientEntry = true;
+            }
+            if (credAddress == serverAccountId)
+            {
+                sawServerEntry = true;
+            }
+            if (extracted.ClientDomainAccount != null && credAddress == extracted.ClientDomainAccount)
+            {
+                sawClientDomainEntry = true;
+            }
         }
 
         if (!sawServerEntry)
-            throw new Exceptions.InvalidServerSignatureException(
+        {
+            throw new InvalidServerSignatureException(
                 $"No authorization entry found for the server account '{serverAccountId}'.");
+        }
         if (!sawClientEntry)
-            throw new Exceptions.InvalidClientAccountException(
+        {
+            throw new InvalidClientAccountException(
                 $"No authorization entry found for the client account '{extracted.ClientAccount}'.");
+        }
+        // When the args declare a client_domain_account, a matching authorization entry must be present
+        // (both the Flutter and Java peer SDKs enforce this). Otherwise the client cannot supply the
+        // client-domain signature and the server rejects the challenge with an opaque error.
+        if (extracted.ClientDomainAccount != null && !sawClientDomainEntry)
+        {
+            throw new InvalidClientDomainException(
+                $"Challenge args declare client_domain_account '{extracted.ClientDomainAccount}' " +
+                "but no authorization entry was found for it.");
+        }
 
         return new ChallengeAuthorizationEntries(
             entries,
@@ -283,8 +322,10 @@ public static class Sep45Challenge
     }
 
     /// <summary>Decode base64-encoded SorobanAuthorizationEntry array (int32 length + entries).</summary>
-    internal static SorobanAuthorizationEntry[] DecodeAuthorizationEntries(string base64) =>
-        DecodeEntriesFromBase64(base64);
+    internal static SorobanAuthorizationEntry[] DecodeAuthorizationEntries(string base64)
+    {
+        return DecodeEntriesFromBase64(base64);
+    }
 
     /// <summary>Encode SorobanAuthorizationEntry array as base64 (int32 length + XDR-encoded entries).</summary>
     internal static string EncodeAuthorizationEntries(SorobanAuthorizationEntry[] entries)
@@ -292,7 +333,9 @@ public static class Sep45Challenge
         var stream = new XdrDataOutputStream();
         stream.WriteInt(entries.Length);
         foreach (var e in entries)
+        {
             SorobanAuthorizationEntry.Encode(stream, e);
+        }
         return Convert.ToBase64String(stream.ToArray());
     }
 
@@ -336,19 +379,22 @@ public static class Sep45Challenge
         }
     }
 
-    private static SCMapEntry MakeSymbolBytesEntry(string key, byte[] value) => new()
+    private static SCMapEntry MakeSymbolBytesEntry(string key, byte[] value)
     {
-        Key = new SCVal
+        return new SCMapEntry
         {
-            Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_SYMBOL },
-            Sym = new SCSymbol(key),
-        },
-        Val = new SCVal
-        {
-            Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_BYTES },
-            Bytes = new SCBytes(value),
-        },
-    };
+            Key = new SCVal
+            {
+                Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_SYMBOL },
+                Sym = new SCSymbol(key),
+            },
+            Val = new SCVal
+            {
+                Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_BYTES },
+                Bytes = new SCBytes(value),
+            },
+        };
+    }
 
     private static SorobanAuthorizationEntry[] DecodeEntriesFromBase64(string b64)
     {
@@ -359,7 +405,7 @@ public static class Sep45Challenge
         }
         catch (FormatException ex)
         {
-            throw new Exceptions.InvalidArgumentsException("authorizationEntries is not valid base64.", ex);
+            throw new InvalidArgumentsException("authorizationEntries is not valid base64.", ex);
         }
 
         try
@@ -371,22 +417,28 @@ public static class Sep45Challenge
             // tiny hostile payload from forcing a huge array allocation (memory-exhaustion DoS).
             var remaining = stream.GetRemainingInputLen();
             if (count < 0 || count > remaining)
-                throw new Exceptions.InvalidArgumentsException(
+            {
+                throw new InvalidArgumentsException(
                     $"Implausible authorization entry count {count} for {remaining} remaining byte(s).");
+            }
 
             var result = new SorobanAuthorizationEntry[count];
             for (var i = 0; i < count; i++)
+            {
                 result[i] = SorobanAuthorizationEntry.Decode(stream);
+            }
 
             if (stream.GetRemainingInputLen() != 0)
-                throw new Exceptions.InvalidArgumentsException(
+            {
+                throw new InvalidArgumentsException(
                     $"{stream.GetRemainingInputLen()} unexpected trailing byte(s) after {count} authorization entries.");
+            }
 
             return result;
         }
         catch (Exception ex) when (
-            ex is System.IO.InvalidDataException or System.IO.IOException or
-                IndexOutOfRangeException or System.IO.EndOfStreamException or
+            ex is InvalidDataException or IOException or
+                IndexOutOfRangeException or EndOfStreamException or
                 FormatException or ArgumentOutOfRangeException)
         {
             // XdrDataInputStream signals truncated/corrupt input with these, so surface them all as the
@@ -397,7 +449,7 @@ public static class Sep45Challenge
             //     ("can't read 'length'"), and a length prefix > int.MaxValue -> ArgumentOutOfRangeException.
             // Unknown enum discriminants, over-large element counts, and excessive nesting are already
             // raised as InvalidDataException by the generated XDR decoders, covered by the cases above.
-            throw new Exceptions.InvalidArgumentsException(
+            throw new InvalidArgumentsException(
                 "Malformed authorization entries XDR: " + ex.Message, ex);
         }
     }
@@ -415,20 +467,15 @@ public static class Sep45Challenge
     {
         var discriminant = addr.Discriminant.InnerValue;
         if (discriminant == SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CONTRACT)
+        {
             return StrKey.EncodeContractId(addr.ContractId.InnerValue.InnerValue);
+        }
         if (discriminant == SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_ACCOUNT)
+        {
             return KeyPair.FromXdrPublicKey(addr.AccountId.InnerValue).AccountId;
-        throw new Exceptions.InvalidArgumentsException($"Unsupported SCAddress type {discriminant}");
+        }
+        throw new InvalidArgumentsException($"Unsupported SCAddress type {discriminant}");
     }
-
-    private sealed record ExtractedArgs(
-        string ClientAccount,
-        string HomeDomain,
-        string Nonce,
-        string WebAuthDomain,
-        string WebAuthDomainAccount,
-        string? ClientDomain,
-        string? ClientDomainAccount);
 
     private static ExtractedArgs ExtractAndValidateArgs(
         SCMap map, string[] allowedHomeDomains, string webAuthDomain, string serverAccountId)
@@ -444,7 +491,9 @@ public static class Sep45Challenge
         foreach (var entry in map.InnerValue)
         {
             if (entry.Key.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_SYMBOL)
-                throw new Exceptions.InvalidArgumentsException("Map key must be SCV_SYMBOL.");
+            {
+                throw new InvalidArgumentsException("Map key must be SCV_SYMBOL.");
+            }
             var k = entry.Key.Sym.InnerValue;
             var v = entry.Val;
 
@@ -461,7 +510,9 @@ public static class Sep45Challenge
                 case "nonce":
                     nonce = RequireString(v, "nonce");
                     if (nonce.Length == 0)
-                        throw new Exceptions.InvalidNonceException("nonce must not be empty.");
+                    {
+                        throw new InvalidNonceException("nonce must not be empty.");
+                    }
                     break;
                 case "web_auth_domain":
                     wad = RequireString(v, "web_auth_domain");
@@ -475,39 +526,36 @@ public static class Sep45Challenge
                 case "client_domain_account":
                     clientDomainAccount = RequireStrKeyAddress(v, "client_domain_account");
                     break;
-                default:
-                    // ignore unknown for forward-compatibility
-                    break;
             }
         }
 
         if (account == null || homeDomain == null || nonce == null || wad == null || wadAccount == null)
         {
-            throw new Exceptions.InvalidArgumentsException(
+            throw new InvalidArgumentsException(
                 "Required keys missing from web_auth_verify args (account, home_domain, nonce, web_auth_domain, web_auth_domain_account).");
         }
 
-        if ((clientDomain == null) != (clientDomainAccount == null))
+        if (clientDomain == null != (clientDomainAccount == null))
         {
-            throw new Exceptions.InvalidClientDomainException(
+            throw new InvalidClientDomainException(
                 "client_domain and client_domain_account must both be present or both absent.");
         }
 
         if (!Array.Exists(allowedHomeDomains, d => d == homeDomain))
         {
-            throw new Exceptions.InvalidHomeDomainException(
+            throw new InvalidHomeDomainException(
                 $"home_domain '{homeDomain}' is not in allowed list.");
         }
 
         if (wad != webAuthDomain)
         {
-            throw new Exceptions.InvalidWebAuthDomainException(
+            throw new InvalidWebAuthDomainException(
                 $"web_auth_domain mismatch. Expected '{webAuthDomain}', got '{wad}'.");
         }
 
         if (wadAccount != serverAccountId)
         {
-            throw new Exceptions.InvalidArgumentsException(
+            throw new InvalidArgumentsException(
                 $"web_auth_domain_account mismatch. Expected server account '{serverAccountId}', got '{wadAccount}'.");
         }
 
@@ -517,7 +565,9 @@ public static class Sep45Challenge
     private static string RequireString(SCVal v, string keyName)
     {
         if (v.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_STRING || v.Str == null)
-            throw new Exceptions.InvalidArgumentsException($"{keyName} must be SCV_STRING.");
+        {
+            throw new InvalidArgumentsException($"{keyName} must be SCV_STRING.");
+        }
         return v.Str.InnerValue;
     }
 
@@ -530,8 +580,19 @@ public static class Sep45Challenge
     {
         var s = RequireString(v, keyName);
         if (!StrKey.IsValidContractId(s) && !StrKey.IsValidEd25519PublicKey(s))
-            throw new Exceptions.InvalidArgumentsException(
+        {
+            throw new InvalidArgumentsException(
                 $"{keyName} is not a valid account (G...) or contract (C...) address: '{s}'.");
+        }
         return s;
     }
+
+    private sealed record ExtractedArgs(
+        string ClientAccount,
+        string HomeDomain,
+        string Nonce,
+        string WebAuthDomain,
+        string WebAuthDomainAccount,
+        string? ClientDomain,
+        string? ClientDomainAccount);
 }

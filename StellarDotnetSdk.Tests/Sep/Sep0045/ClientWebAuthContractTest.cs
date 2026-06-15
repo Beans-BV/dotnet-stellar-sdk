@@ -152,6 +152,81 @@ public class ClientWebAuthContractTest
     }
 
     [TestMethod]
+    public async Task GetChallengeAsync_AcceptsCamelCaseResponseFields()
+    {
+        // The SEP-45 spec uses snake_case, but the Flutter peer SDK also accepts camelCase. Match it
+        // so a camelCase-emitting server interoperates instead of failing with a misleading
+        // "missing authorization_entries" error.
+        var serverKp = KeyPair.Random();
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(
+                    "{\"authorizationEntries\":\"aGk=\",\"networkPassphrase\":\"Test SDF Network ; September 2015\"}"),
+            });
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, ContractId, Network.Test(), serverKp.AccountId,
+            HomeDomain, SorobanRpcUrl, httpClient: client);
+
+        var result = await auth.GetChallengeAsync(TestChallengeBuilder.DefaultWebAuthContractId);
+
+        Assert.AreEqual("aGk=", result.AuthorizationEntries);
+        Assert.AreEqual("Test SDF Network ; September 2015", result.NetworkPassphrase);
+    }
+
+    [TestMethod]
+    public async Task GetChallengeAsync_WrapsMalformedJson_NotRawException()
+    {
+        // Boundary guard for the custom converter: a 200 with a non-JSON body must still surface as the
+        // documented exception (via the JsonException catch), never a raw parser exception.
+        var serverKp = KeyPair.Random();
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent("not json {{{"),
+            });
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, ContractId, Network.Test(), serverKp.AccountId,
+            HomeDomain, SorobanRpcUrl, httpClient: client);
+
+        await Assert.ThrowsExceptionAsync<ChallengeForContractsRequestErrorException>(() =>
+            auth.GetChallengeAsync(TestChallengeBuilder.DefaultWebAuthContractId));
+    }
+
+    [TestMethod]
+    public async Task GetChallengeAsync_RejectsDuplicateAuthorizationEntries()
+    {
+        // The SDK rejects duplicate JSON properties (JsonOptions.AllowDuplicateProperties = false) so an
+        // adversarial server cannot silently override the signed authorization_entries blob. The custom
+        // converter must preserve that guard rather than silently taking last-wins.
+        var serverKp = KeyPair.Random();
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(
+                    "{\"authorization_entries\":\"aGk=\",\"authorization_entries\":\"ZXZpbA==\"}"),
+            });
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, ContractId, Network.Test(), serverKp.AccountId,
+            HomeDomain, SorobanRpcUrl, httpClient: client);
+
+        await Assert.ThrowsExceptionAsync<ChallengeForContractsRequestErrorException>(() =>
+            auth.GetChallengeAsync(TestChallengeBuilder.DefaultWebAuthContractId));
+    }
+
+    [TestMethod]
     public void ValidateChallenge_Passes_WhenValid()
     {
         var result = TestChallengeBuilder.Build();
@@ -715,6 +790,72 @@ public class ClientWebAuthContractTest
                 Content = new StringContent("{\"token\":\"final.jwt.token\"}"),
             });
 
+        using var client = new HttpClient(handler.Object);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            httpClient: client, latestLedgerOverride: 500,
+            webAuthDomain: TestChallengeBuilder.DefaultWebAuthDomain);
+
+        var jwt = await auth.JwtTokenAsync(result.ClientContractId, new[] { signer });
+        Assert.AreEqual("final.jwt.token", jwt);
+    }
+
+    [TestMethod]
+    public async Task JwtTokenAsync_Throws_WhenResponseNetworkPassphraseMismatch()
+    {
+        // The server issued the challenge for a different network. Fail fast with a clear error rather
+        // than letting it surface later as an opaque server-signature failure. Matches the Flutter peer.
+        var signer = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(); // built for Network.Test()
+        var challengeXdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        var handler = new Mock<HttpMessageHandler>();
+        // Fresh response per call (a single shared instance would be disposed by the challenge GET,
+        // masking the behaviour under test if the flow ever reaches a second request).
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(
+                    "{\"authorization_entries\":\"" + challengeXdr +
+                    "\",\"network_passphrase\":\"Public Global Stellar Network ; September 2015\"}"),
+            });
+        using var client = new HttpClient(handler.Object);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            httpClient: client, latestLedgerOverride: 500,
+            webAuthDomain: TestChallengeBuilder.DefaultWebAuthDomain);
+
+        await Assert.ThrowsExceptionAsync<InvalidNetworkPassphraseException>(() =>
+            auth.JwtTokenAsync(result.ClientContractId, new[] { signer }));
+    }
+
+    [TestMethod]
+    public async Task JwtTokenAsync_Succeeds_WhenResponseNetworkPassphraseMatches()
+    {
+        // Boundary guard: a network_passphrase that IS present and matches must NOT be rejected
+        // (the check validates only present-and-mismatched values).
+        var signer = KeyPair.Random();
+        var result = TestChallengeBuilder.Build();
+        var challengeXdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .SetupSequence<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(
+                    "{\"authorization_entries\":\"" + challengeXdr +
+                    "\",\"network_passphrase\":\"Test SDF Network ; September 2015\"}"),
+            })
+            .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent("{\"token\":\"final.jwt.token\"}"),
+            });
         using var client = new HttpClient(handler.Object);
         using var auth = new TestableClientWebAuthContract(
             AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
