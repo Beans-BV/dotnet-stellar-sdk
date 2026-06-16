@@ -697,6 +697,12 @@ public static class SorobanAuthorization
             }
 
             addresses[i] = delegateSigners[i].SignerAddress;
+            if (addresses[i] is null)
+            {
+                throw new ArgumentException(
+                    $"Delegate signer at index {i} returned a null SignerAddress.", nameof(delegateSigners));
+            }
+
             keys[i] = addresses[i].ToXdrByteArray();
         }
 

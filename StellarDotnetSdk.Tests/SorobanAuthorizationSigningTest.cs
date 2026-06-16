@@ -342,6 +342,26 @@ public class SorobanAuthorizationSigningTest
     }
 
     [TestMethod]
+    public void AuthorizeEntryWithDelegates_NullSignerAddress_ThrowsArgumentExceptionWithoutSigning()
+    {
+        var network = Network.Public();
+        var rootKp = KeyPair.Random();
+        var unsigned = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentials(new ScAccountId(rootKp.AccountId), Nonce, 0, new SCString("")),
+            SampleInvocation());
+
+        // A custom signer that violates the ISorobanEntrySigner contract by returning a null SignerAddress
+        // must be rejected with a clear ArgumentException naming the bad input (not an opaque
+        // NullReferenceException), and before any (possibly interactive) signer is invoked.
+        var badSigner = new FixedAddressSigner(null!, new SCString("sig"));
+        var ex = Assert.ThrowsException<ArgumentException>(() =>
+            SorobanAuthorization.AuthorizeEntryWithDelegates(
+                unsigned, new KeyPairEntrySigner(rootKp), new ISorobanEntrySigner[] { badSigner }, ValidUntil, network));
+        Assert.AreEqual("delegateSigners", ex.ParamName);
+        Assert.AreEqual(0, badSigner.SignCallCount);
+    }
+
+    [TestMethod]
     public void AuthorizeEntryWithDelegates_DuplicateDelegateAddresses_ThrowsArgumentException()
     {
         var network = Network.Public();
