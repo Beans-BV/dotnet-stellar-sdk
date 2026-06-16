@@ -1,6 +1,6 @@
 # SEP-0009 (Standard KYC Fields) Compatibility Matrix
 
-**Updated:** 2026-04-15
+**Updated:** 2026-06-17
 **SDK:** StellarDotnetSdk
 **SDK Version:** 12.0.0
 **SEP Version:** 1.17.0
@@ -27,7 +27,7 @@ determined by the needs of the application.
 - ✅ **Implemented:** 76/76
 - ❌ **Not Implemented:** 0/76
 
-**Required Fields:** 0% (0/0)
+**Required Fields:** 0.0% (0/0)
 
 **Optional Fields:** 100.0% (76/76)
 
@@ -55,10 +55,10 @@ determined by the needs of the application.
 
 | Section | Coverage | Required Coverage | Implemented | Not Implemented | Total |
 |---------|----------|-------------------|-------------|-----------------|-------|
-| Card Fields | 100.0% | 100% | 11 | 0 | 11 |
-| Financial Account Fields | 100.0% | 100% | 14 | 0 | 14 |
-| Natural Person Fields | 100.0% | 100% | 34 | 0 | 34 |
-| Organization Fields | 100.0% | 100% | 17 | 0 | 17 |
+| Card Fields | 100.0% | 100.0% | 11 | 0 | 11 |
+| Financial Account Fields | 100.0% | 100.0% | 14 | 0 | 14 |
+| Natural Person Fields | 100.0% | 100.0% | 34 | 0 | 34 |
+| Organization Fields | 100.0% | 100.0% | 17 | 0 | 17 |
 
 ## Detailed Field Comparison
 

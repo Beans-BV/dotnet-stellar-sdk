@@ -1,6 +1,6 @@
 # SEP-0006 (Deposit and Withdrawal API) Compatibility Matrix
 
-**Updated:** 2026-04-15  
+**Updated:** 2026-06-17  
 **SDK:** StellarDotnetSdk  
 **SDK Version:** 12.0.0  
 **SEP Version:** 4.3.0  
@@ -16,7 +16,7 @@ to go to the anchor's site.
 
 Please note that this SEP provides a normalized interface specification that
 allows wallets and other services to interact with anchors _programmatically_.
-[SEP-24](sep-0024.md) was created to support use cases where the anchor may
+[SEP-24](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md) was created to support use cases where the anchor may
 want to interact with users _interactively_ using a popup opened within the
 wallet application.
 
@@ -122,7 +122,7 @@ wallet application.
 | Deposit Endpoints | 100.0% | 100.0% | 2 | 0 | 2 |
 | Deposit Request Parameters | 100.0% | 100.0% | 15 | 0 | 15 |
 | Deposit Response Fields | 100.0% | 100.0% | 8 | 0 | 8 |
-| Fee Endpoint | 100.0% | 100% | 1 | 0 | 1 |
+| Fee Endpoint | 100.0% | 100.0% | 1 | 0 | 1 |
 | Info Endpoint | 100.0% | 100.0% | 1 | 0 | 1 |
 | Info Response Fields | 100.0% | 100.0% | 8 | 0 | 8 |
 | Transaction Endpoints | 100.0% | 100.0% | 3 | 0 | 3 |

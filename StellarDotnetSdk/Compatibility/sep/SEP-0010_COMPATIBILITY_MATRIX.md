@@ -1,6 +1,6 @@
 # SEP-0010 (Stellar Web Authentication) Compatibility Matrix
 
-**Updated:** 2026-04-15
+**Updated:** 2026-06-17
 **SDK:** StellarDotnetSdk
 **SDK Version:** 12.0.0
 **SEP Version:** 3.4.1
@@ -14,25 +14,25 @@ create authenticated web sessions on behalf of a user who holds a Stellar
 account. A wallet may want to authenticate with any web service which requires
 a Stellar account ownership verification, for example, to upload KYC
 information to an anchor in an authenticated way as described in
-[SEP-12](sep-0012.md).
+[SEP-12](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0012.md).
 
 This SEP also supports authenticating users of shared, omnibus, or pooled
-Stellar accounts. Clients can use [memos](#memos) or
-[muxed accounts](#muxed-accounts) to distinguish users or sub-accounts of
+Stellar accounts. Clients can use [memos](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md#memos) or
+[muxed accounts](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md#muxed-accounts) to distinguish users or sub-accounts of
 shared accounts.
 
 ## Overall Coverage
 
-**Total Coverage:** 100.0% (24/24 fields)
+**Total Coverage:** 100.0% (26/26 fields)
 
-- ✅ **Implemented:** 24/24
-- ❌ **Not Implemented:** 0/24
+- ✅ **Implemented:** 26/26
+- ❌ **Not Implemented:** 0/26
 
 _Note: Unlike client-only SDKs, StellarDotnetSdk implements both client (`ClientWebAuth`) and server (`ServerWebAuth`) sides of SEP-0010. Features that are server-side-only (e.g. JWT token validation, client domain stellar.toml verification) are therefore covered by `ServerWebAuth` rather than excluded._
 
 **Required Fields:** 100.0% (19/19)
 
-**Optional Fields:** 100.0% (5/5)
+**Optional Fields:** 100.0% (7/7)
 
 ## Implementation Status
 
@@ -85,7 +85,7 @@ _Note: Unlike client-only SDKs, StellarDotnetSdk implements both client (`Client
 |---------|----------|-------------------|-------------|-----------------|-------|
 | Authentication Endpoints | 100.0% | 100.0% | 2 | 0 | 2 |
 | Challenge Transaction Features | 100.0% | 100.0% | 9 | 0 | 9 |
-| Client Domain Features | 100.0% | 100% | 4 | 0 | 4 |
+| Client Domain Features | 100.0% | 100.0% | 4 | 0 | 4 |
 | JWT Token Features | 100.0% | 100.0% | 5 | 0 | 5 |
 | Verification Features | 100.0% | 100.0% | 6 | 0 | 6 |
 

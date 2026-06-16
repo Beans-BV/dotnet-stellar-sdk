@@ -1,6 +1,6 @@
 # SEP-0024 (Hosted Deposit and Withdrawal) Compatibility Matrix
 
-**Updated:** 2026-04-15  
+**Updated:** 2026-06-17  
 **SDK:** StellarDotnetSdk  
 **SDK Version:** 12.0.0  
 **SEP Version:** 3.8.0  
@@ -12,10 +12,10 @@
 This SEP defines the standard way for anchors and wallets to interact on behalf
 of users. This improves user experience by allowing wallets and other clients
 to interact with anchors directly without the user needing to leave the wallet
-to go to the anchor's site. It is based on [SEP-0006](sep-0006.md), but only
+to go to the anchor's site. It is based on [SEP-0006](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md), but only
 supports the interactive flow, and cleans up or removes confusing artifacts. If
 you are updating from SEP-0006 see the
-[changes from SEP-6](#changes-from-SEP-6) at the bottom of this document.
+[changes from SEP-6](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md#changes-from-sep-6) at the bottom of the SEP-24 specification.
 
 ## Overall Coverage
 
@@ -88,8 +88,8 @@ you are updating from SEP-0006 see the
 |---------|----------|-------------------|-------------|-----------------|-------|
 | Deposit Asset Fields | 100.0% | 100.0% | 6 | 0 | 6 |
 | Deposit Request Parameters | 100.0% | 100.0% | 12 | 0 | 12 |
-| Feature Flags Fields | 100.0% | 100% | 2 | 0 | 2 |
-| Fee Endpoint | 100.0% | 100% | 1 | 0 | 1 |
+| Feature Flags Fields | 100.0% | 100.0% | 2 | 0 | 2 |
+| Fee Endpoint | 100.0% | 100.0% | 1 | 0 | 1 |
 | Fee Endpoint Info Fields | 100.0% | 100.0% | 2 | 0 | 2 |
 | Info Endpoint | 100.0% | 100.0% | 1 | 0 | 1 |
 | Info Response Fields | 100.0% | 100.0% | 4 | 0 | 4 |
