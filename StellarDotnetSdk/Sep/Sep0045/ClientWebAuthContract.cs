@@ -180,8 +180,15 @@ public class ClientWebAuthContract : IDisposable
     /// </remarks>
     internal virtual async Task<uint> GetLatestLedgerSequenceAsync()
     {
-        using var rpc = new SorobanServer(_sorobanRpcUrl, _httpClient);
+        using var rpc = new StellarRpcServer(_sorobanRpcUrl, _httpClient);
         var latest = await rpc.GetLatestLedger().ConfigureAwait(false);
+        if (latest.Sequence < 0)
+        {
+            // Sequence is a signed int on the wire; a negative value is a malformed RPC response that
+            // would wrap to a huge uint (and overflow the expiration-ledger addition below), so fail fast.
+            throw new InvalidOperationException(
+                $"Soroban RPC returned a negative ledger sequence ({latest.Sequence}).");
+        }
         return (uint)latest.Sequence;
     }
 
@@ -493,7 +500,7 @@ public class ClientWebAuthContract : IDisposable
         else
         {
             var json = JsonSerializer.Serialize(
-                new { authorization_entries = signedAuthorizationEntriesXdr });
+                new { authorization_entries = signedAuthorizationEntriesXdr }, JsonOptions.DefaultOptions);
             req.Content = new StringContent(json, Encoding.UTF8, "application/json");
         }
 

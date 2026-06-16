@@ -375,6 +375,66 @@ public class ClientWebAuthContractTest
     }
 
     [TestMethod]
+    public async Task SignAuthorizationEntries_Throws_WhenRpcReturnsNegativeLedgerSequence()
+    {
+        // A malformed/hostile Soroban RPC returning a negative ledger sequence must fail fast: the signed
+        // int would otherwise wrap to a huge uint and overflow the expiration-ledger addition. This drives
+        // the REAL StellarRpcServer path (a real ClientWebAuthContract, not the GetLatestLedger override).
+        var result = TestChallengeBuilder.Build();
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(
+                    """{"jsonrpc":"2.0","id":"1","result":{"id":"h","protocolVersion":21,"sequence":-1}}"""),
+            });
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl, httpClient: client);
+
+        var ex = await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            auth.SignAuthorizationEntriesAsync(xdr, result.ClientContractId, new[] { KeyPair.Random() }));
+        StringAssert.Contains(ex.Message, "negative");
+    }
+
+    [TestMethod]
+    public async Task SignAuthorizationEntries_StampsExpiration_FromRealRpcLedgerSequence()
+    {
+        // Companion to the negative-sequence guard: a valid sequence fetched over the REAL StellarRpcServer
+        // path (no GetLatestLedger override) stamps expiration = sequence + DefaultSignatureExpirationLedgers.
+        var signer = KeyPair.Random();
+        var result = TestChallengeBuilder.Build();
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(
+                    """{"jsonrpc":"2.0","id":"1","result":{"id":"h","protocolVersion":21,"sequence":453871}}"""),
+            });
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl, httpClient: client);
+
+        var signed = await auth.SignAuthorizationEntriesAsync(
+            xdr, result.ClientContractId, new[] { signer });
+
+        // 453871 (RPC sequence) + 10 (DefaultSignatureExpirationLedgers).
+        var clientEntry = TestChallengeBuilder.DecodeEntries(signed)[1];
+        Assert.AreEqual(
+            453881u, clientEntry.Credentials.Address.SignatureExpirationLedger.InnerValue);
+    }
+
+    [TestMethod]
     public async Task SignAuthorizationEntries_Multisig_AppendsVerifiableSignatures()
     {
         // A contract account requiring M-of-N: every signer must produce a distinct, verifiable map.
