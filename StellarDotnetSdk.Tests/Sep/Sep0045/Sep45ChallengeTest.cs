@@ -11,6 +11,8 @@ using StellarDotnetSdk.Xdr;
 using Int64 = StellarDotnetSdk.Xdr.Int64;
 using Uint32 = StellarDotnetSdk.Xdr.Uint32;
 using SCMap = StellarDotnetSdk.Xdr.SCMap;
+using SCMapEntry = StellarDotnetSdk.Xdr.SCMapEntry;
+using SCString = StellarDotnetSdk.Xdr.SCString;
 using SCSymbol = StellarDotnetSdk.Xdr.SCSymbol;
 using SCVal = StellarDotnetSdk.Xdr.SCVal;
 using SCVec = StellarDotnetSdk.Xdr.SCVec;
@@ -244,6 +246,27 @@ public class Sep45ChallengeTest
     }
 
     [TestMethod]
+    [ExpectedException(typeof(InvalidClientDomainException))]
+    public void ReadChallenge_Throws_WhenClientDomainAccountEqualsServerAccount()
+    {
+        // Degenerate/hostile: client_domain_account == the server account. Without an explicit guard the
+        // server entry would double as the client-domain entry, defeating the entry-presence check.
+        var result = TestChallengeBuilder.Build();
+        var serverAccount = result.ServerKeyPair.AccountId;
+        var args = result.Entries[0].RootInvocation.Function.ContractFn.Args[0];
+        args.Map = new SCMap(args.Map!.InnerValue
+            .Concat(new[]
+            {
+                StringMapEntry("client_domain", "wallet.example"),
+                StringMapEntry("client_domain_account", serverAccount),
+            }).ToArray());
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        Sep45Challenge.ReadChallenge(
+            xdr, serverAccount, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+    }
+
+    [TestMethod]
     [ExpectedException(typeof(InvalidArgumentsException))]
     public void ReadChallenge_Throws_OnInvalidBase64()
     {
@@ -364,6 +387,23 @@ public class Sep45ChallengeTest
         Assert.AreEqual(0, leaks.Count,
             "ReadChallenge leaked non-WebAuthContractException(s): " +
             string.Join(", ", leaks.Take(8).Distinct()));
+    }
+
+    private static SCMapEntry StringMapEntry(string key, string value)
+    {
+        return new SCMapEntry
+        {
+            Key = new SCVal
+            {
+                Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_SYMBOL },
+                Sym = new SCSymbol(key),
+            },
+            Val = new SCVal
+            {
+                Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_STRING },
+                Str = new SCString(value),
+            },
+        };
     }
 
     private static SorobanAuthorizationEntry BuildMinimalEntry()

@@ -12,6 +12,10 @@ using StellarDotnetSdk.Sep.Sep0010.Exceptions;
 using StellarDotnetSdk.Sep.Sep0045.Exceptions;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
+// MissingClientDomainException and NoClientDomainSigningKeyFoundException exist in BOTH
+// Sep0010.Exceptions and Sep0045.Exceptions (deliberate per-SEP copies). Since this file imports
+// Sep0010.Exceptions (for NoWebAuthServerSigningKeyFoundException), these aliases pin the unqualified
+// names to the Sep0045 versions. Keep them — without the aliases the names are ambiguous (CS0104).
 using MissingClientDomainException = StellarDotnetSdk.Sep.Sep0045.Exceptions.MissingClientDomainException;
 using NoClientDomainSigningKeyFoundException =
     StellarDotnetSdk.Sep.Sep0045.Exceptions.NoClientDomainSigningKeyFoundException;
@@ -46,6 +50,17 @@ public class ClientWebAuthContract : IDisposable
     ///     config value), so it is taken as configuration here rather than derived from
     ///     <paramref name="authEndpoint" />. Defaults to <paramref name="serverHomeDomain" /> when null.
     /// </param>
+    /// <param name="httpClient">
+    ///     Optional HTTP client to reuse. Credentials placed in this client's
+    ///     <see cref="System.Net.Http.HttpClient.DefaultRequestHeaders" /> are sent to <em>every</em> host
+    ///     it contacts — including a client domain's stellar.toml (a different origin) during client-domain
+    ///     verification. To send credentials only to the auth server, use
+    ///     <paramref name="httpRequestHeaders" /> instead; the SDK does not forward those across origins.
+    /// </param>
+    /// <param name="httpRequestHeaders">
+    ///     Optional headers sent with requests to the auth server. The SDK does NOT forward these to the
+    ///     client domain's stellar.toml fetch, so they are the safe place for auth-server credentials.
+    /// </param>
     public ClientWebAuthContract(
         string authEndpoint,
         string webAuthContractId,
@@ -65,6 +80,18 @@ public class ClientWebAuthContract : IDisposable
         ArgumentException.ThrowIfNullOrEmpty(serverSigningKey);
         ArgumentException.ThrowIfNullOrEmpty(serverHomeDomain);
         ArgumentException.ThrowIfNullOrEmpty(sorobanRpcUrl);
+
+        if (!Uri.TryCreate(authEndpoint, UriKind.Absolute, out var endpointUri))
+        {
+            throw new ArgumentException("authEndpoint must be an absolute URI.", nameof(authEndpoint));
+        }
+        if (!endpointUri.IsLoopback && endpointUri.Scheme != Uri.UriSchemeHttps)
+        {
+            throw new ArgumentException(
+                "authEndpoint must use https (the SEP-45 challenge and JWT are exchanged over it); " +
+                "plain http is allowed only for loopback addresses used in local development.",
+                nameof(authEndpoint));
+        }
 
         _authEndpoint = authEndpoint;
         _webAuthContractId = webAuthContractId;

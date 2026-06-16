@@ -29,7 +29,8 @@ public sealed record ChallengeForContractsResponse
 ///     client signs), so the converter preserves the SDK-wide duplicate-property guard
 ///     (<see cref="StellarDotnetSdk.Converters.JsonOptions" /> sets <c>AllowDuplicateProperties = false</c>):
 ///     a raw <see cref="JsonDocument" /> is last-wins by default, so duplicates are rejected explicitly
-///     here rather than silently overriding the signed blob.
+///     here (case-insensitively, like the SDK's guard) rather than silently overriding the signed blob.
+///     Value lookup itself remains exact-name (snake/camel), mirroring the peer SDK's two-key lookup.
 /// </remarks>
 internal sealed class ChallengeForContractsResponseConverter : JsonConverter<ChallengeForContractsResponse>
 {
@@ -45,11 +46,12 @@ internal sealed class ChallengeForContractsResponseConverter : JsonConverter<Cha
 
         string? snakeAuthorizationEntries = null, camelAuthorizationEntries = null;
         string? snakeNetworkPassphrase = null, camelNetworkPassphrase = null;
-        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var property in root.EnumerateObject())
         {
-            // Reject duplicate property names — a raw JsonDocument is last-wins, which would bypass the
+            // Reject duplicate property names (case-insensitively, matching the SDK's case-insensitive
+            // property matching) — a raw JsonDocument is last-wins, which would otherwise bypass the
             // AllowDuplicateProperties = false guard the SDK applies to every other response.
             if (!seen.Add(property.Name))
             {

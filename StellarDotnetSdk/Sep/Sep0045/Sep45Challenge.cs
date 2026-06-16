@@ -252,6 +252,22 @@ public static class Sep45Challenge
         var firstArgs = entries[0].RootInvocation.Function.ContractFn.Args[0].Map!;
         var extracted = ExtractAndValidateArgs(firstArgs, homeDomains, webAuthDomain, serverAccountId);
 
+        // The client-domain entry is matched purely by its credentials address, so client_domain_account
+        // must name a participant distinct from the client account and the server account. A hostile
+        // challenge that aliases it to either would let that participant's own entry double as the
+        // client-domain entry, satisfying the presence check below without a genuine, separately-signed
+        // client-domain entry — so reject the aliasing up front. Both comparisons are reachable: address
+        // args may be G... or C... (see RequireStrKeyAddress), so the client-account comparison is not
+        // dead code — keep both branches.
+        if (extracted.ClientDomainAccount != null &&
+            (extracted.ClientDomainAccount == extracted.ClientAccount ||
+             extracted.ClientDomainAccount == serverAccountId))
+        {
+            throw new InvalidClientDomainException(
+                $"client_domain_account '{extracted.ClientDomainAccount}' must differ from the client " +
+                "account and the server account.");
+        }
+
         // Every entry's credentials address must belong to the known participant set, and entries for
         // both the server and the client account must be present. This rejects a server that injects an
         // extra entry with an arbitrary credentials address.
