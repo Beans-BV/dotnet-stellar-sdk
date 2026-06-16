@@ -49,10 +49,18 @@ internal sealed class FixedAddressSigner : ISorobanEntrySigner
         _signature = signature;
     }
 
+    /// <summary>How many times <see cref="Sign" /> was invoked.</summary>
+    public int SignCallCount { get; private set; }
+
+    /// <summary>The payload hash passed to the most recent <see cref="Sign" /> call (null if never called).</summary>
+    public byte[] LastPayloadHash { get; private set; }
+
     public ScAddress SignerAddress { get; }
 
     public SCVal Sign(byte[] payloadHash)
     {
+        SignCallCount++;
+        LastPayloadHash = payloadHash;
         return _signature;
     }
 }

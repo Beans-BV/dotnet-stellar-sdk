@@ -20,7 +20,7 @@ namespace StellarDotnetSdk.Operations;
 ///     default to <see cref="Preserve" />, keeping the entry's existing variant and matching the JS
 ///     reference SDK (v16), whose <c>authorizeEntry</c> never changes the credential type. Pass
 ///     <see cref="V2" /> explicitly to upgrade a legacy entry to the Protocol 27 address-bound
-///     credential. V2 is expected to replace V1 in Protocol 28.
+///     credential.
 /// </summary>
 public enum SorobanCredentialsVersion
 {
@@ -41,7 +41,7 @@ public enum SorobanCredentialsVersion
 
     /// <summary>
     ///     Protocol 27 address-bound <c>SOROBAN_CREDENTIALS_ADDRESS_V2</c> (CAP-0071-02); rejected by
-    ///     pre-Protocol-27 networks. Expected to replace V1 in Protocol 28.
+    ///     pre-Protocol-27 networks.
     /// </summary>
     V2 = 2,
 }
@@ -107,6 +107,11 @@ public class KeyPairEntrySigner : ISorobanEntrySigner
 /// </summary>
 public static class SorobanAuthorization
 {
+    // Bounds in-memory recursion over caller-built delegate trees, mirroring the XDR decoder's depth cap
+    // (a decoded tree is already capped at XdrDataInputStream.DefaultMaxDepth). Converts an otherwise
+    // uncatchable StackOverflowException on a pathologically deep tree into a clear, catchable exception.
+    private const int MaxDelegateNestingDepth = XdrDataInputStream.DefaultMaxDepth;
+
     /// <summary>The single canonical-XDR-key comparer used to order and de-duplicate delegate addresses.</summary>
     private static readonly IComparer<byte[]> XdrKeyComparer =
         Comparer<byte[]>.Create((left, right) => left.AsSpan().SequenceCompareTo(right));
@@ -199,14 +204,21 @@ public static class SorobanAuthorization
     ///         cref="AuthorizeEntry(SorobanAuthorizationEntry, ISorobanEntrySigner, uint, Network, SorobanCredentialsVersion, ScAddress?)" />
     ///     .
     /// </summary>
-    /// <param name="entry">The entry whose signing payload to compute. Its credentials must be address credentials.</param>
+    /// <param name="entry">
+    ///     The entry whose signing payload to compute. Its credentials must be address (V1/V2) or
+    ///     delegated credentials; source-account credentials are rejected.
+    /// </param>
     /// <param name="validUntilLedgerSeq">The ledger sequence number on which the signature expires.</param>
     /// <param name="network">The network the transaction is submitted to.</param>
     /// <returns>A 32-byte SHA-256 hash of the XDR-encoded preimage.</returns>
-    /// <exception cref="InvalidOperationException">
-    ///     Thrown for source-account credentials, which have no signature payload (they are signed via
-    ///     the transaction source account), and for unrecognized credential subtypes.
+    /// <exception cref="ArgumentNullException">
+    ///     Thrown when <paramref name="entry" /> or <paramref name="network" /> is null.
     /// </exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown for source-account credentials, which have no signing payload (they are authorized via
+    ///     the transaction source account); pass an address-credentialed or delegated entry instead.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">Thrown for unrecognized credential subtypes.</exception>
     public static byte[] BuildAuthorizationEntryPreimageHash(
         SorobanAuthorizationEntry entry,
         uint validUntilLedgerSeq,
@@ -224,8 +236,10 @@ public static class SorobanAuthorization
                 network, v2.Address, v2.Nonce, validUntilLedgerSeq, entry.RootInvocation),
             SorobanAddressCredentials v1 => BuildAuthPreimageHash(
                 network, v1.Nonce, validUntilLedgerSeq, entry.RootInvocation),
-            SorobanSourceAccountCredentials => throw new InvalidOperationException(
-                "Source-account credentials have no signature payload; they are signed via the transaction source account."),
+            SorobanSourceAccountCredentials => throw new ArgumentException(
+                "Source-account credentials have no signing payload; they are authorized via the transaction " +
+                "source account. Pass an entry with ADDRESS, ADDRESS_V2, or delegated credentials.",
+                nameof(entry)),
             _ => throw new InvalidOperationException(
                 $"Unknown SorobanCredentials type: {entry.Credentials.GetType()}"),
         };
@@ -421,15 +435,22 @@ public static class SorobanAuthorization
         ScAddress? forAddress)
     {
         var root = withDelegates.AddressCredentials;
-        // CAP-0071-01: the top-level account and every delegate sign the same payload, bound to
-        // the top-level (root) address.
-        var payloadHash = BuildAuthorizationEntryPreimageHash(entry, validUntilLedgerSeq, network);
-        var signature = signer.Sign(payloadHash);
 
         // Encode the routing target once; node comparisons reuse the cached key.
         var forAddressKey = forAddress?.ToXdrByteArray();
         var signRoot = forAddressKey is null || KeyEqualsAddress(forAddressKey, root.Address);
-        var matched = signRoot;
+
+        // Resolve which node(s) forAddress targets BEFORE invoking the (possibly interactive) signer, so a
+        // bogus forAddress is rejected without first prompting a hardware wallet / remote co-signer for a
+        // signature that would only be discarded. Mirrors AuthorizeEntryWithDelegates, which likewise
+        // validates the delegate set before signing.
+        if (forAddressKey is not null && !signRoot &&
+            !DelegatesContainAddress(withDelegates.Delegates, forAddressKey, 0))
+        {
+            throw new ArgumentException(
+                "The authorization entry has no credential node for the requested forAddress.",
+                nameof(forAddress));
+        }
 
         // When signing only a delegate (not the root), the root's expiration is still rewritten to
         // validUntilLedgerSeq below while its existing signature is preserved. If that signature is a
@@ -455,7 +476,7 @@ public static class SorobanAuthorization
         // mismatches — re-signing one delegate while a sibling is signed over a different expiration —
         // still cannot be detected here, as a delegate node carries no expiration of its own.)
         if (signRoot && root.SignatureExpirationLedger != validUntilLedgerSeq &&
-            AnyDelegateHasRealSignature(withDelegates.Delegates))
+            AnyDelegateHasRealSignature(withDelegates.Delegates, 0))
         {
             throw new InvalidOperationException(
                 "Cannot re-sign the root with a validUntilLedgerSeq that differs from the entry's current " +
@@ -464,17 +485,17 @@ public static class SorobanAuthorization
                 "BuildWithDelegatesEntry) so every party signs the same expiration.");
         }
 
+        // CAP-0071-01: the top-level account and every delegate sign the same payload, bound to the
+        // top-level (root) address. Sign only after every validation above has passed.
+        var payloadHash = BuildAuthorizationEntryPreimageHash(entry, validUntilLedgerSeq, network);
+        var signature = signer.Sign(payloadHash);
+
         var delegates = withDelegates.Delegates;
         if (forAddressKey is not null)
         {
-            delegates = RouteDelegateSignature(delegates, forAddressKey, signature, ref matched);
-        }
-
-        if (!matched)
-        {
-            throw new ArgumentException(
-                "The authorization entry has no credential node for the requested forAddress.",
-                nameof(forAddress));
+            // forAddress was confirmed to match the root or a delegate above, so routing always places
+            // the signature on at least one node.
+            delegates = RouteDelegateSignature(delegates, forAddressKey, signature, 0);
         }
 
         var newRoot = new SorobanAddressCredentials(
@@ -485,9 +506,19 @@ public static class SorobanAuthorization
             entry.RootInvocation);
     }
 
-    private static SorobanDelegateSignature[] RouteDelegateSignature(
-        SorobanDelegateSignature[] delegates, byte[] forAddressKey, SCVal signature, ref bool matched)
+    private static void ThrowIfDelegateNestingTooDeep(int depth)
     {
+        if (depth > MaxDelegateNestingDepth)
+        {
+            throw new InvalidOperationException(
+                $"Delegate nesting exceeds the maximum supported depth of {MaxDelegateNestingDepth}.");
+        }
+    }
+
+    private static SorobanDelegateSignature[] RouteDelegateSignature(
+        SorobanDelegateSignature[] delegates, byte[] forAddressKey, SCVal signature, int depth)
+    {
+        ThrowIfDelegateNestingTooDeep(depth);
         var result = new SorobanDelegateSignature[delegates.Length];
         for (var i = 0; i < delegates.Length; i++)
         {
@@ -499,19 +530,40 @@ public static class SorobanAuthorization
                 throw new InvalidOperationException("Delegate signatures must not contain null entries.");
             }
 
-            var nested = RouteDelegateSignature(current.NestedDelegates, forAddressKey, signature, ref matched);
-            if (KeyEqualsAddress(forAddressKey, current.Address))
-            {
-                matched = true;
-                result[i] = new SorobanDelegateSignature(current.Address, signature, nested);
-            }
-            else
-            {
-                result[i] = new SorobanDelegateSignature(current.Address, current.Signature, nested);
-            }
+            var nested = RouteDelegateSignature(current.NestedDelegates, forAddressKey, signature, depth + 1);
+            result[i] = KeyEqualsAddress(forAddressKey, current.Address)
+                ? new SorobanDelegateSignature(current.Address, signature, nested)
+                : new SorobanDelegateSignature(current.Address, current.Signature, nested);
         }
 
         return result;
+    }
+
+    /// <summary>
+    ///     Whether any node in the delegate forest (including nested delegates) matches the precomputed
+    ///     <paramref name="forAddressKey" />. Used to resolve a routing target before signing. Rejects
+    ///     null nodes with the same clear error as <see cref="RouteDelegateSignature" />, so a malformed
+    ///     tree surfaces its structural error instead of being masked by the forAddress check.
+    /// </summary>
+    private static bool DelegatesContainAddress(
+        SorobanDelegateSignature[] delegates, byte[] forAddressKey, int depth)
+    {
+        ThrowIfDelegateNestingTooDeep(depth);
+        foreach (var current in delegates)
+        {
+            if (current is null)
+            {
+                throw new InvalidOperationException("Delegate signatures must not contain null entries.");
+            }
+
+            if (KeyEqualsAddress(forAddressKey, current.Address) ||
+                DelegatesContainAddress(current.NestedDelegates, forAddressKey, depth + 1))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -530,8 +582,9 @@ public static class SorobanAuthorization
     ///     the expiration out from under an already-signed delegate. Null nodes are ignored here; they
     ///     are rejected later by <see cref="RouteDelegateSignature" /> or serialization.
     /// </summary>
-    private static bool AnyDelegateHasRealSignature(SorobanDelegateSignature[] delegates)
+    private static bool AnyDelegateHasRealSignature(SorobanDelegateSignature[] delegates, int depth)
     {
+        ThrowIfDelegateNestingTooDeep(depth);
         foreach (var current in delegates)
         {
             if (current is null)
@@ -539,7 +592,7 @@ public static class SorobanAuthorization
                 continue;
             }
 
-            if (current.Signature is not SCVoid || AnyDelegateHasRealSignature(current.NestedDelegates))
+            if (current.Signature is not SCVoid || AnyDelegateHasRealSignature(current.NestedDelegates, depth + 1))
             {
                 return true;
             }
@@ -566,6 +619,16 @@ public static class SorobanAuthorization
     /// <param name="validUntilLedgerSeq">The ledger sequence number on which the signatures expire.</param>
     /// <param name="network">The network the transaction is submitted to.</param>
     /// <returns>A new signed <see cref="SorobanAuthorizationEntry" /> with delegated credentials.</returns>
+    /// <exception cref="ArgumentNullException">
+    ///     Thrown when <paramref name="entry" />, <paramref name="rootSigner" />,
+    ///     <paramref name="delegateSigners" />, or <paramref name="network" /> is null.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown — before any signer is invoked — when <paramref name="entry" /> does not carry ADDRESS
+    ///     or ADDRESS_V2 credentials (source-account or already-delegated), when any element of
+    ///     <paramref name="delegateSigners" /> is null, or when two delegate signers share the same
+    ///     address (CAP-0071-01 forbids duplicate delegate addresses).
+    /// </exception>
     /// <remarks>
     ///     <para>
     ///         Per CAP-0071-01, the top-level account and every delegate sign the same payload: the
@@ -622,8 +685,10 @@ public static class SorobanAuthorization
         // Validate the delegate set (null entries + CAP-71 duplicate addresses) BEFORE invoking any
         // signer: the addresses are known from SignerAddress alone, and an interactive signer (hardware
         // wallet, remote co-signing service) must not be prompted for a request that is guaranteed to be
-        // rejected once a duplicate is found.
+        // rejected once a duplicate is found. The canonical XDR keys computed here are reused for the
+        // post-signing sort below, so each delegate address is encoded only once.
         var addresses = new ScAddress[delegateSigners.Count];
+        var keys = new byte[delegateSigners.Count][];
         for (var i = 0; i < delegateSigners.Count; i++)
         {
             if (delegateSigners[i] is null)
@@ -632,9 +697,10 @@ public static class SorobanAuthorization
             }
 
             addresses[i] = delegateSigners[i].SignerAddress;
+            keys[i] = addresses[i].ToXdrByteArray();
         }
 
-        ThrowOnDuplicateAddresses(addresses, nameof(delegateSigners));
+        ThrowOnDuplicateKeys(keys, nameof(delegateSigners));
 
         // The WITH_DELEGATES XDR embeds a bare SorobanAddressCredentials struct (no V1/V2 discriminant),
         // so the concrete wrapper variant is irrelevant here; a V1 instance carries the fields even
@@ -651,8 +717,10 @@ public static class SorobanAuthorization
 
         // CAP-0071-01 requires delegate arrays sorted by increasing address. All delegate signatures
         // are over the same root-bound payload and therefore independent of array order, so sorting
-        // after signing is safe. (Duplicates were already rejected above.)
-        SortDelegatesByAddress(delegates, nameof(delegateSigners));
+        // after signing is safe. Reuse the keys computed above (no second encode pass); keys[i] is the
+        // key of delegates[i].Address, so the in-tandem sort keeps them aligned. (Duplicates were
+        // already rejected above.)
+        Array.Sort(keys, delegates, XdrKeyComparer);
 
         return new SorobanAuthorizationEntry(
             new SorobanAddressCredentialsWithDelegates(root, delegates),
@@ -758,23 +826,19 @@ public static class SorobanAuthorization
     }
 
     /// <summary>
-    ///     Throws <see cref="ArgumentException" /> if <paramref name="addresses" /> contains two entries
-    ///     that encode to the same canonical XDR key, as CAP-0071-01 forbids within a delegates array.
-    ///     Used to reject duplicates before any signer runs.
+    ///     Throws <see cref="ArgumentException" /> if two of the precomputed canonical XDR
+    ///     <paramref name="keys" /> are equal, as CAP-0071-01 forbids within a delegates array. Sorts a
+    ///     copy so the caller's key ordering (aligned with its element array) is preserved for a later
+    ///     in-tandem sort. Used to reject duplicates before any signer runs.
     /// </summary>
-    private static void ThrowOnDuplicateAddresses(ScAddress[] addresses, string paramName)
+    private static void ThrowOnDuplicateKeys(byte[][] keys, string paramName)
     {
-        var keys = new byte[addresses.Length][];
-        for (var i = 0; i < addresses.Length; i++)
-        {
-            keys[i] = addresses[i].ToXdrByteArray();
-        }
+        var sorted = (byte[][])keys.Clone();
+        Array.Sort(sorted, XdrKeyComparer);
 
-        Array.Sort(keys, XdrKeyComparer);
-
-        for (var i = 1; i < keys.Length; i++)
+        for (var i = 1; i < sorted.Length; i++)
         {
-            if (keys[i - 1].AsSpan().SequenceEqual(keys[i]))
+            if (sorted[i - 1].AsSpan().SequenceEqual(sorted[i]))
             {
                 throw DuplicateDelegateAddressException(paramName);
             }

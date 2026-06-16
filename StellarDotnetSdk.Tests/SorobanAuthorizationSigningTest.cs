@@ -640,8 +640,9 @@ public class SorobanAuthorizationSigningTest
     public void BuildAuthorizationEntryPreimageHash_SourceAccountCredentials_Throws()
     {
         var entry = new SorobanAuthorizationEntry(new SorobanSourceAccountCredentials(), SampleInvocation());
-        var ex = Assert.ThrowsException<InvalidOperationException>(() =>
+        var ex = Assert.ThrowsException<ArgumentException>(() =>
             SorobanAuthorization.BuildAuthorizationEntryPreimageHash(entry, ValidUntil, Network.Public()));
+        Assert.AreEqual("entry", ex.ParamName);
         Assert.IsTrue(ex.Message.Contains("Source-account", StringComparison.OrdinalIgnoreCase));
     }
 
@@ -916,12 +917,22 @@ public class SorobanAuthorizationSigningTest
         // delegate also exercises cross-address-type sorting (account type sorts before contract type).
         var contractAddress = new ScContractId("CDJ4RICANSXXZ275W2OY2U7RO73HYURBGBRHVW2UUXZNGEBIVBNRKEF7");
         var contractSig = new SCString("contract-delegate-signature");
+        var contractSigner = new FixedAddressSigner(contractAddress, contractSig);
         var accountKp = KeyPair.Random();
 
         var signed = SorobanAuthorization.AuthorizeEntryWithDelegates(
             unsigned, new KeyPairEntrySigner(rootKp),
-            [new FixedAddressSigner(contractAddress, contractSig), new KeyPairEntrySigner(accountKp)],
+            [contractSigner, new KeyPairEntrySigner(accountKp)],
             ValidUntil, network);
+
+        // The custom signer must receive the CAP-71 root-bound payload (not a self-address-bound or
+        // legacy payload). FixedAddressSigner returns a constant, so without this assertion the
+        // custom-signer path could pass the wrong hash undetected.
+        var expectedRootHash = SorobanAuthorization.BuildAddressAuthPreimageHash(
+            network, rootAddress, Nonce, ValidUntil, unsigned.RootInvocation);
+        Assert.AreEqual(1, contractSigner.SignCallCount);
+        CollectionAssert.AreEqual(expectedRootHash, contractSigner.LastPayloadHash,
+            "The contract delegate signer must sign the root-bound preimage hash.");
 
         var cred = (SorobanAddressCredentialsWithDelegates)signed.Credentials;
         Assert.AreEqual(2, cred.Delegates.Length);
@@ -982,6 +993,111 @@ public class SorobanAuthorizationSigningTest
         Assert.AreEqual("l1-placeholder", ((SCString)cred.Delegates[0].Signature).InnerValue);
         Assert.AreEqual("l2-placeholder",
             ((SCString)cred.Delegates[0].NestedDelegates[0].Signature).InnerValue);
+    }
+
+    [TestMethod]
+    public void AuthorizeEntry_BogusForAddressOnDelegatedEntry_DoesNotInvokeSignerAndThrows()
+    {
+        var network = Network.Public();
+        var rootKp = KeyPair.Random();
+        var delegateAddress = new ScAccountId(KeyPair.Random().AccountId);
+        var plain = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentials(new ScAccountId(rootKp.AccountId), Nonce, 0, new SCString("")),
+            SampleInvocation());
+        var delegated = SorobanAuthorization.BuildWithDelegatesEntry(plain, [delegateAddress], ValidUntil);
+
+        // A forAddress matching neither root nor any delegate must be rejected WITHOUT invoking the
+        // (interactive) signer — a hardware wallet / remote co-signer must not be prompted for a request
+        // guaranteed to fail.
+        var signer = new FixedAddressSigner(new ScAccountId(rootKp.AccountId), new SCString("sig"));
+        var bogus = new ScAccountId(KeyPair.Random().AccountId);
+        var ex = Assert.ThrowsException<ArgumentException>(() =>
+            SorobanAuthorization.AuthorizeEntry(delegated, signer, ValidUntil, network, forAddress: bogus));
+        Assert.AreEqual("forAddress", ex.ParamName);
+        Assert.AreEqual(0, signer.SignCallCount);
+    }
+
+    [TestMethod]
+    public void AuthorizeEntry_BogusForAddress_WithSignedRootAndMismatchedExpiration_ThrowsArgumentException()
+    {
+        var network = Network.Public();
+        var rootKp = KeyPair.Random();
+        var delegateKp = KeyPair.Random();
+        var plain = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentials(new ScAccountId(rootKp.AccountId), Nonce, 0, new SCString("")),
+            SampleInvocation());
+        // Root + delegate signed over expiration 1000 (real, non-placeholder signatures).
+        var signed = SorobanAuthorization.AuthorizeEntryWithDelegates(
+            plain, new KeyPairEntrySigner(rootKp), [new KeyPairEntrySigner(delegateKp)], 1000, network);
+
+        // A bogus forAddress must report the argument error (no matching node), NOT the expiration guard:
+        // the forAddress existence check now runs before the expiration guards.
+        var bogus = new ScAccountId(KeyPair.Random().AccountId);
+        var ex = Assert.ThrowsException<ArgumentException>(() =>
+            SorobanAuthorization.AuthorizeEntry(signed, rootKp, 2000, network, forAddress: bogus));
+        Assert.AreEqual("forAddress", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void AuthorizeEntry_ForAddressMatchingRootAndDelegate_SignsBoth()
+    {
+        var network = Network.Public();
+        var rootKp = KeyPair.Random();
+        var rootAddress = new ScAccountId(rootKp.AccountId);
+        // A delegate node that shares the root's address (an unusual but constructible topology).
+        var entry = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentialsWithDelegates(
+                new SorobanAddressCredentials(rootAddress, Nonce, ValidUntil, new SCVoid()),
+                [new SorobanDelegateSignature(rootAddress, new SCVoid(), [])]),
+            SampleInvocation());
+
+        // Targeting the shared address signs BOTH the root and the same-address delegate with the same
+        // signature (the documented "route to every matching node" plus "sign root" semantics).
+        var signed = SorobanAuthorization.AuthorizeEntry(entry, rootKp, ValidUntil, network, forAddress: rootAddress);
+        var cred = (SorobanAddressCredentialsWithDelegates)signed.Credentials;
+        Assert.IsFalse(cred.AddressCredentials.Signature is SCVoid, "the root must be signed");
+        Assert.IsFalse(cred.Delegates[0].Signature is SCVoid, "the same-address delegate must also be signed");
+        Assert.AreEqual(
+            cred.AddressCredentials.Signature.ToXdrBase64(), cred.Delegates[0].Signature.ToXdrBase64());
+    }
+
+    [TestMethod]
+    public void AuthorizeEntry_DelegateNestingBeyondMaxDepth_ThrowsInsteadOfStackOverflow()
+    {
+        var network = Network.Public();
+        var rootKp = KeyPair.Random();
+        var rootAddress = new ScAccountId(rootKp.AccountId);
+        var targetKp = KeyPair.Random();
+
+        // A delegate chain deeper than the supported nesting cap (XdrDataInputStream.DefaultMaxDepth =
+        // 200). A pathologically deep caller-built tree must surface a clear, catchable exception rather
+        // than an uncatchable StackOverflowException.
+        SorobanDelegateSignature[] chain = [];
+        for (var i = 0; i < 250; i++)
+        {
+            chain = [new SorobanDelegateSignature(new ScAccountId(KeyPair.Random().AccountId), new SCVoid(), chain)];
+        }
+
+        var deep = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentialsWithDelegates(
+                new SorobanAddressCredentials(rootAddress, Nonce, ValidUntil, new SCVoid()), chain),
+            SampleInvocation());
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            SorobanAuthorization.AuthorizeEntry(
+                deep, targetKp, ValidUntil, network, forAddress: new ScAccountId(targetKp.AccountId)));
+    }
+
+    [TestMethod]
+    public void BuildAuthorizationEntryPreimageHash_NullArguments_Throw()
+    {
+        var entry = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentials(new ScAccountId(KeyPair.Random().AccountId), Nonce, 0, new SCString("")),
+            SampleInvocation());
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            SorobanAuthorization.BuildAuthorizationEntryPreimageHash(null!, ValidUntil, Network.Public()));
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            SorobanAuthorization.BuildAuthorizationEntryPreimageHash(entry, ValidUntil, null!));
     }
 
     [TestMethod]

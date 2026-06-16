@@ -14,8 +14,9 @@ All notable changes to this project are documented here. The format is based on
   - `SorobanAddressCredentialsV2` — CAP-0071-02 address-bound credentials (`SOROBAN_CREDENTIALS_ADDRESS_V2`),
     whose signature is computed over the `ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS` preimage,
     preventing cross-account signature replay.
-  - `SorobanAddressCredentialsWithDelegates` and `SorobanDelegateSignature` — CAP-0071-01 delegated
-    credentials (`SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES`).
+  - `SorobanAddressCredentialsWithDelegates`, `SorobanDelegateSignature`, and `SorobanDelegatedRoot`
+    (a non-serializable view of the delegated root credential) — CAP-0071-01 delegated credentials
+    (`SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES`).
   - `SorobanAuthorization` signing helpers: `AuthorizeEntry`, `AuthorizeEntryWithDelegates`,
     `BuildWithDelegatesEntry`, `BuildAuthorizationEntryPreimageHash`, and the lower-level
     `BuildAuthPreimageHash` / `BuildAddressAuthPreimageHash`.

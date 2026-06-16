@@ -123,12 +123,22 @@ public abstract class SorobanAddressCredentialsBase : SorobanCredentials
     /// </summary>
     internal Xdr.SorobanAddressCredentials ToAddressCredentialsXdr()
     {
+        return ToAddressCredentialsXdr(Address, Nonce, SignatureExpirationLedger, Signature);
+    }
+
+    /// <summary>
+    ///     Encodes the given fields into the bare XDR <see cref="Xdr.SorobanAddressCredentials" /> struct.
+    ///     The single mapping shared by V1, V2, and the delegated <see cref="SorobanDelegatedRoot" />.
+    /// </summary>
+    internal static Xdr.SorobanAddressCredentials ToAddressCredentialsXdr(
+        ScAddress address, long nonce, uint signatureExpirationLedger, SCVal signature)
+    {
         return new Xdr.SorobanAddressCredentials
         {
-            Address = Address.ToXdr(),
-            Nonce = new Int64(Nonce),
-            SignatureExpirationLedger = new Uint32(SignatureExpirationLedger),
-            Signature = Signature.ToXdr(),
+            Address = address.ToXdr(),
+            Nonce = new Int64(nonce),
+            SignatureExpirationLedger = new Uint32(signatureExpirationLedger),
+            Signature = signature.ToXdr(),
         };
     }
 
@@ -217,9 +227,8 @@ public class SorobanAddressCredentials : SorobanAddressCredentialsBase
 /// <remarks>
 ///     V1 (<see cref="SorobanAddressCredentials" />) and V2 are both valid on Protocol 27; the
 ///     signing helpers preserve the entry's existing variant by default (matching the JS reference
-///     SDK), and V2 is expected to replace V1 in Protocol 28. Pass
-///     <see cref="SorobanCredentialsVersion.V2" /> to upgrade a legacy entry. Pre-Protocol-27 networks
-///     reject V2 credentials — keep V1 when targeting them.
+///     SDK). Pass <see cref="SorobanCredentialsVersion.V2" /> to upgrade a legacy entry. Pre-Protocol-27
+///     networks reject V2 credentials — keep V1 when targeting them.
 /// </remarks>
 public class SorobanAddressCredentialsV2 : SorobanAddressCredentialsBase
 {
@@ -351,6 +360,57 @@ public class SorobanDelegateSignature
 }
 
 /// <summary>
+///     The root address credential of a delegated authorization
+///     (<see cref="SorobanAddressCredentialsWithDelegates" />): its bare
+///     address/nonce/expiration/signature fields. On the wire CAP-0071-01 embeds these as a
+///     discriminant-free <c>SorobanAddressCredentials</c> struct, and the signature is computed over the
+///     address-bound (delegated) payload. Unlike <see cref="SorobanAddressCredentials" /> this type is
+///     deliberately NOT a serializable <see cref="SorobanCredentials" />: serializing the root on its
+///     own would emit a standalone credential the network rejects, so the type makes that misuse
+///     impossible to express rather than merely documenting against it.
+/// </summary>
+public sealed class SorobanDelegatedRoot
+{
+    /// <summary>Constructs a new <see cref="SorobanDelegatedRoot" />.</summary>
+    /// <param name="address">The root address that authorizes the invocation.</param>
+    /// <param name="nonce">
+    ///     A value unique for all signatures by <paramref name="address" /> until
+    ///     <paramref name="signatureExpirationLedger" />.
+    /// </param>
+    /// <param name="signatureExpirationLedger">The ledger sequence number on which the signature expires.</param>
+    /// <param name="signature">The root signature over the CAP-0071-01 address-bound payload.</param>
+    public SorobanDelegatedRoot(ScAddress address, long nonce, uint signatureExpirationLedger, SCVal signature)
+    {
+        Address = address ?? throw new ArgumentNullException(nameof(address), "Address cannot be null.");
+        Nonce = nonce;
+        SignatureExpirationLedger = signatureExpirationLedger;
+        Signature = signature ?? throw new ArgumentNullException(nameof(signature), "Signature cannot be null.");
+    }
+
+    /// <summary>The root address that authorizes the invocation.</summary>
+    public ScAddress Address { get; }
+
+    /// <summary>A value unique for all signatures by <see cref="Address" /> until <see cref="SignatureExpirationLedger" />.</summary>
+    public long Nonce { get; }
+
+    /// <summary>The ledger sequence number on which the signature expires.</summary>
+    public uint SignatureExpirationLedger { get; }
+
+    /// <summary>The root signature over the CAP-0071-01 address-bound payload.</summary>
+    public SCVal Signature { get; }
+
+    /// <summary>
+    ///     Encodes the root into the bare XDR <see cref="Xdr.SorobanAddressCredentials" /> struct embedded
+    ///     in the delegated wire form.
+    /// </summary>
+    internal Xdr.SorobanAddressCredentials ToAddressCredentialsXdr()
+    {
+        return SorobanAddressCredentialsBase.ToAddressCredentialsXdr(
+            Address, Nonce, SignatureExpirationLedger, Signature);
+    }
+}
+
+/// <summary>
 ///     Protocol 27 (CAP-0071-01) delegated credentials: a root address credential plus an
 ///     ordered set of delegate signatures that authenticate on its behalf.
 /// </summary>
@@ -368,25 +428,27 @@ public class SorobanAddressCredentialsWithDelegates : SorobanCredentials
         SorobanAddressCredentialsBase addressCredentials,
         SorobanDelegateSignature[] delegates)
     {
-        AddressCredentials = addressCredentials ??
-                             throw new ArgumentNullException(nameof(addressCredentials),
-                                 "AddressCredentials cannot be null.");
+        if (addressCredentials is null)
+        {
+            throw new ArgumentNullException(nameof(addressCredentials), "AddressCredentials cannot be null.");
+        }
+
+        // Normalize the (V1 or V2) input credential to the discriminant-free, non-serializable root view:
+        // only the shared address/nonce/expiration/signature fields appear on the wire, and exposing the
+        // root as SorobanDelegatedRoot keeps a caller from serializing it standalone (its signature is
+        // over the address-bound payload, so a standalone credential would fail on-chain verification).
+        AddressCredentials = new SorobanDelegatedRoot(
+            addressCredentials.Address, addressCredentials.Nonce,
+            addressCredentials.SignatureExpirationLedger, addressCredentials.Signature);
         Delegates = delegates ?? throw new ArgumentNullException(nameof(delegates), "Delegates cannot be null.");
     }
 
     /// <summary>
-    ///     The root address credential being delegated. Variant-agnostic: the wire form is the bare
-    ///     <c>SorobanAddressCredentials</c> struct without a V1/V2 discriminant.
+    ///     The root address credential being delegated, exposed as a non-serializable
+    ///     <see cref="SorobanDelegatedRoot" /> (address/nonce/expiration/signature only). Variant-agnostic:
+    ///     the wire form is the bare <c>SorobanAddressCredentials</c> struct without a V1/V2 discriminant.
     /// </summary>
-    /// <remarks>
-    ///     WARNING: this is typed as the serializable <see cref="SorobanAddressCredentialsBase" />, so
-    ///     <c>AddressCredentials.ToXdr()</c> compiles — but it emits a <b>standalone</b> V1/V2 credential
-    ///     whose signature was computed over the delegated (address-bound) payload, which fails
-    ///     on-chain signature verification. Treat this property as the source of the root
-    ///     address/nonce/expiration/signature fields only; never serialize it on its own to downgrade a
-    ///     delegated entry to a plain one.
-    /// </remarks>
-    public SorobanAddressCredentialsBase AddressCredentials { get; }
+    public SorobanDelegatedRoot AddressCredentials { get; }
 
     /// <summary>The ordered delegate signatures authorizing on behalf of the root.</summary>
     public SorobanDelegateSignature[] Delegates { get; }

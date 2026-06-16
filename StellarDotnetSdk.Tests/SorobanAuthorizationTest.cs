@@ -551,9 +551,15 @@ public class SorobanAuthorizationTest
 
         var decoded = (SorobanAddressCredentialsWithDelegates)SorobanCredentials.FromXdr(credentials.ToXdr());
 
+        // All four root fields must survive the round-trip (the wire form is the bare, discriminant-free
+        // struct, so the V2-ness is intentionally not preserved — only the address/nonce/expiration/
+        // signature fields are).
         Assert.AreEqual(
             ((ScAccountId)v2Root.Address).InnerValue,
             ((ScAccountId)decoded.AddressCredentials.Address).InnerValue);
+        Assert.AreEqual(Nonce, decoded.AddressCredentials.Nonce);
+        Assert.AreEqual(SignatureExpirationLedger, decoded.AddressCredentials.SignatureExpirationLedger);
+        Assert.AreEqual(_signature.ToXdrBase64(), decoded.AddressCredentials.Signature.ToXdrBase64());
         Assert.AreEqual(0, decoded.Delegates.Length);
     }
 
@@ -675,6 +681,39 @@ public class SorobanAuthorizationTest
 
         // Re-encoding the decoded value must not throw (previously ToXdr validated order, FromXdr did not).
         Assert.IsNotNull(decoded.ToXdr());
+    }
+
+    /// <summary>The delegate-signature constructor must reject null components with a clear ArgumentNullException.</summary>
+    [TestMethod]
+    public void SorobanDelegateSignature_NullArguments_Throw()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new SorobanDelegateSignature(null!, _signature, []));
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new SorobanDelegateSignature(_accountAddress, null!, []));
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new SorobanDelegateSignature(_accountAddress, _signature, null!));
+    }
+
+    /// <summary>The delegated-credentials constructor must reject a null root or delegate array.</summary>
+    [TestMethod]
+    public void SorobanAddressCredentialsWithDelegates_NullArguments_Throw()
+    {
+        var root = new SorobanAddressCredentials(_accountAddress, Nonce, SignatureExpirationLedger, _signature);
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new SorobanAddressCredentialsWithDelegates(null!, []));
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new SorobanAddressCredentialsWithDelegates(root, null!));
+    }
+
+    /// <summary>The non-serializable delegated-root view must reject a null address or signature.</summary>
+    [TestMethod]
+    public void SorobanDelegatedRoot_NullArguments_Throw()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new SorobanDelegatedRoot(null!, Nonce, SignatureExpirationLedger, _signature));
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new SorobanDelegatedRoot(_accountAddress, Nonce, SignatureExpirationLedger, null!));
     }
 
     /// <summary>Returns two distinct addresses ordered so that <c>first</c> &gt; <c>second</c> by XDR bytes.</summary>
