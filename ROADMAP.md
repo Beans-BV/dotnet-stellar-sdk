@@ -299,7 +299,7 @@ Q1 2027 investment.
 
 ### D6 — Protocol Evolution (15h)
 
-Protocol 27 (CAP-71) Soroban authorization shipped early in Q3 (PR #187); this window now covers
+Protocol 27 (CAP-71) Soroban authorization shipped ahead of schedule (PR #187); this window now covers
 any follow-on protocol changes.
 
 ### D7 — Developer Support (25h)
