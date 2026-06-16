@@ -356,7 +356,8 @@ public class SorobanAuthorizationSigningTest
         var badSigner = new FixedAddressSigner(null!, new SCString("sig"));
         var ex = Assert.ThrowsException<ArgumentException>(() =>
             SorobanAuthorization.AuthorizeEntryWithDelegates(
-                unsigned, new KeyPairEntrySigner(rootKp), new ISorobanEntrySigner[] { badSigner }, ValidUntil, network));
+                unsigned, new KeyPairEntrySigner(rootKp), new ISorobanEntrySigner[] { badSigner }, ValidUntil,
+                network));
         Assert.AreEqual("delegateSigners", ex.ParamName);
         Assert.AreEqual(0, badSigner.SignCallCount);
     }
