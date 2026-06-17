@@ -23,16 +23,17 @@ shared accounts.
 
 ## Overall Coverage
 
-**Total Coverage:** 100.0% (26/26 fields)
+**Total Coverage:** 100.0% (22/22 applicable fields)
 
-- ✅ **Implemented:** 26/26
-- ❌ **Not Implemented:** 0/26
+- ✅ **Implemented:** 22/22
+- ❌ **Not Implemented:** 0/22
+- ➖ **N/A (excluded):** 4 (`jwt_claims`, `jwt_expiration`, `jwt_token_generation`, `jwt_token_validation`)
 
-_Note: Unlike client-only SDKs, StellarDotnetSdk implements both client (`ClientWebAuth`) and server (`ServerWebAuth`) sides of SEP-0010. Features that are server-side-only (e.g. JWT token validation, client domain stellar.toml verification) are therefore covered by `ServerWebAuth` rather than excluded._
+_Note: StellarDotnetSdk implements the client (`ClientWebAuth`) and server (`ServerWebAuth`) sides of the SEP-10 **challenge** flow — building, reading, and verifying the challenge transaction and its signers. It does **not** mint or validate the session JWT: issuing the token (and constructing/checking its `sub`/`iat`/`exp` claims) is an anchor-**application** responsibility, so those four JWT fields are marked **N/A** and excluded from coverage. The SDK only parses the returned token string (`jwt_token_response`). Client-domain verification resolves the `client_domain` `SIGNING_KEY` from `stellar.toml` on the **client** side (`ClientWebAuth.JwtTokenAsync`); `ServerWebAuth` verifies the resulting signer, not the TOML._
 
-**Required Fields:** 100.0% (19/19)
+**Required Fields:** 100.0% (16/16)
 
-**Optional Fields:** 100.0% (7/7)
+**Optional Fields:** 100.0% (6/6 applicable)
 
 ## Implementation Status
 
@@ -86,8 +87,10 @@ _Note: Unlike client-only SDKs, StellarDotnetSdk implements both client (`Client
 | Authentication Endpoints | 100.0% | 100.0% | 2 | 0 | 2 |
 | Challenge Transaction Features | 100.0% | 100.0% | 9 | 0 | 9 |
 | Client Domain Features | 100.0% | 100.0% | 4 | 0 | 4 |
-| JWT Token Features | 100.0% | 100.0% | 5 | 0 | 5 |
+| JWT Token Features | 100.0% | 100.0% | 1 | 0 | 1 |
 | Verification Features | 100.0% | 100.0% | 6 | 0 | 6 |
+
+_JWT Token Features excludes four N/A fields (`jwt_claims`, `jwt_expiration`, `jwt_token_generation`, `jwt_token_validation`) — JWT minting/validation is an anchor-application responsibility; see the note under Overall Coverage._
 
 ## Detailed Field Comparison
 
@@ -119,17 +122,17 @@ _Note: Unlike client-only SDKs, StellarDotnetSdk implements both client (`Client
 | `client_domain_operation` |  | ✅ | `ServerWebAuth.BuildChallengeTransaction` / `ClientWebAuth.ValidateChallenge` | Add client_domain ManageData operation to challenge |
 | `client_domain_parameter` |  | ✅ | `ClientWebAuth.GetChallengeAsync` | Support optional client_domain parameter in GET /auth |
 | `client_domain_signature` |  | ✅ | `ClientWebAuth.SignTransaction` / `ClientDomainSigningDelegate` | Require signature from client domain account |
-| `client_domain_verification` |  | ✅ | `ClientWebAuth.JwtTokenAsync` / `ServerWebAuth.VerifyChallengeTransactionSigners` | Verify client domain by checking stellar.toml. **Note:** StellarDotnetSdk implements this on both sides — the client resolves the client_domain SIGNING_KEY from `stellar.toml` in `JwtTokenAsync`, and the server verifies the client domain signer in `VerifyChallengeTransactionSigners` / `ValidateSignatures`. |
+| `client_domain_verification` |  | ✅ | `ClientWebAuth.JwtTokenAsync` / `ServerWebAuth.VerifyChallengeTransactionSigners` | Resolve and verify the client domain. **`stellar.toml` lookup is client-side only:** `ClientWebAuth.JwtTokenAsync` resolves the `client_domain` `SIGNING_KEY` from the client domain's `stellar.toml`. `ServerWebAuth` does **not** read TOML — `VerifyChallengeTransactionSigners` / `ValidateSignatures` only verifies that the resolved client-domain signer signed the challenge. |
 
 ### JWT Token Features
 
 | Field | Required | Status | SDK Property | Description |
 |-------|----------|--------|--------------|-------------|
-| `jwt_claims` | ✓ | ✅ | `ClientWebAuth.SendSignedChallengeAsync` / `ServerWebAuth.VerifyChallengeTransactionSigners` | JWT token includes required claims (sub, iat, exp) |
-| `jwt_expiration` | ✓ | ✅ | `ClientWebAuth.SendSignedChallengeAsync` / `ServerWebAuth.VerifyChallengeTransactionSigners` | JWT token includes expiration time |
-| `jwt_token_generation` | ✓ | ✅ | `ClientWebAuth.SendSignedChallengeAsync` / `ServerWebAuth.VerifyChallengeTransactionSigners` | Generate JWT token after successful challenge validation |
-| `jwt_token_response` | ✓ | ✅ | `ClientWebAuth.SendSignedChallengeAsync` / `SubmitChallengeResponse` | Return JWT token in JSON response with "token" field |
-| `jwt_token_validation` |  | ✅ | `ServerWebAuth.VerifyChallengeTransactionSigners` / `ServerWebAuth.VerifyChallengeTransactionThreshold` ⚙️ Server | Validate JWT token structure and signature. **Note:** This is a server-side validation feature. StellarDotnetSdk exposes server-side challenge verification through `ServerWebAuth`, which the JWT issuer uses prior to minting a token. |
+| `jwt_claims` |  | ➖ N/A | ⚙️ Server (anchor app) | JWT includes the required claims (`sub`, `iat`, `exp`). Constructed by the anchor application that mints the token; the SDK has no JWT code and treats the token as opaque. |
+| `jwt_expiration` |  | ➖ N/A | ⚙️ Server (anchor app) | JWT includes an expiration time. Set by the anchor application when minting; not handled by the SDK. |
+| `jwt_token_generation` |  | ➖ N/A | ⚙️ Server (anchor app) | Mint the JWT after successful challenge verification. Anchor-application responsibility — no JWT minting exists anywhere in the SDK. |
+| `jwt_token_response` | ✓ | ✅ | `ClientWebAuth.SendSignedChallengeAsync` / `SubmitChallengeResponse` | Parse the JWT token string from the server's JSON response (`"token"` field). |
+| `jwt_token_validation` |  | ➖ N/A | ⚙️ Server (anchor app) | Validate the JWT's structure/signature. The SDK has no JWT validation; `ServerWebAuth` verifies the **challenge transaction** (a separate step the issuer runs before minting), credited under Verification Features. |
 
 ### Verification Features
 
@@ -144,15 +147,17 @@ _Note: Unlike client-only SDKs, StellarDotnetSdk implements both client (`Client
 
 ## Implementation Gaps
 
-🎉 **No gaps found!** All fields are implemented.
+🎉 **No gaps found!** All applicable fields are implemented.
+
+The four JWT fields `jwt_claims`, `jwt_expiration`, `jwt_token_generation`, and `jwt_token_validation` are marked **N/A**, not gaps: minting/validating the JWT (and constructing its claims) is an anchor-application responsibility with no counterpart in the SDK, which has no JWT code and only parses the returned token string (`jwt_token_response`).
 
 ## Recommendations
 
-✅ The SDK has full compatibility with SEP-0010!
+✅ The SDK fully covers the SEP-10 **challenge** flow (100% of applicable fields) on both the client and server sides.
 
 Notable strengths versus client-only SDKs:
 
-- **Both client and server**: StellarDotnetSdk uniquely covers the full SEP-0010 surface with `ClientWebAuth` for wallets/clients and `ServerWebAuth` for anchors/servers, including signer-threshold verification (`VerifyChallengeTransactionThreshold`) and per-signer verification (`VerifyChallengeTransactionSigners`).
+- **Both client and server challenge handling**: StellarDotnetSdk covers the SEP-10 challenge surface with `ClientWebAuth` for wallets/clients and `ServerWebAuth` for anchors/servers, including signer-threshold verification (`VerifyChallengeTransactionThreshold`) and per-signer verification (`VerifyChallengeTransactionSigners`). Minting and validating the session JWT remains an anchor-application responsibility (see the N/A fields above).
 - **Pluggable client-domain signing**: `ClientDomainSigningDelegate` enables HSM or remote signing flows for the `client_domain` key without exposing the private key to the SDK.
 - **Discovery via stellar.toml**: `ClientWebAuth.FromDomainAsync` auto-discovers `WEB_AUTH_ENDPOINT` and `SIGNING_KEY` from the anchor's `stellar.toml`.
 - **Configurable clock skew**: Both client and server expose a `GracePeriod` for timebounds tolerance (default 5 minutes).
@@ -161,6 +166,7 @@ Notable strengths versus client-only SDKs:
 
 - ✅ **Implemented**: Field is implemented in SDK
 - ❌ **Not Implemented**: Field is missing from SDK
-- ⚙️ **Server**: Server-side only feature in the SEP specification (covered by `ServerWebAuth` in this SDK)
+- ➖ **N/A**: Not an SDK responsibility (an anchor-application concern); excluded from coverage
+- ⚙️ **Server**: Server-side feature in the SEP specification
 - ✓ **Required**: Field is required by SEP specification
 - (blank) **Optional**: Field is optional
