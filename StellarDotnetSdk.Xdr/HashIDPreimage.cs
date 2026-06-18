@@ -40,6 +40,15 @@ namespace StellarDotnetSdk.Xdr;
 //          uint32 signatureExpirationLedger;
 //          SorobanAuthorizedInvocation invocation;
 //      } sorobanAuthorization;
+//  case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS:
+//      struct
+//      {
+//          Hash networkID;
+//          int64 nonce;
+//          uint32 signatureExpirationLedger;
+//          SCAddress address;
+//          SorobanAuthorizedInvocation invocation;
+//      } sorobanAuthorizationWithAddress;
 //  };
 
 //  ===========================================================================
@@ -51,6 +60,7 @@ public class HashIDPreimage
     public HashIDPreimageRevokeID RevokeID { get; set; }
     public HashIDPreimageContractID ContractID { get; set; }
     public HashIDPreimageSorobanAuthorization SorobanAuthorization { get; set; }
+    public HashIDPreimageSorobanAuthorizationWithAddress SorobanAuthorizationWithAddress { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, HashIDPreimage encodedHashIDPreimage)
     {
@@ -68,6 +78,9 @@ public class HashIDPreimage
                 break;
             case EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
                 HashIDPreimageSorobanAuthorization.Encode(stream, encodedHashIDPreimage.SorobanAuthorization);
+                break;
+            case EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS:
+                HashIDPreimageSorobanAuthorizationWithAddress.Encode(stream, encodedHashIDPreimage.SorobanAuthorizationWithAddress);
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + encodedHashIDPreimage.Discriminant.InnerValue);
@@ -95,6 +108,9 @@ public class HashIDPreimage
                 break;
             case EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
                 decodedHashIDPreimage.SorobanAuthorization = HashIDPreimageSorobanAuthorization.Decode(stream, maxDepth);
+                break;
+            case EnvelopeType.EnvelopeTypeEnum.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS:
+                decodedHashIDPreimage.SorobanAuthorizationWithAddress = HashIDPreimageSorobanAuthorizationWithAddress.Decode(stream, maxDepth);
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
@@ -233,6 +249,43 @@ public class HashIDPreimage
         }
 
         public static HashIDPreimageSorobanAuthorization Decode(XdrDataInputStream stream)
+        {
+            return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
+        }
+    }
+
+    public class HashIDPreimageSorobanAuthorizationWithAddress
+    {
+        public Hash NetworkID { get; set; }
+        public Int64 Nonce { get; set; }
+        public Uint32 SignatureExpirationLedger { get; set; }
+        public SCAddress Address { get; set; }
+        public SorobanAuthorizedInvocation Invocation { get; set; }
+
+        public static void Encode(XdrDataOutputStream stream, HashIDPreimageSorobanAuthorizationWithAddress encodedHashIDPreimageSorobanAuthorizationWithAddress)
+        {
+            Hash.Encode(stream, encodedHashIDPreimageSorobanAuthorizationWithAddress.NetworkID);
+            Int64.Encode(stream, encodedHashIDPreimageSorobanAuthorizationWithAddress.Nonce);
+            Uint32.Encode(stream, encodedHashIDPreimageSorobanAuthorizationWithAddress.SignatureExpirationLedger);
+            SCAddress.Encode(stream, encodedHashIDPreimageSorobanAuthorizationWithAddress.Address);
+            SorobanAuthorizedInvocation.Encode(stream, encodedHashIDPreimageSorobanAuthorizationWithAddress.Invocation);
+        }
+
+        public static HashIDPreimageSorobanAuthorizationWithAddress Decode(XdrDataInputStream stream, int maxDepth)
+        {
+            if (maxDepth <= 0)
+                throw new InvalidDataException("Maximum decoding depth reached while decoding HashIDPreimageSorobanAuthorizationWithAddress");
+            maxDepth -= 1;
+            var decodedHashIDPreimageSorobanAuthorizationWithAddress = new HashIDPreimageSorobanAuthorizationWithAddress();
+            decodedHashIDPreimageSorobanAuthorizationWithAddress.NetworkID = Hash.Decode(stream, maxDepth);
+            decodedHashIDPreimageSorobanAuthorizationWithAddress.Nonce = Int64.Decode(stream, maxDepth);
+            decodedHashIDPreimageSorobanAuthorizationWithAddress.SignatureExpirationLedger = Uint32.Decode(stream, maxDepth);
+            decodedHashIDPreimageSorobanAuthorizationWithAddress.Address = SCAddress.Decode(stream, maxDepth);
+            decodedHashIDPreimageSorobanAuthorizationWithAddress.Invocation = SorobanAuthorizedInvocation.Decode(stream, maxDepth);
+            return decodedHashIDPreimageSorobanAuthorizationWithAddress;
+        }
+
+        public static HashIDPreimageSorobanAuthorizationWithAddress Decode(XdrDataInputStream stream)
         {
             return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
         }

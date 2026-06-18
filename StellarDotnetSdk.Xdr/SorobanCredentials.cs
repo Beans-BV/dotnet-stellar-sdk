@@ -14,6 +14,10 @@ namespace StellarDotnetSdk.Xdr;
 //      void;
 //  case SOROBAN_CREDENTIALS_ADDRESS:
 //      SorobanAddressCredentials address;
+//  case SOROBAN_CREDENTIALS_ADDRESS_V2:
+//      SorobanAddressCredentials addressV2;
+//  case SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES:
+//      SorobanAddressCredentialsWithDelegates addressWithDelegates;
 //  };
 
 //  ===========================================================================
@@ -22,6 +26,8 @@ public class SorobanCredentials
     public SorobanCredentialsType Discriminant { get; set; } = new();
 
     public SorobanAddressCredentials Address { get; set; }
+    public SorobanAddressCredentials AddressV2 { get; set; }
+    public SorobanAddressCredentialsWithDelegates AddressWithDelegates { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SorobanCredentials encodedSorobanCredentials)
     {
@@ -32,6 +38,12 @@ public class SorobanCredentials
                 break;
             case SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS:
                 SorobanAddressCredentials.Encode(stream, encodedSorobanCredentials.Address);
+                break;
+            case SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS_V2:
+                SorobanAddressCredentials.Encode(stream, encodedSorobanCredentials.AddressV2);
+                break;
+            case SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES:
+                SorobanAddressCredentialsWithDelegates.Encode(stream, encodedSorobanCredentials.AddressWithDelegates);
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + encodedSorobanCredentials.Discriminant.InnerValue);
@@ -52,6 +64,12 @@ public class SorobanCredentials
                 break;
             case SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS:
                 decodedSorobanCredentials.Address = SorobanAddressCredentials.Decode(stream, maxDepth);
+                break;
+            case SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS_V2:
+                decodedSorobanCredentials.AddressV2 = SorobanAddressCredentials.Decode(stream, maxDepth);
+                break;
+            case SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES:
+                decodedSorobanCredentials.AddressWithDelegates = SorobanAddressCredentialsWithDelegates.Decode(stream, maxDepth);
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);

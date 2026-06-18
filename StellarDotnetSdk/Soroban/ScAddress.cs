@@ -345,3 +345,20 @@ public class ScMuxedAccountId : ScAddress
         };
     }
 }
+
+/// <summary>
+///     Internal helper for encoding an <see cref="ScAddress" /> to its canonical XDR form. CAP-71
+///     orders delegate arrays by "increasing address", defined over the encoded
+///     <see cref="Xdr.SCAddress" /> (type discriminant first, then body bytes); callers cache these
+///     byte keys and compare them lexicographically (e.g. via <c>SequenceCompareTo</c>).
+/// </summary>
+internal static class ScAddressExtensions
+{
+    /// <summary>Returns the canonical XDR encoding of this address.</summary>
+    internal static byte[] ToXdrByteArray(this ScAddress address)
+    {
+        var stream = new XdrDataOutputStream();
+        SCAddress.Encode(stream, address.ToXdr());
+        return stream.ToArray();
+    }
+}

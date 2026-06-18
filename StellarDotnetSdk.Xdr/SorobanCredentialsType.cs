@@ -11,7 +11,9 @@ namespace StellarDotnetSdk.Xdr;
 //  enum SorobanCredentialsType
 //  {
 //      SOROBAN_CREDENTIALS_SOURCE_ACCOUNT = 0,
-//      SOROBAN_CREDENTIALS_ADDRESS = 1
+//      SOROBAN_CREDENTIALS_ADDRESS = 1,
+//      SOROBAN_CREDENTIALS_ADDRESS_V2 = 2,
+//      SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES = 3
 //  };
 
 //  ===========================================================================
@@ -21,6 +23,8 @@ public class SorobanCredentialsType
     {
         SOROBAN_CREDENTIALS_SOURCE_ACCOUNT = 0,
         SOROBAN_CREDENTIALS_ADDRESS = 1,
+        SOROBAN_CREDENTIALS_ADDRESS_V2 = 2,
+        SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES = 3,
     }
 
     public SorobanCredentialsTypeEnum InnerValue { get; set; }
@@ -42,6 +46,8 @@ public class SorobanCredentialsType
         {
             case 0: return Create(SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT);
             case 1: return Create(SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS);
+            case 2: return Create(SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS_V2);
+            case 3: return Create(SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES);
             default:
                 throw new InvalidDataException("Unknown enum value: " + value);
         }
