@@ -25,11 +25,9 @@ public class XdrDataInputStream
     /// <param name="bytes"></param>
     public XdrDataInputStream(byte[] bytes)
     {
+        ArgumentNullException.ThrowIfNull(bytes);
         _bytes = bytes;
-        if (bytes != null)
-        {
-            _stream = new MemoryStream(bytes, false);
-        }
+        _stream = new MemoryStream(bytes, false);
     }
 
     /// <summary>
@@ -185,7 +183,6 @@ public class XdrDataInputStream
     /// </summary>
     public int GetRemainingInputLen()
     {
-        if (_stream == null) return -1;
         return (int)(_stream.Length - _stream.Position);
     }
 

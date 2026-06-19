@@ -186,6 +186,17 @@ public class XdrDataStreamTest
     }
 
     /// <summary>
+    ///     Verifies that constructing the stream with a null buffer throws ArgumentNullException up front,
+    ///     since a null buffer is not a supported input.
+    /// </summary>
+    [TestMethod]
+    public void Constructor_WithNullBuffer_ThrowsArgumentNullException()
+    {
+        // Act & Assert
+        Assert.ThrowsException<ArgumentNullException>(() => new XdrDataInputStream(null!));
+    }
+
+    /// <summary>
     ///     Verifies that reading a single byte past the end of the input throws EndOfStreamException.
     /// </summary>
     [TestMethod]
