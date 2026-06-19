@@ -136,6 +136,33 @@ public class ClientWebAuthContractTest
     }
 
     [TestMethod]
+    public async Task GetChallengeAsync_PreservesExistingQueryString_OnEndpoint()
+    {
+        var serverKp = KeyPair.Random();
+        HttpRequestMessage? captured = null;
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .Callback<HttpRequestMessage, CancellationToken>((r, _) => captured = r)
+            .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent("{\"authorization_entries\":\"aGk=\"}"),
+            });
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            "https://auth.example.com/auth?foo=bar", ContractId, Network.Test(), serverKp.AccountId,
+            HomeDomain, SorobanRpcUrl, httpClient: client);
+
+        await auth.GetChallengeAsync(TestChallengeBuilder.DefaultWebAuthContractId);
+
+        Assert.IsNotNull(captured);
+        var query = captured!.RequestUri!.Query;
+        StringAssert.Contains(query, "foo=bar"); // pre-existing query preserved
+        StringAssert.Contains(query, "account="); // and our param appended
+    }
+
+    [TestMethod]
     public async Task GetChallengeAsync_Throws_OnNon200Response()
     {
         var serverKp = KeyPair.Random();
@@ -305,6 +332,45 @@ public class ClientWebAuthContractTest
         // Use an all-zero contract id as a definitely-different client account
         var differentClientCid = StrKey.EncodeContractId(new byte[32]);
         auth.ValidateChallenge(xdr, differentClientCid);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public void ValidateChallenge_Throws_WhenClientAccountIsNotContract()
+    {
+        // SEP-45 supports only contract (C...) client accounts; a G... ed25519 account arg must be rejected.
+        var gAccount = KeyPair.Random().AccountId; // G... ed25519 address
+        var result = TestChallengeBuilder.Build(clientContractId: gAccount);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            TestChallengeBuilder.DefaultWebAuthDomain,
+            new HttpClient());
+        auth.ValidateChallenge(xdr, gAccount);
+    }
+
+    [TestMethod]
+    public void ValidateChallenge_ReturnsParsedChallenge_WithServerEntry()
+    {
+        // ValidateChallenge now returns the parsed challenge and surfaces the located server entry,
+        // letting JwtTokenAsync reuse the decoded entries instead of decoding the same blob twice.
+        var result = TestChallengeBuilder.Build();
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            TestChallengeBuilder.DefaultWebAuthDomain,
+            new HttpClient());
+
+        var parsed = auth.ValidateChallenge(xdr, result.ClientContractId);
+
+        Assert.AreEqual(result.ClientContractId, parsed.ClientAccountId);
+        Assert.AreEqual(result.Entries.Length, parsed.Entries.Length);
+        var serverAddr = Sep45Challenge.AddressToStrKey(parsed.ServerEntry.Credentials.Address.Address);
+        Assert.AreEqual(result.ServerKeyPair.AccountId, serverAddr);
     }
 
     [TestMethod]
@@ -498,6 +564,45 @@ public class ClientWebAuthContractTest
     }
 
     [TestMethod]
+    public async Task SignAuthorizationEntries_Multisig_SignaturesSortedAscendingByPublicKey()
+    {
+        // The reference smart-wallet __check_auth requires the signature vec strictly ascending by
+        // public_key. Sign with two keypairs in DESCENDING order; the output must be re-sorted ascending.
+        var a = KeyPair.Random();
+        var b = KeyPair.Random();
+        var hi = CompareBytes(a.PublicKey, b.PublicKey) >= 0 ? a : b;
+        var lo = ReferenceEquals(hi, a) ? b : a;
+        var result = TestChallengeBuilder.Build();
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            new HttpClient(), 500);
+
+        var signed = await auth.SignAuthorizationEntriesAsync(
+            xdr, result.ClientContractId, new[] { hi, lo }); // descending input
+        var sigs = ReadSignatures(TestChallengeBuilder.DecodeEntries(signed)[1]);
+
+        Assert.AreEqual(2, sigs.Length);
+        Assert.IsTrue(CompareBytes(sigs[0].PublicKey, sigs[1].PublicKey) < 0,
+            "signature vec must be ascending by public_key");
+    }
+
+    private static int CompareBytes(byte[] x, byte[] y)
+    {
+        var min = Math.Min(x.Length, y.Length);
+        for (var i = 0; i < min; i++)
+        {
+            if (x[i] != y[i])
+            {
+                return x[i].CompareTo(y[i]);
+            }
+        }
+        return x.Length.CompareTo(y.Length);
+    }
+
+    [TestMethod]
     [ExpectedException(typeof(InvalidArgumentsException))]
     public async Task SignAuthorizationEntries_Throws_WhenEntryHasNoSigner()
     {
@@ -534,6 +639,82 @@ public class ClientWebAuthContractTest
         await auth.SignAuthorizationEntriesAsync(
             xdr, result.ClientContractId, new[] { KeyPair.Random() },
             clientDomainSigningDelegate: e => Task.FromResult(e)); // clientDomainAccountId omitted
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public async Task SignAuthorizationEntries_Throws_WhenDelegateReturnsNull()
+    {
+        // A remote delegate returning null must be rejected up front, not dereferenced into an opaque
+        // failure (the non-null annotation is not a runtime guarantee for an untrusted callback).
+        var cdKp = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(clientDomain: "c.example", clientDomainKeyPair: cdKp);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            new HttpClient(), 500);
+
+        await auth.SignAuthorizationEntriesAsync(
+            xdr, result.ClientContractId, new[] { KeyPair.Random() },
+            clientDomainSigningDelegate: _ => Task.FromResult<SorobanAuthorizationEntry>(null!),
+            clientDomainAccountId: cdKp.AccountId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public async Task SignAuthorizationEntries_Throws_WhenDelegateChangesRootInvocation()
+    {
+        // A delegate returning an entry for the right account but with a DIFFERENT root invocation must be
+        // rejected locally (it would otherwise be submitted and opaquely rejected by the server).
+        var cdKp = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(clientDomain: "c.example", clientDomainKeyPair: cdKp);
+        // A second challenge with the same client-domain keypair but a different web-auth contract id, so
+        // its client-domain entry shares the address but carries a different invocation.
+        var tampered = TestChallengeBuilder.Build(
+            clientDomain: "c.example", clientDomainKeyPair: cdKp,
+            webAuthContractId: StrKey.EncodeContractId(new byte[32])).Entries[2];
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            new HttpClient(), 500);
+
+        await auth.SignAuthorizationEntriesAsync(
+            xdr, result.ClientContractId, new[] { KeyPair.Random() },
+            clientDomainSigningDelegate: _ => Task.FromResult(tampered),
+            clientDomainAccountId: cdKp.AccountId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public async Task SignAuthorizationEntries_Throws_OnNonAddressCredentials()
+    {
+        // A standalone caller (skipping ValidateChallenge) passing an entry with non-address credentials
+        // should get a clear failure, not a silently-skipped, partially-signed output.
+        var result = TestChallengeBuilder.Build();
+        var nonAddress = new SorobanAuthorizationEntry
+        {
+            Credentials = new SorobanCredentials
+            {
+                Discriminant = new SorobanCredentialsType
+                {
+                    InnerValue = SorobanCredentialsType.SorobanCredentialsTypeEnum
+                        .SOROBAN_CREDENTIALS_SOURCE_ACCOUNT,
+                },
+            },
+            RootInvocation = result.Entries[0].RootInvocation,
+        };
+        var xdr = TestChallengeBuilder.EncodeEntries(new[] { nonAddress });
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            new HttpClient(), 500);
+
+        await auth.SignAuthorizationEntriesAsync(xdr, result.ClientContractId, new[] { KeyPair.Random() });
     }
 
     [TestMethod]
@@ -735,6 +916,28 @@ public class ClientWebAuthContractTest
             .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.InternalServerError)
             {
                 Content = new StringContent("oops"),
+            });
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, ContractId, Network.Test(), serverKp.AccountId,
+            HomeDomain, SorobanRpcUrl, httpClient: client);
+        await auth.SendSignedChallengeAsync("x");
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(SubmitSignedChallengeForContractsErrorResponseException))]
+    public async Task SendSignedChallenge_ParsesError_OnUnexpectedStatusWithJsonBody()
+    {
+        // An unexpected status (e.g. 500) carrying a structured { "error": ... } body should surface that
+        // message as the clean error type rather than an opaque unknown-response exception.
+        var serverKp = KeyPair.Random();
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+            {
+                Content = new StringContent("{\"error\":\"internal boom\"}"),
             });
         using var client = new HttpClient(handler.Object);
         using var auth = new ClientWebAuthContract(

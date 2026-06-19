@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -218,15 +219,20 @@ public class ClientWebAuthContract : IDisposable
 
         var uri = new UriBuilder(_authEndpoint);
         var q = new List<string> { $"account={Uri.EscapeDataString(clientAccountId)}" };
-        if (homeDomain != null)
+        // Treat empty string like null so a defaulted "" is not sent as a literal empty parameter (which
+        // ValidateChallenge would then fall back to the configured default for — a self-inflicted mismatch).
+        if (!string.IsNullOrEmpty(homeDomain))
         {
             q.Add($"home_domain={Uri.EscapeDataString(homeDomain)}");
         }
-        if (clientDomain != null)
+        if (!string.IsNullOrEmpty(clientDomain))
         {
             q.Add($"client_domain={Uri.EscapeDataString(clientDomain)}");
         }
-        uri.Query = string.Join("&", q);
+        // Preserve any query string already present on the configured endpoint instead of overwriting it.
+        var existingQuery = uri.Query.TrimStart('?');
+        var addedQuery = string.Join("&", q);
+        uri.Query = string.IsNullOrEmpty(existingQuery) ? addedQuery : existingQuery + "&" + addedQuery;
 
         using var req = new HttpRequestMessage(HttpMethod.Get, uri.Uri);
         if (_httpRequestHeaders != null)
@@ -287,6 +293,12 @@ public class ClientWebAuthContract : IDisposable
     ///     via <see cref="Sep45Challenge.ReadChallenge" />, confirms the client account matches,
     ///     enforces the client-domain invariant, and verifies the server's Ed25519 signature.
     /// </summary>
+    /// <remarks>
+    ///     Does not validate the challenge's <c>network_passphrase</c> — that field is on the HTTP response
+    ///     (<see cref="ChallengeForContractsResponse.NetworkPassphrase" />), not the XDR, and is checked by
+    ///     <see cref="JwtTokenAsync" />. A caller using the manual fetch/validate/sign/submit path should
+    ///     compare it themselves.
+    /// </remarks>
     /// <param name="authorizationEntriesXdr">Base64-encoded XDR of the challenge's authorization entries.</param>
     /// <param name="clientAccountId">The expected client contract account ID (C... address).</param>
     /// <param name="clientDomainAccountId">
@@ -303,7 +315,8 @@ public class ClientWebAuthContract : IDisposable
     ///     domain; supply this when the auth server serves multiple home domains so the challenge's
     ///     <c>home_domain</c> is validated against the one actually requested.
     /// </param>
-    public void ValidateChallenge(
+    /// <returns>The parsed, validated challenge (entries + extracted fields + the located server entry).</returns>
+    public ChallengeAuthorizationEntries ValidateChallenge(
         string authorizationEntriesXdr,
         string clientAccountId,
         string? clientDomainAccountId = null,
@@ -327,8 +340,9 @@ public class ClientWebAuthContract : IDisposable
         }
 
         // SEP-45 requires the client to confirm the challenge's client_domain string matches the domain it
-        // requested (distinct from client_domain_account). Compare only when a client domain was requested.
-        if (clientDomain != null && parsed.ClientDomain != clientDomain)
+        // requested (distinct from client_domain_account). Compare only when a client domain was requested
+        // (treat empty like absent, consistent with GetChallengeAsync).
+        if (!string.IsNullOrEmpty(clientDomain) && parsed.ClientDomain != clientDomain)
         {
             throw new InvalidClientDomainException(
                 $"Client domain mismatch. Expected '{clientDomain}', got '{parsed.ClientDomain ?? "<none>"}'.");
@@ -348,28 +362,21 @@ public class ClientWebAuthContract : IDisposable
                 "Challenge contains client_domain but no clientDomainAccountId was supplied.");
         }
 
-        // Locate server entry by credentials address.
-        SorobanAuthorizationEntry? serverEntry = null;
-        foreach (var e in parsed.Entries)
-        {
-            if (CredentialsAddressToStrKey(e) == _serverSigningKey)
-            {
-                serverEntry = e;
-                break;
-            }
-        }
-        if (serverEntry == null)
-        {
-            throw new InvalidServerSignatureException("No entry found for server account.");
-        }
-
-        Sep45Challenge.VerifyServerSignature(serverEntry, _serverSigningKey, _network);
+        // ReadChallenge already located and presence-checked the server entry; just verify its signature.
+        Sep45Challenge.VerifyServerSignature(parsed.ServerEntry, _serverSigningKey, _network);
+        return parsed;
     }
 
     /// <summary>
     ///     Signs SEP-45 authorization entries: the client (contract) entry with every supplied signer,
     ///     and optionally the client-domain entry with a local keypair or a remote signing delegate.
     /// </summary>
+    /// <remarks>
+    ///     Does NOT validate the challenge (server signature, contract id, function name, domain bindings).
+    ///     Call <see cref="ValidateChallenge" /> first, or use the end-to-end <see cref="JwtTokenAsync" />
+    ///     which validates before signing — signing an unvalidated challenge can authorize a hostile
+    ///     server's entry.
+    /// </remarks>
     /// <param name="authorizationEntriesXdr">Base64 XDR of the challenge's authorization entries.</param>
     /// <param name="clientAccountId">
     ///     The client account (C... contract address) being authenticated. The entry whose credentials
@@ -415,6 +422,22 @@ public class ClientWebAuthContract : IDisposable
         string? clientDomainAccountId = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(authorizationEntriesXdr);
+        var entries = Sep45Challenge.DecodeAuthorizationEntries(authorizationEntriesXdr);
+        return await SignDecodedEntriesAsync(
+            entries, clientAccountId, signers, clientDomainAccountKeyPair,
+            clientDomainSigningDelegate, clientDomainAccountId).ConfigureAwait(false);
+    }
+
+    // Shared signing core over already-decoded entries, so the end-to-end JwtTokenAsync path can reuse the
+    // entries ValidateChallenge already decoded instead of decoding the same blob a second time.
+    private async Task<string> SignDecodedEntriesAsync(
+        SorobanAuthorizationEntry[] entries,
+        string clientAccountId,
+        ICollection<KeyPair> signers,
+        KeyPair? clientDomainAccountKeyPair,
+        ClientDomainEntrySigningDelegate? clientDomainSigningDelegate,
+        string? clientDomainAccountId)
+    {
         ArgumentException.ThrowIfNullOrEmpty(clientAccountId);
         ArgumentNullException.ThrowIfNull(signers);
 
@@ -433,9 +456,10 @@ public class ClientWebAuthContract : IDisposable
                 "provide both, or use clientDomainAccountKeyPair for local signing.");
         }
 
-        var entries = Sep45Challenge.DecodeAuthorizationEntries(authorizationEntriesXdr);
         var latest = await GetLatestLedgerSequenceAsync().ConfigureAwait(false);
-        var expiration = latest + _signatureExpirationLedgers;
+        // checked: a near-uint.MaxValue signatureExpirationLedgers (caller-supplied, unbounded) would
+        // otherwise silently wrap to a tiny ledger; fail fast on that pathological config instead.
+        var expiration = checked(latest + _signatureExpirationLedgers);
 
         for (var i = 0; i < entries.Length; i++)
         {
@@ -443,10 +467,16 @@ public class ClientWebAuthContract : IDisposable
             if (entry.Credentials.Discriminant.InnerValue !=
                 SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS)
             {
-                continue;
+                // SEP-45 challenges contain only address-credential entries (ValidateChallenge enforces
+                // this). Fail fast on anything else rather than silently passing it through unsigned —
+                // safer for a standalone caller that skipped ValidateChallenge.
+                throw new InvalidArgumentsException(
+                    $"Authorization entry {i} has non-address credentials " +
+                    $"({entry.Credentials.Discriminant.InnerValue}); SEP-45 challenges contain only " +
+                    "SOROBAN_CREDENTIALS_ADDRESS entries.");
             }
 
-            var entryAddress = CredentialsAddressToStrKey(entry);
+            var entryAddress = Sep45Challenge.AddressToStrKey(entry.Credentials.Address.Address);
 
             if (entryAddress == _serverSigningKey)
             {
@@ -474,10 +504,34 @@ public class ClientWebAuthContract : IDisposable
             else if (clientDomainSigningDelegate != null && clientDomainAccountId != null &&
                      entryAddress == clientDomainAccountId)
             {
+                // Snapshot the invocation before handing the entry to the untrusted remote delegate, so we
+                // can confirm it comes back unchanged even if the delegate mutates the passed-in entry.
+                var expectedInvocation = Sep45Challenge.EncodeInvocation(entry.RootInvocation);
                 entry.Credentials.Address.SignatureExpirationLedger = new Uint32(expiration);
-                // The delegate's return is non-nullable by contract (see ClientDomainEntrySigningDelegate),
-                // so we trust that annotation rather than re-guarding its result here.
-                entries[i] = await clientDomainSigningDelegate(entry).ConfigureAwait(false);
+                var signedEntry =
+                    await clientDomainSigningDelegate(entry).ConfigureAwait(false);
+                // The delegate is a remote callback whose result is untrusted (the non-null annotation is
+                // not a runtime guarantee). Reject null, and verify it still targets the client-domain
+                // account and authorizes the same invocation, so a buggy or hostile delegate cannot swap in
+                // an arbitrary entry that the server would only reject later with an opaque error.
+                if (signedEntry == null)
+                {
+                    throw new InvalidArgumentsException(
+                        "clientDomainSigningDelegate returned null for the client-domain entry.");
+                }
+                if (Sep45Challenge.AddressToStrKey(signedEntry.Credentials.Address.Address) != clientDomainAccountId)
+                {
+                    throw new InvalidArgumentsException(
+                        "clientDomainSigningDelegate returned an entry whose credentials address does not " +
+                        $"match the client-domain account '{clientDomainAccountId}'.");
+                }
+                if (!Sep45Challenge.EncodeInvocation(signedEntry.RootInvocation).SequenceEqual(expectedInvocation))
+                {
+                    throw new InvalidArgumentsException(
+                        "clientDomainSigningDelegate returned an entry whose root invocation differs from " +
+                        "the one it was given.");
+                }
+                entries[i] = signedEntry;
             }
             else
             {
@@ -589,27 +643,38 @@ public class ClientWebAuthContract : IDisposable
                     throw new SubmitSignedChallengeForContractsTimeoutResponseException();
 
                 default:
+                    // Surface a server-provided { "error": ... } message even on an unexpected status,
+                    // instead of an opaque unknown-response error, when the body is parseable JSON.
+                    try
+                    {
+                        var errParsed = JsonSerializer.Deserialize<SubmitChallengeForContractsResponse>(
+                            body, JsonOptions.DefaultOptions);
+                        if (!string.IsNullOrEmpty(errParsed?.Error))
+                        {
+                            throw new SubmitSignedChallengeForContractsErrorResponseException(errParsed.Error!);
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // Body isn't JSON — fall through to the generic unknown-response exception below.
+                    }
                     throw new SubmitSignedChallengeForContractsUnknownResponseException(status, body);
             }
         }
     }
 
-    private static string CredentialsAddressToStrKey(SorobanAuthorizationEntry entry)
-    {
-        var soroban = ScAddress.FromXdr(entry.Credentials.Address.Address);
-        return soroban switch
-        {
-            ScAccountId acc => acc.InnerValue,
-            ScContractId con => con.InnerValue,
-            _ => throw new InvalidSep45ChallengeException(
-                $"Unsupported credentials address type '{soroban.GetType().Name}'; " +
-                "only account (G...) and contract (C...) addresses are valid in SEP-45 challenges."),
-        };
-    }
-
     /// <summary>
     ///     End-to-end SEP-45 flow: fetch challenge, validate, sign, submit, return JWT.
     /// </summary>
+    /// <remarks>
+    ///     Intentionally does NOT perform SEP-45's client-side transaction simulation / footprint check
+    ///     (the "simulate the signed entries and verify the <c>read_write</c> footprint contains only the
+    ///     expected <c>ledger_key_nonce</c> entries" step in the spec's authentication flow). That step is
+    ///     defense-in-depth: the spec (a draft) writes it as a descriptive flow step rather than an
+    ///     RFC-2119 MUST, the structural validation already pins the invocation (contract id, function
+    ///     name, no sub-invocations, identical invocation across entries, validated args), and no peer SDK
+    ///     implements it. Omitted deliberately; revisit if the spec promotes it to a hard requirement.
+    /// </remarks>
     /// <param name="clientAccountId">Contract account being authenticated (C... address).</param>
     /// <param name="signers">
     ///     Keypairs that authorize the client (contract) entry. May be empty for a contract whose
@@ -671,10 +736,12 @@ public class ClientWebAuthContract : IDisposable
 
         var xdr = challenge.AuthorizationEntries!;
 
-        ValidateChallenge(xdr, clientAccountId, resolvedClientDomainAccountId, clientDomain, homeDomain);
+        var parsed = ValidateChallenge(
+            xdr, clientAccountId, resolvedClientDomainAccountId, clientDomain, homeDomain);
 
-        var signed = await SignAuthorizationEntriesAsync(
-            xdr, clientAccountId, signers, clientDomainAccountKeyPair,
+        // Reuse the entries ValidateChallenge already decoded instead of decoding the same blob twice.
+        var signed = await SignDecodedEntriesAsync(
+            parsed.Entries, clientAccountId, signers, clientDomainAccountKeyPair,
             clientDomainSigningDelegate, resolvedClientDomainAccountId).ConfigureAwait(false);
 
         return await SendSignedChallengeAsync(signed).ConfigureAwait(false);

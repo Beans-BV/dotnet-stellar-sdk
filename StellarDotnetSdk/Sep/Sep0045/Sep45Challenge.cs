@@ -181,7 +181,7 @@ public static class Sep45Challenge
                 $"At least 2 authorization entries required, got {entries.Length}.");
         }
 
-        SorobanAuthorizedInvocation? firstInvocation = null;
+        byte[]? firstInvocationBytes = null;
         foreach (var entry in entries)
         {
             // 1) No sub-invocations
@@ -236,12 +236,13 @@ public static class Sep45Challenge
                 throw new InvalidArgumentsException("Credentials must be SOROBAN_CREDENTIALS_ADDRESS.");
             }
 
-            // 7) All entries share the same invocation
-            if (firstInvocation == null)
+            // 7) All entries share the same invocation (encode each once; compare against the first's bytes)
+            var invocationBytes = EncodeInvocation(entry.RootInvocation);
+            if (firstInvocationBytes == null)
             {
-                firstInvocation = entry.RootInvocation;
+                firstInvocationBytes = invocationBytes;
             }
-            else if (!InvocationsEqual(firstInvocation, entry.RootInvocation))
+            else if (!invocationBytes.SequenceEqual(firstInvocationBytes))
             {
                 throw new MismatchedInvocationsException(
                     "All entries must share the same root invocation.");
@@ -281,6 +282,7 @@ public static class Sep45Challenge
             allowedAddresses.Add(extracted.ClientDomainAccount);
         }
 
+        SorobanAuthorizationEntry? serverEntry = null;
         var sawClientEntry = false;
         var sawServerEntry = false;
         var sawClientDomainEntry = false;
@@ -299,6 +301,7 @@ public static class Sep45Challenge
             if (credAddress == serverAccountId)
             {
                 sawServerEntry = true;
+                serverEntry ??= entry; // first match, matching the previous re-scan behavior
             }
             if (extracted.ClientDomainAccount != null && credAddress == extracted.ClientDomainAccount)
             {
@@ -328,6 +331,7 @@ public static class Sep45Challenge
 
         return new ChallengeAuthorizationEntries(
             entries,
+            serverEntry!, // non-null: sawServerEntry (checked above) is set iff serverEntry was assigned
             extracted.ClientAccount,
             extracted.HomeDomain,
             extracted.WebAuthDomain,
@@ -358,8 +362,9 @@ public static class Sep45Challenge
     /// <summary>
     ///     Append a signature to an entry's credentials. Uses the SEP-45 convention: the
     ///     <c>Signature</c> SCVal is an SCV_VEC of SCV_MAPs each containing public_key / signature bytes.
-    ///     Appending (rather than replacing) lets a contract account that requires an M-of-N signer
-    ///     set accumulate one map per signer in a single entry.
+    ///     Accumulates one map per signer (for an M-of-N contract account) and keeps the vec sorted
+    ///     ascending by <c>public_key</c> — the reference smart-wallet <c>__check_auth</c> (and the
+    ///     soroban-examples custom account) reject an out-of-order vec with <c>BadSignatureOrder</c>.
     /// </summary>
     internal static void AppendSignature(
         SorobanAuthorizationEntry entry, byte[] publicKey, byte[] signature)
@@ -376,23 +381,60 @@ public static class Sep45Challenge
         };
 
         var creds = entry.Credentials.Address;
+        SCVal[] combined;
         if (creds.Signature?.Discriminant?.InnerValue == SCValType.SCValTypeEnum.SCV_VEC &&
             creds.Signature.Vec != null)
         {
             var existing = creds.Signature.Vec.InnerValue;
-            var combined = new SCVal[existing.Length + 1];
+            combined = new SCVal[existing.Length + 1];
             Array.Copy(existing, combined, existing.Length);
             combined[existing.Length] = sigMap;
-            creds.Signature.Vec = new SCVec(combined);
         }
         else
         {
-            creds.Signature = new SCVal
-            {
-                Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_VEC },
-                Vec = new SCVec(new[] { sigMap }),
-            };
+            combined = new[] { sigMap };
         }
+
+        // Strictly ascending by public_key so an M-of-N contract account accepts the signatures
+        // regardless of the order the signers were supplied in.
+        Array.Sort(combined, (a, b) => CompareBytes(SignatureMapPublicKey(a), SignatureMapPublicKey(b)));
+
+        creds.Signature = new SCVal
+        {
+            Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_VEC },
+            Vec = new SCVec(combined),
+        };
+    }
+
+    private static byte[] SignatureMapPublicKey(SCVal sigMap)
+    {
+        if (sigMap.Discriminant.InnerValue == SCValType.SCValTypeEnum.SCV_MAP && sigMap.Map != null)
+        {
+            foreach (var kv in sigMap.Map.InnerValue)
+            {
+                if (kv.Key.Discriminant.InnerValue == SCValType.SCValTypeEnum.SCV_SYMBOL &&
+                    kv.Key.Sym?.InnerValue == "public_key" &&
+                    kv.Val.Discriminant.InnerValue == SCValType.SCValTypeEnum.SCV_BYTES &&
+                    kv.Val.Bytes != null)
+                {
+                    return kv.Val.Bytes.InnerValue;
+                }
+            }
+        }
+        return Array.Empty<byte>();
+    }
+
+    private static int CompareBytes(byte[] x, byte[] y)
+    {
+        var min = Math.Min(x.Length, y.Length);
+        for (var i = 0; i < min; i++)
+        {
+            if (x[i] != y[i])
+            {
+                return x[i].CompareTo(y[i]);
+            }
+        }
+        return x.Length.CompareTo(y.Length);
     }
 
     private static SCMapEntry MakeSymbolBytesEntry(string key, byte[] value)
@@ -470,16 +512,19 @@ public static class Sep45Challenge
         }
     }
 
-    private static bool InvocationsEqual(SorobanAuthorizedInvocation a, SorobanAuthorizedInvocation b)
+    internal static byte[] EncodeInvocation(SorobanAuthorizedInvocation invocation)
     {
-        var sa = new XdrDataOutputStream();
-        var sb = new XdrDataOutputStream();
-        SorobanAuthorizedInvocation.Encode(sa, a);
-        SorobanAuthorizedInvocation.Encode(sb, b);
-        return sa.ToArray().SequenceEqual(sb.ToArray());
+        var stream = new XdrDataOutputStream();
+        SorobanAuthorizedInvocation.Encode(stream, invocation);
+        return stream.ToArray();
     }
 
-    private static string AddressToStrKey(SCAddress addr)
+    /// <summary>
+    ///     Converts an XDR <see cref="SCAddress" /> to its strkey form (C... contract or G... account).
+    ///     The single shared helper for both challenge validation and signing, so the validated address
+    ///     set and the signed address set never diverge on how a credentials address is normalized.
+    /// </summary>
+    internal static string AddressToStrKey(SCAddress addr)
     {
         var discriminant = addr.Discriminant.InnerValue;
         if (discriminant == SCAddressType.SCAddressTypeEnum.SC_ADDRESS_TYPE_CONTRACT)
@@ -518,7 +563,7 @@ public static class Sep45Challenge
             switch (k)
             {
                 case "account":
-                    account = RequireStrKeyAddress(v, "account");
+                    account = RequireContractAddress(v, "account");
                     break;
                 case "home_domain":
                     homeDomain = RequireString(v, "home_domain");
@@ -599,6 +644,23 @@ public static class Sep45Challenge
         {
             throw new InvalidArgumentsException(
                 $"{keyName} is not a valid account (G...) or contract (C...) address: '{s}'.");
+        }
+        return s;
+    }
+
+    /// <summary>
+    ///     Reads the client <c>account</c> argument, which SEP-45 restricts to a contract account
+    ///     ("This SEP only supports C (contract) accounts"). A <c>G...</c> ed25519 address is rejected
+    ///     here — unlike <see cref="RequireStrKeyAddress" />, which also allows <c>G...</c> for the
+    ///     server (<c>web_auth_domain_account</c>) and client-domain (<c>client_domain_account</c>) accounts.
+    /// </summary>
+    private static string RequireContractAddress(SCVal v, string keyName)
+    {
+        var s = RequireString(v, keyName);
+        if (!StrKey.IsValidContractId(s))
+        {
+            throw new InvalidArgumentsException(
+                $"{keyName} must be a contract (C...) address; SEP-45 only supports contract accounts: '{s}'.");
         }
         return s;
     }
