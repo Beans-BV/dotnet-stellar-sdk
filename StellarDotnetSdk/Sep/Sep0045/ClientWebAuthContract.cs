@@ -61,6 +61,10 @@ public class ClientWebAuthContract : IDisposable
     ///     Optional headers sent with requests to the auth server. The SDK does NOT forward these to the
     ///     client domain's stellar.toml fetch, so they are the safe place for auth-server credentials.
     /// </param>
+    /// <param name="resilienceOptions">
+    ///     Optional retry/timeout options for the <see cref="HttpClient" /> the SDK creates. Ignored when
+    ///     <paramref name="httpClient" /> is supplied — that client is used as-is.
+    /// </param>
     public ClientWebAuthContract(
         string authEndpoint,
         string webAuthContractId,
@@ -289,6 +293,11 @@ public class ClientWebAuthContract : IDisposable
     ///     Optional expected client-domain signing account. If null, the challenge must not contain
     ///     client-domain keys.
     /// </param>
+    /// <param name="clientDomain">
+    ///     Optional client domain that was requested. When supplied, the challenge's <c>client_domain</c>
+    ///     string is validated against it — SEP-45 requires the client to confirm the returned
+    ///     <c>client_domain</c> matches the one it asked for, not just <c>client_domain_account</c>.
+    /// </param>
     /// <param name="homeDomain">
     ///     Optional home domain the challenge was requested for. Defaults to the configured server home
     ///     domain; supply this when the auth server serves multiple home domains so the challenge's
@@ -298,6 +307,7 @@ public class ClientWebAuthContract : IDisposable
         string authorizationEntriesXdr,
         string clientAccountId,
         string? clientDomainAccountId = null,
+        string? clientDomain = null,
         string? homeDomain = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(authorizationEntriesXdr);
@@ -314,6 +324,14 @@ public class ClientWebAuthContract : IDisposable
         {
             throw new InvalidClientAccountException(
                 $"Client account mismatch. Expected {clientAccountId}, got {parsed.ClientAccountId}.");
+        }
+
+        // SEP-45 requires the client to confirm the challenge's client_domain string matches the domain it
+        // requested (distinct from client_domain_account). Compare only when a client domain was requested.
+        if (clientDomain != null && parsed.ClientDomain != clientDomain)
+        {
+            throw new InvalidClientDomainException(
+                $"Client domain mismatch. Expected '{clientDomain}', got '{parsed.ClientDomain ?? "<none>"}'.");
         }
 
         if (clientDomainAccountId != null)
@@ -558,7 +576,10 @@ public class ClientWebAuthContract : IDisposable
                     {
                         throw new SubmitSignedChallengeForContractsErrorResponseException(parsed.Error!);
                     }
-                    if (string.IsNullOrEmpty(parsed.Token))
+                    // A token is a valid login only on HTTP 200. SEP-45 returns 400 for failures (whose
+                    // `error` field is surfaced above); a 400 carrying a `token` but no `error` is a
+                    // malformed/non-compliant response and must NOT be returned as a successful login.
+                    if (status != 200 || string.IsNullOrEmpty(parsed.Token))
                     {
                         throw new SubmitSignedChallengeForContractsUnknownResponseException(status, body);
                     }
@@ -650,7 +671,7 @@ public class ClientWebAuthContract : IDisposable
 
         var xdr = challenge.AuthorizationEntries!;
 
-        ValidateChallenge(xdr, clientAccountId, resolvedClientDomainAccountId, homeDomain);
+        ValidateChallenge(xdr, clientAccountId, resolvedClientDomainAccountId, clientDomain, homeDomain);
 
         var signed = await SignAuthorizationEntriesAsync(
             xdr, clientAccountId, signers, clientDomainAccountKeyPair,

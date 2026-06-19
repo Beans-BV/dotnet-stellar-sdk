@@ -342,6 +342,41 @@ public class ClientWebAuthContractTest
     }
 
     [TestMethod]
+    [ExpectedException(typeof(InvalidClientDomainException))]
+    public void ValidateChallenge_Throws_WhenClientDomainStringMismatch()
+    {
+        // The challenge's client_domain_account matches, but its client_domain STRING differs from the
+        // domain the client requested. SEP-45 requires verifying the string itself, not just the account.
+        var cdKp = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(clientDomain: "real.example", clientDomainKeyPair: cdKp);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            TestChallengeBuilder.DefaultWebAuthDomain,
+            new HttpClient());
+        // Requested client_domain "attacker.example" differs from the challenge's "real.example".
+        auth.ValidateChallenge(xdr, result.ClientContractId, cdKp.AccountId, "attacker.example");
+    }
+
+    [TestMethod]
+    public void ValidateChallenge_Passes_WhenClientDomainStringMatches()
+    {
+        var cdKp = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(clientDomain: "real.example", clientDomainKeyPair: cdKp);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            TestChallengeBuilder.DefaultWebAuthDomain,
+            new HttpClient());
+        // Requested client_domain matches the challenge → no throw.
+        auth.ValidateChallenge(xdr, result.ClientContractId, cdKp.AccountId, "real.example");
+    }
+
+    [TestMethod]
     public async Task SignAuthorizationEntries_SignsClientContractEntry_Verifiably()
     {
         // Realistic SEP-45: the client account is a C... contract; the wallet signs its entry
@@ -647,6 +682,28 @@ public class ClientWebAuthContractTest
     }
 
     [TestMethod]
+    [ExpectedException(typeof(SubmitSignedChallengeForContractsUnknownResponseException))]
+    public async Task SendSignedChallenge_Throws_On400WithTokenButNoError()
+    {
+        // A 400 means authentication failed; a token in a 400 body (no error) must NOT be returned as a
+        // successful login. Regression guard for the success/error branch shared by status 200 and 400.
+        var serverKp = KeyPair.Random();
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.BadRequest)
+            {
+                Content = new StringContent("{\"token\":\"should.not.be.returned\"}"),
+            });
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, ContractId, Network.Test(), serverKp.AccountId,
+            HomeDomain, SorobanRpcUrl, httpClient: client);
+        await auth.SendSignedChallengeAsync("x");
+    }
+
+    [TestMethod]
     [ExpectedException(typeof(SubmitSignedChallengeForContractsTimeoutResponseException))]
     public async Task SendSignedChallenge_Throws_On504()
     {
@@ -699,7 +756,7 @@ public class ClientWebAuthContractTest
             TestChallengeBuilder.DefaultWebAuthDomain,
             new HttpClient());
 
-        auth.ValidateChallenge(xdr, result.ClientContractId, null, "other.example");
+        auth.ValidateChallenge(xdr, result.ClientContractId, homeDomain: "other.example");
     }
 
     [TestMethod]

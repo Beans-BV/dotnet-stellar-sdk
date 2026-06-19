@@ -69,7 +69,7 @@ public static class Sep45Challenge
     /// <param name="serverEntry">The authorization entry whose credentials should be signed by the server.</param>
     /// <param name="serverAccountId">The expected server signing account (G... address).</param>
     /// <param name="network">The Stellar network the challenge is bound to.</param>
-    public static void VerifyServerSignature(
+    internal static void VerifyServerSignature(
         SorobanAuthorizationEntry serverEntry,
         string serverAccountId,
         Network network)
@@ -158,7 +158,7 @@ public static class Sep45Challenge
     /// <param name="homeDomains">Allowed home domains.</param>
     /// <param name="webAuthDomain">Expected web auth domain binding the challenge.</param>
     /// <returns>The populated <see cref="ChallengeAuthorizationEntries" />.</returns>
-    public static ChallengeAuthorizationEntries ReadChallenge(
+    internal static ChallengeAuthorizationEntries ReadChallenge(
         string authorizationEntriesXdr,
         string serverAccountId,
         string webAuthContractId,
