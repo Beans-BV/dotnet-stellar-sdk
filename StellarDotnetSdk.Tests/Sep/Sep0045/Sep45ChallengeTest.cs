@@ -301,12 +301,12 @@ public class Sep45ChallengeTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidArgumentsException))]
+    [ExpectedException(typeof(InvalidEntryCountException))]
     public void ReadChallenge_Throws_WhenEntryCountExceedsHardCap()
     {
         // Count (200) is small enough to pass the remaining-bytes bound — 200 filler ints = 800 bytes
-        // follow — but exceeds the hard cap on authorization entries, so it must be rejected before the
-        // array is allocated. Covers the ~8x reference-array amplification the byte bound alone permits.
+        // follow — but exceeds the hard cap on authorization entries, so it is rejected as an entry-count
+        // violation (the dedicated InvalidEntryCountException, matching the too-few lower bound).
         var stream = new XdrDataOutputStream();
         stream.WriteInt(200);
         for (var i = 0; i < 200; i++)
@@ -316,6 +316,130 @@ public class Sep45ChallengeTest
         var b64 = Convert.ToBase64String(stream.ToArray());
         Sep45Challenge.ReadChallenge(
             b64, KeyPair.Random().AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidEntryCountException))]
+    public void ReadChallenge_RejectsEntryCount_OneAboveHardCap()
+    {
+        // Boundary: exactly MaxAuthorizationEntries + 1 (101) with enough backing to pass the byte bound
+        // must be rejected by the hard cap. Pins the `>` boundary against a `>=` off-by-one.
+        var stream = new XdrDataOutputStream();
+        stream.WriteInt(101);
+        for (var i = 0; i < 101; i++)
+        {
+            stream.WriteInt(0);
+        }
+        var b64 = Convert.ToBase64String(stream.ToArray());
+        Sep45Challenge.ReadChallenge(
+            b64, KeyPair.Random().AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public void ReadChallenge_AllowsEntryCount_AtHardCap()
+    {
+        // Boundary: exactly MaxAuthorizationEntries (100) is NOT rejected by the cap — it passes the count
+        // checks and only fails later when the (zero-filled) entries fail to decode. The expected type here
+        // is InvalidArgumentsException (a decode failure), NOT InvalidEntryCountException, which proves the
+        // cap admits 100. Together with the 101 test above this pins the boundary at exactly 100/101.
+        var stream = new XdrDataOutputStream();
+        stream.WriteInt(100);
+        for (var i = 0; i < 100; i++)
+        {
+            stream.WriteInt(0);
+        }
+        var b64 = Convert.ToBase64String(stream.ToArray());
+        Sep45Challenge.ReadChallenge(
+            b64, KeyPair.Random().AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public void ReadChallenge_Throws_OnInsufficientBacking_BelowHardCap()
+    {
+        // A count below the hard cap but with fewer remaining bytes than entries must be rejected by the
+        // remaining-bytes bound (not the cap). Isolates the `count > remaining` branch so a future change
+        // that drops it cannot pass unnoticed: count = 50, only 10 filler ints (40 bytes) follow.
+        var stream = new XdrDataOutputStream();
+        stream.WriteInt(50);
+        for (var i = 0; i < 10; i++)
+        {
+            stream.WriteInt(0);
+        }
+        var b64 = Convert.ToBase64String(stream.ToArray());
+        Sep45Challenge.ReadChallenge(
+            b64, KeyPair.Random().AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public void ReadChallenge_Throws_WhenChallengeExceedsInputSizeCap()
+    {
+        // A challenge far larger than any legitimate one is rejected before decoding. This input-size cap
+        // is what bounds total decode-time allocation (the XDR decoders size every nested array by the
+        // bytes remaining), so an oversized hostile payload cannot drive a large allocation.
+        var oversized = new string('A', 200_000); // well past the ~64 KiB base64 limit; valid base64 chars
+        Sep45Challenge.ReadChallenge(
+            oversized, KeyPair.Random().AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public void ReadChallenge_Throws_WhenRootFunctionIsNotContractFn()
+    {
+        // An entry whose root invocation is a create-contract host function (not web_auth_verify's
+        // CONTRACT_FN) must be rejected as invalid args. Covers the branch whose exception type is
+        // InvalidArgumentsException (it is a wrong function *type*, not a wrong contract id).
+        var result = TestChallengeBuilder.Build();
+        var notContractFn = new SorobanAuthorizedInvocation
+        {
+            Function = new SorobanAuthorizedFunction
+            {
+                Discriminant = new SorobanAuthorizedFunctionType
+                {
+                    InnerValue = SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum
+                        .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN,
+                },
+                CreateContractHostFn = new CreateContractArgs
+                {
+                    ContractIDPreimage = new ContractIDPreimage
+                    {
+                        Discriminant = new ContractIDPreimageType
+                        {
+                            InnerValue = ContractIDPreimageType.ContractIDPreimageTypeEnum
+                                .CONTRACT_ID_PREIMAGE_FROM_ADDRESS,
+                        },
+                        FromAddress = new ContractIDPreimage.ContractIDPreimageFromAddress
+                        {
+                            Address = new ScContractId(TestChallengeBuilder.DefaultWebAuthContractId).ToXdr(),
+                            Salt = new Uint256(new byte[32]),
+                        },
+                    },
+                    Executable = new StellarDotnetSdk.Xdr.ContractExecutable
+                    {
+                        Discriminant = new ContractExecutableType
+                        {
+                            InnerValue = ContractExecutableType.ContractExecutableTypeEnum
+                                .CONTRACT_EXECUTABLE_STELLAR_ASSET,
+                        },
+                    },
+                },
+            },
+            SubInvocations = Array.Empty<SorobanAuthorizedInvocation>(),
+        };
+        foreach (var entry in result.Entries)
+        {
+            entry.RootInvocation = notContractFn;
+        }
+        var b64 = TestChallengeBuilder.EncodeEntries(result.Entries);
+        Sep45Challenge.ReadChallenge(
+            b64, result.ServerKeyPair.AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
             new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
     }
 

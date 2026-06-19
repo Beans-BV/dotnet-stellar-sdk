@@ -22,10 +22,29 @@ public static class Sep45Challenge
     public const string WebAuthVerifyFunctionName = "web_auth_verify";
 
     /// <summary>
-    ///     Hard upper bound on the number of authorization entries decoded from a challenge. A legitimate
-    ///     SEP-45 challenge carries only a few (the server, the client contract account, and at most the
-    ///     optional client_domain account); this constant ceiling stops a hostile payload from forcing a
-    ///     large up-front array allocation before decoding fails (memory-exhaustion DoS).
+    ///     Upper bound on the raw byte size of a decoded challenge. A legitimate SEP-45 challenge is at
+    ///     most a few kilobytes (a handful of authorization entries, each with a small signature vec);
+    ///     64 KiB is generous headroom. The XDR decoders size every nested collection by the bytes
+    ///     remaining in the input, so bounding the input bounds total decode-time allocation: a 64 KiB
+    ///     challenge can still expand to a few MB of short-lived managed objects (each decoded element
+    ///     carries per-object overhead) but no further — which closes the open-ended memory-exhaustion
+    ///     vector. This is the primary defense against a hostile server forcing large allocations while
+    ///     decoding the challenge. (The generated XDR decoders are individually unbounded; that SDK-wide
+    ///     hardening is tracked separately. This boundary cap is the SEP-45-local mitigation.)
+    /// </summary>
+    private const int MaxChallengeXdrBytes = 64 * 1024;
+
+    /// <summary>
+    ///     Base64 length corresponding to <see cref="MaxChallengeXdrBytes" /> (base64 expands ~4/3). Used
+    ///     to reject an oversized challenge before the base64 decode itself allocates.
+    /// </summary>
+    private const int MaxChallengeBase64Length = (MaxChallengeXdrBytes + 2) / 3 * 4;
+
+    /// <summary>
+    ///     Sanity bound on the number of authorization entries in a challenge. A legitimate SEP-45
+    ///     challenge carries only a few (the server, the client contract account, and at most the optional
+    ///     client_domain account); this ceiling rejects an implausible count. Note the primary allocation
+    ///     defense is the input-size cap (<see cref="MaxChallengeXdrBytes" />), not this count.
     /// </summary>
     private const int MaxAuthorizationEntries = 100;
 
@@ -464,6 +483,18 @@ public static class Sep45Challenge
 
     private static SorobanAuthorizationEntry[] DecodeEntriesFromBase64(string b64)
     {
+        // Bound the input before decoding. A legitimate SEP-45 challenge is at most a few KB; reject
+        // anything far larger up front. The XDR decoders size every nested array by the bytes remaining,
+        // so capping the input is what bounds total decode-time allocation (the entry-count check below
+        // only limits the outermost array, not the attacker-controlled SCVal trees inside each entry).
+        // Check the base64 length first so the base64 decode itself cannot be driven to a large allocation.
+        if (b64.Length > MaxChallengeBase64Length)
+        {
+            throw new InvalidArgumentsException(
+                $"Challenge XDR is too large: base64 length {b64.Length} exceeds the limit of " +
+                $"{MaxChallengeBase64Length} ({MaxChallengeXdrBytes} decoded bytes).");
+        }
+
         byte[] bytes;
         try
         {
@@ -478,17 +509,20 @@ public static class Sep45Challenge
         {
             var stream = new XdrDataInputStream(bytes);
             var count = stream.ReadInt();
-            // A SEP-45 challenge only ever carries a handful of authorization entries, so cap the count
-            // with a constant before allocating. The byte-remaining bound alone is too loose: each entry
-            // costs one array reference (8 bytes on 64-bit) but needs only one input byte, so count ==
-            // remaining still permits an ~8x up-front allocation. The hard cap closes that DoS; the
-            // remaining-bytes check still rejects counts that cannot possibly be backed by the input.
+            // Two secondary count checks (the input-size cap above is the real allocation bound):
+            //   - reject a count that cannot possibly be backed by the bytes that remain, and
+            //   - reject an implausible number of entries (a real challenge carries only the server, the
+            //     client contract account, and at most the optional client_domain account).
             var remaining = stream.GetRemainingInputLen();
-            if (count < 0 || count > MaxAuthorizationEntries || count > remaining)
+            if (count < 0 || count > remaining)
             {
                 throw new InvalidArgumentsException(
-                    $"Implausible authorization entry count {count} " +
-                    $"(max {MaxAuthorizationEntries}, {remaining} remaining byte(s)).");
+                    $"Implausible authorization entry count {count} for {remaining} remaining byte(s).");
+            }
+            if (count > MaxAuthorizationEntries)
+            {
+                throw new InvalidEntryCountException(
+                    $"Authorization entry count {count} exceeds the maximum of {MaxAuthorizationEntries}.");
             }
 
             var result = new SorobanAuthorizationEntry[count];

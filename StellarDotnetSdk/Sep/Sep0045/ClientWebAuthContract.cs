@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -31,6 +32,13 @@ public class ClientWebAuthContract : IDisposable
 {
     /// <summary>Default number of ledgers added to the latest ledger to compute signature expiration.</summary>
     public const uint DefaultSignatureExpirationLedgers = 10;
+
+    /// <summary>
+    ///     Upper bound on a SEP-45 server response body. The challenge and JWT payloads are small; this
+    ///     stops a hostile or malfunctioning server from exhausting memory by streaming an unbounded body
+    ///     into a string. 512 KiB is generous headroom over a real challenge response (~1-2 KB).
+    /// </summary>
+    private const int MaxResponseBodyBytes = 512 * 1024;
 
     private readonly string _authEndpoint;
     private readonly HttpClient _httpClient;
@@ -198,6 +206,38 @@ public class ClientWebAuthContract : IDisposable
     }
 
     /// <summary>
+    ///     Reads an HTTP response body into a string with an upper size bound. SEP-45 challenge and JWT
+    ///     payloads are small; this prevents a hostile or malfunctioning server from exhausting memory by
+    ///     streaming an unbounded body. Throws <see cref="HttpRequestException" /> when the body exceeds
+    ///     <see cref="MaxResponseBodyBytes" />; callers translate it to their SEP-45 response exception.
+    /// </summary>
+    private static async Task<string> ReadBodyBoundedAsync(HttpResponseMessage response)
+    {
+        if (response.Content.Headers.ContentLength is long contentLength &&
+            contentLength > MaxResponseBodyBytes)
+        {
+            throw new HttpRequestException(
+                $"Response body length {contentLength} exceeds the {MaxResponseBodyBytes}-byte limit.");
+        }
+
+        using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        using var buffer = new MemoryStream();
+        var chunk = new byte[16 * 1024];
+        int read;
+        while ((read = await stream.ReadAsync(chunk, 0, chunk.Length).ConfigureAwait(false)) > 0)
+        {
+            if (buffer.Length + read > MaxResponseBodyBytes)
+            {
+                throw new HttpRequestException(
+                    $"Response body exceeds the {MaxResponseBodyBytes}-byte limit.");
+            }
+            buffer.Write(chunk, 0, read);
+        }
+
+        return Encoding.UTF8.GetString(buffer.GetBuffer(), 0, (int)buffer.Length);
+    }
+
+    /// <summary>
     ///     Fetches a SEP-45 challenge from the configured server for a contract account.
     /// </summary>
     /// <param name="clientAccountId">The contract account being authenticated (C... address).</param>
@@ -261,7 +301,18 @@ public class ClientWebAuthContract : IDisposable
 
         using (resp)
         {
-            var body = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
+            string body;
+            try
+            {
+                body = await ReadBodyBoundedAsync(resp).ConfigureAwait(false);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new ChallengeForContractsRequestErrorException(
+                    (int)resp.StatusCode,
+                    $"Server response body could not be read or exceeded the {MaxResponseBodyBytes}-byte limit.",
+                    ex);
+            }
             if (!resp.IsSuccessStatusCode)
             {
                 throw new ChallengeForContractsRequestErrorException((int)resp.StatusCode, body);
@@ -605,7 +656,18 @@ public class ClientWebAuthContract : IDisposable
 
         using (resp)
         {
-            var body = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
+            string body;
+            try
+            {
+                body = await ReadBodyBoundedAsync(resp).ConfigureAwait(false);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new SubmitSignedChallengeForContractsUnknownResponseException(
+                    (int)resp.StatusCode,
+                    $"Server response body could not be read or exceeded the {MaxResponseBodyBytes}-byte limit.",
+                    ex);
+            }
             var status = (int)resp.StatusCode;
             switch (status)
             {

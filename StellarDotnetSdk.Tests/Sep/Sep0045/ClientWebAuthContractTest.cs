@@ -185,6 +185,32 @@ public class ClientWebAuthContractTest
     }
 
     [TestMethod]
+    public async Task GetChallengeAsync_Throws_WhenResponseBodyExceedsSizeLimit()
+    {
+        // A hostile/malfunctioning server returning an oversized body must be rejected, not buffered
+        // unbounded into memory. The body here is VALID JSON that would otherwise parse and return
+        // successfully, so the rejection is attributable to the size bound, not a parse failure.
+        var serverKp = KeyPair.Random();
+        var bigEntries = new string('A', 600 * 1024); // valid base64 chars; pushes the body past the 512 KiB cap
+        var body = $"{{\"authorization_entries\":\"{bigEntries}\"}}";
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(body),
+            });
+        using var client = new HttpClient(handler.Object);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, ContractId, Network.Test(), serverKp.AccountId,
+            HomeDomain, SorobanRpcUrl, httpClient: client);
+
+        await Assert.ThrowsExceptionAsync<ChallengeForContractsRequestErrorException>(() =>
+            auth.GetChallengeAsync(TestChallengeBuilder.DefaultWebAuthContractId));
+    }
+
+    [TestMethod]
     public async Task GetChallengeAsync_Throws_WhenAuthorizationEntriesMissing()
     {
         var serverKp = KeyPair.Random();
