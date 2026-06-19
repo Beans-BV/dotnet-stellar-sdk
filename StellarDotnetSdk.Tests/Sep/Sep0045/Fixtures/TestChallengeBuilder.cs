@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Security.Cryptography;
-using StellarDotnetSdk;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Sep.Sep0045;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
 using Int64 = StellarDotnetSdk.Xdr.Int64;
@@ -17,7 +16,7 @@ using SCVec = StellarDotnetSdk.Xdr.SCVec;
 using SCMap = StellarDotnetSdk.Xdr.SCMap;
 using SCMapEntry = StellarDotnetSdk.Xdr.SCMapEntry;
 
-namespace StellarDotnetSdk.Tests.Sep.Sep0045;
+namespace StellarDotnetSdk.Tests.Sep.Sep0045.Fixtures;
 
 /// <summary>
 ///     Builds valid SEP-45 challenge authorization entries entirely in-memory for tests.
@@ -27,20 +26,11 @@ namespace StellarDotnetSdk.Tests.Sep.Sep0045;
 internal static class TestChallengeBuilder
 {
     public const string DefaultHomeDomain = "sep45.example.com";
+
     public const string DefaultWebAuthDomain = "auth.example.com";
+
     // Deterministic 32-byte placeholder → a valid C... address (test-only).
     public static readonly string DefaultWebAuthContractId = GenerateContractIdFromSeed(1);
-
-    public sealed class BuildResult
-    {
-        public SorobanAuthorizationEntry[] Entries = Array.Empty<SorobanAuthorizationEntry>();
-        public KeyPair ServerKeyPair = null!;
-        public string ClientContractId = "";
-        public string? ClientDomain;
-        public KeyPair? ClientDomainKeyPair;
-        public string Nonce = "";
-        public uint SignatureExpirationLedger;
-    }
 
     public static BuildResult Build(
         string? homeDomain = null,
@@ -68,7 +58,9 @@ internal static class TestChallengeBuilder
         var nonceStr = nonce ?? Convert.ToBase64String(RandomNumberGenerator.GetBytes(48));
 
         if (clientDomain != null && clientDomainKeyPair == null)
+        {
             throw new ArgumentException("clientDomainKeyPair required when clientDomain supplied");
+        }
 
         // Per the reference web_auth_verify contract the args map is Map<Symbol, String>:
         // every value — including the addresses and nonce — is an SCV_STRING (strkey text
@@ -118,12 +110,15 @@ internal static class TestChallengeBuilder
         var entries = new List<SorobanAuthorizationEntry> { serverEntry, clientEntry };
         if (clientDomain != null)
         {
-            var cdEntry = BuildEntry(clientDomainKeyPair!.AccountId, clientDomainNonce ?? 3, signatureExpirationLedger, invocation);
+            var cdEntry = BuildEntry(clientDomainKeyPair!.AccountId, clientDomainNonce ?? 3, signatureExpirationLedger,
+                invocation);
             entries.Add(cdEntry);
         }
 
         if (signServer)
+        {
             SignEntryInPlace(serverEntry, serverKp, network);
+        }
 
         return new BuildResult
         {
@@ -138,7 +133,9 @@ internal static class TestChallengeBuilder
     }
 
     public static SorobanAuthorizationEntry BuildMinimalServerSignableEntry()
-        => Build().Entries[0];
+    {
+        return Build().Entries[0];
+    }
 
     /// <summary>Encodes entries as base64 of (int32 length) followed by N XDR-encoded entries.</summary>
     public static string EncodeEntries(SorobanAuthorizationEntry[] entries)
@@ -146,7 +143,9 @@ internal static class TestChallengeBuilder
         var stream = new XdrDataOutputStream();
         stream.WriteInt(entries.Length);
         foreach (var e in entries)
+        {
             SorobanAuthorizationEntry.Encode(stream, e);
+        }
         return Convert.ToBase64String(stream.ToArray());
     }
 
@@ -157,14 +156,16 @@ internal static class TestChallengeBuilder
         var count = stream.ReadInt();
         var result = new SorobanAuthorizationEntry[count];
         for (var i = 0; i < count; i++)
+        {
             result[i] = SorobanAuthorizationEntry.Decode(stream);
+        }
         return result;
     }
 
     /// <summary>Sign an entry in place; installs the signature as an SCV_VEC of maps {public_key, signature}.</summary>
     public static void SignEntryInPlace(SorobanAuthorizationEntry entry, KeyPair signer, Network network)
     {
-        var hash = InvokeComputeAuthorizationHash(entry, network);
+        var hash = Sep45Challenge.ComputeAuthorizationHash(entry, network);
         var sig = signer.Sign(hash);
         var pubKey = signer.PublicKey;
 
@@ -214,50 +215,69 @@ internal static class TestChallengeBuilder
         };
     }
 
-    private static SCVal SCValString(string s) => new()
+    private static SCVal SCValString(string s)
     {
-        Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_STRING },
-        Str = new SCString(s),
-    };
+        return new SCVal
+        {
+            Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_STRING },
+            Str = new SCString(s),
+        };
+    }
 
-    private static SCVal SCValBytes(byte[] b) => new()
+    private static SCVal SCValBytes(byte[] b)
     {
-        Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_BYTES },
-        Bytes = new SCBytes(b),
-    };
+        return new SCVal
+        {
+            Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_BYTES },
+            Bytes = new SCBytes(b),
+        };
+    }
 
     private static SCAddress AddressToXdr(string addr)
     {
         if (addr.StartsWith("C", StringComparison.Ordinal))
+        {
             return new ScContractId(addr).ToXdr();
+        }
         return new ScAccountId(addr).ToXdr();
     }
 
-    private static SCMapEntry MapEntry(string key, SCVal value) => new()
+    private static SCMapEntry MapEntry(string key, SCVal value)
     {
-        Key = new SCVal
+        return new SCMapEntry
         {
-            Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_SYMBOL },
-            Sym = new SCSymbol(key),
-        },
-        Val = value,
-    };
+            Key = new SCVal
+            {
+                Discriminant = new SCValType { InnerValue = SCValType.SCValTypeEnum.SCV_SYMBOL },
+                Sym = new SCSymbol(key),
+            },
+            Val = value,
+        };
+    }
 
     private static string GenerateRandomContractId()
-        => StrKey.EncodeContractId(RandomNumberGenerator.GetBytes(32));
+    {
+        return StrKey.EncodeContractId(RandomNumberGenerator.GetBytes(32));
+    }
 
     private static string GenerateContractIdFromSeed(byte seed)
     {
         var raw = new byte[32];
-        for (int i = 0; i < raw.Length; i++) raw[i] = seed;
+        for (var i = 0; i < raw.Length; i++)
+        {
+            raw[i] = seed;
+        }
         return StrKey.EncodeContractId(raw);
     }
 
-    private static byte[] InvokeComputeAuthorizationHash(SorobanAuthorizationEntry entry, Network network)
+    public sealed class BuildResult
     {
-        var mi = typeof(StellarDotnetSdk.Sep.Sep0045.Sep45Challenge)
-            .GetMethod("ComputeAuthorizationHash",
-                BindingFlags.NonPublic | BindingFlags.Static)!;
-        return (byte[])mi.Invoke(null, new object[] { entry, network })!;
+        public string ClientContractId = "";
+        public string? ClientDomain;
+        public KeyPair? ClientDomainKeyPair;
+        public SorobanAuthorizationEntry[] Entries = Array.Empty<SorobanAuthorizationEntry>();
+        public string Nonce = "";
+        public KeyPair ServerKeyPair = null!;
+        public uint SignatureExpirationLedger;
     }
 }

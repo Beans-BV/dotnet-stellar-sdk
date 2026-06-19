@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Sep.Sep0045;
 using StellarDotnetSdk.Sep.Sep0045.Exceptions;
 using StellarDotnetSdk.Soroban;
+using StellarDotnetSdk.Tests.Sep.Sep0045.Fixtures;
 using StellarDotnetSdk.Xdr;
 using Int64 = StellarDotnetSdk.Xdr.Int64;
 using Uint32 = StellarDotnetSdk.Xdr.Uint32;
@@ -28,11 +28,8 @@ public class Sep45ChallengeTest
     {
         var entry = BuildMinimalEntry();
 
-        var mi = typeof(Sep45Challenge).GetMethod(
-            "ComputeAuthorizationHash",
-            BindingFlags.NonPublic | BindingFlags.Static)!;
-        var h1 = (byte[])mi.Invoke(null, new object[] { entry, Network.Test() })!;
-        var h2 = (byte[])mi.Invoke(null, new object[] { entry, Network.Test() })!;
+        var h1 = Sep45Challenge.ComputeAuthorizationHash(entry, Network.Test());
+        var h2 = Sep45Challenge.ComputeAuthorizationHash(entry, Network.Test());
 
         Assert.AreEqual(32, h1.Length);
         Assert.IsTrue(h1.SequenceEqual(h2));
@@ -297,6 +294,25 @@ public class Sep45ChallengeTest
         // 4-byte payload claiming 100,000,000 entries — must be rejected before allocating, not OOM.
         var stream = new XdrDataOutputStream();
         stream.WriteInt(100_000_000);
+        var b64 = Convert.ToBase64String(stream.ToArray());
+        Sep45Challenge.ReadChallenge(
+            b64, KeyPair.Random().AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public void ReadChallenge_Throws_WhenEntryCountExceedsHardCap()
+    {
+        // Count (200) is small enough to pass the remaining-bytes bound — 200 filler ints = 800 bytes
+        // follow — but exceeds the hard cap on authorization entries, so it must be rejected before the
+        // array is allocated. Covers the ~8x reference-array amplification the byte bound alone permits.
+        var stream = new XdrDataOutputStream();
+        stream.WriteInt(200);
+        for (var i = 0; i < 200; i++)
+        {
+            stream.WriteInt(0);
+        }
         var b64 = Convert.ToBase64String(stream.ToArray());
         Sep45Challenge.ReadChallenge(
             b64, KeyPair.Random().AccountId, TestChallengeBuilder.DefaultWebAuthContractId,

@@ -14,6 +14,7 @@ using StellarDotnetSdk.Sep.Sep0010.Exceptions;
 using StellarDotnetSdk.Sep.Sep0045;
 using StellarDotnetSdk.Sep.Sep0045.Exceptions;
 using StellarDotnetSdk.Soroban;
+using StellarDotnetSdk.Tests.Sep.Sep0045.Fixtures;
 using StellarDotnetSdk.Xdr;
 // MissingClientDomainException exists in both Sep0010 and Sep0045; this file imports Sep0010.Exceptions
 // (for NoWebAuthServerSigningKeyFoundException), so the alias pins the unqualified name to Sep0045 — the

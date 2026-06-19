@@ -22,6 +22,14 @@ public static class Sep45Challenge
     public const string WebAuthVerifyFunctionName = "web_auth_verify";
 
     /// <summary>
+    ///     Hard upper bound on the number of authorization entries decoded from a challenge. A legitimate
+    ///     SEP-45 challenge carries only a few (the server, the client contract account, and at most the
+    ///     optional client_domain account); this constant ceiling stops a hostile payload from forcing a
+    ///     large up-front array allocation before decoding fails (memory-exhaustion DoS).
+    /// </summary>
+    private const int MaxAuthorizationEntries = 100;
+
+    /// <summary>
     ///     Build the SHA-256 hash that signers of a SorobanAuthorizationEntry sign
     ///     (HashIDPreimage of type ENVELOPE_TYPE_SOROBAN_AUTHORIZATION).
     /// </summary>
@@ -197,7 +205,7 @@ public static class Sep45Challenge
                 SorobanAuthorizedFunctionType.SorobanAuthorizedFunctionTypeEnum
                     .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
             {
-                throw new InvalidContractIdException("Entry is not a contract function invocation.");
+                throw new InvalidArgumentsException("Entry is not a contract function invocation.");
             }
 
             var contractFn = fn.ContractFn;
@@ -470,14 +478,17 @@ public static class Sep45Challenge
         {
             var stream = new XdrDataInputStream(bytes);
             var count = stream.ReadInt();
-            // Bound the count by the bytes actually remaining before allocating: each entry needs at
-            // least one byte, so a count larger than what is left is necessarily malformed. This stops a
-            // tiny hostile payload from forcing a huge array allocation (memory-exhaustion DoS).
+            // A SEP-45 challenge only ever carries a handful of authorization entries, so cap the count
+            // with a constant before allocating. The byte-remaining bound alone is too loose: each entry
+            // costs one array reference (8 bytes on 64-bit) but needs only one input byte, so count ==
+            // remaining still permits an ~8x up-front allocation. The hard cap closes that DoS; the
+            // remaining-bytes check still rejects counts that cannot possibly be backed by the input.
             var remaining = stream.GetRemainingInputLen();
-            if (count < 0 || count > remaining)
+            if (count < 0 || count > MaxAuthorizationEntries || count > remaining)
             {
                 throw new InvalidArgumentsException(
-                    $"Implausible authorization entry count {count} for {remaining} remaining byte(s).");
+                    $"Implausible authorization entry count {count} " +
+                    $"(max {MaxAuthorizationEntries}, {remaining} remaining byte(s)).");
             }
 
             var result = new SorobanAuthorizationEntry[count];
