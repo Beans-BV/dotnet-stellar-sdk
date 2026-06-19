@@ -263,6 +263,10 @@ var resilienceOptions = new HttpResilienceOptions
 var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 ```
 
+> **What the caller sees:** when `RequestTimeout` elapses, the operation throws
+> `Polly.Timeout.TimeoutRejectedException` — **not** a `TaskCanceledException` or `HttpRequestException`, so
+> catch that type explicitly if you bound operations with `RequestTimeout`.
+
 > **Note:** `HttpClient.Timeout` (default 100 seconds) independently caps the whole operation too — all
 > attempts plus their backoff and `Retry-After` waits — and surfaces as a **non-retried**
 > `TaskCanceledException`. Two honored 60-second `Retry-After` waits under `ForHorizon()` would exceed the
@@ -354,7 +358,7 @@ Check that **all three** conditions hold: `MaxRetryCount > 0`, the status code i
 
 ### Requests time out instead of retrying
 
-That is by design: `HttpClient.Timeout` and `RequestTimeout` failures are terminal, not retried (see [What Gets Retried](#what-gets-retried)). If slow individual attempts are eating your budget, lower the per-call latency at the server selection level or bound the operation with `RequestTimeout` and surface the failure.
+That is by design: `HttpClient.Timeout` and `RequestTimeout` failures are terminal, not retried (see [What Gets Retried](#what-gets-retried)). They surface differently to the caller: `HttpClient.Timeout` throws `TaskCanceledException`, while `RequestTimeout` throws `Polly.Timeout.TimeoutRejectedException`. If slow individual attempts are eating your budget, lower the per-call latency at the server selection level or bound the operation with `RequestTimeout` and surface the failure.
 
 ### Retries take longer than expected
 
