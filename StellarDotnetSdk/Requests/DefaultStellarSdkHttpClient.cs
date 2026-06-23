@@ -7,7 +7,9 @@ namespace StellarDotnetSdk.Requests;
 /// <summary>
 ///     A preconfigured <see cref="HttpClient" /> for communicating with Stellar Horizon and Soroban RPC servers.
 ///     Sets default request headers (client name, version, and optional bearer token) and optionally
-///     wraps the handler pipeline with <see cref="RetryingHttpMessageHandler" /> for connection-level retries.
+///     wraps the handler pipeline with <see cref="RetryingHttpMessageHandler" /> when <see cref="HttpResilienceOptions" />
+///     has any feature enabled (retries, circuit breaker, or timeout — see
+///     <see cref="HttpResilienceOptions.HasAnyResilienceFeatureEnabled" />; status codes alone enable nothing).
 /// </summary>
 public class DefaultStellarSdkHttpClient : HttpClient
 {
@@ -24,16 +26,20 @@ public class DefaultStellarSdkHttpClient : HttpClient
     ///         and <see cref="HttpResilienceOptions" />) instead of relying on this type directly.
     ///     </para>
     ///     <para>
-    ///         By default, no automatic retries are enabled. To enable retries for connection failures
-    ///         (network errors, DNS failures), pass a custom <see cref="HttpResilienceOptions" /> instance with
-    ///         <c>MaxRetryCount</c> set to a positive value. HTTP error status codes (4xx/5xx) are never retried
-    ///         automatically.
+    ///         By default, no automatic retries are enabled. To enable retries, pass a custom
+    ///         <see cref="HttpResilienceOptions" /> instance with <c>MaxRetryCount</c> set to a positive value
+    ///         (and optionally populate <c>RetryHttpStatusCodes</c> for HTTP status-code retries). For
+    ///         Horizon clients use <c>HttpResilienceOptionsPresets.ForHorizon()</c>; for Stellar RPC (Soroban)
+    ///         use <c>HttpResilienceOptionsPresets.ForSoroban()</c>.
     ///     </para>
     /// </summary>
     /// <param name="bearerToken">Bearer token in case the server requires it.</param>
     /// <param name="clientName">Name of the client.</param>
     /// <param name="clientVersion">Version of the client.</param>
-    /// <param name="resilienceOptions">Resilience options. If null, default retry configuration is used.</param>
+    /// <param name="resilienceOptions">
+    ///     Resilience options. If null, no resilience handler is added — requests are sent with no retries,
+    ///     circuit breaker, or timeout.
+    /// </param>
     /// <param name="innerHandler">
     ///     Optional inner HTTP message handler. If null, defaults to <see cref="SocketsHttpHandler" />.
     ///     Use this to inject a custom handler for testing, proxies, or custom certificate handling.
@@ -66,7 +72,8 @@ public class DefaultStellarSdkHttpClient : HttpClient
     {
         var handler = innerHandler ?? new SocketsHttpHandler();
 
-        // Add resilience handler if any resilience feature is enabled (retries, circuit breaker, or timeout)
+        // Add resilience handler if any resilience feature is enabled (retries, circuit breaker, or
+        // timeout). Status codes alone enable nothing — see HasAnyResilienceFeatureEnabled's remarks.
         if (resilienceOptions?.HasAnyResilienceFeatureEnabled == true)
         {
             return new RetryingHttpMessageHandler(handler, resilienceOptions);

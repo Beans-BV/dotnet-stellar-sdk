@@ -30,7 +30,10 @@ public static class JsonOptions
     ///     - Enum converters: LiquidityPoolTypeEnum, SendTransactionStatusEnum, JsonStringEnumConverter (standard)
     ///     - HATEOAS link converters: LinkJsonConverter for EffectResponse and Response
     /// </remarks>
-    public static readonly JsonSerializerOptions DefaultOptions = CreateDefaultOptions();
+    // A get-only property (not a field): 15.1.0 shipped this member as a property, and replacing it with a
+    // field removes get_DefaultOptions() from the binary surface — consumers compiled against an older
+    // package would throw MissingMethodException at runtime. Keep the property shape for binary compatibility.
+    public static JsonSerializerOptions DefaultOptions { get; } = CreateDefaultOptions();
 
     private static JsonSerializerOptions CreateDefaultOptions()
     {

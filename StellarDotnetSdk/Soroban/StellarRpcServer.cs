@@ -59,7 +59,10 @@ public class StellarRpcServer : IDisposable
     ///     Constructs a new instance that will interact with the provided URL.
     /// </summary>
     /// <param name="uri">URL of the Stellar RPC server.</param>
-    /// <param name="resilienceOptions">Resilience options for HTTP requests. If null, default retry configuration is used.</param>
+    /// <param name="resilienceOptions">
+    ///     Resilience options for HTTP requests. If null, no resilience handler is added — requests are sent
+    ///     with no retries, circuit breaker, or timeout.
+    /// </param>
     /// <param name="bearerToken">(Optional) Bearer token in case the server requires it.</param>
     public StellarRpcServer(string uri, HttpResilienceOptions? resilienceOptions, string? bearerToken = null)
     {
