@@ -2,6 +2,7 @@
 // DO NOT EDIT or your changes may be overwritten
 
 using System;
+using System.Buffers.Binary;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,7 @@ public class XdrDataInputStream
     public const int DefaultMaxDepth = 200;
 
     private readonly byte[] _bytes;
-    private int _pos;
+    private readonly MemoryStream _stream;
 
     /// <summary>
     ///     Create the stream from a byte array.
@@ -24,7 +25,9 @@ public class XdrDataInputStream
     /// <param name="bytes"></param>
     public XdrDataInputStream(byte[] bytes)
     {
+        ArgumentNullException.ThrowIfNull(bytes);
         _bytes = bytes;
+        _stream = new MemoryStream(bytes, false);
     }
 
     /// <summary>
@@ -33,10 +36,9 @@ public class XdrDataInputStream
     /// <returns></returns>
     public byte Read()
     {
-        var res = _bytes[_pos];
-        _pos++;
-
-        return res;
+        Span<byte> buffer = stackalloc byte[1];
+        _stream.ReadExactly(buffer);
+        return buffer[0];
     }
 
     /// <summary>
@@ -82,28 +84,16 @@ public class XdrDataInputStream
 
     internal long ReadLong()
     {
-        return
-            ((long)_bytes[_pos++] << 56) |
-            ((long)_bytes[_pos++] << 48) |
-            ((long)_bytes[_pos++] << 40) |
-            ((long)_bytes[_pos++] << 32) |
-            ((long)_bytes[_pos++] << 24) |
-            ((long)_bytes[_pos++] << 16) |
-            ((long)_bytes[_pos++] << 8) |
-            _bytes[_pos++];
+        Span<byte> buffer = stackalloc byte[sizeof(long)];
+        _stream.ReadExactly(buffer);
+        return BinaryPrimitives.ReadInt64BigEndian(buffer);
     }
 
     internal ulong ReadULong()
     {
-        return
-            ((ulong)_bytes[_pos++] << 56) |
-            ((ulong)_bytes[_pos++] << 48) |
-            ((ulong)_bytes[_pos++] << 40) |
-            ((ulong)_bytes[_pos++] << 32) |
-            ((ulong)_bytes[_pos++] << 24) |
-            ((ulong)_bytes[_pos++] << 16) |
-            ((ulong)_bytes[_pos++] << 8) |
-            _bytes[_pos++];
+        Span<byte> buffer = stackalloc byte[sizeof(ulong)];
+        _stream.ReadExactly(buffer);
+        return BinaryPrimitives.ReadUInt64BigEndian(buffer);
     }
 
     /// <summary>
@@ -112,11 +102,9 @@ public class XdrDataInputStream
     /// <returns></returns>
     public int ReadInt()
     {
-        return
-            (_bytes[_pos++] << 0x18) |
-            (_bytes[_pos++] << 0x10) |
-            (_bytes[_pos++] << 0x08) |
-            _bytes[_pos++];
+        Span<byte> buffer = stackalloc byte[sizeof(int)];
+        _stream.ReadExactly(buffer);
+        return BinaryPrimitives.ReadInt32BigEndian(buffer);
     }
 
     /// <summary>
@@ -125,17 +113,14 @@ public class XdrDataInputStream
     /// <returns></returns>
     public uint ReadUInt()
     {
-        return
-            ((uint)_bytes[_pos++] << 0x18) |
-            ((uint)_bytes[_pos++] << 0x10) |
-            ((uint)_bytes[_pos++] << 0x08) |
-            _bytes[_pos++];
+        Span<byte> buffer = stackalloc byte[sizeof(uint)];
+        _stream.ReadExactly(buffer);
+        return BinaryPrimitives.ReadUInt32BigEndian(buffer);
     }
 
-    public unsafe float ReadSingle()
+    public float ReadSingle()
     {
-        var num = ReadInt();
-        return *(float*)&num;
+        return BitConverter.Int32BitsToSingle(ReadInt());
     }
 
     /// <summary>
@@ -159,10 +144,9 @@ public class XdrDataInputStream
         return arr;
     }
 
-    public unsafe double ReadDouble()
+    public double ReadDouble()
     {
-        var num = ReadLong();
-        return *(double*)&num;
+        return BitConverter.Int64BitsToDouble(ReadLong());
     }
 
     /// <summary>
@@ -199,8 +183,7 @@ public class XdrDataInputStream
     /// </summary>
     public int GetRemainingInputLen()
     {
-        if (_bytes == null) return -1;
-        return _bytes.Length - _pos;
+        return (int)(_stream.Length - _stream.Position);
     }
 
     /// <summary>
@@ -238,24 +221,20 @@ public class XdrDataInputStream
         }
 
         var result = new byte[len];
-        Array.Copy(_bytes, _pos, result, 0, (int)len);
+        _stream.ReadExactly(result);
 
         if (tail == 0)
         {
-            _pos += (int)len;
             return result;
         }
 
         var tailBytes = new byte[tailLength];
-
-        Array.Copy(_bytes, _pos + len, tailBytes, 0, tailLength);
+        _stream.ReadExactly(tailBytes);
 
         if (tailBytes.Any(a => a != 0))
         {
             throw new IOException("non-zero padding");
         }
-
-        _pos += (int)len + tailLength;
 
         return result;
     }

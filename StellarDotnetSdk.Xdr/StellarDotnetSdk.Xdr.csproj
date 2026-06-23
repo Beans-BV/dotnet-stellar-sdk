@@ -17,7 +17,6 @@
         <ReleaseNotes>https://github.com/Beans-BV/dotnet-stellar-sdk/releases</ReleaseNotes>
         <WarningLevel>0</WarningLevel>
         <IsPackable>true</IsPackable>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Nullable>disable</Nullable>
         <RootNamespace>StellarDotnetSdk.Xdr</RootNamespace>
         <LangVersion>12</LangVersion>
