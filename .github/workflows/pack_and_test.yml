@@ -32,5 +32,5 @@ jobs:
         uses: actions/setup-dotnet@v4
       - name: Pack
         run: dotnet pack --configuration Release --output ${{env.NuGetDirectory}}
-      - name: Run tests
-        run: dotnet test --configuration Release
+      - name: Run unit tests
+        run: dotnet test StellarDotnetSdk.Tests/StellarDotnetSdk.Tests.csproj --configuration Release
