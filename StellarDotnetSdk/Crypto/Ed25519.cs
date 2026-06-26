@@ -17,7 +17,7 @@ internal static class Ed25519
         var kp = Sodium.PublicKeyAuth.GenerateKeyPair(seed);
         return kp.PublicKey;
 #else
-        var key = NSec.Cryptography.Key.Import(
+        using var key = NSec.Cryptography.Key.Import(
             NSec.Cryptography.SignatureAlgorithm.Ed25519,
             seed,
             NSec.Cryptography.KeyBlobFormat.RawPrivateKey,
@@ -39,7 +39,7 @@ internal static class Ed25519
         var kp = Sodium.PublicKeyAuth.GenerateKeyPair(seed);
         return Sodium.PublicKeyAuth.SignDetached(data, kp.PrivateKey);
 #else
-        var key = NSec.Cryptography.Key.Import(
+        using var key = NSec.Cryptography.Key.Import(
             NSec.Cryptography.SignatureAlgorithm.Ed25519,
             seed,
             NSec.Cryptography.KeyBlobFormat.RawPrivateKey,
