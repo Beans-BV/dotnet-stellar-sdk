@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Nett;
+using StellarDotnetSdk.Compatibility;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Sep.Sep0001.Exceptions;
 

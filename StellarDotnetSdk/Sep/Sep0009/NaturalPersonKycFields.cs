@@ -1,5 +1,9 @@
 using System;
 using System.Collections.Generic;
+#if !NETSTANDARD2_1
+using System.Text.Json.Serialization;
+using StellarDotnetSdk.Converters;
+#endif
 
 namespace StellarDotnetSdk.Sep.Sep0009;
 
@@ -272,7 +276,16 @@ public sealed record NaturalPersonKycFields
     /// <summary>
     ///     Date of birth, e.g. 1976-07-04
     /// </summary>
+    /// <remarks>
+    ///     Uses <c>DateOnly?</c> on net8.0/net10.0 and ISO date string (<c>yyyy-MM-dd</c>) on
+    ///     netstandard2.1.
+    /// </remarks>
+#if NETSTANDARD2_1
+    public string? BirthDate { get; init; }
+#else
+    [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
     public DateOnly? BirthDate { get; init; }
+#endif
 
     /// <summary>
     ///     Place of birth (city, state, country; as on passport)
@@ -327,12 +340,30 @@ public sealed record NaturalPersonKycFields
     /// <summary>
     ///     ID issue date
     /// </summary>
+    /// <remarks>
+    ///     Uses <c>DateOnly?</c> on net8.0/net10.0 and ISO date string (<c>yyyy-MM-dd</c>) on
+    ///     netstandard2.1.
+    /// </remarks>
+#if NETSTANDARD2_1
+    public string? IdIssueDate { get; init; }
+#else
+    [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
     public DateOnly? IdIssueDate { get; init; }
+#endif
 
     /// <summary>
     ///     ID expiration date
     /// </summary>
+    /// <remarks>
+    ///     Uses <c>DateOnly?</c> on net8.0/net10.0 and ISO date string (<c>yyyy-MM-dd</c>) on
+    ///     netstandard2.1.
+    /// </remarks>
+#if NETSTANDARD2_1
+    public string? IdExpirationDate { get; init; }
+#else
+    [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
     public DateOnly? IdExpirationDate { get; init; }
+#endif
 
     /// <summary>
     ///     Passport or ID number
@@ -453,10 +484,7 @@ public sealed record NaturalPersonKycFields
         {
             result[EmailAddressFieldKey] = EmailAddress;
         }
-        if (BirthDate.HasValue)
-        {
-            result[BirthDateFieldKey] = BirthDate.Value.ToString("yyyy-MM-dd");
-        }
+        KycDateFormatting.AddIfPresent(result, BirthDateFieldKey, BirthDate);
         if (BirthPlace is not null)
         {
             result[BirthPlaceFieldKey] = BirthPlace;
@@ -497,14 +525,8 @@ public sealed record NaturalPersonKycFields
         {
             result[IdCountryCodeFieldKey] = IdCountryCode;
         }
-        if (IdIssueDate.HasValue)
-        {
-            result[IdIssueDateFieldKey] = IdIssueDate.Value.ToString("yyyy-MM-dd");
-        }
-        if (IdExpirationDate.HasValue)
-        {
-            result[IdExpirationDateFieldKey] = IdExpirationDate.Value.ToString("yyyy-MM-dd");
-        }
+        KycDateFormatting.AddIfPresent(result, IdIssueDateFieldKey, IdIssueDate);
+        KycDateFormatting.AddIfPresent(result, IdExpirationDateFieldKey, IdExpirationDate);
         if (IdNumber is not null)
         {
             result[IdNumberFieldKey] = IdNumber;

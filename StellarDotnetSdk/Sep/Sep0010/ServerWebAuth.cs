@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Compatibility;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Sep.Sep0010.Exceptions;
 using StellarDotnetSdk.Transactions;
@@ -110,13 +111,13 @@ public static class ServerWebAuth
         string? clientDomain = null,
         KeyPair? clientSigningKey = null)
     {
-        ArgumentNullException.ThrowIfNull(serverKeypair);
-        ArgumentNullException.ThrowIfNull(clientAccountId);
-        ArgumentException.ThrowIfNullOrEmpty(homeDomain);
-        ArgumentException.ThrowIfNullOrEmpty(webAuthDomain);
+        Throw.IfNull(serverKeypair, nameof(serverKeypair));
+        Throw.IfNull(clientAccountId, nameof(clientAccountId));
+        Throw.IfNullOrEmpty(homeDomain, nameof(homeDomain));
+        Throw.IfNullOrEmpty(webAuthDomain, nameof(webAuthDomain));
         if (!string.IsNullOrEmpty(clientDomain))
         {
-            ArgumentNullException.ThrowIfNull(clientSigningKey);
+            Throw.IfNull(clientSigningKey, nameof(clientSigningKey));
         }
 
         if (nonce is null)
@@ -278,7 +279,7 @@ public static class ServerWebAuth
         Network? network = null,
         DateTimeOffset? now = null)
     {
-        ArgumentNullException.ThrowIfNull(signerSummary);
+        Throw.IfNull(signerSummary, nameof(signerSummary));
         var signersFound = VerifyChallengeTransactionSigners(
             transaction,
             serverAccountId,
@@ -322,8 +323,8 @@ public static class ServerWebAuth
         Network? network = null,
         DateTimeOffset? now = null)
     {
-        ArgumentNullException.ThrowIfNull(signers);
-        ArgumentNullException.ThrowIfNull(transaction);
+        Throw.IfNull(signers, nameof(signers));
+        Throw.IfNull(transaction, nameof(transaction));
         if (signers.Count == 0)
         {
             throw new ArgumentException("Signers must be non-empty", nameof(signers));

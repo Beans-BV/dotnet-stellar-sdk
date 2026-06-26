@@ -1,5 +1,7 @@
 using System;
+#if NET8_0_OR_GREATER
 using System.Collections.Frozen;
+#endif
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -22,21 +24,31 @@ public class LiquidityPoolTypeEnumJsonConverter : JsonConverter<LiquidityPoolTyp
     ///     <see cref="LiquidityPoolType.LiquidityPoolTypeEnum" />
     ///     values.
     /// </summary>
-    private static readonly FrozenDictionary<string, LiquidityPoolType.LiquidityPoolTypeEnum> EnumByName =
+    private static readonly IReadOnlyDictionary<string, LiquidityPoolType.LiquidityPoolTypeEnum> EnumByName =
         new Dictionary<string, LiquidityPoolType.LiquidityPoolTypeEnum>(StringComparer.Ordinal)
         {
             ["constant_product"] = LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT,
-        }.ToFrozenDictionary(StringComparer.Ordinal);
+        }
+#if NET8_0_OR_GREATER
+        .ToFrozenDictionary(StringComparer.Ordinal);
+#else
+        ;
+#endif
 
     /// <summary>
     ///     Frozen reverse lookup table mapping <see cref="LiquidityPoolType.LiquidityPoolTypeEnum" /> values to their
     ///     Horizon wire-format strings.
     /// </summary>
-    private static readonly FrozenDictionary<LiquidityPoolType.LiquidityPoolTypeEnum, string> NameByEnum =
+    private static readonly IReadOnlyDictionary<LiquidityPoolType.LiquidityPoolTypeEnum, string> NameByEnum =
         new Dictionary<LiquidityPoolType.LiquidityPoolTypeEnum, string>
         {
             [LiquidityPoolType.LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT] = "constant_product",
-        }.ToFrozenDictionary();
+        }
+#if NET8_0_OR_GREATER
+        .ToFrozenDictionary();
+#else
+        ;
+#endif
 
     /// <inheritdoc />
     public override LiquidityPoolType.LiquidityPoolTypeEnum Read(ref Utf8JsonReader reader, Type typeToConvert,

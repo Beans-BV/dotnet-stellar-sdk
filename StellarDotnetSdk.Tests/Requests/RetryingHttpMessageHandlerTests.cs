@@ -948,7 +948,9 @@ public class RetryingHttpMessageHandlerTests
     /// <summary>
     ///     The synchronous HttpClient.Send path must run through the same resilience pipeline as SendAsync
     ///     instead of silently bypassing it via the inherited DelegatingHandler.Send.
+    ///     Skipped when testing the netstandard2.1 SDK build, which does not override synchronous Send.
     /// </summary>
+#if !TEST_SDK_NETSTANDARD21
     [TestMethod]
     public void Send_SynchronousPath_RetriesThroughPipeline()
     {
@@ -969,6 +971,7 @@ public class RetryingHttpMessageHandlerTests
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         Assert.AreEqual(2, inner.CallCount); // first attempt threw, the synchronous retry succeeded
     }
+#endif
 
     /// <summary>
     ///     Circuit-breaker failure counting is not limited by the RetryHttpMethods whitelist: a sustained

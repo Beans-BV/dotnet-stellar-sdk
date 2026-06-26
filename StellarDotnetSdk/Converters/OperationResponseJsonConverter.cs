@@ -1,5 +1,7 @@
 using System;
+#if NET8_0_OR_GREATER
 using System.Collections.Frozen;
+#endif
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -40,7 +42,7 @@ public class OperationResponseJsonConverter : JsonConverter<OperationResponse>
     ///     Frozen lookup table mapping <c>type_i</c> discriminator values to concrete-type deserializers.
     ///     Built once at type initialization for optimal read performance.
     /// </summary>
-    private static readonly FrozenDictionary<int, Func<JsonElement, JsonSerializerOptions, OperationResponse?>>
+    private static readonly IReadOnlyDictionary<int, Func<JsonElement, JsonSerializerOptions, OperationResponse?>>
         Deserializers =
             new Dictionary<int, Func<JsonElement, JsonSerializerOptions, OperationResponse?>>
             {
@@ -73,7 +75,12 @@ public class OperationResponseJsonConverter : JsonConverter<OperationResponse>
                 [24] = static (root, options) => root.Deserialize<InvokeHostFunctionOperationResponse>(options),
                 [25] = static (root, options) => root.Deserialize<ExtendFootprintOperationResponse>(options),
                 [26] = static (root, options) => root.Deserialize<RestoreFootprintOperationResponse>(options),
-            }.ToFrozenDictionary();
+            }
+#if NET8_0_OR_GREATER
+            .ToFrozenDictionary();
+#else
+            ;
+#endif
 
     /// <inheritdoc />
     public override bool CanConvert(Type typeToConvert)

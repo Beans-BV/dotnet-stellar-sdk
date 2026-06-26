@@ -82,7 +82,9 @@ public static class JsonOptions
         // Freeze the options to prevent accidental modification of the shared singleton.
         // populateMissingResolver: true installs the default reflection-based TypeInfoResolver,
         // which matches the SDK's existing serialization behavior.
+#if NET8_0_OR_GREATER
         options.MakeReadOnly(true);
+#endif
         return options;
     }
 }

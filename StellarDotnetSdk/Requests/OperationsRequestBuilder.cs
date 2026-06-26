@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using StellarDotnetSdk.Compatibility;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Requests;
@@ -53,7 +54,7 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
     /// <param name="account">Account for which to get operations</param>
     public OperationsRequestBuilder ForAccount(string account)
     {
-        ArgumentException.ThrowIfNullOrEmpty(account);
+        Throw.IfNullOrEmpty(account, nameof(account));
 
         if (!StrKey.IsValidEd25519PublicKey(account))
         {
@@ -72,7 +73,7 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
     /// <param name="claimableBalanceId">Hex-encoded claimable balance ID (0000...) for which to get operations.</param>
     public OperationsRequestBuilder ForClaimableBalance(string claimableBalanceId)
     {
-        ArgumentException.ThrowIfNullOrEmpty(claimableBalanceId);
+        Throw.IfNullOrEmpty(claimableBalanceId, nameof(claimableBalanceId));
         if (!StrKey.IsValidClaimableBalanceId(ClaimableBalanceIdUtils.ToBase32String(claimableBalanceId)))
         {
             throw new ArgumentException($"Claimable balance ID {claimableBalanceId} is not valid.");
@@ -111,7 +112,7 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
     /// <param name="transactionId">Transaction ID for which to get operations</param>
     public OperationsRequestBuilder ForTransaction(string transactionId)
     {
-        ArgumentException.ThrowIfNullOrEmpty(transactionId);
+        Throw.IfNullOrEmpty(transactionId, nameof(transactionId));
 
         SetSegments("transactions", transactionId, "operations");
 
@@ -125,7 +126,7 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
     /// <param name="liquidityPoolId">Liquidity pool ID for which to get operations</param>
     public OperationsRequestBuilder ForLiquidityPool(string liquidityPoolId)
     {
-        ArgumentException.ThrowIfNullOrEmpty(liquidityPoolId);
+        Throw.IfNullOrEmpty(liquidityPoolId, nameof(liquidityPoolId));
 
         SetSegments("liquidity_pools", liquidityPoolId, "operations");
 

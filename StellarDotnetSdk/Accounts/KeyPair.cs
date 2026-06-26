@@ -3,10 +3,9 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text.Json.Serialization;
 using dotnetstandard_bip32;
-using NSec.Cryptography;
+using StellarDotnetSdk.Crypto;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Xdr;
-using PublicKey = NSec.Cryptography.PublicKey;
 using xdr_PublicKey = StellarDotnetSdk.Xdr.PublicKey;
 
 namespace StellarDotnetSdk.Accounts;
@@ -24,16 +23,7 @@ namespace StellarDotnetSdk.Accounts;
 [JsonConverter(typeof(KeyPairJsonConverter))]
 public class KeyPair : IAccountId, IEquatable<KeyPair>
 {
-    private readonly PublicKey _publicKey;
-
-    private readonly Key? _secretKey;
-
-    private KeyPair(Key secretKey, byte[] seed)
-    {
-        _secretKey = secretKey ?? throw new ArgumentNullException(nameof(secretKey));
-        _publicKey = secretKey.PublicKey;
-        SeedBytes = seed ?? throw new ArgumentNullException(nameof(seed));
-    }
+    private readonly byte[] _publicKey;
 
     /// <summary>
     ///     Creates a new Keypair object from public key.
@@ -53,26 +43,14 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <param name="seed"></param>
     public KeyPair(byte[] publicKey, byte[]? privateKey, byte[]? seed)
     {
-        _publicKey = NSec.Cryptography.PublicKey.Import(SignatureAlgorithm.Ed25519, publicKey,
-            KeyBlobFormat.RawPublicKey);
-
-        if (privateKey != null)
-        {
-            _secretKey = Key.Import(SignatureAlgorithm.Ed25519, privateKey, KeyBlobFormat.RawPrivateKey,
-                new KeyCreationParameters { ExportPolicy = KeyExportPolicies.AllowPlaintextExport });
-        }
-        else
-        {
-            _secretKey = null;
-        }
-
-        SeedBytes = seed;
+        _publicKey = publicKey ?? throw new ArgumentNullException(nameof(publicKey));
+        SeedBytes = seed ?? privateKey;
     }
 
     /// <summary>
     ///     The private key.
     /// </summary>
-    public byte[]? PrivateKey => _secretKey?.Export(KeyBlobFormat.RawPrivateKey);
+    public byte[]? PrivateKey => SeedBytes;
 
     /// <summary>
     ///     The bytes of the Secret Seed
@@ -146,7 +124,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <summary>
     ///     The public key.
     /// </summary>
-    public byte[] PublicKey => _publicKey.Export(KeyBlobFormat.RawPublicKey);
+    public byte[] PublicKey => _publicKey;
 
     /// <summary>
     ///     AccountId
@@ -210,7 +188,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
         {
             return false;
         }
-        return _publicKey.Equals(other._publicKey);
+        return _publicKey.SequenceEqual(other._publicKey);
     }
 
     /// <summary>
@@ -243,7 +221,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <returns></returns>
     public bool CanSign()
     {
-        return _secretKey != null;
+        return SeedBytes != null;
     }
 
     /// <summary>
@@ -268,10 +246,8 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// </returns>
     public static KeyPair FromSecretSeed(byte[] seed)
     {
-        var privateKey = Key.Import(SignatureAlgorithm.Ed25519, seed, KeyBlobFormat.RawPrivateKey,
-            new KeyCreationParameters { ExportPolicy = KeyExportPolicies.AllowPlaintextExport });
-
-        return new KeyPair(privateKey, seed);
+        var publicKey = Ed25519.GetPublicKey(seed);
+        return new KeyPair(publicKey, privateKey: seed, seed: seed);
     }
 
     /// <summary>
@@ -349,13 +325,13 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <returns>signed bytes, null if the private key for this keypair is null.</returns>
     public byte[] Sign(byte[] data)
     {
-        if (_secretKey == null)
+        if (SeedBytes == null)
         {
             throw new Exception(
                 "KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.");
         }
 
-        return SignatureAlgorithm.Ed25519.Sign(_secretKey, data);
+        return Ed25519.Sign(SeedBytes, data);
     }
 
     /// <summary>
@@ -418,7 +394,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     {
         try
         {
-            return SignatureAlgorithm.Ed25519.Verify(_publicKey, data, signature);
+            return Ed25519.Verify(_publicKey, data, signature);
         }
         catch
         {
