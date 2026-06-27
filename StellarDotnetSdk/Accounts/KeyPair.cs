@@ -43,14 +43,17 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <param name="seed"></param>
     public KeyPair(byte[] publicKey, byte[]? privateKey, byte[]? seed)
     {
-        _publicKey = publicKey ?? throw new ArgumentNullException(nameof(publicKey));
-        SeedBytes = seed ?? privateKey;
+        if (publicKey == null) throw new ArgumentNullException(nameof(publicKey));
+
+        _publicKey = (byte[])publicKey.Clone();
+        var secret = seed ?? privateKey;
+        SeedBytes = secret != null ? (byte[])secret.Clone() : null;
     }
 
     /// <summary>
     ///     The private key.
     /// </summary>
-    public byte[]? PrivateKey => SeedBytes;
+    public byte[]? PrivateKey => SeedBytes is null ? null : (byte[])SeedBytes.Clone();
 
     /// <summary>
     ///     The bytes of the Secret Seed
@@ -124,7 +127,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <summary>
     ///     The public key.
     /// </summary>
-    public byte[] PublicKey => _publicKey;
+    public byte[] PublicKey => (byte[])_publicKey.Clone();
 
     /// <summary>
     ///     AccountId
