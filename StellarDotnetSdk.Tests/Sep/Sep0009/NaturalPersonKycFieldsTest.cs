@@ -2,6 +2,7 @@ using System;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Sep.Sep0009;
+using StellarDotnetSdk.Tests.Sep.Sep0009.Fixtures;
 
 namespace StellarDotnetSdk.Tests.Sep.Sep0009;
 
@@ -79,22 +80,17 @@ public class NaturalPersonKycFieldsTest
     [TestMethod]
     public void DateProperties_SetAndGet_WorkCorrectly()
     {
-        // Arrange
-        var birthDate = new DateOnly(1990, 1, 15);
-        var idIssueDate = new DateOnly(2020, 5, 10);
-        var idExpirationDate = new DateOnly(2030, 5, 10);
-
         var fields = new NaturalPersonKycFields
         {
-            BirthDate = birthDate,
-            IdIssueDate = idIssueDate,
-            IdExpirationDate = idExpirationDate,
+            BirthDate = KycTestDates.BirthDate,
+            IdIssueDate = KycTestDates.IdIssueDate,
+            IdExpirationDate = KycTestDates.IdExpirationDate,
         };
 
         // Assert
-        fields.BirthDate.Should().Be(birthDate);
-        fields.IdIssueDate.Should().Be(idIssueDate);
-        fields.IdExpirationDate.Should().Be(idExpirationDate);
+        fields.BirthDate.Should().Be(KycTestDates.BirthDate);
+        fields.IdIssueDate.Should().Be(KycTestDates.IdIssueDate);
+        fields.IdExpirationDate.Should().Be(KycTestDates.IdExpirationDate);
     }
 
     /// <summary>
@@ -239,9 +235,9 @@ public class NaturalPersonKycFieldsTest
         // Arrange
         var fields = new NaturalPersonKycFields
         {
-            BirthDate = new DateOnly(1990, 1, 15),
-            IdIssueDate = new DateOnly(2020, 5, 10),
-            IdExpirationDate = new DateOnly(2030, 5, 10),
+            BirthDate = KycTestDates.BirthDate,
+            IdIssueDate = KycTestDates.IdIssueDate,
+            IdExpirationDate = KycTestDates.IdExpirationDate,
         };
 
         // Act

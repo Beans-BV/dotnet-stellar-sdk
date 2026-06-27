@@ -55,9 +55,12 @@ public static class Util
     /// <returns>Sha-256 Hash</returns>
     public static byte[] Hash(byte[] data)
     {
-        var mySha256 = SHA256.Create();
-        var hash = mySha256.ComputeHash(data);
-        return hash;
+#if NET8_0_OR_GREATER
+        return SHA256.HashData(data);
+#else
+        using var sha256 = SHA256.Create();
+        return sha256.ComputeHash(data);
+#endif
     }
 
     /// <summary>

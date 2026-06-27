@@ -48,10 +48,14 @@ public static class JsonOptions
             // Reject JSON payloads with duplicate property names to prevent silent data corruption.
             // Malformed or adversarial responses could otherwise overwrite financial fields (amount,
             // balance, destination) with attacker-controlled values without any error.
+#if NET10_0_OR_GREATER
             AllowDuplicateProperties = false,
+#endif
 
+#if NET10_0_OR_GREATER
             // Enforce C# nullability annotations so null values for non-nullable properties are rejected
             RespectNullableAnnotations = true,
+#endif
 
             Converters =
             {
@@ -82,7 +86,9 @@ public static class JsonOptions
         // Freeze the options to prevent accidental modification of the shared singleton.
         // populateMissingResolver: true installs the default reflection-based TypeInfoResolver,
         // which matches the SDK's existing serialization behavior.
+#if NET8_0_OR_GREATER
         options.MakeReadOnly(true);
+#endif
         return options;
     }
 }

@@ -35,6 +35,14 @@ determined by the needs of the application.
 
 ✅ **Implemented**
 
+### Target-framework API notes
+
+SEP-0009 date fields keep the same JSON wire format (`yyyy-MM-dd`) across all target frameworks, but their public
+property types differ by TFM:
+
+- `net10.0` / `net8.0`: `DateOnly?`
+- `netstandard2.1`: `string?`
+
 ### Implementation Files
 
 - `StellarDotnetSdk/Sep/Sep0009/StandardKycFields.cs`
@@ -105,7 +113,7 @@ determined by the needs of the application.
 | `address` |  | ✅ | `Address` | Entire address (country, state, postal code, street address, etc.) as a multi-line string |
 | `address_country_code` |  | ✅ | `AddressCountryCode` | Country code for current address |
 | `birth_country_code` |  | ✅ | `BirthCountryCode` | ISO Code of country of birth (ISO 3166-1 alpha-3) |
-| `birth_date` |  | ✅ | `BirthDate` | Date of birth (e.g., 1976-07-04) |
+| `birth_date` |  | ✅ | `BirthDate` | Date of birth (e.g., 1976-07-04). `DateOnly?` on net8+/net10; `string?` on netstandard2.1 |
 | `birth_place` |  | ✅ | `BirthPlace` | Place of birth (city, state, country; as on passport) |
 | `city` |  | ✅ | `City` | Name of city/town |
 | `email_address` |  | ✅ | `EmailAddress` | Email address |
@@ -113,8 +121,8 @@ determined by the needs of the application.
 | `employer_name` |  | ✅ | `EmployerName` | Name of employer |
 | `first_name` |  | ✅ | `FirstName` | Given or first name |
 | `id_country_code` |  | ✅ | `IdCountryCode` | Country issuing passport or photo ID (ISO 3166-1 alpha-3) |
-| `id_expiration_date` |  | ✅ | `IdExpirationDate` | ID expiration date |
-| `id_issue_date` |  | ✅ | `IdIssueDate` | ID issue date |
+| `id_expiration_date` |  | ✅ | `IdExpirationDate` | ID expiration date. `DateOnly?` on net8+/net10; `string?` on netstandard2.1 |
+| `id_issue_date` |  | ✅ | `IdIssueDate` | ID issue date. `DateOnly?` on net8+/net10; `string?` on netstandard2.1 |
 | `id_number` |  | ✅ | `IdNumber` | Passport or ID number |
 | `id_type` |  | ✅ | `IdType` | Type of ID (passport, drivers_license, id_card, etc.) |
 | `ip_address` |  | ✅ | `IpAddress` | IP address of customer's computer |
@@ -152,7 +160,7 @@ determined by the needs of the application.
 | `organization.photo_proof_address` |  | ✅ | `PhotoProofAddress` | Image of a utility bill, bank statement with the organization's name and address |
 | `organization.postal_code` |  | ✅ | `PostalCode` | Postal or other code identifying organization's locale |
 | `organization.registered_address` |  | ✅ | `RegisteredAddress` | Organization registered address |
-| `organization.registration_date` |  | ✅ | `RegistrationDate` | Date the organization was registered |
+| `organization.registration_date` |  | ✅ | `RegistrationDate` | Date the organization was registered. `DateOnly?` on net8+/net10; `string?` on netstandard2.1 |
 | `organization.registration_number` |  | ✅ | `RegistrationNumber` | Organization registration number |
 | `organization.shareholder_name` |  | ✅ | `ShareholderName` | Name of shareholder (can be organization or person) |
 | `organization.state_or_province` |  | ✅ | `StateOrProvince` | Name of state/province/region/prefecture |

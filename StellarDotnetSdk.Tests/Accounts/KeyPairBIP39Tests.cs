@@ -283,7 +283,7 @@ public class KeyPairBip39Tests
             Assert.AreEqual(expectedSecret, pair1.SecretSeed);
 
             // Act - Test with byte array seed
-            var pair2 = KeyPair.FromBIP39Seed(bip39Seed.HexToByteArray(), accountIndex);
+            var pair2 = KeyPair.FromBIP39Seed(Util.HexToBytes(bip39Seed), accountIndex);
 
             // Assert - Verify byte array seed derivation
             Assert.AreEqual(expectedAccountId, pair2.AccountId);

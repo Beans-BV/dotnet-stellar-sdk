@@ -1,5 +1,7 @@
 using System;
+#if NET8_0_OR_GREATER
 using System.Collections.Frozen;
+#endif
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -48,7 +50,7 @@ public class EffectResponseJsonConverter : JsonConverter<EffectResponse>
     ///     Frozen lookup table mapping <c>type_i</c> discriminator values to concrete-type deserializers.
     ///     Built once at type initialization for optimal read performance across 40+ non-sequential keys.
     /// </summary>
-    private static readonly FrozenDictionary<int, Func<JsonElement, JsonSerializerOptions, EffectResponse?>>
+    private static readonly IReadOnlyDictionary<int, Func<JsonElement, JsonSerializerOptions, EffectResponse?>>
         Deserializers =
             new Dictionary<int, Func<JsonElement, JsonSerializerOptions, EffectResponse?>>
             {
@@ -111,7 +113,12 @@ public class EffectResponseJsonConverter : JsonConverter<EffectResponse>
                 [95] = static (root, options) => root.Deserialize<LiquidityPoolRevokedEffectResponse>(options),
                 [96] = static (root, options) => root.Deserialize<ContractCreditedEffectResponse>(options),
                 [97] = static (root, options) => root.Deserialize<ContractDebitedEffectResponse>(options),
-            }.ToFrozenDictionary();
+            }
+#if NET8_0_OR_GREATER
+            .ToFrozenDictionary();
+#else
+            ;
+#endif
 
     /// <inheritdoc />
     public override bool CanConvert(Type typeToConvert)

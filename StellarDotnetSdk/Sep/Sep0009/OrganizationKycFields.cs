@@ -1,5 +1,9 @@
 using System;
 using System.Collections.Generic;
+#if !NETSTANDARD2_1
+using System.Text.Json.Serialization;
+using StellarDotnetSdk.Converters;
+#endif
 
 namespace StellarDotnetSdk.Sep.Sep0009;
 
@@ -131,7 +135,16 @@ public sealed record OrganizationKycFields
     /// <summary>
     ///     Date the organization was registered
     /// </summary>
+    /// <remarks>
+    ///     Uses <c>DateOnly?</c> on net8.0/net10.0 and ISO date string (<c>yyyy-MM-dd</c>) on
+    ///     netstandard2.1.
+    /// </remarks>
+#if NETSTANDARD2_1
+    public string? RegistrationDate { get; init; }
+#else
+    [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
     public DateOnly? RegistrationDate { get; init; }
+#endif
 
     /// <summary>
     ///     Organization registered address
@@ -228,10 +241,7 @@ public sealed record OrganizationKycFields
         {
             result[RegistrationNumberFieldKey] = RegistrationNumber;
         }
-        if (RegistrationDate.HasValue)
-        {
-            result[RegistrationDateFieldKey] = RegistrationDate.Value.ToString("yyyy-MM-dd");
-        }
+        KycDateFormatting.AddIfPresent(result, RegistrationDateFieldKey, RegistrationDate);
         if (RegisteredAddress is not null)
         {
             result[RegisteredAddressFieldKey] = RegisteredAddress;

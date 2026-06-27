@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Compatibility;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
 using EnvelopeTypeEnum = StellarDotnetSdk.Xdr.EnvelopeType.EnvelopeTypeEnum;
@@ -134,8 +135,8 @@ public static class SorobanAuthorization
         uint signatureExpirationLedger,
         SorobanAuthorizedInvocation invocation)
     {
-        ArgumentNullException.ThrowIfNull(network);
-        ArgumentNullException.ThrowIfNull(invocation);
+        Throw.IfNull(network, nameof(network));
+        Throw.IfNull(invocation, nameof(invocation));
 
         var preimage = new HashIDPreimage
         {
@@ -172,9 +173,9 @@ public static class SorobanAuthorization
         uint signatureExpirationLedger,
         SorobanAuthorizedInvocation invocation)
     {
-        ArgumentNullException.ThrowIfNull(network);
-        ArgumentNullException.ThrowIfNull(address);
-        ArgumentNullException.ThrowIfNull(invocation);
+        Throw.IfNull(network, nameof(network));
+        Throw.IfNull(address, nameof(address));
+        Throw.IfNull(invocation, nameof(invocation));
 
         var preimage = new HashIDPreimage
         {
@@ -224,8 +225,8 @@ public static class SorobanAuthorization
         uint validUntilLedgerSeq,
         Network network)
     {
-        ArgumentNullException.ThrowIfNull(entry);
-        ArgumentNullException.ThrowIfNull(network);
+        Throw.IfNull(entry, nameof(entry));
+        Throw.IfNull(network, nameof(network));
 
         return entry.Credentials switch
         {
@@ -284,7 +285,7 @@ public static class SorobanAuthorization
         SorobanCredentialsVersion version = SorobanCredentialsVersion.Preserve,
         ScAddress? forAddress = null)
     {
-        ArgumentNullException.ThrowIfNull(signer);
+        Throw.IfNull(signer, nameof(signer));
 
         return AuthorizeEntry(entry, new KeyPairEntrySigner(signer), validUntilLedgerSeq, network, version,
             forAddress);
@@ -363,9 +364,9 @@ public static class SorobanAuthorization
         SorobanCredentialsVersion version = SorobanCredentialsVersion.Preserve,
         ScAddress? forAddress = null)
     {
-        ArgumentNullException.ThrowIfNull(entry);
-        ArgumentNullException.ThrowIfNull(signer);
-        ArgumentNullException.ThrowIfNull(network);
+        Throw.IfNull(entry, nameof(entry));
+        Throw.IfNull(signer, nameof(signer));
+        Throw.IfNull(network, nameof(network));
 
         return entry.Credentials switch
         {
@@ -652,10 +653,10 @@ public static class SorobanAuthorization
         SorobanAuthorizationEntry entry, ISorobanEntrySigner rootSigner,
         IReadOnlyList<ISorobanEntrySigner> delegateSigners, uint validUntilLedgerSeq, Network network)
     {
-        ArgumentNullException.ThrowIfNull(entry);
-        ArgumentNullException.ThrowIfNull(rootSigner);
-        ArgumentNullException.ThrowIfNull(delegateSigners);
-        ArgumentNullException.ThrowIfNull(network);
+        Throw.IfNull(entry, nameof(entry));
+        Throw.IfNull(rootSigner, nameof(rootSigner));
+        Throw.IfNull(delegateSigners, nameof(delegateSigners));
+        Throw.IfNull(network, nameof(network));
 
         // Mirror BuildWithDelegatesEntry: an already-delegated entry is not a valid input here. Sign
         // such an entry incrementally with AuthorizeEntry(..., forAddress) instead.
@@ -768,8 +769,8 @@ public static class SorobanAuthorization
         IReadOnlyList<ScAddress> delegateAddresses,
         uint validUntilLedgerSeq)
     {
-        ArgumentNullException.ThrowIfNull(entry);
-        ArgumentNullException.ThrowIfNull(delegateAddresses);
+        Throw.IfNull(entry, nameof(entry));
+        Throw.IfNull(delegateAddresses, nameof(delegateAddresses));
 
         var (rootAddress, rootNonce) = entry.Credentials switch
         {
