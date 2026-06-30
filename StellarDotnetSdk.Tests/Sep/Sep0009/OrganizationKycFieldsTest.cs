@@ -2,6 +2,7 @@ using System;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Sep.Sep0009;
+using StellarDotnetSdk.Tests.Sep.Sep0009.Fixtures;
 
 namespace StellarDotnetSdk.Tests.Sep.Sep0009;
 
@@ -18,13 +19,12 @@ public class OrganizationKycFieldsTest
     public void TextProperties_SetAndGet_WorkCorrectly()
     {
         // Arrange
-        var registrationDate = new DateOnly(2020, 1, 1);
         var fields = new OrganizationKycFields
         {
             Name = "Acme Corp",
             VatNumber = "VAT123456",
             RegistrationNumber = "REG789012",
-            RegistrationDate = registrationDate,
+            RegistrationDate = KycTestDates.RegistrationDate,
             RegisteredAddress = "123 Business St",
             ShareholderName = "John Doe",
             AddressCountryCode = "USA",
@@ -41,7 +41,7 @@ public class OrganizationKycFieldsTest
         fields.Name.Should().Be("Acme Corp");
         fields.VatNumber.Should().Be("VAT123456");
         fields.RegistrationNumber.Should().Be("REG789012");
-        fields.RegistrationDate.Should().Be(registrationDate);
+        fields.RegistrationDate.Should().Be(KycTestDates.RegistrationDate);
         fields.RegisteredAddress.Should().Be("123 Business St");
         fields.ShareholderName.Should().Be("John Doe");
         fields.AddressCountryCode.Should().Be("USA");
@@ -115,13 +115,12 @@ public class OrganizationKycFieldsTest
     public void GetFields_WithAllTextFieldsSet_ReturnsAllFields()
     {
         // Arrange
-        var registrationDate = new DateOnly(2020, 1, 1);
         var fields = new OrganizationKycFields
         {
             Name = "Acme Corp",
             VatNumber = "VAT123456",
             RegistrationNumber = "REG789012",
-            RegistrationDate = registrationDate,
+            RegistrationDate = KycTestDates.RegistrationDate,
             RegisteredAddress = "123 Business St",
             ShareholderName = "John Doe",
             AddressCountryCode = "USA",
@@ -165,7 +164,7 @@ public class OrganizationKycFieldsTest
         // Arrange
         var fields = new OrganizationKycFields
         {
-            RegistrationDate = new DateOnly(2020, 1, 15),
+            RegistrationDate = KycTestDates.RegistrationDateIso,
         };
 
         // Act

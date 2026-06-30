@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using StellarDotnetSdk.Compatibility;
 using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Responses.Effects;
 
@@ -28,7 +29,7 @@ public class EffectsRequestBuilder : RequestBuilderStreamable<EffectsRequestBuil
     /// <param name="account">Account for which to get effects</param>
     public EffectsRequestBuilder ForAccount(string account)
     {
-        ArgumentException.ThrowIfNullOrEmpty(account);
+        Throw.IfNullOrEmpty(account, nameof(account));
 
         if (!StrKey.IsValidEd25519PublicKey(account))
         {
@@ -56,7 +57,7 @@ public class EffectsRequestBuilder : RequestBuilderStreamable<EffectsRequestBuil
     /// <param name="transactionId">Transaction ID for which to get effects</param>
     public EffectsRequestBuilder ForTransaction(string transactionId)
     {
-        ArgumentException.ThrowIfNullOrEmpty(transactionId);
+        Throw.IfNullOrEmpty(transactionId, nameof(transactionId));
 
         SetSegments("transactions", transactionId, "effects");
         return this;
@@ -90,7 +91,7 @@ public class EffectsRequestBuilder : RequestBuilderStreamable<EffectsRequestBuil
     /// <returns>The current <see cref="EffectsRequestBuilder" /> instance for chaining.</returns>
     public EffectsRequestBuilder ForLiquidityPool(string liquidityPoolId)
     {
-        ArgumentException.ThrowIfNullOrEmpty(liquidityPoolId);
+        Throw.IfNullOrEmpty(liquidityPoolId, nameof(liquidityPoolId));
 
         SetSegments("liquidity_pools", liquidityPoolId, "effects");
         return this;

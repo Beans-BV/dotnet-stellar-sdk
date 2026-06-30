@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.Compatibility;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
@@ -28,7 +29,7 @@ public class PathsRequestBuilder : RequestBuilderExecutePageable<PathsRequestBui
     /// <exception cref="ArgumentException">Thrown when the account ID is invalid.</exception>
     public PathsRequestBuilder DestinationAccount(string account)
     {
-        ArgumentException.ThrowIfNullOrEmpty(account);
+        Throw.IfNullOrEmpty(account, nameof(account));
 
         if (!StrKey.IsValidEd25519PublicKey(account))
         {
@@ -46,7 +47,7 @@ public class PathsRequestBuilder : RequestBuilderExecutePageable<PathsRequestBui
     /// <exception cref="ArgumentException">Thrown when the account ID is invalid.</exception>
     public PathsRequestBuilder SourceAccount(string account)
     {
-        ArgumentException.ThrowIfNullOrEmpty(account);
+        Throw.IfNullOrEmpty(account, nameof(account));
 
         if (!StrKey.IsValidEd25519PublicKey(account))
         {

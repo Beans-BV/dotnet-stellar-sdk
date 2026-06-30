@@ -99,6 +99,7 @@ public class RetryingHttpMessageHandler : DelegatingHandler
     /// <param name="request">The HTTP request message to send.</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     /// <returns>The HTTP response message.</returns>
+#if NET8_0_OR_GREATER
     protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var context = ResilienceContextPool.Shared.Get(cancellationToken);
@@ -113,6 +114,7 @@ public class RetryingHttpMessageHandler : DelegatingHandler
             ResilienceContextPool.Shared.Return(context);
         }
     }
+#endif
 
     private static ResiliencePipeline<HttpResponseMessage> BuildPipeline(HttpResilienceOptions options)
     {

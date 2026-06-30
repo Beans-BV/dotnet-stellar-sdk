@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Compatibility;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Memos;
 using StellarDotnetSdk.Operations;
@@ -147,10 +148,10 @@ public class ClientWebAuth : IDisposable
         int? gracePeriod = null,
         HttpResilienceOptions? resilienceOptions = null)
     {
-        ArgumentException.ThrowIfNullOrEmpty(authEndpoint);
-        ArgumentNullException.ThrowIfNull(network);
-        ArgumentException.ThrowIfNullOrEmpty(serverSigningKey);
-        ArgumentException.ThrowIfNullOrEmpty(serverHomeDomain);
+        Throw.IfNullOrEmpty(authEndpoint, nameof(authEndpoint));
+        Throw.IfNull(network, nameof(network));
+        Throw.IfNullOrEmpty(serverSigningKey, nameof(serverSigningKey));
+        Throw.IfNullOrEmpty(serverHomeDomain, nameof(serverHomeDomain));
 
         _authEndpoint = authEndpoint;
         _network = network;
@@ -247,8 +248,8 @@ public class ClientWebAuth : IDisposable
         KeyPair? clientDomainAccountKeyPair = null,
         ClientDomainSigningDelegate? clientDomainSigningDelegate = null)
     {
-        ArgumentException.ThrowIfNullOrEmpty(clientAccountId);
-        ArgumentNullException.ThrowIfNull(signers);
+        Throw.IfNullOrEmpty(clientAccountId, nameof(clientAccountId));
+        Throw.IfNull(signers, nameof(signers));
 
         if (memo != null && clientAccountId.StartsWith("M", StringComparison.Ordinal))
         {
@@ -424,8 +425,8 @@ public class ClientWebAuth : IDisposable
         int? timeBoundsGracePeriod = null,
         ulong? memo = null)
     {
-        ArgumentException.ThrowIfNullOrEmpty(challengeTransaction);
-        ArgumentException.ThrowIfNullOrEmpty(userAccountId);
+        Throw.IfNullOrEmpty(challengeTransaction, nameof(challengeTransaction));
+        Throw.IfNullOrEmpty(userAccountId, nameof(userAccountId));
 
         // Convert to SDK Transaction early - single conversion point
         var transaction = Transaction.FromEnvelopeXdr(challengeTransaction);
@@ -587,8 +588,8 @@ public class ClientWebAuth : IDisposable
     /// <returns>Base64-encoded XDR transaction envelope with additional signatures</returns>
     public string SignTransaction(string challengeTransaction, ICollection<KeyPair> signers)
     {
-        ArgumentException.ThrowIfNullOrEmpty(challengeTransaction);
-        ArgumentNullException.ThrowIfNull(signers);
+        Throw.IfNullOrEmpty(challengeTransaction, nameof(challengeTransaction));
+        Throw.IfNull(signers, nameof(signers));
 
         // Convert to SDK Transaction for easy access
         var transaction = Transaction.FromEnvelopeXdr(challengeTransaction);
@@ -613,7 +614,7 @@ public class ClientWebAuth : IDisposable
     /// <returns>The JWT authentication token</returns>
     public async Task<string> SendSignedChallengeAsync(string base64EnvelopeXdr)
     {
-        ArgumentException.ThrowIfNullOrEmpty(base64EnvelopeXdr);
+        Throw.IfNullOrEmpty(base64EnvelopeXdr, nameof(base64EnvelopeXdr));
 
         var serverUri = new Uri(_authEndpoint);
 

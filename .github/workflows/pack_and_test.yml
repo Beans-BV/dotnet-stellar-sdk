@@ -30,7 +30,17 @@ jobs:
           ref: ${{github.head_ref}}
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Restore
+        run: dotnet restore stellar-dotnet-sdk.sln
+      - name: Build all target frameworks
+        run: dotnet build stellar-dotnet-sdk.sln --configuration Release --no-restore
       - name: Pack
-        run: dotnet pack --configuration Release --output ${{env.NuGetDirectory}}
-      - name: Run unit tests
-        run: dotnet test StellarDotnetSdk.Tests/StellarDotnetSdk.Tests.csproj --configuration Release
+        run: dotnet pack stellar-dotnet-sdk.sln --configuration Release --no-build --output ${{env.NuGetDirectory}}
+      - name: Run unit tests (net10.0)
+        run: dotnet test StellarDotnetSdk.Tests/StellarDotnetSdk.Tests.csproj --configuration Release --no-build --framework net10.0
+      - name: Run unit tests (net8.0)
+        run: dotnet test StellarDotnetSdk.Tests/StellarDotnetSdk.Tests.csproj --configuration Release --no-build --framework net8.0
+      - name: Run unit tests (netstandard2.1 via net8.0 host)
+        run: dotnet test StellarDotnetSdk.NetStandard21.Tests/StellarDotnetSdk.NetStandard21.Tests.csproj --configuration Release --no-build
