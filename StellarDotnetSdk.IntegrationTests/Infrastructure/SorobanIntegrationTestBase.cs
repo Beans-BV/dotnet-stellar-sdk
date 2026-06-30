@@ -90,8 +90,7 @@ public abstract class SorobanIntegrationTestBase : IntegrationTestBase
                 case TransactionInfo.TransactionStatus.SUCCESS:
                     return get;
                 case TransactionInfo.TransactionStatus.FAILED:
-                    Assert.Fail($"Soroban transaction {hash} FAILED: {get.ResultXdr}");
-                    break;
+                    throw new AssertionException($"Soroban transaction {hash} FAILED: {get.ResultXdr}");
                 default:
                     await Task.Delay(TimeSpan.FromSeconds(2));
                     break;
