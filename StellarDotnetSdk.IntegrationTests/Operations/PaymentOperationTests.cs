@@ -12,7 +12,7 @@ namespace StellarDotnetSdk.IntegrationTests.Operations;
 
 [TestFixture]
 [CancelAfter(60_000)]
-public class PaymentOperationTests : IntegrationTestBase
+public class PaymentOperationTests : OperationsTestBase
 {
     [Test]
     public async Task PaymentOperation_WithNativeAsset_CreditsDestination()
@@ -42,5 +42,21 @@ public class PaymentOperationTests : IntegrationTestBase
             CultureInfo.InvariantCulture);
 
         (destNativeAfter - destNativeBefore).Should().Be(5m);
+    }
+
+    [Test]
+    public async Task PaymentOperation_WithNonNativeAsset_CreditsDestination()
+    {
+        var issuer = await CreateFundedAccountAsync();
+        var recipient = await CreateFundedAccountAsync();
+        var asset = Asset.CreateNonNativeAsset("USD", issuer.AccountId);
+
+        // The recipient must trust the asset before the issuer can pay it.
+        await SubmitAsync(recipient, new ChangeTrustOperation(asset, "1000"));
+        await SubmitAsync(issuer, new PaymentOperation(recipient, asset, "250"));
+
+        var account = await LoadAccountAsync(recipient);
+        var balance = account.Balances.Single(b => b.AssetCode == "USD" && b.AssetIssuer == issuer.AccountId);
+        decimal.Parse(balance.BalanceString, CultureInfo.InvariantCulture).Should().Be(250m);
     }
 }
