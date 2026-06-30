@@ -399,7 +399,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
         {
             return Ed25519.Verify(_publicKey, data, signature);
         }
-        catch
+        catch (Exception ex) when (ex is ArgumentException or FormatException or CryptographicException)
         {
             return false;
         }

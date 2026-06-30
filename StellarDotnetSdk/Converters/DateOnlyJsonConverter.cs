@@ -22,7 +22,12 @@ public class DateOnlyJsonConverter : JsonConverter<DateOnly>
             throw new JsonException("Cannot convert null JSON value to DateOnly.");
         }
 
-        return DateOnly.ParseExact(value, IsoDateFormat, CultureInfo.InvariantCulture);
+        if (!DateOnly.TryParseExact(value, IsoDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
+        {
+            throw new JsonException($"Cannot convert JSON value '{value}' to DateOnly. Expected format: {IsoDateFormat}.");
+        }
+
+        return result;
     }
 
     /// <inheritdoc />

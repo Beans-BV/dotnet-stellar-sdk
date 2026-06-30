@@ -42,9 +42,7 @@ public static class KycJsonOptions
 #endif
         };
 
-#if NET8_0_OR_GREATER
         options.MakeReadOnly(true);
-#endif
 
         return options;
     }

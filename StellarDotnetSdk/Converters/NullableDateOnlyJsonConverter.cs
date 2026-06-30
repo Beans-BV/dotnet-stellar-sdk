@@ -25,7 +25,13 @@ public class NullableDateOnlyJsonConverter : JsonConverter<DateOnly?>
             return null;
         }
 
-        return DateOnly.ParseExact(value, DateOnlyJsonConverter.IsoDateFormat, CultureInfo.InvariantCulture);
+        if (!DateOnly.TryParseExact(value, DateOnlyJsonConverter.IsoDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
+        {
+            throw new JsonException(
+                $"Cannot convert JSON value '{value}' to DateOnly. Expected format: {DateOnlyJsonConverter.IsoDateFormat}.");
+        }
+
+        return result;
     }
 
     /// <inheritdoc />

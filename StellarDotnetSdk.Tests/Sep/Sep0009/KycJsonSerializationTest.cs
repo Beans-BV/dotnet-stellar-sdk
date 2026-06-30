@@ -105,7 +105,7 @@ public class KycJsonSerializationTest
 
         var act = () => JsonSerializer.Deserialize<NaturalPersonKycFields>(json, KycJsonOptions.Default);
 
-        act.Should().Throw<FormatException>();
+        act.Should().Throw<JsonException>();
     }
 #endif
 }

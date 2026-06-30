@@ -20,9 +20,10 @@ public static class JsonOptions
     ///     Configuration:
     ///     - NumberHandling: Allows reading numbers from strings (API compatibility)
     ///     - PropertyNameCaseInsensitive: Allows flexible property matching
-    ///     - AllowDuplicateProperties: Rejects JSON payloads that contain the same property more than once,
+    ///     - AllowDuplicateProperties (net10.0+ only): Rejects JSON payloads that contain the same property more than once,
     ///     preventing silent data corruption from malformed responses (critical for financial data integrity).
-    ///     - RespectNullableAnnotations: Enforces C# nullability annotations during (de)serialization,
+    ///     On net8.0/netstandard2.1 this option is unavailable; STJ uses its default duplicate-property behavior.
+    ///     - RespectNullableAnnotations (net10.0+ only): Enforces C# nullability annotations during (de)serialization,
     ///     so malformed API responses that violate the SDK's nullability contract fail fast.
     ///     Registered Converters:
     ///     - Polymorphic converters: OperationResponse, EffectResponse, Predicate
@@ -45,15 +46,18 @@ public static class JsonOptions
             // Case-insensitive property matching
             PropertyNameCaseInsensitive = true,
 
-            // Reject JSON payloads with duplicate property names to prevent silent data corruption.
-            // Malformed or adversarial responses could otherwise overwrite financial fields (amount,
-            // balance, destination) with attacker-controlled values without any error.
+            // AllowDuplicateProperties (net10.0+ only): Reject JSON payloads with duplicate property names to prevent
+            // silent data corruption. Malformed or adversarial responses could otherwise overwrite financial fields
+            // (amount, balance, destination) with attacker-controlled values without any error.
+            // On net8.0/netstandard2.1 this STJ option is unavailable; deserialization uses the runtime default
+            // (last duplicate property wins).
 #if NET10_0_OR_GREATER
             AllowDuplicateProperties = false,
 #endif
 
 #if NET10_0_OR_GREATER
-            // Enforce C# nullability annotations so null values for non-nullable properties are rejected
+            // RespectNullableAnnotations (net10.0+ only): Enforce C# nullability annotations so null values for
+            // non-nullable properties are rejected during deserialization.
             RespectNullableAnnotations = true,
 #endif
 
@@ -86,9 +90,8 @@ public static class JsonOptions
         // Freeze the options to prevent accidental modification of the shared singleton.
         // populateMissingResolver: true installs the default reflection-based TypeInfoResolver,
         // which matches the SDK's existing serialization behavior.
-#if NET8_0_OR_GREATER
+        // STJ 8.0+ (including netstandard2.1 via package 8.0.5) provides MakeReadOnly(bool).
         options.MakeReadOnly(true);
-#endif
         return options;
     }
 }

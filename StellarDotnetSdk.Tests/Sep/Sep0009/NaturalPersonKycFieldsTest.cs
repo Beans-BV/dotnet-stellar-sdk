@@ -250,6 +250,22 @@ public class NaturalPersonKycFieldsTest
             .Be("2030-05-10");
     }
 
+#if TEST_SDK_NETSTANDARD21
+    /// <summary>
+    ///     Verifies that GetFields rejects non-canonical date strings on netstandard2.1 so SEP-9 wire format matches net8+.
+    /// </summary>
+    [TestMethod]
+    public void GetFields_WithNonCanonicalDateString_ThrowsArgumentException()
+    {
+        var fields = new NaturalPersonKycFields { BirthDate = "6/9/2026" };
+
+        var act = () => fields.GetFields();
+
+        act.Should().Throw<ArgumentException>()
+            .WithParameterName(NaturalPersonKycFields.BirthDateFieldKey);
+    }
+#endif
+
     /// <summary>
     ///     Verifies that GetFields formats int values as strings.
     /// </summary>
