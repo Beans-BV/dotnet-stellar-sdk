@@ -34,6 +34,13 @@ public static class TestnetConfig
     /// <summary>Optional bearer token for <see cref="StellarRpcUrl" />. Null when unset.</summary>
     public static string? StellarRpcToken => EnvOrNull("INTEGRATION_STELLAR_RPC_TOKEN");
 
+    /// <summary>
+    ///     Home domain of the SEP-10 anchor used by the real-anchor auth test. Defaults to SDF's
+    ///     reference Testnet anchor; <c>ClientWebAuth.FromDomainAsync</c> discovers the auth endpoint
+    ///     and signing key from this domain's stellar.toml.
+    /// </summary>
+    public static string Sep10HomeDomain => Env("INTEGRATION_SEP10_HOME_DOMAIN", "testanchor.stellar.org");
+
     public static string NetworkPassphrase => Network.TestnetPassphrase;
 
     private static string Env(string key, string fallback)
