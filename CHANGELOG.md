@@ -62,9 +62,21 @@ All notable changes to this project are documented here. The format is based on
   environmental failures — e.g. a missing native libsodium — now propagate instead of being misreported
   as an invalid signature ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195)).
 - On `netstandard2.1`, the default HTTP handler is `HttpClientHandler` (`SocketsHttpHandler` on
-  `net8.0`/`net10.0`), and `RetryingHttpMessageHandler` overrides the synchronous `HttpClient.Send`
-  path only on `net8.0`/`net10.0` — use `SendAsync` on `netstandard2.1`
+  `net8.0`/`net10.0`). `RetryingHttpMessageHandler` runs the synchronous `HttpClient.Send` path
+  through the full resilience pipeline on `net8.0`/`net10.0`; on the `netstandard2.1` assembly
+  (which `net5`–`net7` apps also resolve) it derives from `HttpMessageHandler` instead of
+  `DelegatingHandler`, so synchronous `Send` on a .NET 5+ host throws `NotSupportedException`
+  instead of silently bypassing retries/circuit-breaker — use `SendAsync`. Consequently the handler
+  does not expose `DelegatingHandler.InnerHandler` on `netstandard2.1`
   ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195)).
+- `KeyPair.Sign` expands/imports the Ed25519 signing key once per `KeyPair` instance (lazily,
+  thread-safe) and reuses it for subsequent signatures, instead of re-deriving it on every call —
+  repeated signing with the same instance is ~3–4× faster on both crypto backends
+  ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) follow-up).
+- **Breaking (behavioral):** `KeyPair` constructors and byte-array factories (`FromPublicKey`,
+  `FromSecretSeed(byte[])`) now throw `ArgumentException` for wrong-length key material and
+  `ArgumentNullException` for null, uniformly on all target frameworks and always at construction
+  time. Previous releases surfaced NSec's `FormatException` instead.
 
 ### Removed
 
@@ -77,3 +89,39 @@ All notable changes to this project are documented here. The format is based on
 - `Util.Hash` no longer leaks a `SHA256` instance on every call: it uses the static
   `SHA256.HashData` on `net8.0`/`net10.0` and a properly disposed instance on `netstandard2.1`
   ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195)).
+- `KeyPair` construction-time validation lost in
+  [#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) is restored: the
+  `KeyPair(byte[], byte[]?, byte[]?)` constructor rejects public keys, private keys, and seeds that
+  are not exactly 32 bytes (e.g. `FromPublicKey(new byte[16])` no longer constructs a keypair with a
+  malformed account ID), and the `privateKey`/`seed` arguments are tracked separately again — a
+  seed-only `KeyPair` reports `CanSign() == false` and a private-key-only `KeyPair` no longer
+  exposes the private key through `SecretSeed`/`SeedBytes`.
+- SEP-0009 KYC date fields (`BirthDate`, `IdIssueDate`, `IdExpirationDate`, `RegistrationDate`) are
+  now validated during JSON (de)serialization on `netstandard2.1` too: the new
+  `IsoDateStringJsonConverter` rejects anything but `yyyy-MM-dd` with a `JsonException` on both read
+  and write, matching the `DateOnly`-based behavior on `net8.0`/`net10.0`. Previously the
+  `netstandard2.1` build silently accepted and re-emitted malformed date strings through
+  `KycJsonOptions` ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) follow-up).
+- The XDR generator's blessed test snapshots are regenerated to match the
+  [#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) template changes
+  (`Throw.IfNull`, `ReadExactlyCompat`, `AddRangeCompat`) — the Ruby snapshot suite failed on `main`
+  since that merge. The suite now normalizes line endings (so it passes on Windows and Linux alike)
+  and runs in CI via a new `xdr_generator_tests.yml` workflow, so template/snapshot
+  desync can no longer land silently.
+- Cross-TFM behavior parity for the compatibility shims
+  ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) follow-up):
+  - `Util.HexToBytes` (all TFMs) throws `ArgumentNullException` for null and `FormatException` for
+    odd-length input — the `Convert.FromHexString` contract the released package had — instead of
+    `NullReferenceException` / `IndexOutOfRangeException` escaping the decode loop.
+  - The `netstandard2.1` `Throw.IfNullOrEmpty` polyfill emits the BCL's
+    "The value cannot be an empty string." message.
+  - The `netstandard2.1` `ReadAsStringAsync` cancellation shim surfaces `TaskCanceledException`
+    (with the token attached), matching the real net6+ overload, instead of the base
+    `OperationCanceledException`.
+  - The XDR `ReadExactlyCompat` shim throws `EndOfStreamException` with the BCL's
+    "Unable to read beyond the end of the stream." message.
+  - The Sodium key handles used by the `netstandard2.1` Ed25519 backend are disposed after use.
+- `integration_tests.yml` installs both the `8.0.x` and `10.0.x` SDKs; the previous 8-only pin
+  satisfied `global.json` only because the runner image happened to preinstall .NET 10.
+- The README "Platform support" section documents that Unity 2022.3's bundled compiler cannot
+  construct SDK types with `required` members (Unity 6 or an upgraded Roslyn can).

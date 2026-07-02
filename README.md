@@ -70,14 +70,15 @@ The `stellar-dotnet-sdk` and `stellar-dotnet-sdk-xdr` packages multi-target the 
 |------------------|-------------------|----------------|
 | `net10.0` | .NET 10 apps | NSec |
 | `net8.0` | .NET 8 apps | NSec |
-| `netstandard2.1` | Unity 2022.3+, Unity 6, Tizen 5.5+, portable libraries | Sodium.Core |
+| `netstandard2.1` | Unity 6, Unity 2022.3 (see compiler note below), Tizen 5.5+, portable libraries | Sodium.Core |
 
 NuGet resolves the best matching assembly for your project automatically.
 
 ### TFM-specific API notes
 
 - **SEP-0009 date fields** (`BirthDate`, `IdIssueDate`, `IdExpirationDate`, `RegistrationDate`): `DateOnly?` on `net8.0` / `net10.0`; `string?` (ISO `yyyy-MM-dd`) on `netstandard2.1`. JSON wire format is identical across TFMs.
-- **Synchronous `HttpClient.Send` resilience**: `RetryingHttpMessageHandler` overrides sync `Send` only on `net8.0` / `net10.0`. Use `SendAsync` on `netstandard2.1`.
+- **Synchronous `HttpClient.Send` resilience**: on `net8.0` / `net10.0`, `RetryingHttpMessageHandler` overrides sync `Send` with the full retry pipeline. On the `netstandard2.1` assembly (also what `net5`–`net7` apps resolve), sync `Send` throws `NotSupportedException` instead of silently bypassing retries — use `SendAsync`.
+- **Unity compiler note (`required` members)**: many SDK request/response models declare C# `required` members. Constructing them from *your* code needs a compiler that understands `required`: Unity 6 qualifies; Unity 2022.3's bundled compiler (Roslyn 4.1) does not — member initialization of those types fails to compile there unless you upgrade the compiler (e.g. [UnityRoslynUpdater](https://github.com/DaZombieKiller/UnityRoslynUpdater)). Deserialization and APIs without `required` members are unaffected.
 
 ### Examples
 

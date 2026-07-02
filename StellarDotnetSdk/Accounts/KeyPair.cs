@@ -2,9 +2,10 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.Json.Serialization;
+using System.Threading;
 using dotnetstandard_bip32;
-using StellarDotnetSdk.Crypto;
 using StellarDotnetSdk.Converters;
+using StellarDotnetSdk.Crypto;
 using StellarDotnetSdk.Xdr;
 using xdr_PublicKey = StellarDotnetSdk.Xdr.PublicKey;
 
@@ -23,12 +24,19 @@ namespace StellarDotnetSdk.Accounts;
 [JsonConverter(typeof(KeyPairJsonConverter))]
 public class KeyPair : IAccountId, IEquatable<KeyPair>
 {
+    private readonly byte[]? _privateKey;
     private readonly byte[] _publicKey;
+
+    // Lazily created on first Sign and reused, so the Ed25519 key expansion/import runs once per KeyPair
+    // instead of once per signature (roughly a 2x cost per signature otherwise).
+    private Ed25519Signer? _signer;
 
     /// <summary>
     ///     Creates a new Keypair object from public key.
     /// </summary>
-    /// <param name="publicKey"></param>
+    /// <param name="publicKey">The 32-byte ed25519 public key.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="publicKey" /> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="publicKey" /> is not exactly 32 bytes long.</exception>
     public KeyPair(byte[] publicKey)
         : this(publicKey, null, null)
     {
@@ -38,22 +46,45 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     ///     Creates a new Keypair instance from secret. This can either be secret key or secret seed depending on underlying
     ///     public-key signature system. Currently Keypair only supports ed25519.
     /// </summary>
-    /// <param name="publicKey"></param>
-    /// <param name="privateKey"></param>
-    /// <param name="seed"></param>
+    /// <param name="publicKey">The 32-byte ed25519 public key.</param>
+    /// <param name="privateKey">The optional 32-byte raw private key; enables signing when provided.</param>
+    /// <param name="seed">
+    ///     The optional 32-byte secret seed, exposed via <see cref="SeedBytes" /> and <see cref="SecretSeed" />
+    ///     .
+    /// </param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="publicKey" /> is null.</exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when <paramref name="publicKey" />, <paramref name="privateKey" /> or <paramref name="seed" />
+    ///     is not exactly 32 bytes long.
+    /// </exception>
     public KeyPair(byte[] publicKey, byte[]? privateKey, byte[]? seed)
     {
-        if (publicKey == null) throw new ArgumentNullException(nameof(publicKey));
+        if (publicKey == null)
+        {
+            throw new ArgumentNullException(nameof(publicKey));
+        }
+        if (publicKey.Length != Ed25519.PublicKeyLength)
+        {
+            throw new ArgumentException($"PublicKey must be {Ed25519.PublicKeyLength} bytes.", nameof(publicKey));
+        }
+        if (privateKey != null && privateKey.Length != Ed25519.SeedLength)
+        {
+            throw new ArgumentException($"PrivateKey must be {Ed25519.SeedLength} bytes.", nameof(privateKey));
+        }
+        if (seed != null && seed.Length != Ed25519.SeedLength)
+        {
+            throw new ArgumentException($"Seed must be {Ed25519.SeedLength} bytes.", nameof(seed));
+        }
 
         _publicKey = (byte[])publicKey.Clone();
-        var secret = seed ?? privateKey;
-        SeedBytes = secret != null ? (byte[])secret.Clone() : null;
+        _privateKey = privateKey != null ? (byte[])privateKey.Clone() : null;
+        SeedBytes = seed != null ? (byte[])seed.Clone() : null;
     }
 
     /// <summary>
     ///     The private key.
     /// </summary>
-    public byte[]? PrivateKey => SeedBytes is null ? null : (byte[])SeedBytes.Clone();
+    public byte[]? PrivateKey => _privateKey is null ? null : (byte[])_privateKey.Clone();
 
     /// <summary>
     ///     The bytes of the Secret Seed
@@ -224,7 +255,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <returns></returns>
     public bool CanSign()
     {
-        return SeedBytes != null;
+        return _privateKey != null;
     }
 
     /// <summary>
@@ -247,10 +278,12 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <returns>
     ///     <see cref="KeyPair" />
     /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="seed" /> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="seed" /> is not exactly 32 bytes long.</exception>
     public static KeyPair FromSecretSeed(byte[] seed)
     {
         var publicKey = Ed25519.GetPublicKey(seed);
-        return new KeyPair(publicKey, privateKey: seed, seed: seed);
+        return new KeyPair(publicKey, seed, seed);
     }
 
     /// <summary>
@@ -301,6 +334,8 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <returns>
     ///     <see cref="KeyPair" />
     /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="publicKey" /> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="publicKey" /> is not exactly 32 bytes long.</exception>
     public static KeyPair FromPublicKey(byte[] publicKey)
     {
         return new KeyPair(publicKey);
@@ -325,16 +360,26 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     ///     Sign the provided data with the key pair's private key.
     /// </summary>
     /// <param name="data">The data to sign.</param>
-    /// <returns>signed bytes, null if the private key for this keypair is null.</returns>
+    /// <returns>The signed bytes.</returns>
+    /// <exception cref="Exception">Thrown when this keypair does not contain a private key.</exception>
     public byte[] Sign(byte[] data)
     {
-        if (SeedBytes == null)
+        if (_privateKey == null)
         {
             throw new Exception(
                 "KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.");
         }
 
-        return Ed25519.Sign(SeedBytes, data);
+        var signer = Volatile.Read(ref _signer);
+        if (signer == null)
+        {
+            signer = new Ed25519Signer(_privateKey);
+            // Benign race: if two threads initialize concurrently, the first published instance wins and
+            // both are functionally identical; the loser is simply collected.
+            signer = Interlocked.CompareExchange(ref _signer, signer, null) ?? signer;
+        }
+
+        return signer.Sign(data);
     }
 
     /// <summary>

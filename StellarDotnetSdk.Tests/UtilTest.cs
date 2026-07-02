@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -27,6 +28,41 @@ public class UtilTest
 
         // Assert
         Assert.AreEqual(test, bytesToString);
+    }
+
+    /// <summary>
+    ///     HexToBytes must keep the exception contract of <c>Convert.FromHexString</c> (which the released
+    ///     package used): ArgumentNullException for null, FormatException for odd-length or non-hex input —
+    ///     not NullReferenceException / IndexOutOfRangeException from the decode loop.
+    /// </summary>
+    [TestMethod]
+    public void HexToBytes_WithNull_ThrowsArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => Util.HexToBytes(null!));
+    }
+
+    [TestMethod]
+    public void HexToBytes_WithOddLength_ThrowsFormatException()
+    {
+        Assert.ThrowsException<FormatException>(() => Util.HexToBytes("abc"));
+    }
+
+    [TestMethod]
+    public void HexToBytes_WithInvalidCharacter_ThrowsFormatException()
+    {
+        Assert.ThrowsException<FormatException>(() => Util.HexToBytes("zz11"));
+    }
+
+    [TestMethod]
+    public void HexToBytes_WithMixedCase_Decodes()
+    {
+        CollectionAssert.AreEqual(new byte[] { 0xAB, 0xCD }, Util.HexToBytes("aBcD"));
+    }
+
+    [TestMethod]
+    public void HexToBytes_WithEmptyString_ReturnsEmptyArray()
+    {
+        Assert.AreEqual(0, Util.HexToBytes(string.Empty).Length);
     }
 
     /// <summary>

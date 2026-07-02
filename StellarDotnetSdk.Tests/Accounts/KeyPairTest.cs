@@ -36,6 +36,27 @@ public class KeyPairTest
     }
 
     /// <summary>
+    ///     Signing twice with the same KeyPair must produce the identical known-answer signature: the
+    ///     second call goes through the cached Ed25519 signer (expanded once per KeyPair, not per call),
+    ///     which must not change the output.
+    /// </summary>
+    [TestMethod]
+    public void Sign_CalledRepeatedly_ReturnsSameSignatureViaCachedSigner()
+    {
+        const string expectedSig =
+            "587d4b472eeef7d07aafcd0b049640b0bb3f39784118c2e2b73a04fa2f64c9c538b4b2d0f5335e968a480021fdc23e98c0ddf424cb15d8131df8cb6c4bb58309";
+        var keyPair = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+        var bytes = Encoding.UTF8.GetBytes("hello world");
+
+        var first = keyPair.Sign(bytes);
+        var second = keyPair.Sign(bytes);
+
+        Assert.IsTrue(Util.HexToBytes(expectedSig).SequenceEqual(first));
+        Assert.IsTrue(first.SequenceEqual(second));
+        Assert.IsTrue(keyPair.Verify(bytes, second));
+    }
+
+    /// <summary>
     ///     Verifies that Verify method returns true for valid signature.
     /// </summary>
     [TestMethod]
@@ -248,5 +269,131 @@ public class KeyPairTest
 
         // Assert
         CollectionAssert.AreEqual(expectedBytes, sig.Hint.InnerValue);
+    }
+
+    /// <summary>
+    ///     Verifies that FromPublicKey rejects a public key that is not exactly 32 bytes at construction time.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow(0)]
+    [DataRow(16)]
+    [DataRow(31)]
+    [DataRow(33)]
+    public void FromPublicKey_WithWrongLengthKey_ThrowsArgumentException(int length)
+    {
+        Assert.ThrowsException<ArgumentException>(() => KeyPair.FromPublicKey(new byte[length]));
+    }
+
+    /// <summary>
+    ///     Verifies that the constructor rejects a null public key.
+    /// </summary>
+    [TestMethod]
+    public void Constructor_WithNullPublicKey_ThrowsArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => new KeyPair(null!, null, null));
+    }
+
+    /// <summary>
+    ///     Verifies that the constructor rejects a private key that is not exactly 32 bytes at construction time.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow(16)]
+    [DataRow(33)]
+    public void Constructor_WithWrongLengthPrivateKey_ThrowsArgumentException(int length)
+    {
+        var publicKey = KeyPair.FromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ")
+            .PublicKey;
+
+        Assert.ThrowsException<ArgumentException>(() => new KeyPair(publicKey, new byte[length], null));
+    }
+
+    /// <summary>
+    ///     Verifies that the constructor rejects a seed that is not exactly 32 bytes at construction time.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow(16)]
+    [DataRow(33)]
+    public void Constructor_WithWrongLengthSeed_ThrowsArgumentException(int length)
+    {
+        var publicKey = KeyPair.FromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ")
+            .PublicKey;
+
+        Assert.ThrowsException<ArgumentException>(() => new KeyPair(publicKey, null, new byte[length]));
+    }
+
+    /// <summary>
+    ///     Verifies that FromSecretSeed rejects a seed that is not exactly 32 bytes at construction time.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow(0)]
+    [DataRow(16)]
+    [DataRow(31)]
+    [DataRow(33)]
+    public void FromSecretSeed_WithWrongLengthSeed_ThrowsArgumentException(int length)
+    {
+        Assert.ThrowsException<ArgumentException>(() => KeyPair.FromSecretSeed(new byte[length]));
+    }
+
+    /// <summary>
+    ///     Verifies that a KeyPair constructed with a seed but no private key cannot sign.
+    /// </summary>
+    [TestMethod]
+    public void Constructor_WithSeedOnly_CannotSign()
+    {
+        // Arrange
+        var publicKey = KeyPair.FromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ")
+            .PublicKey;
+        var unrelatedSeed = Util.HexToBytes(Seed);
+
+        // Act
+        var keyPair = new KeyPair(publicKey, null, unrelatedSeed);
+
+        // Assert
+        Assert.IsFalse(keyPair.CanSign());
+        Assert.IsNull(keyPair.PrivateKey);
+        Assert.IsNotNull(keyPair.SecretSeed);
+        Assert.ThrowsException<Exception>(() => keyPair.Sign(Encoding.UTF8.GetBytes("hello world")));
+    }
+
+    /// <summary>
+    ///     Verifies that a KeyPair constructed with a private key but no seed can sign without exposing a secret seed.
+    /// </summary>
+    [TestMethod]
+    public void Constructor_WithPrivateKeyOnly_CanSignWithoutExposingSecretSeed()
+    {
+        // Arrange
+        var privateKey = Util.HexToBytes(Seed);
+        var fullKeyPair = KeyPair.FromSecretSeed(privateKey);
+
+        // Act
+        var keyPair = new KeyPair(fullKeyPair.PublicKey, privateKey, null);
+
+        // Assert
+        Assert.IsTrue(keyPair.CanSign());
+        Assert.IsNotNull(keyPair.PrivateKey);
+        Assert.IsNull(keyPair.SecretSeed);
+        Assert.IsNull(keyPair.SeedBytes);
+        var data = Encoding.UTF8.GetBytes("hello world");
+        Assert.IsTrue(keyPair.Verify(data, keyPair.Sign(data)));
+    }
+
+    /// <summary>
+    ///     Verifies that a KeyPair holding only a private key equals a public-only KeyPair with the same public key,
+    ///     since neither holds a secret seed.
+    /// </summary>
+    [TestMethod]
+    public void Equals_WithPrivateKeyOnlyAndPublicOnly_ReturnsTrue()
+    {
+        // Arrange
+        var privateKey = Util.HexToBytes(Seed);
+        var fullKeyPair = KeyPair.FromSecretSeed(privateKey);
+
+        // Act
+        var keyPair = new KeyPair(fullKeyPair.PublicKey, privateKey, null);
+        var publicOnlyKeyPair = KeyPair.FromPublicKey(fullKeyPair.PublicKey);
+
+        // Assert
+        Assert.IsTrue(keyPair.Equals(publicOnlyKeyPair));
+        Assert.IsTrue(publicOnlyKeyPair.Equals(keyPair));
     }
 }

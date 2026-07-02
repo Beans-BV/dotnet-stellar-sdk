@@ -5,6 +5,7 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Text;
+using StellarDotnetSdk.Xdr.Compatibility;
 
 namespace StellarDotnetSdk.Xdr;
 
@@ -69,28 +70,28 @@ public class XdrDataOutputStream
     {
         Span<byte> buffer = stackalloc byte[sizeof(long)];
         BinaryPrimitives.WriteInt64BigEndian(buffer, v);
-        _bytes.AddRange(buffer);
+        _bytes.AddRangeCompat(buffer);
     }
 
     public void WriteULong(ulong v)
     {
         Span<byte> buffer = stackalloc byte[sizeof(ulong)];
         BinaryPrimitives.WriteUInt64BigEndian(buffer, v);
-        _bytes.AddRange(buffer);
+        _bytes.AddRangeCompat(buffer);
     }
 
     public void WriteInt(int i)
     {
         Span<byte> buffer = stackalloc byte[sizeof(int)];
         BinaryPrimitives.WriteInt32BigEndian(buffer, i);
-        _bytes.AddRange(buffer);
+        _bytes.AddRangeCompat(buffer);
     }
 
     public void WriteUInt(uint i)
     {
         Span<byte> buffer = stackalloc byte[sizeof(uint)];
         BinaryPrimitives.WriteUInt32BigEndian(buffer, i);
-        _bytes.AddRange(buffer);
+        _bytes.AddRangeCompat(buffer);
     }
 
     public void WriteSingle(float v)

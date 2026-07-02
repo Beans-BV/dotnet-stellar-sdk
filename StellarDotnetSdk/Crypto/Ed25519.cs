@@ -1,4 +1,7 @@
 using System;
+#if NETSTANDARD2_1
+using Sodium;
+#endif
 using StellarDotnetSdk.Compatibility;
 
 namespace StellarDotnetSdk.Crypto;
@@ -11,11 +14,16 @@ internal static class Ed25519
     public static byte[] GetPublicKey(byte[] seed)
     {
         Throw.IfNull(seed, nameof(seed));
-        if (seed.Length != SeedLength) throw new ArgumentException($"Seed must be {SeedLength} bytes.", nameof(seed));
+        if (seed.Length != SeedLength)
+        {
+            throw new ArgumentException($"Seed must be {SeedLength} bytes.", nameof(seed));
+        }
 
 #if NETSTANDARD2_1
-        var kp = Sodium.PublicKeyAuth.GenerateKeyPair(seed);
-        return kp.PublicKey;
+        // Clone rather than returning the handle's internal buffer — the returned array must not share
+        // its lifetime with the disposed handle.
+        using var kp = PublicKeyAuth.GenerateKeyPair(seed);
+        return (byte[])kp.PublicKey.Clone();
 #else
         using var key = NSec.Cryptography.Key.Import(
             NSec.Cryptography.SignatureAlgorithm.Ed25519,
@@ -32,12 +40,15 @@ internal static class Ed25519
     public static byte[] Sign(byte[] seed, byte[] data)
     {
         Throw.IfNull(seed, nameof(seed));
-        if (seed.Length != SeedLength) throw new ArgumentException($"Seed must be {SeedLength} bytes.", nameof(seed));
+        if (seed.Length != SeedLength)
+        {
+            throw new ArgumentException($"Seed must be {SeedLength} bytes.", nameof(seed));
+        }
         Throw.IfNull(data, nameof(data));
 
 #if NETSTANDARD2_1
-        var kp = Sodium.PublicKeyAuth.GenerateKeyPair(seed);
-        return Sodium.PublicKeyAuth.SignDetached(data, kp.PrivateKey);
+        using var kp = PublicKeyAuth.GenerateKeyPair(seed);
+        return PublicKeyAuth.SignDetached(data, kp.PrivateKey);
 #else
         using var key = NSec.Cryptography.Key.Import(
             NSec.Cryptography.SignatureAlgorithm.Ed25519,
@@ -55,12 +66,14 @@ internal static class Ed25519
     {
         Throw.IfNull(publicKey, nameof(publicKey));
         if (publicKey.Length != PublicKeyLength)
+        {
             throw new ArgumentException($"PublicKey must be {PublicKeyLength} bytes.", nameof(publicKey));
+        }
         Throw.IfNull(data, nameof(data));
         Throw.IfNull(signature, nameof(signature));
 
 #if NETSTANDARD2_1
-        return Sodium.PublicKeyAuth.VerifyDetached(signature, data, publicKey);
+        return PublicKeyAuth.VerifyDetached(signature, data, publicKey);
 #else
         var pk = NSec.Cryptography.PublicKey.Import(
             NSec.Cryptography.SignatureAlgorithm.Ed25519,
@@ -70,4 +83,3 @@ internal static class Ed25519
 #endif
     }
 }
-

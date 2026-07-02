@@ -974,6 +974,27 @@ public class RetryingHttpMessageHandlerTests
 #endif
 
     /// <summary>
+    ///     On the netstandard2.1 assembly the handler derives from HttpMessageHandler (not DelegatingHandler),
+    ///     so synchronous HttpClient.Send must fail loudly with NotSupportedException on net5+ hosts instead
+    ///     of silently bypassing the resilience pipeline — the bypass a DelegatingHandler base would cause.
+    /// </summary>
+#if TEST_SDK_NETSTANDARD21
+    [TestMethod]
+    public void Send_SynchronousPath_ThrowsNotSupportedInsteadOfBypassingPipeline()
+    {
+        var handler = new TrackingHttpMessageHandler((_, _, _) =>
+            Task.FromResult(CreateResponse(HttpStatusCode.OK)));
+
+        using var retryHandler = new RetryingHttpMessageHandler(handler, new HttpResilienceOptions());
+        using var client = new HttpClient(retryHandler);
+
+        Assert.ThrowsException<NotSupportedException>(() =>
+            client.Send(new HttpRequestMessage(HttpMethod.Get, TestUri)));
+        Assert.AreEqual(0, handler.CallCount); // the request never silently reached the inner handler
+    }
+#endif
+
+    /// <summary>
     ///     Circuit-breaker failure counting is not limited by the RetryHttpMethods whitelist: a sustained
     ///     503 storm on POST (not retried — replay safety) must still open the circuit.
     /// </summary>
