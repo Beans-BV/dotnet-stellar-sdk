@@ -8,7 +8,7 @@ namespace StellarDotnetSdk.Operations;
 /// <summary>
 ///     Extend the time to live (TTL) of entries for Soroban smart contracts.
 ///     This operation extends the TTL of the entries specified in the readOnly footprint of
-///     the transaction so that they will live at least until the extendTo ledger sequence number is reached.
+///     the transaction so that they will live at least extendTo ledgers past the last-closed ledger.
 ///     See:
 ///     <a
 ///         href="https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations#extend-footprint-ttl">
@@ -21,7 +21,12 @@ public class ExtendFootprintOperation : Operation
     /// <summary>
     ///     Constructs a new <c>ExtendFootprintOperation</c>.
     /// </summary>
-    /// <param name="extendTo">The ledger sequence number the entries will live until.</param>
+    /// <param name="extendTo">
+    ///     The number of ledgers past the last-closed ledger the entries should live for (relative, not an absolute
+    ///     ledger sequence number). The new live-until ledger becomes approximately the current ledger plus
+    ///     <c>extendTo</c> when that exceeds the entries' current TTL.
+    /// </param>
+    /// <param name="extensionPoint">(Optional) Reserved for later use.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public ExtendFootprintOperation(uint extendTo, ExtensionPoint? extensionPoint = null,
         IAccountId? sourceAccount = null) : base(sourceAccount)
@@ -31,7 +36,9 @@ public class ExtendFootprintOperation : Operation
     }
 
     /// <summary>
-    ///     The ledger sequence number the entries will live until.
+    ///     The number of ledgers past the last-closed ledger the entries should live for (relative, not an absolute
+    ///     ledger sequence number). The new live-until ledger becomes approximately the current ledger plus
+    ///     <c>ExtendTo</c> when that exceeds the entries' current TTL.
     /// </summary>
     public uint ExtendTo { get; }
 

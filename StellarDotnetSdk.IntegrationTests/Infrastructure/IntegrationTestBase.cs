@@ -19,6 +19,13 @@ namespace StellarDotnetSdk.IntegrationTests.Infrastructure;
 ///         (<see cref="_fundingServer" />) pinned to Stellar's public Testnet, because the
 ///         Friendbot faucet is SDF-only and not hosted by most providers.
 ///     </para>
+///     <para>
+///         The fixtures' <c>[CancelAfter]</c> budgets are documentation of expected worst-case
+///         duration, not enforcement: NUnit cancellation is cooperative and these tests do not
+///         observe the injected token, so a late test is neither aborted nor failed by the
+///         attribute. Actual bounding comes from the per-request HTTP timeout
+///         (<see cref="TestnetConfig.HttpRequestTimeout" />) plus the helpers' retry deadlines.
+///     </para>
 /// </summary>
 public abstract class IntegrationTestBase
 {
@@ -77,11 +84,52 @@ public abstract class IntegrationTestBase
     }
 
     /// <summary>
-    ///     Loads the on-chain account state for the given keypair (sequence number, balances, etc).
+    ///     True for errors that indicate backend/network trouble (per-request timeout, connection
+    ///     failure, 429/5xx status) rather than an SDK regression. Horizon and Stellar RPC share the
+    ///     same response handling, so the classification applies to both. Callers retry these and,
+    ///     when sustained, map them to <see cref="Assert.Inconclusive(string)" /> per the suite's
+    ///     flakiness policy. Other HTTP status errors (4xx) stay hard failures — they indicate a
+    ///     malformed request, not flake.
     /// </summary>
-    protected Task<AccountResponse> LoadAccountAsync(KeyPair keyPair)
+    protected static bool IsTransientBackendError(Exception ex)
     {
-        return Server.Accounts.Account(keyPair.AccountId);
+        return ex is TaskCanceledException
+            or HttpRequestException
+            or ServiceUnavailableException
+            or TooManyRequestsException
+            or HttpResponseException { StatusCode: >= 500 };
+    }
+
+    /// <summary>
+    ///     Loads the on-chain account state for the given keypair (sequence number, balances, etc),
+    ///     retrying briefly on 404 and on transient Horizon errors. Accounts are funded via the
+    ///     Friendbot Horizon; when <see cref="Server" /> is routed to a different provider instance,
+    ///     the read side can briefly trail the funding side. A sustained miss is reported
+    ///     <see cref="Assert.Inconclusive(string)" /> (cross-instance ingestion lag or Horizon
+    ///     outage, not an SDK regression).
+    /// </summary>
+    protected async Task<AccountResponse> LoadAccountAsync(KeyPair keyPair)
+    {
+        var deadline = DateTime.UtcNow.AddSeconds(30);
+        Exception? last = null;
+        while (DateTime.UtcNow < deadline)
+        {
+            try
+            {
+                return await Server.Accounts.Account(keyPair.AccountId);
+            }
+            catch (Exception ex) when (ex is HttpResponseException { StatusCode: 404 } ||
+                                       IsTransientBackendError(ex))
+            {
+                last = ex;
+                await Task.Delay(TimeSpan.FromSeconds(2));
+            }
+        }
+
+        Assert.Inconclusive(
+            $"Horizon did not return account {keyPair.AccountId} within 30s of funding " +
+            $"(cross-instance ingestion lag or Horizon outage, not an SDK regression). {last?.Message}");
+        return null!; // unreachable — Assert.Inconclusive throws
     }
 
     private async Task FundWithRetryAsync(string accountId)

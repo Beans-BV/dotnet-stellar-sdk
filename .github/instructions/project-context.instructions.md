@@ -5,7 +5,7 @@ applyTo: "**"
 
 **Persona**: Senior .NET engineer with Stellar blockchain expertise. Clean architecture, SOLID, DRY. Prefer composition over inheritance, terse but explicit code.
 
-**Projects**: `StellarDotnetSdk/` (main SDK) → `StellarDotnetSdk.Xdr/` (generated XDR) → `StellarDotnetSdk.Tests/` (MSTest) → `StellarDotnetSdk.Console/` (examples)
+**Projects**: `StellarDotnetSdk/` (main SDK) → `StellarDotnetSdk.Xdr/` (generated XDR) → `StellarDotnetSdk.Tests/` (MSTest unit tests) → `StellarDotnetSdk.IntegrationTests/` (NUnit, live Testnet) → `StellarDotnetSdk.Console/` (examples)
 
 **Architecture**: Request builders (`*RequestBuilder`) → HttpClient → Horizon API. Never bypass layers.
 
@@ -17,7 +17,7 @@ applyTo: "**"
 
 **Errors**: Custom exceptions in `Exceptions/` folder. HTTP status codes → specific exceptions (`TooManyRequestsException`, `ServiceUnavailableException`).
 
-**Testing**: MSTest (`[TestClass]`, `[TestMethod]`), AAA pattern, Moq for mocks, FluentAssertions for assertions. Test data in `TestData/`.
+**Testing**: Unit tests (`StellarDotnetSdk.Tests/`): MSTest (`[TestClass]`, `[TestMethod]`), AAA pattern, Moq for mocks, FluentAssertions for assertions, test data in `TestData/`. Integration tests (`StellarDotnetSdk.IntegrationTests/`): NUnit (`[TestFixture]`, `[Test]`), no mocks — they run against live Stellar Testnet (see that project's README).
 
 **Build**: `dotnet build` | `dotnet test` | `dotnet pack` (NuGet). After code changes → `dotnet build` + `dotnet test`.
 

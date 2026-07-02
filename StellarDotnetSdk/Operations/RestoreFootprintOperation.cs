@@ -21,6 +21,7 @@ public class RestoreFootprintOperation : Operation
     /// <summary>
     ///     Constructs a new <c>RestoreFootprintOperation</c>.
     /// </summary>
+    /// <param name="extensionPoint">(Optional) Reserved for later use.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public RestoreFootprintOperation(ExtensionPoint? extensionPoint = null, IAccountId? sourceAccount = null) :
         base(sourceAccount)

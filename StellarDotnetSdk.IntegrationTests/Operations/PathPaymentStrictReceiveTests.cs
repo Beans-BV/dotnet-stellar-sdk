@@ -17,9 +17,11 @@ public class PathPaymentStrictReceiveTests : OperationsTestBase
     public async Task PathPaymentStrictReceive_DeliversExactDestinationAmount()
     {
         var asset = await SetUpXlmToAssetMarketAsync();
-        var destination = await CreateFundedAccountAsync();
+        // The destination and sender are independent; fund them concurrently.
+        var accounts = await Task.WhenAll(CreateFundedAccountAsync(), CreateFundedAccountAsync());
+        var destination = accounts[0];
+        var sender = accounts[1];
         await SubmitAsync(destination, new ChangeTrustOperation(asset, "1000000"));
-        var sender = await CreateFundedAccountAsync();
 
         // Require exactly 10 PATH delivered; allow up to 20 XLM spent.
         await SubmitAsync(sender, new PathPaymentStrictReceiveOperation(

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -54,16 +55,27 @@ public class Sep10AuthTests : IntegrationTestBase
             using var webAuth = await ClientWebAuth.FromDomainAsync(TestnetConfig.Sep10HomeDomain, Network.Current!);
             jwt = await webAuth.JwtTokenAsync(account.AccountId, new[] { account });
         }
-        // Treat anchor unavailability OR anchor-side misbehavior as Inconclusive, not Fail — SDK-side
-        // SEP-10 protocol logic is covered deterministically by the loopback test above.
+        // Anchor unavailability (transport/discovery/timeouts) and anchor-side garbage (malformed
+        // toml/JSON/base64/XDR) map to Inconclusive — anchor or network trouble, not an SDK
+        // regression. Deliberately NOT mapped, so they fail the test: ChallengeValidationException
+        // (the SDK rejected the anchor's challenge — an over-strict validation regression would
+        // otherwise hide as Inconclusive) and SubmitChallengeErrorResponseException (the anchor
+        // rejected our signed challenge — a signing regression would otherwise hide). Client-side
+        // validation is also unit-covered by ClientWebAuthTest; the loopback test above covers only
+        // the ServerWebAuth primitives, which are a separate implementation.
         catch (Exception ex) when (ex is HttpRequestException
                                        or TaskCanceledException
                                        or JsonException
-                                       or InvalidOperationException
                                        or StellarTomlException
-                                       or WebAuthException)
+                                       or FormatException // malformed base64 / URI from the anchor
+                                       or InvalidDataException // malformed XDR payload
+                                       or IOException // truncated XDR / bad padding (incl. EndOfStreamException)
+                                       or WebAuthException
+                                       and not ChallengeValidationException
+                                       and not SubmitChallengeErrorResponseException)
         {
-            Assert.Inconclusive($"SEP-10 anchor '{TestnetConfig.Sep10HomeDomain}' unavailable: {ex.Message}");
+            Assert.Inconclusive(
+                $"SEP-10 anchor '{TestnetConfig.Sep10HomeDomain}' unavailable or misbehaving: {ex.Message}");
             return;
         }
 

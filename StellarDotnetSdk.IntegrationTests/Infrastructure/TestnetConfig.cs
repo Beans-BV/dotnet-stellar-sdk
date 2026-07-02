@@ -26,7 +26,7 @@ public static class TestnetConfig
     public static string FriendbotUrl => Env("INTEGRATION_FRIENDBOT_URL", "https://horizon-testnet.stellar.org");
 
     /// <summary>
-    ///     Stellar RPC (formerly Soroban RPC) base URL. Consumed by Soroban tests in a later phase.
+    ///     Stellar RPC (formerly Soroban RPC) base URL. Consumed by the Soroban fixtures.
     ///     The public Testnet host is still <c>soroban-testnet.stellar.org</c> despite the renamed term.
     /// </summary>
     public static string StellarRpcUrl => Env("INTEGRATION_STELLAR_RPC_URL", "https://soroban-testnet.stellar.org");

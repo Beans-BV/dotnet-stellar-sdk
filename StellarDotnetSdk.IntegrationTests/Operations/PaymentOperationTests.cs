@@ -25,7 +25,7 @@ public class PaymentOperationTests : OperationsTestBase
             destBefore.Balances.Single(b => b.AssetType == "native").BalanceString,
             CultureInfo.InvariantCulture);
 
-        var sourceAccount = await Server.Accounts.Account(source.AccountId);
+        var sourceAccount = await LoadAccountAsync(source);
         var payment = new PaymentOperation(destination, new AssetTypeNative(), "5");
         var tx = new TransactionBuilder(sourceAccount)
             .AddOperation(payment)

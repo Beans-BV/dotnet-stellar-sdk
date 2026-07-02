@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -15,11 +16,16 @@ public class AccountsRequestBuilderTests : OperationsTestBase
     {
         var keyPair = await CreateFundedAccountAsync();
 
-        var account = await Server.Accounts.Account(keyPair.AccountId);
+        var account = await LoadAccountAsync(keyPair);
 
         account.AccountId.Should().Be(keyPair.AccountId);
         account.SequenceNumber.Should().BeGreaterThan(0);
-        account.Balances.Should().Contain(b => b.AssetType == "native");
+        var native = account.Balances.Should().ContainSingle(b => b.AssetType == "native").Which;
+        // Friendbot currently grants 10,000 XLM. The wide range tolerates faucet policy changes and
+        // non-SDF faucets while still catching decimal/stroop scale regressions (a 10^7 factor lands
+        // far outside it).
+        decimal.Parse(native.BalanceString, CultureInfo.InvariantCulture).Should()
+            .BeInRange(1_000m, 100_000m);
     }
 
     [Test]

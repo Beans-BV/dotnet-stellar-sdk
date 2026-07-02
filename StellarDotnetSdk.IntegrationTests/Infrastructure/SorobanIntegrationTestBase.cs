@@ -57,22 +57,23 @@ public abstract class SorobanIntegrationTestBase : IntegrationTestBase
     }
 
     /// <summary>
-    ///     Loads an account from the RPC, retrying briefly on <see cref="AccountNotFoundException" />.
-    ///     The account is funded via Friendbot (Horizon) but read here from Stellar RPC — a different
-    ///     backend that ingests ledgers independently, so it can briefly trail. A sustained miss is
-    ///     reported <see cref="Assert.Inconclusive(string)" /> (cross-backend lag, not an SDK regression).
+    ///     Loads an account from the RPC, retrying briefly on <see cref="AccountNotFoundException" />
+    ///     and on transient RPC errors. The account is funded via Friendbot (Horizon) but read here
+    ///     from Stellar RPC — a different backend that ingests ledgers independently, so it can briefly
+    ///     trail. A sustained miss is reported <see cref="Assert.Inconclusive(string)" />
+    ///     (cross-backend lag or RPC outage, not an SDK regression).
     /// </summary>
     protected async Task<Account> GetRpcAccountWithRetryAsync(string accountId)
     {
         var deadline = DateTime.UtcNow.AddSeconds(30);
-        AccountNotFoundException? last = null;
+        Exception? last = null;
         while (DateTime.UtcNow < deadline)
         {
             try
             {
                 return await Rpc.GetAccount(accountId);
             }
-            catch (AccountNotFoundException ex)
+            catch (Exception ex) when (ex is AccountNotFoundException || IsTransientBackendError(ex))
             {
                 last = ex;
                 await Task.Delay(TimeSpan.FromSeconds(2));
@@ -80,8 +81,8 @@ public abstract class SorobanIntegrationTestBase : IntegrationTestBase
         }
 
         Assert.Inconclusive(
-            $"Stellar RPC did not ingest account {accountId} within 30s of Horizon funding " +
-            $"(cross-backend ingestion lag, not an SDK regression). {last?.Message}");
+            $"Stellar RPC did not return account {accountId} within 30s of Horizon funding " +
+            $"(cross-backend ingestion lag or RPC outage, not an SDK regression). {last?.Message}");
         return null!; // unreachable — Assert.Inconclusive throws
     }
 
@@ -109,8 +110,9 @@ public abstract class SorobanIntegrationTestBase : IntegrationTestBase
 
     /// <summary>
     ///     Sends an assembled Soroban transaction and polls <c>GetTransaction</c> until SUCCESS/FAILED,
-    ///     bounded by a 90s deadline. A per-request timeout or transient network error on a poll is
-    ///     retried until the deadline; a sustained stall reports <see cref="Assert.Inconclusive(string)" />.
+    ///     bounded by a 90s deadline. A per-request timeout or transient network/RPC error (429/5xx) on
+    ///     a poll is retried until the deadline; a sustained stall reports
+    ///     <see cref="Assert.Inconclusive(string)" />.
     /// </summary>
     protected async Task<GetTransactionResponse> SendAndPollAsync(Transaction tx)
     {
@@ -135,10 +137,13 @@ public abstract class SorobanIntegrationTestBase : IntegrationTestBase
             {
                 get = await Rpc.GetTransaction(hash);
             }
-            catch (Exception ex) when (ex is TaskCanceledException or HttpRequestException)
+            catch (Exception ex) when (IsTransientBackendError(ex))
             {
-                // Per-request timeout / transient network error — keep polling until the deadline,
-                // which maps a sustained RPC stall to the Inconclusive below rather than a hard failure.
+                // Per-request timeout / transient network or RPC error (429/5xx) — pause, then keep
+                // polling until the deadline, which maps a sustained RPC stall to the Inconclusive
+                // below rather than a hard failure. The pause also keeps a fast-failing endpoint from
+                // being hammered in a tight loop.
+                await Task.Delay(TimeSpan.FromSeconds(2));
                 continue;
             }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -26,9 +27,9 @@ public class FootprintTests : SorobanIntegrationTestBase
         var latest = await Rpc.GetLatestLedger();
         var currentLedger = (uint)latest.Sequence;
         // extendTo is RELATIVE (ledgers from the current ledger), so remaining + 100k makes the new
-        // liveUntil exceed the old. The (long) cast prevents a uint-underflow in the subtraction; for a
-        // freshly deployed contract oldLiveUntil >> currentLedger, so the result is safely positive.
-        var extendTo = (uint)((long)oldLiveUntil - currentLedger + 100_000);
+        // liveUntil exceed the old. For a freshly deployed contract oldLiveUntil > currentLedger; the
+        // long arithmetic plus the clamp keep a ledger race from ever wrapping the uint cast.
+        var extendTo = (uint)Math.Max(100_000, (long)oldLiveUntil - currentLedger + 100_000);
 
         var rpcAccount = await GetRpcAccountWithRetryAsync(account.AccountId);
         var tx = new TransactionBuilder(rpcAccount)

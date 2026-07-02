@@ -23,7 +23,7 @@ public abstract class OperationsTestBase : IntegrationTestBase
     /// </summary>
     protected async Task<SubmitTransactionResponse> SubmitAsync(KeyPair source, params Operation[] operations)
     {
-        var sourceAccount = await Server.Accounts.Account(source.AccountId);
+        var sourceAccount = await LoadAccountAsync(source);
         var builder = new TransactionBuilder(sourceAccount);
         foreach (var operation in operations)
         {

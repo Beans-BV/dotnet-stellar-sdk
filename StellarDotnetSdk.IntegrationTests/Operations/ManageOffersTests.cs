@@ -47,7 +47,7 @@ public class ManageOffersTests : OperationsTestBase
     }
 
     [Test]
-    public async Task ManageBuyOffer_CreatesRestingOffer()
+    public async Task ManageBuyOffer_CreateUpdateDelete()
     {
         var issuer = await CreateFundedAccountAsync();
         var buyer = await CreateFundedAccountAsync();
@@ -58,8 +58,24 @@ public class ManageOffersTests : OperationsTestBase
         await SubmitAsync(buyer, new ChangeTrustOperation(asset, "1000"));
         await SubmitAsync(buyer, new ManageBuyOfferOperation(native, asset, "10", "2", 0));
 
-        var offers = await Server.Offers.ForAccount(buyer.AccountId).Execute();
-        offers.Records.Should().HaveCount(1);
-        offers.Records[0].Buying.Should().Be(asset);
+        var afterCreate = await Server.Offers.ForAccount(buyer.AccountId).Execute();
+        afterCreate.Records.Should().HaveCount(1);
+        var offer = afterCreate.Records[0];
+        offer.Buying.Should().Be(asset);
+        // The ledger stores a buy offer in sell terms: buying 10 BUY at price 2 XLM/BUY sells 20 XLM.
+        decimal.Parse(offer.Amount, CultureInfo.InvariantCulture).Should().Be(20m);
+        var offerId = long.Parse(offer.Id, CultureInfo.InvariantCulture);
+
+        // Update: same offerId, new buy amount (4 BUY -> selling 8 XLM).
+        await SubmitAsync(buyer, new ManageBuyOfferOperation(native, asset, "4", "2", offerId));
+        var afterUpdate = await Server.Offers.ForAccount(buyer.AccountId).Execute();
+        var updated = afterUpdate.Records.Single();
+        updated.Id.Should().Be(offer.Id, "the same offer should be mutated, not replaced");
+        decimal.Parse(updated.Amount, CultureInfo.InvariantCulture).Should().Be(8m);
+
+        // Delete: buy amount "0".
+        await SubmitAsync(buyer, new ManageBuyOfferOperation(native, asset, "0", "2", offerId));
+        var afterDelete = await Server.Offers.ForAccount(buyer.AccountId).Execute();
+        afterDelete.Records.Should().BeEmpty();
     }
 }
