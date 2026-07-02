@@ -20,11 +20,16 @@ public class SseStreamingTests : IntegrationTestBase
             TaskCreationOptions.RunContinuationsAsynchronously);
 
         IEventSource eventSource = null!;
+        Exception? lastStreamError = null;
         eventSource = Server.Ledgers.Cursor("now").Stream((_, ledger) =>
         {
             firstLedger.TrySetResult(ledger);
             eventSource.Shutdown();
         });
+        // The stream swallows handler/connection errors internally and reconnects, so a sustained
+        // failure (e.g. a deserialization regression) is otherwise invisible. Capture the last error
+        // to surface it in the no-event verdict below.
+        eventSource.Error += (_, e) => lastStreamError = e.Exception;
 
         using var cts = new CancellationTokenSource();
         var connectTask = eventSource.Connect();
@@ -44,7 +49,12 @@ public class SseStreamingTests : IntegrationTestBase
 
         if (completed != firstLedger.Task)
         {
-            Assert.Inconclusive("No ledger event arrived within 45s (Horizon SSE outage/lag, not an SDK regression).");
+            Assert.Inconclusive(
+                "No ledger event arrived within 45s (usually Horizon SSE outage/lag, not an SDK regression). " +
+                (lastStreamError is null
+                    ? "The stream reported no errors."
+                    : "Last stream error — a parse failure here implicates the SDK: " +
+                      $"{lastStreamError.GetType().Name}: {lastStreamError.Message}"));
         }
 
         var ledger = await firstLedger.Task;
