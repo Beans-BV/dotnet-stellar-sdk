@@ -1,10 +1,16 @@
 # Horizon API vs Stellar .NET SDK Compatibility Matrix
 
-**Horizon Version:** v25.0.0 (released 2025-12-11)  
-**Horizon Source:** [v25.0.0](https://github.com/stellar/stellar-horizon/releases/tag/v25.0.0)  
+**Horizon Version:** v27.0.0 (released 2026-06-11)  
+**Horizon Source:** [v27.0.0](https://github.com/stellar/stellar-horizon/releases/tag/v27.0.0)  
 **SDK:** `StellarDotnetSdk`  
 **SDK Version:** 14.0.0  
-**Updated:** 2026-03-27
+**Updated:** 2026-07-02
+
+> **Version history:** Horizon v26.0.0 (Protocol 26) added no new endpoints — its API-visible changes were CAP-77
+> result codes (SDK support in [#177](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/177)) and CAP-73 effects
+> reusing the existing `contract_credited`/`contract_debited` types (SDK support in
+> [#179](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/179)). Horizon v27.0.0 (Protocol 27) added ingestion
+> support only, with no endpoint or response-schema changes.
 
 **Public API Endpoints (in matrix):** 50
 

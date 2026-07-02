@@ -1,9 +1,9 @@
 # Stellar RPC vs .NET SDK Compatibility Matrix
 
-**RPC Version:** v25.0.0 (released 2025-12-12)
-**RPC Source:** [https://github.com/stellar/stellar-rpc/releases/tag/v25.0.0](https://github.com/stellar/stellar-rpc/releases/tag/v25.0.0)
+**RPC Version:** v26.0.1 (released 2026-06-10)
+**RPC Source:** [https://github.com/stellar/stellar-rpc/releases/tag/v26.0.1](https://github.com/stellar/stellar-rpc/releases/tag/v26.0.1)
 **SDK Version:** 12.0.0
-**Updated:** 2026-03-27
+**Updated:** 2026-07-02
 
 ## Overall Coverage
 
@@ -20,7 +20,7 @@
 | `getEvents` | ✅ Fully Supported | `getEvents` | 1/1 | 6/6 | All parameters and response fields implemented |
 | `getFeeStats` | ✅ Fully Supported | `getFeeStats` | N/A | 3/3 | All parameters and response fields implemented |
 | `getHealth` | ✅ Fully Supported | `getHealth` | N/A | 4/4 | All parameters and response fields implemented |
-| `getLatestLedger` | ✅ Fully Supported | `getLatestLedger` | N/A | 3/3 | All parameters and response fields implemented |
+| `getLatestLedger` | ✅ Fully Supported | `getLatestLedger` | N/A | 6/6 | All parameters and response fields implemented |
 | `getLedgerEntries` | ✅ Fully Supported | `getLedgerEntries` | 1/1 | 2/2 | All parameters and response fields implemented |
 | `getLedgers` | ✅ Fully Supported | `getLedgers` | 1/1 | 6/6 | All parameters and response fields implemented |
 | `getNetwork` | ✅ Fully Supported | `getNetwork` | N/A | 3/3 | All parameters and response fields implemented |
@@ -39,7 +39,7 @@ Detailed breakdown of response field support per method.
 | `getEvents` | 6 | 6 | - |
 | `getFeeStats` | 3 | 3 | - |
 | `getHealth` | 4 | 4 | - |
-| `getLatestLedger` | 3 | 3 | - |
+| `getLatestLedger` | 6 | 6 | - |
 | `getLedgerEntries` | 2 | 2 | - |
 | `getLedgers` | 6 | 6 | - |
 | `getNetwork` | 3 | 3 | - |
