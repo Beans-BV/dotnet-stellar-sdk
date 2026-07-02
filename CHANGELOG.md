@@ -51,12 +51,13 @@ All notable changes to this project are documented here. The format is based on
 - The `SorobanCredentials`, `SorobanSourceAccountCredentials`, and `SorobanAddressCredentials` classes
   moved from `InvokeHostFunctionOperation.cs` to a new `SorobanCredentials.cs` file. They remain in the
   `StellarDotnetSdk.Operations` namespace, so `using`/fully-qualified references are unaffected.
-- **Breaking (behavioral, `net8.0`):** the SDK no longer references the standalone `System.Text.Json`
-  10.0.6 package and uses each target framework's built-in System.Text.Json instead. As a result,
-  `AllowDuplicateProperties = false` and `RespectNullableAnnotations = true` on
-  `JsonOptions.DefaultOptions` now apply on `net10.0` only; on `net8.0` and `netstandard2.1`,
-  deserialization follows the STJ 8 defaults — the last duplicate JSON property wins and nullability
-  annotations are not enforced ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195)).
+- The SDK references the standalone `System.Text.Json` 10.0.6 package on `net8.0` and
+  `netstandard2.1` (`net10.0` uses the built-in STJ 10), so `AllowDuplicateProperties = false` and
+  `RespectNullableAnnotations = true` on `JsonOptions.DefaultOptions` / `KycJsonOptions.Default`
+  apply on **every** target framework: a response carrying a duplicate JSON property is rejected
+  instead of last-write-wins, and nullability annotations are enforced uniformly. Consumers on
+  `net8.0`/`netstandard2.1` inherit a transitive `System.Text.Json >= 10.0.6` dependency floor
+  ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) follow-up).
 - `KeyPair.Verify` no longer swallows every exception. Malformed or attacker-supplied signatures still
   return `false` (`ArgumentException`, `FormatException`, and `CryptographicException` are caught), but
   environmental failures — e.g. a missing native libsodium — now propagate instead of being misreported

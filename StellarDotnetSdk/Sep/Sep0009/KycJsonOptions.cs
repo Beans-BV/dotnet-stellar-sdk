@@ -30,9 +30,7 @@ public static class KycJsonOptions
         {
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-#if NET10_0_OR_GREATER
             RespectNullableAnnotations = true,
-#endif
 #if !NETSTANDARD2_1
             Converters =
             {
