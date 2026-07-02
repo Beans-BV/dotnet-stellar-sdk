@@ -15,7 +15,9 @@ defaults:
 jobs:
   integration_tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Well above the suite's typical wall-clock (~9 min tests + setup): the fixtures' [CancelAfter]
+    # budgets are cooperative-only, so this job timeout is the real backstop under a degraded Testnet.
+    timeout-minutes: 40
     permissions:
       contents: read
     steps:
@@ -29,6 +31,9 @@ jobs:
           INTEGRATION_HORIZON_TOKEN:     ${{ secrets.INTEGRATION_HORIZON_TOKEN }}
           INTEGRATION_STELLAR_RPC_URL:   ${{ vars.INTEGRATION_STELLAR_RPC_URL   || 'https://soroban-testnet.stellar.org' }}
           INTEGRATION_STELLAR_RPC_TOKEN: ${{ secrets.INTEGRATION_STELLAR_RPC_TOKEN }}
+          INTEGRATION_FRIENDBOT_URL:     ${{ vars.INTEGRATION_FRIENDBOT_URL     || 'https://horizon-testnet.stellar.org' }}
+          INTEGRATION_SEP10_HOME_DOMAIN: ${{ vars.INTEGRATION_SEP10_HOME_DOMAIN || 'testanchor.stellar.org' }}
+          INTEGRATION_HTTP_TIMEOUT_SECONDS: ${{ vars.INTEGRATION_HTTP_TIMEOUT_SECONDS || '45' }}
         run: |
           dotnet test StellarDotnetSdk.IntegrationTests/StellarDotnetSdk.IntegrationTests.csproj `
             --configuration Release `

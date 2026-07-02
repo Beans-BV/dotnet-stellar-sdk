@@ -15,4 +15,12 @@
     <ItemGroup>
         <ProjectReference Include="..\StellarDotnetSdk\StellarDotnetSdk.csproj"/>
     </ItemGroup>
+    <ItemGroup>
+        <Content Include="TestData\Wasm\soroban_hello_world_contract.wasm">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="TestData\Wasm\soroban_events_contract.wasm">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 </Project>

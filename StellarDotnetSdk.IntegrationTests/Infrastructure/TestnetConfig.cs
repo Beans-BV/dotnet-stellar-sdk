@@ -26,7 +26,7 @@ public static class TestnetConfig
     public static string FriendbotUrl => Env("INTEGRATION_FRIENDBOT_URL", "https://horizon-testnet.stellar.org");
 
     /// <summary>
-    ///     Stellar RPC (formerly Soroban RPC) base URL. Consumed by Soroban tests in a later phase.
+    ///     Stellar RPC (formerly Soroban RPC) base URL. Consumed by the Soroban fixtures.
     ///     The public Testnet host is still <c>soroban-testnet.stellar.org</c> despite the renamed term.
     /// </summary>
     public static string StellarRpcUrl => Env("INTEGRATION_STELLAR_RPC_URL", "https://soroban-testnet.stellar.org");
@@ -34,12 +34,35 @@ public static class TestnetConfig
     /// <summary>Optional bearer token for <see cref="StellarRpcUrl" />. Null when unset.</summary>
     public static string? StellarRpcToken => EnvOrNull("INTEGRATION_STELLAR_RPC_TOKEN");
 
+    /// <summary>
+    ///     Home domain of the SEP-10 anchor used by the real-anchor auth test. Defaults to SDF's
+    ///     reference Testnet anchor; <c>ClientWebAuth.FromDomainAsync</c> discovers the auth endpoint
+    ///     and signing key from this domain's stellar.toml.
+    /// </summary>
+    public static string Sep10HomeDomain => Env("INTEGRATION_SEP10_HOME_DOMAIN", "testanchor.stellar.org");
+
+    /// <summary>
+    ///     Per-request HTTP timeout for the main Horizon <c>Server</c> and the Stellar RPC client.
+    ///     The SDK's default client sets no timeout (HttpClient's ~100s default), so a stalled call
+    ///     would hang far past a fixture's budget; this caps each request. Env override is in seconds.
+    ///     Deliberately NOT applied to the Friendbot funding client, which has its own retry/Inconclusive
+    ///     path (a timeout there would throw past it).
+    /// </summary>
+    public static TimeSpan HttpRequestTimeout =>
+        TimeSpan.FromSeconds(EnvInt("INTEGRATION_HTTP_TIMEOUT_SECONDS", 45));
+
     public static string NetworkPassphrase => Network.TestnetPassphrase;
 
     private static string Env(string key, string fallback)
     {
         var value = Environment.GetEnvironmentVariable(key);
         return string.IsNullOrWhiteSpace(value) ? fallback : value;
+    }
+
+    private static int EnvInt(string key, int fallback)
+    {
+        var value = Environment.GetEnvironmentVariable(key);
+        return int.TryParse(value, out var parsed) && parsed > 0 ? parsed : fallback;
     }
 
     private static string? EnvOrNull(string key)

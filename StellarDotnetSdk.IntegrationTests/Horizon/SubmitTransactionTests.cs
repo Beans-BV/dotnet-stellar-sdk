@@ -91,7 +91,7 @@ public class SubmitTransactionTests : IntegrationTestBase
 
     private async Task<Transaction> BuildPaymentTransactionAsync(KeyPair source, KeyPair destination, string amountXlm)
     {
-        var sourceAccount = await Server.Accounts.Account(source.AccountId);
+        var sourceAccount = await LoadAccountAsync(source);
         var payment = new PaymentOperation(destination, new AssetTypeNative(), amountXlm);
         return new TransactionBuilder(sourceAccount)
             .AddOperation(payment)

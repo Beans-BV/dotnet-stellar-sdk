@@ -20,7 +20,7 @@ public class CreateAccountOperationTests : IntegrationTestBase
         var funder = await CreateFundedAccountAsync();
         var newAccount = KeyPair.Random();
 
-        var funderAccount = await Server.Accounts.Account(funder.AccountId);
+        var funderAccount = await LoadAccountAsync(funder);
         var operation = new CreateAccountOperation(newAccount, "10");
         var tx = new TransactionBuilder(funderAccount)
             .AddOperation(operation)

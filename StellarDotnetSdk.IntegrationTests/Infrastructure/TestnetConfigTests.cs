@@ -35,6 +35,8 @@ public class TestnetConfigTests
         "INTEGRATION_FRIENDBOT_URL",
         "INTEGRATION_STELLAR_RPC_URL",
         "INTEGRATION_STELLAR_RPC_TOKEN",
+        "INTEGRATION_SEP10_HOME_DOMAIN",
+        "INTEGRATION_HTTP_TIMEOUT_SECONDS",
     };
 
     private readonly Dictionary<string, string?> _originalValues = new();
@@ -109,6 +111,53 @@ public class TestnetConfigTests
     {
         Environment.SetEnvironmentVariable("INTEGRATION_STELLAR_RPC_TOKEN", "rpc-token");
         TestnetConfig.StellarRpcToken.Should().Be("rpc-token");
+    }
+
+    [Test]
+    public void Sep10HomeDomain_WhenEnvVarUnset_ReturnsReferenceAnchorDefault()
+    {
+        TestnetConfig.Sep10HomeDomain.Should().Be("testanchor.stellar.org");
+    }
+
+    [Test]
+    public void Sep10HomeDomain_WhenEnvVarSet_ReturnsConfiguredValue()
+    {
+        Environment.SetEnvironmentVariable("INTEGRATION_SEP10_HOME_DOMAIN", "anchor.example.com");
+        TestnetConfig.Sep10HomeDomain.Should().Be("anchor.example.com");
+    }
+
+    [Test]
+    public void Sep10HomeDomain_WhenEnvVarWhitespace_ReturnsReferenceAnchorDefault()
+    {
+        Environment.SetEnvironmentVariable("INTEGRATION_SEP10_HOME_DOMAIN", "   ");
+        TestnetConfig.Sep10HomeDomain.Should().Be("testanchor.stellar.org");
+    }
+
+    [Test]
+    public void HttpRequestTimeout_WhenEnvVarUnset_Returns45SecondDefault()
+    {
+        TestnetConfig.HttpRequestTimeout.Should().Be(TimeSpan.FromSeconds(45));
+    }
+
+    [Test]
+    public void HttpRequestTimeout_WhenEnvVarSet_ReturnsConfiguredSeconds()
+    {
+        Environment.SetEnvironmentVariable("INTEGRATION_HTTP_TIMEOUT_SECONDS", "60");
+        TestnetConfig.HttpRequestTimeout.Should().Be(TimeSpan.FromSeconds(60));
+    }
+
+    [Test]
+    public void HttpRequestTimeout_WhenEnvVarNotNumeric_Returns45SecondDefault()
+    {
+        Environment.SetEnvironmentVariable("INTEGRATION_HTTP_TIMEOUT_SECONDS", "abc");
+        TestnetConfig.HttpRequestTimeout.Should().Be(TimeSpan.FromSeconds(45));
+    }
+
+    [Test]
+    public void HttpRequestTimeout_WhenEnvVarNotPositive_Returns45SecondDefault()
+    {
+        Environment.SetEnvironmentVariable("INTEGRATION_HTTP_TIMEOUT_SECONDS", "0");
+        TestnetConfig.HttpRequestTimeout.Should().Be(TimeSpan.FromSeconds(45));
     }
 
     [Test]
