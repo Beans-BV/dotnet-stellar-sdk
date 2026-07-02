@@ -108,4 +108,30 @@ public class KycJsonSerializationTest
         act.Should().Throw<JsonException>();
     }
 #endif
+
+    // The following run on every TFM (including netstandard2.1) — that is the point of referencing
+    // System.Text.Json 10.x on all targets: KycJsonOptions.Default must enforce the same JSON guards
+    // as JsonOptions.DefaultOptions everywhere, not just on net10.0.
+    [TestMethod]
+    public void KycJsonOptions_Default_DisablesAllowDuplicateProperties()
+    {
+        KycJsonOptions.Default.AllowDuplicateProperties.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void KycJsonOptions_Default_RespectNullableAnnotations_IsEnabled()
+    {
+        KycJsonOptions.Default.RespectNullableAnnotations.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void KycJsonOptions_Deserialize_WithDuplicateProperties_ThrowsJsonException()
+    {
+        // A duplicated field must be rejected rather than silently taking the last value.
+        var json = """{"firstName":"John","firstName":"Jane"}""";
+
+        var act = () => JsonSerializer.Deserialize<NaturalPersonKycFields>(json, KycJsonOptions.Default);
+
+        act.Should().Throw<JsonException>();
+    }
 }
