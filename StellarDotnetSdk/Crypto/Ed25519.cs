@@ -14,8 +14,10 @@ internal static class Ed25519
         if (seed.Length != SeedLength) throw new ArgumentException($"Seed must be {SeedLength} bytes.", nameof(seed));
 
 #if NETSTANDARD2_1
-        var kp = Sodium.PublicKeyAuth.GenerateKeyPair(seed);
-        return kp.PublicKey;
+        // Clone rather than returning the handle's internal buffer — the returned array must not share
+        // its lifetime with the disposed handle.
+        using var kp = Sodium.PublicKeyAuth.GenerateKeyPair(seed);
+        return (byte[])kp.PublicKey.Clone();
 #else
         using var key = NSec.Cryptography.Key.Import(
             NSec.Cryptography.SignatureAlgorithm.Ed25519,
@@ -36,7 +38,7 @@ internal static class Ed25519
         Throw.IfNull(data, nameof(data));
 
 #if NETSTANDARD2_1
-        var kp = Sodium.PublicKeyAuth.GenerateKeyPair(seed);
+        using var kp = Sodium.PublicKeyAuth.GenerateKeyPair(seed);
         return Sodium.PublicKeyAuth.SignDetached(data, kp.PrivateKey);
 #else
         using var key = NSec.Cryptography.Key.Import(

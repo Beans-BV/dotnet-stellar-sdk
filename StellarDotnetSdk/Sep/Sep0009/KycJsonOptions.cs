@@ -7,7 +7,9 @@ namespace StellarDotnetSdk.Sep.Sep0009;
 
 /// <summary>
 ///     JSON serializer options for SEP-0009 KYC field types.
-///     Date fields use ISO 8601 date-only format (yyyy-MM-dd) on frameworks that support date-only types.
+///     Date fields use ISO 8601 date-only format (yyyy-MM-dd) on every target framework: via
+///     <c>DateOnly</c> converters on net8.0/net10.0 and via <c>IsoDateStringJsonConverter</c>
+///     property annotations on netstandard2.1, so invalid date strings are rejected on all targets.
 /// </summary>
 /// <remarks>
 ///     These options use <see cref="JsonNamingPolicy.CamelCase" /> (emitting e.g. <c>birthDate</c>), so they are

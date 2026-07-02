@@ -14,6 +14,20 @@ namespace StellarDotnetSdk.Tests.Xdr;
 [TestClass]
 public class XdrDataStreamTest
 {
+    /// <summary>
+    ///     A truncated stream must fail with the BCL's Stream.ReadExactly exception type and message on
+    ///     every TFM: net8.0/net10.0 call ReadExactly directly, and the netstandard2.1 compat shim mirrors
+    ///     it, so consumers matching on either observe identical behavior.
+    /// </summary>
+    [TestMethod]
+    public void ReadInt_WithTruncatedStream_ThrowsEndOfStreamWithBclMessage()
+    {
+        var stream = new XdrDataInputStream(new byte[2]);
+
+        var ex = Assert.ThrowsException<EndOfStreamException>(() => stream.ReadInt());
+        Assert.AreEqual("Unable to read beyond the end of the stream.", ex.Message);
+    }
+
     private static string BackAndForthXdrStreaming(string inputString)
     {
         var xdrOutputStream = new XdrDataOutputStream();

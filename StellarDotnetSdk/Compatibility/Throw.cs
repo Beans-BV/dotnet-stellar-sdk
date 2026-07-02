@@ -26,7 +26,9 @@ internal static class Throw
 
         if (value.Length == 0)
         {
-            throw new ArgumentException("Value cannot be empty.", paramName);
+            // Same text as ArgumentException.ThrowIfNullOrEmpty on net8.0+, so exception messages
+            // do not diverge between target frameworks.
+            throw new ArgumentException("The value cannot be an empty string.", paramName);
         }
 #else
         ArgumentException.ThrowIfNullOrEmpty(value, paramName);

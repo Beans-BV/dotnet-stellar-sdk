@@ -24,7 +24,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          # 10.0.x satisfies global.json (the runner image happened to preinstall it, which is why
+          # the old 8.0.x-only pin worked by accident); 8.0.x supplies the runtime the net8.0
+          # integration-test project executes on.
+          dotnet-version: |
+            8.0.x
+            10.0.x
       - name: Run integration tests
         env:
           INTEGRATION_HORIZON_URL:       ${{ vars.INTEGRATION_HORIZON_URL       || 'https://horizon-testnet.stellar.org' }}

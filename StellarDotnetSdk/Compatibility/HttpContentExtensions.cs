@@ -9,7 +9,14 @@ internal static class HttpContentExtensions
 {
     public static async Task<string> ReadAsStringAsync(this HttpContent content, CancellationToken cancellationToken)
     {
-        cancellationToken.ThrowIfCancellationRequested();
+        if (cancellationToken.IsCancellationRequested)
+        {
+            // Match the real ReadAsStringAsync(CancellationToken) overload on net8.0+, which surfaces
+            // cancellation as TaskCanceledException (with the token attached), not the base
+            // OperationCanceledException that ThrowIfCancellationRequested would produce.
+            return await Task.FromCanceled<string>(cancellationToken).ConfigureAwait(false);
+        }
+
         if (!cancellationToken.CanBeCanceled)
         {
             return await content.ReadAsStringAsync().ConfigureAwait(false);
@@ -26,7 +33,8 @@ internal static class HttpContentExtensions
             {
                 // Observe the eventual read result/exception so it is not left unobserved.
                 _ = readTask.ContinueWith(static t => _ = t.Exception, TaskContinuationOptions.OnlyOnFaulted);
-                cancellationToken.ThrowIfCancellationRequested();
+                // TaskCanceledException for type parity with the net8.0+ overload (see above).
+                return await Task.FromCanceled<string>(cancellationToken).ConfigureAwait(false);
             }
         }
 

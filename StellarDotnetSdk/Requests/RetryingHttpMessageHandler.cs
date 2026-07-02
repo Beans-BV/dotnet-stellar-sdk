@@ -27,10 +27,24 @@ namespace StellarDotnetSdk.Requests;
 ///         immediately, exactly like a user-initiated cancellation.
 ///     </para>
 /// </summary>
-public class RetryingHttpMessageHandler : DelegatingHandler
+public class RetryingHttpMessageHandler :
+#if NETSTANDARD2_1
+    // Deliberately NOT DelegatingHandler on netstandard2.1: this TFM cannot override the synchronous
+    // Send virtual (it does not exist in netstandard2.1 reference assemblies), and DelegatingHandler's
+    // runtime base Send would forward straight to the inner handler on net5+ hosts — silently bypassing
+    // the entire resilience pipeline. HttpMessageHandler's base Send throws NotSupportedException on
+    // those hosts instead, so a sync caller fails loudly rather than losing retries without a signal.
+    HttpMessageHandler
+#else
+    DelegatingHandler
+#endif
 {
     private static readonly ResiliencePropertyKey<HttpRequestMessage?> RequestKey = new("StellarSdk.HttpRequest");
     private readonly ResiliencePipeline<HttpResponseMessage> _pipeline;
+#if NETSTANDARD2_1
+    private readonly HttpMessageHandler _innerHandler;
+    private readonly HttpMessageInvoker _innerInvoker;
+#endif
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="RetryingHttpMessageHandler" /> class.
@@ -49,8 +63,17 @@ public class RetryingHttpMessageHandler : DelegatingHandler
     ///     subject to this check.
     /// </exception>
     public RetryingHttpMessageHandler(HttpMessageHandler innerHandler, HttpResilienceOptions? options = null)
+#if NETSTANDARD2_1
+    {
+        _innerHandler = innerHandler ?? throw new ArgumentNullException(nameof(innerHandler));
+        // HttpMessageHandler.SendAsync is protected internal, so the inner handler is driven through an
+        // HttpMessageInvoker (the same public wrapper HttpClient itself uses). disposeHandler: false —
+        // Dispose(bool) below owns the inner handler's lifetime, matching DelegatingHandler semantics.
+        _innerInvoker = new HttpMessageInvoker(_innerHandler, false);
+#else
         : base(innerHandler ?? throw new ArgumentNullException(nameof(innerHandler)))
     {
+#endif
         // Snapshot the options. The scalar settings are baked into the pipeline below either way, but the
         // set-typed properties are read by the ShouldHandle/DelayGenerator closures on every request —
         // without a copy, post-construction mutations would half-apply (and HashSet is not thread-safe
@@ -77,7 +100,11 @@ public class RetryingHttpMessageHandler : DelegatingHandler
         try
         {
             return await _pipeline.ExecuteAsync(
+#if NETSTANDARD2_1
+                async ctx => await _innerInvoker.SendAsync(request, ctx.CancellationToken).ConfigureAwait(false),
+#else
                 async ctx => await base.SendAsync(request, ctx.CancellationToken).ConfigureAwait(false),
+#endif
                 context).ConfigureAwait(false);
         }
         finally
@@ -92,9 +119,11 @@ public class RetryingHttpMessageHandler : DelegatingHandler
     ///     Sends an HTTP request through the resilience pipeline synchronously. Mirrors
     ///     <see cref="SendAsync" /> so that <see cref="HttpClient.Send(HttpRequestMessage)" /> receives the
     ///     same retry, circuit-breaker, and timeout behavior instead of silently bypassing the pipeline
-    ///     (the inherited <see cref="DelegatingHandler.Send(HttpRequestMessage, CancellationToken)" />
-    ///     forwards straight to the inner handler). The inner handler chain must itself support synchronous
-    ///     <c>Send</c> (<see cref="SocketsHttpHandler" /> does over HTTP/1.1).
+    ///     (a <c>DelegatingHandler</c>'s inherited sync <c>Send</c> forwards straight to the inner handler).
+    ///     The inner handler chain must itself support synchronous <c>Send</c> (<c>SocketsHttpHandler</c>
+    ///     does over HTTP/1.1). This override exists only on <c>net8.0</c>/<c>net10.0</c>; on the
+    ///     <c>netstandard2.1</c> assembly (which <c>net5</c>–<c>net7</c> apps resolve) synchronous
+    ///     <c>Send</c> throws <see cref="NotSupportedException" /> — see the base-class note above.
     /// </summary>
     /// <param name="request">The HTTP request message to send.</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
@@ -113,6 +142,21 @@ public class RetryingHttpMessageHandler : DelegatingHandler
             context.Properties.Set(RequestKey, null);
             ResilienceContextPool.Shared.Return(context);
         }
+    }
+#endif
+
+#if NETSTANDARD2_1
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Match DelegatingHandler's contract: disposing the handler disposes its inner handler.
+            _innerInvoker.Dispose();
+            _innerHandler.Dispose();
+        }
+
+        base.Dispose(disposing);
     }
 #endif
 
