@@ -40,28 +40,23 @@ public abstract class OperationsTestBase : IntegrationTestBase
     }
 
     /// <summary>
-    ///     Provisions an XLM→asset path: a fresh issuer, and a market maker that trusts the asset,
-    ///     receives <paramref name="offerAmount" /> of it, and rests a sell offer (selling the asset
-    ///     for native XLM at <paramref name="price" /> XLM per unit). A sender paying XLM can then
-    ///     deliver the asset to any destination that trusts it.
+    ///     Provisions an XLM→asset market on a fresh issuer: a market maker trusts the asset, receives
+    ///     1000 of it, and rests a sell offer (selling the asset for native XLM at 1:1). A sender paying
+    ///     XLM can then deliver the asset to any destination that trusts it. Returns the issued asset.
     /// </summary>
-    protected async Task<PathMarket> SetUpXlmToAssetMarketAsync(string assetCode, string offerAmount, string price)
+    protected async Task<Asset> SetUpXlmToAssetMarketAsync()
     {
-        var issuer = await CreateFundedAccountAsync();
-        var marketMaker = await CreateFundedAccountAsync();
-        var asset = Asset.CreateNonNativeAsset(assetCode, issuer.AccountId);
+        // The issuer and market maker are independent; fund them concurrently to halve setup latency.
+        var accounts = await Task.WhenAll(CreateFundedAccountAsync(), CreateFundedAccountAsync());
+        var issuer = accounts[0];
+        var marketMaker = accounts[1];
+        var asset = Asset.CreateNonNativeAsset("PATH", issuer.AccountId);
 
         await SubmitAsync(marketMaker, new ChangeTrustOperation(asset, "1000000"));
-        await SubmitAsync(issuer, new PaymentOperation(marketMaker, asset, offerAmount));
+        await SubmitAsync(issuer, new PaymentOperation(marketMaker, asset, "1000"));
         await SubmitAsync(marketMaker,
-            new ManageSellOfferOperation(asset, new AssetTypeNative(), offerAmount, price, 0));
+            new ManageSellOfferOperation(asset, new AssetTypeNative(), "1000", "1", 0));
 
-        return new PathMarket(issuer, marketMaker, asset);
+        return asset;
     }
-
-    /// <summary>A funded asset issuer + a market maker resting a sell offer (asset → XLM).</summary>
-    protected sealed record PathMarket(
-        KeyPair Issuer,
-        KeyPair MarketMaker,
-        Asset Asset);
 }

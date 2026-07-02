@@ -1,11 +1,14 @@
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.LedgerKeys;
 using StellarDotnetSdk.Operations;
+using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses.SorobanRpc;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
@@ -18,53 +21,96 @@ using Transaction = StellarDotnetSdk.Transactions.Transaction;
 namespace StellarDotnetSdk.IntegrationTests.Infrastructure;
 
 /// <summary>
-///     Base for Soroban integration tests. Owns a <see cref="StellarRpcServer" /> and provides the
-///     simulate → assemble → sign → send → poll helpers plus a self-provisioning contract deploy
-///     (upload + create the hello_world WASM), so tests never depend on a pre-existing contract id.
+///     Base for Soroban integration tests. Owns a <see cref="StellarRpcServer" /> (with a per-request
+///     timeout) and provides the simulate → assemble → sign → send → poll helpers plus a
+///     self-provisioning contract deploy (upload + create a WASM), so tests never depend on a
+///     pre-existing contract id.
 /// </summary>
 public abstract class SorobanIntegrationTestBase : IntegrationTestBase
 {
+    private HttpClient _rpcHttp = null!;
     protected StellarRpcServer Rpc = null!;
 
     [OneTimeSetUp]
     public void SorobanOneTimeSetUp()
     {
-        Rpc = new StellarRpcServer(TestnetConfig.StellarRpcUrl, TestnetConfig.StellarRpcToken);
+        // Per-request timeout so a stalled RPC call fails fast instead of hanging on HttpClient's
+        // ~100s default (the SDK sets none). This is what makes the poll deadlines below meaningful.
+        _rpcHttp = new DefaultStellarSdkHttpClient(TestnetConfig.StellarRpcToken)
+        {
+            Timeout = TestnetConfig.HttpRequestTimeout,
+        };
+        Rpc = new StellarRpcServer(TestnetConfig.StellarRpcUrl, _rpcHttp);
     }
 
     [OneTimeTearDown]
     public void SorobanOneTimeTearDown()
     {
         Rpc.Dispose();
+        _rpcHttp.Dispose();
     }
 
-    /// <summary>Reads the hello_world WASM copied into the test output's TestData/Wasm folder.</summary>
-    protected static byte[] HelloWorldWasm()
+    /// <summary>Reads a WASM file copied into the test output's TestData/Wasm folder.</summary>
+    protected static byte[] ReadWasm(string fileName)
     {
-        return File.ReadAllBytes(
-            Path.Combine(AppContext.BaseDirectory, "TestData", "Wasm", "soroban_hello_world_contract.wasm"));
+        return File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "TestData", "Wasm", fileName));
     }
 
-    /// <summary>Simulates the transaction, applies the returned Soroban data/auth + resource fee, and signs it.</summary>
-    protected async Task SimulateAssembleSignAsync(Transaction tx, KeyPair signer)
+    /// <summary>
+    ///     Loads an account from the RPC, retrying briefly on <see cref="AccountNotFoundException" />.
+    ///     The account is funded via Friendbot (Horizon) but read here from Stellar RPC — a different
+    ///     backend that ingests ledgers independently, so it can briefly trail. A sustained miss is
+    ///     reported <see cref="Assert.Inconclusive(string)" /> (cross-backend lag, not an SDK regression).
+    /// </summary>
+    protected async Task<Account> GetRpcAccountWithRetryAsync(string accountId)
+    {
+        var deadline = DateTime.UtcNow.AddSeconds(30);
+        AccountNotFoundException? last = null;
+        while (DateTime.UtcNow < deadline)
+        {
+            try
+            {
+                return await Rpc.GetAccount(accountId);
+            }
+            catch (AccountNotFoundException ex)
+            {
+                last = ex;
+                await Task.Delay(TimeSpan.FromSeconds(2));
+            }
+        }
+
+        Assert.Inconclusive(
+            $"Stellar RPC did not ingest account {accountId} within 30s of Horizon funding " +
+            $"(cross-backend ingestion lag, not an SDK regression). {last?.Message}");
+        return null!; // unreachable — Assert.Inconclusive throws
+    }
+
+    /// <summary>
+    ///     Simulates the transaction, asserts it returned assembled Soroban data, applies that data +
+    ///     authorization + resource fee, signs it, and returns the simulation response.
+    /// </summary>
+    protected async Task<SimulateTransactionResponse> SimulateAssembleSignAsync(Transaction tx, KeyPair signer)
     {
         var sim = await Rpc.SimulateTransaction(tx);
         sim.Error.Should().BeNull("simulation should not error: {0}", sim.Error);
-        if (sim.SorobanTransactionData != null)
-        {
-            tx.SetSorobanTransactionData(sim.SorobanTransactionData);
-        }
+        // A successful simulation must return assembled transaction data; otherwise the caller's
+        // placeholder resources/fee would be signed and sent, failing on-chain as a confusing FAILED.
+        sim.SorobanTransactionData.Should()
+            .NotBeNull("a successful simulation should return assembled Soroban transaction data");
+        tx.SetSorobanTransactionData(sim.SorobanTransactionData!);
         if (sim.SorobanAuthorization != null)
         {
             tx.SetSorobanAuthorization(sim.SorobanAuthorization);
         }
         tx.AddResourceFee((sim.MinResourceFee ?? 0) + 100_000);
         tx.Sign(signer);
+        return sim;
     }
 
     /// <summary>
     ///     Sends an assembled Soroban transaction and polls <c>GetTransaction</c> until SUCCESS/FAILED,
-    ///     bounded by a 90s deadline. RPC lag/outage (never resolving) reports <see cref="Assert.Inconclusive(string)" />.
+    ///     bounded by a 90s deadline. A per-request timeout or transient network error on a poll is
+    ///     retried until the deadline; a sustained stall reports <see cref="Assert.Inconclusive(string)" />.
     /// </summary>
     protected async Task<GetTransactionResponse> SendAndPollAsync(Transaction tx)
     {
@@ -84,7 +130,18 @@ public abstract class SorobanIntegrationTestBase : IntegrationTestBase
         var deadline = DateTime.UtcNow.AddSeconds(90);
         while (DateTime.UtcNow < deadline)
         {
-            var get = await Rpc.GetTransaction(hash);
+            GetTransactionResponse get;
+            try
+            {
+                get = await Rpc.GetTransaction(hash);
+            }
+            catch (Exception ex) when (ex is TaskCanceledException or HttpRequestException)
+            {
+                // Per-request timeout / transient network error — keep polling until the deadline,
+                // which maps a sustained RPC stall to the Inconclusive below rather than a hard failure.
+                continue;
+            }
+
             switch (get.Status)
             {
                 case TransactionInfo.TransactionStatus.SUCCESS:
@@ -105,16 +162,16 @@ public abstract class SorobanIntegrationTestBase : IntegrationTestBase
     /// <summary>Builds a single-operation Soroban transaction, simulates/assembles/signs it, and sends+polls.</summary>
     protected async Task<GetTransactionResponse> RunSorobanAsync(KeyPair source, Operation operation)
     {
-        var account = await Rpc.GetAccount(source.AccountId);
+        var account = await GetRpcAccountWithRetryAsync(source.AccountId);
         var tx = new TransactionBuilder(account).AddOperation(operation).Build();
         await SimulateAssembleSignAsync(tx, source);
         return await SendAndPollAsync(tx);
     }
 
-    /// <summary>Uploads the hello_world WASM and returns its hash (hex).</summary>
-    protected async Task<string> UploadHelloWorldAsync(KeyPair source)
+    /// <summary>Uploads a contract WASM and returns its hash (hex).</summary>
+    protected async Task<string> UploadWasmAsync(KeyPair source, byte[] wasm)
     {
-        var result = await RunSorobanAsync(source, new UploadContractOperation(HelloWorldWasm()));
+        var result = await RunSorobanAsync(source, new UploadContractOperation(wasm));
         result.WasmHash.Should().NotBeNull("upload should yield a WASM hash");
         return result.WasmHash!;
     }
@@ -127,11 +184,17 @@ public abstract class SorobanIntegrationTestBase : IntegrationTestBase
         return result.CreatedContractId!;
     }
 
-    /// <summary>Uploads + creates the hello_world contract; returns the deployed contract id.</summary>
-    protected async Task<string> DeployHelloWorldAsync(KeyPair source)
+    /// <summary>Uploads + creates a contract from its WASM bytes; returns the deployed contract id.</summary>
+    protected async Task<string> DeployContractAsync(KeyPair source, byte[] wasm)
     {
-        var wasmHash = await UploadHelloWorldAsync(source);
+        var wasmHash = await UploadWasmAsync(source, wasm);
         return await CreateContractAsync(source, wasmHash);
+    }
+
+    /// <summary>Uploads + creates the hello_world contract; returns the deployed contract id.</summary>
+    protected Task<string> DeployHelloWorldAsync(KeyPair source)
+    {
+        return DeployContractAsync(source, ReadWasm("soroban_hello_world_contract.wasm"));
     }
 
     /// <summary>Builds the ledger key for a contract's instance data entry (verbatim from SorobanHelpers).</summary>

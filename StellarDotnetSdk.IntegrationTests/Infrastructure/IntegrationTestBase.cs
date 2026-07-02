@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Exceptions;
+using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.IntegrationTests.Infrastructure;
@@ -35,6 +36,9 @@ public abstract class IntegrationTestBase
     /// <summary>Client used solely for Friendbot funding, pinned to a faucet-capable Horizon.</summary>
     private Server _fundingServer = null!;
 
+    /// <summary>HTTP client backing <see cref="Server" />; owned here so we can give it a per-request timeout.</summary>
+    private HttpClient _horizonHttp = null!;
+
     /// <summary>Client for reads and submissions; honors the optional Horizon bearer token.</summary>
     protected Server Server = null!;
 
@@ -42,7 +46,14 @@ public abstract class IntegrationTestBase
     public void BaseOneTimeSetUp()
     {
         Network.UseTestNetwork();
-        Server = new Server(TestnetConfig.HorizonUrl, TestnetConfig.HorizonToken);
+        // Give the main client a per-request timeout so a stalled Horizon call fails fast instead of
+        // hanging on HttpClient's ~100s default. The Friendbot client keeps the default — its own
+        // retry/Inconclusive path handles slow funding, and a timeout would throw past it.
+        _horizonHttp = new DefaultStellarSdkHttpClient(TestnetConfig.HorizonToken)
+        {
+            Timeout = TestnetConfig.HttpRequestTimeout,
+        };
+        Server = new Server(TestnetConfig.HorizonUrl, _horizonHttp);
         _fundingServer = new Server(TestnetConfig.FriendbotUrl);
     }
 
@@ -51,6 +62,7 @@ public abstract class IntegrationTestBase
     {
         Server.Dispose();
         _fundingServer.Dispose();
+        _horizonHttp.Dispose();
     }
 
     /// <summary>

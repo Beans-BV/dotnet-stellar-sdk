@@ -16,8 +16,10 @@ namespace StellarDotnetSdk.IntegrationTests.Sep;
 [CancelAfter(90_000)]
 public class Sep10AuthTests : IntegrationTestBase
 {
-    private const string HomeDomain = "integration.example.com";
-    private const string WebAuthDomain = "integration.example.com";
+    // Distinct values: the SDK uses the home domain (→ ManageData op name) and the web-auth domain
+    // (→ web_auth_domain op value) on different paths, so distinct values catch a swap regression.
+    private const string HomeDomain = "home.example.com";
+    private const string WebAuthDomain = "webauth.example.com";
 
     [Test]
     public void Sep10Loopback_BuildSignVerify_RoundTrips()

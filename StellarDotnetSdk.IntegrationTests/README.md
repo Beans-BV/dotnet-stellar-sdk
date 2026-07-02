@@ -23,6 +23,7 @@ these variables — URLs as repo `vars.*`, tokens as `secrets.*`:
 | `INTEGRATION_STELLAR_RPC_URL`   | `https://soroban-testnet.stellar.org` | Stellar RPC base URL (used from Phase 2) |
 | `INTEGRATION_STELLAR_RPC_TOKEN` | _(none)_                              | Bearer token for `INTEGRATION_STELLAR_RPC_URL` |
 | `INTEGRATION_SEP10_HOME_DOMAIN` | `testanchor.stellar.org`              | Home domain of the SEP-10 anchor for the real-anchor auth test |
+| `INTEGRATION_HTTP_TIMEOUT_SECONDS` | `45`                               | Per-request timeout for the Horizon + Stellar RPC clients (a stalled call fails fast instead of hanging on HttpClient's ~100s default) |
 
 ## Friendbot funding
 

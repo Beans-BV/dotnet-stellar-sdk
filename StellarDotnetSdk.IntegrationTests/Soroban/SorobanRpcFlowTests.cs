@@ -5,7 +5,6 @@ using StellarDotnetSdk.IntegrationTests.Infrastructure;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Requests.SorobanRpc;
 using StellarDotnetSdk.Responses.SorobanRpc;
-using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Transactions;
 
 namespace StellarDotnetSdk.IntegrationTests.Soroban;
@@ -25,25 +24,24 @@ public class SorobanRpcFlowTests : SorobanIntegrationTestBase
         var latest = await Rpc.GetLatestLedger();
         latest.Sequence.Should().BeGreaterThan(0);
 
-        // GetAccount (for a funded account)
+        // GetAccount (retries across the Horizon -> RPC ingestion handoff)
         var account = await CreateFundedAccountAsync();
-        var rpcAccount = await Rpc.GetAccount(account.AccountId);
+        var rpcAccount = await GetRpcAccountWithRetryAsync(account.AccountId);
         rpcAccount.AccountId.Should().Be(account.AccountId);
 
-        // Deploy + invoke drives Simulate -> Send -> GetTransaction internally.
-        var contractId = await DeployHelloWorldAsync(account);
-        var invokeAccount = await Rpc.GetAccount(account.AccountId);
+        // Deploy an events-emitting contract so the GetEvents step below actually validates retrieval
+        // (the hello_world contract emits no contract events).
+        var contractId = await DeployContractAsync(account, ReadWasm("soroban_events_contract.wasm"));
+        var invokeAccount = await GetRpcAccountWithRetryAsync(account.AccountId);
         var invokeTx = new TransactionBuilder(invokeAccount)
-            .AddOperation(new InvokeContractOperation(contractId, "hello", [new SCSymbol("rpc")]))
+            .AddOperation(new InvokeContractOperation(contractId, "increment", null))
             .Build();
 
-        // SimulateTransaction (explicit, to assert its fields)
-        var sim = await Rpc.SimulateTransaction(invokeTx);
-        sim.Error.Should().BeNull();
+        // SimulateTransaction (assemble + sign here; assert its fields without a second round-trip).
+        var sim = await SimulateAssembleSignAsync(invokeTx, account);
         sim.MinResourceFee.Should().NotBeNull();
 
         // SendTransaction + GetTransaction (poll)
-        await SimulateAssembleSignAsync(invokeTx, account);
         var final = await SendAndPollAsync(invokeTx);
         final.Status.Should().Be(TransactionInfo.TransactionStatus.SUCCESS);
 
@@ -51,14 +49,14 @@ public class SorobanRpcFlowTests : SorobanIntegrationTestBase
         var entries = await Rpc.GetLedgerEntries([CreateLedgerKeyContractData(contractId)]);
         entries.LedgerEntries.Should().NotBeNullOrEmpty();
 
-        // GetEvents from the ledger the contract was created in onward
+        // GetEvents from the invoke ledger (where `increment` published its event) onward, filtered to
+        // the contract — asserts an actual event was retrieved, not merely a non-null response.
         var request = new GetEventsRequest
         {
             StartLedger = final.Ledger,
             Filters = [new GetEventsRequest.EventFilter { ContractIds = [contractId] }],
         };
         var events = await Rpc.GetEvents(request);
-        events.Should().NotBeNull();
-        events.LatestLedger.Should().NotBeNull();
+        events.Events.Should().NotBeNullOrEmpty("the increment invoke should have published a contract event");
     }
 }

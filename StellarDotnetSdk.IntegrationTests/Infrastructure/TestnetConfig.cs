@@ -41,12 +41,28 @@ public static class TestnetConfig
     /// </summary>
     public static string Sep10HomeDomain => Env("INTEGRATION_SEP10_HOME_DOMAIN", "testanchor.stellar.org");
 
+    /// <summary>
+    ///     Per-request HTTP timeout for the main Horizon <c>Server</c> and the Stellar RPC client.
+    ///     The SDK's default client sets no timeout (HttpClient's ~100s default), so a stalled call
+    ///     would hang far past a fixture's budget; this caps each request. Env override is in seconds.
+    ///     Deliberately NOT applied to the Friendbot funding client, which has its own retry/Inconclusive
+    ///     path (a timeout there would throw past it).
+    /// </summary>
+    public static TimeSpan HttpRequestTimeout =>
+        TimeSpan.FromSeconds(EnvInt("INTEGRATION_HTTP_TIMEOUT_SECONDS", 45));
+
     public static string NetworkPassphrase => Network.TestnetPassphrase;
 
     private static string Env(string key, string fallback)
     {
         var value = Environment.GetEnvironmentVariable(key);
         return string.IsNullOrWhiteSpace(value) ? fallback : value;
+    }
+
+    private static int EnvInt(string key, int fallback)
+    {
+        var value = Environment.GetEnvironmentVariable(key);
+        return int.TryParse(value, out var parsed) && parsed > 0 ? parsed : fallback;
     }
 
     private static string? EnvOrNull(string key)

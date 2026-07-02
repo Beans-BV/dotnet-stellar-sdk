@@ -9,7 +9,7 @@ using StellarDotnetSdk.Soroban;
 namespace StellarDotnetSdk.IntegrationTests.Soroban;
 
 [TestFixture]
-[CancelAfter(240_000)]
+[CancelAfter(300_000)]
 public class InvokeHostFunctionTests : SorobanIntegrationTestBase
 {
     [Test]
