@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using StellarDotnetSdk.Compatibility;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
@@ -54,7 +55,7 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
     /// <param name="account">Account for which to get transactions</param>
     public TransactionsRequestBuilder ForAccount(string account)
     {
-        ArgumentException.ThrowIfNullOrEmpty(account);
+        Throw.IfNullOrEmpty(account, nameof(account));
 
         if (!StrKey.IsValidEd25519PublicKey(account))
         {

@@ -6,6 +6,7 @@ using System.Buffers.Binary;
 using System.IO;
 using System.Linq;
 using System.Text;
+using StellarDotnetSdk.Xdr.Compatibility;
 
 namespace <%= @namespace %>;
 
@@ -25,7 +26,7 @@ public class XdrDataInputStream
     /// <param name="bytes"></param>
     public XdrDataInputStream(byte[] bytes)
     {
-        ArgumentNullException.ThrowIfNull(bytes);
+        Throw.IfNull(bytes, nameof(bytes));
         _bytes = bytes;
         _stream = new MemoryStream(bytes, false);
     }
@@ -37,7 +38,7 @@ public class XdrDataInputStream
     public byte Read()
     {
         Span<byte> buffer = stackalloc byte[1];
-        _stream.ReadExactly(buffer);
+        _stream.ReadExactlyCompat(buffer);
         return buffer[0];
     }
 
@@ -85,14 +86,14 @@ public class XdrDataInputStream
     internal long ReadLong()
     {
         Span<byte> buffer = stackalloc byte[sizeof(long)];
-        _stream.ReadExactly(buffer);
+        _stream.ReadExactlyCompat(buffer);
         return BinaryPrimitives.ReadInt64BigEndian(buffer);
     }
 
     internal ulong ReadULong()
     {
         Span<byte> buffer = stackalloc byte[sizeof(ulong)];
-        _stream.ReadExactly(buffer);
+        _stream.ReadExactlyCompat(buffer);
         return BinaryPrimitives.ReadUInt64BigEndian(buffer);
     }
 
@@ -103,7 +104,7 @@ public class XdrDataInputStream
     public int ReadInt()
     {
         Span<byte> buffer = stackalloc byte[sizeof(int)];
-        _stream.ReadExactly(buffer);
+        _stream.ReadExactlyCompat(buffer);
         return BinaryPrimitives.ReadInt32BigEndian(buffer);
     }
 
@@ -114,7 +115,7 @@ public class XdrDataInputStream
     public uint ReadUInt()
     {
         Span<byte> buffer = stackalloc byte[sizeof(uint)];
-        _stream.ReadExactly(buffer);
+        _stream.ReadExactlyCompat(buffer);
         return BinaryPrimitives.ReadUInt32BigEndian(buffer);
     }
 
@@ -221,7 +222,7 @@ public class XdrDataInputStream
         }
 
         var result = new byte[len];
-        _stream.ReadExactly(result);
+        _stream.ReadExactlyCompat(result);
 
         if (tail == 0)
         {
@@ -229,7 +230,7 @@ public class XdrDataInputStream
         }
 
         var tailBytes = new byte[tailLength];
-        _stream.ReadExactly(tailBytes);
+        _stream.ReadExactlyCompat(tailBytes);
 
         if (tailBytes.Any(a => a != 0))
         {

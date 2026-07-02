@@ -79,14 +79,14 @@ public static class ClaimableBalanceIdUtils
     {
         var os = new XdrDataOutputStream();
         ClaimableBalanceID.Encode(os, xdr);
-        return Convert.ToHexString(os.ToArray());
+        return Util.BytesToHex(os.ToArray());
     }
 
     internal static ClaimableBalanceID FromHexString(string hex)
     {
         try
         {
-            var inputStream = new XdrDataInputStream(Convert.FromHexString(hex));
+            var inputStream = new XdrDataInputStream(Util.HexToBytes(hex));
             return ClaimableBalanceID.Decode(inputStream);
         }
         catch

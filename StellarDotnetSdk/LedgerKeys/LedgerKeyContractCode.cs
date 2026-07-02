@@ -14,7 +14,7 @@ public class LedgerKeyContractCode : LedgerKey
     ///     Use this to fetch contract wasm byte-code.
     /// </summary>
     /// <param name="wasmHash">A hex-encoded string of the Wasm bytes of a compiled smart contract.</param>
-    public LedgerKeyContractCode(string wasmHash) : this(Convert.FromHexString(wasmHash))
+    public LedgerKeyContractCode(string wasmHash) : this(Util.HexToBytes(wasmHash))
     {
     }
 
@@ -58,6 +58,6 @@ public class LedgerKeyContractCode : LedgerKey
     /// <param name="xdr">The XDR ledger key contract code object.</param>
     public static LedgerKeyContractCode FromXdr(Xdr.LedgerKey.LedgerKeyContractCode xdr)
     {
-        return new LedgerKeyContractCode(Convert.ToHexString(xdr.Hash.InnerValue));
+        return new LedgerKeyContractCode(Util.BytesToHex(xdr.Hash.InnerValue));
     }
 }

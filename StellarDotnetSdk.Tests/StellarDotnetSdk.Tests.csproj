@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFrameworks>net10.0;net8.0</TargetFrameworks>
         <IsPackable>false</IsPackable>
         <Nullable>enable</Nullable>
         <LangVersion>12</LangVersion>
@@ -26,6 +26,10 @@
         <PackageReference Include="MSTest.TestAdapter" Version="2.2.10"/>
         <PackageReference Include="MSTest.TestFramework" Version="2.2.10"/>
         <PackageReference Include="SpecFlow.MsTest" Version="3.9.74"/>
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+        <PackageReference Include="NSec.Cryptography" Version="26.4.0"/>
+        <PackageReference Include="Sodium.Core" Version="1.4.1"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\StellarDotnetSdk\StellarDotnetSdk.csproj"/>
@@ -469,13 +473,5 @@
         <None Update="TestData\Responses\Operations\invokeHostFunction.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Remove="KeyPairBIP39Tests.cs"/>
-        <Compile Remove="KeyPairTest.cs"/>
-        <Compile Remove="MuxedAccountTest.cs"/>
-        <Compile Remove="AssetAmountTest.cs"/>
-        <Compile Remove="AssetTest.cs"/>
-        <Compile Remove="TransactionPreconditionsTest.cs"/>
     </ItemGroup>
 </Project>

@@ -70,7 +70,20 @@ public class DefaultStellarSdkHttpClient : HttpClient
         HttpResilienceOptions? resilienceOptions,
         HttpMessageHandler? innerHandler)
     {
-        var handler = innerHandler ?? new SocketsHttpHandler();
+        HttpMessageHandler handler;
+        if (innerHandler != null)
+        {
+            handler = innerHandler;
+        }
+        else
+        {
+#if NET8_0_OR_GREATER
+            handler = new SocketsHttpHandler();
+#else
+            // SocketsHttpHandler is not available on netstandard2.1 reference assemblies.
+            handler = new HttpClientHandler();
+#endif
+        }
 
         // Add resilience handler if any resilience feature is enabled (retries, circuit breaker, or
         // timeout). Status codes alone enable nothing — see HasAnyResilienceFeatureEnabled's remarks.

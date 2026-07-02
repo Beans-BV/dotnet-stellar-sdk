@@ -227,10 +227,7 @@ public class KeyPairTest
         var sig = keypair.SignPayloadDecorated(payload);
 
         // Assert
-        for (var i = 0; i < sig.Hint.InnerValue.Length; i++)
-        {
-            sig.Hint.InnerValue[i] = expectedBytes[i];
-        }
+        CollectionAssert.AreEqual(expectedBytes, sig.Hint.InnerValue);
     }
 
 
@@ -250,9 +247,6 @@ public class KeyPairTest
         var sig = keypair.SignPayloadDecorated(payload);
 
         // Assert
-        for (var i = 0; i < sig.Hint.InnerValue.Length; i++)
-        {
-            sig.Hint.InnerValue[i] = expectedBytes[i];
-        }
+        CollectionAssert.AreEqual(expectedBytes, sig.Hint.InnerValue);
     }
 }

@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.Compatibility;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
@@ -51,7 +52,7 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
     /// <exception cref="ArgumentNullException"></exception>
     public OffersRequestBuilder Offers(OffersRequestOptions options)
     {
-        ArgumentNullException.ThrowIfNull(options);
+        Throw.IfNull(options, nameof(options));
 
         if (options.Seller != null)
         {
@@ -79,7 +80,7 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
     /// <exception cref="ArgumentNullException">Thrown when <c>optionsAction</c> is null.</exception>
     public OffersRequestBuilder Offers(Action<OffersRequestOptions> optionsAction)
     {
-        ArgumentNullException.ThrowIfNull(optionsAction);
+        Throw.IfNull(optionsAction, nameof(optionsAction));
 
         var options = new OffersRequestOptions();
         optionsAction.Invoke(options);

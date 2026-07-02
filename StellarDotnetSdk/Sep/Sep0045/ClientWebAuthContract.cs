@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Compatibility;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Sep.Sep0001;
@@ -87,12 +88,12 @@ public class ClientWebAuthContract : IDisposable
         uint? signatureExpirationLedgers = null,
         HttpResilienceOptions? resilienceOptions = null)
     {
-        ArgumentException.ThrowIfNullOrEmpty(authEndpoint);
-        ArgumentException.ThrowIfNullOrEmpty(webAuthContractId);
-        ArgumentNullException.ThrowIfNull(network);
-        ArgumentException.ThrowIfNullOrEmpty(serverSigningKey);
-        ArgumentException.ThrowIfNullOrEmpty(serverHomeDomain);
-        ArgumentException.ThrowIfNullOrEmpty(sorobanRpcUrl);
+        Throw.IfNullOrEmpty(authEndpoint, nameof(authEndpoint));
+        Throw.IfNullOrEmpty(webAuthContractId, nameof(webAuthContractId));
+        Throw.IfNull(network, nameof(network));
+        Throw.IfNullOrEmpty(serverSigningKey, nameof(serverSigningKey));
+        Throw.IfNullOrEmpty(serverHomeDomain, nameof(serverHomeDomain));
+        Throw.IfNullOrEmpty(sorobanRpcUrl, nameof(sorobanRpcUrl));
 
         if (!Uri.TryCreate(authEndpoint, UriKind.Absolute, out var endpointUri))
         {
@@ -255,7 +256,7 @@ public class ClientWebAuthContract : IDisposable
         string? homeDomain = null,
         string? clientDomain = null)
     {
-        ArgumentException.ThrowIfNullOrEmpty(clientAccountId);
+        Throw.IfNullOrEmpty(clientAccountId, nameof(clientAccountId));
 
         var uri = new UriBuilder(_authEndpoint);
         var q = new List<string> { $"account={Uri.EscapeDataString(clientAccountId)}" };
@@ -374,8 +375,8 @@ public class ClientWebAuthContract : IDisposable
         string? clientDomain = null,
         string? homeDomain = null)
     {
-        ArgumentException.ThrowIfNullOrEmpty(authorizationEntriesXdr);
-        ArgumentException.ThrowIfNullOrEmpty(clientAccountId);
+        Throw.IfNullOrEmpty(authorizationEntriesXdr, nameof(authorizationEntriesXdr));
+        Throw.IfNullOrEmpty(clientAccountId, nameof(clientAccountId));
 
         var parsed = Sep45Challenge.ReadChallenge(
             authorizationEntriesXdr,
@@ -472,7 +473,7 @@ public class ClientWebAuthContract : IDisposable
         ClientDomainEntrySigningDelegate? clientDomainSigningDelegate = null,
         string? clientDomainAccountId = null)
     {
-        ArgumentException.ThrowIfNullOrEmpty(authorizationEntriesXdr);
+        Throw.IfNullOrEmpty(authorizationEntriesXdr, nameof(authorizationEntriesXdr));
         var entries = Sep45Challenge.DecodeAuthorizationEntries(authorizationEntriesXdr);
         return await SignDecodedEntriesAsync(
             entries, clientAccountId, signers, clientDomainAccountKeyPair,
@@ -489,8 +490,8 @@ public class ClientWebAuthContract : IDisposable
         ClientDomainEntrySigningDelegate? clientDomainSigningDelegate,
         string? clientDomainAccountId)
     {
-        ArgumentException.ThrowIfNullOrEmpty(clientAccountId);
-        ArgumentNullException.ThrowIfNull(signers);
+        Throw.IfNullOrEmpty(clientAccountId, nameof(clientAccountId));
+        Throw.IfNull(signers, nameof(signers));
 
         // The client-domain entry is signed either locally (clientDomainAccountKeyPair, which carries its
         // own account id) or remotely (clientDomainSigningDelegate). Remote signing additionally needs
@@ -610,7 +611,7 @@ public class ClientWebAuthContract : IDisposable
     public async Task<string> SendSignedChallengeAsync(
         string signedAuthorizationEntriesXdr, bool useFormUrlEncoded = true)
     {
-        ArgumentException.ThrowIfNullOrEmpty(signedAuthorizationEntriesXdr);
+        Throw.IfNullOrEmpty(signedAuthorizationEntriesXdr, nameof(signedAuthorizationEntriesXdr));
 
         using var req = new HttpRequestMessage(HttpMethod.Post, new Uri(_authEndpoint));
         if (useFormUrlEncoded)
@@ -758,8 +759,8 @@ public class ClientWebAuthContract : IDisposable
         KeyPair? clientDomainAccountKeyPair = null,
         ClientDomainEntrySigningDelegate? clientDomainSigningDelegate = null)
     {
-        ArgumentException.ThrowIfNullOrEmpty(clientAccountId);
-        ArgumentNullException.ThrowIfNull(signers);
+        Throw.IfNullOrEmpty(clientAccountId, nameof(clientAccountId));
+        Throw.IfNull(signers, nameof(signers));
 
         var resolvedClientDomainAccountId = clientDomainAccountKeyPair?.AccountId;
         if (resolvedClientDomainAccountId == null && clientDomainSigningDelegate != null)

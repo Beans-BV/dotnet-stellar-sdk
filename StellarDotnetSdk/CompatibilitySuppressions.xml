@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- https://learn.microsoft.com/dotnet/fundamentals/package-validation/diagnostic-ids -->
+<Suppressions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.get_BirthDate</Target>
+    <Left>lib/netstandard2.1/StellarDotnetSdk.dll</Left>
+    <Right>lib/net8.0/StellarDotnetSdk.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.get_IdExpirationDate</Target>
+    <Left>lib/netstandard2.1/StellarDotnetSdk.dll</Left>
+    <Right>lib/net8.0/StellarDotnetSdk.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:StellarDotnetSdk.Sep.Sep0009.NaturalPersonKycFields.get_IdIssueDate</Target>
+    <Left>lib/netstandard2.1/StellarDotnetSdk.dll</Left>
+    <Right>lib/net8.0/StellarDotnetSdk.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:StellarDotnetSdk.Sep.Sep0009.OrganizationKycFields.get_RegistrationDate</Target>
+    <Left>lib/netstandard2.1/StellarDotnetSdk.dll</Left>
+    <Right>lib/net8.0/StellarDotnetSdk.dll</Right>
+  </Suppression>
+</Suppressions>

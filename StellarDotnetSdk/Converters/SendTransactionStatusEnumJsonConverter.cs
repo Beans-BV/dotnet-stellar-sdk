@@ -1,5 +1,7 @@
 using System;
+#if NET8_0_OR_GREATER
 using System.Collections.Frozen;
+#endif
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -20,14 +22,19 @@ public class SendTransactionStatusEnumJsonConverter : JsonConverter<SendTransact
     /// <summary>
     ///     Frozen lookup table mapping the Soroban RPC wire-format status strings to enum values.
     /// </summary>
-    private static readonly FrozenDictionary<string, SendTransactionResponse.SendTransactionStatus> StatusByName =
+    private static readonly IReadOnlyDictionary<string, SendTransactionResponse.SendTransactionStatus> StatusByName =
         new Dictionary<string, SendTransactionResponse.SendTransactionStatus>(StringComparer.Ordinal)
         {
             ["PENDING"] = SendTransactionResponse.SendTransactionStatus.PENDING,
             ["TRY_AGAIN_LATER"] = SendTransactionResponse.SendTransactionStatus.TRY_AGAIN_LATER,
             ["DUPLICATE"] = SendTransactionResponse.SendTransactionStatus.DUPLICATE,
             ["ERROR"] = SendTransactionResponse.SendTransactionStatus.ERROR,
-        }.ToFrozenDictionary(StringComparer.Ordinal);
+        }
+#if NET8_0_OR_GREATER
+        .ToFrozenDictionary(StringComparer.Ordinal);
+#else
+        ;
+#endif
 
     /// <inheritdoc />
     public override SendTransactionResponse.SendTransactionStatus Read(ref Utf8JsonReader reader, Type typeToConvert,

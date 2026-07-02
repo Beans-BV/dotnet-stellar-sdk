@@ -36,14 +36,21 @@ namespace StellarDotnetSdk.Tests;
 
 public static class Utils
 {
+    private const string SourceTestProjectName = "StellarDotnetSdk.Tests";
+
     /// <summary>
     ///     Gets the root path of the test project (StellarDotnetSdk.Tests directory).
     ///     This is calculated by going up 4 levels from AppContext.BaseDirectory
     ///     (bin/Debug/net8.0 -> Debug -> bin -> StellarDotnetSdk.Tests).
+    ///     When <c>TEST_SDK_NETSTANDARD21</c> is defined, test data is resolved from the host output
+    ///     directory where <c>TestData</c> is copied at build time.
     /// </summary>
     /// <returns>The absolute path to the test project root directory.</returns>
     private static string GetTestProjectRoot()
     {
+#if TEST_SDK_NETSTANDARD21
+        return AppContext.BaseDirectory;
+#else
         var baseDir = AppContext.BaseDirectory;
         // Go up 4 levels: bin/Debug/net8.0 -> Debug -> bin -> StellarDotnetSdk.Tests
         for (var i = 0; i < 4; i++)
@@ -52,6 +59,23 @@ public static class Utils
         }
 
         return baseDir ?? ".";
+#endif
+    }
+
+    /// <summary>
+    ///     Maps a compiled test source file path to its directory relative to <see cref="SourceTestProjectName" />.
+    /// </summary>
+    private static string GetTestRelativeDirectoryFromSourcePath(string testFilePath)
+    {
+        var markerIndex = testFilePath.IndexOf(SourceTestProjectName, StringComparison.Ordinal);
+        if (markerIndex < 0)
+        {
+            return string.Empty;
+        }
+
+        var afterProject = testFilePath[(markerIndex + SourceTestProjectName.Length)..]
+            .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        return Path.GetDirectoryName(afterProject) ?? string.Empty;
     }
 
     /// <summary>
@@ -87,6 +111,12 @@ public static class Utils
         {
             return Path.Combine("TestData", jsonFilePath);
         }
+
+#if TEST_SDK_NETSTANDARD21
+        // Source files are compiled from StellarDotnetSdk.Tests; TestData mirrors that tree under output.
+        var ns21RelativeDirectory = GetTestRelativeDirectoryFromSourcePath(testFilePath);
+        return Path.Combine("TestData", ns21RelativeDirectory, jsonFilePath);
+#else
         // testFilePath would be something like C:\workspace\dotnet-stellar-sdk\StellarDotnetSdk.Tests\Responses\Effects\LiquidityPoolEffectResponseTest.cs on Windows
         // testFileDirectoryPath would be something like C:\workspace\dotnet-stellar-sdk\StellarDotnetSdk.Tests\Responses\Effects\ on Windows
         // AppContext.BaseDirectory would be /home/runner/work/dotnet-stellar-sdk/dotnet-stellar-sdk/StellarDotnetSdk.Tests/bin/Release/net8.0 on Linux
@@ -99,6 +129,7 @@ public static class Utils
         var testRelativeDirectoryPath = Path.GetRelativePath(rootPath, testFileDirectoryPath);
 
         return Path.Combine("TestData", testRelativeDirectoryPath, jsonFilePath);
+#endif
     }
 
     public static TransactionResult AssertResultOfType(string xdr, Type resultType, bool isSuccess)

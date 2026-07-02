@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using StellarDotnetSdk.Compatibility;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses;

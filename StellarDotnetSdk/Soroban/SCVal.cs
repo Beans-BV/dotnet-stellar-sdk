@@ -2043,7 +2043,7 @@ public class ContractExecutableWasm : ContractExecutable
     /// <returns>A <see cref="ContractExecutableWasm" /> instance.</returns>
     public static ContractExecutableWasm FromXdr(Xdr.ContractExecutable xdr)
     {
-        return new ContractExecutableWasm(Convert.ToHexString(xdr.WasmHash.InnerValue));
+        return new ContractExecutableWasm(Util.BytesToHex(xdr.WasmHash.InnerValue));
     }
 
     /// <summary>
@@ -2058,7 +2058,7 @@ public class ContractExecutableWasm : ContractExecutable
             {
                 InnerValue = ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_WASM,
             },
-            WasmHash = new Hash(Convert.FromHexString(WasmHash)),
+            WasmHash = new Hash(Util.HexToBytes(WasmHash)),
         };
     }
 }

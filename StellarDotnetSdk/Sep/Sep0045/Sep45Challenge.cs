@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using StellarDotnetSdk.Accounts;
+using StellarDotnetSdk.Compatibility;
 using StellarDotnetSdk.Sep.Sep0045.Exceptions;
 using StellarDotnetSdk.Xdr;
 using Int64 = StellarDotnetSdk.Xdr.Int64;
@@ -56,8 +57,8 @@ public static class Sep45Challenge
         SorobanAuthorizationEntry entry,
         Network network)
     {
-        ArgumentNullException.ThrowIfNull(entry);
-        ArgumentNullException.ThrowIfNull(network);
+        Throw.IfNull(entry, nameof(entry));
+        Throw.IfNull(network, nameof(network));
 
         if (entry.Credentials.Discriminant.InnerValue !=
             SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS)
@@ -76,7 +77,7 @@ public static class Sep45Challenge
             },
             SorobanAuthorization = new HashIDPreimage.HashIDPreimageSorobanAuthorization
             {
-                NetworkID = new Hash(SHA256.HashData(Encoding.UTF8.GetBytes(network.NetworkPassphrase))),
+                NetworkID = new Hash(Util.Hash(Encoding.UTF8.GetBytes(network.NetworkPassphrase))),
                 Nonce = new Int64(addressCreds.Nonce.InnerValue),
                 SignatureExpirationLedger = new Uint32(addressCreds.SignatureExpirationLedger.InnerValue),
                 Invocation = entry.RootInvocation,
@@ -85,7 +86,7 @@ public static class Sep45Challenge
 
         var stream = new XdrDataOutputStream();
         HashIDPreimage.Encode(stream, preimage);
-        return SHA256.HashData(stream.ToArray());
+        return Util.Hash(stream.ToArray());
     }
 
     /// <summary>
@@ -101,9 +102,9 @@ public static class Sep45Challenge
         string serverAccountId,
         Network network)
     {
-        ArgumentNullException.ThrowIfNull(serverEntry);
-        ArgumentException.ThrowIfNullOrEmpty(serverAccountId);
-        ArgumentNullException.ThrowIfNull(network);
+        Throw.IfNull(serverEntry, nameof(serverEntry));
+        Throw.IfNullOrEmpty(serverAccountId, nameof(serverAccountId));
+        Throw.IfNull(network, nameof(network));
 
         if (serverEntry.Credentials.Discriminant.InnerValue !=
             SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS)
@@ -196,10 +197,10 @@ public static class Sep45Challenge
         {
             throw new InvalidArgumentsException("authorizationEntriesXdr must not be empty");
         }
-        ArgumentException.ThrowIfNullOrEmpty(serverAccountId);
-        ArgumentException.ThrowIfNullOrEmpty(webAuthContractId);
-        ArgumentNullException.ThrowIfNull(homeDomains);
-        ArgumentException.ThrowIfNullOrEmpty(webAuthDomain);
+        Throw.IfNullOrEmpty(serverAccountId, nameof(serverAccountId));
+        Throw.IfNullOrEmpty(webAuthContractId, nameof(webAuthContractId));
+        Throw.IfNull(homeDomains, nameof(homeDomains));
+        Throw.IfNullOrEmpty(webAuthDomain, nameof(webAuthDomain));
 
         var entries = DecodeEntriesFromBase64(authorizationEntriesXdr);
         if (entries.Length < 2)

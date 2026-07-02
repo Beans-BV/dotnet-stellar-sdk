@@ -142,7 +142,7 @@ public class TransactionInfo
         {
             if (ResultValue is SCBytes bytes)
             {
-                return Convert.ToHexString(bytes.InnerValue);
+                return Util.BytesToHex(bytes.InnerValue);
             }
 
             return null;
