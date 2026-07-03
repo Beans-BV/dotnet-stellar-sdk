@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using StellarDotnetSdk.Converters;
 
 namespace StellarDotnetSdk.Sep.Sep0045;
 
@@ -27,9 +27,10 @@ public sealed record ChallengeForContractsResponse
 /// <remarks>
 ///     This response is an adversarial-server surface (its <c>authorization_entries</c> blob is what the
 ///     client signs), so the converter preserves the SDK-wide duplicate-property guard
-///     (<see cref="StellarDotnetSdk.Converters.JsonOptions" /> sets <c>AllowDuplicateProperties = false</c>):
-///     a raw <see cref="JsonDocument" /> is last-wins by default, so duplicates are rejected explicitly
-///     here (case-insensitively, like the SDK's guard) rather than silently overriding the signed blob.
+///     (<see cref="JsonOptions" /> sets <c>AllowDuplicateProperties = false</c>):
+///     a raw <see cref="JsonDocument" /> is last-wins by default, so duplicates are rejected via
+///     <see cref="JsonDuplicatePropertyGuard" /> (case-insensitively, like the SDK's guard) rather than
+///     silently overriding the signed blob.
 ///     Value lookup itself remains exact-name (snake/camel), mirroring the peer SDK's two-key lookup.
 /// </remarks>
 internal sealed class ChallengeForContractsResponseConverter : JsonConverter<ChallengeForContractsResponse>
@@ -44,21 +45,15 @@ internal sealed class ChallengeForContractsResponseConverter : JsonConverter<Cha
             return new ChallengeForContractsResponse();
         }
 
+        // Reject duplicate property names — a raw JsonDocument is last-wins, which would otherwise
+        // bypass the AllowDuplicateProperties = false guard the SDK applies to every other response.
+        JsonDuplicatePropertyGuard.EnsureNoDuplicateProperties(root, "SEP-45 challenge response");
+
         string? snakeAuthorizationEntries = null, camelAuthorizationEntries = null;
         string? snakeNetworkPassphrase = null, camelNetworkPassphrase = null;
-        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var property in root.EnumerateObject())
         {
-            // Reject duplicate property names (case-insensitively, matching the SDK's case-insensitive
-            // property matching) — a raw JsonDocument is last-wins, which would otherwise bypass the
-            // AllowDuplicateProperties = false guard the SDK applies to every other response.
-            if (!seen.Add(property.Name))
-            {
-                throw new JsonException(
-                    $"Duplicate property '{property.Name}' in SEP-45 challenge response.");
-            }
-
             if (property.Value.ValueKind != JsonValueKind.String)
             {
                 continue;

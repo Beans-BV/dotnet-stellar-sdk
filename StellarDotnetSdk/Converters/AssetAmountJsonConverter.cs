@@ -9,6 +9,13 @@ namespace StellarDotnetSdk.Converters;
 ///     JSON converter for AssetAmount.
 ///     Handles conversion between JSON objects and AssetAmount instances.
 /// </summary>
+/// <remarks>
+///     Duplicate JSON property names are always rejected with a <see cref="JsonException" />, matched
+///     case-insensitively. This is intentional hardening for financial fields and does not honor the
+///     <see cref="JsonSerializerOptions" /> passed to <see cref="Read" /> — neither
+///     <see cref="JsonSerializerOptions.AllowDuplicateProperties" /> nor
+///     <see cref="JsonSerializerOptions.PropertyNameCaseInsensitive" /> changes it.
+/// </remarks>
 public class AssetAmountJsonConverter : JsonConverter<AssetAmount>
 {
     /// <inheritdoc />
@@ -25,6 +32,7 @@ public class AssetAmountJsonConverter : JsonConverter<AssetAmount>
 
         using var jsonDocument = JsonDocument.ParseValue(ref reader);
         var jsonObject = jsonDocument.RootElement;
+        JsonDuplicatePropertyGuard.EnsureNoDuplicateProperties(jsonObject, nameof(AssetAmount));
 
         if (!jsonObject.TryGetProperty("asset", out var assetElement))
         {

@@ -10,6 +10,13 @@ namespace StellarDotnetSdk.Converters;
 ///     JSON converter for Reserve.
 ///     Handles conversion between JSON objects and Reserve instances.
 /// </summary>
+/// <remarks>
+///     Duplicate JSON property names are always rejected with a <see cref="JsonException" />, matched
+///     case-insensitively. This is intentional hardening for financial fields and does not honor the
+///     <see cref="JsonSerializerOptions" /> passed to <see cref="Read" /> — neither
+///     <see cref="JsonSerializerOptions.AllowDuplicateProperties" /> nor
+///     <see cref="JsonSerializerOptions.PropertyNameCaseInsensitive" /> changes it.
+/// </remarks>
 public class ReserveJsonConverter : JsonConverter<Reserve>
 {
     /// <inheritdoc />
@@ -26,6 +33,7 @@ public class ReserveJsonConverter : JsonConverter<Reserve>
 
         string? assetName = null;
         string? amount = null;
+        var seen = JsonDuplicatePropertyGuard.CreateSeenSet();
 
         while (reader.Read())
         {
@@ -36,7 +44,8 @@ public class ReserveJsonConverter : JsonConverter<Reserve>
 
             if (reader.TokenType == JsonTokenType.PropertyName)
             {
-                var propertyName = reader.GetString();
+                var propertyName = reader.GetString()!;
+                JsonDuplicatePropertyGuard.MarkSeen(seen, propertyName, nameof(Reserve));
                 reader.Read();
                 switch (propertyName)
                 {
@@ -45,6 +54,12 @@ public class ReserveJsonConverter : JsonConverter<Reserve>
                         break;
                     case "amount":
                         amount = reader.GetString();
+                        break;
+                    default:
+                        // Skip the whole value: an unrecognized object/array value would otherwise be
+                        // walked as if its keys were top-level Reserve properties, corrupting the
+                        // duplicate guard's seen-set and desynchronizing the reader.
+                        reader.Skip();
                         break;
                 }
             }

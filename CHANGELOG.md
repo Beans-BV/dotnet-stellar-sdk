@@ -54,11 +54,19 @@ All notable changes to this project are documented here. The format is based on
 - **Breaking:** the SDK references the standalone `System.Text.Json` 10.0.6 package on `net8.0` and
   `netstandard2.1` (`net10.0` uses the built-in STJ 10), so `AllowDuplicateProperties = false` and
   `RespectNullableAnnotations = true` on `JsonOptions.DefaultOptions` / `KycJsonOptions.Default`
-  apply on **every** target framework: a response carrying a duplicate JSON property is rejected
-  instead of last-write-wins, and nullability annotations are enforced uniformly. This is breaking
-  in two ways — payloads that previously deserialized on `net8.0`/`netstandard2.1` (duplicate keys,
-  or `null` for a non-nullable member) are now rejected, and consumers on `net8.0`/`netstandard2.1`
-  inherit a transitive `System.Text.Json >= 10.0.6` dependency floor
+  apply on **every** target framework: a duplicate JSON property on a POCO-mapped field now throws
+  `JsonException` instead of last-write-wins (fields parsed by the SDK's hand-written converters,
+  e.g. `Reserve`/`Asset`/`AssetAmount`, are outside this option's reach but are now guarded
+  separately — see the Security entry below), and explicit `null` for a non-nullable member also
+  throws `JsonException`. For `KycJsonOptions.Default`, duplicate-property rejection is new on every
+  TFM including `net10.0` (it previously enforced only nullability, and only on `net10.0`). This is
+  breaking in two ways — payloads that previously deserialized on `net8.0`/`netstandard2.1`
+  (duplicate keys, or explicit `null` for a non-nullable member) are now rejected, and consumers on
+  `net8.0`/`netstandard2.1` inherit a transitive `System.Text.Json >= 10.0.6` floor plus its own
+  dependencies (`System.Text.Encodings.Web` and `System.IO.Pipelines` 10.0.6 on both TFMs; on
+  `netstandard2.1` also `Microsoft.Bcl.AsyncInterfaces` 10.0.6 — with `System.IO.Pipelines` net-new
+  relative to the previous `System.Text.Json` 8.0.5 reference, one more DLL for consumers who vendor
+  dependencies by hand, e.g. Unity)
   ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) follow-up).
 - `KeyPair.Verify` no longer swallows every exception. Malformed or attacker-supplied signatures still
   return `false` (`ArgumentException`, `FormatException`, and `CryptographicException` are caught), but
@@ -69,6 +77,21 @@ All notable changes to this project are documented here. The format is based on
   path only on `net8.0`/`net10.0` — use `SendAsync` on `netstandard2.1`
   ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195)).
 
+### Security
+
+- **Breaking:** converters that hand-parse JSON now reject objects that define the same property more
+  than once (throwing `JsonException`, matched case-insensitively), on every target framework — payloads
+  with duplicate keys that previously deserialized last-wins are now rejected. The serializer-level
+  `AllowDuplicateProperties = false` guard on `JsonOptions.DefaultOptions` is enforced by the built-in
+  object mapper only, so fields read manually by a converter were last-wins: a malformed or adversarial
+  Horizon response could silently override a financial field by repeating its key. Hardened converters:
+  `AssetAmount`, `Reserve`, `LiquidityPoolClaimableAssetAmount`, `Asset` (asset-code/issuer
+  substitution), `Predicate` (claimable-balance time locks, checked at every nesting level), and the
+  HATEOAS `Link` converter (pagination `href`). The two remaining hand-parsing converters — the
+  polymorphic `OperationResponse`/`EffectResponse` converters — read only the `type_i` discriminator by
+  hand and re-deserialize the payload through the object mapper, so duplicates on their fields are
+  rejected by the serializer-level guard without a converter-level one.
+
 ### Removed
 
 - **Breaking:** `SorobanSourceAccountCredentials.ToSorobanCredentialsXdr()` and
@@ -77,6 +100,16 @@ All notable changes to this project are documented here. The format is based on
 
 ### Fixed
 
+- `PredicateJsonConverter` no longer leaks `FormatException`/`OverflowException` for malformed
+  `rel_before`/`abs_before_epoch` values — every malformed predicate now throws `JsonException`, the
+  SDK's documented deserialization failure mode. It also rejects `and`/`or` predicate arrays that do
+  not contain exactly 2 elements (Stellar's `ClaimPredicate` AND/OR are strictly binary; extra
+  elements were previously dropped silently) and validates the arity before deserializing any element,
+  so an oversized array is no longer fully materialized.
+- The `Asset` and `Reserve` converters now skip unrecognized properties with object/array values
+  whole. Previously the reader descended into such values and treated their nested keys as top-level
+  properties, which could reject valid payloads with a misleading duplicate-property error (the
+  malformed-payload path always failed closed — no silent corruption was possible).
 - `Util.Hash` no longer leaks a `SHA256` instance on every call: it uses the static
   `SHA256.HashData` on `net8.0`/`net10.0` and a properly disposed instance on `netstandard2.1`
   ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195)).

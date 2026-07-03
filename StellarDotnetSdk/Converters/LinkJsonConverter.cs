@@ -12,6 +12,11 @@ namespace StellarDotnetSdk.Converters;
 /// <typeparam name="T">The response type this link refers to</typeparam>
 /// <remarks>
 ///     Performance: Uses direct instantiation (no reflection) for Native AOT compatibility.
+///     Duplicate JSON property names are always rejected with a <see cref="JsonException" />, matched
+///     case-insensitively. This is intentional hardening for pagination hrefs and does not honor the
+///     <see cref="JsonSerializerOptions" /> passed to <see cref="Read" /> — neither
+///     <see cref="JsonSerializerOptions.AllowDuplicateProperties" /> nor
+///     <see cref="JsonSerializerOptions.PropertyNameCaseInsensitive" /> changes it.
 /// </remarks>
 public class LinkJsonConverter<T> : JsonConverter<Link<T>> where T : Response
 {
@@ -26,6 +31,7 @@ public class LinkJsonConverter<T> : JsonConverter<Link<T>> where T : Response
 
         using var jsonDocument = JsonDocument.ParseValue(ref reader);
         var jsonObject = jsonDocument.RootElement;
+        JsonDuplicatePropertyGuard.EnsureNoDuplicateProperties(jsonObject, $"Link<{typeof(T).Name}>");
 
         // Read templated property (optional, defaults to false)
         var templated = jsonObject.TryGetProperty("templated", out var templatedElement)

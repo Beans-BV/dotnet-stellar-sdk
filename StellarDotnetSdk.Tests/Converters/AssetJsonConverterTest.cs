@@ -268,4 +268,39 @@ public class AssetJsonConverterTest
         Assert.AreEqual("TESTTEST", creditAsset.Code);
         Assert.AreEqual(issuer.AccountId, creditAsset.Issuer);
     }
+
+    /// <summary>
+    ///     Verifies that an unrecognized property with an object value is skipped whole: its nested keys
+    ///     must not be walked as if they were top-level (which would trip the duplicate-property guard
+    ///     on names like asset_type that legitimately appear inside nested objects).
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithUnknownObjectProperty_IgnoresIt()
+    {
+        // Arrange
+        var json = @"{""asset_type"":""native"",""extra"":{""asset_type"":""credit_alphanum4""}}";
+
+        // Act
+        var result = JsonSerializer.Deserialize<Asset>(json, _options);
+
+        // Assert
+        Assert.IsInstanceOfType(result, typeof(AssetTypeNative));
+    }
+
+    /// <summary>
+    ///     Verifies that an unrecognized property with an array value is skipped whole, including the
+    ///     keys of any objects inside the array.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithUnknownArrayProperty_IgnoresIt()
+    {
+        // Arrange
+        var json = @"{""asset_type"":""native"",""extra"":[{""asset_code"":""EVL""},42]}";
+
+        // Act
+        var result = JsonSerializer.Deserialize<Asset>(json, _options);
+
+        // Assert
+        Assert.IsInstanceOfType(result, typeof(AssetTypeNative));
+    }
 }

@@ -10,6 +10,13 @@ namespace StellarDotnetSdk.Converters;
 ///     JSON converter for LiquidityPoolClaimableAssetAmount.
 ///     Handles conversion between JSON objects and LiquidityPoolClaimableAssetAmount instances.
 /// </summary>
+/// <remarks>
+///     Duplicate JSON property names are always rejected with a <see cref="JsonException" />, matched
+///     case-insensitively. This is intentional hardening for financial fields and does not honor the
+///     <see cref="JsonSerializerOptions" /> passed to <see cref="Read" /> — neither
+///     <see cref="JsonSerializerOptions.AllowDuplicateProperties" /> nor
+///     <see cref="JsonSerializerOptions.PropertyNameCaseInsensitive" /> changes it.
+/// </remarks>
 public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<LiquidityPoolClaimableAssetAmount>
 {
     /// <inheritdoc />
@@ -27,6 +34,8 @@ public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<Liqu
 
         using var jsonDocument = JsonDocument.ParseValue(ref reader);
         var jsonObject = jsonDocument.RootElement;
+        JsonDuplicatePropertyGuard.EnsureNoDuplicateProperties(jsonObject,
+            nameof(LiquidityPoolClaimableAssetAmount));
 
         if (!jsonObject.TryGetProperty("asset", out var assetElement))
         {

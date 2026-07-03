@@ -9,6 +9,13 @@ namespace StellarDotnetSdk.Converters;
 ///     JSON converter for Asset.
 ///     Handles conversion between JSON objects and Asset instances (native or credit assets).
 /// </summary>
+/// <remarks>
+///     Duplicate JSON property names are always rejected with a <see cref="JsonException" />, matched
+///     case-insensitively. This is intentional hardening for financial fields and does not honor the
+///     <see cref="JsonSerializerOptions" /> passed to <see cref="Read" /> — neither
+///     <see cref="JsonSerializerOptions.AllowDuplicateProperties" /> nor
+///     <see cref="JsonSerializerOptions.PropertyNameCaseInsensitive" /> changes it.
+/// </remarks>
 public class AssetJsonConverter : JsonConverter<Asset>
 {
     /// <inheritdoc />
@@ -40,12 +47,19 @@ public class AssetJsonConverter : JsonConverter<Asset>
         string? type = null;
         string? code = null;
         string? issuer = null;
+        var seen = JsonDuplicatePropertyGuard.CreateSeenSet();
 
         while (reader.Read())
         {
+            if (reader.TokenType == JsonTokenType.EndObject)
+            {
+                break;
+            }
+
             if (reader.TokenType == JsonTokenType.PropertyName)
             {
-                var propertyName = reader.GetString();
+                var propertyName = reader.GetString()!;
+                JsonDuplicatePropertyGuard.MarkSeen(seen, propertyName, nameof(Asset));
                 reader.Read();
                 switch (propertyName)
                 {
@@ -58,12 +72,13 @@ public class AssetJsonConverter : JsonConverter<Asset>
                     case "asset_issuer":
                         issuer = reader.GetString();
                         break;
+                    default:
+                        // Skip the whole value: an unrecognized object/array value would otherwise be
+                        // walked as if its keys were top-level Asset properties, corrupting the
+                        // duplicate guard's seen-set and desynchronizing the reader.
+                        reader.Skip();
+                        break;
                 }
-            }
-
-            if (reader.TokenType == JsonTokenType.EndObject)
-            {
-                break;
             }
         }
 

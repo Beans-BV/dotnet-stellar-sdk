@@ -414,6 +414,128 @@ public class PredicateJsonConverterTest
     }
 
     /// <summary>
+    ///     Tests that deserialization throws JsonException (not FormatException) when rel_before is a
+    ///     non-numeric string. Malformed Horizon input must surface as the SDK's documented failure mode.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNonNumericRelBeforeString_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""rel_before"":""notanumber""}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
+    ///     Tests that deserialization throws JsonException (not OverflowException) when rel_before is a
+    ///     numeric string that does not fit in a 64-bit integer.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithOverflowingRelBeforeString_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""rel_before"":""99999999999999999999999999""}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
+    ///     Tests that deserialization throws JsonException (not InvalidOperationException) when rel_before
+    ///     is neither a number nor a string.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithBooleanRelBefore_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""rel_before"":true}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
+    ///     Tests that deserialization throws JsonException (not FormatException) when rel_before is a
+    ///     fractional number, which cannot represent a whole-second duration.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithFractionalRelBefore_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""rel_before"":1.5}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
+    ///     Tests that deserialization throws JsonException (not FormatException) when abs_before_epoch is
+    ///     a non-numeric string.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNonNumericAbsBeforeEpochString_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""abs_before"":""2025-12-31T23:59:59Z"",""abs_before_epoch"":""notanumber""}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
+    ///     Tests that deserialization throws JsonException when the and array has more than two predicates.
+    ///     Stellar's ClaimPredicate AND is strictly binary; extra elements were previously dropped silently.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithAndArrayMoreThanTwoPredicates_ThrowsJsonException()
+    {
+        // Arrange
+        var json =
+            @"{""and"":[{""unconditional"":true},{""rel_before"":3600},{""rel_before"":7200}]}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
+    ///     Tests that deserialization throws JsonException when the or array has more than two predicates.
+    ///     Stellar's ClaimPredicate OR is strictly binary; extra elements were previously dropped silently.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithOrArrayMoreThanTwoPredicates_ThrowsJsonException()
+    {
+        // Arrange
+        var json =
+            @"{""or"":[{""unconditional"":true},{""rel_before"":3600},{""rel_before"":7200}]}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
+    ///     Tests that deserialization throws JsonException (not InvalidOperationException) when the and
+    ///     property is not an array.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNonArrayAnd_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""and"":true}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
     ///     Tests that serialization throws JsonException for unknown predicate type.
     ///     Verifies proper error handling when predicate type is not recognized.
     /// </summary>

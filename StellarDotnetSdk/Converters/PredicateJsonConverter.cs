@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses.Predicates;
@@ -21,6 +22,13 @@ namespace StellarDotnetSdk.Converters;
 ///         <item><c>{"abs_before": "...", "abs_before_epoch": ...}</c> → <see cref="PredicateBeforeAbsoluteTime" /></item>
 ///         <item><c>{"rel_before": ...}</c> → <see cref="PredicateBeforeRelativeTime" /></item>
 ///     </list>
+///     <para>
+///         Duplicate JSON property names are always rejected with a <see cref="JsonException" />, matched
+///         case-insensitively, at every nesting level. This is intentional hardening for time-lock
+///         predicates and does not honor the <see cref="JsonSerializerOptions" /> passed to
+///         <see cref="Read" /> — neither <see cref="JsonSerializerOptions.AllowDuplicateProperties" />
+///         nor <see cref="JsonSerializerOptions.PropertyNameCaseInsensitive" /> changes it.
+///     </para>
 /// </remarks>
 public class PredicateJsonConverter : JsonConverter<Predicate>
 {
@@ -30,29 +38,19 @@ public class PredicateJsonConverter : JsonConverter<Predicate>
     {
         using var document = JsonDocument.ParseValue(ref reader);
         var root = document.RootElement;
+        // Nested predicates re-enter this converter, so each recursion level checks its own object.
+        JsonDuplicatePropertyGuard.EnsureNoDuplicateProperties(root, nameof(Predicate));
 
         // Determine type by which property is present
         if (root.TryGetProperty("and", out var andElement))
         {
-            var predicates = DeserializePredicateArray(andElement, options);
-            if (predicates.Length < 2)
-            {
-                throw new JsonException(
-                    "Property 'and' must contain at least 2 predicates.");
-            }
-
+            var predicates = DeserializePredicateArray(andElement, options, "and");
             return new PredicateAnd(predicates[0], predicates[1]);
         }
 
         if (root.TryGetProperty("or", out var orElement))
         {
-            var predicates = DeserializePredicateArray(orElement, options);
-            if (predicates.Length < 2)
-            {
-                throw new JsonException(
-                    "Property 'or' must contain at least 2 predicates.");
-            }
-
+            var predicates = DeserializePredicateArray(orElement, options, "or");
             return new PredicateOr(predicates[0], predicates[1]);
         }
 
@@ -86,9 +84,7 @@ public class PredicateJsonConverter : JsonConverter<Predicate>
             long? absBeforeEpoch = null;
             if (root.TryGetProperty("abs_before_epoch", out var epochElement))
             {
-                absBeforeEpoch = epochElement.ValueKind == JsonValueKind.String
-                    ? long.Parse(epochElement.GetString()!)
-                    : epochElement.GetInt64();
+                absBeforeEpoch = ReadInt64FromNumberOrString(epochElement, "abs_before_epoch");
             }
 
             return new PredicateBeforeAbsoluteTime(absBefore, absBeforeEpoch);
@@ -96,9 +92,7 @@ public class PredicateJsonConverter : JsonConverter<Predicate>
 
         if (root.TryGetProperty("rel_before", out var relBeforeElement))
         {
-            var relBefore = relBeforeElement.ValueKind == JsonValueKind.String
-                ? long.Parse(relBeforeElement.GetString()!)
-                : relBeforeElement.GetInt64();
+            var relBefore = ReadInt64FromNumberOrString(relBeforeElement, "rel_before");
 
             return new PredicateBeforeRelativeTime(relBefore);
         }
@@ -160,9 +154,45 @@ public class PredicateJsonConverter : JsonConverter<Predicate>
         writer.WriteEndObject();
     }
 
-    private static Predicate[] DeserializePredicateArray(JsonElement element, JsonSerializerOptions options)
+    /// <summary>
+    ///     Reads a 64-bit integer that Horizon emits either as a JSON number or as a numeric string.
+    ///     Every malformed value becomes a <see cref="JsonException" /> (the SDK's documented failure mode)
+    ///     rather than a leaked <see cref="FormatException" /> or <see cref="OverflowException" />.
+    /// </summary>
+    private static long ReadInt64FromNumberOrString(JsonElement element, string propertyName)
     {
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.String
+                when long.TryParse(element.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture,
+                    out var parsed):
+                return parsed;
+            case JsonValueKind.Number when element.TryGetInt64(out var number):
+                return number;
+            default:
+                throw new JsonException(
+                    $"Property '{propertyName}' must be a 64-bit integer or a numeric string containing one.");
+        }
+    }
+
+    private static Predicate[] DeserializePredicateArray(JsonElement element, JsonSerializerOptions options,
+        string propertyName)
+    {
+        if (element.ValueKind != JsonValueKind.Array)
+        {
+            throw new JsonException($"Property '{propertyName}' must be an array of exactly 2 predicates.");
+        }
+
+        // Validate the arity before touching any element: Stellar's ClaimPredicate AND/OR are strictly
+        // binary (extra elements used to be dropped silently), and checking first also stops an
+        // oversized array from being fully materialized.
         var length = element.GetArrayLength();
+        if (length != 2)
+        {
+            throw new JsonException(
+                $"Property '{propertyName}' must contain exactly 2 predicates, but found {length}.");
+        }
+
         var result = new Predicate[length];
         var index = 0;
         foreach (var item in element.EnumerateArray())

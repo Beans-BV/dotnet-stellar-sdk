@@ -315,4 +315,41 @@ public class ReserveJsonConverterTest
         Assert.AreEqual("native", result.Asset.CanonicalName());
         Assert.AreEqual("100", result.Amount);
     }
+
+    /// <summary>
+    ///     Verifies that an unrecognized property with an object value is skipped whole: its nested keys
+    ///     must not be walked as if they were top-level, which would both trip the duplicate-property
+    ///     guard on names like amount and desynchronize the reader.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithUnknownObjectProperty_IgnoresIt()
+    {
+        // Arrange - the nested object deliberately reuses the top-level property name "amount"
+        var json = @"{""asset"":""native"",""amount"":""100"",""_links"":{""amount"":""999999""}}";
+
+        // Act
+        var result = JsonSerializer.Deserialize<Reserve>(json, _options);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual("100", result.Amount);
+    }
+
+    /// <summary>
+    ///     Verifies that an unrecognized property with an array value is skipped whole, including the
+    ///     keys of any objects inside the array.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithUnknownArrayProperty_IgnoresIt()
+    {
+        // Arrange
+        var json = @"{""asset"":""native"",""amount"":""100"",""extra"":[{""asset"":""EVL:G""}]}";
+
+        // Act
+        var result = JsonSerializer.Deserialize<Reserve>(json, _options);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual("100", result.Amount);
+    }
 }

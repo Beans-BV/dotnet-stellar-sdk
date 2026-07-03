@@ -23,6 +23,11 @@ public static class JsonOptions
     ///     - AllowDuplicateProperties: Rejects JSON payloads that contain the same property more than once,
     ///     preventing silent data corruption from malformed responses (critical for financial data integrity).
     ///     Available on every TFM via the System.Text.Json 10.x package reference on net8.0/netstandard2.1.
+    ///     Scope: the option is enforced by STJ's built-in object mapper (POCO-bound properties); converters
+    ///     that hand-parse JSON (e.g. Reserve, Asset, AssetAmount) enforce the same rule themselves via
+    ///     <see cref="JsonDuplicatePropertyGuard" />. The polymorphic OperationResponse/EffectResponse
+    ///     converters also hand-parse (only to read the <c>type_i</c> discriminator) but need no guard of
+    ///     their own: they re-deserialize the payload through the object mapper, which re-detects duplicates.
     ///     - RespectNullableAnnotations: Enforces C# nullability annotations during (de)serialization,
     ///     so malformed API responses that violate the SDK's nullability contract fail fast.
     ///     Registered Converters:
@@ -47,9 +52,14 @@ public static class JsonOptions
             PropertyNameCaseInsensitive = true,
 
             // Reject JSON payloads with duplicate property names to prevent silent data corruption. Malformed
-            // or adversarial responses could otherwise overwrite financial fields (amount, balance, destination)
-            // with attacker-controlled values without any error. The System.Text.Json 10.x package reference on
-            // net8.0/netstandard2.1 makes this option available on every TFM.
+            // or adversarial responses could otherwise overwrite POCO-mapped financial fields (amount, balance,
+            // destination) with attacker-controlled values without any error. The System.Text.Json 10.x package
+            // reference on net8.0/netstandard2.1 makes this option available on every TFM.
+            // Note: STJ enforces this option only in its built-in object mapper. Converters registered below
+            // that hand-parse JSON (Reserve, Asset, AssetAmount, LiquidityPoolClaimableAssetAmount, Predicate,
+            // Link) enforce the same rule themselves via JsonDuplicatePropertyGuard. The polymorphic
+            // OperationResponse/EffectResponse converters hand-parse only the type_i discriminator and then
+            // re-deserialize through the mapper, so duplicates on their fields are still rejected by this option.
             AllowDuplicateProperties = false,
 
             // Enforce C# nullability annotations so null values for non-nullable properties are rejected
@@ -85,7 +95,8 @@ public static class JsonOptions
         // Freeze the options to prevent accidental modification of the shared singleton.
         // populateMissingResolver: true installs the default reflection-based TypeInfoResolver,
         // which matches the SDK's existing serialization behavior.
-        // STJ 8.0+ (including netstandard2.1 via package 8.0.5) provides MakeReadOnly(bool).
+        // STJ 8.0+ provides MakeReadOnly(bool) — satisfied on every TFM (built-in STJ 10 on net10.0;
+        // the System.Text.Json 10.x package on net8.0/netstandard2.1).
         options.MakeReadOnly(true);
         return options;
     }
