@@ -36,27 +36,25 @@ public class AssetAmountJsonConverter : JsonConverter<AssetAmount>
 
         if (!jsonObject.TryGetProperty("asset", out var assetElement))
         {
-            throw new ArgumentException("JSON value for asset is missing.", nameof(assetElement));
+            throw new JsonException($"JSON value for asset is missing in {nameof(AssetAmount)}.");
         }
         var assetName = assetElement.GetString();
-        var asset = string.IsNullOrEmpty(assetName) ? null : Asset.Create(assetName);
+        if (string.IsNullOrEmpty(assetName))
+        {
+            throw new JsonException($"JSON value for asset is missing in {nameof(AssetAmount)}.");
+        }
 
         if (!jsonObject.TryGetProperty("amount", out var amountElement))
         {
-            throw new ArgumentException("JSON value for amount is missing.", nameof(amountElement));
+            throw new JsonException($"JSON value for amount is missing in {nameof(AssetAmount)}.");
         }
         var amount = amountElement.GetString();
-
-        if (asset == null)
-        {
-            throw new ArgumentException("JSON value for asset is missing.", nameof(asset));
-        }
         if (amount == null)
         {
-            throw new ArgumentException("JSON value for amount is missing.", nameof(amount));
+            throw new JsonException($"JSON value for amount is missing in {nameof(AssetAmount)}.");
         }
 
-        return new AssetAmount(asset, amount);
+        return new AssetAmount(AssetJsonReadHelper.CreateAsset(assetName), amount);
     }
 
     /// <inheritdoc />

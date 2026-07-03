@@ -39,16 +39,23 @@ public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<Liqu
 
         if (!jsonObject.TryGetProperty("asset", out var assetElement))
         {
-            throw new ArgumentException("JSON value for asset is missing.", nameof(assetElement));
+            throw new JsonException($"JSON value for asset is missing in {nameof(LiquidityPoolClaimableAssetAmount)}.");
         }
         var assetName = assetElement.GetString();
-        var asset = string.IsNullOrEmpty(assetName) ? null : Asset.Create(assetName);
+        if (string.IsNullOrEmpty(assetName))
+        {
+            throw new JsonException($"JSON value for asset is missing in {nameof(LiquidityPoolClaimableAssetAmount)}.");
+        }
 
         if (!jsonObject.TryGetProperty("amount", out var amountElement))
         {
-            throw new ArgumentException("JSON value for amount is missing.", nameof(amountElement));
+            throw new JsonException($"JSON value for amount is missing in {nameof(LiquidityPoolClaimableAssetAmount)}.");
         }
         var amount = amountElement.GetString();
+        if (amount == null)
+        {
+            throw new JsonException($"JSON value for amount is missing in {nameof(LiquidityPoolClaimableAssetAmount)}.");
+        }
 
         // claimable_balance_id is optional
         string? claimableBalanceId = null;
@@ -57,18 +64,9 @@ public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<Liqu
             claimableBalanceId = claimableBalanceIdElement.GetString();
         }
 
-        if (asset == null)
-        {
-            throw new ArgumentException("JSON value for asset is missing.", nameof(asset));
-        }
-        if (amount == null)
-        {
-            throw new ArgumentException("JSON value for amount is missing.", nameof(amount));
-        }
-
         return new LiquidityPoolClaimableAssetAmount
         {
-            Asset = asset,
+            Asset = AssetJsonReadHelper.CreateAsset(assetName),
             Amount = amount,
             ClaimableBalanceId = claimableBalanceId,
         };

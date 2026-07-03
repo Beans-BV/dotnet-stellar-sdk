@@ -67,15 +67,15 @@ public class ReserveJsonConverter : JsonConverter<Reserve>
 
         if (string.IsNullOrEmpty(assetName))
         {
-            throw new ArgumentException("JSON value for asset is missing.", nameof(assetName));
+            throw new JsonException($"JSON value for asset is missing in {nameof(Reserve)}.");
         }
 
         if (string.IsNullOrEmpty(amount))
         {
-            throw new ArgumentException("JSON value for amount is missing.", nameof(amount));
+            throw new JsonException($"JSON value for amount is missing in {nameof(Reserve)}.");
         }
 
-        var asset = Asset.Create(assetName);
+        var asset = AssetJsonReadHelper.CreateAsset(assetName);
 
         return new Reserve
         {

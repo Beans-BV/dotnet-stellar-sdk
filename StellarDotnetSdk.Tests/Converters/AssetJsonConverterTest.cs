@@ -143,12 +143,12 @@ public class AssetJsonConverterTest
     }
 
     /// <summary>
-    ///     Tests that deserialization throws ArgumentException when asset_type property is missing.
+    ///     Tests that deserialization throws JsonException when asset_type property is missing.
     ///     Verifies proper error handling for invalid JSON structure.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithMissingAssetType_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithMissingAssetType_ThrowsJsonException()
     {
         // Arrange
         var json =
@@ -159,12 +159,12 @@ public class AssetJsonConverterTest
     }
 
     /// <summary>
-    ///     Tests that deserialization throws ArgumentException when credit asset is missing asset_code property.
+    ///     Tests that deserialization throws JsonException when credit asset is missing asset_code property.
     ///     Verifies validation for required properties on non-native assets.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithNonNativeMissingCode_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNonNativeMissingCode_ThrowsJsonException()
     {
         // Arrange
         var json =
@@ -175,12 +175,12 @@ public class AssetJsonConverterTest
     }
 
     /// <summary>
-    ///     Tests that deserialization throws ArgumentException when credit asset is missing asset_issuer property.
+    ///     Tests that deserialization throws JsonException when credit asset is missing asset_issuer property.
     ///     Verifies validation for required properties on non-native assets.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithNonNativeMissingIssuer_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNonNativeMissingIssuer_ThrowsJsonException()
     {
         // Arrange
         var json = @"{""asset_type"":""credit_alphanum4"",""asset_code"":""USD""}";

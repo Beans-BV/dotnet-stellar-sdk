@@ -64,9 +64,10 @@ All notable changes to this project are documented here. The format is based on
   (duplicate keys, or explicit `null` for a non-nullable member) are now rejected, and consumers on
   `net8.0`/`netstandard2.1` inherit a transitive `System.Text.Json >= 10.0.6` floor plus its own
   dependencies (`System.Text.Encodings.Web` and `System.IO.Pipelines` 10.0.6 on both TFMs; on
-  `netstandard2.1` also `Microsoft.Bcl.AsyncInterfaces` 10.0.6 — with `System.IO.Pipelines` net-new
-  relative to the previous `System.Text.Json` 8.0.5 reference, one more DLL for consumers who vendor
-  dependencies by hand, e.g. Unity)
+  `netstandard2.1` also `Microsoft.Bcl.AsyncInterfaces` 10.0.6). `netstandard2.1` is the only target
+  that previously pinned `System.Text.Json` 8.0.5, and relative to that 8.0.5 closure `System.IO.Pipelines`
+  is net-new — one more DLL for consumers who vendor dependencies by hand, e.g. Unity. (`net8.0` never
+  referenced 8.0.5: it resolved the built-in framework `System.Text.Json` before this package reference.)
   ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) follow-up).
 - `KeyPair.Verify` no longer swallows every exception. Malformed or attacker-supplied signatures still
   return `false` (`ArgumentException`, `FormatException`, and `CryptographicException` are caught), but
@@ -86,11 +87,15 @@ All notable changes to this project are documented here. The format is based on
   object mapper only, so fields read manually by a converter were last-wins: a malformed or adversarial
   Horizon response could silently override a financial field by repeating its key. Hardened converters:
   `AssetAmount`, `Reserve`, `LiquidityPoolClaimableAssetAmount`, `Asset` (asset-code/issuer
-  substitution), `Predicate` (claimable-balance time locks, checked at every nesting level), and the
-  HATEOAS `Link` converter (pagination `href`). The two remaining hand-parsing converters — the
-  polymorphic `OperationResponse`/`EffectResponse` converters — read only the `type_i` discriminator by
-  hand and re-deserialize the payload through the object mapper, so duplicates on their fields are
-  rejected by the serializer-level guard without a converter-level one.
+  substitution), `Predicate` (claimable-balance time locks, checked at every nesting level), the
+  HATEOAS `Link` converter (pagination `href`), and the SEP-45 `ChallengeForContractsResponse` converter
+  (the adversarial `authorization_entries` blob the client signs — it already rejected duplicates inline
+  and now shares the `JsonDuplicatePropertyGuard` helper). The polymorphic `OperationResponse`/`EffectResponse`
+  converters read the `type_i` discriminator by hand and re-deserialize the payload through the object
+  mapper; the mapper rejects duplicates of the mapped payload fields, but because `type_i` is a read-only
+  property the mapper never binds a duplicated discriminator would otherwise slip through, so these two
+  converters now apply the same guard to the whole object and reject any duplicate — discriminator
+  included — before dispatching.
 
 ### Removed
 
@@ -103,13 +108,28 @@ All notable changes to this project are documented here. The format is based on
 - `PredicateJsonConverter` no longer leaks `FormatException`/`OverflowException` for malformed
   `rel_before`/`abs_before_epoch` values — every malformed predicate now throws `JsonException`, the
   SDK's documented deserialization failure mode. It also rejects `and`/`or` predicate arrays that do
-  not contain exactly 2 elements (Stellar's `ClaimPredicate` AND/OR are strictly binary; extra
-  elements were previously dropped silently) and validates the arity before deserializing any element,
-  so an oversized array is no longer fully materialized.
+  not contain exactly 2 elements (stellar-core validates `ClaimPredicate` AND/OR to exactly 2 children
+  at ledger close, so Horizon never emits any other arity; extra elements were previously dropped
+  silently) and validates the arity before deserializing any element, so an oversized array is no
+  longer fully materialized. Time-bound values are now also range- and consistency-checked: a negative
+  `rel_before`/`abs_before_epoch` is rejected (Stellar time bounds are unsigned), and a payload that
+  supplies both `abs_before` and `abs_before_epoch` with disagreeing instants is rejected rather than
+  silently preferring the epoch — a spoofed epoch can no longer shift a claim deadline while the
+  human-readable `abs_before` string still looks correct.
 - The `Asset` and `Reserve` converters now skip unrecognized properties with object/array values
   whole. Previously the reader descended into such values and treated their nested keys as top-level
-  properties, which could reject valid payloads with a misleading duplicate-property error (the
-  malformed-payload path always failed closed — no silent corruption was possible).
+  properties. With the new duplicate-property guard in place that surfaced as a misleading
+  duplicate-property rejection of an otherwise-valid payload; in releases without that guard (≤ 15.1.0)
+  a nested key reusing a top-level name — e.g. `amount` inside a `_links` object — could instead
+  silently overwrite the top-level financial field. Skipping unrecognized values whole closes both.
+- **Breaking:** the `Asset`, `AssetAmount`, `Reserve`, and `LiquidityPoolClaimableAssetAmount` converters
+  now throw `JsonException` — the documented System.Text.Json deserialization failure mode — for missing,
+  `null`, empty, or malformed `asset`/`amount`/`asset_code`/`asset_issuer` values, where they previously
+  leaked `ArgumentException` (or `AssetCodeLengthInvalidException` for an out-of-range asset code). A
+  consumer can now catch every malformed-response failure from `JsonSerializer.Deserialize` with a single
+  `catch (JsonException)`; code that specifically caught `ArgumentException` from these converters must
+  catch `JsonException` instead. (The `Asset.Create`/`Asset.CreateNonNativeAsset` factory methods, when
+  called directly, still throw `ArgumentException`/`AssetCodeLengthInvalidException`.)
 - `Util.Hash` no longer leaks a `SHA256` instance on every call: it uses the static
   `SHA256.HashData` on `net8.0`/`net10.0` and a properly disposed instance on `netstandard2.1`
   ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195)).

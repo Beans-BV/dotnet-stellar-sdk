@@ -134,6 +134,12 @@ public class EffectResponseJsonConverter : JsonConverter<EffectResponse>
         using var document = JsonDocument.ParseValue(ref reader);
         var root = document.RootElement;
 
+        // The mapper re-parse below rejects duplicates of mapped fields, but type_i is a read-only
+        // (get-only) discriminator the mapper never binds, so a duplicated type_i would otherwise slip
+        // through and be resolved by a single hand-read. Guard the root explicitly so every duplicate —
+        // discriminator included — fails fast, consistent with the SDK's other hand-parsing converters.
+        JsonDuplicatePropertyGuard.EnsureNoDuplicateProperties(root, nameof(EffectResponse));
+
         // Extract discriminator from parsed document
         if (!root.TryGetProperty("type_i", out var typeProperty))
         {

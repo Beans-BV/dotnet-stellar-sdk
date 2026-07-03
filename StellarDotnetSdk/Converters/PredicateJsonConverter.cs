@@ -85,6 +85,20 @@ public class PredicateJsonConverter : JsonConverter<Predicate>
             if (root.TryGetProperty("abs_before_epoch", out var epochElement))
             {
                 absBeforeEpoch = ReadInt64FromNumberOrString(epochElement, "abs_before_epoch");
+
+                // Horizon renders abs_before and abs_before_epoch as the same instant. If a payload
+                // supplies both and they disagree, a spoofed epoch could silently shift the claim
+                // deadline while the human-readable string still looks correct (the DateTime accessor
+                // prefers the epoch), so reject the contradiction instead of trusting one side.
+                if (DateTimeOffset.TryParse(absBefore, CultureInfo.InvariantCulture,
+                        DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+                        out var parsedAbsBefore)
+                    && parsedAbsBefore.ToUnixTimeSeconds() != absBeforeEpoch.Value)
+                {
+                    throw new JsonException(
+                        $"Property 'abs_before_epoch' ({absBeforeEpoch.Value}) does not match " +
+                        $"'abs_before' ({absBefore}); they must denote the same instant.");
+                }
             }
 
             return new PredicateBeforeAbsoluteTime(absBefore, absBeforeEpoch);
@@ -155,24 +169,37 @@ public class PredicateJsonConverter : JsonConverter<Predicate>
     }
 
     /// <summary>
-    ///     Reads a 64-bit integer that Horizon emits either as a JSON number or as a numeric string.
-    ///     Every malformed value becomes a <see cref="JsonException" /> (the SDK's documented failure mode)
-    ///     rather than a leaked <see cref="FormatException" /> or <see cref="OverflowException" />.
+    ///     Reads a non-negative 64-bit integer that Horizon emits either as a JSON number or as a numeric
+    ///     string. Every malformed value becomes a <see cref="JsonException" /> (the SDK's documented
+    ///     failure mode) rather than a leaked <see cref="FormatException" /> or
+    ///     <see cref="OverflowException" />. Stellar time bounds are unsigned, so a negative value is
+    ///     rejected as well.
     /// </summary>
     private static long ReadInt64FromNumberOrString(JsonElement element, string propertyName)
     {
+        long value;
         switch (element.ValueKind)
         {
             case JsonValueKind.String
                 when long.TryParse(element.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture,
                     out var parsed):
-                return parsed;
+                value = parsed;
+                break;
             case JsonValueKind.Number when element.TryGetInt64(out var number):
-                return number;
+                value = number;
+                break;
             default:
                 throw new JsonException(
                     $"Property '{propertyName}' must be a 64-bit integer or a numeric string containing one.");
         }
+
+        if (value < 0)
+        {
+            throw new JsonException(
+                $"Property '{propertyName}' must not be negative; Stellar time bounds are unsigned.");
+        }
+
+        return value;
     }
 
     private static Predicate[] DeserializePredicateArray(JsonElement element, JsonSerializerOptions options,

@@ -123,12 +123,31 @@ public class KycJsonSerializationTest
     [TestMethod]
     public void KycJsonOptions_Default_RespectNullableAnnotations_IsEnabled()
     {
-        // Flag-only assertion by design: a behavioral rejection test (explicit null for a
-        // non-nullable member) is not possible against the SEP-9 models, because every property on
-        // NaturalPersonKycFields/OrganizationKycFields is nullable. The flag is the maximum
-        // meaningful coverage without a synthetic fixture DTO.
+        // The SEP-9 models can't exercise this behaviorally (every property on
+        // NaturalPersonKycFields/OrganizationKycFields is nullable), so this asserts the flag and
+        // KycJsonOptions_Deserialize_NullForNonNullableMember_ThrowsJsonException (below) asserts the
+        // behavior via a synthetic non-nullable DTO.
         KycJsonOptions.Default.RespectNullableAnnotations.Should().BeTrue();
     }
+
+    [TestMethod]
+    public void KycJsonOptions_Deserialize_NullForNonNullableMember_ThrowsJsonException()
+    {
+        // Behavioral coverage for RespectNullableAnnotations = true through KycJsonOptions.Default:
+        // an explicit null for a non-nullable member is rejected rather than silently written.
+        var json = """{"value":null}""";
+
+        var act = () => JsonSerializer.Deserialize<NonNullableProbe>(json, KycJsonOptions.Default);
+
+        act.Should().Throw<JsonException>();
+    }
+
+#nullable enable
+    private sealed class NonNullableProbe
+    {
+        public string Value { get; set; } = string.Empty;
+    }
+#nullable restore
 
     [TestMethod]
     public void KycJsonOptions_Deserialize_WithDuplicateProperties_ThrowsJsonException()

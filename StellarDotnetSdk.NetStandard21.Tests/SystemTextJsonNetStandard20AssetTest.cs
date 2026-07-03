@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Text.Json;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace StellarDotnetSdk.Tests;
@@ -25,7 +26,11 @@ public class SystemTextJsonNetStandard20AssetTest
 {
     private const string DuplicatePropertyJson = """{"Value":1,"Value":2}""";
 
-    private static readonly Lazy<NetStandard20SystemTextJson> Stj = new(NetStandard20SystemTextJson.Load);
+    // PublicationOnly so a transient load failure (e.g. project.assets.json not yet restored) is not
+    // cached forever: the default Lazy mode caches the first exception and re-throws it for every later
+    // access, which would mask the real first failure behind identical repeats across the test methods.
+    private static readonly Lazy<NetStandard20SystemTextJson> Stj =
+        new(NetStandard20SystemTextJson.Load, LazyThreadSafetyMode.PublicationOnly);
 
     /// <summary>
     ///     The netstandard2.1 restore must keep resolving a System.Text.Json version whose
@@ -227,7 +232,16 @@ public class SystemTextJsonNetStandard20AssetTest
                     {
                         stjPath = fullPath;
                         var prerelease = version.IndexOfAny(new[] { '-', '+' });
-                        stjVersion = Version.Parse(prerelease < 0 ? version : version[..prerelease]);
+                        var core = prerelease < 0 ? version : version[..prerelease];
+                        if (!Version.TryParse(core, out var parsedVersion))
+                        {
+                            throw new InvalidOperationException(
+                                $"Could not parse the resolved System.Text.Json version '{version}' " +
+                                $"(core '{core}') from {assetsFile}. Update this probe if the version " +
+                                "string format changed.");
+                        }
+
+                        stjVersion = parsedVersion;
                     }
                 }
             }

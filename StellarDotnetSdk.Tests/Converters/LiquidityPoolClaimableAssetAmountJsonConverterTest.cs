@@ -143,11 +143,11 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with missing asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with missing asset property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithMissingAsset_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithMissingAsset_ThrowsJsonException()
     {
         // Arrange
         var json = @"{
@@ -160,11 +160,11 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with missing amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with missing amount property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithMissingAmount_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithMissingAmount_ThrowsJsonException()
     {
         // Arrange
         var json = @"{
@@ -177,11 +177,11 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with null asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with null asset property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithNullAsset_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNullAsset_ThrowsJsonException()
     {
         // Arrange
         var json = @"{
@@ -195,11 +195,11 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with null amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with null amount property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithNullAmount_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNullAmount_ThrowsJsonException()
     {
         // Arrange
         var json = @"{

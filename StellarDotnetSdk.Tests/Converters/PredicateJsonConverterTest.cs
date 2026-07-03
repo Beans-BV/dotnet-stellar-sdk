@@ -489,6 +489,85 @@ public class PredicateJsonConverterTest
     }
 
     /// <summary>
+    ///     Tests that a negative rel_before is rejected. Stellar time bounds are unsigned, so a negative
+    ///     value would wrap to a nonsensical ~584-billion-year duration when cast to ulong in the rebuilt
+    ///     XDR predicate.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNegativeRelBefore_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""rel_before"":-100}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
+    ///     Tests that a negative rel_before supplied as a string is rejected too (the string branch used
+    ///     NumberStyles.Integer, which permits a leading minus sign).
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNegativeRelBeforeString_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""rel_before"":""-100""}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
+    ///     Tests that a negative abs_before_epoch is rejected.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNegativeAbsBeforeEpoch_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""abs_before"":""2025-12-31T23:59:59Z"",""abs_before_epoch"":-1}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
+    ///     Tests that a payload supplying both abs_before and abs_before_epoch with disagreeing instants is
+    ///     rejected. A spoofed epoch must not be able to shift the claim deadline while the human-readable
+    ///     abs_before string still looks correct (the DateTime accessor prefers the epoch).
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithMismatchedAbsBeforeAndEpoch_ThrowsJsonException()
+    {
+        // Arrange - abs_before says 2020; the epoch says year 3000.
+        var json = @"{""abs_before"":""2020-01-01T00:00:00Z"",""abs_before_epoch"":32503680000}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
+    ///     Control case: abs_before and abs_before_epoch that denote the same instant deserialize fine, so
+    ///     the mismatch guard above cannot be firing for an unrelated reason.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithMatchingAbsBeforeAndEpoch_Succeeds()
+    {
+        // Arrange - 2025-12-31T23:59:59Z is exactly epoch 1767225599.
+        var json = @"{""abs_before"":""2025-12-31T23:59:59Z"",""abs_before_epoch"":1767225599}";
+
+        // Act
+        var result = (PredicateBeforeAbsoluteTime)JsonSerializer.Deserialize<Predicate>(json, _options)!;
+
+        // Assert
+        Assert.AreEqual("2025-12-31T23:59:59Z", result.AbsBefore);
+        Assert.AreEqual(1767225599L, result.AbsBeforeEpoch);
+    }
+
+    /// <summary>
     ///     Tests that deserialization throws JsonException when the and array has more than two predicates.
     ///     Stellar's ClaimPredicate AND is strictly binary; extra elements were previously dropped silently.
     /// </summary>

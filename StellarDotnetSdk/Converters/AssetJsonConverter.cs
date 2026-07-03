@@ -84,7 +84,7 @@ public class AssetJsonConverter : JsonConverter<Asset>
 
         if (type == null)
         {
-            throw new ArgumentException("JSON value for asset_type is missing.", nameof(type));
+            throw new JsonException($"JSON value for asset_type is missing in {nameof(Asset)}.");
         }
 
         if (type == "native")
@@ -94,13 +94,13 @@ public class AssetJsonConverter : JsonConverter<Asset>
 
         if (code == null)
         {
-            throw new ArgumentException("JSON value for asset_code is missing.", nameof(code));
+            throw new JsonException($"JSON value for asset_code is missing in {nameof(Asset)}.");
         }
         if (issuer == null)
         {
-            throw new ArgumentException("JSON value for asset_issuer is missing.", nameof(issuer));
+            throw new JsonException($"JSON value for asset_issuer is missing in {nameof(Asset)}.");
         }
 
-        return Asset.CreateNonNativeAsset(code, issuer);
+        return AssetJsonReadHelper.CreateNonNativeAsset(code, issuer);
     }
 }
