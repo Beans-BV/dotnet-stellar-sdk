@@ -190,6 +190,21 @@ public class AssetJsonConverterTest
     }
 
     /// <summary>
+    ///     Tests that deserialization throws JsonException when credit asset has an empty asset_issuer.
+    ///     An empty issuer would otherwise produce an Asset whose canonical name ends in ":".
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNonNativeEmptyIssuer_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""asset_type"":""credit_alphanum4"",""asset_code"":""USD"",""asset_issuer"":""""}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Asset>(json, _options);
+    }
+
+    /// <summary>
     ///     Tests that deserialization throws JsonException when JSON is not an object.
     ///     Verifies proper error handling for invalid JSON token types.
     /// </summary>

@@ -49,7 +49,7 @@ public class AssetAmountJsonConverter : JsonConverter<AssetAmount>
             throw new JsonException($"JSON value for amount is missing in {nameof(AssetAmount)}.");
         }
         var amount = amountElement.GetString();
-        if (amount == null)
+        if (string.IsNullOrEmpty(amount))
         {
             throw new JsonException($"JSON value for amount is missing in {nameof(AssetAmount)}.");
         }

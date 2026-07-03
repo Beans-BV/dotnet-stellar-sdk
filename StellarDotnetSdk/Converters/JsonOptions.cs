@@ -26,8 +26,9 @@ public static class JsonOptions
     ///     Scope: the option is enforced by STJ's built-in object mapper (POCO-bound properties); converters
     ///     that hand-parse JSON (e.g. Reserve, Asset, AssetAmount) enforce the same rule themselves via
     ///     <see cref="JsonDuplicatePropertyGuard" />. The polymorphic OperationResponse/EffectResponse
-    ///     converters also hand-parse (only to read the <c>type_i</c> discriminator) but need no guard of
-    ///     their own: they re-deserialize the payload through the object mapper, which re-detects duplicates.
+    ///     converters also guard the root document themselves: re-deserializing through the object mapper
+    ///     re-detects duplicates of mapped properties, but the <c>type_i</c> discriminator they hand-read
+    ///     is get-only and never mapper-bound, so a duplicated <c>type_i</c> would otherwise slip through.
     ///     - RespectNullableAnnotations: Enforces C# nullability annotations during (de)serialization,
     ///     so malformed API responses that violate the SDK's nullability contract fail fast.
     ///     Registered Converters:
@@ -57,9 +58,10 @@ public static class JsonOptions
             // reference on net8.0/netstandard2.1 makes this option available on every TFM.
             // Note: STJ enforces this option only in its built-in object mapper. Converters registered below
             // that hand-parse JSON (Reserve, Asset, AssetAmount, LiquidityPoolClaimableAssetAmount, Predicate,
-            // Link) enforce the same rule themselves via JsonDuplicatePropertyGuard. The polymorphic
-            // OperationResponse/EffectResponse converters hand-parse only the type_i discriminator and then
-            // re-deserialize through the mapper, so duplicates on their fields are still rejected by this option.
+            // Link, OperationResponse, EffectResponse) enforce the same rule themselves via
+            // JsonDuplicatePropertyGuard. The polymorphic OperationResponse/EffectResponse converters guard
+            // the root explicitly because the mapper re-parse only re-detects duplicates of mapped fields —
+            // the get-only type_i discriminator they hand-read is never mapper-bound.
             AllowDuplicateProperties = false,
 
             // Enforce C# nullability annotations so null values for non-nullable properties are rejected

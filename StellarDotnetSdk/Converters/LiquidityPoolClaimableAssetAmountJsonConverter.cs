@@ -52,7 +52,7 @@ public class LiquidityPoolClaimableAssetAmountJsonConverter : JsonConverter<Liqu
             throw new JsonException($"JSON value for amount is missing in {nameof(LiquidityPoolClaimableAssetAmount)}.");
         }
         var amount = amountElement.GetString();
-        if (amount == null)
+        if (string.IsNullOrEmpty(amount))
         {
             throw new JsonException($"JSON value for amount is missing in {nameof(LiquidityPoolClaimableAssetAmount)}.");
         }

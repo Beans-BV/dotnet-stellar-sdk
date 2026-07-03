@@ -274,4 +274,18 @@ public class AssetAmountJsonConverterTest
         // Act
         JsonSerializer.Deserialize<AssetAmount>(json, _options);
     }
+
+    /// <summary>
+    ///     Verifies that deserializing JSON with empty amount property throws JsonException.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithEmptyAmount_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""asset"":""native"",""amount"":""""}";
+
+        // Act
+        JsonSerializer.Deserialize<AssetAmount>(json, _options);
+    }
 }

@@ -96,7 +96,7 @@ public class AssetJsonConverter : JsonConverter<Asset>
         {
             throw new JsonException($"JSON value for asset_code is missing in {nameof(Asset)}.");
         }
-        if (issuer == null)
+        if (string.IsNullOrEmpty(issuer))
         {
             throw new JsonException($"JSON value for asset_issuer is missing in {nameof(Asset)}.");
         }
