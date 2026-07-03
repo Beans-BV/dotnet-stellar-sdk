@@ -115,7 +115,11 @@ All notable changes to this project are documented here. The format is based on
   `rel_before`/`abs_before_epoch` is rejected (Stellar time bounds are unsigned), and a payload that
   supplies both `abs_before` and `abs_before_epoch` with disagreeing instants is rejected rather than
   silently preferring the epoch — a spoofed epoch can no longer shift a claim deadline while the
-  human-readable `abs_before` string still looks correct.
+  human-readable `abs_before` string still looks correct. `PredicateBeforeAbsoluteTime.DateTime` now
+  parses `abs_before` with the same rules as that consistency check (invariant culture; a value without
+  an offset designator is interpreted as UTC) instead of the machine's current culture and local time
+  zone, so an epoch-less payload resolves to the same deadline instant on every machine. Horizon always
+  emits `abs_before` with an explicit offset, so values from Horizon are unaffected.
 - The `Asset` and `Reserve` converters now skip unrecognized properties with object/array values
   whole. Previously the reader descended into such values and treated their nested keys as top-level
   properties. With the new duplicate-property guard in place that surfaced as a misleading
