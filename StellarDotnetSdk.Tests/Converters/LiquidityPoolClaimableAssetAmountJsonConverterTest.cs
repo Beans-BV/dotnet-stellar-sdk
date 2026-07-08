@@ -231,6 +231,25 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
     }
 
     /// <summary>
+    ///     Verifies that deserializing JSON with empty asset property throws JsonException. Mirrors the
+    ///     empty-amount test; Read rejects both empty asset and empty amount with the same guard.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithEmptyAsset_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{
+            ""asset"":"""",
+            ""amount"":""999.99"",
+            ""claimable_balance_id"":""00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072""
+        }";
+
+        // Act
+        JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
+    }
+
+    /// <summary>
     ///     Verifies that serialization produces JSON with correct property names and values.
     /// </summary>
     [TestMethod]

@@ -444,6 +444,22 @@ public class PredicateJsonConverterTest
     }
 
     /// <summary>
+    ///     Tests that deserialization throws JsonException (not OverflowException) when rel_before is a
+    ///     number literal that does not fit in a 64-bit integer. Mirrors the string-form overflow test;
+    ///     both share ReadInt64FromNumberOrString.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithOverflowingRelBefore_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""rel_before"":99999999999999999999999999}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
     ///     Tests that deserialization throws JsonException (not InvalidOperationException) when rel_before
     ///     is neither a number nor a string.
     /// </summary>
@@ -534,6 +550,21 @@ public class PredicateJsonConverterTest
     }
 
     /// <summary>
+    ///     Tests that a negative abs_before_epoch supplied as a string is rejected too. Mirrors the
+    ///     number-form test; both share the value &lt; 0 guard in ReadInt64FromNumberOrString.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNegativeAbsBeforeEpochString_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""abs_before"":""2025-12-31T23:59:59Z"",""abs_before_epoch"":""-1""}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
     ///     Tests that a payload supplying both abs_before and abs_before_epoch with disagreeing instants is
     ///     rejected. A spoofed epoch must not be able to shift the claim deadline while the human-readable
     ///     abs_before string still looks correct (the DateTime accessor prefers the epoch).
@@ -609,6 +640,21 @@ public class PredicateJsonConverterTest
     {
         // Arrange
         var json = @"{""and"":true}";
+
+        // Act & Assert
+        JsonSerializer.Deserialize<Predicate>(json, _options);
+    }
+
+    /// <summary>
+    ///     Tests that deserialization throws JsonException (not InvalidOperationException) when the or
+    ///     property is not an array. Mirrors the non-array and test; both share DeserializePredicateArray.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNonArrayOr_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""or"":true}";
 
         // Act & Assert
         JsonSerializer.Deserialize<Predicate>(json, _options);

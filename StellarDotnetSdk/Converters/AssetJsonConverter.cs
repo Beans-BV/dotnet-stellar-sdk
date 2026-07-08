@@ -92,7 +92,7 @@ public class AssetJsonConverter : JsonConverter<Asset>
             return new AssetTypeNative();
         }
 
-        if (code == null)
+        if (string.IsNullOrEmpty(code))
         {
             throw new JsonException($"JSON value for asset_code is missing in {nameof(Asset)}.");
         }
