@@ -21,9 +21,11 @@ namespace StellarDotnetSdk.Accounts;
 ///     <see cref="FromSecretSeed(string)" />, <see cref="FromAccountId" />, or <see cref="Random" />
 ///     to create instances.
 ///     Signing caches expanded key material (libsodium secure memory on net8.0/net10.0) for the
-///     lifetime of the instance; call <see cref="Dispose" /> on signing keypairs to release it
-///     deterministically. Disposal is optional: an undisposed NSec key is released when its handle
-///     is finalized, while on netstandard2.1 an undisposed expanded-key copy is reclaimed by the GC
+///     lifetime of the instance; call <see cref="Dispose()" /> on signing keypairs to release it
+///     deterministically. Disposal releases signing resources only — it does not erase the stored
+///     seed (<see cref="SecretSeed" />, <see cref="SeedBytes" />, <see cref="PrivateKey" /> remain
+///     readable). Disposal is optional: an undisposed NSec key is released when its handle is
+///     finalized, while on netstandard2.1 an undisposed expanded-key copy is reclaimed by the GC
 ///     without being zeroed. Keypairs that never signed hold no cached material, though disposal
 ///     still disables <see cref="Sign" />.
 /// </remarks>
@@ -369,18 +371,20 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>, IDisposable
     /// </summary>
     /// <param name="data">The data to sign.</param>
     /// <returns>The signed bytes.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when this keypair does not contain a private key.</exception>
     /// <exception cref="ObjectDisposedException">Thrown when this keypair has been disposed.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when this keypair does not contain a private key.</exception>
     public byte[] Sign(byte[] data)
     {
+        // Disposal is checked first so a disposed keypair throws ObjectDisposedException regardless of
+        // whether it holds a private key, matching the documented Dispose contract.
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(nameof(KeyPair));
+        }
         if (_privateKey == null)
         {
             throw new InvalidOperationException(
                 "KeyPair does not contain secret key. Use KeyPair.FromSecretSeed method to create a new KeyPair with a secret key.");
-        }
-        if (_disposed)
-        {
-            throw new ObjectDisposedException(nameof(KeyPair));
         }
 
         var signer = Volatile.Read(ref _signer);
@@ -410,10 +414,12 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>, IDisposable
     /// <summary>
     ///     Sign a message and return an XDR Decorated Signature
     /// </summary>
-    /// <param name="message"></param>
+    /// <param name="message">The message to sign.</param>
     /// <returns>
     ///     <see cref="DecoratedSignature" />
     /// </returns>
+    /// <exception cref="ObjectDisposedException">Thrown when this keypair has been disposed.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when this keypair does not contain a private key.</exception>
     public DecoratedSignature SignDecorated(byte[] message)
     {
         var rawSig = Sign(message);
@@ -428,10 +434,12 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>, IDisposable
     /// <summary>
     ///     Sign the provided payload data for payload signer where the input is the data being signed.
     /// </summary>
-    /// <param name="message"></param>
+    /// <param name="signerPayload">The payload to sign.</param>
     /// <returns>
     ///     <see cref="DecoratedSignature" />
     /// </returns>
+    /// <exception cref="ObjectDisposedException">Thrown when this keypair has been disposed.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when this keypair does not contain a private key.</exception>
     public DecoratedSignature SignPayloadDecorated(byte[] signerPayload)
     {
         var payloadSignature = SignDecorated(signerPayload);
@@ -489,14 +497,30 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>, IDisposable
     /// <summary>
     ///     Releases the cached Ed25519 signing handle created by <see cref="Sign" />: the libsodium
     ///     secure-memory key is freed on net8.0/net10.0 and the expanded private key copy is zeroed on
-    ///     netstandard2.1. Subsequent <see cref="Sign" />/<see cref="SignDecorated" /> calls throw
-    ///     <see cref="ObjectDisposedException" />; public-key members (<see cref="Verify(byte[], byte[])" />,
-    ///     <see cref="AccountId" />, equality) and the stored seed (<see cref="SecretSeed" />,
-    ///     <see cref="SeedBytes" />) remain usable. Safe to call multiple times and on keypairs that
-    ///     never signed. Not safe to call concurrently with an in-flight <see cref="Sign" />.
+    ///     netstandard2.1. Subsequent <see cref="Sign" />/<see cref="SignDecorated" />/
+    ///     <see cref="SignPayloadDecorated" /> calls throw <see cref="ObjectDisposedException" />;
+    ///     public-key members (<see cref="Verify(byte[], byte[])" />, <see cref="AccountId" />, equality)
+    ///     and the stored seed (<see cref="SecretSeed" />, <see cref="SeedBytes" />) remain usable —
+    ///     disposal releases signing resources, it does not erase the seed. Safe to call multiple times
+    ///     and on keypairs that never signed. Safe to call concurrently with <see cref="Sign" />: an
+    ///     in-flight signature completes normally and any signing call that starts after disposal throws.
     /// </summary>
     public void Dispose()
     {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    ///     Releases the cached Ed25519 signing handle. See <see cref="Dispose()" />.
+    /// </summary>
+    /// <param name="disposing">True when called from <see cref="Dispose()" />, false from a finalizer.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing)
+        {
+            return;
+        }
         _disposed = true;
         Interlocked.Exchange(ref _signer, null)?.Dispose();
     }

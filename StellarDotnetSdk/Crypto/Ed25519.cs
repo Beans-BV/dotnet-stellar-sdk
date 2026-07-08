@@ -25,14 +25,13 @@ internal static class Ed25519
         using var kp = PublicKeyAuth.GenerateKeyPair(seed);
         return (byte[])kp.PublicKey.Clone();
 #else
+        // Default key creation parameters: ExportPolicy = None. Exporting the *public* key never
+        // requires an export policy, and allowing plaintext private-key export here would needlessly
+        // weaken the secure-memory handle.
         using var key = NSec.Cryptography.Key.Import(
             NSec.Cryptography.SignatureAlgorithm.Ed25519,
             seed,
-            NSec.Cryptography.KeyBlobFormat.RawPrivateKey,
-            new NSec.Cryptography.KeyCreationParameters
-            {
-                ExportPolicy = NSec.Cryptography.KeyExportPolicies.AllowPlaintextExport,
-            });
+            NSec.Cryptography.KeyBlobFormat.RawPrivateKey);
         return key.PublicKey.Export(NSec.Cryptography.KeyBlobFormat.RawPublicKey);
 #endif
     }

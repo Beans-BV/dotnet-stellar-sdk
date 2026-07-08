@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 
@@ -406,7 +408,8 @@ public class KeyPairTest
         keyPair.Dispose();
 
         // Assert
-        Assert.ThrowsException<ObjectDisposedException>(() => keyPair.Sign(data));
+        var e = Assert.ThrowsException<ObjectDisposedException>(() => keyPair.Sign(data));
+        Assert.AreEqual(nameof(KeyPair), e.ObjectName);
         Assert.ThrowsException<ObjectDisposedException>(() => keyPair.SignDecorated(data));
         Assert.IsTrue(keyPair.Verify(data, signature));
         Assert.IsNotNull(keyPair.AccountId);
@@ -414,25 +417,30 @@ public class KeyPairTest
     }
 
     /// <summary>
-    ///     Verifies that disposing before the first Sign call also blocks signing (no signer is
-    ///     lazily created from the retained seed afterwards).
+    ///     Verifies that disposing before the first Sign call also blocks all three signing entry
+    ///     points (no signer is lazily created from the retained seed afterwards).
     /// </summary>
     [TestMethod]
     public void Dispose_BeforeFirstSign_SignThrows()
     {
         // Arrange
         var keyPair = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+        var data = Encoding.UTF8.GetBytes("hello world");
 
         // Act
         keyPair.Dispose();
 
         // Assert
-        Assert.ThrowsException<ObjectDisposedException>(() => keyPair.Sign(Encoding.UTF8.GetBytes("hello world")));
+        var e = Assert.ThrowsException<ObjectDisposedException>(() => keyPair.Sign(data));
+        Assert.AreEqual(nameof(KeyPair), e.ObjectName);
+        Assert.ThrowsException<ObjectDisposedException>(() => keyPair.SignDecorated(data));
+        Assert.ThrowsException<ObjectDisposedException>(() => keyPair.SignPayloadDecorated(data));
     }
 
     /// <summary>
     ///     Verifies that Dispose is idempotent, harmless on keypairs that cannot sign, and does not
-    ///     affect equality.
+    ///     affect equality — and that a disposed public-only keypair reports the disposed state
+    ///     (ObjectDisposedException) rather than the missing-secret-key state from Sign.
     /// </summary>
     [TestMethod]
     public void Dispose_IsIdempotent_AndHarmlessOnPublicOnlyKeyPairs()
@@ -450,5 +458,57 @@ public class KeyPairTest
         // Assert
         Assert.IsTrue(keyPair.Equals(sameSeedKeyPair));
         Assert.IsNotNull(publicOnlyKeyPair.AccountId);
+        Assert.ThrowsException<ObjectDisposedException>(
+            () => publicOnlyKeyPair.Sign(Encoding.UTF8.GetBytes("hello world")));
+    }
+
+    /// <summary>
+    ///     Regression test for the Dispose-vs-Sign race: before Sign and Dispose were serialized inside
+    ///     the signer, a Dispose could zero the expanded key mid-signature on the netstandard2.1 backend
+    ///     and Sign would silently return invalid bytes (probe-measured at ~0.3% of contended calls).
+    ///     Every concurrent Sign must therefore either return a valid signature or throw
+    ///     ObjectDisposedException — nothing in between. The iteration count makes a regression
+    ///     near-certain to surface while the assertions can never fail spuriously on correct code.
+    /// </summary>
+    [TestMethod]
+    public void Sign_ConcurrentWithDispose_NeverReturnsInvalidSignature()
+    {
+        var data = Encoding.UTF8.GetBytes("race probe");
+        var verifier = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+
+        for (var i = 0; i < 3000; i++)
+        {
+            var keyPair = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+            // Alternate between racing the lazy signer creation and racing the published-signer fast path.
+            if (i % 2 == 0)
+            {
+                keyPair.Sign(data);
+            }
+
+            using var start = new ManualResetEventSlim(false);
+            var signTask = Task.Run(() =>
+            {
+                start.Wait();
+                try
+                {
+                    var signature = keyPair.Sign(data);
+                    Assert.IsTrue(
+                        verifier.Verify(data, signature),
+                        "Sign returned an invalid signature instead of throwing during a concurrent Dispose.");
+                }
+                catch (ObjectDisposedException)
+                {
+                    // The only acceptable failure mode.
+                }
+            });
+            var disposeTask = Task.Run(() =>
+            {
+                start.Wait();
+                Thread.SpinWait(Random.Shared.Next(0, 2000));
+                keyPair.Dispose();
+            });
+            start.Set();
+            Task.WaitAll(signTask, disposeTask);
+        }
     }
 }
