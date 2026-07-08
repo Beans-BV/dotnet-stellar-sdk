@@ -92,51 +92,34 @@ public class KycJsonSerializationTest
         KycJsonOptions.Default.IsReadOnly.Should().BeTrue();
     }
 
-#if !TEST_SDK_NETSTANDARD21
+    /// <summary>
+    ///     Runs on every TFM leg and asserts the exact message so the wording stays identical across the
+    ///     netstandard2.1 <c>IsoDateStringJsonConverter</c> and the net8.0/net10.0 DateOnly converters.
+    /// </summary>
     [TestMethod]
-    public void NullableDateOnlyJsonConverter_RejectsInvalidDateFormat()
+    public void KycDateField_RejectsInvalidDateFormat_OnRead_WithSameMessageOnAllTfms()
     {
         var json = """{"birthDate":"15-01-1990"}""";
 
         var act = () => JsonSerializer.Deserialize<NaturalPersonKycFields>(json, KycJsonOptions.Default);
 
-        act.Should().Throw<JsonException>();
-    }
-#endif
-
-#if TEST_SDK_NETSTANDARD21
-    [TestMethod]
-    public void IsoDateStringJsonConverter_RejectsInvalidDateFormat_OnRead()
-    {
-        var json = """{"birthDate":"15-01-1990"}""";
-
-        var act = () => JsonSerializer.Deserialize<NaturalPersonKycFields>(json, KycJsonOptions.Default);
-
-        act.Should().Throw<JsonException>();
+        act.Should().Throw<JsonException>()
+            .WithMessage("Cannot convert JSON value '15-01-1990' to an ISO 8601 date. Expected format: yyyy-MM-dd.*");
     }
 
     [TestMethod]
-    public void IsoDateStringJsonConverter_RejectsInvalidRegistrationDate_OnRead()
+    public void KycRegistrationDate_RejectsInvalidValue_OnRead_WithSameMessageOnAllTfms()
     {
         var json = """{"registrationDate":"June 1, 2010"}""";
 
         var act = () => JsonSerializer.Deserialize<OrganizationKycFields>(json, KycJsonOptions.Default);
 
-        act.Should().Throw<JsonException>();
+        act.Should().Throw<JsonException>()
+            .WithMessage("Cannot convert JSON value 'June 1, 2010' to an ISO 8601 date. Expected format: yyyy-MM-dd.*");
     }
 
     [TestMethod]
-    public void IsoDateStringJsonConverter_RejectsInvalidDateFormat_OnWrite()
-    {
-        var fields = new NaturalPersonKycFields { BirthDate = "6/9/2026" };
-
-        var act = () => JsonSerializer.Serialize(fields, KycJsonOptions.Default);
-
-        act.Should().Throw<JsonException>();
-    }
-
-    [TestMethod]
-    public void IsoDateStringJsonConverter_AllowsNullDates()
+    public void KycDateFields_AllowNullDates()
     {
         var fields = new NaturalPersonKycFields { FirstName = "John" };
 
@@ -144,6 +127,18 @@ public class KycJsonSerializationTest
         var roundTrip = JsonSerializer.Deserialize<NaturalPersonKycFields>(json, KycJsonOptions.Default);
 
         roundTrip!.BirthDate.Should().BeNull();
+    }
+
+#if TEST_SDK_NETSTANDARD21
+    [TestMethod]
+    public void IsoDateStringJsonConverter_RejectsInvalidDateFormat_OnWrite()
+    {
+        var fields = new NaturalPersonKycFields { BirthDate = "6/9/2026" };
+
+        var act = () => JsonSerializer.Serialize(fields, KycJsonOptions.Default);
+
+        act.Should().Throw<JsonException>()
+            .WithMessage("Cannot convert JSON value '6/9/2026' to an ISO 8601 date. Expected format: yyyy-MM-dd.*");
     }
 #endif
 }

@@ -43,6 +43,15 @@ All notable changes to this project are documented here. The format is based on
     when the fields are submitted (throwing `ArgumentException` otherwise, including from
     `InteractiveService.DepositAsync`/`WithdrawAsync`), so the SEP-9 wire format is identical on every
     TFM.
+- `KeyPair` implements `IDisposable`: disposing releases the cached Ed25519 signing handle
+  deterministically — the NSec key on `net8.0`/`net10.0` (libsodium secure memory: one mlocked region
+  per signing keypair, otherwise held until finalization) is freed, and the expanded private-key copy
+  on `netstandard2.1` is zeroed. After disposal `Sign`/`SignDecorated` throw
+  `ObjectDisposedException`; public-key operations and the stored seed remain usable. Disposal is
+  optional — an undisposed NSec key is still freed at finalization, while an undisposed
+  `netstandard2.1` key copy is reclaimed by the GC without zeroing — and harmless for keypairs that
+  never signed, though it disables `Sign` for them too
+  ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) follow-up).
 
 ### Changed
 
@@ -77,6 +86,10 @@ All notable changes to this project are documented here. The format is based on
   `FromSecretSeed(byte[])`) now throw `ArgumentException` for wrong-length key material and
   `ArgumentNullException` for null, uniformly on all target frameworks and always at construction
   time. Previous releases surfaced NSec's `FormatException` instead.
+- **Breaking (behavioral):** `KeyPair.Sign`/`SignDecorated` on a keypair without a private key now
+  throw `InvalidOperationException` instead of the base `Exception` (still caught by any existing
+  `catch (Exception)`), and the message references the correctly-cased `KeyPair.FromSecretSeed`
+  factory (previously `fromSecretSeed`, a leftover from the Java SDK port).
 
 ### Removed
 
@@ -99,9 +112,11 @@ All notable changes to this project are documented here. The format is based on
 - SEP-0009 KYC date fields (`BirthDate`, `IdIssueDate`, `IdExpirationDate`, `RegistrationDate`) are
   now validated during JSON (de)serialization on `netstandard2.1` too: the new
   `IsoDateStringJsonConverter` rejects anything but `yyyy-MM-dd` with a `JsonException` on both read
-  and write, matching the `DateOnly`-based behavior on `net8.0`/`net10.0`. Previously the
-  `netstandard2.1` build silently accepted and re-emitted malformed date strings through
-  `KycJsonOptions` ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) follow-up).
+  and write, matching the `DateOnly`-based behavior on `net8.0`/`net10.0` — including the exception
+  message, which is now the same "Cannot convert JSON value '…' to an ISO 8601 date." text on every
+  TFM. Previously the `netstandard2.1` build silently accepted and re-emitted malformed date strings
+  through `KycJsonOptions` ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195)
+  follow-up).
 - The XDR generator's blessed test snapshots are regenerated to match the
   [#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) template changes
   (`Throw.IfNull`, `ReadExactlyCompat`, `AddRangeCompat`) — the Ruby snapshot suite failed on `main`
@@ -111,8 +126,11 @@ All notable changes to this project are documented here. The format is based on
 - Cross-TFM behavior parity for the compatibility shims
   ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) follow-up):
   - `Util.HexToBytes` (all TFMs) throws `ArgumentNullException` for null and `FormatException` for
-    odd-length input — the `Convert.FromHexString` contract the released package had — instead of
-    `NullReferenceException` / `IndexOutOfRangeException` escaping the decode loop.
+    odd-length input instead of `NullReferenceException` / `IndexOutOfRangeException` escaping the
+    decode loop. This restores the `Convert.FromHexString` contract at the call sites
+    (`LedgerKeyContractCode`, `ContractExecutableWasm.ToXdr`, `ClaimableBalanceIdUtils`) that
+    [#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195) switched from
+    `Convert.FromHexString` to `HexToBytes` — `HexToBytes` itself never had that contract.
   - The `netstandard2.1` `Throw.IfNullOrEmpty` polyfill emits the BCL's
     "The value cannot be an empty string." message.
   - The `netstandard2.1` `ReadAsStringAsync` cancellation shim surfaces `TaskCanceledException`

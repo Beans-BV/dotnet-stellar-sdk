@@ -37,31 +37,6 @@ internal static class Ed25519
 #endif
     }
 
-    public static byte[] Sign(byte[] seed, byte[] data)
-    {
-        Throw.IfNull(seed, nameof(seed));
-        if (seed.Length != SeedLength)
-        {
-            throw new ArgumentException($"Seed must be {SeedLength} bytes.", nameof(seed));
-        }
-        Throw.IfNull(data, nameof(data));
-
-#if NETSTANDARD2_1
-        using var kp = PublicKeyAuth.GenerateKeyPair(seed);
-        return PublicKeyAuth.SignDetached(data, kp.PrivateKey);
-#else
-        using var key = NSec.Cryptography.Key.Import(
-            NSec.Cryptography.SignatureAlgorithm.Ed25519,
-            seed,
-            NSec.Cryptography.KeyBlobFormat.RawPrivateKey,
-            new NSec.Cryptography.KeyCreationParameters
-            {
-                ExportPolicy = NSec.Cryptography.KeyExportPolicies.AllowPlaintextExport,
-            });
-        return NSec.Cryptography.SignatureAlgorithm.Ed25519.Sign(key, data);
-#endif
-    }
-
     public static bool Verify(byte[] publicKey, byte[] data, byte[] signature)
     {
         Throw.IfNull(publicKey, nameof(publicKey));

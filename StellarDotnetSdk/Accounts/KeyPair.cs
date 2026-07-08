@@ -20,12 +20,20 @@ namespace StellarDotnetSdk.Accounts;
 ///     other public-key signature systems in the future. Use factory methods such as
 ///     <see cref="FromSecretSeed(string)" />, <see cref="FromAccountId" />, or <see cref="Random" />
 ///     to create instances.
+///     Signing caches expanded key material (libsodium secure memory on net8.0/net10.0) for the
+///     lifetime of the instance; call <see cref="Dispose" /> on signing keypairs to release it
+///     deterministically. Disposal is optional: an undisposed NSec key is released when its handle
+///     is finalized, while on netstandard2.1 an undisposed expanded-key copy is reclaimed by the GC
+///     without being zeroed. Keypairs that never signed hold no cached material, though disposal
+///     still disables <see cref="Sign" />.
 /// </remarks>
 [JsonConverter(typeof(KeyPairJsonConverter))]
-public class KeyPair : IAccountId, IEquatable<KeyPair>
+public class KeyPair : IAccountId, IEquatable<KeyPair>, IDisposable
 {
     private readonly byte[]? _privateKey;
     private readonly byte[] _publicKey;
+
+    private volatile bool _disposed;
 
     // Lazily created on first Sign and reused, so the Ed25519 key expansion/import runs once per KeyPair
     // instead of once per signature (roughly a 2x cost per signature otherwise).
@@ -361,22 +369,39 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// </summary>
     /// <param name="data">The data to sign.</param>
     /// <returns>The signed bytes.</returns>
-    /// <exception cref="Exception">Thrown when this keypair does not contain a private key.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when this keypair does not contain a private key.</exception>
+    /// <exception cref="ObjectDisposedException">Thrown when this keypair has been disposed.</exception>
     public byte[] Sign(byte[] data)
     {
         if (_privateKey == null)
         {
-            throw new Exception(
-                "KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.");
+            throw new InvalidOperationException(
+                "KeyPair does not contain secret key. Use KeyPair.FromSecretSeed method to create a new KeyPair with a secret key.");
+        }
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(nameof(KeyPair));
         }
 
         var signer = Volatile.Read(ref _signer);
         if (signer == null)
         {
             signer = new Ed25519Signer(_privateKey);
-            // Benign race: if two threads initialize concurrently, the first published instance wins and
-            // both are functionally identical; the loser is simply collected.
-            signer = Interlocked.CompareExchange(ref _signer, signer, null) ?? signer;
+            var existing = Interlocked.CompareExchange(ref _signer, signer, null);
+            if (existing != null)
+            {
+                // Benign race: another thread published first and both instances are functionally
+                // identical; scrub the loser's key material instead of leaving it to the GC.
+                signer.Dispose();
+                signer = existing;
+            }
+            else if (_disposed)
+            {
+                // Dispose ran between the guard above and publication; unpublish so no live key
+                // material outlives the Dispose call.
+                Interlocked.Exchange(ref _signer, null)?.Dispose();
+                throw new ObjectDisposedException(nameof(KeyPair));
+            }
         }
 
         return signer.Sign(data);
@@ -459,5 +484,20 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     public bool Verify(byte[] data, Signature signature)
     {
         return Verify(data, signature.InnerValue);
+    }
+
+    /// <summary>
+    ///     Releases the cached Ed25519 signing handle created by <see cref="Sign" />: the libsodium
+    ///     secure-memory key is freed on net8.0/net10.0 and the expanded private key copy is zeroed on
+    ///     netstandard2.1. Subsequent <see cref="Sign" />/<see cref="SignDecorated" /> calls throw
+    ///     <see cref="ObjectDisposedException" />; public-key members (<see cref="Verify(byte[], byte[])" />,
+    ///     <see cref="AccountId" />, equality) and the stored seed (<see cref="SecretSeed" />,
+    ///     <see cref="SeedBytes" />) remain usable. Safe to call multiple times and on keypairs that
+    ///     never signed. Not safe to call concurrently with an in-flight <see cref="Sign" />.
+    /// </summary>
+    public void Dispose()
+    {
+        _disposed = true;
+        Interlocked.Exchange(ref _signer, null)?.Dispose();
     }
 }

@@ -54,6 +54,8 @@ internal sealed class IsoDateStringJsonConverter : JsonConverter<string?>
     {
         if (!DateTime.TryParseExact(value, IsoDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
         {
+            // Keep this text in sync with DateOnlyJsonConverter/NullableDateOnlyJsonConverter (net8.0/net10.0):
+            // consumers must observe the same JsonException message on every target framework.
             throw new JsonException(
                 $"Cannot convert JSON value '{value}' to an ISO 8601 date. Expected format: {IsoDateFormat}.");
         }

@@ -150,10 +150,9 @@ public class KeyPairTest
     }
 
     /// <summary>
-    ///     Verifies that Sign throws exception when KeyPair does not contain secret key.
+    ///     Verifies that Sign throws InvalidOperationException when KeyPair does not contain secret key.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void Sign_WithoutSecretKey_ThrowsException()
     {
         // Arrange
@@ -161,17 +160,11 @@ public class KeyPairTest
         const string data = "hello world";
 
         // Act & Assert
-        try
-        {
-            var unused = keyPair.Sign(Encoding.UTF8.GetBytes(data));
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(
-                "KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.",
-                e.Message);
-            throw;
-        }
+        var e = Assert.ThrowsException<InvalidOperationException>(
+            () => keyPair.Sign(Encoding.UTF8.GetBytes(data)));
+        Assert.AreEqual(
+            "KeyPair does not contain secret key. Use KeyPair.FromSecretSeed method to create a new KeyPair with a secret key.",
+            e.Message);
     }
 
     /// <summary>
@@ -352,7 +345,7 @@ public class KeyPairTest
         Assert.IsFalse(keyPair.CanSign());
         Assert.IsNull(keyPair.PrivateKey);
         Assert.IsNotNull(keyPair.SecretSeed);
-        Assert.ThrowsException<Exception>(() => keyPair.Sign(Encoding.UTF8.GetBytes("hello world")));
+        Assert.ThrowsException<InvalidOperationException>(() => keyPair.Sign(Encoding.UTF8.GetBytes("hello world")));
     }
 
     /// <summary>
@@ -395,5 +388,67 @@ public class KeyPairTest
         // Assert
         Assert.IsTrue(keyPair.Equals(publicOnlyKeyPair));
         Assert.IsTrue(publicOnlyKeyPair.Equals(keyPair));
+    }
+
+    /// <summary>
+    ///     Verifies that disposing a keypair after signing blocks further signing but keeps
+    ///     public-key members and previously produced signatures usable.
+    /// </summary>
+    [TestMethod]
+    public void Dispose_AfterSigning_BlocksSigningButKeepsPublicKeyMembersUsable()
+    {
+        // Arrange
+        var keyPair = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+        var data = Encoding.UTF8.GetBytes("hello world");
+        var signature = keyPair.Sign(data);
+
+        // Act
+        keyPair.Dispose();
+
+        // Assert
+        Assert.ThrowsException<ObjectDisposedException>(() => keyPair.Sign(data));
+        Assert.ThrowsException<ObjectDisposedException>(() => keyPair.SignDecorated(data));
+        Assert.IsTrue(keyPair.Verify(data, signature));
+        Assert.IsNotNull(keyPair.AccountId);
+        Assert.IsNotNull(keyPair.SecretSeed);
+    }
+
+    /// <summary>
+    ///     Verifies that disposing before the first Sign call also blocks signing (no signer is
+    ///     lazily created from the retained seed afterwards).
+    /// </summary>
+    [TestMethod]
+    public void Dispose_BeforeFirstSign_SignThrows()
+    {
+        // Arrange
+        var keyPair = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+
+        // Act
+        keyPair.Dispose();
+
+        // Assert
+        Assert.ThrowsException<ObjectDisposedException>(() => keyPair.Sign(Encoding.UTF8.GetBytes("hello world")));
+    }
+
+    /// <summary>
+    ///     Verifies that Dispose is idempotent, harmless on keypairs that cannot sign, and does not
+    ///     affect equality.
+    /// </summary>
+    [TestMethod]
+    public void Dispose_IsIdempotent_AndHarmlessOnPublicOnlyKeyPairs()
+    {
+        // Arrange
+        var keyPair = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+        var sameSeedKeyPair = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+        var publicOnlyKeyPair = KeyPair.FromPublicKey(keyPair.PublicKey);
+
+        // Act
+        keyPair.Dispose();
+        keyPair.Dispose();
+        publicOnlyKeyPair.Dispose();
+
+        // Assert
+        Assert.IsTrue(keyPair.Equals(sameSeedKeyPair));
+        Assert.IsNotNull(publicOnlyKeyPair.AccountId);
     }
 }
