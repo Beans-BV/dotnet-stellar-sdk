@@ -32,9 +32,11 @@ public static class KycJsonOptions
         {
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-#if NET10_0_OR_GREATER
+            // Reject KYC payloads with duplicate property names (last-write-wins would otherwise let a
+            // malformed/adversarial record silently overwrite a field). Matches JsonOptions.DefaultOptions;
+            // available on every TFM via the System.Text.Json 10.x reference on net8.0/netstandard2.1.
+            AllowDuplicateProperties = false,
             RespectNullableAnnotations = true,
-#endif
 #if !NETSTANDARD2_1
             Converters =
             {

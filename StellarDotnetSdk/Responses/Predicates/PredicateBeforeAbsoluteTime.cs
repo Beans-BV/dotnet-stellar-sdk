@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using ClaimPredicate = StellarDotnetSdk.Claimants.ClaimPredicate;
 
 namespace StellarDotnetSdk.Responses.Predicates;
@@ -33,9 +34,16 @@ public sealed class PredicateBeforeAbsoluteTime : Predicate
     /// <summary>
     ///     Gets the deadline as a <see cref="DateTimeOffset" />.
     /// </summary>
+    /// <remarks>
+    ///     When no epoch is available, <see cref="AbsBefore" /> is parsed with the invariant culture and a
+    ///     value without an offset designator is interpreted as UTC — the same rules the
+    ///     <see cref="Converters.PredicateJsonConverter" /> consistency check applies — so the deadline
+    ///     resolves to the same instant regardless of the machine's culture or local time zone.
+    /// </remarks>
     public DateTimeOffset DateTime => AbsBeforeEpoch.HasValue
         ? DateTimeOffset.FromUnixTimeSeconds(AbsBeforeEpoch.Value)
-        : DateTimeOffset.Parse(AbsBefore);
+        : DateTimeOffset.Parse(AbsBefore, CultureInfo.InvariantCulture,
+            DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
 
     /// <inheritdoc />
     public override ClaimPredicate ToClaimPredicate()

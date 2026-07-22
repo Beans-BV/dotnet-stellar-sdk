@@ -141,4 +141,79 @@ public class KycJsonSerializationTest
             .WithMessage("Cannot convert JSON value '6/9/2026' to an ISO 8601 date. Expected format: yyyy-MM-dd.*");
     }
 #endif
+
+    // The following run on every TFM (including netstandard2.1) — that is the point of referencing
+    // System.Text.Json 10.x on all targets: KycJsonOptions.Default must enforce the same JSON guards
+    // as JsonOptions.DefaultOptions everywhere, not just on net10.0.
+    // (KycJsonOptions.Default is a public utility for consumers' own internal/persistence
+    // serialization — SEP-0009 wire parsing goes through the typed field models, not these options.)
+    [TestMethod]
+    public void KycJsonOptions_Default_DisablesAllowDuplicateProperties()
+    {
+        KycJsonOptions.Default.AllowDuplicateProperties.Should().BeFalse();
+    }
+
+    [TestMethod]
+    public void KycJsonOptions_Default_RespectNullableAnnotations_IsEnabled()
+    {
+        // The SEP-9 models can't exercise this behaviorally (every property on
+        // NaturalPersonKycFields/OrganizationKycFields is nullable), so this asserts the flag and
+        // KycJsonOptions_Deserialize_NullForNonNullableMember_ThrowsJsonException (below) asserts the
+        // behavior via a synthetic non-nullable DTO.
+        KycJsonOptions.Default.RespectNullableAnnotations.Should().BeTrue();
+    }
+
+    [TestMethod]
+    public void KycJsonOptions_Deserialize_NullForNonNullableMember_ThrowsJsonException()
+    {
+        // Behavioral coverage for RespectNullableAnnotations = true through KycJsonOptions.Default:
+        // an explicit null for a non-nullable member is rejected rather than silently written.
+        var json = """{"value":null}""";
+
+        var act = () => JsonSerializer.Deserialize<NonNullableProbe>(json, KycJsonOptions.Default);
+
+        act.Should().Throw<JsonException>();
+    }
+
+#nullable enable
+    private sealed class NonNullableProbe
+    {
+        public string Value { get; set; } = string.Empty;
+    }
+#nullable restore
+
+    [TestMethod]
+    public void KycJsonOptions_Deserialize_WithDuplicateProperties_ThrowsJsonException()
+    {
+        // A duplicated field must be rejected rather than silently taking the last value.
+        var json = """{"firstName":"John","firstName":"Jane"}""";
+
+        var act = () => JsonSerializer.Deserialize<NaturalPersonKycFields>(json, KycJsonOptions.Default);
+
+        act.Should().Throw<JsonException>();
+    }
+
+    [TestMethod]
+    public void KycJsonOptions_Deserialize_OrganizationWithDuplicateProperties_ThrowsJsonException()
+    {
+        // Same guard as the NaturalPersonKycFields test above, on the organization model.
+        var json = """{"name":"Acme Corp","name":"Evil Corp"}""";
+
+        var act = () => JsonSerializer.Deserialize<OrganizationKycFields>(json, KycJsonOptions.Default);
+
+        act.Should().Throw<JsonException>();
+    }
+
+    [TestMethod]
+    public void KycJsonOptions_Deserialize_WithCaseInsensitiveDuplicateProperties_ThrowsJsonException()
+    {
+        // PropertyNameCaseInsensitive = true makes these the same logical property, so the
+        // duplicate guard must reject them despite the differing case (mirrors the equivalent
+        // JsonOptions.DefaultOptions test).
+        var json = """{"firstName":"John","FIRSTNAME":"Jane"}""";
+
+        var act = () => JsonSerializer.Deserialize<NaturalPersonKycFields>(json, KycJsonOptions.Default);
+
+        act.Should().Throw<JsonException>();
+    }
 }

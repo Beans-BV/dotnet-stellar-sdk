@@ -121,11 +121,11 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with missing asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with missing asset property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithMissingAsset_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithMissingAsset_ThrowsJsonException()
     {
         // Arrange
         var json = @"{""amount"":""100""}";
@@ -135,11 +135,11 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with missing amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with missing amount property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithMissingAmount_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithMissingAmount_ThrowsJsonException()
     {
         // Arrange
         var json = @"{""asset"":""native""}";
@@ -149,11 +149,11 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with null asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with null asset property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithNullAsset_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNullAsset_ThrowsJsonException()
     {
         // Arrange
         var json = @"{""asset"":null,""amount"":""100""}";
@@ -163,11 +163,11 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with null amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with null amount property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithNullAmount_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNullAmount_ThrowsJsonException()
     {
         // Arrange
         var json = @"{""asset"":""native"",""amount"":null}";
@@ -262,14 +262,28 @@ public class AssetAmountJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with empty asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with empty asset property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithEmptyAsset_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithEmptyAsset_ThrowsJsonException()
     {
         // Arrange
         var json = @"{""asset"":"""",""amount"":""100""}";
+
+        // Act
+        JsonSerializer.Deserialize<AssetAmount>(json, _options);
+    }
+
+    /// <summary>
+    ///     Verifies that deserializing JSON with empty amount property throws JsonException.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithEmptyAmount_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{""asset"":""native"",""amount"":""""}";
 
         // Act
         JsonSerializer.Deserialize<AssetAmount>(json, _options);

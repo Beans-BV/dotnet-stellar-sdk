@@ -143,11 +143,11 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with missing asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with missing asset property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithMissingAsset_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithMissingAsset_ThrowsJsonException()
     {
         // Arrange
         var json = @"{
@@ -160,11 +160,11 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with missing amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with missing amount property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithMissingAmount_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithMissingAmount_ThrowsJsonException()
     {
         // Arrange
         var json = @"{
@@ -177,11 +177,11 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with null asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with null asset property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithNullAsset_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNullAsset_ThrowsJsonException()
     {
         // Arrange
         var json = @"{
@@ -195,16 +195,53 @@ public class LiquidityPoolClaimableAssetAmountJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with null amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with null amount property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithNullAmount_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNullAmount_ThrowsJsonException()
     {
         // Arrange
         var json = @"{
             ""asset"":""native"",
             ""amount"":null,
+            ""claimable_balance_id"":""00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072""
+        }";
+
+        // Act
+        JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
+    }
+
+    /// <summary>
+    ///     Verifies that deserializing JSON with empty amount property throws JsonException.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithEmptyAmount_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{
+            ""asset"":""native"",
+            ""amount"":"""",
+            ""claimable_balance_id"":""00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072""
+        }";
+
+        // Act
+        JsonSerializer.Deserialize<LiquidityPoolClaimableAssetAmount>(json, _options);
+    }
+
+    /// <summary>
+    ///     Verifies that deserializing JSON with empty asset property throws JsonException. Mirrors the
+    ///     empty-amount test; Read rejects both empty asset and empty amount with the same guard.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithEmptyAsset_ThrowsJsonException()
+    {
+        // Arrange
+        var json = @"{
+            ""asset"":"""",
+            ""amount"":""999.99"",
             ""claimable_balance_id"":""00000000929b20b72e5890ab51c24f1cc46fa01c4f318d8d33367d24dd614cfdf5491072""
         }";
 

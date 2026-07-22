@@ -169,6 +169,43 @@ public class PredicateDeserializerTest
     }
 
     /// <summary>
+    ///     Verifies that when abs_before has no offset designator and no epoch is supplied, the DateTime
+    ///     accessor interprets the value as UTC — the same rule the converter's abs_before/abs_before_epoch
+    ///     consistency check applies — rather than the machine's local time zone.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithOffsetlessAbsBeforeAndNoEpoch_DateTimeAssumesUtc()
+    {
+        // Arrange
+        const string json = "{\"abs_before\":\"2020-08-26T11:15:39\"}";
+
+        // Act
+        var predicate = JsonSerializer.Deserialize<Predicate>(json, JsonOptions.DefaultOptions);
+
+        // Assert
+        var absPredicate = (PredicateBeforeAbsoluteTime)predicate!;
+        Assert.AreEqual(1598440539L, absPredicate.DateTime.ToUnixTimeSeconds());
+    }
+
+    /// <summary>
+    ///     Verifies that when abs_before carries an explicit offset and no epoch is supplied, the DateTime
+    ///     accessor preserves the denoted instant.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithOffsetAbsBeforeAndNoEpoch_DateTimePreservesInstant()
+    {
+        // Arrange
+        const string json = "{\"abs_before\":\"2020-08-26T13:15:39+02:00\"}";
+
+        // Act
+        var predicate = JsonSerializer.Deserialize<Predicate>(json, JsonOptions.DefaultOptions);
+
+        // Assert
+        var absPredicate = (PredicateBeforeAbsoluteTime)predicate!;
+        Assert.AreEqual(1598440539L, absPredicate.DateTime.ToUnixTimeSeconds());
+    }
+
+    /// <summary>
     ///     Verifies that PredicateBeforeAbsoluteTime can be deserialized from JSON with string epoch.
     /// </summary>
     [TestMethod]

@@ -12,11 +12,10 @@ namespace StellarDotnetSdk.Tests.Converters;
 [TestClass]
 public class JsonOptionsTest
 {
-    // AllowDuplicateProperties is only available (and enabled by JsonOptions) on net10.0+.
-#if NET10_0_OR_GREATER
     /// <summary>
     ///     The shared options must disable <c>AllowDuplicateProperties</c> so malformed JSON
-    ///     cannot silently overwrite financial fields.
+    ///     cannot silently overwrite financial fields. Available on every TFM via the
+    ///     System.Text.Json 10.x package reference on net8.0/netstandard2.1.
     /// </summary>
     [TestMethod]
     public void DefaultOptions_DisablesAllowDuplicateProperties()
@@ -49,7 +48,6 @@ public class JsonOptionsTest
         Assert.ThrowsException<JsonException>(() =>
             JsonSerializer.Deserialize<Payment>(json, JsonOptions.DefaultOptions));
     }
-#endif
 
     /// <summary>
     ///     Well-formed JSON without duplicates must still deserialize successfully so that
@@ -75,8 +73,6 @@ public class JsonOptionsTest
         Assert.AreEqual("100.00", payment.Amount);
     }
 
-    // AllowDuplicateProperties is only available (and enabled by JsonOptions) on net10.0+.
-#if NET10_0_OR_GREATER
     /// <summary>
     ///     Case-insensitive matching is also in effect, so two properties that differ only in
     ///     casing must still be rejected as duplicates.
@@ -97,10 +93,7 @@ public class JsonOptionsTest
         Assert.ThrowsException<JsonException>(() =>
             JsonSerializer.Deserialize<Payment>(json, JsonOptions.DefaultOptions));
     }
-#endif
 
-    // RespectNullableAnnotations is only available (and enabled by JsonOptions) on net10.0+.
-#if NET10_0_OR_GREATER
     /// <summary>
     ///     Verifies that <see cref="JsonOptions.DefaultOptions" /> has
     ///     <see cref="JsonSerializerOptions.RespectNullableAnnotations" /> enabled.
@@ -126,7 +119,6 @@ public class JsonOptionsTest
         Assert.ThrowsException<JsonException>(() =>
             JsonSerializer.Deserialize<SampleDto>(json, JsonOptions.DefaultOptions));
     }
-#endif
 
     /// <summary>
     ///     Tests deserialization of JSON where a nullable reference property is null.

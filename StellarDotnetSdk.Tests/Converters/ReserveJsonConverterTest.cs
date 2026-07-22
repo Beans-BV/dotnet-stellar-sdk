@@ -128,11 +128,11 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with missing asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with missing asset property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithMissingAsset_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithMissingAsset_ThrowsJsonException()
     {
         // Arrange
         var json = @"{""amount"":""100""}";
@@ -142,11 +142,11 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with missing amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with missing amount property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithMissingAmount_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithMissingAmount_ThrowsJsonException()
     {
         // Arrange
         var json = @"{""asset"":""native""}";
@@ -156,11 +156,11 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with null asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with null asset property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithNullAsset_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNullAsset_ThrowsJsonException()
     {
         // Arrange
         var json = @"{""asset"":null,""amount"":""100""}";
@@ -170,11 +170,11 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with null amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with null amount property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithNullAmount_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithNullAmount_ThrowsJsonException()
     {
         // Arrange
         var json = @"{""asset"":""native"",""amount"":null}";
@@ -270,11 +270,11 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with empty asset property throws ArgumentException.
+    ///     Verifies that deserializing JSON with empty asset property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithEmptyAsset_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithEmptyAsset_ThrowsJsonException()
     {
         // Arrange
         var json = @"{""asset"":"""",""amount"":""100""}";
@@ -284,11 +284,11 @@ public class ReserveJsonConverterTest
     }
 
     /// <summary>
-    ///     Verifies that deserializing JSON with empty amount property throws ArgumentException.
+    ///     Verifies that deserializing JSON with empty amount property throws JsonException.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void Deserialize_WithEmptyAmount_ThrowsArgumentException()
+    [ExpectedException(typeof(JsonException))]
+    public void Deserialize_WithEmptyAmount_ThrowsJsonException()
     {
         // Arrange
         var json = @"{""asset"":""native"",""amount"":""""}";
@@ -313,6 +313,43 @@ public class ReserveJsonConverterTest
         Assert.IsNotNull(result);
         Assert.IsNotNull(result.Asset);
         Assert.AreEqual("native", result.Asset.CanonicalName());
+        Assert.AreEqual("100", result.Amount);
+    }
+
+    /// <summary>
+    ///     Verifies that an unrecognized property with an object value is skipped whole: its nested keys
+    ///     must not be walked as if they were top-level, which would both trip the duplicate-property
+    ///     guard on names like amount and desynchronize the reader.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithUnknownObjectProperty_IgnoresIt()
+    {
+        // Arrange - the nested object deliberately reuses the top-level property name "amount"
+        var json = @"{""asset"":""native"",""amount"":""100"",""_links"":{""amount"":""999999""}}";
+
+        // Act
+        var result = JsonSerializer.Deserialize<Reserve>(json, _options);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual("100", result.Amount);
+    }
+
+    /// <summary>
+    ///     Verifies that an unrecognized property with an array value is skipped whole, including the
+    ///     keys of any objects inside the array.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithUnknownArrayProperty_IgnoresIt()
+    {
+        // Arrange
+        var json = @"{""asset"":""native"",""amount"":""100"",""extra"":[{""asset"":""EVL:G""}]}";
+
+        // Act
+        var result = JsonSerializer.Deserialize<Reserve>(json, _options);
+
+        // Assert
+        Assert.IsNotNull(result);
         Assert.AreEqual("100", result.Amount);
     }
 }
