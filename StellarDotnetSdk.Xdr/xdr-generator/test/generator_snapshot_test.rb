@@ -40,7 +40,7 @@ class GeneratorSnapshotTest < Minitest::Test
       if UPDATE_SNAPSHOTS
         FileUtils.rm_rf(snapshot_dir)
         FileUtils.mkdir_p(snapshot_dir)
-        FileUtils.cp_r("#{generated_dir}/.", snapshot_dir)
+        copy_normalized(generated_dir, snapshot_dir)
         next
       end
 
@@ -76,8 +76,8 @@ class GeneratorSnapshotTest < Minitest::Test
     expected_files.each do |relative_path|
       expected_path = File.join(expected_dir, relative_path)
       actual_path = File.join(actual_dir, relative_path)
-      expected_content = File.binread(expected_path)
-      actual_content = File.binread(actual_path)
+      expected_content = normalize_eol(File.binread(expected_path))
+      actual_content = normalize_eol(File.binread(actual_path))
 
       assert_equal expected_content, actual_content, <<~MSG
         Generated content changed for fixture #{fixture_name}: #{relative_path}
@@ -89,5 +89,20 @@ class GeneratorSnapshotTest < Minitest::Test
     Dir.chdir(root_dir) do
       Dir.glob("**/*", File::FNM_DOTMATCH).sort.select { |path| File.file?(path) }
     end
+  end
+
+  # Generation emits platform-native line endings (CRLF on Windows); snapshots
+  # are stored with LF so the suite passes on every OS.
+  def copy_normalized(source_dir, target_dir)
+    collect_relative_files(source_dir).each do |relative_path|
+      source_path = File.join(source_dir, relative_path)
+      target_path = File.join(target_dir, relative_path)
+      FileUtils.mkdir_p(File.dirname(target_path))
+      File.binwrite(target_path, normalize_eol(File.binread(source_path)))
+    end
+  end
+
+  def normalize_eol(content)
+    content.gsub("\r\n", "\n")
   end
 end

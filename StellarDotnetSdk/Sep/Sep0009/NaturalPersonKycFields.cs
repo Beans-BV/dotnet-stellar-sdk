@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-#if !NETSTANDARD2_1
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Converters;
-#endif
 
 namespace StellarDotnetSdk.Sep.Sep0009;
 
@@ -281,6 +279,7 @@ public sealed record NaturalPersonKycFields
     ///     netstandard2.1.
     /// </remarks>
 #if NETSTANDARD2_1
+    [JsonConverter(typeof(IsoDateStringJsonConverter))]
     public string? BirthDate { get; init; }
 #else
     [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
@@ -345,6 +344,7 @@ public sealed record NaturalPersonKycFields
     ///     netstandard2.1.
     /// </remarks>
 #if NETSTANDARD2_1
+    [JsonConverter(typeof(IsoDateStringJsonConverter))]
     public string? IdIssueDate { get; init; }
 #else
     [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
@@ -359,6 +359,7 @@ public sealed record NaturalPersonKycFields
     ///     netstandard2.1.
     /// </remarks>
 #if NETSTANDARD2_1
+    [JsonConverter(typeof(IsoDateStringJsonConverter))]
     public string? IdExpirationDate { get; init; }
 #else
     [JsonConverter(typeof(NullableDateOnlyJsonConverter))]

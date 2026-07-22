@@ -27,8 +27,10 @@ public class NullableDateOnlyJsonConverter : JsonConverter<DateOnly?>
 
         if (!DateOnly.TryParseExact(value, DateOnlyJsonConverter.IsoDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
         {
+            // Keep this text in sync with IsoDateStringJsonConverter (netstandard2.1): consumers must observe
+            // the same JsonException message on every target framework.
             throw new JsonException(
-                $"Cannot convert JSON value '{value}' to DateOnly. Expected format: {DateOnlyJsonConverter.IsoDateFormat}.");
+                $"Cannot convert JSON value '{value}' to an ISO 8601 date. Expected format: {DateOnlyJsonConverter.IsoDateFormat}.");
         }
 
         return result;

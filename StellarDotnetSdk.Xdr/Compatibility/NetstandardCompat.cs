@@ -27,8 +27,9 @@ internal static class NetstandardCompat
             var read = stream.Read(buffer.Slice(totalRead));
             if (read <= 0)
             {
-                throw new EndOfStreamException(
-                    $"Unable to read required number of bytes. Expected {buffer.Length}, got {totalRead}.");
+                // Same text as Stream.ReadExactly's EndOfStreamException on net8.0+, so callers matching
+                // on the message observe identical behavior across target frameworks.
+                throw new EndOfStreamException("Unable to read beyond the end of the stream.");
             }
 
             totalRead += read;
@@ -41,4 +42,3 @@ internal static class NetstandardCompat
         stream.ReadExactlyCompat(buffer.AsSpan());
     }
 }
-

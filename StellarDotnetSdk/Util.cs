@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using StellarDotnetSdk.Compatibility;
 
 namespace StellarDotnetSdk;
 
@@ -36,8 +37,19 @@ public static class Util
     /// </summary>
     /// <param name="s">The hexadecimal string to convert.</param>
     /// <returns>The decoded byte array.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="s" /> is null.</exception>
+    /// <exception cref="FormatException">
+    ///     Thrown when <paramref name="s" /> has an odd length or contains a non-hexadecimal character —
+    ///     the same exception type <see cref="Convert.FromHexString(string)" /> throws for such input.
+    /// </exception>
     public static byte[] HexToBytes(string s)
     {
+        Throw.IfNull(s, nameof(s));
+        if (s.Length % 2 != 0)
+        {
+            throw new FormatException("The input is not a valid hex string as its length is not a multiple of 2.");
+        }
+
         var len = s.Length;
         var data = new byte[len / 2];
         for (var i = 0; i < len; i += 2)

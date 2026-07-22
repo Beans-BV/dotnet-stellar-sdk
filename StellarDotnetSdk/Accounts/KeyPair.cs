@@ -2,9 +2,10 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.Json.Serialization;
+using System.Threading;
 using dotnetstandard_bip32;
-using StellarDotnetSdk.Crypto;
 using StellarDotnetSdk.Converters;
+using StellarDotnetSdk.Crypto;
 using StellarDotnetSdk.Xdr;
 using xdr_PublicKey = StellarDotnetSdk.Xdr.PublicKey;
 
@@ -19,16 +20,33 @@ namespace StellarDotnetSdk.Accounts;
 ///     other public-key signature systems in the future. Use factory methods such as
 ///     <see cref="FromSecretSeed(string)" />, <see cref="FromAccountId" />, or <see cref="Random" />
 ///     to create instances.
+///     Signing caches expanded key material (libsodium secure memory on net8.0/net10.0) for the
+///     lifetime of the instance; call <see cref="Dispose()" /> on signing keypairs to release it
+///     deterministically. Disposal releases signing resources only — it does not erase the stored
+///     seed (<see cref="SecretSeed" />, <see cref="SeedBytes" />, <see cref="PrivateKey" /> remain
+///     readable). Disposal is optional: an undisposed NSec key is released when its handle is
+///     finalized, while on netstandard2.1 an undisposed expanded-key copy is reclaimed by the GC
+///     without being zeroed. Keypairs that never signed hold no cached material, though disposal
+///     still disables <see cref="Sign" />.
 /// </remarks>
 [JsonConverter(typeof(KeyPairJsonConverter))]
-public class KeyPair : IAccountId, IEquatable<KeyPair>
+public class KeyPair : IAccountId, IEquatable<KeyPair>, IDisposable
 {
+    private readonly byte[]? _privateKey;
     private readonly byte[] _publicKey;
+
+    private volatile bool _disposed;
+
+    // Lazily created on first Sign and reused, so the Ed25519 key expansion/import runs once per KeyPair
+    // instead of once per signature (roughly a 2x cost per signature otherwise).
+    private Ed25519Signer? _signer;
 
     /// <summary>
     ///     Creates a new Keypair object from public key.
     /// </summary>
-    /// <param name="publicKey"></param>
+    /// <param name="publicKey">The 32-byte ed25519 public key.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="publicKey" /> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="publicKey" /> is not exactly 32 bytes long.</exception>
     public KeyPair(byte[] publicKey)
         : this(publicKey, null, null)
     {
@@ -38,22 +56,45 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     ///     Creates a new Keypair instance from secret. This can either be secret key or secret seed depending on underlying
     ///     public-key signature system. Currently Keypair only supports ed25519.
     /// </summary>
-    /// <param name="publicKey"></param>
-    /// <param name="privateKey"></param>
-    /// <param name="seed"></param>
+    /// <param name="publicKey">The 32-byte ed25519 public key.</param>
+    /// <param name="privateKey">The optional 32-byte raw private key; enables signing when provided.</param>
+    /// <param name="seed">
+    ///     The optional 32-byte secret seed, exposed via <see cref="SeedBytes" /> and <see cref="SecretSeed" />
+    ///     .
+    /// </param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="publicKey" /> is null.</exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when <paramref name="publicKey" />, <paramref name="privateKey" /> or <paramref name="seed" />
+    ///     is not exactly 32 bytes long.
+    /// </exception>
     public KeyPair(byte[] publicKey, byte[]? privateKey, byte[]? seed)
     {
-        if (publicKey == null) throw new ArgumentNullException(nameof(publicKey));
+        if (publicKey == null)
+        {
+            throw new ArgumentNullException(nameof(publicKey));
+        }
+        if (publicKey.Length != Ed25519.PublicKeyLength)
+        {
+            throw new ArgumentException($"PublicKey must be {Ed25519.PublicKeyLength} bytes.", nameof(publicKey));
+        }
+        if (privateKey != null && privateKey.Length != Ed25519.SeedLength)
+        {
+            throw new ArgumentException($"PrivateKey must be {Ed25519.SeedLength} bytes.", nameof(privateKey));
+        }
+        if (seed != null && seed.Length != Ed25519.SeedLength)
+        {
+            throw new ArgumentException($"Seed must be {Ed25519.SeedLength} bytes.", nameof(seed));
+        }
 
         _publicKey = (byte[])publicKey.Clone();
-        var secret = seed ?? privateKey;
-        SeedBytes = secret != null ? (byte[])secret.Clone() : null;
+        _privateKey = privateKey != null ? (byte[])privateKey.Clone() : null;
+        SeedBytes = seed != null ? (byte[])seed.Clone() : null;
     }
 
     /// <summary>
     ///     The private key.
     /// </summary>
-    public byte[]? PrivateKey => SeedBytes is null ? null : (byte[])SeedBytes.Clone();
+    public byte[]? PrivateKey => _privateKey is null ? null : (byte[])_privateKey.Clone();
 
     /// <summary>
     ///     The bytes of the Secret Seed
@@ -224,7 +265,7 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <returns></returns>
     public bool CanSign()
     {
-        return SeedBytes != null;
+        return _privateKey != null;
     }
 
     /// <summary>
@@ -247,10 +288,12 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <returns>
     ///     <see cref="KeyPair" />
     /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="seed" /> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="seed" /> is not exactly 32 bytes long.</exception>
     public static KeyPair FromSecretSeed(byte[] seed)
     {
         var publicKey = Ed25519.GetPublicKey(seed);
-        return new KeyPair(publicKey, privateKey: seed, seed: seed);
+        return new KeyPair(publicKey, seed, seed);
     }
 
     /// <summary>
@@ -301,6 +344,8 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <returns>
     ///     <see cref="KeyPair" />
     /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="publicKey" /> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="publicKey" /> is not exactly 32 bytes long.</exception>
     public static KeyPair FromPublicKey(byte[] publicKey)
     {
         return new KeyPair(publicKey);
@@ -325,25 +370,56 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     ///     Sign the provided data with the key pair's private key.
     /// </summary>
     /// <param name="data">The data to sign.</param>
-    /// <returns>signed bytes, null if the private key for this keypair is null.</returns>
+    /// <returns>The signed bytes.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when this keypair has been disposed.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when this keypair does not contain a private key.</exception>
     public byte[] Sign(byte[] data)
     {
-        if (SeedBytes == null)
+        // Disposal is checked first so a disposed keypair throws ObjectDisposedException regardless of
+        // whether it holds a private key, matching the documented Dispose contract.
+        if (_disposed)
         {
-            throw new Exception(
-                "KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.");
+            throw new ObjectDisposedException(nameof(KeyPair));
+        }
+        if (_privateKey == null)
+        {
+            throw new InvalidOperationException(
+                "KeyPair does not contain secret key. Use KeyPair.FromSecretSeed method to create a new KeyPair with a secret key.");
         }
 
-        return Ed25519.Sign(SeedBytes, data);
+        var signer = Volatile.Read(ref _signer);
+        if (signer == null)
+        {
+            signer = new Ed25519Signer(_privateKey);
+            var existing = Interlocked.CompareExchange(ref _signer, signer, null);
+            if (existing != null)
+            {
+                // Benign race: another thread published first and both instances are functionally
+                // identical; scrub the loser's key material instead of leaving it to the GC.
+                signer.Dispose();
+                signer = existing;
+            }
+            else if (_disposed)
+            {
+                // Dispose ran between the guard above and publication; unpublish so no live key
+                // material outlives the Dispose call.
+                Interlocked.Exchange(ref _signer, null)?.Dispose();
+                throw new ObjectDisposedException(nameof(KeyPair));
+            }
+        }
+
+        return signer.Sign(data);
     }
 
     /// <summary>
     ///     Sign a message and return an XDR Decorated Signature
     /// </summary>
-    /// <param name="message"></param>
+    /// <param name="message">The message to sign.</param>
     /// <returns>
     ///     <see cref="DecoratedSignature" />
     /// </returns>
+    /// <exception cref="ObjectDisposedException">Thrown when this keypair has been disposed.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when this keypair does not contain a private key.</exception>
     public DecoratedSignature SignDecorated(byte[] message)
     {
         var rawSig = Sign(message);
@@ -358,10 +434,12 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     /// <summary>
     ///     Sign the provided payload data for payload signer where the input is the data being signed.
     /// </summary>
-    /// <param name="message"></param>
+    /// <param name="signerPayload">The payload to sign.</param>
     /// <returns>
     ///     <see cref="DecoratedSignature" />
     /// </returns>
+    /// <exception cref="ObjectDisposedException">Thrown when this keypair has been disposed.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when this keypair does not contain a private key.</exception>
     public DecoratedSignature SignPayloadDecorated(byte[] signerPayload)
     {
         var payloadSignature = SignDecorated(signerPayload);
@@ -414,5 +492,36 @@ public class KeyPair : IAccountId, IEquatable<KeyPair>
     public bool Verify(byte[] data, Signature signature)
     {
         return Verify(data, signature.InnerValue);
+    }
+
+    /// <summary>
+    ///     Releases the cached Ed25519 signing handle created by <see cref="Sign" />: the libsodium
+    ///     secure-memory key is freed on net8.0/net10.0 and the expanded private key copy is zeroed on
+    ///     netstandard2.1. Subsequent <see cref="Sign" />/<see cref="SignDecorated" />/
+    ///     <see cref="SignPayloadDecorated" /> calls throw <see cref="ObjectDisposedException" />;
+    ///     public-key members (<see cref="Verify(byte[], byte[])" />, <see cref="AccountId" />, equality)
+    ///     and the stored seed (<see cref="SecretSeed" />, <see cref="SeedBytes" />) remain usable —
+    ///     disposal releases signing resources, it does not erase the seed. Safe to call multiple times
+    ///     and on keypairs that never signed. Safe to call concurrently with <see cref="Sign" />: an
+    ///     in-flight signature completes normally and any signing call that starts after disposal throws.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    ///     Releases the cached Ed25519 signing handle. See <see cref="Dispose()" />.
+    /// </summary>
+    /// <param name="disposing">True when called from <see cref="Dispose()" />, false from a finalizer.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing)
+        {
+            return;
+        }
+        _disposed = true;
+        Interlocked.Exchange(ref _signer, null)?.Dispose();
     }
 }

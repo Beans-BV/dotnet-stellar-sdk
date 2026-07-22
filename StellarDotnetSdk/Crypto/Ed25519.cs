@@ -1,4 +1,7 @@
 using System;
+#if NETSTANDARD2_1
+using Sodium;
+#endif
 using StellarDotnetSdk.Compatibility;
 
 namespace StellarDotnetSdk.Crypto;
@@ -11,43 +14,25 @@ internal static class Ed25519
     public static byte[] GetPublicKey(byte[] seed)
     {
         Throw.IfNull(seed, nameof(seed));
-        if (seed.Length != SeedLength) throw new ArgumentException($"Seed must be {SeedLength} bytes.", nameof(seed));
+        if (seed.Length != SeedLength)
+        {
+            throw new ArgumentException($"Seed must be {SeedLength} bytes.", nameof(seed));
+        }
 
 #if NETSTANDARD2_1
-        var kp = Sodium.PublicKeyAuth.GenerateKeyPair(seed);
-        return kp.PublicKey;
+        // Clone rather than returning the handle's internal buffer — the returned array must not share
+        // its lifetime with the disposed handle.
+        using var kp = PublicKeyAuth.GenerateKeyPair(seed);
+        return (byte[])kp.PublicKey.Clone();
 #else
+        // Default key creation parameters: ExportPolicy = None. Exporting the *public* key never
+        // requires an export policy, and allowing plaintext private-key export here would needlessly
+        // weaken the secure-memory handle.
         using var key = NSec.Cryptography.Key.Import(
             NSec.Cryptography.SignatureAlgorithm.Ed25519,
             seed,
-            NSec.Cryptography.KeyBlobFormat.RawPrivateKey,
-            new NSec.Cryptography.KeyCreationParameters
-            {
-                ExportPolicy = NSec.Cryptography.KeyExportPolicies.AllowPlaintextExport,
-            });
+            NSec.Cryptography.KeyBlobFormat.RawPrivateKey);
         return key.PublicKey.Export(NSec.Cryptography.KeyBlobFormat.RawPublicKey);
-#endif
-    }
-
-    public static byte[] Sign(byte[] seed, byte[] data)
-    {
-        Throw.IfNull(seed, nameof(seed));
-        if (seed.Length != SeedLength) throw new ArgumentException($"Seed must be {SeedLength} bytes.", nameof(seed));
-        Throw.IfNull(data, nameof(data));
-
-#if NETSTANDARD2_1
-        var kp = Sodium.PublicKeyAuth.GenerateKeyPair(seed);
-        return Sodium.PublicKeyAuth.SignDetached(data, kp.PrivateKey);
-#else
-        using var key = NSec.Cryptography.Key.Import(
-            NSec.Cryptography.SignatureAlgorithm.Ed25519,
-            seed,
-            NSec.Cryptography.KeyBlobFormat.RawPrivateKey,
-            new NSec.Cryptography.KeyCreationParameters
-            {
-                ExportPolicy = NSec.Cryptography.KeyExportPolicies.AllowPlaintextExport,
-            });
-        return NSec.Cryptography.SignatureAlgorithm.Ed25519.Sign(key, data);
 #endif
     }
 
@@ -55,12 +40,14 @@ internal static class Ed25519
     {
         Throw.IfNull(publicKey, nameof(publicKey));
         if (publicKey.Length != PublicKeyLength)
+        {
             throw new ArgumentException($"PublicKey must be {PublicKeyLength} bytes.", nameof(publicKey));
+        }
         Throw.IfNull(data, nameof(data));
         Throw.IfNull(signature, nameof(signature));
 
 #if NETSTANDARD2_1
-        return Sodium.PublicKeyAuth.VerifyDetached(signature, data, publicKey);
+        return PublicKeyAuth.VerifyDetached(signature, data, publicKey);
 #else
         var pk = NSec.Cryptography.PublicKey.Import(
             NSec.Cryptography.SignatureAlgorithm.Ed25519,
@@ -70,4 +57,3 @@ internal static class Ed25519
 #endif
     }
 }
-

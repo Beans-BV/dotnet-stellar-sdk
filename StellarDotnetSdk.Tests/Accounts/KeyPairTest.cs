@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 
@@ -33,6 +35,27 @@ public class KeyPairTest
 
         // Assert
         Assert.IsTrue(Util.HexToBytes(expectedSig).SequenceEqual(sig));
+    }
+
+    /// <summary>
+    ///     Signing twice with the same KeyPair must produce the identical known-answer signature: the
+    ///     second call goes through the cached Ed25519 signer (expanded once per KeyPair, not per call),
+    ///     which must not change the output.
+    /// </summary>
+    [TestMethod]
+    public void Sign_CalledRepeatedly_ReturnsSameSignatureViaCachedSigner()
+    {
+        const string expectedSig =
+            "587d4b472eeef7d07aafcd0b049640b0bb3f39784118c2e2b73a04fa2f64c9c538b4b2d0f5335e968a480021fdc23e98c0ddf424cb15d8131df8cb6c4bb58309";
+        var keyPair = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+        var bytes = Encoding.UTF8.GetBytes("hello world");
+
+        var first = keyPair.Sign(bytes);
+        var second = keyPair.Sign(bytes);
+
+        Assert.IsTrue(Util.HexToBytes(expectedSig).SequenceEqual(first));
+        Assert.IsTrue(first.SequenceEqual(second));
+        Assert.IsTrue(keyPair.Verify(bytes, second));
     }
 
     /// <summary>
@@ -129,10 +152,9 @@ public class KeyPairTest
     }
 
     /// <summary>
-    ///     Verifies that Sign throws exception when KeyPair does not contain secret key.
+    ///     Verifies that Sign throws InvalidOperationException when KeyPair does not contain secret key.
     /// </summary>
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void Sign_WithoutSecretKey_ThrowsException()
     {
         // Arrange
@@ -140,17 +162,11 @@ public class KeyPairTest
         const string data = "hello world";
 
         // Act & Assert
-        try
-        {
-            var unused = keyPair.Sign(Encoding.UTF8.GetBytes(data));
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(
-                "KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.",
-                e.Message);
-            throw;
-        }
+        var e = Assert.ThrowsException<InvalidOperationException>(
+            () => keyPair.Sign(Encoding.UTF8.GetBytes(data)));
+        Assert.AreEqual(
+            "KeyPair does not contain secret key. Use KeyPair.FromSecretSeed method to create a new KeyPair with a secret key.",
+            e.Message);
     }
 
     /// <summary>
@@ -248,5 +264,251 @@ public class KeyPairTest
 
         // Assert
         CollectionAssert.AreEqual(expectedBytes, sig.Hint.InnerValue);
+    }
+
+    /// <summary>
+    ///     Verifies that FromPublicKey rejects a public key that is not exactly 32 bytes at construction time.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow(0)]
+    [DataRow(16)]
+    [DataRow(31)]
+    [DataRow(33)]
+    public void FromPublicKey_WithWrongLengthKey_ThrowsArgumentException(int length)
+    {
+        Assert.ThrowsException<ArgumentException>(() => KeyPair.FromPublicKey(new byte[length]));
+    }
+
+    /// <summary>
+    ///     Verifies that the constructor rejects a null public key.
+    /// </summary>
+    [TestMethod]
+    public void Constructor_WithNullPublicKey_ThrowsArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => new KeyPair(null!, null, null));
+    }
+
+    /// <summary>
+    ///     Verifies that the constructor rejects a private key that is not exactly 32 bytes at construction time.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow(16)]
+    [DataRow(33)]
+    public void Constructor_WithWrongLengthPrivateKey_ThrowsArgumentException(int length)
+    {
+        var publicKey = KeyPair.FromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ")
+            .PublicKey;
+
+        Assert.ThrowsException<ArgumentException>(() => new KeyPair(publicKey, new byte[length], null));
+    }
+
+    /// <summary>
+    ///     Verifies that the constructor rejects a seed that is not exactly 32 bytes at construction time.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow(16)]
+    [DataRow(33)]
+    public void Constructor_WithWrongLengthSeed_ThrowsArgumentException(int length)
+    {
+        var publicKey = KeyPair.FromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ")
+            .PublicKey;
+
+        Assert.ThrowsException<ArgumentException>(() => new KeyPair(publicKey, null, new byte[length]));
+    }
+
+    /// <summary>
+    ///     Verifies that FromSecretSeed rejects a seed that is not exactly 32 bytes at construction time.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow(0)]
+    [DataRow(16)]
+    [DataRow(31)]
+    [DataRow(33)]
+    public void FromSecretSeed_WithWrongLengthSeed_ThrowsArgumentException(int length)
+    {
+        Assert.ThrowsException<ArgumentException>(() => KeyPair.FromSecretSeed(new byte[length]));
+    }
+
+    /// <summary>
+    ///     Verifies that a KeyPair constructed with a seed but no private key cannot sign.
+    /// </summary>
+    [TestMethod]
+    public void Constructor_WithSeedOnly_CannotSign()
+    {
+        // Arrange
+        var publicKey = KeyPair.FromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ")
+            .PublicKey;
+        var unrelatedSeed = Util.HexToBytes(Seed);
+
+        // Act
+        var keyPair = new KeyPair(publicKey, null, unrelatedSeed);
+
+        // Assert
+        Assert.IsFalse(keyPair.CanSign());
+        Assert.IsNull(keyPair.PrivateKey);
+        Assert.IsNotNull(keyPair.SecretSeed);
+        Assert.ThrowsException<InvalidOperationException>(() => keyPair.Sign(Encoding.UTF8.GetBytes("hello world")));
+    }
+
+    /// <summary>
+    ///     Verifies that a KeyPair constructed with a private key but no seed can sign without exposing a secret seed.
+    /// </summary>
+    [TestMethod]
+    public void Constructor_WithPrivateKeyOnly_CanSignWithoutExposingSecretSeed()
+    {
+        // Arrange
+        var privateKey = Util.HexToBytes(Seed);
+        var fullKeyPair = KeyPair.FromSecretSeed(privateKey);
+
+        // Act
+        var keyPair = new KeyPair(fullKeyPair.PublicKey, privateKey, null);
+
+        // Assert
+        Assert.IsTrue(keyPair.CanSign());
+        Assert.IsNotNull(keyPair.PrivateKey);
+        Assert.IsNull(keyPair.SecretSeed);
+        Assert.IsNull(keyPair.SeedBytes);
+        var data = Encoding.UTF8.GetBytes("hello world");
+        Assert.IsTrue(keyPair.Verify(data, keyPair.Sign(data)));
+    }
+
+    /// <summary>
+    ///     Verifies that a KeyPair holding only a private key equals a public-only KeyPair with the same public key,
+    ///     since neither holds a secret seed.
+    /// </summary>
+    [TestMethod]
+    public void Equals_WithPrivateKeyOnlyAndPublicOnly_ReturnsTrue()
+    {
+        // Arrange
+        var privateKey = Util.HexToBytes(Seed);
+        var fullKeyPair = KeyPair.FromSecretSeed(privateKey);
+
+        // Act
+        var keyPair = new KeyPair(fullKeyPair.PublicKey, privateKey, null);
+        var publicOnlyKeyPair = KeyPair.FromPublicKey(fullKeyPair.PublicKey);
+
+        // Assert
+        Assert.IsTrue(keyPair.Equals(publicOnlyKeyPair));
+        Assert.IsTrue(publicOnlyKeyPair.Equals(keyPair));
+    }
+
+    /// <summary>
+    ///     Verifies that disposing a keypair after signing blocks further signing but keeps
+    ///     public-key members and previously produced signatures usable.
+    /// </summary>
+    [TestMethod]
+    public void Dispose_AfterSigning_BlocksSigningButKeepsPublicKeyMembersUsable()
+    {
+        // Arrange
+        var keyPair = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+        var data = Encoding.UTF8.GetBytes("hello world");
+        var signature = keyPair.Sign(data);
+
+        // Act
+        keyPair.Dispose();
+
+        // Assert
+        var e = Assert.ThrowsException<ObjectDisposedException>(() => keyPair.Sign(data));
+        Assert.AreEqual(nameof(KeyPair), e.ObjectName);
+        Assert.ThrowsException<ObjectDisposedException>(() => keyPair.SignDecorated(data));
+        Assert.IsTrue(keyPair.Verify(data, signature));
+        Assert.IsNotNull(keyPair.AccountId);
+        Assert.IsNotNull(keyPair.SecretSeed);
+    }
+
+    /// <summary>
+    ///     Verifies that disposing before the first Sign call also blocks all three signing entry
+    ///     points (no signer is lazily created from the retained seed afterwards).
+    /// </summary>
+    [TestMethod]
+    public void Dispose_BeforeFirstSign_SignThrows()
+    {
+        // Arrange
+        var keyPair = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+        var data = Encoding.UTF8.GetBytes("hello world");
+
+        // Act
+        keyPair.Dispose();
+
+        // Assert
+        var e = Assert.ThrowsException<ObjectDisposedException>(() => keyPair.Sign(data));
+        Assert.AreEqual(nameof(KeyPair), e.ObjectName);
+        Assert.ThrowsException<ObjectDisposedException>(() => keyPair.SignDecorated(data));
+        Assert.ThrowsException<ObjectDisposedException>(() => keyPair.SignPayloadDecorated(data));
+    }
+
+    /// <summary>
+    ///     Verifies that Dispose is idempotent, harmless on keypairs that cannot sign, and does not
+    ///     affect equality — and that a disposed public-only keypair reports the disposed state
+    ///     (ObjectDisposedException) rather than the missing-secret-key state from Sign.
+    /// </summary>
+    [TestMethod]
+    public void Dispose_IsIdempotent_AndHarmlessOnPublicOnlyKeyPairs()
+    {
+        // Arrange
+        var keyPair = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+        var sameSeedKeyPair = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+        var publicOnlyKeyPair = KeyPair.FromPublicKey(keyPair.PublicKey);
+
+        // Act
+        keyPair.Dispose();
+        keyPair.Dispose();
+        publicOnlyKeyPair.Dispose();
+
+        // Assert
+        Assert.IsTrue(keyPair.Equals(sameSeedKeyPair));
+        Assert.IsNotNull(publicOnlyKeyPair.AccountId);
+        Assert.ThrowsException<ObjectDisposedException>(
+            () => publicOnlyKeyPair.Sign(Encoding.UTF8.GetBytes("hello world")));
+    }
+
+    /// <summary>
+    ///     Regression test for the Dispose-vs-Sign race: before Sign and Dispose were serialized inside
+    ///     the signer, a Dispose could zero the expanded key mid-signature on the netstandard2.1 backend
+    ///     and Sign would silently return invalid bytes (probe-measured at ~0.3% of contended calls).
+    ///     Every concurrent Sign must therefore either return a valid signature or throw
+    ///     ObjectDisposedException — nothing in between. The iteration count makes a regression
+    ///     near-certain to surface while the assertions can never fail spuriously on correct code.
+    /// </summary>
+    [TestMethod]
+    public void Sign_ConcurrentWithDispose_NeverReturnsInvalidSignature()
+    {
+        var data = Encoding.UTF8.GetBytes("race probe");
+        var verifier = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+
+        for (var i = 0; i < 3000; i++)
+        {
+            var keyPair = KeyPair.FromSecretSeed(Util.HexToBytes(Seed));
+            // Alternate between racing the lazy signer creation and racing the published-signer fast path.
+            if (i % 2 == 0)
+            {
+                keyPair.Sign(data);
+            }
+
+            using var start = new ManualResetEventSlim(false);
+            var signTask = Task.Run(() =>
+            {
+                start.Wait();
+                try
+                {
+                    var signature = keyPair.Sign(data);
+                    Assert.IsTrue(
+                        verifier.Verify(data, signature),
+                        "Sign returned an invalid signature instead of throwing during a concurrent Dispose.");
+                }
+                catch (ObjectDisposedException)
+                {
+                    // The only acceptable failure mode.
+                }
+            });
+            var disposeTask = Task.Run(() =>
+            {
+                start.Wait();
+                Thread.SpinWait(Random.Shared.Next(0, 2000));
+                keyPair.Dispose();
+            });
+            start.Set();
+            Task.WaitAll(signTask, disposeTask);
+        }
     }
 }
