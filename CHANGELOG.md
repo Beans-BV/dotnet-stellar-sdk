@@ -135,6 +135,33 @@ All notable changes to this project are documented here. The format is based on
 
 ### Fixed
 
+- `StellarRpcServer.SimulateTransaction` now sends the `authMode` parameter using the values Stellar RPC
+  accepts (`enforce`, `record`, `record_allow_nonroot`). RPC matches this field case-sensitively against
+  those three literals, so the parameter was non-functional in every release that offered it
+  (14.0.0 onwards) — but it failed in two different ways, because the SDK changed JSON stacks in 15.0.0:
+  - **15.0.0 through 16.0.0-beta** serialized the `AuthMode` enum under System.Text.Json's default enum
+    naming, putting `ENFORCE`/`RECORD`/`RECORD_ALLOW_NONROOT` on the wire. RPC rejected each one with
+    `optional 'authMode' must be one of enforce,record,record_allow_nonroot when included`. It reports
+    this inside the simulation result rather than as a JSON-RPC error, so it surfaced on
+    `SimulateTransactionResponse.Error` and was easily mistaken for a failed simulation.
+  - **14.0.0 and 14.0.1** built the request with Newtonsoft.Json, whose default enum handling emits the
+    ordinal — `"authMode":0`/`1`/`2`. RPC's `authMode` is a string field, so the request failed to
+    unmarshal and RPC replied with a JSON-RPC error instead (`-32602 invalid parameters`,
+    `json: cannot unmarshal number into Go struct field SimulateTransactionRequest.authMode of type
+    string`). The SDK does not model JSON-RPC errors, so `SimulateTransaction` returned `null` rather
+    than a response carrying `Error`, typically surfacing as a `NullReferenceException` at the call site.
+
+  Either way, callers who passed an `AuthMode` were silently simulating nothing. Passing no `authMode`
+  was, and remains, unaffected — the field is omitted entirely and RPC applies its own default.
+
+  `AuthMode` now carries the wire spelling on the type itself (`[JsonStringEnumMemberName]` on each member
+  plus a type-level `[JsonConverter]`), so *any* serialization of the enum produces the RPC form rather than
+  only the one call site that remembers to convert. Two knock-on effects, both limited to code that
+  serializes `AuthMode` directly: it now writes `"enforce"` instead of `0` under a plain
+  `JsonSerializerOptions`, and reading it back accepts only the lowercase spellings — `"ENFORCE"` previously
+  round-tripped through `JsonOptions.DefaultOptions` and now throws `JsonException`. Nothing in the SDK
+  deserializes `AuthMode`, and no Stellar RPC response carries the field
+  ([#208](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/208)).
 - `PredicateJsonConverter` no longer leaks `FormatException`/`OverflowException` for malformed
   `rel_before`/`abs_before_epoch` values — every malformed predicate now throws `JsonException`, the
   SDK's documented deserialization failure mode. It also rejects `and`/`or` predicate arrays that do

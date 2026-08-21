@@ -296,6 +296,10 @@ public class StellarRpcServer : IDisposable
     ///     </p>
     /// </param>
     /// <returns>A <see cref="SimulateTransactionResponse" /> object.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown when <paramref name="authMode" /> holds a value that is not a defined <see cref="AuthMode" />
+    ///     member. Raised synchronously, while building the request, rather than surfacing on the returned task.
+    /// </exception>
     public Task<SimulateTransactionResponse> SimulateTransaction(
         Transaction transaction,
         uint? resourceConfig = null,
@@ -326,7 +330,7 @@ public class StellarRpcServer : IDisposable
 
         if (authMode != null)
         {
-            request["authMode"] = authMode;
+            request["authMode"] = authMode.Value.ToRequestValue();
         }
 
         return request;

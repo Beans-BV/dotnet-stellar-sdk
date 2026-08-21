@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
@@ -1422,6 +1423,85 @@ public class StellarRpcServerTest
         Assert.AreEqual(2, extension.ArchivedSorobanEntries.Length);
         Assert.AreEqual(134U, extension.ArchivedSorobanEntries[0]);
         Assert.AreEqual(554U, extension.ArchivedSorobanEntries[1]);
+    }
+
+    /// <summary>
+    ///     Verifies that the <c>authMode</c> parameter is put on the wire using the values Stellar RPC accepts.
+    ///     RPC compares the field case-sensitively and rejects anything other than <c>enforce</c>, <c>record</c>,
+    ///     or <c>record_allow_nonroot</c>.
+    /// </summary>
+    [TestMethod]
+    [DataRow(AuthMode.ENFORCE, "enforce")]
+    [DataRow(AuthMode.RECORD, "record")]
+    [DataRow(AuthMode.RECORD_ALLOW_NONROOT, "record_allow_nonroot")]
+    public async Task SimulateTransaction_WithAuthMode_SendsRpcWireValue(AuthMode authMode, string expectedWireValue)
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "1",
+              "result": {
+                "latestLedger": "14245"
+              }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
+
+        // Act
+        await sorobanServer.SimulateTransaction(CreateDummyTransaction(false), null, authMode);
+
+        // Assert
+        var body = handler.RequestBody;
+        Assert.IsNotNull(body);
+        using var request = JsonDocument.Parse(body!);
+        var authModeField = request.RootElement.GetProperty("params").GetProperty("authMode");
+        Assert.AreEqual(expectedWireValue, authModeField.GetString());
+    }
+
+    /// <summary>
+    ///     Verifies that no <c>authMode</c> field is sent when the caller does not request one, leaving Stellar RPC
+    ///     to apply its own default.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithoutAuthMode_OmitsAuthModeField()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "1",
+              "result": {
+                "latestLedger": "14245"
+              }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
+
+        // Act
+        await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        var body = handler.RequestBody;
+        Assert.IsNotNull(body);
+        using var request = JsonDocument.Parse(body!);
+        Assert.IsFalse(request.RootElement.GetProperty("params").TryGetProperty("authMode", out _));
+    }
+
+    /// <summary>
+    ///     Verifies that an undefined <see cref="AuthMode" /> value fails loudly rather than being put on the wire as
+    ///     a string Stellar RPC would reject.
+    /// </summary>
+    [TestMethod]
+    public void ToRequestValue_WithUndefinedAuthMode_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        const AuthMode undefinedAuthMode = (AuthMode)99;
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => undefinedAuthMode.ToRequestValue());
     }
 
     /// <summary>
