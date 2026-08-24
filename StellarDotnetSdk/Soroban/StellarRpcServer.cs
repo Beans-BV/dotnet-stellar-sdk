@@ -115,6 +115,9 @@ public class StellarRpcServer : IDisposable
     ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getHealth
     /// </summary>
     /// <returns>The <see cref="GetHealthResponse" /> object containing the health check result.</returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<GetHealthResponse> GetHealth()
     {
         return SendRequest<object, GetHealthResponse>("getHealth", null);
@@ -126,6 +129,9 @@ public class StellarRpcServer : IDisposable
     ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getNetwork
     /// </summary>
     /// <returns>The <see cref="GetNetworkResponse" /> object containing the network metadata.</returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<GetNetworkResponse> GetNetwork()
     {
         return SendRequest<object, GetNetworkResponse>("getNetwork", null);
@@ -144,6 +150,9 @@ public class StellarRpcServer : IDisposable
     ///     A GetTransactionResponse object containing the transaction status, result, and
     ///     other details.
     /// </returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<GetTransactionResponse> GetTransaction(string txHash)
     {
         return SendRequest<object, GetTransactionResponse>("getTransaction", new { hash = txHash });
@@ -157,6 +166,9 @@ public class StellarRpcServer : IDisposable
     /// </summary>
     /// <param name="txHash"></param>
     /// <returns></returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<GetTransactionsResponse> GetTransactions(GetTransactionsRequest request)
     {
         return SendRequest<object, GetTransactionsResponse>("getTransactions", request);
@@ -169,6 +181,9 @@ public class StellarRpcServer : IDisposable
     /// </summary>
     /// <param name="request">The request parameters including start ledger and pagination options.</param>
     /// <returns>A <see cref="GetLedgersResponse" /> object containing the ledger details.</returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<GetLedgersResponse> GetLedgers(GetLedgersRequest request)
     {
         return SendRequest<object, GetLedgersResponse>("getLedgers", request);
@@ -180,6 +195,9 @@ public class StellarRpcServer : IDisposable
     ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getVersionInfo
     /// </summary>
     /// <returns></returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<GetVersionInfoResponse> GetVersionInfo()
     {
         return SendRequest<object, GetVersionInfoResponse>("getVersionInfo", null);
@@ -193,6 +211,9 @@ public class StellarRpcServer : IDisposable
     ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getFeeStats
     /// </summary>
     /// <returns></returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<GetFeeStatsResponse> GetFeeStats()
     {
         return SendRequest<object, GetFeeStatsResponse>("getFeeStats", null);
@@ -208,6 +229,9 @@ public class StellarRpcServer : IDisposable
     /// <returns>
     ///     An Account object containing the sequence number and current state of the account.
     /// </returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public async Task<Account> GetAccount(string accountId)
     {
         var ledgerKeyAccount = new LedgerKeyAccount(accountId);
@@ -225,6 +249,9 @@ public class StellarRpcServer : IDisposable
     ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLatestLedger
     /// </summary>
     /// <returns></returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<GetLatestLedgerResponse> GetLatestLedger()
     {
         return SendRequest<object, GetLatestLedgerResponse>("getLatestLedger", null);
@@ -245,6 +272,9 @@ public class StellarRpcServer : IDisposable
     ///     least one key must be provided.
     /// </param>
     /// <returns>A <see cref="GetLedgerEntriesResponse" /> object containing the current values.</returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<GetLedgerEntriesResponse> GetLedgerEntries(LedgerKey[] keys)
     {
         return SendRequest<object, GetLedgerEntriesResponse>("getLedgerEntries",
@@ -257,6 +287,9 @@ public class StellarRpcServer : IDisposable
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<GetEventsResponse> GetEvents(GetEventsRequest request)
     {
         return SendRequest<object, GetEventsResponse>("getEvents", request);
@@ -267,6 +300,9 @@ public class StellarRpcServer : IDisposable
     /// </summary>
     /// <param name="key">The <see cref="LedgerKey" /> of the ledger entry to retrieve.</param>
     /// <returns>A <see cref="GetLedgerEntriesResponse" /> object containing the current value.</returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<GetLedgerEntriesResponse> GetLedgerEntry(LedgerKey key)
     {
         var xdrBase64Keys = new[] { key.ToXdrBase64() };
@@ -327,6 +363,9 @@ public class StellarRpcServer : IDisposable
     ///     Thrown when <paramref name="authMode" /> holds a value that is not a defined <see cref="AuthMode" />
     ///     member. Raised synchronously, while building the request, rather than surfacing on the returned task.
     /// </exception>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<SimulateTransactionResponse> SimulateTransaction(
         Transaction transaction,
         uint? resourceConfig = null,
@@ -379,6 +418,9 @@ public class StellarRpcServer : IDisposable
     /// </summary>
     /// <param name="transaction">The transaction object to be submitted.</param>
     /// <returns>A <see cref="SendTransactionResponse" /> response.</returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<SendTransactionResponse> SendTransaction(Transaction transaction)
     {
         return SendRequest<object, SendTransactionResponse>("sendTransaction",
@@ -394,6 +436,9 @@ public class StellarRpcServer : IDisposable
     /// </summary>
     /// <param name="feeBumpTransaction">The FeeBumpTransaction object to be submitted.</param>
     /// <returns>A <see cref="T:StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse" /> response.</returns>
+    /// <exception cref="SorobanRpcException">
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
     public Task<SendTransactionResponse> SendTransaction(FeeBumpTransaction feeBumpTransaction)
     {
         return SendRequest<object, SendTransactionResponse>("sendTransaction",
@@ -411,6 +456,12 @@ public class StellarRpcServer : IDisposable
 
         var response = await _httpClient.PostAsync(_serverUri, httpContent);
         var sorobanRpcResponse = await responseHandler.HandleResponse(response);
+        // A JSON-RPC error is delivered with HTTP status 200 and no result member, so it survives
+        // ResponseHandler's status-code checks; surface it instead of returning a null result.
+        if (sorobanRpcResponse.Error is { } error)
+        {
+            throw new SorobanRpcException(error.Code, error.Message, error.Data);
+        }
         return sorobanRpcResponse.Result;
     }
 
