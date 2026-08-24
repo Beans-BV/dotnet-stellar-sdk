@@ -11,11 +11,32 @@ namespace StellarDotnetSdk.Soroban;
 ///     the <c>authMode</c> request field against those literals case-sensitively. The wire spelling is therefore
 ///     pinned on the members themselves rather than left to whatever enum naming a serializer happens to apply.
 ///     <para>
-///         The type-level <see cref="JsonConverterAttribute" /> is what makes that pinning hold: on its own,
-///         <see cref="JsonStringEnumMemberNameAttribute" /> only takes effect when a
-///         <see cref="JsonStringEnumConverter" /> is registered on the options in use. Relying on such a global
-///         registration is precisely what put <c>RECORD_ALLOW_NONROOT</c> on the wire in releases 15.0.0 through
-///         16.0.0-beta, so the contract is attached to the type instead of to any one options instance.
+///         Two mechanisms carry that spelling, because neither covers every path on its own.
+///         <see cref="JsonStringEnumMemberNameAttribute" /> only takes effect through a
+///         <see cref="JsonStringEnumConverter" />, so it needs one to be in play; the type-level
+///         <see cref="JsonConverterAttribute" /> supplies one for callers whose
+///         <see cref="System.Text.Json.JsonSerializerOptions" /> registers none. Between them, every ordinary
+///         serialization of an <see cref="AuthMode" /> emits the RPC literal — verified for
+///         <c>JsonOptions.DefaultOptions</c>, a bare options instance, and the parameterless
+///         <c>JsonSerializer.Serialize</c> overload.
+///     </para>
+///     <para>
+///         Note which of the two actually runs, because it is not the intuitive one. System.Text.Json resolves a
+///         converter in a fixed order — a <see cref="JsonConverterAttribute" /> on the <em>property</em> first,
+///         then the options' <c>Converters</c> collection (the first entry whose <c>CanConvert</c> matches),
+///         then a <see cref="JsonConverterAttribute" /> on the <em>type</em>. A type-level attribute is thus the
+///         weakest of the three, not an override: under <c>JsonOptions.DefaultOptions</c>, whose collection
+///         includes a catch-all <see cref="JsonStringEnumConverter" />, that global converter resolves this enum
+///         and the attribute below is never consulted. The two agree only because
+///         <see cref="JsonStringEnumConverter" /> honours the member-name attributes. A consumer who registers
+///         their own <see cref="AuthMode" /> converter likewise outranks the attribute below — harmless here,
+///         since <c>AuthModeExtensions.ToRequestValue</c> and not the serializer is what puts the value
+///         in the <c>authMode</c> request field.
+///     </para>
+///     <para>
+///         What broke releases 15.0.0 through 16.0.0-beta was not the global registration itself but the absence
+///         of any member-name mapping to go with it: a bare <see cref="JsonStringEnumConverter" /> falls back to
+///         the C# member name, so the boxed enum went out as <c>RECORD_ALLOW_NONROOT</c>.
 ///     </para>
 /// </remarks>
 [JsonConverter(typeof(JsonStringEnumConverter<AuthMode>))]
@@ -54,9 +75,12 @@ internal static class AuthModeExtensions
     ///     different failure modes and neither covers both:
     ///     <list type="bullet">
     ///         <item>
-    ///             The attributes make <em>every</em> serialization path correct by default — including a future
-    ///             call site that puts the raw enum into a request payload, which is how the wire format broke in
-    ///             the first place. They cannot be bypassed by forgetting to call this method.
+    ///             The attributes make ordinary serialization correct by default — including a future call site
+    ///             that puts the raw enum into a request payload, which is how the wire format broke in the first
+    ///             place. They cannot be bypassed by forgetting to call this method. (They <em>can</em> be
+    ///             outranked by a converter a consumer registers for <see cref="AuthMode" /> on their own
+    ///             options; see the remarks on the enum. This method is unaffected by that, which is the second
+    ///             reason to keep it.)
     ///         </item>
     ///         <item>
     ///             The attributes do not validate. An undefined value — <c>(AuthMode)99</c>, or a member added to

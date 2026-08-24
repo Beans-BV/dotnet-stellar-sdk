@@ -155,11 +155,16 @@ All notable changes to this project are documented here. The format is based on
   was, and remains, unaffected — the field is omitted entirely and RPC applies its own default.
 
   `AuthMode` now carries the wire spelling on the type itself (`[JsonStringEnumMemberName]` on each member
-  plus a type-level `[JsonConverter]`), so *any* serialization of the enum produces the RPC form rather than
-  only the one call site that remembers to convert. Two knock-on effects, both limited to code that
+  plus a type-level `[JsonConverter]`), so serializing the enum produces the RPC form rather than only the
+  one call site that remembers to convert — for `JsonOptions.DefaultOptions`, a bare
+  `JsonSerializerOptions`, and the parameterless `JsonSerializer.Serialize` alike. (A caller who registers
+  their own `AuthMode` converter still wins: System.Text.Json checks the options' `Converters` collection
+  before a type-level attribute. That does not affect the `authMode` request field, which is now built from
+  an explicit mapping rather than by serializing the enum.) Two knock-on effects, both limited to code that
   serializes `AuthMode` directly: it now writes `"enforce"` instead of `0` under a plain
-  `JsonSerializerOptions`, and reading it back accepts only the lowercase spellings — `"ENFORCE"` previously
-  round-tripped through `JsonOptions.DefaultOptions` and now throws `JsonException`. Nothing in the SDK
+  `JsonSerializerOptions`, and reading it back accepts only the lowercase spellings — `"ENFORCE"` and
+  `"Enforce"` previously round-tripped through `JsonOptions.DefaultOptions` and now throw `JsonException`
+  (member-name matching is case-sensitive once `[JsonStringEnumMemberName]` is applied). Nothing in the SDK
   deserializes `AuthMode`, and no Stellar RPC response carries the field
   ([#208](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/208)).
 - `PredicateJsonConverter` no longer leaks `FormatException`/`OverflowException` for malformed
