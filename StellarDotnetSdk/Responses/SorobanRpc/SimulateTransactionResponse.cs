@@ -41,12 +41,16 @@ public class SimulateTransactionResponse
     /// <summary>
     ///     (Optional) Not present in case of error.
     ///     <para>
-    ///         Recommended minimum resource fee to add when submitting the transaction. This fee is to be added on top of the
-    ///         Stellar network fee.
+    ///         Recommended minimum resource fee (in stroops) to add when submitting the transaction. This fee is to be added
+    ///         on top of the Stellar network fee.
+    ///     </para>
+    ///     <para>
+    ///         Stellar RPC declares this field as an <c>int64</c>, so it is modelled as a <see cref="long" />: values above
+    ///         <see cref="uint.MaxValue" /> (~429 XLM) are reachable on large uploads and restores.
     ///     </para>
     ///     See https://developers.stellar.org/docs/encyclopedia/fees-surge-pricing-fee-strategies#network-fees-on-stellar.
     /// </summary>
-    public uint? MinResourceFee { get; init; }
+    public long? MinResourceFee { get; init; }
 
     /// <summary>
     ///     If present, it indicates that the simulation detected archived ledger entries which need to be restored before the

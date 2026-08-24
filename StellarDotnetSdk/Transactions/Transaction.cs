@@ -91,10 +91,33 @@ public class Transaction : TransactionBase
     /// <summary>
     ///     Adds an additional resource fee (in stroops) to the transaction fee, typically from Soroban simulation results.
     /// </summary>
-    /// <param name="resourceFee">The resource fee in stroops to add.</param>
-    public void AddResourceFee(uint resourceFee)
+    /// <param name="resourceFee">
+    ///     The resource fee in stroops to add. Declared as a <see cref="long" /> to accept
+    ///     <see cref="Responses.SorobanRpc.SimulateTransactionResponse.MinResourceFee" /> at its full <c>int64</c> wire
+    ///     width.
+    /// </param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="resourceFee" /> is negative.</exception>
+    /// <exception cref="OverflowException">
+    ///     Thrown when the resulting fee would exceed <see cref="uint.MaxValue" />, the largest value the transaction
+    ///     envelope's <c>uint32</c> fee field can carry. The fee is left unchanged.
+    /// </exception>
+    public void AddResourceFee(long resourceFee)
     {
-        Fee += resourceFee;
+        if (resourceFee < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(resourceFee), resourceFee,
+                "Resource fee cannot be negative.");
+        }
+
+        // Compared against the remaining headroom rather than summed, so the check itself cannot overflow.
+        if (resourceFee > uint.MaxValue - Fee)
+        {
+            throw new OverflowException(
+                $"Adding a resource fee of {resourceFee} stroops to the current fee of {Fee} stroops exceeds " +
+                $"{uint.MaxValue}, the maximum fee a transaction envelope can carry.");
+        }
+
+        Fee += (uint)resourceFee;
     }
 
     /// <summary>
