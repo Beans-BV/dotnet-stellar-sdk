@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -2542,11 +2542,12 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
-    ///     Verifies that StellarRpcServer.GetLedgerEntries returns null when querying TTL ledger entries directly, as they cannot
-    ///     be queried.
+    ///     Verifies that a JSON-RPC error response (HTTP 200, no <c>result</c> member) throws a
+    ///     <see cref="SorobanRpcException" /> carrying the RPC error code and message, using the error
+    ///     returned when TTL ledger entries are queried directly.
     /// </summary>
     [TestMethod]
-    public async Task GetLedgerEntries_WithTtlEntries_ReturnsNull()
+    public async Task GetLedgerEntries_WithTtlEntries_ThrowsSorobanRpcException()
     {
         // Arrange
         const string json =
@@ -2568,10 +2569,115 @@ public class StellarRpcServerTest
         using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act
-        var response = await sorobanServer.GetLedgerEntries(ledgerKeyTtl);
+        var exception =
+            await Assert.ThrowsExceptionAsync<SorobanRpcException>(() => sorobanServer.GetLedgerEntries(ledgerKeyTtl));
 
         // Assert
-        Assert.IsNull(response);
+        Assert.AreEqual(-32602, exception.Code);
+        Assert.AreEqual("ledger ttl entries cannot be queried directly", exception.ErrorMessage);
+        Assert.IsNull(exception.ErrorData);
+        StringAssert.Contains(exception.Message, "ledger ttl entries cannot be queried directly");
+    }
+
+    /// <summary>
+    ///     Verifies that the optional JSON-RPC <c>data</c> member is preserved when it holds a string.
+    /// </summary>
+    [TestMethod]
+    public async Task GetEvents_WithJsonRpcErrorCarryingStringData_ThrowsSorobanRpcExceptionWithData()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "198cb1a8-9104-4446-a269-88bf000c2721",
+              "error": {
+                "code": -32600,
+                "message": "startLedger must be within the ledger range: 2223 - 12223",
+                "data": "requested ledger 1"
+              }
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var exception = await Assert.ThrowsExceptionAsync<SorobanRpcException>(
+            () => sorobanServer.GetEvents(new GetEventsRequest { StartLedger = 1 }));
+
+        // Assert
+        Assert.AreEqual(-32600, exception.Code);
+        Assert.AreEqual("startLedger must be within the ledger range: 2223 - 12223", exception.ErrorMessage);
+        Assert.IsNotNull(exception.ErrorData);
+        Assert.AreEqual("requested ledger 1", exception.ErrorData.Value.GetString());
+    }
+
+    /// <summary>
+    ///     Verifies that a structured JSON-RPC <c>data</c> member is preserved whole rather than being
+    ///     flattened or dropped.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithJsonRpcErrorCarryingObjectData_ThrowsSorobanRpcExceptionWithData()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "7a10e4b0-1a51-4a1b-b0a8-0c9b7c4d5a2f",
+              "error": {
+                "code": -32602,
+                "message": "invalid parameters",
+                "data": {
+                  "field": "authMode",
+                  "allowed": ["enforce", "record", "record_allow_nonroot"]
+                }
+              }
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var exception = await Assert.ThrowsExceptionAsync<SorobanRpcException>(
+            () => sorobanServer.SimulateTransaction(CreateDummyTransaction(false)));
+
+        // Assert
+        Assert.AreEqual(-32602, exception.Code);
+        Assert.IsNotNull(exception.ErrorData);
+        var data = exception.ErrorData.Value;
+        Assert.AreEqual("authMode", data.GetProperty("field").GetString());
+        Assert.AreEqual(3, data.GetProperty("allowed").GetArrayLength());
+    }
+
+    /// <summary>
+    ///     Verifies that a JSON-RPC error without the optional <c>message</c> member still throws a
+    ///     <see cref="SorobanRpcException" /> instead of failing to deserialize.
+    /// </summary>
+    [TestMethod]
+    public async Task GetHealth_WithJsonRpcErrorWithoutMessage_ThrowsSorobanRpcException()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "0b0b4d4a-4b5a-4a4e-9f0e-6f2b3c4d5e6f",
+              "error": {
+                "code": -32603
+              }
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var exception = await Assert.ThrowsExceptionAsync<SorobanRpcException>(() => sorobanServer.GetHealth());
+
+        // Assert
+        Assert.AreEqual(-32603, exception.Code);
+        Assert.IsNull(exception.ErrorMessage);
+        StringAssert.Contains(exception.Message, "-32603");
     }
 
     private Transaction CreateDummyTransaction(bool sign = true)

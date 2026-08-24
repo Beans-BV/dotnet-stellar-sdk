@@ -226,7 +226,7 @@ resilienceOptions.AdditionalRetriableExceptionTypes.Add(typeof(SocketException))
 var httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
 ```
 
-> **Scope:** `AdditionalRetriableExceptionTypes` applies only to exceptions thrown from within the HTTP handler chain (`HttpClient.SendAsync`). It does **not** apply to typed exceptions thrown after a response is received (`TooManyRequestsException`, `ServiceUnavailableException`, `HttpResponseException`). To retry those, use `RetryHttpStatusCodes` instead.
+> **Scope:** `AdditionalRetriableExceptionTypes` applies only to exceptions thrown from within the HTTP handler chain (`HttpClient.SendAsync`). It does **not** apply to typed exceptions thrown after a response is received (`TooManyRequestsException`, `ServiceUnavailableException`, `HttpResponseException`). To retry those, use `RetryHttpStatusCodes` instead. `SorobanRpcException` is out of reach of both knobs: Stellar RPC reports JSON-RPC errors with HTTP status 200, so neither the handler chain nor a status-code rule ever sees a failure. Handle it at the call site.
 
 ## Circuit Breaker (Advanced)
 

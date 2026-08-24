@@ -153,6 +153,23 @@ All notable changes to this project are documented here. The format is based on
 
 ### Fixed
 
+- `StellarRpcServer` now surfaces JSON-RPC error responses instead of discarding them
+  ([#197](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/197)). Stellar RPC reports request-scoped
+  failures — an out-of-range `startLedger`, a TTL ledger key queried directly, malformed parameters — as a
+  JSON-RPC 2.0 error object (`code`, `message`, optional `data`) delivered with HTTP status 200 and no
+  `result` member. `SorobanRpcResponse<T>` had no `Error` member, so the payload was dropped during
+  deserialization and the call returned `null`, typically surfacing at the call site as an unrelated
+  `NullReferenceException` with the server's own explanation unrecoverable.
+  - **Breaking:** every `StellarRpcServer` method — they all route through one `SendRequest` helper — now
+    throws the new `SorobanRpcException` where it previously returned `null`. The exception carries `Code`,
+    `ErrorMessage` (the server's message verbatim; `Message` wraps it together with the code), and
+    `ErrorData`, the optional JSON-RPC `data` member preserved verbatim as a `JsonElement?`. Code that
+    null-checked the return value must catch `SorobanRpcException` instead.
+  - `SorobanRpcResponse<T>` gains a nullable `Error` property of the new type `SorobanRpcErrorResponse`
+    (`Code`, `Message`, `Data`), for callers that deserialize RPC envelopes themselves.
+  - HTTP-status-level failures are unchanged: 429, 503, and other error statuses still throw
+    `TooManyRequestsException`, `ServiceUnavailableException`, and `HttpResponseException`. A JSON-RPC
+    error is invisible to the resilience pipeline — the status is 200 — so it is never retried.
 - `StellarRpcServer.SimulateTransaction` now sends the `authMode` parameter using the values Stellar RPC
   accepts (`enforce`, `record`, `record_allow_nonroot`). RPC matches this field case-sensitively against
   those three literals, so the parameter was non-functional in every release that offered it
