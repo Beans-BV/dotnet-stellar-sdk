@@ -213,3 +213,19 @@ All notable changes to this project are documented here. The format is based on
   satisfied `global.json` only because the runner image happened to preinstall .NET 10.
 - The README "Platform support" section documents that Unity 2022.3's bundled compiler cannot
   construct SDK types with `required` members (Unity 6 or an upgraded Roslyn can).
+- **Breaking:** `GetEventsRequest.PaginationOptions.Cursor` and `.Limit` are now auto-properties instead
+  of public fields, so `getEvents` pagination finally reaches the wire. System.Text.Json ignores fields
+  unless `IncludeFields` is set and `JsonOptions.DefaultOptions` does not set it, so both members
+  serialized to an empty `"pagination": {}` and cursor paging was impossible: a request with
+  `Limit = 2` came back with the server's default page size (100 events against Stellar RPC 28.0.0); a
+  `startLedger`-plus-cursor request silently re-read the first page forever; and a cursor-only request —
+  the shape Stellar RPC requires, since it rejects a cursor combined with a ledger range — failed with
+  `-32602 startLedger must be positive`. One consequence is newly visible rather than fixed: a caller
+  that sets both `StartLedger` and a cursor now gets `-32602 ledger ranges and cursor cannot both be
+  set`, where the dropped cursor previously let the call succeed. Until
+  [#197](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/197) is fixed, that error surfaces as a
+  `null` result rather than an exception. The change is source-compatible for object-initializer and
+  property-access callers but binary-breaking (a field load is not a property call), so consumers must
+  recompile against this version. The top-level `PaginationOptions` used by `GetTransactionsRequest`
+  and `GetLedgersRequest` always declared both members as properties and was never affected
+  ([#214](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/214)).
