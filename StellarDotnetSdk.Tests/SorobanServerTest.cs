@@ -2617,6 +2617,51 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
+    ///     Verifies that a JSON-RPC error arriving with a null <c>id</c> is reported as the server's error.
+    ///     JSON-RPC 2.0 §5 requires a null id exactly when the server could not read the request's id at all —
+    ///     a parse error or an invalid request — so such a response carries the explanation the caller needs.
+    /// </summary>
+    [TestMethod]
+    public async Task GetHealth_WithJsonRpcErrorAndNullResponseId_ThrowsSorobanRpcException()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": null,
+              "error": {
+                "code": -32700,
+                "message": "Parse error"
+              }
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var exception = await Assert.ThrowsExceptionAsync<SorobanRpcException>(() => sorobanServer.GetHealth());
+
+        // Assert
+        Assert.AreEqual(-32700, exception.Code);
+        Assert.AreEqual("Parse error", exception.ErrorMessage);
+    }
+
+    /// <summary>
+    ///     Verifies that a body holding the JSON literal <c>null</c> — no response object at all — is reported as
+    ///     a protocol failure rather than reaching the caller as a <see cref="NullReferenceException" />.
+    /// </summary>
+    [TestMethod]
+    public async Task GetHealth_WithJsonNullResponseBody_ThrowsClientProtocolException()
+    {
+        // Arrange
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent("null");
+
+        // Act & Assert
+        await Assert.ThrowsExceptionAsync<ClientProtocolException>(() => sorobanServer.GetHealth());
+    }
+
+    /// <summary>
     ///     Verifies that a JSON-RPC envelope carrying neither a <c>result</c> nor an <c>error</c> member is
     ///     rejected rather than silently returning null to a caller whose return type promises otherwise.
     /// </summary>
