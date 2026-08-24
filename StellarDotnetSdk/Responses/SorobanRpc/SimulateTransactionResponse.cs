@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Soroban;
@@ -83,25 +84,110 @@ public class SimulateTransactionResponse
     ///     refundable fee and resource usage information such as the ledger footprint and IO access data.
     ///     <para>Not present in case of error.</para>
     /// </summary>
+    /// <exception cref="InvalidDataException">
+    ///     Thrown when the server-supplied <c>transactionData</c> is not decodable as a
+    ///     <c>SorobanTransactionData</c> XDR blob. Decoding happens on every read of this property, not during
+    ///     deserialization, so the failure surfaces here rather than at the originating
+    ///     <see cref="StellarRpcServer.SimulateTransaction" /> call.
+    /// </exception>
     [JsonIgnore]
-    public SorobanTransactionData? SorobanTransactionData =>
-        TransactionData != null ? SorobanTransactionData.FromXdrBase64(TransactionData) : null;
-
+    public SorobanTransactionData? SorobanTransactionData
+    {
+        get
+        {
+            if (TransactionData == null)
+            {
+                return null;
+            }
+            try
+            {
+                return SorobanTransactionData.FromXdrBase64(TransactionData);
+            }
+            catch (Exception ex) when (IsXdrDecodeFailure(ex))
+            {
+                throw new InvalidDataException("Malformed Soroban transaction data XDR: " + ex.Message, ex);
+            }
+        }
+    }
 
     /// <summary>
     ///     (optional) Array of Soroban authorization entries required for the simulated transaction.
     ///     Derived from the first result's auth entries.
+    ///     <para>
+    ///         The entries are decoded from server-supplied base64 on every read, so this property can throw. A
+    ///         <c>SorobanAuthorization != null</c> guard is therefore not a safe way to probe for their presence;
+    ///         check <c>Results?[0].Auth</c>, or handle <see cref="InvalidDataException" />.
+    ///     </para>
     /// </summary>
+    /// <exception cref="InvalidDataException">
+    ///     Thrown when any of the server-supplied auth entries is not decodable as a
+    ///     <c>SorobanAuthorizationEntry</c> XDR blob — including an unknown <c>SorobanCredentialsType</c>
+    ///     discriminant. The originating decoder exception is preserved as the inner exception.
+    /// </exception>
     public SorobanAuthorizationEntry[]? SorobanAuthorization
     {
         get
         {
-            if (Results is not { Length: > 0 } || Results[0].Auth == null)
+            if (Results is not { Length: > 0 })
             {
                 return null;
             }
-            return Results[0].Auth?.Select(SorobanAuthorizationEntry.FromXdrBase64).ToArray();
+            var auth = Results[0].Auth;
+            if (auth == null)
+            {
+                return null;
+            }
+
+            var entries = new SorobanAuthorizationEntry[auth.Length];
+            for (var i = 0; i < auth.Length; i++)
+            {
+                try
+                {
+                    entries[i] = SorobanAuthorizationEntry.FromXdrBase64(auth[i]);
+                }
+                catch (Exception ex) when (IsXdrDecodeFailure(ex))
+                {
+                    throw new InvalidDataException(
+                        $"Malformed authorization entry XDR at index {i}: {ex.Message}", ex);
+                }
+            }
+            return entries;
         }
+    }
+
+    /// <summary>
+    ///     Recognizes the exceptions that decoding an attacker- or server-controlled base64 XDR blob can produce, so
+    ///     that they can be normalized to the single <see cref="InvalidDataException" /> these properties document.
+    /// </summary>
+    /// <remarks>
+    ///     The set mirrors the one <c>Sep45Challenge</c> normalizes for the same reason:
+    ///     <list type="bullet">
+    ///         <item>
+    ///             <see cref="InvalidDataException" /> — an unknown enum discriminant, an over-large element count,
+    ///             or a fixed-width read past the end of the buffer, raised by the generated XDR decoders.
+    ///         </item>
+    ///         <item>
+    ///             <see cref="IOException" /> (and <see cref="EndOfStreamException" />) — truncated input, or
+    ///             non-zero opaque padding.
+    ///         </item>
+    ///         <item><see cref="FormatException" /> — invalid base64, or a length prefix that runs off the buffer.</item>
+    ///         <item><see cref="IndexOutOfRangeException" /> — a read past the end of the backing array.</item>
+    ///         <item>
+    ///             <see cref="ArgumentException" /> (and its <see cref="ArgumentNullException" /> /
+    ///             <see cref="ArgumentOutOfRangeException" /> subtypes) — a null entry, a length prefix beyond
+    ///             <see cref="int.MaxValue" />, or a decoded field rejected by the domain type it is handed to.
+    ///         </item>
+    ///         <item>
+    ///             <see cref="InvalidOperationException" /> — a discriminant the generated decoder accepts but the
+    ///             SDK's own <c>FromXdr</c> dispatch does not, e.g. <c>SorobanCredentials.FromXdr</c>.
+    ///         </item>
+    ///     </list>
+    ///     Anything outside this set is a defect in the SDK rather than in the response, and is left to propagate.
+    /// </remarks>
+    private static bool IsXdrDecodeFailure(Exception ex)
+    {
+        return ex is InvalidDataException or IOException or FormatException or IndexOutOfRangeException
+            or ArgumentException or InvalidOperationException;
     }
 
     /// <summary>
@@ -182,8 +268,14 @@ public class SimulateTransactionResponse
 
         /// <summary>
         ///     The base64-encoded XDR key of the affected ledger entry.
+        ///     <para>
+        ///         (optional) Stellar RPC tags this field <c>omitempty</c>, so it is absent whenever the key is empty —
+        ///         for instance when the entry's key travels in the JSON-XDR <c>keyJson</c> field instead. A missing
+        ///         property does not violate a non-nullable annotation the way an explicit <c>null</c> does, so this
+        ///         was previously reported as a non-null <c>string</c> that could nevertheless be null at runtime.
+        ///     </para>
         /// </summary>
-        public string Key { get; init; }
+        public string? Key { get; init; }
 
         /// <summary>
         ///     The base64-encoded XDR of the ledger entry before the change, or null for created entries.

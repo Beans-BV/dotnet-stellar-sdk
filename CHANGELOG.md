@@ -125,6 +125,37 @@ All notable changes to this project are documented here. The format is based on
   factory (previously `fromSecretSeed`, a leftover from the Java SDK port). These methods can also
   throw `ObjectDisposedException` now, but only after an explicit call to the new `KeyPair.Dispose`
   (see *Added*) — existing callers that never dispose are unaffected.
+- **Breaking:** `GetEventsRequest.EventFilter.Type` is now the new `[Flags]` enum `EventFilterType`
+  (`None`/`System`/`Contract`) instead of a free `string`. Stellar RPC accepts only the literals
+  `system` and `contract` in this field, joined by a bare comma for a set, and validates them
+  case-sensitively without trimming — so `"diagnostic"`, `"System"`, and `"system, contract"` were all
+  accepted by the SDK and rejected by the server as `filter type invalid`. A value carrying undefined
+  flags (e.g. `(EventFilterType)99`) now throws `ArgumentOutOfRangeException` at the assignment rather
+  than as a round-trip error. `diagnostic` is deliberately not offered: Protocol 23 removed diagnostic
+  events from the `getEvents` stream, and RPC v23.0.0 onwards rejects a filter naming it, so no server
+  this SDK supports accepts it. Migration: `Type = "contract"` becomes
+  `Type = EventFilterType.Contract`, and `Type = "system,contract"` becomes
+  `Type = EventFilterType.System | EventFilterType.Contract`. Leaving `Type` null is unchanged and
+  still means "all event types". The wire value is produced by the new public
+  `EventFilterTypeJsonConverter`, which is registered on `JsonOptions.DefaultOptions` ahead of the
+  catch-all `JsonStringEnumConverter` and also applied directly to the property — System.Text.Json
+  resolves a property-level `[JsonConverter]` first, then the options' `Converters` collection (first
+  match wins), then a type-level `[JsonConverter]`, so the type-level attribute alone would have been
+  outranked and would have emitted the unusable `"System, Contract"`
+  ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
+- **Breaking:** `SendTransactionStatusEnumJsonConverter` is now actually reachable. It was
+  registered on `JsonOptions.DefaultOptions` *after* the catch-all `JsonStringEnumConverter`, and
+  System.Text.Json returns the first converter in the collection whose `CanConvert` matches — so the
+  standard converter, which matches every enum, shadowed it and the hand-written one never ran (its
+  unit tests built their own options containing only it, so they passed regardless). Reordering it
+  ahead of the catch-all tightens `SendTransactionResponse.Status` deserialization to the four
+  literals Stellar RPC actually emits: a bare integer is now rejected instead of being mapped by
+  ordinal — `"status": 0` previously deserialized to `PENDING`, so a malformed or adversarial
+  `sendTransaction` response could present a failed submission as pending — and matching is
+  case-sensitive, so `"pending"` is rejected where it was previously accepted. Non-string tokens now
+  report the SDK's own `JsonException` message rather than a wrapped `InvalidOperationException` from
+  the reader. The four valid literals (`PENDING`, `TRY_AGAIN_LATER`, `DUPLICATE`, `ERROR`) are
+  unaffected ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
 
 ### Security
 
@@ -219,6 +250,27 @@ All notable changes to this project are documented here. The format is based on
   getter outside any `try` around the awaited `SimulateTransaction` call. Consumers with nullable
   reference types enabled will need a null check (or `!`) at the use site
   (fixes [#213](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/213)).
+- **Breaking:** `SimulateTransactionResponse.LedgerEntryChange.Key` is now `string?`. Stellar RPC tags
+  the field `omitempty` and omits it whenever the key is empty, and a *missing* property does not
+  violate a non-nullable annotation the way an explicit `null` does — so `RespectNullableAnnotations`
+  never caught it and the property could be null at runtime while advertising that it could not.
+  Consumers compiling with nullable reference types enabled may see new warnings where the value was
+  dereferenced. (`LedgerEntryChange.Type` is unaffected: RPC does not tag it `omitempty`, so it is
+  always present.) ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211))
+- `SimulateTransactionResponse.SorobanAuthorization` and
+  `SimulateTransactionResponse.SorobanTransactionData` no longer leak raw XDR decoder exceptions.
+  Both getters decode server-supplied base64 on every read, and a malformed blob surfaced as whichever
+  of `InvalidDataException`, `IOException`/`EndOfStreamException`, `FormatException`,
+  `IndexOutOfRangeException`, `ArgumentException`, or `InvalidOperationException` the decoder happened
+  to raise — none of them documented, and all of them thrown from a property rather than from the
+  awaited `SimulateTransaction` call, so they escaped any `try` around it. An unknown
+  `SorobanCredentialsType` discriminant needs only eight bytes of `auth` to trigger this, which meant
+  even a defensive `if (response.SorobanAuthorization != null)` threw instead of returning null. Both
+  properties now normalize every decode failure to a single documented `InvalidDataException` (naming
+  the offending entry's index, with the original exception preserved as `InnerException`), matching
+  what `Sep45Challenge` already does for the same class of input. They still throw rather than
+  returning null, so `!= null` is not a safe presence check — test `Results?[0].Auth` or catch
+  `InvalidDataException` ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
 - `PredicateJsonConverter` no longer leaks `FormatException`/`OverflowException` for malformed
   `rel_before`/`abs_before_epoch` values — every malformed predicate now throws `JsonException`, the
   SDK's documented deserialization failure mode. It also rejects `and`/`or` predicate arrays that do

@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Effects;
@@ -34,7 +34,10 @@ public static class JsonOptions
     ///     Registered Converters:
     ///     - Polymorphic converters: OperationResponse, EffectResponse, Predicate
     ///     - Domain type converters: Asset, AssetAmount, KeyPair, LiquidityPoolId, LiquidityPoolClaimableAssetAmount, Reserve
-    ///     - Enum converters: LiquidityPoolTypeEnum, SendTransactionStatusEnum, JsonStringEnumConverter (standard)
+    ///     - Enum converters: LiquidityPoolTypeEnum, EventFilterType, SendTransactionStatusEnum, then
+    ///     JsonStringEnumConverter (standard) last. Registration order is significant — the standard converter
+    ///     matches every enum, so it must come last or it shadows the specific ones. See the comment on the
+    ///     collection below.
     ///     - HATEOAS link converters: LinkJsonConverter for EffectResponse and Response
     /// </remarks>
     // A get-only property (not a field): 15.1.0 shipped this member as a property, and replacing it with a
@@ -88,9 +91,21 @@ public static class JsonOptions
                 new LinkJsonConverter<EffectResponse>(),
                 new LinkJsonConverter<Response>(),
 
-                // Enum converters
-                new JsonStringEnumConverter(),
+                // Enum converters.
+                // ORDER MATTERS, and JsonStringEnumConverter must stay last of these. System.Text.Json
+                // returns the FIRST converter in this collection whose CanConvert accepts the type, and
+                // JsonStringEnumConverter is a factory that accepts *every* enum — so anything after it is
+                // unreachable. (A type-level [JsonConverter] does not help: this collection outranks it.
+                // Only a property-level [JsonConverter] outranks this collection.)
+                // - EventFilterType: Stellar RPC wants its flags joined by a bare comma ("system,contract"),
+                //   whereas JsonStringEnumConverter would write "System, Contract" and RPC would reject it.
+                // - SendTransactionStatus: the hand-written converter accepts only the four exact literals
+                //   RPC emits. JsonStringEnumConverter, which shadowed it until this ordering was fixed, is
+                //   case-insensitive and — worse — accepts bare integers, so a malformed `"status": 0` was
+                //   silently read as the first member (PENDING) instead of being rejected.
+                new EventFilterTypeJsonConverter(),
                 new SendTransactionStatusEnumJsonConverter(),
+                new JsonStringEnumConverter(),
             },
         };
 

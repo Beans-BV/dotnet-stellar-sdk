@@ -37,9 +37,26 @@ public class SendTransactionStatusEnumJsonConverter : JsonConverter<SendTransact
 #endif
 
     /// <inheritdoc />
+    /// <remarks>
+    ///     Matching is case-sensitive and integers are not accepted, unlike the built-in
+    ///     <see cref="JsonStringEnumConverter" />: Stellar RPC emits exactly these four uppercase literals, and
+    ///     reading a bare number would map <c>0</c> to the first member (<c>PENDING</c>) — turning a malformed
+    ///     status into a plausible one. This converter must stay registered ahead of
+    ///     <see cref="JsonStringEnumConverter" /> in <see cref="JsonOptions.DefaultOptions" /> for that to hold.
+    /// </remarks>
+    /// <exception cref="JsonException">
+    ///     Thrown when the JSON value is not a string, or is not one of the four status literals.
+    /// </exception>
     public override SendTransactionResponse.SendTransactionStatus Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
+        if (reader.TokenType != JsonTokenType.String)
+        {
+            throw new JsonException(
+                $"Expected a string value for {nameof(SendTransactionResponse.SendTransactionStatus)} but found " +
+                $"{reader.TokenType}.");
+        }
+
         var value = reader.GetString();
         if (value != null && StatusByName.TryGetValue(value, out var status))
         {
