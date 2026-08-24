@@ -1443,14 +1443,14 @@ public class StellarRpcServerTest
               "jsonrpc": "2.0",
               "id": "1",
               "result": {
-                "latestLedger": "14245"
+                "latestLedger": 14245
               }
             }
             """;
         using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
 
         // Act
-        await sorobanServer.SimulateTransaction(CreateDummyTransaction(false), null, authMode);
+        await sorobanServer.SimulateTransaction(CreateDummyInvokeContractTransaction(), null, authMode);
 
         // Assert
         var body = handler.RequestBody;
@@ -1474,20 +1474,81 @@ public class StellarRpcServerTest
               "jsonrpc": "2.0",
               "id": "1",
               "result": {
-                "latestLedger": "14245"
+                "latestLedger": 14245
               }
             }
             """;
         using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
 
         // Act
-        await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+        await sorobanServer.SimulateTransaction(CreateDummyInvokeContractTransaction());
 
         // Assert
         var body = handler.RequestBody;
         Assert.IsNotNull(body);
         using var request = JsonDocument.Parse(body!);
         Assert.IsFalse(request.RootElement.GetProperty("params").TryGetProperty("authMode", out _));
+    }
+
+    /// <summary>
+    ///     Verifies that the <c>resourceConfig</c> parameter is put on the wire as an object with a nested
+    ///     <c>instructionLeeway</c> field, the shape Stellar RPC expects.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithResourceConfig_SendsNestedInstructionLeeway()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "1",
+              "result": {
+                "latestLedger": 14245
+              }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
+
+        // Act
+        await sorobanServer.SimulateTransaction(CreateDummyInvokeContractTransaction(), 1000);
+
+        // Assert
+        var body = handler.RequestBody;
+        Assert.IsNotNull(body);
+        using var request = JsonDocument.Parse(body!);
+        var resourceConfig = request.RootElement.GetProperty("params").GetProperty("resourceConfig");
+        Assert.AreEqual(1000U, resourceConfig.GetProperty("instructionLeeway").GetUInt32());
+    }
+
+    /// <summary>
+    ///     Verifies that no <c>resourceConfig</c> field is sent when the caller does not provide one, leaving
+    ///     Stellar RPC to apply its own default.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithoutResourceConfig_OmitsResourceConfigField()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "1",
+              "result": {
+                "latestLedger": 14245
+              }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
+
+        // Act
+        await sorobanServer.SimulateTransaction(CreateDummyInvokeContractTransaction());
+
+        // Assert
+        var body = handler.RequestBody;
+        Assert.IsNotNull(body);
+        using var request = JsonDocument.Parse(body!);
+        Assert.IsFalse(request.RootElement.GetProperty("params").TryGetProperty("resourceConfig", out _));
     }
 
     /// <summary>
@@ -2585,6 +2646,19 @@ public class StellarRpcServerTest
             transaction.Sign(_account);
         }
         return transaction;
+    }
+
+    // Stellar RPC only simulates transactions holding a single invokeHostFunction operation, so the
+    // simulateTransaction wire-format tests use this fixture rather than CreateDummyTransaction.
+    private Transaction CreateDummyInvokeContractTransaction()
+    {
+        var account = new Account(AccountId, 0);
+        return new TransactionBuilder(account)
+            .AddOperation(new InvokeContractOperation(
+                new ScContractId("CDSUR2JFKSUORJLUA2FISW7P6ALDTS2PDK6AYQZ7G4CSY5WZS5QVSM47"),
+                new SCSymbol("increment"),
+                []))
+            .Build();
     }
 
     private FeeBumpTransaction CreateDummyFeeBumpTransaction(bool sign = true)
