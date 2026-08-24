@@ -1426,6 +1426,121 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
+    ///     Verifies that StellarRpcServer.SimulateTransaction exposes the restore preamble returned when the simulation
+    ///     detects archived ledger entries, including the Soroban transaction data needed to build the
+    ///     <c>RestoreFootprint</c> transaction.
+    /// </summary>
+    /// <remarks>
+    ///     The response body below was captured verbatim from Stellar RPC 28.0.0 on Testnet (protocol 27) on
+    ///     2026-08-24, by simulating an <c>ExtendFootprintTtl</c> operation over the archived contract instance
+    ///     entry of <c>CA52ABHNGNYQXUVJH2JDTPEHV5FH5RJQH6QKN6ZUBXPHGS5W4SEZ5FUR</c>. That is the one code path
+    ///     in the RPC's preflight that still emits a restore preamble: the <c>InvokeHostFunction</c> and
+    ///     <c>RestoreFootprint</c> paths pass no preamble, and protocol 23+ auto-restores archived entries for
+    ///     an invocation instead (surfacing them through
+    ///     <see cref="SorobanTransactionData.Extension" />).
+    /// </remarks>
+    [TestMethod]
+    public async Task SimulateTransaction_WithArchivedEntries_ReturnsRestorePreambleWithSorobanTransactionData()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "02fa0e31-28e0-45c4-a2d8-b17887688c4b",
+                "result": {
+                    "transactionData": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALbw=",
+                    "minResourceFee": "11708",
+                    "restorePreamble": {
+                        "transactionData": "AAAAAAAAAAAAAAABAAAABgAAAAE7oATtM3EL0qk+kjm8h69KfsUwP6Cm+zQN3nNLtuSJngAAABQAAAABAAAAAAAAAywAAAMsAAAAAAABqmY=",
+                        "minResourceFee": "109158"
+                    },
+                    "latestLedger": 4302699
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        Assert.IsNotNull(response);
+        var restorePreamble = response.RestorePreambleInfo;
+        Assert.IsNotNull(restorePreamble);
+        Assert.AreEqual(109158L, restorePreamble.MinResourceFee);
+
+        var restoreData = restorePreamble.SorobanTransactionData;
+        Assert.IsNotNull(restoreData);
+        Assert.AreEqual(109158L, restoreData.ResourceFee);
+        Assert.IsNull(restoreData.Extension);
+
+        var restoreResources = restoreData.Resources;
+        Assert.AreEqual(0U, restoreResources.Instructions);
+        Assert.AreEqual(812U, restoreResources.DiskReadBytes);
+        Assert.AreEqual(812U, restoreResources.WriteBytes);
+
+        // The entry to restore is declared read-write, as a RestoreFootprint operation requires.
+        Assert.AreEqual(0, restoreResources.Footprint.ReadOnly.Length);
+        Assert.AreEqual(1, restoreResources.Footprint.ReadWrite.Length);
+        if (restoreResources.Footprint.ReadWrite[0] is LedgerKeyContractData
+            {
+                Contract: ScContractId contractId,
+                Key: SCLedgerKeyContractInstance,
+            } contractData)
+        {
+            Assert.AreEqual("CA52ABHNGNYQXUVJH2JDTPEHV5FH5RJQH6QKN6ZUBXPHGS5W4SEZ5FUR", contractId.InnerValue);
+            Assert.AreEqual(
+                ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT,
+                contractData.Durability.InnerValue);
+        }
+        else
+        {
+            Assert.Fail("The restore preamble footprint does not hold the archived contract instance entry.");
+        }
+
+        // The preamble carries its own data, distinct from the simulated transaction's.
+        Assert.AreEqual(11708U, response.MinResourceFee);
+        Assert.AreEqual(11708L, response.SorobanTransactionData?.ResourceFee);
+        Assert.AreEqual(0, response.SorobanTransactionData?.Resources.Footprint.ReadWrite.Length);
+        Assert.AreEqual(4302699L, response.LatestLedger);
+    }
+
+    /// <summary>
+    ///     Verifies that a restore preamble without transaction data yields a null
+    ///     <c>SorobanTransactionData</c> instead of throwing.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithRestorePreambleMissingTransactionData_ReturnsNullSorobanTransactionData()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "minResourceFee": "58181",
+                    "restorePreamble": {
+                        "minResourceFee": "12345"
+                    },
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        Assert.IsNotNull(response);
+        Assert.IsNotNull(response.RestorePreambleInfo);
+        Assert.AreEqual(12345L, response.RestorePreambleInfo.MinResourceFee);
+        Assert.IsNull(response.RestorePreambleInfo.SorobanTransactionData);
+    }
+
+    /// <summary>
     ///     Verifies that the <c>authMode</c> parameter is put on the wire using the values Stellar RPC accepts.
     ///     RPC compares the field case-sensitively and rejects anything other than <c>enforce</c>, <c>record</c>,
     ///     or <c>record_allow_nonroot</c>.

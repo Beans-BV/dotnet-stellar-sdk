@@ -63,7 +63,7 @@ public class SimulateTransactionResponse
     ///     </para>
     /// </summary>
     [JsonPropertyName("restorePreamble")]
-    public RestorePreamble? RestorePreambleInfo { get; init; } // TODO Unit test
+    public RestorePreamble? RestorePreambleInfo { get; init; }
 
     /// <summary>
     ///     (optional) An array of state changes that would result from executing the simulated transaction.
@@ -115,7 +115,8 @@ public class SimulateTransactionResponse
     /// </summary>
     public class RestorePreamble
     {
-        private string TransactionData { get; }
+        [JsonInclude]
+        private string? TransactionData { get; init; }
 
         /// <summary>
         ///     Recommended minimum resource fee to add when submitting the <c>RestoreFootprint</c> operation. This fee is to be
@@ -126,9 +127,11 @@ public class SimulateTransactionResponse
 
         /// <summary>
         ///     The recommended Soroban Transaction Data to use when submitting the <c>RestoreFootprint</c> operation.
+        ///     <para>Null if the preamble carried no transaction data.</para>
         /// </summary>
-        public SorobanTransactionData SorobanTransactionData =>
-            SorobanTransactionData.FromXdrBase64(TransactionData); // TODO Unit test
+        [JsonIgnore]
+        public SorobanTransactionData? SorobanTransactionData =>
+            TransactionData != null ? SorobanTransactionData.FromXdrBase64(TransactionData) : null;
     }
 
     /// <summary>
