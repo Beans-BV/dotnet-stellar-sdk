@@ -118,6 +118,9 @@ public class StellarRpcServer : IDisposable
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
     /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
+    /// </exception>
     public Task<GetHealthResponse> GetHealth()
     {
         return SendRequest<object, GetHealthResponse>("getHealth", null);
@@ -131,6 +134,9 @@ public class StellarRpcServer : IDisposable
     /// <returns>The <see cref="GetNetworkResponse" /> object containing the network metadata.</returns>
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
     /// </exception>
     public Task<GetNetworkResponse> GetNetwork()
     {
@@ -153,6 +159,9 @@ public class StellarRpcServer : IDisposable
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
     /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
+    /// </exception>
     public Task<GetTransactionResponse> GetTransaction(string txHash)
     {
         return SendRequest<object, GetTransactionResponse>("getTransaction", new { hash = txHash });
@@ -169,6 +178,9 @@ public class StellarRpcServer : IDisposable
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
     /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
+    /// </exception>
     public Task<GetTransactionsResponse> GetTransactions(GetTransactionsRequest request)
     {
         return SendRequest<object, GetTransactionsResponse>("getTransactions", request);
@@ -184,6 +196,9 @@ public class StellarRpcServer : IDisposable
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
     /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
+    /// </exception>
     public Task<GetLedgersResponse> GetLedgers(GetLedgersRequest request)
     {
         return SendRequest<object, GetLedgersResponse>("getLedgers", request);
@@ -197,6 +212,9 @@ public class StellarRpcServer : IDisposable
     /// <returns></returns>
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
     /// </exception>
     public Task<GetVersionInfoResponse> GetVersionInfo()
     {
@@ -213,6 +231,9 @@ public class StellarRpcServer : IDisposable
     /// <returns></returns>
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
     /// </exception>
     public Task<GetFeeStatsResponse> GetFeeStats()
     {
@@ -231,6 +252,9 @@ public class StellarRpcServer : IDisposable
     /// </returns>
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
     /// </exception>
     public async Task<Account> GetAccount(string accountId)
     {
@@ -251,6 +275,9 @@ public class StellarRpcServer : IDisposable
     /// <returns></returns>
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
     /// </exception>
     public Task<GetLatestLedgerResponse> GetLatestLedger()
     {
@@ -275,6 +302,9 @@ public class StellarRpcServer : IDisposable
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
     /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
+    /// </exception>
     public Task<GetLedgerEntriesResponse> GetLedgerEntries(LedgerKey[] keys)
     {
         return SendRequest<object, GetLedgerEntriesResponse>("getLedgerEntries",
@@ -290,6 +320,9 @@ public class StellarRpcServer : IDisposable
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
     /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
+    /// </exception>
     public Task<GetEventsResponse> GetEvents(GetEventsRequest request)
     {
         return SendRequest<object, GetEventsResponse>("getEvents", request);
@@ -302,6 +335,9 @@ public class StellarRpcServer : IDisposable
     /// <returns>A <see cref="GetLedgerEntriesResponse" /> object containing the current value.</returns>
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
     /// </exception>
     public Task<GetLedgerEntriesResponse> GetLedgerEntry(LedgerKey key)
     {
@@ -338,6 +374,9 @@ public class StellarRpcServer : IDisposable
     /// </exception>
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
     /// </exception>
     public Task<SimulateTransactionResponse> SimulateTransaction(
         Transaction transaction,
@@ -387,6 +426,9 @@ public class StellarRpcServer : IDisposable
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
     /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
+    /// </exception>
     public Task<SendTransactionResponse> SendTransaction(Transaction transaction)
     {
         return SendRequest<object, SendTransactionResponse>("sendTransaction",
@@ -404,6 +446,9 @@ public class StellarRpcServer : IDisposable
     /// <returns>A <see cref="T:StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse" /> response.</returns>
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    /// </exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response carries neither a result nor an error.
     /// </exception>
     public Task<SendTransactionResponse> SendTransaction(FeeBumpTransaction feeBumpTransaction)
     {
@@ -427,6 +472,13 @@ public class StellarRpcServer : IDisposable
         if (sorobanRpcResponse.Error is { } error)
         {
             throw new SorobanRpcException(error.Code, error.Message, error.Data);
+        }
+        // JSON-RPC 2.0 §5 requires exactly one of result/error. An envelope with neither cannot be turned
+        // into the non-nullable response these methods promise, so reject it instead of returning null.
+        if (sorobanRpcResponse.Result is null)
+        {
+            throw new ClientProtocolException(
+                "The Stellar RPC server returned a JSON-RPC response carrying neither a result nor an error.");
         }
         return sorobanRpcResponse.Result;
     }
