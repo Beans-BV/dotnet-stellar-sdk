@@ -16,9 +16,9 @@ namespace StellarDotnetSdk.Soroban;
 ///         <see cref="JsonStringEnumConverter" />, so it needs one to be in play; the type-level
 ///         <see cref="JsonConverterAttribute" /> supplies one for callers whose
 ///         <see cref="System.Text.Json.JsonSerializerOptions" /> registers none. Between them, every ordinary
-///         serialization of an <see cref="AuthMode" /> emits the RPC literal — verified for
+///         serialization of an <see cref="AuthMode" /> emits the RPC literal — for
 ///         <c>JsonOptions.DefaultOptions</c>, a bare options instance, and the parameterless
-///         <c>JsonSerializer.Serialize</c> overload.
+///         <c>JsonSerializer.Serialize</c> overload alike, each covered by <c>AuthModeTest</c>.
 ///     </para>
 ///     <para>
 ///         Note which of the two actually runs, because it is not the intuitive one. System.Text.Json resolves a

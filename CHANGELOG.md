@@ -160,12 +160,21 @@ All notable changes to this project are documented here. The format is based on
   `JsonSerializerOptions`, and the parameterless `JsonSerializer.Serialize` alike. (A caller who registers
   their own `AuthMode` converter still wins: System.Text.Json checks the options' `Converters` collection
   before a type-level attribute. That does not affect the `authMode` request field, which is now built from
-  an explicit mapping rather than by serializing the enum.) Two knock-on effects, both limited to code that
-  serializes `AuthMode` directly: it now writes `"enforce"` instead of `0` under a plain
-  `JsonSerializerOptions`, and reading it back accepts only the lowercase spellings — `"ENFORCE"` and
-  `"Enforce"` previously round-tripped through `JsonOptions.DefaultOptions` and now throw `JsonException`
-  (member-name matching is case-sensitive once `[JsonStringEnumMemberName]` is applied). Nothing in the SDK
-  deserializes `AuthMode`, and no Stellar RPC response carries the field
+  an explicit mapping rather than by serializing the enum.) See the breaking knock-on below
+  ([#208](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/208)).
+- **Breaking (behavioral):** pinning that wire spelling on `AuthMode` changes what serializing the enum
+  *directly* produces. This affects only code that (de)serializes an `AuthMode` itself — the `authMode`
+  request field is unaffected, being built from an explicit mapping rather than by serializing the enum,
+  and no Stellar RPC response carries the field.
+  - Serializing now writes `"enforce"` where a plain `JsonSerializerOptions` — and the parameterless
+    `JsonSerializer.Serialize` overload — previously wrote `0`, and `"enforce"` where
+    `JsonOptions.DefaultOptions` previously wrote `"ENFORCE"`.
+  - Deserializing now accepts only the lowercase RPC spellings. `"ENFORCE"` and `"Enforce"` previously
+    round-tripped through `JsonOptions.DefaultOptions` and now throw `JsonException`, because member-name
+    matching is case-sensitive once `[JsonStringEnumMemberName]` is applied. (Reading an `AuthMode` from
+    its ordinal — `0` — still works, as before.)
+
+  Nothing in the SDK deserializes `AuthMode`, so no SDK behavior depends on the old spellings
   ([#208](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/208)).
 - `PredicateJsonConverter` no longer leaks `FormatException`/`OverflowException` for malformed
   `rel_before`/`abs_before_epoch` values — every malformed predicate now throws `JsonException`, the

@@ -1491,8 +1491,34 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
-    ///     Verifies that an undefined <see cref="AuthMode" /> value fails loudly rather than being put on the wire as
-    ///     a string Stellar RPC would reject.
+    ///     Verifies that an undefined <see cref="AuthMode" /> value fails loudly through the public
+    ///     <c>SimulateTransaction</c> entry point rather than being put on the wire as a string Stellar RPC would
+    ///     reject.
+    ///     <para>
+    ///         <c>SimulateTransaction</c> is deliberately not <c>async</c>, so the validation runs while the request
+    ///         is built and the caller sees the exception on their own stack frame instead of on the returned task.
+    ///         That is the documented contract, and asserting it here — not only on the internal
+    ///         <c>ToRequestValue</c> helper below — is what stops a later refactor from moving the throw onto the
+    ///         task while the suite stays green. <see cref="Assert.ThrowsException{T}(System.Func{object})" /> never
+    ///         awaits the lambda, so a faulted task would fail this test rather than satisfy it.
+    ///     </para>
+    /// </summary>
+    [TestMethod]
+    public void SimulateTransaction_WithUndefinedAuthMode_ThrowsSynchronouslyWithoutSendingRequest()
+    {
+        // Arrange
+        const AuthMode undefinedAuthMode = (AuthMode)99;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, null);
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => sorobanServer.SimulateTransaction(CreateDummyTransaction(false), null, undefinedAuthMode));
+        Assert.IsNull(handler.RequestBody, "The request must not reach the wire when validation fails.");
+    }
+
+    /// <summary>
+    ///     Verifies that the mapping helper itself rejects an undefined <see cref="AuthMode" />, which is what makes
+    ///     the public contract above hold for every call site that builds a request through it.
     /// </summary>
     [TestMethod]
     public void ToRequestValue_WithUndefinedAuthMode_ThrowsArgumentOutOfRangeException()
