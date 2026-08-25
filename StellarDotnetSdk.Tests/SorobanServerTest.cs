@@ -2680,6 +2680,50 @@ public class StellarRpcServerTest
         StringAssert.Contains(exception.Message, "-32603");
     }
 
+    /// <summary>
+    ///     Verifies that a JSON-RPC envelope carrying neither a <c>result</c> nor an <c>error</c> member is
+    ///     rejected rather than silently returning null to a caller whose return type promises otherwise.
+    /// </summary>
+    [TestMethod]
+    public async Task GetHealth_WithEnvelopeMissingResultAndError_ThrowsClientProtocolException()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "a0f2f0f0-6a1f-4a3e-8f2d-9c1b0a7d3e4f"
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act & Assert
+        await Assert.ThrowsExceptionAsync<ClientProtocolException>(() => sorobanServer.GetHealth());
+    }
+
+    /// <summary>
+    ///     Verifies that an explicit <c>"result": null</c> is rejected the same way as an absent result member.
+    /// </summary>
+    [TestMethod]
+    public async Task GetHealth_WithNullResult_ThrowsClientProtocolException()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "a0f2f0f0-6a1f-4a3e-8f2d-9c1b0a7d3e4f",
+              "result": null
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act & Assert
+        await Assert.ThrowsExceptionAsync<ClientProtocolException>(() => sorobanServer.GetHealth());
+    }
+
     private Transaction CreateDummyTransaction(bool sign = true)
     {
         var account = new Account(AccountId, 0);

@@ -166,7 +166,13 @@ All notable changes to this project are documented here. The format is based on
     `ErrorData`, the optional JSON-RPC `data` member preserved verbatim as a `JsonElement?`. Code that
     null-checked the return value must catch `SorobanRpcException` instead.
   - `SorobanRpcResponse<T>` gains a nullable `Error` property of the new type `SorobanRpcErrorResponse`
-    (`Code`, `Message`, `Data`), for callers that deserialize RPC envelopes themselves.
+    (`Code`, `Message`, `Data`), for callers that deserialize RPC envelopes themselves, and its `Result`
+    is now annotated `T?` — a JSON-RPC error response carries no result, so the old non-nullable
+    annotation was a promise the type could not keep.
+  - A malformed envelope carrying *neither* member no longer returns `null` either: JSON-RPC 2.0 §5
+    requires exactly one of `result`/`error`, and a response with neither now throws
+    `ClientProtocolException` — the same type `ResponseHandler` already raises for an empty body — so no
+    `StellarRpcServer` method can hand back a `null` its signature says is non-nullable.
   - HTTP-status-level failures are unchanged: 429, 503, and other error statuses still throw
     `TooManyRequestsException`, `ServiceUnavailableException`, and `HttpResponseException`. A JSON-RPC
     error is invisible to the resilience pipeline — the status is 200 — so it is never retried.
