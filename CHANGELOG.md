@@ -35,10 +35,13 @@ All notable changes to this project are documented here. The format is based on
   with the flag, signs the recorded v2 entry and submits it, which is the first end-to-end proof that the SDK's
   address-bound preimage is accepted by a live host.
 
-  The flag is opt-in and unset by default, so the SDK's own behaviour is unchanged: omit it and Stellar RPC
-  keeps returning v1 credentials. It is also transitional — RPC intends to flip its *server-side* default to v2
-  at protocol 29, at which point the flag becomes a no-op, and to stop returning v1 at protocol 30, so nothing
-  should rely on omitting it to keep receiving v1
+  The flag is opt-in and unset by default, so the SDK's own *behaviour* is unchanged: omit it and Stellar RPC
+  keeps returning v1 credentials. **Breaking:** its *binary* compatibility is not — appending the parameter
+  changes the CLR signature of `SimulateTransaction`, so an application compiled against an earlier release that
+  drops in this assembly without recompiling throws `MissingMethodException` at the call site. Recompiling is
+  enough; no source change is needed. It is also transitional — RPC intends to flip its *server-side* default
+  to v2 at protocol 29, at which point the flag becomes a no-op, and to stop returning v1 at protocol 30, so
+  nothing should rely on omitting it to keep receiving v1
   ([#206](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/206)).
 - **Multi-target NuGet packages: `net10.0`, `net8.0`, and `netstandard2.1`**
   ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195), implements

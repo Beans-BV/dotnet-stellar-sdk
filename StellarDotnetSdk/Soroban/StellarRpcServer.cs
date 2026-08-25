@@ -309,12 +309,16 @@ public class StellarRpcServer : IDisposable
     ///         for v2) and preserves whichever variant simulation returned.
     ///     </p>
     ///     <p>
-    ///         The flag is transitional. Stellar RPC ignores it wherever it cannot emit <c>ADDRESS_V2</c> — a network
-    ///         older than protocol 27, or an entry that carries no address credential in the first place, such as the
-    ///         source-account arm — so passing <see langword="true" /> is never an error, it simply may not change the
-    ///         result. RPC intends to flip its own default to v2 at protocol 29, at which point this flag becomes a
-    ///         no-op, and to stop returning v1 at protocol 30; do not build anything that relies on omitting the flag
-    ///         to keep receiving v1. See
+    ///         The flag is best-effort: passing <see langword="true" /> is never an error, it simply may not change
+    ///         the result. Stellar RPC applies it only in the <em>recording</em> auth modes, so pairing it with
+    ///         <see cref="AuthMode.ENFORCE" /> does nothing; it is silently ignored on protocol versions whose host
+    ///         cannot emit <c>ADDRESS_V2</c> (anything older than protocol 27); and it has nothing to act on for an
+    ///         entry that carries no address credential in the first place, such as the source-account arm.
+    ///     </p>
+    ///     <p>
+    ///         The flag is also transitional. RPC intends to flip its own default to v2 at protocol 29, at which point
+    ///         this flag becomes a no-op, and to stop returning v1 at protocol 30; do not build anything that relies
+    ///         on omitting the flag to keep receiving v1. See
     ///         <see href="https://github.com/Beans-BV/dotnet-stellar-sdk/issues/206">issue #206</see>.
     ///     </p>
     /// </param>

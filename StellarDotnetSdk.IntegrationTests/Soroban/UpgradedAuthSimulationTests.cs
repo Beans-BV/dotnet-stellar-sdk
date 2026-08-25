@@ -48,14 +48,25 @@ public class UpgradedAuthSimulationTests : SorobanIntegrationTestBase
         // Without this half, a v2 result below would not prove the flag did anything.
         var legacySim = await Rpc.SimulateTransaction(tx, null, AuthMode.RECORD);
         AssertSimulated(legacySim);
-        if (legacySim.SorobanAuthorization![0].Credentials is SorobanAddressCredentialsV2)
+        var legacyCredentials = legacySim.SorobanAuthorization![0].Credentials;
+        if (legacyCredentials is SorobanAddressCredentialsV2)
         {
-            Assert.Inconclusive(
-                "Stellar RPC returned ADDRESS_V2 credentials without useUpgradedAuth, i.e. it has flipped its " +
-                "server-side default (planned for protocol 29), making the flag a no-op. That is an ecosystem " +
-                "change, not an SDK regression.");
+            // Stellar RPC has flipped its server-side default (planned for protocol 29), so the flag is a
+            // no-op and this control can no longer distinguish anything. That is an ecosystem change, not an
+            // SDK regression, so the control is dropped and the test carries on: the sign/submit half below
+            // is the coverage that matters, and it is this suite's only live-host check of the v2 preimage.
+            // Deliberately not Assert.Inconclusive/Assert.Warn — both end the run here and report the test as
+            // skipped (Inconclusive drops it from the run totals outright), so the day the flag stops mattering
+            // is exactly the day the v2 coverage would silently stop running, with a green exit code.
+            TestContext.Out.WriteLine(
+                "NOTE: Stellar RPC returned ADDRESS_V2 credentials without useUpgradedAuth — its server-side " +
+                "default has flipped and the flag is now a no-op. The v1 control was skipped; the v2 " +
+                "simulate/sign/submit assertions below still ran.");
         }
-        legacySim.SorobanAuthorization[0].Credentials.Should().BeOfType<SorobanAddressCredentials>();
+        else
+        {
+            legacyCredentials.Should().BeOfType<SorobanAddressCredentials>();
+        }
 
         // With the flag, the identical transaction records CAP-71 address-bound credentials instead.
         var upgradedSim = await Rpc.SimulateTransaction(tx, null, AuthMode.RECORD, true);
