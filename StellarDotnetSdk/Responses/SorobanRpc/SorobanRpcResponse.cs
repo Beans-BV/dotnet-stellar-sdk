@@ -18,10 +18,12 @@ public class SorobanRpcResponse<T> : Response
     public string JsonRpc { get; init; }
 
     /// <summary>
-    ///     The typed result payload of the JSON-RPC response. Absent — and therefore null — when the server
-    ///     answered with <see cref="Error" /> instead.
+    ///     The typed result payload of the JSON-RPC response, or null when the server answered with
+    ///     <see cref="Error" /> instead — a JSON-RPC error response carries no result. It is also null for a
+    ///     malformed envelope that carries neither member, which <see cref="Soroban.StellarRpcServer" />
+    ///     rejects rather than passing on.
     /// </summary>
-    public T Result { get; init; }
+    public T? Result { get; init; }
 
     /// <summary>
     ///     The JSON-RPC error returned by the server, or null when the request succeeded. A JSON-RPC error
