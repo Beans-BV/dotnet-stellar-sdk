@@ -1403,9 +1403,14 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
-    ///     Verifies that an explicit <c>"key": null</c> is still rejected during deserialization — that path is
-    ///     governed by <c>RespectNullableAnnotations</c> and is unaffected by widening the annotation, since the
-    ///     property is now genuinely nullable.
+    ///     Verifies the second half of the annotation change: an explicit <c>"key": null</c> now deserializes to
+    ///     <see langword="null" />, where it previously threw <c>JsonException</c>.
+    ///     <para>
+    ///         <c>RespectNullableAnnotations</c> rejected an explicit null only because the property was declared
+    ///         non-nullable, so widening it to <c>string?</c> necessarily relaxes that check too. Stellar RPC never
+    ///         sends this shape — the field is <c>omitempty</c>, so it is either present with a value or absent
+    ///         entirely — but code that caught <c>JsonException</c> for it will no longer see one.
+    ///     </para>
     /// </summary>
     [TestMethod]
     public async Task SimulateTransaction_WithStateChangeNullKey_LeavesKeyNull()

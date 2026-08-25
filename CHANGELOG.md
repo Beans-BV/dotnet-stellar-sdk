@@ -255,8 +255,13 @@ All notable changes to this project are documented here. The format is based on
   violate a non-nullable annotation the way an explicit `null` does — so `RespectNullableAnnotations`
   never caught it and the property could be null at runtime while advertising that it could not.
   Consumers compiling with nullable reference types enabled may see new warnings where the value was
-  dereferenced. (`LedgerEntryChange.Type` is unaffected: RPC does not tag it `omitempty`, so it is
-  always present.) ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211))
+  dereferenced. Widening the annotation also relaxes the opposite path: an explicit `"key": null`, which
+  `RespectNullableAnnotations` previously rejected with `JsonException` purely because the property was
+  declared non-nullable, now deserializes to `null`. RPC never sends that shape — the field is
+  `omitempty`, so it is either present with a value or absent entirely — but code that caught
+  `JsonException` for it will no longer see one. (`LedgerEntryChange.Type` is unaffected: RPC does not
+  tag it `omitempty`, so it is always present.)
+  ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211))
 - `SimulateTransactionResponse.SorobanAuthorization` and
   `SimulateTransactionResponse.SorobanTransactionData` no longer leak raw XDR decoder exceptions.
   Both getters decode server-supplied base64 on every read, and a malformed blob surfaced as whichever
