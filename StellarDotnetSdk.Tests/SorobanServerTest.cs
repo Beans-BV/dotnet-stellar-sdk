@@ -1326,7 +1326,7 @@ public class StellarRpcServerTest
         }
 
         Assert.AreEqual(1, footprint.ReadWrite.Length);
-        Assert.AreEqual(58181U, response.MinResourceFee);
+        Assert.AreEqual(58181L, response.MinResourceFee);
         var events = response.Events;
         Assert.IsNotNull(events);
         Assert.AreEqual(2, events.Length);

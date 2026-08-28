@@ -194,6 +194,22 @@ All notable changes to this project are documented here. The format is based on
 
   Nothing in the SDK deserializes `AuthMode`, so no SDK behavior depends on the old spellings
   ([#208](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/208)).
+- **Breaking:** `SimulateTransactionResponse.MinResourceFee` is now `long?` (was `uint?`). Stellar RPC
+  declares `minResourceFee` as an `int64`, so a simulation quoting more than `uint.MaxValue` stroops
+  (~429 XLM, reachable on large Wasm uploads and footprint restores) failed to deserialize — and took the
+  *entire* `SimulateTransactionResponse` down with it, throwing `JsonException` rather than dropping the
+  single field. The nested `RestorePreamble.MinResourceFee` was already `long`, so the two members are now
+  consistent with each other and with the peer SDKs (Java `long`, Python `int`)
+  ([#212](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/212)).
+- **Breaking:** `Transaction.AddResourceFee` now takes a `long` (was `uint`) and validates the result
+  instead of wrapping. A resource fee that would push the total past `uint.MaxValue` — the width of the
+  transaction envelope's `fee` field — throws `OverflowException` and leaves `Fee` unchanged, and a
+  negative fee throws `ArgumentOutOfRangeException`. Previously the addition wrapped modulo 2^32, so a
+  large server-supplied `minResourceFee` could silently yield a *tiny* transaction fee (100 stroops +
+  4294967295 stroops produced 99 stroops) with nothing bounding the value between the simulated number and
+  the fee the user signed. Existing call sites that pass a `uint` still compile unchanged, since `uint`
+  widens to `long` implicitly; the signature change is binary-breaking, so consumers must recompile
+  ([#212](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/212)).
 - `PredicateJsonConverter` no longer leaks `FormatException`/`OverflowException` for malformed
   `rel_before`/`abs_before_epoch` values — every malformed predicate now throws `JsonException`, the
   SDK's documented deserialization failure mode. It also rejects `and`/`or` predicate arrays that do

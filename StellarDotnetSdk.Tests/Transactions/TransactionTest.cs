@@ -746,4 +746,92 @@ public class TransactionTest
             ((LedgerKeyData)decodedFootprint.ReadWrite[0]).Account.AccountId);
         Assert.AreEqual(keyData.DataName, ((LedgerKeyData)decodedFootprint.ReadWrite[0]).DataName);
     }
+
+    /// <summary>
+    ///     Verifies that AddResourceFee adds the simulated resource fee to the transaction fee.
+    /// </summary>
+    [TestMethod]
+    public void AddResourceFee_WithFeeInRange_AddsToTransactionFee()
+    {
+        // Arrange
+        var transaction = BuildSingleOperationTransaction(100);
+
+        // Act
+        transaction.AddResourceFee(1000);
+
+        // Assert
+        Assert.AreEqual(1100U, transaction.Fee);
+    }
+
+    /// <summary>
+    ///     Verifies that a resource fee bringing the total to exactly <see cref="uint.MaxValue" /> is accepted, since
+    ///     that is the largest fee the <c>uint32</c> XDR envelope field can carry.
+    /// </summary>
+    [TestMethod]
+    public void AddResourceFee_WithSumEqualToUintMaxValue_AddsToTransactionFee()
+    {
+        // Arrange
+        var transaction = BuildSingleOperationTransaction(100);
+
+        // Act
+        transaction.AddResourceFee(uint.MaxValue - 100L);
+
+        // Assert
+        Assert.AreEqual(uint.MaxValue, transaction.Fee);
+    }
+
+    /// <summary>
+    ///     Verifies that a resource fee pushing the total past <see cref="uint.MaxValue" /> throws instead of wrapping
+    ///     modulo 2^32 — a wrapped sum would silently sign a transaction with a tiny fee.
+    /// </summary>
+    [TestMethod]
+    public void AddResourceFee_WithSumExceedingUintMaxValue_ThrowsOverflowException()
+    {
+        // Arrange
+        var transaction = BuildSingleOperationTransaction(100);
+
+        // Act & Assert
+        Assert.ThrowsException<OverflowException>(() => transaction.AddResourceFee(uint.MaxValue));
+        Assert.AreEqual(100U, transaction.Fee, "The transaction fee must be left unchanged when the sum overflows.");
+    }
+
+    /// <summary>
+    ///     Verifies that a resource fee wider than <see cref="uint" /> — the width Stellar RPC actually reports in
+    ///     <c>minResourceFee</c> — throws rather than being truncated.
+    /// </summary>
+    [TestMethod]
+    public void AddResourceFee_WithFeeAboveUintMaxValue_ThrowsOverflowException()
+    {
+        // Arrange
+        var transaction = BuildSingleOperationTransaction(100);
+
+        // Act & Assert
+        Assert.ThrowsException<OverflowException>(() => transaction.AddResourceFee(5_000_000_000L));
+        Assert.AreEqual(100U, transaction.Fee, "The transaction fee must be left unchanged when the sum overflows.");
+    }
+
+    /// <summary>
+    ///     Verifies that a negative resource fee is rejected — fees are unsigned on the wire and a negative value
+    ///     would otherwise reduce the fee the user signs.
+    /// </summary>
+    [TestMethod]
+    public void AddResourceFee_WithNegativeFee_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        var transaction = BuildSingleOperationTransaction(100);
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => transaction.AddResourceFee(-1));
+        Assert.AreEqual(100U, transaction.Fee, "The transaction fee must be left unchanged when the fee is invalid.");
+    }
+
+    private static Transaction BuildSingleOperationTransaction(uint fee)
+    {
+        var account = new Account(KeyPair.Random().AccountId, 7);
+        var destination = KeyPair.FromAccountId("GDQERENWDDSQZS7R7WKHZI3BSOYMV3FSWR7TFUYFTKQ447PIX6NREOJM");
+        return new TransactionBuilder(account)
+            .SetFee(fee)
+            .AddOperation(new PaymentOperation(destination, new AssetTypeNative(), "2000"))
+            .Build();
+    }
 }
