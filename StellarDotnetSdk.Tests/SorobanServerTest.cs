@@ -1800,6 +1800,46 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
+    ///     Verifies that a malformed restore-preamble <c>transactionData</c> surfaces as the same documented
+    ///     <see cref="InvalidDataException" /> as its two siblings on the enclosing response, rather than as
+    ///     whichever exception the XDR decoder happened to raise (here <c>EndOfStreamException</c>, for a
+    ///     truncated blob). All three getters decode server-supplied base64 on read, so they share one contract.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithMalformedRestorePreambleTransactionData_ThrowsInvalidDataException()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "minResourceFee": "58181",
+                    "restorePreamble": {
+                        "transactionData": "AAAA",
+                        "minResourceFee": "12345"
+                    },
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert: the rest of the preamble stays readable; only decoding the blob fails.
+        Assert.IsNotNull(response.RestorePreambleInfo);
+        Assert.AreEqual(12345L, response.RestorePreambleInfo.MinResourceFee);
+
+        var ex = Assert.ThrowsException<InvalidDataException>(
+            () => _ = response.RestorePreambleInfo.SorobanTransactionData);
+        StringAssert.Contains(ex.Message, "Malformed restore preamble Soroban transaction data XDR");
+        Assert.IsNotNull(ex.InnerException);
+    }
+
+    /// <summary>
     ///     Verifies that the <c>authMode</c> parameter is put on the wire using the values Stellar RPC accepts.
     ///     RPC compares the field case-sensitively and rejects anything other than <c>enforce</c>, <c>record</c>,
     ///     or <c>record_allow_nonroot</c>.

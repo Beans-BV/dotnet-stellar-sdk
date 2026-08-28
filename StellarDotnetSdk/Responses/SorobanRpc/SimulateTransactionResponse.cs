@@ -215,9 +215,32 @@ public class SimulateTransactionResponse
         ///     The recommended Soroban Transaction Data to use when submitting the <c>RestoreFootprint</c> operation.
         ///     <para>Null if the preamble carried no transaction data.</para>
         /// </summary>
+        /// <exception cref="InvalidDataException">
+        ///     Thrown when the server-supplied <c>transactionData</c> is not decodable as a
+        ///     <c>SorobanTransactionData</c> XDR blob, matching
+        ///     <see cref="SimulateTransactionResponse.SorobanTransactionData" />. Decoding happens on every read of
+        ///     this property, not during deserialization.
+        /// </exception>
         [JsonIgnore]
-        public SorobanTransactionData? SorobanTransactionData =>
-            TransactionData != null ? SorobanTransactionData.FromXdrBase64(TransactionData) : null;
+        public SorobanTransactionData? SorobanTransactionData
+        {
+            get
+            {
+                if (TransactionData == null)
+                {
+                    return null;
+                }
+                try
+                {
+                    return SorobanTransactionData.FromXdrBase64(TransactionData);
+                }
+                catch (Exception ex) when (IsXdrDecodeFailure(ex))
+                {
+                    throw new InvalidDataException(
+                        "Malformed restore preamble Soroban transaction data XDR: " + ex.Message, ex);
+                }
+            }
+        }
     }
 
     /// <summary>

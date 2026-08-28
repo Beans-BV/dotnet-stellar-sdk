@@ -262,20 +262,21 @@ All notable changes to this project are documented here. The format is based on
   `JsonException` for it will no longer see one. (`LedgerEntryChange.Type` is unaffected: RPC does not
   tag it `omitempty`, so it is always present.)
   ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211))
-- `SimulateTransactionResponse.SorobanAuthorization` and
-  `SimulateTransactionResponse.SorobanTransactionData` no longer leak raw XDR decoder exceptions.
-  Both getters decode server-supplied base64 on every read, and a malformed blob surfaced as whichever
-  of `InvalidDataException`, `IOException`/`EndOfStreamException`, `FormatException`,
-  `IndexOutOfRangeException`, `ArgumentException`, or `InvalidOperationException` the decoder happened
-  to raise — none of them documented, and all of them thrown from a property rather than from the
-  awaited `SimulateTransaction` call, so they escaped any `try` around it. An unknown
+- `SimulateTransactionResponse.SorobanAuthorization`, `.SorobanTransactionData`, and
+  `.RestorePreamble.SorobanTransactionData` no longer leak raw XDR decoder exceptions. All three
+  getters decode server-supplied base64 on every read, and a malformed blob surfaced as whichever of
+  `InvalidDataException`, `IOException`/`EndOfStreamException`, `FormatException`,
+  `IndexOutOfRangeException`, `ArgumentException`, or `InvalidOperationException` the decoder
+  happened to raise — none of them documented, and all of them thrown from a property rather than
+  from the awaited `SimulateTransaction` call, so they escaped any `try` around it. An unknown
   `SorobanCredentialsType` discriminant needs only eight bytes of `auth` to trigger this, which meant
-  even a defensive `if (response.SorobanAuthorization != null)` threw instead of returning null. Both
-  properties now normalize every decode failure to a single documented `InvalidDataException` (naming
-  the offending entry's index, with the original exception preserved as `InnerException`), matching
-  what `Sep45Challenge` already does for the same class of input. They still throw rather than
-  returning null, so `!= null` is not a safe presence check — test `Results?[0].Auth` or catch
-  `InvalidDataException` ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
+  even a defensive `if (response.SorobanAuthorization != null)` threw instead of returning null. All
+  three properties now normalize every decode failure to a single documented `InvalidDataException`
+  (naming the offending auth entry's index, with the original exception preserved as
+  `InnerException`), matching what `Sep45Challenge` already does for the same class of input. They
+  still throw rather than returning null, so `!= null` is not a safe presence check — test
+  `Results?[0].Auth` or catch `InvalidDataException`
+  ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
 - `PredicateJsonConverter` no longer leaks `FormatException`/`OverflowException` for malformed
   `rel_before`/`abs_before_epoch` values — every malformed predicate now throws `JsonException`, the
   SDK's documented deserialization failure mode. It also rejects `and`/`or` predicate arrays that do

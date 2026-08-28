@@ -90,10 +90,10 @@ public class GetEventsRequestTest
         Assert.AreEqual(Cursor, restored.Pagination.Cursor);
         Assert.AreEqual(2L, restored.Pagination.Limit);
     }
-    
+
     /// <summary>
-    ///     Serializes a request the way <c>StellarRpcServer</c> does and returns the raw <c>filters[0].type</c>
-    ///     value, so assertions compare against exactly what would go on the wire.
+    ///     Serializes a single-filter request and returns the raw <c>filters[0].type</c> value, so assertions
+    ///     compare against exactly what would go on the wire.
     /// </summary>
     private static string? SerializeFilterType(EventFilterType? type)
     {
@@ -110,8 +110,7 @@ public class GetEventsRequestTest
             ],
         };
 
-        var json = JsonSerializer.Serialize(request, JsonOptions.DefaultOptions);
-        using var document = JsonDocument.Parse(json);
+        using var document = Serialize(request);
         var element = document.RootElement.GetProperty("filters")[0].GetProperty("type");
         return element.ValueKind == JsonValueKind.Null ? null : element.GetString();
     }
