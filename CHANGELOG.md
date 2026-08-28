@@ -176,6 +176,20 @@ All notable changes to this project are documented here. The format is based on
   - HTTP-status-level failures are unchanged: 429, 503, and other error statuses still throw
     `TooManyRequestsException`, `ServiceUnavailableException`, and `HttpResponseException`. A JSON-RPC
     error is invisible to the resilience pipeline — the status is 200 — so it is never retried.
+- `StellarRpcServer` no longer converts two malformed Stellar RPC responses into exceptions that hide what
+  actually went wrong ([#210](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/210)). Both are
+  companions to the JSON-RPC error handling above and sit in the same `SendRequest` helper, so every
+  method is affected.
+  - A body holding the JSON literal `null` deserializes to no response object at all, and was then
+    dereferenced — reaching the caller as a `NullReferenceException`. It now throws
+    `ClientProtocolException`, the same exception an empty body already produced.
+  - **Breaking:** `SorobanRpcResponse<T>.Id` is now `string?`. JSON-RPC 2.0 §5 requires a null `id` in
+    exactly one case — the server could not read the request's `id` at all, a parse error or an invalid
+    request — and such a response carries the `error` explaining why. The non-nullable annotation made
+    `RespectNullableAnnotations` reject it while deserializing, so the caller got a `JsonException` naming
+    an SDK annotation rather than the server's own message; it now surfaces as a `SorobanRpcException`
+    like any other JSON-RPC error. `JsonRpc` stays non-nullable — the specification never permits a null
+    there.
 - `StellarRpcServer.SimulateTransaction` now sends the `authMode` parameter using the values Stellar RPC
   accepts (`enforce`, `record`, `record_allow_nonroot`). RPC matches this field case-sensitively against
   those three literals, so the parameter was non-functional in every release that offered it
