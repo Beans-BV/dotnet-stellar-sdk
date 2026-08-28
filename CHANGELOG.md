@@ -210,6 +210,15 @@ All notable changes to this project are documented here. The format is based on
   the fee the user signed. Existing call sites that pass a `uint` still compile unchanged, since `uint`
   widens to `long` implicitly; the signature change is binary-breaking, so consumers must recompile
   ([#212](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/212)).
+- **Breaking:** `SimulateTransactionResponse.RestorePreamble.SorobanTransactionData` no longer throws
+  `ArgumentNullException` on every access, making the archived-entry restore workflow usable for the first
+  time. The backing `transactionData` property was private and get-only with no `[JsonInclude]`, so
+  System.Text.Json never populated it and the public getter always parsed `null`. It now matches the
+  outer response's equivalent property, and — like that one — is typed `SorobanTransactionData?` and
+  returns `null` when the preamble carries no transaction data, instead of throwing from a property
+  getter outside any `try` around the awaited `SimulateTransaction` call. Consumers with nullable
+  reference types enabled will need a null check (or `!`) at the use site
+  (fixes [#213](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/213)).
 - `PredicateJsonConverter` no longer leaks `FormatException`/`OverflowException` for malformed
   `rel_before`/`abs_before_epoch` values — every malformed predicate now throws `JsonException`, the
   SDK's documented deserialization failure mode. It also rejects `and`/`or` predicate arrays that do
