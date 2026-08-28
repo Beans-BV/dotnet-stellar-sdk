@@ -595,6 +595,17 @@ public static class Utils
         return new StellarRpcServer(uri, httpClient);
     }
 
+    public static StellarRpcServer CreateTestStellarRpcServerCapturingRequest(
+        out FakeHttpMessageHandler handler,
+        string? content,
+        HttpStatusCode statusCode = HttpStatusCode.OK,
+        string uri = "https://soroban-testnet.stellar.org")
+    {
+        Network.UseTestNetwork();
+        var httpClient = CreateFakeHttpClient(out handler, content, statusCode);
+        return new StellarRpcServer(uri, httpClient);
+    }
+
     public static Server CreateTestServerWithHeaders(
         Dictionary<string, IEnumerable<string>> headers,
         HttpStatusCode statusCode = HttpStatusCode.OK,
@@ -616,6 +627,15 @@ public static class Utils
     }
 
     public static HttpClient CreateFakeHttpClient(
+        string? content,
+        HttpStatusCode statusCode = HttpStatusCode.OK,
+        IDictionary<string, IEnumerable<string>>? headers = null)
+    {
+        return CreateFakeHttpClient(out _, content, statusCode, headers);
+    }
+
+    public static HttpClient CreateFakeHttpClient(
+        out FakeHttpMessageHandler handler,
         string? content,
         HttpStatusCode statusCode = HttpStatusCode.OK,
         IDictionary<string, IEnumerable<string>>? headers = null)
@@ -642,12 +662,19 @@ public static class Utils
 
         mockFakeHttpMessageHandler.Setup(a => a.Send(It.IsAny<HttpRequestMessage>())).Returns(httpResponseMessage);
 
+        handler = mockFakeHttpMessageHandler.Object;
         return httpClient;
     }
 
     public abstract class FakeHttpMessageHandler : HttpMessageHandler
     {
         public Uri? RequestUri { get; private set; }
+
+        /// <summary>
+        ///     Body of the most recent request, or null if it had none. Lets tests assert on the exact
+        ///     payload the SDK puts on the wire, not just on how a canned response is parsed.
+        /// </summary>
+        public string? RequestBody { get; private set; }
 
         public virtual HttpResponseMessage Send(HttpRequestMessage request)
         {
@@ -658,7 +685,8 @@ public static class Utils
             CancellationToken cancellationToken)
         {
             RequestUri = request.RequestUri;
-            return await Task.FromResult(Send(request));
+            RequestBody = request.Content == null ? null : await request.Content.ReadAsStringAsync();
+            return Send(request);
         }
     }
 }

@@ -25,6 +25,24 @@ All notable changes to this project are documented here. The format is based on
     existing credential variant (matching the JS reference SDK).
   - Signing output is verified byte-for-byte against `@stellar/stellar-sdk@16.0.0-rc.1` for the V2 and
     delegated paths via the known-answer vectors in `StellarDotnetSdk.Tests/TestData/generate-p27-auth-kat.mjs`.
+- `StellarRpcServer.SimulateTransaction` accepts an optional `useUpgradedAuth` flag, opting a simulation in to
+  CAP-71 v2 authorization entries: recording mode then returns `SorobanAddressCredentialsV2`
+  (`SOROBAN_CREDENTIALS_ADDRESS_V2`) instead of the legacy `SorobanAddressCredentials`, whose signature is not
+  bound to the credential address and can therefore be replayed against another account. Signing needs no
+  change at the call site — `SorobanAuthorization.AuthorizeEntry` already preserves whichever variant
+  simulation returned and signs it over the matching preimage
+  ([#187](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/187)); a new Testnet integration test simulates
+  with the flag, signs the recorded v2 entry and submits it, which is the first end-to-end proof that the SDK's
+  address-bound preimage is accepted by a live host.
+
+  The flag is opt-in and unset by default, so the SDK's own *behaviour* is unchanged: omit it and Stellar RPC
+  keeps returning v1 credentials. **Breaking:** its *binary* compatibility is not — appending the parameter
+  changes the CLR signature of `SimulateTransaction`, so an application compiled against an earlier release that
+  drops in this assembly without recompiling throws `MissingMethodException` at the call site. Recompiling is
+  enough; no source change is needed. It is also transitional — RPC intends to flip its *server-side* default
+  to v2 at protocol 29, at which point the flag becomes a no-op, and to stop returning v1 at protocol 30, so
+  nothing should rely on omitting it to keep receiving v1
+  ([#206](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/206)).
 - **Multi-target NuGet packages: `net10.0`, `net8.0`, and `netstandard2.1`**
   ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195), implements
   [#162](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/162)):
@@ -135,6 +153,47 @@ All notable changes to this project are documented here. The format is based on
 
 ### Fixed
 
+- `StellarRpcServer.SimulateTransaction` now sends the `authMode` parameter using the values Stellar RPC
+  accepts (`enforce`, `record`, `record_allow_nonroot`). RPC matches this field case-sensitively against
+  those three literals, so the parameter was non-functional in every release that offered it
+  (14.0.0 onwards) — but it failed in two different ways, because the SDK changed JSON stacks in 15.0.0:
+  - **15.0.0 through 16.0.0-beta** serialized the `AuthMode` enum under System.Text.Json's default enum
+    naming, putting `ENFORCE`/`RECORD`/`RECORD_ALLOW_NONROOT` on the wire. RPC rejected each one with
+    `optional 'authMode' must be one of enforce,record,record_allow_nonroot when included`. It reports
+    this inside the simulation result rather than as a JSON-RPC error, so it surfaced on
+    `SimulateTransactionResponse.Error` and was easily mistaken for a failed simulation.
+  - **14.0.0 and 14.0.1** built the request with Newtonsoft.Json, whose default enum handling emits the
+    ordinal — `"authMode":0`/`1`/`2`. RPC's `authMode` is a string field, so the request failed to
+    unmarshal and RPC replied with a JSON-RPC error instead (`-32602 invalid parameters`,
+    `json: cannot unmarshal number into Go struct field SimulateTransactionRequest.authMode of type
+    string`). The SDK does not model JSON-RPC errors, so `SimulateTransaction` returned `null` rather
+    than a response carrying `Error`, typically surfacing as a `NullReferenceException` at the call site.
+
+  Either way, callers who passed an `AuthMode` were silently simulating nothing. Passing no `authMode`
+  was, and remains, unaffected — the field is omitted entirely and RPC applies its own default.
+
+  `AuthMode` now carries the wire spelling on the type itself (`[JsonStringEnumMemberName]` on each member
+  plus a type-level `[JsonConverter]`), so serializing the enum produces the RPC form rather than only the
+  one call site that remembers to convert — for `JsonOptions.DefaultOptions`, a bare
+  `JsonSerializerOptions`, and the parameterless `JsonSerializer.Serialize` alike. (A caller who registers
+  their own `AuthMode` converter still wins: System.Text.Json checks the options' `Converters` collection
+  before a type-level attribute. That does not affect the `authMode` request field, which is now built from
+  an explicit mapping rather than by serializing the enum.) See the breaking knock-on below
+  ([#208](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/208)).
+- **Breaking (behavioral):** pinning that wire spelling on `AuthMode` changes what serializing the enum
+  *directly* produces. This affects only code that (de)serializes an `AuthMode` itself — the `authMode`
+  request field is unaffected, being built from an explicit mapping rather than by serializing the enum,
+  and no Stellar RPC response carries the field.
+  - Serializing now writes `"enforce"` where a plain `JsonSerializerOptions` — and the parameterless
+    `JsonSerializer.Serialize` overload — previously wrote `0`, and `"enforce"` where
+    `JsonOptions.DefaultOptions` previously wrote `"ENFORCE"`.
+  - Deserializing now accepts only the lowercase RPC spellings. `"ENFORCE"` and `"Enforce"` previously
+    round-tripped through `JsonOptions.DefaultOptions` and now throw `JsonException`, because member-name
+    matching is case-sensitive once `[JsonStringEnumMemberName]` is applied. (Reading an `AuthMode` from
+    its ordinal — `0` — still works, as before.)
+
+  Nothing in the SDK deserializes `AuthMode`, so no SDK behavior depends on the old spellings
+  ([#208](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/208)).
 - `PredicateJsonConverter` no longer leaks `FormatException`/`OverflowException` for malformed
   `rel_before`/`abs_before_epoch` values — every malformed predicate now throws `JsonException`, the
   SDK's documented deserialization failure mode. It also rejects `and`/`or` predicate arrays that do

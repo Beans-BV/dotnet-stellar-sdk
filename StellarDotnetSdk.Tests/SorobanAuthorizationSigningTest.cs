@@ -1123,12 +1123,13 @@ public class SorobanAuthorizationSigningTest
 
     [TestMethod]
     [Ignore(
-        "Enable after Protocol 27 Testnet upgrade (2026-06-18): submit a V2-signed InvokeHostFunction and assert success. Tracked by issue #186 AC4.")]
+        "Superseded: issue #186 AC4 is covered by StellarDotnetSdk.IntegrationTests.Soroban.UpgradedAuthSimulationTests, which submits a V2-signed entry to Testnet. Network tests do not belong in the unit project; this stub is kept only as a pointer for anyone looking for AC4 here.")]
     public void AuthorizeEntry_AgainstP27Testnet_SubmitsSuccessfully()
     {
-        // Not yet implemented: until the P27 testnet is live (2026-06-18) there is no network to submit
-        // to. Fail loudly if enabled before the body exists, so it cannot silently pass and be mistaken
-        // for verified coverage of issue #186 AC4.
-        Assert.Inconclusive("Pending Protocol 27 Testnet upgrade (2026-06-18); submission test not yet implemented.");
+        // Intentionally empty — see the Ignore reason above. Kept (rather than deleted) so a search for
+        // "P27Testnet" in the unit suite lands on the integration test that actually provides the coverage.
+        Assert.Inconclusive(
+            "Covered by StellarDotnetSdk.IntegrationTests.Soroban.UpgradedAuthSimulationTests " +
+            "(simulate with useUpgradedAuth -> sign the V2 entry -> submit -> assert SUCCESS).");
     }
 }

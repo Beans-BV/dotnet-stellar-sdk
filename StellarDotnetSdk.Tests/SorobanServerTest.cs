@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
@@ -1422,6 +1423,175 @@ public class StellarRpcServerTest
         Assert.AreEqual(2, extension.ArchivedSorobanEntries.Length);
         Assert.AreEqual(134U, extension.ArchivedSorobanEntries[0]);
         Assert.AreEqual(554U, extension.ArchivedSorobanEntries[1]);
+    }
+
+    /// <summary>
+    ///     Verifies that the <c>authMode</c> parameter is put on the wire using the values Stellar RPC accepts.
+    ///     RPC compares the field case-sensitively and rejects anything other than <c>enforce</c>, <c>record</c>,
+    ///     or <c>record_allow_nonroot</c>.
+    /// </summary>
+    [TestMethod]
+    [DataRow(AuthMode.ENFORCE, "enforce")]
+    [DataRow(AuthMode.RECORD, "record")]
+    [DataRow(AuthMode.RECORD_ALLOW_NONROOT, "record_allow_nonroot")]
+    public async Task SimulateTransaction_WithAuthMode_SendsRpcWireValue(AuthMode authMode, string expectedWireValue)
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "1",
+              "result": {
+                "latestLedger": "14245"
+              }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
+
+        // Act
+        await sorobanServer.SimulateTransaction(CreateDummyTransaction(false), null, authMode);
+
+        // Assert
+        var body = handler.RequestBody;
+        Assert.IsNotNull(body);
+        using var request = JsonDocument.Parse(body!);
+        var authModeField = request.RootElement.GetProperty("params").GetProperty("authMode");
+        Assert.AreEqual(expectedWireValue, authModeField.GetString());
+    }
+
+    /// <summary>
+    ///     Verifies that no <c>authMode</c> field is sent when the caller does not request one, leaving Stellar RPC
+    ///     to apply its own default.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithoutAuthMode_OmitsAuthModeField()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "1",
+              "result": {
+                "latestLedger": "14245"
+              }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
+
+        // Act
+        await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        var body = handler.RequestBody;
+        Assert.IsNotNull(body);
+        using var request = JsonDocument.Parse(body!);
+        Assert.IsFalse(request.RootElement.GetProperty("params").TryGetProperty("authMode", out _));
+    }
+
+    /// <summary>
+    ///     Verifies that an undefined <see cref="AuthMode" /> value fails loudly through the public
+    ///     <c>SimulateTransaction</c> entry point rather than being put on the wire as a string Stellar RPC would
+    ///     reject.
+    ///     <para>
+    ///         <c>SimulateTransaction</c> is deliberately not <c>async</c>, so the validation runs while the request
+    ///         is built and the caller sees the exception on their own stack frame instead of on the returned task.
+    ///         That is the documented contract, and asserting it here — not only on the internal
+    ///         <c>ToRequestValue</c> helper below — is what stops a later refactor from moving the throw onto the
+    ///         task while the suite stays green. <see cref="Assert.ThrowsException{T}(System.Func{object})" /> never
+    ///         awaits the lambda, so a faulted task would fail this test rather than satisfy it.
+    ///     </para>
+    /// </summary>
+    [TestMethod]
+    public void SimulateTransaction_WithUndefinedAuthMode_ThrowsSynchronouslyWithoutSendingRequest()
+    {
+        // Arrange
+        const AuthMode undefinedAuthMode = (AuthMode)99;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, null);
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentOutOfRangeException>(
+            () => sorobanServer.SimulateTransaction(CreateDummyTransaction(false), null, undefinedAuthMode));
+        Assert.IsNull(handler.RequestBody, "The request must not reach the wire when validation fails.");
+    }
+
+    /// <summary>
+    ///     Verifies that the mapping helper itself rejects an undefined <see cref="AuthMode" />, which is what makes
+    ///     the public contract above hold for every call site that builds a request through it.
+    /// </summary>
+    [TestMethod]
+    public void ToRequestValue_WithUndefinedAuthMode_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        const AuthMode undefinedAuthMode = (AuthMode)99;
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => undefinedAuthMode.ToRequestValue());
+    }
+
+    /// <summary>
+    ///     Verifies that the <c>useUpgradedAuth</c> parameter is put on the wire as a JSON boolean, for both
+    ///     <see langword="true" /> and <see langword="false" />. Stellar RPC types the field as a bool and rejects
+    ///     the quoted forms with a JSON-RPC <c>-32602 invalid parameters</c> error.
+    /// </summary>
+    [TestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public async Task SimulateTransaction_WithUseUpgradedAuth_SendsJsonBoolean(bool useUpgradedAuth)
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "1",
+              "result": {
+                "latestLedger": "14245"
+              }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
+
+        // Act
+        await sorobanServer.SimulateTransaction(CreateDummyTransaction(false), null, null, useUpgradedAuth);
+
+        // Assert
+        var body = handler.RequestBody;
+        Assert.IsNotNull(body);
+        using var request = JsonDocument.Parse(body!);
+        var field = request.RootElement.GetProperty("params").GetProperty("useUpgradedAuth");
+        Assert.AreEqual(useUpgradedAuth ? JsonValueKind.True : JsonValueKind.False, field.ValueKind);
+    }
+
+    /// <summary>
+    ///     Verifies that no <c>useUpgradedAuth</c> field is sent when the caller does not request one, leaving Stellar
+    ///     RPC to apply its own default (v1 <c>SOROBAN_CREDENTIALS_ADDRESS</c> credentials today).
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithoutUseUpgradedAuth_OmitsUseUpgradedAuthField()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "1",
+              "result": {
+                "latestLedger": "14245"
+              }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
+
+        // Act
+        await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        var body = handler.RequestBody;
+        Assert.IsNotNull(body);
+        using var request = JsonDocument.Parse(body!);
+        Assert.IsFalse(request.RootElement.GetProperty("params").TryGetProperty("useUpgradedAuth", out _));
     }
 
     /// <summary>
