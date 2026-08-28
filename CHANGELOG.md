@@ -157,6 +157,12 @@ All notable changes to this project are documented here. The format is based on
   the reader. The four valid literals (`PENDING`, `TRY_AGAIN_LATER`, `DUPLICATE`, `ERROR`) are
   unaffected ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
 
+- `SendTransactionStatusEnumJsonConverter.Write` rejects an undefined enum value with `JsonException`
+  instead of writing the bare number as a string. Serializing
+  `(SendTransactionStatus)99` produced `"99"`, which the converter's own `Read` then rejected, so the
+  type did not round-trip; the sibling `EventFilterTypeJsonConverter` already refused the equivalent
+  input ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
+
 ### Security
 
 - **Breaking:** converters that hand-parse JSON now reject objects that define the same property more
@@ -259,8 +265,13 @@ All notable changes to this project are documented here. The format is based on
   `RespectNullableAnnotations` previously rejected with `JsonException` purely because the property was
   declared non-nullable, now deserializes to `null`. RPC never sends that shape — the field is
   `omitempty`, so it is either present with a value or absent entirely — but code that caught
-  `JsonException` for it will no longer see one. (`LedgerEntryChange.Type` is unaffected: RPC does not
-  tag it `omitempty`, so it is always present.)
+  `JsonException` for it will no longer see one. `LedgerEntryChange.Type` is now `string?` for the same
+  reason. RPC does not tag it `omitempty`, so a conforming server always sends it — but
+  `RespectNullableAnnotations` cannot enforce presence either way, and RPC v23.0.0/v23.0.1 shipped
+  pre-allocated no-op state changes whose `type` marshalled to `""` and whose `key` was omitted (fixed in
+  v23.0.2, [stellar/stellar-rpc#506](https://github.com/stellar/stellar-rpc/pull/506)) — the real payload
+  behind both changes. Compare `Type` against `"created"`/`"updated"`/`"deleted"` rather than assuming a
+  non-empty value.
   ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211))
 - `SimulateTransactionResponse.SorobanAuthorization`, `.SorobanTransactionData`, and
   `.RestorePreamble.SorobanTransactionData` no longer leak raw XDR decoder exceptions. All three
@@ -271,11 +282,47 @@ All notable changes to this project are documented here. The format is based on
   from the awaited `SimulateTransaction` call, so they escaped any `try` around it. An unknown
   `SorobanCredentialsType` discriminant needs only eight bytes of `auth` to trigger this, which meant
   even a defensive `if (response.SorobanAuthorization != null)` threw instead of returning null. All
-  three properties now normalize every decode failure to a single documented `InvalidDataException`
-  (naming the offending auth entry's index, with the original exception preserved as
-  `InnerException`), matching what `Sep45Challenge` already does for the same class of input. They
-  still throw rather than returning null, so `!= null` is not a safe presence check — test
-  `Results?[0].Auth` or catch `InvalidDataException`
+  three properties now normalize the recognized decode failures to a single documented
+  `InvalidDataException` (naming the offending auth entry's index, with the original exception preserved
+  as `InnerException`). The caught set is deliberately wider than the one `Sep45Challenge` uses, because
+  that method stops at the generated decoder while these properties continue through the SDK's own
+  `FromXdr` dispatch. It is empirical rather than proven exhaustive, so it is documented as the failure
+  this API reports and not as a guarantee that nothing else can escape. They still throw rather than
+  returning null, so `!= null` is not a safe presence check — test `Results?[0].Auth` or catch
+  `InvalidDataException`
+  ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
+- **Breaking:** those same three properties changed observable exception type. A caller who wrapped them
+  in `catch (FormatException)` or `catch (IOException)` to handle a malformed blob will find that clause
+  no longer fires: `System.IO.InvalidDataException` derives from neither. Catch `InvalidDataException`.
+- Three inputs that defeated that normalization entirely, each reachable from a hostile or
+  non-conforming RPC endpoint with a handful of bytes, now normalize like the rest:
+  - An `SCV_VEC` or `SCV_MAP` whose XDR *optional* body is absent. Those are the only two optional arms
+    of `SCVal`; the generated decoder legitimately leaves the body null for a present-flag of `0`, and
+    `SCVec.FromSCValXdr`/`SCMap.FromSCValXdr` then dereferenced it, throwing a raw
+    `NullReferenceException` out of the property. Eight bytes of `auth` were enough, and the same shape
+    reached `SorobanTransactionData` through a `CONTRACT_DATA` footprint key and
+    `InvokeHostFunctionOperation.FromXdr` through any server-supplied envelope. Both now throw
+    `ArgumentException`, which the callers' filters already cover. Note that this is fixed at the root,
+    in `SCVec.FromSCValXdr`/`SCMap.FromSCValXdr`, rather than in the `simulateTransaction` response
+    getters: those two are public and are reached from `Transaction.FromEnvelopeXdr` and
+    `InvokeHostFunctionOperation.FromXdr` as well, so the behaviour change applies to every caller
+    decoding an untrusted `SCVal`, not only to `SimulateTransactionResponse`. Catching
+    `NullReferenceException` in the response getters instead would have been narrower but would have
+    masked genuine SDK defects.
+  - An asset code that is empty once its trailing NUL padding is stripped, or too short for its
+    `ALPHANUM12` discriminant, reached via a `TRUSTLINE` footprint key or a `createContract` argument.
+    This raised `AssetCodeLengthInvalidException`, which derives straight from `Exception` and so sat
+    outside every hierarchy the filter named. Four zero bytes in an otherwise well-formed blob triggered
+    it. It is now caught explicitly.
+  - A `null` element inside `results`. The guard tested `Results.Length` but not the element, so
+    `"results": [null]` passed it and then dereferenced null. It now yields `null`
+    ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
+- **Breaking:** `SendTransactionResponse.Status` is now `[JsonRequired]`. `RespectNullableAnnotations`
+  rejects an explicit `null` but cannot reject an *absent* property, and an enum is a value type besides
+  — so a `sendTransaction` response carrying no `status` at all deserialized to the zero member,
+  `PENDING`, presenting a submission the server never accepted as pending. That is the same outcome the
+  `"status": 0` fix above closes, reached by a simpler payload. Stellar RPC tags the field without
+  `omitempty`, so requiring it rejects nothing a conforming server sends
   ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
 - `PredicateJsonConverter` no longer leaks `FormatException`/`OverflowException` for malformed
   `rel_before`/`abs_before_epoch` values — every malformed predicate now throws `JsonException`, the

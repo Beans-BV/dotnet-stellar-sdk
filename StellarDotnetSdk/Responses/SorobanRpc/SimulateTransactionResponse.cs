@@ -3,6 +3,10 @@ using System.IO;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Soroban;
+// Deliberately NOT `using StellarDotnetSdk.Exceptions`: that namespace declares its own FormatException,
+// which would silently shadow System.FormatException in the filter below. The SDK types it contributes
+// here are named in full.
+using AssetCodeLengthInvalidException = StellarDotnetSdk.Exceptions.AssetCodeLengthInvalidException;
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;
 
@@ -83,12 +87,20 @@ public class SimulateTransactionResponse
     ///     The recommended Soroban Transaction Data to use when submitting the simulated transaction. This data contains the
     ///     refundable fee and resource usage information such as the ledger footprint and IO access data.
     ///     <para>Not present in case of error.</para>
+    ///     <para>
+    ///         The blob is decoded from server-supplied base64 on every read, so this property can throw and each
+    ///         read returns a fresh object graph. A <c>SorobanTransactionData != null</c> guard is therefore not a
+    ///         safe way to probe for presence, and reading the property twice pays for two decodes — bind it to a
+    ///         local instead.
+    ///     </para>
     /// </summary>
     /// <exception cref="InvalidDataException">
     ///     Thrown when the server-supplied <c>transactionData</c> is not decodable as a
     ///     <c>SorobanTransactionData</c> XDR blob. Decoding happens on every read of this property, not during
     ///     deserialization, so the failure surfaces here rather than at the originating
-    ///     <see cref="StellarRpcServer.SimulateTransaction" /> call.
+    ///     <see cref="StellarRpcServer.SimulateTransaction" /> call. This is the failure this property reports for
+    ///     a malformed blob; it is not a guarantee that no other exception can escape (see
+    ///     <c>IsXdrDecodeFailure</c>).
     /// </exception>
     [JsonIgnore]
     public SorobanTransactionData? SorobanTransactionData
@@ -114,21 +126,29 @@ public class SimulateTransactionResponse
     ///     (optional) Array of Soroban authorization entries required for the simulated transaction.
     ///     Derived from the first result's auth entries.
     ///     <para>
-    ///         The entries are decoded from server-supplied base64 on every read, so this property can throw. A
-    ///         <c>SorobanAuthorization != null</c> guard is therefore not a safe way to probe for their presence;
-    ///         check <c>Results?[0].Auth</c>, or handle <see cref="InvalidDataException" />.
+    ///         The entries are decoded from server-supplied base64 on every read, so this property can throw and
+    ///         each read returns a fresh object graph. A <c>SorobanAuthorization != null</c> guard is therefore not
+    ///         a safe way to probe for their presence; check <c>Results?[0].Auth</c>, or handle
+    ///         <see cref="InvalidDataException" />. Bind the value to a local rather than reading the property
+    ///         twice, which decodes every entry twice.
     ///     </para>
     /// </summary>
     /// <exception cref="InvalidDataException">
     ///     Thrown when any of the server-supplied auth entries is not decodable as a
     ///     <c>SorobanAuthorizationEntry</c> XDR blob — including an unknown <c>SorobanCredentialsType</c>
-    ///     discriminant. The originating decoder exception is preserved as the inner exception.
+    ///     discriminant. The originating decoder exception is preserved as the inner exception. This is the failure
+    ///     this property reports for a malformed blob; it is not a guarantee that no other exception can escape
+    ///     (see <c>IsXdrDecodeFailure</c>).
     /// </exception>
     public SorobanAuthorizationEntry[]? SorobanAuthorization
     {
         get
         {
-            if (Results is not { Length: > 0 })
+            // The element check is not redundant with the length check: `"results": [null]` satisfies
+            // `Length: > 0` and would then dereference null. A conforming server cannot send it (the Go
+            // type is a slice of structs, not pointers), but the whole point of this property is to
+            // behave predictably for responses that are not conforming.
+            if (Results is not { Length: > 0 } || Results[0] == null)
             {
                 return null;
             }
@@ -160,7 +180,12 @@ public class SimulateTransactionResponse
     ///     that they can be normalized to the single <see cref="InvalidDataException" /> these properties document.
     /// </summary>
     /// <remarks>
-    ///     The set mirrors the one <c>Sep45Challenge</c> normalizes for the same reason:
+    ///     <para>
+    ///         The set is broader than the one <c>Sep45Challenge</c> uses, because that method decodes with the
+    ///         generated <c>Xdr.SorobanAuthorizationEntry.Decode</c> and stops there, whereas these properties go
+    ///         on through the SDK's own <c>FromXdr</c> dispatch (<c>SCVal</c>, <c>ScAddress</c>, <c>Asset</c>,
+    ///         <c>TrustlineAsset</c>, …), which raises its own argument- and state-validation exceptions.
+    ///     </para>
     ///     <list type="bullet">
     ///         <item>
     ///             <see cref="InvalidDataException" /> — an unknown enum discriminant, an over-large element count,
@@ -175,19 +200,43 @@ public class SimulateTransactionResponse
     ///         <item>
     ///             <see cref="ArgumentException" /> (and its <see cref="ArgumentNullException" /> /
     ///             <see cref="ArgumentOutOfRangeException" /> subtypes) — a null entry, a length prefix beyond
-    ///             <see cref="int.MaxValue" />, or a decoded field rejected by the domain type it is handed to.
+    ///             <see cref="int.MaxValue" />, an <c>SCV_VEC</c>/<c>SCV_MAP</c> whose optional body is absent, or a
+    ///             decoded field rejected by the domain type it is handed to.
     ///         </item>
     ///         <item>
-    ///             <see cref="InvalidOperationException" /> — a discriminant the generated decoder accepts but the
-    ///             SDK's own <c>FromXdr</c> dispatch does not, e.g. <c>SorobanCredentials.FromXdr</c>.
+    ///             <see cref="InvalidOperationException" /> — a discriminant the SDK's own <c>FromXdr</c> dispatch
+    ///             does not accept, e.g. an <c>SCAddress</c> that decodes but is not a legal
+    ///             <c>invokeHostFunction</c> argument. (Not <c>SorobanCredentials.FromXdr</c>: the generated
+    ///             <c>SorobanCredentialsType.Decode</c> rejects an unknown discriminant first, with
+    ///             <see cref="InvalidDataException" />.)
+    ///         </item>
+    ///         <item>
+    ///             <see cref="AssetCodeLengthInvalidException" /> — a footprint <c>TRUSTLINE</c> key, or a
+    ///             <c>createContract</c> argument, carrying an asset code that is empty once its trailing NUL
+    ///             padding is stripped, or that is too short for its <c>ALPHANUM12</c> discriminant. Four zero
+    ///             bytes in an otherwise well-formed blob are enough. It derives straight from
+    ///             <see cref="Exception" />, so no hierarchy above covers it and it has to be named.
     ///         </item>
     ///     </list>
-    ///     Anything outside this set is a defect in the SDK rather than in the response, and is left to propagate.
+    ///     <para>
+    ///         Note that the SDK declares a <c>FormatException</c> of its own in
+    ///         <c>StellarDotnetSdk.Exceptions</c>. Importing that namespace into this file would shadow
+    ///         <see cref="FormatException" /> in the filter below and silently stop catching the invalid-base64
+    ///         failures it exists for, so the SDK exception type above is aliased in rather than imported.
+    ///     </para>
+    ///     <para>
+    ///         The list is empirical, not proven exhaustive: it covers every exception type observed across a fuzz
+    ///         of the real decoders plus a sweep of the SDK exception types reachable from these two roots. A
+    ///         response that provokes something outside it — including <see cref="OutOfMemoryException" /> from the
+    ///         unbounded allocation the generated array decoders still permit — will propagate unnormalized. Treat
+    ///         <see cref="InvalidDataException" /> as the failure this API reports, not as a guarantee that nothing
+    ///         else can escape.
+    ///     </para>
     /// </remarks>
     private static bool IsXdrDecodeFailure(Exception ex)
     {
         return ex is InvalidDataException or IOException or FormatException or IndexOutOfRangeException
-            or ArgumentException or InvalidOperationException;
+            or ArgumentException or InvalidOperationException or AssetCodeLengthInvalidException;
     }
 
     /// <summary>
@@ -285,9 +334,21 @@ public class SimulateTransactionResponse
     public class LedgerEntryChange
     {
         /// <summary>
-        ///     The type of ledger entry change (e.g., "created", "updated", "deleted").
+        ///     The type of ledger entry change: <c>"created"</c>, <c>"updated"</c> or <c>"deleted"</c>.
+        ///     <para>
+        ///         Nullable despite the server tagging the field neither <c>omitempty</c> nor optional, for the same
+        ///         reason <see cref="Key" /> is: <c>RespectNullableAnnotations</c> rejects an explicit <c>null</c>
+        ///         but cannot reject an <em>absent</em> property, so a non-nullable annotation here would be a
+        ///         contract the deserializer does not enforce.
+        ///     </para>
+        ///     <para>
+        ///         An empty string is also possible and is not a documented type: Stellar RPC v23.0.0 and v23.0.1
+        ///         emitted pre-allocated no-op state changes whose <c>type</c> marshalled to <c>""</c> (fixed in
+        ///         v23.0.2, stellar/stellar-rpc#506) — the same entries that omitted <see cref="Key" />. Compare
+        ///         against the three literals rather than assuming a non-empty value.
+        ///     </para>
         /// </summary>
-        public string Type { get; init; }
+        public string? Type { get; init; }
 
         /// <summary>
         ///     The base64-encoded XDR key of the affected ledger entry.

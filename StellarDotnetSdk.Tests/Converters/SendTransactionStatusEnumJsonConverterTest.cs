@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Responses.SorobanRpc;
@@ -130,5 +130,50 @@ public class SendTransactionStatusEnumJsonConverterTest
         Assert.IsTrue(specificIndex < standardIndex,
             "SendTransactionStatusEnumJsonConverter must precede JsonStringEnumConverter, which matches every " +
             "enum and would otherwise shadow it.");
+    }
+
+    /// <summary>
+    ///     Verifies that an absent <c>status</c> is rejected rather than silently yielding the zero member.
+    ///     <c>SendTransactionStatus</c> is an enum, i.e. a value type, so <c>RespectNullableAnnotations</c> never
+    ///     applied: a response of <c>{"hash":"ab"}</c> deserialized to
+    ///     <see cref="SendTransactionResponse.SendTransactionStatus.PENDING" />, presenting a submission the server
+    ///     never accepted as pending — the same outcome the <c>"status": 0</c> fix closes, reached by a simpler
+    ///     payload. Stellar RPC tags the field <c>json:"status"</c> with no <c>omitempty</c>, so requiring it
+    ///     rejects nothing a conforming server sends.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithoutStatus_ThrowsJsonException()
+    {
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<SendTransactionResponse>(
+                "{\"hash\":\"ab\"}", JsonOptions.DefaultOptions));
+    }
+
+    /// <summary>
+    ///     A response carrying both required fields still deserializes, so the two guards above reject only what a
+    ///     conforming server never sends.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithStatusAndHash_Succeeds()
+    {
+        var response = JsonSerializer.Deserialize<SendTransactionResponse>(
+            "{\"hash\":\"ab\",\"status\":\"PENDING\"}", JsonOptions.DefaultOptions);
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual("ab", response.Hash);
+        Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.PENDING, response.Status);
+    }
+
+    /// <summary>
+    ///     Verifies that an undefined value cannot be written. Without the check <c>Write</c> emitted the bare
+    ///     number as a string (<c>"99"</c>) — a value this converter's own <c>Read</c> rejects, so the type did not
+    ///     round-trip, and its sibling <c>EventFilterTypeJsonConverter</c> already refused the equivalent input.
+    /// </summary>
+    [TestMethod]
+    public void Serialize_WithUndefinedStatus_ThrowsJsonException()
+    {
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Serialize(
+                (SendTransactionResponse.SendTransactionStatus)99, JsonOptions.DefaultOptions));
     }
 }

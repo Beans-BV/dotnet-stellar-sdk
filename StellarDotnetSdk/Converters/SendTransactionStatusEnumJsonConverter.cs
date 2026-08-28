@@ -68,9 +68,21 @@ public class SendTransactionStatusEnumJsonConverter : JsonConverter<SendTransact
     }
 
     /// <inheritdoc />
+    /// <exception cref="JsonException">
+    ///     Thrown when <paramref name="value" /> is not a defined
+    ///     <see cref="SendTransactionResponse.SendTransactionStatus" /> member. Without this check
+    ///     <c>(SendTransactionStatus)99</c> was written as the string <c>"99"</c> — a value this converter's own
+    ///     <see cref="Read" /> then rejects, so the type did not round-trip.
+    /// </exception>
     public override void Write(Utf8JsonWriter writer, SendTransactionResponse.SendTransactionStatus value,
         JsonSerializerOptions options)
     {
+        if (!Enum.IsDefined(typeof(SendTransactionResponse.SendTransactionStatus), value))
+        {
+            throw new JsonException(
+                $"Value '{value}' is not a defined {nameof(SendTransactionResponse.SendTransactionStatus)}.");
+        }
+
         writer.WriteStringValue(value.ToString());
     }
 }

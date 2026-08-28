@@ -1,4 +1,6 @@
-﻿namespace StellarDotnetSdk.Responses.SorobanRpc;
+﻿using System.Text.Json.Serialization;
+
+namespace StellarDotnetSdk.Responses.SorobanRpc;
 
 /// <summary>
 ///     Transaction status and network state. The result will include if the transaction was successfully enqueued, and
@@ -77,5 +79,14 @@ public class SendTransactionResponse
     ///     TRY_AGAIN_LATER represents the status value returned by stellar-core when a submitted transaction was not included
     ///     in the previous 4 ledgers and get banned for being added in the next few ledgers.
     /// </summary>
+    /// <remarks>
+    ///     <see cref="JsonRequiredAttribute" /> closes the other half of the "a malformed response must not read as
+    ///     a plausible status" problem that <see cref="Converters.SendTransactionStatusEnumJsonConverter" /> closes
+    ///     for <c>"status": 0</c>. Nothing enforces presence otherwise — an enum is a value type, so a response with
+    ///     no <c>status</c> at all silently yielded the zero member, <see cref="SendTransactionStatus.PENDING" />,
+    ///     presenting a submission the server never accepted as pending. Stellar RPC tags the field
+    ///     <c>json:"status"</c> with no <c>omitempty</c>, so requiring it rejects nothing a conforming server sends.
+    /// </remarks>
+    [JsonRequired]
     public SendTransactionStatus Status { get; init; }
 }
