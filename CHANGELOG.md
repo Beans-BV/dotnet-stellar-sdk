@@ -265,13 +265,13 @@ All notable changes to this project are documented here. The format is based on
   `RespectNullableAnnotations` previously rejected with `JsonException` purely because the property was
   declared non-nullable, now deserializes to `null`. RPC never sends that shape — the field is
   `omitempty`, so it is either present with a value or absent entirely — but code that caught
-  `JsonException` for it will no longer see one. `LedgerEntryChange.Type` is now `string?` for the same
-  reason. RPC does not tag it `omitempty`, so a conforming server always sends it — but
-  `RespectNullableAnnotations` cannot enforce presence either way, and RPC v23.0.0/v23.0.1 shipped
-  pre-allocated no-op state changes whose `type` marshalled to `""` and whose `key` was omitted (fixed in
-  v23.0.2, [stellar/stellar-rpc#506](https://github.com/stellar/stellar-rpc/pull/506)) — the real payload
-  behind both changes. Compare `Type` against `"created"`/`"updated"`/`"deleted"` rather than assuming a
-  non-empty value.
+  `JsonException` for it will no longer see one. (`LedgerEntryChange.Type` is unaffected and stays
+  non-nullable: RPC tags it neither `omitempty` nor optional and its `MarshalJSON` always writes a string,
+  so a conforming server always sends it. Note though that the string can be empty — RPC v23.0.0/v23.0.1
+  shipped pre-allocated no-op state changes whose `type` marshalled to `""` and whose `key` was omitted,
+  fixed in v23.0.2 ([stellar/stellar-rpc#506](https://github.com/stellar/stellar-rpc/pull/506)); that is
+  the real payload behind `Key`'s nullability. Compare `Type` against `"created"`/`"updated"`/`"deleted"`
+  rather than assuming one of the three.)
   ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211))
 - `SimulateTransactionResponse.SorobanAuthorization`, `.SorobanTransactionData`, and
   `.RestorePreamble.SorobanTransactionData` no longer leak raw XDR decoder exceptions. All three

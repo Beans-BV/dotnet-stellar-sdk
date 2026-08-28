@@ -336,19 +336,18 @@ public class SimulateTransactionResponse
         /// <summary>
         ///     The type of ledger entry change: <c>"created"</c>, <c>"updated"</c> or <c>"deleted"</c>.
         ///     <para>
-        ///         Nullable despite the server tagging the field neither <c>omitempty</c> nor optional, for the same
-        ///         reason <see cref="Key" /> is: <c>RespectNullableAnnotations</c> rejects an explicit <c>null</c>
-        ///         but cannot reject an <em>absent</em> property, so a non-nullable annotation here would be a
-        ///         contract the deserializer does not enforce.
+        ///         Non-nullable, unlike <see cref="Key" />: Stellar RPC tags this field neither <c>omitempty</c> nor
+        ///         optional and its <c>MarshalJSON</c> always writes a string, so a conforming server always sends
+        ///         it.
         ///     </para>
         ///     <para>
-        ///         An empty string is also possible and is not a documented type: Stellar RPC v23.0.0 and v23.0.1
-        ///         emitted pre-allocated no-op state changes whose <c>type</c> marshalled to <c>""</c> (fixed in
-        ///         v23.0.2, stellar/stellar-rpc#506) — the same entries that omitted <see cref="Key" />. Compare
-        ///         against the three literals rather than assuming a non-empty value.
+        ///         An empty string is possible and is not one of the three documented types: Stellar RPC v23.0.0 and
+        ///         v23.0.1 emitted pre-allocated no-op state changes whose <c>type</c> marshalled to <c>""</c>
+        ///         (fixed in v23.0.2, stellar/stellar-rpc#506) — the same entries that omitted <see cref="Key" />.
+        ///         Compare against the three literals rather than assuming a non-empty value.
         ///     </para>
         /// </summary>
-        public string? Type { get; init; }
+        public string Type { get; init; }
 
         /// <summary>
         ///     The base64-encoded XDR key of the affected ledger entry.

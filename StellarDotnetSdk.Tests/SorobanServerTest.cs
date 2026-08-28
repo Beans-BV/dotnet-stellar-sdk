@@ -1586,73 +1586,10 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
-    ///     Verifies that a state change with no <c>type</c> deserializes to <see langword="null" /> rather than
-    ///     failing an annotation the deserializer cannot enforce. <c>RespectNullableAnnotations</c> rejects an
-    ///     explicit <c>null</c> but not an absent property, so the previous non-nullable <c>string Type</c> was a
-    ///     contract the wire never had to honour — the same reasoning that made <c>Key</c> nullable.
-    /// </summary>
-    [TestMethod]
-    public async Task SimulateTransaction_WithStateChangeMissingType_LeavesTypeNull()
-    {
-        // Arrange
-        const string json =
-            """
-            {
-                "jsonrpc": "2.0",
-                "id": "7a469b9d6ed4444893491be530862ce3",
-                "result": {
-                    "stateChanges": [ { "key": "AAAA", "before": null, "after": "AAAA" } ],
-                    "latestLedger": "14245"
-                }
-            }
-            """;
-        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
-
-        // Act
-        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
-
-        // Assert
-        Assert.IsNotNull(response.StateChanges);
-        Assert.IsNull(response.StateChanges[0].Type);
-        Assert.AreEqual("AAAA", response.StateChanges[0].Key);
-    }
-
-    /// <summary>
-    ///     The mutation-sensitive half of the <c>Type</c> nullability change. The missing-property test above
-    ///     passes with or without the widening (an absent property yields the CLR default either way); only an
-    ///     explicit <c>"type": null</c> distinguishes them, because that is the single case
-    ///     <c>RespectNullableAnnotations</c> actually enforces. Same relationship as
-    ///     <see cref="SimulateTransaction_WithStateChangeNullKey_LeavesKeyNull" /> has to its missing-key sibling.
-    /// </summary>
-    [TestMethod]
-    public async Task SimulateTransaction_WithNullStateChangeType_LeavesTypeNull()
-    {
-        // Arrange
-        const string json =
-            """
-            {
-                "jsonrpc": "2.0",
-                "id": "7a469b9d6ed4444893491be530862ce3",
-                "result": {
-                    "stateChanges": [ { "type": null, "key": "AAAA", "before": null, "after": null } ],
-                    "latestLedger": "14245"
-                }
-            }
-            """;
-        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
-
-        // Act
-        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
-
-        // Assert
-        Assert.IsNotNull(response.StateChanges);
-        Assert.IsNull(response.StateChanges[0].Type);
-    }
-
-    /// <summary>
-    ///     Verifies the empty-string shape too. Stellar RPC v23.0.0 and v23.0.1 emitted pre-allocated no-op state
-    ///     changes whose <c>type</c> marshalled to <c>""</c> and whose <c>key</c> was omitted (fixed in v23.0.2,
-    ///     stellar/stellar-rpc#506) — the real-world payload behind both this field's and <c>Key</c>'s nullability.
+    ///     The real-world payload behind <c>Key</c>'s nullability: Stellar RPC v23.0.0 and v23.0.1 emitted
+    ///     pre-allocated no-op state changes whose <c>key</c> was omitted and whose <c>type</c> marshalled to
+    ///     <c>""</c> (fixed in v23.0.2, stellar/stellar-rpc#506). <c>Type</c> stays non-nullable — an empty string
+    ///     is not a null — but it is not one of the three documented literals either, which is worth pinning.
     /// </summary>
     [TestMethod]
     public async Task SimulateTransaction_WithEmptyStateChangeType_LeavesTypeEmptyAndKeyNull()
