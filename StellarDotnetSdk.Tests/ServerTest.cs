@@ -831,4 +831,51 @@ public class ServerTest
         // Assert - Server should be created successfully
         Assert.IsNotNull(server);
     }
+
+    /// <summary>
+    ///     Verifies that a Horizon response body holding the JSON literal <c>null</c> is reported as a
+    ///     protocol failure rather than being returned as a null through a non-nullable signature, where it
+    ///     would reach the caller as an unrelated <see cref="NullReferenceException" />.
+    /// </summary>
+    [TestMethod]
+    public async Task RootAsync_WithJsonNullResponseBody_ThrowsClientProtocolException()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("null");
+
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<ClientProtocolException>(() => server.RootAsync());
+        StringAssert.Contains(exception.Message, "no object");
+    }
+
+    /// <summary>
+    ///     The same guard covers the request builders, which share <see cref="ResponseHandler{T}" /> with
+    ///     <see cref="Server.RootAsync" />. Without it each one returns a null the signature says is
+    ///     non-nullable.
+    /// </summary>
+    [TestMethod]
+    public async Task RequestBuilder_WithJsonNullResponseBody_ThrowsClientProtocolException()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("null");
+
+        // Act & Assert
+        await Assert.ThrowsExceptionAsync<ClientProtocolException>(
+            () => server.Accounts.Account("GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3"));
+        await Assert.ThrowsExceptionAsync<ClientProtocolException>(() => server.Ledgers.Ledger(1));
+    }
+
+    /// <summary>
+    ///     An empty body was already rejected; this pins that the new null-object guard did not change it.
+    /// </summary>
+    [TestMethod]
+    public async Task RootAsync_WithEmptyResponseBody_ThrowsClientProtocolException()
+    {
+        // Arrange
+        using var server = Utils.CreateTestServerWithContent("");
+
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<ClientProtocolException>(() => server.RootAsync());
+        StringAssert.Contains(exception.Message, "no content");
+    }
 }
