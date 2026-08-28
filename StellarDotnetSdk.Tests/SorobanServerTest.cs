@@ -1531,6 +1531,70 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
+    ///     Verifies that the <c>useUpgradedAuth</c> parameter is put on the wire as a JSON boolean, for both
+    ///     <see langword="true" /> and <see langword="false" />. Stellar RPC types the field as a bool and rejects
+    ///     the quoted forms with a JSON-RPC <c>-32602 invalid parameters</c> error.
+    /// </summary>
+    [TestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public async Task SimulateTransaction_WithUseUpgradedAuth_SendsJsonBoolean(bool useUpgradedAuth)
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "1",
+              "result": {
+                "latestLedger": "14245"
+              }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
+
+        // Act
+        await sorobanServer.SimulateTransaction(CreateDummyTransaction(false), null, null, useUpgradedAuth);
+
+        // Assert
+        var body = handler.RequestBody;
+        Assert.IsNotNull(body);
+        using var request = JsonDocument.Parse(body!);
+        var field = request.RootElement.GetProperty("params").GetProperty("useUpgradedAuth");
+        Assert.AreEqual(useUpgradedAuth ? JsonValueKind.True : JsonValueKind.False, field.ValueKind);
+    }
+
+    /// <summary>
+    ///     Verifies that no <c>useUpgradedAuth</c> field is sent when the caller does not request one, leaving Stellar
+    ///     RPC to apply its own default (v1 <c>SOROBAN_CREDENTIALS_ADDRESS</c> credentials today).
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithoutUseUpgradedAuth_OmitsUseUpgradedAuthField()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "1",
+              "result": {
+                "latestLedger": "14245"
+              }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
+
+        // Act
+        await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        var body = handler.RequestBody;
+        Assert.IsNotNull(body);
+        using var request = JsonDocument.Parse(body!);
+        Assert.IsFalse(request.RootElement.GetProperty("params").TryGetProperty("useUpgradedAuth", out _));
+    }
+
+    /// <summary>
     ///     Verifies that StellarRpcServer.GetFeeStats returns fee statistics with inclusion fee and Soroban inclusion fee data.
     /// </summary>
     [TestMethod]
