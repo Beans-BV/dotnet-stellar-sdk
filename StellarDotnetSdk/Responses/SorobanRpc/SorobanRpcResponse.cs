@@ -8,9 +8,11 @@
 public class SorobanRpcResponse<T> : Response
 {
     /// <summary>
-    ///     The JSON-RPC request identifier that was sent with the request.
+    ///     The JSON-RPC request identifier echoed back by the server, normally the one sent with the request.
+    ///     JSON-RPC 2.0 §5 requires it to be null in exactly one case — the server could not read the request's
+    ///     id at all, a parse error or an invalid request — and such a response carries <see cref="Error" />.
     /// </summary>
-    public string Id { get; init; }
+    public string? Id { get; init; }
 
     /// <summary>
     ///     The JSON-RPC protocol version (e.g., "2.0").

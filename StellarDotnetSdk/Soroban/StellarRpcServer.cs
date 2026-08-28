@@ -501,6 +501,12 @@ public class StellarRpcServer : IDisposable
 
         var response = await _httpClient.PostAsync(_serverUri, httpContent);
         var sorobanRpcResponse = await responseHandler.HandleResponse(response);
+        // A body holding the JSON literal null deserializes to no response object at all, which would
+        // otherwise be dereferenced below and reach the caller as a NullReferenceException.
+        if (sorobanRpcResponse is null)
+        {
+            throw new ClientProtocolException("Response is not a JSON-RPC response object");
+        }
         // A JSON-RPC error is delivered with HTTP status 200 and no result member, so it survives
         // ResponseHandler's status-code checks; surface it instead of returning a null result.
         if (sorobanRpcResponse.Error is { } error)
