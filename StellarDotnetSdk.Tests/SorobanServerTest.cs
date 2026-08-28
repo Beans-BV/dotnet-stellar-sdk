@@ -124,7 +124,10 @@ public class StellarRpcServerTest
               "result": {
                 "id": "6bdb3e5cd5dcbf53df4b67dd56f892d0134c5abfb659234a83778af0b85620fe",
                 "protocolVersion": 21,
-                "sequence": 453871
+                "sequence": 453871,
+                "closeTime": "1750898400",
+                "headerXdr": "AAAAFgAAAADSFCi7HpJnjZuJ4nH4YkbFDcM/hQ/JcCJ1PxJnUp9pyg==",
+                "metadataXdr": "AAAAAgAAAADSFCi7HpJnjZuJ4nH4YkbFDcM/hQ/JcCJ1PxJnUp9pyg=="
               }
             }
             """;
@@ -138,6 +141,42 @@ public class StellarRpcServerTest
         Assert.AreEqual(21, response.ProtocolVersion);
         Assert.AreEqual(453871, response.Sequence);
         Assert.AreEqual("6bdb3e5cd5dcbf53df4b67dd56f892d0134c5abfb659234a83778af0b85620fe", response.Id);
+        Assert.AreEqual("1750898400", response.CloseTime);
+        Assert.AreEqual("AAAAFgAAAADSFCi7HpJnjZuJ4nH4YkbFDcM/hQ/JcCJ1PxJnUp9pyg==", response.HeaderXdr);
+        Assert.AreEqual("AAAAAgAAAADSFCi7HpJnjZuJ4nH4YkbFDcM/hQ/JcCJ1PxJnUp9pyg==", response.MetadataXdr);
+    }
+
+    /// <summary>
+    ///     Verifies that StellarRpcServer.GetLatestLedger tolerates responses from RPC servers that omit the
+    ///     ledger close time, header, and metadata fields.
+    /// </summary>
+    [TestMethod]
+    public async Task GetLatestLedger_WithoutOptionalFields_ReturnsNullForMissingFields()
+    {
+        // Arrange
+        const string getLatestLedgerResponseJson =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "8675309",
+              "result": {
+                "id": "6bdb3e5cd5dcbf53df4b67dd56f892d0134c5abfb659234a83778af0b85620fe",
+                "protocolVersion": 21,
+                "sequence": 453871
+              }
+            }
+            """;
+
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(getLatestLedgerResponseJson);
+
+        // Act
+        var response = await sorobanServer.GetLatestLedger();
+
+        // Assert
+        Assert.AreEqual(453871, response.Sequence);
+        Assert.IsNull(response.CloseTime);
+        Assert.IsNull(response.HeaderXdr);
+        Assert.IsNull(response.MetadataXdr);
     }
 
     /// <summary>
