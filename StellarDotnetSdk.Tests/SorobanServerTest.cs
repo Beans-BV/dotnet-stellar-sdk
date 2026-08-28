@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -1363,6 +1364,455 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
+    ///     Verifies that a state change whose <c>key</c> the server omitted deserializes to a null
+    ///     <see cref="SimulateTransactionResponse.LedgerEntryChange.Key" />. Stellar RPC tags the field
+    ///     <c>omitempty</c>, and a missing property does not trip <c>RespectNullableAnnotations</c> the way an
+    ///     explicit null does, so the previous non-nullable annotation was a contract the wire never honoured.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithStateChangeMissingKey_LeavesKeyNull()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "stateChanges": [
+                        {
+                            "type": "created",
+                            "before": null,
+                            "after": "AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+                        }
+                    ],
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        Assert.IsNotNull(response.StateChanges);
+        Assert.AreEqual(1, response.StateChanges.Length);
+        Assert.IsNull(response.StateChanges[0].Key);
+        Assert.AreEqual("created", response.StateChanges[0].Type);
+    }
+
+    /// <summary>
+    ///     Verifies the second half of the annotation change: an explicit <c>"key": null</c> now deserializes to
+    ///     <see langword="null" />, where it previously threw <c>JsonException</c>.
+    ///     <para>
+    ///         <c>RespectNullableAnnotations</c> rejected an explicit null only because the property was declared
+    ///         non-nullable, so widening it to <c>string?</c> necessarily relaxes that check too. Stellar RPC never
+    ///         sends this shape — the field is <c>omitempty</c>, so it is either present with a value or absent
+    ///         entirely — but code that caught <c>JsonException</c> for it will no longer see one.
+    ///     </para>
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithStateChangeNullKey_LeavesKeyNull()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "stateChanges": [
+                        {
+                            "type": "created",
+                            "key": null,
+                            "before": null,
+                            "after": null
+                        }
+                    ],
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        Assert.IsNotNull(response.StateChanges);
+        Assert.IsNull(response.StateChanges[0].Key);
+    }
+
+    /// <summary>
+    ///     Verifies that an auth entry the XDR decoder cannot read surfaces as the documented
+    ///     <see cref="InvalidDataException" /> rather than as a raw decoder exception. The payload is the eight-byte
+    ///     blob <c>00 00 00 63 00 00 00 00</c>: a <c>SorobanCredentialsType</c> discriminant of 99, which no
+    ///     generated decoder recognises.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithUnknownAuthCredentialsType_ThrowsInvalidDataException()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "results": [
+                        {
+                            "auth": ["AAAAYwAAAAA="],
+                            "xdr": "AAAAAwAAABQ="
+                        }
+                    ],
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert: the response itself deserializes; only reading the derived property fails.
+        Assert.IsNotNull(response.Results);
+        Assert.AreEqual(1, response.Results.Length);
+
+        var ex = Assert.ThrowsException<InvalidDataException>(() => _ = response.SorobanAuthorization);
+        StringAssert.Contains(ex.Message, "Malformed authorization entry XDR at index 0");
+        Assert.IsNotNull(ex.InnerException);
+    }
+
+    /// <summary>
+    ///     Verifies that a truncated auth entry is normalised to the same documented exception type as an unknown
+    ///     discriminant, so a single catch covers every malformed-blob shape.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithTruncatedAuthEntry_ThrowsInvalidDataException()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "results": [
+                        {
+                            "auth": ["AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA", "AAAA"],
+                            "xdr": "AAAAAwAAABQ="
+                        }
+                    ],
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        var ex = Assert.ThrowsException<InvalidDataException>(() => _ = response.SorobanAuthorization);
+        StringAssert.Contains(ex.Message, "Malformed authorization entry XDR at index 1");
+    }
+
+    /// <summary>
+    ///     Verifies that a non-base64 auth entry is normalised too — <c>Convert.FromBase64String</c> raises
+    ///     <c>FormatException</c> before the XDR decoder ever runs.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithNonBase64AuthEntry_ThrowsInvalidDataException()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "results": [
+                        {
+                            "auth": ["not base64 at all!"],
+                            "xdr": "AAAAAwAAABQ="
+                        }
+                    ],
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        Assert.ThrowsException<InvalidDataException>(() => _ = response.SorobanAuthorization);
+    }
+
+    /// <summary>
+    ///     Verifies that a malformed <c>transactionData</c> blob surfaces as the same documented
+    ///     <see cref="InvalidDataException" /> from
+    ///     <see cref="SimulateTransactionResponse.SorobanTransactionData" />.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithMalformedTransactionData_ThrowsInvalidDataException()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "transactionData": "AAAA",
+                    "minResourceFee": "58181",
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert: the rest of the response stays readable.
+        Assert.AreEqual(58181U, response.MinResourceFee);
+
+        var ex = Assert.ThrowsException<InvalidDataException>(() => _ = response.SorobanTransactionData);
+        StringAssert.Contains(ex.Message, "Malformed Soroban transaction data XDR");
+        Assert.IsNotNull(ex.InnerException);
+    }
+
+    /// <summary>
+    ///     The real-world payload behind <c>Key</c>'s nullability: Stellar RPC v23.0.0 and v23.0.1 emitted
+    ///     pre-allocated no-op state changes whose <c>key</c> was omitted and whose <c>type</c> marshalled to
+    ///     <c>""</c> (fixed in v23.0.2, stellar/stellar-rpc#506). <c>Type</c> stays non-nullable — an empty string
+    ///     is not a null — but it is not one of the three documented literals either, which is worth pinning.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithEmptyStateChangeType_LeavesTypeEmptyAndKeyNull()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "stateChanges": [ { "type": "", "before": null, "after": null } ],
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        Assert.IsNotNull(response.StateChanges);
+        Assert.AreEqual("", response.StateChanges[0].Type);
+        Assert.IsNull(response.StateChanges[0].Key);
+    }
+
+    /// <summary>
+    ///     Verifies that an auth entry whose signature is an <c>SCV_VEC</c> with the XDR optional present-flag set
+    ///     to 0 is normalised rather than dereferenced. <c>SCV_VEC</c> and <c>SCV_MAP</c> are the only two optional
+    ///     arms of <c>SCVal</c>, so the generated decoder legitimately leaves the body null and the SDK-side
+    ///     <c>SCVec.FromSCValXdr</c> used to call <c>.InnerValue.Select(...)</c> on it — a raw
+    ///     <see cref="NullReferenceException" /> out of the property, from eight attacker-chosen bytes.
+    /// </summary>
+    [DataTestMethod]
+    // creds=ADDRESS{addr, nonce=0, expLedger=0, signature}, root=CONTRACT_FN with 0 args and 0 sub-invocations.
+    [DataRow(
+        "AAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWYAAAAAAAAAAAAAAA==",
+        DisplayName = "signature = SCV_VEC with an absent body")]
+    [DataRow(
+        "AAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWYAAAAAAAAAAAAAAA==",
+        DisplayName = "signature = SCV_MAP with an absent body")]
+    public async Task SimulateTransaction_WithAbsentScValOptionalBody_ThrowsInvalidDataException(string authEntry)
+    {
+        // Arrange
+        var json =
+            $$"""
+              {
+                  "jsonrpc": "2.0",
+                  "id": "7a469b9d6ed4444893491be530862ce3",
+                  "result": {
+                      "results": [ { "auth": ["{{authEntry}}"], "xdr": "AAAAAwAAABQ=" } ],
+                      "latestLedger": "14245"
+                  }
+              }
+              """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        var ex = Assert.ThrowsException<InvalidDataException>(() => _ = response.SorobanAuthorization);
+        StringAssert.Contains(ex.Message, "Malformed authorization entry XDR at index 0");
+        Assert.IsNotNull(ex.InnerException);
+    }
+
+    /// <summary>
+    ///     The success-path counterpart of
+    ///     <see cref="SimulateTransaction_WithAbsentScValOptionalBody_ThrowsInvalidDataException" />: the same entry
+    ///     with the present-flag set to 1 and an empty vector still decodes, so the new guard rejects only the
+    ///     absent form.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithPresentEmptyScVecSignature_DecodesSorobanAuthorization()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "results": [ { "auth": ["AAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFmAAAAAAAAAAAAAAA="], "xdr": "AAAAAwAAABQ=" } ],
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        Assert.IsNotNull(response.SorobanAuthorization);
+        Assert.AreEqual(1, response.SorobanAuthorization.Length);
+    }
+
+    /// <summary>
+    ///     Verifies that an asset code which is empty once its trailing NUL padding is stripped is normalised.
+    ///     <c>AssetCodeLengthInvalidException</c> derives straight from <see cref="Exception" />, so it sat outside
+    ///     every hierarchy the decode filter names and escaped raw; four zero bytes in an otherwise well-formed
+    ///     footprint are enough to trigger it.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithEmptyAssetCodeInFootprint_ThrowsInvalidDataException()
+    {
+        // Arrange: footprint.readOnly[0] = LedgerKey(TRUSTLINE){accountId, ALPHANUM4 with a 4-zero-byte code}.
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "transactionData": "AAAAAAAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        var ex = Assert.ThrowsException<InvalidDataException>(() => _ = response.SorobanTransactionData);
+        StringAssert.Contains(ex.Message, "Malformed Soroban transaction data XDR");
+        Assert.IsNotNull(ex.InnerException);
+    }
+
+    /// <summary>
+    ///     The success-path counterpart of
+    ///     <see cref="SimulateTransaction_WithEmptyAssetCodeInFootprint_ThrowsInvalidDataException" />: the same
+    ///     footprint carrying the asset code "AB" decodes, so the normalisation is not swallowing valid data.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithValidAssetCodeInFootprint_DecodesSorobanTransactionData()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "transactionData": "AAAAAAAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUFCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        Assert.IsNotNull(response.SorobanTransactionData);
+        Assert.AreEqual(1, response.SorobanTransactionData.Resources.Footprint.ReadOnly.Length);
+    }
+
+    /// <summary>
+    ///     Verifies that a null element inside <c>results</c> yields <see langword="null" /> rather than a raw
+    ///     <see cref="NullReferenceException" />. The guard used to test only <c>Results.Length</c>, which a
+    ///     <c>[null]</c> array satisfies before the element is dereferenced.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithNullResultElement_LeavesSorobanAuthorizationNull()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": { "results": [null], "latestLedger": "14245" }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        Assert.IsNull(response.SorobanAuthorization);
+    }
+
+    /// <summary>
+    ///     Verifies that a well-formed response still decodes both derived properties, so the added guards do not
+    ///     change the success path.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithWellFormedAuthEntry_DecodesSorobanAuthorization()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "results": [
+                        {
+                            "auth": ["AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA"],
+                            "xdr": "AAAAAwAAABQ="
+                        }
+                    ],
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert
+        var auth = response.SorobanAuthorization;
+        Assert.IsNotNull(auth);
+        Assert.AreEqual(1, auth.Length);
+        Assert.IsInstanceOfType(auth[0].Credentials, typeof(SorobanSourceAccountCredentials));
+    }
+
+    /// <summary>
     ///     Verifies that StellarRpcServer.SimulateTransaction returns successful simulation response with Protocol 23 extension
     ///     data.
     /// </summary>
@@ -1538,6 +1988,46 @@ public class StellarRpcServerTest
         Assert.IsNotNull(response.RestorePreambleInfo);
         Assert.AreEqual(12345L, response.RestorePreambleInfo.MinResourceFee);
         Assert.IsNull(response.RestorePreambleInfo.SorobanTransactionData);
+    }
+
+    /// <summary>
+    ///     Verifies that a malformed restore-preamble <c>transactionData</c> surfaces as the same documented
+    ///     <see cref="InvalidDataException" /> as its two siblings on the enclosing response, rather than as
+    ///     whichever exception the XDR decoder happened to raise (here <c>EndOfStreamException</c>, for a
+    ///     truncated blob). All three getters decode server-supplied base64 on read, so they share one contract.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithMalformedRestorePreambleTransactionData_ThrowsInvalidDataException()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": {
+                    "minResourceFee": "58181",
+                    "restorePreamble": {
+                        "transactionData": "AAAA",
+                        "minResourceFee": "12345"
+                    },
+                    "latestLedger": "14245"
+                }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act
+        var response = await sorobanServer.SimulateTransaction(CreateDummyTransaction(false));
+
+        // Assert: the rest of the preamble stays readable; only decoding the blob fails.
+        Assert.IsNotNull(response.RestorePreambleInfo);
+        Assert.AreEqual(12345L, response.RestorePreambleInfo.MinResourceFee);
+
+        var ex = Assert.ThrowsException<InvalidDataException>(
+            () => _ = response.RestorePreambleInfo.SorobanTransactionData);
+        StringAssert.Contains(ex.Message, "Malformed restore preamble Soroban transaction data XDR");
+        Assert.IsNotNull(ex.InnerException);
     }
 
     /// <summary>
