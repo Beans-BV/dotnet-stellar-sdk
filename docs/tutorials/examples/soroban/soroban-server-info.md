@@ -64,12 +64,22 @@ private static async Task GetLatestLedger()
     var response = await server.GetLatestLedger();
     Console.WriteLine($"Server protocol version: {response.ProtocolVersion}");
     Console.WriteLine($"Server latest ledger: {response.Sequence}");
+    Console.WriteLine($"Latest ledger hash: {response.Id}");
+    Console.WriteLine($"Latest ledger close time (unix): {response.CloseTime}");
+    Console.WriteLine($"Latest ledger header XDR: {response.HeaderXdr}");
+    Console.WriteLine($"Latest ledger metadata XDR length: {response.MetadataXdr?.Length}");
 }
 ```
 
 This provides:
 - The current protocol version running on the server
 - The sequence number of the latest ledger processed by the server
+- The hash of the latest ledger (`Id`)
+- The close time of the latest ledger as a unix timestamp string (`CloseTime`)
+- The base64-encoded XDR of the ledger header (`HeaderXdr`) and close metadata (`MetadataXdr`)
+
+`CloseTime`, `HeaderXdr`, and `MetadataXdr` are nullable: they are `null` when the RPC server is older than
+v26 and omits them.
 
 ## Retrieving Account Information
 
