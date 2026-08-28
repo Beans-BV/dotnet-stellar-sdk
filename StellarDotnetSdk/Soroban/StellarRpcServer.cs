@@ -116,10 +116,19 @@ public class StellarRpcServer : IDisposable
     /// </summary>
     /// <returns>The <see cref="GetHealthResponse" /> object containing the health check result.</returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<GetHealthResponse> GetHealth()
     {
@@ -133,10 +142,19 @@ public class StellarRpcServer : IDisposable
     /// </summary>
     /// <returns>The <see cref="GetNetworkResponse" /> object containing the network metadata.</returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<GetNetworkResponse> GetNetwork()
     {
@@ -157,10 +175,19 @@ public class StellarRpcServer : IDisposable
     ///     other details.
     /// </returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<GetTransactionResponse> GetTransaction(string txHash)
     {
@@ -176,10 +203,19 @@ public class StellarRpcServer : IDisposable
     /// <param name="txHash"></param>
     /// <returns></returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<GetTransactionsResponse> GetTransactions(GetTransactionsRequest request)
     {
@@ -194,10 +230,19 @@ public class StellarRpcServer : IDisposable
     /// <param name="request">The request parameters including start ledger and pagination options.</param>
     /// <returns>A <see cref="GetLedgersResponse" /> object containing the ledger details.</returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<GetLedgersResponse> GetLedgers(GetLedgersRequest request)
     {
@@ -211,10 +256,19 @@ public class StellarRpcServer : IDisposable
     /// </summary>
     /// <returns></returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<GetVersionInfoResponse> GetVersionInfo()
     {
@@ -230,10 +284,19 @@ public class StellarRpcServer : IDisposable
     /// </summary>
     /// <returns></returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<GetFeeStatsResponse> GetFeeStats()
     {
@@ -251,10 +314,26 @@ public class StellarRpcServer : IDisposable
     ///     An Account object containing the sequence number and current state of the account.
     /// </returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
+    /// </exception>
+    /// <exception cref="AccountNotFoundException">
+    ///     Thrown when the account does not exist on the network.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when <paramref name="accountId" /> is not a valid Stellar account id. Raised before any
+    ///     request is sent.
     /// </exception>
     public async Task<Account> GetAccount(string accountId)
     {
@@ -274,10 +353,19 @@ public class StellarRpcServer : IDisposable
     /// </summary>
     /// <returns></returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<GetLatestLedgerResponse> GetLatestLedger()
     {
@@ -300,10 +388,19 @@ public class StellarRpcServer : IDisposable
     /// </param>
     /// <returns>A <see cref="GetLedgerEntriesResponse" /> object containing the current values.</returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<GetLedgerEntriesResponse> GetLedgerEntries(LedgerKey[] keys)
     {
@@ -318,10 +415,19 @@ public class StellarRpcServer : IDisposable
     /// <param name="request"></param>
     /// <returns></returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<GetEventsResponse> GetEvents(GetEventsRequest request)
     {
@@ -334,10 +440,19 @@ public class StellarRpcServer : IDisposable
     /// <param name="key">The <see cref="LedgerKey" /> of the ledger entry to retrieve.</param>
     /// <returns>A <see cref="GetLedgerEntriesResponse" /> object containing the current value.</returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<GetLedgerEntriesResponse> GetLedgerEntry(LedgerKey key)
     {
@@ -400,10 +515,19 @@ public class StellarRpcServer : IDisposable
     ///     member. Raised synchronously, while building the request, rather than surfacing on the returned task.
     /// </exception>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<SimulateTransactionResponse> SimulateTransaction(
         Transaction transaction,
@@ -458,10 +582,19 @@ public class StellarRpcServer : IDisposable
     /// <param name="transaction">The transaction object to be submitted.</param>
     /// <returns>A <see cref="SendTransactionResponse" /> response.</returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<SendTransactionResponse> SendTransaction(Transaction transaction)
     {
@@ -479,10 +612,19 @@ public class StellarRpcServer : IDisposable
     /// <param name="feeBumpTransaction">The FeeBumpTransaction object to be submitted.</param>
     /// <returns>A <see cref="T:StellarDotnetSdk.Responses.SorobanRpc.SendTransactionResponse" /> response.</returns>
     /// <exception cref="SorobanRpcException">
-    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result.
+    ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
+    ///     error delivered with HTTP status 200 surfaces this way; one carried by an HTTP failure status is
+    ///     reported by that status's exception below, and the JSON-RPC error object is not preserved.
     /// </exception>
     /// <exception cref="ClientProtocolException">
-    ///     Thrown when the response carries neither a result nor an error.
+    ///     Thrown when the response carries no usable result: an empty body, a body that is not a JSON-RPC
+    ///     response object, or an envelope whose <c>result</c> member is absent or null.
+    /// </exception>
+    /// <exception cref="ServiceUnavailableException">Thrown when the server answers with HTTP 503.</exception>
+    /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
+    /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
     /// </exception>
     public Task<SendTransactionResponse> SendTransaction(FeeBumpTransaction feeBumpTransaction)
     {
@@ -500,25 +642,22 @@ public class StellarRpcServer : IDisposable
             "application/json");
 
         var response = await _httpClient.PostAsync(_serverUri, httpContent);
+        // ResponseHandler rejects an empty body and a body holding the JSON literal null, both as
+        // ClientProtocolException, so this is never null.
         var sorobanRpcResponse = await responseHandler.HandleResponse(response);
-        // A body holding the JSON literal null deserializes to no response object at all, which would
-        // otherwise be dereferenced below and reach the caller as a NullReferenceException.
-        if (sorobanRpcResponse is null)
-        {
-            throw new ClientProtocolException("Response is not a JSON-RPC response object");
-        }
         // A JSON-RPC error is delivered with HTTP status 200 and no result member, so it survives
         // ResponseHandler's status-code checks; surface it instead of returning a null result.
         if (sorobanRpcResponse.Error is { } error)
         {
             throw new SorobanRpcException(error.Code, error.Message, error.Data);
         }
-        // JSON-RPC 2.0 §5 requires exactly one of result/error. An envelope with neither cannot be turned
-        // into the non-nullable response these methods promise, so reject it instead of returning null.
+        // JSON-RPC 2.0 §5 requires exactly one of result/error. Neither an envelope that omits result nor
+        // one carrying an explicit null can be turned into the non-nullable response these methods
+        // promise, so reject both instead of returning null.
         if (sorobanRpcResponse.Result is null)
         {
             throw new ClientProtocolException(
-                "The Stellar RPC server returned a JSON-RPC response carrying neither a result nor an error.");
+                "The Stellar RPC server returned a JSON-RPC response with no usable result.");
         }
         return sorobanRpcResponse.Result;
     }

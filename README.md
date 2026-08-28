@@ -170,10 +170,18 @@ and `ServiceUnavailableException`. Those exceptions also expose a
 
 **A note on `Retry-After` for Stellar services.** Horizon sends `Retry-After` only on
 HTTP 429 (always as an integer number of seconds); on HTTP 503 it relies on the client's
-configured backoff. Stellar RPC (Soroban) does not send `Retry-After` at all — overload
-is reported via HTTP 503/504 or JSON-RPC error bodies, so the retry pipeline falls back
-to exponential backoff. The parser still accepts the RFC 7231 HTTP-date form because
-upstream proxies and CDNs (Cloudflare, nginx, API gateways) may rewrite the header.
+configured backoff. Stellar RPC (Soroban) does not send `Retry-After` at all, so when it
+reports overload as HTTP 503/504 the retry pipeline falls back to exponential backoff. The
+parser still accepts the RFC 7231 HTTP-date form because upstream proxies and CDNs
+(Cloudflare, nginx, API gateways) may rewrite the header.
+
+**JSON-RPC errors are not retried.** Stellar RPC reports request-scoped failures — an
+out-of-range `startLedger`, malformed parameters, a TTL ledger key queried directly — as a
+JSON-RPC error body delivered with HTTP status 200. The retry pipeline keys on the status
+code, and 200 is not a failure, so these never enter it: neither `RetryHttpStatusCodes` nor
+`AdditionalRetriableExceptionTypes` can reach them and no backoff applies. They surface as
+`SorobanRpcException`, carrying the server's own error code and message, and are meant to be
+handled at the call site.
 
 ## Documentation
 

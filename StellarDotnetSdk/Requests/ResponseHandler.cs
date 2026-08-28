@@ -22,6 +22,10 @@ public class ResponseHandler<T> where T : class
     /// </summary>
     /// <param name="response">The HTTP response message to process.</param>
     /// <returns>The deserialized response object of type <typeparamref name="T" />.</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<T> HandleResponse(HttpResponseMessage response)
     {
         var statusCode = response.StatusCode;
@@ -49,6 +53,13 @@ public class ResponseHandler<T> where T : class
         }
 
         var responseObj = JsonSerializer.Deserialize<T>(content, JsonOptions.DefaultOptions);
+        // A body holding the JSON literal null deserializes to no object at all. This method's return type
+        // is non-nullable, so passing it on would hand every caller a null through a signature that says
+        // otherwise, reaching them as a NullReferenceException that hides the malformed response.
+        if (responseObj is null)
+        {
+            throw new ClientProtocolException("Response contains no object");
+        }
         if (responseObj is Response responseInstance)
         {
             responseInstance.SetHeaders(response.Headers);

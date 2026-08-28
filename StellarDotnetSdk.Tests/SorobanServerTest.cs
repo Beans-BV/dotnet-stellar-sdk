@@ -3388,7 +3388,9 @@ public class StellarRpcServerTest
         using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent("null");
 
         // Act & Assert
-        await Assert.ThrowsExceptionAsync<ClientProtocolException>(() => sorobanServer.GetHealth());
+        var exception =
+            await Assert.ThrowsExceptionAsync<ClientProtocolException>(() => sorobanServer.GetHealth());
+        StringAssert.Contains(exception.Message, "no object");
     }
 
     /// <summary>
@@ -3410,7 +3412,9 @@ public class StellarRpcServerTest
         using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
 
         // Act & Assert
-        await Assert.ThrowsExceptionAsync<ClientProtocolException>(() => sorobanServer.GetHealth());
+        var exception =
+            await Assert.ThrowsExceptionAsync<ClientProtocolException>(() => sorobanServer.GetHealth());
+        StringAssert.Contains(exception.Message, "no usable result");
     }
 
     /// <summary>
@@ -3429,10 +3433,13 @@ public class StellarRpcServerTest
             }
             """;
 
-        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
-
         // Act & Assert
-        await Assert.ThrowsExceptionAsync<ClientProtocolException>(() => sorobanServer.GetHealth());
+        // The message must not claim the response carried no result member: this one does carry it.
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+        var exception =
+            await Assert.ThrowsExceptionAsync<ClientProtocolException>(() => sorobanServer.GetHealth());
+        StringAssert.Contains(exception.Message, "no usable result");
+        StringAssert.DoesNotMatch(exception.Message, new System.Text.RegularExpressions.Regex("neither"));
     }
 
     private Transaction CreateDummyTransaction(bool sign = true)
