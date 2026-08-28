@@ -65,12 +65,12 @@ public class GetEventsRequest
         ///     A cursor value for pagination. When provided, returns results after this cursor.
         /// </summary>
         [JsonPropertyName("cursor")]
-        public string? Cursor;
+        public string? Cursor { get; set; }
 
         /// <summary>
         ///     The maximum number of events to return in a single response.
         /// </summary>
         [JsonPropertyName("limit")]
-        public long? Limit;
+        public long? Limit { get; set; }
     }
 }
