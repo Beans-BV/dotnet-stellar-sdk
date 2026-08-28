@@ -217,7 +217,8 @@ All notable changes to this project are documented here. The format is based on
   outer response's equivalent property, and — like that one — is typed `SorobanTransactionData?` and
   returns `null` when the preamble carries no transaction data, instead of throwing from a property
   getter outside any `try` around the awaited `SimulateTransaction` call. Consumers with nullable
-  reference types enabled will need a null check (or `!`) at the use site.
+  reference types enabled will need a null check (or `!`) at the use site
+  (fixes [#213](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/213)).
 - `PredicateJsonConverter` no longer leaks `FormatException`/`OverflowException` for malformed
   `rel_before`/`abs_before_epoch` values — every malformed predicate now throws `JsonException`, the
   SDK's documented deserialization failure mode. It also rejects `and`/`or` predicate arrays that do
