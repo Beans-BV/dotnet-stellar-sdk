@@ -1,11 +1,8 @@
 using System;
+using System.IO;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Soroban;
-using StellarDotnetSdk.Xdr;
-using SCBytes = StellarDotnetSdk.Soroban.SCBytes;
-using SCVal = StellarDotnetSdk.Soroban.SCVal;
-using TransactionMeta = StellarDotnetSdk.Soroban.TransactionMeta;
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;
 
@@ -107,7 +104,15 @@ public class TransactionInfo
 
     /// <summary>
     ///     (optional) The return value of the Soroban contract invocation, extracted from the transaction metadata.
-    ///     Only present for successful transactions that invoked a contract.
+    ///     Both <c>TransactionMetaV3</c> (Protocol 20-22) and <c>TransactionMetaV4</c> (Protocol 23+) are supported.
+    ///     Only present for successful transactions that carry Soroban metadata. Returns <c>null</c> — rather than
+    ///     throwing — when <see cref="ResultMetaXdr" /> is missing, is not valid base-64, is malformed or truncated,
+    ///     carries an unknown union discriminant, is a metadata version that predates Soroban, holds no return
+    ///     value, or holds a return value this SDK rejects as unrepresentable. A failure that instead signals a gap
+    ///     in this SDK — an <see cref="SCVal" /> type the mapping does not know — still throws, because that is a
+    ///     defect here rather than bad input.
+    ///     Unlike <see cref="TransactionMeta" />, this property reads the return value straight off the decoded XDR,
+    ///     so it still reports the value when some unrelated part of the metadata cannot be mapped to an SDK type.
     /// </summary>
     public SCVal? ResultValue
     {
@@ -118,15 +123,50 @@ public class TransactionInfo
                 return null;
             }
 
-            var bytes = Convert.FromBase64String(ResultMetaXdr);
-            var reader = new XdrDataInputStream(bytes);
-            var meta = Xdr.TransactionMeta.Decode(reader);
-            return meta.V4?.SorobanMeta?.ReturnValue == null ? null : SCVal.FromXdr(meta.V4.SorobanMeta.ReturnValue);
+            Xdr.SCVal? returnValue;
+            try
+            {
+                var reader = new Xdr.XdrDataInputStream(Convert.FromBase64String(ResultMetaXdr));
+                var meta = Xdr.TransactionMeta.Decode(reader);
+
+                // Only v3 and v4 carry Soroban metadata; discriminants 0-2 predate Soroban and have no
+                // return value to read. A discriminant added by a future protocol would also land on the
+                // default arm, so TransactionInfoTest pins the set of discriminants the XDR layer knows:
+                // regenerating StellarDotnetSdk.Xdr with a new arm fails that test and forces this switch
+                // to be revisited, rather than silently reporting "no return value" (see issue #224).
+                returnValue = meta.Discriminant switch
+                {
+                    3 => meta.V3?.SorobanMeta?.ReturnValue,
+                    4 => meta.V4?.SorobanMeta?.ReturnValue,
+                    _ => null,
+                };
+
+                return returnValue == null ? null : SCVal.FromXdr(returnValue);
+            }
+            // Every way the payload itself can be bad: invalid base-64, malformed/truncated/over-deep XDR
+            // (EndOfStreamException derives from IOException, as does the stream's non-zero-padding check),
+            // hostile length prefixes that overflow a signed index (ArgumentOutOfRangeException, an
+            // ArgumentException), and a decoded value the SDK rejects as unrepresentable — an SCV_VEC or
+            // SCV_MAP whose optional body is absent, or an unmappable address — which SCVal.FromXdr reports
+            // as ArgumentException. A failure that instead signals a gap in this SDK — InvalidOperationException
+            // for an SCVal type the mapping does not know, or a NullReferenceException from a defect — is
+            // deliberately left to propagate rather than being reported to callers as "no return value".
+            catch (Exception exception) when (
+                exception is FormatException or InvalidDataException or IOException or ArgumentException)
+            {
+                return null;
+            }
         }
     }
 
     /// <summary>
-    ///     Holds the transaction metadata.
+    ///     Holds the transaction metadata. Returns <c>null</c> when <see cref="ResultMetaXdr" /> is missing, cannot
+    ///     be decoded, is a metadata version this SDK does not model (only v3 and v4 are), or contains any structure
+    ///     that cannot be mapped to an SDK type. This is all-or-nothing: use <see cref="ResultValue" /> when you only
+    ///     need the Soroban return value, as it does not depend on the rest of the metadata converting successfully.
+    ///     A failure that says nothing about the payload — an <see cref="OutOfMemoryException" />, or a defect in this
+    ///     SDK surfacing as a <see cref="NullReferenceException" /> — propagates rather than being reported here as
+    ///     absent metadata.
     /// </summary>
     public TransactionMeta? TransactionMeta
     {
@@ -140,7 +180,18 @@ public class TransactionInfo
             {
                 return TransactionMeta.FromXdrBase64(ResultMetaXdr);
             }
-            catch
+            // Every failure this property documents as null: bad base-64, malformed/truncated/over-deep XDR
+            // (EndOfStreamException derives from IOException, as does the stream's non-zero-padding check), a
+            // metadata version this SDK does not model plus hostile length prefixes
+            // (ArgumentOutOfRangeException, an ArgumentException), and a decoded structure that cannot be
+            // mapped onto an SDK type (ArgumentException / InvalidOperationException). A bare catch also
+            // swallowed failures that say nothing about the payload — an OutOfMemoryException on a large
+            // metadata graph, or a NullReferenceException from a genuine defect in this SDK — and reported
+            // them to callers as "no metadata". Those now propagate, matching ResultValue's stance that an
+            // SDK bug is not bad input.
+            catch (Exception exception) when (
+                exception is FormatException or InvalidDataException or IOException
+                    or ArgumentException or InvalidOperationException)
             {
                 return null;
             }
@@ -149,7 +200,7 @@ public class TransactionInfo
 
     /// <summary>
     ///     (optional) The hex-encoded WASM hash returned from a contract deployment transaction.
-    ///     Only present when the result value is of type SCBytes.
+    ///     Only present when <see cref="ResultValue" /> is of type <see cref="SCBytes" />.
     /// </summary>
     public string? WasmHash
     {
@@ -166,7 +217,7 @@ public class TransactionInfo
 
     /// <summary>
     ///     (optional) The StrKey contract ID (C...) of a newly created contract.
-    ///     Only present when the result value is of type ScContractId.
+    ///     Only present when <see cref="ResultValue" /> is of type <see cref="ScContractId" />.
     /// </summary>
     public string? CreatedContractId
     {
