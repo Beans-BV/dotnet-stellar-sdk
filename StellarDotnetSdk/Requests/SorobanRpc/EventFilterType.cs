@@ -31,7 +31,8 @@ namespace StellarDotnetSdk.Requests.SorobanRpc;
 ///     <para>
 ///         <c>diagnostic</c> is deliberately absent. It was a legal filter value up to Stellar RPC v22.1.5, but
 ///         Protocol 23 removed diagnostic events from the <c>getEvents</c> stream and RPC v23.0.0 onwards answers
-///         <c>filter type invalid: if set, type must be either 'system' or 'contract'</c> for it. Every RPC release
+///         <c>filter N invalid: filter type invalid: if set, type must be either 'system' or 'contract'</c>
+///         for it, where <c>N</c> is the 1-based index of the offending filter. Every RPC release
 ///         this SDK supports rejects it, so it is not offered.
 ///     </para>
 /// </remarks>
@@ -63,43 +64,59 @@ public enum EventFilterType
 internal static class EventFilterTypeExtensions
 {
     /// <summary>
-    ///     Every bit <see cref="EventFilterType" /> defines. Anything outside this mask cannot be expressed on the
-    ///     wire.
+    ///     Maps an <see cref="EventFilterType" /> to the string Stellar RPC expects in an event filter's
+    ///     <c>type</c> field, or reports that the value has no wire spelling.
     /// </summary>
-    private const EventFilterType KnownFlags = EventFilterType.System | EventFilterType.Contract;
-
-    /// <summary>
-    ///     Returns <see langword="true" /> when <paramref name="value" /> is made up only of defined
-    ///     <see cref="EventFilterType" /> flags.
-    /// </summary>
-    internal static bool IsDefined(this EventFilterType value)
+    /// <param name="value">The value to map.</param>
+    /// <param name="requestValue">
+    ///     The wire spelling when this returns <see langword="true" />; the empty string otherwise.
+    /// </param>
+    /// <returns><see langword="true" /> when <paramref name="value" /> has a wire spelling.</returns>
+    /// <remarks>
+    ///     <para>
+    ///         Members are emitted in declaration order and joined with a bare comma, because RPC splits the value
+    ///         on <c>","</c> without trimming. Add a case here when adding a member to
+    ///         <see cref="EventFilterType" />.
+    ///     </para>
+    ///     <para>
+    ///         This switch is the single source of truth for which values are serializable, and both
+    ///         <see cref="IsDefined" /> and <see cref="Converters.EventFilterTypeJsonConverter" />'s
+    ///         <c>Write</c> derive their answer from it rather than testing a separate mask. That matters:
+    ///         two independent declarations of one set drift apart silently, and the specific way they would
+    ///         drift here is that a newly added member is admitted by the guard and then has no case to match —
+    ///         which is exactly how an <see cref="ArgumentOutOfRangeException" /> used to escape from inside
+    ///         <c>JsonSerializer.Serialize</c>. Deriving both from this one switch means a missing case fails at
+    ///         the guard instead, as a <c>JsonException</c>, and cannot put an unusable value on the wire.
+    ///     </para>
+    /// </remarks>
+    internal static bool TryToRequestValue(this EventFilterType value, out string requestValue)
     {
-        return (value & ~KnownFlags) == 0;
+        switch (value)
+        {
+            case EventFilterType.None:
+                requestValue = "";
+                return true;
+            case EventFilterType.System:
+                requestValue = "system";
+                return true;
+            case EventFilterType.Contract:
+                requestValue = "contract";
+                return true;
+            case EventFilterType.System | EventFilterType.Contract:
+                requestValue = "system,contract";
+                return true;
+            default:
+                requestValue = "";
+                return false;
+        }
     }
 
     /// <summary>
-    ///     Maps an <see cref="EventFilterType" /> to the string Stellar RPC expects in an event filter's
-    ///     <c>type</c> field.
+    ///     Returns <see langword="true" /> when <paramref name="value" /> is made up only of defined
+    ///     <see cref="EventFilterType" /> flags — equivalently, when it has a wire spelling.
     /// </summary>
-    /// <remarks>
-    ///     Members are emitted in declaration order and joined with a bare comma, because RPC splits the value on
-    ///     <c>","</c> without trimming. Add a case here when adding a member to <see cref="EventFilterType" />;
-    ///     the switch is exhaustive over flag combinations by design, so a missing one fails loudly instead of
-    ///     silently putting an unusable value on the wire.
-    /// </remarks>
-    /// <exception cref="ArgumentOutOfRangeException">
-    ///     Thrown when <paramref name="value" /> contains bits that are not defined <see cref="EventFilterType" />
-    ///     flags.
-    /// </exception>
-    internal static string ToRequestValue(this EventFilterType value)
+    internal static bool IsDefined(this EventFilterType value)
     {
-        return value switch
-        {
-            EventFilterType.None => "",
-            EventFilterType.System => "system",
-            EventFilterType.Contract => "contract",
-            KnownFlags => "system,contract",
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown event filter type."),
-        };
+        return value.TryToRequestValue(out _);
     }
 }

@@ -116,8 +116,12 @@ public class TransactionStatusJsonConverterTest
     [TestMethod]
     public void Serialize_WithUndefinedStatus_ThrowsJsonException()
     {
-        Assert.ThrowsException<JsonException>(() =>
+        var exception = Assert.ThrowsException<JsonException>(() =>
             JsonSerializer.Serialize((TransactionInfo.TransactionStatus)99, JsonOptions.DefaultOptions));
+
+        // Pin the message, not just the type: without this the guard could throw an empty JsonException and
+        // every assertion here would still pass, leaving an operator with no way to tell which value was bad.
+        Assert.AreEqual("Value '99' is not a defined TransactionStatus.", exception.Message);
     }
 
     /// <summary>
