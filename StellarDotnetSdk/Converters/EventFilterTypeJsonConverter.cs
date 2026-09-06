@@ -44,7 +44,8 @@ public class EventFilterTypeJsonConverter : JsonConverter<EventFilterType>
                 "system" => EventFilterType.System,
                 "contract" => EventFilterType.Contract,
                 _ => throw new JsonException(
-                    $"Value '{segment}' cannot be converted to type {nameof(EventFilterType)}. " +
+                    $"Value {UntrustedJsonValue.Describe(segment)} cannot be converted to type " +
+                    $"{nameof(EventFilterType)}. " +
                     "Stellar RPC accepts only 'system' and 'contract', comma-separated and without spaces."),
             };
         }

@@ -319,6 +319,20 @@ All notable changes to this project are documented here. The format is based on
 - **Breaking:** those same three properties changed observable exception type. A caller who wrapped them
   in `catch (FormatException)` or `catch (IOException)` to handle a malformed blob will find that clause
   no longer fires: `System.IO.InvalidDataException` derives from neither. Catch `InvalidDataException`.
+- Exception messages from the SDK's strict enum converters no longer copy the whole server-supplied
+  value. `SendTransactionStatusEnumJsonConverter`, `SubmitTransactionAsyncStatusJsonConverter`,
+  `TransactionStatusJsonConverter`, and `EventFilterTypeJsonConverter` all name the offending literal so
+  a wire-format mismatch stays diagnosable, but the value is now clamped to 64 characters (with its true
+  length appended) and escaped. Previously the message grew with the payload — a 2 MB `status` produced a
+  2,000,059-character `JsonException` message — and a `\r\n` in the value forged a line in whatever log
+  the caller wrote it to. A conforming value is unaffected. Escaping covers more than `char.IsControl`,
+  which is Unicode category `Cc` only and left three further ways to forge a line or disguise one:
+  `Zl`/`Zp` (U+2028 LINE SEPARATOR and U+2029 PARAGRAPH SEPARATOR, which .NET's own
+  `ReplaceLineEndings` and JavaScript both treat as line terminators), `Cf` (U+202E RIGHT-TO-LEFT
+  OVERRIDE and friends, which visually reverse the rest of the line without needing an ANSI escape), and
+  the apostrophe that delimits the quoted fragment. The clamp also no longer cuts between the halves of a
+  surrogate pair: truncating by UTF-16 code unit could leave an unpaired surrogate in the message, which
+  a strict encoder rejects outright and a lenient one silently rewrites to U+FFFD.
 - Three inputs that defeated that normalization entirely, each reachable from a hostile or
   non-conforming RPC endpoint with a handful of bytes, now normalize like the rest:
   - An `SCV_VEC` or `SCV_MAP` whose XDR *optional* body is absent. Those are the only two optional arms
