@@ -133,6 +133,19 @@ public class SendTransactionStatusEnumJsonConverterTest
     }
 
     /// <summary>
+    ///     Verifies that an absent <c>hash</c> is rejected. It is a non-nullable <see cref="string" />, and an
+    ///     absent property does not trip <c>RespectNullableAnnotations</c> — only an explicit <c>null</c> does — so
+    ///     it used to leave the property holding <see langword="null" /> while advertising that it could not be.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithoutHash_ThrowsJsonException()
+    {
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<SendTransactionResponse>(
+                "{\"status\":\"PENDING\"}", JsonOptions.DefaultOptions));
+    }
+
+    /// <summary>
     ///     Verifies that an absent <c>status</c> is rejected rather than silently yielding the zero member.
     ///     <c>SendTransactionStatus</c> is an enum, i.e. a value type, so <c>RespectNullableAnnotations</c> never
     ///     applied: a response of <c>{"hash":"ab"}</c> deserialized to
@@ -168,6 +181,11 @@ public class SendTransactionStatusEnumJsonConverterTest
     ///     Verifies that an undefined value cannot be written. Without the check <c>Write</c> emitted the bare
     ///     number as a string (<c>"99"</c>) — a value this converter's own <c>Read</c> rejects, so the type did not
     ///     round-trip, and its sibling <c>EventFilterTypeJsonConverter</c> already refused the equivalent input.
+    ///     <para>
+    ///         The property-level pin on <see cref="SendTransactionResponse.Status" /> widens the blast radius:
+    ///         it routes every options instance through this converter, so an unguarded write leaked to
+    ///         consumers' own options too.
+    ///     </para>
     /// </summary>
     [TestMethod]
     public void Serialize_WithUndefinedStatus_ThrowsJsonException()
@@ -175,5 +193,25 @@ public class SendTransactionStatusEnumJsonConverterTest
         Assert.ThrowsException<JsonException>(() =>
             JsonSerializer.Serialize(
                 (SendTransactionResponse.SendTransactionStatus)99, JsonOptions.DefaultOptions));
+    }
+
+    /// <summary>
+    ///     Verifies the property-level <c>[JsonConverter]</c> pin on <see cref="SendTransactionResponse.Status" />:
+    ///     a consumer deserializing with their own options — even ones registering the permissive
+    ///     <see cref="System.Text.Json.Serialization.JsonStringEnumConverter" /> — still gets strict parsing,
+    ///     because System.Text.Json resolves a property attribute ahead of the options' converter collection.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithConsumerOwnedOptions_StillRejectsOrdinalStatus()
+    {
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        options.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<SendTransactionResponse>("{\"hash\":\"abcd\",\"status\":0}", options));
+
+        var ok = JsonSerializer.Deserialize<SendTransactionResponse>(
+            "{\"hash\":\"abcd\",\"status\":\"ERROR\"}", options);
+        Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.ERROR, ok!.Status);
     }
 }
