@@ -443,3 +443,32 @@ All notable changes to this project are documented here. The format is based on
   recompile against this version. The top-level `PaginationOptions` used by `GetTransactionsRequest`
   and `GetLedgersRequest` always declared both members as properties and was never affected
   ([#214](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/214)).
+- **Breaking (behavioral):** `TransactionInfo.ResultValue` — and the derived `WasmHash` /
+  `CreatedContractId` — now read the Soroban return value from TransactionMeta V3 as well as V4, and return
+  `null` instead of throwing when `resultMetaXdr` cannot be decoded. Previously the getter navigated only
+  `V4.SorobanMeta.ReturnValue`, so a successful contract invocation recorded before Protocol 23 (a V3 meta)
+  reported no return value at all — even though the sibling `TransactionMeta` property on the same class
+  decoded the same payload fine — and a meta with an unknown union discriminant, truncated XDR, or invalid
+  base64 threw a raw `InvalidDataException`, `EndOfStreamException` or `FormatException` from a property
+  getter. Two consequences for existing callers. First, a `catch` around a `ResultValue` / `WasmHash` /
+  `CreatedContractId` access no longer fires for an undecodable payload: the properties now yield `null` for
+  bad base-64, malformed, truncated or over-deep XDR, an unknown discriminant, and hostile length prefixes.
+  A value that decodes but that the SDK cannot map onto an `SCVal` still throws, since that is a gap in the
+  SDK rather than bad input. Second, because V3's `returnValue` is a mandatory XDR field while V4's is an
+  optional pointer, a void-returning invocation recorded on a V3 meta now yields a non-null `SCVoid` where it
+  previously yielded `null`, so `ResultValue != null` no longer means "the invocation produced a value" for
+  pre-Protocol 23 transactions. The return value is read straight off the decoded XDR rather than through the
+  `TransactionMeta` property, so it still surfaces when some unrelated part of the metadata cannot be mapped
+  to an SDK type. Affects `GetTransaction` and `GetTransactions` alike; the V3 regression shipped in 14.0.1
+  ([#81](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/81) switched the getter from V3 to V4 instead
+  of supporting both), the throw-on-undecodable behavior in 10.0.0
+  ([#224](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/224)).
+- **Breaking (behavioral):** `TransactionInfo.TransactionMeta` no longer reports *every* failure as absent
+  metadata. It still returns `null` for each case it documents — bad base-64, malformed, truncated or
+  over-deep XDR, a metadata version this SDK does not model, and a decoded structure that cannot be mapped
+  onto an SDK type — but it no longer sits behind a bare `catch`, so a failure that says nothing about the
+  payload now propagates instead of being swallowed: an `OutOfMemoryException` while building a large
+  metadata graph, or a defect in this SDK surfacing as a `NullReferenceException`, previously reached
+  callers as "this transaction has no metadata". This aligns the property with `ResultValue`, which already
+  treats an SDK mapping bug as distinct from bad input
+  ([#224](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/224)).
