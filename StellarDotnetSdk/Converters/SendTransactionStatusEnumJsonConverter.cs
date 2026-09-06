@@ -14,8 +14,11 @@ namespace StellarDotnetSdk.Converters;
 ///     the Soroban RPC string representations (e.g., "PENDING", "ERROR") and the corresponding enum values.
 /// </summary>
 /// <remarks>
-///     Performance: Uses a <see cref="FrozenDictionary{TKey,TValue}" /> for string→enum dispatch,
-///     yielding faster reads than a switch expression on immutable data.
+///     Performance: the lookup table is a <c>FrozenDictionary</c> on net8.0 and later, which reads faster than a
+///     switch expression over immutable data, and a plain <c>Dictionary</c> on netstandard2.1, where
+///     <c>System.Collections.Frozen</c> is unavailable. Behaviour is identical on both; only the dispatch cost
+///     differs. (The type is named in prose rather than with a <c>see cref</c> because the reference cannot
+///     resolve on the netstandard2.1 leg, where the <c>using</c> is compiled out.)
 /// </remarks>
 public class SendTransactionStatusEnumJsonConverter : JsonConverter<SendTransactionResponse.SendTransactionStatus>
 {
@@ -64,7 +67,8 @@ public class SendTransactionStatusEnumJsonConverter : JsonConverter<SendTransact
         }
 
         throw new JsonException(
-            $"Value '{value}' cannot be converted to type {nameof(SendTransactionResponse.SendTransactionStatus)}.");
+            $"Value {UntrustedJsonValue.Describe(value)} cannot be converted to type " +
+            $"{nameof(SendTransactionResponse.SendTransactionStatus)}.");
     }
 
     /// <inheritdoc />

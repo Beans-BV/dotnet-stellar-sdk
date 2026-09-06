@@ -94,7 +94,12 @@ public class GetEventsResponse
         public string[] Topics { get; init; }
 
         /// <summary>
-        ///     The type of event emission. Allowed values: contract, diagnostic, system.
+        ///     The type of event emission. Allowed values: <c>contract</c>, <c>system</c>.
+        ///     <para>
+        ///         <c>diagnostic</c> was a third value up to Stellar RPC v22.1.5. Protocol 23 removed diagnostic
+        ///         events from the <c>getEvents</c> stream, so no server this SDK supports emits it here — matching
+        ///         <see cref="Requests.SorobanRpc.EventFilterType" />, which does not offer it on the request side.
+        ///     </para>
         /// </summary>
         [JsonPropertyName("type")]
         public string Type { get; init; }

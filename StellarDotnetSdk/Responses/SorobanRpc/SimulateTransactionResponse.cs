@@ -3,10 +3,6 @@ using System.IO;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Operations;
 using StellarDotnetSdk.Soroban;
-// Deliberately NOT `using StellarDotnetSdk.Exceptions`: that namespace declares its own FormatException,
-// which would silently shadow System.FormatException in the filter below. The SDK types it contributes
-// here are named in full.
-using AssetCodeLengthInvalidException = StellarDotnetSdk.Exceptions.AssetCodeLengthInvalidException;
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;
 
@@ -100,7 +96,7 @@ public class SimulateTransactionResponse
     ///     deserialization, so the failure surfaces here rather than at the originating
     ///     <see cref="StellarRpcServer.SimulateTransaction" /> call. This is the failure this property reports for
     ///     a malformed blob; it is not a guarantee that no other exception can escape (see
-    ///     <c>IsXdrDecodeFailure</c>).
+    ///     <c>XdrDecodeFailure.IsPayloadFailure</c>).
     /// </exception>
     [JsonIgnore]
     public SorobanTransactionData? SorobanTransactionData
@@ -115,7 +111,7 @@ public class SimulateTransactionResponse
             {
                 return SorobanTransactionData.FromXdrBase64(TransactionData);
             }
-            catch (Exception ex) when (IsXdrDecodeFailure(ex))
+            catch (Exception ex) when (XdrDecodeFailure.IsPayloadFailure(ex))
             {
                 throw new InvalidDataException("Malformed Soroban transaction data XDR: " + ex.Message, ex);
             }
@@ -138,7 +134,7 @@ public class SimulateTransactionResponse
     ///     <c>SorobanAuthorizationEntry</c> XDR blob — including an unknown <c>SorobanCredentialsType</c>
     ///     discriminant. The originating decoder exception is preserved as the inner exception. This is the failure
     ///     this property reports for a malformed blob; it is not a guarantee that no other exception can escape
-    ///     (see <c>IsXdrDecodeFailure</c>).
+    ///     (see <c>XdrDecodeFailure.IsPayloadFailure</c>).
     /// </exception>
     public SorobanAuthorizationEntry[]? SorobanAuthorization
     {
@@ -165,7 +161,7 @@ public class SimulateTransactionResponse
                 {
                     entries[i] = SorobanAuthorizationEntry.FromXdrBase64(auth[i]);
                 }
-                catch (Exception ex) when (IsXdrDecodeFailure(ex))
+                catch (Exception ex) when (XdrDecodeFailure.IsPayloadFailure(ex))
                 {
                     throw new InvalidDataException(
                         $"Malformed authorization entry XDR at index {i}: {ex.Message}", ex);
@@ -173,70 +169,6 @@ public class SimulateTransactionResponse
             }
             return entries;
         }
-    }
-
-    /// <summary>
-    ///     Recognizes the exceptions that decoding an attacker- or server-controlled base64 XDR blob can produce, so
-    ///     that they can be normalized to the single <see cref="InvalidDataException" /> these properties document.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///         The set is broader than the one <c>Sep45Challenge</c> uses, because that method decodes with the
-    ///         generated <c>Xdr.SorobanAuthorizationEntry.Decode</c> and stops there, whereas these properties go
-    ///         on through the SDK's own <c>FromXdr</c> dispatch (<c>SCVal</c>, <c>ScAddress</c>, <c>Asset</c>,
-    ///         <c>TrustlineAsset</c>, …), which raises its own argument- and state-validation exceptions.
-    ///     </para>
-    ///     <list type="bullet">
-    ///         <item>
-    ///             <see cref="InvalidDataException" /> — an unknown enum discriminant, an over-large element count,
-    ///             or a fixed-width read past the end of the buffer, raised by the generated XDR decoders.
-    ///         </item>
-    ///         <item>
-    ///             <see cref="IOException" /> (and <see cref="EndOfStreamException" />) — truncated input, or
-    ///             non-zero opaque padding.
-    ///         </item>
-    ///         <item><see cref="FormatException" /> — invalid base64, or a length prefix that runs off the buffer.</item>
-    ///         <item><see cref="IndexOutOfRangeException" /> — a read past the end of the backing array.</item>
-    ///         <item>
-    ///             <see cref="ArgumentException" /> (and its <see cref="ArgumentNullException" /> /
-    ///             <see cref="ArgumentOutOfRangeException" /> subtypes) — a null entry, a length prefix beyond
-    ///             <see cref="int.MaxValue" />, an <c>SCV_VEC</c>/<c>SCV_MAP</c> whose optional body is absent, or a
-    ///             decoded field rejected by the domain type it is handed to.
-    ///         </item>
-    ///         <item>
-    ///             <see cref="InvalidOperationException" /> — a discriminant the SDK's own <c>FromXdr</c> dispatch
-    ///             does not accept, e.g. an <c>SCAddress</c> that decodes but is not a legal
-    ///             <c>invokeHostFunction</c> argument. (Not <c>SorobanCredentials.FromXdr</c>: the generated
-    ///             <c>SorobanCredentialsType.Decode</c> rejects an unknown discriminant first, with
-    ///             <see cref="InvalidDataException" />.)
-    ///         </item>
-    ///         <item>
-    ///             <see cref="AssetCodeLengthInvalidException" /> — a footprint <c>TRUSTLINE</c> key, or a
-    ///             <c>createContract</c> argument, carrying an asset code that is empty once its trailing NUL
-    ///             padding is stripped, or that is too short for its <c>ALPHANUM12</c> discriminant. Four zero
-    ///             bytes in an otherwise well-formed blob are enough. It derives straight from
-    ///             <see cref="Exception" />, so no hierarchy above covers it and it has to be named.
-    ///         </item>
-    ///     </list>
-    ///     <para>
-    ///         Note that the SDK declares a <c>FormatException</c> of its own in
-    ///         <c>StellarDotnetSdk.Exceptions</c>. Importing that namespace into this file would shadow
-    ///         <see cref="FormatException" /> in the filter below and silently stop catching the invalid-base64
-    ///         failures it exists for, so the SDK exception type above is aliased in rather than imported.
-    ///     </para>
-    ///     <para>
-    ///         The list is empirical, not proven exhaustive: it covers every exception type observed across a fuzz
-    ///         of the real decoders plus a sweep of the SDK exception types reachable from these two roots. A
-    ///         response that provokes something outside it — including <see cref="OutOfMemoryException" /> from the
-    ///         unbounded allocation the generated array decoders still permit — will propagate unnormalized. Treat
-    ///         <see cref="InvalidDataException" /> as the failure this API reports, not as a guarantee that nothing
-    ///         else can escape.
-    ///     </para>
-    /// </remarks>
-    private static bool IsXdrDecodeFailure(Exception ex)
-    {
-        return ex is InvalidDataException or IOException or FormatException or IndexOutOfRangeException
-            or ArgumentException or InvalidOperationException or AssetCodeLengthInvalidException;
     }
 
     /// <summary>
@@ -283,7 +215,7 @@ public class SimulateTransactionResponse
                 {
                     return SorobanTransactionData.FromXdrBase64(TransactionData);
                 }
-                catch (Exception ex) when (IsXdrDecodeFailure(ex))
+                catch (Exception ex) when (XdrDecodeFailure.IsPayloadFailure(ex))
                 {
                     throw new InvalidDataException(
                         "Malformed restore preamble Soroban transaction data XDR: " + ex.Message, ex);
