@@ -102,6 +102,31 @@ All notable changes to this project are documented here. The format is based on
   `AllowDuplicateProperties` setting and does not travel with the type, so a caller deserializing this body
   with their own options still gets last-wins semantics. The four valid literals are unaffected
   ([#226](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/226)).
+- **Breaking:** `SubmitTransactionAsyncResponse.TransactionStatus`,
+  `SendTransactionResponse.SendTransactionStatus` and `TransactionInfo.TransactionStatus` now carry a
+  type-level `[JsonConverter]` as well, matching `EventFilterType`. The property-level pin above only
+  covers an enum reached *through* its response object; the enum travelling on its own — a caller's own
+  DTO field, a persisted status column, a queue message — resolved through whatever the caller's
+  `JsonSerializerOptions` provided, and a bare options instance maps a bare integer by ordinal. So
+  `JsonSerializer.Deserialize<TransactionStatus>("0", new JsonSerializerOptions())` returned `PENDING`,
+  and the `TransactionInfo` equivalent read `1` as `SUCCESS` — a corrupted stored record presenting
+  itself as a confirmed transaction. All three now throw `JsonException` for anything but the documented
+  literals under an options instance that registers no converter for the enum. Note the limit of this
+  tier: System.Text.Json resolves a property-level attribute first, then the options' `Converters`
+  collection, then the type-level attribute — so a caller whose own options register
+  `JsonStringEnumConverter` still shadows it, and the bare enum still reads `0` as `PENDING` and `1` as
+  `SUCCESS` there. Only the response *properties* (pinned with property-level `[JsonConverter]`) are
+  strict under every options instance; a persisted or queued bare enum is not, and should be stored as
+  the literal. This also changes the **write** direction: under a bare options instance
+  `JsonSerializer.Serialize(SendTransactionStatus.PENDING, new JsonSerializerOptions())` emitted `0` and
+  now emits `"PENDING"`, so a value persisted as a number by an earlier release no longer round-trips
+  through the same call. Code that round-tripped one of these enums as a bare integer must
+  store the literal instead. All four strict enum converters — including `EventFilterTypeJsonConverter`,
+  whose type-level attribute predates this change — now also implement `ReadAsPropertyName` and
+  `WriteAsPropertyName`, so these enums keep working as `Dictionary` keys; a type-level converter without
+  those overloads makes `Dictionary<TStatus, T>` throw `NotSupportedException`, which is not a
+  `JsonException` and so escapes a caller's `catch (JsonException)` entirely
+  ([#230](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/230)).
 - **Breaking:** `SimulateTransactionResponse.StateChanges`, `.Results`, `.Events` and
   `.Results[i].Auth` reject a `null`
   array *element* with `JsonException` instead of admitting it. `RespectNullableAnnotations` constrains
@@ -405,9 +430,10 @@ All notable changes to this project are documented here. The format is based on
   all four. Both halves of that qualifier matter. It does not extend to every converter in
   `JsonOptions.DefaultOptions`: the catch-all `JsonStringEnumConverter` registered last handles every enum
   without a dedicated converter and writes an undefined value as its bare number without throwing at all.
-  And it is specific to those options: of the four, only `EventFilterType` carries a type-level
-  `[JsonConverter]`, so under a bare `JsonSerializerOptions` it stays strict while `LiquidityPoolTypeEnum`
-  falls through to the catch-all. Assigning an undefined value to `GetEventsRequest.EventFilter.Type` still
+  And it is specific to those options: of the four, `EventFilterType`,
+  `SendTransactionResponse.SendTransactionStatus` and `TransactionInfo.TransactionStatus` carry a
+  type-level `[JsonConverter]`, so under a bare `JsonSerializerOptions` they stay strict while
+  `LiquidityPoolTypeEnum` falls through to the catch-all. Assigning an undefined value to `GetEventsRequest.EventFilter.Type` still
   throws `ArgumentOutOfRangeException` — that is a rejected *argument*, raised at assignment, and is
   unchanged. This entry is deliberately not marked breaking: the `ArgumentOutOfRangeException` it replaces
   never shipped, because `EventFilterType` and its converter are themselves new in this same unreleased
