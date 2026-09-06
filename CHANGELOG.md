@@ -76,6 +76,29 @@ All notable changes to this project are documented here. The format is based on
 
 ### Changed
 
+- **Breaking:** `SubmitTransactionAsyncResponse.TxStatus` deserialization is now strict. The nested
+  `TransactionStatus` enum was bound by the catch-all `JsonStringEnumConverter`, which maps bare
+  integers by ordinal and matches case-insensitively — so a malformed Horizon `POST /transactions_async`
+  response of `"tx_status": 0` deserialized to `PENDING` — the most optimistic of the four statuses.
+  (Two of the four are not observable through `Server.SubmitTransactionAsync` today: Horizon answers a
+  duplicate with HTTP 409 and an unavailable core with 503, and `HandleResponse` deserializes a body
+  only for 200/201/400, so `DUPLICATE` and `TRY_AGAIN_LATER` surface as
+  `SubmitTransactionUnknownResponseException` and `ServiceUnavailableException` instead. The strict
+  converter still governs `PENDING` and `ERROR` there, and all four wherever a caller deserializes such
+  a body themselves.) `"tx_status": 99` produced the
+  undefined enum value `99`, which matches none of the four members and so silently fails every
+  comparison a caller writes, and `"tx_status": "pending"` was accepted although Horizon — passing the
+  status through verbatim from stellar-core — emits only the four uppercase literals `PENDING`,
+  `DUPLICATE`, `TRY_AGAIN_LATER`, `ERROR`. The new public `SubmitTransactionAsyncStatusJsonConverter`
+  accepts exactly those literals and rejects everything else with `JsonException`, on write as well as
+  read (serializing an undefined cast such as `(TransactionStatus)99` now throws instead of emitting a
+  bare number). It is registered on `JsonOptions.DefaultOptions` ahead of the catch-all and also pinned
+  on the property with a property-level `[JsonConverter]`, so the strict wire format holds whichever
+  options instance the response is deserialized with. That pin governs the *value* grammar only: the
+  duplicate-property rejection that catches a repeated `tx_status` is `JsonOptions.DefaultOptions`'
+  `AllowDuplicateProperties` setting and does not travel with the type, so a caller deserializing this body
+  with their own options still gets last-wins semantics. The four valid literals are unaffected
+  ([#226](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/226)).
 - **Breaking:** `SimulateTransactionResponse.StateChanges`, `.Results`, `.Events` and
   `.Results[i].Auth` reject a `null`
   array *element* with `JsonException` instead of admitting it. `RespectNullableAnnotations` constrains

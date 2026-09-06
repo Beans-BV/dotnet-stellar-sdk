@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using StellarDotnetSdk.Converters;
 using TransactionResult = StellarDotnetSdk.Responses.Results.TransactionResult;
 
 namespace StellarDotnetSdk.Responses;
@@ -48,7 +49,16 @@ public sealed class SubmitTransactionAsyncResponse : Response
     /// <summary>
     ///     The status of the transaction submission.
     /// </summary>
+    // The property-level [JsonConverter] pins the strict wire format whichever options instance the response is
+    // deserialized with: System.Text.Json resolves converters property attribute first, then the options'
+    // Converters collection, then the type attribute — so this attribute outranks even a catch-all
+    // JsonStringEnumConverter registered on the caller's options, which would map bare integers by ordinal.
+    // The pin governs the *value* grammar only. The duplicate-property rejection that catches a repeated
+    // tx_status is JsonOptions.DefaultOptions' AllowDuplicateProperties setting, which does not travel with
+    // the type — under a caller's own options a body that opens with ERROR and repeats tx_status as PENDING
+    // still deserializes to PENDING.
     [JsonPropertyName("tx_status")]
+    [JsonConverter(typeof(SubmitTransactionAsyncStatusJsonConverter))]
     public required TransactionStatus TxStatus { get; init; }
 
     /// <summary>
