@@ -268,6 +268,47 @@ All notable changes to this project are documented here. The format is based on
     an SDK annotation rather than the server's own message; it now surfaces as a `SorobanRpcException`
     like any other JSON-RPC error. `JsonRpc` stays non-nullable — the specification never permits a null
     there.
+- Exception messages from `SendTransactionStatusEnumJsonConverter`, `TransactionStatusJsonConverter` and
+  `EventFilterTypeJsonConverter` no longer copy the whole rejected value. All three still name the
+  offending literal so a wire-format mismatch stays diagnosable, but the value is now clamped to 64 UTF-16
+  code units (with its true length appended) and escaped. Previously the message grew with the payload — a
+  2 MB `status` produced a 2,000,059-character `JsonException` message — and a `\r\n` in the value forged a
+  line in whatever log the caller wrote it to. For the two status converters the value is server-supplied,
+  so it is attacker-controlled whenever the caller does not operate the RPC endpoint; `EventFilterType` is
+  request-side only and is never bound to a server response, so there the value is whatever JSON the caller
+  chose to deserialize. A conforming value is unaffected: every field this applies to carries an ASCII wire
+  literal by contract (`PENDING`, `NOT_FOUND`, `system,contract`). Escaping is a whitelist — printable
+  ASCII survives, everything else becomes `\uXXXX`, and an astral character becomes a single
+  `\UXXXXXXXX` rather than its two surrogate halves. A blacklist of "dangerous" categories cannot be
+  complete: `char.IsControl` is `Cc` only, and adding `Zl`/`Zp` (U+2028/U+2029, line terminators to
+  .NET's own `ReplaceLineEndings` and to JavaScript) and `Cf` (U+202E RIGHT-TO-LEFT OVERRIDE, which
+  visually reverses the rest of the line without needing an ANSI escape) still leaves `Cn` (U+2065 and
+  the reserved default-ignorable range, drawn as nothing), `Mn` (combining marks), `Zs` (U+00A0, which
+  forges alignment in fixed-width output) and `Co` — plus a version-skew hole, since a code point that is
+  `Cf` in a newer Unicode than the running framework's tables is `Cn` today and would pass. Three ASCII
+  characters are also escaped: the apostrophe that delimits the quoted fragment, the quotation mark that
+  would end the string in a JSON or CSV log the message is written into, and the backslash that
+  introduces every escape emitted here — without the last the encoding is ambiguous, because the six
+  characters `\u202e` arriving literally on the wire would render identically to a real U+202E, which
+  both destroys the diagnostic value being traded for and lets any downstream that unescapes `\uXXXX`
+  re-materialise the character the escaping removed. The clamp does not cut between the halves of a
+  surrogate pair, so a truncated astral character is dropped whole rather than reported as a bare
+  surrogate code unit.
+- `EventFilterTypeJsonConverter.Write` now throws `JsonException` rather than
+  `ArgumentOutOfRangeException` for a value carrying undefined flag bits, matching the SDK's other
+  hand-written strict enum converters — `SendTransactionStatusEnumJsonConverter`,
+  `TransactionStatusJsonConverter` and `LiquidityPoolTypeEnumJsonConverter` — so one
+  `catch (JsonException)` around a `JsonSerializer.Serialize` that uses `JsonOptions.DefaultOptions` covers
+  all four. Both halves of that qualifier matter. It does not extend to every converter in
+  `JsonOptions.DefaultOptions`: the catch-all `JsonStringEnumConverter` registered last handles every enum
+  without a dedicated converter and writes an undefined value as its bare number without throwing at all.
+  And it is specific to those options: of the four, only `EventFilterType` carries a type-level
+  `[JsonConverter]`, so under a bare `JsonSerializerOptions` it stays strict while `LiquidityPoolTypeEnum`
+  falls through to the catch-all. Assigning an undefined value to `GetEventsRequest.EventFilter.Type` still
+  throws `ArgumentOutOfRangeException` — that is a rejected *argument*, raised at assignment, and is
+  unchanged. This entry is deliberately not marked breaking: the `ArgumentOutOfRangeException` it replaces
+  never shipped, because `EventFilterType` and its converter are themselves new in this same unreleased
+  section, so no released version ever exhibited the old behaviour.
 - `StellarRpcServer.SimulateTransaction` now sends the `authMode` parameter using the values Stellar RPC
   accepts (`enforce`, `record`, `record_allow_nonroot`). RPC matches this field case-sensitively against
   those three literals, so the parameter was non-functional in every release that offered it
@@ -525,3 +566,12 @@ All notable changes to this project are documented here. The format is based on
   callers as "this transaction has no metadata". This aligns the property with `ResultValue`, which already
   treats an SDK mapping bug as distinct from bad input
   ([#224](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/224)).
+  Both properties now decide "bad payload" from one shared predicate rather than two hand-maintained clause
+  lists. The lists had already diverged: neither named `AssetCodeLengthInvalidException`, which derives
+  straight from `Exception` rather than from `ArgumentException`, so a `resultMetaXdr` carrying a `TRUSTLINE`
+  ledger-entry change with an unmappable asset code — four NUL bytes in an otherwise well-formed blob are
+  enough — threw it out of the `TransactionMeta` getter instead of returning `null` as documented. The shared
+  predicate is transcribed from `SimulateTransactionResponse.IsXdrDecodeFailure`, which derived the same set
+  empirically from a fuzz of these decoders, and also adds `IndexOutOfRangeException` from that list.
+  `ResultValue` keeps its one deliberate deviation — it still lets `InvalidOperationException` propagate —
+  now expressed as a deviation from the shared set rather than by re-listing the other types.

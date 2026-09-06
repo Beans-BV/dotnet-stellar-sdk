@@ -118,7 +118,8 @@ public class GetEventsRequestTest
     /// <summary>
     ///     Verifies that combined flags are joined with a bare comma. Stellar RPC splits the value on <c>","</c>
     ///     without trimming, so the <c>"System, Contract"</c> that a plain enum converter would emit is rejected
-    ///     with <c>filter type invalid: if set, type must be either 'system' or 'contract'</c>. This is the
+    ///     with <c>filter N invalid: filter type invalid: if set, type must be either 'system' or 'contract'</c>,
+    ///     where <c>N</c> is the 1-based index of the offending filter. This is the
     ///     regression guard for the converter-resolution order: <c>JsonOptions.DefaultOptions</c> registers a
     ///     catch-all <c>JsonStringEnumConverter</c>, which outranks a type-level <c>[JsonConverter]</c>.
     /// </summary>

@@ -73,12 +73,24 @@ public class EventFilterTypeJsonConverterTest
     /// <summary>
     ///     Verifies that a value carrying undefined flag bits is rejected client-side rather than being written to
     ///     the wire as a bare number for the server to refuse.
+    ///     <para>
+    ///         The exception is <see cref="JsonException" />, matching every other converter in
+    ///         <c>JsonOptions.DefaultOptions</c> that rejects an undefined enum on write, so that one
+    ///         <c>catch (JsonException)</c> around <c>JsonSerializer.Serialize</c> covers all of them. The
+    ///         <see cref="ArgumentOutOfRangeException" /> thrown by
+    ///         <c>GetEventsRequest.EventFilter.Type</c>'s setter is a different failure — a bad argument, raised
+    ///         at assignment — and is asserted separately by <c>GetEventsRequestTest</c>.
+    ///     </para>
     /// </summary>
     [TestMethod]
-    public void Write_WithUndefinedFlags_ThrowsArgumentOutOfRangeException()
+    public void Write_WithUndefinedFlags_ThrowsJsonException()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+        var exception = Assert.ThrowsException<JsonException>(() =>
             JsonSerializer.Serialize((EventFilterType)99, BareOptions));
+
+        // Pin the message, not just the type: without this the guard could throw an empty JsonException and
+        // every assertion here would still pass, leaving an operator with no way to tell which value was bad.
+        Assert.AreEqual("Value '99' is not a defined EventFilterType.", exception.Message);
     }
 
     /// <summary>

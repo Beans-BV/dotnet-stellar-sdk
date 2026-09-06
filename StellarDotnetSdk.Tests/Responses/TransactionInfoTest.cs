@@ -232,6 +232,49 @@ public class TransactionInfoTest
         };
     }
 
+    /// <summary>
+    ///     Builds a ledger entry change that decodes cleanly as XDR but that the SDK rejects with an exception
+    ///     outside the <c>ArgumentException</c> hierarchy: a TRUSTLINE entry whose ALPHANUM4 asset code is four NUL
+    ///     bytes, which is empty once its trailing padding is stripped. <c>Asset.FromXdr</c> answers that with
+    ///     <c>AssetCodeLengthInvalidException</c>, which derives straight from <c>Exception</c>, so a catch filter
+    ///     has to name it explicitly — an earlier filter here did not, and it escaped <c>TransactionMeta</c>.
+    /// </summary>
+    private static LedgerEntryChange InvalidAssetCodeLedgerEntryChange()
+    {
+        var accountId = new AccountID(KeyPair.FromAccountId(AccountId).XdrPublicKey);
+        return new LedgerEntryChange
+        {
+            Discriminant = LedgerEntryChangeType.Create(
+                LedgerEntryChangeType.LedgerEntryChangeTypeEnum.LEDGER_ENTRY_STATE),
+            State = new LedgerEntry
+            {
+                LastModifiedLedgerSeq = new Uint32(1),
+                Ext = new LedgerEntry.LedgerEntryExt { Discriminant = 0 },
+                Data = new LedgerEntry.LedgerEntryData
+                {
+                    Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.TRUSTLINE),
+                    TrustLine = new TrustLineEntry
+                    {
+                        AccountID = accountId,
+                        Asset = new TrustLineAsset
+                        {
+                            Discriminant = AssetType.Create(AssetType.AssetTypeEnum.ASSET_TYPE_CREDIT_ALPHANUM4),
+                            AlphaNum4 = new AlphaNum4
+                            {
+                                AssetCode = new AssetCode4 { InnerValue = new byte[4] },
+                                Issuer = accountId,
+                            },
+                        },
+                        Balance = new StellarDotnetSdk.Xdr.Int64(1),
+                        Limit = new StellarDotnetSdk.Xdr.Int64(2),
+                        Flags = new Uint32(0),
+                        Ext = new TrustLineEntry.TrustLineEntryExt { Discriminant = 0 },
+                    },
+                },
+            },
+        };
+    }
+
     private static TransactionInfo SuccessfulTransaction(string? resultMetaXdr)
     {
         return new TransactionInfo
@@ -768,6 +811,91 @@ public class TransactionInfoTest
 
         // Assert
         Assert.IsNull(meta);
+    }
+
+    /// <summary>
+    ///     A TRUSTLINE ledger-entry change whose asset code is four NUL bytes decodes cleanly as XDR but cannot be
+    ///     mapped to an SDK <c>Asset</c>. <c>TransactionMeta</c> documents that case as <c>null</c>, but the
+    ///     failure arrives as <c>AssetCodeLengthInvalidException</c>, which derives straight from
+    ///     <c>Exception</c> — so a catch filter listing only the <c>ArgumentException</c> hierarchy let it escape
+    ///     a property getter. Regression guard for that escape.
+    /// </summary>
+    [TestMethod]
+    public void TransactionMeta_WithInvalidAssetCodeLedgerEntryChange_ReturnsNull()
+    {
+        // Arrange
+        var transaction = SuccessfulTransaction(
+            V4MetaXdrBase64(new SCBytes(Hash), txChangesAfter: [InvalidAssetCodeLedgerEntryChange()]));
+
+        // Act & Assert: the all-or-nothing view reports absent metadata rather than throwing.
+        Assert.IsNull(transaction.TransactionMeta);
+
+        // And the return value still surfaces, because ResultValue reads it straight off the decoded XDR
+        // without converting the rest of the graph.
+        Assert.IsInstanceOfType(transaction.ResultValue, typeof(SCBytes));
+    }
+
+    /// <summary>
+    ///     The same payload one arm over: a TRUSTLINE change with a well-formed asset code must convert, so the
+    ///     guard above is shown to be observing the asset code rather than the entry type. Without this control a
+    ///     broken <c>InvalidAssetCodeLedgerEntryChange</c> would make the test above pass vacuously.
+    /// </summary>
+    [TestMethod]
+    public void TransactionMeta_WithValidAssetCodeLedgerEntryChange_ReturnsMetadata()
+    {
+        // Arrange
+        var change = InvalidAssetCodeLedgerEntryChange();
+        change.State.Data.TrustLine.Asset.AlphaNum4.AssetCode = new AssetCode4 { InnerValue = "USD\0"u8.ToArray() };
+        var transaction = SuccessfulTransaction(V4MetaXdrBase64(new SCBytes(Hash), txChangesAfter: [change]));
+
+        // Act & Assert
+        Assert.IsNotNull(transaction.TransactionMeta);
+    }
+
+    /// <summary>
+    ///     <c>TransactionMeta</c> documents invalid base-64 as <c>null</c>. Asserted here on the property itself:
+    ///     the existing base-64 test reads <c>ResultValue</c>, whose filter is a different clause list, so removing
+    ///     <c>FormatException</c> from this property's filter left the whole suite green.
+    /// </summary>
+    [TestMethod]
+    public void TransactionMeta_WithInvalidBase64_ReturnsNull()
+    {
+        Assert.IsNull(SuccessfulTransaction("not valid base64!").TransactionMeta);
+    }
+
+    /// <summary>
+    ///     <c>TransactionMeta</c> documents a truncated stream and non-zero opaque padding as <c>null</c>. Both
+    ///     arrive as <c>IOException</c>-derived failures; asserted on the property itself for the same reason as
+    ///     <see cref="TransactionMeta_WithInvalidBase64_ReturnsNull" />.
+    /// </summary>
+    [TestMethod]
+    public void TransactionMeta_WithTruncatedAndNonZeroPaddingMeta_ReturnsNull()
+    {
+        Assert.IsNull(SuccessfulTransaction(TruncatedMetaXdrBase64).TransactionMeta);
+        Assert.IsNull(SuccessfulTransaction(NonZeroPaddingMetaXdrBase64).TransactionMeta);
+    }
+
+    /// <summary>
+    ///     <c>TransactionMeta</c> documents a structure it cannot map as <c>null</c>. This payload — an
+    ///     over-long <c>DataEntry</c> name — arrives as an <c>ArgumentException</c>, so it pins that clause on the
+    ///     property rather than only on <c>ResultValue</c>.
+    ///     <para>
+    ///         It does <em>not</em> constrain <c>IsPayloadFailure</c>'s <c>InvalidOperationException</c> or
+    ///         <c>IndexOutOfRangeException</c> clauses: dropping either leaves this suite green. Both are carried
+    ///         on the strength of the fuzz that produced
+    ///         <c>SimulateTransactionResponse.IsXdrDecodeFailure</c>'s list, and no payload reproducing them
+    ///         through this property has been constructed — <c>InvalidOperationException</c> in particular is
+    ///         currently unreachable, since the generated decoders reject an unknown discriminant before any SDK
+    ///         mapping switch runs.
+    ///     </para>
+    /// </summary>
+    [TestMethod]
+    public void TransactionMeta_WithUnconvertibleLedgerEntryChange_ReturnsNull()
+    {
+        var transaction = SuccessfulTransaction(
+            V4MetaXdrBase64(new SCBytes(Hash), txChangesAfter: [UnconvertibleLedgerEntryChange()]));
+
+        Assert.IsNull(transaction.TransactionMeta);
     }
 
     /// <summary>
