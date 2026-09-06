@@ -105,8 +105,12 @@ public static class JsonOptions
                 //   RPC emits. JsonStringEnumConverter, which shadowed it until this ordering was fixed, is
                 //   case-insensitive and — worse — accepts bare integers, so a malformed `"status": 0` was
                 //   silently read as the first member (PENDING) instead of being rejected.
+                // - TransactionStatus: the same hazard on getTransaction/getTransactions, and worse there —
+                //   ordinal 1 is SUCCESS, so `"status": 1` presented an unsettled transaction as successful on
+                //   the endpoint callers poll to confirm payment.
                 new EventFilterTypeJsonConverter(),
                 new SendTransactionStatusEnumJsonConverter(),
+                new TransactionStatusJsonConverter(),
                 new JsonStringEnumConverter(),
             },
         };

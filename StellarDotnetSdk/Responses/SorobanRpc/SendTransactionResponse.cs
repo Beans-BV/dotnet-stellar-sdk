@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
+using StellarDotnetSdk.Converters;
 
 namespace StellarDotnetSdk.Responses.SorobanRpc;
 
@@ -59,6 +60,17 @@ public class SendTransactionResponse
     /// <summary>
     ///     The transaction hash (a hex-encoded string).
     /// </summary>
+    /// <remarks>
+    ///     Stellar RPC tags this field <c>json:"hash"</c> with no <c>omitempty</c>, so it is always present.
+    ///     <see cref="JsonRequiredAttribute" /> makes that a contract the deserializer enforces:
+    ///     <c>RespectNullableAnnotations</c> rejects an explicit <c>null</c> but not an <em>absent</em> property,
+    ///     which would otherwise leave this non-nullable <see cref="string" /> holding <see langword="null" />.
+    ///     The check enforces presence, not validity — an empty string is not rejected (a conforming server never
+    ///     sends one) — and required-property checks run before any field is readable, so a non-conforming reply
+    ///     that omits <c>hash</c> surfaces as a <see cref="System.Text.Json.JsonException" /> before
+    ///     <see cref="Status" /> or <see cref="ErrorResultXdr" /> can be observed.
+    /// </remarks>
+    [JsonRequired]
     public string Hash { get; init; }
 
     /// <summary>
@@ -87,6 +99,10 @@ public class SendTransactionResponse
     ///     presenting a submission the server never accepted as pending. Stellar RPC tags the field
     ///     <c>json:"status"</c> with no <c>omitempty</c>, so requiring it rejects nothing a conforming server sends.
     /// </remarks>
+    // The property-level [JsonConverter] pins the wire format whichever JsonSerializerOptions the caller
+    // supplies: System.Text.Json resolves a property attribute ahead of the options' Converters collection —
+    // same pattern as GetEventsRequest.EventFilter.Type.
+    [JsonConverter(typeof(SendTransactionStatusEnumJsonConverter))]
     [JsonRequired]
     public SendTransactionStatus Status { get; init; }
 }
