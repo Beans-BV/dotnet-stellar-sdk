@@ -1,4 +1,6 @@
-﻿using System;
+using System;
+using System.Text.Json.Serialization;
+using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Soroban;
 using StellarDotnetSdk.Xdr;
 using SCBytes = StellarDotnetSdk.Soroban.SCBytes;
@@ -31,6 +33,19 @@ public class TransactionInfo
     /// <summary>
     ///     The current status of the transaction by hash
     /// </summary>
+    /// <remarks>
+    ///     Stellar RPC tags this field <c>json:"status"</c> with no <c>omitempty</c>, so it is always present;
+    ///     <see cref="JsonRequiredAttribute" /> makes that enforceable. An enum is a value type, so without it a
+    ///     response carrying no <c>status</c> silently yielded the zero member,
+    ///     <see cref="TransactionStatus.NOT_FOUND" />.
+    /// </remarks>
+    // The property-level [JsonConverter] pins the wire format whichever JsonSerializerOptions the caller
+    // supplies: System.Text.Json resolves a property attribute ahead of the options' Converters collection —
+    // same pattern as GetEventsRequest.EventFilter.Type. Without it, a consumer deserializing this type with
+    // their own options fell back to JsonStringEnumConverter, which maps bare integers by ordinal
+    // ("status": 1 read as SUCCESS) and matches case-insensitively.
+    [JsonConverter(typeof(TransactionStatusJsonConverter))]
+    [JsonRequired]
     public TransactionStatus Status { get; init; }
 
     /// <summary>

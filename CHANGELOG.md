@@ -156,6 +156,31 @@ All notable changes to this project are documented here. The format is based on
   report the SDK's own `JsonException` message rather than a wrapped `InvalidOperationException` from
   the reader. The four valid literals (`PENDING`, `TRY_AGAIN_LATER`, `DUPLICATE`, `ERROR`) are
   unaffected ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
+- **Breaking:** `getTransaction`/`getTransactions` statuses are now parsed by the new public
+  `TransactionStatusJsonConverter` instead of the catch-all `JsonStringEnumConverter`, which is
+  case-insensitive and maps bare integers by ordinal — so `"status": 1` deserialized to `SUCCESS`, on
+  the endpoint callers poll to decide whether a payment settled, and `"status": 7` produced an
+  undefined enum value that silently matches none of the three members. Only the exact literals
+  `NOT_FOUND`, `SUCCESS` and `FAILED` are accepted now; `"success"` and any numeric form are rejected,
+  and serializing an undefined cast (`(TransactionStatus)99`) throws a `JsonException` instead of
+  emitting a bare number — the same guard `SendTransactionStatusEnumJsonConverter.Write` carries. Like
+  `EventFilterType`, the converter is both registered on `JsonOptions.DefaultOptions` ahead of the
+  catch-all and applied to `TransactionInfo.Status` with a property-level `[JsonConverter]` — which
+  System.Text.Json resolves ahead of any options' converter collection, so the strictness also holds
+  for consumers who deserialize these response types with their own `JsonSerializerOptions`
+  (`SendTransactionResponse.Status` gained the same property-level pin). Deliberate fail-closed
+  trade-off: a `getTransactions` page is deserialized as one document, so a single entry carrying a
+  malformed status now fails the whole response instead of silently reporting a wrong settlement
+  status.
+- **Breaking:** `TransactionInfo.Status` and `SendTransactionResponse.Hash` are now `[JsonRequired]`,
+  extending to both the guard `SendTransactionResponse.Status` already carries.
+  `RespectNullableAnnotations` rejects an explicit `null` but cannot reject an *absent* property, and
+  an enum is a value type besides — so a `getTransaction` response carrying no `status` deserialized
+  to the zero member, `NOT_FOUND`, and an absent `hash` left a non-nullable `string` holding `null`.
+  Stellar RPC tags both fields without `omitempty`, so requiring them rejects nothing a conforming
+  server sends. The check enforces presence, not validity (an empty `hash` is not rejected), and runs
+  before any field is readable — a non-conforming reply omitting `hash` surfaces as a `JsonException`
+  rather than a readable `ERROR` status.
 
 - `SendTransactionStatusEnumJsonConverter.Write` rejects an undefined enum value with `JsonException`
   instead of writing the bare number as a string. Serializing
