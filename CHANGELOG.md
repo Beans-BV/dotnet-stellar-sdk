@@ -76,6 +76,51 @@ All notable changes to this project are documented here. The format is based on
 
 ### Changed
 
+- **Breaking:** `SimulateTransactionResponse.StateChanges`, `.Results`, `.Events` and
+  `.Results[i].Auth` reject a `null`
+  array *element* with `JsonException` instead of admitting it. `RespectNullableAnnotations` constrains
+  the array reference, never its contents, so `"stateChanges":[null]` produced an array holding `null`
+  despite the non-nullable element type — and `foreach (var c in StateChanges) if (c.Type == "created")`,
+  the very loop the `[JsonRequired]` on `LedgerEntryChange.Type` was added to protect, then threw
+  `NullReferenceException` at the caller instead of failing at deserialization like every other
+  malformed-payload path. The same hole was open on the two sibling arrays: `"results":[null]` threw
+  `NullReferenceException` on the first `Results[0].Xdr`, and — more quietly — made
+  `SorobanAuthorization` answer `null`, which reads as *no authorization required*, so the documented
+  assemble-and-submit flow guarded on that null and would submit the transaction with no auth entries.
+  `"events":[null]` behaved the same way on first use. Note that closing this spelling does not make a
+  `null` `SorobanAuthorization` trustworthy on its own: `{}`, `"results":[]`, `"results":[{}]` and
+  `"results":[{"auth":null}]` all still answer `null`, and so does a simulation that genuinely needs no
+  authorization. What changed is that a *malformed* payload can no longer produce that answer; telling
+  "no auth required" apart from "no auth parsed" still means checking `Results` yourself.
+  Assigning a null element from C# rather than
+  reading it from JSON throws `ArgumentException`, not `JsonException`: that is a rejected argument, and
+  raising a serialization exception from an object initializer would put it outside any `catch` a caller
+  would reasonably write there. The check runs at assignment and the array is not copied, so it does not
+  prevent a later write into an array the caller still holds — but serializing such an array now throws
+  `JsonException` rather than silently emitting `null`, so the two directions agree. The guards are public
+  converters --
+  `StateChangesArrayJsonConverter`, `SimulationResultsArrayJsonConverter`,
+  `SimulationEventsArrayJsonConverter` and `SorobanAuthArrayJsonConverter`, over the shared base
+  `NonNullElementArrayJsonConverter<T>` -- because the System.Text.Json source generator can only construct
+  a converter that is public with a public parameterless constructor. It does not fail loudly otherwise: it
+  emits `SYSLIB1220` and silently drops the converter, and the property's `ArgumentException` guard would then
+  surface out of `JsonSerializer.Deserialize` instead of `JsonException`, inverting the contract for exactly
+  those consumers. Do not register these on `JsonSerializerOptions.Converters`: they read and write the array
+  by delegating to `JsonSerializer`, so a globally registered instance resolves back to itself and recurses.
+  That used to terminate the process with an uncatchable `StackOverflowException`; both directions now detect
+  the registration and throw `InvalidOperationException` instead. Because these converters are necessarily
+  public and look exactly like the ones this SDK *does* register globally in `JsonOptions`, the mistake was
+  worth converting into an ordinary exception rather than leaving to a comment.
+  One diagnostic consequence is worth knowing: reading the array delegates to a fresh serializer session,
+  which restarts the JSON path at the array, so *every* failure inside one of these four arrays — not just a
+  null element — arrived as a bare `$[1].type`, naming neither the array it came from nor where that array
+  sits. Failures are now rethrown with `Path` unset, which is what makes System.Text.Json fill in the path it
+  tracks in the outer session: `$.stateChanges` rather than `$[1].type`. That is coarser than pointing at the
+  offending element, and deliberately so — a converter knows its own field name but not its ancestors, so any
+  path computed here would be wrong for `results[i].auth`, which is not a root-level property. The element
+  index and the failing field both survive in the exception message, and `JsonException.Path` is now always a
+  true prefix of where the value lives rather than occasionally a fabricated location
+  ([#229](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/229)).
 - **Breaking:** `SorobanCredentials.ToXdr()` is now `abstract` (was a concrete method that switched on
   the runtime type). External subclasses of `SorobanCredentials` must now override `ToXdr()`.
 - The `SorobanCredentials`, `SorobanSourceAccountCredentials`, and `SorobanAddressCredentials` classes
@@ -215,6 +260,35 @@ All notable changes to this project are documented here. The format is based on
 
 ### Fixed
 
+- **Breaking:** `SimulateTransactionResponse.SorobanAuthorization` is now `[JsonIgnore]`, matching the
+  `SorobanTransactionData` property beside it. Serialization reads every property, so a response
+  carrying a malformed `auth` entry threw `InvalidDataException` from inside `JsonSerializer.Serialize`
+  — for a caller who was only trying to log or cache the response, and from a call that has nothing to
+  do with authorization. The value is derived from `Results[0].Auth`, which is serialized already, so
+  nothing leaves the payload that was not already in it; round-tripping a serialized response still
+  reconstructs the entries. Code that read `SorobanAuthorization` back out of serialized JSON must read
+  the auth entries instead — note that these are the SDK's own CLR property names, so in a payload
+  produced by `JsonSerializer.Serialize` the path is `Results[0].Auth`, not the `results[0].auth` of the
+  RPC wire format ([#229](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/229)).
+- **Breaking:** `SimulateTransactionResponse.LedgerEntryChange.Type` and
+  `.RestorePreamble.MinResourceFee` are now `[JsonRequired]`. Both are declared in a way that cannot be
+  violated by an *absent* property — a non-nullable `string` and a `long` — but nothing enforced that:
+  `RespectNullableAnnotations` rejects an explicit `null` and says nothing about a missing key. A
+  `stateChanges` entry with no `type` therefore left a non-nullable `string` holding `null`, so every
+  `Type == "created"` comparison silently returned false; a `restorePreamble` with no `minResourceFee`
+  yielded `0`, and a caller following the documented "use `MinResourceFee` and `SorobanTransactionData`
+  to submit a `RestoreFootprint` operation" flow would submit it underfunded. Stellar RPC marks neither
+  field `omitempty`, so requiring them rejects nothing a conforming server sends; a non-conforming reply
+  now fails with `JsonException` at deserialization instead of downstream. This enforces presence, not
+  membership: the empty `type` that RPC v23.0.0/v23.0.1 emitted still deserializes.
+  Both are also `required` now, which carries the same guarantee to the other entry point: the attribute
+  binds only the deserializer, so `new LedgerEntryChange { Before = "…" }` still compiled and still left a
+  non-nullable `string` holding `null` — the state the attribute exists to make unreachable, one entry point
+  over. This is source-breaking for code that constructs either type without setting the field, which the
+  compiler now reports; deserialization is unaffected, and these are response types callers normally receive
+  rather than build. It matches how the array properties above guard both paths, and how `Claimant` and
+  `ClaimableBalanceResponse` already declare their always-present fields
+  ([#229](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/229)).
 - `StellarRpcServer.SimulateTransaction` now sends the `authMode` parameter using the values Stellar RPC
   accepts (`enforce`, `record`, `record_allow_nonroot`). RPC matches this field case-sensitively against
   those three literals, so the parameter was non-functional in every release that offered it

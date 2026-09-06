@@ -225,13 +225,18 @@ private static async Task<SimulateTransactionResponse> SimulateAndUpdateTransact
     StellarRpcServer server = new(TestNetSorobanUrl);
     var simulateResponse = await server.SimulateTransaction(tx);
 
-    if (simulateResponse.SorobanTransactionData != null)
+    // Read each property ONCE into a local: both decode the server's base64 XDR on every access, so
+    // `if (x.SorobanTransactionData != null) { use(x.SorobanTransactionData); }` decodes twice, and the
+    // `!= null` test itself throws InvalidDataException on a malformed blob rather than yielding null.
+    var transactionData = simulateResponse.SorobanTransactionData;
+    if (transactionData != null)
     {
-        tx.SetSorobanTransactionData(simulateResponse.SorobanTransactionData);
+        tx.SetSorobanTransactionData(transactionData);
     }
-    if (simulateResponse.SorobanAuthorization != null)
+    var authorization = simulateResponse.SorobanAuthorization;
+    if (authorization != null)
     {
-        tx.SetSorobanAuthorization(simulateResponse.SorobanAuthorization);
+        tx.SetSorobanAuthorization(authorization);
     }
 
     tx.AddResourceFee((simulateResponse.MinResourceFee ?? 0) + 100000);
