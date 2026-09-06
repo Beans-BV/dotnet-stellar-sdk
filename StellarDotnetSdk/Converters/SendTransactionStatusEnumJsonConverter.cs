@@ -81,12 +81,55 @@ public class SendTransactionStatusEnumJsonConverter : JsonConverter<SendTransact
     public override void Write(Utf8JsonWriter writer, SendTransactionResponse.SendTransactionStatus value,
         JsonSerializerOptions options)
     {
-        if (!Enum.IsDefined(typeof(SendTransactionResponse.SendTransactionStatus), value))
+        // Checking the name against the read table avoids the boxing Enum.IsDefined(Type, object) overload and
+        // keeps Read and Write agreeing on the exact literal set, matching TransactionStatusJsonConverter.
+        var name = value.ToString();
+        if (!StatusByName.ContainsKey(name))
         {
             throw new JsonException(
-                $"Value '{value}' is not a defined {nameof(SendTransactionResponse.SendTransactionStatus)}.");
+                $"Value '{name}' is not a defined {nameof(SendTransactionResponse.SendTransactionStatus)}.");
         }
 
-        writer.WriteStringValue(value.ToString());
+        writer.WriteStringValue(name);
+    }
+
+    /// <inheritdoc />
+    /// <remarks>
+    ///     Required because this converter is attached to the enum <em>type</em>. Without the two property-name
+    ///     overloads System.Text.Json has no way to turn the enum into a JSON object key and throws
+    ///     <see cref="NotSupportedException" /> for a <c>Dictionary&lt;SendTransactionStatus, T&gt;</c> — which is
+    ///     not a <see cref="JsonException" />, so a caller's <c>catch (JsonException)</c> would miss it.
+    /// </remarks>
+    /// <exception cref="JsonException">Thrown when the key is not one of the four status literals.</exception>
+    public override SendTransactionResponse.SendTransactionStatus ReadAsPropertyName(ref Utf8JsonReader reader,
+        Type typeToConvert, JsonSerializerOptions options)
+    {
+        var value = reader.GetString();
+        if (value != null && StatusByName.TryGetValue(value, out var status))
+        {
+            return status;
+        }
+
+        throw new JsonException(
+            $"Value {UntrustedJsonValue.Describe(value)} cannot be converted to type " +
+            $"{nameof(SendTransactionResponse.SendTransactionStatus)}.");
+    }
+
+    /// <inheritdoc />
+    /// <exception cref="JsonException">
+    ///     Thrown when <paramref name="value" /> is not a defined
+    ///     <see cref="SendTransactionResponse.SendTransactionStatus" /> member.
+    /// </exception>
+    public override void WriteAsPropertyName(Utf8JsonWriter writer,
+        SendTransactionResponse.SendTransactionStatus value, JsonSerializerOptions options)
+    {
+        var name = value.ToString();
+        if (!StatusByName.ContainsKey(name))
+        {
+            throw new JsonException(
+                $"Value '{name}' is not a defined {nameof(SendTransactionResponse.SendTransactionStatus)}.");
+        }
+
+        writer.WritePropertyName(name);
     }
 }

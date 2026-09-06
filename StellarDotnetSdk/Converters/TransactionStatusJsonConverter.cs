@@ -93,44 +93,4 @@ public class TransactionStatusJsonConverter : JsonConverter<TransactionInfo.Tran
 
         writer.WriteStringValue(name);
     }
-
-    /// <inheritdoc />
-    /// <remarks>
-    ///     Required because this converter is registered on <see cref="JsonOptions.DefaultOptions" />, where it
-    ///     displaces <see cref="JsonStringEnumConverter" /> for this enum — and the standard converter supported
-    ///     dictionary keys. Without the two property-name overloads System.Text.Json throws
-    ///     <see cref="NotSupportedException" /> for a <c>Dictionary&lt;TransactionStatus, T&gt;</c>, which is not a
-    ///     <see cref="JsonException" />, so a caller's <c>catch (JsonException)</c> would miss it.
-    /// </remarks>
-    /// <exception cref="JsonException">Thrown when the key is not one of the three status literals.</exception>
-    public override TransactionInfo.TransactionStatus ReadAsPropertyName(ref Utf8JsonReader reader,
-        Type typeToConvert, JsonSerializerOptions options)
-    {
-        var value = reader.GetString();
-        if (value != null && StatusByName.TryGetValue(value, out var status))
-        {
-            return status;
-        }
-
-        throw new JsonException(
-            $"Value '{value}' cannot be converted to type {nameof(TransactionInfo.TransactionStatus)}.");
-    }
-
-    /// <inheritdoc />
-    /// <exception cref="JsonException">
-    ///     Thrown when <paramref name="value" /> is not a defined <see cref="TransactionInfo.TransactionStatus" />
-    ///     member.
-    /// </exception>
-    public override void WriteAsPropertyName(Utf8JsonWriter writer, TransactionInfo.TransactionStatus value,
-        JsonSerializerOptions options)
-    {
-        var name = value.ToString();
-        if (!StatusByName.ContainsKey(name))
-        {
-            throw new JsonException(
-                $"Value '{name}' is not a defined {nameof(TransactionInfo.TransactionStatus)}.");
-        }
-
-        writer.WritePropertyName(name);
-    }
 }

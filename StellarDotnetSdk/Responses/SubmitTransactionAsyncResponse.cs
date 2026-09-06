@@ -13,6 +13,16 @@ public sealed class SubmitTransactionAsyncResponse : Response
     /// <summary>
     ///     Possible statuses for an asynchronously submitted transaction.
     /// </summary>
+    /// <remarks>
+    ///     The type-level <see cref="JsonConverterAttribute" /> is the third and weakest of the three places the
+    ///     strict converter is attached, and it covers the case the other two miss: the enum travelling on its
+    ///     own — a caller's own DTO field, a persisted status column, a queue message — under a
+    ///     <see cref="System.Text.Json.JsonSerializerOptions" /> that registers no converter for it. Without it
+    ///     the built-in enum handling maps a bare integer by ordinal, and ordinal 0 here is
+    ///     <see cref="PENDING" />, the most optimistic of the four. See
+    ///     <see cref="Requests.SorobanRpc.EventFilterType" /> for the full three-tier resolution order.
+    /// </remarks>
+    [JsonConverter(typeof(SubmitTransactionAsyncStatusJsonConverter))]
     public enum TransactionStatus
     {
         /// <summary>

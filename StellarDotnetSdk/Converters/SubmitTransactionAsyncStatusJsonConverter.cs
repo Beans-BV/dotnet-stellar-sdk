@@ -96,8 +96,7 @@ public class SubmitTransactionAsyncStatusJsonConverter : JsonConverter<SubmitTra
 
     /// <inheritdoc />
     /// <remarks>
-    ///     Required because this converter is registered in <see cref="JsonOptions.DefaultOptions" />'s
-    ///     <c>Converters</c> collection, so a dictionary key resolves to it. Without the two property-name
+    ///     Required because this converter is attached to the enum <em>type</em>. Without the two property-name
     ///     overloads System.Text.Json has no way to turn the enum into a JSON object key and throws
     ///     <see cref="NotSupportedException" /> for a <c>Dictionary&lt;TransactionStatus, T&gt;</c> — which is not
     ///     a <see cref="JsonException" />, so a caller's <c>catch (JsonException)</c> would miss it. The literal
