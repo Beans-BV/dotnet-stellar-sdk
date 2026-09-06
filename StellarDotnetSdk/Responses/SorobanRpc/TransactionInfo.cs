@@ -18,6 +18,16 @@ public class TransactionInfo
     /// <summary>
     ///     Indicates the current status of a transaction retrieved from the Soroban RPC server.
     /// </summary>
+    /// <remarks>
+    ///     The type-level <see cref="JsonConverterAttribute" /> is the third and weakest of the three places the
+    ///     strict converter is attached, and it covers the case the other two miss: the enum travelling on its
+    ///     own — a caller's own DTO field, a persisted status column, a queue message — under a
+    ///     <see cref="System.Text.Json.JsonSerializerOptions" /> that registers no converter for it. Without it
+    ///     the built-in enum handling maps a bare integer by ordinal, and ordinal 1 here is
+    ///     <see cref="SUCCESS" /> — so a corrupted stored record read as a confirmed transaction. See
+    ///     <see cref="Requests.SorobanRpc.EventFilterType" /> for the full three-tier resolution order.
+    /// </remarks>
+    [JsonConverter(typeof(TransactionStatusJsonConverter))]
     public enum TransactionStatus
     {
         /// <summary>The transaction was not found in the ledger history.</summary>

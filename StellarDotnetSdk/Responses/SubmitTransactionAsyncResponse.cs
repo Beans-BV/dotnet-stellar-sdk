@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using StellarDotnetSdk.Converters;
 using TransactionResult = StellarDotnetSdk.Responses.Results.TransactionResult;
 
 namespace StellarDotnetSdk.Responses;
@@ -12,6 +13,16 @@ public sealed class SubmitTransactionAsyncResponse : Response
     /// <summary>
     ///     Possible statuses for an asynchronously submitted transaction.
     /// </summary>
+    /// <remarks>
+    ///     The type-level <see cref="JsonConverterAttribute" /> is the third and weakest of the three places the
+    ///     strict converter is attached, and it covers the case the other two miss: the enum travelling on its
+    ///     own — a caller's own DTO field, a persisted status column, a queue message — under a
+    ///     <see cref="System.Text.Json.JsonSerializerOptions" /> that registers no converter for it. Without it
+    ///     the built-in enum handling maps a bare integer by ordinal, and ordinal 0 here is
+    ///     <see cref="PENDING" />, the most optimistic of the four. See
+    ///     <see cref="Requests.SorobanRpc.EventFilterType" /> for the full three-tier resolution order.
+    /// </remarks>
+    [JsonConverter(typeof(SubmitTransactionAsyncStatusJsonConverter))]
     public enum TransactionStatus
     {
         /// <summary>
@@ -48,7 +59,12 @@ public sealed class SubmitTransactionAsyncResponse : Response
     /// <summary>
     ///     The status of the transaction submission.
     /// </summary>
+    // The property-level [JsonConverter] pins the strict wire format whichever options instance the response is
+    // deserialized with: System.Text.Json resolves converters property attribute first, then the options'
+    // Converters collection, then the type attribute — so this attribute outranks even a catch-all
+    // JsonStringEnumConverter registered on the caller's options, which would map bare integers by ordinal.
     [JsonPropertyName("tx_status")]
+    [JsonConverter(typeof(SubmitTransactionAsyncStatusJsonConverter))]
     public required TransactionStatus TxStatus { get; init; }
 
     /// <summary>

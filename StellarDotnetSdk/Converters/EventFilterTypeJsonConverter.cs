@@ -77,4 +77,55 @@ public class EventFilterTypeJsonConverter : JsonConverter<EventFilterType>
 
         writer.WriteStringValue(value.ToRequestValue());
     }
+
+    /// <inheritdoc />
+    /// <remarks>
+    ///     Required because this converter is attached to the enum <em>type</em>. Without the two property-name
+    ///     overloads System.Text.Json has no way to turn the enum into a JSON object key and throws
+    ///     <see cref="NotSupportedException" /> for a <c>Dictionary&lt;EventFilterType, T&gt;</c> — which is not a
+    ///     <see cref="JsonException" />, so a caller's <c>catch (JsonException)</c> would miss it. Keys use the
+    ///     same bare-comma wire spelling as values.
+    /// </remarks>
+    /// <exception cref="JsonException">Thrown when the key is not a valid filter-type spelling.</exception>
+    public override EventFilterType ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
+    {
+        var value = reader.GetString();
+        if (string.IsNullOrEmpty(value))
+        {
+            return EventFilterType.None;
+        }
+
+        var result = EventFilterType.None;
+        foreach (var segment in value!.Split(','))
+        {
+            result |= segment switch
+            {
+                "system" => EventFilterType.System,
+                "contract" => EventFilterType.Contract,
+                _ => throw new JsonException(
+                    $"Value {UntrustedJsonValue.Describe(segment)} cannot be converted to type " +
+                    $"{nameof(EventFilterType)}. " +
+                    "Stellar RPC accepts only 'system' and 'contract', comma-separated and without spaces."),
+            };
+        }
+
+        return result;
+    }
+
+    /// <inheritdoc />
+    /// <exception cref="JsonException">
+    ///     Thrown when <paramref name="value" /> carries bits that are not defined
+    ///     <see cref="EventFilterType" /> flags.
+    /// </exception>
+    public override void WriteAsPropertyName(Utf8JsonWriter writer, EventFilterType value,
+        JsonSerializerOptions options)
+    {
+        if (!value.IsDefined())
+        {
+            throw new JsonException($"Value '{value}' is not a defined {nameof(EventFilterType)}.");
+        }
+
+        writer.WritePropertyName(value.ToRequestValue());
+    }
 }

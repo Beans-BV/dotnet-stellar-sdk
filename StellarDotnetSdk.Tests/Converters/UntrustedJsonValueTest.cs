@@ -3,6 +3,7 @@ using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Requests.SorobanRpc;
+using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.SorobanRpc;
 
 namespace StellarDotnetSdk.Tests.Converters;
@@ -170,11 +171,13 @@ public class UntrustedJsonValueTest
     [DataTestMethod]
     [DataRow(typeof(SendTransactionResponse), "{\"hash\":\"h\",\"status\":\"@\"}", 'A')]
     [DataRow(typeof(TransactionInfo), "{\"status\":\"@\"}", 'A')]
+    [DataRow(typeof(SubmitTransactionAsyncResponse), "{\"hash\":\"h\",\"tx_status\":\"@\"}", 'A')]
     [DataRow(typeof(GetEventsRequest.EventFilter), "{\"type\":\"@\"}", 'A')]
     // The same rows with a payload where every character must be escaped. Escaping expands 1 char to 6, so
     // this is the real worst case; asserting only the all-'A' form would pin a bound the escaped form exceeds.
     [DataRow(typeof(SendTransactionResponse), "{\"hash\":\"h\",\"status\":\"@\"}", '\u202e')]
     [DataRow(typeof(TransactionInfo), "{\"status\":\"@\"}", '\u202e')]
+    [DataRow(typeof(SubmitTransactionAsyncResponse), "{\"hash\":\"h\",\"tx_status\":\"@\"}", '\u202e')]
     [DataRow(typeof(GetEventsRequest.EventFilter), "{\"type\":\"@\"}", '\u202e')]
     public void Deserialize_WithOverlongValue_RoutesEveryConverterThroughDescribe(Type responseType,
         string jsonTemplate, char payloadChar)

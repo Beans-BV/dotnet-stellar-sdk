@@ -181,6 +181,44 @@ All notable changes to this project are documented here. The format is based on
   server sends. The check enforces presence, not validity (an empty `hash` is not rejected), and runs
   before any field is readable — a non-conforming reply omitting `hash` surfaces as a `JsonException`
   rather than a readable `ERROR` status.
+- **Breaking:** `SubmitTransactionAsyncResponse.TxStatus` deserialization is now strict. The nested
+  `TransactionStatus` enum was bound by the catch-all `JsonStringEnumConverter`, which maps bare
+  integers by ordinal and matches case-insensitively — so a malformed Horizon `POST /transactions_async`
+  response of `"tx_status": 0` deserialized to `PENDING` (the most optimistic of the four statuses, on
+  the path callers use to decide whether a submission needs retrying), `"tx_status": 99` produced the
+  undefined enum value `99`, which matches none of the four members and so silently fails every
+  comparison a caller writes, and `"tx_status": "pending"` was accepted although Horizon — passing the
+  status through verbatim from stellar-core — emits only the four uppercase literals `PENDING`,
+  `DUPLICATE`, `TRY_AGAIN_LATER`, `ERROR`. The new public `SubmitTransactionAsyncStatusJsonConverter`
+  accepts exactly those literals and rejects everything else with `JsonException`, on write as well as
+  read (serializing an undefined cast such as `(TransactionStatus)99` now throws instead of emitting a
+  bare number). It is registered on `JsonOptions.DefaultOptions` ahead of the catch-all and also pinned
+  on the property with a property-level `[JsonConverter]`, so the strict wire format holds whichever
+  options instance the response is deserialized with. The four valid literals are unaffected
+  ([#226](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/226)).
+- **Breaking:** `SubmitTransactionAsyncResponse.TransactionStatus`,
+  `SendTransactionResponse.SendTransactionStatus` and `TransactionInfo.TransactionStatus` now carry a
+  type-level `[JsonConverter]` as well, matching `EventFilterType`. The property-level pin above only
+  covers an enum reached *through* its response object; the enum travelling on its own — a caller's own
+  DTO field, a persisted status column, a queue message — resolved through whatever the caller's
+  `JsonSerializerOptions` provided, and a bare options instance maps a bare integer by ordinal. So
+  `JsonSerializer.Deserialize<TransactionStatus>("0", new JsonSerializerOptions())` returned `PENDING`,
+  and the `TransactionInfo` equivalent read `1` as `SUCCESS` — a corrupted stored record presenting
+  itself as a confirmed transaction. All three now throw `JsonException` for anything but the documented
+  literals, under any options instance. Code that round-tripped one of these enums as a bare integer must
+  store the literal instead. All four strict enum converters — including `EventFilterTypeJsonConverter`,
+  whose type-level attribute predates this change — now also implement `ReadAsPropertyName` and
+  `WriteAsPropertyName`, so these enums keep working as `Dictionary` keys; a type-level converter without
+  those overloads makes `Dictionary<TStatus, T>` throw `NotSupportedException`, which is not a
+  `JsonException` and so escapes a caller's `catch (JsonException)` entirely
+  ([#226](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/226)).
+- **Breaking:** `SimulateTransactionResponse.StateChanges` rejects a `null` array *element* with
+  `JsonException` instead of admitting it. `RespectNullableAnnotations` constrains the array reference,
+  never its contents, so `"stateChanges":[null]` produced an array holding `null` despite the
+  non-nullable element type — and `foreach (var c in StateChanges) if (c.Type == "created")`, the very
+  loop the `[JsonRequired]` on `LedgerEntryChange.Type` was added to protect, then threw
+  `NullReferenceException` at the caller instead of failing at deserialization like every other
+  malformed-payload path ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
 
 - `SendTransactionStatusEnumJsonConverter.Write` rejects an undefined enum value with `JsonException`
   instead of writing the bare number as a string. Serializing
@@ -341,13 +379,6 @@ All notable changes to this project are documented here. The format is based on
   now fails with `JsonException` at deserialization instead of downstream. This enforces presence, not
   membership: the empty `type` that RPC v23.0.0/v23.0.1 emitted still deserializes
   ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
-- **Breaking:** `SimulateTransactionResponse.StateChanges` rejects a `null` array *element* with
-  `JsonException` instead of admitting it. `RespectNullableAnnotations` constrains the array reference,
-  never its contents, so `"stateChanges":[null]` produced an array holding `null` despite the
-  non-nullable element type — and `foreach (var c in StateChanges) if (c.Type == "created")`, the very
-  loop the `[JsonRequired]` on `LedgerEntryChange.Type` was added to protect, then threw
-  `NullReferenceException` at the caller instead of failing at deserialization like every other
-  malformed-payload path ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
 - Exception messages from the SDK's strict enum converters no longer copy the whole server-supplied
   value. `SendTransactionStatusEnumJsonConverter`, `SubmitTransactionAsyncStatusJsonConverter`,
   `TransactionStatusJsonConverter`, and `EventFilterTypeJsonConverter` all name the offending literal so

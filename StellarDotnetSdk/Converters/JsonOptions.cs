@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.Effects;
@@ -34,12 +34,12 @@ public static class JsonOptions
     ///     Registered Converters:
     ///     - Polymorphic converters: OperationResponse, EffectResponse, Predicate
     ///     - Domain type converters: Asset, AssetAmount, KeyPair, LiquidityPoolId, LiquidityPoolClaimableAssetAmount, Reserve
-    ///     - Enum converters: EventFilterType and SendTransactionStatusEnum, then
-    ///     JsonStringEnumConverter (standard) last. Registration order is significant — the standard converter
-    ///     matches every enum, so it must come last or it shadows the specific ones. See the comment on the
-    ///     collection below. (LiquidityPoolTypeEnum is an enum converter too, but it is registered up with the
-    ///     domain types; its position relative to the other two does not matter, only that it precedes the
-    ///     catch-all.)
+    ///     - Enum converters: EventFilterType, SendTransactionStatusEnum, TransactionStatus, and
+    ///     SubmitTransactionAsyncStatus, then JsonStringEnumConverter (standard) last. Registration order is
+    ///     significant — the standard converter matches every enum, so it must come last or it shadows the
+    ///     specific ones. See the comment on the collection below. (LiquidityPoolTypeEnum is an enum converter
+    ///     too, but it is registered up with the domain types; its position relative to the others does not
+    ///     matter, only that it precedes the catch-all.)
     ///     - HATEOAS link converters: LinkJsonConverter for EffectResponse and Response
     /// </remarks>
     // A get-only property (not a field): 15.1.0 shipped this member as a property, and replacing it with a
@@ -108,9 +108,14 @@ public static class JsonOptions
                 // - TransactionStatus: the same hazard on getTransaction/getTransactions, and worse there —
                 //   ordinal 1 is SUCCESS, so `"status": 1` presented an unsettled transaction as successful on
                 //   the endpoint callers poll to confirm payment.
+                // - SubmitTransactionAsyncStatus: same failure mode on Horizon's POST /transactions_async —
+                //   the catch-all read `"tx_status": 0` as PENDING (the most optimistic status) and passed
+                //   undefined values like 99 through as-is. The property on SubmitTransactionAsyncResponse is
+                //   additionally pinned with a property-level [JsonConverter], which outranks this collection.
                 new EventFilterTypeJsonConverter(),
                 new SendTransactionStatusEnumJsonConverter(),
                 new TransactionStatusJsonConverter(),
+                new SubmitTransactionAsyncStatusJsonConverter(),
                 new JsonStringEnumConverter(),
             },
         };
