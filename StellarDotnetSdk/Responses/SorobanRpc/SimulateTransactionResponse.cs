@@ -73,8 +73,41 @@ public class SimulateTransactionResponse
     /// <summary>
     ///     (optional) An array of state changes that would result from executing the simulated transaction.
     /// </summary>
+    /// <remarks>
+    ///     A <c>null</c> <em>element</em> is rejected at deserialization. <c>RespectNullableAnnotations</c>
+    ///     constrains the array reference, never its contents, so <c>"stateChanges":[null]</c> otherwise
+    ///     produced an array whose element was <see langword="null" /> despite the non-nullable element type —
+    ///     and the very loop <see cref="LedgerEntryChange.Type" />'s <see cref="JsonRequiredAttribute" /> was
+    ///     added to protect, <c>foreach (var c in StateChanges) if (c.Type == "created")</c>, then threw
+    ///     <see cref="NullReferenceException" /> instead of the <see cref="System.Text.Json.JsonException" />
+    ///     every other malformed-payload path here reports.
+    /// </remarks>
+    /// <exception cref="System.Text.Json.JsonException">
+    ///     Thrown during deserialization when the array contains a <c>null</c> element.
+    /// </exception>
     [JsonPropertyName("stateChanges")]
-    public LedgerEntryChange[]? StateChanges { get; init; }
+    public LedgerEntryChange[]? StateChanges
+    {
+        get => _stateChanges;
+        init
+        {
+            if (value != null)
+            {
+                for (var i = 0; i < value.Length; i++)
+                {
+                    if (value[i] == null)
+                    {
+                        throw new System.Text.Json.JsonException(
+                            $"The 'stateChanges' array contains a null element at index {i}.");
+                    }
+                }
+            }
+
+            _stateChanges = value;
+        }
+    }
+
+    private readonly LedgerEntryChange[]? _stateChanges;
 
     /// <summary>
     ///     An array of the individual host function call results.
@@ -140,6 +173,12 @@ public class SimulateTransactionResponse
     ///     this property reports for a malformed blob; it is not a guarantee that no other exception can escape
     ///     (see <c>IsXdrDecodeFailure</c>).
     /// </exception>
+    // [JsonIgnore] for the same reason SorobanTransactionData carries it, plus one this property adds:
+    // serialization reads every property, so without it JsonSerializer.Serialize(response) invokes this
+    // getter and an InvalidDataException escapes from inside Serialize — for a response the caller may only
+    // be trying to log or cache. The value is derived from Results[0].Auth, which is serialized already, so
+    // nothing is lost from the payload.
+    [JsonIgnore]
     public SorobanAuthorizationEntry[]? SorobanAuthorization
     {
         get
@@ -258,6 +297,26 @@ public class SimulateTransactionResponse
         ///     added on
         ///     top of the Stellar network fee.
         /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         <see cref="JsonRequiredAttribute" /> stops a preamble that omits the field entirely from
+        ///         reading as a free restore. This is a value type, so nothing else enforces presence: an object
+        ///         with no <c>minResourceFee</c> silently yielded <c>0</c>, and a caller following the documented
+        ///         "use <see cref="MinResourceFee" /> and <see cref="SorobanTransactionData" /> to submit a
+        ///         RestoreFootprint operation" flow would then submit it underfunded. Stellar RPC declares the
+        ///         field <c>json:"minResourceFee,string"</c> with no <c>omitempty</c>, so a conforming server
+        ///         always sends it and requiring it rejects nothing.
+        ///     </para>
+        ///     <para>
+        ///         This enforces <em>presence only</em>, not plausibility: an explicit <c>"0"</c> or a negative
+        ///         <c>"-500"</c> both satisfy the attribute and still describe a restore this SDK would submit
+        ///         underfunded. Nothing here range-checks the value, and <see cref="SorobanTransactionData" />
+        ///         — the other half of the documented flow — carries no presence requirement at all, so a
+        ///         preamble consisting of nothing but a fee still deserializes. Callers who act on a preamble
+        ///         should check both fields rather than assume deserialization vouched for them.
+        ///     </para>
+        /// </remarks>
+        [JsonRequired]
         public long MinResourceFee { get; init; }
 
         /// <summary>
@@ -347,15 +406,32 @@ public class SimulateTransactionResponse
         ///         Compare against the three literals rather than assuming a non-empty value.
         ///     </para>
         /// </summary>
+        /// <remarks>
+        ///     <see cref="JsonRequiredAttribute" /> makes "a conforming server always sends it" a contract the
+        ///     deserializer enforces, matching <see cref="SendTransactionResponse.Hash" />. Without it the
+        ///     non-nullable annotation was unenforced in exactly the direction that matters:
+        ///     <c>RespectNullableAnnotations</c> rejects an explicit <c>null</c> but not an <em>absent</em>
+        ///     property, so an entry with no <c>type</c> left this <see cref="string" /> holding
+        ///     <see langword="null" /> and every <c>Type == "created"</c> comparison silently returned false.
+        ///     Requiring it rejects nothing a conforming server sends. Note this enforces presence, not
+        ///     membership: the empty string described above still deserializes.
+        /// </remarks>
+        [JsonRequired]
         public string Type { get; init; }
 
         /// <summary>
         ///     The base64-encoded XDR key of the affected ledger entry.
         ///     <para>
-        ///         (optional) Stellar RPC tags this field <c>omitempty</c>, so it is absent whenever the key is empty —
-        ///         for instance when the entry's key travels in the JSON-XDR <c>keyJson</c> field instead. A missing
-        ///         property does not violate a non-nullable annotation the way an explicit <c>null</c> does, so this
-        ///         was previously reported as a non-null <c>string</c> that could nevertheless be null at runtime.
+        ///         (optional) Stellar RPC tags this field <c>omitempty</c>, so it is absent whenever the key is
+        ///         empty. That is not hypothetical: v23.0.0 and v23.0.1 shipped pre-allocated no-op state changes
+        ///         with no key at all — the same entries whose <see cref="Type" /> marshalled to <c>""</c> — fixed
+        ///         in v23.0.2 (stellar/stellar-rpc#506). It is also absent when the entry's key travels in the
+        ///         JSON-XDR <c>keyJson</c> field instead, though this SDK never requests that format.
+        ///     </para>
+        ///     <para>
+        ///         A missing property does not violate a non-nullable annotation the way an explicit <c>null</c>
+        ///         does, so before this was widened the property advertised a guarantee the wire did not honour and
+        ///         the compiler suppressed exactly the null checks that would have caught it.
         ///     </para>
         /// </summary>
         public string? Key { get; init; }

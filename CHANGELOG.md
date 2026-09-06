@@ -319,6 +319,35 @@ All notable changes to this project are documented here. The format is based on
 - **Breaking:** those same three properties changed observable exception type. A caller who wrapped them
   in `catch (FormatException)` or `catch (IOException)` to handle a malformed blob will find that clause
   no longer fires: `System.IO.InvalidDataException` derives from neither. Catch `InvalidDataException`.
+- **Breaking:** `SimulateTransactionResponse.SorobanAuthorization` is now `[JsonIgnore]`, matching the
+  `SorobanTransactionData` property beside it. Serialization reads every property, so a response
+  carrying a malformed `auth` entry threw `InvalidDataException` from inside `JsonSerializer.Serialize`
+  — for a caller who was only trying to log or cache the response, and from a call that has nothing to
+  do with authorization. The value is derived from `Results[0].Auth`, which is serialized already, so
+  nothing leaves the payload that was not already in it; round-tripping a serialized response still
+  reconstructs the entries. Code that read `SorobanAuthorization` back out of serialized JSON must read
+  the auth entries instead — note that these are the SDK's own CLR property names, so in a payload
+  produced by `JsonSerializer.Serialize` the path is `Results[0].Auth`, not the `results[0].auth` of the
+  RPC wire format ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
+- **Breaking:** `SimulateTransactionResponse.LedgerEntryChange.Type` and
+  `.RestorePreamble.MinResourceFee` are now `[JsonRequired]`. Both are declared in a way that cannot be
+  violated by an *absent* property — a non-nullable `string` and a `long` — but nothing enforced that:
+  `RespectNullableAnnotations` rejects an explicit `null` and says nothing about a missing key. A
+  `stateChanges` entry with no `type` therefore left a non-nullable `string` holding `null`, so every
+  `Type == "created"` comparison silently returned false; a `restorePreamble` with no `minResourceFee`
+  yielded `0`, and a caller following the documented "use `MinResourceFee` and `SorobanTransactionData`
+  to submit a `RestoreFootprint` operation" flow would submit it underfunded. Stellar RPC marks neither
+  field `omitempty`, so requiring them rejects nothing a conforming server sends; a non-conforming reply
+  now fails with `JsonException` at deserialization instead of downstream. This enforces presence, not
+  membership: the empty `type` that RPC v23.0.0/v23.0.1 emitted still deserializes
+  ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
+- **Breaking:** `SimulateTransactionResponse.StateChanges` rejects a `null` array *element* with
+  `JsonException` instead of admitting it. `RespectNullableAnnotations` constrains the array reference,
+  never its contents, so `"stateChanges":[null]` produced an array holding `null` despite the
+  non-nullable element type — and `foreach (var c in StateChanges) if (c.Type == "created")`, the very
+  loop the `[JsonRequired]` on `LedgerEntryChange.Type` was added to protect, then threw
+  `NullReferenceException` at the caller instead of failing at deserialization like every other
+  malformed-payload path ([#211](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/211)).
 - Exception messages from the SDK's strict enum converters no longer copy the whole server-supplied
   value. `SendTransactionStatusEnumJsonConverter`, `SubmitTransactionAsyncStatusJsonConverter`,
   `TransactionStatusJsonConverter`, and `EventFilterTypeJsonConverter` all name the offending literal so
