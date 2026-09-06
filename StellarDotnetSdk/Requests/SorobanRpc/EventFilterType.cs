@@ -31,7 +31,8 @@ namespace StellarDotnetSdk.Requests.SorobanRpc;
 ///     <para>
 ///         <c>diagnostic</c> is deliberately absent. It was a legal filter value up to Stellar RPC v22.1.5, but
 ///         Protocol 23 removed diagnostic events from the <c>getEvents</c> stream and RPC v23.0.0 onwards answers
-///         <c>filter type invalid: if set, type must be either 'system' or 'contract'</c> for it. Every RPC release
+///         <c>filter N invalid: filter type invalid: if set, type must be either 'system' or 'contract'</c>
+///         for it, where <c>N</c> is the 1-based index of the offending filter. Every RPC release
 ///         this SDK supports rejects it, so it is not offered.
 ///     </para>
 /// </remarks>

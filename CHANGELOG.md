@@ -333,6 +333,12 @@ All notable changes to this project are documented here. The format is based on
   the apostrophe that delimits the quoted fragment. The clamp also no longer cuts between the halves of a
   surrogate pair: truncating by UTF-16 code unit could leave an unpaired surrogate in the message, which
   a strict encoder rejects outright and a lenient one silently rewrites to U+FFFD.
+- `EventFilterTypeJsonConverter.Write` now throws `JsonException` rather than
+  `ArgumentOutOfRangeException` for a value carrying undefined flag bits, matching every other converter
+  in `JsonOptions.DefaultOptions` that rejects an undefined enum on write, so a single
+  `catch (JsonException)` around `JsonSerializer.Serialize` covers all of them. Assigning such a value to
+  `GetEventsRequest.EventFilter.Type` still throws `ArgumentOutOfRangeException` — that is a rejected
+  *argument*, raised at assignment, and is unchanged.
 - Three inputs that defeated that normalization entirely, each reachable from a hostile or
   non-conforming RPC endpoint with a handful of bytes, now normalize like the rest:
   - An `SCV_VEC` or `SCV_MAP` whose XDR *optional* body is absent. Those are the only two optional arms

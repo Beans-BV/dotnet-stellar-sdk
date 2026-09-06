@@ -13,7 +13,8 @@ namespace StellarDotnetSdk.Converters;
 ///     The built-in <see cref="JsonStringEnumConverter" /> cannot be used here: for a <see cref="FlagsAttribute" />
 ///     enum it joins members with <c>", "</c> (a comma <em>and a space</em>), and RPC splits the value on a bare
 ///     comma without trimming, so <c>"system, contract"</c> is rejected with
-///     <c>filter type invalid: if set, type must be either 'system' or 'contract'</c>.
+///     <c>filter N invalid: filter type invalid: if set, type must be either 'system' or 'contract'</c>,
+///     where <c>N</c> is the 1-based index of the offending filter.
 /// </remarks>
 public class EventFilterTypeJsonConverter : JsonConverter<EventFilterType>
 {
@@ -54,14 +55,26 @@ public class EventFilterTypeJsonConverter : JsonConverter<EventFilterType>
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentOutOfRangeException">
+    /// <exception cref="JsonException">
     ///     Thrown when <paramref name="value" /> contains bits that are not defined <see cref="EventFilterType" />
     ///     flags — for example a raw cast such as <c>(EventFilterType)99</c>. Assigning such a value to
-    ///     <see cref="GetEventsRequest.EventFilter.Type" /> already throws, so this is a backstop for values that
-    ///     reach the serializer by another route.
+    ///     <see cref="GetEventsRequest.EventFilter.Type" /> already throws
+    ///     <see cref="ArgumentOutOfRangeException" />, so this is a backstop for values that reach the serializer
+    ///     by another route.
+    ///     <para>
+    ///         The two exception types are deliberate and describe different failures: the setter rejects a bad
+    ///         <em>argument</em>, while a converter reports a <em>serialization</em> failure and so throws what
+    ///         the sibling converters throw — a caller wrapping <c>JsonSerializer.Serialize</c> in
+    ///         <c>catch (JsonException)</c> catches all three.
+    ///     </para>
     /// </exception>
     public override void Write(Utf8JsonWriter writer, EventFilterType value, JsonSerializerOptions options)
     {
+        if (!value.IsDefined())
+        {
+            throw new JsonException($"Value '{value}' is not a defined {nameof(EventFilterType)}.");
+        }
+
         writer.WriteStringValue(value.ToRequestValue());
     }
 }
