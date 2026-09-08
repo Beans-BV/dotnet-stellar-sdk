@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using StellarDotnetSdk.Compatibility;
 using StellarDotnetSdk.Converters;
+using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Sep.Sep0001;
@@ -232,6 +233,10 @@ public class TransferServerService : IDisposable
     /// <param name="jwt">JWT token from SEP-10 authentication</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>Information about supported assets and their requirements</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<InfoResponse> InfoAsync(string? language = null, string? jwt = null,
         CancellationToken cancellationToken = default)
     {
@@ -256,6 +261,10 @@ public class TransferServerService : IDisposable
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<DepositResponse> DepositAsync(DepositRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -275,6 +284,10 @@ public class TransferServerService : IDisposable
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<DepositResponse> DepositExchangeAsync(DepositExchangeRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -294,6 +307,10 @@ public class TransferServerService : IDisposable
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -313,6 +330,10 @@ public class TransferServerService : IDisposable
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<WithdrawResponse> WithdrawExchangeAsync(WithdrawExchangeRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -329,6 +350,10 @@ public class TransferServerService : IDisposable
     /// <param name="request">Fee request parameters</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>A FeeResponse containing the calculated fee amount</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<FeeResponse> FeeAsync(FeeRequest request, CancellationToken cancellationToken = default)
     {
         var queryParams = new Dictionary<string, string>
@@ -355,6 +380,10 @@ public class TransferServerService : IDisposable
     /// <param name="request">Transaction history request with account, asset code, and optional filters</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>List of transactions with their current status and details</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<AnchorTransactionsResponse> TransactionsAsync(AnchorTransactionsRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -413,6 +442,10 @@ public class TransferServerService : IDisposable
     /// <param name="request">Transaction query request with at least one identifier</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation</param>
     /// <returns>Current status and details of the requested transaction</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<AnchorTransactionResponse> TransactionAsync(AnchorTransactionRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -454,6 +487,10 @@ public class TransferServerService : IDisposable
     /// <exception cref="CustomerInformationNeededException">Thrown when additional KYC information is required</exception>
     /// <exception cref="CustomerInformationStatusException">Thrown when KYC status needs to be checked</exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when authentication is missing or invalid</exception>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<AnchorTransactionResponse> PatchTransactionAsync(PatchTransactionRequest request,
         CancellationToken cancellationToken = default)
     {

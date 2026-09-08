@@ -149,6 +149,13 @@ public class Server : IDisposable
     ///     Fetches the root information from the Horizon server synchronously.
     /// </summary>
     /// <returns>The root response containing server metadata and supported protocol version.</returns>
+    /// <exception cref="AggregateException">
+    ///     Thrown when <see cref="RootAsync" /> fails. This overload blocks on the asynchronous one, so every
+    ///     exception it documents — including the <see cref="ClientProtocolException" /> raised for an empty
+    ///     body or one holding the JSON literal <c>null</c> — arrives wrapped here rather than on its own, and
+    ///     must be read from <see cref="AggregateException.InnerExceptions" />. Prefer <see cref="RootAsync" />,
+    ///     which surfaces it directly.
+    /// </exception>
     public RootResponse Root()
     {
         return RootAsync().Result;
@@ -158,6 +165,10 @@ public class Server : IDisposable
     ///     Fetches the root information from the Horizon server asynchronously.
     /// </summary>
     /// <returns>The root response containing server metadata and supported protocol version.</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<RootResponse> RootAsync()
     {
         var responseHandler = new ResponseHandler<RootResponse>();

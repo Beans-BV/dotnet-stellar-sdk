@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Assets;
 using StellarDotnetSdk.Compatibility;
+using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
@@ -23,6 +24,10 @@ public class OffersRequestBuilder : RequestBuilderExecutePageable<OffersRequestB
     /// <summary>
     ///     Requests specific uri and returns OfferResponse
     /// </summary>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<OfferResponse> Offer(Uri uri)
     {
         var responseHandler = new ResponseHandler<OfferResponse>();

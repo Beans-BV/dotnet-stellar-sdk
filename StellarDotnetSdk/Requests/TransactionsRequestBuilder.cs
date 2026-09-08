@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Compatibility;
+using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
@@ -26,6 +27,10 @@ public class TransactionsRequestBuilder : RequestBuilderStreamable<TransactionsR
     ///     Requests specific uri and returns LedgerResponse.
     ///     This method is helpful for getting the links.
     /// </summary>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<TransactionResponse> Transaction(Uri uri)
     {
         var responseHandler = new ResponseHandler<TransactionResponse>();

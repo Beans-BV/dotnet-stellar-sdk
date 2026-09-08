@@ -231,8 +231,11 @@ All notable changes to this project are documented here. The format is based on
     `ResponseHandler.HandleResponse` rather than in `SendRequest`, because the same hazard applied to
     every caller of that helper: its return type is non-nullable, so it was handing a `null` through a
     signature that says otherwise on the Horizon and SEP paths too (`Server.RootAsync`, every request
-    builder, `Link`, `FederationServer`, `TransferServerService`). Those methods now throw where they
-    previously returned `null`.
+    builder, `Link.Follow`, `FederationServer.ResolveAddress`, and the nine `TransferServerService`
+    endpoint methods). Those methods now throw where they previously returned `null`, and each one now
+    documents it. `FederationServer.ResolveAddress` is the exception to the type: it wraps every failure
+    other than an HTTP error status, so the malformed body reaches the caller as its own
+    `ConnectionErrorException` rather than as `ClientProtocolException`.
   - **Breaking:** `SorobanRpcResponse<T>.Id` is now `string?`. JSON-RPC 2.0 §5 requires a null `id` in
     exactly one case — the server could not read the request's `id` at all, a parse error or an invalid
     request — and such a response carries the `error` explaining why. The non-nullable annotation made

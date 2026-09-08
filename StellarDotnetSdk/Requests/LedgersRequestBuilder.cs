@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
@@ -27,6 +28,10 @@ public class LedgersRequestBuilder : RequestBuilderStreamable<LedgersRequestBuil
     /// </summary>
     /// <param name="uri"></param>
     /// <returns></returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<LedgerResponse> Ledger(Uri uri)
     {
         var responseHandler = new ResponseHandler<LedgerResponse>();

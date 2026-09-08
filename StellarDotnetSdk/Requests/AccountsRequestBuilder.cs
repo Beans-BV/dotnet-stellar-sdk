@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Assets;
+using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Responses;
 
 namespace StellarDotnetSdk.Requests;
@@ -26,6 +27,10 @@ public class AccountsRequestBuilder : RequestBuilderExecutePageable<AccountsRequ
     /// </summary>
     /// <param name="uri"></param>
     /// <returns></returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<AccountResponse> Account(Uri uri)
     {
         var responseHandler = new ResponseHandler<AccountResponse>();
@@ -39,6 +44,10 @@ public class AccountsRequestBuilder : RequestBuilderExecutePageable<AccountsRequ
     /// </summary>
     /// <param name="uri">The URI of the account data resource.</param>
     /// <returns>The <see cref="AccountDataResponse" />.</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<AccountDataResponse> AccountData(Uri uri)
     {
         var responseHandler = new ResponseHandler<AccountDataResponse>();

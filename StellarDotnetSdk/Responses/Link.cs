@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Requests;
 
 namespace StellarDotnetSdk.Responses;
@@ -88,6 +89,10 @@ public class Link<TResponse> : Link where TResponse : Response
     /// <param name="httpClient">The HTTP client to use for the request.</param>
     /// <param name="parameters">An object whose properties are used for template substitution.</param>
     /// <returns>The linked resource.</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public Task<TResponse> Follow(HttpClient httpClient, object? parameters)
     {
         return DoFollow(httpClient, Resolve(parameters));
@@ -99,6 +104,10 @@ public class Link<TResponse> : Link where TResponse : Response
     /// <param name="httpClient">The HTTP client to use for the request.</param>
     /// <param name="parameters">A dictionary of parameter names and values for template substitution.</param>
     /// <returns>The linked resource.</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public Task<TResponse> Follow(HttpClient httpClient, IDictionary<string, object>? parameters)
     {
         return DoFollow(httpClient, Resolve(parameters));
@@ -109,6 +118,10 @@ public class Link<TResponse> : Link where TResponse : Response
     /// </summary>
     /// <param name="httpClient">The HTTP client to use for the request.</param>
     /// <returns>The linked resource.</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public Task<TResponse> Follow(HttpClient httpClient)
     {
         return Follow(httpClient, null);
@@ -118,6 +131,10 @@ public class Link<TResponse> : Link where TResponse : Response
     ///     Follows the link to retrieve the linked resource using a new HttpClient.
     /// </summary>
     /// <returns>The linked resource.</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public Task<TResponse> Follow()
     {
         return Follow(new HttpClient());
@@ -128,6 +145,10 @@ public class Link<TResponse> : Link where TResponse : Response
     /// </summary>
     /// <param name="parameters">An object whose properties are used for template substitution.</param>
     /// <returns>The linked resource.</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public Task<TResponse> Follow(object? parameters)
     {
         return Follow(new HttpClient(), parameters);
@@ -138,6 +159,10 @@ public class Link<TResponse> : Link where TResponse : Response
     /// </summary>
     /// <param name="parameters">A dictionary of parameter names and values for template substitution.</param>
     /// <returns>The linked resource.</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public Task<TResponse> Follow(IDictionary<string, object>? parameters)
     {
         return Follow(new HttpClient(), parameters);
