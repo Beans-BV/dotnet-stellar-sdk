@@ -207,14 +207,19 @@ private static async Task<SimulateTransactionResponse> SimulateAndUpdateTransact
     // Simulate the transaction to get Soroban-specific details
     var simulateResponse = await server.SimulateTransaction(tx);
 
-    // Update the transaction with Soroban-specific data
-    if (simulateResponse.SorobanTransactionData != null)
+    // Update the transaction with Soroban-specific data.
+    // Read each property ONCE into a local: both decode the server's base64 XDR on every access, so
+    // `if (x.SorobanTransactionData != null) { use(x.SorobanTransactionData); }` decodes twice, and the
+    // `!= null` test itself throws InvalidDataException on a malformed blob rather than yielding null.
+    var transactionData = simulateResponse.SorobanTransactionData;
+    if (transactionData != null)
     {
-        tx.SetSorobanTransactionData(simulateResponse.SorobanTransactionData);
+        tx.SetSorobanTransactionData(transactionData);
     }
-    if (simulateResponse.SorobanAuthorization != null)
+    var authorization = simulateResponse.SorobanAuthorization;
+    if (authorization != null)
     {
-        tx.SetSorobanAuthorization(simulateResponse.SorobanAuthorization);
+        tx.SetSorobanAuthorization(authorization);
     }
 
     // Add a resource fee

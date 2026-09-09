@@ -81,4 +81,81 @@ public class SimulateTransactionResponseDeserializerTest
         Assert.IsNotNull(response);
         Assert.IsNull(response.MinResourceFee);
     }
+
+    /// <summary>
+    ///     Verifies that <see cref="SimulateTransactionResponse.SorobanAuthorization" /> reports "no entries" rather
+    ///     than throwing when the response carries no <c>results</c> at all. The property indexes <c>Results[0]</c>,
+    ///     so without the length half of its guard this dereferences a null array.
+    /// </summary>
+    [TestMethod]
+    public void SorobanAuthorization_WithoutResults_ReturnsNull()
+    {
+        // Arrange
+        const string json = """{"latestLedger":"1"}""";
+
+        // Act
+        var response = JsonSerializer.Deserialize<SimulateTransactionResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
+        Assert.IsNotNull(response);
+        Assert.IsNull(response.SorobanAuthorization);
+    }
+
+    /// <summary>
+    ///     Verifies the same for an empty <c>results</c> array, which is the shape Stellar RPC returns for a
+    ///     simulation that produced no results. Without the length half of the guard this throws
+    ///     <see cref="System.IndexOutOfRangeException" />.
+    /// </summary>
+    [TestMethod]
+    public void SorobanAuthorization_WithEmptyResults_ReturnsNull()
+    {
+        // Arrange
+        const string json = """{"results":[],"latestLedger":"1"}""";
+
+        // Act
+        var response = JsonSerializer.Deserialize<SimulateTransactionResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
+        Assert.IsNotNull(response);
+        Assert.IsNull(response.SorobanAuthorization);
+    }
+
+    /// <summary>
+    ///     Verifies the element half of the guard, which is not redundant with the length check: <c>[null]</c> has
+    ///     length one and would then be dereferenced. A conforming server cannot send it — the Go type is a slice of
+    ///     structs, not pointers — but the property exists to behave predictably for responses that are not
+    ///     conforming.
+    /// </summary>
+    [TestMethod]
+    public void SorobanAuthorization_WithNullResultElement_ReturnsNull()
+    {
+        // Arrange
+        const string json = """{"results":[null],"latestLedger":"1"}""";
+
+        // Act
+        var response = JsonSerializer.Deserialize<SimulateTransactionResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
+        Assert.IsNotNull(response);
+        Assert.IsNull(response.SorobanAuthorization);
+    }
+
+    /// <summary>
+    ///     Verifies that a result carrying no <c>auth</c> key reports "no entries" rather than throwing. Stellar RPC
+    ///     tags the field <c>auth,omitempty</c>, so this is the ordinary shape for a simulation that requires no
+    ///     authorization; without the guard the entry loop dereferences a null array.
+    /// </summary>
+    [TestMethod]
+    public void SorobanAuthorization_WithoutAuth_ReturnsNull()
+    {
+        // Arrange
+        const string json = """{"results":[{"xdr":"AAAAAQ=="}],"latestLedger":"1"}""";
+
+        // Act
+        var response = JsonSerializer.Deserialize<SimulateTransactionResponse>(json, JsonOptions.DefaultOptions);
+
+        // Assert
+        Assert.IsNotNull(response);
+        Assert.IsNull(response.SorobanAuthorization);
+    }
 }

@@ -1729,11 +1729,26 @@ public class SCVec : SCVal
     /// </summary>
     /// <param name="xdrVal">The XDR value to convert.</param>
     /// <returns>An <see cref="SCVec" /> instance.</returns>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when <paramref name="xdrVal" /> is not an <c>SCV_VEC</c>, or is an <c>SCV_VEC</c> whose optional
+    ///     body is absent.
+    /// </exception>
     public static SCVec FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_VEC)
         {
             throw new ArgumentException("Not an SCVec", nameof(xdrVal));
+        }
+
+        // SCV_VEC carries an XDR *optional*: a present-flag of 0 is well-formed on the wire and leaves
+        // Xdr.SCVal.Vec null. Without this guard the Select() below dereferences null, and a raw
+        // NullReferenceException escapes every caller that documents a normalized decode failure
+        // (SimulateTransactionResponse.SorobanAuthorization / .SorobanTransactionData,
+        // InvokeHostFunctionOperation.FromXdr). Stellar RPC and Core never emit the absent form, so
+        // rejecting it is correct; ArgumentException keeps it inside the callers' existing filters.
+        if (xdrVal.Vec == null)
+        {
+            throw new ArgumentException("SCV_VEC with an absent vector body", nameof(xdrVal));
         }
 
         return FromXdr(xdrVal.Vec);
@@ -1802,11 +1817,22 @@ public class SCMap : SCVal
     /// </summary>
     /// <param name="xdrVal">The XDR value to convert.</param>
     /// <returns>An <see cref="SCMap" /> instance.</returns>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when <paramref name="xdrVal" /> is not an <c>SCV_MAP</c>, or is an <c>SCV_MAP</c> whose optional
+    ///     body is absent.
+    /// </exception>
     public static SCMap FromSCValXdr(Xdr.SCVal xdrVal)
     {
         if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_MAP)
         {
             throw new ArgumentException("Not an SCMap", nameof(xdrVal));
+        }
+
+        // See SCVec.FromSCValXdr: SCV_MAP is the other XDR optional arm of SCVal, with the same
+        // absent-body hazard.
+        if (xdrVal.Map == null)
+        {
+            throw new ArgumentException("SCV_MAP with an absent map body", nameof(xdrVal));
         }
 
         return FromXdr(xdrVal.Map);
