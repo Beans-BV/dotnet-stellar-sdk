@@ -106,6 +106,29 @@ public class FederationServerTest
         var unused = await server.ResolveAddress("bob*stellar.org");
     }
 
+    /// <summary>
+    ///     Verifies that a response body holding the JSON literal <c>null</c> is reported rather than being
+    ///     returned as a null through a non-nullable signature.
+    ///     <para>
+    ///         The guard itself lives in <see cref="StellarDotnetSdk.Requests.ResponseHandler{T}" /> and raises
+    ///         <c>ClientProtocolException</c>, but this method wraps every failure other than an HTTP error
+    ///         status, so the caller sees <see cref="ConnectionErrorException" /> instead. That is what the
+    ///         XML docs on <see cref="FederationServer.ResolveAddress" /> promise, and it is the one path where
+    ///         the exception type differs from the rest of the Horizon and SEP surface.
+    ///     </para>
+    /// </summary>
+    [TestMethod]
+    public async Task ResolveAddress_WithJsonNullResponseBody_ThrowsConnectionErrorException()
+    {
+        // Arrange
+        var server = CreateTestServer("null");
+
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<ConnectionErrorException>(
+            () => server.ResolveAddress("bob*stellar.org"));
+        StringAssert.Contains(exception.Message, "no object");
+    }
+
     private static FederationServer CreateTestServer(string content, HttpStatusCode statusCode = HttpStatusCode.OK)
     {
         Network.UseTestNetwork();

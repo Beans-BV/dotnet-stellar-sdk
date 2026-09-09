@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using StellarDotnetSdk.Exceptions;
 
 namespace StellarDotnetSdk.Requests;
 
@@ -33,6 +34,10 @@ public interface IRequestBuilder<T> where T : class
     /// <typeparam name="TZ">The response type to deserialize into.</typeparam>
     /// <param name="uri">The URI to send the request to.</param>
     /// <returns>The deserialized response object.</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     Task<TZ> Execute<TZ>(Uri uri) where TZ : class;
 
     /// <summary>
@@ -79,12 +84,13 @@ public interface IRequestBuilder<T> where T : class
 /// </summary>
 public class RequestBuilder<T> : IRequestBuilder<T> where T : class
 {
-    private readonly List<string> _segments;
-    private readonly Uri _serverUri;
     /// <summary>
     ///     The URI builder used to construct the request URL with path segments and query parameters.
     /// </summary>
     protected readonly UriBuilder UriBuilder;
+
+    private readonly List<string> _segments;
+    private readonly Uri _serverUri;
     private bool _segmentsAdded;
 
     /// <summary>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Nett;
+using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Requests;
 
 namespace StellarDotnetSdk.Federation;
@@ -123,6 +124,12 @@ public class FederationServer : IDisposable
     /// </summary>
     /// <param name="address">The Stellar federation address to resolve.</param>
     /// <returns>A <see cref="FederationResponse" /> containing the resolved account information.</returns>
+    /// <exception cref="ConnectionErrorException">
+    ///     Thrown when the request fails, and when the response body is empty or holds the JSON literal
+    ///     <c>null</c> and so deserializes to no object. This method wraps every failure other than an
+    ///     HTTP error status, so the underlying <see cref="ClientProtocolException" /> surfaces here rather
+    ///     than on its own; its text is carried in <see cref="Exception.Message" />.
+    /// </exception>
     public async Task<FederationResponse> ResolveAddress(string address)
     {
         var tokens = Regex.Split(address, "\\*");

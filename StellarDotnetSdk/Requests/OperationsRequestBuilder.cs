@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Compatibility;
+using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.Responses.Operations;
 
 namespace StellarDotnetSdk.Requests;
@@ -28,6 +29,10 @@ public class OperationsRequestBuilder : RequestBuilderStreamable<OperationsReque
     /// <returns>
     ///     <see cref="Task{OperationResponse}" />
     /// </returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<OperationResponse> Operation(Uri uri)
     {
         var responseHandler = new ResponseHandler<OperationResponse>();

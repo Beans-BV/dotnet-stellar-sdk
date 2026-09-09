@@ -85,8 +85,10 @@ internal static class AuthModeExtensions
     ///         <item>
     ///             The attributes do not validate. An undefined value — <c>(AuthMode)99</c>, or a member added to
     ///             the enum but not to the attribute set — serializes as a bare JSON number, which RPC rejects with
-    ///             a JSON-RPC <c>-32602</c> error that this SDK surfaces to the caller as a <see langword="null" />
-    ///             response. This switch throws instead, so the mistake is caught in the caller's own stack frame.
+    ///             a JSON-RPC <c>-32602</c> error. This SDK surfaces that as an
+    ///             <see cref="Exceptions.SorobanRpcException" /> naming the RPC server, one network round trip
+    ///             after the mistake and with nothing pointing back at the call that made it. This switch throws
+    ///             instead, so the mistake is caught in the caller's own stack frame before a request is sent.
     ///         </item>
     ///     </list>
     ///     Keep both in step when adding a member: the attribute defines the wire value, this switch enforces that

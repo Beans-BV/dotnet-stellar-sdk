@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using StellarDotnetSdk.Exceptions;
 using StellarDotnetSdk.LiquidityPool;
 using StellarDotnetSdk.Responses;
 
@@ -33,6 +34,10 @@ public class
     /// </summary>
     /// <param name="uri">The URI of the liquidity pool resource.</param>
     /// <returns>The <see cref="LiquidityPoolResponse" />.</returns>
+    /// <exception cref="ClientProtocolException">
+    ///     Thrown when the response body is empty, or holds the JSON literal <c>null</c> and so
+    ///     deserializes to no object.
+    /// </exception>
     public async Task<LiquidityPoolResponse> LiquidityPool(Uri uri)
     {
         var responseHandler = new ResponseHandler<LiquidityPoolResponse>();
