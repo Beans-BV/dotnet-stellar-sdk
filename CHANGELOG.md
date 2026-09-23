@@ -10,6 +10,12 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- `GetLatestLedgerResponse` now exposes the remaining `getLatestLedger` fields served by Stellar RPC:
+  `CloseTime` (unix timestamp as a string, matching the wire format), `HeaderXdr`, and `MetadataXdr`.
+  All three are nullable so responses from older RPC servers that omit them still deserialize
+  ([#198](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/198), completes
+  [#155](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/155) and
+  [#159](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/159)).
 - **Protocol 27 (CAP-71) Soroban authorization** ([#187](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/187), implements [#186](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/186)):
   - `SorobanAddressCredentialsV2` — CAP-0071-02 address-bound credentials (`SOROBAN_CREDENTIALS_ADDRESS_V2`),
     whose signature is computed over the `ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS` preimage,
