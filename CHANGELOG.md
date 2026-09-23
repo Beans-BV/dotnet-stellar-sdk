@@ -172,8 +172,8 @@ All notable changes to this project are documented here. The format is based on
   trade-off: a `getTransactions` page is deserialized as one document, so a single entry carrying a
   malformed status now fails the whole response instead of silently reporting a wrong settlement
   status.
-- **Breaking:** `TransactionInfo.Status` and `SendTransactionResponse.Hash` are now `[JsonRequired]`,
-  extending to both the guard `SendTransactionResponse.Status` already carries.
+- **Breaking:** `TransactionInfo.Status` and `SendTransactionResponse.Hash` are now
+  `[JsonRequired]`, the same guard `SendTransactionResponse.Status` already carries.
   `RespectNullableAnnotations` rejects an explicit `null` but cannot reject an *absent* property, and
   an enum is a value type besides — so a `getTransaction` response carrying no `status` deserialized
   to the zero member, `NOT_FOUND`, and an absent `hash` left a non-nullable `string` holding `null`.

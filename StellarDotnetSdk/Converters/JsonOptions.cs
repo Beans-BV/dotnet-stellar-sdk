@@ -34,11 +34,11 @@ public static class JsonOptions
     ///     Registered Converters:
     ///     - Polymorphic converters: OperationResponse, EffectResponse, Predicate
     ///     - Domain type converters: Asset, AssetAmount, KeyPair, LiquidityPoolId, LiquidityPoolClaimableAssetAmount, Reserve
-    ///     - Enum converters: EventFilterType and SendTransactionStatusEnum, then
+    ///     - Enum converters: EventFilterType, SendTransactionStatusEnum and TransactionStatus, then
     ///     JsonStringEnumConverter (standard) last. Registration order is significant — the standard converter
     ///     matches every enum, so it must come last or it shadows the specific ones. See the comment on the
     ///     collection below. (LiquidityPoolTypeEnum is an enum converter too, but it is registered up with the
-    ///     domain types; its position relative to the other two does not matter, only that it precedes the
+    ///     domain types; its position relative to the other three does not matter, only that it precedes the
     ///     catch-all.)
     ///     - HATEOAS link converters: LinkJsonConverter for EffectResponse and Response
     /// </remarks>

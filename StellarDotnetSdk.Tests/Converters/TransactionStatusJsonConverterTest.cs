@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -121,15 +122,110 @@ public class TransactionStatusJsonConverterTest
     }
 
     /// <summary>
+    ///     Pins the fail-closed trade-off the CHANGELOG documents: a <c>getTransactions</c> page is deserialized as
+    ///     one document, so a single entry carrying an ordinal status fails the whole response rather than being
+    ///     read as <see cref="TransactionInfo.TransactionStatus.SUCCESS" />.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_GetTransactionsPageWithOneOrdinalStatus_FailsWholePage()
+    {
+        const string valid = "{\"status\":\"SUCCESS\",\"txHash\":\"aa\"}";
+        const string ordinal = "{\"status\":1,\"txHash\":\"bb\"}";
+
+        var ok = JsonSerializer.Deserialize<GetTransactionsResponse>(
+            $"{{\"transactions\":[{valid},{valid}]}}", JsonOptions.DefaultOptions);
+        Assert.AreEqual(2, ok!.Transactions!.Length);
+
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<GetTransactionsResponse>(
+                $"{{\"transactions\":[{valid},{ordinal}]}}", JsonOptions.DefaultOptions));
+    }
+
+    /// <summary>
+    ///     Verifies the pins reach <see cref="GetTransactionResponse" />, the subclass
+    ///     <c>StellarRpcServer.GetTransaction</c> actually returns: it inherits both the property-level converter
+    ///     (strict even under consumer-owned options) and <c>[JsonRequired]</c>.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_GetTransactionResponse_InheritsStrictRequiredStatus()
+    {
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        options.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<GetTransactionResponse>("{\"status\":1}", options));
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<GetTransactionResponse>("{\"latestLedger\":42}", options));
+
+        var ok = JsonSerializer.Deserialize<GetTransactionResponse>("{\"status\":\"SUCCESS\"}", options);
+        Assert.AreEqual(TransactionInfo.TransactionStatus.SUCCESS, ok!.Status);
+    }
+
+    /// <summary>
+    ///     Verifies the enum still works as a dictionary key under <see cref="JsonOptions.DefaultOptions" />. The
+    ///     catch-all <c>JsonStringEnumConverter</c> this converter displaces supported keys; without the
+    ///     property-name overloads the same call threw <see cref="System.NotSupportedException" />.
+    /// </summary>
+    [TestMethod]
+    public void RoundTrip_AsDictionaryKey_WithDefaultOptions()
+    {
+        var original = new Dictionary<TransactionInfo.TransactionStatus, int>
+        {
+            [TransactionInfo.TransactionStatus.NOT_FOUND] = 0,
+            [TransactionInfo.TransactionStatus.SUCCESS] = 1,
+            [TransactionInfo.TransactionStatus.FAILED] = 2,
+        };
+
+        var json = JsonSerializer.Serialize(original, JsonOptions.DefaultOptions);
+        var roundTripped = JsonSerializer.Deserialize<Dictionary<TransactionInfo.TransactionStatus, int>>(
+            json, JsonOptions.DefaultOptions);
+
+        Assert.AreEqual("{\"NOT_FOUND\":0,\"SUCCESS\":1,\"FAILED\":2}", json);
+        CollectionAssert.AreEquivalent(original, roundTripped);
+    }
+
+    /// <summary>
+    ///     Verifies dictionary keys are held to the same literal set as values: a key the value path would reject
+    ///     is rejected, and an undefined value cannot be written as a key.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow("{\"success\":1}")]
+    [DataRow("{\"1\":1}")]
+    [DataRow("{\"BOGUS\":1}")]
+    public void Deserialize_AsDictionaryKey_RejectsNonLiteralKeys(string json)
+    {
+        var exception = Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<Dictionary<TransactionInfo.TransactionStatus, int>>(
+                json, JsonOptions.DefaultOptions));
+
+        StringAssert.Contains(exception.Message, "cannot be converted");
+    }
+
+    /// <summary>
+    ///     Verifies an undefined value cannot be written as a dictionary key either.
+    /// </summary>
+    [TestMethod]
+    public void Serialize_WithUndefinedStatusAsDictionaryKey_ThrowsJsonException()
+    {
+        var dictionary = new Dictionary<TransactionInfo.TransactionStatus, int>
+        {
+            [(TransactionInfo.TransactionStatus)99] = 1,
+        };
+
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Serialize(dictionary, JsonOptions.DefaultOptions));
+    }
+
+    /// <summary>
     ///     Guards the registration order this converter depends on: the catch-all must stay last, or it shadows
     ///     this converter and every rejection above silently becomes an acceptance.
     /// </summary>
     [TestMethod]
     public void DefaultOptions_RegistersTheStandardEnumConverterLast()
     {
-        var converters = JsonOptions.DefaultOptions.Converters;
-        var specific = converters.ToList().FindIndex(c => c is TransactionStatusJsonConverter);
-        var catchAll = converters.ToList().FindIndex(c => c is System.Text.Json.Serialization.JsonStringEnumConverter);
+        var converters = JsonOptions.DefaultOptions.Converters.ToList();
+        var specific = converters.FindIndex(c => c is TransactionStatusJsonConverter);
+        var catchAll = converters.FindIndex(c => c is System.Text.Json.Serialization.JsonStringEnumConverter);
 
         Assert.IsTrue(specific >= 0, "TransactionStatusJsonConverter is not registered.");
         Assert.IsTrue(catchAll >= 0, "JsonStringEnumConverter is not registered.");
