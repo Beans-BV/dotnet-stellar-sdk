@@ -2512,6 +2512,11 @@ public class StellarRpcServerTest
         Assert.IsNotNull(meta);
         Assert.IsInstanceOfType(meta, typeof(TransactionMetaV3));
 
+        // The V3 meta's Soroban return value (set_currency_rate returns void) must surface on ResultValue.
+        Assert.IsInstanceOfType(response.ResultValue, typeof(SCVoid));
+        Assert.IsNull(response.WasmHash);
+        Assert.IsNull(response.CreatedContractId);
+
         #region Events
 
         var events = response.Events;
