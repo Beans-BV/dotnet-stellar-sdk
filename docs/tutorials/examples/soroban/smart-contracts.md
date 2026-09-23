@@ -216,10 +216,22 @@ private static async Task<SimulateTransactionResponse> SimulateAndUpdateTransact
     {
         tx.SetSorobanTransactionData(transactionData);
     }
-    var authorization = simulateResponse.SorobanAuthorization;
-    if (authorization != null)
+    // Probe presence on Results[0].Auth, not on SorobanAuthorization. Reading that property decodes every
+    // entry's base64 XDR, so on a malformed blob it throws InvalidDataException rather than answering
+    // null — which is what makes it unusable as a guard. Going through Results keeps the decode to the
+    // one place the value is used, so a caller can wrap that line to handle a malformed entry.
+    // `Results[0]` is null-checked because the array is not copied on assignment: code still holding the
+    // reference can write a null into it after deserialization, which is why SorobanAuthorization's own
+    // getter keeps the same check.
+    //
+    // This still cannot tell "no authorization required" apart from "the reply carried no results":
+    // SorobanAuthorization answers null for both, and an empty `results` is legitimate when simulating an
+    // operation other than InvokeHostFunction, so both are treated here as "nothing to attach".
+    var result = simulateResponse.Results is { Length: > 0 } results ? results[0] : null;
+    if (result?.Auth != null)
     {
-        tx.SetSorobanAuthorization(authorization);
+        // Non-null by construction: derived from exactly the entries just checked.
+        tx.SetSorobanAuthorization(simulateResponse.SorobanAuthorization!);
     }
 
     // Add a resource fee
