@@ -70,7 +70,8 @@ public class TransactionStatusJsonConverter : JsonConverter<TransactionInfo.Tran
         }
 
         throw new JsonException(
-            $"Value '{value}' cannot be converted to type {nameof(TransactionInfo.TransactionStatus)}.");
+            $"Value {UntrustedJsonValue.Describe(value)} cannot be converted to type " +
+            $"{nameof(TransactionInfo.TransactionStatus)}.");
     }
 
     /// <inheritdoc />
