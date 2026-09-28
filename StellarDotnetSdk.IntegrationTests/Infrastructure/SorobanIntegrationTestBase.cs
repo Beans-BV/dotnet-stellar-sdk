@@ -96,12 +96,18 @@ public abstract class SorobanIntegrationTestBase : IntegrationTestBase
         sim.Error.Should().BeNull("simulation should not error: {0}", sim.Error);
         // A successful simulation must return assembled transaction data; otherwise the caller's
         // placeholder resources/fee would be signed and sent, failing on-chain as a confusing FAILED.
-        sim.SorobanTransactionData.Should()
+        // Both properties decode base64 XDR on every read, so read each once. Probe auth presence on
+        // Results[0].Auth: a `SorobanAuthorization != null` guard throws on a malformed entry instead of
+        // answering null (see Examples/Soroban/Helpers/SorobanHelpers.cs for the full rationale).
+        var transactionData = sim.SorobanTransactionData;
+        transactionData.Should()
             .NotBeNull("a successful simulation should return assembled Soroban transaction data");
-        tx.SetSorobanTransactionData(sim.SorobanTransactionData!);
-        if (sim.SorobanAuthorization != null)
+        tx.SetSorobanTransactionData(transactionData!);
+        var result = sim.Results is { Length: > 0 } results ? results[0] : null;
+        if (result?.Auth != null)
         {
-            tx.SetSorobanAuthorization(sim.SorobanAuthorization);
+            var authorization = sim.SorobanAuthorization!;
+            tx.SetSorobanAuthorization(authorization);
         }
         tx.AddResourceFee((sim.MinResourceFee ?? 0) + 100_000);
         tx.Sign(signer);

@@ -111,15 +111,19 @@ All notable changes to this project are documented here. The format is based on
   the registration and throw `InvalidOperationException` instead. Because these converters are necessarily
   public and look exactly like the ones this SDK *does* register globally in `JsonOptions`, the mistake was
   worth converting into an ordinary exception rather than leaving to a comment.
-  One diagnostic consequence is worth knowing: reading the array delegates to a fresh serializer session,
-  which restarts the JSON path at the array, so *every* failure inside one of these four arrays — not just a
-  null element — arrived as a bare `$[1].type`, naming neither the array it came from nor where that array
-  sits. Failures are now rethrown with `Path` unset, which is what makes System.Text.Json fill in the path it
-  tracks in the outer session: `$.stateChanges` rather than `$[1].type`. That is coarser than pointing at the
-  offending element, and deliberately so — a converter knows its own field name but not its ancestors, so any
-  path computed here would be wrong for `results[i].auth`, which is not a root-level property. The element
-  index and the failing field both survive in the exception message, and `JsonException.Path` is now always a
-  true prefix of where the value lives rather than occasionally a fabricated location
+  **Diagnostic cost:** `JsonException.Path` is less precise for *every* failure inside these four arrays, not
+  just a null element. A type mismatch inside `stateChanges` used to report `$.stateChanges[1].type`; it now
+  reports `$.stateChanges`, and a failure inside `results[i].auth` reports only `$.results`. Reading the array
+  delegates to a fresh serializer session that restarts the path at the array, so the converter rethrows with
+  `Path` unset and System.Text.Json fills in the outer path, which stops at the array. Computing a deeper path
+  isn't possible, because a converter knows its own field name but not its ancestors, so a computed path would
+  be wrong for the nested `auth` array. This trade is deliberate: a converter is the only place that can raise
+  `JsonException` on the wire while the `init` accessor raises `ArgumentException` on assignment, and that
+  distinction was ranked above path precision. `Path` is always a true prefix of where the value lives, but the
+  message recovers the rest only in part. A type mismatch keeps its array-relative locator (`$[1].type`) and a
+  null element names its index. A missing required field names the field but not the element: an entry
+  without `type` gives the same message at any index. For a failure inside `auth`, the message carries the
+  index within `auth` but not which `results` entry holds it; only `InnerException.Path` does
   ([#229](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/229)).
 - `SimulateTransactionResponse.MinResourceFee` and `.RestorePreamble.MinResourceFee` now carry
   `[JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]`. Stellar RPC tags the two fields

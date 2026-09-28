@@ -101,7 +101,8 @@ internal static class SorobanHelpers
         if (result?.Auth != null)
         {
             // Non-null by construction: derived from exactly the entries just checked.
-            tx.SetSorobanAuthorization(simulateResponse.SorobanAuthorization!);
+            var authorization = simulateResponse.SorobanAuthorization!;
+            tx.SetSorobanAuthorization(authorization);
         }
 
         tx.AddResourceFee((simulateResponse.MinResourceFee ?? 0) + 100000);

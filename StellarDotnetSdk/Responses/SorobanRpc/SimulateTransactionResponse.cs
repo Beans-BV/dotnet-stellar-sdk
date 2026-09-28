@@ -356,8 +356,13 @@ public class SimulateTransactionResponse
         ///         <c>"-500"</c> both satisfy the attribute and still describe a restore this SDK would submit
         ///         underfunded. Nothing here range-checks the value, and <see cref="SorobanTransactionData" />
         ///         — the other half of the documented flow — carries no presence requirement at all, so a
-        ///         preamble consisting of nothing but a fee still deserializes. Callers who act on a preamble
-        ///         should check both fields rather than assume deserialization vouched for them.
+        ///         preamble consisting of nothing but a fee still deserializes. That matches the wire contract
+        ///         rather than a guarantee: Stellar RPC tags it <c>json:"transactionData,omitempty"</c> and sends
+        ///         <c>transactionDataJson</c> in its place when a request asks for JSON-format XDR. This SDK never
+        ///         asks for that, so a server replying to it includes <c>transactionData</c> in every preamble;
+        ///         the field is left optional to match the upstream contract and the top-level
+        ///         <c>transactionData</c>, not because a reply to this SDK can lack it. Callers who act on a
+        ///         preamble should check both fields rather than assume deserialization vouched for them.
         ///     </para>
         ///     <para>
         ///         <c>required</c> carries the guarantee to the other entry point, for the reason given on

@@ -95,6 +95,8 @@ public abstract class NonNullElementArrayJsonConverter<T> : JsonConverter<T[]?> 
             throw new JsonException($"Failed to read the '{_wireName}' array: {ex.Message}", ex);
         }
 
+        // Unreachable through the serializer: HandleNull is false for a reference type, so System.Text.Json
+        // answers a JSON null itself and never calls Read for it. Kept for a caller invoking Read directly.
         if (array == null)
         {
             return null;
@@ -135,6 +137,9 @@ public abstract class NonNullElementArrayJsonConverter<T> : JsonConverter<T[]?> 
         // RespectNullableAnnotations included — is left to police the element type on the way out. The
         // array is stored by reference and never copied, so a caller that still holds it can write a null
         // in after the accessor's check passed; without this, that null is serialized silently.
+        //
+        // The null test is unreachable through the serializer, which writes a null array itself (HandleNull
+        // is false for a reference type). Kept for a caller invoking Write directly.
         if (value != null)
         {
             for (var i = 0; i < value.Length; i++)

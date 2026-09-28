@@ -225,30 +225,19 @@ private static async Task<SimulateTransactionResponse> SimulateAndUpdateTransact
     StellarRpcServer server = new(TestNetSorobanUrl);
     var simulateResponse = await server.SimulateTransaction(tx);
 
-    // Read each property ONCE into a local: both decode the server's base64 XDR on every access, so
-    // `if (x.SorobanTransactionData != null) { use(x.SorobanTransactionData); }` decodes twice, and the
-    // `!= null` test itself throws InvalidDataException on a malformed blob rather than yielding null.
+    // Read each property once: both decode base64 XDR on every access.
     var transactionData = simulateResponse.SorobanTransactionData;
     if (transactionData != null)
     {
         tx.SetSorobanTransactionData(transactionData);
     }
-    // Probe presence on Results[0].Auth, not on SorobanAuthorization. Reading that property decodes every
-    // entry's base64 XDR, so on a malformed blob it throws InvalidDataException rather than answering
-    // null — which is what makes it unusable as a guard. Going through Results keeps the decode to the
-    // one place the value is used, so a caller can wrap that line to handle a malformed entry.
-    // `Results[0]` is null-checked because the array is not copied on assignment: code still holding the
-    // reference can write a null into it after deserialization, which is why SorobanAuthorization's own
-    // getter keeps the same check.
-    //
-    // This still cannot tell "no authorization required" apart from "the reply carried no results":
-    // SorobanAuthorization answers null for both, and an empty `results` is legitimate when simulating an
-    // operation other than InvokeHostFunction, so both are treated here as "nothing to attach".
+    // Check for auth entries via Results[0].Auth: SorobanAuthorization throws on a malformed entry
+    // rather than returning null, so it can't be used as the presence check.
     var result = simulateResponse.Results is { Length: > 0 } results ? results[0] : null;
     if (result?.Auth != null)
     {
-        // Non-null by construction: derived from exactly the entries just checked.
-        tx.SetSorobanAuthorization(simulateResponse.SorobanAuthorization!);
+        var authorization = simulateResponse.SorobanAuthorization!;
+        tx.SetSorobanAuthorization(authorization);
     }
 
     tx.AddResourceFee((simulateResponse.MinResourceFee ?? 0) + 100000);

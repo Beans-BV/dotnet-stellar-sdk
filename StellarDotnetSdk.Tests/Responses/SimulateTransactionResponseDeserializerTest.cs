@@ -407,8 +407,10 @@ public class SimulateTransactionResponseDeserializerTest
 
         var exception = Assert.ThrowsException<JsonException>(() =>
             JsonSerializer.Deserialize<SimulateTransactionResponse>(json, JsonOptions.DefaultOptions));
-        // System.Text.Json names the CLR property, not the JSON one. Assert on that exact phrase so the test
-        // cannot pass on the incidental "type" inside "JSON deserialization for type '...'".
+        // System.Text.Json names the property by its effective JSON name (JsonPropertyInfo.Name). That is 'Type'
+        // rather than the wire's "type" only because JsonOptions.DefaultOptions sets no PropertyNamingPolicy.
+        // Assert on that exact phrase so the test cannot pass on the incidental "type" inside
+        // "JSON deserialization for type '...'".
         StringAssert.Contains(exception.Message, "missing required properties including: 'Type'");
     }
 
