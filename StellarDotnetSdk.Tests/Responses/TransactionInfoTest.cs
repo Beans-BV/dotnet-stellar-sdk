@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Responses.SorobanRpc;
@@ -239,6 +240,37 @@ public class TransactionInfoTest
             Status = TransactionInfo.TransactionStatus.SUCCESS,
             ResultMetaXdr = resultMetaXdr,
         };
+    }
+
+    /// <summary>
+    ///     Runs <paramref name="action" /> and counts the exceptions thrown on this thread while it runs, caught or
+    ///     not. A property that answers <c>null</c> through a <c>catch</c> and one that answers it through a guard
+    ///     look identical from the outside; this tells them apart. Only the calling thread is counted, so exceptions
+    ///     from tests running in parallel do not leak in.
+    /// </summary>
+    private static int CountThrownExceptions(Action action)
+    {
+        var threadId = Environment.CurrentManagedThreadId;
+        var count = 0;
+
+        void OnFirstChance(object? sender, FirstChanceExceptionEventArgs e)
+        {
+            if (Environment.CurrentManagedThreadId == threadId)
+            {
+                count++;
+            }
+        }
+
+        AppDomain.CurrentDomain.FirstChanceException += OnFirstChance;
+        try
+        {
+            action();
+        }
+        finally
+        {
+            AppDomain.CurrentDomain.FirstChanceException -= OnFirstChance;
+        }
+        return count;
     }
 
     private static TransactionInfo FailedTransaction(string? resultMetaXdr)
@@ -563,6 +595,25 @@ public class TransactionInfoTest
     }
 
     /// <summary>
+    ///     Verifies that an empty <c>resultMetaXdr</c> is treated as missing: ResultValue is null without first
+    ///     attempting — and failing — a base-64 and XDR decode of zero bytes.
+    /// </summary>
+    [TestMethod]
+    public void ResultValue_WithEmptyResultMetaXdr_ReturnsNullWithoutThrowing()
+    {
+        // Arrange
+        var transaction = SuccessfulTransaction("");
+        SCVal? resultValue = null;
+
+        // Act
+        var thrown = CountThrownExceptions(() => resultValue = transaction.ResultValue);
+
+        // Assert
+        Assert.IsNull(resultValue);
+        Assert.AreEqual(0, thrown, "An empty resultMetaXdr should be rejected by a guard, not by a caught exception.");
+    }
+
+    /// <summary>
     ///     Verifies that ResultValue is null — rather than throwing — when ResultMetaXdr carries an unknown
     ///     TransactionMeta version, matching the behavior of the TransactionMeta property.
     /// </summary>
@@ -771,6 +822,25 @@ public class TransactionInfoTest
     }
 
     /// <summary>
+    ///     Verifies that an empty <c>resultMetaXdr</c> is treated as missing: TransactionMeta is null without first
+    ///     attempting — and failing — a base-64 and XDR decode of zero bytes.
+    /// </summary>
+    [TestMethod]
+    public void TransactionMeta_WithEmptyResultMetaXdr_ReturnsNullWithoutThrowing()
+    {
+        // Arrange
+        var transaction = SuccessfulTransaction("");
+        StellarDotnetSdk.Soroban.TransactionMeta? meta = null;
+
+        // Act
+        var thrown = CountThrownExceptions(() => meta = transaction.TransactionMeta);
+
+        // Assert
+        Assert.IsNull(meta);
+        Assert.AreEqual(0, thrown, "An empty resultMetaXdr should be rejected by a guard, not by a caught exception.");
+    }
+
+    /// <summary>
     ///     Pins the set of TransactionMeta union discriminants the generated XDR layer knows about. ResultValue
     ///     switches on that discriminant and reports "no return value" for anything outside {3, 4}, which is the
     ///     right answer only while 0-2 are the sole other arms. If a future protocol adds an arm, regenerating
@@ -800,10 +870,64 @@ public class TransactionInfoTest
             () => TransactionMeta.Decode(unknown),
             "Discriminant 5 is not a known TransactionMeta arm; if this now decodes, the XDR was regenerated " +
             "with a new metadata version and TransactionInfo.ResultValue must handle it explicitly.");
-        StringAssert.Contains(exception.Message, "5");
+        StringAssert.Contains(exception.Message, "Unknown discriminant value: 5");
         return;
 
         static byte[] BigEndian(int value) =>
             [(byte)(value >> 24), (byte)(value >> 16), (byte)(value >> 8), (byte)value];
+    }
+
+    /// <summary>
+    ///     Pins that <see cref="SCVal.FromXdr" /> maps every <c>SCValType</c> — and, for <c>SCV_ERROR</c>, every
+    ///     <c>SCErrorType</c> — that the generated XDR layer can decode. ResultValue deliberately lets the mapping's
+    ///     "Unknown SCVal type" / "Unknown SCError type" <see cref="InvalidOperationException" /> propagate as an SDK
+    ///     defect rather than reporting it as "no return value". Today no payload reaches either arm, because the
+    ///     generated decoders reject any other wire value first; but once StellarDotnetSdk.Xdr is regenerated with a
+    ///     new member, well-formed data from a newer network would decode cleanly and then throw out of the getter.
+    ///     This test fails first, forcing the mapping to be extended alongside the regeneration.
+    /// </summary>
+    [TestMethod]
+    public void SCValFromXdr_WithEveryGeneratedType_DoesNotReportUnknownType()
+    {
+        foreach (var type in Enum.GetValues<SCValType.SCValTypeEnum>())
+        {
+            // Arrange: a bodyless value is enough to reach the type dispatch; what the per-type mapping then does
+            // with the missing body is irrelevant here.
+            var value = BodylessXdrSCVal(type);
+
+            // Act & Assert
+            AssertNotReportedAsUnknown(() => SCVal.FromXdr(value), "Unknown SCVal type", type.ToString());
+        }
+
+        foreach (var type in Enum.GetValues<SCErrorType.SCErrorTypeEnum>())
+        {
+            // Arrange
+            var value = new XdrSCVal
+            {
+                Discriminant = SCValType.Create(SCValType.SCValTypeEnum.SCV_ERROR),
+                Error = new SCError { Discriminant = SCErrorType.Create(type) },
+            };
+
+            // Act & Assert
+            AssertNotReportedAsUnknown(() => SCVal.FromXdr(value), "Unknown SCError type", type.ToString());
+        }
+
+        return;
+
+        static void AssertNotReportedAsUnknown(Action map, string unknownTypeMessage, string type)
+        {
+            try
+            {
+                map();
+            }
+            catch (InvalidOperationException exception) when (exception.Message == unknownTypeMessage)
+            {
+                Assert.Fail($"{type} decodes from XDR but the SDK mapping reports it as unknown; extend the mapping.");
+            }
+            catch (Exception)
+            {
+                // Any other outcome means the dispatch recognised the type.
+            }
+        }
     }
 }

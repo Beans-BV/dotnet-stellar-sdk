@@ -105,8 +105,11 @@ public class TransactionInfo
     /// <summary>
     ///     (optional) The return value of the Soroban contract invocation, extracted from the transaction metadata.
     ///     Both <c>TransactionMetaV3</c> (Protocol 20-22) and <c>TransactionMetaV4</c> (Protocol 23+) are supported.
+    ///     A void-returning invocation recorded on a V3 meta yields a non-null <see cref="SCVoid" />, because V3's
+    ///     return value is a mandatory XDR field, so test for <see cref="SCVoid" /> rather than relying on
+    ///     <c>ResultValue != null</c> to tell whether the invocation produced a value.
     ///     Only present for successful transactions that carry Soroban metadata. Returns <c>null</c> — rather than
-    ///     throwing — when <see cref="ResultMetaXdr" /> is missing, is not valid base-64, is malformed or truncated,
+    ///     throwing — when <see cref="ResultMetaXdr" /> is missing or empty, is not valid base-64, is malformed or truncated,
     ///     carries an unknown union discriminant, is a metadata version that predates Soroban, holds no return
     ///     value, or holds a return value this SDK rejects as unrepresentable. A failure that instead signals a gap
     ///     in this SDK — an <see cref="SCVal" /> type the mapping does not know — still throws, because that is a
@@ -118,12 +121,11 @@ public class TransactionInfo
     {
         get
         {
-            if (Status != TransactionStatus.SUCCESS || ResultMetaXdr == null)
+            if (Status != TransactionStatus.SUCCESS || string.IsNullOrEmpty(ResultMetaXdr))
             {
                 return null;
             }
 
-            Xdr.SCVal? returnValue;
             try
             {
                 var reader = new Xdr.XdrDataInputStream(Convert.FromBase64String(ResultMetaXdr));
@@ -134,7 +136,7 @@ public class TransactionInfo
                 // default arm, so TransactionInfoTest pins the set of discriminants the XDR layer knows:
                 // regenerating StellarDotnetSdk.Xdr with a new arm fails that test and forces this switch
                 // to be revisited, rather than silently reporting "no return value" (see issue #224).
-                returnValue = meta.Discriminant switch
+                var returnValue = meta.Discriminant switch
                 {
                     3 => meta.V3?.SorobanMeta?.ReturnValue,
                     4 => meta.V4?.SorobanMeta?.ReturnValue,
@@ -160,7 +162,7 @@ public class TransactionInfo
     }
 
     /// <summary>
-    ///     Holds the transaction metadata. Returns <c>null</c> when <see cref="ResultMetaXdr" /> is missing, cannot
+    ///     Holds the transaction metadata. Returns <c>null</c> when <see cref="ResultMetaXdr" /> is missing or empty, cannot
     ///     be decoded, is a metadata version this SDK does not model (only v3 and v4 are), or contains any structure
     ///     that cannot be mapped to an SDK type. This is all-or-nothing: use <see cref="ResultValue" /> when you only
     ///     need the Soroban return value, as it does not depend on the rest of the metadata converting successfully.
@@ -172,7 +174,7 @@ public class TransactionInfo
     {
         get
         {
-            if (ResultMetaXdr == null)
+            if (string.IsNullOrEmpty(ResultMetaXdr))
             {
                 return null;
             }
