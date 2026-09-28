@@ -564,8 +564,9 @@ All notable changes to this project are documented here. The format is based on
   onto an SDK type — but it no longer sits behind a bare `catch`, so a failure that says nothing about the
   payload now propagates instead of being swallowed: an `OutOfMemoryException` while building a large
   metadata graph, or a defect in this SDK surfacing as a `NullReferenceException`, previously reached
-  callers as "this transaction has no metadata". This aligns the property with `ResultValue`, which already
-  treats an SDK mapping bug as distinct from bad input
+  callers as "this transaction has no metadata". Unlike `ResultValue`, it still reports a decoded structure
+  the SDK cannot map (`InvalidOperationException`) as `null`: it is an all-or-nothing view of the metadata,
+  so an unmappable part is the same answer as no metadata
   ([#224](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/224)).
   Both properties now decide "bad payload" from one shared predicate rather than two hand-maintained clause
   lists. The lists had already diverged: neither named `AssetCodeLengthInvalidException`, which derives
@@ -575,5 +576,5 @@ All notable changes to this project are documented here. The format is based on
   predicate is the one `SimulateTransactionResponse` already used, whose set was derived empirically from a
   fuzz of these decoders, so the properties also gain `IndexOutOfRangeException` from that list; the two
   classes now call a single internal helper rather than keeping separate copies.
-  `ResultValue` keeps its one deliberate deviation — it still lets `InvalidOperationException` propagate —
-  now expressed as a deviation from the shared set rather than by re-listing the other types.
+  The `InvalidOperationException` carve-out in `ResultValue` is now expressed as an exclusion from the
+  shared set rather than by re-listing the other types.
