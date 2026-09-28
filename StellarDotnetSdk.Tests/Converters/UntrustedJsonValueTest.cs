@@ -50,11 +50,11 @@ public class UntrustedJsonValueTest
     [TestMethod]
     public void Describe_WithControlCharacters_EscapesThem()
     {
-        var described = UntrustedJsonValue.Describe("OK\r\n2026-09-06 INFO Transaction confirmed[2J");
+        var described = UntrustedJsonValue.Describe("OK\r\n2026-09-06 INFO Transaction confirmed\u001b[2J");
 
         Assert.IsFalse(described.Contains('\r'), "A carriage return survived into the message.");
         Assert.IsFalse(described.Contains('\n'), "A newline survived into the message.");
-        Assert.IsFalse(described.Contains(''), "An ESC survived into the message.");
+        Assert.IsFalse(described.Contains('\u001b'), "An ESC survived into the message.");
         StringAssert.Contains(described, "\\u000d");
         StringAssert.Contains(described, "\\u001b");
     }

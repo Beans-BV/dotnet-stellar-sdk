@@ -206,6 +206,33 @@ All notable changes to this project are documented here. The format is based on
   property the mapper never binds a duplicated discriminator would otherwise slip through, so these two
   converters now apply the same guard to the whole object and reject any duplicate — discriminator
   included — before dispatching.
+- Exception messages from `SendTransactionStatusEnumJsonConverter`, `TransactionStatusJsonConverter` and
+  `EventFilterTypeJsonConverter` — including a rejected dictionary key, which `TransactionStatusJsonConverter`
+  reads through its own property-name path — no longer copy the whole rejected value. All three still name the
+  offending literal so a wire-format mismatch stays diagnosable, but the value is now clamped to 64 UTF-16
+  code units (with its true length appended) and escaped. Previously the message grew with the payload — a
+  2 MB `status` produced a 2,000,059-character `JsonException` message — and a `\r\n` in the value forged a
+  line in whatever log the caller wrote it to. For the two status converters the value is server-supplied,
+  so it is attacker-controlled whenever the caller does not operate the RPC endpoint; `EventFilterType` is
+  request-side only and is never bound to a server response, so there the value is whatever JSON the caller
+  chose to deserialize. A conforming value is unaffected: every field this applies to carries an ASCII wire
+  literal by contract (`PENDING`, `NOT_FOUND`, `system,contract`). Escaping is a whitelist — printable
+  ASCII survives, everything else becomes `\uXXXX`, and an astral character becomes a single
+  `\UXXXXXXXX` rather than its two surrogate halves. A blacklist of "dangerous" categories cannot be
+  complete: `char.IsControl` is `Cc` only, and adding `Zl`/`Zp` (U+2028/U+2029, line terminators to
+  .NET's own `ReplaceLineEndings` and to JavaScript) and `Cf` (U+202E RIGHT-TO-LEFT OVERRIDE, which
+  visually reverses the rest of the line without needing an ANSI escape) still leaves `Cn` (U+2065 and
+  the reserved default-ignorable range, drawn as nothing), `Mn` (combining marks), `Zs` (U+00A0, which
+  forges alignment in fixed-width output) and `Co` — plus a version-skew hole, since a code point that is
+  `Cf` in a newer Unicode than the running framework's tables is `Cn` today and would pass. Three ASCII
+  characters are also escaped: the apostrophe that delimits the quoted fragment, the quotation mark that
+  would end the string in a JSON or CSV log the message is written into, and the backslash that
+  introduces every escape emitted here — without the last the encoding is ambiguous, because the six
+  characters `\u202e` arriving literally on the wire would render identically to a real U+202E, which
+  both destroys the diagnostic value being traded for and lets any downstream that unescapes `\uXXXX`
+  re-materialise the character the escaping removed. The clamp does not cut between the halves of a
+  surrogate pair, so a truncated astral character is dropped whole rather than reported as a bare
+  surrogate code unit.
 
 ### Removed
 
@@ -268,33 +295,6 @@ All notable changes to this project are documented here. The format is based on
     an SDK annotation rather than the server's own message; it now surfaces as a `SorobanRpcException`
     like any other JSON-RPC error. `JsonRpc` stays non-nullable — the specification never permits a null
     there.
-- Exception messages from `SendTransactionStatusEnumJsonConverter`, `TransactionStatusJsonConverter` and
-  `EventFilterTypeJsonConverter` — including a rejected dictionary key, which `TransactionStatusJsonConverter`
-  reads through its own property-name path — no longer copy the whole rejected value. All three still name the
-  offending literal so a wire-format mismatch stays diagnosable, but the value is now clamped to 64 UTF-16
-  code units (with its true length appended) and escaped. Previously the message grew with the payload — a
-  2 MB `status` produced a 2,000,059-character `JsonException` message — and a `\r\n` in the value forged a
-  line in whatever log the caller wrote it to. For the two status converters the value is server-supplied,
-  so it is attacker-controlled whenever the caller does not operate the RPC endpoint; `EventFilterType` is
-  request-side only and is never bound to a server response, so there the value is whatever JSON the caller
-  chose to deserialize. A conforming value is unaffected: every field this applies to carries an ASCII wire
-  literal by contract (`PENDING`, `NOT_FOUND`, `system,contract`). Escaping is a whitelist — printable
-  ASCII survives, everything else becomes `\uXXXX`, and an astral character becomes a single
-  `\UXXXXXXXX` rather than its two surrogate halves. A blacklist of "dangerous" categories cannot be
-  complete: `char.IsControl` is `Cc` only, and adding `Zl`/`Zp` (U+2028/U+2029, line terminators to
-  .NET's own `ReplaceLineEndings` and to JavaScript) and `Cf` (U+202E RIGHT-TO-LEFT OVERRIDE, which
-  visually reverses the rest of the line without needing an ANSI escape) still leaves `Cn` (U+2065 and
-  the reserved default-ignorable range, drawn as nothing), `Mn` (combining marks), `Zs` (U+00A0, which
-  forges alignment in fixed-width output) and `Co` — plus a version-skew hole, since a code point that is
-  `Cf` in a newer Unicode than the running framework's tables is `Cn` today and would pass. Three ASCII
-  characters are also escaped: the apostrophe that delimits the quoted fragment, the quotation mark that
-  would end the string in a JSON or CSV log the message is written into, and the backslash that
-  introduces every escape emitted here — without the last the encoding is ambiguous, because the six
-  characters `\u202e` arriving literally on the wire would render identically to a real U+202E, which
-  both destroys the diagnostic value being traded for and lets any downstream that unescapes `\uXXXX`
-  re-materialise the character the escaping removed. The clamp does not cut between the halves of a
-  surrogate pair, so a truncated astral character is dropped whole rather than reported as a bare
-  surrogate code unit.
 - `EventFilterTypeJsonConverter.Write` now throws `JsonException` rather than
   `ArgumentOutOfRangeException` for a value carrying undefined flag bits, matching the SDK's other
   hand-written strict enum converters — `SendTransactionStatusEnumJsonConverter`,

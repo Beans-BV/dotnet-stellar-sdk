@@ -199,11 +199,11 @@ public class TransactionInfo
             }
             // Every failure this property documents as null — see XdrDecodeFailure.IsPayloadFailure. Unlike
             // ResultValue this property does report an unmappable structure as absent metadata,
-            // InvalidOperationException included: it is an all-or-nothing view, so "some part of this graph has no SDK representation"
-            // is the same answer as "no metadata" to every caller. A bare catch also swallowed failures that
-            // say nothing about the payload — an OutOfMemoryException on a large metadata graph, or a
-            // NullReferenceException from a genuine defect in this SDK — and reported them to callers as "no
-            // metadata". Those now propagate.
+            // InvalidOperationException included: it is an all-or-nothing view, so "some part of this graph has
+            // no SDK representation" is the same answer as "no metadata" to every caller. A bare catch also
+            // swallowed failures that say nothing about the payload — an OutOfMemoryException on a large metadata
+            // graph, or a NullReferenceException from a genuine defect in this SDK — and reported them to callers
+            // as "no metadata". Those now propagate.
             catch (Exception exception) when (XdrDecodeFailure.IsPayloadFailure(exception))
             {
                 return null;
