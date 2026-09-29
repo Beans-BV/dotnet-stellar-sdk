@@ -1254,7 +1254,7 @@ public class StellarRpcServerTest
                             "after": "AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
                         }
                     ],
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -1386,7 +1386,7 @@ public class StellarRpcServerTest
                             "after": "AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
                         }
                     ],
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -1430,7 +1430,7 @@ public class StellarRpcServerTest
                             "after": null
                         }
                     ],
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -1466,7 +1466,7 @@ public class StellarRpcServerTest
                             "xdr": "AAAAAwAAABQ="
                         }
                     ],
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -1504,7 +1504,7 @@ public class StellarRpcServerTest
                             "xdr": "AAAAAwAAABQ="
                         }
                     ],
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -1538,7 +1538,7 @@ public class StellarRpcServerTest
                             "xdr": "AAAAAwAAABQ="
                         }
                     ],
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -1568,7 +1568,7 @@ public class StellarRpcServerTest
                 "result": {
                     "transactionData": "AAAA",
                     "minResourceFee": "58181",
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -1602,7 +1602,7 @@ public class StellarRpcServerTest
                 "id": "7a469b9d6ed4444893491be530862ce3",
                 "result": {
                     "stateChanges": [ { "type": "", "before": null, "after": null } ],
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -1642,7 +1642,7 @@ public class StellarRpcServerTest
                   "id": "7a469b9d6ed4444893491be530862ce3",
                   "result": {
                       "results": [ { "auth": ["{{authEntry}}"], "xdr": "AAAAAwAAABQ=" } ],
-                      "latestLedger": "14245"
+                      "latestLedger": 14245
                   }
               }
               """;
@@ -1674,7 +1674,7 @@ public class StellarRpcServerTest
                 "id": "7a469b9d6ed4444893491be530862ce3",
                 "result": {
                     "results": [ { "auth": ["AAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFmAAAAAAAAAAAAAAA="], "xdr": "AAAAAwAAABQ=" } ],
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -1705,7 +1705,7 @@ public class StellarRpcServerTest
                 "id": "7a469b9d6ed4444893491be530862ce3",
                 "result": {
                     "transactionData": "AAAAAAAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -1736,7 +1736,7 @@ public class StellarRpcServerTest
                 "id": "7a469b9d6ed4444893491be530862ce3",
                 "result": {
                     "transactionData": "AAAAAAAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUFCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -1764,7 +1764,7 @@ public class StellarRpcServerTest
             {
                 "jsonrpc": "2.0",
                 "id": "7a469b9d6ed4444893491be530862ce3",
-                "result": { "results": [null], "latestLedger": "14245" }
+                "result": { "results": [null], "latestLedger": 14245 }
             }
             """;
         using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
@@ -1796,7 +1796,7 @@ public class StellarRpcServerTest
                             "xdr": "AAAAAwAAABQ="
                         }
                     ],
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -1849,7 +1849,7 @@ public class StellarRpcServerTest
                             "after": "AAAAZAAAAAAAAAAAbmgm1V2dg5V1mq1elMcG1txjSYKZ9wEgoSBaeW8UiFoAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
                         }
                     ],
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -1974,7 +1974,7 @@ public class StellarRpcServerTest
                     "restorePreamble": {
                         "minResourceFee": "12345"
                     },
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -2011,7 +2011,7 @@ public class StellarRpcServerTest
                         "transactionData": "AAAA",
                         "minResourceFee": "12345"
                     },
-                    "latestLedger": "14245"
+                    "latestLedger": 14245
                 }
             }
             """;
@@ -2213,7 +2213,7 @@ public class StellarRpcServerTest
               "jsonrpc": "2.0",
               "id": "1",
               "result": {
-                "latestLedger": "14245"
+                "latestLedger": 14245
               }
             }
             """;
@@ -2244,7 +2244,7 @@ public class StellarRpcServerTest
               "jsonrpc": "2.0",
               "id": "1",
               "result": {
-                "latestLedger": "14245"
+                "latestLedger": 14245
               }
             }
             """;
