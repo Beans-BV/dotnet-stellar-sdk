@@ -133,6 +133,11 @@ public class StatusEnumConverterAttachmentTest
     [DataRow(typeof(Dictionary<SendTransactionResponse.SendTransactionStatus, int>), "PENDING")]
     [DataRow(typeof(Dictionary<TransactionInfo.TransactionStatus, int>), "SUCCESS")]
     [DataRow(typeof(Dictionary<EventFilterType, int>), "contract")]
+    // The two EventFilterType spellings that differ from a single literal: the combined flags (written with a
+    // bare comma, not ", ") and None (the empty key). Writing the combination with a space, or dropping the
+    // empty-key branch from ReadAsPropertyName, left the suite green until these rows existed.
+    [DataRow(typeof(Dictionary<EventFilterType, int>), "system,contract")]
+    [DataRow(typeof(Dictionary<EventFilterType, int>), "")]
     public void UsedAsADictionaryKey_RoundTripsUnderBareAndDefaultOptions(Type dictionaryType, string key)
     {
         var json = $"{{\"{key}\":1}}";
@@ -156,6 +161,7 @@ public class StatusEnumConverterAttachmentTest
     [DataRow(typeof(Dictionary<SubmitTransactionAsyncResponse.TransactionStatus, int>), "0")]
     [DataRow(typeof(Dictionary<SendTransactionResponse.SendTransactionStatus, int>), "NOPE")]
     [DataRow(typeof(Dictionary<SendTransactionResponse.SendTransactionStatus, int>), "0")]
+    [DataRow(typeof(Dictionary<SendTransactionResponse.SendTransactionStatus, int>), "pending")]
     [DataRow(typeof(Dictionary<TransactionInfo.TransactionStatus, int>), "success")]
     [DataRow(typeof(Dictionary<TransactionInfo.TransactionStatus, int>), "1")]
     [DataRow(typeof(Dictionary<EventFilterType, int>), "diagnostic")]
@@ -166,9 +172,36 @@ public class StatusEnumConverterAttachmentTest
 
         foreach (var options in new[] { new JsonSerializerOptions(), JsonOptions.DefaultOptions })
         {
-            Assert.ThrowsException<JsonException>(() => JsonSerializer.Deserialize(json, dictionaryType, options),
+            var exception = Assert.ThrowsException<JsonException>(
+                () => JsonSerializer.Deserialize(json, dictionaryType, options),
                 $"Key '{key}' was accepted for {dictionaryType.Name}.");
+            // Pin the message, not just the type, so a guard that throws an empty JsonException still fails.
+            StringAssert.Contains(exception.Message, "cannot be converted");
         }
+    }
+
+    /// <summary>
+    ///     A rejected key is echoed through the same clamp-and-escape as a rejected value. The key is as
+    ///     server-controlled as the value, but the overlong-value test in <c>UntrustedJsonValueTest</c> only
+    ///     reaches the value path: reverting a <c>ReadAsPropertyName</c> to raw interpolation left the suite green
+    ///     until this test existed. <see cref="TransactionInfo.TransactionStatus" /> has its own copy in
+    ///     <c>TransactionStatusJsonConverterTest</c>.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow(typeof(Dictionary<SubmitTransactionAsyncResponse.TransactionStatus, int>))]
+    [DataRow(typeof(Dictionary<SendTransactionResponse.SendTransactionStatus, int>))]
+    [DataRow(typeof(Dictionary<EventFilterType, int>))]
+    public void ReadAsPropertyName_WithAHostileKey_ProducesABoundedEscapedMessage(Type dictionaryType)
+    {
+        var json = "{\"FORGED\\r\\nINFO confirmed" + new string('A', 500_000) + "\":1}";
+
+        var exception = Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize(json, dictionaryType, JsonOptions.DefaultOptions));
+
+        Assert.IsTrue(exception.Message.Length < 512,
+            $"{dictionaryType.Name}: the message grew with the payload to {exception.Message.Length} characters.");
+        Assert.IsFalse(exception.Message.Contains('\n'), "A raw newline in the key reached the message.");
+        StringAssert.Contains(exception.Message, "'FORGED\\u000d\\u000aINFO confirmed");
     }
 
     /// <summary>
@@ -182,16 +215,18 @@ public class StatusEnumConverterAttachmentTest
     {
         foreach (var options in new[] { new JsonSerializerOptions(), JsonOptions.DefaultOptions })
         {
-            Assert.ThrowsException<JsonException>(() => JsonSerializer.Serialize(
+            // Each rejection pins its message, not just the type: a guard that throws an empty JsonException
+            // would still pass a type-only assertion, and leave an operator unable to tell which value was bad.
+            AssertRejectsUndefined(() => JsonSerializer.Serialize(
                 new Dictionary<SubmitTransactionAsyncResponse.TransactionStatus, int>
                     { [(SubmitTransactionAsyncResponse.TransactionStatus)99] = 1 }, options));
-            Assert.ThrowsException<JsonException>(() => JsonSerializer.Serialize(
+            AssertRejectsUndefined(() => JsonSerializer.Serialize(
                 new Dictionary<SendTransactionResponse.SendTransactionStatus, int>
                     { [(SendTransactionResponse.SendTransactionStatus)99] = 1 }, options));
-            Assert.ThrowsException<JsonException>(() => JsonSerializer.Serialize(
+            AssertRejectsUndefined(() => JsonSerializer.Serialize(
                 new Dictionary<TransactionInfo.TransactionStatus, int>
                     { [(TransactionInfo.TransactionStatus)99] = 1 }, options));
-            Assert.ThrowsException<JsonException>(() => JsonSerializer.Serialize(
+            AssertRejectsUndefined(() => JsonSerializer.Serialize(
                 new Dictionary<EventFilterType, int> { [(EventFilterType)99] = 1 }, options));
 
             // Positive control: defined values in the same key position serialize, so the rejections above are
@@ -201,4 +236,68 @@ public class StatusEnumConverterAttachmentTest
                     { [SubmitTransactionAsyncResponse.TransactionStatus.ERROR] = 1 }, options));
         }
     }
+
+    /// <summary>
+    ///     Pins the CHANGELOG's claim that the property-name overloads always write the wire literal. The
+    ///     built-in enum key handling applied the caller's <see cref="JsonSerializerOptions.DictionaryKeyPolicy" />
+    ///     (a camelCase policy wrote <c>trY_AGAIN_LATER</c>), and a key written that way is one these converters'
+    ///     own readers reject — so honouring the policy would make the type stop round-tripping.
+    /// </summary>
+    [TestMethod]
+    public void WriteAsPropertyName_IgnoresTheCallersDictionaryKeyPolicy()
+    {
+        var camel = new JsonSerializerOptions { DictionaryKeyPolicy = JsonNamingPolicy.CamelCase };
+
+        Assert.AreEqual("{\"TRY_AGAIN_LATER\":1}", JsonSerializer.Serialize(
+            new Dictionary<SubmitTransactionAsyncResponse.TransactionStatus, int>
+                { [SubmitTransactionAsyncResponse.TransactionStatus.TRY_AGAIN_LATER] = 1 }, camel));
+        Assert.AreEqual("{\"TRY_AGAIN_LATER\":1}", JsonSerializer.Serialize(
+            new Dictionary<SendTransactionResponse.SendTransactionStatus, int>
+                { [SendTransactionResponse.SendTransactionStatus.TRY_AGAIN_LATER] = 1 }, camel));
+        Assert.AreEqual("{\"NOT_FOUND\":1}", JsonSerializer.Serialize(
+            new Dictionary<TransactionInfo.TransactionStatus, int>
+                { [TransactionInfo.TransactionStatus.NOT_FOUND] = 1 }, camel));
+        Assert.AreEqual("{\"system,contract\":1}", JsonSerializer.Serialize(
+            new Dictionary<EventFilterType, int> { [EventFilterType.System | EventFilterType.Contract] = 1 },
+            new JsonSerializerOptions { DictionaryKeyPolicy = JsonNamingPolicy.SnakeCaseUpper }));
+    }
+
+    /// <summary>
+    ///     Pins the CHANGELOG's claim that a source-generated context with <c>UseStringEnumConverter = true</c>
+    ///     does not shadow the type attribute the way a runtime <see cref="JsonStringEnumConverter" /> in the
+    ///     options' <c>Converters</c> collection does: the ordinal that read as the zero or success member before
+    ///     now throws, while the literal still reads.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithSourceGeneratedStringEnumContext_StillRejectsOrdinals()
+    {
+        var context = StatusEnumSourceGenContext.Default;
+
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize("0", context.SubmitTransactionAsyncResponseTransactionStatus));
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize("0", context.SendTransactionStatus));
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize("1", context.TransactionInfoTransactionStatus));
+
+        // Positive control: the same context reads the literal, so the rejections are about the ordinal form.
+        Assert.AreEqual(SendTransactionResponse.SendTransactionStatus.PENDING,
+            JsonSerializer.Deserialize("\"PENDING\"", context.SendTransactionStatus));
+    }
+
+    private static void AssertRejectsUndefined(Func<string> serialize)
+    {
+        var exception = Assert.ThrowsException<JsonException>(() => serialize());
+        StringAssert.Contains(exception.Message, "Value '99' is not a defined");
+    }
+}
+
+[JsonSourceGenerationOptions(UseStringEnumConverter = true)]
+[JsonSerializable(typeof(SubmitTransactionAsyncResponse.TransactionStatus),
+    TypeInfoPropertyName = "SubmitTransactionAsyncResponseTransactionStatus")]
+[JsonSerializable(typeof(SendTransactionResponse.SendTransactionStatus))]
+[JsonSerializable(typeof(TransactionInfo.TransactionStatus),
+    TypeInfoPropertyName = "TransactionInfoTransactionStatus")]
+internal partial class StatusEnumSourceGenContext : JsonSerializerContext
+{
 }

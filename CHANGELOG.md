@@ -125,7 +125,13 @@ All notable changes to this project are documented here. The format is based on
   whose type-level attribute predates this change — now also implement `ReadAsPropertyName` and
   `WriteAsPropertyName`, so these enums keep working as `Dictionary` keys; a type-level converter without
   those overloads makes `Dictionary<TStatus, T>` throw `NotSupportedException`, which is not a
-  `JsonException` and so escapes a caller's `catch (JsonException)` entirely
+  `JsonException` and so escapes a caller's `catch (JsonException)` entirely. For the three status enums,
+  keys change the same way as values: the overloads always write the literal, ignoring the caller's
+  `DictionaryKeyPolicy`, and under options that register no converter for the enum they reject keys the
+  built-in handling read back — a lowercase or mixed-case literal, or an ordinal such as `"0"` — so a
+  dictionary stored under those keys no longer loads. Unlike a runtime
+  `JsonStringEnumConverter`, a source-generated context with `UseStringEnumConverter = true` does not
+  shadow the type attribute: there `0` read as `PENDING` before and now throws
   ([#230](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/230)).
 - **Breaking:** `SimulateTransactionResponse.StateChanges`, `.Results`, `.Events` and
   `.Results[i].Auth` reject a `null`
