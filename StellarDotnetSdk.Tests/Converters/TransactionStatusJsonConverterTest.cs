@@ -117,8 +117,12 @@ public class TransactionStatusJsonConverterTest
     [TestMethod]
     public void Serialize_WithUndefinedStatus_ThrowsJsonException()
     {
-        Assert.ThrowsException<JsonException>(() =>
+        var exception = Assert.ThrowsException<JsonException>(() =>
             JsonSerializer.Serialize((TransactionInfo.TransactionStatus)99, JsonOptions.DefaultOptions));
+
+        // Pin the message, not just the type: without this the guard could throw an empty JsonException and
+        // every assertion here would still pass, leaving an operator with no way to tell which value was bad.
+        Assert.AreEqual("Value '99' is not a defined TransactionStatus.", exception.Message);
     }
 
     /// <summary>
@@ -199,6 +203,26 @@ public class TransactionStatusJsonConverterTest
                 json, JsonOptions.DefaultOptions));
 
         StringAssert.Contains(exception.Message, "cannot be converted");
+    }
+
+    /// <summary>
+    ///     Verifies a rejected dictionary key is echoed through the same clamp-and-escape as a rejected value. The
+    ///     key is as server-controlled as the value, so the property-name path must not reopen the unbounded,
+    ///     log-forging message the value path closed.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_AsDictionaryKey_WithHostileKey_ProducesABoundedEscapedMessage()
+    {
+        var json = "{\"FORGED\\r\\nINFO confirmed" + new string('A', 500_000) + "\":1}";
+
+        var exception = Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<Dictionary<TransactionInfo.TransactionStatus, int>>(
+                json, JsonOptions.DefaultOptions));
+
+        Assert.IsTrue(exception.Message.Length < 512,
+            $"Exception message grew with the payload: {exception.Message.Length} characters.");
+        Assert.IsFalse(exception.Message.Contains('\n'), "A raw newline in the key reached the message.");
+        StringAssert.Contains(exception.Message, "'FORGED\\u000d\\u000aINFO confirmed");
     }
 
     /// <summary>

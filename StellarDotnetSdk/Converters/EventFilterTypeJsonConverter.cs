@@ -13,7 +13,8 @@ namespace StellarDotnetSdk.Converters;
 ///     The built-in <see cref="JsonStringEnumConverter" /> cannot be used here: for a <see cref="FlagsAttribute" />
 ///     enum it joins members with <c>", "</c> (a comma <em>and a space</em>), and RPC splits the value on a bare
 ///     comma without trimming, so <c>"system, contract"</c> is rejected with
-///     <c>filter type invalid: if set, type must be either 'system' or 'contract'</c>.
+///     <c>filter N invalid: filter type invalid: if set, type must be either 'system' or 'contract'</c>,
+///     where <c>N</c> is the 1-based index of the offending filter.
 /// </remarks>
 public class EventFilterTypeJsonConverter : JsonConverter<EventFilterType>
 {
@@ -44,7 +45,8 @@ public class EventFilterTypeJsonConverter : JsonConverter<EventFilterType>
                 "system" => EventFilterType.System,
                 "contract" => EventFilterType.Contract,
                 _ => throw new JsonException(
-                    $"Value '{segment}' cannot be converted to type {nameof(EventFilterType)}. " +
+                    $"Value {UntrustedJsonValue.Describe(segment)} cannot be converted to type " +
+                    $"{nameof(EventFilterType)}. " +
                     "Stellar RPC accepts only 'system' and 'contract', comma-separated and without spaces."),
             };
         }
@@ -53,14 +55,40 @@ public class EventFilterTypeJsonConverter : JsonConverter<EventFilterType>
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentOutOfRangeException">
+    /// <exception cref="JsonException">
     ///     Thrown when <paramref name="value" /> contains bits that are not defined <see cref="EventFilterType" />
     ///     flags — for example a raw cast such as <c>(EventFilterType)99</c>. Assigning such a value to
-    ///     <see cref="GetEventsRequest.EventFilter.Type" /> already throws, so this is a backstop for values that
-    ///     reach the serializer by another route.
+    ///     <see cref="GetEventsRequest.EventFilter.Type" /> already throws
+    ///     <see cref="ArgumentOutOfRangeException" />, so this is a backstop for values that reach the serializer
+    ///     by another route.
+    ///     <para>
+    ///         The two exception types are deliberate and describe different failures: the setter rejects a bad
+    ///         <em>argument</em>, while a converter reports a <em>serialization</em> failure and so throws what
+    ///         the SDK's other hand-written strict enum converters throw — this one,
+    ///         <see cref="SendTransactionStatusEnumJsonConverter" />, <see cref="TransactionStatusJsonConverter" />
+    ///         and <see cref="LiquidityPoolTypeEnumJsonConverter" /> all reject an undefined value on write with
+    ///         <see cref="JsonException" />, so one <c>catch (JsonException)</c> around a
+    ///         <c>JsonSerializer.Serialize</c> that uses <see cref="JsonOptions.DefaultOptions" /> covers all
+    ///         four. The qualifier matters: only a converter actually in play can enforce anything, and of the
+    ///         four only <see cref="EventFilterType" /> carries a type-level
+    ///         <see cref="JsonConverterAttribute" />, so under a bare <see cref="JsonSerializerOptions" /> this
+    ///         one stays strict while <c>LiquidityPoolTypeEnum</c> falls through to the catch-all and writes the
+    ///         bare number.
+    ///     </para>
+    ///     <para>
+    ///         This is not true of every converter in <see cref="JsonOptions.DefaultOptions" />: the catch-all
+    ///         <see cref="JsonStringEnumConverter" /> registered last handles every enum without a dedicated
+    ///         converter and writes an undefined value as its bare number without throwing at all.
+    ///     </para>
     /// </exception>
     public override void Write(Utf8JsonWriter writer, EventFilterType value, JsonSerializerOptions options)
     {
-        writer.WriteStringValue(value.ToRequestValue());
+        // One decision point: the same switch that produces the wire spelling also decides whether one exists.
+        if (!value.TryToRequestValue(out var requestValue))
+        {
+            throw new JsonException($"Value '{value}' is not a defined {nameof(EventFilterType)}.");
+        }
+
+        writer.WriteStringValue(requestValue);
     }
 }
