@@ -30,28 +30,7 @@ public class EventFilterTypeJsonConverter : JsonConverter<EventFilterType>
                 $"Expected a string value for {nameof(EventFilterType)} but found {reader.TokenType}.");
         }
 
-        var value = reader.GetString();
-        if (string.IsNullOrEmpty(value))
-        {
-            // RPC treats an empty set as "no type filter", i.e. every event type.
-            return EventFilterType.None;
-        }
-
-        var result = EventFilterType.None;
-        foreach (var segment in value!.Split(','))
-        {
-            result |= segment switch
-            {
-                "system" => EventFilterType.System,
-                "contract" => EventFilterType.Contract,
-                _ => throw new JsonException(
-                    $"Value {UntrustedJsonValue.Describe(segment)} cannot be converted to type " +
-                    $"{nameof(EventFilterType)}. " +
-                    "Stellar RPC accepts only 'system' and 'contract', comma-separated and without spaces."),
-            };
-        }
-
-        return result;
+        return ParseWireValue(reader.GetString());
     }
 
     /// <inheritdoc />
@@ -65,17 +44,20 @@ public class EventFilterTypeJsonConverter : JsonConverter<EventFilterType>
     ///         The two exception types are deliberate and describe different failures: the setter rejects a bad
     ///         <em>argument</em>, while a converter reports a <em>serialization</em> failure and so throws what
     ///         the SDK's other hand-written strict enum converters throw — this one,
+    ///         <see cref="SubmitTransactionAsyncStatusJsonConverter" />,
     ///         <see cref="SendTransactionStatusEnumJsonConverter" />, <see cref="TransactionStatusJsonConverter" />
     ///         and <see cref="LiquidityPoolTypeEnumJsonConverter" /> all reject an undefined value on write with
     ///         <see cref="JsonException" />, so one <c>catch (JsonException)</c> around a
     ///         <c>JsonSerializer.Serialize</c> that uses <see cref="JsonOptions.DefaultOptions" /> covers all
-    ///         four. The qualifier matters: only a converter actually in play can enforce anything, and of the
-    ///         four only <see cref="EventFilterType" />,
+    ///         five. The qualifier matters: only a converter actually in play can enforce anything. Of the five,
+    ///         four enums — <see cref="EventFilterType" />,
+    ///         <see cref="Responses.SubmitTransactionAsyncResponse.TransactionStatus" />,
     ///         <see cref="Responses.SorobanRpc.SendTransactionResponse.SendTransactionStatus" /> and
-    ///         <see cref="Responses.SorobanRpc.TransactionInfo.TransactionStatus" /> carry a type-level
-    ///         <see cref="JsonConverterAttribute" />, so under a bare <see cref="JsonSerializerOptions" /> those
-    ///         three stay strict while <c>LiquidityPoolTypeEnum</c> falls through to the catch-all and writes the
-    ///         bare number.
+    ///         <see cref="Responses.SorobanRpc.TransactionInfo.TransactionStatus" /> — carry a type-level
+    ///         <see cref="JsonConverterAttribute" /> and so stay strict under a bare
+    ///         <see cref="JsonSerializerOptions" />; only <c>LiquidityPoolTypeEnum</c> does not, and on its own
+    ///         falls through to the catch-all and writes the bare number (its response properties carry their
+    ///         own property-level pins).
     ///     </para>
     ///     <para>
     ///         This is not true of every converter in <see cref="JsonOptions.DefaultOptions" />: the catch-all
@@ -106,27 +88,7 @@ public class EventFilterTypeJsonConverter : JsonConverter<EventFilterType>
     public override EventFilterType ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
-        var value = reader.GetString();
-        if (string.IsNullOrEmpty(value))
-        {
-            return EventFilterType.None;
-        }
-
-        var result = EventFilterType.None;
-        foreach (var segment in value!.Split(','))
-        {
-            result |= segment switch
-            {
-                "system" => EventFilterType.System,
-                "contract" => EventFilterType.Contract,
-                _ => throw new JsonException(
-                    $"Value {UntrustedJsonValue.Describe(segment)} cannot be converted to type " +
-                    $"{nameof(EventFilterType)}. " +
-                    "Stellar RPC accepts only 'system' and 'contract', comma-separated and without spaces."),
-            };
-        }
-
-        return result;
+        return ParseWireValue(reader.GetString());
     }
 
     /// <inheritdoc />
@@ -145,5 +107,36 @@ public class EventFilterTypeJsonConverter : JsonConverter<EventFilterType>
         }
 
         writer.WritePropertyName(requestValue);
+    }
+
+    /// <summary>
+    ///     Parses the RPC wire spelling shared by values and dictionary keys. One decision point, as on the write
+    ///     side: <c>Read</c> and <c>ReadAsPropertyName</c> accept exactly the same spellings because they are the
+    ///     same code, so a new filter type or a change to the rejection message cannot land in only one of them.
+    /// </summary>
+    /// <exception cref="JsonException">Thrown when a segment is not an event type Stellar RPC accepts.</exception>
+    private static EventFilterType ParseWireValue(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            // RPC treats an empty set as "no type filter", i.e. every event type.
+            return EventFilterType.None;
+        }
+
+        var result = EventFilterType.None;
+        foreach (var segment in value!.Split(','))
+        {
+            result |= segment switch
+            {
+                "system" => EventFilterType.System,
+                "contract" => EventFilterType.Contract,
+                _ => throw new JsonException(
+                    $"Value {UntrustedJsonValue.Describe(segment)} cannot be converted to type " +
+                    $"{nameof(EventFilterType)}. " +
+                    "Stellar RPC accepts only 'system' and 'contract', comma-separated and without spaces."),
+            };
+        }
+
+        return result;
     }
 }

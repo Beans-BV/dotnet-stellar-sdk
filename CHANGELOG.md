@@ -121,7 +121,7 @@ All notable changes to this project are documented here. The format is based on
   `JsonSerializer.Serialize(SendTransactionStatus.PENDING, new JsonSerializerOptions())` emitted `0` and
   now emits `"PENDING"`, so a value persisted as a number by an earlier release no longer round-trips
   through the same call. Code that round-tripped one of these enums as a bare integer must
-  store the literal instead. All four strict enum converters — including `EventFilterTypeJsonConverter`,
+  store the literal instead. All four type-level converters — including `EventFilterTypeJsonConverter`,
   whose type-level attribute predates this change — now also implement `ReadAsPropertyName` and
   `WriteAsPropertyName`, so these enums keep working as `Dictionary` keys; a type-level converter without
   those overloads makes `Dictionary<TStatus, T>` throw `NotSupportedException`, which is not a
@@ -430,20 +430,22 @@ All notable changes to this project are documented here. The format is based on
     there.
 - `EventFilterTypeJsonConverter.Write` now throws `JsonException` rather than
   `ArgumentOutOfRangeException` for a value carrying undefined flag bits, matching the SDK's other
-  hand-written strict enum converters — `SendTransactionStatusEnumJsonConverter`,
-  `TransactionStatusJsonConverter` and `LiquidityPoolTypeEnumJsonConverter` — so one
-  `catch (JsonException)` around a `JsonSerializer.Serialize` that uses `JsonOptions.DefaultOptions` covers
-  all four. Both halves of that qualifier matter. It does not extend to every converter in
-  `JsonOptions.DefaultOptions`: the catch-all `JsonStringEnumConverter` registered last handles every enum
-  without a dedicated converter and writes an undefined value as its bare number without throwing at all.
-  And it is specific to those options: of the four, `EventFilterType`,
-  `SendTransactionResponse.SendTransactionStatus` and `TransactionInfo.TransactionStatus` carry a
-  type-level `[JsonConverter]`, so under a bare `JsonSerializerOptions` they stay strict while
-  `LiquidityPoolTypeEnum` falls through to the catch-all. Assigning an undefined value to `GetEventsRequest.EventFilter.Type` still
-  throws `ArgumentOutOfRangeException` — that is a rejected *argument*, raised at assignment, and is
-  unchanged. This entry is deliberately not marked breaking: the `ArgumentOutOfRangeException` it replaces
-  never shipped, because `EventFilterType` and its converter are themselves new in this same unreleased
-  section, so no released version ever exhibited the old behaviour.
+  hand-written strict enum converters — `SubmitTransactionAsyncStatusJsonConverter`,
+  `SendTransactionStatusEnumJsonConverter`, `TransactionStatusJsonConverter` and
+  `LiquidityPoolTypeEnumJsonConverter` — so one `catch (JsonException)` around a
+  `JsonSerializer.Serialize` that uses `JsonOptions.DefaultOptions` covers all five. Both halves of that
+  qualifier matter. It does not extend to every converter in `JsonOptions.DefaultOptions`: the catch-all
+  `JsonStringEnumConverter` registered last handles every enum without a dedicated converter and writes an
+  undefined value as its bare number without throwing at all. And it is specific to those options: of the
+  five, four enums — `EventFilterType`, `SubmitTransactionAsyncResponse.TransactionStatus`,
+  `SendTransactionResponse.SendTransactionStatus` and `TransactionInfo.TransactionStatus` — carry a
+  type-level `[JsonConverter]` and so stay strict under a bare `JsonSerializerOptions`; only
+  `LiquidityPoolTypeEnum` does not, and on its own falls through to the catch-all (its response properties
+  carry their own pins). Assigning an undefined value to `GetEventsRequest.EventFilter.Type` still throws
+  `ArgumentOutOfRangeException` — that is a rejected *argument*, raised at assignment, and is unchanged.
+  This entry is deliberately not marked breaking: the `ArgumentOutOfRangeException` it replaces never
+  shipped, because `EventFilterType` and its converter are themselves new in this same unreleased section,
+  so no released version ever exhibited the old behaviour.
 - **Breaking:** `SimulateTransactionResponse.SorobanAuthorization` is now `[JsonIgnore]`, matching the
   `SorobanTransactionData` property beside it. Serialization reads every property, so a response
   carrying a malformed `auth` entry threw `InvalidDataException` from inside `JsonSerializer.Serialize`

@@ -7,6 +7,7 @@ using StellarDotnetSdk.Converters;
 using StellarDotnetSdk.Requests.SorobanRpc;
 using StellarDotnetSdk.Responses;
 using StellarDotnetSdk.Responses.SorobanRpc;
+using LiquidityPoolTypeEnum = StellarDotnetSdk.Xdr.LiquidityPoolType.LiquidityPoolTypeEnum;
 
 namespace StellarDotnetSdk.Tests.Converters;
 
@@ -47,6 +48,25 @@ public class StatusEnumConverterAttachmentTest
             $"{enumType.Name} has no type-level [JsonConverter]. Deserialized on its own under an options " +
             "instance that registers no converter for it, a bare integer maps by ordinal.");
         Assert.AreEqual(expectedConverter, attribute.ConverterType);
+    }
+
+    /// <summary>
+    ///     Pins the negative half of the documented split: the CHANGELOG and the
+    ///     <see cref="EventFilterTypeJsonConverter" /> write remarks both say <c>LiquidityPoolTypeEnum</c> is the
+    ///     one strict-converter enum <em>without</em> a type-level attribute, so it falls through to the built-in
+    ///     handling under bare options. If it is ever pinned too, this fails and points at the two documents to
+    ///     update, instead of both going stale silently.
+    /// </summary>
+    [TestMethod]
+    public void LiquidityPoolTypeEnum_CarriesNoTypeLevelConverterAttribute()
+    {
+        Assert.IsNull(
+            Attribute.GetCustomAttribute(typeof(LiquidityPoolTypeEnum),
+                typeof(JsonConverterAttribute)),
+            "LiquidityPoolTypeEnum now carries a type-level [JsonConverter]: update the CHANGELOG and the " +
+            "EventFilterTypeJsonConverter.Write remarks, which both describe it as falling through to the catch-all.");
+        Assert.AreEqual("0", JsonSerializer.Serialize(
+            LiquidityPoolTypeEnum.LIQUIDITY_POOL_CONSTANT_PRODUCT, new JsonSerializerOptions()));
     }
 
     /// <summary>
@@ -273,6 +293,17 @@ public class StatusEnumConverterAttachmentTest
     {
         var context = StatusEnumSourceGenContext.Default;
 
+        // Control: the option is honoured on this leg. An enum with no converter attribute reads and writes as a
+        // string through the same context. If a toolchain ever ignored UseStringEnumConverter, the rejections
+        // below would pass without the type attribute having been contested at all.
+        Assert.AreEqual(SourceGenControlEnum.Second,
+            JsonSerializer.Deserialize("\"Second\"", context.SourceGenControlEnum));
+        Assert.AreEqual("\"Second\"",
+            JsonSerializer.Serialize(SourceGenControlEnum.Second, context.SourceGenControlEnum));
+        // ...and it still accepts an ordinal there, so the rejections below come from the type attribute and not
+        // from a string-enum handling that happens to refuse integers on its own.
+        Assert.AreEqual(SourceGenControlEnum.First, JsonSerializer.Deserialize("0", context.SourceGenControlEnum));
+
         Assert.ThrowsException<JsonException>(() =>
             JsonSerializer.Deserialize("0", context.SubmitTransactionAsyncResponseTransactionStatus));
         Assert.ThrowsException<JsonException>(() =>
@@ -292,7 +323,15 @@ public class StatusEnumConverterAttachmentTest
     }
 }
 
+/// <summary>An enum with no converter attribute: the positive control for the source-generated context.</summary>
+public enum SourceGenControlEnum
+{
+    First,
+    Second,
+}
+
 [JsonSourceGenerationOptions(UseStringEnumConverter = true)]
+[JsonSerializable(typeof(SourceGenControlEnum))]
 [JsonSerializable(typeof(SubmitTransactionAsyncResponse.TransactionStatus),
     TypeInfoPropertyName = "SubmitTransactionAsyncResponseTransactionStatus")]
 [JsonSerializable(typeof(SendTransactionResponse.SendTransactionStatus))]
