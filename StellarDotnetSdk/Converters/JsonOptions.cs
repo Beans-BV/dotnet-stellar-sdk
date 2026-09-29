@@ -34,11 +34,11 @@ public static class JsonOptions
     ///     Registered Converters:
     ///     - Polymorphic converters: OperationResponse, EffectResponse, Predicate
     ///     - Domain type converters: Asset, AssetAmount, KeyPair, LiquidityPoolId, LiquidityPoolClaimableAssetAmount, Reserve
-    ///     - Enum converters: EventFilterType and SendTransactionStatusEnum, then
+    ///     - Enum converters: EventFilterType, SendTransactionStatusEnum and TransactionStatus, then
     ///     JsonStringEnumConverter (standard) last. Registration order is significant — the standard converter
     ///     matches every enum, so it must come last or it shadows the specific ones. See the comment on the
     ///     collection below. (LiquidityPoolTypeEnum is an enum converter too, but it is registered up with the
-    ///     domain types; its position relative to the other two does not matter, only that it precedes the
+    ///     domain types; its position relative to the other three does not matter, only that it precedes the
     ///     catch-all.)
     ///     - HATEOAS link converters: LinkJsonConverter for EffectResponse and Response
     /// </remarks>
@@ -105,8 +105,12 @@ public static class JsonOptions
                 //   RPC emits. JsonStringEnumConverter, which shadowed it until this ordering was fixed, is
                 //   case-insensitive and — worse — accepts bare integers, so a malformed `"status": 0` was
                 //   silently read as the first member (PENDING) instead of being rejected.
+                // - TransactionStatus: the same hazard on getTransaction/getTransactions, and worse there —
+                //   ordinal 1 is SUCCESS, so `"status": 1` presented an unsettled transaction as successful on
+                //   the endpoint callers poll to confirm payment.
                 new EventFilterTypeJsonConverter(),
                 new SendTransactionStatusEnumJsonConverter(),
+                new TransactionStatusJsonConverter(),
                 new JsonStringEnumConverter(),
             },
         };
