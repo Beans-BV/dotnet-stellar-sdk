@@ -94,7 +94,10 @@ All notable changes to this project are documented here. The format is based on
   read (serializing an undefined cast such as `(TransactionStatus)99` now throws instead of emitting a
   bare number). It is registered on `JsonOptions.DefaultOptions` ahead of the catch-all and also pinned
   on the property with a property-level `[JsonConverter]`, so the strict wire format holds whichever
-  options instance the response is deserialized with. That pin governs the *value* grammar only: the
+  options instance the response is deserialized with. The pin applies on write too: serializing a
+  response with the caller's own options, even a plain `new JsonSerializerOptions()`, now emits
+  `"tx_status":"PENDING"` where 15.1.0 emitted the number `0`, so a response persisted that way can no
+  longer be read back as a number. That pin governs the *value* grammar only: the
   duplicate-property rejection that catches a repeated `tx_status` is `JsonOptions.DefaultOptions`'
   `AllowDuplicateProperties` setting and does not travel with the type, so a caller deserializing this body
   with their own options still gets last-wins semantics. The four valid literals are unaffected

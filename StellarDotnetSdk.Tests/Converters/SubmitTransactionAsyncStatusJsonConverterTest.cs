@@ -123,6 +123,50 @@ public class SubmitTransactionAsyncStatusJsonConverterTest
     }
 
     /// <summary>
+    ///     Pins <em>where</em> the converter is attached, not just that it is. The property comment claims the pin
+    ///     outranks a catch-all <c>JsonStringEnumConverter</c> registered on the caller's own options, which holds
+    ///     only for a property-level attribute: a type-level attribute loses to the options' <c>Converters</c>
+    ///     collection. With empty options (the test above) both placements behave the same, so moving the attribute
+    ///     from the property to the enum type left the suite green until this test existed.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_WithConsumerOwnedCatchAll_StillRejectsOrdinalStatus()
+    {
+        var options = new JsonSerializerOptions();
+        options.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<SubmitTransactionAsyncResponse>(
+                """{"tx_status":0,"hash":"aa"}""", options));
+
+        var ok = JsonSerializer.Deserialize<SubmitTransactionAsyncResponse>(
+            """{"tx_status":"PENDING","hash":"aa"}""", options);
+        Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.PENDING, ok!.TxStatus);
+    }
+
+    /// <summary>
+    ///     Rejects the strings a lenient parser would accept. The rows above are all ones the standard
+    ///     <c>JsonStringEnumConverter</c> takes; these are the ones <c>Enum.TryParse</c> takes instead — a numeric
+    ///     string, surrounding whitespace, and a comma-separated list — so replacing the exact lookup with
+    ///     <c>Enum.TryParse(value, ignoreCase: false, …)</c> left the suite green until these rows existed, while
+    ///     reading <c>"0"</c> as <see cref="SubmitTransactionAsyncResponse.TransactionStatus.PENDING" /> again.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow("\"0\"")]
+    [DataRow("\"3\"")]
+    [DataRow("\" PENDING\"")]
+    [DataRow("\"PENDING \"")]
+    [DataRow("\"DUPLICATE, TRY_AGAIN_LATER\"")]
+    public void Deserialize_WithStringALenientParserWouldAccept_ThrowsJsonException(string json)
+    {
+        var exception = Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<SubmitTransactionAsyncResponse.TransactionStatus>(json,
+                JsonOptions.DefaultOptions));
+
+        StringAssert.Contains(exception.Message, "cannot be converted to type");
+    }
+
+    /// <summary>
     ///     Verifies that an absent <c>tx_status</c> is rejected rather than defaulting to the zero member
     ///     (<c>PENDING</c>). An enum is a value type, so <c>RespectNullableAnnotations</c> cannot catch this — only
     ///     the <c>required</c> modifier on the property can. This documents behavior that already held before the
@@ -232,6 +276,27 @@ public class SubmitTransactionAsyncStatusJsonConverterTest
                 $$"""{"{{key}}":1}""", JsonOptions.DefaultOptions));
 
         StringAssert.Contains(exception.Message, "cannot be converted to type");
+    }
+
+    /// <summary>
+    ///     A rejected dictionary key is echoed through the same clamp-and-escape as a rejected value. The key is
+    ///     as server-controlled as the value, but the overlong-value test in <c>UntrustedJsonValueTest</c> only
+    ///     reaches the value path, so reverting <c>ReadAsPropertyName</c> to raw interpolation left the suite green
+    ///     until this test existed.
+    /// </summary>
+    [TestMethod]
+    public void Deserialize_AsDictionaryKey_WithHostileKey_ProducesABoundedEscapedMessage()
+    {
+        var json = "{\"FORGED\\r\\nINFO confirmed" + new string('A', 500_000) + "\":1}";
+
+        var exception = Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<Dictionary<SubmitTransactionAsyncResponse.TransactionStatus, int>>(
+                json, JsonOptions.DefaultOptions));
+
+        Assert.IsTrue(exception.Message.Length < 512,
+            $"Exception message grew with the payload: {exception.Message.Length} characters.");
+        Assert.IsFalse(exception.Message.Contains('\n'), "A raw newline in the key reached the message.");
+        StringAssert.Contains(exception.Message, "'FORGED\\u000d\\u000aINFO confirmed");
     }
 
     /// <summary>
