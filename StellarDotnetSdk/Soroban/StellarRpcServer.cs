@@ -527,7 +527,14 @@ public class StellarRpcServer : IDisposable
     /// <exception cref="TooManyRequestsException">Thrown when the server answers with HTTP 429.</exception>
     /// <exception cref="HttpResponseException">Thrown when the server answers with any other status of 300 or above.</exception>
     /// <exception cref="JsonException">
-    ///     Thrown when the response body is not valid JSON, or does not match the expected schema.
+    ///     Thrown when the response body is not valid JSON, or does not match the expected schema. That
+    ///     includes a reply which parses but does not satisfy the response type's wire contract: a missing
+    ///     <c>stateChanges[i].type</c> or <c>restorePreamble.minResourceFee</c>, or a <c>null</c> element in
+    ///     <c>events</c>, <c>results</c>, <c>results[i].auth</c> or <c>stateChanges</c>. Deserialization is
+    ///     all-or-nothing, so a malformed value in a field this SDK never reads still fails the whole call
+    ///     rather than yielding a response with the rest of the data: the alternative is handing back a
+    ///     <see cref="SimulateTransactionResponse" /> whose type declarations do not describe its contents.
+    ///     A conforming Stellar RPC server cannot provoke this.
     /// </exception>
     public Task<SimulateTransactionResponse> SimulateTransaction(
         Transaction transaction,

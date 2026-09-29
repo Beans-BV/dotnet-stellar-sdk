@@ -225,13 +225,19 @@ private static async Task<SimulateTransactionResponse> SimulateAndUpdateTransact
     StellarRpcServer server = new(TestNetSorobanUrl);
     var simulateResponse = await server.SimulateTransaction(tx);
 
-    if (simulateResponse.SorobanTransactionData != null)
+    // Read each property once: both decode base64 XDR on every access.
+    var transactionData = simulateResponse.SorobanTransactionData;
+    if (transactionData != null)
     {
-        tx.SetSorobanTransactionData(simulateResponse.SorobanTransactionData);
+        tx.SetSorobanTransactionData(transactionData);
     }
-    if (simulateResponse.SorobanAuthorization != null)
+    // Check for auth entries via Results[0].Auth: SorobanAuthorization throws on a malformed entry
+    // rather than returning null, so it can't be used as the presence check.
+    var result = simulateResponse.Results is { Length: > 0 } results ? results[0] : null;
+    if (result?.Auth != null)
     {
-        tx.SetSorobanAuthorization(simulateResponse.SorobanAuthorization);
+        var authorization = simulateResponse.SorobanAuthorization!;
+        tx.SetSorobanAuthorization(authorization);
     }
 
     tx.AddResourceFee((simulateResponse.MinResourceFee ?? 0) + 100000);

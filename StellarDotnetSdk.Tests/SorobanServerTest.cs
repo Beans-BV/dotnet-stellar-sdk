@@ -1751,12 +1751,18 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
-    ///     Verifies that a null element inside <c>results</c> yields <see langword="null" /> rather than a raw
-    ///     <see cref="NullReferenceException" />. The guard used to test only <c>Results.Length</c>, which a
-    ///     <c>[null]</c> array satisfies before the element is dereferenced.
+    ///     Verifies that a null element inside <c>results</c> is rejected where it arrives, rather than being
+    ///     carried into the response object.
+    ///     <para>
+    ///         This previously deserialized, and <see cref="SimulateTransactionResponse.SorobanAuthorization" />
+    ///         answered <see langword="null" /> for it — which a caller cannot distinguish from a simulation that
+    ///         legitimately needs no authorization. The documented assemble-and-submit flow guards on exactly
+    ///         that null, so the malformed payload would have produced a transaction submitted with no auth
+    ///         entries. Failing at deserialization is what makes the two cases distinguishable.
+    ///     </para>
     /// </summary>
     [TestMethod]
-    public async Task SimulateTransaction_WithNullResultElement_LeavesSorobanAuthorizationNull()
+    public async Task SimulateTransaction_WithNullResultElement_ThrowsJsonException()
     {
         // Arrange
         const string json =
@@ -1765,6 +1771,31 @@ public class StellarRpcServerTest
                 "jsonrpc": "2.0",
                 "id": "7a469b9d6ed4444893491be530862ce3",
                 "result": { "results": [null], "latestLedger": 14245 }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
+
+        // Act & Assert
+        var exception = await Assert.ThrowsExceptionAsync<JsonException>(
+            () => sorobanServer.SimulateTransaction(CreateDummyTransaction(false)));
+        StringAssert.Contains(exception.Message, "null element at index 0");
+    }
+
+    /// <summary>
+    ///     Positive control for the test above: an empty <c>results</c> array — the shape Stellar RPC actually
+    ///     returns for a simulation with no results — still deserializes and still reports no authorization, so
+    ///     the rejection above is about the null element and not about <c>results</c> handling in general.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithEmptyResults_LeavesSorobanAuthorizationNull()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+                "jsonrpc": "2.0",
+                "id": "7a469b9d6ed4444893491be530862ce3",
+                "result": { "results": [], "latestLedger": 14245 }
             }
             """;
         using var sorobanServer = Utils.CreateTestStellarRpcServerWithContent(json);
