@@ -187,9 +187,37 @@ public class SubmitTransactionAsyncStatusJsonConverterTest
     [TestMethod]
     public void Serialize_WithUndefinedStatus_ThrowsJsonException()
     {
-        Assert.ThrowsException<JsonException>(() =>
+        var exception = Assert.ThrowsException<JsonException>(() =>
             JsonSerializer.Serialize((SubmitTransactionAsyncResponse.TransactionStatus)99,
                 JsonOptions.DefaultOptions));
+
+        // Pin the message, not just the type: without this the guard could throw an empty JsonException and the
+        // assertion above would still pass, leaving an operator with no way to tell which value was bad.
+        StringAssert.Contains(exception.Message, "Value '99' is not a defined");
+    }
+
+    /// <summary>
+    ///     The write side of the property-level pin, which the CHANGELOG documents as a breaking change: under a
+    ///     caller's own options, even a plain one, the response now serializes <c>tx_status</c> as the literal
+    ///     where 15.1.0 wrote the number. The foreign-options tests above cover only the read direction, and the
+    ///     round-trip test serializes the bare enum under <see cref="JsonOptions.DefaultOptions" />, which reaches
+    ///     the collection registration rather than the attribute.
+    /// </summary>
+    [TestMethod]
+    public void Serialize_WithForeignOptions_WritesTheStatusLiteral()
+    {
+        var foreignOptions = new JsonSerializerOptions();
+        var response = new SubmitTransactionAsyncResponse
+        {
+            TxStatus = SubmitTransactionAsyncResponse.TransactionStatus.PENDING,
+            Hash = "aa",
+        };
+
+        var json = JsonSerializer.Serialize(response, foreignOptions);
+
+        StringAssert.Contains(json, "\"tx_status\":\"PENDING\"");
+        Assert.AreEqual(SubmitTransactionAsyncResponse.TransactionStatus.PENDING,
+            JsonSerializer.Deserialize<SubmitTransactionAsyncResponse>(json, foreignOptions)!.TxStatus);
     }
 
     /// <summary>
