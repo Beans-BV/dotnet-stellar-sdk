@@ -96,11 +96,11 @@ public class TransactionStatusJsonConverter : JsonConverter<TransactionInfo.Tran
 
     /// <inheritdoc />
     /// <remarks>
-    ///     Required because this converter is registered on <see cref="JsonOptions.DefaultOptions" />, where it
-    ///     displaces <see cref="JsonStringEnumConverter" /> for this enum — and the standard converter supported
-    ///     dictionary keys. Without the two property-name overloads System.Text.Json throws
-    ///     <see cref="NotSupportedException" /> for a <c>Dictionary&lt;TransactionStatus, T&gt;</c>, which is not a
-    ///     <see cref="JsonException" />, so a caller's <c>catch (JsonException)</c> would miss it.
+    ///     Required because this converter is attached to the enum <em>type</em>. Without the two property-name
+    ///     overloads System.Text.Json has no way to turn the enum into a JSON object key and throws
+    ///     <see cref="NotSupportedException" /> for a <c>Dictionary&lt;TransactionStatus, T&gt;</c> — which is not
+    ///     a <see cref="JsonException" />, so a caller's <c>catch (JsonException)</c> would miss it. The literal
+    ///     set is the same one <see cref="Read" /> accepts, so a key round-trips exactly like a value.
     /// </remarks>
     /// <exception cref="JsonException">Thrown when the key is not one of the three status literals.</exception>
     public override TransactionInfo.TransactionStatus ReadAsPropertyName(ref Utf8JsonReader reader,

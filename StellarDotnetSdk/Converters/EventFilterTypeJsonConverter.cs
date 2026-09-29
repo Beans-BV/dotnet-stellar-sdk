@@ -30,7 +30,93 @@ public class EventFilterTypeJsonConverter : JsonConverter<EventFilterType>
                 $"Expected a string value for {nameof(EventFilterType)} but found {reader.TokenType}.");
         }
 
-        var value = reader.GetString();
+        return ParseWireValue(reader.GetString());
+    }
+
+    /// <inheritdoc />
+    /// <exception cref="JsonException">
+    ///     Thrown when <paramref name="value" /> contains bits that are not defined <see cref="EventFilterType" />
+    ///     flags — for example a raw cast such as <c>(EventFilterType)99</c>. Assigning such a value to
+    ///     <see cref="GetEventsRequest.EventFilter.Type" /> already throws
+    ///     <see cref="ArgumentOutOfRangeException" />, so this is a backstop for values that reach the serializer
+    ///     by another route.
+    ///     <para>
+    ///         The two exception types are deliberate and describe different failures: the setter rejects a bad
+    ///         <em>argument</em>, while a converter reports a <em>serialization</em> failure and so throws what
+    ///         the SDK's other hand-written strict enum converters throw — this one,
+    ///         <see cref="SubmitTransactionAsyncStatusJsonConverter" />,
+    ///         <see cref="SendTransactionStatusEnumJsonConverter" />, <see cref="TransactionStatusJsonConverter" />
+    ///         and <see cref="LiquidityPoolTypeEnumJsonConverter" /> all reject an undefined value on write with
+    ///         <see cref="JsonException" />, so one <c>catch (JsonException)</c> around a
+    ///         <c>JsonSerializer.Serialize</c> that uses <see cref="JsonOptions.DefaultOptions" /> covers all
+    ///         five. The qualifier matters: only a converter actually in play can enforce anything. Of the five,
+    ///         four enums — <see cref="EventFilterType" />,
+    ///         <see cref="Responses.SubmitTransactionAsyncResponse.TransactionStatus" />,
+    ///         <see cref="Responses.SorobanRpc.SendTransactionResponse.SendTransactionStatus" /> and
+    ///         <see cref="Responses.SorobanRpc.TransactionInfo.TransactionStatus" /> — carry a type-level
+    ///         <see cref="JsonConverterAttribute" /> and so stay strict under a bare
+    ///         <see cref="JsonSerializerOptions" />; only <c>LiquidityPoolTypeEnum</c> does not, and on its own
+    ///         falls through to the catch-all and writes the bare number (its response properties carry their
+    ///         own property-level pins).
+    ///     </para>
+    ///     <para>
+    ///         This is not true of every converter in <see cref="JsonOptions.DefaultOptions" />: the catch-all
+    ///         <see cref="JsonStringEnumConverter" /> registered last handles every enum without a dedicated
+    ///         converter and writes an undefined value as its bare number without throwing at all.
+    ///     </para>
+    /// </exception>
+    public override void Write(Utf8JsonWriter writer, EventFilterType value, JsonSerializerOptions options)
+    {
+        // One decision point: the same switch that produces the wire spelling also decides whether one exists.
+        if (!value.TryToRequestValue(out var requestValue))
+        {
+            throw new JsonException($"Value '{value}' is not a defined {nameof(EventFilterType)}.");
+        }
+
+        writer.WriteStringValue(requestValue);
+    }
+
+    /// <inheritdoc />
+    /// <remarks>
+    ///     Required because this converter is attached to the enum <em>type</em>. Without the two property-name
+    ///     overloads System.Text.Json has no way to turn the enum into a JSON object key and throws
+    ///     <see cref="NotSupportedException" /> for a <c>Dictionary&lt;EventFilterType, T&gt;</c> — which is not a
+    ///     <see cref="JsonException" />, so a caller's <c>catch (JsonException)</c> would miss it. Keys use the
+    ///     same bare-comma wire spelling as values.
+    /// </remarks>
+    /// <exception cref="JsonException">Thrown when the key is not a valid filter-type spelling.</exception>
+    public override EventFilterType ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
+    {
+        return ParseWireValue(reader.GetString());
+    }
+
+    /// <inheritdoc />
+    /// <exception cref="JsonException">
+    ///     Thrown when <paramref name="value" /> carries bits that are not defined
+    ///     <see cref="EventFilterType" /> flags.
+    /// </exception>
+    public override void WriteAsPropertyName(Utf8JsonWriter writer, EventFilterType value,
+        JsonSerializerOptions options)
+    {
+        // One decision point, as in Write: the same switch that produces the wire spelling also decides
+        // whether one exists, so a newly added member cannot pass the guard and then have no case to match.
+        if (!value.TryToRequestValue(out var requestValue))
+        {
+            throw new JsonException($"Value '{value}' is not a defined {nameof(EventFilterType)}.");
+        }
+
+        writer.WritePropertyName(requestValue);
+    }
+
+    /// <summary>
+    ///     Parses the RPC wire spelling shared by values and dictionary keys. One decision point, as on the write
+    ///     side: <c>Read</c> and <c>ReadAsPropertyName</c> accept exactly the same spellings because they are the
+    ///     same code, so a new filter type or a change to the rejection message cannot land in only one of them.
+    /// </summary>
+    /// <exception cref="JsonException">Thrown when a segment is not an event type Stellar RPC accepts.</exception>
+    private static EventFilterType ParseWireValue(string? value)
+    {
         if (string.IsNullOrEmpty(value))
         {
             // RPC treats an empty set as "no type filter", i.e. every event type.
@@ -52,43 +138,5 @@ public class EventFilterTypeJsonConverter : JsonConverter<EventFilterType>
         }
 
         return result;
-    }
-
-    /// <inheritdoc />
-    /// <exception cref="JsonException">
-    ///     Thrown when <paramref name="value" /> contains bits that are not defined <see cref="EventFilterType" />
-    ///     flags — for example a raw cast such as <c>(EventFilterType)99</c>. Assigning such a value to
-    ///     <see cref="GetEventsRequest.EventFilter.Type" /> already throws
-    ///     <see cref="ArgumentOutOfRangeException" />, so this is a backstop for values that reach the serializer
-    ///     by another route.
-    ///     <para>
-    ///         The two exception types are deliberate and describe different failures: the setter rejects a bad
-    ///         <em>argument</em>, while a converter reports a <em>serialization</em> failure and so throws what
-    ///         the SDK's other hand-written strict enum converters throw — this one,
-    ///         <see cref="SendTransactionStatusEnumJsonConverter" />, <see cref="TransactionStatusJsonConverter" />
-    ///         and <see cref="LiquidityPoolTypeEnumJsonConverter" /> all reject an undefined value on write with
-    ///         <see cref="JsonException" />, so one <c>catch (JsonException)</c> around a
-    ///         <c>JsonSerializer.Serialize</c> that uses <see cref="JsonOptions.DefaultOptions" /> covers all
-    ///         four. The qualifier matters: only a converter actually in play can enforce anything, and of the
-    ///         four only <see cref="EventFilterType" /> carries a type-level
-    ///         <see cref="JsonConverterAttribute" />, so under a bare <see cref="JsonSerializerOptions" /> this
-    ///         one stays strict while <c>LiquidityPoolTypeEnum</c> falls through to the catch-all and writes the
-    ///         bare number.
-    ///     </para>
-    ///     <para>
-    ///         This is not true of every converter in <see cref="JsonOptions.DefaultOptions" />: the catch-all
-    ///         <see cref="JsonStringEnumConverter" /> registered last handles every enum without a dedicated
-    ///         converter and writes an undefined value as its bare number without throwing at all.
-    ///     </para>
-    /// </exception>
-    public override void Write(Utf8JsonWriter writer, EventFilterType value, JsonSerializerOptions options)
-    {
-        // One decision point: the same switch that produces the wire spelling also decides whether one exists.
-        if (!value.TryToRequestValue(out var requestValue))
-        {
-            throw new JsonException($"Value '{value}' is not a defined {nameof(EventFilterType)}.");
-        }
-
-        writer.WriteStringValue(requestValue);
     }
 }
