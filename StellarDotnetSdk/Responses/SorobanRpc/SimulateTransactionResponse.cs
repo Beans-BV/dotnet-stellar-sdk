@@ -96,7 +96,7 @@ public class SimulateTransactionResponse
     ///     deserialization, so the failure surfaces here rather than at the originating
     ///     <see cref="StellarRpcServer.SimulateTransaction" /> call. This is the failure this property reports for
     ///     a malformed blob; it is not a guarantee that no other exception can escape (see
-    ///     <c>XdrDecodeFailure.IsPayloadFailure</c>).
+    ///     <c>XdrDecodeFailure.IsDecodeFailure</c>).
     /// </exception>
     [JsonIgnore]
     public SorobanTransactionData? SorobanTransactionData
@@ -111,7 +111,7 @@ public class SimulateTransactionResponse
             {
                 return SorobanTransactionData.FromXdrBase64(TransactionData);
             }
-            catch (Exception ex) when (XdrDecodeFailure.IsPayloadFailure(ex))
+            catch (Exception ex) when (XdrDecodeFailure.IsDecodeFailure(ex))
             {
                 throw new InvalidDataException("Malformed Soroban transaction data XDR: " + ex.Message, ex);
             }
@@ -134,7 +134,7 @@ public class SimulateTransactionResponse
     ///     <c>SorobanAuthorizationEntry</c> XDR blob — including an unknown <c>SorobanCredentialsType</c>
     ///     discriminant. The originating decoder exception is preserved as the inner exception. This is the failure
     ///     this property reports for a malformed blob; it is not a guarantee that no other exception can escape
-    ///     (see <c>XdrDecodeFailure.IsPayloadFailure</c>).
+    ///     (see <c>XdrDecodeFailure.IsDecodeFailure</c>).
     /// </exception>
     public SorobanAuthorizationEntry[]? SorobanAuthorization
     {
@@ -161,7 +161,7 @@ public class SimulateTransactionResponse
                 {
                     entries[i] = SorobanAuthorizationEntry.FromXdrBase64(auth[i]);
                 }
-                catch (Exception ex) when (XdrDecodeFailure.IsPayloadFailure(ex))
+                catch (Exception ex) when (XdrDecodeFailure.IsDecodeFailure(ex))
                 {
                     throw new InvalidDataException(
                         $"Malformed authorization entry XDR at index {i}: {ex.Message}", ex);
@@ -215,7 +215,7 @@ public class SimulateTransactionResponse
                 {
                     return SorobanTransactionData.FromXdrBase64(TransactionData);
                 }
-                catch (Exception ex) when (XdrDecodeFailure.IsPayloadFailure(ex))
+                catch (Exception ex) when (XdrDecodeFailure.IsDecodeFailure(ex))
                 {
                     throw new InvalidDataException(
                         "Malformed restore preamble Soroban transaction data XDR: " + ex.Message, ex);

@@ -157,11 +157,11 @@ public class TransactionInfo
 
                 return returnValue == null ? null : SCVal.FromXdr(returnValue);
             }
-            // Every way the payload itself can be bad — see XdrDecodeFailure.IsPayloadFailure — except
+            // Every decode failure — see XdrDecodeFailure.IsDecodeFailure — except
             // InvalidOperationException, which this property deliberately lets propagate: it signals a gap in this
             // SDK's own mapping rather than bad input, and reporting an SDK defect to callers as "no return value"
             // would hide it. The exclusion is stated as a deviation from the shared set rather than by re-listing
-            // the other types, so this property cannot drift from the others over what counts as a bad payload.
+            // the other types, so this property cannot drift from the others over what counts as a decode failure.
             //
             // Note that on the route this property takes — SCVal.FromXdr on the decoded return value — that
             // exclusion is currently theoretical: SCVal.FromXdr's "Unknown SCVal type" arm covers all 22
@@ -169,7 +169,7 @@ public class TransactionInfo
             // InvalidDataException first, so no payload reaches it. It is kept as a standing guarantee for
             // whenever the generated XDR layer gains a member ahead of the mapping.
             catch (Exception exception) when (
-                XdrDecodeFailure.IsPayloadFailure(exception) && exception is not InvalidOperationException)
+                XdrDecodeFailure.IsDecodeFailure(exception) && exception is not InvalidOperationException)
             {
                 return null;
             }
@@ -197,14 +197,15 @@ public class TransactionInfo
             {
                 return TransactionMeta.FromXdrBase64(ResultMetaXdr);
             }
-            // Every failure this property documents as null — see XdrDecodeFailure.IsPayloadFailure. Unlike
+            // Every failure this property documents as null — see XdrDecodeFailure.IsDecodeFailure. Unlike
             // ResultValue this property does report an unmappable structure as absent metadata,
             // InvalidOperationException included: it is an all-or-nothing view, so "some part of this graph has
             // no SDK representation" is the same answer as "no metadata" to every caller. A bare catch also
             // swallowed failures that say nothing about the payload — an OutOfMemoryException on a large metadata
             // graph, or a NullReferenceException from a genuine defect in this SDK — and reported them to callers
-            // as "no metadata". Those now propagate.
-            catch (Exception exception) when (XdrDecodeFailure.IsPayloadFailure(exception))
+            // as "no metadata". Those now propagate. The filter cannot tell a malformed payload from an SDK defect
+            // that throws one of the same types, though, so such a defect is still reported here as null.
+            catch (Exception exception) when (XdrDecodeFailure.IsDecodeFailure(exception))
             {
                 return null;
             }

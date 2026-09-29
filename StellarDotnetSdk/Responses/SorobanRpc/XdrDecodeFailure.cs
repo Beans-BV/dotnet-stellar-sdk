@@ -8,11 +8,11 @@ using AssetCodeLengthInvalidException = StellarDotnetSdk.Exceptions.AssetCodeLen
 namespace StellarDotnetSdk.Responses.SorobanRpc;
 
 /// <summary>
-///     The one declaration of which exceptions mean "this server-supplied base64 XDR blob is bad", shared by every
-///     response property that decodes one. Each caller decides what to do with such a failure —
+///     The one declaration of which exceptions mean "decoding this server-supplied base64 XDR blob failed", shared by
+///     every response property that decodes one. Each caller decides what to do with such a failure —
 ///     <c>SimulateTransactionResponse</c> normalizes it to <see cref="InvalidDataException" />,
 ///     <c>TransactionInfo</c> reports it as <c>null</c> — but none of them keeps its own list, so they cannot drift
-///     apart over what counts as a bad payload.
+///     apart over what counts as a decode failure.
 /// </summary>
 internal static class XdrDecodeFailure
 {
@@ -23,6 +23,18 @@ internal static class XdrDecodeFailure
     ///     and state-validation exceptions.
     /// </summary>
     /// <remarks>
+    ///     <para>
+    ///         A match classifies the exception by type, not by origin, so it means decoding failed — not
+    ///         necessarily that the server is at fault. The input is an in-memory buffer, so a failure has only two
+    ///         possible sources: a malformed payload, or a defect or gap in this SDK's handling of a well-formed one
+    ///         (including a newer protocol structure it does not model yet). <see cref="IOException" /> and
+    ///         <see cref="FormatException" /> can only mean the former; <see cref="ArgumentException" />,
+    ///         <see cref="InvalidOperationException" /> and <see cref="IndexOutOfRangeException" /> can mean either.
+    ///         Callers that rethrow keep the original as the inner exception, so an SDK defect stays diagnosable;
+    ///         callers that report <c>null</c> cannot, which is why <c>TransactionInfo.ResultValue</c> excludes
+    ///         <see cref="InvalidOperationException" />. Telling the two apart exactly would need the decoders to
+    ///         raise a dedicated exception type at the point the payload is found malformed.
+    ///     </para>
     ///     <para>
     ///         The set is broader than the one <c>Sep45Challenge</c> uses, because that method decodes with the
     ///         generated <c>Xdr.SorobanAuthorizationEntry.Decode</c> and stops there.
@@ -68,10 +80,10 @@ internal static class XdrDecodeFailure
     ///         of the real decoders plus a sweep of the SDK exception types reachable from these roots. A payload
     ///         that provokes something outside it — including <see cref="OutOfMemoryException" /> from the
     ///         unbounded allocation the generated array decoders still permit — propagates, by design: callers
-    ///         report bad input, not every conceivable failure.
+    ///         report decode failures, not every conceivable failure.
     ///     </para>
     /// </remarks>
-    internal static bool IsPayloadFailure(Exception exception)
+    internal static bool IsDecodeFailure(Exception exception)
     {
         return exception is InvalidDataException or IOException or FormatException or IndexOutOfRangeException
             or ArgumentException or InvalidOperationException or AssetCodeLengthInvalidException;

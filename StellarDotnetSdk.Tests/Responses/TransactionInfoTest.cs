@@ -950,7 +950,7 @@ public class TransactionInfoTest
     ///     over-long <c>DataEntry</c> name — arrives as an <c>ArgumentException</c>, so it pins that clause on the
     ///     property rather than only on <c>ResultValue</c>.
     ///     <para>
-    ///         It does <em>not</em> constrain <c>XdrDecodeFailure.IsPayloadFailure</c>'s
+    ///         It does <em>not</em> constrain <c>XdrDecodeFailure.IsDecodeFailure</c>'s
     ///         <c>InvalidOperationException</c> or <c>IndexOutOfRangeException</c> clauses: dropping either leaves
     ///         this suite green. Both are carried on the strength of the fuzz that produced the list for
     ///         <c>SimulateTransactionResponse</c>, and no payload reproducing them
