@@ -283,6 +283,30 @@ public sealed class AssetIdentifier : IEquatable<AssetIdentifier>
         return System.HashCode.Combine(Scheme, Code, Issuer);
     }
 
+    /// <summary>
+    ///     Compares two identifiers by value, as <see cref="Equals(AssetIdentifier)" /> does. Without it, <c>==</c>
+    ///     between two identifiers would compare references, while <c>==</c> against a string compares values
+    ///     through the implicit string conversion.
+    /// </summary>
+    /// <param name="left">The first identifier.</param>
+    /// <param name="right">The second identifier.</param>
+    /// <returns><see langword="true" /> when both are null or both have the same scheme, code and issuer.</returns>
+    public static bool operator ==(AssetIdentifier? left, AssetIdentifier? right)
+    {
+        return left is null ? right is null : left.Equals(right);
+    }
+
+    /// <summary>
+    ///     Compares two identifiers by value; the negation of <see cref="op_Equality" />.
+    /// </summary>
+    /// <param name="left">The first identifier.</param>
+    /// <param name="right">The second identifier.</param>
+    /// <returns><see langword="true" /> when the identifiers differ.</returns>
+    public static bool operator !=(AssetIdentifier? left, AssetIdentifier? right)
+    {
+        return !(left == right);
+    }
+
     private static bool IsValidStellarCode(string? code)
     {
         if (code == null || code.Length < 1 || code.Length > 12)

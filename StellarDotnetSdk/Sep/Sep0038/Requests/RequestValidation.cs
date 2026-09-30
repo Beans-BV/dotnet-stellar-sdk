@@ -21,8 +21,18 @@ internal static class RequestValidation
         };
     }
 
-    internal static string FormatAmount(decimal amount)
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown when <paramref name="amount" /> is zero or negative.
+    /// </exception>
+    internal static string FormatAmount(decimal amount, string propertyName)
     {
+        // SEP-38 amounts are quantities to exchange; zero or a negative value can only be a caller error, so it
+        // fails here, before anything is sent, like the other request rules.
+        if (amount <= 0)
+        {
+            throw new ArgumentOutOfRangeException(propertyName, amount, $"{propertyName} must be greater than zero.");
+        }
+
         // Invariant culture: a comma decimal separator from the current culture would change the amount the
         // anchor reads. ToString keeps the scale the caller gave ("100.50" stays "100.50").
         return amount.ToString(CultureInfo.InvariantCulture);

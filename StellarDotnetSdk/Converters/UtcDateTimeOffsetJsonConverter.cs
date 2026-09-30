@@ -27,8 +27,12 @@ namespace StellarDotnetSdk.Converters;
 ///     <para>
 ///         Writes UTC with a <c>Z</c> designator and only as many fractional-second digits as are non-zero.
 ///     </para>
+///     <para>
+///         Attached per property with <see cref="JsonConverterAttribute" />. It is public so that a consumer's
+///         source-generated <see cref="JsonSerializerContext" /> can instantiate it.
+///     </para>
 /// </remarks>
-internal sealed class UtcDateTimeOffsetJsonConverter : JsonConverter<DateTimeOffset>
+public sealed class UtcDateTimeOffsetJsonConverter : JsonConverter<DateTimeOffset>
 {
     /// <inheritdoc />
     /// <exception cref="JsonException">Thrown when the token is not an ISO 8601 timestamp string.</exception>

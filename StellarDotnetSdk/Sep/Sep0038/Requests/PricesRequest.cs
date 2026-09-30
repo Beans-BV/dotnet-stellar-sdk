@@ -23,7 +23,7 @@ public sealed record PricesRequest
 
     /// <summary>
     ///     The amount of <see cref="SellAsset" /> to exchange for each of the buy assets. Required with, and only
-    ///     valid with, <see cref="SellAsset" />.
+    ///     valid with, <see cref="SellAsset" />. Must be greater than zero.
     /// </summary>
     public decimal? SellAmount { get; init; }
 
@@ -35,7 +35,7 @@ public sealed record PricesRequest
 
     /// <summary>
     ///     The amount of <see cref="BuyAsset" /> to receive for each of the sell assets. Required with, and only
-    ///     valid with, <see cref="BuyAsset" />.
+    ///     valid with, <see cref="BuyAsset" />. Must be greater than zero.
     /// </summary>
     public decimal? BuyAmount { get; init; }
 
@@ -79,7 +79,9 @@ public sealed record PricesRequest
     /// <summary>
     ///     Checks the sell/buy exclusivity rules and returns the query parameters.
     /// </summary>
-    /// <exception cref="ArgumentException">Thrown when the request mixes or omits the sell and buy sides.</exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when the request mixes or omits the sell and buy sides, or its amount is zero or negative.
+    /// </exception>
     internal Dictionary<string, string> ToQueryParameters()
     {
         var hasSellAsset = !string.IsNullOrWhiteSpace(SellAsset);
@@ -106,7 +108,7 @@ public sealed record PricesRequest
             }
 
             parameters["sell_asset"] = SellAsset!;
-            parameters["sell_amount"] = RequestValidation.FormatAmount(SellAmount.Value);
+            parameters["sell_amount"] = RequestValidation.FormatAmount(SellAmount.Value, nameof(SellAmount));
         }
         else
         {
@@ -122,7 +124,7 @@ public sealed record PricesRequest
             }
 
             parameters["buy_asset"] = BuyAsset!;
-            parameters["buy_amount"] = RequestValidation.FormatAmount(BuyAmount.Value);
+            parameters["buy_amount"] = RequestValidation.FormatAmount(BuyAmount.Value, nameof(BuyAmount));
         }
 
         AddOptional(parameters, "sell_delivery_method", SellDeliveryMethod);

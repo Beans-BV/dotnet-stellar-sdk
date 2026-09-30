@@ -35,11 +35,13 @@ namespace StellarDotnetSdk.Converters;
 ///         Writes the invariant-culture string form, which round-trips exactly.
 ///     </para>
 ///     <para>
-///         Kept <c>internal</c> and attached per property with <see cref="JsonConverterAttribute" />; it must not be
-///         registered globally, where it would change how every <see cref="decimal" /> in the SDK is read.
+///         Attached per property with <see cref="JsonConverterAttribute" />. It is public so that a consumer's
+///         source-generated <see cref="JsonSerializerContext" /> can instantiate it; do not register it on
+///         <see cref="JsonSerializerOptions.Converters" />, where it would change how every <see cref="decimal" />
+///         those options read is parsed, including a bare JSON number, which it rejects.
 ///     </para>
 /// </remarks>
-internal sealed class ExactDecimalJsonConverter : JsonConverter<decimal>
+public sealed class ExactDecimalJsonConverter : JsonConverter<decimal>
 {
     /// <summary>The most significant digits a <see cref="decimal" /> can hold.</summary>
     private const int MaxDigits = 29;

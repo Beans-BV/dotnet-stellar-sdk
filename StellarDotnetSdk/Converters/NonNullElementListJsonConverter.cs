@@ -19,54 +19,80 @@ namespace StellarDotnetSdk.Converters;
 ///     </para>
 ///     <para>
 ///         Attach it with a property-level <see cref="JsonConverterAttribute" /> naming the closed type (for example
-///         <c>NonNullElementListJsonConverter&lt;DeliveryMethod&gt;</c>); never register it on
-///         <see cref="JsonSerializerOptions.Converters" />. Reading delegates to <see cref="JsonSerializer" /> for
-///         <c>T[]</c> and writing for <see cref="IEnumerable{T}" />, neither of which resolves back to this
-///         converter while it is property-scoped.
+///         <c>NonNullElementListJsonConverter&lt;DeliveryMethod&gt;</c>). It is public so that a consumer's
+///         source-generated <see cref="JsonSerializerContext" /> can instantiate it.
 ///     </para>
 ///     <para>
-///         Kept <c>internal</c>, so it adds nothing to the public surface.
+///         Elements are read and written one at a time, delegating to <see cref="JsonSerializer" /> for <c>T</c>
+///         alone. That is what a source-generated context supports: it carries metadata for the element type the
+///         property exposes, but not for <c>T[]</c> or <see cref="IEnumerable{T}" />, which a whole-collection
+///         delegation would need. It also means the converter needs no guard against a registration on
+///         <see cref="JsonSerializerOptions.Converters" />, unlike <see cref="NonNullElementArrayJsonConverter{T}" />:
+///         a delegated call for <c>T</c> never resolves back to a converter for <see cref="IReadOnlyList{T}" />.
+///         Registered globally, it only applies the null-element check to every <see cref="IReadOnlyList{T}" /> of
+///         that element type.
 ///     </para>
 /// </remarks>
-internal sealed class NonNullElementListJsonConverter<T> : JsonConverter<IReadOnlyList<T>?> where T : class
+public sealed class NonNullElementListJsonConverter<T> : JsonConverter<IReadOnlyList<T>?> where T : class
 {
     /// <inheritdoc />
-    /// <exception cref="JsonException">Thrown when the array contains a <c>null</c> element.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the value is not an array, or the array contains a <c>null</c> or unreadable element.
+    /// </exception>
     public override IReadOnlyList<T>? Read(ref Utf8JsonReader reader, Type typeToConvert,
         JsonSerializerOptions options)
     {
-        T[]? array;
-        try
+        if (reader.TokenType != JsonTokenType.StartArray)
         {
-            array = JsonSerializer.Deserialize<T[]>(ref reader, options);
-        }
-        catch (JsonException ex) when (ex.Path != null)
-        {
-            // The delegated read starts a fresh serializer session whose path is relative to this array. Leaving
-            // Path unset on the rethrow lets System.Text.Json fill in the outer, absolute one; the inner message
-            // keeps the relative locator. See NonNullElementArrayJsonConverter for the full rationale.
-            throw new JsonException($"Failed to read the array: {ex.Message}", ex);
+            throw new JsonException($"Expected a JSON array, but found a {reader.TokenType} token.");
         }
 
-        // Unreachable through the serializer, which answers a JSON null itself for a reference type.
-        if (array == null)
+        var items = new List<T>();
+        while (true)
         {
-            return null;
-        }
-
-        for (var i = 0; i < array.Length; i++)
-        {
-            if (array[i] is null)
+            // The serializer hands a custom converter the whole value, so only a direct caller with a reader over a
+            // partial buffer can run out here; that must fail rather than return the elements read so far.
+            if (!reader.Read())
             {
-                throw new JsonException($"The array contains a null element at index {i}.");
+                throw new JsonException($"The JSON ended before the array was closed, after {items.Count} elements.");
             }
+
+            if (reader.TokenType == JsonTokenType.EndArray)
+            {
+                break;
+            }
+
+            if (reader.TokenType == JsonTokenType.Null)
+            {
+                throw new JsonException($"The array contains a null element at index {items.Count}.");
+            }
+
+            T? item;
+            try
+            {
+                item = JsonSerializer.Deserialize<T>(ref reader, options);
+            }
+            catch (JsonException ex) when (ex.Path != null)
+            {
+                // The delegated read starts a fresh serializer session whose path is relative to this element.
+                // Leaving Path unset on the rethrow lets System.Text.Json fill in the outer, absolute one; the inner
+                // message keeps the relative locator. See NonNullElementArrayJsonConverter for the full rationale.
+                throw new JsonException($"Failed to read the array element at index {items.Count}: {ex.Message}",
+                    ex);
+            }
+
+            // A JSON null is caught above; this is an element converter that answered null for a non-null token.
+            items.Add(item ?? throw new JsonException(
+                $"The array contains an element at index {items.Count} that was read as null."));
         }
 
-        return Array.AsReadOnly(array);
+        return items.AsReadOnly();
     }
 
     /// <inheritdoc />
-    /// <exception cref="JsonException">Thrown when the list contains a <c>null</c> element.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the list contains a <c>null</c> element; nothing of the list is written then.
+    /// </exception>
     public override void Write(Utf8JsonWriter writer, IReadOnlyList<T>? value, JsonSerializerOptions options)
     {
         if (value == null)
@@ -83,6 +109,12 @@ internal sealed class NonNullElementListJsonConverter<T> : JsonConverter<IReadOn
             }
         }
 
-        JsonSerializer.Serialize<IEnumerable<T>>(writer, value, options);
+        writer.WriteStartArray();
+        foreach (var item in value)
+        {
+            JsonSerializer.Serialize(writer, item, options);
+        }
+
+        writer.WriteEndArray();
     }
 }

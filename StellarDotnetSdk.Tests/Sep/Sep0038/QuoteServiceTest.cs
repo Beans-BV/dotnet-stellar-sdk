@@ -418,6 +418,41 @@ public class QuoteServiceTest
     }
 
     [TestMethod]
+    [DataRow("prices", true, "0")]
+    [DataRow("prices", false, "-1")]
+    [DataRow("price", true, "-0.01")]
+    [DataRow("price", false, "0.00")]
+    [DataRow("quote", true, "-542")]
+    [DataRow("quote", false, "0")]
+    public async Task WithAnAmountThatIsNotPositive_ThrowsBeforeSending(string endpoint, bool sellSide, string amountText)
+    {
+        var amount = decimal.Parse(amountText, CultureInfo.InvariantCulture);
+        var (service, handler) = CreateService("{}");
+        decimal? sell = sellSide ? amount : null;
+        decimal? buy = sellSide ? null : amount;
+        Func<Task> call = endpoint switch
+        {
+            "prices" => () => service.PricesAsync(sellSide
+                ? new PricesRequest { SellAsset = Brl, SellAmount = sell }
+                : new PricesRequest { BuyAsset = Usdc, BuyAmount = buy }),
+            "price" => () => service.PriceAsync(new PriceRequest
+            {
+                Context = QuoteContext.Sep6, SellAsset = Brl, BuyAsset = Usdc, SellAmount = sell, BuyAmount = buy,
+            }),
+            _ => () => service.PostQuoteAsync(new QuoteRequest
+            {
+                Context = QuoteContext.Sep6, SellAsset = Brl, BuyAsset = Usdc, SellAmount = sell, BuyAmount = buy,
+                Jwt = Jwt,
+            }),
+        };
+
+        var ex = await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(call);
+
+        Assert.AreEqual(sellSide ? "SellAmount" : "BuyAmount", ex.ParamName);
+        Assert.AreEqual(0, handler.Requests.Count);
+    }
+
+    [TestMethod]
     public async Task PriceAsync_WithSep24Context_ThrowsBecauseTheSpecificationAllowsOnlySep6AndSep31()
     {
         var (service, handler) = CreateService(ReadTestData("price-response.json"));
@@ -814,6 +849,34 @@ public class QuoteServiceTest
         }
     }
 
+    /// <summary>
+    ///     A consumer's source-generated <see cref="System.Text.Json.Serialization.JsonSerializerContext" /> can only
+    ///     instantiate a property's converter when the converter is public with a public parameterless constructor;
+    ///     otherwise the generator reports SYSLIB1220 and falls back to the default converter, which rejects the
+    ///     spec's string amounts. This test assembly sees the SDK's internals, so a context compiled here would pass
+    ///     either way; reflection is what checks the consumer's view.
+    /// </summary>
+    [TestMethod]
+    public void ResponseConverters_AreUsableFromAConsumersSourceGeneratedContext()
+    {
+        var converters = typeof(QuoteResponse).Assembly.GetTypes()
+            .Where(t => t.Namespace == typeof(QuoteResponse).Namespace)
+            .SelectMany(t => t.GetProperties())
+            .SelectMany(p => p.GetCustomAttributes(typeof(System.Text.Json.Serialization.JsonConverterAttribute), false)
+                .Cast<System.Text.Json.Serialization.JsonConverterAttribute>())
+            .Select(a => a.ConverterType)
+            .OfType<Type>()
+            .Distinct()
+            .ToList();
+
+        Assert.IsTrue(converters.Count >= 7, $"Only {converters.Count} converters found.");
+        foreach (var converter in converters)
+        {
+            Assert.IsTrue(converter.IsPublic, $"{converter.Name} is not public.");
+            Assert.IsNotNull(converter.GetConstructor(Type.EmptyTypes), $"{converter.Name} has no public parameterless constructor.");
+        }
+    }
+
     [TestMethod]
     public async Task GetQuoteAsync_WithExpiryOnlyTheJsonReaderAccepts_ThrowsUnexpectedResponseException()
     {
@@ -901,6 +964,32 @@ public class QuoteServiceTest
 
         Assert.AreEqual(429, ex.StatusCode);
         Assert.AreEqual(TimeSpan.FromSeconds(30), ex.RetryAfterDelay);
+    }
+
+    [TestMethod]
+    [DataRow(HttpStatusCode.BadRequest)]
+    [DataRow(HttpStatusCode.Forbidden)]
+    [DataRow(HttpStatusCode.NotFound)]
+    public async Task OnAStatusWithADedicatedException_LeavesRetryAfterDelayNull(HttpStatusCode statusCode)
+    {
+        var (service, _) = CreateService(_ =>
+        {
+            var response = new HttpResponseMessage(statusCode) { Content = new StringContent("{\"error\":\"no\"}") };
+            response.Headers.RetryAfter = new RetryConditionHeaderValue(TimeSpan.FromSeconds(30));
+            return response;
+        });
+
+        try
+        {
+            await service.InfoAsync();
+            Assert.Fail("Expected a QuoteServerException.");
+        }
+        catch (QuoteServerException ex)
+        {
+            Assert.AreEqual((int)statusCode, ex.StatusCode);
+            Assert.IsNotInstanceOfType(ex, typeof(UnexpectedResponseException));
+            Assert.IsNull(ex.RetryAfterDelay);
+        }
     }
 
     [TestMethod]

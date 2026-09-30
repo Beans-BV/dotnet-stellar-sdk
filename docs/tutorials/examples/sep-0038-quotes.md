@@ -129,7 +129,7 @@ Pass `quote.Id` as `QuoteId` of a SEP-24 `DepositRequest` or `WithdrawRequest`, 
 
 Amounts and prices are `decimal`. They are sent as invariant-culture strings and read exactly: a value that `decimal` cannot represent without rounding fails with `UnexpectedResponseException` instead of being approximated.
 
-Request rules the specification states (one amount, one `GET /prices` side, at most one delivery method on `POST /quote`) throw `ArgumentException` before anything is sent. Anchor errors map to exceptions derived from `QuoteServerException`; transport failures surface as `HttpRequestException`, and timeouts as `TaskCanceledException`:
+Request rules the specification states (one amount, one `GET /prices` side, at most one delivery method on `POST /quote`), and a zero or negative amount, throw `ArgumentException` before anything is sent. Anchor errors map to exceptions derived from `QuoteServerException`; transport failures surface as `HttpRequestException`, and timeouts as `TaskCanceledException`:
 
 ```csharp
 using StellarDotnetSdk.Sep.Sep0038.Exceptions;

@@ -140,9 +140,15 @@ All notable changes to this project are documented here. The format is based on
     enforce the spec's request rules before sending, failing the returned task with `ArgumentException`:
     exactly one of `SellAmount`/`BuyAmount`, one `GET /prices` side (sell or buy, the v2.3.0 buy side
     included), at most one delivery method on `POST /quote`, and only `sep6`/`sep31` for `GET /price`.
-    Their `ToString` redacts the JWT.
+    A zero or negative amount fails the same way (`ArgumentOutOfRangeException`). Their `ToString`
+    redacts the JWT.
+  - The response converters `ExactDecimalJsonConverter`, `UtcDateTimeOffsetJsonConverter` and
+    `NonNullElementListJsonConverter<T>` (namespace `StellarDotnetSdk.Converters`) are public, so a
+    consumer's source-generated `JsonSerializerContext` over the SEP-38 response types reads amounts and
+    timestamps the same way the SDK does.
   - `AssetIdentifier` builds, parses and validates the Asset Identification Format (`stellar:CODE:ISSUER`,
-    `stellar:native`, `iso4217:USD`) and converts to and from the SDK `Asset` types.
+    `stellar:native`, `iso4217:USD`), converts to and from the SDK `Asset` types, and compares by value
+    (`Equals`, `==`, `!=`).
   - Amounts and prices are `decimal`. Requests send them as invariant-culture strings with their scale
     kept. Responses read them exactly, in plain or exponent form (`"1E-7"`): a value that `decimal` cannot
     hold without rounding is rejected rather than approximated. An `expires_at` without an offset is read

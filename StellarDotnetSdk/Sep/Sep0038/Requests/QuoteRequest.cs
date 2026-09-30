@@ -41,12 +41,14 @@ public sealed record QuoteRequest
     public required string BuyAsset { get; init; }
 
     /// <summary>
-    ///     The amount of <see cref="SellAsset" /> to exchange. Mutually exclusive with <see cref="BuyAmount" />.
+    ///     The amount of <see cref="SellAsset" /> to exchange. Mutually exclusive with <see cref="BuyAmount" />. Must
+    ///     be greater than zero.
     /// </summary>
     public decimal? SellAmount { get; init; }
 
     /// <summary>
-    ///     The amount of <see cref="BuyAsset" /> to receive. Mutually exclusive with <see cref="SellAmount" />.
+    ///     The amount of <see cref="BuyAsset" /> to receive. Mutually exclusive with <see cref="SellAmount" />. Must
+    ///     be greater than zero.
     /// </summary>
     public decimal? BuyAmount { get; init; }
 
@@ -100,10 +102,12 @@ public sealed record QuoteRequest
     ///     Checks the request and returns the UTF-8 JSON body.
     /// </summary>
     /// <exception cref="ArgumentException">
-    ///     Thrown when an asset or the JWT is missing, when not exactly one amount is given, or when both delivery
-    ///     methods are given.
+    ///     Thrown when an asset or the JWT is missing, when not exactly one amount is given or it is not positive, or
+    ///     when both delivery methods are given.
     /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <see cref="Context" /> is not a defined value.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown when <see cref="Context" /> is not a defined value, or the amount is zero or negative.
+    /// </exception>
     internal string ToJson()
     {
         RequestValidation.RequireNonEmpty(SellAsset, nameof(SellAsset));
@@ -129,11 +133,11 @@ public sealed record QuoteRequest
             // anchor side can turn them into a binary float.
             if (SellAmount.HasValue)
             {
-                writer.WriteString("sell_amount", RequestValidation.FormatAmount(SellAmount.Value));
+                writer.WriteString("sell_amount", RequestValidation.FormatAmount(SellAmount.Value, nameof(SellAmount)));
             }
             else
             {
-                writer.WriteString("buy_amount", RequestValidation.FormatAmount(BuyAmount!.Value));
+                writer.WriteString("buy_amount", RequestValidation.FormatAmount(BuyAmount!.Value, nameof(BuyAmount)));
             }
 
             if (ExpireAfter.HasValue)

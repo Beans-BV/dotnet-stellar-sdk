@@ -49,7 +49,7 @@ namespace StellarDotnetSdk.Sep.Sep0038;
 ///         <b>Errors</b>
 ///     </para>
 ///     <para>
-///         Invalid arguments — including the sell/buy amount exclusivity rules — throw
+///         Invalid arguments — including the sell/buy amount exclusivity rules and a zero or negative amount — throw
 ///         <see cref="ArgumentException" /> from the returned task, before anything is sent. Error responses map to
 ///         <see cref="BadRequestException" /> (400), <see cref="PermissionDeniedException" /> (403),
 ///         <see cref="NotFoundException" /> (404) and <see cref="UnexpectedResponseException" /> (anything else, an
@@ -120,7 +120,10 @@ public class QuoteService : IDisposable
     ///     Optional retry and timeout options for the client the service creates. Ignored when
     ///     <paramref name="httpClient" /> is provided.
     /// </param>
-    /// <param name="httpRequestHeaders">Optional headers added to every request.</param>
+    /// <param name="httpRequestHeaders">
+    ///     Optional headers added to every request. A content header (<c>Content-Language</c>, for example) is sent
+    ///     only with <c>POST /quote</c>; the other requests have no body to carry it, so it is dropped from them.
+    /// </param>
     /// <exception cref="ArgumentException">
     ///     Thrown when <paramref name="serviceAddress" /> is empty, is not an absolute URL, carries a query,
     ///     fragment or user information, or uses plain <c>http</c> for a host other than a loopback address (the JWT travels with every
@@ -166,7 +169,10 @@ public class QuoteService : IDisposable
     /// </param>
     /// <param name="bearerToken">Optional bearer token for the stellar.toml fetch only.</param>
     /// <param name="httpClient">Optional HTTP client to use; it remains owned by the caller.</param>
-    /// <param name="httpRequestHeaders">Optional headers added to the stellar.toml fetch and every request.</param>
+    /// <param name="httpRequestHeaders">
+    ///     Optional headers added to the stellar.toml fetch and every request. A content header is sent only with
+    ///     <c>POST /quote</c>, the one request with a body.
+    /// </param>
     /// <param name="cancellationToken">Token to cancel the stellar.toml fetch.</param>
     /// <returns>A client for the anchor's quote server.</returns>
     /// <exception cref="StellarTomlException">Thrown when the stellar.toml cannot be fetched or parsed.</exception>
@@ -280,7 +286,10 @@ public class QuoteService : IDisposable
     ///     <see cref="PricesResponse.SellAssets" /> for a buy-side one.
     /// </returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="request" /> is null.</exception>
-    /// <exception cref="ArgumentException">Thrown when the request mixes or omits the sell and buy sides.</exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when the request mixes or omits the sell and buy sides, or its amount is zero or negative.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the amount is zero or negative.</exception>
     /// <exception cref="QuoteServerException">
     ///     Thrown (as one of its subtypes) when the anchor answers with an error or an unusable response.
     /// </exception>
@@ -313,9 +322,12 @@ public class QuoteService : IDisposable
     /// <returns>The indicative price.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="request" /> is null.</exception>
     /// <exception cref="ArgumentException">
-    ///     Thrown when an asset is missing, when not exactly one amount is given, or when the context is SEP-24.
+    ///     Thrown when an asset is missing, when not exactly one amount is given or it is not positive, or when the
+    ///     context is SEP-24.
     /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when the context is not a defined value.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown when the context is not a defined value, or the amount is zero or negative.
+    /// </exception>
     /// <exception cref="QuoteServerException">
     ///     Thrown (as one of its subtypes) when the anchor answers with an error or an unusable response.
     /// </exception>
@@ -342,10 +354,12 @@ public class QuoteService : IDisposable
     /// <returns>The firm quote; pass its <see cref="QuoteResponse.Id" /> as <c>quote_id</c> to use it.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="request" /> is null.</exception>
     /// <exception cref="ArgumentException">
-    ///     Thrown when an asset or the JWT is missing, when not exactly one amount is given, or when both delivery
-    ///     methods are given.
+    ///     Thrown when an asset or the JWT is missing, when not exactly one amount is given or it is not positive, or
+    ///     when both delivery methods are given.
     /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when the context is not a defined value.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown when the context is not a defined value, or the amount is zero or negative.
+    /// </exception>
     /// <exception cref="QuoteServerException">
     ///     Thrown (as one of its subtypes) when the anchor answers with an error or an unusable response.
     /// </exception>

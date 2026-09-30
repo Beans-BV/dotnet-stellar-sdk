@@ -68,7 +68,7 @@ _Note: fields are enumerated from the SEP-0038 v2.5.0 specification itself, incl
 - **`QuoteResponse`**: Firm quote from `POST /quote` and `GET /quote/:id`
 - **`QuoteFee`**: Fee object (`total`, `asset`, `details`)
 - **`QuoteFeeDetail`**: Fee breakdown entry
-- **`QuoteServerException`**: Base exception for SEP-38 errors (`StatusCode`, `Error`, `ResponseBody`)
+- **`QuoteServerException`**: Base exception for SEP-38 errors (`StatusCode`, `Error`, `ResponseBody`, `RetryAfterDelay` from a `Retry-After` header)
 - **`BadRequestException`**: HTTP 400
 - **`PermissionDeniedException`**: HTTP 403
 - **`NotFoundException`**: HTTP 404 (e.g. unknown quote id)

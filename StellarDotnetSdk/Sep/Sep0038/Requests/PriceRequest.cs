@@ -32,12 +32,14 @@ public sealed record PriceRequest
     public required string BuyAsset { get; init; }
 
     /// <summary>
-    ///     The amount of <see cref="SellAsset" /> to exchange. Mutually exclusive with <see cref="BuyAmount" />.
+    ///     The amount of <see cref="SellAsset" /> to exchange. Mutually exclusive with <see cref="BuyAmount" />. Must
+    ///     be greater than zero.
     /// </summary>
     public decimal? SellAmount { get; init; }
 
     /// <summary>
-    ///     The amount of <see cref="BuyAsset" /> to receive. Mutually exclusive with <see cref="SellAmount" />.
+    ///     The amount of <see cref="BuyAsset" /> to receive. Mutually exclusive with <see cref="SellAmount" />. Must
+    ///     be greater than zero.
     /// </summary>
     public decimal? BuyAmount { get; init; }
 
@@ -83,10 +85,12 @@ public sealed record PriceRequest
     ///     Checks the request and returns the query parameters.
     /// </summary>
     /// <exception cref="ArgumentException">
-    ///     Thrown when an asset is missing, when not exactly one amount is given, or when <see cref="Context" /> is
-    ///     <see cref="QuoteContext.Sep24" />.
+    ///     Thrown when an asset is missing, when not exactly one amount is given or it is not positive, or when
+    ///     <see cref="Context" /> is <see cref="QuoteContext.Sep24" />.
     /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <see cref="Context" /> is not a defined value.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown when <see cref="Context" /> is not a defined value, or the amount is zero or negative.
+    /// </exception>
     internal Dictionary<string, string> ToQueryParameters()
     {
         RequestValidation.RequireNonEmpty(SellAsset, nameof(SellAsset));
@@ -107,11 +111,11 @@ public sealed record PriceRequest
         };
         if (SellAmount.HasValue)
         {
-            parameters["sell_amount"] = RequestValidation.FormatAmount(SellAmount.Value);
+            parameters["sell_amount"] = RequestValidation.FormatAmount(SellAmount.Value, nameof(SellAmount));
         }
         else
         {
-            parameters["buy_amount"] = RequestValidation.FormatAmount(BuyAmount!.Value);
+            parameters["buy_amount"] = RequestValidation.FormatAmount(BuyAmount!.Value, nameof(BuyAmount));
         }
 
         PricesRequest.AddOptional(parameters, "sell_delivery_method", SellDeliveryMethod);

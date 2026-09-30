@@ -210,4 +210,21 @@ public class AssetIdentifierTest
         Assert.AreNotEqual(AssetIdentifier.StellarNative(), AssetIdentifier.Stellar("native", Issuer));
         Assert.IsFalse(AssetIdentifier.Iso4217("USD").Equals(null));
     }
+
+    [TestMethod]
+    public void EqualityOperators_AgreeWithEquals()
+    {
+        var usd = AssetIdentifier.Iso4217("USD");
+        var sameUsd = AssetIdentifier.Parse("iso4217:USD");
+        var eur = AssetIdentifier.Iso4217("EUR");
+        AssetIdentifier? none = null;
+
+        Assert.IsTrue(usd == sameUsd);
+        Assert.IsFalse(usd != sameUsd);
+        Assert.IsFalse(usd == eur);
+        Assert.IsTrue(usd != eur);
+        Assert.IsFalse(usd == none);
+        Assert.IsFalse(none == usd);
+        Assert.IsTrue(none == null);
+    }
 }
