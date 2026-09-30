@@ -20,6 +20,9 @@ using StellarDotnetSdk.Xdr;
 // (for NoWebAuthServerSigningKeyFoundException), so the alias pins the unqualified name to Sep0045 — the
 // type the production code throws. Keep it — without the alias the name is ambiguous (CS0104).
 using MissingClientDomainException = StellarDotnetSdk.Sep.Sep0045.Exceptions.MissingClientDomainException;
+using CredentialsType = StellarDotnetSdk.Xdr.SorobanCredentialsType.SorobanCredentialsTypeEnum;
+using SorobanAuthorization = StellarDotnetSdk.Operations.SorobanAuthorization;
+using SdkSorobanAuthorizedInvocation = StellarDotnetSdk.Operations.SorobanAuthorizedInvocation;
 
 namespace StellarDotnetSdk.Tests.Sep.Sep0045;
 
@@ -810,6 +813,273 @@ public class ClientWebAuthContractTest
         Assert.AreEqual(1, ReadSignatures(entries[1]).Length);
     }
 
+    // ---- Protocol 27 ADDRESS_V2 credentials (CAP-0071-02) ----
+    // Signatures are checked against TestChallengeBuilder.ReferenceAuthorizationHash (the SDK's public
+    // preimage helper), not Sep45Challenge.ComputeAuthorizationHash, so they do not just echo the code under
+    // test.
+
+    [TestMethod]
+    public void ValidateChallenge_Passes_WhenChallengeIsV2()
+    {
+        var result = TestChallengeBuilder.Build(credentialsType: CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new ClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            TestChallengeBuilder.DefaultWebAuthDomain,
+            new HttpClient());
+
+        var parsed = auth.ValidateChallenge(xdr, result.ClientContractId);
+
+        Assert.AreEqual(CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2,
+            parsed.ServerEntry.Credentials.Discriminant.InnerValue);
+    }
+
+    [TestMethod]
+    public async Task SignAuthorizationEntries_SignsV2ClientEntry_OverAddressBoundPreimage()
+    {
+        var signer = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(credentialsType: CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            new HttpClient(), 500);
+
+        var signed = await auth.SignAuthorizationEntriesAsync(xdr, result.ClientContractId, new[] { signer });
+        var entries = TestChallengeBuilder.DecodeEntries(signed);
+        var clientEntry = entries[1];
+
+        // The arm is preserved (not downgraded to V1) and the expiration stamped into the V2 payload.
+        Assert.AreEqual(CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2,
+            clientEntry.Credentials.Discriminant.InnerValue);
+        Assert.IsNull(clientEntry.Credentials.Address);
+        Assert.AreEqual(510u, clientEntry.Credentials.AddressV2.SignatureExpirationLedger.InnerValue);
+
+        var sigs = ReadSignatures(clientEntry);
+        Assert.AreEqual(1, sigs.Length);
+        CollectionAssert.AreEqual(signer.PublicKey, sigs[0].PublicKey);
+        Assert.IsTrue(signer.Verify(
+            TestChallengeBuilder.ReferenceAuthorizationHash(clientEntry, Network.Test()), sigs[0].Signature));
+        // ...and specifically not over the legacy, address-unbound preimage.
+        var creds = clientEntry.Credentials.AddressV2;
+        var legacyHash = SorobanAuthorization.BuildAuthPreimageHash(
+            Network.Test(), creds.Nonce.InnerValue, creds.SignatureExpirationLedger.InnerValue,
+            SdkSorobanAuthorizedInvocation.FromXdr(clientEntry.RootInvocation));
+        Assert.IsFalse(signer.Verify(legacyHash, sigs[0].Signature));
+
+        // The V2 server entry is left untouched.
+        Assert.AreEqual(CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2,
+            entries[0].Credentials.Discriminant.InnerValue);
+        Sep45Challenge.VerifyServerSignature(entries[0], result.ServerKeyPair.AccountId, Network.Test());
+    }
+
+    [TestMethod]
+    public async Task SignAuthorizationEntries_MixedV1V2_SignsEachEntryOverItsOwnPreimage()
+    {
+        // Server V2, client V1, client domain V2: each entry keeps its arm and is signed over its arm's preimage.
+        var clientSigner = KeyPair.Random();
+        var cdKp = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(
+            clientDomain: "c.example", clientDomainKeyPair: cdKp,
+            credentialsType: CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2,
+            clientCredentialsType: CredentialsType.SOROBAN_CREDENTIALS_ADDRESS);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            new HttpClient(), 500,
+            TestChallengeBuilder.DefaultWebAuthDomain);
+        auth.ValidateChallenge(xdr, result.ClientContractId, cdKp.AccountId);
+
+        var signed = await auth.SignAuthorizationEntriesAsync(
+            xdr, result.ClientContractId, new[] { clientSigner }, cdKp);
+        var entries = TestChallengeBuilder.DecodeEntries(signed);
+
+        CollectionAssert.AreEqual(
+            new[]
+            {
+                CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2,
+                CredentialsType.SOROBAN_CREDENTIALS_ADDRESS,
+                CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2,
+            },
+            entries.Select(e => e.Credentials.Discriminant.InnerValue).ToArray());
+        Sep45Challenge.VerifyServerSignature(entries[0], result.ServerKeyPair.AccountId, Network.Test());
+        var clientSigs = ReadSignatures(entries[1]);
+        Assert.AreEqual(1, clientSigs.Length);
+        Assert.IsTrue(clientSigner.Verify(
+            TestChallengeBuilder.ReferenceAuthorizationHash(entries[1], Network.Test()), clientSigs[0].Signature));
+        var cdSigs = ReadSignatures(entries[2]);
+        Assert.AreEqual(1, cdSigs.Length);
+        Assert.IsTrue(cdKp.Verify(
+            TestChallengeBuilder.ReferenceAuthorizationHash(entries[2], Network.Test()), cdSigs[0].Signature));
+    }
+
+    [TestMethod]
+    public async Task SignAuthorizationEntries_SignsV2ClientDomain_WithRemoteDelegate()
+    {
+        var cdKp = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(
+            clientDomain: "c.example", clientDomainKeyPair: cdKp,
+            credentialsType: CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            new HttpClient(), 500);
+
+        var delegated = new List<string>();
+        ClientDomainEntrySigningDelegate del = e =>
+        {
+            delegated.Add(CredentialsAddress(e));
+            TestChallengeBuilder.SignEntryInPlace(e, cdKp, Network.Test());
+            return Task.FromResult(e);
+        };
+
+        var signed = await auth.SignAuthorizationEntriesAsync(
+            xdr, result.ClientContractId, new[] { KeyPair.Random() },
+            clientDomainSigningDelegate: del, clientDomainAccountId: cdKp.AccountId);
+
+        CollectionAssert.AreEqual(new[] { cdKp.AccountId }, delegated);
+        var cdEntry = TestChallengeBuilder.DecodeEntries(signed)[2];
+        Assert.AreEqual(CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2, cdEntry.Credentials.Discriminant.InnerValue);
+        // The delegate saw the stamped expiration, so its signature covers the final entry.
+        Assert.AreEqual(510u, cdEntry.Credentials.AddressV2.SignatureExpirationLedger.InnerValue);
+        var cdSigs = ReadSignatures(cdEntry);
+        Assert.AreEqual(1, cdSigs.Length);
+        Assert.IsTrue(cdKp.Verify(
+            TestChallengeBuilder.ReferenceAuthorizationHash(cdEntry, Network.Test()), cdSigs[0].Signature));
+    }
+
+    [TestMethod]
+    public async Task SignAuthorizationEntries_Throws_WhenDelegateChangesCredentialsArm()
+    {
+        // The delegate returns the right account and invocation but downgrades the V2 entry to V1 (signing the
+        // legacy preimage). That is a different authorization than the server issued, so reject it locally.
+        var cdKp = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(
+            clientDomain: "c.example", clientDomainKeyPair: cdKp,
+            credentialsType: CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            new HttpClient(), 500);
+
+        ClientDomainEntrySigningDelegate del = e =>
+        {
+            var downgraded = new SorobanAuthorizationEntry
+            {
+                Credentials = new SorobanCredentials
+                {
+                    Discriminant = new SorobanCredentialsType
+                    {
+                        InnerValue = CredentialsType.SOROBAN_CREDENTIALS_ADDRESS,
+                    },
+                    Address = e.Credentials.AddressV2,
+                },
+                RootInvocation = e.RootInvocation,
+            };
+            TestChallengeBuilder.SignEntryInPlace(downgraded, cdKp, Network.Test());
+            return Task.FromResult(downgraded);
+        };
+
+        var ex = await Assert.ThrowsExceptionAsync<InvalidArgumentsException>(() =>
+            auth.SignAuthorizationEntriesAsync(
+                xdr, result.ClientContractId, new[] { KeyPair.Random() },
+                clientDomainSigningDelegate: del, clientDomainAccountId: cdKp.AccountId));
+        StringAssert.Contains(ex.Message, "credentials type");
+    }
+
+    [TestMethod]
+    [DataRow(CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES)]
+    [DataRow(CredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT)]
+    public async Task SignAuthorizationEntries_Throws_OnNonSep45Credentials(CredentialsType credentialsType)
+    {
+        // Standalone callers skip ValidateChallenge; the signer must still refuse the arms SEP-45 excludes.
+        var result = TestChallengeBuilder.Build();
+        var clientEntry = result.Entries[1];
+        clientEntry.Credentials = new SorobanCredentials
+        {
+            Discriminant = new SorobanCredentialsType { InnerValue = credentialsType },
+            AddressWithDelegates = credentialsType == CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES
+                ? new SorobanAddressCredentialsWithDelegates
+                {
+                    AddressCredentials = clientEntry.Credentials.Address,
+                    Delegates = Array.Empty<SorobanDelegateSignature>(),
+                }
+                : null,
+        };
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            new HttpClient(), 500);
+
+        var ex = await Assert.ThrowsExceptionAsync<InvalidArgumentsException>(() =>
+            auth.SignAuthorizationEntriesAsync(xdr, result.ClientContractId, new[] { KeyPair.Random() }));
+        StringAssert.Contains(ex.Message, "non-address credentials");
+    }
+
+    [TestMethod]
+    public async Task JwtTokenAsync_FullFlow_V2Challenge_SubmitsV2EntriesSignedOverAddressBoundPreimage()
+    {
+        // End to end against a server that issues ADDRESS_V2 challenges (as Java SDK 5.0.0 servers do on
+        // protocol 27+ networks): validate, sign, submit, and inspect what was posted.
+        var signer = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(credentialsType: CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
+        var challengeXdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+
+        string? postedBody = null;
+        var handler = new Mock<HttpMessageHandler>();
+        handler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync((HttpRequestMessage r, CancellationToken _) =>
+            {
+                if (r.Method == HttpMethod.Get)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent("{\"authorization_entries\":\"" + challengeXdr + "\"}"),
+                    };
+                }
+                postedBody = r.Content!.ReadAsStringAsync().GetAwaiter().GetResult();
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent("{\"token\":\"final.jwt.token\"}"),
+                };
+            });
+
+        using var client = new HttpClient(handler.Object);
+        using var auth = new TestableClientWebAuthContract(
+            AuthEndpoint, TestChallengeBuilder.DefaultWebAuthContractId,
+            Network.Test(), result.ServerKeyPair.AccountId,
+            TestChallengeBuilder.DefaultHomeDomain, SorobanRpcUrl,
+            client, 500,
+            TestChallengeBuilder.DefaultWebAuthDomain);
+
+        var jwt = await auth.JwtTokenAsync(result.ClientContractId, new[] { signer });
+
+        Assert.AreEqual("final.jwt.token", jwt);
+        Assert.IsNotNull(postedBody);
+        const string prefix = "authorization_entries=";
+        StringAssert.StartsWith(postedBody, prefix);
+        var posted = TestChallengeBuilder.DecodeEntries(WebUtility.UrlDecode(postedBody!.Substring(prefix.Length)));
+        Assert.IsTrue(posted.All(e =>
+            e.Credentials.Discriminant.InnerValue == CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2));
+        var clientSigs = ReadSignatures(posted[1]);
+        Assert.AreEqual(1, clientSigs.Length);
+        Assert.IsTrue(signer.Verify(
+            TestChallengeBuilder.ReferenceAuthorizationHash(posted[1], Network.Test()), clientSigs[0].Signature));
+    }
+
     [TestMethod]
     public async Task SendSignedChallenge_FormEncoded_ReturnsJwtOn200()
     {
@@ -1126,7 +1396,7 @@ public class ClientWebAuthContractTest
     /// <summary>Extracts the (public_key, signature) byte pairs from an entry's SCV_VEC signature.</summary>
     private static (byte[] PublicKey, byte[] Signature)[] ReadSignatures(SorobanAuthorizationEntry entry)
     {
-        var vec = entry.Credentials.Address.Signature.Vec!.InnerValue;
+        var vec = TestChallengeBuilder.AddressCredentials(entry).Signature.Vec!.InnerValue;
         var result = new (byte[] PublicKey, byte[] Signature)[vec.Length];
         for (var i = 0; i < vec.Length; i++)
         {
@@ -1151,7 +1421,7 @@ public class ClientWebAuthContractTest
     /// <summary>Returns the strkey of an entry's credentials address (mirrors the production helper).</summary>
     private static string CredentialsAddress(SorobanAuthorizationEntry entry)
     {
-        return ScAddress.FromXdr(entry.Credentials.Address.Address) switch
+        return ScAddress.FromXdr(TestChallengeBuilder.AddressCredentials(entry).Address) switch
         {
             ScAccountId acc => acc.InnerValue,
             ScContractId con => con.InnerValue,

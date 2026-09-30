@@ -516,8 +516,10 @@ public class ClientWebAuthContract : IDisposable
         for (var i = 0; i < entries.Length; i++)
         {
             var entry = entries[i];
-            if (entry.Credentials.Discriminant.InnerValue !=
-                SorobanCredentialsType.SorobanCredentialsTypeEnum.SOROBAN_CREDENTIALS_ADDRESS)
+            // Each entry keeps its own credential arm: ADDRESS and ADDRESS_V2 share the payload mutated
+            // below, and ComputeAuthorizationHash picks the matching preimage for each.
+            var creds = Sep45Challenge.GetAddressCredentials(entry);
+            if (creds == null)
             {
                 // SEP-45 challenges contain only address-credential entries (ValidateChallenge enforces
                 // this). Fail fast on anything else rather than silently passing it through unsigned —
@@ -525,10 +527,10 @@ public class ClientWebAuthContract : IDisposable
                 throw new InvalidArgumentsException(
                     $"Authorization entry {i} has non-address credentials " +
                     $"({entry.Credentials.Discriminant.InnerValue}); SEP-45 challenges contain only " +
-                    "SOROBAN_CREDENTIALS_ADDRESS entries.");
+                    "SOROBAN_CREDENTIALS_ADDRESS or SOROBAN_CREDENTIALS_ADDRESS_V2 entries.");
             }
 
-            var entryAddress = Sep45Challenge.AddressToStrKey(entry.Credentials.Address.Address);
+            var entryAddress = Sep45Challenge.AddressToStrKey(creds.Address);
 
             if (entryAddress == _serverSigningKey)
             {
@@ -539,7 +541,7 @@ public class ClientWebAuthContract : IDisposable
             {
                 // Client (contract) entry: authorize with every supplied signer. The signature
                 // expiration must be stamped before hashing because it is part of the signed preimage.
-                entry.Credentials.Address.SignatureExpirationLedger = new Uint32(expiration);
+                creds.SignatureExpirationLedger = new Uint32(expiration);
                 var hash = Sep45Challenge.ComputeAuthorizationHash(entry, _network);
                 foreach (var kp in signers)
                 {
@@ -548,7 +550,7 @@ public class ClientWebAuthContract : IDisposable
             }
             else if (clientDomainAccountKeyPair != null && entryAddress == clientDomainAccountKeyPair.AccountId)
             {
-                entry.Credentials.Address.SignatureExpirationLedger = new Uint32(expiration);
+                creds.SignatureExpirationLedger = new Uint32(expiration);
                 var hash = Sep45Challenge.ComputeAuthorizationHash(entry, _network);
                 Sep45Challenge.AppendSignature(
                     entry, clientDomainAccountKeyPair.PublicKey, clientDomainAccountKeyPair.Sign(hash));
@@ -559,7 +561,8 @@ public class ClientWebAuthContract : IDisposable
                 // Snapshot the invocation before handing the entry to the untrusted remote delegate, so we
                 // can confirm it comes back unchanged even if the delegate mutates the passed-in entry.
                 var expectedInvocation = Sep45Challenge.EncodeInvocation(entry.RootInvocation);
-                entry.Credentials.Address.SignatureExpirationLedger = new Uint32(expiration);
+                var expectedCredentialsType = entry.Credentials.Discriminant.InnerValue;
+                creds.SignatureExpirationLedger = new Uint32(expiration);
                 var signedEntry =
                     await clientDomainSigningDelegate(entry).ConfigureAwait(false);
                 // The delegate is a remote callback whose result is untrusted (the non-null annotation is
@@ -571,7 +574,19 @@ public class ClientWebAuthContract : IDisposable
                     throw new InvalidArgumentsException(
                         "clientDomainSigningDelegate returned null for the client-domain entry.");
                 }
-                if (Sep45Challenge.AddressToStrKey(signedEntry.Credentials.Address.Address) != clientDomainAccountId)
+                // The credential arm must survive too: the delegate signed the preimage of the arm it
+                // returned, so a switched arm (e.g. V2 -> V1) is a different authorization than the one the
+                // server issued.
+                if (signedEntry.Credentials?.Discriminant?.InnerValue != expectedCredentialsType)
+                {
+                    throw new InvalidArgumentsException(
+                        "clientDomainSigningDelegate returned an entry whose credentials type " +
+                        $"({signedEntry.Credentials?.Discriminant?.InnerValue}) differs from the one it was " +
+                        $"given ({expectedCredentialsType}).");
+                }
+                var signedCreds = Sep45Challenge.GetAddressCredentials(signedEntry);
+                if (signedCreds?.Address == null ||
+                    Sep45Challenge.AddressToStrKey(signedCreds.Address) != clientDomainAccountId)
                 {
                     throw new InvalidArgumentsException(
                         "clientDomainSigningDelegate returned an entry whose credentials address does not " +
