@@ -32,7 +32,9 @@ public class GetLatestLedgerResponse
     /// <remarks>
     ///     <see cref="JsonNumberHandlingAttribute" /> records the quoted wire form at the declaration, so a caller who
     ///     deserializes this type with their own options reads it without enabling
-    ///     <see cref="JsonNumberHandling.AllowReadingFromString" /> globally; see the remarks on
+    ///     <see cref="JsonNumberHandling.AllowReadingFromString" /> globally. Those options must still bind the camelCase
+    ///     wire name (for example with <see cref="System.Text.Json.JsonSerializerOptions.PropertyNameCaseInsensitive" />);
+    ///     under default case-sensitive options the property stays <c>null</c>. See the remarks on
     ///     <see cref="SimulateTransactionResponse.MinResourceFee" />.
     /// </remarks>
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
