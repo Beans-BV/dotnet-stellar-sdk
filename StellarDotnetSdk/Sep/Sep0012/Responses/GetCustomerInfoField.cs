@@ -34,9 +34,10 @@ public class GetCustomerInfoField
     public string[]? Choices { get; init; }
 
     /// <summary>
-    ///     Gets whether the field may be omitted. SEP-0012 defines an absent value as <c>false</c>: the field is
-    ///     required to proceed.
+    ///     Gets whether the field may be omitted. An absent or <c>null</c> value reads as <c>false</c>, the SEP-0012
+    ///     default: the field is required to proceed.
     /// </summary>
     [JsonPropertyName("optional")]
-    public bool? Optional { get; init; }
+    [JsonConverter(typeof(OptionalFlagJsonConverter))]
+    public bool Optional { get; init; }
 }

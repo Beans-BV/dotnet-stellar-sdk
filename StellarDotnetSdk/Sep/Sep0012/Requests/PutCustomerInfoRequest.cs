@@ -13,7 +13,10 @@ namespace StellarDotnetSdk.Sep.Sep0012.Requests;
 ///         Fields are written in this order, a later source overriding an earlier one with the same name:
 ///         identification parameters, <see cref="KycFields" />, <see cref="CustomFields" />,
 ///         <see cref="VerificationFields" />, <see cref="FileReferences" />; then the binary parts from
-///         <see cref="KycFields" /> followed by <see cref="CustomFiles" />.
+///         <see cref="KycFields" /> followed by <see cref="CustomFiles" />. A name used by both a text field and a
+///         binary field (for example <c>CustomFields["photo_id_front"]</c> with
+///         <see cref="NaturalPersonKycFields.PhotoIdFront" />) is rejected with an
+///         <see cref="System.ArgumentException" /> before sending.
 ///     </para>
 /// </remarks>
 public sealed record PutCustomerInfoRequest

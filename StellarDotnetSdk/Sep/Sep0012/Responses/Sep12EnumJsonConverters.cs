@@ -236,6 +236,35 @@ public sealed class ChoicesJsonConverter : JsonConverter<string[]?>
     }
 }
 
+/// <summary>
+///     Reads a field's <c>optional</c> flag. SEP-0012 defines an absent flag as <c>false</c>, and an explicit
+///     <c>null</c> reads the same way, since anchors whose serializers write out null properties send it for "not
+///     set". Any other non-boolean value fails the parse.
+/// </summary>
+public sealed class OptionalFlagJsonConverter : JsonConverter<bool>
+{
+    /// <inheritdoc />
+    public override bool HandleNull => true;
+
+    /// <inheritdoc />
+    /// <exception cref="JsonException">Thrown when the value is not <c>true</c>, <c>false</c> or <c>null</c>.</exception>
+    public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        return reader.TokenType switch
+        {
+            JsonTokenType.True => true,
+            JsonTokenType.False or JsonTokenType.Null => false,
+            _ => throw new JsonException($"Expected a boolean 'optional' value but found {reader.TokenType}."),
+        };
+    }
+
+    /// <inheritdoc />
+    public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
+    {
+        writer.WriteBooleanValue(value);
+    }
+}
+
 /// <summary>Rejects a <c>null</c> element in the <c>files</c> array of <c>GET /customer/files</c>.</summary>
 public sealed class CustomerFilesJsonConverter : NonNullElementArrayJsonConverter<CustomerFileResponse>
 {
