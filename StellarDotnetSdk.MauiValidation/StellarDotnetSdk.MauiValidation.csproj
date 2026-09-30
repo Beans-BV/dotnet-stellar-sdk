@@ -1,0 +1,93 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!--
+        Minimal .NET MAUI app that exercises the SDK on mobile runtimes in trimmed Release builds. It is a validation
+        harness, not a product sample. It is deliberately NOT part of stellar-dotnet-sdk.sln, so building the solution
+        never requires the MAUI workloads. Setup and run instructions: docs/maui-compatibility.md.
+        The iOS and Mac Catalyst targets have not been built yet (no macOS host was available).
+    -->
+    <PropertyGroup>
+        <TargetFrameworks>net10.0-android</TargetFrameworks>
+        <!-- iOS and Mac Catalyst can only be built on macOS. run-android.sh restricts the build to Android. -->
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx')) And '$(ValidationAndroidOnly)' != 'true'">$(TargetFrameworks);net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+        <OutputType>Exe</OutputType>
+        <UseMaui>true</UseMaui>
+        <SingleProject>true</SingleProject>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>12</LangVersion>
+        <IsPackable>false</IsPackable>
+        <RootNamespace>StellarDotnetSdk.MauiValidation</RootNamespace>
+
+        <ApplicationTitle>Stellar SDK MAUI Validation</ApplicationTitle>
+        <ApplicationId>io.github.beansbv.dotnetstellarsdk.mauivalidation</ApplicationId>
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <ApplicationVersion>1</ApplicationVersion>
+
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+    </PropertyGroup>
+
+    <!-- The desktop console baseline (Desktop/) is a separate project that compiles ValidationRunner.cs itself. -->
+    <ItemGroup>
+        <Compile Remove="Desktop/**" />
+        <None Remove="Desktop/**" />
+    </ItemGroup>
+
+    <!--
+        Trimming. Release builds of MAUI apps are trimmed by default in "partial" mode, which only trims
+        assemblies marked IsTrimmable. The SDK is not marked, so partial mode would leave it untouched and
+        hide its trim warnings. Full mode trims every assembly and reports every IL2xxx warning, so this
+        harness defaults to it. Override with -p:ValidationTrimMode=partial to test the out-of-the-box
+        MAUI configuration.
+    -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <ValidationTrimMode Condition="'$(ValidationTrimMode)' == ''">full</ValidationTrimMode>
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>$(ValidationTrimMode)</TrimMode>
+        <!-- Report each trim warning individually instead of one summary warning per assembly. -->
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
+        <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+    </PropertyGroup>
+
+    <!--
+        Workaround the SDK needs under TrimMode=full (see docs/maui-compatibility.md §3.2). Without it the first
+        Horizon or RPC call fails: TrimMode=full turns off reflection-based System.Text.Json, which the SDK depends
+        on, and the trimmer removes the model constructors and properties that reflection would use.
+        Pass -p:StellarDotnetSdkTrimWorkaround=false to reproduce the failure.
+        The conditions work here because this project sets TrimMode itself. An app copying the workaround should add
+        it unconditionally (docs/maui-compatibility.md §3.2).
+    -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Release' And '$(TrimMode)' == 'full' And '$(StellarDotnetSdkTrimWorkaround)' != 'false'">
+        <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Release' And '$(TrimMode)' == 'full' And '$(StellarDotnetSdkTrimWorkaround)' != 'false'">
+        <TrimmerRootDescriptor Include="ILLink.Descriptors.xml" />
+    </ItemGroup>
+
+    <!-- Android Release: build a self-contained APK that installs directly with adb. -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Release' And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+        <AndroidPackageFormat>apk</AndroidPackageFormat>
+        <AndroidKeyStore>false</AndroidKeyStore>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+    </ItemGroup>
+
+    <!--
+        By default the app uses the SDK built from this repository. -p:StellarDotnetSdkPackageVersion=15.1.0 tests a
+        published NuGet package instead, and -p:NSecPackageVersion=26.4.0 adds the consumer-side NSec reference that
+        makes the published package work on Android (docs/maui-compatibility.md §1).
+    -->
+    <ItemGroup Condition="'$(StellarDotnetSdkPackageVersion)' == ''">
+        <ProjectReference Include="..\StellarDotnetSdk\StellarDotnetSdk.csproj" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(StellarDotnetSdkPackageVersion)' != ''">
+        <PackageReference Include="stellar-dotnet-sdk" Version="$(StellarDotnetSdkPackageVersion)" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(NSecPackageVersion)' != ''">
+        <PackageReference Include="NSec.Cryptography" Version="$(NSecPackageVersion)" />
+    </ItemGroup>
+</Project>

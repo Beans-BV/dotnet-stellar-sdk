@@ -74,6 +74,8 @@ The `stellar-dotnet-sdk` and `stellar-dotnet-sdk-xdr` packages multi-target the 
 
 NuGet resolves the best matching assembly for your project automatically.
 
+.NET MAUI: validated on an Android emulator; iOS is not validated yet. See [MAUI compatibility](docs/maui-compatibility.md) for results, required workarounds (including for the published 15.1.0 package on Android), trimming settings and known limitations.
+
 ### TFM-specific API notes
 
 - **SEP-0009 date fields** (`BirthDate`, `IdIssueDate`, `IdExpirationDate`, `RegistrationDate`): `DateOnly?` on `net8.0` / `net10.0`; `string?` (ISO `yyyy-MM-dd`) on `netstandard2.1`. JSON wire format is identical across TFMs.
@@ -84,8 +86,8 @@ NuGet resolves the best matching assembly for your project automatically.
 
 The SDK includes numerous example applications showcasing its features. Explore these standalone projects:
 
-- [Horizon Examples](https://github.com/Beans-BV/dotnet-stellar-sdk/tree/master/Examples/Horizon/HorizonExamples.cs)
-- [Soroban Examples](https://github.com/Beans-BV/dotnet-stellar-sdk/tree/master/Examples/Soroban/SorobanExamples.cs)
+- [Horizon Examples](Examples/Horizon/HorizonExamples.cs)
+- [Soroban Examples](Examples/Soroban/)
 
 ### HTTP retry & resilience
 
