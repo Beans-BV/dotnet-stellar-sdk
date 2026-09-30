@@ -1148,9 +1148,12 @@ public class KycService : IDisposable
             return false;
         }
 
+        // Both branches require the host as written to equal Uri.Host, so the two parses must agree on where the
+        // host ends. Uri.Host is already lower-cased, so LOCALHOST still passes.
         if (uri.HostNameType == UriHostNameType.Dns)
         {
-            return string.Equals(host, "localhost", StringComparison.OrdinalIgnoreCase);
+            return string.Equals(host, uri.Host, StringComparison.OrdinalIgnoreCase) &&
+                   string.Equals(host, "localhost", StringComparison.OrdinalIgnoreCase);
         }
 
         return string.Equals(host, uri.Host, StringComparison.OrdinalIgnoreCase) &&

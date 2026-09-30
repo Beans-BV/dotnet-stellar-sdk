@@ -86,6 +86,7 @@ public class KycServiceTest
     [DataRow("kyc.example.com")]
     [DataRow("/customer")]
     [DataRow("ftp://kyc.example.com")]
+    [DataRow("http://evil.com\\@localhost/", DisplayName = "backslash before '@', which Uri and the as-written host read differently")]
     public void Constructor_WithInvalidAddress_ThrowsArgumentException(string address)
     {
         Assert.ThrowsException<ArgumentException>(() => new KycService(address, new HttpClient()));
@@ -1245,6 +1246,7 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     [DataRow("")]
     [DataRow("/relative/callback")]
     [DataRow("ftp://wallet.example.com/callback")]
+    [DataRow("http://evil.com\\@localhost/", DisplayName = "backslash before '@', which Uri and the as-written host read differently")]
     public async Task PutCustomerCallbackAsync_WithInvalidUrl_ThrowsArgumentException(string url)
     {
         var (service, handler) = CreateService("");
