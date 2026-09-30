@@ -17,6 +17,9 @@ using SCSymbol = StellarDotnetSdk.Xdr.SCSymbol;
 using SCVal = StellarDotnetSdk.Xdr.SCVal;
 using SCVec = StellarDotnetSdk.Xdr.SCVec;
 using SCValType = StellarDotnetSdk.Xdr.SCValType;
+using CredentialsType = StellarDotnetSdk.Xdr.SorobanCredentialsType.SorobanCredentialsTypeEnum;
+using SorobanAuthorization = StellarDotnetSdk.Operations.SorobanAuthorization;
+using SdkSorobanAuthorizedInvocation = StellarDotnetSdk.Operations.SorobanAuthorizedInvocation;
 
 namespace StellarDotnetSdk.Tests.Sep.Sep0045;
 
@@ -527,6 +530,190 @@ public class Sep45ChallengeTest
         Assert.AreEqual(0, leaks.Count,
             "ReadChallenge leaked non-WebAuthContractException(s): " +
             string.Join(", ", leaks.Take(8).Distinct()));
+    }
+
+    // ---- Protocol 27 ADDRESS_V2 credentials (CAP-0071-02) ----
+    // Peer servers issue ADDRESS_V2 challenge entries on protocol 27+ networks (Java SDK 5.0.0 does so by
+    // default), so validation, server-signature verification and hashing must accept both address arms.
+
+    [TestMethod]
+    [DataRow(CredentialsType.SOROBAN_CREDENTIALS_ADDRESS)]
+    [DataRow(CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2)]
+    public void ComputeAuthorizationHash_MatchesSdkPreimageHelper(CredentialsType credentialsType)
+    {
+        // Pins the SEP-45 XDR-level hash to the SDK's public preimage helper for both arms, so the two
+        // cannot drift apart.
+        var result = TestChallengeBuilder.Build(credentialsType: credentialsType);
+        foreach (var entry in result.Entries)
+        {
+            CollectionAssert.AreEqual(
+                TestChallengeBuilder.ReferenceAuthorizationHash(entry, Network.Test()),
+                Sep45Challenge.ComputeAuthorizationHash(entry, Network.Test()));
+        }
+    }
+
+    [TestMethod]
+    public void ComputeAuthorizationHash_V2_UsesAddressBoundPreimage()
+    {
+        var entry = TestChallengeBuilder.Build(credentialsType: CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2)
+            .Entries[1];
+        var creds = entry.Credentials.AddressV2;
+        var invocation = SdkSorobanAuthorizedInvocation.FromXdr(entry.RootInvocation);
+
+        var hash = Sep45Challenge.ComputeAuthorizationHash(entry, Network.Test());
+
+        var addressBound = SorobanAuthorization.BuildAddressAuthPreimageHash(
+            Network.Test(), ScAddress.FromXdr(creds.Address), creds.Nonce.InnerValue,
+            creds.SignatureExpirationLedger.InnerValue, invocation);
+        var legacy = SorobanAuthorization.BuildAuthPreimageHash(
+            Network.Test(), creds.Nonce.InnerValue, creds.SignatureExpirationLedger.InnerValue, invocation);
+        CollectionAssert.AreEqual(addressBound, hash);
+        CollectionAssert.AreNotEqual(legacy, hash);
+
+        // Bound to the entry's own credential address: the same entry re-addressed hashes differently.
+        creds.Address = new ScAccountId(KeyPair.Random().AccountId).ToXdr();
+        CollectionAssert.AreNotEqual(hash, Sep45Challenge.ComputeAuthorizationHash(entry, Network.Test()));
+    }
+
+    [TestMethod]
+    public void VerifyServerSignature_Passes_WhenServerEntryIsV2()
+    {
+        var result = TestChallengeBuilder.Build(credentialsType: CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
+        Assert.AreEqual(CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2,
+            result.Entries[0].Credentials.Discriminant.InnerValue);
+        Sep45Challenge.VerifyServerSignature(
+            result.Entries[0], result.ServerKeyPair.AccountId, Network.Test());
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidServerSignatureException))]
+    public void VerifyServerSignature_Throws_WhenV2ServerEntrySignedOverLegacyPreimage()
+    {
+        // A V2 entry must be verified over the address-bound preimage. A signature made over the legacy
+        // preimage (the pre-fix client's hash) must not verify.
+        var result = TestChallengeBuilder.Build(
+            credentialsType: CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2, signServer: false);
+        var serverEntry = result.Entries[0];
+        var creds = serverEntry.Credentials.AddressV2;
+        var legacyHash = SorobanAuthorization.BuildAuthPreimageHash(
+            Network.Test(), creds.Nonce.InnerValue, creds.SignatureExpirationLedger.InnerValue,
+            SdkSorobanAuthorizedInvocation.FromXdr(serverEntry.RootInvocation));
+        TestChallengeBuilder.SignEntryInPlace(serverEntry, result.ServerKeyPair, legacyHash);
+
+        Sep45Challenge.VerifyServerSignature(serverEntry, result.ServerKeyPair.AccountId, Network.Test());
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidServerSignatureException))]
+    public void VerifyServerSignature_Throws_WhenV2HashTampered()
+    {
+        var result = TestChallengeBuilder.Build(credentialsType: CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
+        result.Entries[0].Credentials.AddressV2.SignatureExpirationLedger = new Uint32(9999);
+        Sep45Challenge.VerifyServerSignature(
+            result.Entries[0], result.ServerKeyPair.AccountId, Network.Test());
+    }
+
+    [TestMethod]
+    [DataRow(CredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT)]
+    [DataRow(CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES)]
+    public void VerifyServerSignature_Throws_OnNonAddressCredentials(CredentialsType credentialsType)
+    {
+        var result = TestChallengeBuilder.Build();
+        ReplaceCredentials(result.Entries[0], credentialsType);
+        Assert.ThrowsException<InvalidServerSignatureException>(() =>
+            Sep45Challenge.VerifyServerSignature(
+                result.Entries[0], result.ServerKeyPair.AccountId, Network.Test()));
+    }
+
+    [TestMethod]
+    public void ReadChallenge_ReturnsParsed_WhenAllEntriesV2()
+    {
+        var cdKp = KeyPair.Random();
+        var result = TestChallengeBuilder.Build(
+            clientDomain: "wallet.example", clientDomainKeyPair: cdKp,
+            credentialsType: CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+
+        var parsed = Sep45Challenge.ReadChallenge(
+            xdr, result.ServerKeyPair.AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+
+        Assert.AreEqual(3, parsed.Entries.Length);
+        Assert.IsTrue(parsed.Entries.All(e =>
+            e.Credentials.Discriminant.InnerValue == CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2));
+        Assert.AreEqual(result.ClientContractId, parsed.ClientAccountId);
+        Assert.AreEqual(cdKp.AccountId, parsed.ClientDomainAccountId);
+        Assert.AreEqual(result.ServerKeyPair.AccountId,
+            Sep45Challenge.AddressToStrKey(parsed.ServerEntry.Credentials.AddressV2.Address));
+        Sep45Challenge.VerifyServerSignature(parsed.ServerEntry, result.ServerKeyPair.AccountId, Network.Test());
+    }
+
+    [TestMethod]
+    [DataRow(CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2, CredentialsType.SOROBAN_CREDENTIALS_ADDRESS)]
+    [DataRow(CredentialsType.SOROBAN_CREDENTIALS_ADDRESS, CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2)]
+    public void ReadChallenge_ReturnsParsed_WhenEntriesMixV1AndV2(
+        CredentialsType serverCredentialsType, CredentialsType clientCredentialsType)
+    {
+        var result = TestChallengeBuilder.Build(
+            serverCredentialsType: serverCredentialsType, clientCredentialsType: clientCredentialsType);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+
+        var parsed = Sep45Challenge.ReadChallenge(
+            xdr, result.ServerKeyPair.AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+
+        Assert.AreEqual(result.ClientContractId, parsed.ClientAccountId);
+        Assert.AreEqual(serverCredentialsType, parsed.ServerEntry.Credentials.Discriminant.InnerValue);
+        Sep45Challenge.VerifyServerSignature(parsed.ServerEntry, result.ServerKeyPair.AccountId, Network.Test());
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidArgumentsException))]
+    public void ReadChallenge_Throws_WhenV2EntryHasUnexpectedCredentialsAddress()
+    {
+        // The participant allowlist applies to V2 entries too.
+        var result = TestChallengeBuilder.Build(credentialsType: CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
+        result.Entries[1].Credentials.AddressV2.Address = new ScAccountId(KeyPair.Random().AccountId).ToXdr();
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+        Sep45Challenge.ReadChallenge(
+            xdr, result.ServerKeyPair.AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain);
+    }
+
+    [TestMethod]
+    [DataRow(CredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT)]
+    [DataRow(CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES)]
+    public void ReadChallenge_Throws_OnNonAddressCredentials(CredentialsType credentialsType)
+    {
+        // SEP-45 describes only credentials.address; source-account and delegated credentials stay rejected.
+        var result = TestChallengeBuilder.Build();
+        ReplaceCredentials(result.Entries[1], credentialsType);
+        var xdr = TestChallengeBuilder.EncodeEntries(result.Entries);
+
+        var ex = Assert.ThrowsException<InvalidArgumentsException>(() => Sep45Challenge.ReadChallenge(
+            xdr, result.ServerKeyPair.AccountId, TestChallengeBuilder.DefaultWebAuthContractId,
+            new[] { TestChallengeBuilder.DefaultHomeDomain }, TestChallengeBuilder.DefaultWebAuthDomain));
+        StringAssert.Contains(ex.Message, "Credentials must be");
+    }
+
+    /// <summary>
+    ///     Swaps an entry's credentials for a non-SEP-45 arm. The WITH_DELEGATES arm keeps the original address
+    ///     payload, so only the arm itself can cause a rejection.
+    /// </summary>
+    private static void ReplaceCredentials(SorobanAuthorizationEntry entry, CredentialsType credentialsType)
+    {
+        var original = entry.Credentials.Address;
+        entry.Credentials = new SorobanCredentials
+        {
+            Discriminant = new SorobanCredentialsType { InnerValue = credentialsType },
+            AddressWithDelegates = credentialsType == CredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES
+                ? new SorobanAddressCredentialsWithDelegates
+                {
+                    AddressCredentials = original,
+                    Delegates = Array.Empty<SorobanDelegateSignature>(),
+                }
+                : null,
+        };
     }
 
     private static SCMapEntry StringMapEntry(string key, string value)
