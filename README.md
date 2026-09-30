@@ -127,8 +127,8 @@ surfaces `tx_bad_seq` and your code should look up the transaction by its hash t
 original result.
 
 > **⚠️ Do not wire `ForHorizon()` or `ForSoroban()` into SEP service clients**
-> (`ClientWebAuth`, `InteractiveService`, `TransferServerService`, `StellarToml` with a custom
-> `HttpClient`). Specific SEP POST endpoints are **non-idempotent by spec** and silently retrying
+> (`ClientWebAuth`, `InteractiveService`, `TransferServerService`, `UriScheme`, `StellarToml` with a
+> custom `HttpClient`). Specific SEP POST endpoints are **non-idempotent by spec** and silently retrying
 > them creates real problems:
 >
 > - **SEP-10 `POST /auth`** — the spec says: *"The Server should not provide more than one JWT for
@@ -139,9 +139,13 @@ original result.
 >   URL. The spec defines no idempotency-key mechanism.
 > - **SEP-6 `PATCH /transactions/{id}`** — not in the SEP-6 master spec; anchor-vendor extension
 >   that mutates KYC state. Treat as non-idempotent.
+> - **SEP-7 callback `POST`** (`UriScheme.SubmitToCallbackAsync`, `SignAndSubmitTransactionAsync`) —
+>   the spec says nothing about idempotency; the POST delivers a signed transaction to a URL the
+>   requester chose, and a retry delivers it again. Use `NoRetry()` (the default) for `UriScheme`:
+>   even transport retries replay it.
 >
-> For SEP HttpClients, use `WithConnectionRetries()` (transport retries only) or build a custom
-> `HttpResilienceOptions` whose `RetryHttpMethods` contains only `GET`/`HEAD`/`OPTIONS`. Note that
+> For the other SEP HttpClients, use `WithConnectionRetries()` (transport retries only) or build a
+> custom `HttpResilienceOptions` whose `RetryHttpMethods` contains only `GET`/`HEAD`/`OPTIONS`. Note that
 > transport (connection-failure) retries apply to **all** HTTP methods: a POST whose response was
 > lost may already have been processed server-side, so even `WithConnectionRetries()` carries a
 > small replay window. If that window is unacceptable, use `NoRetry()` and recover at the
