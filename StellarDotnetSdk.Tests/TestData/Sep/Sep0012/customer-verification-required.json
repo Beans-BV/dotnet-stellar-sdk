@@ -1,0 +1,11 @@
+{
+  "id": "d1ce2f48-3ff1-495d-9240-7a50d806cfed",
+  "status": "NEEDS_INFO",
+  "provided_fields": {
+    "mobile_number": {
+      "description": "phone number of the customer",
+      "type": "string",
+      "status": "VERIFICATION_REQUIRED"
+    }
+  }
+}

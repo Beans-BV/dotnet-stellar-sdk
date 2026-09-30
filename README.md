@@ -127,9 +127,9 @@ surfaces `tx_bad_seq` and your code should look up the transaction by its hash t
 original result.
 
 > **⚠️ Do not wire `ForHorizon()` or `ForSoroban()` into SEP service clients**
-> (`ClientWebAuth`, `InteractiveService`, `TransferServerService`, `StellarToml` with a custom
-> `HttpClient`). Specific SEP POST endpoints are **non-idempotent by spec** and silently retrying
-> them creates real problems:
+> (`ClientWebAuth`, `InteractiveService`, `TransferServerService`, `KycService`, `StellarToml` with a
+> custom `HttpClient`). Specific SEP POST endpoints are **non-idempotent by spec** and silently
+> retrying them creates real problems:
 >
 > - **SEP-10 `POST /auth`** — the spec says: *"The Server should not provide more than one JWT for
 >   a specific challenge transaction."* The challenge is one-shot. On transient failure, request a
@@ -139,6 +139,8 @@ original result.
 >   URL. The spec defines no idempotency-key mechanism.
 > - **SEP-6 `PATCH /transactions/{id}`** — not in the SEP-6 master spec; anchor-vendor extension
 >   that mutates KYC state. Treat as non-idempotent.
+> - **SEP-12 `POST /customer/files`** — each call stores the upload under a fresh `file_id`.
+>   Retrying after the anchor already stored it leaves an orphaned duplicate file.
 >
 > For SEP HttpClients, use `WithConnectionRetries()` (transport retries only) or build a custom
 > `HttpResilienceOptions` whose `RetryHttpMethods` contains only `GET`/`HEAD`/`OPTIONS`. Note that

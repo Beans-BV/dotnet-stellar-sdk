@@ -164,9 +164,11 @@ resilienceOptions.RetryHttpMethods.Add(HttpMethod.Post);
 >   is defined.
 > - **SEP-6 `PATCH /transactions/{id}`** — not in the SEP-6 master spec; anchor-vendor extension
 >   that mutates KYC state.
+> - **SEP-12 `POST /customer/files`** — each call stores the upload under a fresh `file_id`;
+>   retrying after the anchor already stored it leaves an orphaned duplicate file.
 >
 > Do NOT wire `ForHorizon()` or `ForSoroban()` into a `ClientWebAuth` / `InteractiveService` /
-> `TransferServerService` HttpClient. For SEP HttpClients, use `WithConnectionRetries()`
+> `TransferServerService` / `KycService` HttpClient. For SEP HttpClients, use `WithConnectionRetries()`
 > (transport failures only) or build a custom `HttpResilienceOptions` whose `RetryHttpMethods`
 > contains only the safe defaults.
 >

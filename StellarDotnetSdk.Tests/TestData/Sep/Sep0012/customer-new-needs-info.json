@@ -1,0 +1,23 @@
+{
+  "status": "NEEDS_INFO",
+  "fields": {
+    "email_address": {
+      "description": "Email address of the customer",
+      "type": "string",
+      "optional": true
+    },
+    "id_type": {
+      "description": "Government issued ID",
+      "type": "string",
+      "choices": [
+        "Passport",
+        "Drivers License",
+        "State ID"
+      ]
+    },
+    "photo_id_front": {
+      "description": "A clear photo of the front of the government issued ID",
+      "type": "binary"
+    }
+  }
+}
