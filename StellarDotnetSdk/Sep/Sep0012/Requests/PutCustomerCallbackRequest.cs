@@ -20,7 +20,11 @@ public sealed record PutCustomerCallbackRequest
     public required string Jwt { get; init; }
 
     /// <summary>
-    ///     Gets the callback URL the anchor POSTs status changes to.
+    ///     Gets the callback URL the anchor POSTs status changes to. It must be an absolute <c>https</c> URL, because
+    ///     each callback carries the customer's KYC status and field details, which http would send in the clear.
+    ///     Plain <c>http</c> is accepted only for <c>localhost</c> or a loopback IP address in its standard form
+    ///     (such as <c>127.0.0.1</c> or <c>[::1]</c>), which reaches the wallet only when the anchor runs on the same
+    ///     machine, as in local testing.
     /// </summary>
     public required string Url { get; init; }
 

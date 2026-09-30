@@ -163,7 +163,9 @@ public sealed class FieldTypeJsonConverter : Sep12EnumJsonConverter<FieldType>
 public sealed class ChoicesJsonConverter : JsonConverter<string[]?>
 {
     /// <inheritdoc />
-    /// <exception cref="JsonException">Thrown when the value is not an array of strings and numbers.</exception>
+    /// <exception cref="JsonException">
+    ///     Thrown when the value is not an array of strings and numbers, or the reader ends inside the array.
+    /// </exception>
     public override string[]? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType == JsonTokenType.Null)
@@ -177,8 +179,19 @@ public sealed class ChoicesJsonConverter : JsonConverter<string[]?>
         }
 
         var choices = new List<string>();
-        while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
+        while (true)
         {
+            // JsonSerializer hands a converter the whole value, but a direct caller may pass a partial reader.
+            if (!reader.Read())
+            {
+                throw new JsonException("The 'choices' array ends before its closing bracket.");
+            }
+
+            if (reader.TokenType == JsonTokenType.EndArray)
+            {
+                break;
+            }
+
             switch (reader.TokenType)
             {
                 case JsonTokenType.String:

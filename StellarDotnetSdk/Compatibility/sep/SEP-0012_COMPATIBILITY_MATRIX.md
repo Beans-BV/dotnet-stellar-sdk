@@ -77,7 +77,7 @@ _Note: StellarDotnetSdk implements the **client** (wallet) side of SEP-12, count
 
 ### Key Classes
 
-- **`KycService`**: Client for every SEP-12 endpoint. `FromDomainAsync` discovers `KYC_SERVER` (falling back to `TRANSFER_SERVER`) from stellar.toml; requires https (http only for loopback); responses are read with a 1 MiB cap within the client's timeout and parsed with the hardened `JsonOptions.DefaultOptions`.
+- **`KycService`**: Client for every SEP-12 endpoint. `FromDomainAsync` discovers `KYC_SERVER` (falling back to `TRANSFER_SERVER`) from stellar.toml; requires https (http only for `localhost` or a standard-form loopback IP); responses are read with a 1 MiB cap within the client's timeout and parsed with the hardened `JsonOptions.DefaultOptions`.
 - **`KycCallbackSignature`**: Verifies the `Signature` / `X-Stellar-Signature` header of anchor callbacks (Ed25519 over `<timestamp>.<host>.<body>`, with a freshness window) over the body as a string or as raw bytes; `GetSignedHost` derives the host string the anchor signs; `CreateSignatureHeader` computes the header for anchors and tests.
 - **`GetCustomerInfoRequest`**: Parameters for `GET /customer`.
 - **`GetCustomerInfoResponse`**: Customer status, required fields, provided fields and message; `FromJson` parses callback payloads.
@@ -247,7 +247,7 @@ _Note: StellarDotnetSdk implements the **client** (wallet) side of SEP-12, count
 | `id` |  | ✅ | `PutCustomerCallbackRequest.Id` | ID of the customer |
 | `memo` |  | ✅ | `PutCustomerCallbackRequest.Memo` | Memo identifying a customer of a shared account |
 | `memo_type` |  | ✅ | `PutCustomerCallbackRequest.MemoType` | (Deprecated) Type of memo |
-| `url` | ✓ | ✅ | `PutCustomerCallbackRequest.Url` | Callback URL the anchor POSTs status changes to (validated as absolute http(s)) |
+| `url` | ✓ | ✅ | `PutCustomerCallbackRequest.Url` | Callback URL the anchor POSTs status changes to (validated as absolute https; http only for `localhost` or a standard-form loopback IP) |
 
 ### Callback Signature
 
@@ -312,7 +312,7 @@ Notable strengths:
 
 - **Beyond the peer reference**: in addition to the Flutter SDK's surface, the SDK implements callback signature verification (`KycCallbackSignature`), the v1.12.0 `*_verification` flow on `PUT /customer`, `*_file_id` references, and typed statuses and field types.
 - **Hardened parsing**: response bodies are capped at 1 MiB (declared lengths are refused before reading, undeclared ones stop streaming at the limit); duplicate JSON properties are rejected in success **and** error bodies (issue #205's concern, applied from the start); status and field-type literals are matched exactly — on the response properties and on the enum types themselves — so an ordinal or an unknown value cannot be misread as `ACCEPTED`; `null` dictionary and array entries are rejected; the whole exchange, body included, is bounded by the client's timeout; a response from a different origin after a redirect is rejected.
-- **Safe requests**: the KYC server must use https (http only for an explicit loopback address, never for a server discovered from stellar.toml) and the internal client does not follow redirects; form-data part names must be printable ASCII without quotes or backslashes, and file names are percent-encoded; the account in `DELETE /customer/{account}` is escaped as a path segment and may not be `.` or `..`; server-supplied text (error text, and field names echoed in parse errors) is clamped, with control, format and line-separator characters in any Unicode plane replaced, before it reaches an exception message; `ToString()` of a request redacts the JWT and customer data and reduces a callback URL to its origin, while printing identifiers (customer ID, account, memo).
+- **Safe requests**: the KYC server and a registered callback URL must use https (http only for `localhost` or a loopback IP in its standard form, never for a server discovered from stellar.toml) and the internal client does not follow redirects; form-data part names must be printable ASCII without quotes or backslashes, and file names are percent-encoded; the account in `DELETE /customer/{account}` is escaped as a path segment and may not be `.` or `..`; server-supplied text (error text, and field names echoed in parse errors) is clamped, with control, format and line-separator characters in any Unicode plane replaced, before it reaches an exception message; `ToString()` of a request redacts the JWT and customer data and reduces a callback URL to its origin, while printing identifiers (customer ID, account, memo).
 - **Discovery and authentication**: `KycService.FromDomainAsync` follows the SEP's `KYC_SERVER` → `TRANSFER_SERVER` rule, and every request takes a SEP-10 or SEP-45 JWT.
 
 ## Legend
