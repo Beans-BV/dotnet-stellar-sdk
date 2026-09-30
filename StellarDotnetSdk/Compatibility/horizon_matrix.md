@@ -3,8 +3,8 @@
 **Horizon Version:** v28.0.1 (released 2026-08-27)  
 **Horizon Source:** [v28.0.1](https://github.com/stellar/stellar-horizon/releases/tag/v28.0.1)  
 **SDK:** `StellarDotnetSdk`  
-**SDK Version:** 14.0.0  
-**Updated:** 2026-08-28
+**SDK Version:** 16.0.0  
+**Updated:** 2026-09-30
 
 > **Version history:** Horizon v26.0.0 (Protocol 26) added no new endpoints — its API-visible changes were CAP-77
 > result codes (SDK support in [#177](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/177)) and CAP-73 effects

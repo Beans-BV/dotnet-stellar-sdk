@@ -30,10 +30,16 @@ private static async Task GetHealth()
     StellarRpcServer server = new(TestNetSorobanUrl);
     var response = await server.GetHealth();
     Console.WriteLine($"Server health: {response.Status}");
+    Console.WriteLine($"Latest ledger: {response.LatestLedger}, closed at (unix): {response.LatestLedgerCloseTime?.ToString() ?? "(not provided)"}");
+    Console.WriteLine($"Oldest ledger: {response.OldestLedger}, closed at (unix): {response.OldestLedgerCloseTime?.ToString() ?? "(not provided)"}");
 }
 ```
 
 A healthy server will return a status of "healthy". If the server is experiencing issues, you might receive an error or a different status.
+
+The response also reports the range of ledgers the server retains (`OldestLedger` to `LatestLedger`) and when each
+of those ledgers closed, as unix timestamps in seconds (`LatestLedgerCloseTime`, `OldestLedgerCloseTime`). The
+close times are nullable: they are `null` when the RPC server is older than v27.1.0 and omits them.
 
 ## Getting Network Information
 
@@ -65,9 +71,9 @@ private static async Task GetLatestLedger()
     Console.WriteLine($"Server protocol version: {response.ProtocolVersion}");
     Console.WriteLine($"Server latest ledger: {response.Sequence}");
     Console.WriteLine($"Latest ledger hash: {response.Id}");
-    Console.WriteLine($"Latest ledger close time (unix): {response.CloseTime}");
-    Console.WriteLine($"Latest ledger header XDR: {response.HeaderXdr}");
-    Console.WriteLine($"Latest ledger metadata XDR length: {response.MetadataXdr?.Length}");
+    Console.WriteLine($"Latest ledger close time (unix): {response.CloseTime?.ToString() ?? "(not provided)"}");
+    Console.WriteLine($"Latest ledger header XDR: {response.HeaderXdr ?? "(not provided)"}");
+    Console.WriteLine($"Latest ledger metadata XDR length: {response.MetadataXdr?.Length.ToString() ?? "(not provided)"}");
 }
 ```
 
@@ -75,7 +81,7 @@ This provides:
 - The current protocol version running on the server
 - The sequence number of the latest ledger processed by the server
 - The hash of the latest ledger (`Id`)
-- The close time of the latest ledger as a unix timestamp string (`CloseTime`)
+- The close time of the latest ledger as a unix timestamp in seconds (`CloseTime`)
 - The base64-encoded XDR of the ledger header (`HeaderXdr`) and close metadata (`MetadataXdr`)
 
 `CloseTime`, `HeaderXdr`, and `MetadataXdr` are nullable: they are `null` when the RPC server is older than

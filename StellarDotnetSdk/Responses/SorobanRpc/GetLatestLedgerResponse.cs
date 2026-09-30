@@ -1,4 +1,6 @@
-﻿namespace StellarDotnetSdk.Responses.SorobanRpc;
+﻿using System.Text.Json.Serialization;
+
+namespace StellarDotnetSdk.Responses.SorobanRpc;
 
 /// <summary>
 ///     Represents the response from the Soroban RPC <c>getLatestLedger</c> method.
@@ -24,9 +26,17 @@ public class GetLatestLedgerResponse
     public int Sequence { get; init; }
 
     /// <summary>
-    ///     The unix timestamp of the close time of the latest ledger, encoded as a string.
+    ///     The close time of the latest ledger, as a unix timestamp in seconds. Stellar RPC sends it as a quoted
+    ///     number; <c>null</c> when the server is older than v26 and omits it.
     /// </summary>
-    public string? CloseTime { get; init; }
+    /// <remarks>
+    ///     <see cref="JsonNumberHandlingAttribute" /> records the quoted wire form at the declaration, so a caller who
+    ///     deserializes this type with their own options reads it without enabling
+    ///     <see cref="JsonNumberHandling.AllowReadingFromString" /> globally; see the remarks on
+    ///     <see cref="SimulateTransactionResponse.MinResourceFee" />.
+    /// </remarks>
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+    public long? CloseTime { get; init; }
 
     /// <summary>
     ///     The base-64 encoded XDR of the latest ledger's header.

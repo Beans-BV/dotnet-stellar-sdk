@@ -15,5 +15,7 @@ internal static class GetHealthExample
         var response = await server.GetHealth();
 
         Console.WriteLine($"Server health: {response.Status}");
+        Console.WriteLine($"Latest ledger: {response.LatestLedger}, closed at (unix): {response.LatestLedgerCloseTime?.ToString() ?? "(not provided)"}");
+        Console.WriteLine($"Oldest ledger: {response.OldestLedger}, closed at (unix): {response.OldestLedgerCloseTime?.ToString() ?? "(not provided)"}");
     }
 }
