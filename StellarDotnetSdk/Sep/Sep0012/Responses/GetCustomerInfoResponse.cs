@@ -51,7 +51,8 @@ public sealed class GetCustomerInfoResponse
     /// <summary>
     ///     Parses a <c>GET /customer</c> response body, such as the payload an anchor POSTs to the URL registered with
     ///     <c>PUT /customer/callback</c>, using the SDK's hardened JSON settings: duplicate properties, a missing or
-    ///     unknown <c>status</c>, unknown field types, and <c>null</c> entries are all rejected.
+    ///     unknown <c>status</c>, unknown field types, a field without a <c>description</c>, and <c>null</c> entries
+    ///     are all rejected.
     /// </summary>
     /// <remarks>
     ///     Verify the callback's <c>Signature</c> header with <see cref="KycCallbackSignature.Verify(string, byte[], string, Accounts.KeyPair, System.DateTimeOffset?, System.TimeSpan?)" /> before

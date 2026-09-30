@@ -19,9 +19,11 @@ public class GetCustomerInfoField
 
     /// <summary>
     ///     Gets a human-readable description of the field, especially important when it is not a SEP-0009 field.
+    ///     Required by SEP-0012: a missing or <c>null</c> description is rejected.
     /// </summary>
+    [JsonRequired]
     [JsonPropertyName("description")]
-    public string? Description { get; init; }
+    public string Description { get; init; } = null!;
 
     /// <summary>
     ///     Gets the list of valid values for the field, or <c>null</c> when any value is accepted. A numeric choice is
