@@ -7,7 +7,7 @@ namespace StellarDotnetSdk.Sep.Sep0012.Responses;
 ///     <c>provided_fields</c> in the <c>GET /customer</c> response. Carries the same description as
 ///     <see cref="GetCustomerInfoField" /> plus the validation state of the submitted value.
 /// </summary>
-public class GetCustomerInfoProvidedField : GetCustomerInfoField
+public sealed class GetCustomerInfoProvidedField : GetCustomerInfoField
 {
     /// <summary>
     ///     Gets the validation status of the field, or <c>null</c> when the anchor does not expose which fields were

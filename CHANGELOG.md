@@ -78,7 +78,9 @@ All notable changes to this project are documented here. The format is based on
   `PUT /customer/callback`, `DELETE /customer/{account}`, `POST`/`GET /customer/files` — and
   `FromDomainAsync` discovers `KYC_SERVER` from stellar.toml, falling back to `TRANSFER_SERVER`, and raises
   `KycServiceException` for a declared server that is not an absolute `https` URL. Requests take a SEP-10 or
-  SEP-45 JWT and must go to an `https` server (plain `http` only for an explicit loopback address).
+  SEP-45 JWT and must go to an `https` server, and a callback URL registered with `PUT /customer/callback`
+  must be `https` too, which SEP-12 itself does not require (plain `http` only for `localhost` or a
+  loopback IP in its standard form, in both cases).
   `PUT /customer` sends SEP-9 fields (via the existing `Sep0009` types), custom fields and files as
   `multipart/form-data` with every binary part last, plus `*_verification` codes and `*_file_id`
   references; the client-side rules of SEP-12 (a `type` with every `transaction_id`, no memo for a `C...`

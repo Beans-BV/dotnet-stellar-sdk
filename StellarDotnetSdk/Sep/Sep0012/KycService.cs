@@ -34,8 +34,9 @@ namespace StellarDotnetSdk.Sep.Sep0012;
 ///         JWT obtained from the same anchor through SEP-10 (<see cref="Sep0010.ClientWebAuth" />, for <c>G...</c> and
 ///         <c>M...</c> accounts) or SEP-45 (<see cref="Sep0045.ClientWebAuthContract" />, for <c>C...</c> contract
 ///         accounts); each request type carries it in its <c>Jwt</c> property. Because every request carries that JWT
-///         and customer data, the KYC server must use <c>https</c>; plain <c>http</c> is accepted only for a loopback
-///         address.
+///         and customer data, the KYC server must use <c>https</c>; plain <c>http</c> is accepted only for
+///         <c>localhost</c> or a loopback IP address in its standard form (such as <c>127.0.0.1</c> or <c>[::1]</c>).
+///         The same rule applies to a callback URL registered with <see cref="PutCustomerCallbackAsync" />.
 ///     </para>
 ///     <para>
 ///         <b>Response handling.</b> Response bodies are read with a hard size limit of 1 MiB, so a hostile or
@@ -101,7 +102,8 @@ public class KycService : IDisposable
     /// </summary>
     /// <param name="serviceAddress">
     ///     The absolute <c>https</c> URL of the anchor's KYC server (its <c>KYC_SERVER</c>), without a query, fragment
-    ///     or user info. Plain <c>http</c> is accepted only for a loopback address, for local testing.
+    ///     or user info. Plain <c>http</c> is accepted only for <c>localhost</c> or a loopback IP address in its
+    ///     standard form, for local testing.
     /// </param>
     /// <param name="httpClient">
     ///     Optional shared HTTP client. If <c>null</c>, an internal client is created and disposed with this instance.
@@ -122,7 +124,8 @@ public class KycService : IDisposable
     /// </param>
     /// <exception cref="ArgumentException">
     ///     Thrown when <paramref name="serviceAddress" /> is empty, is not an absolute http(s) URL, uses <c>http</c>
-    ///     for a non-loopback host, or contains a query, fragment or user info.
+    ///     for a host other than <c>localhost</c> or a standard-form loopback IP address, or contains a query,
+    ///     fragment or user info.
     /// </exception>
     public KycService(
         string serviceAddress,
@@ -145,7 +148,8 @@ public class KycService : IDisposable
         {
             throw new ArgumentException(
                 "The KYC service address must use https: every SEP-0012 request carries a JWT and customer data. " +
-                "Plain http is accepted only for a loopback address.",
+                "Plain http is accepted only for localhost or a loopback IP address in its standard form, " +
+                "such as 127.0.0.1 or [::1].",
                 nameof(serviceAddress));
         }
 
@@ -189,12 +193,13 @@ public class KycService : IDisposable
             return;
         }
 
+        // Flag first, so a call that checks it from here on reports this service as disposed rather than its
+        // HttpClient. A call already past the check can still reach the disposed client.
+        _disposed = true;
         if (_ownsHttpClient)
         {
             _httpClient.Dispose();
         }
-
-        _disposed = true;
     }
 
     /// <summary>
@@ -431,8 +436,9 @@ public class KycService : IDisposable
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="request" /> is <c>null</c>.</exception>
     /// <exception cref="ArgumentException">
-    ///     Thrown when the JWT is empty or is not printable ASCII, the URL is not an absolute http(s) URL, a memo is
-    ///     given for a <c>C...</c> account, or <c>MemoType</c> is not <c>text</c>, <c>id</c> or <c>hash</c>.
+    ///     Thrown when the JWT is empty or is not printable ASCII, the URL is not an absolute http(s) URL or uses
+    ///     <c>http</c> for a host other than <c>localhost</c> or a standard-form loopback IP address, a memo is given for a <c>C...</c>
+    ///     account, or <c>MemoType</c> is not <c>text</c>, <c>id</c> or <c>hash</c>.
     /// </exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when the JWT is rejected.</exception>
     /// <exception cref="CustomerNotFoundException">Thrown when the anchor has no information on the customer (HTTP 404).</exception>
@@ -446,9 +452,20 @@ public class KycService : IDisposable
             throw new ArgumentNullException(nameof(request));
         }
 
-        if (!TryParseHttpUrl(request.Url, out var url, out _))
+        if (!TryParseHttpUrl(request.Url, out var url, out var callbackUri))
         {
             throw new ArgumentException("The callback URL must be an absolute http(s) URL.", nameof(request));
+        }
+
+        // The anchor POSTs a full GET /customer body to this URL; the Signature header authenticates it but does
+        // not encrypt it, so the constructor's https rule applies here too.
+        if (callbackUri.Scheme == Uri.UriSchemeHttp && !IsLoopbackHost(callbackUri, url))
+        {
+            throw new ArgumentException(
+                "The callback URL must use https: the anchor posts customer data to it. " +
+                "Plain http is accepted only for localhost or a loopback IP address in its standard form, " +
+                "such as 127.0.0.1 or [::1].",
+                nameof(request));
         }
 
         ValidateIdentification(request.Account, request.Memo, request.MemoType);
@@ -676,7 +693,19 @@ public class KycService : IDisposable
             throw new ObjectDisposedException(nameof(KycService));
         }
 
-        using var httpRequest = new HttpRequestMessage(method, url);
+        HttpRequestMessage unownedRequest;
+        try
+        {
+            unownedRequest = new HttpRequestMessage(method, url);
+        }
+        catch
+        {
+            // UriFormatException for an over-long URL; the request does not own the content yet.
+            content?.Dispose();
+            throw;
+        }
+
+        using var httpRequest = unownedRequest;
         httpRequest.Content = content;
         var requestUri = httpRequest.RequestUri!;
         if (_httpRequestHeaders != null)
@@ -1098,21 +1127,34 @@ public class KycService : IDisposable
     }
 
     /// <summary>
-    ///     Whether a URL's host, as written, is the name <c>localhost</c> or a loopback IP address.
-    ///     <see cref="Uri.IsLoopback" /> is not used: it also accepts the name <c>loopback</c>, which DNS can resolve
-    ///     anywhere, and its handling of an upper-case <c>LOCALHOST</c> differs between runtimes.
+    ///     Whether a URL's host, as written, is the name <c>localhost</c> or a loopback IP address in its standard
+    ///     form. <see cref="Uri.IsLoopback" /> is not used: it also accepts the name <c>loopback</c>, which DNS can
+    ///     resolve anywhere, and its handling of an upper-case <c>LOCALHOST</c> differs between runtimes. An IP
+    ///     address must be written as <see cref="Uri" /> prints it: <see cref="Uri" /> also reads <c>0177.0.0.1</c>,
+    ///     <c>0x7f.1</c>, <c>127.1</c> and <c>2130706433</c> as <c>127.0.0.1</c>, while other parsers (such as the
+    ///     anchor's, for a callback URL) may read them as a public address or a DNS name.
     /// </summary>
     private static bool IsLoopbackHost(Uri uri, string trimmedUrl)
     {
+        var authority = GetAuthorityAsWritten(trimmedUrl);
+        var hostEnd = authority.StartsWith("[", StringComparison.Ordinal)
+            ? authority.IndexOf(']') + 1
+            : authority.LastIndexOf(':');
+        var host = hostEnd <= 0 ? authority : authority.Substring(0, hostEnd);
+
+        // Uri reads anything after an IPv6 literal's ']' other than a port ("[::1]x") as part of the path.
+        if (hostEnd > 0 && hostEnd < authority.Length && authority[hostEnd] != ':')
+        {
+            return false;
+        }
+
         if (uri.HostNameType == UriHostNameType.Dns)
         {
-            var authority = GetAuthorityAsWritten(trimmedUrl);
-            var colon = authority.LastIndexOf(':');
-            var host = colon < 0 ? authority : authority.Substring(0, colon);
             return string.Equals(host, "localhost", StringComparison.OrdinalIgnoreCase);
         }
 
-        return IPAddress.TryParse(uri.DnsSafeHost, out var address) && IPAddress.IsLoopback(address);
+        return string.Equals(host, uri.Host, StringComparison.OrdinalIgnoreCase) &&
+               IPAddress.TryParse(uri.DnsSafeHost, out var address) && IPAddress.IsLoopback(address);
     }
 
     private static string? Get(Dictionary<string, string> fields, string key)

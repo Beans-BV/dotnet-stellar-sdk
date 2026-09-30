@@ -138,10 +138,31 @@ public class KycServiceTest
     }
 
     [TestMethod]
+    public void Dispose_MarksTheServiceDisposedBeforeReleasingTheInternalClient()
+    {
+        var service = new KycService(KycServerUrl);
+        var disposedField = typeof(KycService).GetField("_disposed", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        var clientField = typeof(KycService).GetField("_httpClient", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        using var internalClient = (HttpClient)clientField.GetValue(service)!;
+        var client = new DisposeObservingHttpClient(() => (bool)disposedField.GetValue(service)!);
+        clientField.SetValue(service, client);
+
+        service.Dispose();
+
+        Assert.AreEqual(true, client.ServiceDisposedWhenReleased,
+            "A call starting while the client is released would report HttpClient, not KycService, as disposed.");
+    }
+
+    [TestMethod]
     [DataRow("http://kyc.example.com")]
     [DataRow("http://10.0.0.5/sep12")]
     [DataRow("http://loopback/sep12", DisplayName = "the bare name 'loopback' is not a loopback address")]
     [DataRow("http://localhost.evil.example/sep12")]
+    [DataRow("http://0177.0.0.1/sep12", DisplayName = "octal IPv4, which some parsers read as 177.0.0.1")]
+    [DataRow("http://0x7f.1/sep12", DisplayName = "hex IPv4")]
+    [DataRow("http://2130706433/sep12", DisplayName = "integer IPv4")]
+    [DataRow("http://127.1/sep12", DisplayName = "short IPv4")]
+    [DataRow("http://[::1]x/sep12", DisplayName = "text after an IPv6 literal, which Uri reads as path")]
     public void Constructor_WithHttpForNonLoopbackHost_ThrowsArgumentException(string address)
     {
         var ex = Assert.ThrowsException<ArgumentException>(() => new KycService(address, new HttpClient()));
@@ -154,6 +175,9 @@ public class KycServiceTest
     [DataRow("http://127.0.0.1/kyc")]
     [DataRow("http://[::1]:8000")]
     [DataRow("http://LOCALHOST:8000")]
+    [DataRow("http://127.0.0.2")]
+    [DataRow("http://[::1]")]
+    [DataRow("http://[::FFFF:127.0.0.1]:8000")]
     public void Constructor_WithHttpForLoopbackHost_IsAccepted(string address)
     {
         using var service = new KycService(address, new HttpClient());
@@ -1232,6 +1256,45 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     }
 
     [TestMethod]
+    [DataRow("http://wallet.example.com/callback")]
+    [DataRow("http://10.0.0.5/callback")]
+    [DataRow("http://loopback/callback", DisplayName = "the bare name 'loopback' is not a loopback address")]
+    [DataRow("http://localhost.evil.example/callback")]
+    [DataRow("http://0177.0.0.1/callback", DisplayName = "octal IPv4, which some parsers read as 177.0.0.1")]
+    [DataRow("http://0x7f.1/callback", DisplayName = "hex IPv4")]
+    [DataRow("http://2130706433/callback", DisplayName = "integer IPv4")]
+    [DataRow("http://127.1/callback", DisplayName = "short IPv4")]
+    [DataRow("http://[::1]x/callback", DisplayName = "text after an IPv6 literal, which Uri reads as path")]
+    public async Task PutCustomerCallbackAsync_WithHttpForNonLoopbackHost_ThrowsArgumentException(string url)
+    {
+        var (service, handler) = CreateService("");
+
+        var ex = await AssertThrowsAsync<ArgumentException>(() =>
+            service.PutCustomerCallbackAsync(new PutCustomerCallbackRequest { Jwt = Jwt, Url = url }));
+
+        StringAssert.Contains(ex.Message, "https");
+        Assert.AreEqual(0, handler.Requests.Count);
+    }
+
+    [TestMethod]
+    [DataRow("http://localhost:8000/callback")]
+    [DataRow("http://127.0.0.1/callback")]
+    [DataRow("http://[::1]:8000/callback")]
+    [DataRow("http://LOCALHOST:8000/callback")]
+    [DataRow("http://127.0.0.2/callback")]
+    [DataRow("http://[::ffff:127.0.0.1]/callback")]
+    [DataRow("http://[::1]/callback", DisplayName = "IPv6 without a port")]
+    [DataRow("http://[::FFFF:127.0.0.1]/callback", DisplayName = "upper-case IPv6 literal")]
+    public async Task PutCustomerCallbackAsync_WithHttpForLoopbackHost_IsSent(string url)
+    {
+        var (service, handler) = CreateService("");
+
+        await service.PutCustomerCallbackAsync(new PutCustomerCallbackRequest { Jwt = Jwt, Url = url });
+
+        Assert.AreEqual(url, handler.Requests.Single().Part("url").Value);
+    }
+
+    [TestMethod]
     public async Task PutCustomerCallbackAsync_404_ThrowsCustomerNotFound()
     {
         var (service, _) = CreateService("{\"error\": \"not found\"}", HttpStatusCode.NotFound);
@@ -1858,6 +1921,23 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     }
 
     [TestMethod]
+    public void ChoicesJsonConverter_WithReaderEndingInsideTheArray_ThrowsJsonException()
+    {
+        var reader = new Utf8JsonReader("[\"a\", 1"u8, false, default);
+        Assert.IsTrue(reader.Read());
+
+        try
+        {
+            new ChoicesJsonConverter().Read(ref reader, typeof(string[]), JsonSerializerOptions.Default);
+            Assert.Fail("A reader that ran out inside the array was read as a complete array.");
+        }
+        catch (JsonException ex)
+        {
+            StringAssert.Contains(ex.Message, "closing bracket");
+        }
+    }
+
+    [TestMethod]
     [DataRow("[true]", DisplayName = "boolean")]
     [DataRow("[{}]", DisplayName = "object")]
     [DataRow("[[1]]", DisplayName = "array")]
@@ -2214,6 +2294,24 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         await service.DeleteCustomerAsync(new DeleteCustomerRequest { Jwt = Jwt, Account = Account });
 
         Assert.IsTrue(content.Disposed, "The unread success response was not disposed.");
+    }
+
+    [TestMethod]
+    public async Task RequestContent_IsDisposedWhenTheRequestMessageCannotBeCreated()
+    {
+        // The public path is DeleteCustomerAsync with a memo and an account long enough to exceed the runtime's URL
+        // limit, which only .NET 8 enforces; an out-of-range port makes the same constructor throw the same
+        // UriFormatException on every runtime.
+        var (service, handler) = CreateService("");
+        var content = new TrackingContent("memo");
+        var sendAsync = typeof(KycService).GetMethod("SendAsync", BindingFlags.NonPublic | BindingFlags.Instance)!;
+
+        await AssertThrowsAsync<UriFormatException>(() => (Task)sendAsync.Invoke(service,
+            new object?[] { HttpMethod.Delete, "https://kyc.example.com:99999/customer", content, Jwt, true, false,
+                CancellationToken.None })!);
+
+        Assert.IsTrue(content.Disposed, "The request content was not disposed.");
+        Assert.AreEqual(0, handler.Requests.Count);
     }
 
     [TestMethod]
@@ -2581,7 +2679,26 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         }
     }
 
-    /// <summary>Response content that records whether it was disposed.</summary>
+    /// <summary>An HttpClient that records whether its owning service was already marked disposed.</summary>
+    private sealed class DisposeObservingHttpClient : HttpClient
+    {
+        private readonly Func<bool> _isServiceDisposed;
+
+        public DisposeObservingHttpClient(Func<bool> isServiceDisposed)
+        {
+            _isServiceDisposed = isServiceDisposed;
+        }
+
+        public bool? ServiceDisposedWhenReleased { get; private set; }
+
+        protected override void Dispose(bool disposing)
+        {
+            ServiceDisposedWhenReleased ??= _isServiceDisposed();
+            base.Dispose(disposing);
+        }
+    }
+
+    /// <summary>Content that records whether it was disposed.</summary>
     private sealed class TrackingContent : StringContent
     {
         public TrackingContent(string content)
