@@ -39,6 +39,8 @@ public sealed class ValidationRunner
     private readonly Action<string> _onLine;
     private KeyPair? _funded;
     private SseTiming? _socketsTiming;
+    // The ledger of the last payment the submit check applied, kept across its retry; null when none succeeded.
+    private long? _submittedLedger;
 
     /// <param name="onLine">Receives every result line, for display.</param>
     /// <param name="isUiThread">
@@ -113,6 +115,7 @@ public sealed class ValidationRunner
             // Per-run state: a later run on this instance must not reuse the disposed account or the old timing.
             _funded = null;
             _socketsTiming = null;
+            _submittedLedger = null;
             Log("DONE");
         }
         return allPassed;
@@ -397,6 +400,7 @@ public sealed class ValidationRunner
             var response = await server.SubmitTransaction(tx).WaitAsync(NetworkTimeout)
                            ?? throw new InvalidOperationException("SubmitTransaction returned null");
             Expect(response.IsSuccess, $"submit failed: result {response.ResultXdr}");
+            _submittedLedger = Math.Max(_submittedLedger ?? 0, response.Ledger!.Value);
             var submittedMs = sw.ElapsedMilliseconds;
 
             // Wait for the default stream, then give the SocketsHttpHandler stream until the same deadline its own
@@ -537,9 +541,10 @@ public sealed class ValidationRunner
     /// <summary>
     ///     Simulates the native SAC <c>balance(address)</c> call for the funded account and checks the decoded
     ///     <c>i128</c> against the account's native balance from Horizon. Horizon and the RPC node ingest ledgers
-    ///     independently and can be a ledger apart right after the previous check's submit, so the simulation is
-    ///     repeated (briefly) until the RPC node has reached the ledger that last changed the account. An RPC node that
-    ///     does not report its ledger fails the check, because the comparison would then prove nothing.
+    ///     independently and can be a ledger apart right after the previous check's submit. Horizon's account is
+    ///     re-read (briefly) until it shows that submit, and the simulation is repeated until the RPC node has reached
+    ///     the ledger that last changed the account. An RPC node that does not report its ledger fails the check,
+    ///     because the comparison would then prove nothing.
     /// </summary>
     private async Task<string> CheckSorobanSimulateAsync()
     {
@@ -547,6 +552,14 @@ public sealed class ValidationRunner
         using var horizon = new Server(HorizonTestnetUrl);
         using var rpc = new StellarRpcServer(RpcTestnetUrl);
         var account = await horizon.Accounts.Account(source.AccountId).WaitAsync(NetworkTimeout);
+        // Horizon's servers ingest independently too: a lagging one returns the account from before the payment.
+        for (var attempt = 1; attempt < 5 && account.LastModifiedLedger < _submittedLedger; attempt++)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            account = await horizon.Accounts.Account(source.AccountId).WaitAsync(NetworkTimeout);
+        }
+        Expect(!(account.LastModifiedLedger < _submittedLedger),
+            $"Horizon returned the account at ledger {account.LastModifiedLedger}, before the payment in ledger {_submittedLedger}");
         var invoke = new InvokeContractOperation(
             NativeSacTestnet, "balance", [new ScAccountId(source.AccountId)], source);
         var tx = new TransactionBuilder(account).AddOperation(invoke).Build();
