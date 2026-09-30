@@ -84,7 +84,7 @@ git show 34cadad5^:StellarDotnetSdk/Compatibility/horizon_matrix.md | head -25
 
 **Delivery PR:** [#139 — chore: complete Horizon matrix parity](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/139), commit [`02bcf4a1`](https://github.com/Beans-BV/dotnet-stellar-sdk/commit/02bcf4a1).
 
-**Current matrix on `main`:** [`horizon_matrix.md`](https://github.com/Beans-BV/dotnet-stellar-sdk/blob/main/StellarDotnetSdk/Compatibility/horizon_matrix.md), pinned to Horizon v25.0.0.
+**Matrix at the verification target:** [`horizon_matrix.md`](https://github.com/Beans-BV/dotnet-stellar-sdk/blob/3e1e1917/StellarDotnetSdk/Compatibility/horizon_matrix.md), pinned to Horizon v25.0.0.
 
 **Every item called out in the original submission, now ✅:**
 
@@ -121,7 +121,7 @@ git show 34cadad5^:StellarDotnetSdk/Compatibility/rpc_matrix.md | head -15
 
 **Delivery PR:** [#140 — chore: complete RPC matrix parity](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/140), commit [`84492ecf`](https://github.com/Beans-BV/dotnet-stellar-sdk/commit/84492ecf). Also: [#143](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/143) aligned naming with the upstream `Soroban RPC → Stellar RPC` rename.
 
-**Current matrix on `main`:** [`rpc_matrix.md`](https://github.com/Beans-BV/dotnet-stellar-sdk/blob/main/StellarDotnetSdk/Compatibility/rpc_matrix.md), pinned to Stellar RPC v25.0.0. Response-field table shows `Missing Fields: -` for every method.
+**Matrix at the verification target:** [`rpc_matrix.md`](https://github.com/Beans-BV/dotnet-stellar-sdk/blob/3e1e1917/StellarDotnetSdk/Compatibility/rpc_matrix.md), pinned to Stellar RPC v25.0.0. Response-field table shows `Missing Fields: -` for every method.
 
 **Items called out in the original submission, now ✅:**
 
