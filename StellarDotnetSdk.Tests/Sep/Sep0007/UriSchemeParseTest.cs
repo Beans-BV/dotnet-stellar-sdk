@@ -92,6 +92,30 @@ public class UriSchemeParseTest
     }
 
     [TestMethod]
+    [DataRow(8, " ")]
+    [DataRow(8, "\n")]
+    [DataRow(8, "\r\n")]
+    [DataRow(0, " ")]
+    [DataRow(-1, "\t")]
+    // Four characters keep the length a multiple of 4, so only the alphabet check can reject these.
+    [DataRow(8, "    ")]
+    [DataRow(8, "\r\n\r\n")]
+    public void ParseUri_RejectsWhitespaceInTheEnvelope(int position, string whitespace)
+    {
+        var xdr = position < 0
+            ? Sep7TestVectors.SpecTxXdr + whitespace
+            : Sep7TestVectors.SpecTxXdr.Insert(position, whitespace);
+        // Convert.FromBase64String skips whitespace, so only a strict check tells this apart from the vector.
+        CollectionAssert.AreEqual(Convert.FromBase64String(Sep7TestVectors.SpecTxXdr), Convert.FromBase64String(xdr));
+        var uri = "web+stellar:tx?xdr=" + Uri.EscapeDataString(xdr);
+
+        var ex = Assert.ThrowsException<InvalidSep7UriException>(() => UriScheme.ParseUri(uri));
+        StringAssert.Contains(ex.Message, "not a valid base64 XDR");
+        StringAssert.Contains(ex.InnerException!.Message, "strict base64");
+        Assert.IsFalse(UriScheme.ValidateUri(uri).IsValid);
+    }
+
+    [TestMethod]
     public void ParseUri_SpecPayExample2_ExposesPayParameters()
     {
         var request = UriScheme.ParseUri(Sep7TestVectors.SpecPayExample2);

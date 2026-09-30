@@ -396,11 +396,16 @@ internal static class Sep7UriParser
     }
 
     /// <summary>
-    ///     Decodes exactly one <c>TransactionEnvelope</c>. Trailing bytes are rejected, so the accepted value is
-    ///     canonical and the transaction a wallet signs is the whole of what the request carried.
+    ///     Decodes exactly one <c>TransactionEnvelope</c>. The value must use only the base64 alphabet and padding
+    ///     (whitespace, which <see cref="Convert.FromBase64String" /> skips, is rejected) and trailing bytes are
+    ///     rejected, so the transaction a wallet signs is the whole of what the request carried.
     /// </summary>
     internal static TransactionBase DecodeEnvelope(string xdr)
     {
+        if (!IsStrictBase64(xdr))
+        {
+            throw new FormatException("The value is not strict base64.");
+        }
         var stream = new Xdr.XdrDataInputStream(Convert.FromBase64String(xdr));
         var envelope = Xdr.TransactionEnvelope.Decode(stream);
         if (stream.GetRemainingInputLen() != 0)
