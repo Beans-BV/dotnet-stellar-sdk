@@ -388,8 +388,8 @@ public sealed class ValidationRunner
 
             // Submit only after the default stream is open, so cursor "now" precedes the submitted ledger. The
             // SocketsHttpHandler stream and the comparison readers use cursor "now" too, so they get a short grace
-            // period to open (about 2-3 s): a stream that fails to open is judged by its own check, a reader reports
-            // when it opened, and either costs this check at most those seconds.
+            // period to open (they usually open within 1-3 s; the wait is capped at 5 s): a stream that fails to open
+            // is judged by its own check, and a reader reports when it opened.
             var openedMs = await opened.Task.WaitAsync(NetworkTimeout);
             await Task.WhenAny(
                 Task.WhenAll(socketsOpened.Task, rawBytesOpened.Task, rawLinesOpened.Task, rawLinesSocketsOpened.Task),
@@ -403,6 +403,8 @@ public sealed class ValidationRunner
                 .AddTimeBounds(new TimeBounds(0L, DateTimeOffset.UtcNow.AddMinutes(5).ToUnixTimeSeconds()))
                 .Build();
             tx.Sign(source);
+            // The payment can land in a ledger from here on, so a reader that opens later can miss it.
+            var submitStartMs = sw.ElapsedMilliseconds;
             var response = await server.SubmitTransaction(tx).WaitAsync(NetworkTimeout)
                            ?? throw new InvalidOperationException("SubmitTransaction returned null");
             Expect(response.IsSuccess, $"submit failed: result {response.ResultXdr}");
@@ -425,9 +427,9 @@ public sealed class ValidationRunner
             var rawBytesResult = await rawBytes;
             var rawLinesResult = await rawLines;
             var rawLinesSocketsResult = await rawLinesSockets;
-            history.Enqueue($"raw HttpClient Stream.ReadAsync {DescribeOpen(rawBytesOpened, submittedMs)} saw it {rawBytesResult}");
-            history.Enqueue($"raw HttpClient StreamReader.ReadLineAsync {DescribeOpen(rawLinesOpened, submittedMs)} saw it {rawLinesResult}");
-            history.Enqueue($"raw SocketsHttpHandler StreamReader.ReadLineAsync {DescribeOpen(rawLinesSocketsOpened, submittedMs)} saw it {rawLinesSocketsResult}");
+            history.Enqueue($"raw HttpClient Stream.ReadAsync {DescribeOpen(rawBytesOpened, submitStartMs)} saw it {rawBytesResult}");
+            history.Enqueue($"raw HttpClient StreamReader.ReadLineAsync {DescribeOpen(rawLinesOpened, submitStartMs)} saw it {rawLinesResult}");
+            history.Enqueue($"raw SocketsHttpHandler StreamReader.ReadLineAsync {DescribeOpen(rawLinesSocketsOpened, submitStartMs)} saw it {rawLinesSocketsResult}");
             // Judged for both streams before anything else, so that a slow submit is measured again (see
             // CheckSubmitAndStreamWithRetryAsync) before either check fails on it, delivered or not.
             var timingDetail = $"stream open {openedMs} ms, submit done {submittedMs} ms; states [{string.Join(", ", history)}]";
@@ -497,7 +499,7 @@ public sealed class ValidationRunner
     ///     (as LaunchDarkly.EventSource 3.x does) instead of raw <see cref="Stream.ReadAsync(Memory{byte}, CancellationToken)" />,
     ///     and also reports when the event's <c>id:</c> line arrived. <paramref name="isSocketsHandler" /> uses
     ///     <see cref="SocketsHttpHandler" /> instead of the platform default handler. <paramref name="opened" /> gets the
-    ///     time the response headers arrived, or -1 if the request failed. Never throws.
+    ///     time the response headers arrived, or -1 if they never did. Never throws.
     /// </summary>
     private static async Task<string> ReadSseUntilAsync(string url, string needle, Stopwatch sw, bool isLineReader,
         bool isSocketsHandler, TaskCompletionSource<long> opened, CancellationToken ct)
@@ -555,17 +557,17 @@ public sealed class ValidationRunner
     }
 
     /// <summary>
-    ///     When a comparison reader opened. One that opened after the submit can have missed the payment, because it
-    ///     reads from cursor "now", so its result says nothing about buffering.
+    ///     When a comparison reader opened. One that opened after the submit started can have missed the payment,
+    ///     because it reads from cursor "now", so a "never" from it may be a miss rather than buffering.
     /// </summary>
-    private static string DescribeOpen(TaskCompletionSource<long> opened, long submittedMs)
+    private static string DescribeOpen(TaskCompletionSource<long> opened, long submitStartMs)
     {
         if (opened.Task.Result < 0)
         {
             return "(never opened)";
         }
-        return opened.Task.Result > submittedMs
-            ? $"(opened at {opened.Task.Result} ms, after the submit: it may have missed the payment)"
+        return opened.Task.Result > submitStartMs
+            ? $"(opened at {opened.Task.Result} ms, after the submit started: it may have missed the payment)"
             : $"(opened at {opened.Task.Result} ms)";
     }
 
