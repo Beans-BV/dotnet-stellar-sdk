@@ -34,8 +34,9 @@ public static class JsonOptions
     ///     Registered Converters:
     ///     - Polymorphic converters: OperationResponse, EffectResponse, Predicate
     ///     - Domain type converters: Asset, AssetAmount, KeyPair, LiquidityPoolId, LiquidityPoolClaimableAssetAmount, Reserve
-    ///     - Enum converters: EventFilterType, SendTransactionStatusEnum, TransactionStatus, and
-    ///     SubmitTransactionAsyncStatus, then JsonStringEnumConverter (standard) last. Registration order is
+    ///     - Enum converters: EventFilterType, SendTransactionStatusEnum, TransactionStatus,
+    ///     SubmitTransactionAsyncStatus, and the SEP-12 CustomerStatus, ProvidedFieldStatus and FieldType, then
+    ///     JsonStringEnumConverter (standard) last. Registration order is
     ///     significant — the standard converter matches every enum, so it must come last or it shadows the
     ///     specific ones. See the comment on the collection below. (LiquidityPoolTypeEnum is an enum converter
     ///     too, but it is registered up with the domain types; its position relative to the others does not
@@ -116,6 +117,11 @@ public static class JsonOptions
                 new SendTransactionStatusEnumJsonConverter(),
                 new TransactionStatusJsonConverter(),
                 new SubmitTransactionAsyncStatusJsonConverter(),
+                // - SEP-12 CustomerStatus / ProvidedFieldStatus / FieldType: the catch-all would read `"status": 0`
+                //   as ACCEPTED for a KYC status. The response properties are also pinned property-level.
+                new Sep.Sep0012.Responses.CustomerStatusJsonConverter(),
+                new Sep.Sep0012.Responses.ProvidedFieldStatusJsonConverter(),
+                new Sep.Sep0012.Responses.FieldTypeJsonConverter(),
                 new JsonStringEnumConverter(),
             },
         };

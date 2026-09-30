@@ -130,9 +130,9 @@ surfaces `tx_bad_seq` and your code should look up the transaction by its hash t
 original result.
 
 > **⚠️ Do not wire `ForHorizon()` or `ForSoroban()` into SEP service clients**
-> (`ClientWebAuth`, `InteractiveService`, `TransferServerService`, `UriScheme`, `QuoteService`,
-> `StellarToml` with a custom `HttpClient`). Specific SEP POST endpoints are **non-idempotent by spec**
-> and silently retrying them creates real problems:
+> (`ClientWebAuth`, `InteractiveService`, `TransferServerService`, `KycService`, `UriScheme`,
+> `QuoteService`, `StellarToml` with a custom `HttpClient`). Specific SEP POST endpoints are
+> **non-idempotent by spec** and silently retrying them creates real problems:
 >
 > - **SEP-10 `POST /auth`** — the spec says: *"The Server should not provide more than one JWT for
 >   a specific challenge transaction."* The challenge is one-shot. On transient failure, request a
@@ -146,6 +146,8 @@ original result.
 >   the spec says nothing about idempotency; the POST delivers a signed transaction to a URL the
 >   requester chose, and a retry delivers it again. Use `NoRetry()` (the default) for `UriScheme`:
 >   even transport retries replay it.
+> - **SEP-12 `POST /customer/files`** — each call stores the upload under a fresh `file_id`.
+>   Retrying after the anchor already stored it leaves an orphaned duplicate file.
 > - **SEP-38 `POST /quote`** — each call creates a new firm quote that the anchor holds in reserve
 >   until it expires. Both presets retry `POST` on a 408, 429, 500, 502, 503 or 504 answer, so one
 >   call can reserve two quotes.

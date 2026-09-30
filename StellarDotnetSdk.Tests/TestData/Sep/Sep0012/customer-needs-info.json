@@ -1,0 +1,38 @@
+{
+  "id": "d1ce2f48-3ff1-495d-9240-7a50d806cfed",
+  "status": "NEEDS_INFO",
+  "message": "Please provide your mobile number and date of birth.",
+  "fields": {
+    "mobile_number": {
+      "description": "phone number of the customer",
+      "type": "string"
+    },
+    "email_address": {
+      "description": "email address of the customer",
+      "type": "string",
+      "optional": true
+    },
+    "birth_date": {
+      "description": "date of birth",
+      "type": "date",
+      "optional": false
+    },
+    "number_of_shareholders": {
+      "description": "number of shareholders",
+      "type": "number"
+    }
+  },
+  "provided_fields": {
+    "first_name": {
+      "description": "The customer's first name",
+      "type": "string",
+      "status": "ACCEPTED"
+    },
+    "last_name": {
+      "description": "The customer's last name",
+      "type": "string",
+      "status": "REJECTED",
+      "error": "The last name does not match the ID document."
+    }
+  }
+}
