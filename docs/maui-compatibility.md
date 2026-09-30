@@ -150,7 +150,7 @@ dotnet run --project Desktop
 
 `run-android.sh` cleans the app's Release output (switching trim modes over an incremental build reuses stale linked assemblies, which then crash inside MAUI at startup). It then publishes the APK, waits for the device, installs the APK, enlarges the device's logcat buffer to 8 MB (so that a long run cannot push out its first results; on some devices the setting stays until reboot), launches it, and prints every logcat line that carries the `STELLAR-MAUI-VALIDATION` prefix (the logcat tag is `DOTNET`). It stops with an error if no booted device appears within `BOOT_TIMEOUT_SECONDS` (default 300), if the app crashes (Java exception or native crash), or if it does not finish within `TIMEOUT_SECONDS` (default 1200). `./run-android.sh --help` prints the usage.
 
-It exits 0 when every check passed, except the checks in `KNOWN_FAILURES` that failed for their known reason, which it reports as `KNOWN FAIL`. The default is `horizon.submit-and-sse-stream` failing with "SSE event arrived … after submit": the SDK's SSE stream with the default Android handler is late because of the SDK limitation in §3.3. Any other failure of that check (a submit error, a timeout, a second inconclusive measurement) still fails the run. The same stream with the workaround is its own check and must pass. Set `KNOWN_FAILURES=""` to make that failure fatal, for example after the SDK is fixed; the script also notes when a known failure starts passing. The app's own `RESULT` line counts every check, so it reads `RESULT FAIL 5/6` on Android.
+It exits 0 when every check passed, except the checks in `KNOWN_FAILURES` that failed for their known reason, which it reports as `KNOWN FAIL`. Only a check whose known reason is defined in the script can be listed there; any other name stops the script with an error before the build, because excusing a check by name alone would also hide unrelated failures of it. The default is `horizon.submit-and-sse-stream` failing with "SSE event arrived … after submit": the SDK's SSE stream with the default Android handler is late because of the SDK limitation in §3.3. Any other failure of that check (a submit error, a timeout, a second inconclusive measurement) still fails the run. The same stream with the workaround is its own check and must pass. Set `KNOWN_FAILURES=""` to make that failure fatal, for example after the SDK is fixed; the script also notes when a known failure starts passing. The app's own `RESULT` line counts every check, so it reads `RESULT FAIL 5/6` on Android.
 
 ### Reproducing on macOS (iOS, Mac Catalyst): not done
 
@@ -191,7 +191,7 @@ From the final runs of `run-android.sh`. SSE times are after the submit returned
 | `horizon.sse-stream-sockets-handler` | pass (2.7 s) | pass (3.5 s) | **fail**: no measurement |
 | `soroban.simulate` | pass | pass | **fail**: no funded account |
 | `run-android.sh` exit code | 0 | 0 | 1 |
-| Unique IL2xxx warnings | 0 | 121 | 96 |
+| Unique IL2xxx warnings (see §3.2 for how they are counted) | 0 | 124 | 99 |
 | APK size (arm64-v8a + x86_64) | 32.9 MB | 29.2 MB | 28.0 MB |
 
 The APK contains `lib/arm64-v8a/libsodium.so` and `lib/x86_64/libsodium.so` from the libsodium 1.0.22 package. The x86_64 one is the binary the emulator runs.
@@ -242,18 +242,18 @@ With it, every check passes under full trimming except the known SSE failure (§
 
 **iOS and Mac Catalyst (read from the iOS SDK 27.0.10722 targets, not run):** the iOS SDK sets `JsonSerializerIsReflectionEnabledByDefault=true` in every trim mode, and its default link mode for devices (`SdkOnly`) maps to `TrimMode=partial`. Full trimming comes from `MtouchLink=Full` or from `PublishAot=true` (NativeAOT); an app that uses either still needs the descriptor. Reflection-based System.Text.Json under iOS NativeAOT is untested.
 
-Trim warnings, deduplicated, with the SDK built from `main`:
+Trim warnings with the SDK built from `main` at `83303a27`. MSBuild prints each warning several times, so they are counted once per source location and message; counting by message alone gives a few fewer (118 here), because one message can occur at several places in a file. The counts come from the `dotnet publish` output of `run-android.sh full`:
 
 | Source | Code | Count (full, workaround) | Cause |
 |--------|------|:---:|-------|
-| SDK JSON converters (`EffectResponseJsonConverter`, `OperationResponseJsonConverter`, `PredicateJsonConverter`) | IL2026 | 89 | `JsonSerializer.(De)Serialize` with reflection-based metadata |
+| SDK JSON converters (`EffectResponseJsonConverter`, `OperationResponseJsonConverter`, `PredicateJsonConverter`, `NonNullElementArrayJsonConverter`) | IL2026 | 92 | `JsonSerializer.(De)Serialize` with reflection-based metadata |
 | SDK request/response plumbing (`ResponseHandler`, `Server`, `StellarRpcServer`, `RequestBuilderStreamable`, `JsonOptions`) | IL2026 | 5 | same |
 | SDK SEP services (SEP-6, 9, 10, 24, 45) | IL2026 | 17 | same |
 | SDK `UriTemplate` | IL2075 | 1 | `GetType().GetProperties()` on parameter objects |
 | Nett (TOML, used by SEP-1 / federation) | IL2067, IL2070 | 7 | reflection-based TOML mapping |
 | Common.Logging (dependency of LaunchDarkly.EventSource 3.3.2) | IL2072 | 2 | `Activator.CreateInstance` on a configured type |
 
-Without the descriptor there are 96, because unreachable SDK code (SEP services, TOML) is trimmed away before it is analyzed. The SDK and Nett warnings are covered by the descriptor. The Common.Logging warning is on the path that instantiates a logging adapter named in configuration settings; neither the SDK nor this app configures one.
+Without the descriptor there are 99, because unreachable SDK code (SEP services, TOML) is trimmed away before it is analyzed. The SDK and Nett warnings are covered by the descriptor. The Common.Logging warning is on the path that instantiates a logging adapter named in configuration settings; neither the SDK nor this app configures one.
 
 The durable fix is SDK-side: a source-generated `JsonSerializerContext` for the SDK models, and marking the SDK `IsTrimmable` once it is warning-free. That is a larger change and is not part of this deliverable.
 

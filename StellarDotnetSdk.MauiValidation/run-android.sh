@@ -18,7 +18,8 @@
 #   ADB_SERIAL        device serial when several are connected, e.g. a physical device [unset]
 #   TIMEOUT_SECONDS   how long to wait for the app to finish [1200]
 #   BOOT_TIMEOUT_SECONDS  how long to wait for a booted device after the build [300]
-#   KNOWN_FAILURES    space-separated check names that do not fail the run [horizon.submit-and-sse-stream]
+#   KNOWN_FAILURES    space-separated check names whose known failure does not fail the run; each needs a reason in
+#                     known_reason below [horizon.submit-and-sse-stream]
 set -euo pipefail
 
 usage() {
@@ -76,6 +77,13 @@ known_reason() {
 # Keep in sync with the checks in ValidationRunner.cs.
 expected_checks="crypto.rfc8032 crypto.random-keypair horizon.friendbot-and-account horizon.submit-and-sse-stream
 horizon.sse-stream-sockets-handler soroban.simulate"
+# Only a check with a known reason can be excused: excusing it by name alone would hide any other failure of it.
+for known in $known_failures; do
+    if [[ -z "$(known_reason "$known")" ]]; then
+        echo "KNOWN_FAILURES: no known failure reason is defined for '$known' (see known_reason in $0)" >&2
+        exit 2
+    fi
+done
 
 if [[ ! -x "${adb[0]}" ]]; then
     echo "adb not found at ${adb[0]}; set ANDROID_SDK_ROOT" >&2
@@ -160,7 +168,7 @@ for check in $expected_checks; do
         FAIL)
             reason="$(known_reason "$check")"
             fail_line="$(grep -E "^FAIL $check " <<< "$lines")"
-            if [[ $is_known == 1 && ( -z "$reason" || "$fail_line" == *"$reason"* ) ]]; then
+            if [[ $is_known == 1 && "$fail_line" == *"$reason"* ]]; then
                 echo "KNOWN FAIL $check (see docs/maui-compatibility.md)" >&2
             else
                 [[ $is_known == 1 ]] && echo "$check failed for another reason than its known failure" >&2
