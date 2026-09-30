@@ -2299,12 +2299,10 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
-    ///     Verifies that an explicit <see langword="null" /> <c>useUpgradedAuth</c> also sends <c>true</c>. This
-    ///     is what a caller compiled against a pre-release build with the null-means-legacy default passes (no
-    ///     published release carries the parameter): the compiler embeds the parameter's default
-    ///     (<see langword="null" />) at the call site, so the flip only reaches such callers because
-    ///     <see langword="null" /> is resolved to <see langword="true" /> at runtime rather than being the
-    ///     parameter's default value.
+    ///     Verifies that an explicit <see langword="null" /> <c>useUpgradedAuth</c> also sends <c>true</c>.
+    ///     <see langword="null" /> is the parameter's declared default, which the compiler embeds at every call
+    ///     site that omits the argument; the SDK keeps control of the effective default only because it resolves
+    ///     <see langword="null" /> at runtime, and this pins that resolution.
     /// </summary>
     [TestMethod]
     public async Task SimulateTransaction_WithNullUseUpgradedAuth_SendsTrue()
@@ -2334,6 +2332,24 @@ public class StellarRpcServerTest
         // The other optional fields are unaffected by the flag's default.
         Assert.AreEqual("record", parameters.GetProperty("authMode").GetString());
         Assert.AreEqual(1000, parameters.GetProperty("resourceConfig").GetProperty("instructionLeeway").GetInt32());
+    }
+
+    /// <summary>
+    ///     Pins the declared default of <c>useUpgradedAuth</c> as <see langword="null" />. A declared
+    ///     <see langword="true" /> would put the same request on the wire today, so the two tests above cannot tell
+    ///     them apart, but the compiler would copy it into every call site that omits the argument, and a later
+    ///     change of the SDK default would no longer reach those callers without a recompile.
+    /// </summary>
+    [TestMethod]
+    public void SimulateTransaction_UseUpgradedAuthDeclaredDefault_IsNull()
+    {
+        var parameter = Array.Find(
+            typeof(StellarRpcServer).GetMethod(nameof(StellarRpcServer.SimulateTransaction))!.GetParameters(),
+            p => p.Name == "useUpgradedAuth");
+
+        Assert.IsNotNull(parameter);
+        Assert.IsTrue(parameter.HasDefaultValue);
+        Assert.IsNull(parameter.DefaultValue);
     }
 
     /// <summary>

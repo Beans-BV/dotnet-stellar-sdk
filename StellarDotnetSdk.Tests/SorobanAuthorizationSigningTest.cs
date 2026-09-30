@@ -144,9 +144,7 @@ public class SorobanAuthorizationSigningTest
         var network = Network.Public();
         var keyPair = KeyPair.Random();
         var address = new ScAccountId(keyPair.AccountId);
-        var unsigned = new SorobanAuthorizationEntry(
-            new SorobanAddressCredentialsV2(address, Nonce, 0, new SCVoid()),
-            SampleInvocation());
+        var unsigned = UnsignedAddressEntry(keyPair, v2: true);
 
         var signed = SorobanAuthorization.AuthorizeEntry(
             unsigned, keyPair, ValidUntil, network, SorobanCredentialsVersion.V1);
@@ -254,11 +252,7 @@ public class SorobanAuthorizationSigningTest
         var network = Network.Public();
         var keyPair = KeyPair.Random();
         var address = new ScAccountId(keyPair.AccountId);
-        // Shaped like a recording-mode simulation result: no expiration, void signature.
-        SorobanCredentials unsignedCredentials = inputIsV2
-            ? new SorobanAddressCredentialsV2(address, Nonce, 0, new SCVoid())
-            : new SorobanAddressCredentials(address, Nonce, 0, new SCVoid());
-        var entry = new SorobanAuthorizationEntry(unsignedCredentials, SampleInvocation());
+        var entry = UnsignedAddressEntry(keyPair, inputIsV2);
 
         var signed = SorobanAuthorization.AuthorizeEntry(entry, new KeyPairEntrySigner(keyPair), ValidUntil, network);
 

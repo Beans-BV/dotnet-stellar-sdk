@@ -492,20 +492,22 @@ public class StellarRpcServer : IDisposable
     ///         Leaving it unset (<see langword="null" />) means <see langword="true" />: the request carries
     ///         <c>"useUpgradedAuth": true</c>. This takes up the client-default flip that SDF's CAP-71 transition
     ///         plan schedules for the JS SDK at protocol 28 and invites other SDKs to adopt, and matches the JS
-    ///         and Java SDKs. The parameter's declared default stays <see langword="null" /> and is resolved to
-    ///         <see langword="true" /> when the request is built, not baked into the caller as a compile-time
-    ///         constant, so a call site compiled against the earlier null-means-legacy behaviour gets v2 entries
-    ///         too once it runs on this version, without recompiling.
+    ///         and Java SDKs. The declared default is deliberately <see langword="null" />, meaning "the SDK's
+    ///         current default", rather than <see langword="true" />: C# copies a declared default into every call
+    ///         site at compile time, whereas <see langword="null" /> is resolved when the request is built, so a
+    ///         later change to the default — such as no longer sending the field once Stellar RPC retires it —
+    ///         reaches callers that leave the argument unset without a recompile. It also lets a caller pass an
+    ///         optional setting of its own straight through.
     ///     </p>
     ///     <p>
     ///         To keep receiving legacy credentials, pass <see langword="false" /> explicitly. It is sent on the
-    ///         wire as <c>"useUpgradedAuth": false</c> rather than omitted, as the JS and Java SDKs do, but Stellar
-    ///         RPC treats an absent field as <see langword="false" />, so the two are equivalent: the explicit
-    ///         value does not keep the opt-out working once the server's own default changes (see below). Legacy
-    ///         credentials remain valid on protocol 28 — CAP-71 does not deprecate them — so the opt-out is safe
-    ///         for signers that cannot yet produce the address-bound signature, at the cost of address binding:
-    ///         a legacy signature can be replayed against another account that shares the same signing key
-    ///         when the invocation does not itself bind the signer's address.
+    ///         wire as <c>"useUpgradedAuth": false</c> rather than omitted (the JS and Java SDKs likewise send it
+    ///         explicitly), but Stellar RPC treats an absent field as <see langword="false" />, so the two are
+    ///         equivalent: the explicit value does not keep the opt-out working once the server's own default
+    ///         changes (see below). Legacy credentials remain valid on protocol 28 — CAP-71 does not deprecate
+    ///         them — so the opt-out is safe for signers that cannot yet produce the address-bound signature, at
+    ///         the cost of address binding: a legacy signature can be replayed against another account that
+    ///         shares the same signing key when the invocation does not itself bind the signer's address.
     ///     </p>
     ///     <p>
     ///         Signing either variant is handled by <c>SorobanAuthorization.AuthorizeEntry</c>, which by default
@@ -516,8 +518,8 @@ public class StellarRpcServer : IDisposable
     ///         <see cref="Operations.SorobanAddressCredentials" /> rather than a subclass, so an <c>is</c> or
     ///         <c>as</c> test for the legacy type silently stops matching; and a hand-rolled signer that always builds
     ///         the legacy preimage will produce signatures the network rejects for v2 entries — use
-    ///         <c>SorobanAuthorization.BuildAuthorizationEntryPreimageHash</c>, which picks the preimage from the
-    ///         entry.
+    ///         <see cref="Operations.SorobanAuthorization.BuildAuthorizationEntryPreimageHash" />, which picks the
+    ///         preimage from the entry.
     ///     </p>
     ///     <p>
     ///         The flag is best-effort: it is never an error, it simply may not change the result. Stellar RPC
@@ -598,7 +600,8 @@ public class StellarRpcServer : IDisposable
         }
 
         // CAP-71: an unset flag means upgraded (v2) auth. Resolved here at runtime rather than as the parameter's
-        // default value, so callers compiled against the old null default are flipped as well.
+        // default value, because a declared default is compiled into each call site: this way a later change to
+        // the SDK default reaches existing callers without a recompile.
         request["useUpgradedAuth"] = useUpgradedAuth ?? true;
 
         return request;

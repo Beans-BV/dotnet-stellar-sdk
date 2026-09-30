@@ -82,11 +82,12 @@ All notable changes to this project are documented here. The format is based on
   invites other SDKs to adopt, and matches the JS and Java SDKs. It is a policy change for ecosystem
   alignment, not a correctness fix: legacy credentials remain valid on protocol 28 (CAP-71 does not deprecate
   them), and both opt-outs below keep them reachable.
-  - The parameter's declared default is still `null`; the SDK resolves `null` to `true` when it builds the
-    request, not at the call site. A binary compiled against the earlier null-means-legacy behaviour (which no
-    published release carries — only builds from pre-release sources) therefore gets v2 entries without
-    recompiling. Code compiled against 15.x has to recompile anyway (see the `useUpgradedAuth` entry under
-    **Added**) and picks up the new default when it does.
+  - The parameter's declared default stays `null`, meaning "the SDK's current default", which the SDK resolves
+    to `true` when it builds the request rather than at the call site. C# compiles a declared default into every
+    call site, so this lets a later change to the default — such as no longer sending the field once Stellar RPC
+    retires it — reach callers that leave the argument unset without a recompile. Code compiled against 15.x has
+    to recompile anyway (see the `useUpgradedAuth` entry under **Added**) and picks up the new default when it
+    does.
   - Signing needs no change. `SorobanAuthorization.AuthorizeEntry` keeps its
     `SorobanCredentialsVersion.Preserve` default because it signs an entry whose variant simulation already
     chose: a v2 simulation yields a v2 signature over the address-bound
@@ -113,8 +114,9 @@ All notable changes to this project are documented here. The format is based on
     `SorobanCredentialsVersion.V1` to `AuthorizeEntry` to sign an entry as legacy regardless of what simulation
     returned. Either way the signature gives up address binding: it can be replayed against another account that
     shares the same signing key when the invocation does not itself bind the signer's address. Explicit `false`
-    is put on the wire rather than omitted, as the JS and Java SDKs do, but Stellar RPC treats an absent field
-    as `false`, so the explicit value does not protect the opt-out against a change of the server-side default.
+    is put on the wire rather than omitted (the JS and Java SDKs likewise send it explicitly), but Stellar RPC
+    treats an absent field as `false`, so the explicit value does not protect the opt-out against a change of the
+    server-side default.
   - The simulation opt-out is transitional: under SDF's tentative plan, RPC flips its server-side default to v2
     (planned for protocol 29), at which point `useUpgradedAuth: false` becomes a no-op and stops returning
     legacy credentials, and later disables the flag altogether (planned for protocol 30). Stellar Testnet was

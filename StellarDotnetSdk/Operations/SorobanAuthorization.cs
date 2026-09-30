@@ -63,10 +63,10 @@ public enum SorobanCredentialsVersion
 
     /// <summary>
     ///     Protocol 27 address-bound <c>SOROBAN_CREDENTIALS_ADDRESS_V2</c> (CAP-0071-02); rejected by
-    ///     pre-Protocol-27 networks. The SDK-wide default variant, which simulation requests unless told
-    ///     otherwise; pass it here to upgrade a legacy entry at signing time, or to require the address-bound
-    ///     signature even when simulation came back with a legacy entry (an RPC server older than v27.1.0
-    ///     ignores the request for V2).
+    ///     pre-Protocol-27 networks. The variant simulation requests by default (this enum's own default is
+    ///     <see cref="Preserve" />); pass it here to upgrade a legacy entry at signing time, or to require the
+    ///     address-bound signature even when simulation came back with a legacy entry (an RPC server older
+    ///     than v27.1.0 ignores the request for V2).
     /// </summary>
     V2 = 2,
 }
