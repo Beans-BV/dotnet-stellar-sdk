@@ -128,6 +128,39 @@ All notable changes to this project are documented here. The format is based on
     itself is detected on the callback path after the fact.
   - Typed exceptions under `StellarDotnetSdk.Sep.Sep0007.Exceptions` (base `Sep7Exception`), and a new
     `SEP-0007_COMPATIBILITY_MATRIX.md` (100%, 31/31 fields).
+- **SEP-38 (Anchor RFQ API) client**, new namespace `StellarDotnetSdk.Sep.Sep0038` (SEP-38 v2.5.0):
+  - `QuoteService` covers `GET /info`, `GET /prices`, `GET /price`, `POST /quote` and `GET /quote/:id`,
+    and `QuoteService.FromDomainAsync` discovers `ANCHOR_QUOTE_SERVER` from stellar.toml. The JWT is
+    optional for the first three endpoints and required for the two quote endpoints; it is the token
+    from the existing SEP-10 (`ClientWebAuth.JwtTokenAsync`) or SEP-45
+    (`ClientWebAuthContract.JwtTokenAsync`) flow. The quote server address must be https (the constructor
+    allows plain http on loopback for local development; `FromDomainAsync` never does) and carry no query,
+    fragment or user information.
+  - `PricesRequest`, `PriceRequest` and `QuoteRequest` (with `QuoteContext`: `Sep6`/`Sep24`/`Sep31`)
+    enforce the spec's request rules before sending, failing the returned task with `ArgumentException`:
+    exactly one of `SellAmount`/`BuyAmount`, one `GET /prices` side (sell or buy, the v2.3.0 buy side
+    included), at most one delivery method on `POST /quote`, and only `sep6`/`sep31` for `GET /price`.
+    Their `ToString` redacts the JWT.
+  - `AssetIdentifier` builds, parses and validates the Asset Identification Format (`stellar:CODE:ISSUER`,
+    `stellar:native`, `iso4217:USD`) and converts to and from the SDK `Asset` types.
+  - Amounts and prices are `decimal`. Requests send them as invariant-culture strings with their scale
+    kept. Responses read them exactly, in plain or exponent form (`"1E-7"`): a value `decimal` cannot hold
+    without rounding is rejected rather than approximated. An `expires_at` without an offset is read as UTC,
+    as the spec defines, not as local time.
+  - Responses go through the hardened `JsonOptions` (duplicate properties rejected,
+    [#205](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/205)), required fields are enforced,
+    null list elements are rejected, a `GET /prices` answer must carry the list for the requested side,
+    and `GET /quote/:id` must return the requested quote (its `total_price` is optional, as that
+    endpoint's response table omits it). Bodies are capped at 1 MiB and streamed so the cap bounds memory,
+    and the whole exchange, body included, stays within `HttpClient.Timeout` (and `RequestTimeout` for the
+    internal client). Errors map to `BadRequestException` (400), `PermissionDeniedException` (403),
+    `NotFoundException` (404), `UnexpectedResponseException` and `NoAnchorQuoteServerFoundException`, all
+    derived from `QuoteServerException`; transport failures surface as `HttpRequestException`, timeouts as
+    `TaskCanceledException`.
+  - `POST /quote` is not idempotent: do not configure `QuoteService` with the `ForHorizon()` or
+    `ForSoroban()` presets, which retry `POST`; the README and HTTP-retry guide now say so.
+  - Compatibility matrix `StellarDotnetSdk/Compatibility/sep/SEP-0038_COMPATIBILITY_MATRIX.md`: 100%
+    (75/75 fields), with the spec's prose rules listed separately.
 
 ### Changed
 

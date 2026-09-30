@@ -167,11 +167,13 @@ resilienceOptions.RetryHttpMethods.Add(HttpMethod.Post);
 > - **SEP-7 callback `POST`** (`UriScheme`) — the spec says nothing about idempotency; the POST
 >   delivers a signed transaction to a URL the requester chose, and a retry delivers it again. Use
 >   `NoRetry()` (the default) for `UriScheme`: even transport retries replay it.
+> - **SEP-38 `POST /quote`** — each call creates a new firm quote that the anchor holds in reserve
+>   until it expires; a retry after a 408 or 5xx reserves a second quote.
 >
 > Do NOT wire `ForHorizon()` or `ForSoroban()` into a `ClientWebAuth` / `InteractiveService` /
-> `TransferServerService` / `UriScheme` HttpClient. For the other SEP HttpClients, use `WithConnectionRetries()`
-> (transport failures only) or build a custom `HttpResilienceOptions` whose `RetryHttpMethods`
-> contains only the safe defaults.
+> `TransferServerService` / `UriScheme` / `QuoteService` HttpClient. For the other SEP HttpClients,
+> use `WithConnectionRetries()` (transport failures only) or build a custom `HttpResilienceOptions`
+> whose `RetryHttpMethods` contains only the safe defaults.
 >
 > Be aware that connection-failure retries apply to **all** HTTP methods: a POST whose response was
 > lost may already have been processed by the server, so even `WithConnectionRetries()` carries a
