@@ -2228,9 +2228,12 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
-    ///     Verifies that the <c>useUpgradedAuth</c> parameter is put on the wire as a JSON boolean, for both
+    ///     Verifies that an explicit <c>useUpgradedAuth</c> is put on the wire as a JSON boolean, for both
     ///     <see langword="true" /> and <see langword="false" />. Stellar RPC types the field as a bool and rejects
-    ///     the quoted forms with a JSON-RPC <c>-32602 invalid parameters</c> error.
+    ///     the quoted forms with a JSON-RPC <c>-32602 invalid parameters</c> error. The <see langword="false" />
+    ///     row is the legacy (v1) opt-out: it is sent as an explicit <c>false</c> rather than omitted, as the JS
+    ///     and Java SDKs do. Stellar RPC reads an absent field as <see langword="false" />, so this pins the wire
+    ///     shape, not a guarantee that the opt-out survives a change of the server's own default.
     /// </summary>
     [TestMethod]
     [DataRow(true)]
@@ -2262,11 +2265,14 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
-    ///     Verifies that no <c>useUpgradedAuth</c> field is sent when the caller does not request one, leaving Stellar
-    ///     RPC to apply its own default (v1 <c>SOROBAN_CREDENTIALS_ADDRESS</c> credentials today).
+    ///     Verifies the CAP-71 default: when the caller does not pass <c>useUpgradedAuth</c>, the request carries
+    ///     <c>"useUpgradedAuth": true</c>, so a recording-mode simulation returns
+    ///     <c>SOROBAN_CREDENTIALS_ADDRESS_V2</c> entries. The field must be present, not merely defaulted
+    ///     server-side: Stellar RPC (v28, and v29 on Testnet as of September 2026) treats an absent field as
+    ///     <see langword="false" /> (legacy v1).
     /// </summary>
     [TestMethod]
-    public async Task SimulateTransaction_WithoutUseUpgradedAuth_OmitsUseUpgradedAuthField()
+    public async Task SimulateTransaction_WithoutUseUpgradedAuth_SendsTrue()
     {
         // Arrange
         const string json =
@@ -2288,7 +2294,46 @@ public class StellarRpcServerTest
         var body = handler.RequestBody;
         Assert.IsNotNull(body);
         using var request = JsonDocument.Parse(body!);
-        Assert.IsFalse(request.RootElement.GetProperty("params").TryGetProperty("useUpgradedAuth", out _));
+        var field = request.RootElement.GetProperty("params").GetProperty("useUpgradedAuth");
+        Assert.AreEqual(JsonValueKind.True, field.ValueKind);
+    }
+
+    /// <summary>
+    ///     Verifies that an explicit <see langword="null" /> <c>useUpgradedAuth</c> also sends <c>true</c>. This
+    ///     is what a caller compiled against a pre-release build with the null-means-legacy default passes (no
+    ///     published release carries the parameter): the compiler embeds the parameter's default
+    ///     (<see langword="null" />) at the call site, so the flip only reaches such callers because
+    ///     <see langword="null" /> is resolved to <see langword="true" /> at runtime rather than being the
+    ///     parameter's default value.
+    /// </summary>
+    [TestMethod]
+    public async Task SimulateTransaction_WithNullUseUpgradedAuth_SendsTrue()
+    {
+        // Arrange
+        const string json =
+            """
+            {
+              "jsonrpc": "2.0",
+              "id": "1",
+              "result": {
+                "latestLedger": 14245
+              }
+            }
+            """;
+        using var sorobanServer = Utils.CreateTestStellarRpcServerCapturingRequest(out var handler, json);
+
+        // Act
+        await sorobanServer.SimulateTransaction(CreateDummyInvokeContractTransaction(), 1000, AuthMode.RECORD, null);
+
+        // Assert
+        var body = handler.RequestBody;
+        Assert.IsNotNull(body);
+        using var request = JsonDocument.Parse(body!);
+        var parameters = request.RootElement.GetProperty("params");
+        Assert.AreEqual(JsonValueKind.True, parameters.GetProperty("useUpgradedAuth").ValueKind);
+        // The other optional fields are unaffected by the flag's default.
+        Assert.AreEqual("record", parameters.GetProperty("authMode").GetString());
+        Assert.AreEqual(1000, parameters.GetProperty("resourceConfig").GetProperty("instructionLeeway").GetInt32());
     }
 
     /// <summary>

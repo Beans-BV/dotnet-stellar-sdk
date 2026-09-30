@@ -483,29 +483,55 @@ public class StellarRpcServer : IDisposable
     ///     </p>
     /// </param>
     /// <param name="useUpgradedAuth">
-    ///     Opts in to CAP-71 v2 authorization entries: when <see langword="true" />, a recording-mode simulation
-    ///     returns <see cref="Operations.SorobanAddressCredentialsV2" /> (<c>SOROBAN_CREDENTIALS_ADDRESS_V2</c>)
-    ///     instead of the legacy <see cref="Operations.SorobanAddressCredentials" />
-    ///     (<c>SOROBAN_CREDENTIALS_ADDRESS</c>). V2 credentials bind the credential address into the signed payload,
-    ///     so a signature made for one account cannot be replayed against another.
+    ///     Which CAP-71 address-credential variant a recording-mode simulation returns. <see langword="true" />
+    ///     asks for <see cref="Operations.SorobanAddressCredentialsV2" /> (<c>SOROBAN_CREDENTIALS_ADDRESS_V2</c>),
+    ///     whose signature binds the credential address into the signed payload so it cannot be replayed against
+    ///     another account that shares the same signing key; <see langword="false" /> asks for the legacy
+    ///     <see cref="Operations.SorobanAddressCredentials" /> (<c>SOROBAN_CREDENTIALS_ADDRESS</c>).
     ///     <p>
-    ///         Leaving this field unset omits it from the request, which is what makes v1 today's default: Stellar RPC
-    ///         returns legacy <c>ADDRESS</c> credentials unless asked otherwise. Signing either variant is handled by
-    ///         <c>SorobanAuthorization.AuthorizeEntry</c>, which picks the matching preimage
+    ///         Leaving it unset (<see langword="null" />) means <see langword="true" />: the request carries
+    ///         <c>"useUpgradedAuth": true</c>. This takes up the client-default flip that SDF's CAP-71 transition
+    ///         plan schedules for the JS SDK at protocol 28 and invites other SDKs to adopt, and matches the JS
+    ///         and Java SDKs. The parameter's declared default stays <see langword="null" /> and is resolved to
+    ///         <see langword="true" /> when the request is built, not baked into the caller as a compile-time
+    ///         constant, so a call site compiled against the earlier null-means-legacy behaviour gets v2 entries
+    ///         too once it runs on this version, without recompiling.
+    ///     </p>
+    ///     <p>
+    ///         To keep receiving legacy credentials, pass <see langword="false" /> explicitly. It is sent on the
+    ///         wire as <c>"useUpgradedAuth": false</c> rather than omitted, as the JS and Java SDKs do, but Stellar
+    ///         RPC treats an absent field as <see langword="false" />, so the two are equivalent: the explicit
+    ///         value does not keep the opt-out working once the server's own default changes (see below). Legacy
+    ///         credentials remain valid on protocol 28 — CAP-71 does not deprecate them — so the opt-out is safe
+    ///         for signers that cannot yet produce the address-bound signature, at the cost of address binding:
+    ///         a legacy signature can be replayed against another account that shares the same signing key
+    ///         when the invocation does not itself bind the signer's address.
+    ///     </p>
+    ///     <p>
+    ///         Signing either variant is handled by <c>SorobanAuthorization.AuthorizeEntry</c>, which by default
+    ///         preserves whichever variant simulation returned and signs it over the matching preimage
     ///         (<c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION</c> for v1, <c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS</c>
-    ///         for v2) and preserves whichever variant simulation returned.
+    ///         for v2), so the call site needs no change. Code that inspects credentials by hand must now expect
+    ///         <see cref="Operations.SorobanAddressCredentialsV2" />, a sibling of
+    ///         <see cref="Operations.SorobanAddressCredentials" /> rather than a subclass, so an <c>is</c> or
+    ///         <c>as</c> test for the legacy type silently stops matching; and a hand-rolled signer that always builds
+    ///         the legacy preimage will produce signatures the network rejects for v2 entries — use
+    ///         <c>SorobanAuthorization.BuildAuthorizationEntryPreimageHash</c>, which picks the preimage from the
+    ///         entry.
     ///     </p>
     ///     <p>
-    ///         The flag is best-effort: passing <see langword="true" /> is never an error, it simply may not change
-    ///         the result. Stellar RPC applies it only in the <em>recording</em> auth modes, so pairing it with
-    ///         <see cref="AuthMode.ENFORCE" /> does nothing; it is silently ignored on protocol versions whose host
-    ///         cannot emit <c>ADDRESS_V2</c> (anything older than protocol 27); and it has nothing to act on for an
-    ///         entry that carries no address credential in the first place, such as the source-account arm.
+    ///         The flag is best-effort: it is never an error, it simply may not change the result. Stellar RPC
+    ///         applies it only in the <em>recording</em> auth modes, so pairing it with
+    ///         <see cref="AuthMode.ENFORCE" /> does nothing; it is silently ignored by RPC servers older than
+    ///         v27.1.0 and on protocol versions whose host cannot emit <c>ADDRESS_V2</c> (anything older than
+    ///         protocol 27), where the default therefore still yields v1 entries; and it has nothing to act on for
+    ///         an entry that carries no address credential in the first place, such as the source-account arm.
     ///     </p>
     ///     <p>
-    ///         The flag is also transitional. RPC intends to flip its own default to v2 at protocol 29, at which point
-    ///         this flag becomes a no-op, and to stop returning v1 at protocol 30; do not build anything that relies
-    ///         on omitting the flag to keep receiving v1. See
+    ///         The flag is also transitional. Under SDF's tentative plan, RPC flips its own server-side default to
+    ///         v2 (planned for protocol 29), at which point the flag becomes a no-op and <see langword="false" />
+    ///         no longer yields legacy credentials, and later disables the flag altogether (planned for protocol
+    ///         30); do not build anything that relies on <see langword="false" /> indefinitely. See
     ///         <see href="https://github.com/Beans-BV/dotnet-stellar-sdk/issues/206">issue #206</see>.
     ///     </p>
     /// </param>
@@ -571,10 +597,9 @@ public class StellarRpcServer : IDisposable
             request["authMode"] = authMode.Value.ToRequestValue();
         }
 
-        if (useUpgradedAuth != null)
-        {
-            request["useUpgradedAuth"] = useUpgradedAuth.Value;
-        }
+        // CAP-71: an unset flag means upgraded (v2) auth. Resolved here at runtime rather than as the parameter's
+        // default value, so callers compiled against the old null default are flipped as well.
+        request["useUpgradedAuth"] = useUpgradedAuth ?? true;
 
         return request;
     }

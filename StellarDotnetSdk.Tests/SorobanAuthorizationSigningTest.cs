@@ -14,6 +14,7 @@ using SorobanAddressCredentials = StellarDotnetSdk.Operations.SorobanAddressCred
 using SorobanAddressCredentialsWithDelegates = StellarDotnetSdk.Operations.SorobanAddressCredentialsWithDelegates;
 using SorobanAuthorizationEntry = StellarDotnetSdk.Operations.SorobanAuthorizationEntry;
 using SorobanAuthorizedInvocation = StellarDotnetSdk.Operations.SorobanAuthorizedInvocation;
+using SorobanCredentials = StellarDotnetSdk.Operations.SorobanCredentials;
 using SorobanDelegateSignature = StellarDotnetSdk.Operations.SorobanDelegateSignature;
 
 namespace StellarDotnetSdk.Tests;
@@ -30,6 +31,19 @@ public class SorobanAuthorizationSigningTest
         var fn = new SorobanAuthorizedContractFunction(
             new InvokeContractHostFunction(contract, new SCSymbol("hello"), [new SCString("world")]));
         return new SorobanAuthorizedInvocation(fn, []);
+    }
+
+    /// <summary>
+    ///     An unsigned address-credential entry for <paramref name="signer" />, shaped like a recording-mode
+    ///     simulation result (no expiration, void signature), in the V2 or legacy variant.
+    /// </summary>
+    private static SorobanAuthorizationEntry UnsignedAddressEntry(KeyPair signer, bool v2)
+    {
+        var address = new ScAccountId(signer.AccountId);
+        SorobanCredentials credentials = v2
+            ? new SorobanAddressCredentialsV2(address, Nonce, 0, new SCVoid())
+            : new SorobanAddressCredentials(address, Nonce, 0, new SCVoid());
+        return new SorobanAuthorizationEntry(credentials, SampleInvocation());
     }
 
     [TestMethod]
@@ -123,6 +137,34 @@ public class SorobanAuthorizationSigningTest
     }
 
     [TestMethod]
+    public void AuthorizeEntry_WithV1VersionOnV2Entry_DowngradesToV1Credential()
+    {
+        // The signing-time legacy opt-out: an entry from a default (V2) simulation, forced to V1, must come
+        // out as a legacy credential signed over the legacy (address-free) preimage.
+        var network = Network.Public();
+        var keyPair = KeyPair.Random();
+        var address = new ScAccountId(keyPair.AccountId);
+        var unsigned = new SorobanAuthorizationEntry(
+            new SorobanAddressCredentialsV2(address, Nonce, 0, new SCVoid()),
+            SampleInvocation());
+
+        var signed = SorobanAuthorization.AuthorizeEntry(
+            unsigned, keyPair, ValidUntil, network, SorobanCredentialsVersion.V1);
+
+        Assert.IsInstanceOfType(signed.Credentials, typeof(SorobanAddressCredentials));
+        var credentials = (SorobanAddressCredentials)signed.Credentials;
+        Assert.AreEqual(address.ToXdrBase64(), credentials.Address.ToXdrBase64());
+        Assert.AreEqual(Nonce, credentials.Nonce);
+        Assert.AreEqual(ValidUntil, credentials.SignatureExpirationLedger);
+        var expectedHash = SorobanAuthorization.BuildAuthPreimageHash(
+            network, Nonce, ValidUntil, unsigned.RootInvocation);
+        Assert.AreEqual(new KeyPairEntrySigner(keyPair).Sign(expectedHash).ToXdrBase64(),
+            credentials.Signature.ToXdrBase64());
+        var decoded = SorobanAuthorizationEntry.FromXdr(signed.ToXdr());
+        Assert.IsInstanceOfType(decoded.Credentials, typeof(SorobanAddressCredentials));
+    }
+
+    [TestMethod]
     public void AuthorizeEntry_WithSourceAccountCredentials_ReturnsEntryUnchanged()
     {
         // Source-account credentials are authorized by the transaction source-account signature, so
@@ -196,6 +238,117 @@ public class SorobanAuthorizationSigningTest
             network, address, Nonce, ValidUntil, v2Entry.RootInvocation);
         Assert.AreEqual(new KeyPairEntrySigner(keyPair).Sign(v2Hash).ToXdrBase64(),
             ((SorobanAddressCredentialsV2)signedV2.Credentials).Signature.ToXdrBase64());
+    }
+
+    /// <summary>
+    ///     CAP-71 default flip: the signer-based overload defaults to <see cref="SorobanCredentialsVersion.Preserve" />
+    ///     just like the <see cref="KeyPair" /> overload, so an entry from a default (V2) simulation is signed as
+    ///     V2 and an entry from an explicit legacy simulation (<c>useUpgradedAuth: false</c>) stays V1. Each row
+    ///     also pins the preimage: the signature must be over the variant's own payload, not merely carry its type.
+    /// </summary>
+    [TestMethod]
+    [DataRow(false, DisplayName = "legacy V1 entry stays V1")]
+    [DataRow(true, DisplayName = "V2 entry stays V2")]
+    public void AuthorizeEntry_WithEntrySigner_DefaultVersion_PreservesInputVariant(bool inputIsV2)
+    {
+        var network = Network.Public();
+        var keyPair = KeyPair.Random();
+        var address = new ScAccountId(keyPair.AccountId);
+        // Shaped like a recording-mode simulation result: no expiration, void signature.
+        SorobanCredentials unsignedCredentials = inputIsV2
+            ? new SorobanAddressCredentialsV2(address, Nonce, 0, new SCVoid())
+            : new SorobanAddressCredentials(address, Nonce, 0, new SCVoid());
+        var entry = new SorobanAuthorizationEntry(unsignedCredentials, SampleInvocation());
+
+        var signed = SorobanAuthorization.AuthorizeEntry(entry, new KeyPairEntrySigner(keyPair), ValidUntil, network);
+
+        Assert.AreEqual(inputIsV2, signed.Credentials is SorobanAddressCredentialsV2);
+        var expectedHash = inputIsV2
+            ? SorobanAuthorization.BuildAddressAuthPreimageHash(network, address, Nonce, ValidUntil, entry.RootInvocation)
+            : SorobanAuthorization.BuildAuthPreimageHash(network, Nonce, ValidUntil, entry.RootInvocation);
+        Assert.AreEqual(new KeyPairEntrySigner(keyPair).Sign(expectedHash).ToXdrBase64(),
+            ((SorobanAddressCredentialsBase)signed.Credentials).Signature.ToXdrBase64());
+        // The variant survives the wire: the decoded entry keeps the same credential arm.
+        var decoded = SorobanAuthorizationEntry.FromXdr(signed.ToXdr());
+        Assert.AreEqual(inputIsV2, decoded.Credentials is SorobanAddressCredentialsV2);
+    }
+
+    /// <summary>
+    ///     Pins <see cref="SorobanCredentialsVersion.Preserve" /> as the enum's zero value, so an
+    ///     uninitialized or <c>default</c> <see cref="SorobanCredentialsVersion" /> never silently rewrites a
+    ///     credential's variant.
+    /// </summary>
+    [TestMethod]
+    public void SorobanCredentialsVersion_DefaultValue_IsPreserve()
+    {
+        Assert.AreEqual(SorobanCredentialsVersion.Preserve, default(SorobanCredentialsVersion));
+        Assert.AreEqual(0, (int)SorobanCredentialsVersion.Preserve);
+        Assert.AreEqual(1, (int)SorobanCredentialsVersion.V1);
+        Assert.AreEqual(2, (int)SorobanCredentialsVersion.V2);
+    }
+
+    /// <summary>
+    ///     <see cref="SorobanAuthorization.AuthorizeEntryWithDelegates" /> takes no
+    ///     <see cref="SorobanCredentialsVersion" />: whatever variant the input entry carries, it emits
+    ///     <c>SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES</c> whose root and delegate signatures are both over the
+    ///     address-bound (CAP-0071-01) payload. Covers both the legacy input and the V2 input the flipped
+    ///     simulation default now produces.
+    /// </summary>
+    [TestMethod]
+    [DataRow(false, DisplayName = "from a legacy V1 entry")]
+    [DataRow(true, DisplayName = "from a V2 entry")]
+    public void AuthorizeEntryWithDelegates_AnyInputVariant_SignsAddressBoundPayload(bool inputIsV2)
+    {
+        var network = Network.Public();
+        var rootKp = KeyPair.Random();
+        var delegateKp = KeyPair.Random();
+        var entry = UnsignedAddressEntry(rootKp, inputIsV2);
+        var rootHash = SorobanAuthorization.BuildAddressAuthPreimageHash(
+            network, new ScAccountId(rootKp.AccountId), Nonce, ValidUntil, entry.RootInvocation);
+
+        var signed = SorobanAuthorization.AuthorizeEntryWithDelegates(
+            entry, new KeyPairEntrySigner(rootKp), [new KeyPairEntrySigner(delegateKp)], ValidUntil, network);
+
+        var signedCred = (SorobanAddressCredentialsWithDelegates)signed.Credentials;
+        Assert.AreEqual(new KeyPairEntrySigner(rootKp).Sign(rootHash).ToXdrBase64(),
+            signedCred.AddressCredentials.Signature.ToXdrBase64());
+        Assert.AreEqual(1, signedCred.Delegates.Length);
+        Assert.AreEqual(new KeyPairEntrySigner(delegateKp).Sign(rootHash).ToXdrBase64(),
+            signedCred.Delegates[0].Signature.ToXdrBase64());
+    }
+
+    /// <summary>
+    ///     <see cref="SorobanAuthorization.BuildWithDelegatesEntry" /> takes no
+    ///     <see cref="SorobanCredentialsVersion" />: whatever variant the input entry carries, it emits an unsigned
+    ///     <c>SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES</c> entry, and signing that entry incrementally with
+    ///     <c>SorobanAuthorization.AuthorizeEntry</c> puts root and delegate signatures over the address-bound
+    ///     (CAP-0071-01) payload.
+    /// </summary>
+    [TestMethod]
+    [DataRow(false, DisplayName = "from a legacy V1 entry")]
+    [DataRow(true, DisplayName = "from a V2 entry")]
+    public void BuildWithDelegatesEntry_AnyInputVariant_IncrementalSigningUsesAddressBoundPayload(bool inputIsV2)
+    {
+        var network = Network.Public();
+        var rootKp = KeyPair.Random();
+        var delegateKp = KeyPair.Random();
+        var delegateAddress = new ScAccountId(delegateKp.AccountId);
+        var entry = UnsignedAddressEntry(rootKp, inputIsV2);
+        var rootHash = SorobanAuthorization.BuildAddressAuthPreimageHash(
+            network, new ScAccountId(rootKp.AccountId), Nonce, ValidUntil, entry.RootInvocation);
+
+        var built = SorobanAuthorization.BuildWithDelegatesEntry(entry, [delegateAddress], ValidUntil);
+        Assert.IsInstanceOfType(built.Credentials, typeof(SorobanAddressCredentialsWithDelegates));
+        var rootSigned = SorobanAuthorization.AuthorizeEntry(built, rootKp, ValidUntil, network);
+        var fullySigned = SorobanAuthorization.AuthorizeEntry(
+            rootSigned, delegateKp, ValidUntil, network, forAddress: delegateAddress);
+
+        var signedCred = (SorobanAddressCredentialsWithDelegates)fullySigned.Credentials;
+        Assert.AreEqual(new KeyPairEntrySigner(rootKp).Sign(rootHash).ToXdrBase64(),
+            signedCred.AddressCredentials.Signature.ToXdrBase64());
+        Assert.AreEqual(1, signedCred.Delegates.Length);
+        Assert.AreEqual(new KeyPairEntrySigner(delegateKp).Sign(rootHash).ToXdrBase64(),
+            signedCred.Delegates[0].Signature.ToXdrBase64());
     }
 
     [TestMethod]
@@ -1130,6 +1283,6 @@ public class SorobanAuthorizationSigningTest
         // "P27Testnet" in the unit suite lands on the integration test that actually provides the coverage.
         Assert.Inconclusive(
             "Covered by StellarDotnetSdk.IntegrationTests.Soroban.UpgradedAuthSimulationTests " +
-            "(simulate with useUpgradedAuth -> sign the V2 entry -> submit -> assert SUCCESS).");
+            "(simulate with the default useUpgradedAuth: true -> sign the V2 entry -> submit -> assert SUCCESS).");
     }
 }
