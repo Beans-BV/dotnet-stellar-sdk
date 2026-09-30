@@ -74,6 +74,24 @@ public class UriSchemeParseTest
     }
 
     [TestMethod]
+    [DataRow(1)]
+    [DataRow(4)]
+    [DataRow(8)]
+    public void ParseUri_RejectsTrailingBytesAfterTheEnvelope(int trailingBytes)
+    {
+        // A decoder that stops after one envelope would accept these and silently drop the tail.
+        var envelope = Convert.FromBase64String(Sep7TestVectors.SpecTxXdr);
+        var padded = new byte[envelope.Length + trailingBytes];
+        Buffer.BlockCopy(envelope, 0, padded, 0, envelope.Length);
+        var uri = "web+stellar:tx?xdr=" + Uri.EscapeDataString(Convert.ToBase64String(padded));
+
+        var ex = Assert.ThrowsException<InvalidSep7UriException>(() => UriScheme.ParseUri(uri));
+        StringAssert.Contains(ex.Message, "not a valid base64 XDR");
+        StringAssert.Contains(ex.InnerException!.Message, "trailing byte");
+        Assert.IsFalse(UriScheme.ValidateUri(uri).IsValid);
+    }
+
+    [TestMethod]
     public void ParseUri_SpecPayExample2_ExposesPayParameters()
     {
         var request = UriScheme.ParseUri(Sep7TestVectors.SpecPayExample2);

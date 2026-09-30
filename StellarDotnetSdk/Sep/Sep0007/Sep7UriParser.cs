@@ -386,13 +386,29 @@ internal static class Sep7UriParser
         }
         try
         {
-            TransactionBuilder.FromEnvelopeXdr(xdr);
+            DecodeEnvelope(xdr);
         }
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
             throw new InvalidSep7UriException(
                 "The 'xdr' parameter is not a valid base64 XDR transaction envelope.", ex);
         }
+    }
+
+    /// <summary>
+    ///     Decodes exactly one <c>TransactionEnvelope</c>. Trailing bytes are rejected, so the accepted value is
+    ///     canonical and the transaction a wallet signs is the whole of what the request carried.
+    /// </summary>
+    internal static TransactionBase DecodeEnvelope(string xdr)
+    {
+        var stream = new Xdr.XdrDataInputStream(Convert.FromBase64String(xdr));
+        var envelope = Xdr.TransactionEnvelope.Decode(stream);
+        if (stream.GetRemainingInputLen() != 0)
+        {
+            throw new FormatException(
+                $"{stream.GetRemainingInputLen()} unexpected trailing byte(s) after the transaction envelope.");
+        }
+        return TransactionBuilder.FromEnvelopeXdr(envelope);
     }
 
     private static void ValidatePayParameters(Dictionary<string, string> parameters)

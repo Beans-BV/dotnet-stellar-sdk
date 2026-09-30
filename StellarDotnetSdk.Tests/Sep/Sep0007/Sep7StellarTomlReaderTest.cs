@@ -28,6 +28,8 @@ public class Sep7StellarTomlReaderTest
     [DataRow("URI_REQUEST_SIGNING_KEY = \"\\u0047D7ACHBPHSC5OJMJZZBXA7Z5IAUFTH6E6XVLNBPASDQYJ7LO5UIYBDQW\"")]
     [DataRow("URI_REQUEST_SIGNING_KEY = '''\r\n" + Key + "'''")]
     [DataRow("URI_REQUEST_SIGNING_KEY = \"\"\"GD7ACHBPHSC5OJMJZZ\\\n    BXA7Z5IAUFTH6E6XVLNBPASDQYJ7LO5UIYBDQW\"\"\"")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"\"\"GD7ACHBPHSC5OJMJZZ\\ \t \n    BXA7Z5IAUFTH6E6XVLNBPASDQYJ7LO5UIYBDQW\"\"\"")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"\"\"GD7ACHBPHSC5OJMJZZ\\  \r\n\r\n  BXA7Z5IAUFTH6E6XVLNBPASDQYJ7LO5UIYBDQW\"\"\"")]
     public void ReadsTheKey_InEveryStringAndKeyForm(string toml)
     {
         Assert.AreEqual(Key, Sep7StellarTomlReader.ReadUriRequestSigningKey(toml));
@@ -84,6 +86,11 @@ public class Sep7StellarTomlReaderTest
     [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key, "unterminated string")]
     [DataRow("URI_REQUEST_SIGNING_KEY = \"G\nD\"", "newline")]
     [DataRow("URI_REQUEST_SIGNING_KEY = \"\\q\"", "escape")]
+    // A line-ending backslash must be the last non-whitespace character on its line.
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"\"\"GD7ACHBPHSC5OJMJZZ\\ BXA7Z5IAUFTH6E6XVLNBPASDQYJ7LO5UIYBDQW\"\"\"", "escape")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"\"\"GD7ACHBPHSC5OJMJZZ\\\tBXA7Z5IAUFTH6E6XVLNBPASDQYJ7LO5UIYBDQW\"\"\"", "escape")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"\"\"GD7ACHBPHSC5OJMJZZ\\ \"\"\"", "escape")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"\"\"GD7ACHBPHSC5OJMJZZ\\\rBXA7Z5IAUFTH6E6XVLNBPASDQYJ7LO5UIYBDQW\"\"\"", "escape")]
     [DataRow("URI_REQUEST_SIGNING_KEY = \"\\uD800\"", "unicode")]
     [DataRow("URI_REQUEST_SIGNING_KEY = \"\\UFFFFFFFF\"", "unicode")]
     [DataRow("URI_REQUEST_SIGNING_KEY \"" + Key + "\"", "'='")]

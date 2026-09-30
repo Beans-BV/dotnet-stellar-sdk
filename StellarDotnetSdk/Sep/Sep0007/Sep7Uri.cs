@@ -126,7 +126,7 @@ public sealed class Sep7Uri
         {
             throw new InvalidOperationException("Only 'tx' requests carry a transaction envelope.");
         }
-        return TransactionBuilder.FromEnvelopeXdr(Xdr);
+        return Sep7UriParser.DecodeEnvelope(Xdr);
     }
 
     /// <summary>

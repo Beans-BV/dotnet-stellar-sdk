@@ -313,8 +313,21 @@ internal sealed class Sep7StellarTomlReader
         }
         if (multiLine && (c == ' ' || c == '\t' || c == '\n' || c == '\r'))
         {
-            // A line-ending backslash trims the newline and the whitespace that follows it.
+            // A line-ending backslash trims the newline and the whitespace that follows it. It must be the last
+            // non-whitespace character on its line: "\ " followed by more text on the same line is invalid.
             _position--;
+            while (!AtEnd && (Current == ' ' || Current == '\t'))
+            {
+                _position++;
+            }
+            if (!AtEnd && Current == '\r' && _position + 1 < _toml.Length && _toml[_position + 1] == '\n')
+            {
+                _position++;
+            }
+            if (AtEnd || Current != '\n')
+            {
+                throw Error("invalid escape sequence", escapeStart);
+            }
             while (!AtEnd && (Current == ' ' || Current == '\t' || Current == '\n' || Current == '\r'))
             {
                 _position++;
