@@ -13,8 +13,9 @@ All notable changes to this project are documented here. The format is based on
 - `GetLatestLedgerResponse` now exposes the remaining `getLatestLedger` fields served by Stellar RPC:
   `CloseTime` (`long?`, unix timestamp in seconds), `HeaderXdr`, and `MetadataXdr`. `GetHealthResponse` gains the
   RPC v27.1.0 fields `LatestLedgerCloseTime` and `OldestLedgerCloseTime` (`long?`, unix seconds). The three close
-  times read the quoted wire value, or a bare number, under any serializer options. All five fields are nullable so
-  responses from older RPC servers that omit them still deserialize
+  times read the quoted wire value or a bare number, including under a caller's own serializer options that bind the
+  wire names but do not enable `AllowReadingFromString`. All five fields are nullable so responses from older RPC
+  servers that omit them still deserialize
   ([#198](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/198), completes
   [#155](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/155) and the compatibility-matrix scope of
   [#159](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/159)).
