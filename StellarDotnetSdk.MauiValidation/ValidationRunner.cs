@@ -110,6 +110,9 @@ public sealed class ValidationRunner
             {
                 DisposeLater(_funded)?.Dispose();
             }
+            // Per-run state: a later run on this instance must not reuse the disposed account or the old timing.
+            _funded = null;
+            _socketsTiming = null;
             Log("DONE");
         }
         return allPassed;
