@@ -146,7 +146,7 @@ catch (QuoteServerException ex)
 {
     // BadRequestException (400), PermissionDeniedException (403), UnexpectedResponseException (anything else).
     // ex.Error is the anchor's message, exactly as sent: escape it before logging or display. ex.Message carries
-    // an escaped, length-bounded copy.
+    // an escaped, length-bounded copy. ex.RetryAfterDelay is the anchor's Retry-After (typically on 429 or 503).
     Console.WriteLine($"{ex.StatusCode}: {ex.Message}");
 }
 ```

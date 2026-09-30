@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -879,6 +880,45 @@ public class QuoteServiceTest
 
         Assert.AreEqual(500, ex.StatusCode);
         Assert.AreEqual("database unavailable", ex.Error);
+        Assert.IsNull(ex.RetryAfterDelay);
+    }
+
+    [TestMethod]
+    public async Task PostQuoteAsync_OnTooManyRequests_ExposesTheRetryAfterDelay()
+    {
+        var (service, _) = CreateService(_ =>
+        {
+            var response = new HttpResponseMessage(HttpStatusCode.TooManyRequests)
+            {
+                Content = new StringContent("{\"error\":\"slow down\"}"),
+            };
+            response.Headers.RetryAfter = new RetryConditionHeaderValue(TimeSpan.FromSeconds(30));
+            return response;
+        });
+
+        var ex = await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() =>
+            service.PostQuoteAsync(ValidQuoteRequest()));
+
+        Assert.AreEqual(429, ex.StatusCode);
+        Assert.AreEqual(TimeSpan.FromSeconds(30), ex.RetryAfterDelay);
+    }
+
+    [TestMethod]
+    public async Task OnServiceUnavailableWithAnHttpDate_ExposesTheRetryAfterDelay()
+    {
+        var (service, _) = CreateService(_ =>
+        {
+            var response = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
+            response.Headers.RetryAfter = new RetryConditionHeaderValue(DateTimeOffset.UtcNow.AddMinutes(10));
+            return response;
+        });
+
+        var ex = await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() => service.InfoAsync());
+
+        Assert.AreEqual(503, ex.StatusCode);
+        Assert.IsNotNull(ex.RetryAfterDelay);
+        Assert.IsTrue(ex.RetryAfterDelay > TimeSpan.FromMinutes(9) && ex.RetryAfterDelay <= TimeSpan.FromMinutes(10),
+            $"RetryAfterDelay was {ex.RetryAfterDelay}.");
     }
 
     [TestMethod]

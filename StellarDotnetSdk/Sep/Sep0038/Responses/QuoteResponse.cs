@@ -13,8 +13,8 @@ namespace StellarDotnetSdk.Sep.Sep0038.Responses;
 ///         The anchor holds the quoted amount in reserve until <see cref="ExpiresAt" />.
 ///     </para>
 ///     <para>
-///         Every amount and price is read exactly: a value <see cref="decimal" /> cannot hold without rounding fails
-///         deserialization instead of being approximated.
+///         Every amount and price is read exactly: a value that <see cref="decimal" /> cannot hold without rounding
+///         fails deserialization instead of being approximated.
 ///     </para>
 /// </remarks>
 public sealed record QuoteResponse

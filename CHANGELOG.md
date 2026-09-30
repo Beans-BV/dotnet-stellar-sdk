@@ -144,9 +144,9 @@ All notable changes to this project are documented here. The format is based on
   - `AssetIdentifier` builds, parses and validates the Asset Identification Format (`stellar:CODE:ISSUER`,
     `stellar:native`, `iso4217:USD`) and converts to and from the SDK `Asset` types.
   - Amounts and prices are `decimal`. Requests send them as invariant-culture strings with their scale
-    kept. Responses read them exactly, in plain or exponent form (`"1E-7"`): a value `decimal` cannot hold
-    without rounding is rejected rather than approximated. An `expires_at` without an offset is read as UTC,
-    as the spec defines, not as local time.
+    kept. Responses read them exactly, in plain or exponent form (`"1E-7"`): a value that `decimal` cannot
+    hold without rounding is rejected rather than approximated. An `expires_at` without an offset is read
+    as UTC, as the spec defines, not as local time.
   - Responses go through the hardened `JsonOptions` (duplicate properties rejected,
     [#205](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/205)), required fields are enforced,
     null list elements are rejected, a `GET /prices` answer must carry the list for the requested side,
@@ -155,7 +155,8 @@ All notable changes to this project are documented here. The format is based on
     and the whole exchange, body included, stays within `HttpClient.Timeout` (and `RequestTimeout` for the
     internal client). Errors map to `BadRequestException` (400), `PermissionDeniedException` (403),
     `NotFoundException` (404), `UnexpectedResponseException` and `NoAnchorQuoteServerFoundException`, all
-    derived from `QuoteServerException`; transport failures surface as `HttpRequestException`, timeouts as
+    derived from `QuoteServerException`, whose `RetryAfterDelay` carries an error response's
+    `Retry-After`; transport failures surface as `HttpRequestException`, timeouts as
     `TaskCanceledException`.
   - `POST /quote` is not idempotent: do not configure `QuoteService` with the `ForHorizon()` or
     `ForSoroban()` presets, which retry `POST`; the README and HTTP-retry guide now say so.

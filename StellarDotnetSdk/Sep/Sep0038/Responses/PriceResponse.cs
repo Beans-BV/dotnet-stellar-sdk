@@ -12,8 +12,8 @@ namespace StellarDotnetSdk.Sep.Sep0038.Responses;
 ///         firm price.
 ///     </para>
 ///     <para>
-///         Every amount and price is read exactly: a value <see cref="decimal" /> cannot hold without rounding fails
-///         deserialization instead of being approximated.
+///         Every amount and price is read exactly: a value that <see cref="decimal" /> cannot hold without rounding
+///         fails deserialization instead of being approximated.
 ///     </para>
 /// </remarks>
 public sealed record PriceResponse

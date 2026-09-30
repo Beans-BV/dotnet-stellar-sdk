@@ -22,9 +22,10 @@ public class UnexpectedResponseException : QuoteServerException
     /// <param name="error">The <c>error</c> field of the response body, if it had one.</param>
     /// <param name="responseBody">The response body, if it was read.</param>
     /// <param name="innerException">The exception that caused this one, if any.</param>
+    /// <param name="retryAfterDelay">The delay the server asked for in a <c>Retry-After</c> header, if any.</param>
     public UnexpectedResponseException(string message, int statusCode, string? error, string? responseBody,
-        Exception? innerException = null)
-        : base(message, statusCode, error, responseBody, innerException)
+        Exception? innerException = null, TimeSpan? retryAfterDelay = null)
+        : base(message, statusCode, error, responseBody, innerException, retryAfterDelay)
     {
     }
 }

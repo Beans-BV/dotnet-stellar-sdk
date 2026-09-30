@@ -32,8 +32,8 @@ public sealed record AssetPrice
     ///         means one USDC costs 5.42 BRL, as in the specification's buy-side example.
     ///     </para>
     ///     <para>
-    ///         Read exactly: a value <see cref="decimal" /> cannot hold without rounding fails deserialization instead
-    ///         of being approximated.
+    ///         Read exactly: a value that <see cref="decimal" /> cannot hold without rounding fails deserialization
+    ///         instead of being approximated.
     ///     </para>
     /// </remarks>
     [JsonPropertyName("price")]

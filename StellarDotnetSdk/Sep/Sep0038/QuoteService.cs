@@ -42,7 +42,7 @@ namespace StellarDotnetSdk.Sep.Sep0038;
 ///     </para>
 ///     <para>
 ///         Amounts and prices are <see cref="decimal" /> values. Requests send them as invariant-culture strings,
-///         keeping the scale given; responses are read exactly, and a value <see cref="decimal" /> cannot hold without
+///         keeping the scale given; responses are read exactly: a value that <see cref="decimal" /> cannot hold without
 ///         rounding fails with <see cref="UnexpectedResponseException" /> rather than being approximated.
 ///     </para>
 ///     <para>
@@ -53,7 +53,9 @@ namespace StellarDotnetSdk.Sep.Sep0038;
 ///         <see cref="ArgumentException" /> from the returned task, before anything is sent. Error responses map to
 ///         <see cref="BadRequestException" /> (400), <see cref="PermissionDeniedException" /> (403),
 ///         <see cref="NotFoundException" /> (404) and <see cref="UnexpectedResponseException" /> (anything else, an
-///         oversized body, or an unusable success body); all derive from <see cref="QuoteServerException" />.
+///         oversized body, or an unusable success body); all derive from <see cref="QuoteServerException" />. A
+///         <c>Retry-After</c> header on an error response (typically 429 or 503) is exposed as
+///         <see cref="QuoteServerException.RetryAfterDelay" />.
 ///         Response bodies are read up to 1 MiB, and parsed with the SDK's hardened JSON options, which reject
 ///         duplicated mapped properties.
 ///     </para>
@@ -514,7 +516,8 @@ public class QuoteService : IDisposable
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw CreateErrorException(response.StatusCode, body);
+                    throw CreateErrorException(response.StatusCode, body,
+                        RetryAfterParser.ToTimeSpan(response.Headers.RetryAfter));
                 }
 
                 T? result;
@@ -627,7 +630,8 @@ public class QuoteService : IDisposable
             statusCode, null, null);
     }
 
-    private static QuoteServerException CreateErrorException(HttpStatusCode statusCode, byte[]? body)
+    private static QuoteServerException CreateErrorException(HttpStatusCode statusCode, byte[]? body,
+        TimeSpan? retryAfterDelay)
     {
         var text = body == null ? null : DecodeBody(body);
         var error = body == null ? null : TryReadError(body);
@@ -639,7 +643,7 @@ public class QuoteService : IDisposable
             HttpStatusCode.BadRequest => new BadRequestException(message, error, text),
             HttpStatusCode.Forbidden => new PermissionDeniedException(message, error, text),
             HttpStatusCode.NotFound => new NotFoundException(message, error, text),
-            _ => new UnexpectedResponseException(message, code, error, text),
+            _ => new UnexpectedResponseException(message, code, error, text, retryAfterDelay: retryAfterDelay),
         };
     }
 

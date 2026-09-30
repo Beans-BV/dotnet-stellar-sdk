@@ -3,10 +3,12 @@ using System;
 namespace StellarDotnetSdk.Sep.Sep0038.Exceptions;
 
 /// <summary>
-///     Base type of every error <see cref="QuoteService" /> raises for a response from, or the discovery of, an
-///     anchor's SEP-38 quote server. Catch this to handle all of them.
+///     Base type of the errors <see cref="QuoteService" /> raises for a response from an anchor's SEP-38 quote
+///     server, or for a stellar.toml that declares no usable one. Catch this to handle all of them.
 /// </summary>
 /// <remarks>
+///     A stellar.toml that cannot be fetched or parsed during discovery raises
+///     <see cref="StellarDotnetSdk.Sep.Sep0001.Exceptions.StellarTomlException" />, which does not derive from this type.
 ///     Transport failures (DNS, TLS, connection resets, timeouts) are not wrapped: they surface as the
 ///     <see cref="System.Net.Http.HttpRequestException" /> or <see cref="System.Threading.Tasks.TaskCanceledException" />
 ///     that <see cref="System.Net.Http.HttpClient" /> raised. Invalid request arguments raise
@@ -41,13 +43,15 @@ public class QuoteServerException : Exception
     /// <param name="error">The <c>error</c> field of the response body, if it had one.</param>
     /// <param name="responseBody">The response body, if it was read.</param>
     /// <param name="innerException">The exception that caused this one, if any.</param>
+    /// <param name="retryAfterDelay">The delay the server asked for in a <c>Retry-After</c> header, if any.</param>
     public QuoteServerException(string message, int? statusCode, string? error, string? responseBody,
-        Exception? innerException = null)
+        Exception? innerException = null, TimeSpan? retryAfterDelay = null)
         : base(message, innerException)
     {
         StatusCode = statusCode;
         Error = error;
         ResponseBody = responseBody;
+        RetryAfterDelay = retryAfterDelay;
     }
 
     /// <summary>
@@ -68,4 +72,17 @@ public class QuoteServerException : Exception
     ///     <see langword="null" /> when it was not read. Server-controlled: escape it before logging or display.
     /// </summary>
     public string? ResponseBody { get; }
+
+    /// <summary>
+    ///     The delay the server asked the client to wait before retrying, from the <c>Retry-After</c> header of an
+    ///     error response such as <c>429 Too Many Requests</c> or <c>503 Service Unavailable</c>, or
+    ///     <see langword="null" /> when the response carried none. Only an <see cref="UnexpectedResponseException" />
+    ///     carries it; the 400, 403 and 404 subtypes never do. Named like
+    ///     <see cref="StellarDotnetSdk.Exceptions.TooManyRequestsException.RetryAfterDelay" />.
+    /// </summary>
+    /// <remarks>
+    ///     <c>POST /quote</c> is never retried automatically (it is not idempotent), so this is the only way to honor
+    ///     an anchor's rate limit on it.
+    /// </remarks>
+    public TimeSpan? RetryAfterDelay { get; }
 }
