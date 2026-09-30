@@ -208,7 +208,7 @@ _Note: StellarDotnetSdk implements the **client** (wallet) side of SEP-12, count
 | Field | Required | Status | SDK Property | Description |
 |-------|----------|--------|--------------|-------------|
 | `choices` |  | ✅ | `GetCustomerInfoField.Choices` | Array of valid values for the field; string and number elements are accepted (a number is kept as its JSON text) |
-| `description` | ✓ | ✅ | `GetCustomerInfoField.Description` | Human-readable description of the field |
+| `description` | ✓ | ✅ | `GetCustomerInfoField.Description` | Human-readable description of the field (required; rejected if missing or null) |
 | `error` |  | ✅ | `GetCustomerInfoProvidedField.Error` | Description of why a provided field was rejected |
 | `optional` |  | ✅ | `GetCustomerInfoField.Optional` | Whether the field may be omitted (absent means `false`) |
 | `status` |  | ✅ | `GetCustomerInfoProvidedField.Status` | Validation status of a provided field |

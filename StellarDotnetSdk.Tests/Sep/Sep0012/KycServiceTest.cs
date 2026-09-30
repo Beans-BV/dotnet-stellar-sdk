@@ -524,17 +524,24 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     }
 
     [TestMethod]
-    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"STRING\"}}}", DisplayName = "uppercase type")]
-    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"file\"}}}", DisplayName = "undefined type")]
+    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"STRING\",\"description\":\"d\"}}}", DisplayName = "uppercase type")]
+    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"file\",\"description\":\"d\"}}}", DisplayName = "undefined type")]
     [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"description\":\"d\"}}}", DisplayName = "missing type")]
     [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":null}}", DisplayName = "null field entry")]
-    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"string\",\"choices\":[\"a\",null]}}}",
+    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"string\",\"description\":\"d\",\"choices\":[\"a\",null]}}}",
         DisplayName = "null choice")]
-    [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"x\":{\"type\":\"string\",\"status\":\"VERIFIED\"}}}",
+    [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"x\":{\"type\":\"string\",\"description\":\"d\",\"status\":\"VERIFIED\"}}}",
         DisplayName = "undefined provided status")]
-    [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"x\":{\"type\":\"string\",\"status\":\"verification_required\"}}}",
+    [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"x\":{\"type\":\"string\",\"description\":\"d\",\"status\":\"verification_required\"}}}",
         DisplayName = "lowercase provided status")]
     [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"x\":null}}", DisplayName = "null provided entry")]
+    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"string\"}}}", DisplayName = "missing description")]
+    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"string\",\"description\":null}}}",
+        DisplayName = "null description")]
+    [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"x\":{\"type\":\"string\",\"status\":\"ACCEPTED\"}}}",
+        DisplayName = "missing provided description")]
+    [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"x\":{\"type\":\"string\",\"description\":null}}}",
+        DisplayName = "null provided description")]
     public async Task GetCustomerInfoAsync_WithInvalidField_ThrowsInvalidKycResponseException(string body)
     {
         var (service, _) = CreateService(body);
@@ -545,11 +552,11 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
 
     [TestMethod]
     [DataRow("{\"status\":\"REJECTED\",\"status\":\"ACCEPTED\"}", DisplayName = "duplicate status")]
-    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"string\",\"type\":\"binary\"}}}",
+    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"string\",\"type\":\"binary\",\"description\":\"d\"}}}",
         DisplayName = "duplicate field type")]
-    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"string\"},\"x\":{\"type\":\"binary\"}}}",
+    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"string\",\"description\":\"d\"},\"x\":{\"type\":\"binary\",\"description\":\"d\"}}}",
         DisplayName = "duplicate fields key")]
-    [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"x\":{\"type\":\"string\",\"status\":\"REJECTED\",\"status\":\"ACCEPTED\"}}}",
+    [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"x\":{\"type\":\"string\",\"description\":\"d\",\"status\":\"REJECTED\",\"status\":\"ACCEPTED\"}}}",
         DisplayName = "duplicate provided status")]
     public async Task GetCustomerInfoAsync_WithDuplicateProperty_ThrowsInvalidKycResponseException(string body)
     {
@@ -644,6 +651,7 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
                 ["mobile_number"] = new()
                 {
                     Type = FieldType.String,
+                    Description = "mobile phone number of the customer",
                     Status = ProvidedFieldStatus.VerificationRequired,
                 },
             },
@@ -1676,7 +1684,7 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     {
         var key = "K\nFORGED LOG LINE\u2028" + new string('B', 5000);
         var body = "{\"status\":\"NEEDS_INFO\",\"fields\":{" + JsonSerializer.Serialize(key) +
-                   ":{\"type\":\"string\",\"optional\":\"not-a-bool\"}}}";
+                   ":{\"type\":\"string\",\"description\":\"d\",\"optional\":\"not-a-bool\"}}}";
         var (service, _) = CreateService(body);
 
         var ex = await AssertThrowsAsync<InvalidKycResponseException>(() =>
@@ -1693,7 +1701,7 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     {
         var key = "K\r\nFORGED" + new string('B', 5000);
         var body = "{\"status\":\"NEEDS_INFO\",\"fields\":{" + JsonSerializer.Serialize(key) +
-                   ":{\"type\":\"string\",\"optional\":\"not-a-bool\"}}}";
+                   ":{\"type\":\"string\",\"description\":\"d\",\"optional\":\"not-a-bool\"}}}";
 
         var ex = Assert.ThrowsException<JsonException>(() => GetCustomerInfoResponse.FromJson(body));
 
@@ -1857,7 +1865,7 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     public async Task GetCustomerInfoAsync_WithUnsupportedChoiceElement_ThrowsInvalidKycResponseException(
         string choices)
     {
-        var body = "{\"status\":\"NEEDS_INFO\",\"fields\":{\"n\":{\"type\":\"string\",\"choices\":" + choices + "}}}";
+        var body = "{\"status\":\"NEEDS_INFO\",\"fields\":{\"n\":{\"type\":\"string\",\"description\":\"d\",\"choices\":" + choices + "}}}";
         var (service, _) = CreateService(body);
 
         await AssertThrowsAsync<InvalidKycResponseException>(() =>
