@@ -226,5 +226,9 @@ public class AssetIdentifierTest
         Assert.IsFalse(usd == none);
         Assert.IsFalse(none == usd);
         Assert.IsTrue(none == null);
+        // Mixed comparisons resolve through the implicit string conversion, by value; pinned so that adding a
+        // string-to-identifier conversion later cannot silently flip them.
+        Assert.IsTrue(usd == "iso4217:USD");
+        Assert.IsFalse(usd == "iso4217:EUR");
     }
 }

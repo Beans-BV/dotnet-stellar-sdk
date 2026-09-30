@@ -286,9 +286,7 @@ public class QuoteService : IDisposable
     ///     <see cref="PricesResponse.SellAssets" /> for a buy-side one.
     /// </returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="request" /> is null.</exception>
-    /// <exception cref="ArgumentException">
-    ///     Thrown when the request mixes or omits the sell and buy sides, or its amount is zero or negative.
-    /// </exception>
+    /// <exception cref="ArgumentException">Thrown when the request mixes or omits the sell and buy sides.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the amount is zero or negative.</exception>
     /// <exception cref="QuoteServerException">
     ///     Thrown (as one of its subtypes) when the anchor answers with an error or an unusable response.
@@ -322,8 +320,7 @@ public class QuoteService : IDisposable
     /// <returns>The indicative price.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="request" /> is null.</exception>
     /// <exception cref="ArgumentException">
-    ///     Thrown when an asset is missing, when not exactly one amount is given or it is not positive, or when the
-    ///     context is SEP-24.
+    ///     Thrown when an asset is missing, when not exactly one amount is given, or when the context is SEP-24.
     /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     Thrown when the context is not a defined value, or the amount is zero or negative.
@@ -354,8 +351,8 @@ public class QuoteService : IDisposable
     /// <returns>The firm quote; pass its <see cref="QuoteResponse.Id" /> as <c>quote_id</c> to use it.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="request" /> is null.</exception>
     /// <exception cref="ArgumentException">
-    ///     Thrown when an asset or the JWT is missing, when not exactly one amount is given or it is not positive, or
-    ///     when both delivery methods are given.
+    ///     Thrown when an asset or the JWT is missing, when not exactly one amount is given, or when both delivery
+    ///     methods are given.
     /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     Thrown when the context is not a defined value, or the amount is zero or negative.

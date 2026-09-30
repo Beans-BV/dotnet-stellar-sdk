@@ -79,9 +79,8 @@ public sealed record PricesRequest
     /// <summary>
     ///     Checks the sell/buy exclusivity rules and returns the query parameters.
     /// </summary>
-    /// <exception cref="ArgumentException">
-    ///     Thrown when the request mixes or omits the sell and buy sides, or its amount is zero or negative.
-    /// </exception>
+    /// <exception cref="ArgumentException">Thrown when the request mixes or omits the sell and buy sides.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the amount is zero or negative.</exception>
     internal Dictionary<string, string> ToQueryParameters()
     {
         var hasSellAsset = !string.IsNullOrWhiteSpace(SellAsset);

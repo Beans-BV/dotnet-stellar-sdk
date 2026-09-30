@@ -85,8 +85,8 @@ public sealed record PriceRequest
     ///     Checks the request and returns the query parameters.
     /// </summary>
     /// <exception cref="ArgumentException">
-    ///     Thrown when an asset is missing, when not exactly one amount is given or it is not positive, or when
-    ///     <see cref="Context" /> is <see cref="QuoteContext.Sep24" />.
+    ///     Thrown when an asset is missing, when not exactly one amount is given, or when <see cref="Context" /> is
+    ///     <see cref="QuoteContext.Sep24" />.
     /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     Thrown when <see cref="Context" /> is not a defined value, or the amount is zero or negative.

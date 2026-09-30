@@ -102,8 +102,8 @@ public sealed record QuoteRequest
     ///     Checks the request and returns the UTF-8 JSON body.
     /// </summary>
     /// <exception cref="ArgumentException">
-    ///     Thrown when an asset or the JWT is missing, when not exactly one amount is given or it is not positive, or
-    ///     when both delivery methods are given.
+    ///     Thrown when an asset or the JWT is missing, when not exactly one amount is given, or when both delivery
+    ///     methods are given.
     /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     Thrown when <see cref="Context" /> is not a defined value, or the amount is zero or negative.
