@@ -175,17 +175,18 @@ All notable changes to this project are documented here. The format is based on
   `PUT /customer` sends SEP-9 fields (via the existing `Sep0009` types), custom fields and files as
   `multipart/form-data` with every binary part last, plus `*_verification` codes and `*_file_id`
   references; the client-side rules of SEP-12 (a `type` with every `transaction_id`, no memo for a `C...`
-  account) are checked before sending. Customer statuses, provided-field statuses and field types are
-  typed enums matched against the exact SEP-12 literals — on the response properties and on the enum types
-  themselves — so an unknown value or a bare ordinal fails the parse instead of reading as `ACCEPTED`.
+  account) are checked before sending, and so is a name used by both a text field and a file. Customer
+  statuses, provided-field statuses and field types are typed enums matched against the exact SEP-12
+  literals — on the response properties and on the enum types themselves — so an unknown value or a bare
+  ordinal fails the parse instead of reading as `ACCEPTED`.
   Response bodies are capped at 1 MiB, the whole exchange (body included) is bounded by the client's
   timeout, duplicate JSON properties are rejected in success and error bodies alike (the hardening issue
   [#205](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/205) asks for elsewhere), and error
   statuses map to `AuthenticationRequiredException`, `CustomerNotFoundException`,
   `PayloadTooLargeException` or `KycServiceException`, carrying the anchor's `error` text (and, on a plain
-  `KycServiceException`, any `Retry-After` delay as `RetryAfterDelay`); an invalid success body raises
-  `InvalidKycResponseException`, and server text quoted in any exception message is clamped and stripped
-  of control and format characters. The internal client does not follow redirects, and a response from
+  `KycServiceException`, any `Retry-After` delay as `RetryAfterDelay`); an invalid success body, including
+  one that is not valid UTF-8, raises `InvalidKycResponseException`, and server text quoted in any exception
+  message is clamped and stripped of control and format characters. The internal client does not follow redirects, and a response from
   another origin is rejected. File names are percent-encoded per RFC 7578, and a request's `ToString()`
   redacts the JWT, customer data and callback-URL secrets. The SEP-12 converters are public, so a consumer's
   source-generated `JsonSerializerContext` can use the response types. `KycCallbackSignature`

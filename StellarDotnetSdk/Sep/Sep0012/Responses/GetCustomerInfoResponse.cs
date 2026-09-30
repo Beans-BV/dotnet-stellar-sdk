@@ -29,7 +29,9 @@ public sealed class GetCustomerInfoResponse
 
     /// <summary>
     ///     Gets the fields the anchor has not yet received for the customer and requested <c>type</c>, keyed by field
-    ///     name. Required by SEP-0012 for <see cref="CustomerStatus.NeedsInfo" />, but may accompany any status.
+    ///     name. SEP-0012 requires it for <see cref="CustomerStatus.NeedsInfo" /> and allows it with any status. The
+    ///     SDK does not enforce that requirement, so the status stays readable when an anchor omits the fields:
+    ///     expect <c>null</c> here even for <see cref="CustomerStatus.NeedsInfo" />.
     /// </summary>
     [JsonPropertyName("fields")]
     public IReadOnlyDictionary<string, GetCustomerInfoField>? Fields { get; init; }
@@ -42,8 +44,9 @@ public sealed class GetCustomerInfoResponse
     public IReadOnlyDictionary<string, GetCustomerInfoProvidedField>? ProvidedFields { get; init; }
 
     /// <summary>
-    ///     Gets a human-readable message describing the current state of the KYC process. Required by SEP-0012 for
-    ///     <see cref="CustomerStatus.Rejected" />.
+    ///     Gets a human-readable message describing the current state of the KYC process. SEP-0012 requires it for
+    ///     <see cref="CustomerStatus.Rejected" />. The SDK does not enforce that requirement, so a rejection without a
+    ///     message still reaches the caller: expect <c>null</c> here even for <see cref="CustomerStatus.Rejected" />.
     /// </summary>
     [JsonPropertyName("message")]
     public string? Message { get; init; }

@@ -342,7 +342,7 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         Assert.AreEqual(ProvidedFieldStatus.Accepted, firstName.Status);
         Assert.IsNull(firstName.Error);
         Assert.IsNull(firstName.Choices);
-        Assert.IsNull(firstName.Optional);
+        Assert.IsFalse(firstName.Optional);
 
         var request = handler.Requests.Single();
         Assert.AreEqual(HttpMethod.Get, request.Method);
@@ -362,10 +362,11 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         Assert.IsNotNull(response.Fields);
         Assert.AreEqual(4, response.Fields.Count);
         Assert.AreEqual(FieldType.String, response.Fields["mobile_number"].Type);
-        Assert.IsNull(response.Fields["mobile_number"].Optional);
-        Assert.AreEqual(true, response.Fields["email_address"].Optional);
+        // Absent reads as the SEP-0012 default, false, the same as the explicit false on birth_date.
+        Assert.IsFalse(response.Fields["mobile_number"].Optional);
+        Assert.IsTrue(response.Fields["email_address"].Optional);
         Assert.AreEqual(FieldType.Date, response.Fields["birth_date"].Type);
-        Assert.AreEqual(false, response.Fields["birth_date"].Optional);
+        Assert.IsFalse(response.Fields["birth_date"].Optional);
         Assert.AreEqual(FieldType.Number, response.Fields["number_of_shareholders"].Type);
 
         Assert.IsNotNull(response.ProvidedFields);
@@ -567,12 +568,33 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         DisplayName = "missing provided description")]
     [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"x\":{\"type\":\"string\",\"description\":null}}}",
         DisplayName = "null provided description")]
+    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"string\",\"description\":\"d\",\"optional\":\"true\"}}}",
+        DisplayName = "string optional")]
+    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"string\",\"description\":\"d\",\"optional\":1}}}",
+        DisplayName = "number optional")]
+    [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"x\":{\"type\":\"string\",\"description\":\"d\",\"optional\":{}}}}",
+        DisplayName = "object provided optional")]
     public async Task GetCustomerInfoAsync_WithInvalidField_ThrowsInvalidKycResponseException(string body)
     {
         var (service, _) = CreateService(body);
 
         await AssertThrowsAsync<InvalidKycResponseException>(() =>
             service.GetCustomerInfoAsync(new GetCustomerInfoRequest { Jwt = Jwt }));
+    }
+
+    [TestMethod]
+    public void FromJson_WithNullOptional_ReadsFalse()
+    {
+        // Anchors whose serializers write out null properties send "optional": null for "not set".
+        var response = GetCustomerInfoResponse.FromJson(
+            "{\"status\":\"NEEDS_INFO\"," +
+            "\"fields\":{\"a\":{\"type\":\"string\",\"description\":\"d\",\"optional\":null}," +
+            "\"b\":{\"type\":\"string\",\"description\":\"d\",\"optional\":true}}," +
+            "\"provided_fields\":{\"c\":{\"type\":\"string\",\"description\":\"d\",\"optional\":null}}}");
+
+        Assert.IsFalse(response.Fields!["a"].Optional);
+        Assert.IsTrue(response.Fields["b"].Optional);
+        Assert.IsFalse(response.ProvidedFields!["c"].Optional);
     }
 
     [TestMethod]
@@ -994,6 +1016,56 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         Assert.AreEqual("back-image-bytes", request.Part("photo_id_front").Value);
         Assert.AreEqual("incorporation-doc", request.Part("proof_of_funds").Value);
         Assert.AreEqual("proof_of_funds", request.Part("proof_of_funds").FileName);
+    }
+
+    [TestMethod]
+    public async Task PutCustomerInfoAsync_WithNameUsedAsTextAndFile_ThrowsBeforeSending()
+    {
+        var requests = new[]
+        {
+            new PutCustomerInfoRequest
+            {
+                Jwt = Jwt,
+                KycFields = new StandardKycFields
+                {
+                    NaturalPerson = new NaturalPersonKycFields { PhotoIdFront = PhotoFront },
+                },
+                CustomFields = new Dictionary<string, string> { ["photo_id_front"] = "text" },
+            },
+            new PutCustomerInfoRequest
+            {
+                Jwt = Jwt,
+                Account = Account,
+                CustomFiles = new Dictionary<string, byte[]> { ["account"] = PhotoFront },
+            },
+            new PutCustomerInfoRequest
+            {
+                Jwt = Jwt,
+                KycFields = new StandardKycFields { NaturalPerson = new NaturalPersonKycFields { FirstName = "John" } },
+                CustomFiles = new Dictionary<string, byte[]> { ["first_name"] = PhotoFront },
+            },
+            new PutCustomerInfoRequest
+            {
+                Jwt = Jwt,
+                FileReferences = new Dictionary<string, string> { ["photo_id_front"] = "file_1" },
+                CustomFiles = new Dictionary<string, byte[]> { ["photo_id_front_file_id"] = PhotoFront },
+            },
+            new PutCustomerInfoRequest
+            {
+                Jwt = Jwt,
+                VerificationFields = new Dictionary<string, string> { ["mobile_number"] = "2735021" },
+                CustomFiles = new Dictionary<string, byte[]> { ["mobile_number_verification"] = PhotoFront },
+            },
+        };
+        var (service, handler) = CreateService(ReadTestData("put-customer.json"));
+
+        foreach (var request in requests)
+        {
+            var ex = await AssertThrowsAsync<ArgumentException>(() => service.PutCustomerInfoAsync(request));
+            StringAssert.Contains(ex.Message, "both as a text field and as a file");
+        }
+
+        Assert.AreEqual(0, handler.Requests.Count);
     }
 
     [TestMethod]
@@ -1984,6 +2056,57 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     }
 
     [TestMethod]
+    public async Task Response_WithMultiByteUtf8_IsParsed()
+    {
+        var handler = new RecordingHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            // Two-, three- and four-byte sequences, sent as raw UTF-8 rather than JSON escapes.
+            Content = new ByteArrayContent(Encoding.UTF8.GetBytes(
+                "{\"status\":\"REJECTED\",\"message\":\"Z\u00fcrich \u6771\u4eac \ud83d\ude00\"}")),
+        });
+        using var service = new KycService(KycServerUrl, new HttpClient(handler));
+
+        var response = await service.GetCustomerInfoAsync(new GetCustomerInfoRequest { Jwt = Jwt });
+
+        Assert.AreEqual("Z\u00fcrich \u6771\u4eac \ud83d\ude00", response.Message);
+    }
+
+    [TestMethod]
+    public async Task Response_WithMalformedUtf8_ThrowsInvalidKycResponseException()
+    {
+        // A replacement-fallback decoder would read the two bytes as U+FFFD U+FFFD and accept the body.
+        var handler = new RecordingHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new ByteArrayContent(WithInvalidUtf8("{\"status\":\"REJECTED\",\"message\":\"a", "b\"}")),
+        });
+        using var service = new KycService(KycServerUrl, new HttpClient(handler));
+
+        var ex = await AssertThrowsAsync<InvalidKycResponseException>(() =>
+            service.GetCustomerInfoAsync(new GetCustomerInfoRequest { Jwt = Jwt }));
+
+        StringAssert.Contains(ex.Message, "not valid UTF-8");
+        Assert.IsInstanceOfType(ex.InnerException, typeof(DecoderFallbackException));
+    }
+
+    [TestMethod]
+    public async Task ErrorResponse_WithMalformedUtf8_IsStillMappedByItsType()
+    {
+        // A 403 maps to AuthenticationRequiredException only through the body's "type", so error bodies stay
+        // lenient: rejecting the bytes would turn an expired JWT into a plain KycServiceException.
+        var handler = new RecordingHandler(_ => new HttpResponseMessage(HttpStatusCode.Forbidden)
+        {
+            Content = new ByteArrayContent(
+                WithInvalidUtf8("{\"type\":\"authentication_required\",\"error\":\"a", "b\"}")),
+        });
+        using var service = new KycService(KycServerUrl, new HttpClient(handler));
+
+        var ex = await AssertThrowsAsync<AuthenticationRequiredException>(() =>
+            service.GetCustomerInfoAsync(new GetCustomerInfoRequest { Jwt = Jwt }));
+
+        Assert.AreEqual("a\ufffd\ufffdb", ex.ErrorMessage);
+    }
+
+    [TestMethod]
     public void StatusEnums_OnTheirOwn_RejectOrdinalsAndWrongCase()
     {
         foreach (var options in new[] { JsonOptions.DefaultOptions, new JsonSerializerOptions() })
@@ -2485,6 +2608,13 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     private static byte[] WithBom(string text)
     {
         return new byte[] { 0xEF, 0xBB, 0xBF }.Concat(Encoding.UTF8.GetBytes(text)).ToArray();
+    }
+
+    private static byte[] WithInvalidUtf8(string before, string after)
+    {
+        // 0xFF never occurs in UTF-8; 0xC3 starts a two-byte sequence that the next ASCII byte cannot continue.
+        return Encoding.UTF8.GetBytes(before).Concat(new byte[] { 0xFF, 0xC3 })
+            .Concat(Encoding.UTF8.GetBytes(after)).ToArray();
     }
 
     private static bool ContainsSequence(byte[] haystack, byte[] needle)

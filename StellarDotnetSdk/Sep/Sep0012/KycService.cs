@@ -43,9 +43,10 @@ namespace StellarDotnetSdk.Sep.Sep0012;
 ///         malfunctioning server cannot exhaust memory by streaming an unbounded body, and the whole exchange —
 ///         headers and body — is bounded by the <see cref="HttpClient.Timeout" /> of the client in use (and, for the
 ///         internal client, by <see cref="HttpResilienceOptions.RequestTimeout" />), so it cannot stall the caller
-///         either. Bodies are parsed with <see cref="JsonOptions.DefaultOptions" /> — duplicate properties are
-///         rejected, including in error bodies — and statuses and field types are matched against the exact literal
-///         sets SEP-0012 defines. A success response that fails any of this raises
+///         either. Bodies are decoded as strict UTF-8, so malformed bytes are rejected rather than replaced, and are
+///         parsed with <see cref="JsonOptions.DefaultOptions" /> — duplicate properties are rejected, including in
+///         error bodies — and statuses and field types are matched against the exact literal sets SEP-0012
+///         defines. A success response that fails any of this raises
 ///         <see cref="InvalidKycResponseException" />. Error statuses raise <see cref="AuthenticationRequiredException" />
 ///         (401, or 403 <c>authentication_required</c>), <see cref="CustomerNotFoundException" /> (404 from
 ///         <c>GET</c>/<c>PUT /customer</c>, <c>PUT /customer/verification</c>, <c>PUT /customer/callback</c> or
@@ -89,6 +90,10 @@ public class KycService : IDisposable
     private const string VerificationSuffix = "_verification";
     private const string FileIdSuffix = "_file_id";
     private static readonly string[] MemoTypes = { "text", "id", "hash" };
+
+    // Throws on malformed input instead of substituting U+FFFD, which would turn corrupt bytes into a valid string.
+    // Used for success bodies only: an error body stays lenient, so its "type" still selects the exception.
+    private static readonly UTF8Encoding StrictUtf8 = new(false, true);
 
     private readonly HttpClient _httpClient;
     private readonly Dictionary<string, string>? _httpRequestHeaders;
@@ -325,7 +330,8 @@ public class KycService : IDisposable
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="request" /> is <c>null</c>.</exception>
     /// <exception cref="ArgumentException">
     ///     Thrown when the JWT is empty or is not printable ASCII, a field value is <c>null</c>, a field name is empty
-    ///     or is not printable ASCII free of quotes and backslashes, <c>TransactionId</c> is set without <c>Type</c>, a
+    ///     or is not printable ASCII free of quotes and backslashes, a name is used by both a text field and a file,
+    ///     <c>TransactionId</c> is set without <c>Type</c>, a
     ///     memo is given for a <c>C...</c> account, or <c>MemoType</c> is not <c>text</c>, <c>id</c> or <c>hash</c>.
     /// </exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when the JWT is rejected.</exception>
@@ -371,6 +377,18 @@ public class KycService : IDisposable
         CopyWithSuffix(fields, request.VerificationFields, VerificationSuffix);
         CopyWithSuffix(fields, request.FileReferences, FileIdSuffix);
         CopyInto(files, request.CustomFiles);
+
+        // Text and binary parts are merged separately, so the later-source rule cannot pick between them: sending
+        // both would leave the winner to the server, and a file part named "account" would bypass the checks below.
+        foreach (var name in files.Keys)
+        {
+            if (fields.ContainsKey(name))
+            {
+                throw new ArgumentException(
+                    $"Form field {UntrustedJsonValue.Describe(name)} is set both as a text field and as a file.",
+                    nameof(request));
+            }
+        }
 
         // Checked on the merged fields, since CustomFields may set the same keys as the typed properties.
         ValidateIdentification(Get(fields, "account"), Get(fields, "memo"), Get(fields, "memo_type"));
@@ -760,7 +778,8 @@ public class KycService : IDisposable
             string? body;
             try
             {
-                body = await ReadBodyBoundedAsync(response, timeoutSource.Token).ConfigureAwait(false);
+                var encoding = response.IsSuccessStatusCode ? StrictUtf8 : Encoding.UTF8;
+                body = await ReadBodyBoundedAsync(response, encoding, timeoutSource.Token).ConfigureAwait(false);
             }
             catch (IOException ex)
             {
@@ -771,6 +790,11 @@ public class KycService : IDisposable
 
                 // The status alone still selects the exception type; only the anchor's error text is lost.
                 body = null;
+            }
+            catch (DecoderFallbackException ex)
+            {
+                // Only the strict decoder throws this, and only success bodies use it.
+                throw new InvalidKycResponseException("SEP-0012 response body is not valid UTF-8.", status, ex);
             }
 
             if (response.IsSuccessStatusCode)
@@ -829,7 +853,10 @@ public class KycService : IDisposable
     ///     anything is read; an undeclared or understated length is caught while streaming. A leading UTF-8 byte order
     ///     mark is skipped, as <see cref="HttpContent.ReadAsStringAsync()" /> would.
     /// </summary>
-    private static async Task<string?> ReadBodyBoundedAsync(HttpResponseMessage response,
+    /// <exception cref="DecoderFallbackException">
+    ///     Thrown when <paramref name="encoding" /> throws on invalid input and the body is not valid UTF-8.
+    /// </exception>
+    private static async Task<string?> ReadBodyBoundedAsync(HttpResponseMessage response, Encoding encoding,
         CancellationToken cancellationToken)
     {
         // Never null on .NET 5+, but netstandard2.1 also runs on older runtimes where it can be.
@@ -860,7 +887,7 @@ public class KycService : IDisposable
         var bytes = buffer.GetBuffer();
         var length = (int)buffer.Length;
         var offset = length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF ? 3 : 0;
-        return Encoding.UTF8.GetString(bytes, offset, length - offset);
+        return encoding.GetString(bytes, offset, length - offset);
     }
 
     private static KycServiceException CreateErrorException(HttpMethod method, int status, string? body,

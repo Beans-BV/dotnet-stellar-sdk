@@ -34,7 +34,7 @@ This SEP was made with these goals in mind:
 - ✅ **Implemented:** 90/90
 - ❌ **Not Implemented:** 0/90
 
-_Note: StellarDotnetSdk implements the **client** (wallet) side of SEP-12, counting every endpoint, request parameter, response field, status literal and field type, the request rules a client can enforce before sending (`type` whenever `transaction_id` is given, no `memo` for a `C...` account), and the wallet's own obligation to verify the signature and freshness of anchor callbacks. Anchor-side behaviour (storing customer data, running KYC review, sending callbacks, accepting `application/json` and `application/x-www-form-urlencoded` bodies) is outside an SDK's scope; the server-only content types are listed below as ⚙️ and not counted. `KycCallbackSignature.CreateSignatureHeader` additionally implements the anchor's "COMPUTE signature" step for anchor implementations and tests._
+_Note: StellarDotnetSdk implements the **client** (wallet) side of SEP-12, counting every endpoint, request parameter, response field, status literal and field type, the request rules a client can enforce before sending (`type` whenever `transaction_id` is given, no `memo` for a `C...` account; the SDK additionally rejects a `PUT /customer` name used by both a text field and a file), and the wallet's own obligation to verify the signature and freshness of anchor callbacks. Anchor-side behaviour (storing customer data, running KYC review, sending callbacks, accepting `application/json` and `application/x-www-form-urlencoded` bodies) is outside an SDK's scope; the server-only content types are listed below as ⚙️ and not counted. `KycCallbackSignature.CreateSignatureHeader` additionally implements the anchor's "COMPUTE signature" step for anchor implementations and tests._
 
 **Required Fields:** 100.0% (49/49)
 
@@ -97,7 +97,7 @@ _Note: StellarDotnetSdk implements the **client** (wallet) side of SEP-12, count
 - **`AuthenticationRequiredException`**: 401, or 403 `authentication_required`.
 - **`CustomerNotFoundException`**: 404 from `GET`/`PUT /customer`, `/customer/verification`, `/customer/callback` or `DELETE /customer` (a 404 from `/customer/files` is a plain `KycServiceException`).
 - **`PayloadTooLargeException`**: 413 on a file upload.
-- **`InvalidKycResponseException`**: A success response that is empty, oversized, not JSON, has duplicate properties, or violates the SEP-12 schema.
+- **`InvalidKycResponseException`**: A success response that is empty, oversized, not valid UTF-8, not JSON, has duplicate properties, or violates the SEP-12 schema.
 
 ## Coverage by Section
 
@@ -199,9 +199,9 @@ _Note: StellarDotnetSdk implements the **client** (wallet) side of SEP-12, count
 | Field | Required | Status | SDK Property | Description |
 |-------|----------|--------|--------------|-------------|
 | `ACCEPTED` | ✓ | ✅ | `CustomerStatus.Accepted` | All required KYC fields accepted; customer validated for the `type` |
-| `NEEDS_INFO` | ✓ | ✅ | `CustomerStatus.NeedsInfo` | More info needed; `fields` lists it |
+| `NEEDS_INFO` | ✓ | ✅ | `CustomerStatus.NeedsInfo` | More info needed; `fields` lists it (not enforced: a response without `fields` still parses, so the status stays readable) |
 | `PROCESSING` | ✓ | ✅ | `CustomerStatus.Processing` | KYC process in flight |
-| `REJECTED` | ✓ | ✅ | `CustomerStatus.Rejected` | KYC failed and will never succeed; `message` explains why |
+| `REJECTED` | ✓ | ✅ | `CustomerStatus.Rejected` | KYC failed and will never succeed; `message` explains why (not enforced: a response without `message` still parses, so the rejection reaches the caller) |
 
 ### Field Properties
 
@@ -210,7 +210,7 @@ _Note: StellarDotnetSdk implements the **client** (wallet) side of SEP-12, count
 | `choices` |  | ✅ | `GetCustomerInfoField.Choices` | Array of valid values for the field; string and number elements are accepted (a number is kept as its JSON text) |
 | `description` | ✓ | ✅ | `GetCustomerInfoField.Description` | Human-readable description of the field (required; rejected if missing or null) |
 | `error` |  | ✅ | `GetCustomerInfoProvidedField.Error` | Description of why a provided field was rejected |
-| `optional` |  | ✅ | `GetCustomerInfoField.Optional` | Whether the field may be omitted (absent means `false`) |
+| `optional` |  | ✅ | `GetCustomerInfoField.Optional` | Whether the field may be omitted (absent or `null` means `false`) |
 | `status` |  | ✅ | `GetCustomerInfoProvidedField.Status` | Validation status of a provided field |
 | `type` | ✓ | ✅ | `GetCustomerInfoField.Type` | Data type of the field value (required; rejected if missing) |
 
@@ -311,7 +311,7 @@ _Note: StellarDotnetSdk implements the **client** (wallet) side of SEP-12, count
 Notable strengths:
 
 - **Beyond the peer reference**: in addition to the Flutter SDK's surface, the SDK implements callback signature verification (`KycCallbackSignature`), the v1.12.0 `*_verification` flow on `PUT /customer`, `*_file_id` references, and typed statuses and field types.
-- **Hardened parsing**: response bodies are capped at 1 MiB (declared lengths are refused before reading, undeclared ones stop streaming at the limit); duplicate JSON properties are rejected in success **and** error bodies (issue #205's concern, applied from the start); status and field-type literals are matched exactly — on the response properties and on the enum types themselves — so an ordinal or an unknown value cannot be misread as `ACCEPTED`; `null` dictionary and array entries are rejected; the whole exchange, body included, is bounded by the client's timeout; a response from a different origin after a redirect is rejected.
+- **Hardened parsing**: response bodies are capped at 1 MiB (declared lengths are refused before reading, undeclared ones stop streaming at the limit) and decoded as strict UTF-8, so malformed bytes are rejected rather than replaced with U+FFFD; duplicate JSON properties are rejected in success **and** error bodies (issue #205's concern, applied from the start); status and field-type literals are matched exactly — on the response properties and on the enum types themselves — so an ordinal or an unknown value cannot be misread as `ACCEPTED`; `null` dictionary and array entries are rejected; the whole exchange, body included, is bounded by the client's timeout; a response from a different origin after a redirect is rejected.
 - **Safe requests**: the KYC server and a registered callback URL must use https (http only for `localhost` or a loopback IP in its standard form, never for a server discovered from stellar.toml) and the internal client does not follow redirects; form-data part names must be printable ASCII without quotes or backslashes, and file names are percent-encoded; the account in `DELETE /customer/{account}` is escaped as a path segment and may not be `.` or `..`; server-supplied text (error text, and field names echoed in parse errors) is clamped, with control, format and line-separator characters in any Unicode plane replaced, before it reaches an exception message; `ToString()` of a request redacts the JWT and customer data and reduces a callback URL to its origin, while printing identifiers (customer ID, account, memo).
 - **Discovery and authentication**: `KycService.FromDomainAsync` follows the SEP's `KYC_SERVER` → `TRANSFER_SERVER` rule, and every request takes a SEP-10 or SEP-45 JWT.
 
