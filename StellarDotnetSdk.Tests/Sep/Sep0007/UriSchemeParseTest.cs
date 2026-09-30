@@ -515,6 +515,8 @@ public class UriSchemeParseTest
     // fetch (userinfo, port, path, IP, CRLF).
     [TestMethod]
     [DataRow("localhost")]
+    [DataRow("foo.localhost")]
+    [DataRow("foo.LocalHost")]
     [DataRow("test")]
     [DataRow("-invalid.com")]
     [DataRow("invalid-.com")]
@@ -643,6 +645,7 @@ public class UriSchemeParseTest
     [DataRow("*example.com")]
     [DataRow("bob*")]
     [DataRow("bob*localhost")]
+    [DataRow("bob*foo.localhost")]
     [DataRow("bo b*example.com")]
     [DataRow("bob")]
     public void ParseUri_MalformedFederationAddressDestination_IsInvalid(string address)

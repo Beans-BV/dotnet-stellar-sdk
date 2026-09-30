@@ -101,9 +101,11 @@ All notable changes to this project are documented here. The format is based on
   - `SignAndSubmitTransactionAsync` verifies any `origin_domain` signature before it signs, then POSTs
     the signed envelope to the request's `callback` (https only, http for loopback) or submits it to
     Horizon; `SubmitTransactionAsync`/`SubmitToCallbackAsync` hand on a transaction the wallet signed
-    itself; a callback's non-2xx answer or a transaction Horizon rejects is returned, with
+    itself, and `SubmitToCallbackAsync` refuses the same callback URLs a parsed request cannot carry
+    (whitespace, invisible characters, user info); a callback's non-2xx answer or a transaction Horizon rejects is returned, with
     `Sep7SubmitResult.IsSuccess`. With the SDK's own HTTP client the callback POST follows no redirects
-    (a 3xx is returned as the callback's answer) and the stellar.toml fetch follows up to 5, https only;
+    (a 3xx is returned as the callback's answer) and the stellar.toml fetch follows up to 5, https only,
+    each to a fully qualified domain name (not under `localhost`) on the default port without user info;
     a caller-supplied client that follows redirects itself is detected on the callback path after the
     fact.
   - Typed exceptions under `StellarDotnetSdk.Sep.Sep0007.Exceptions` (base `Sep7Exception`), and a new

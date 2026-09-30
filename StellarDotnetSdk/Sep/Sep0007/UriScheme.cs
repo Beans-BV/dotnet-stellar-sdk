@@ -93,7 +93,14 @@ public class UriScheme : IDisposable
     ///         own turns a callback POST answered with 301/302/303 into a GET, or re-POSTs the signed transaction to
     ///         wherever a 307/308 points, before this class can intervene. <see cref="SubmitToCallbackAsync" />
     ///         detects that afterwards on a best-effort basis and throws, and for the stellar.toml fetch the
-    ///         client's own redirect limits apply instead of this class's (5 hops, https only).
+    ///         client's own redirect limits apply instead of this class's (5 hops, https only, each to a fully
+    ///         qualified domain name on the default port without user info).
+    ///     </para>
+    ///     <para>
+    ///         Where requests come from untrusted sources and this runs on a server, supply a client whose handler
+    ///         refuses loopback, private and link-local addresses (for example with
+    ///         <c>SocketsHttpHandler.ConnectCallback</c>). This class only limits where redirects may point; the
+    ///         origin domain itself, and any domain a redirect names, can still resolve to such an address.
     ///     </para>
     ///     <para>
     ///         Its <see cref="System.Net.Http.HttpClient.Timeout" /> bounds each stellar.toml fetch and callback POST
@@ -545,8 +552,9 @@ public class UriScheme : IDisposable
     ///     reader rather than the general <see cref="StellarDotnetSdk.Sep.Sep0001.StellarToml" /> parser: the domain
     ///     is chosen by whoever wrote the URI, and that parser overflows the stack on small hostile documents.
     ///     Redirects of the stellar.toml request that reach this class are followed, at most 5 of them and only to
-    ///     https URLs. With the SDK's own client that is every redirect; a client that follows redirects itself
-    ///     applies its own limits first (see the constructor).
+    ///     https URLs on a fully qualified domain name, the default port and no user info, so a redirect reaches no
+    ///     further than an origin domain could. With the SDK's own client that is every redirect; a client that
+    ///     follows redirects itself applies its own limits first (see the constructor).
     /// </remarks>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
     /// <exception cref="ObjectDisposedException">Thrown when this instance or its HTTP client has been disposed.</exception>
@@ -556,7 +564,7 @@ public class UriScheme : IDisposable
     /// <exception cref="MissingSignatureException">Thrown when the URI has no <c>signature</c>.</exception>
     /// <exception cref="OriginDomainStellarTomlException">
     ///     Thrown when the stellar.toml cannot be fetched (including a connection dropped mid-response, a response
-    ///     over 512 KiB, a redirect that is not https, and a request the client's resilience pipeline rejected or
+    ///     over 512 KiB, a redirect this class does not follow, and a request the client's resilience pipeline rejected or
     ///     timed out) or its root table cannot be read.
     /// </exception>
     /// <exception cref="NoUriRequestSigningKeyFoundException">Thrown when the stellar.toml has no <c>URI_REQUEST_SIGNING_KEY</c>.</exception>
@@ -859,7 +867,9 @@ public class UriScheme : IDisposable
     ///     <see cref="Sep7SubmitResult.IsSuccess" />.
     /// </returns>
     /// <exception cref="ArgumentException">
-    ///     Thrown when the URL is not absolute https; plain http is allowed only for loopback addresses.
+    ///     Thrown when the URL is not absolute https (plain http is allowed only for loopback addresses), or when it
+    ///     contains whitespace, control or invisible formatting characters or credentials, which a callback in a
+    ///     parsed request cannot either.
     /// </exception>
     /// <exception cref="HttpRequestException">
     ///     Thrown when the POST fails (including a connection dropped mid-response and a request the client's
@@ -1000,7 +1010,7 @@ public class UriScheme : IDisposable
 
     /// <summary>
     ///     The URL a callback POST goes to: <paramref name="callbackUrl" /> without its <c>url:</c> prefix, which must
-    ///     be absolute https, or plain http to a loopback address.
+    ///     be absolute https, or plain http to a loopback address, and pass the callback checks of a parsed request.
     /// </summary>
     private static Uri ResolveCallbackTarget(string callbackUrl)
     {
@@ -1013,6 +1023,10 @@ public class UriScheme : IDisposable
             throw new ArgumentException(
                 "The callback must be an absolute https URL (it receives the signed transaction); plain http is " +
                 "allowed only for loopback addresses used in local development.", nameof(callbackUrl));
+        }
+        if (Sep7UriParser.CallbackUrlProblem(url, target) is { } problem)
+        {
+            throw new ArgumentException($"The callback URL {problem}.", nameof(callbackUrl));
         }
         return target;
     }
@@ -1094,7 +1108,8 @@ public class UriScheme : IDisposable
 
     /// <summary>
     ///     GETs the stellar.toml, following up to <see cref="MaxStellarTomlRedirects" /> redirects itself (the
-    ///     SDK's own client does not follow any), each to an https URL only.
+    ///     SDK's own client does not follow any), each to an https URL on a fully qualified domain name, the default
+    ///     port and no user info only (see <see cref="IsPermittedRedirectTarget" />).
     /// </summary>
     private async Task<string> GetStellarTomlBodyAsync(string domain, Uri tomlUri,
         CancellationToken cancellationToken)
@@ -1122,6 +1137,12 @@ public class UriScheme : IDisposable
                         $"{Sep7UriParser.Echo(target.ToString())} redirected to {Sep7UriParser.Echo(next.ToString())}, " +
                         "which is not https.");
                 }
+                if (!IsPermittedRedirectTarget(next))
+                {
+                    throw new OriginDomainStellarTomlException(domain,
+                        $"{Sep7UriParser.Echo(target.ToString())} redirected to {Sep7UriParser.Echo(next.ToString())}, " +
+                        "which is not a fully qualified domain name on the default https port without user info.");
+                }
                 if (redirects >= MaxStellarTomlRedirects)
                 {
                     throw new OriginDomainStellarTomlException(domain,
@@ -1142,6 +1163,28 @@ public class UriScheme : IDisposable
     private static bool IsRedirect(HttpResponseMessage response)
     {
         return (int)response.StatusCode is 301 or 302 or 303 or 307 or 308;
+    }
+
+    /// <summary>
+    ///     Whether a stellar.toml redirect may be followed to <paramref name="target" />. The origin domain is chosen
+    ///     by whoever wrote the URI and had to be a fully qualified domain name, so a redirect may not reach further
+    ///     than naming another domain could: no IP literal, single-label or localhost host (the domain name check
+    ///     rejects all three), other port or user info, not even an empty one.
+    /// </summary>
+    private static bool IsPermittedRedirectTarget(Uri target)
+    {
+        string host;
+        try
+        {
+            host = target.IdnHost;
+        }
+        catch (UriFormatException)
+        {
+            // A host IDNA cannot map; refuse it here so the error names the redirect, not the first request.
+            return false;
+        }
+        return target.IsDefaultPort && !Sep7UriParser.HasUserInfo(target) &&
+               Sep7UriParser.IsFullyQualifiedDomainName(host);
     }
 
     /// <summary>

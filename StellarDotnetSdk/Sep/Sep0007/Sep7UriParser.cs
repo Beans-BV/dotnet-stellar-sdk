@@ -305,22 +305,40 @@ internal static class Sep7UriParser
         return false;
     }
 
-    /// <summary>The authority part of an absolute URL: what lies between <c>://</c> and the next <c>/</c>, <c>?</c> or <c>#</c>.</summary>
-    private static string AuthorityOf(string url)
+    /// <summary>
+    ///     The checks every callback URL passes, in a parsed request and in
+    ///     <see cref="UriScheme.SubmitToCallbackAsync" /> alike: no whitespace, control or invisible formatting
+    ///     characters and no credentials. Returns why <paramref name="url" /> (without its <c>url:</c> prefix) is
+    ///     refused, or <c>null</c>.
+    /// </summary>
+    internal static string? CallbackUrlProblem(string url, System.Uri parsed)
     {
-        var start = url.IndexOf("://", StringComparison.Ordinal);
-        if (start < 0)
+        // Uri.TryCreate trims surrounding whitespace, so check the raw value: CallbackUrl returns it as sent.
+        if (HasHiddenCharacters(url, 0, url.Length))
         {
-            return string.Empty;
+            return "must not contain whitespace, control or invisible formatting characters";
         }
-        start += 3;
-        var end = url.IndexOfAny(new[] { '/', '?', '#' }, start);
-        return end < 0 ? url.Substring(start) : url.Substring(start, end - start);
+        if (HasUserInfo(parsed))
+        {
+            return "must not contain credentials (user info)";
+        }
+        return null;
+    }
+
+    /// <summary>
+    ///     Whether <paramref name="url" /> carries user info, even an empty one: <see cref="System.Uri.UserInfo" /> is
+    ///     "" for <c>https://@host</c>, and <c>https:\\@host</c> normalizes to that, so the delimiter is what counts.
+    /// </summary>
+    internal static bool HasUserInfo(System.Uri url)
+    {
+        return url.GetComponents(UriComponents.UserInfo | UriComponents.KeepDelimiter, UriFormat.UriEscaped).Length > 0;
     }
 
     internal static bool IsFullyQualifiedDomainName(string domain)
     {
-        return FqdnRegex.IsMatch(domain);
+        // RFC 6761 reserves the localhost TLD for loopback: foo.localhost resolves to 127.0.0.1 without any DNS the
+        // name's author controls, so it is no more a public domain than "localhost" itself.
+        return FqdnRegex.IsMatch(domain) && !domain.EndsWith(".localhost", StringComparison.OrdinalIgnoreCase);
     }
 
     internal static bool IsStrictBase64(string value)
@@ -525,16 +543,9 @@ internal static class Sep7UriParser
             {
                 throw Invalid("The 'callback' parameter must hold an absolute http(s) URL after 'url:'.");
             }
-            // Uri.TryCreate trims surrounding whitespace, so check the raw value: CallbackUrl returns it as sent.
-            if (HasHiddenCharacters(url, 0, url.Length))
+            if (CallbackUrlProblem(url, callbackUri) is { } problem)
             {
-                throw Invalid(
-                    "The 'callback' URL must not contain whitespace, control or invisible formatting characters.");
-            }
-            // UserInfo is "" for "https://@host", so look for the '@' in the authority itself.
-            if (callbackUri.UserInfo.Length > 0 || AuthorityOf(url).IndexOf('@') >= 0)
-            {
-                throw Invalid("The 'callback' URL must not contain credentials (user info).");
+                throw Invalid($"The 'callback' URL {problem}.");
             }
         }
 

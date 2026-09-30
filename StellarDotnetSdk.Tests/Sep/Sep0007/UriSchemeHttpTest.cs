@@ -425,6 +425,29 @@ public class UriSchemeHttpTest
     }
 
     [TestMethod]
+    [DataRow("https://user:pw@cb.example.com/x")]
+    [DataRow("url:https://user@cb.example.com/x")]
+    [DataRow("https://@cb.example.com/x")]
+    [DataRow(" https://cb.example.com/x")]
+    [DataRow("https://cb.example.com/x\n")]
+    [DataRow("https://cb.example.com/x\u200B")]
+    [DataRow("https:\\\\@cb.example.com/x")] // normalized to https://@cb.example.com/x
+    public async Task SubmitToCallbackAsync_CallbackARequestCannotCarry_Throws(string callback)
+    {
+        var handler = new RecordingHandler(_ => new HttpResponseMessage());
+        using var uriScheme = new UriScheme(new HttpClient(handler));
+
+        var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
+            uriScheme.SubmitToCallbackAsync(callback, "AAAA"));
+        StringAssert.Contains(ex.Message, "must not contain");
+        Assert.AreEqual(0, handler.Requests.Count);
+        // One rule for both paths: the same callback makes a request invalid.
+        var prefixed = callback.StartsWith(UriScheme.CallbackUrlPrefix) ? callback : UriScheme.CallbackUrlPrefix + callback;
+        Assert.IsFalse(UriScheme.ValidateUri(Sep7TestVectors.SpecPayExample1 + "&callback=" +
+                                             Uri.EscapeDataString(prefixed)).IsValid);
+    }
+
+    [TestMethod]
     public async Task SubmitToCallbackAsync_LoopbackHttp_IsAllowed()
     {
         var handler = new RecordingHandler(_ => new HttpResponseMessage(HttpStatusCode.OK));
@@ -570,6 +593,46 @@ public class UriSchemeHttpTest
             uriScheme.VerifyOriginDomainSignatureAsync(Sep7TestVectors.SpecSignedPayUri));
         StringAssert.Contains(ex.Message, "not https");
         Assert.AreEqual(1, handler.Requests.Count);
+    }
+
+    [TestMethod]
+    [DataRow("https://127.0.0.1/.well-known/stellar.toml")]
+    [DataRow("https://[::1]/.well-known/stellar.toml")]
+    [DataRow("https://169.254.169.254/latest/meta-data/")]
+    [DataRow("https://intranet/.well-known/stellar.toml")]
+    [DataRow("https://www.somedomain.com:8443/.well-known/stellar.toml")]
+    [DataRow("https://user:pw@www.somedomain.com/.well-known/stellar.toml")]
+    [DataRow("https://@www.somedomain.com/.well-known/stellar.toml")]
+    [DataRow("https://foo.localhost/.well-known/stellar.toml")] // RFC 6761: resolves to loopback
+    [DataRow("https://www.somedomain.com\uFF0Fx/t")] // a host IDNA cannot map
+    public async Task VerifyOriginDomainSignatureAsync_TomlRedirectBeyondADomainName_Throws(string location)
+    {
+        // The origin domain is attacker-chosen: a redirect must not reach what naming a domain could not.
+        var handler = new RecordingHandler(_ => Redirect(HttpStatusCode.Found, new Uri(location)));
+        using var uriScheme = new UriScheme(new HttpClient(handler));
+
+        var ex = await Assert.ThrowsExceptionAsync<OriginDomainStellarTomlException>(() =>
+            uriScheme.VerifyOriginDomainSignatureAsync(Sep7TestVectors.SpecSignedPayUri));
+        StringAssert.Contains(ex.Message, "not a fully qualified domain name");
+        Assert.AreEqual(1, handler.Requests.Count);
+    }
+
+    [TestMethod]
+    [DataRow("https://www.somedomain.com:443/stellar.toml")]
+    [DataRow("https://bücher.example/stellar.toml")]
+    public async Task VerifyOriginDomainSignatureAsync_TomlRedirectToADomainName_IsFollowed(string location)
+    {
+        var handler = new RecordingHandler(request => request.RequestUri!.AbsolutePath == "/.well-known/stellar.toml"
+            ? Redirect(HttpStatusCode.Found, new Uri(location))
+            : new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent($"URI_REQUEST_SIGNING_KEY=\"{Sep7TestVectors.SpecSigningAccountId}\""),
+            });
+        using var uriScheme = new UriScheme(new HttpClient(handler));
+
+        Assert.AreEqual(Sep7TestVectors.SpecSigningAccountId,
+            await uriScheme.VerifyOriginDomainSignatureAsync(Sep7TestVectors.SpecSignedPayUri));
+        Assert.AreEqual(2, handler.Requests.Count);
     }
 
     [TestMethod]
