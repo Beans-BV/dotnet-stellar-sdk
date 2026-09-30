@@ -3,7 +3,8 @@
     <!--
         Runs the MAUI app's validation checks (../ValidationRunner.cs) as a desktop console app: the baseline the
         mobile results are compared with in docs/maui-compatibility.md. Like the MAUI app, it is not part of
-        stellar-dotnet-sdk.sln, because it talks to Stellar Testnet.
+        stellar-dotnet-sdk.sln, because it talks to Stellar Testnet. CI builds it but does not run it
+        (.github/workflows/pack_and_test.yml), so that the checks keep compiling against the SDK.
         Run it from the repository root with dotnet run and the project path StellarDotnetSdk.MauiValidation/Desktop.
     -->
     <PropertyGroup>

@@ -66,7 +66,7 @@ public sealed class ValidationRunner
                 ("crypto.rfc8032", () => Task.FromResult(CheckRfc8032KnownAnswer())),
                 ("crypto.random-keypair", () => Task.FromResult(CheckRandomKeyPair())),
                 ("horizon.friendbot-and-account", CheckFriendbotAndAccountAsync),
-                ("horizon.submit-and-sse-stream", CheckSubmitAndStreamAsync),
+                ("horizon.submit-and-sse-stream", CheckSubmitAndStreamWithRetryAsync),
                 ("horizon.sse-stream-sockets-handler", () => Task.FromResult(CheckSseSocketsHandler())),
                 ("soroban.simulate", CheckSorobanSimulateAsync),
             };
@@ -278,6 +278,25 @@ public sealed class ValidationRunner
     }
 
     /// <summary>
+    ///     Runs <see cref="CheckSubmitAndStreamAsync" />, and once more if its timing was inconclusive: a slow Testnet
+    ///     submit says nothing about the SDK, and the rule that catches it cannot be relaxed (see
+    ///     <see cref="ExpectPromptDelivery" />). A second inconclusive measurement fails the check.
+    /// </summary>
+    private async Task<string> CheckSubmitAndStreamWithRetryAsync()
+    {
+        try
+        {
+            return await CheckSubmitAndStreamAsync();
+        }
+        catch (InconclusiveException ex)
+        {
+            Log($"INFO horizon.submit-and-sse-stream measuring again: {ex.Message.ReplaceLineEndings(" ")}");
+            _socketsTiming = null;
+            return await CheckSubmitAndStreamAsync();
+        }
+    }
+
+    /// <summary>
     ///     Opens an SSE payments stream on the funded account, then submits a signed CreateAccount transaction from
     ///     it and waits for the stream to deliver that operation. The same stream is also opened with
     ///     <see cref="SocketsHttpHandler" />; its timing is judged by <see cref="CheckSseSocketsHandler" />.
@@ -395,6 +414,15 @@ public sealed class ValidationRunner
             history.Enqueue($"raw HttpClient Stream.ReadAsync saw it {await rawBytes}");
             history.Enqueue($"raw HttpClient StreamReader.ReadLineAsync saw it {await rawLines}");
             history.Enqueue($"raw SocketsHttpHandler StreamReader.ReadLineAsync saw it {await rawLinesSockets}");
+            // Judged for both streams before anything else, so that a slow submit is measured again (see
+            // CheckSubmitAndStreamWithRetryAsync) before either check fails on it, delivered or not.
+            var timingDetail = $"stream open {openedMs} ms, submit done {submittedMs} ms; states [{string.Join(", ", history)}]";
+            ExpectConclusive(openedMs, submittedMs, timingDetail);
+            if (_socketsTiming.OpenedMs is { } socketsOpenedMs)
+            {
+                ExpectConclusive(socketsOpenedMs, submittedMs, timingDetail);
+            }
+            // Zero timeout: the result if the stream already delivered, a TimeoutException if it did not.
             var (op, eventMs) = await streamed.Task.WaitAsync(TimeSpan.Zero);
             var detail = $"submitted {response.Hash} (ledger {response.Ledger}); SSE delivered {op.Type} op {op.Id}; " +
                          $"stream open {openedMs} ms, submit done {submittedMs} ms, event {eventMs} ms; " +
@@ -437,10 +465,14 @@ public sealed class ValidationRunner
     ///     and a held-back event is delivered at that close; the second rule keeps a slow submit from making such a
     ///     delivery look prompt.
     /// </summary>
+    /// <remarks>
+    ///     The two rules share <see cref="SseMaxDelay" /> on purpose. A longer window for the submit would let a
+    ///     held-back event pass: with a submit 40 s after the stream opened, an event delivered at the close about
+    ///     55 s in is only 15 s after the submit. The first window must stay well under 55 s minus the second.
+    /// </remarks>
     private static void ExpectPromptDelivery(string what, long openedMs, long submittedMs, long eventMs, string detail)
     {
-        Expect(submittedMs - openedMs <= SseMaxDelay.TotalMilliseconds,
-            $"inconclusive: submit finished {submittedMs - openedMs} ms after the stream opened (limit {SseMaxDelay.TotalMilliseconds} ms): {detail}");
+        ExpectConclusive(openedMs, submittedMs, detail);
         Expect(eventMs - submittedMs <= SseMaxDelay.TotalMilliseconds,
             $"{what} arrived {eventMs - submittedMs} ms after submit (limit {SseMaxDelay.TotalMilliseconds} ms): {detail}");
     }
@@ -504,7 +536,10 @@ public sealed class ValidationRunner
 
     /// <summary>
     ///     Simulates the native SAC <c>balance(address)</c> call for the funded account and checks the decoded
-    ///     <c>i128</c> against the account's native balance from Horizon.
+    ///     <c>i128</c> against the account's native balance from Horizon. Horizon and the RPC node ingest ledgers
+    ///     independently and can be a ledger apart right after the previous check's submit, so the simulation is
+    ///     repeated (briefly) until the RPC node has reached the ledger that last changed the account. An RPC node that
+    ///     does not report its ledger fails the check, because the comparison would then prove nothing.
     /// </summary>
     private async Task<string> CheckSorobanSimulateAsync()
     {
@@ -516,20 +551,38 @@ public sealed class ValidationRunner
             NativeSacTestnet, "balance", [new ScAccountId(source.AccountId)], source);
         var tx = new TransactionBuilder(account).AddOperation(invoke).Build();
         var simulation = await rpc.SimulateTransaction(tx).WaitAsync(NetworkTimeout);
+        for (var attempt = 1; attempt < 5 && simulation.LatestLedger < account.LastModifiedLedger; attempt++)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            simulation = await rpc.SimulateTransaction(tx).WaitAsync(NetworkTimeout);
+        }
         Expect(simulation.Error == null, $"simulation error: {simulation.Error}");
+        Expect(simulation.LatestLedger >= account.LastModifiedLedger,
+            $"RPC node at ledger {simulation.LatestLedger?.ToString() ?? "(not reported)"}, behind Horizon's ledger " +
+            $"{account.LastModifiedLedger} for the account");
         var results = simulation.Results ?? [];
         Expect(results.Length == 1, $"simulation returned {results.Length} results, expected 1");
         var value = SCVal.FromXdrBase64(results[0].Xdr
                                         ?? throw new InvalidOperationException("simulation result has no XDR"));
         var balance = value as SCInt128
                       ?? throw new InvalidOperationException($"balance() returned {value.GetType().Name}, expected an i128");
-        // Nothing else touches this account, so the SAC balance (stroops) equals Horizon's native balance.
+        // Nothing else touches this account, and both sources have seen its last change, so the SAC balance
+        // (stroops) equals Horizon's native balance.
         var native = account.Balances.Single(b => b.AssetType == "native");
         var expectedStroops = decimal.Parse(native.BalanceString, CultureInfo.InvariantCulture) * 10_000_000m;
         Expect(balance.Hi == 0 && balance.Lo == expectedStroops,
             $"balance() = (hi {balance.Hi}, lo {balance.Lo}), Horizon says {native.BalanceString} XLM = {expectedStroops:0} stroops");
         return $"balance() = {balance.Lo} stroops, matches Horizon; minResourceFee {simulation.MinResourceFee}, " +
                $"latestLedger {simulation.LatestLedger}";
+    }
+
+    private static void ExpectConclusive(long openedMs, long submittedMs, string detail)
+    {
+        if (submittedMs - openedMs > SseMaxDelay.TotalMilliseconds)
+        {
+            throw new InconclusiveException(
+                $"inconclusive: submit finished {submittedMs - openedMs} ms after the stream opened (limit {SseMaxDelay.TotalMilliseconds} ms): {detail}");
+        }
     }
 
     private static void Expect(bool condition, string message)
@@ -539,6 +592,9 @@ public sealed class ValidationRunner
             throw new InvalidOperationException(message);
         }
     }
+
+    /// <summary>The measurement cannot tell a prompt stream from a late one; says nothing about the SDK.</summary>
+    private sealed class InconclusiveException(string message) : InvalidOperationException(message);
 
     /// <summary>Times on the check's stopwatch, in ms; null when the event did not happen.</summary>
     private sealed record SseTiming(long? OpenedMs, long SubmittedMs, long? EventMs);

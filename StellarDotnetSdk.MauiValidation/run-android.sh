@@ -107,6 +107,10 @@ done
 "${adb[@]}" install -r "$out_dir/$app_id-Signed.apk"
 "${adb[@]}" shell am force-stop "$app_id"
 "${adb[@]}" logcat -c
+# The verdict is read from the last full dump of the log buffer, so make it large enough that system chatter
+# during a long run cannot push out the first results. Best effort: some devices refuse to resize it, and on some
+# the new size stays until reboot.
+"${adb[@]}" logcat -G 8M > /dev/null 2>&1 || echo "note: could not enlarge the logcat buffer" >&2
 "${adb[@]}" shell monkey -p "$app_id" -c android.intent.category.LAUNCHER 1 > /dev/null 2>&1
 
 # Wait for DONE. A crash shows up as a Java FATAL EXCEPTION ("Process: <app>, PID"), a native crash tombstone
