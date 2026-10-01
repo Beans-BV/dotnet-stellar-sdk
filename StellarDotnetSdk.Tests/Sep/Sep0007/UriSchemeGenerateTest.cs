@@ -256,6 +256,31 @@ public class UriSchemeGenerateTest
     }
 
     [TestMethod]
+    [DataRow(new byte[] { 0x61, 0xFF, 0x62 })]
+    [DataRow(new byte[] { 0xC3 })] // truncated two-byte sequence
+    [DataRow(new byte[] { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF })]
+    [DataRow(new byte[] { 0xED, 0xA0, 0x80 })] // encoded surrogate
+    public void GeneratePayOperationUri_TextMemoThatIsNotValidUtf8_Throws(byte[] bytes)
+    {
+        // Decoding would replace the bad bytes with U+FFFD, so the URI would carry a different memo.
+        var ex = Assert.ThrowsException<ArgumentException>(() =>
+            UriScheme.GeneratePayOperationUri(Destination, memo: Memo.Text(bytes)));
+
+        StringAssert.Contains(ex.Message, "valid UTF-8");
+        Assert.AreEqual("memo", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void GeneratePayOperationUri_MultiByteUtf8TextMemo_RoundTripsByteForByte()
+    {
+        var bytes = System.Text.Encoding.UTF8.GetBytes("é€😀");
+
+        var request = UriScheme.ParseUri(UriScheme.GeneratePayOperationUri(Destination, memo: Memo.Text(bytes)));
+
+        CollectionAssert.AreEqual(bytes, ((MemoText)request.GetMemo()!).MemoBytesValue);
+    }
+
+    [TestMethod]
     public void GeneratePayOperationUri_FederationDestination_RoundTrips()
     {
         var uri = UriScheme.GeneratePayOperationUri("bob*example.com", "10");

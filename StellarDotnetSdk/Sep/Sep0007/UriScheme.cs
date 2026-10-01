@@ -1031,6 +1031,21 @@ public class UriScheme : IDisposable
         return target;
     }
 
+    private static readonly UTF8Encoding StrictUtf8 = new(false, true);
+
+    private static bool IsValidUtf8(byte[] bytes)
+    {
+        try
+        {
+            StrictUtf8.GetString(bytes);
+            return true;
+        }
+        catch (DecoderFallbackException)
+        {
+            return false;
+        }
+    }
+
     private static readonly (string Name, string Argument)[] EmptyMeansSomethingElse =
     {
         (Sep7Parameters.Callback, "callback"),
@@ -1059,6 +1074,10 @@ public class UriScheme : IDisposable
             MemoText { MemoTextValue.Length: 0 } => throw new ArgumentException(
                 "An empty text memo cannot be expressed in SEP-7 (parameters must not be empty); pass null or " +
                 "MemoNone for no memo.", nameof(memo)),
+            // MemoTextValue replaces invalid UTF-8 with U+FFFD, so the URI would name different bytes.
+            MemoText text when !IsValidUtf8(text.MemoBytesValue) => throw new ArgumentException(
+                "A text memo must be valid UTF-8: SEP-7 carries it as text, and invalid bytes would be replaced, " +
+                "so the request would name a different memo.", nameof(memo)),
             MemoText text => (text.MemoTextValue, Sep7MemoType.MemoText),
             MemoId id => (id.IdValue.ToString(CultureInfo.InvariantCulture), Sep7MemoType.MemoId),
             MemoReturnHash returnHash => (Convert.ToBase64String(returnHash.MemoBytes), Sep7MemoType.MemoReturn),
