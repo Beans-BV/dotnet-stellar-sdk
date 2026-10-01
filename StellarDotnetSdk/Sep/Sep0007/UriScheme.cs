@@ -301,7 +301,7 @@ public class UriScheme : IDisposable
     ///     Parses and validates a SEP-7 URI. It checks:
     ///     <list type="bullet">
     ///         <item>the <c>web+stellar:</c> scheme, a <c>tx</c> or <c>pay</c> operation, no fragment;</item>
-    ///         <item>well-formed, non-repeated query parameters; known parameters are non-empty;</item>
+    ///         <item><c>name=value</c> query parameters, none repeated; known parameters are non-empty;</item>
     ///         <item>
     ///             no parameter of the other operation (<c>xdr</c>/<c>replace</c>/<c>pubkey</c>/<c>chain</c> are
     ///             <c>tx</c>-only; <c>destination</c>/<c>amount</c>/<c>asset_*</c>/<c>memo*</c> are <c>pay</c>-only);
@@ -328,7 +328,10 @@ public class UriScheme : IDisposable
     ///     </list>
     ///     A request with an <c>origin_domain</c> but no <c>signature</c> is invalid, as SEP-7 specifies. Query values
     ///     are decoded like an HTML form and the other Stellar SDKs do: <c>+</c> is a space, except in the base64
-    ///     values (<c>xdr</c>, <c>signature</c>, hash memos), where it stays a <c>+</c>. The request signature is not
+    ///     values (<c>xdr</c>, <c>signature</c>, hash memos), where it stays a <c>+</c>. A <c>%</c> not followed by
+    ///     two hex digits is kept as a literal character, as <c>URLSearchParams</c> keeps it, so the value read is the
+    ///     value shown; only <c>callback</c> rejects one, because there it would change the URL that is POSTed to.
+    ///     The request signature is not
     ///     verified here; see <see cref="VerifySignature" /> and <see cref="VerifyOriginDomainSignatureAsync" />.
     /// </summary>
     /// <param name="uri">The URI to parse.</param>

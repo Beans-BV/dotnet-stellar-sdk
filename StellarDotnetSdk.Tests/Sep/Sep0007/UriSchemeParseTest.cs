@@ -793,6 +793,19 @@ public class UriSchemeParseTest
         Assert.IsTrue(UriScheme.ValidateUri(PayPrefix + "&callback=" + callback).IsValid);
     }
 
+    // Outside callback a stray '%' is kept literally, as URLSearchParams and Python's parse_qs read it: the text a
+    // wallet shows is the text it uses, so there is nothing to spoof.
+    [TestMethod]
+    [DataRow("%ZZ", "%ZZ")]
+    [DataRow("50%", "50%")]
+    [DataRow("a%2", "a%2")]
+    public void ParseUri_MessageWithMalformedEscape_KeepsItLiterally(string raw, string expected)
+    {
+        var request = UriScheme.ParseUri(PayPrefix + "&msg=" + raw);
+
+        Assert.AreEqual(expected, request.Message);
+    }
+
     [TestMethod]
     public void ParseUri_LowerCaseMuxedAndContractDestinations_AreInvalid()
     {
