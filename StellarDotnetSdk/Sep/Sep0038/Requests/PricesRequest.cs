@@ -79,12 +79,15 @@ public sealed record PricesRequest
     /// <summary>
     ///     Checks the sell/buy exclusivity rules and returns the query parameters.
     /// </summary>
-    /// <exception cref="ArgumentException">Thrown when the request mixes or omits the sell and buy sides.</exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when the request mixes or omits the sell and buy sides, when a string property is empty or
+    ///     whitespace rather than null, or when the JWT is not printable ASCII without whitespace.
+    /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the amount is zero or negative.</exception>
     internal Dictionary<string, string> ToQueryParameters()
     {
-        var hasSellAsset = !string.IsNullOrWhiteSpace(SellAsset);
-        var hasBuyAsset = !string.IsNullOrWhiteSpace(BuyAsset);
+        var hasSellAsset = RequestValidation.IsProvided(SellAsset, nameof(SellAsset));
+        var hasBuyAsset = RequestValidation.IsProvided(BuyAsset, nameof(BuyAsset));
         if (hasSellAsset == hasBuyAsset)
         {
             throw new ArgumentException(
@@ -126,15 +129,18 @@ public sealed record PricesRequest
             parameters["buy_amount"] = RequestValidation.FormatAmount(BuyAmount.Value, nameof(BuyAmount));
         }
 
-        AddOptional(parameters, "sell_delivery_method", SellDeliveryMethod);
-        AddOptional(parameters, "buy_delivery_method", BuyDeliveryMethod);
-        AddOptional(parameters, "country_code", CountryCode);
+        AddOptional(parameters, "sell_delivery_method", SellDeliveryMethod, nameof(SellDeliveryMethod));
+        AddOptional(parameters, "buy_delivery_method", BuyDeliveryMethod, nameof(BuyDeliveryMethod));
+        AddOptional(parameters, "country_code", CountryCode, nameof(CountryCode));
+        RequestValidation.RequireValidJwt(Jwt, nameof(Jwt), false);
         return parameters;
     }
 
-    internal static void AddOptional(Dictionary<string, string> parameters, string name, string? value)
+    /// <exception cref="ArgumentException">Thrown when <paramref name="value" /> is empty or whitespace.</exception>
+    internal static void AddOptional(Dictionary<string, string> parameters, string name, string? value,
+        string propertyName)
     {
-        if (!string.IsNullOrWhiteSpace(value))
+        if (RequestValidation.IsProvided(value, propertyName))
         {
             parameters[name] = value!;
         }

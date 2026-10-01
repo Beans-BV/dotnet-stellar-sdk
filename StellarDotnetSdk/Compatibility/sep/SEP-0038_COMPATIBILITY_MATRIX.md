@@ -71,7 +71,7 @@ _Note: fields are enumerated from the SEP-0038 v2.5.0 specification itself, incl
 - **`QuoteServerException`**: Base exception for SEP-38 errors (`StatusCode`, `Error`, `ResponseBody`, `RetryAfterDelay` from a `Retry-After` header)
 - **`BadRequestException`**: HTTP 400
 - **`PermissionDeniedException`**: HTTP 403
-- **`NotFoundException`**: HTTP 404 (e.g. unknown quote id)
+- **`QuoteServerNotFoundException`**: HTTP 404 (e.g. unknown quote id)
 - **`UnexpectedResponseException`**: Other status codes, oversized bodies, or success bodies that fail validation
 - **`NoAnchorQuoteServerFoundException`**: stellar.toml has no `ANCHOR_QUOTE_SERVER`
 
@@ -159,7 +159,7 @@ _Note: fields are enumerated from the SEP-0038 v2.5.0 specification itself, incl
 | `403 Permission Denied` | ✓ | ✅ | `PermissionDeniedException` | Missing or rejected JWT |
 | `error` | ✓ | ✅ | `QuoteServerException.Error` | Human-readable error description in the response body |
 
-_Note: these rows are the specification's own error table, which names only `400` and `403`. The client also maps `404 Not Found` to `NotFoundException`, and exposes a `Retry-After` header on an error response (typically `429` or `503`) as `QuoteServerException.RetryAfterDelay`. Neither is a specification field, so neither is counted in the coverage above._
+_Note: these rows are the specification's own error table, which names only `400` and `403`. The client also maps `404 Not Found` to `QuoteServerNotFoundException`, and exposes a `Retry-After` header on an error response (typically `429` or `503`) as `QuoteServerException.RetryAfterDelay`. Neither is a specification field, so neither is counted in the coverage above._
 
 ### Fee Details Fields
 

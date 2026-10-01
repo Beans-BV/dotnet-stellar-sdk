@@ -36,9 +36,10 @@ namespace StellarDotnetSdk.Converters;
 ///     </para>
 ///     <para>
 ///         Attached per property with <see cref="JsonConverterAttribute" />. It is public so that a consumer's
-///         source-generated <see cref="JsonSerializerContext" /> can instantiate it; do not register it on
-///         <see cref="JsonSerializerOptions.Converters" />, where it would change how every <see cref="decimal" />
-///         those options read is parsed, including a bare JSON number, which it rejects.
+///         source-generated <see cref="JsonSerializerContext" /> can instantiate it. Do not register it on
+///         <see cref="JsonSerializerOptions.Converters" />: every <see cref="decimal" /> those options handle would
+///         then be read from a quoted string as well as a bare number, rejected instead of rounded when
+///         <see cref="decimal" /> cannot hold it exactly, and written as a string rather than a number.
 ///     </para>
 /// </remarks>
 public sealed class ExactDecimalJsonConverter : JsonConverter<decimal>

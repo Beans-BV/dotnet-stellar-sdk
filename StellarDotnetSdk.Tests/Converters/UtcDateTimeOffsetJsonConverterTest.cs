@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -134,6 +135,26 @@ public class UtcDateTimeOffsetJsonConverterTest
             UtcDateTimeOffsetJsonConverter.Format(new DateTimeOffset(2021, 4, 30, 9, 42, 23, TimeSpan.FromHours(2))));
         Assert.AreEqual("2021-04-30T07:42:23.5Z",
             UtcDateTimeOffsetJsonConverter.Format(new DateTimeOffset(2021, 4, 30, 7, 42, 23, 500, TimeSpan.Zero)));
+    }
+
+    [TestMethod]
+    [DataRow("th-TH", DisplayName = "Buddhist calendar")]
+    [DataRow("fa-IR", DisplayName = "Persian calendar")]
+    public void Format_IgnoresTheCurrentCulture(string cultureName)
+    {
+        var culture = CultureInfo.CurrentCulture;
+        try
+        {
+            // These cultures default to non-Gregorian calendars: a culture-sensitive format prints 2564 or 1400.
+            CultureInfo.CurrentCulture = new CultureInfo(cultureName);
+
+            Assert.AreEqual("2021-04-30T07:42:23.5Z",
+                UtcDateTimeOffsetJsonConverter.Format(new DateTimeOffset(2021, 4, 30, 7, 42, 23, 500, TimeSpan.Zero)));
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = culture;
+        }
     }
 
     [TestMethod]

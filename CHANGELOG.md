@@ -140,15 +140,18 @@ All notable changes to this project are documented here. The format is based on
     enforce the spec's request rules before sending, failing the returned task with `ArgumentException`:
     exactly one of `SellAmount`/`BuyAmount`, one `GET /prices` side (sell or buy, the v2.3.0 buy side
     included), at most one delivery method on `POST /quote`, and only `sep6`/`sep31` for `GET /price`.
-    A zero or negative amount fails the same way (`ArgumentOutOfRangeException`). Their `ToString`
-    redacts the JWT.
+    A zero or negative amount fails the same way (`ArgumentOutOfRangeException`), and so does a string
+    property set to an empty or whitespace value instead of `null`, or a JWT that is not printable
+    ASCII without whitespace (`ArgumentException`). Their `ToString` redacts the JWT. Custom headers with
+    an invalid name, a `Content-Length` or `Transfer-Encoding` name, or a value outside printable ASCII
+    are rejected when the service is created, which takes a copy of them.
   - The response converters `ExactDecimalJsonConverter`, `UtcDateTimeOffsetJsonConverter` and
     `NonNullElementListJsonConverter<T>` (namespace `StellarDotnetSdk.Converters`) are public, so a
     consumer's source-generated `JsonSerializerContext` over the SEP-38 response types reads amounts and
     timestamps the same way the SDK does.
   - `AssetIdentifier` builds, parses and validates the Asset Identification Format (`stellar:CODE:ISSUER`,
     `stellar:native`, `iso4217:USD`), converts to and from the SDK `Asset` types, and compares by value
-    (`Equals`, `==`, `!=`).
+    (`Equals`, `==`, `!=`). The issuer must be in its canonical upper-case form; `FromAsset` converts it.
   - Amounts and prices are `decimal`. Requests send them as invariant-culture strings with their scale
     kept. Responses read them exactly, in plain or exponent form (`"1E-7"`): a value that `decimal` cannot
     hold without rounding is rejected rather than approximated. An `expires_at` without an offset is read
@@ -157,15 +160,22 @@ All notable changes to this project are documented here. The format is based on
     [#205](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/205)), required fields are enforced,
     null list elements are rejected, a `GET /prices` answer must carry the list for the requested side,
     and `GET /quote/:id` must return the requested quote (its `total_price` is optional, as that
-    endpoint's response table omits it). Bodies are capped at 1 MiB and streamed so the cap bounds memory,
-    and the whole exchange, body included, stays within `HttpClient.Timeout` (and `RequestTimeout` for the
-    internal client). Errors map to `BadRequestException` (400), `PermissionDeniedException` (403),
-    `NotFoundException` (404), `UnexpectedResponseException` and `NoAnchorQuoteServerFoundException`, all
-    derived from `QuoteServerException`, whose `RetryAfterDelay` carries an error response's
-    `Retry-After`; transport failures surface as `HttpRequestException`, timeouts as
+    endpoint's response table omits it). A `POST /quote` answer must carry a usable id, the requested
+    asset pair, no delivery method the request did not name, and an expiry no earlier than
+    `expire_after`; prices and amounts must be greater than zero. Bodies are capped at 1 MiB and streamed
+    so the cap bounds memory (an error body over the cap is dropped, and the status still selects the
+    exception), a leading UTF-8 byte order mark is skipped, and the whole exchange, body included, stays
+    within `HttpClient.Timeout` (and `RequestTimeout` for the internal client). The internal client does
+    not follow redirects, and a response whose final location, after a caller-owned client followed
+    redirects, is another origin is rejected. Errors map to `BadRequestException` (400), `PermissionDeniedException` (403),
+    `QuoteServerNotFoundException` (404), `UnexpectedResponseException` and
+    `NoAnchorQuoteServerFoundException`, all derived from `QuoteServerException`; an
+    `UnexpectedResponseException` for an error status carries the response's `Retry-After` as
+    `RetryAfterDelay`. Transport failures surface as `HttpRequestException`, timeouts as
     `TaskCanceledException`.
   - `POST /quote` is not idempotent: do not configure `QuoteService` with the `ForHorizon()` or
-    `ForSoroban()` presets, which retry `POST`; the README and HTTP-retry guide now say so.
+    `ForSoroban()` presets, which retry `POST` on a 408, 429, 500, 502, 503 or 504 answer; the README
+    and HTTP-retry guide now say so.
   - Compatibility matrix `StellarDotnetSdk/Compatibility/sep/SEP-0038_COMPATIBILITY_MATRIX.md`: 100%
     (75/75 fields), with the spec's prose rules listed separately.
 

@@ -9,7 +9,7 @@ namespace StellarDotnetSdk.Sep.Sep0038.Exceptions;
 /// <remarks>
 ///     <see cref="QuoteServerException.Error" /> holds the anchor's explanation, when it sent one.
 /// </remarks>
-public class NotFoundException : QuoteServerException
+public class QuoteServerNotFoundException : QuoteServerException
 {
     /// <summary>
     ///     Initializes a new instance.
@@ -17,7 +17,7 @@ public class NotFoundException : QuoteServerException
     /// <param name="message">The error message.</param>
     /// <param name="error">The <c>error</c> field of the response body, if it had one.</param>
     /// <param name="responseBody">The response body.</param>
-    public NotFoundException(string message, string? error, string? responseBody)
+    public QuoteServerNotFoundException(string message, string? error, string? responseBody)
         : base(message, 404, error, responseBody)
     {
     }

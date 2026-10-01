@@ -85,8 +85,9 @@ public sealed record PriceRequest
     ///     Checks the request and returns the query parameters.
     /// </summary>
     /// <exception cref="ArgumentException">
-    ///     Thrown when an asset is missing, when not exactly one amount is given, or when <see cref="Context" /> is
-    ///     <see cref="QuoteContext.Sep24" />.
+    ///     Thrown when an asset is missing, when not exactly one amount is given, when <see cref="Context" /> is
+    ///     <see cref="QuoteContext.Sep24" />, when an optional string property is empty or whitespace rather than
+    ///     null, or when the JWT is not printable ASCII without whitespace.
     /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     Thrown when <see cref="Context" /> is not a defined value, or the amount is zero or negative.
@@ -118,9 +119,11 @@ public sealed record PriceRequest
             parameters["buy_amount"] = RequestValidation.FormatAmount(BuyAmount!.Value, nameof(BuyAmount));
         }
 
-        PricesRequest.AddOptional(parameters, "sell_delivery_method", SellDeliveryMethod);
-        PricesRequest.AddOptional(parameters, "buy_delivery_method", BuyDeliveryMethod);
-        PricesRequest.AddOptional(parameters, "country_code", CountryCode);
+        PricesRequest.AddOptional(parameters, "sell_delivery_method", SellDeliveryMethod,
+            nameof(SellDeliveryMethod));
+        PricesRequest.AddOptional(parameters, "buy_delivery_method", BuyDeliveryMethod, nameof(BuyDeliveryMethod));
+        PricesRequest.AddOptional(parameters, "country_code", CountryCode, nameof(CountryCode));
+        RequestValidation.RequireValidJwt(Jwt, nameof(Jwt), false);
         parameters["context"] = context;
         return parameters;
     }

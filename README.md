@@ -147,8 +147,8 @@ original result.
 >   requester chose, and a retry delivers it again. Use `NoRetry()` (the default) for `UriScheme`:
 >   even transport retries replay it.
 > - **SEP-38 `POST /quote`** — each call creates a new firm quote that the anchor holds in reserve
->   until it expires. Both presets retry `POST` on a 408, 429 or 5xx answer, so one call can reserve
->   two quotes.
+>   until it expires. Both presets retry `POST` on a 408, 429, 500, 502, 503 or 504 answer, so one
+>   call can reserve two quotes.
 >
 > For the other SEP HttpClients, use `WithConnectionRetries()` (transport retries only) or build a
 > custom `HttpResilienceOptions` whose `RetryHttpMethods` contains only `GET`/`HEAD`/`OPTIONS`. Note that

@@ -1,4 +1,7 @@
+using System;
+using System.Buffers;
 using System.Globalization;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,6 +24,32 @@ public class ExactDecimalJsonConverterTest
     private static decimal Read(string jsonValue)
     {
         return JsonSerializer.Deserialize<Holder>($"{{\"Value\":{jsonValue}}}", JsonOptions.DefaultOptions)!.Value;
+    }
+
+    private sealed class Segment : ReadOnlySequenceSegment<byte>
+    {
+        public Segment(byte[] bytes, Segment? previous = null)
+        {
+            Memory = bytes;
+            if (previous != null)
+            {
+                RunningIndex = previous.RunningIndex + previous.Memory.Length;
+                previous.Next = this;
+            }
+        }
+    }
+
+    [TestMethod]
+    public void Read_WithANumberSplitAcrossBufferSegments_KeepsItsDigits()
+    {
+        // A streaming deserializer hands the converter a number token that spans two buffers.
+        var first = new Segment(Encoding.UTF8.GetBytes("{\"Value\":0.17"));
+        var last = new Segment(Encoding.UTF8.GetBytes("95000}"), first);
+        var reader = new Utf8JsonReader(new ReadOnlySequence<byte>(first, 0, last, last.Memory.Length));
+
+        var holder = JsonSerializer.Deserialize<Holder>(ref reader, JsonOptions.DefaultOptions)!;
+
+        Assert.AreEqual("0.1795000", holder.Value.ToString(CultureInfo.InvariantCulture));
     }
 
     [TestMethod]

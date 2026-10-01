@@ -102,8 +102,9 @@ public sealed record QuoteRequest
     ///     Checks the request and returns the UTF-8 JSON body.
     /// </summary>
     /// <exception cref="ArgumentException">
-    ///     Thrown when an asset or the JWT is missing, when not exactly one amount is given, or when both delivery
-    ///     methods are given.
+    ///     Thrown when an asset or the JWT is missing, when the JWT is not printable ASCII without whitespace, when
+    ///     not exactly one amount is given, when an optional string property is empty or whitespace rather than
+    ///     null, or when both delivery methods are given.
     /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     Thrown when <see cref="Context" /> is not a defined value, or the amount is zero or negative.
@@ -112,9 +113,12 @@ public sealed record QuoteRequest
     {
         RequestValidation.RequireNonEmpty(SellAsset, nameof(SellAsset));
         RequestValidation.RequireNonEmpty(BuyAsset, nameof(BuyAsset));
-        RequestValidation.RequireNonEmpty(Jwt, nameof(Jwt));
+        RequestValidation.RequireValidJwt(Jwt, nameof(Jwt), true);
         RequestValidation.RequireExactlyOneAmount(SellAmount, BuyAmount);
-        if (!string.IsNullOrWhiteSpace(SellDeliveryMethod) && !string.IsNullOrWhiteSpace(BuyDeliveryMethod))
+        var hasSellDeliveryMethod = RequestValidation.IsProvided(SellDeliveryMethod, nameof(SellDeliveryMethod));
+        var hasBuyDeliveryMethod = RequestValidation.IsProvided(BuyDeliveryMethod, nameof(BuyDeliveryMethod));
+        RequestValidation.IsProvided(CountryCode, nameof(CountryCode));
+        if (hasSellDeliveryMethod && hasBuyDeliveryMethod)
         {
             throw new ArgumentException(
                 "At most one of SellDeliveryMethod or BuyDeliveryMethod may be provided, not both.",
@@ -157,7 +161,8 @@ public sealed record QuoteRequest
 
     private static void WriteOptional(Utf8JsonWriter writer, string name, string? value)
     {
-        if (!string.IsNullOrWhiteSpace(value))
+        // Blank values were rejected above, so null is the only absent form left.
+        if (value != null)
         {
             writer.WriteString(name, value);
         }

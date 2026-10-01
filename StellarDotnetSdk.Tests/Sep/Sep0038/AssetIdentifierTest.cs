@@ -76,10 +76,33 @@ public class AssetIdentifierTest
     }
 
     [TestMethod]
+    [DataRow(false, DisplayName = "Lower case")]
+    [DataRow(true, DisplayName = "Mixed case")]
+    public void Stellar_WithANonCanonicalIssuer_IsRejected(bool mixedCase)
+    {
+        // StrKey decoding accepts these; the SEP-11 identifier must carry the canonical upper-case form.
+        var issuer = mixedCase ? Issuer.Substring(0, 10) + Issuer.Substring(10).ToLowerInvariant() : Issuer.ToLowerInvariant();
+
+        var ex = Assert.ThrowsException<ArgumentException>(() => AssetIdentifier.Stellar("USDC", issuer));
+
+        Assert.AreEqual("issuer", ex.ParamName);
+        Assert.IsFalse(AssetIdentifier.TryParse($"stellar:USDC:{issuer}", out _));
+    }
+
+    [TestMethod]
+    public void FromAsset_WithALowerCaseIssuer_UsesTheCanonicalForm()
+    {
+        var asset = Asset.CreateNonNativeAsset("USDC", Issuer.ToLowerInvariant());
+
+        Assert.AreEqual(AssetIdentifier.Stellar("USDC", Issuer), AssetIdentifier.FromAsset(asset));
+    }
+
+    [TestMethod]
     [DataRow("usd")]
     [DataRow("US")]
     [DataRow("USDC")]
     [DataRow("U5D")]
+    [DataRow("\u00c9UR", DisplayName = "Non-ASCII upper-case letter")]
     [DataRow(null)]
     public void Iso4217_WithInvalidCode_Throws(string? code)
     {

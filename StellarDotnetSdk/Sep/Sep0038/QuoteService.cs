@@ -49,15 +49,26 @@ namespace StellarDotnetSdk.Sep.Sep0038;
 ///         <b>Errors</b>
 ///     </para>
 ///     <para>
-///         Invalid arguments — including the sell/buy amount exclusivity rules and a zero or negative amount — throw
-///         <see cref="ArgumentException" /> from the returned task, before anything is sent. Error responses map to
-///         <see cref="BadRequestException" /> (400), <see cref="PermissionDeniedException" /> (403),
-///         <see cref="NotFoundException" /> (404) and <see cref="UnexpectedResponseException" /> (anything else, an
-///         oversized body, or an unusable success body); all derive from <see cref="QuoteServerException" />. A
-///         <c>Retry-After</c> header on an error response (typically 429 or 503) is exposed as
-///         <see cref="QuoteServerException.RetryAfterDelay" />.
+///         Invalid arguments — including the sell/buy amount exclusivity rules, a zero or negative amount, a string
+///         property that is empty or whitespace rather than null, and a JWT that is not printable ASCII without
+///         whitespace — throw <see cref="ArgumentException" /> from the returned task, before anything is sent. Error
+///         responses map to <see cref="BadRequestException" /> (400), <see cref="PermissionDeniedException" /> (403),
+///         <see cref="QuoteServerNotFoundException" /> (404) and <see cref="UnexpectedResponseException" /> (anything
+///         else, including a 3xx, or an unusable success body); all derive from <see cref="QuoteServerException" />.
+///         A <c>Retry-After</c> header on an error response (typically 429 or 503) is exposed as
+///         <see cref="UnexpectedResponseException" />'s <see cref="QuoteServerException.RetryAfterDelay" />.
 ///         Response bodies are read up to 1 MiB, and parsed with the SDK's hardened JSON options, which reject
-///         duplicated mapped properties.
+///         duplicated mapped properties. An error body over the limit is dropped (<see cref="QuoteServerException.Error" />
+///         and <see cref="QuoteServerException.ResponseBody" /> are then null) but the status still selects the
+///         exception type; a success body over the limit raises <see cref="UnexpectedResponseException" />. A leading
+///         UTF-8 byte order mark is skipped.
+///     </para>
+///     <para>
+///         A success body is also checked against the request: a firm quote must carry a usable <c>id</c>, the
+///         requested asset pair, no delivery method other than the one requested, and an expiry no earlier than the
+///         requested <c>expire_after</c>; prices and amounts must be greater than zero. A response that fails these
+///         checks raises <see cref="UnexpectedResponseException" />, whose <see cref="QuoteServerException.ResponseBody" />
+///         still holds what the anchor sent (for <c>POST /quote</c>, the id of the quote it already created).
 ///     </para>
 ///     <para>
 ///         Transport failures surface as <see cref="HttpRequestException" /> (including a connection that drops
@@ -67,7 +78,23 @@ namespace StellarDotnetSdk.Sep.Sep0038;
 ///         client, by <see cref="HttpResilienceOptions.RequestTimeout" />), so a server that trickles its body cannot
 ///         stall the caller. An internal client with <see cref="HttpResilienceOptions.EnableCircuitBreaker" /> set
 ///         throws Polly's <c>BrokenCircuitException</c> while the circuit is open, and a call on a disposed service
-///         that owns its client throws <see cref="ObjectDisposedException" />.
+///         that owns its client throws <see cref="ObjectDisposedException" />. On runtimes before .NET 10, a request
+///         whose URL exceeds the runtime's length limit (a quote id tens of kilobytes long) raises
+///         <see cref="UriFormatException" />.
+///     </para>
+///     <para>
+///         <b>Redirects</b>
+///     </para>
+///     <para>
+///         The internal client does not follow redirects, so a 3xx answer raises
+///         <see cref="UnexpectedResponseException" /> and a request is never replayed to another host. A caller-owned
+///         client follows redirects if its handler does; the service then rejects any response that comes from a
+///         different origin than the quote server, but by that point the request, its body and the custom headers
+///         have already been sent there (on .NET's <c>SocketsHttpHandler</c>, not the JWT, whose <c>Authorization</c>
+///         header it drops on a redirect). Only the final location is visible, so a chain that leaves the origin and
+///         returns to it is not detected at all. Disable <c>AllowAutoRedirect</c> on a caller-owned client's handler
+///         to avoid both. The check compares the final request URI, so a caller's handler that rewrites it to
+///         another origin (a gateway, for example) is rejected the same way.
 ///     </para>
 ///     <para>
 ///         <b>Retries</b>
@@ -75,8 +102,8 @@ namespace StellarDotnetSdk.Sep.Sep0038;
 ///     <para>
 ///         <c>POST /quote</c> is not idempotent: every call creates a new firm quote that the anchor holds in reserve
 ///         until it expires. Do not pass <see cref="HttpResilienceOptionsPresets.ForHorizon" /> or
-///         <see cref="HttpResilienceOptionsPresets.ForSoroban" />: both retry <c>POST</c> on a 408, 429 or 5xx
-///         answer, so one call can reserve two quotes. Use <see cref="HttpResilienceOptionsPresets.WithConnectionRetries" /> (which
+///         <see cref="HttpResilienceOptionsPresets.ForSoroban" />: both retry <c>POST</c> on a 408, 429, 500, 502,
+///         503 or 504 answer, so one call can reserve two quotes. Use <see cref="HttpResilienceOptionsPresets.WithConnectionRetries" /> (which
 ///         still replays a <c>POST</c> whose response was lost in transit) or
 ///         <see cref="HttpResilienceOptionsPresets.NoRetry" />.
 ///     </para>
@@ -122,12 +149,17 @@ public class QuoteService : IDisposable
     /// </param>
     /// <param name="httpRequestHeaders">
     ///     Optional headers added to every request. A content header (<c>Content-Language</c>, for example) is sent
-    ///     only with <c>POST /quote</c>; the other requests have no body to carry it, so it is dropped from them.
+    ///     only with <c>POST /quote</c>; the other requests have no body to carry it, so it is dropped from them. A
+    ///     <c>Content-Type</c> header is ignored: <c>POST /quote</c> always sends <c>application/json</c>.
     /// </param>
     /// <exception cref="ArgumentException">
     ///     Thrown when <paramref name="serviceAddress" /> is empty, is not an absolute URL, carries a query,
     ///     fragment or user information, or uses plain <c>http</c> for a host other than a loopback address (the JWT travels with every
-    ///     authenticated request, so it must not go in cleartext; loopback is allowed for local development).
+    ///     authenticated request, so it must not go in cleartext; loopback is allowed for local development); or when
+    ///     <paramref name="httpRequestHeaders" /> holds a name that is not a valid HTTP header name, a
+    ///     <c>Content-Length</c> or <c>Transfer-Encoding</c> header, or a value with anything other than printable
+    ///     ASCII, spaces and tabs (a line break would otherwise split into extra headers on the wire). The headers are
+    ///     copied, so later changes to the dictionary have no effect.
     /// </exception>
     public QuoteService(
         string serviceAddress,
@@ -141,10 +173,13 @@ public class QuoteService : IDisposable
             throw new ArgumentException(problem, nameof(serviceAddress));
         }
 
+        ValidateHeaders(httpRequestHeaders);
+
         // The address as parsed, not as given: Uri drops surrounding whitespace that would otherwise reach every
         // request URI and fail there.
         _serviceAddress = new Uri(serviceAddress, UriKind.Absolute).AbsoluteUri.TrimEnd('/');
-        _httpRequestHeaders = httpRequestHeaders;
+        // A copy, so the checks above still hold if the caller changes its dictionary later.
+        _httpRequestHeaders = httpRequestHeaders == null ? null : new Dictionary<string, string>(httpRequestHeaders);
         if (httpClient != null)
         {
             _httpClient = httpClient;
@@ -152,7 +187,10 @@ public class QuoteService : IDisposable
         }
         else
         {
-            _httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions);
+            // Not following redirects: a 3xx would otherwise replay the request, POST body and custom headers
+            // included, to whatever host the Location names.
+            _httpClient = new DefaultStellarSdkHttpClient(resilienceOptions: resilienceOptions,
+                innerHandler: CreateNonRedirectingHandler());
             _internalHttpClient = true;
             _requestTimeout = resilienceOptions?.RequestTimeout;
         }
@@ -171,10 +209,18 @@ public class QuoteService : IDisposable
     /// <param name="httpClient">Optional HTTP client to use; it remains owned by the caller.</param>
     /// <param name="httpRequestHeaders">
     ///     Optional headers added to the stellar.toml fetch and every request. A content header is sent only with
-    ///     <c>POST /quote</c>, the one request with a body.
+    ///     <c>POST /quote</c>, the one request with a body, and a <c>Content-Type</c> header is ignored.
     /// </param>
     /// <param name="cancellationToken">Token to cancel the stellar.toml fetch.</param>
     /// <returns>A client for the anchor's quote server.</returns>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when <paramref name="domain" /> is null or empty, or when <paramref name="httpRequestHeaders" />
+    ///     holds a header the constructor refuses.
+    /// </exception>
+    /// <exception cref="UriFormatException">Thrown when <paramref name="domain" /> is not a valid host name.</exception>
+    /// <exception cref="OperationCanceledException">
+    ///     Thrown when <paramref name="cancellationToken" /> is canceled during the stellar.toml fetch.
+    /// </exception>
     /// <exception cref="StellarTomlException">Thrown when the stellar.toml cannot be fetched or parsed.</exception>
     /// <exception cref="NoAnchorQuoteServerFoundException">
     ///     Thrown when the stellar.toml does not declare <c>ANCHOR_QUOTE_SERVER</c>, or declares a value that is not
@@ -188,6 +234,8 @@ public class QuoteService : IDisposable
         Dictionary<string, string>? httpRequestHeaders = null,
         CancellationToken cancellationToken = default)
     {
+        // Before the stellar.toml fetch, which sends the same headers.
+        ValidateHeaders(httpRequestHeaders);
         var toml = await StellarToml.FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient,
                 httpRequestHeaders, cancellationToken)
             .ConfigureAwait(false);
@@ -252,12 +300,76 @@ public class QuoteService : IDisposable
     }
 
     /// <summary>
+    ///     Rejects custom headers that <see cref="HttpHeaders.TryAddWithoutValidation(string, string)" /> would
+    ///     otherwise drop silently (an invalid name), send as more than one header (a line break in the value), or
+    ///     let fail only at send time (a non-ASCII value, a framing header).
+    /// </summary>
+    /// <exception cref="ArgumentException">Thrown when a header name or value is unusable.</exception>
+    private static void ValidateHeaders(Dictionary<string, string>? headers)
+    {
+        if (headers == null)
+        {
+            return;
+        }
+
+        using var probe = new HttpRequestMessage();
+        using var probeContent = new ByteArrayContent(Array.Empty<byte>());
+        foreach (var header in headers)
+        {
+            // A name is usable when it is valid as either a request or a content header.
+            if (string.IsNullOrWhiteSpace(header.Key) ||
+                (!probe.Headers.TryAddWithoutValidation(header.Key, "x") &&
+                 !probeContent.Headers.TryAddWithoutValidation(header.Key, "x")))
+            {
+                throw new ArgumentException(
+                    $"The custom header name {UntrustedJsonValue.Describe(header.Key)} is not a valid HTTP header name.",
+                    "httpRequestHeaders");
+            }
+
+            // The service frames the body itself; a caller's value would contradict it and fail at send time.
+            if (string.Equals(header.Key, "Content-Length", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(header.Key, "Transfer-Encoding", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ArgumentException(
+                    $"The custom header {UntrustedJsonValue.Describe(header.Key)} is set by the service and cannot be " +
+                    "supplied.", "httpRequestHeaders");
+            }
+
+            // Printable ASCII, space and tab only: a line break would split into extra headers on the wire, and a
+            // non-ASCII character fails at send time as an HttpRequestException that looks like a transport fault.
+            foreach (var c in header.Value ?? string.Empty)
+            {
+                if ((c < ' ' && c != '\t') || c > '~')
+                {
+                    throw new ArgumentException(
+                        $"The value of the custom header {UntrustedJsonValue.Describe(header.Key)} must consist of " +
+                        "printable ASCII characters, spaces and tabs.", "httpRequestHeaders");
+                }
+            }
+        }
+    }
+
+    private static HttpMessageHandler CreateNonRedirectingHandler()
+    {
+#if NET8_0_OR_GREATER
+        return new SocketsHttpHandler { AllowAutoRedirect = false };
+#else
+        // SocketsHttpHandler is not available on netstandard2.1 reference assemblies.
+        return new HttpClientHandler { AllowAutoRedirect = false };
+#endif
+    }
+
+    /// <summary>
     ///     <c>GET /info</c>: the Stellar and off-chain assets available for trading, with their delivery methods and
     ///     country codes.
     /// </summary>
     /// <param name="jwt">Optional SEP-10 or SEP-45 JWT; the anchor may use it to personalize the response.</param>
     /// <param name="cancellationToken">Token to cancel the request.</param>
     /// <returns>The supported assets.</returns>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when <paramref name="jwt" /> is empty or whitespace rather than null, or is not printable ASCII
+    ///     without whitespace.
+    /// </exception>
     /// <exception cref="QuoteServerException">
     ///     Thrown (as one of its subtypes) when the anchor answers with an error or an unusable response.
     /// </exception>
@@ -268,6 +380,7 @@ public class QuoteService : IDisposable
     /// </exception>
     public async Task<InfoResponse> InfoAsync(string? jwt = null, CancellationToken cancellationToken = default)
     {
+        RequestValidation.RequireValidJwt(jwt, nameof(jwt), false);
         var request = CreateRequest(HttpMethod.Get, BuildUri("info", null), jwt);
         return await SendAsync<InfoResponse>(request, cancellationToken).ConfigureAwait(false);
     }
@@ -286,7 +399,10 @@ public class QuoteService : IDisposable
     ///     <see cref="PricesResponse.SellAssets" /> for a buy-side one.
     /// </returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="request" /> is null.</exception>
-    /// <exception cref="ArgumentException">Thrown when the request mixes or omits the sell and buy sides.</exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when the request mixes or omits the sell and buy sides, when a string property is empty or
+    ///     whitespace rather than null, or when the JWT is not printable ASCII without whitespace.
+    /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the amount is zero or negative.</exception>
     /// <exception cref="QuoteServerException">
     ///     Thrown (as one of its subtypes) when the anchor answers with an error or an unusable response.
@@ -303,12 +419,27 @@ public class QuoteService : IDisposable
         var httpRequest = CreateRequest(HttpMethod.Get, BuildUri("prices", request.ToQueryParameters()), request.Jwt);
         // The spec pairs each request side with one response array; a body without it (an empty object, or the
         // other side's array) would otherwise surface as a null list the caller was told to expect populated.
-        var sellSide = !string.IsNullOrWhiteSpace(request.SellAsset);
+        var sellSide = request.SellAsset != null;
         return await SendAsync<PricesResponse>(httpRequest, cancellationToken, response =>
-                (sellSide ? response.BuyAssets : response.SellAssets) == null
-                    ? $"The quote server answered a {(sellSide ? "sell" : "buy")}-side GET /prices without " +
-                      $"'{(sellSide ? "buy_assets" : "sell_assets")}'."
-                    : null)
+            {
+                var prices = sellSide ? response.BuyAssets : response.SellAssets;
+                if (prices == null)
+                {
+                    return $"The quote server answered a {(sellSide ? "sell" : "buy")}-side GET /prices without " +
+                           $"'{(sellSide ? "buy_assets" : "sell_assets")}'.";
+                }
+
+                foreach (var price in prices)
+                {
+                    if (price.Price <= 0)
+                    {
+                        return $"The quote server answered GET /prices with a price of {price.Price} for " +
+                               $"{UntrustedJsonValue.Describe(price.Asset)}; prices must be greater than zero.";
+                    }
+                }
+
+                return null;
+            })
             .ConfigureAwait(false);
     }
 
@@ -320,7 +451,9 @@ public class QuoteService : IDisposable
     /// <returns>The indicative price.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="request" /> is null.</exception>
     /// <exception cref="ArgumentException">
-    ///     Thrown when an asset is missing, when not exactly one amount is given, or when the context is SEP-24.
+    ///     Thrown when an asset is missing, when not exactly one amount is given, when the context is SEP-24, when an
+    ///     optional string property is empty or whitespace rather than null, or when the JWT is not printable ASCII
+    ///     without whitespace.
     /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     Thrown when the context is not a defined value, or the amount is zero or negative.
@@ -337,7 +470,9 @@ public class QuoteService : IDisposable
     {
         Throw.IfNull(request, nameof(request));
         var httpRequest = CreateRequest(HttpMethod.Get, BuildUri("price", request.ToQueryParameters()), request.Jwt);
-        return await SendAsync<PriceResponse>(httpRequest, cancellationToken).ConfigureAwait(false);
+        return await SendAsync<PriceResponse>(httpRequest, cancellationToken, price =>
+                CheckPositive("GET /price", price.TotalPrice, price.Price, price.SellAmount, price.BuyAmount))
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -351,8 +486,9 @@ public class QuoteService : IDisposable
     /// <returns>The firm quote; pass its <see cref="QuoteResponse.Id" /> as <c>quote_id</c> to use it.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="request" /> is null.</exception>
     /// <exception cref="ArgumentException">
-    ///     Thrown when an asset or the JWT is missing, when not exactly one amount is given, or when both delivery
-    ///     methods are given.
+    ///     Thrown when an asset or the JWT is missing, when the JWT is not printable ASCII without whitespace, when
+    ///     not exactly one amount is given, when an optional string property is empty or whitespace rather than
+    ///     null, or when both delivery methods are given.
     /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     Thrown when the context is not a defined value, or the amount is zero or negative.
@@ -372,12 +508,8 @@ public class QuoteService : IDisposable
         var body = request.ToJson();
         var httpRequest = CreateRequest(HttpMethod.Post, BuildUri("quote", null), request.Jwt,
             new StringContent(body, Encoding.UTF8, "application/json"));
-        // total_price is optional on GET /quote/:id, whose response table omits it, but required here. The anchor
-        // has already created the quote, so the rejection keeps the body: its id is in ResponseBody.
-        return await SendAsync<QuoteResponse>(httpRequest, cancellationToken, quote =>
-                quote.TotalPrice == null
-                    ? "The quote server answered POST /quote without the required 'total_price'."
-                    : null)
+        // The anchor has already created the quote, so a rejection keeps the body: its id is in ResponseBody.
+        return await SendAsync<QuoteResponse>(httpRequest, cancellationToken, quote => CheckPostedQuote(request, quote))
             .ConfigureAwait(false);
     }
 
@@ -390,10 +522,11 @@ public class QuoteService : IDisposable
     /// <param name="cancellationToken">Token to cancel the request.</param>
     /// <returns>The quote.</returns>
     /// <exception cref="ArgumentException">
-    ///     Thrown when <paramref name="quoteId" /> or <paramref name="jwt" /> is empty, or when
-    ///     <paramref name="quoteId" /> is <c>.</c> or <c>..</c>.
+    ///     Thrown when <paramref name="quoteId" /> or <paramref name="jwt" /> is empty, when
+    ///     <paramref name="quoteId" /> is <c>.</c> or <c>..</c>, or when <paramref name="jwt" /> is not printable ASCII
+    ///     without whitespace.
     /// </exception>
-    /// <exception cref="NotFoundException">Thrown when the anchor has no such quote for the account.</exception>
+    /// <exception cref="QuoteServerNotFoundException">Thrown when the anchor has no such quote for the account.</exception>
     /// <exception cref="QuoteServerException">
     ///     Thrown (as one of its subtypes) when the anchor answers with an error or an unusable response, including
     ///     a quote whose <c>id</c> is not <paramref name="quoteId" />.
@@ -407,7 +540,7 @@ public class QuoteService : IDisposable
         CancellationToken cancellationToken = default)
     {
         RequestValidation.RequireNonEmpty(quoteId, nameof(quoteId));
-        RequestValidation.RequireNonEmpty(jwt, nameof(jwt));
+        RequestValidation.RequireValidJwt(jwt, nameof(jwt), true);
         // Escaped as a single path segment, so an id containing '/', '?' or '#' cannot reach another endpoint. The
         // dot segments are the exception: EscapeDataString leaves '.' alone and the URI parser then resolves "." and
         // ".." away, so they are refused outright.
@@ -420,7 +553,7 @@ public class QuoteService : IDisposable
         // The spec defines the response id as "the id specified in the request".
         return await SendAsync<QuoteResponse>(CreateRequest(HttpMethod.Get, uri, jwt), cancellationToken, quote =>
                 string.Equals(quote.Id, quoteId, StringComparison.Ordinal)
-                    ? null
+                    ? CheckPositive("GET /quote/:id", quote.TotalPrice, quote.Price, quote.SellAmount, quote.BuyAmount)
                     : $"The quote server answered GET /quote/:id for {UntrustedJsonValue.Describe(quoteId)} with " +
                       $"the quote {UntrustedJsonValue.Describe(quote.Id)}.")
             .ConfigureAwait(false);
@@ -458,17 +591,20 @@ public class QuoteService : IDisposable
         {
             foreach (var header in _httpRequestHeaders)
             {
-                if (!request.Headers.TryAddWithoutValidation(header.Key, header.Value))
+                // A content header the body already carries (its Content-Type) is not added again: a second value
+                // would make the header malformed ("application/json; charset=utf-8, text/plain").
+                if (!request.Headers.TryAddWithoutValidation(header.Key, header.Value) && content != null &&
+                    !content.Headers.TryGetValues(header.Key, out _))
                 {
-                    content?.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                    content.Headers.TryAddWithoutValidation(header.Key, header.Value);
                 }
             }
         }
 
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        if (!string.IsNullOrWhiteSpace(jwt))
+        if (jwt != null)
         {
-            // Set after the custom headers so the per-call JWT wins over any configured Authorization header.
+            // Validated by the caller (RequestValidation.RequireValidJwt). Set after the custom headers so the per-call JWT wins over any configured Authorization header.
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
         }
 
@@ -493,6 +629,10 @@ public class QuoteService : IDisposable
             // It also takes the body out of HttpClient.Timeout's reach, so the same deadline is re-imposed here over
             // the whole exchange; without it a server that trickles its body would hold the call open indefinitely.
             var timeout = GetTimeout();
+            // Captured before sending: a client that follows redirects updates the request's URI to the final one,
+            // and turns a POST into a GET on a 301 or 302.
+            var requestUri = request.RequestUri!;
+            var method = request.Method.Method;
             using var timeoutSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             if (timeout != Timeout.InfiniteTimeSpan)
             {
@@ -505,11 +645,20 @@ public class QuoteService : IDisposable
                     .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, timeoutSource.Token)
                     .ConfigureAwait(false);
                 var statusCode = (int)response.StatusCode;
+                var finalUri = response.RequestMessage?.RequestUri ?? requestUri;
+                if (Uri.Compare(finalUri, requestUri, UriComponents.SchemeAndServer, UriFormat.UriEscaped,
+                        StringComparison.OrdinalIgnoreCase) != 0)
+                {
+                    throw new UnexpectedResponseException(
+                        $"The SEP-0038 {method} request was redirected to a different origin; the " +
+                        "response was rejected.", statusCode, null, null);
+                }
+
+                // Null when the body is over the size limit.
                 byte[]? body;
                 try
                 {
-                    body = await ReadBodyBoundedAsync(response, statusCode, timeoutSource.Token)
-                        .ConfigureAwait(false);
+                    body = await ReadBodyBoundedAsync(response, timeoutSource.Token).ConfigureAwait(false);
                 }
                 catch (Exception ex) when (ex is IOException or InvalidDataException)
                 {
@@ -527,8 +676,15 @@ public class QuoteService : IDisposable
 
                 if (!response.IsSuccessStatusCode)
                 {
+                    // An error body that is missing, unreadable or over the limit still leaves the status to select
+                    // the exception type, and the Retry-After header to tell the caller when to come back.
                     throw CreateErrorException(response.StatusCode, body,
                         RetryAfterParser.ToTimeSpan(response.Headers.RetryAfter));
+                }
+
+                if (body == null)
+                {
+                    throw TooLarge(statusCode);
                 }
 
                 T? result;
@@ -597,9 +753,11 @@ public class QuoteService : IDisposable
     }
 
     /// <summary>
-    ///     Reads the response body with an upper size bound of <see cref="MaxResponseBodyBytes" />.
+    ///     Reads the response body, or returns <see langword="null" /> when it exceeds
+    ///     <see cref="MaxResponseBodyBytes" />. A leading UTF-8 byte order mark is skipped, as
+    ///     <see cref="HttpContent.ReadAsStringAsync()" /> would; the JSON parsers reject it.
     /// </summary>
-    private static async Task<byte[]> ReadBodyBoundedAsync(HttpResponseMessage response, int statusCode,
+    private static async Task<byte[]?> ReadBodyBoundedAsync(HttpResponseMessage response,
         CancellationToken cancellationToken)
     {
         if (response.Content == null)
@@ -609,7 +767,7 @@ public class QuoteService : IDisposable
 
         if (response.Content.Headers.ContentLength is long contentLength && contentLength > MaxResponseBodyBytes)
         {
-            throw TooLarge(statusCode);
+            return null;
         }
 
 #if NETSTANDARD2_1
@@ -625,13 +783,16 @@ public class QuoteService : IDisposable
             // Enforced on the bytes actually read too: Content-Length can be absent (chunked) or understated.
             if (buffer.Length + read > MaxResponseBodyBytes)
             {
-                throw TooLarge(statusCode);
+                return null;
             }
 
             buffer.Write(chunk, 0, read);
         }
 
-        return buffer.ToArray();
+        var bytes = buffer.GetBuffer();
+        var length = (int)buffer.Length;
+        var offset = length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF ? 3 : 0;
+        return bytes.AsSpan(offset, length - offset).ToArray();
     }
 
     private static UnexpectedResponseException TooLarge(int statusCode)
@@ -639,6 +800,73 @@ public class QuoteService : IDisposable
         return new UnexpectedResponseException(
             $"The quote server returned HTTP {statusCode} with a body larger than the {MaxResponseBodyBytes}-byte limit.",
             statusCode, null, null);
+    }
+
+    /// <summary>
+    ///     Checks a <c>POST /quote</c> answer against its request, returning why it is unusable or
+    ///     <see langword="null" />.
+    /// </summary>
+    private static string? CheckPostedQuote(QuoteRequest request, QuoteResponse quote)
+    {
+        // The id is what the caller passes on as quote_id and to GetQuoteAsync, which refuses these same values.
+        if (string.IsNullOrWhiteSpace(quote.Id) || quote.Id is "." or "..")
+        {
+            return $"The quote server answered POST /quote with the unusable quote id {UntrustedJsonValue.Describe(quote.Id)}.";
+        }
+
+        // total_price is optional on GET /quote/:id, whose response table omits it, but required here.
+        if (quote.TotalPrice == null)
+        {
+            return "The quote server answered POST /quote without the required 'total_price'.";
+        }
+
+        if (!string.Equals(quote.SellAsset, request.SellAsset, StringComparison.Ordinal) ||
+            !string.Equals(quote.BuyAsset, request.BuyAsset, StringComparison.Ordinal))
+        {
+            // A stellar:CODE:ISSUER identifier runs past Describe's default 64-unit bound.
+            return $"The quote server answered POST /quote for {Echo(request.SellAsset)} -> {Echo(request.BuyAsset)} " +
+                   $"with a quote for {Echo(quote.SellAsset)} -> {Echo(quote.BuyAsset)}.";
+        }
+
+        // The specification echoes a delivery method "only if specified in the request".
+        if ((quote.SellDeliveryMethod != null &&
+             !string.Equals(quote.SellDeliveryMethod, request.SellDeliveryMethod, StringComparison.Ordinal)) ||
+            (quote.BuyDeliveryMethod != null &&
+             !string.Equals(quote.BuyDeliveryMethod, request.BuyDeliveryMethod, StringComparison.Ordinal)))
+        {
+            return "The quote server answered POST /quote with a delivery method the request did not ask for.";
+        }
+
+        // An anchor that cannot honor expire_after must answer 400 instead. Compared to the second: the request
+        // carries sub-second digits, and an anchor that stores whole seconds answers 07:42:23Z to 07:42:23.5Z.
+        if (request.ExpireAfter is { } expireAfter &&
+            quote.ExpiresAt < expireAfter.AddTicks(-(expireAfter.UtcTicks % TimeSpan.TicksPerSecond)))
+        {
+            return "The quote server answered POST /quote with a quote that expires before the requested " +
+                   "'expire_after'.";
+        }
+
+        return CheckPositive("POST /quote", quote.TotalPrice, quote.Price, quote.SellAmount, quote.BuyAmount);
+    }
+
+    private static string Echo(string? value)
+    {
+        return UntrustedJsonValue.Describe(value, MaxEchoedErrorLength);
+    }
+
+    /// <summary>
+    ///     Returns why a price or quote is unusable when one of its prices or amounts is zero or negative, or
+    ///     <see langword="null" />. Requests refuse such values too.
+    /// </summary>
+    private static string? CheckPositive(string endpoint, decimal? totalPrice, decimal price, decimal sellAmount,
+        decimal buyAmount)
+    {
+        if (totalPrice <= 0 || price <= 0 || sellAmount <= 0 || buyAmount <= 0)
+        {
+            return $"The quote server answered {endpoint} with a price or amount that is not greater than zero.";
+        }
+
+        return null;
     }
 
     private static QuoteServerException CreateErrorException(HttpStatusCode statusCode, byte[]? body,
@@ -653,7 +881,7 @@ public class QuoteService : IDisposable
         {
             HttpStatusCode.BadRequest => new BadRequestException(message, error, text),
             HttpStatusCode.Forbidden => new PermissionDeniedException(message, error, text),
-            HttpStatusCode.NotFound => new NotFoundException(message, error, text),
+            HttpStatusCode.NotFound => new QuoteServerNotFoundException(message, error, text),
             _ => new UnexpectedResponseException(message, code, error, text, retryAfterDelay: retryAfterDelay),
         };
     }

@@ -123,13 +123,13 @@ var sameQuote = await quotes.GetQuoteAsync(quote.Id, jwt);
 
 Pass `quote.Id` as `QuoteId` of a SEP-24 `DepositRequest` or `WithdrawRequest`, or of a SEP-6 `DepositExchangeRequest` or `WithdrawExchangeRequest`.
 
-`POST /quote` is not idempotent: each call reserves a new firm quote. Do not configure the service with `HttpResilienceOptionsPresets.ForHorizon()` or `ForSoroban()`, which retry `POST` on a 408, 429 or 5xx answer; see [HTTP retries](http-retry.md).
+`POST /quote` is not idempotent: each call reserves a new firm quote. Do not configure the service with `HttpResilienceOptionsPresets.ForHorizon()` or `ForSoroban()`, which retry `POST` on a 408, 429, 500, 502, 503 or 504 answer; see [HTTP retries](http-retry.md).
 
 ## Amounts and errors
 
 Amounts and prices are `decimal`. They are sent as invariant-culture strings and read exactly: a value that `decimal` cannot represent without rounding fails with `UnexpectedResponseException` instead of being approximated.
 
-Request rules the specification states (one amount, one `GET /prices` side, at most one delivery method on `POST /quote`), and a zero or negative amount, throw `ArgumentException` before anything is sent. Anchor errors map to exceptions derived from `QuoteServerException`; transport failures surface as `HttpRequestException`, and timeouts as `TaskCanceledException`:
+Request rules the specification states (one amount, one `GET /prices` side, at most one delivery method on `POST /quote`), a zero or negative amount, a string property set to an empty or whitespace value (leave it `null` instead), and a JWT that is not printable ASCII throw `ArgumentException` before anything is sent. Anchor errors map to exceptions derived from `QuoteServerException`, and so does an answer that does not match the request (a quote for another asset pair, or a zero price); transport failures surface as `HttpRequestException`, and timeouts as `TaskCanceledException`:
 
 ```csharp
 using StellarDotnetSdk.Sep.Sep0038.Exceptions;
@@ -138,7 +138,7 @@ try
 {
     await quotes.GetQuoteAsync(quote.Id, jwt);
 }
-catch (NotFoundException)
+catch (QuoteServerNotFoundException)
 {
     // 404: no such quote for this account (anchors also answer 404 for an unknown asset on GET /price).
 }

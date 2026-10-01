@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -50,6 +51,28 @@ public class QuoteServiceTest
     {
         var handler = new StubHandler(respond);
         return (new QuoteService(ServiceAddress, new HttpClient(handler)), handler);
+    }
+
+    /// <summary>The quote fixture, edited: the fixture echoes a PIX sell delivery method, for example.</summary>
+    private static string QuoteJson(Action<JsonObject> edit)
+    {
+        var quote = JsonNode.Parse(ReadTestData("quote-response.json"))!.AsObject();
+        edit(quote);
+        return quote.ToJsonString();
+    }
+
+    /// <summary>
+    ///     The loopback tests need a direct connection; an <c>http_proxy</c> without a <c>no_proxy</c> entry for
+    ///     loopback would send them to the proxy, and they would fail for a reason that is not the code's.
+    /// </summary>
+    private static void SkipIfLoopbackIsProxied(Uri uri)
+    {
+        // GetProxy still names the proxy for a no_proxy address; IsBypassed is what says the request goes direct.
+        var proxy = HttpClient.DefaultProxy.GetProxy(uri);
+        if (proxy != null && proxy != uri && !HttpClient.DefaultProxy.IsBypassed(uri))
+        {
+            Assert.Inconclusive($"Requests to {uri} go through the proxy {proxy}; set no_proxy to run this test.");
+        }
     }
 
     private static QuoteRequest ValidQuoteRequest()
@@ -557,7 +580,7 @@ public class QuoteServiceTest
     [TestMethod]
     public async Task PostQuoteAsync_WithBuyAmountAndNoOptionalFields_SendsOnlyTheRequiredFields()
     {
-        var (service, handler) = CreateService(ReadTestData("quote-response.json"));
+        var (service, handler) = CreateService(QuoteJson(q => q.Remove("sell_delivery_method")));
 
         await service.PostQuoteAsync(new QuoteRequest
         {
@@ -632,11 +655,23 @@ public class QuoteServiceTest
     public async Task PostQuoteAsync_WithCustomContentHeader_AttachesItToTheContent()
     {
         var headers = new Dictionary<string, string> { ["Content-Language"] = "pt-BR" };
-        var (service, handler) = CreateService(ReadTestData("quote-response.json"), headers: headers);
+        var (service, handler) = CreateService(QuoteJson(q => q.Remove("sell_delivery_method")), headers: headers);
 
         await service.PostQuoteAsync(ValidQuoteRequest());
 
         CollectionAssert.AreEqual(new[] { "pt-BR" }, handler.ContentLanguages.Single());
+    }
+
+    [TestMethod]
+    public async Task PostQuoteAsync_WithCustomContentTypeHeader_KeepsTheJsonContentType()
+    {
+        var headers = new Dictionary<string, string> { ["Content-Type"] = "text/plain" };
+        var (service, handler) = CreateService(QuoteJson(q => q.Remove("sell_delivery_method")), headers: headers);
+
+        await service.PostQuoteAsync(ValidQuoteRequest());
+
+        // One value, not "application/json; charset=utf-8, text/plain".
+        CollectionAssert.AreEqual(new[] { "application/json; charset=utf-8" }, handler.RawContentTypes.Single());
     }
 
     [TestMethod]
@@ -891,11 +926,11 @@ public class QuoteServiceTest
     }
 
     [TestMethod]
-    public async Task GetQuoteAsync_OnNotFound_ThrowsNotFoundException()
+    public async Task GetQuoteAsync_OnNotFound_ThrowsQuoteServerNotFoundException()
     {
         var (service, _) = CreateService("{\"error\":\"quote not found\"}", HttpStatusCode.NotFound);
 
-        var ex = await Assert.ThrowsExceptionAsync<NotFoundException>(() => service.GetQuoteAsync("missing", Jwt));
+        var ex = await Assert.ThrowsExceptionAsync<QuoteServerNotFoundException>(() => service.GetQuoteAsync("missing", Jwt));
         Assert.AreEqual(404, ex.StatusCode);
         Assert.AreEqual("quote not found", ex.Error);
     }
@@ -1308,27 +1343,34 @@ public class QuoteServiceTest
     {
         // The internal client cannot take a stub handler, so this runs against a loopback socket that sends the
         // headers and a few body bytes, then goes silent. HttpClient.Timeout (100 s) would never fire in time.
-        using var listener = new System.Net.Sockets.TcpListener(IPAddress.Loopback, 0);
-        listener.Start();
-        var port = ((IPEndPoint)listener.LocalEndpoint).Port;
-        var server = Task.Run(async () =>
-        {
-            using var client = await listener.AcceptTcpClientAsync();
-            var stream = client.GetStream();
-            var buffer = new byte[8192];
-            await stream.ReadAsync(buffer, 0, buffer.Length);
-            var head = Encoding.ASCII.GetBytes(
-                "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: 1000\r\n\r\n{\"ass");
-            await stream.WriteAsync(head, 0, head.Length);
-            await Task.Delay(TimeSpan.FromSeconds(9));
-        });
-        using var service = new QuoteService($"http://127.0.0.1:{port}/sep38", null,
+        using var server = new LoopbackServer(_ => Encoding.ASCII.GetBytes(
+            "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: 1000\r\n\r\n{\"ass"),
+            stallAfterResponse: true);
+        SkipIfLoopbackIsProxied(new Uri(server.Address));
+        using var service = new QuoteService(server.Address + "/sep38", null,
             new StellarDotnetSdk.Requests.HttpResilienceOptions { RequestTimeout = TimeSpan.FromMilliseconds(300) });
 
         var ex = await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => service.InfoAsync());
 
         Assert.IsInstanceOfType(ex.InnerException, typeof(TimeoutException));
-        listener.Stop();
+    }
+
+    [TestMethod]
+    [Timeout(10000)]
+    public async Task StalledBody_IsBoundedByAClientTimeoutChangedAfterConstruction()
+    {
+        var handler = new StubHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new ScriptedContent(Encoding.UTF8.GetBytes("{\"ass"), stall: true),
+        });
+        using var httpClient = new HttpClient(handler);
+        var service = new QuoteService(ServiceAddress, httpClient);
+        // The deadline is read on every call: a caller may tighten the timeout of a client it shares.
+        httpClient.Timeout = TimeSpan.FromMilliseconds(300);
+
+        var ex = await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => service.InfoAsync());
+
+        Assert.IsInstanceOfType(ex.InnerException, typeof(TimeoutException));
     }
 
     [TestMethod]
@@ -1372,8 +1414,18 @@ public class QuoteServiceTest
             },
             innerHandler: new HangingHandler());
         var service = new QuoteService(ServiceAddress, httpClient);
-
-        var ex = await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => service.InfoAsync());
+        var culture = CultureInfo.CurrentCulture;
+        TaskCanceledException ex;
+        try
+        {
+            // A comma decimal separator would print "0,2": the duration is formatted with the invariant culture.
+            CultureInfo.CurrentCulture = new CultureInfo("de-DE");
+            ex = await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => service.InfoAsync());
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = culture;
+        }
 
         Assert.IsInstanceOfType(ex.InnerException, typeof(TimeoutException));
         StringAssert.Contains(ex.Message, "0.2 seconds");
@@ -1387,7 +1439,7 @@ public class QuoteServiceTest
             Content = new ScriptedContent(Encoding.UTF8.GetBytes("{\"err"), stall: false),
         });
 
-        var ex = await Assert.ThrowsExceptionAsync<NotFoundException>(() => service.InfoAsync());
+        var ex = await Assert.ThrowsExceptionAsync<QuoteServerNotFoundException>(() => service.InfoAsync());
 
         Assert.IsNull(ex.ResponseBody);
     }
@@ -1495,18 +1547,396 @@ public class QuoteServiceTest
     }
 
     [TestMethod]
-    public async Task ErrorResponseOverTheSizeLimit_IsRejectedWithItsStatusCode()
+    public async Task ErrorResponseOverTheSizeLimit_KeepsTheExceptionTypeOfItsStatus()
     {
         var (service, _) = CreateService(new string(' ', MaxResponseBodyBytes + 1), HttpStatusCode.BadRequest);
 
-        var ex = await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() => service.InfoAsync());
+        var ex = await Assert.ThrowsExceptionAsync<BadRequestException>(() => service.InfoAsync());
 
         Assert.AreEqual(400, ex.StatusCode);
+        Assert.IsNull(ex.Error);
+        Assert.IsNull(ex.ResponseBody);
+    }
+
+    [TestMethod]
+    [DataRow(true, DisplayName = "Declared Content-Length")]
+    [DataRow(false, DisplayName = "Unknown length")]
+    public async Task ErrorResponseOverTheSizeLimit_KeepsTheRetryAfterDelay(bool declaredLength)
+    {
+        var payload = Encoding.UTF8.GetBytes(new string(' ', MaxResponseBodyBytes + 1));
+        var (service, _) = CreateService(_ =>
+        {
+            var response = new HttpResponseMessage(HttpStatusCode.TooManyRequests)
+            {
+                Content = declaredLength ? new ByteArrayContent(payload) : new UnknownLengthContent(payload),
+            };
+            response.Headers.RetryAfter = new RetryConditionHeaderValue(TimeSpan.FromSeconds(7));
+            return response;
+        });
+
+        var ex = await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() => service.InfoAsync());
+
+        Assert.AreEqual(429, ex.StatusCode);
+        Assert.AreEqual(TimeSpan.FromSeconds(7), ex.RetryAfterDelay);
     }
 
     private static string PadJson(string json, int totalBytes)
     {
         return json + new string(' ', totalBytes - Encoding.UTF8.GetByteCount(json));
+    }
+
+    #endregion
+
+    #region Redirects, headers, JWT and byte order marks
+
+    [TestMethod]
+    [Timeout(10000)]
+    public async Task InternalClient_DoesNotFollowARedirect()
+    {
+        using var target = new LoopbackServer(_ => Response(201, QuoteJson(q => q.Remove("sell_delivery_method"))));
+        using var origin = new LoopbackServer(_ => Encoding.ASCII.GetBytes(
+            $"HTTP/1.1 307 Temporary Redirect\r\nLocation: {target.Address}/quote\r\nContent-Length: 0\r\n\r\n"));
+        SkipIfLoopbackIsProxied(new Uri(origin.Address));
+        using var service = new QuoteService(origin.Address);
+
+        var ex = await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() =>
+            service.PostQuoteAsync(ValidQuoteRequest()));
+
+        Assert.AreEqual(307, ex.StatusCode);
+        Assert.AreEqual(1, origin.RequestCount);
+        // The POST body was never replayed to the redirect target.
+        Assert.AreEqual(0, target.RequestCount);
+    }
+
+    [TestMethod]
+    [Timeout(10000)]
+    [DataRow(307)]
+    [DataRow(302)]
+    public async Task CallerOwnedClient_ResponseFromAnotherOrigin_IsRejected(int status)
+    {
+        using var target = new LoopbackServer(_ => Response(201, QuoteJson(q => q.Remove("sell_delivery_method"))));
+        using var origin = new LoopbackServer(_ => Encoding.ASCII.GetBytes(
+            $"HTTP/1.1 {status} Redirect\r\nLocation: {target.Address}/quote\r\nContent-Length: 0\r\n\r\n"));
+        SkipIfLoopbackIsProxied(new Uri(origin.Address));
+        // A plain HttpClient follows redirects, and updates the request's URI to the final location.
+        using var httpClient = new HttpClient();
+        using var service = new QuoteService(origin.Address, httpClient);
+
+        var ex = await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() =>
+            service.PostQuoteAsync(ValidQuoteRequest()));
+
+        StringAssert.Contains(ex.Message, "different origin");
+        // A 302 turns the POST into a GET; the message names the method the caller sent.
+        StringAssert.Contains(ex.Message, "POST request");
+        Assert.AreEqual(1, target.RequestCount);
+    }
+
+    [TestMethod]
+    [DataRow("v\r\nX-Evil: 1", DisplayName = "CR LF in the value")]
+    [DataRow("v\nX-Evil: 1", DisplayName = "LF in the value")]
+    [DataRow("v\0", DisplayName = "NUL in the value")]
+    public void Constructor_WithALineBreakInACustomHeaderValue_Throws(string value)
+    {
+        var headers = new Dictionary<string, string> { ["X-A"] = value };
+
+        var ex = Assert.ThrowsException<ArgumentException>(() =>
+            new QuoteService(ServiceAddress, httpRequestHeaders: headers));
+
+        Assert.AreEqual("httpRequestHeaders", ex.ParamName);
+    }
+
+    [TestMethod]
+    [DataRow("v\u00e9", DisplayName = "Non-ASCII")]
+    [DataRow("v\u0001", DisplayName = "Control character")]
+    [DataRow("v\u007f", DisplayName = "DEL")]
+    public void Constructor_WithANonPrintableCustomHeaderValue_Throws(string value)
+    {
+        var headers = new Dictionary<string, string> { ["X-A"] = value };
+
+        Assert.ThrowsException<ArgumentException>(() => new QuoteService(ServiceAddress, httpRequestHeaders: headers));
+    }
+
+    [TestMethod]
+    public async Task CustomHeaderValueWithATab_IsSent()
+    {
+        var headers = new Dictionary<string, string> { ["X-A"] = "a\tb" };
+        var (service, handler) = CreateService(ReadTestData("info-response.json"), headers: headers);
+
+        await service.InfoAsync();
+
+        CollectionAssert.AreEqual(new[] { "a\tb" }, handler.Requests.Single().Headers.GetValues("X-A").ToArray());
+    }
+
+    [TestMethod]
+    [DataRow("Content-Length")]
+    [DataRow("transfer-encoding")]
+    public void Constructor_WithAFramingCustomHeader_Throws(string name)
+    {
+        var headers = new Dictionary<string, string> { [name] = "5" };
+
+        Assert.ThrowsException<ArgumentException>(() => new QuoteService(ServiceAddress, httpRequestHeaders: headers));
+    }
+
+    [TestMethod]
+    public async Task CustomHeaders_ChangedAfterConstruction_AreNotSent()
+    {
+        var headers = new Dictionary<string, string> { ["X-A"] = "1" };
+        var (service, handler) = CreateService(ReadTestData("info-response.json"), headers: headers);
+        // The dictionary was validated when the service was created; the service keeps its own copy.
+        headers["X-A"] = "2";
+        headers["X-Injected"] = "v\r\nX-Evil: 1";
+
+        await service.InfoAsync();
+
+        var request = handler.Requests.Single();
+        CollectionAssert.AreEqual(new[] { "1" }, request.Headers.GetValues("X-A").ToArray());
+        Assert.IsFalse(request.Headers.Contains("X-Injected"));
+    }
+
+    [TestMethod]
+    [DataRow("X Bad")]
+    [DataRow("X:Bad")]
+    [DataRow("")]
+    public void Constructor_WithAnInvalidCustomHeaderName_Throws(string name)
+    {
+        var headers = new Dictionary<string, string> { [name] = "v" };
+
+        var ex = Assert.ThrowsException<ArgumentException>(() =>
+            new QuoteService(ServiceAddress, httpRequestHeaders: headers));
+
+        Assert.AreEqual("httpRequestHeaders", ex.ParamName);
+    }
+
+    [TestMethod]
+    public async Task FromDomainAsync_WithAnUnusableCustomHeader_ThrowsBeforeFetchingTheToml()
+    {
+        var handler = new StubHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent($"ANCHOR_QUOTE_SERVER=\"{ServiceAddress}\""),
+        });
+        using var httpClient = new HttpClient(handler);
+        var headers = new Dictionary<string, string> { ["X-A"] = "v\r\nX-Evil: 1" };
+
+        await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
+            QuoteService.FromDomainAsync("example.com", httpClient: httpClient, httpRequestHeaders: headers));
+
+        Assert.AreEqual(0, handler.Requests.Count);
+    }
+
+    [TestMethod]
+    public async Task FromDomainAsync_WithAMalformedDomain_ThrowsUriFormatException()
+    {
+        await Assert.ThrowsExceptionAsync<UriFormatException>(() => QuoteService.FromDomainAsync("bad domain"));
+    }
+
+    [TestMethod]
+    [DataRow("abc\r\nX-Evil: 1", DisplayName = "CR LF")]
+    [DataRow("abc.def\n", DisplayName = "Trailing LF")]
+    [DataRow("abc\u00e9", DisplayName = "Non-ASCII")]
+    [DataRow("abc\u007f", DisplayName = "DEL")]
+    [DataRow("has space", DisplayName = "Space")]
+    [DataRow("", DisplayName = "Empty")]
+    public async Task MalformedJwt_ThrowsArgumentExceptionBeforeSending(string jwt)
+    {
+        var (service, handler) = CreateService(ReadTestData("info-response.json"));
+        var calls = new Func<Task>[]
+        {
+            () => service.InfoAsync(jwt),
+            () => service.GetQuoteAsync(QuoteId, jwt),
+            () => service.PostQuoteAsync(ValidQuoteRequest() with { Jwt = jwt }),
+            () => service.PriceAsync(new PriceRequest
+            {
+                Context = QuoteContext.Sep6, SellAsset = Brl, BuyAsset = Usdc, SellAmount = 1m, Jwt = jwt,
+            }),
+            () => service.PricesAsync(new PricesRequest { SellAsset = Brl, SellAmount = 1m, Jwt = jwt }),
+        };
+
+        foreach (var call in calls)
+        {
+            await Assert.ThrowsExceptionAsync<ArgumentException>(call);
+        }
+
+        Assert.AreEqual(0, handler.Requests.Count);
+    }
+
+    [TestMethod]
+    public async Task SuccessBodyWithAByteOrderMark_IsParsed()
+    {
+        var (service, _) = CreateService(_ => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new ByteArrayContent(WithByteOrderMark(ReadTestData("info-response.json"))),
+        });
+
+        Assert.AreEqual(3, (await service.InfoAsync()).Assets.Count);
+    }
+
+    [TestMethod]
+    public async Task ErrorBodyWithAByteOrderMark_KeepsTheErrorText()
+    {
+        var (service, _) = CreateService(_ => new HttpResponseMessage(HttpStatusCode.BadRequest)
+        {
+            Content = new ByteArrayContent(WithByteOrderMark("{\"error\":\"boom\"}")),
+        });
+
+        var ex = await Assert.ThrowsExceptionAsync<BadRequestException>(() => service.InfoAsync());
+
+        Assert.AreEqual("boom", ex.Error);
+    }
+
+    private static byte[] WithByteOrderMark(string json)
+    {
+        return new byte[] { 0xEF, 0xBB, 0xBF }.Concat(Encoding.UTF8.GetBytes(json)).ToArray();
+    }
+
+    #endregion
+
+    #region Response checked against the request
+
+    [TestMethod]
+    [DataRow("id", "\"\"", DisplayName = "Empty id")]
+    [DataRow("id", "\"  \"", DisplayName = "Whitespace id")]
+    [DataRow("id", "\"..\"", DisplayName = "Dot-segment id")]
+    [DataRow("id", "\".\"", DisplayName = "Single-dot id")]
+    [DataRow("sell_asset", "\"iso4217:EUR\"", DisplayName = "Other sell asset")]
+    [DataRow("buy_asset", "\"stellar:native\"", DisplayName = "Other buy asset")]
+    [DataRow("buy_delivery_method", "\"ACH\"", DisplayName = "Unrequested buy delivery method")]
+    [DataRow("sell_delivery_method", "\"PIX\"", DisplayName = "Unrequested sell delivery method")]
+    [DataRow("price", "\"0\"", DisplayName = "Zero price")]
+    [DataRow("total_price", "\"-5.42\"", DisplayName = "Negative total price")]
+    [DataRow("buy_amount", "\"0\"", DisplayName = "Zero buy amount")]
+    public async Task PostQuoteAsync_WithAQuoteThatDoesNotMatchTheRequest_ThrowsAndKeepsTheBody(string field,
+        string json)
+    {
+        var body = QuoteJson(q =>
+        {
+            q.Remove("sell_delivery_method");
+            q[field] = JsonNode.Parse(json);
+        });
+        var (service, _) = CreateService(body, HttpStatusCode.Created);
+
+        var ex = await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() =>
+            service.PostQuoteAsync(ValidQuoteRequest()));
+
+        // The anchor already created the quote; what it sent stays available.
+        Assert.AreEqual(body, ex.ResponseBody);
+    }
+
+    [TestMethod]
+    public async Task PostQuoteAsync_EchoingTheRequestedDeliveryMethod_IsAccepted()
+    {
+        var (service, _) = CreateService(ReadTestData("quote-response.json"), HttpStatusCode.Created);
+
+        var quote = await service.PostQuoteAsync(ValidQuoteRequest() with { SellDeliveryMethod = "PIX" });
+
+        Assert.AreEqual("PIX", quote.SellDeliveryMethod);
+    }
+
+    [TestMethod]
+    [DataRow(1000, true, DisplayName = "Expires a second before expire_after")]
+    [DataRow(0, false, DisplayName = "Expires exactly at expire_after")]
+    [DataRow(500, false, DisplayName = "expire_after half a second later; the anchor answers in whole seconds")]
+    public async Task PostQuoteAsync_ExpiringBeforeTheRequestedExpireAfter_Throws(int millisecondsAfterExpiry,
+        bool rejected)
+    {
+        // The fixture's quote expires at 2021-04-30T07:42:23Z.
+        var expireAfter = new DateTimeOffset(2021, 4, 30, 7, 42, 23, TimeSpan.Zero)
+            .AddMilliseconds(millisecondsAfterExpiry);
+        var (service, _) = CreateService(ReadTestData("quote-response.json"), HttpStatusCode.Created);
+        var request = ValidQuoteRequest() with { SellDeliveryMethod = "PIX", ExpireAfter = expireAfter };
+
+        if (rejected)
+        {
+            await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() => service.PostQuoteAsync(request));
+        }
+        else
+        {
+            await service.PostQuoteAsync(request);
+        }
+    }
+
+    [TestMethod]
+    [DataRow("total_price", "0")]
+    [DataRow("price", "0")]
+    [DataRow("sell_amount", "0")]
+    [DataRow("sell_amount", "-542")]
+    [DataRow("buy_amount", "0")]
+    public async Task PriceAsync_WithANonPositiveAmount_Throws(string field, string value)
+    {
+        var body = JsonNode.Parse(ReadTestData("price-response.json"))!.AsObject();
+        body[field] = value;
+        var (service, _) = CreateService(body.ToJsonString());
+
+        await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() => service.PriceAsync(new PriceRequest
+        {
+            Context = QuoteContext.Sep6, SellAsset = Brl, BuyAsset = Usdc, SellAmount = 542m,
+        }));
+    }
+
+    [TestMethod]
+    public async Task PricesAsync_WithANonPositivePrice_Throws()
+    {
+        var (service, _) = CreateService("{\"buy_assets\":[{\"asset\":\"iso4217:BRL\",\"price\":\"0\",\"decimals\":2}]}");
+
+        await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() =>
+            service.PricesAsync(new PricesRequest { SellAsset = Usdc, SellAmount = 1m }));
+    }
+
+    [TestMethod]
+    public async Task GetQuoteAsync_WithANonPositivePrice_Throws()
+    {
+        var (service, _) = CreateService(QuoteJson(q => q["price"] = "0"));
+
+        await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() => service.GetQuoteAsync(QuoteId, Jwt));
+    }
+
+    #endregion
+
+    #region Blank request values
+
+    [TestMethod]
+    public async Task PricesAsync_WithAWhitespaceOtherSide_ThrowsInsteadOfDroppingIt()
+    {
+        var (service, handler) = CreateService("{\"buy_assets\":[]}");
+
+        var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
+            service.PricesAsync(new PricesRequest { SellAsset = Brl, SellAmount = 1m, BuyAsset = " " }));
+
+        Assert.AreEqual("BuyAsset", ex.ParamName);
+        Assert.AreEqual(0, handler.Requests.Count);
+    }
+
+    [TestMethod]
+    [DataRow("")]
+    [DataRow(" ")]
+    public async Task OptionalStringSetToABlankValue_ThrowsBeforeSending(string blank)
+    {
+        var (service, handler) = CreateService(ReadTestData("info-response.json"));
+        var prices = new PricesRequest { SellAsset = Brl, SellAmount = 1m };
+        var price = new PriceRequest { Context = QuoteContext.Sep6, SellAsset = Brl, BuyAsset = Usdc, SellAmount = 1m };
+        var quote = ValidQuoteRequest();
+        var calls = new (string Property, Func<Task> Call)[]
+        {
+            ("SellDeliveryMethod", () => service.PricesAsync(prices with { SellDeliveryMethod = blank })),
+            ("BuyDeliveryMethod", () => service.PricesAsync(prices with { BuyDeliveryMethod = blank })),
+            ("CountryCode", () => service.PricesAsync(prices with { CountryCode = blank })),
+            ("Jwt", () => service.PricesAsync(prices with { Jwt = blank })),
+            ("SellDeliveryMethod", () => service.PriceAsync(price with { SellDeliveryMethod = blank })),
+            ("BuyDeliveryMethod", () => service.PriceAsync(price with { BuyDeliveryMethod = blank })),
+            ("CountryCode", () => service.PriceAsync(price with { CountryCode = blank })),
+            ("Jwt", () => service.PriceAsync(price with { Jwt = blank })),
+            ("SellDeliveryMethod", () => service.PostQuoteAsync(quote with { SellDeliveryMethod = blank })),
+            ("BuyDeliveryMethod", () => service.PostQuoteAsync(quote with { BuyDeliveryMethod = blank })),
+            ("CountryCode", () => service.PostQuoteAsync(quote with { CountryCode = blank })),
+            ("jwt", () => service.InfoAsync(blank)),
+        };
+
+        foreach (var (property, call) in calls)
+        {
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(call);
+            Assert.AreEqual(property, ex.ParamName);
+        }
+
+        Assert.AreEqual(0, handler.Requests.Count);
     }
 
     #endregion
@@ -1540,11 +1970,32 @@ public class QuoteServiceTest
     }
 
     [TestMethod]
-    public void Dispose_WithAnInternalHttpClient_DoesNotThrow()
+    public async Task Dispose_WithAnInternalHttpClient_DisposesIt()
     {
         var service = new QuoteService(ServiceAddress);
         service.Dispose();
         service.Dispose();
+
+        await Assert.ThrowsExceptionAsync<ObjectDisposedException>(() => service.InfoAsync());
+    }
+
+    [TestMethod]
+    public async Task Request_IsDisposedAfterTheCall()
+    {
+        HttpRequestMessage? sent = null;
+        var (service, _) = CreateService(request =>
+        {
+            sent = request;
+            return new HttpResponseMessage(HttpStatusCode.Created)
+            {
+                Content = new StringContent(QuoteJson(q => q.Remove("sell_delivery_method"))),
+            };
+        });
+
+        await service.PostQuoteAsync(ValidQuoteRequest());
+
+        // HttpClient does not dispose a request; the service owns it, and its content with it.
+        await Assert.ThrowsExceptionAsync<ObjectDisposedException>(() => sent!.Content!.ReadAsStringAsync());
     }
 
     #endregion
@@ -1565,6 +2016,7 @@ public class QuoteServiceTest
         public List<HttpRequestMessage> Requests { get; } = new();
         public List<string?> Bodies { get; } = new();
         public List<string?> ContentTypes { get; } = new();
+        public List<string[]> RawContentTypes { get; } = new();
         public List<string[]> ContentLanguages { get; } = new();
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
@@ -1574,6 +2026,10 @@ public class QuoteServiceTest
             Requests.Add(request);
             Bodies.Add(request.Content == null ? null : await request.Content.ReadAsStringAsync());
             ContentTypes.Add(request.Content?.Headers.ContentType?.MediaType);
+            RawContentTypes.Add(request.Content != null &&
+                                request.Content.Headers.TryGetValues("Content-Type", out var contentTypes)
+                ? contentTypes.ToArray()
+                : Array.Empty<string>());
             ContentLanguages.Add(request.Content?.Headers.ContentLanguage.ToArray() ?? Array.Empty<string>());
             return _respond(request);
         }
@@ -1789,6 +2245,120 @@ public class QuoteServiceTest
         {
             Disposed = true;
             base.Dispose(disposing);
+        }
+    }
+
+    private static byte[] Response(int status, string json)
+    {
+        var body = Encoding.UTF8.GetBytes(json);
+        var head = Encoding.ASCII.GetBytes(
+            $"HTTP/1.1 {status} X\r\nContent-Type: application/json\r\nContent-Length: {body.Length}\r\n" +
+            "Connection: close\r\n\r\n");
+        return head.Concat(body).ToArray();
+    }
+
+    /// <summary>
+    ///     A real HTTP/1.1 server on a loopback port, for behaviour a stub handler cannot show (redirects followed by
+    ///     a real handler, the internal client). Every connection gets the scripted response; with
+    ///     <c>stallAfterResponse</c> the connection then stays open and silent.
+    /// </summary>
+    private sealed class LoopbackServer : IDisposable
+    {
+        private readonly System.Net.Sockets.TcpListener _listener;
+        private readonly Func<string, byte[]> _respond;
+        private readonly bool _stallAfterResponse;
+        private readonly CancellationTokenSource _stop = new();
+        private int _requestCount;
+
+        public LoopbackServer(Func<string, byte[]> respond, bool stallAfterResponse = false)
+        {
+            _respond = respond;
+            _stallAfterResponse = stallAfterResponse;
+            _listener = new System.Net.Sockets.TcpListener(IPAddress.Loopback, 0);
+            _listener.Start();
+            Address = $"http://127.0.0.1:{((IPEndPoint)_listener.LocalEndpoint).Port}";
+            _ = AcceptAsync();
+        }
+
+        public string Address { get; }
+
+        public int RequestCount => Volatile.Read(ref _requestCount);
+
+        public void Dispose()
+        {
+            _stop.Cancel();
+            _listener.Stop();
+        }
+
+        private async Task AcceptAsync()
+        {
+            while (!_stop.IsCancellationRequested)
+            {
+                System.Net.Sockets.TcpClient client;
+                try
+                {
+                    client = await _listener.AcceptTcpClientAsync();
+                }
+                catch (Exception) when (_stop.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                _ = ServeAsync(client);
+            }
+        }
+
+        private async Task ServeAsync(System.Net.Sockets.TcpClient client)
+        {
+            using (client)
+            {
+                try
+                {
+                    var stream = client.GetStream();
+                    var received = new StringBuilder();
+                    var buffer = new byte[8192];
+                    while (true)
+                    {
+                        var read = await stream.ReadAsync(buffer, 0, buffer.Length, _stop.Token);
+                        if (read == 0)
+                        {
+                            return;
+                        }
+
+                        received.Append(Encoding.Latin1.GetString(buffer, 0, read));
+                        var text = received.ToString();
+                        var headerEnd = text.IndexOf("\r\n\r\n", StringComparison.Ordinal);
+                        if (headerEnd < 0)
+                        {
+                            continue;
+                        }
+
+                        var lengthLine = text.Substring(0, headerEnd).Split("\r\n")
+                            .FirstOrDefault(l => l.StartsWith("Content-Length:", StringComparison.OrdinalIgnoreCase));
+                        var length = lengthLine == null ? 0 : int.Parse(lengthLine.Substring(15).Trim());
+                        if (text.Length - headerEnd - 4 >= length)
+                        {
+                            break;
+                        }
+                    }
+
+                    Interlocked.Increment(ref _requestCount);
+                    var response = _respond(received.ToString());
+                    await stream.WriteAsync(response, 0, response.Length, _stop.Token);
+                    if (_stallAfterResponse)
+                    {
+                        await Task.Delay(Timeout.Infinite, _stop.Token);
+                    }
+                }
+                catch (Exception) when (_stop.IsCancellationRequested)
+                {
+                    // Disposed while the client was still connected.
+                }
+                catch (IOException)
+                {
+                    // The client gave up on the connection.
+                }
+            }
         }
     }
 

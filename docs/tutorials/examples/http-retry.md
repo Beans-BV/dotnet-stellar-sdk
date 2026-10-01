@@ -168,7 +168,7 @@ resilienceOptions.RetryHttpMethods.Add(HttpMethod.Post);
 >   delivers a signed transaction to a URL the requester chose, and a retry delivers it again. Use
 >   `NoRetry()` (the default) for `UriScheme`: even transport retries replay it.
 > - **SEP-38 `POST /quote`** — each call creates a new firm quote that the anchor holds in reserve
->   until it expires; a retry after a 408 or 5xx reserves a second quote.
+>   until it expires; a retry after a 408, 429, 500, 502, 503 or 504 reserves a second quote.
 >
 > Do NOT wire `ForHorizon()` or `ForSoroban()` into a `ClientWebAuth` / `InteractiveService` /
 > `TransferServerService` / `UriScheme` / `QuoteService` HttpClient. For the other SEP HttpClients,

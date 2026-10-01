@@ -73,7 +73,7 @@ public sealed class AssetIdentifier : IEquatable<AssetIdentifier>
     ///     Identifies a non-native Stellar asset: <c>stellar:CODE:ISSUER</c>.
     /// </summary>
     /// <param name="code">The asset code: 1 to 12 ASCII letters or digits.</param>
-    /// <param name="issuer">The issuer's account ID (a <c>G...</c> address).</param>
+    /// <param name="issuer">The issuer's account ID (a <c>G...</c> address, in its canonical upper case).</param>
     /// <returns>The identifier.</returns>
     /// <exception cref="ArgumentException">Thrown when the code or the issuer is not valid.</exception>
     public static AssetIdentifier Stellar(string code, string issuer)
@@ -83,9 +83,9 @@ public sealed class AssetIdentifier : IEquatable<AssetIdentifier>
             throw new ArgumentException("The asset code must be 1 to 12 ASCII letters or digits.", nameof(code));
         }
 
-        if (issuer == null || !StrKey.IsValidEd25519PublicKey(issuer))
+        if (!IsValidIssuer(issuer))
         {
-            throw new ArgumentException("The issuer must be a valid account ID (G...).", nameof(issuer));
+            throw new ArgumentException("The issuer must be a valid account ID (G...) in upper case.", nameof(issuer));
         }
 
         return new AssetIdentifier(StellarScheme, code, issuer);
@@ -133,7 +133,8 @@ public sealed class AssetIdentifier : IEquatable<AssetIdentifier>
         {
             null => throw new ArgumentNullException(nameof(asset)),
             AssetTypeNative => StellarNative(),
-            AssetTypeCreditAlphaNum credit => Stellar(credit.Code, credit.Issuer),
+            // An Asset keeps its issuer as written; StrKey is case-insensitive, so the canonical form is upper case.
+            AssetTypeCreditAlphaNum credit => Stellar(credit.Code, credit.Issuer.ToUpperInvariant()),
             _ => throw new ArgumentException(
                 $"Only native and credit assets can be identified in SEP-38; got {asset.GetType().Name}.",
                 nameof(asset)),
@@ -205,7 +206,7 @@ public sealed class AssetIdentifier : IEquatable<AssetIdentifier>
 
                 var code = identifier.Substring(0, codeEnd);
                 var issuer = identifier.Substring(codeEnd + 1);
-                if (!IsValidStellarCode(code) || !StrKey.IsValidEd25519PublicKey(issuer))
+                if (!IsValidStellarCode(code) || !IsValidIssuer(issuer))
                 {
                     return false;
                 }
@@ -305,6 +306,29 @@ public sealed class AssetIdentifier : IEquatable<AssetIdentifier>
     public static bool operator !=(AssetIdentifier? left, AssetIdentifier? right)
     {
         return !(left == right);
+    }
+
+    /// <summary>
+    ///     Whether <paramref name="issuer" /> is an account ID in its canonical form. StrKey decoding accepts lower-
+    ///     and mixed-case base32, but SEP-11 identifiers carry the upper-case form: a lower-case issuer would reach the
+    ///     anchor as an identifier it does not list, and would compare unequal to the canonical one here.
+    /// </summary>
+    private static bool IsValidIssuer(string? issuer)
+    {
+        if (issuer == null || !StrKey.IsValidEd25519PublicKey(issuer))
+        {
+            return false;
+        }
+
+        foreach (var c in issuer)
+        {
+            if (c is >= 'a' and <= 'z')
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static bool IsValidStellarCode(string? code)
