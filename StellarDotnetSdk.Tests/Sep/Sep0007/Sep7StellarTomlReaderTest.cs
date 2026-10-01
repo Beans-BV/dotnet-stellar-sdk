@@ -107,11 +107,57 @@ public class Sep7StellarTomlReaderTest
     [DataRow("A = 1\rB = 2", "after a value")]
     [DataRow("\"\"\"A\"\"\" = 1", "multi-line string cannot be a key")]
     [DataRow("A = \"\"\"x\"\"\"\"\"\"", "too many quotes")]
+    // The header line that ends the root table is checked too; conforming parsers reject all of these.
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[broken", "']' closing a table header")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[a]junk", "after a table header")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[]", "expected a key")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[a.]", "expected a key")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[[a]", "']]' closing an array-of-tables header")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[[a] ]", "']]' closing an array-of-tables header")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[a]]", "after a table header")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[a\nb]", "']' closing a table header")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[ [a]]", "expected a key")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[\"a\nb\"]", "newline")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[a] b = 1", "after a table header")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[", "expected a key")] // '[' as the last character
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[a b]", "']' closing a table header")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[a]\r", "after a table header")] // lone CR
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[\na]", "expected a key")]
+    // A header redefining the signing key as a table.
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[URI_REQUEST_SIGNING_KEY]", "used as a table")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[[URI_REQUEST_SIGNING_KEY]]", "used as a table")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[\"URI_REQUEST_SIGNING_KEY\".x]", "used as a table")]
     public void Throws_WhenTheRootTableIsMalformed(string toml, string reason)
     {
         var ex = Assert.ThrowsException<FormatException>(() => Sep7StellarTomlReader.ReadUriRequestSigningKey(toml));
 
         StringAssert.Contains(ex.Message, reason);
+    }
+
+    // Well-formed headers, as conforming parsers accept them, end the root table without an error.
+    [TestMethod]
+    [DataRow("[a]")]
+    [DataRow("[ a ]")]
+    [DataRow("[[a]]")]
+    [DataRow("[[ a . b ]]")]
+    [DataRow("[a] # a comment")]
+    [DataRow("[a]\t\r\nX = 1")]
+    [DataRow("[\"quoted key\".b]")]
+    [DataRow("['literal'.\"basic\"]")]
+    [DataRow("[a-b_c.1]")]
+    [DataRow("[\"\"]")] // empty quoted key
+    [DataRow("[\"a]b\"]")] // ']' and '#' inside a quoted key
+    [DataRow("[\"a#b\"]")]
+    [DataRow("[\"\u00E9\"]")]
+    [DataRow("[\"a\\\"b\"]")] // escaped quote
+    [DataRow("[\ta\t]")]
+    [DataRow("[URI_REQUEST_SIGNING_KEY_2]")] // a different key that only starts the same
+    [DataRow("[a]\n[broken")] // after the first header nothing is read
+    public void ReadsTheKey_WhenTheRootTableEndsInAWellFormedHeader(string header)
+    {
+        var toml = "URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n" + header;
+
+        Assert.AreEqual(Key, Sep7StellarTomlReader.ReadUriRequestSigningKey(toml));
     }
 
     [TestMethod]

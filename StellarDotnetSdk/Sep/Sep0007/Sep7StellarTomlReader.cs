@@ -16,8 +16,8 @@ namespace StellarDotnetSdk.Sep.Sep0007;
 ///     library. It reads only the root table (everything before the first <c>[table]</c> header), which is where
 ///     SEP-1 puts <c>URI_REQUEST_SIGNING_KEY</c>. It checks the structure of that part (key/value lines, comments
 ///     and blank lines; strings decoded and terminated; arrays and inline tables balanced, each closed by its own
-///     bracket kind) but is not a full TOML validator: other scalar values are not checked. Content after the
-///     first table header is never looked at.
+///     bracket kind; the header line that ends it well formed) but is not a full TOML validator: other scalar values
+///     are not checked. Content after the first table header line is never looked at.
 /// </remarks>
 internal sealed class Sep7StellarTomlReader
 {
@@ -57,9 +57,21 @@ internal sealed class Sep7StellarTomlReader
         while (true)
         {
             SkipBlankLinesAndComments();
-            if (AtEnd || Current == '[')
+            if (AtEnd)
             {
-                // The first [table] or [[array-of-tables]] header ends the root table.
+                return signingKey;
+            }
+            if (Current == '[')
+            {
+                // The first [table] or [[array-of-tables]] header ends the root table. It is checked like the root
+                // table itself, so a document whose root table ends in a malformed header is rejected, as every
+                // conforming TOML parser rejects it.
+                var headerStart = _position;
+                if (ReadTableHeader() == UriRequestSigningKeyName && seen)
+                {
+                    // [URI_REQUEST_SIGNING_KEY] or [[URI_REQUEST_SIGNING_KEY.x]] would redefine the key as a table.
+                    throw Error($"{UriRequestSigningKeyName} is used as a table", headerStart);
+                }
                 return signingKey;
             }
 
@@ -95,6 +107,28 @@ internal sealed class Sep7StellarTomlReader
             SkipComment();
             ExpectLineEnd();
         }
+    }
+
+    /// <summary>
+    ///     Reads a <c>[table]</c> or <c>[[array-of-tables]]</c> header line: its name is a key (dotted and quoted
+    ///     segments allowed, as in a key/value line), the brackets match in kind and count, and only whitespace or a
+    ///     comment follows on the line. Returns the name's first segment.
+    /// </summary>
+    private string ReadTableHeader()
+    {
+        var arrayOfTables = _position + 1 < _toml.Length && _toml[_position + 1] == '[';
+        _position += arrayOfTables ? 2 : 1;
+        SkipInlineWhitespace();
+        var (firstSegment, _) = ReadKey();
+        Expect(']', arrayOfTables ? "']]' closing an array-of-tables header" : "']' closing a table header");
+        if (arrayOfTables)
+        {
+            Expect(']', "']]' closing an array-of-tables header");
+        }
+        SkipInlineWhitespace();
+        SkipComment();
+        ExpectLineEnd("a table header");
+        return firstSegment;
     }
 
     private (string FirstSegment, int SegmentCount) ReadKey()
@@ -403,7 +437,7 @@ internal sealed class Sep7StellarTomlReader
         }
     }
 
-    private void ExpectLineEnd()
+    private void ExpectLineEnd(string after = "a value")
     {
         if (AtEnd || Current == '\n')
         {
@@ -413,7 +447,7 @@ internal sealed class Sep7StellarTomlReader
         {
             return;
         }
-        throw Error("unexpected text after a value", _position);
+        throw Error($"unexpected text after {after}", _position);
     }
 
     private void Expect(char expected, string what)
