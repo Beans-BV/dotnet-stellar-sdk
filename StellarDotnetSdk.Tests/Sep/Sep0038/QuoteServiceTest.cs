@@ -12,6 +12,7 @@ using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StellarDotnetSdk.Requests;
 using StellarDotnetSdk.Sep.Sep0038;
 using StellarDotnetSdk.Sep.Sep0038.Exceptions;
 using StellarDotnetSdk.Sep.Sep0038.Requests;
@@ -1028,6 +1029,46 @@ public class QuoteServiceTest
     }
 
     [TestMethod]
+    [DataRow(new[] { "2147483648" }, DisplayName = "Delta-seconds beyond int.MaxValue")]
+    [DataRow(new[] { "2147483648", "60" }, DisplayName = "Two Retry-After headers, the first beyond int.MaxValue")]
+    [DataRow(new[] { "ISO" }, DisplayName = "ISO 8601 date")]
+    public async Task OnTooManyRequestsWithARetryAfterTheTypedHeaderRejects_ExposesTheRetryAfterDelay(
+        string[] values)
+    {
+        // The typed RetryConditionHeaderValue cannot hold these forms; the raw header still carries the delay. With
+        // two headers the typed value is null too, and the first raw value is the one read, as the retry handler does.
+        var iso = DateTimeOffset.UtcNow.AddMinutes(10).ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture);
+        var (service, _) = CreateService(_ =>
+        {
+            var response = new HttpResponseMessage(HttpStatusCode.TooManyRequests);
+            foreach (var value in values)
+            {
+                response.Headers.TryAddWithoutValidation("Retry-After", value == "ISO" ? iso : value);
+            }
+
+            return response;
+        });
+
+        var ex = await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() =>
+            service.PostQuoteAsync(ValidQuoteRequest()));
+
+        var expected = values[0] switch
+        {
+            "2147483648" => RetryAfterParser.MaxRepresentableDelay,
+            _ => (TimeSpan?)null,
+        };
+        if (expected != null)
+        {
+            Assert.AreEqual(expected, ex.RetryAfterDelay);
+        }
+        else
+        {
+            Assert.IsTrue(ex.RetryAfterDelay > TimeSpan.FromMinutes(9) && ex.RetryAfterDelay <= TimeSpan.FromMinutes(10),
+                $"RetryAfterDelay was {ex.RetryAfterDelay}.");
+        }
+    }
+
+    [TestMethod]
     public async Task OnServiceUnavailableWithAnHttpDate_ExposesTheRetryAfterDelay()
     {
         var (service, _) = CreateService(_ =>
@@ -1717,9 +1758,10 @@ public class QuoteServiceTest
         using var httpClient = new HttpClient(handler);
         var headers = new Dictionary<string, string> { ["X-A"] = "v\r\nX-Evil: 1" };
 
-        await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
+        var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
             QuoteService.FromDomainAsync("example.com", httpClient: httpClient, httpRequestHeaders: headers));
 
+        Assert.AreEqual("httpRequestHeaders", ex.ParamName);
         Assert.AreEqual(0, handler.Requests.Count);
     }
 

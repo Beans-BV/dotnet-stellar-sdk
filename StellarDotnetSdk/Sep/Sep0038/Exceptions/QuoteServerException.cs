@@ -79,7 +79,7 @@ public class QuoteServerException : Exception
     /// <summary>
     ///     The delay the server asked the client to wait before retrying, from the <c>Retry-After</c> header of an
     ///     error response such as <c>429 Too Many Requests</c> or <c>503 Service Unavailable</c>, or
-    ///     <see langword="null" /> when the response carried none. Only an <see cref="UnexpectedResponseException" />
+    ///     <see langword="null" /> when the response carried none that can be read. Only an <see cref="UnexpectedResponseException" />
     ///     for an error status carries it, whatever the size of the error body; the 400, 403 and 404 subtypes never do. Named like
     ///     <see cref="StellarDotnetSdk.Exceptions.TooManyRequestsException.RetryAfterDelay" />.
     /// </summary>

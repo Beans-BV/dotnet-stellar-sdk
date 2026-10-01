@@ -173,7 +173,7 @@ public class QuoteService : IDisposable
             throw new ArgumentException(problem, nameof(serviceAddress));
         }
 
-        ValidateHeaders(httpRequestHeaders);
+        ValidateHeaders(httpRequestHeaders, nameof(httpRequestHeaders));
 
         // The address as parsed, not as given: Uri drops surrounding whitespace that would otherwise reach every
         // request URI and fail there.
@@ -235,7 +235,7 @@ public class QuoteService : IDisposable
         CancellationToken cancellationToken = default)
     {
         // Before the stellar.toml fetch, which sends the same headers.
-        ValidateHeaders(httpRequestHeaders);
+        ValidateHeaders(httpRequestHeaders, nameof(httpRequestHeaders));
         var toml = await StellarToml.FromDomainAsync(domain, resilienceOptions, bearerToken, httpClient,
                 httpRequestHeaders, cancellationToken)
             .ConfigureAwait(false);
@@ -304,8 +304,10 @@ public class QuoteService : IDisposable
     ///     otherwise drop silently (an invalid name), send as more than one header (a line break in the value), or
     ///     let fail only at send time (a non-ASCII value, a framing header).
     /// </summary>
+    /// <param name="headers">The custom headers to check.</param>
+    /// <param name="paramName">The caller's parameter name, reported as <see cref="ArgumentException.ParamName" />.</param>
     /// <exception cref="ArgumentException">Thrown when a header name or value is unusable.</exception>
-    private static void ValidateHeaders(Dictionary<string, string>? headers)
+    private static void ValidateHeaders(Dictionary<string, string>? headers, string paramName)
     {
         if (headers == null)
         {
@@ -323,7 +325,7 @@ public class QuoteService : IDisposable
             {
                 throw new ArgumentException(
                     $"The custom header name {UntrustedJsonValue.Describe(header.Key)} is not a valid HTTP header name.",
-                    "httpRequestHeaders");
+                    paramName);
             }
 
             // The service frames the body itself; a caller's value would contradict it and fail at send time.
@@ -332,7 +334,7 @@ public class QuoteService : IDisposable
             {
                 throw new ArgumentException(
                     $"The custom header {UntrustedJsonValue.Describe(header.Key)} is set by the service and cannot be " +
-                    "supplied.", "httpRequestHeaders");
+                    "supplied.", paramName);
             }
 
             // Printable ASCII, space and tab only: a line break would split into extra headers on the wire, and a
@@ -343,7 +345,7 @@ public class QuoteService : IDisposable
                 {
                     throw new ArgumentException(
                         $"The value of the custom header {UntrustedJsonValue.Describe(header.Key)} must consist of " +
-                        "printable ASCII characters, spaces and tabs.", "httpRequestHeaders");
+                        "printable ASCII characters, spaces and tabs.", paramName);
                 }
             }
         }
@@ -678,8 +680,7 @@ public class QuoteService : IDisposable
                 {
                     // An error body that is missing, unreadable or over the limit still leaves the status to select
                     // the exception type, and the Retry-After header to tell the caller when to come back.
-                    throw CreateErrorException(response.StatusCode, body,
-                        RetryAfterParser.ToTimeSpan(response.Headers.RetryAfter));
+                    throw CreateErrorException(response.StatusCode, body, ReadRetryAfter(response));
                 }
 
                 if (body == null)
@@ -848,6 +849,19 @@ public class QuoteService : IDisposable
         return CheckPositive("POST /quote", quote.TotalPrice, quote.Price, quote.SellAmount, quote.BuyAmount);
     }
 
+    /// <summary>
+    ///     Reads the <c>Retry-After</c> delay of <paramref name="response" />, or <see langword="null" />.
+    /// </summary>
+    private static TimeSpan? ReadRetryAfter(HttpResponseMessage response)
+    {
+        // The typed header is null for forms .NET cannot represent (delta-seconds beyond int.MaxValue, an ISO 8601
+        // date). The raw value is parsed then, as RetryingHttpMessageHandler and the Horizon exceptions do.
+        return RetryAfterParser.ToTimeSpan(response.Headers.RetryAfter) ??
+               (response.Headers.TryGetValues("Retry-After", out var values)
+                   ? RetryAfterParser.Parse(values.FirstOrDefault())
+                   : null);
+    }
+
     private static string Echo(string? value)
     {
         return UntrustedJsonValue.Describe(value, MaxEchoedErrorLength);
@@ -855,7 +869,8 @@ public class QuoteService : IDisposable
 
     /// <summary>
     ///     Returns why a price or quote is unusable when one of its prices or amounts is zero or negative, or
-    ///     <see langword="null" />. Requests refuse such values too.
+    ///     <see langword="null" />. Requests refuse such values too. A null <paramref name="totalPrice" /> passes:
+    ///     <c>GET /quote/:id</c> may omit it, and the lifted <c>&lt;=</c> is false for null.
     /// </summary>
     private static string? CheckPositive(string endpoint, decimal? totalPrice, decimal price, decimal sellAmount,
         decimal buyAmount)
