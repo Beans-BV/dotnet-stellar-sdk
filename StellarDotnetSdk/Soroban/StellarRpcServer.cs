@@ -572,7 +572,9 @@ public class StellarRpcServer : IDisposable
             throw new ClientProtocolException(
                 "The getLedgerEntries response has no valid latestLedger, so the tag entry's liveness cannot be determined.");
         }
-        if (entry.LiveUntilLedger <= latestLedger)
+        // LiveUntilLedger is nullable on LedgerEntry; the response always sets it, but an unknown TTL must fail
+        // closed like an absent one (a lifted null comparison would read as live).
+        if (entry.LiveUntilLedger is not { } liveUntil || liveUntil <= latestLedger)
         {
             throw new ExternalRefNotFoundException(owner.InnerValue, externalRef.Tag, true);
         }

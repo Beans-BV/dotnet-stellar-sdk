@@ -17,10 +17,13 @@ All notable changes to this project are documented here. The format is based on
     contain the new arms previously failed to decode. The feature-gated CAP-84 (muxed contract addresses) and
     `TEST_FEATURE` blocks are not part of Protocol 28 and are left out; the XDR generator now names every
     leftover `#ifdef` block by file and line instead of failing with xdrgen's bare parse error.
-  - Generated XDR string typedefs (`SCString`, `SCSymbol`, `String32`, `String64`) keep the raw wire bytes in a
-    new `InnerBytes` property and round-trip them verbatim. `InnerValue` remains as a UTF-8 view of those bytes:
-    the getter replaces invalid UTF-8 with U+FFFD, the setter encodes. Previously a non-UTF-8 string was decoded
-    lossily and re-encoded as different bytes, which for a CAP-85 tag is the key of a different ledger entry.
+  - Generated XDR string typedefs (`StellarDotnetSdk.Xdr`'s `SCString`, `SCSymbol`, `String32`, `String64`) keep
+    the raw wire bytes in a new `InnerBytes` property and round-trip them verbatim. `InnerValue` remains as a
+    UTF-8 view of those bytes: the getter replaces invalid UTF-8 with U+FFFD, the setter encodes. Previously a
+    non-UTF-8 string was decoded lossily and re-encoded as different bytes, which for a CAP-85 tag is the key of
+    a different ledger entry. The SDK-layer wrappers built on them (`Soroban.SCString` and `Soroban.SCSymbol`,
+    and data entry names read through `String64.InnerValue`) still decode lossily; that is tracked in
+    [#246](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/246).
   - `SCExecutableTag` (the `SCVal` for `SCV_EXECUTABLE_TAG`, raw bytes in `InnerValue`) and
     `ContractExecutableExternalRef` (a `ContractExecutable`, raw bytes in `Tag`), each with a strict UTF-8
     accessor (`TryGetUtf8String` / `TryGetTagUtf8String`) that fails on invalid UTF-8 instead of decoding it
@@ -270,11 +273,12 @@ All notable changes to this project are documented here. The format is based on
   `SCValType`, `ContractExecutableType` and `StellarValueType` gain members (`SCV_EXECUTABLE_TAG`,
   `CONTRACT_EXECUTABLE_EXTERNAL_REF`, `STELLAR_VALUE_EMPTY_TX_SET`), so values that used to fail to decode with
   `InvalidDataException` now decode, and code that switches over these enums or over `SCVal` /
-  `ContractExecutable` subclasses meets cases it has not seen. The generated string typedefs' `InnerValue` is now
-  a view over `InnerBytes`: unchanged for valid UTF-8, but a decoded non-UTF-8 string now re-encodes to its
-  original bytes instead of to the U+FFFD replacement. Because the text is now stored as UTF-8, a string with an
-  unpaired surrogate no longer reads back as set: its wire bytes are unchanged (U+FFFD), but `InnerValue` now
-  returns U+FFFD in its place, and each read decodes a new string. Source and binary compatible.
+  `ContractExecutable` subclasses meets cases it has not seen. The generated `StellarDotnetSdk.Xdr` string
+  typedefs' `InnerValue` is now a view over `InnerBytes`: unchanged for valid UTF-8, but a decoded non-UTF-8
+  string now re-encodes to its original bytes instead of to the U+FFFD replacement. Because the text is now
+  stored as UTF-8, a string with an unpaired surrogate no longer reads back as set: its wire bytes are unchanged
+  (U+FFFD), but `InnerValue` now returns U+FFFD in its place, and each read decodes a new string. Source and
+  binary compatible.
 - **Breaking:** `SubmitTransactionAsyncResponse.TxStatus` deserialization is now strict. The nested
   `TransactionStatus` enum was bound by the catch-all `JsonStringEnumConverter`, which maps bare
   integers by ordinal and matches case-insensitively — so a malformed Horizon `POST /transactions_async`
