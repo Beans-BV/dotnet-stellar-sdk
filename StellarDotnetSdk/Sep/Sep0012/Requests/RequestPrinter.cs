@@ -5,8 +5,11 @@ namespace StellarDotnetSdk.Sep.Sep0012.Requests;
 /// <summary>
 ///     Builds the <c>ToString</c> text of the SEP-0012 request records. The compiler-generated form prints every
 ///     property, which would put the bearer JWT and the customer's KYC data into any log line that formats a request;
-///     these helpers print identifiers (customer ID, account, memo, transaction ID) as they are, reduce a URL to its
-///     origin, and replace secrets and personal data with a placeholder.
+///     these helpers print identifiers (customer ID, account, memo, transaction ID), reduce a URL to its origin, and
+///     replace secrets and personal data with a placeholder. Identifiers and the printed origin go through
+///     <see cref="KycUntrustedText.Sanitize(string, int)" />, since they are not always the caller's own (a
+///     transaction ID usually comes from an anchor, a memo from an end user), and a line break or bidi override in
+///     one would otherwise forge or reorder the log line the request is formatted into.
 /// </summary>
 /// <remarks>
 ///     A record's <c>ToString</c> writes <c>TypeName { </c> before calling <c>PrintMembers</c>, so each helper takes
@@ -16,9 +19,9 @@ internal static class RequestPrinter
 {
     private const string Redacted = "[redacted]";
 
-    internal static void Value(StringBuilder builder, int start, string name, object? value)
+    internal static void Value(StringBuilder builder, int start, string name, string? value)
     {
-        Name(builder, start, name).Append(value);
+        Name(builder, start, name).Append(value == null ? null : KycUntrustedText.Sanitize(value));
     }
 
     internal static void Secret(StringBuilder builder, int start, string name, object? value)
@@ -44,7 +47,9 @@ internal static class RequestPrinter
             return;
         }
 
-        target.Append(uri.GetComponents(System.UriComponents.SchemeAndServer, System.UriFormat.UriEscaped));
+        // Uri keeps some format and separator characters in a host (U+2028, U+200B, tag characters) unescaped.
+        target.Append(KycUntrustedText.Sanitize(
+            uri.GetComponents(System.UriComponents.SchemeAndServer, System.UriFormat.UriEscaped)));
         if (uri.UserInfo.Length > 0 || uri.AbsolutePath != "/" || uri.Query.Length > 0 || uri.Fragment.Length > 0)
         {
             target.Append(' ').Append(Redacted);

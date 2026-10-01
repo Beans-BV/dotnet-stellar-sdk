@@ -2496,6 +2496,59 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     }
 
     [TestMethod]
+    public void RequestToString_NeutralizesLineBreaksAndBidiControlsInEveryStringProperty()
+    {
+        // A transaction ID usually comes from an anchor and a memo from an end user; neither may forge or reorder
+        // the log line a request is formatted into. Each string property is set on its own, so a single call site
+        // that skips sanitizing fails here.
+        const string hostile = "1\r\n[INFO] forged\u2028line \u202Eevil\u200B\U000E0041";
+        var unsafeChars = new[] { '\r', '\n', '\u2028', '\u202E', '\u200B', '\uDB40' };
+        var requestTypes = typeof(GetCustomerInfoRequest).Assembly.GetExportedTypes()
+            .Where(t => t.Namespace == typeof(GetCustomerInfoRequest).Namespace && !t.IsAbstract)
+            .ToList();
+        Assert.AreEqual(7, requestTypes.Count, string.Join(", ", requestTypes.Select(t => t.Name)));
+
+        var checkedProperties = 0;
+        foreach (var type in requestTypes)
+        {
+            foreach (var property in type.GetProperties().Where(p => p.PropertyType == typeof(string) && p.CanWrite))
+            {
+                var request = Activator.CreateInstance(type)!;
+                property.SetValue(request, hostile);
+
+                var text = request.ToString()!;
+
+                var where = $"{type.Name}.{property.Name}";
+                foreach (var c in unsafeChars)
+                {
+                    Assert.IsFalse(text.Contains(c), $"{where} printed U+{(int)c:X4}: {text}");
+                }
+
+                Assert.IsTrue(text.Contains("1  [INFO] forged line  evil  ") || text.Contains("[redacted]"),
+                    $"{where} printed neither the sanitized value nor a placeholder: {text}");
+                checkedProperties++;
+            }
+        }
+
+        Assert.IsTrue(checkedProperties >= 25, $"Only {checkedProperties} properties checked.");
+
+        // Uri keeps some format and separator characters in a host, so the printed origin is sanitized too.
+        foreach (var url in new[] { "https://host\u2028.example", "https://host\u200B.example", "https://host\U000E0041.example" })
+        {
+            var urlText = new PutCustomerCallbackRequest { Jwt = Jwt, Url = url }.ToString();
+            foreach (var c in unsafeChars)
+            {
+                Assert.IsFalse(urlText.Contains(c), $"Url printed U+{(int)c:X4}: {urlText}");
+            }
+
+            StringAssert.Contains(urlText, "Url = https://host", url);
+        }
+
+        // An ordinary identifier is printed unchanged.
+        StringAssert.Contains(new GetCustomerInfoRequest { Jwt = Jwt, Memo = "12345" }.ToString(), "Memo = 12345,");
+    }
+
+    [TestMethod]
     public void RequestToString_RedactsTheJwtAndCustomerData()
     {
         var request = new PutCustomerInfoRequest
