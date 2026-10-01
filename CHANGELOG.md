@@ -88,7 +88,9 @@ All notable changes to this project are documented here. The format is based on
     malformed percent escape, a backslash or a `.`/`..` path segment. Rejections carry a typed
     `Sep7ValidationResult.Error`, and values echoed into messages are escaped and length-clamped. Query
     values are decoded like an HTML form (`+` is a space, as `URLSearchParams` and the other Stellar SDKs
-    write it), except in base64 values, where a raw `+` stays a `+`.
+    write it), except in base64 values, where a raw `+` stays a `+`; escapes that are not valid UTF-8
+    (`%FF`, `%ED%A0%80`) make the request invalid, as decoders disagree on them (`URLSearchParams` reads
+    U+FFFD, .NET's own decoder keeps the escape as text).
   - `replace` support: `ParseReplacements`/`ReplacementsToString` with `Sep7Replacement`, enforcing the
     spec's balanced-identifier rule and rejecting Txrep paths SEP-7 forbids (`tx.` prefix, signatures,
     `_present`/`len`).

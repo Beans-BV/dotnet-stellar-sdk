@@ -469,12 +469,40 @@ public class UriSchemeParseTest
         Assert.IsTrue(UriScheme.ValidateUri(PayPrefix + "&msg=a�b").IsValid);
     }
 
-    // The lone-surrogate check runs on the raw URI only; that covers decoded values because an escaped surrogate
-    // (ill-formed UTF-8) is left escaped by the decoder rather than turned into a lone surrogate.
+    // Escapes that are not valid UTF-8 are rejected: decoders disagree on them (URLSearchParams and parse_qs read
+    // U+FFFD, .NET's keeps them as literal text), so wallets would read different values. An escaped surrogate is one.
     [TestMethod]
-    public void ParseUri_EscapedSurrogate_StaysEscaped()
+    [DataRow("msg=a%ED%A0%80b")] // escaped surrogate (CESU-8)
+    [DataRow("msg=%FF")] // never a UTF-8 byte
+    [DataRow("msg=%C0%80")] // overlong NUL
+    [DataRow("msg=%E2%82")] // truncated sequence
+    [DataRow("msg=%E2%82x%AC")] // a sequence split by a literal character
+    [DataRow("msg=%E2%82%ZZ%AC")] // ... or by a malformed escape
+    [DataRow("msg=%E2%82%2%AC")]
+    [DataRow("msg=%E2%82+%AC")] // ... or by a '+'
+    [DataRow("msg=%A9")] // continuation byte alone
+    [DataRow("msg=%F4%90%80%80")] // above U+10FFFF
+    [DataRow("memo_type=MEMO_TEXT&memo=%FF")]
+    [DataRow("network_passphrase=Test%FF")]
+    [DataRow("f%FFo=1")] // parameter name
+    public void ValidateUri_EscapeNotValidUtf8_IsInvalid(string parameter)
     {
-        Assert.AreEqual("a%ED%A0%80b", UriScheme.ParseUri(PayPrefix + "&msg=a%ED%A0%80b").Message);
+        var result = UriScheme.ValidateUri(PayPrefix + "&" + parameter);
+
+        Assert.IsFalse(result.IsValid);
+        StringAssert.Contains(result.Reason, "not valid UTF-8");
+    }
+
+    [TestMethod]
+    [DataRow("a%C3%A9b", "a\u00E9b")]
+    [DataRow("%E2%82%AC", "\u20AC")] // three-byte sequence
+    [DataRow("%F0%9F%98%80", "\U0001F600")] // four-byte sequence
+    [DataRow("%e2%82%ac", "\u20AC")] // lower-case hex
+    [DataRow("%C3%A9%ZZ", "\u00E9%ZZ")] // a malformed escape after a valid one stays literal
+    [DataRow("%41%C3%A9", "A\u00E9")] // ASCII then a multi-byte sequence in one run
+    public void ParseUri_EscapeValidUtf8_IsDecoded(string raw, string expected)
+    {
+        Assert.AreEqual(expected, UriScheme.ParseUri(PayPrefix + "&msg=" + raw).Message);
     }
 
     [TestMethod]

@@ -85,7 +85,8 @@ internal static class Sep7UriParser
         }
         // A signature covers the URI's UTF-8 bytes, and UTF-8 encoding turns every lone surrogate into U+FFFD, so
         // URIs differing only in one would share a signature. Uri.UnescapeDataString keeps a raw one in the decoded
-        // value (an escaped one, such as %ED%A0%80, stays escaped), so this check on the raw URI covers every value.
+        // value, and an escaped one (%ED%A0%80) is not valid UTF-8, which DecodeComponent rejects, so this check on
+        // the raw URI covers every value.
         if (HasLoneSurrogate(uri))
         {
             throw Invalid("The URI must not contain a lone UTF-16 surrogate, which has no UTF-8 encoding.");
@@ -484,7 +485,50 @@ internal static class Sep7UriParser
 
     private static string DecodeComponent(string component, bool plusIsSpace)
     {
+        // Decoders disagree on escapes that are not valid UTF-8 (%FF, %ED%A0%80): Uri.UnescapeDataString leaves them
+        // as literal text, URLSearchParams and Python's parse_qs read U+FFFD, so wallets would read different values.
+        // They are rejected instead; a '%' not followed by two hex digits is not an escape and stays literal, as in
+        // those two.
+        if (HasInvalidUtf8Escape(component))
+        {
+            throw Invalid($"The query component {Echo(component)} has percent escapes that are not valid UTF-8.");
+        }
         return Uri.UnescapeDataString(plusIsSpace ? component.Replace('+', ' ') : component);
+    }
+
+    private static readonly UTF8Encoding StrictUtf8 = new(false, true);
+
+    /// <summary>
+    ///     Whether a run of consecutive well-formed escapes (<c>%</c> and two hex digits) in
+    ///     <paramref name="component" /> decodes to bytes that are not valid UTF-8. Only a run can form a multi-byte
+    ///     sequence: any other character between two escapes ends it.
+    /// </summary>
+    private static bool HasInvalidUtf8Escape(string component)
+    {
+        var bytes = new List<byte>();
+        for (var i = 0; i <= component.Length; i++)
+        {
+            if (i + 2 < component.Length && component[i] == '%' && IsHexDigit(component[i + 1]) &&
+                IsHexDigit(component[i + 2]))
+            {
+                bytes.Add(byte.Parse(component.Substring(i + 1, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture));
+                i += 2;
+                continue;
+            }
+            if (bytes.Count > 0)
+            {
+                try
+                {
+                    StrictUtf8.GetString(bytes.ToArray());
+                }
+                catch (DecoderFallbackException)
+                {
+                    return true;
+                }
+                bytes.Clear();
+            }
+        }
+        return false;
     }
 
     private static bool IsBase64Valued(string name, string? memoType)

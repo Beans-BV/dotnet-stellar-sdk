@@ -335,6 +335,9 @@ public class UriScheme : IDisposable
     ///     values (<c>xdr</c>, <c>signature</c>, hash memos), where it stays a <c>+</c>. A <c>%</c> not followed by
     ///     two hex digits is kept as a literal character, as <c>URLSearchParams</c> keeps it, so the value read is the
     ///     value shown; only <c>callback</c> rejects one, because there it would change the URL that is POSTed to.
+    ///     Escapes that decode to bytes that are not valid UTF-8 (<c>%FF</c>, <c>%ED%A0%80</c>) make the request
+    ///     invalid: decoders disagree on them (<c>URLSearchParams</c> reads U+FFFD, .NET's own decoder keeps the
+    ///     escape as text), so wallets would read different values.
     ///     The request signature is not
     ///     verified here; see <see cref="VerifySignature" /> and <see cref="VerifyOriginDomainSignatureAsync" />.
     /// </summary>
