@@ -95,14 +95,17 @@ All notable changes to this project are documented here. The format is based on
   `PayloadTooLargeException` or `KycServiceException`, carrying the anchor's `error` text (and, on a plain
   `KycServiceException`, any `Retry-After` delay as `RetryAfterDelay`); an invalid success body, including
   one that is not valid UTF-8, raises `InvalidKycResponseException`, and server text quoted in any exception
-  message is clamped and stripped of control and format characters. The internal client does not follow redirects, and a response from
-  another origin is rejected. File names are percent-encoded per RFC 7578, and a request's `ToString()`
-  redacts the JWT, customer data and callback-URL secrets. The SEP-12 converters are public, so a consumer's
-  source-generated `JsonSerializerContext` can use the response types. `KycCallbackSignature`
-  verifies the `Signature`/`X-Stellar-Signature` header on anchor status callbacks (Ed25519 over
+  message is clamped and stripped of control and format characters. The internal client does not follow
+  redirects, and a response from another origin is rejected. File names are percent-encoded per RFC 7578,
+  and a request's `ToString()` redacts the JWT, SEP-9 and custom field values, file contents and names,
+  verification codes, file references and callback-URL secrets, but prints identifiers (customer ID,
+  account, memo, memo type, type, transaction ID, language, file ID, content type) with control and format
+  characters replaced. The SEP-12 converters are public, so a consumer's source-generated
+  `JsonSerializerContext` can use the response types. `KycCallbackSignature` verifies the
+  `Signature`/`X-Stellar-Signature` header on anchor status callbacks (Ed25519 over
   `<timestamp>.<host>.<body>`, with a freshness window, over the body as a string or raw bytes), and
-  `GetSignedHost` derives the host string the anchor signs (`host:port` when the callback URL names a
-  port); `GetCustomerInfoResponse.FromJson` parses the callback payload. Compatibility matrix:
+  `GetSignedHost` derives the host string the anchor signs (`host:port` when the callback URL names a port);
+  `GetCustomerInfoResponse.FromJson` parses the callback payload. Compatibility matrix:
   `StellarDotnetSdk/Compatibility/sep/SEP-0012_COMPATIBILITY_MATRIX.md` (100%, 90/90 fields).
 
 ### Changed
