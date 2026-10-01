@@ -131,7 +131,17 @@ public class Sep7StellarTomlReaderTest
     [DataRow("A = { a = 1 }\nB = [1, # c\r\n 2,\r]\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")]
     [DataRow("A = \"\"\"a\rb\"\"\"\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")]
     [DataRow("A = \"\"\"a\\\n\r b\"\"\"\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")]
-    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\r[a]", "after a value")] // ends a value line
+    // A CR directly before a CRLF is lone too.
+    [DataRow("\r\r\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")]
+    [DataRow("# c\r\r\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")]
+    [DataRow("A = [1,\r\r\n2]\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")]
+    [DataRow("A = \"\"\"a\r\r\nb\"\"\"\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")]
+    [DataRow("A = \"\"\"a \\  \r\r\n  b\"\"\"\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "invalid escape")]
+    // A lone CR as the last character.
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\" # c\r", "carriage return")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n\r", "carriage return")]
+    // Already rejected before lone CRs were handled anywhere: a CR ending a value line is not a line end.
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\r[a]", "after a value")]
     // A header redefining the signing key as a table.
     [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[URI_REQUEST_SIGNING_KEY]", "used as a table")]
     [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[[URI_REQUEST_SIGNING_KEY]]", "used as a table")]

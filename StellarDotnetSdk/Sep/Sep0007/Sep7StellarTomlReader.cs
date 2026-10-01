@@ -456,8 +456,8 @@ internal sealed class Sep7StellarTomlReader
     }
 
     /// <summary>
-    ///     Whether the reader is at a carriage return that does not start a CRLF: TOML has no lone-CR newline, and as
-    ///     a control character it is not allowed in a comment or string either.
+    ///     Whether the reader is at a carriage return that does not start a CRLF: TOML has no lone-CR newline, and a
+    ///     lone CR is not allowed in a comment or string either. Other control characters there are not checked.
     /// </summary>
     private bool AtLoneCarriageReturn =>
         !AtEnd && Current == '\r' && !(_position + 1 < _toml.Length && _toml[_position + 1] == '\n');
