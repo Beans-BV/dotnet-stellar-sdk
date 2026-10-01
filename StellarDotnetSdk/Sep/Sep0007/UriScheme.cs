@@ -300,7 +300,10 @@ public class UriScheme : IDisposable
     /// <summary>
     ///     Parses and validates a SEP-7 URI. It checks:
     ///     <list type="bullet">
-    ///         <item>the <c>web+stellar:</c> scheme, a <c>tx</c> or <c>pay</c> operation, no fragment;</item>
+    ///         <item>
+    ///             the <c>web+stellar:</c> scheme, a <c>tx</c> or <c>pay</c> operation, no fragment, no lone UTF-16
+    ///             surrogate;
+    ///         </item>
     ///         <item><c>name=value</c> query parameters, none repeated; known parameters are non-empty;</item>
     ///         <item>
     ///             no parameter of the other operation (<c>xdr</c>/<c>replace</c>/<c>pubkey</c>/<c>chain</c> are

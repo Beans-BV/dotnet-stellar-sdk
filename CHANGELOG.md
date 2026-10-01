@@ -79,10 +79,13 @@ All notable changes to this project are documented here. The format is based on
     and validates them (`ParseUri`, `TryParseUri`, `ValidateUri` → `Sep7Uri`/`Sep7ValidationResult`).
     Validation covers the operation, per-operation parameters, addresses, amounts, assets, memo types and
     values, `msg` length, `callback` form, `origin_domain` FQDN, `chain` nesting (at most 7 levels), and
-    rejects an `origin_domain` without a `signature`, as the spec does. `destination` also takes a SEP-2
-    federation address; hash memos must be exactly 32 bytes; account ids must be upper case; `callback`
-    URLs may not carry whitespace, invisible characters, credentials, a fragment, a malformed
-    percent escape or a backslash. Rejections carry a typed
+    rejects an `origin_domain` without a `signature`, as the spec does. A URI with a lone UTF-16 surrogate
+    is rejected, since UTF-8 has no encoding for it and its signature would also cover other URIs.
+    `destination` also takes a SEP-2 federation address; an `amount` is a positive decimal of at most
+    7 decimal places and at most the int64 stroop maximum, leading zeros allowed (`0000000000001` is 1);
+    hash memos must be exactly 32 bytes; account ids must be upper case; `callback` URLs may not carry
+    whitespace, invisible characters, credentials, a fragment, a malformed percent escape or a
+    backslash. Rejections carry a typed
     `Sep7ValidationResult.Error`, and values echoed into messages are escaped and length-clamped. Query
     values are decoded like an HTML form (`+` is a space, as `URLSearchParams` and the other Stellar SDKs
     write it), except in base64 values, where a raw `+` stays a `+`.

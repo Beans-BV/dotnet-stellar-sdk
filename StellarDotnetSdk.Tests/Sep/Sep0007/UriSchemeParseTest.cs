@@ -367,6 +367,11 @@ public class UriSchemeParseTest
     [DataRow(PayPrefix + "&amount=1.12345678", "'amount'")]
     [DataRow(PayPrefix + "&amount=1e5", "'amount'")]
     [DataRow(PayPrefix + "&amount=922337203685.4775808", "'amount'")]
+    [DataRow(PayPrefix + "&amount=1000000000000", "'amount'")] // 13 significant digits
+    [DataRow(PayPrefix + "&amount=.5", "'amount'")]
+    [DataRow(PayPrefix + "&amount=1.", "'amount'")]
+    [DataRow(PayPrefix + "&amount=0000000000000.0000000", "'amount'")]
+    [DataRow(PayPrefix + "&amount=100000000000000000000000000000", "'amount'")] // beyond decimal
     [DataRow(PayPrefix + "&asset_code=USD", "must be given together")]
     [DataRow(PayPrefix + "&asset_issuer=" + Destination, "must be given together")]
     [DataRow(PayPrefix + "&asset_code=ABCDEFGHIJKLM&asset_issuer=" + Destination, "'asset_code'")]
@@ -428,9 +433,48 @@ public class UriSchemeParseTest
     [DataRow("0.0000001")]
     [DataRow("922337203685.4775807")]
     [DataRow("120.1234567")]
+    [DataRow("0000000000001")] // 13 digits, value 1
+    [DataRow("0000000000000922337203685.4775807")] // the maximum behind leading zeros
     public void ValidateUri_Amount_AcceptsValidAmounts(string amount)
     {
         Assert.IsTrue(UriScheme.ValidateUri(PayPrefix + "&amount=" + amount).IsValid);
+    }
+
+    // Built in code, not DataRows: attribute strings are stored as UTF-8, which would turn a lone surrogate into U+FFFD.
+    [TestMethod]
+    public void ValidateUri_LoneSurrogate_IsInvalid()
+    {
+        var uris = new[]
+        {
+            PayPrefix + "&msg=a\uD800b", // lone high
+            PayPrefix + "&msg=a\uDC00b", // lone low
+            PayPrefix + "&msg=a\uDC00\uD800b", // a pair in the wrong order
+            PayPrefix + "&msg=a\uD83D", // high at the very end
+            PayPrefix + "&memo_type=MEMO_TEXT&memo=a\uD800b",
+            PayPrefix + "&foo=a\uD800b", // unknown parameter
+            PayPrefix + "&f\uD800o=1", // parameter name
+        };
+        foreach (var uri in uris)
+        {
+            var result = UriScheme.ValidateUri(uri);
+            Assert.IsFalse(result.IsValid, uri);
+            StringAssert.Contains(result.Reason, "surrogate", uri);
+        }
+    }
+
+    [TestMethod]
+    public void ValidateUri_SurrogatePairAndReplacementCharacter_AreValid()
+    {
+        Assert.IsTrue(UriScheme.ValidateUri(PayPrefix + "&msg=a😀b").IsValid); // U+1F600, raw
+        Assert.IsTrue(UriScheme.ValidateUri(PayPrefix + "&msg=a�b").IsValid);
+    }
+
+    // The lone-surrogate check runs on the raw URI only; that covers decoded values because an escaped surrogate
+    // (ill-formed UTF-8) is left escaped by the decoder rather than turned into a lone surrogate.
+    [TestMethod]
+    public void ParseUri_EscapedSurrogate_StaysEscaped()
+    {
+        Assert.AreEqual("a%ED%A0%80b", UriScheme.ParseUri(PayPrefix + "&msg=a%ED%A0%80b").Message);
     }
 
     [TestMethod]

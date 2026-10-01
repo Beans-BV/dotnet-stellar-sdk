@@ -191,4 +191,20 @@ public class UriSchemeSignatureTest
 
         Assert.IsTrue(UriScheme.VerifySignature(signed, signer.AccountId));
     }
+
+    [TestMethod]
+    public void VerifySignature_LoneSurrogateInPlaceOfSignedReplacementCharacter_ReturnsFalse()
+    {
+        // UTF-8 encodes a lone surrogate as U+FFFD, so this URI has the signed URI's payload bytes; it must still
+        // fail, since its msg is different text.
+        using var signer = KeyPair.Random();
+        var signed = UriScheme.SignUri("web+stellar:pay?destination=" + Sep7TestVectors.SonesoAccountId +
+                                       "&msg=a�b&origin_domain=example.com", signer);
+        var swapped = signed.Replace("a�b", "a\uD800b");
+
+        Assert.IsTrue(UriScheme.VerifySignature(signed, signer.AccountId));
+        CollectionAssert.AreEqual(UriScheme.BuildSignaturePayload(UriScheme.RemoveSignatureParameter(signed)),
+            UriScheme.BuildSignaturePayload(UriScheme.RemoveSignatureParameter(swapped)));
+        Assert.IsFalse(UriScheme.VerifySignature(swapped, signer.AccountId));
+    }
 }

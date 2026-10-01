@@ -42,7 +42,8 @@ internal static class Sep7UriParser
         @"^(?=.{1,253}\z)(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+(?:[a-zA-Z]{2,63}|[xX][nN]--(?:[a-zA-Z0-9-]{0,58}[a-zA-Z0-9]))\z",
         RegexOptions.CultureInvariant);
 
-    private static readonly Regex AmountRegex = new(@"^[0-9]{1,12}(?:\.[0-9]{1,7})?\z", RegexOptions.CultureInvariant);
+    // Syntax and scale only: the value range is MaxAmount's, so leading zeros ("0000000000001") are fine.
+    private static readonly Regex AmountRegex = new(@"^[0-9]+(?:\.[0-9]{1,7})?\z", RegexOptions.CultureInvariant);
 
     private static readonly Regex AssetCodeRegex = new(@"^[a-zA-Z0-9]{1,12}\z", RegexOptions.CultureInvariant);
 
@@ -81,6 +82,13 @@ internal static class Sep7UriParser
         if (uri.IndexOf('#') >= 0)
         {
             throw Invalid("The URI must not contain a fragment ('#'); parameter values must be URL-encoded.");
+        }
+        // A signature covers the URI's UTF-8 bytes, and UTF-8 encoding turns every lone surrogate into U+FFFD, so
+        // URIs differing only in one would share a signature. Uri.UnescapeDataString keeps a raw one in the decoded
+        // value (an escaped one, such as %ED%A0%80, stays escaped), so this check on the raw URI covers every value.
+        if (HasLoneSurrogate(uri))
+        {
+            throw Invalid("The URI must not contain a lone UTF-16 surrogate, which has no UTF-8 encoding.");
         }
 
         var rest = uri.Substring(UriScheme.SchemePrefix.Length);
@@ -646,6 +654,22 @@ internal static class Sep7UriParser
                decimal.TryParse(amount, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture,
                    out var value) &&
                value > 0 && value <= MaxAmount;
+    }
+
+    private static bool HasLoneSurrogate(string value)
+    {
+        for (var i = 0; i < value.Length; i++)
+        {
+            if (char.IsHighSurrogate(value[i]) && i + 1 < value.Length && char.IsLowSurrogate(value[i + 1]))
+            {
+                i++;
+            }
+            else if (char.IsSurrogate(value[i]))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static int CountCodePoints(string value)
