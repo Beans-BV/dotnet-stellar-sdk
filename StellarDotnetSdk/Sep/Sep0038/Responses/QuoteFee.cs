@@ -9,8 +9,16 @@ namespace StellarDotnetSdk.Sep.Sep0038.Responses;
 ///     <c>POST /quote</c> and <c>GET /quote/:id</c>). It can be used to show the price components to the user.
 /// </summary>
 /// <remarks>
-///     With <c>fee</c> in the sell asset, <c>sell_amount - fee = price * buy_amount</c>; with it in the buy asset,
-///     <c>sell_amount = price * (buy_amount + fee)</c>. In both cases <c>sell_amount = total_price * buy_amount</c>.
+///     <para>
+///         With <c>fee</c> in the sell asset, <c>sell_amount - fee = price * buy_amount</c>; with it in the buy asset,
+///         <c>sell_amount = price * (buy_amount + fee)</c>. Whatever the fee asset,
+///         <c>sell_amount = total_price * buy_amount</c>.
+///     </para>
+///     <para>
+///         The specification does not require <see cref="Asset" /> to be the sell or the buy asset, so branch on it
+///         before applying either fee formula. The client validates neither the fee's asset nor the sign of any fee
+///         amount.
+///     </para>
 /// </remarks>
 public sealed record QuoteFee
 {
