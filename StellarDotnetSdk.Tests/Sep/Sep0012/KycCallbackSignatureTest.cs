@@ -91,6 +91,34 @@ public class KycCallbackSignatureTest
     }
 
     [TestMethod]
+    [DataRow(999, 0, false, DisplayName = "999 ms late, zero window")]
+    [DataRow(999, 500, false, DisplayName = "999 ms late, 500 ms window")]
+    [DataRow(-500, 600, true, DisplayName = "500 ms early, 600 ms window")]
+    [DataRow(500, 500, true, DisplayName = "late by exactly the window")]
+    [DataRow(-500, 500, true, DisplayName = "early by exactly the window")]
+    [DataRow(501, 500, false, DisplayName = "1 ms past the window")]
+    [DataRow(0, 0, true, DisplayName = "same instant, zero window")]
+    public void Verify_ComparesTheWindowAtSubSecondPrecision(int offsetMilliseconds, int maxAgeMilliseconds,
+        bool expected)
+    {
+        // The signed timestamp is whole seconds, but the current time is not: truncating it would let the window
+        // drift by up to a second.
+        Assert.AreEqual(expected, KycCallbackSignature.Verify(SignedHeader(), Body, Host, AnchorPublicKey,
+            SignedAt.AddMilliseconds(offsetMilliseconds), TimeSpan.FromMilliseconds(maxAgeMilliseconds)));
+    }
+
+    [TestMethod]
+    [DataRow("9223372036854775807", -1, DisplayName = "long.MaxValue against one second before the epoch")]
+    [DataRow("4611686018427387904", 0, DisplayName = "2^62 against the epoch")]
+    public void Verify_WithATimestampThatWouldOverflowLongArithmetic_ReturnsFalse(string timestamp,
+        int nowSecondsFromEpoch)
+    {
+        // In long ticks these timestamps wrap around to the given `now`, so they would look fresh.
+        Assert.IsFalse(KycCallbackSignature.Verify(HeaderSignedOver(timestamp), Body, Host, AnchorPublicKey,
+            DateTimeOffset.UnixEpoch.AddSeconds(nowSecondsFromEpoch)));
+    }
+
+    [TestMethod]
     public void Verify_WithTamperedBody_ReturnsFalse()
     {
         Assert.IsFalse(KycCallbackSignature.Verify(SignedHeader(), Body.Replace("ACCEPTED", "REJECTED"), Host,

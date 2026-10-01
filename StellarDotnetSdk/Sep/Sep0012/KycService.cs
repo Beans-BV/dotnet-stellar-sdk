@@ -818,7 +818,9 @@ public class KycService : IDisposable
         }
         catch (TimeoutRejectedException ex) when (!cancellationToken.IsCancellationRequested)
         {
-            throw CreateTimeoutException(_requestTimeout ?? timeout, ex);
+            // A RetryingHttpMessageHandler's per-request timeout. Its duration is known only for the internal client;
+            // an external client's handler can carry any value, unrelated to HttpClient.Timeout.
+            throw CreateTimeoutException(_requestTimeout, ex);
         }
     }
 
@@ -839,12 +841,17 @@ public class KycService : IDisposable
         return timeout;
     }
 
-    private static TaskCanceledException CreateTimeoutException(TimeSpan timeout, Exception cause)
+    /// <summary>
+    ///     Builds the exception for a timed-out request, naming the duration only when <paramref name="timeout" /> is
+    ///     known.
+    /// </summary>
+    private static TaskCanceledException CreateTimeoutException(TimeSpan? timeout, Exception cause)
     {
-        var seconds = timeout.TotalSeconds.ToString(CultureInfo.InvariantCulture);
-        return new TaskCanceledException(
-            $"The SEP-0012 request was canceled due to the configured timeout of {seconds} seconds elapsing.",
-            new TimeoutException(cause.Message, cause));
+        var message = timeout is { } known
+            ? "The SEP-0012 request was canceled due to the configured timeout of " +
+              $"{known.TotalSeconds.ToString(CultureInfo.InvariantCulture)} seconds elapsing."
+            : "The SEP-0012 request was canceled due to a timeout in the HTTP client's message handler.";
+        return new TaskCanceledException(message, new TimeoutException(cause.Message, cause));
     }
 
     /// <summary>

@@ -153,11 +153,12 @@ public static class KycCallbackSignature
             return false;
         }
 
-        var currentSeconds = (now ?? DateTimeOffset.UtcNow).ToUnixTimeSeconds();
-        // Compare in decimal so an adversarial timestamp near long.MaxValue, against a caller-supplied `now` far in
-        // the past, cannot overflow the subtraction.
-        var age = Math.Abs((decimal)currentSeconds - timestamp);
-        if (age > (decimal)window.TotalSeconds)
+        // Compare at tick precision: ToUnixTimeSeconds would drop the current second's fraction and let the window
+        // drift by up to a second either way. Decimal keeps an adversarial timestamp near long.MaxValue, against a
+        // caller-supplied `now` far in the past, from overflowing the subtraction.
+        var currentTicks = (now ?? DateTimeOffset.UtcNow).UtcTicks - DateTimeOffset.UnixEpoch.UtcTicks;
+        var age = Math.Abs((decimal)currentTicks - (decimal)timestamp * TimeSpan.TicksPerSecond);
+        if (age > window.Ticks)
         {
             return false;
         }
