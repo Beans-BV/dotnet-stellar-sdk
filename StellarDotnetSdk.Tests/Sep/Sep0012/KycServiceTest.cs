@@ -1708,6 +1708,46 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         Assert.AreSame(call, finished, "The body read ignored HttpClient.Timeout.");
         var ex = await AssertThrowsAsync<TaskCanceledException>(() => call);
         Assert.IsInstanceOfType(ex.InnerException, typeof(TimeoutException));
+        StringAssert.Contains(ex.Message, "configured timeout of 0.3 seconds");
+    }
+
+    [TestMethod]
+    [DataRow(false, DisplayName = "HttpClient over RetryingHttpMessageHandler")]
+    [DataRow(true, DisplayName = "HttpClient over RetryingHttpMessageHandler, infinite Timeout")]
+    public async Task ExternalClient_HandlerTimeout_DoesNotClaimTheClientTimeout(bool infiniteClientTimeout)
+    {
+        // The handler's RequestTimeout is not readable from KycService, and has nothing to do with HttpClient.Timeout.
+        var client = new HttpClient(new RetryingHttpMessageHandler(new StallingHandler(), HandlerTimeoutOptions));
+        if (infiniteClientTimeout)
+        {
+            client.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
+        }
+
+        await AssertHandlerTimeoutAsync(client);
+    }
+
+    [TestMethod]
+    public async Task ExternalDefaultStellarSdkHttpClient_RequestTimeout_DoesNotClaimTheClientTimeout()
+    {
+        await AssertHandlerTimeoutAsync(
+            new DefaultStellarSdkHttpClient(resilienceOptions: HandlerTimeoutOptions, innerHandler: new StallingHandler()));
+    }
+
+    private static readonly HttpResilienceOptions HandlerTimeoutOptions =
+        new() { RequestTimeout = TimeSpan.FromMilliseconds(300), MaxRetryCount = 0 };
+
+    private static async Task AssertHandlerTimeoutAsync(HttpClient client)
+    {
+        using var service = new KycService(KycServerUrl, client);
+
+        var call = service.GetCustomerInfoAsync(new GetCustomerInfoRequest { Jwt = Jwt });
+        var finished = await Task.WhenAny(call, Task.Delay(TimeSpan.FromSeconds(20)));
+
+        Assert.AreSame(call, finished, "The handler's RequestTimeout did not end the call.");
+        var ex = await AssertThrowsAsync<TaskCanceledException>(() => call);
+        Assert.IsInstanceOfType(ex.InnerException, typeof(TimeoutException));
+        StringAssert.Contains(ex.Message, "timeout in the HTTP client's message handler");
+        Assert.IsFalse(ex.Message.Contains("seconds"), ex.Message);
     }
 
     [TestMethod]
@@ -2982,6 +3022,17 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         {
             _stop.Cancel();
             _listener.Stop();
+        }
+    }
+
+    /// <summary>A handler that never answers, like a server that stalls before its headers.</summary>
+    private sealed class StallingHandler : HttpMessageHandler
+    {
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            await Task.Delay(System.Threading.Timeout.Infinite, cancellationToken);
+            throw new InvalidOperationException("Unreachable.");
         }
     }
 
