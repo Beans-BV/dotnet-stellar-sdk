@@ -43,6 +43,7 @@ public abstract class SCVal
             SCContractInstance scContractInstance => scContractInstance.ToSCValXdr(),
             SCLedgerKeyContractInstance scLedgerKeyContractInstance => scLedgerKeyContractInstance.ToSCValXdr(),
             SCNonceKey scNonceKey => scNonceKey.ToSCValXdr(),
+            SCExecutableTag scExecutableTag => scExecutableTag.ToSCValXdr(),
             _ => throw new InvalidOperationException("Unknown SCVal type"),
         };
     }
@@ -79,6 +80,7 @@ public abstract class SCVal
             SCValType.SCValTypeEnum.SCV_LEDGER_KEY_CONTRACT_INSTANCE =>
                 SCLedgerKeyContractInstance.FromSCValXdr(xdrVal),
             SCValType.SCValTypeEnum.SCV_LEDGER_KEY_NONCE => SCNonceKey.FromSCValXdr(xdrVal),
+            SCValType.SCValTypeEnum.SCV_EXECUTABLE_TAG => SCExecutableTag.FromSCValXdr(xdrVal),
             _ => throw new InvalidOperationException("Unknown SCVal type"),
         };
     }
@@ -1942,7 +1944,7 @@ public class SCContractInstance : SCVal
     /// <summary>
     ///     Initializes a new <see cref="SCContractInstance" /> with the specified executable and optional storage.
     /// </summary>
-    /// <param name="executable">The contract executable (Wasm or Stellar Asset Contract).</param>
+    /// <param name="executable">The contract executable (Wasm, Stellar Asset Contract, or CAP-85 external reference).</param>
     /// <param name="storage">Optional instance storage as a map.</param>
     public SCContractInstance(ContractExecutable executable, SCMap? storage)
     {
@@ -1951,7 +1953,7 @@ public class SCContractInstance : SCVal
     }
 
     /// <summary>
-    ///     The contract executable (Wasm or Stellar Asset Contract).
+    ///     The contract executable (Wasm, Stellar Asset Contract, or CAP-85 external reference).
     /// </summary>
     public ContractExecutable Executable { get; }
 
@@ -2031,6 +2033,8 @@ public abstract class ContractExecutable
                 ContractExecutableWasm.FromXdr(xdrContractExecutable),
             ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_STELLAR_ASSET =>
                 new ContractExecutableStellarAsset(),
+            ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_EXTERNAL_REF =>
+                ContractExecutableExternalRef.FromXdr(xdrContractExecutable),
             _ => throw new ArgumentOutOfRangeException(nameof(xdrContractExecutable),
                 "Not a valid contract executable type."),
         };
@@ -2111,6 +2115,123 @@ public class ContractExecutableStellarAsset : ContractExecutable
 }
 
 /// <summary>
+///     Represents a <see href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0085.md">CAP-85</see>
+///     external executable reference (<c>CONTRACT_EXECUTABLE_EXTERNAL_REF</c>). Instead of carrying its own Wasm
+///     hash, the contract follows the Wasm hash that <see cref="ExecutableOwner" /> stores in a persistent contract
+///     data entry keyed by <see cref="SCExecutableTag" />(<see cref="Tag" />), so the owner can upgrade every
+///     contract that references the tag at once.
+/// </summary>
+/// <remarks>
+///     The owner can change the referenced Wasm at any time, and so has full control over every contract that follows
+///     the reference. Only reference an owner you trust as much as the contract's own admin.
+///     <para>
+///         Use <see cref="StellarRpcServer.GetExternalRefWasmHash" /> to resolve the reference to the Wasm hash it
+///         currently names.
+///     </para>
+/// </remarks>
+public class ContractExecutableExternalRef : ContractExecutable
+{
+    /// <summary>
+    ///     Initializes a new <see cref="ContractExecutableExternalRef" /> with the raw tag bytes, which are kept
+    ///     verbatim.
+    /// </summary>
+    /// <param name="executableOwner">
+    ///     The contract that owns the executable. Only a contract can hold the tag entry, so any other address type
+    ///     is unresolvable; it is accepted here so that any reference read from the network can be represented.
+    /// </param>
+    /// <param name="tag">
+    ///     The owner-scoped tag naming the executable. It need not be valid UTF-8. The bytes are copied, so changing
+    ///     the array afterwards does not change this reference.
+    /// </param>
+    /// <exception cref="ArgumentNullException">Thrown when either argument is null.</exception>
+    public ContractExecutableExternalRef(ScAddress executableOwner, byte[] tag)
+    {
+        ExecutableOwner = executableOwner ?? throw new ArgumentNullException(nameof(executableOwner));
+        Tag = (byte[])(tag ?? throw new ArgumentNullException(nameof(tag))).Clone();
+    }
+
+    /// <summary>
+    ///     Initializes a new <see cref="ContractExecutableExternalRef" /> with a text tag, encoded as UTF-8.
+    /// </summary>
+    /// <param name="executableOwner">The contract that owns the executable.</param>
+    /// <param name="tag">The owner-scoped tag naming the executable.</param>
+    /// <exception cref="ArgumentNullException">Thrown when either argument is null.</exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when <paramref name="tag" /> contains an unpaired surrogate, which has no UTF-8 encoding; use the
+    ///     <c>byte[]</c> overload for a tag that is not text.
+    /// </exception>
+    public ContractExecutableExternalRef(ScAddress executableOwner, string tag)
+        : this(executableOwner,
+            Util.EncodeUtf8Strict(tag ?? throw new ArgumentNullException(nameof(tag)), nameof(tag)))
+    {
+    }
+
+    /// <summary>
+    ///     The contract that owns the executable and stores the Wasm hash under <see cref="Tag" />.
+    /// </summary>
+    public ScAddress ExecutableOwner { get; }
+
+    /// <summary>
+    ///     The raw tag bytes, exactly as they are encoded on the wire. The array is this instance's own copy; do not
+    ///     modify it.
+    /// </summary>
+    public byte[] Tag { get; }
+
+    /// <summary>
+    ///     Decodes <see cref="Tag" /> as strict UTF-8.
+    /// </summary>
+    /// <param name="value">
+    ///     The tag text, or <see langword="null" /> when <see cref="Tag" /> is not valid UTF-8. Invalid bytes are
+    ///     never replaced with U+FFFD, because such text would identify a different tag.
+    /// </param>
+    /// <returns><see langword="true" /> when the tag is valid UTF-8.</returns>
+    public bool TryGetTagUtf8String(out string? value)
+    {
+        return Util.TryDecodeUtf8(Tag, out value);
+    }
+
+    /// <summary>
+    ///     Creates a new <see cref="ContractExecutableExternalRef" /> from an XDR <see cref="Xdr.ContractExecutable" />
+    ///     object, keeping the raw tag bytes.
+    /// </summary>
+    /// <param name="xdr">The XDR contract executable to convert.</param>
+    /// <returns>A <see cref="ContractExecutableExternalRef" /> instance.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="xdr" /> is not an external reference.</exception>
+    public new static ContractExecutableExternalRef FromXdr(Xdr.ContractExecutable xdr)
+    {
+        if (xdr.Discriminant.InnerValue !=
+            ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_EXTERNAL_REF)
+        {
+            throw new ArgumentException("Not a ContractExecutableExternalRef", nameof(xdr));
+        }
+
+        return new ContractExecutableExternalRef(
+            ScAddress.FromXdr(xdr.ExternalRef.ExecutableOwner),
+            xdr.ExternalRef.Tag.InnerBytes);
+    }
+
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>A <see cref="Xdr.ContractExecutable" /> XDR object.</returns>
+    public override Xdr.ContractExecutable ToXdr()
+    {
+        return new Xdr.ContractExecutable
+        {
+            Discriminant = new ContractExecutableType
+            {
+                InnerValue = ContractExecutableType.ContractExecutableTypeEnum.CONTRACT_EXECUTABLE_EXTERNAL_REF,
+            },
+            ExternalRef = new Xdr.ContractExecutableExternalRef
+            {
+                ExecutableOwner = ExecutableOwner.ToXdr(),
+                Tag = new Xdr.SCString { InnerBytes = (byte[])Tag.Clone() },
+            },
+        };
+    }
+}
+
+/// <summary>
 ///     Represents a Soroban nonce key used for authorization nonce tracking.
 /// </summary>
 public class SCNonceKey : SCVal
@@ -2180,5 +2301,120 @@ public class SCNonceKey : SCVal
         }
 
         return FromXdr(xdrVal.NonceKey);
+    }
+}
+
+/// <summary>
+///     Represents a <see href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0085.md">CAP-85</see>
+///     executable tag (<c>SCV_EXECUTABLE_TAG</c>): the owner-scoped name of an executable. Used as the key of a
+///     persistent contract data entry on the owner contract, it names the entry that holds the Wasm hash a
+///     <see cref="ContractExecutableExternalRef" /> currently resolves to.
+/// </summary>
+/// <remarks>
+///     A tag is an unbounded byte string and need not be valid UTF-8. The ledger key of the entry is built from the
+///     exact bytes, so <see cref="InnerValue" /> is the source of truth; use <see cref="TryGetUtf8String" /> to read
+///     it as text.
+/// </remarks>
+public class SCExecutableTag : SCVal
+{
+    /// <summary>
+    ///     Initializes a new <see cref="SCExecutableTag" /> from the raw tag bytes, which are kept verbatim.
+    /// </summary>
+    /// <param name="tag">
+    ///     The tag bytes. They need not be valid UTF-8. The bytes are copied, so changing the array afterwards does
+    ///     not change this tag.
+    /// </param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="tag" /> is null.</exception>
+    public SCExecutableTag(byte[] tag)
+    {
+        InnerValue = (byte[])(tag ?? throw new ArgumentNullException(nameof(tag))).Clone();
+    }
+
+    /// <summary>
+    ///     Initializes a new <see cref="SCExecutableTag" /> from a text tag, encoded as UTF-8.
+    /// </summary>
+    /// <param name="tag">The tag text.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="tag" /> is null.</exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when <paramref name="tag" /> contains an unpaired surrogate, which has no UTF-8 encoding; use the
+    ///     <c>byte[]</c> overload for a tag that is not text.
+    /// </exception>
+    public SCExecutableTag(string tag)
+    {
+        if (tag == null)
+        {
+            throw new ArgumentNullException(nameof(tag));
+        }
+        InnerValue = Util.EncodeUtf8Strict(tag, nameof(tag));
+    }
+
+    /// <summary>
+    ///     The raw tag bytes, exactly as they are encoded on the wire. The array is this instance's own copy; do not
+    ///     modify it.
+    /// </summary>
+    public byte[] InnerValue { get; }
+
+    /// <summary>
+    ///     Decodes the tag as strict UTF-8.
+    /// </summary>
+    /// <param name="value">
+    ///     The tag text, or <see langword="null" /> when <see cref="InnerValue" /> is not valid UTF-8. Invalid bytes are
+    ///     never replaced with U+FFFD, because such text would identify a different tag.
+    /// </param>
+    /// <returns><see langword="true" /> when the tag is valid UTF-8.</returns>
+    public bool TryGetUtf8String(out string? value)
+    {
+        return Util.TryDecodeUtf8(InnerValue, out value);
+    }
+
+    /// <summary>
+    ///     Converts this instance to its XDR representation.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCString" /> XDR object holding the raw tag bytes.</returns>
+    public new Xdr.SCString ToXdr()
+    {
+        return new Xdr.SCString { InnerBytes = (byte[])InnerValue.Clone() };
+    }
+
+    /// <summary>
+    ///     Converts this instance to an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <returns>An <see cref="Xdr.SCVal" /> XDR object of type <c>SCV_EXECUTABLE_TAG</c>.</returns>
+    public Xdr.SCVal ToSCValXdr()
+    {
+        return new Xdr.SCVal
+        {
+            Discriminant = new SCValType
+            {
+                InnerValue = SCValType.SCValTypeEnum.SCV_EXECUTABLE_TAG,
+            },
+            ExecutableTag = ToXdr(),
+        };
+    }
+
+    /// <summary>
+    ///     Creates a new <see cref="SCExecutableTag" /> from an XDR <see cref="Xdr.SCString" /> object, keeping its raw
+    ///     bytes.
+    /// </summary>
+    /// <param name="xdrSCString">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCExecutableTag" /> instance.</returns>
+    public static SCExecutableTag FromXdr(Xdr.SCString xdrSCString)
+    {
+        return new SCExecutableTag(xdrSCString.InnerBytes);
+    }
+
+    /// <summary>
+    ///     Creates a new <see cref="SCExecutableTag" /> from an XDR <see cref="Xdr.SCVal" /> object.
+    /// </summary>
+    /// <param name="xdrVal">The XDR value to convert.</param>
+    /// <returns>An <see cref="SCExecutableTag" /> instance.</returns>
+    public static SCExecutableTag FromSCValXdr(Xdr.SCVal xdrVal)
+    {
+        if (xdrVal.Discriminant.InnerValue != SCValType.SCValTypeEnum.SCV_EXECUTABLE_TAG)
+        {
+            throw new ArgumentException("Not an SCExecutableTag", nameof(xdrVal));
+        }
+
+        return FromXdr(xdrVal.ExecutableTag);
     }
 }

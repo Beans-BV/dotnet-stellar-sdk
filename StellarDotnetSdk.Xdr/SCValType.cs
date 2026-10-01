@@ -60,7 +60,9 @@ namespace StellarDotnetSdk.Xdr;
 //      // symbolic SCVals used as the key for ledger entries for a contract's
 //      // instance and an address' nonce, respectively.
 //      SCV_LEDGER_KEY_CONTRACT_INSTANCE = 20,
-//      SCV_LEDGER_KEY_NONCE = 21
+//      SCV_LEDGER_KEY_NONCE = 21,
+//  
+//      SCV_EXECUTABLE_TAG = 22
 //  };
 
 //  ===========================================================================
@@ -90,6 +92,7 @@ public class SCValType
         SCV_CONTRACT_INSTANCE = 19,
         SCV_LEDGER_KEY_CONTRACT_INSTANCE = 20,
         SCV_LEDGER_KEY_NONCE = 21,
+        SCV_EXECUTABLE_TAG = 22,
     }
 
     public SCValTypeEnum InnerValue { get; set; }
@@ -131,6 +134,7 @@ public class SCValType
             case 19: return Create(SCValTypeEnum.SCV_CONTRACT_INSTANCE);
             case 20: return Create(SCValTypeEnum.SCV_LEDGER_KEY_CONTRACT_INSTANCE);
             case 21: return Create(SCValTypeEnum.SCV_LEDGER_KEY_NONCE);
+            case 22: return Create(SCValTypeEnum.SCV_EXECUTABLE_TAG);
             default:
                 throw new InvalidDataException("Unknown enum value: " + value);
         }

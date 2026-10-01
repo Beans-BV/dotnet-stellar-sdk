@@ -27,6 +27,14 @@ namespace StellarDotnetSdk.Xdr;
 //          void;
 //      case STELLAR_VALUE_SIGNED:
 //          LedgerCloseValueSignature lcValueSignature;
+//      case STELLAR_VALUE_EMPTY_TX_SET:
+//          struct
+//          {
+//              Hash txSetHash;
+//              Hash previousLedgerHash;
+//              uint32 previousLedgerVersion;
+//              LedgerCloseValueSignature lcValueSignature;
+//          } proposedValue;
 //      }
 //      ext;
 //  };
@@ -89,6 +97,7 @@ public class StellarValue
         public StellarValueType Discriminant { get; set; } = new();
 
         public LedgerCloseValueSignature LcValueSignature { get; set; }
+        public StellarValueProposedValue ProposedValue { get; set; }
 
         public static void Encode(XdrDataOutputStream stream, StellarValueExt encodedStellarValueExt)
         {
@@ -99,6 +108,9 @@ public class StellarValue
                     break;
                 case StellarValueType.StellarValueTypeEnum.STELLAR_VALUE_SIGNED:
                     LedgerCloseValueSignature.Encode(stream, encodedStellarValueExt.LcValueSignature);
+                    break;
+                case StellarValueType.StellarValueTypeEnum.STELLAR_VALUE_EMPTY_TX_SET:
+                    StellarValueProposedValue.Encode(stream, encodedStellarValueExt.ProposedValue);
                     break;
                 default:
                     throw new InvalidDataException("Unknown discriminant value: " + encodedStellarValueExt.Discriminant.InnerValue);
@@ -120,6 +132,9 @@ public class StellarValue
                 case StellarValueType.StellarValueTypeEnum.STELLAR_VALUE_SIGNED:
                     decodedStellarValueExt.LcValueSignature = LedgerCloseValueSignature.Decode(stream, maxDepth);
                     break;
+                case StellarValueType.StellarValueTypeEnum.STELLAR_VALUE_EMPTY_TX_SET:
+                    decodedStellarValueExt.ProposedValue = StellarValueProposedValue.Decode(stream, maxDepth);
+                    break;
                 default:
                     throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
             }
@@ -130,6 +145,40 @@ public class StellarValue
         public static StellarValueExt Decode(XdrDataInputStream stream)
         {
             return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
+        }
+
+        public class StellarValueProposedValue
+        {
+            public Hash TxSetHash { get; set; }
+            public Hash PreviousLedgerHash { get; set; }
+            public Uint32 PreviousLedgerVersion { get; set; }
+            public LedgerCloseValueSignature LcValueSignature { get; set; }
+
+            public static void Encode(XdrDataOutputStream stream, StellarValueProposedValue encodedStellarValueProposedValue)
+            {
+                Hash.Encode(stream, encodedStellarValueProposedValue.TxSetHash);
+                Hash.Encode(stream, encodedStellarValueProposedValue.PreviousLedgerHash);
+                Uint32.Encode(stream, encodedStellarValueProposedValue.PreviousLedgerVersion);
+                LedgerCloseValueSignature.Encode(stream, encodedStellarValueProposedValue.LcValueSignature);
+            }
+
+            public static StellarValueProposedValue Decode(XdrDataInputStream stream, int maxDepth)
+            {
+                if (maxDepth <= 0)
+                    throw new InvalidDataException("Maximum decoding depth reached while decoding StellarValueProposedValue");
+                maxDepth -= 1;
+                var decodedStellarValueProposedValue = new StellarValueProposedValue();
+                decodedStellarValueProposedValue.TxSetHash = Hash.Decode(stream, maxDepth);
+                decodedStellarValueProposedValue.PreviousLedgerHash = Hash.Decode(stream, maxDepth);
+                decodedStellarValueProposedValue.PreviousLedgerVersion = Uint32.Decode(stream, maxDepth);
+                decodedStellarValueProposedValue.LcValueSignature = LedgerCloseValueSignature.Decode(stream, maxDepth);
+                return decodedStellarValueProposedValue;
+            }
+
+            public static StellarValueProposedValue Decode(XdrDataInputStream stream)
+            {
+                return Decode(stream, XdrDataInputStream.DefaultMaxDepth);
+            }
         }
     }
 }

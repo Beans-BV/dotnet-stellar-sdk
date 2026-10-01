@@ -52,6 +52,16 @@ public class XdrDataOutputStream
         WriteVarOpaque((uint)bytes.Length, bytes);
     }
 
+    /// <summary>
+    ///     Write the raw bytes of an XDR string verbatim, without assuming any text encoding.
+    /// </summary>
+    /// <param name="bytes">The string bytes.</param>
+    public void WriteStringBytes(byte[] bytes)
+    {
+        Throw.IfNull(bytes, nameof(bytes));
+        WriteVarOpaque((uint)bytes.Length, bytes);
+    }
+
     public void WriteIntArray(int[] a)
     {
         WriteInt(a.Length);

@@ -55,6 +55,15 @@ public class XdrDataInputStream
     }
 
     /// <summary>
+    ///     Read the raw bytes of an XDR string from stream, without assuming any text encoding.
+    /// </summary>
+    /// <returns>The string bytes exactly as they appear on the wire.</returns>
+    public byte[] ReadStringBytes()
+    {
+        return ReadVarOpaque(uint.MaxValue);
+    }
+
+    /// <summary>
     ///     Read a string from stream.
     /// </summary>
     /// <returns></returns>

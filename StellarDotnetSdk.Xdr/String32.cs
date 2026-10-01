@@ -22,11 +22,27 @@ public class String32
         InnerValue = value;
     }
 
-    public string InnerValue { get; set; }
+    /// <summary>
+    ///     The raw bytes of the string exactly as they appear on the wire. They are not
+    ///     guaranteed to be valid UTF-8 and are encoded and decoded verbatim.
+    /// </summary>
+    public byte[] InnerBytes { get; set; }
+
+    /// <summary>
+    ///     A UTF-8 view of <see cref="InnerBytes" />. The getter replaces invalid UTF-8 with
+    ///     U+FFFD, so it is lossy for non-UTF-8 bytes, and decodes again on every read; the setter
+    ///     replaces <see cref="InnerBytes" /> with the UTF-8 encoding of the value, in which an
+    ///     unpaired surrogate becomes U+FFFD.
+    /// </summary>
+    public string InnerValue
+    {
+        get => InnerBytes == null ? null : System.Text.Encoding.UTF8.GetString(InnerBytes);
+        set => InnerBytes = value == null ? null : System.Text.Encoding.UTF8.GetBytes(value);
+    }
 
     public static void Encode(XdrDataOutputStream stream, String32 encodedString32)
     {
-        stream.WriteString(encodedString32.InnerValue);
+        stream.WriteStringBytes(encodedString32.InnerBytes);
     }
 
     public static String32 Decode(XdrDataInputStream stream, int maxDepth)
@@ -35,7 +51,7 @@ public class String32
             throw new InvalidDataException("Maximum decoding depth reached while decoding String32");
         maxDepth -= 1;
         var decodedString32 = new String32();
-        decodedString32.InnerValue = stream.ReadString();
+        decodedString32.InnerBytes = stream.ReadStringBytes();
         return decodedString32;
     }
 

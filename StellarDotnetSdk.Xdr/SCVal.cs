@@ -67,6 +67,9 @@ namespace StellarDotnetSdk.Xdr;
 //      void;
 //  case SCV_LEDGER_KEY_NONCE:
 //      SCNonceKey nonce_key;
+//  
+//  case SCV_EXECUTABLE_TAG:
+//      SCString executable_tag;
 //  };
 
 //  ===========================================================================
@@ -94,6 +97,7 @@ public class SCVal
     public SCAddress Address { get; set; }
     public SCContractInstance Instance { get; set; }
     public SCNonceKey NonceKey { get; set; }
+    public SCString ExecutableTag { get; set; }
 
     public static void Encode(XdrDataOutputStream stream, SCVal encodedSCVal)
     {
@@ -179,6 +183,9 @@ public class SCVal
                 break;
             case SCValType.SCValTypeEnum.SCV_LEDGER_KEY_NONCE:
                 SCNonceKey.Encode(stream, encodedSCVal.NonceKey);
+                break;
+            case SCValType.SCValTypeEnum.SCV_EXECUTABLE_TAG:
+                SCString.Encode(stream, encodedSCVal.ExecutableTag);
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + encodedSCVal.Discriminant.InnerValue);
@@ -266,6 +273,9 @@ public class SCVal
                 break;
             case SCValType.SCValTypeEnum.SCV_LEDGER_KEY_NONCE:
                 decodedSCVal.NonceKey = SCNonceKey.Decode(stream, maxDepth);
+                break;
+            case SCValType.SCValTypeEnum.SCV_EXECUTABLE_TAG:
+                decodedSCVal.ExecutableTag = SCString.Decode(stream, maxDepth);
                 break;
             default:
                 throw new InvalidDataException("Unknown discriminant value: " + discriminant.InnerValue);
