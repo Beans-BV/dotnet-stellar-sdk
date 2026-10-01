@@ -322,7 +322,8 @@ public class UriScheme : IDisposable
     ///         </item>
     ///         <item>
     ///             <c>callback</c> is <c>url:</c> plus an absolute http(s) URL without whitespace, credentials, a
-    ///             fragment, a malformed percent escape or a backslash (SEP-7
+    ///             host with no valid IDN form, a fragment, a malformed percent escape, a backslash or a
+    ///             <c>.</c>/<c>..</c> path segment (SEP-7
     ///             allows http; <see cref="SubmitToCallbackAsync" /> still refuses it except for loopback addresses),
     ///             <c>msg</c> is at most 300
     ///             characters, <c>origin_domain</c> is a fully qualified domain name, <c>signature</c> is 64
@@ -557,7 +558,8 @@ public class UriScheme : IDisposable
     /// <remarks>
     ///     Only the <c>URI_REQUEST_SIGNING_KEY</c> of the stellar.toml's root table is read, with a non-recursive
     ///     reader rather than the general <see cref="StellarDotnetSdk.Sep.Sep0001.StellarToml" /> parser: the domain
-    ///     is chosen by whoever wrote the URI, and that parser overflows the stack on small hostile documents.
+    ///     is chosen by whoever wrote the URI, and that parser overflows the stack on small hostile documents. The
+    ///     whole document must be valid UTF-8, as TOML requires, including the tables after the root one.
     ///     Redirects of the stellar.toml request that reach this class are followed, at most 5 of them and only to
     ///     https URLs on a fully qualified domain name, the default port and no user info, so a redirect reaches no
     ///     further than an origin domain could. With the SDK's own client that is every redirect; a client that
@@ -572,7 +574,7 @@ public class UriScheme : IDisposable
     /// <exception cref="OriginDomainStellarTomlException">
     ///     Thrown when the stellar.toml cannot be fetched (including a connection dropped mid-response, a response
     ///     over 512 KiB, a redirect this class does not follow, and a request the client's resilience pipeline rejected or
-    ///     timed out) or its root table cannot be read.
+    ///     timed out), is not valid UTF-8, or its root table cannot be read.
     /// </exception>
     /// <exception cref="NoUriRequestSigningKeyFoundException">Thrown when the stellar.toml has no <c>URI_REQUEST_SIGNING_KEY</c>.</exception>
     /// <exception cref="InvalidUriRequestSigningKeyException">Thrown when the published key is not a valid account id.</exception>
@@ -875,8 +877,9 @@ public class UriScheme : IDisposable
     /// </returns>
     /// <exception cref="ArgumentException">
     ///     Thrown when the URL is not absolute https (plain http is allowed only for loopback addresses), or when it
-    ///     contains whitespace, control or invisible formatting characters, credentials, a fragment, a malformed
-    ///     percent escape or a backslash, which a callback in a parsed request cannot either.
+    ///     contains whitespace, control or invisible formatting characters, credentials, a host with no valid IDN
+    ///     form, a fragment, a malformed percent escape, a backslash or a <c>.</c>/<c>..</c> path segment, which a
+    ///     callback in a parsed request cannot either.
     /// </exception>
     /// <exception cref="HttpRequestException">
     ///     Thrown when the POST fails (including a connection dropped mid-response and a request the client's
@@ -924,7 +927,8 @@ public class UriScheme : IDisposable
             string body;
             try
             {
-                body = await ReadBodyBoundedAsync(response, timeout.Token).ConfigureAwait(false);
+                body = DecodeCallbackBody(await ReadBodyBoundedAsync(response, timeout.Token).ConfigureAwait(false),
+                    response.Content.Headers.ContentType?.CharSet);
             }
             catch (HttpRequestException ex)
             {
@@ -1102,7 +1106,7 @@ public class UriScheme : IDisposable
     {
         // The domain passed IsFullyQualifiedDomainName, so it cannot smuggle a port, path or userinfo into the URL.
         var tomlUri = new Uri($"https://{domain}/.well-known/stellar.toml");
-        string body;
+        byte[] body;
         using (var timeout = CreateExchangeTimeout(cancellationToken))
         {
             try
@@ -1121,9 +1125,19 @@ public class UriScheme : IDisposable
             }
         }
 
+        string toml;
         try
         {
-            return Sep7StellarTomlReader.ReadUriRequestSigningKey(body);
+            // TOML must be valid UTF-8; a lenient decoder would quietly replace what it cannot read.
+            toml = StrictUtf8.GetString(body);
+        }
+        catch (DecoderFallbackException ex)
+        {
+            throw new OriginDomainStellarTomlException(domain, "The stellar.toml is not valid UTF-8.", ex);
+        }
+        try
+        {
+            return Sep7StellarTomlReader.ReadUriRequestSigningKey(toml);
         }
         catch (FormatException ex)
         {
@@ -1137,7 +1151,7 @@ public class UriScheme : IDisposable
     ///     SDK's own client does not follow any), each to an https URL on a fully qualified domain name, the default
     ///     port and no user info only (see <see cref="IsPermittedRedirectTarget" />).
     /// </summary>
-    private async Task<string> GetStellarTomlBodyAsync(string domain, Uri tomlUri,
+    private async Task<byte[]> GetStellarTomlBodyAsync(string domain, Uri tomlUri,
         CancellationToken cancellationToken)
     {
         var target = tomlUri;
@@ -1253,10 +1267,10 @@ public class UriScheme : IDisposable
     }
 
     /// <summary>
-    ///     Reads an HTTP response body into a string with an upper size bound. Throws
+    ///     Reads an HTTP response body with an upper size bound, leaving the decoding to the caller. Throws
     ///     <see cref="HttpRequestException" /> when the body exceeds <see cref="MaxResponseBodyBytes" />.
     /// </summary>
-    private static async Task<string> ReadBodyBoundedAsync(HttpResponseMessage response,
+    private static async Task<byte[]> ReadBodyBoundedAsync(HttpResponseMessage response,
         CancellationToken cancellationToken)
     {
         if (response.Content.Headers.ContentLength is long contentLength &&
@@ -1279,6 +1293,44 @@ public class UriScheme : IDisposable
             buffer.Write(chunk, 0, read);
         }
 
-        return Encoding.UTF8.GetString(buffer.GetBuffer(), 0, (int)buffer.Length);
+        return buffer.ToArray();
+    }
+
+    /// <summary>
+    ///     Decodes a callback's answer: a byte order mark (UTF-8, UTF-16 LE or BE) decides the encoding and is
+    ///     dropped; otherwise the charset its <c>Content-Type</c> declares is used if this runtime supports it, else
+    ///     UTF-8. Bytes the encoding cannot decode become U+FFFD, whatever fallback a registered encoding provider
+    ///     sets: the callback already has the transaction, so its answer is reported rather than rejected.
+    /// </summary>
+    private static string DecodeCallbackBody(byte[] body, string? charset)
+    {
+        if (body.Length >= 3 && body[0] == 0xEF && body[1] == 0xBB && body[2] == 0xBF)
+        {
+            return Encoding.UTF8.GetString(body, 3, body.Length - 3);
+        }
+        if (body.Length >= 2 && body[0] == 0xFF && body[1] == 0xFE)
+        {
+            return Encoding.Unicode.GetString(body, 2, body.Length - 2);
+        }
+        if (body.Length >= 2 && body[0] == 0xFE && body[1] == 0xFF)
+        {
+            return Encoding.BigEndianUnicode.GetString(body, 2, body.Length - 2);
+        }
+        var encoding = Encoding.UTF8;
+        var name = charset?.Trim().Trim('"');
+        if (!string.IsNullOrEmpty(name))
+        {
+            try
+            {
+                encoding = Encoding.GetEncoding(name, EncoderFallback.ReplacementFallback,
+                    new DecoderReplacementFallback("\uFFFD"));
+            }
+            // ArgumentException: unknown to this runtime (code pages need CodePagesEncodingProvider).
+            // NotSupportedException: known but disabled, such as UTF-7.
+            catch (Exception ex) when (ex is ArgumentException or NotSupportedException)
+            {
+            }
+        }
+        return encoding.GetString(body);
     }
 }

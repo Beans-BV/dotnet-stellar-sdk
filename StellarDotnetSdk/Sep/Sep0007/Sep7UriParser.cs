@@ -316,11 +316,14 @@ internal static class Sep7UriParser
     /// <summary>
     ///     The checks every callback URL passes, in a parsed request and in
     ///     <see cref="UriScheme.SubmitToCallbackAsync" /> alike: no whitespace, control or invisible formatting
-    ///     characters, no credentials, no fragment, no malformed percent escape and no backslash. The last three make
-    ///     the URL shown differ from the one POSTed to: HTTP never sends a fragment, and <see cref="System.Uri" />
-    ///     re-escapes a stray <c>%</c> (<c>/%ZZ</c> is requested as <c>/%25ZZ</c>) and rewrites a backslash
-    ///     (<c>/a\b</c> is requested as <c>/a/b</c>, <c>?q=\</c> as <c>?q=%5C</c>). Returns why <paramref name="url" />
-    ///     (without its <c>url:</c> prefix) is refused, or <c>null</c>.
+    ///     characters, no credentials, a host whose IDN form HttpClient can connect to, no
+    ///     fragment, no malformed percent escape, no backslash and no <c>.</c> or
+    ///     <c>..</c> path segment. The last four make the URL shown differ from the one POSTed to: HTTP never sends a
+    ///     fragment, and <see cref="System.Uri" /> re-escapes a stray <c>%</c> (<c>/%ZZ</c> is requested as
+    ///     <c>/%25ZZ</c>), rewrites a backslash (<c>/a\b</c> is requested as <c>/a/b</c>, <c>?q=\</c> as
+    ///     <c>?q=%5C</c>) and removes dot segments (<c>/allowed/../other</c> is requested as <c>/other</c>, which
+    ///     would pass a caller's check for the <c>/allowed/</c> prefix). Returns why <paramref name="url" /> (without
+    ///     its <c>url:</c> prefix) is refused, or <c>null</c>.
     /// </summary>
     internal static string? CallbackUrlProblem(string url, System.Uri parsed)
     {
@@ -332,6 +335,25 @@ internal static class Sep7UriParser
         if (HasUserInfo(parsed))
         {
             return "must not contain credentials (user info)";
+        }
+        // Uri accepts some hosts HttpClient cannot send to: IdnHost throws for one with a fullwidth solidus
+        // (U+FF0F), maps others to characters no host name may hold ('a⑴b' becomes 'a(1)b'), and returns a label
+        // whose punycode would exceed 63 characters unconverted, as Unicode. HttpClient then fails before
+        // connecting, which must not pass for a delivered request. It builds its connection authority from IdnHost
+        // with UriBuilder and sends it in an ASCII-only Host header, so both conditions are checked here.
+        string idnHost;
+        try
+        {
+            idnHost = parsed.IdnHost;
+            _ = new UriBuilder(System.Uri.UriSchemeHttp, idnHost, parsed.Port).Uri;
+        }
+        catch (UriFormatException)
+        {
+            return "must not contain a host name without a valid internationalized (IDN) form";
+        }
+        if (idnHost.Any(c => c > '\u007F'))
+        {
+            return "must not contain a host name without a valid internationalized (IDN) form";
         }
         // KeepDelimiter so an empty trailing '#' counts too.
         if (parsed.GetComponents(UriComponents.Fragment | UriComponents.KeepDelimiter, UriFormat.UriEscaped).Length > 0)
@@ -346,7 +368,41 @@ internal static class Sep7UriParser
         {
             return "must not contain a backslash, which is not sent as written";
         }
+        if (HasDotSegment(url))
+        {
+            return "must not contain a '.' or '..' path segment, which is not sent as written";
+        }
         return null;
+    }
+
+    /// <summary>
+    ///     Whether the path of <paramref name="url" /> (an absolute http(s) URL without a backslash or fragment) has a
+    ///     segment that is <c>.</c> or <c>..</c>, with either dot written as <c>%2E</c> or <c>%2e</c>, as
+    ///     <see cref="System.Uri" /> removes those. The query is left alone, as Uri does.
+    /// </summary>
+    private static bool HasDotSegment(string url)
+    {
+        var schemeEnd = url.IndexOf("://", StringComparison.Ordinal);
+        if (schemeEnd < 0)
+        {
+            return false;
+        }
+        var pathStart = url.IndexOfAny(new[] { '/', '?' }, schemeEnd + 3);
+        if (pathStart < 0 || url[pathStart] == '?')
+        {
+            return false;
+        }
+        var queryStart = url.IndexOf('?', pathStart);
+        var path = queryStart < 0 ? url.Substring(pathStart) : url.Substring(pathStart, queryStart - pathStart);
+        foreach (var segment in path.Split('/'))
+        {
+            var dots = segment.Replace("%2E", ".").Replace("%2e", ".");
+            if (dots is "." or "..")
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static bool HasMalformedPercentEscape(string value)

@@ -809,8 +809,8 @@ public class UriSchemeParseTest
         Assert.IsFalse(UriScheme.ValidateUri(PayPrefix + "&callback=" + callback).IsValid);
     }
 
-    // The URL a wallet shows must be the one POSTed to: HTTP never sends a fragment, and Uri re-escapes a stray '%'
-    // and rewrites a backslash.
+    // The URL a wallet shows must be the one POSTed to: HTTP never sends a fragment, and Uri re-escapes a stray '%',
+    // rewrites a backslash and removes '.' and '..' path segments.
     [TestMethod]
     [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fcb%23frag", "fragment")]
     [DataRow("url%3Ahttps%3A%2F%2Fevil.example%23.good.example", "fragment")] // reads as good.example, POSTs to evil
@@ -824,7 +824,14 @@ public class UriSchemeParseTest
     [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fa%5Cb", "backslash")] // requested as /a/b
     [DataRow("url%3Ahttps%3A%5C%5Ccb.example.com%2Fx", "backslash")] // https:\\host, requested as https://host
     [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fx%3Fq%3D%5C", "backslash")] // requested as ?q=%5C
-    public void ValidateUri_CallbackWithFragmentMalformedEscapeOrBackslash_IsInvalid(string callback, string reason)
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fallowed%2F..%2Fother", "'..'")] // requested as /other
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fa%2F.%2Fb", "'..'")] // requested as /a/b
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fa%2F%252e%252E%2Fb", "'..'")] // escaped dots, requested as /b
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fa%2F.%252E%2Fb", "'..'")] // one dot escaped
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fa%2F..", "'..'")] // trailing, requested as /
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2F.", "'..'")] // requested as /
+    [DataRow("url%3Ahttps%3A%2F%2Fallowed.com%EF%BC%8Fevil.com%2Fa", "IDN")] // U+FF0F: HttpClient cannot send it
+    public void ValidateUri_CallbackNotSentAsWritten_IsInvalid(string callback, string reason)
     {
         var result = UriScheme.ValidateUri(PayPrefix + "&callback=" + callback);
 
@@ -839,6 +846,24 @@ public class UriSchemeParseTest
     public void ValidateUri_CallbackWithWellFormedEscapes_IsValid(string callback)
     {
         Assert.IsTrue(UriScheme.ValidateUri(PayPrefix + "&callback=" + callback).IsValid);
+    }
+
+    // Dots that are not a whole '.' or '..' path segment are sent as written, so they stay allowed.
+    [TestMethod]
+    [DataRow("https://cb.example.com/a/.../b")]
+    [DataRow("https://cb.example.com/a/..;/b")]
+    [DataRow("https://cb.example.com/a/x../b")]
+    [DataRow("https://cb.example.com/a/..x/b")]
+    [DataRow("https://cb.example.com/a/.well-known/cb")]
+    [DataRow("https://cb.example.com/a/%252e%252e/b")] // a double-escaped dot is the literal text %2e
+    [DataRow("https://cb.example.com/cb?next=/../x")] // the query is not normalized
+    [DataRow("https://cb.example.com?x=..")]
+    public void ValidateUri_CallbackWithDotsThatAreNotDotSegments_IsValid(string url)
+    {
+        Assert.IsTrue(UriScheme.ValidateUri(PayPrefix + "&callback=" + Uri.EscapeDataString("url:" + url)).IsValid);
+        // And it is requested as written, which is what the rule protects.
+        var written = url.Substring("https://cb.example.com".Length);
+        Assert.AreEqual(written.StartsWith("/") ? written : "/" + written, new Uri(url).PathAndQuery);
     }
 
     // Outside callback a stray '%' is kept literally, as URLSearchParams and Python's parse_qs read it: the text a

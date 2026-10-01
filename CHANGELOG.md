@@ -84,8 +84,8 @@ All notable changes to this project are documented here. The format is based on
     `destination` also takes a SEP-2 federation address; an `amount` is a positive decimal of at most
     7 decimal places and at most the int64 stroop maximum, leading zeros allowed (`0000000000001` is 1);
     hash memos must be exactly 32 bytes; account ids must be upper case; `callback` URLs may not carry
-    whitespace, invisible characters, credentials, a fragment, a malformed percent escape or a
-    backslash. Rejections carry a typed
+    whitespace, invisible characters, credentials, a host with no valid IDN form, a fragment, a
+    malformed percent escape, a backslash or a `.`/`..` path segment. Rejections carry a typed
     `Sep7ValidationResult.Error`, and values echoed into messages are escaped and length-clamped. Query
     values are decoded like an HTML form (`+` is a space, as `URLSearchParams` and the other Stellar SDKs
     write it), except in base64 values, where a raw `+` stays a `+`.
@@ -99,6 +99,8 @@ All notable changes to this project are documented here. The format is based on
     read, with a non-recursive reader: the domain is chosen by whoever wrote the URI, and the general
     `StellarToml` parser overflows the stack on a few kilobytes of hostile TOML. The stellar.toml and
     callback responses are read with a 512 KiB cap and within the HTTP client's `Timeout`, body included;
+    the whole stellar.toml must be valid UTF-8, as TOML requires, and a callback's answer is decoded by its
+    byte order mark, else by its `Content-Type` charset if .NET supports it, else as UTF-8;
     connection failures, including ones mid-body and resilience-pipeline rejections, surface as
     `OriginDomainStellarTomlException` (so `IsValidSignedUriAsync` reports them) or, for the callback, as
     `HttpRequestException`.
@@ -106,13 +108,13 @@ All notable changes to this project are documented here. The format is based on
     the signed envelope to the request's `callback` (https only, http for loopback) or submits it to
     Horizon; `SubmitTransactionAsync`/`SubmitToCallbackAsync` hand on a transaction the wallet signed
     itself, and `SubmitToCallbackAsync` refuses the same callback URLs a parsed request cannot carry
-    (whitespace, invisible characters, user info, a fragment, a malformed percent escape, a
-    backslash); a callback's non-2xx answer or a transaction Horizon rejects is returned, with
-    `Sep7SubmitResult.IsSuccess`. With the SDK's own HTTP client the callback POST follows no redirects
-    (a 3xx is returned as the callback's answer) and the stellar.toml fetch follows up to 5, https only,
-    each to a fully qualified domain name (not under `localhost`) on the default port without user info;
-    a caller-supplied client that follows redirects itself is detected on the callback path after the
-    fact.
+    (whitespace, invisible characters, user info, a host with no valid IDN form, a fragment, a malformed
+    percent escape, a backslash or a `.`/`..` path segment); a callback's non-2xx answer or a
+    transaction Horizon rejects is returned, with `Sep7SubmitResult.IsSuccess`. With the SDK's own HTTP
+    client the callback POST follows no redirects (a 3xx is returned as the callback's answer) and the
+    stellar.toml fetch follows up to 5, https only, each to a fully qualified domain name (not under
+    `localhost`) on the default port without user info; a caller-supplied client that follows redirects
+    itself is detected on the callback path after the fact.
   - Typed exceptions under `StellarDotnetSdk.Sep.Sep0007.Exceptions` (base `Sep7Exception`), and a new
     `SEP-0007_COMPATIBILITY_MATRIX.md` (100%, 31/31 fields).
 

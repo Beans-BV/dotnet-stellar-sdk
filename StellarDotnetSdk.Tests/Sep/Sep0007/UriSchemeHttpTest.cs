@@ -226,6 +226,34 @@ public class UriSchemeHttpTest
     }
 
     [TestMethod]
+    public async Task VerifyOriginDomainSignatureAsync_TomlNotValidUtf8_Throws()
+    {
+        // A valid key, then a comment holding a byte that is never valid UTF-8: a lenient decoder would read the key.
+        var toml = Encoding.UTF8.GetBytes($"URI_REQUEST_SIGNING_KEY = \"{Sep7TestVectors.SpecSigningAccountId}\"\n# ")
+            .Concat(new byte[] { 0xFF, (byte)'\n' }).ToArray();
+        var handler = new RecordingHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new ByteArrayContent(toml),
+        });
+        using var uriScheme = new UriScheme(new HttpClient(handler));
+
+        var ex = await Assert.ThrowsExceptionAsync<OriginDomainStellarTomlException>(() =>
+            uriScheme.VerifyOriginDomainSignatureAsync(Sep7TestVectors.SpecSignedPayUri));
+
+        StringAssert.Contains(ex.Message, "not valid UTF-8");
+    }
+
+    [TestMethod]
+    public async Task VerifyOriginDomainSignatureAsync_TomlWithNonAsciiUtf8_Verifies()
+    {
+        var handler = TomlHandler($"ORG_NAME = \"Café ✓\" # ünïcödé\nURI_REQUEST_SIGNING_KEY = \"{Sep7TestVectors.SpecSigningAccountId}\"");
+        using var uriScheme = new UriScheme(new HttpClient(handler));
+
+        Assert.AreEqual(Sep7TestVectors.SpecSigningAccountId,
+            await uriScheme.VerifyOriginDomainSignatureAsync(Sep7TestVectors.SpecSignedPayUri));
+    }
+
+    [TestMethod]
     public async Task VerifyOriginDomainSignatureAsync_TomlOverDeclaredLimit_Throws()
     {
         var handler = new RecordingHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)
@@ -393,6 +421,97 @@ public class UriSchemeHttpTest
         Assert.AreEqual("xdr=" + WebUtility.UrlEncode(transaction.ToEnvelopeXdrBase64()), handler.Bodies.Single());
     }
 
+    // The answer is decoded with the charset its Content-Type declares; UTF-8 when there is none or it is unknown.
+    [TestMethod]
+    [DataRow("iso-8859-1", "latin1")]
+    [DataRow("\"ISO-8859-1\"", "latin1")] // quoted and upper case
+    [DataRow("utf-16", "utf-16")]
+    [DataRow("utf-8", "utf-8")]
+    [DataRow(null, "utf-8")]
+    [DataRow("x-no-such-charset", "utf-8")]
+    [DataRow("utf-7", "utf-8")] // known but disabled on .NET: GetEncoding throws NotSupportedException
+    // A byte order mark decides the encoding and is dropped, whatever the charset says.
+    [DataRow(null, "utf-8 bom")]
+    [DataRow("iso-8859-1", "utf-8 bom")]
+    [DataRow(null, "utf-16le bom")]
+    [DataRow("utf-8", "utf-16be bom")]
+    public async Task SubmitToCallbackAsync_ResponseBody_IsDecodedWithItsCharset(string? charset, string bytesAs)
+    {
+        const string text = "café ✓ déjà";
+        var bytes = bytesAs switch
+        {
+            "latin1" => Encoding.GetEncoding("iso-8859-1").GetBytes("café déjà"),
+            "utf-16" => Encoding.Unicode.GetBytes(text),
+            "utf-8 bom" => new byte[] { 0xEF, 0xBB, 0xBF }.Concat(Encoding.UTF8.GetBytes(text)).ToArray(),
+            "utf-16le bom" => new byte[] { 0xFF, 0xFE }.Concat(Encoding.Unicode.GetBytes(text)).ToArray(),
+            "utf-16be bom" => new byte[] { 0xFE, 0xFF }.Concat(Encoding.BigEndianUnicode.GetBytes(text)).ToArray(),
+            _ => Encoding.UTF8.GetBytes(text),
+        };
+        var handler = new RecordingHandler(_ =>
+        {
+            var content = new ByteArrayContent(bytes);
+            content.Headers.TryAddWithoutValidation("Content-Type",
+                charset == null ? "text/plain" : "text/plain; charset=" + charset);
+            return new HttpResponseMessage(HttpStatusCode.OK) { Content = content };
+        });
+        using var uriScheme = new UriScheme(new HttpClient(handler));
+
+        var result = await uriScheme.SubmitToCallbackAsync("url:https://cb.example.com", "AAAA");
+
+        Assert.AreEqual(bytesAs == "latin1" ? "café déjà" : text, result.CallbackResponseBody);
+    }
+
+    // Hosts HttpClient does send to, though stricter host-name checks (Uri.CheckHostName) would refuse some.
+    [TestMethod]
+    [DataRow("https://_.example/cb")]
+    [DataRow("https://-a.example/cb")]
+    [DataRow("https://ex\u00E4mple.com/cb")] // IDN form xn--exmple-cua.com
+    // 30 x U+00E4: the punycode label still fits in 63 characters.
+    [DataRow("https://\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4.com/")]
+    public async Task SubmitToCallbackAsync_UnusualButSendableHost_IsPosted(string callback)
+    {
+        var handler = new RecordingHandler(_ => new HttpResponseMessage(HttpStatusCode.OK));
+        using var uriScheme = new UriScheme(new HttpClient(handler));
+
+        await uriScheme.SubmitToCallbackAsync(callback, "AAAA");
+
+        Assert.AreEqual(1, handler.Requests.Count);
+    }
+
+    [TestMethod]
+    public async Task SubmitToCallbackAsync_CharsetWithThrowingFallback_StillReturnsTheAnswer()
+    {
+        // A provider the host application registered may hand out an encoding whose decoder throws; the callback
+        // already has the transaction, so its answer must still come back, with U+FFFD for what does not decode.
+        Encoding.RegisterProvider(new StrictTestEncodingProvider());
+        var handler = new RecordingHandler(_ =>
+        {
+            var content = new ByteArrayContent(new byte[] { 0x41, 0xC0, 0x41 });
+            content.Headers.TryAddWithoutValidation("Content-Type", "text/plain; charset=" + StrictTestEncodingProvider.Name);
+            return new HttpResponseMessage(HttpStatusCode.OK) { Content = content };
+        });
+        using var uriScheme = new UriScheme(new HttpClient(handler));
+
+        var result = await uriScheme.SubmitToCallbackAsync("url:https://cb.example.com", "AAAA");
+
+        Assert.AreEqual("A\uFFFDA", result.CallbackResponseBody);
+    }
+
+    private sealed class StrictTestEncodingProvider : EncodingProvider
+    {
+        public const string Name = "x-sep7-test-strict-utf-8";
+
+        public override Encoding? GetEncoding(int codepage)
+        {
+            return null;
+        }
+
+        public override Encoding? GetEncoding(string name)
+        {
+            return name == Name ? new UTF8Encoding(false, true) : null;
+        }
+    }
+
     [TestMethod]
     public async Task SubmitToCallbackAsync_ErrorStatus_IsReturnedNotThrown()
     {
@@ -441,6 +560,14 @@ public class UriSchemeHttpTest
     [DataRow("https://cb.example.com/%41%ZZ")]
     [DataRow("https://cb.example.com/a\\b")] // requested as /a/b
     [DataRow("https:\\\\cb.example.com/x")] // requested as https://cb.example.com/x
+    [DataRow("https://cb.example.com/allowed/../other")] // requested as /other
+    [DataRow("https://cb.example.com/a/%2e%2E/b")] // requested as /b
+    [DataRow("https://allowed.com\uFF0Fevil.com/a")] // fullwidth solidus: no IDN form, HttpClient cannot send it
+    [DataRow("https://cb\u2100.example.com/x")] // U+2100 ACCOUNT OF, same
+    [DataRow("https://a\u2474b.example/cb")] // IDN form a(1)b.example: no valid host name, HttpClient cannot send it
+    [DataRow("https://a\u037Eb.example/cb")] // Greek question mark, IDN form a;b.example
+    // 60 x U+00E4: its punycode label would exceed 63 characters, so IdnHost stays Unicode and HttpClient refuses it.
+    [DataRow("https://\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4\u00E4.com/")]
     public async Task SubmitToCallbackAsync_CallbackARequestCannotCarry_Throws(string callback)
     {
         var handler = new RecordingHandler(_ => new HttpResponseMessage());

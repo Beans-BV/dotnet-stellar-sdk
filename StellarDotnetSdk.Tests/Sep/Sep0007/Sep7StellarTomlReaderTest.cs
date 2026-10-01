@@ -97,6 +97,10 @@ public class Sep7StellarTomlReaderTest
     [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\" junk", "after a value")]
     [DataRow("= 1", "expected a key")]
     [DataRow("A = [1, 2", "unterminated array")]
+    // A closer of the wrong kind must not end the value: conforming parsers reject the whole document.
+    [DataRow("X = [}\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "mismatched bracket")]
+    [DataRow("X = {]\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "mismatched bracket")]
+    [DataRow("X = [{a = 1]}\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "mismatched bracket")]
     [DataRow("A =", "expected a value")]
     [DataRow("A = '''never closed", "unterminated string")]
     [DataRow("A =\nB = 1", "expected a value")]

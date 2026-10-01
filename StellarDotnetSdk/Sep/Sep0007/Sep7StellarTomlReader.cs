@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -14,9 +15,9 @@ namespace StellarDotnetSdk.Sep.Sep0007;
 ///     kills the process instead of raising a catchable exception. This reader uses no recursion and no parser
 ///     library. It reads only the root table (everything before the first <c>[table]</c> header), which is where
 ///     SEP-1 puts <c>URI_REQUEST_SIGNING_KEY</c>. It checks the structure of that part (key/value lines, comments
-///     and blank lines; strings decoded and terminated; arrays and inline tables balanced) but is not a full TOML
-///     validator: other scalar values and the pairing of bracket kinds are not checked. Content after the first
-///     table header is never looked at.
+///     and blank lines; strings decoded and terminated; arrays and inline tables balanced, each closed by its own
+///     bracket kind) but is not a full TOML validator: other scalar values are not checked. Content after the
+///     first table header is never looked at.
 /// </remarks>
 internal sealed class Sep7StellarTomlReader
 {
@@ -170,12 +171,13 @@ internal sealed class Sep7StellarTomlReader
 
     /// <summary>
     ///     Skips an array or inline table, including any nested ones, strings and comments inside it. Nesting is
-    ///     tracked with a counter, not recursion, so its depth costs no stack.
+    ///     tracked with a stack of the expected closing delimiters, not recursion, so its depth costs no call stack,
+    ///     and a closing delimiter of the wrong kind (<c>[}</c>) is rejected as the TOML grammar requires.
     /// </summary>
     private void SkipBracketed()
     {
         var start = _position;
-        var depth = 0;
+        var expectedClosers = new Stack<char>();
         do
         {
             if (AtEnd)
@@ -185,13 +187,19 @@ internal sealed class Sep7StellarTomlReader
             switch (Current)
             {
                 case '[':
+                    expectedClosers.Push(']');
+                    _position++;
+                    break;
                 case '{':
-                    depth++;
+                    expectedClosers.Push('}');
                     _position++;
                     break;
                 case ']':
                 case '}':
-                    depth--;
+                    if (expectedClosers.Pop() != Current)
+                    {
+                        throw Error("mismatched bracket in an array or inline table", _position);
+                    }
                     _position++;
                     break;
                 case '"':
@@ -205,7 +213,7 @@ internal sealed class Sep7StellarTomlReader
                     _position++;
                     break;
             }
-        } while (depth > 0);
+        } while (expectedClosers.Count > 0);
     }
 
     /// <summary>Reads a basic, literal, multi-line basic or multi-line literal string and returns its value.</summary>

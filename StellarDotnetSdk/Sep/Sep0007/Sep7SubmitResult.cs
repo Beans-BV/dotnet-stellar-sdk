@@ -33,7 +33,11 @@ public sealed class Sep7SubmitResult
 
     /// <summary>
     ///     The body the callback URL answered with (at most 512 KiB); <c>null</c> for a Horizon submission.
-    ///     SEP-7 defines no format for it, so it is returned as-is.
+    ///     SEP-7 defines no format for it, so it is returned as-is, decoded by its byte order mark if it starts with
+    ///     one (UTF-8 or UTF-16, the mark dropped), else with the charset its <c>Content-Type</c> declares if .NET
+    ///     supports it, else as UTF-8. Without <c>CodePagesEncodingProvider</c> registered, .NET supports only the
+    ///     UTF encodings, US-ASCII and ISO-8859-1 (true Latin-1, not windows-1252 as browsers read it); undecodable
+    ///     bytes become U+FFFD.
     /// </summary>
     public string? CallbackResponseBody { get; }
 
