@@ -432,6 +432,13 @@ public class UriSchemeHttpTest
     [DataRow("https://cb.example.com/x\n")]
     [DataRow("https://cb.example.com/x\u200B")]
     [DataRow("https:\\\\@cb.example.com/x")] // normalized to https://@cb.example.com/x
+    [DataRow("https://cb.example.com/x#frag")]
+    [DataRow("https://cb.example.com/x#")]
+    [DataRow("https://cb.example.com/%ZZ")]
+    [DataRow("https://cb.example.com/a%2")]
+    [DataRow("https://cb.example.com/%2G")]
+    [DataRow("https://cb.example.com/%G2")]
+    [DataRow("https://cb.example.com/%41%ZZ")]
     public async Task SubmitToCallbackAsync_CallbackARequestCannotCarry_Throws(string callback)
     {
         var handler = new RecordingHandler(_ => new HttpResponseMessage());

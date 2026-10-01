@@ -308,8 +308,10 @@ internal static class Sep7UriParser
     /// <summary>
     ///     The checks every callback URL passes, in a parsed request and in
     ///     <see cref="UriScheme.SubmitToCallbackAsync" /> alike: no whitespace, control or invisible formatting
-    ///     characters and no credentials. Returns why <paramref name="url" /> (without its <c>url:</c> prefix) is
-    ///     refused, or <c>null</c>.
+    ///     characters, no credentials, no fragment and no malformed percent escape. The last two make the URL
+    ///     shown differ from the one POSTed to: HTTP never sends a fragment, and <see cref="System.Uri" /> re-escapes
+    ///     a stray <c>%</c> (<c>/%ZZ</c> is requested as <c>/%25ZZ</c>). Returns why <paramref name="url" />
+    ///     (without its <c>url:</c> prefix) is refused, or <c>null</c>.
     /// </summary>
     internal static string? CallbackUrlProblem(string url, System.Uri parsed)
     {
@@ -322,7 +324,33 @@ internal static class Sep7UriParser
         {
             return "must not contain credentials (user info)";
         }
+        // KeepDelimiter so an empty trailing '#' counts too.
+        if (parsed.GetComponents(UriComponents.Fragment | UriComponents.KeepDelimiter, UriFormat.UriEscaped).Length > 0)
+        {
+            return "must not contain a fragment ('#'), which HTTP never sends";
+        }
+        if (HasMalformedPercentEscape(url))
+        {
+            return "must not contain a '%' that is not followed by two hex digits";
+        }
         return null;
+    }
+
+    private static bool HasMalformedPercentEscape(string value)
+    {
+        for (var i = value.IndexOf('%'); i >= 0; i = value.IndexOf('%', i + 1))
+        {
+            if (i + 2 >= value.Length || !IsHexDigit(value[i + 1]) || !IsHexDigit(value[i + 2]))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static bool IsHexDigit(char c)
+    {
+        return c is >= '0' and <= '9' or >= 'a' and <= 'f' or >= 'A' and <= 'F';
     }
 
     /// <summary>

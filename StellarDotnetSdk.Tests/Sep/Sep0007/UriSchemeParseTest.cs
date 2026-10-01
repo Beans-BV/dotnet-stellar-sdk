@@ -765,6 +765,34 @@ public class UriSchemeParseTest
         Assert.IsFalse(UriScheme.ValidateUri(PayPrefix + "&callback=" + callback).IsValid);
     }
 
+    // The URL a wallet shows must be the one POSTed to: HTTP never sends a fragment, and Uri re-escapes a stray '%'.
+    [TestMethod]
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fcb%23frag", "fragment")]
+    [DataRow("url%3Ahttps%3A%2F%2Fevil.example%23.good.example", "fragment")] // reads as good.example, POSTs to evil
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fcb%23", "fragment")] // empty trailing '#'
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2F%ZZ", "'%'")] // requested as /%25ZZ
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fa%2", "'%'")] // truncated escape
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2F%2G", "'%'")] // second digit not hex
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2F%G2", "'%'")] // first digit not hex
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2F%2541%25ZZ", "'%'")] // a good escape before the bad one
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fa%25", "'%'")] // decodes to a trailing bare '%'
+    public void ValidateUri_CallbackWithFragmentOrMalformedEscape_IsInvalid(string callback, string reason)
+    {
+        var result = UriScheme.ValidateUri(PayPrefix + "&callback=" + callback);
+
+        Assert.IsFalse(result.IsValid);
+        StringAssert.Contains(result.Reason, reason);
+    }
+
+    [TestMethod]
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fa%252Fb")] // decodes to a well-formed escape, /a%2Fb
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2F%25e0%25A4")] // well-formed escapes of any case
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2F%25af%25AF%2509")] // hex range edges: a f A F 0 9
+    public void ValidateUri_CallbackWithWellFormedEscapes_IsValid(string callback)
+    {
+        Assert.IsTrue(UriScheme.ValidateUri(PayPrefix + "&callback=" + callback).IsValid);
+    }
+
     [TestMethod]
     public void ParseUri_LowerCaseMuxedAndContractDestinations_AreInvalid()
     {
