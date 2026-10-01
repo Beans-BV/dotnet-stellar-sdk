@@ -1862,6 +1862,59 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     }
 
     [TestMethod]
+    [DataRow(303, "PUT callback", "PUT /customer/callback", DisplayName = "303 on PUT /customer/callback")]
+    [DataRow(303, "DELETE", "DELETE /customer/" + Account, DisplayName = "303 on DELETE /customer")]
+    [DataRow(303, "PUT customer", "PUT /customer", DisplayName = "303 on PUT /customer")]
+    [DataRow(302, "POST file", "POST /customer/files", DisplayName = "302 on POST /customer/files")]
+    [DataRow(301, "POST file", "POST /customer/files", DisplayName = "301 on POST /customer/files")]
+    public async Task ExternalClient_RedirectThatChangesTheMethod_IsRejected(int redirectStatus, string call,
+        string firstRequest)
+    {
+        // A real socket handler, since the method rewrite happens inside it. The landing page answers 200 with a
+        // body that would parse, so only the method check can reject it.
+        using var server = new RedirectingServer(redirectStatus);
+        using var service = new KycService($"http://127.0.0.1:{server.Port}", new HttpClient());
+
+        var ex = await AssertThrowsAsync<KycServiceException>(() => SendRedirectedCall(service, call));
+
+        StringAssert.Contains(ex.Message, "resent as GET");
+        CollectionAssert.AreEqual(new[] { firstRequest, "GET /landing" }, server.Requests.ToArray());
+    }
+
+    [TestMethod]
+    [DataRow(307, "PUT callback", "PUT", DisplayName = "307 on PUT /customer/callback")]
+    [DataRow(308, "PUT customer", "PUT", DisplayName = "308 on PUT /customer")]
+    [DataRow(301, "PUT customer", "PUT", DisplayName = "301 on PUT /customer")]
+    [DataRow(307, "POST file", "POST", DisplayName = "307 on POST /customer/files")]
+    [DataRow(303, "GET customer", "GET", DisplayName = "303 on GET /customer")]
+    [DataRow(302, "GET files", "GET", DisplayName = "302 on GET /customer/files")]
+    public async Task ExternalClient_SameOriginRedirectThatKeepsTheMethod_IsAccepted(int redirectStatus, string call,
+        string method)
+    {
+        using var server = new RedirectingServer(redirectStatus);
+        using var service = new KycService($"http://127.0.0.1:{server.Port}", new HttpClient());
+
+        await SendRedirectedCall(service, call);
+
+        Assert.AreEqual(method + " /landing", server.Requests.Last());
+    }
+
+    private static Task SendRedirectedCall(KycService service, string call)
+    {
+        return call switch
+        {
+            "PUT callback" => service.PutCustomerCallbackAsync(
+                new PutCustomerCallbackRequest { Jwt = Jwt, Url = "https://wallet.example.com/cb" }),
+            "DELETE" => service.DeleteCustomerAsync(new DeleteCustomerRequest { Jwt = Jwt, Account = Account }),
+            "PUT customer" => service.PutCustomerInfoAsync(new PutCustomerInfoRequest { Jwt = Jwt, Id = CustomerId }),
+            "POST file" => service.PostCustomerFileAsync(new PostCustomerFileRequest { Jwt = Jwt, File = PhotoFront }),
+            "GET customer" => service.GetCustomerInfoAsync(new GetCustomerInfoRequest { Jwt = Jwt }),
+            "GET files" => service.GetCustomerFilesAsync(new GetCustomerFilesRequest { Jwt = Jwt, FileId = "f" }),
+            _ => throw new ArgumentOutOfRangeException(nameof(call), call, null),
+        };
+    }
+
+    [TestMethod]
     public void InternalClient_DoesNotFollowRedirects()
     {
         using var service = new KycService(KycServerUrl);
@@ -3023,6 +3076,109 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         {
             _stop.Cancel();
             _listener.Stop();
+        }
+    }
+
+    /// <summary>
+    ///     A real loopback HTTP server that answers every request with <c>redirectStatus</c> and a <c>Location</c> of
+    ///     <c>/landing</c>, and <c>/landing</c> itself with a 200 whose body parses as any SEP-0012 success response
+    ///     the tests read. Records each request as <c>"METHOD /path"</c>.
+    /// </summary>
+    private sealed class RedirectingServer : IDisposable
+    {
+        private const string LandingBody =
+            "{\"id\":\"landing\",\"status\":\"ACCEPTED\",\"file_id\":\"landing\",\"content_type\":\"image/png\"," +
+            "\"size\":1,\"files\":[]}";
+
+        private readonly TcpListener _listener = new(IPAddress.Loopback, 0);
+        private readonly System.Collections.Concurrent.ConcurrentQueue<string> _requests = new();
+        private readonly CancellationTokenSource _stop = new();
+
+        public RedirectingServer(int redirectStatus)
+        {
+            _listener.Start();
+            Port = ((IPEndPoint)_listener.LocalEndpoint).Port;
+            _ = Task.Run(async () =>
+            {
+                while (!_stop.IsCancellationRequested)
+                {
+                    TcpClient client;
+                    try
+                    {
+                        client = await _listener.AcceptTcpClientAsync();
+                    }
+                    catch (Exception)
+                    {
+                        return;
+                    }
+
+                    _ = Task.Run(() => ServeAsync(client, redirectStatus));
+                }
+            });
+        }
+
+        public int Port { get; }
+
+        public IEnumerable<string> Requests => _requests;
+
+        public void Dispose()
+        {
+            _stop.Cancel();
+            _listener.Stop();
+        }
+
+        private async Task ServeAsync(TcpClient client, int redirectStatus)
+        {
+            using var _ = client;
+            try
+            {
+                var stream = client.GetStream();
+                var head = await ReadHeadAsync(stream);
+                var requestLine = head.Substring(0, head.IndexOf("\r\n", StringComparison.Ordinal)).Split(' ');
+                _requests.Enqueue(requestLine[0] + " " + requestLine[1]);
+
+                // Drain the body so the client is not reset while it is still sending.
+                var length = head.Split("\r\n")
+                    .Where(h => h.StartsWith("Content-Length:", StringComparison.OrdinalIgnoreCase))
+                    .Select(h => int.Parse(h.Substring("Content-Length:".Length).Trim()))
+                    .FirstOrDefault();
+                var body = new byte[length];
+                for (var read = 0; read < length;)
+                {
+                    var count = await stream.ReadAsync(body, read, length - read, _stop.Token);
+                    if (count == 0)
+                    {
+                        return;
+                    }
+
+                    read += count;
+                }
+
+                var response = requestLine[1] == "/landing"
+                    ? "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nConnection: close\r\n" +
+                      $"Content-Length: {LandingBody.Length}\r\n\r\n{LandingBody}"
+                    : $"HTTP/1.1 {redirectStatus} Redirect\r\nLocation: /landing\r\nConnection: close\r\n" +
+                      "Content-Length: 0\r\n\r\n";
+                var bytes = Encoding.ASCII.GetBytes(response);
+                await stream.WriteAsync(bytes, 0, bytes.Length, _stop.Token);
+            }
+            catch (Exception)
+            {
+                // Stopped, or the client gave up.
+            }
+        }
+
+        private async Task<string> ReadHeadAsync(NetworkStream stream)
+        {
+            var head = new StringBuilder();
+            var one = new byte[1];
+            while (!head.ToString().EndsWith("\r\n\r\n", StringComparison.Ordinal) &&
+                   await stream.ReadAsync(one, 0, 1, _stop.Token) == 1)
+            {
+                head.Append((char)one[0]);
+            }
+
+            return head.ToString();
         }
     }
 

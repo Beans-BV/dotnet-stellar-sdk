@@ -67,7 +67,11 @@ namespace StellarDotnetSdk.Sep.Sep0012;
 ///         <see cref="KycServiceException" /> and the request body is never replayed to another host. An external
 ///         client follows redirects if its handler does; the service then rejects any response that comes from a
 ///         different origin than <see cref="ServiceAddress" />, but by that point the request, including its customer
-///         data, has already been sent there. Only the final location is visible, so a chain that leaves the origin
+///         data, has already been sent there. It also rejects a response to a request the handler resent with a
+///         different method (a <c>POST</c> after a 301, 302 or 303, or a <c>PUT</c> or <c>DELETE</c> after a 303,
+///         is resent as <c>GET</c>), whatever its status: a success would not show the change was applied, and an
+///         error would answer a request the caller never made, so both raise a plain
+///         <see cref="KycServiceException" />. Only the final location is visible, so a chain that leaves the origin
 ///         and returns to it is not detected at all. Disable <c>AllowAutoRedirect</c> on an external client's handler
 ///         to avoid both.
 ///     </para>
@@ -768,6 +772,16 @@ public class KycService : IDisposable
                 throw new KycServiceException(
                     $"SEP-0012 {method.Method} request was redirected to a different origin; the response was " +
                     "rejected.", status);
+            }
+
+            // Following a redirect, HttpClient resends a POST as GET on 301-303 and a PUT or DELETE as GET on 303.
+            // The final response then answers a GET the caller never made, and may not mean the change was applied.
+            var finalMethod = response.RequestMessage?.Method ?? method;
+            if (finalMethod != method)
+            {
+                throw new KycServiceException(
+                    $"SEP-0012 {method.Method} request was redirected and resent as {finalMethod.Method}; the " +
+                    "response was rejected.", status);
             }
 
             if (response.IsSuccessStatusCode && !readSuccessBody)
