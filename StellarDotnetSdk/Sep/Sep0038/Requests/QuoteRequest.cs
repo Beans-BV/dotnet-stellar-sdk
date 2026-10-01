@@ -54,7 +54,9 @@ public sealed record QuoteRequest
 
     /// <summary>
     ///     Optional: the desired expiry of the quote. The anchor may choose a later <c>expires_at</c>, and should
-    ///     answer <c>400 Bad Request</c> if it cannot offer an expiry on or after this time. Sent as UTC.
+    ///     answer <c>400 Bad Request</c> if it cannot offer an expiry on or after this time. Sent as UTC, rounded up
+    ///     to the whole second so that an anchor storing whole seconds can honor it exactly; a quote expiring before
+    ///     the sent time is rejected.
     /// </summary>
     public DateTimeOffset? ExpireAfter { get; init; }
 
@@ -144,9 +146,9 @@ public sealed record QuoteRequest
                 writer.WriteString("buy_amount", RequestValidation.FormatAmount(BuyAmount!.Value, nameof(BuyAmount)));
             }
 
-            if (ExpireAfter.HasValue)
+            if (SentExpireAfter is { } expireAfter)
             {
-                writer.WriteString("expire_after", UtcDateTimeOffsetJsonConverter.Format(ExpireAfter.Value));
+                writer.WriteString("expire_after", UtcDateTimeOffsetJsonConverter.Format(expireAfter));
             }
 
             WriteOptional(writer, "sell_delivery_method", SellDeliveryMethod);
@@ -157,6 +159,26 @@ public sealed record QuoteRequest
         }
 
         return Encoding.UTF8.GetString(stream.GetBuffer(), 0, (int)stream.Length);
+    }
+
+    /// <summary>
+    ///     <see cref="ExpireAfter" /> as sent, in UTC and rounded up to the whole second, or <see langword="null" />.
+    /// </summary>
+    internal DateTimeOffset? SentExpireAfter
+    {
+        get
+        {
+            if (ExpireAfter is not { } expireAfter)
+            {
+                return null;
+            }
+
+            // Rounded in UTC: rounding the caller's clock time could overflow it while the instant still fits.
+            var utc = expireAfter.ToUniversalTime();
+            var shortfall = (TimeSpan.TicksPerSecond - utc.UtcTicks % TimeSpan.TicksPerSecond) % TimeSpan.TicksPerSecond;
+            // The last second of year 9999 has no next whole second, so it goes out unrounded.
+            return utc.UtcTicks > DateTimeOffset.MaxValue.UtcTicks - shortfall ? utc : utc.AddTicks(shortfall);
+        }
     }
 
     private static void WriteOptional(Utf8JsonWriter writer, string name, string? value)

@@ -1832,17 +1832,26 @@ public class QuoteServiceTest
     }
 
     [TestMethod]
-    [DataRow(1000, true, DisplayName = "Expires a second before expire_after")]
-    [DataRow(0, false, DisplayName = "Expires exactly at expire_after")]
-    [DataRow(500, false, DisplayName = "expire_after half a second later; the anchor answers in whole seconds")]
-    public async Task PostQuoteAsync_ExpiringBeforeTheRequestedExpireAfter_Throws(int millisecondsAfterExpiry,
+    [DataRow("2021-04-30T07:42:24Z", "2021-04-30T07:42:23Z", true, DisplayName = "Expires a second early")]
+    [DataRow("2021-04-30T07:42:23Z", "2021-04-30T07:42:23Z", false, DisplayName = "Expires exactly at expire_after")]
+    [DataRow("2021-04-30T07:42:23Z", "2021-04-30T07:42:22.999Z", true, DisplayName = "Expires a millisecond early")]
+    [DataRow("2021-04-30T07:42:22.5Z", "2021-04-30T07:42:23Z", false,
+        DisplayName = "Sub-second expire_after, honored in whole seconds")]
+    [DataRow("2021-04-30T07:42:23.5Z", "2021-04-30T07:42:23Z", true,
+        DisplayName = "Sub-second expire_after, truncated by the anchor")]
+    [DataRow("2021-04-30T07:42:23.5Z", "2021-04-30T07:42:23.9Z", true,
+        DisplayName = "Later than expire_after but before the rounded-up value sent")]
+    public async Task PostQuoteAsync_ExpiringBeforeTheSentExpireAfter_Throws(string expireAfter, string expiresAt,
         bool rejected)
     {
-        // The fixture's quote expires at 2021-04-30T07:42:23Z.
-        var expireAfter = new DateTimeOffset(2021, 4, 30, 7, 42, 23, TimeSpan.Zero)
-            .AddMilliseconds(millisecondsAfterExpiry);
-        var (service, _) = CreateService(ReadTestData("quote-response.json"), HttpStatusCode.Created);
-        var request = ValidQuoteRequest() with { SellDeliveryMethod = "PIX", ExpireAfter = expireAfter };
+        var body = ReadTestData("quote-response.json")
+            .Replace("\"2021-04-30T07:42:23\"", $"\"{expiresAt}\"");
+        var (service, _) = CreateService(body, HttpStatusCode.Created);
+        var request = ValidQuoteRequest() with
+        {
+            SellDeliveryMethod = "PIX",
+            ExpireAfter = DateTimeOffset.Parse(expireAfter, CultureInfo.InvariantCulture),
+        };
 
         if (rejected)
         {
@@ -1852,6 +1861,33 @@ public class QuoteServiceTest
         {
             await service.PostQuoteAsync(request);
         }
+    }
+
+    [TestMethod]
+    [DataRow("2021-04-30T07:42:22.0000001Z", "2021-04-30T07:42:23Z", DisplayName = "One tick past a second")]
+    [DataRow("2021-04-30T09:42:22.5+02:00", "2021-04-30T07:42:23Z", DisplayName = "Converted to UTC")]
+    [DataRow("9999-12-31T23:59:59.5+14:00", "9999-12-31T10:00:00Z",
+        DisplayName = "Rounded in UTC, past the end of the caller's clock")]
+    [DataRow("9999-12-31T23:59:59.9999999Z", "9999-12-31T23:59:59.9999999Z",
+        DisplayName = "The last second of year 9999 goes out unrounded")]
+    public async Task PostQuoteAsync_SendsExpireAfterRoundedUpToTheSecond(string expireAfter, string sent)
+    {
+        var (service, handler) = CreateService(ReadTestData("quote-response.json"), HttpStatusCode.Created);
+        var request = ValidQuoteRequest() with
+        {
+            ExpireAfter = DateTimeOffset.Parse(expireAfter, CultureInfo.InvariantCulture),
+        };
+
+        // The fixture's quote expires at 2021-04-30T07:42:23Z, too early for the last two rows.
+        try
+        {
+            await service.PostQuoteAsync(request);
+        }
+        catch (UnexpectedResponseException)
+        {
+        }
+
+        StringAssert.Contains(handler.Bodies.Single(), $"\"expire_after\":\"{sent}\"");
     }
 
     [TestMethod]

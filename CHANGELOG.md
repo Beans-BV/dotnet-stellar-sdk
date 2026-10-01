@@ -162,9 +162,9 @@ All notable changes to this project are documented here. The format is based on
     and `GET /quote/:id` must return the requested quote (its `total_price` is optional, as that
     endpoint's response table omits it). A `POST /quote` answer must carry a usable id, the requested
     asset pair, no delivery method the request did not name, and an expiry no earlier than
-    `expire_after`; prices and amounts must be greater than zero. Bodies are capped at 1 MiB and streamed
-    so the cap bounds memory (an error body over the cap is dropped, and the status still selects the
-    exception), a leading UTF-8 byte order mark is skipped, and the whole exchange, body included, stays
+    `expire_after` (sent in UTC, rounded up to the whole second); prices and amounts must be greater
+    than zero. Bodies are capped at 1 MiB and streamed so the cap bounds memory (an error body over the
+    cap is dropped, and the status still selects the exception), a leading UTF-8 byte order mark is skipped, and the whole exchange, body included, stays
     within `HttpClient.Timeout` (and `RequestTimeout` for the internal client). The internal client does
     not follow redirects, and a response whose final location, after a caller-owned client followed
     redirects, is another origin is rejected. Errors map to `BadRequestException` (400), `PermissionDeniedException` (403),

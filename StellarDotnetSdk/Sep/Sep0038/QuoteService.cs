@@ -837,10 +837,9 @@ public class QuoteService : IDisposable
             return "The quote server answered POST /quote with a delivery method the request did not ask for.";
         }
 
-        // An anchor that cannot honor expire_after must answer 400 instead. Compared to the second: the request
-        // carries sub-second digits, and an anchor that stores whole seconds answers 07:42:23Z to 07:42:23.5Z.
-        if (request.ExpireAfter is { } expireAfter &&
-            quote.ExpiresAt < expireAfter.AddTicks(-(expireAfter.UtcTicks % TimeSpan.TicksPerSecond)))
+        // An anchor that cannot honor expire_after must answer 400 instead. Compared with the value sent, which is
+        // rounded up to the whole second, so an anchor that stores whole seconds can match it exactly.
+        if (request.SentExpireAfter is { } expireAfter && quote.ExpiresAt < expireAfter)
         {
             return "The quote server answered POST /quote with a quote that expires before the requested " +
                    "'expire_after'.";
