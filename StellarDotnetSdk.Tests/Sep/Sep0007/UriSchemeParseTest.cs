@@ -765,7 +765,8 @@ public class UriSchemeParseTest
         Assert.IsFalse(UriScheme.ValidateUri(PayPrefix + "&callback=" + callback).IsValid);
     }
 
-    // The URL a wallet shows must be the one POSTed to: HTTP never sends a fragment, and Uri re-escapes a stray '%'.
+    // The URL a wallet shows must be the one POSTed to: HTTP never sends a fragment, and Uri re-escapes a stray '%'
+    // and rewrites a backslash.
     [TestMethod]
     [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fcb%23frag", "fragment")]
     [DataRow("url%3Ahttps%3A%2F%2Fevil.example%23.good.example", "fragment")] // reads as good.example, POSTs to evil
@@ -776,7 +777,10 @@ public class UriSchemeParseTest
     [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2F%G2", "'%'")] // first digit not hex
     [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2F%2541%25ZZ", "'%'")] // a good escape before the bad one
     [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fa%25", "'%'")] // decodes to a trailing bare '%'
-    public void ValidateUri_CallbackWithFragmentOrMalformedEscape_IsInvalid(string callback, string reason)
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fa%5Cb", "backslash")] // requested as /a/b
+    [DataRow("url%3Ahttps%3A%5C%5Ccb.example.com%2Fx", "backslash")] // https:\\host, requested as https://host
+    [DataRow("url%3Ahttps%3A%2F%2Fcb.example.com%2Fx%3Fq%3D%5C", "backslash")] // requested as ?q=%5C
+    public void ValidateUri_CallbackWithFragmentMalformedEscapeOrBackslash_IsInvalid(string callback, string reason)
     {
         var result = UriScheme.ValidateUri(PayPrefix + "&callback=" + callback);
 

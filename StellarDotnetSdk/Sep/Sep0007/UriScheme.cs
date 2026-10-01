@@ -319,7 +319,7 @@ public class UriScheme : IDisposable
     ///         </item>
     ///         <item>
     ///             <c>callback</c> is <c>url:</c> plus an absolute http(s) URL without whitespace, credentials, a
-    ///             fragment or a malformed percent escape (SEP-7
+    ///             fragment, a malformed percent escape or a backslash (SEP-7
     ///             allows http; <see cref="SubmitToCallbackAsync" /> still refuses it except for loopback addresses),
     ///             <c>msg</c> is at most 300
     ///             characters, <c>origin_domain</c> is a fully qualified domain name, <c>signature</c> is 64
@@ -872,8 +872,8 @@ public class UriScheme : IDisposable
     /// </returns>
     /// <exception cref="ArgumentException">
     ///     Thrown when the URL is not absolute https (plain http is allowed only for loopback addresses), or when it
-    ///     contains whitespace, control or invisible formatting characters, credentials, a fragment or a malformed
-    ///     percent escape, which a callback in a parsed request cannot either.
+    ///     contains whitespace, control or invisible formatting characters, credentials, a fragment, a malformed
+    ///     percent escape or a backslash, which a callback in a parsed request cannot either.
     /// </exception>
     /// <exception cref="HttpRequestException">
     ///     Thrown when the POST fails (including a connection dropped mid-response and a request the client's

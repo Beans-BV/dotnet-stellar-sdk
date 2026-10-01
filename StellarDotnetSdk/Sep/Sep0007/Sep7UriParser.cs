@@ -308,9 +308,10 @@ internal static class Sep7UriParser
     /// <summary>
     ///     The checks every callback URL passes, in a parsed request and in
     ///     <see cref="UriScheme.SubmitToCallbackAsync" /> alike: no whitespace, control or invisible formatting
-    ///     characters, no credentials, no fragment and no malformed percent escape. The last two make the URL
-    ///     shown differ from the one POSTed to: HTTP never sends a fragment, and <see cref="System.Uri" /> re-escapes
-    ///     a stray <c>%</c> (<c>/%ZZ</c> is requested as <c>/%25ZZ</c>). Returns why <paramref name="url" />
+    ///     characters, no credentials, no fragment, no malformed percent escape and no backslash. The last three make
+    ///     the URL shown differ from the one POSTed to: HTTP never sends a fragment, and <see cref="System.Uri" />
+    ///     re-escapes a stray <c>%</c> (<c>/%ZZ</c> is requested as <c>/%25ZZ</c>) and rewrites a backslash
+    ///     (<c>/a\b</c> is requested as <c>/a/b</c>, <c>?q=\</c> as <c>?q=%5C</c>). Returns why <paramref name="url" />
     ///     (without its <c>url:</c> prefix) is refused, or <c>null</c>.
     /// </summary>
     internal static string? CallbackUrlProblem(string url, System.Uri parsed)
@@ -332,6 +333,10 @@ internal static class Sep7UriParser
         if (HasMalformedPercentEscape(url))
         {
             return "must not contain a '%' that is not followed by two hex digits";
+        }
+        if (url.IndexOf('\\') >= 0)
+        {
+            return "must not contain a backslash, which is not sent as written";
         }
         return null;
     }

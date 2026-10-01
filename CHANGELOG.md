@@ -81,8 +81,8 @@ All notable changes to this project are documented here. The format is based on
     values, `msg` length, `callback` form, `origin_domain` FQDN, `chain` nesting (at most 7 levels), and
     rejects an `origin_domain` without a `signature`, as the spec does. `destination` also takes a SEP-2
     federation address; hash memos must be exactly 32 bytes; account ids must be upper case; `callback`
-    URLs may not carry whitespace, invisible characters, credentials, a fragment or a malformed
-    percent escape. Rejections carry a typed
+    URLs may not carry whitespace, invisible characters, credentials, a fragment, a malformed
+    percent escape or a backslash. Rejections carry a typed
     `Sep7ValidationResult.Error`, and values echoed into messages are escaped and length-clamped. Query
     values are decoded like an HTML form (`+` is a space, as `URLSearchParams` and the other Stellar SDKs
     write it), except in base64 values, where a raw `+` stays a `+`.
@@ -103,8 +103,8 @@ All notable changes to this project are documented here. The format is based on
     the signed envelope to the request's `callback` (https only, http for loopback) or submits it to
     Horizon; `SubmitTransactionAsync`/`SubmitToCallbackAsync` hand on a transaction the wallet signed
     itself, and `SubmitToCallbackAsync` refuses the same callback URLs a parsed request cannot carry
-    (whitespace, invisible characters, user info, a fragment, a malformed percent escape); a
-    callback's non-2xx answer or a transaction Horizon rejects is returned, with
+    (whitespace, invisible characters, user info, a fragment, a malformed percent escape, a
+    backslash); a callback's non-2xx answer or a transaction Horizon rejects is returned, with
     `Sep7SubmitResult.IsSuccess`. With the SDK's own HTTP client the callback POST follows no redirects
     (a 3xx is returned as the callback's answer) and the stellar.toml fetch follows up to 5, https only,
     each to a fully qualified domain name (not under `localhost`) on the default port without user info;
