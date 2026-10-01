@@ -605,6 +605,12 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         DisplayName = "duplicate fields key")]
     [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"x\":{\"type\":\"string\",\"description\":\"d\",\"status\":\"REJECTED\",\"status\":\"ACCEPTED\"}}}",
         DisplayName = "duplicate provided status")]
+    // PropertyNameCaseInsensitive makes case variants the same property, so they must count as duplicates too.
+    [DataRow("{\"status\":\"REJECTED\",\"Status\":\"ACCEPTED\"}", DisplayName = "case-variant status")]
+    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"string\",\"Type\":\"binary\",\"description\":\"d\"}}}",
+        DisplayName = "case-variant field type")]
+    [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"x\":{\"type\":\"string\",\"description\":\"d\",\"status\":\"REJECTED\",\"STATUS\":\"ACCEPTED\"}}}",
+        DisplayName = "case-variant provided status")]
     public async Task GetCustomerInfoAsync_WithDuplicateProperty_ThrowsInvalidKycResponseException(string body)
     {
         var (service, _) = CreateService(body);
@@ -739,6 +745,19 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         Assert.ThrowsException<JsonException>(() => GetCustomerInfoResponse.FromJson(json));
     }
 
+    [TestMethod]
+    [DataRow("{\"status\":\"ACCEPTED\",\"Status\":\"REJECTED\"}", DisplayName = "case-variant status")]
+    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"x\":{\"type\":\"string\",\"TYPE\":\"binary\",\"description\":\"d\"}}}",
+        DisplayName = "case-variant field type")]
+    [DataRow("{\"status\":\"ACCEPTED\",\"message\":\"a\",\"Message\":\"b\"}", DisplayName = "case-variant message")]
+    public void FromJson_WithCaseVariantDuplicate_ThrowsJsonException(string json)
+    {
+        // The callback payload is parsed case-insensitively; a case variant must not overwrite the first value.
+        var ex = Assert.ThrowsException<JsonException>(() => GetCustomerInfoResponse.FromJson(json));
+
+        StringAssert.Contains(ex.Message, "Duplicate property");
+    }
+
     #endregion
 
     #region Error responses
@@ -813,6 +832,8 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     [TestMethod]
     [DataRow("{\"error\": \"a\", \"error\": \"b\"}", DisplayName = "duplicate error")]
     [DataRow("{\"type\": \"other\", \"type\": \"authentication_required\"}", DisplayName = "duplicate type")]
+    [DataRow("{\"error\": \"a\", \"Error\": \"b\"}", DisplayName = "case-variant error")]
+    [DataRow("{\"type\": \"other\", \"Type\": \"authentication_required\"}", DisplayName = "case-variant type")]
     public async Task ErrorResponse_WithDuplicateProperty_IsNotTrusted(string body)
     {
         var (service, _) = CreateService(body, HttpStatusCode.Forbidden);
@@ -1198,6 +1219,7 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     [DataRow("{}", DisplayName = "missing id")]
     [DataRow("{\"id\": null}", DisplayName = "null id")]
     [DataRow("{\"id\": \"a\", \"id\": \"b\"}", DisplayName = "duplicate id")]
+    [DataRow("{\"id\": \"a\", \"ID\": \"b\"}", DisplayName = "case-variant id")]
     public async Task PutCustomerInfoAsync_WithInvalidResponse_ThrowsInvalidKycResponseException(string body)
     {
         var (service, _) = CreateService(body);
