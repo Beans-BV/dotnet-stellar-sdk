@@ -10,7 +10,7 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
-- **Protocol 28 support** (implements [#207](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/207)):
+- **Protocol 28 support** (implements [#207](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/207), [#252](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/252)):
   - XDR regenerated from stellar-xdr `v28.0` (`9c9c145`, the XDR that Protocol 28 on Mainnet was built from):
     CAP-85 `SCV_EXECUTABLE_TAG` and `CONTRACT_EXECUTABLE_EXTERNAL_REF` (`ContractExecutableExternalRef`), and
     CAP-83 `STELLAR_VALUE_EMPTY_TX_SET`. Ledger entries, transaction metas, events and simulation results that
@@ -266,7 +266,7 @@ All notable changes to this project are documented here. The format is based on
     legacy credentials, and later disables the flag altogether (planned for protocol 30). Stellar Testnet was
     already on protocol 29 with RPC 29.0.0 in September 2026 and still defaulted to v1, so the protocol numbers
     are not firm.
-- **Breaking (behavioral):** Protocol 28 XDR ([#207](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/207)).
+- **Breaking (behavioral):** Protocol 28 XDR ([#207](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/207), [#252](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/252)).
   `SCValType`, `ContractExecutableType` and `StellarValueType` gain members (`SCV_EXECUTABLE_TAG`,
   `CONTRACT_EXECUTABLE_EXTERNAL_REF`, `STELLAR_VALUE_EMPTY_TX_SET`), so values that used to fail to decode with
   `InvalidDataException` now decode, and code that switches over these enums or over `SCVal` /

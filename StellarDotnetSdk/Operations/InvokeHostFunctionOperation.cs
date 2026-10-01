@@ -164,7 +164,10 @@ public class CreateContractOperation : InvokeHostFunctionOperation
     /// </param>
     /// <param name="accountId">The address to use to derive the contract ID.</param>
     /// <param name="arguments">The optional parameters to pass to the constructor of this contract.</param>
-    /// <param name="salt">(Optional) Custom salt 32-byte salt for the token ID. It will be randomly generated if omitted.</param>
+    /// <param name="salt">
+    ///     (Optional) The 32-byte salt that, together with <paramref name="accountId" />, derives the new contract's ID.
+    ///     It is randomly generated if omitted.
+    /// </param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public static CreateContractOperation FromAddress(
         string wasmHash,
@@ -196,7 +199,10 @@ public class CreateContractOperation : InvokeHostFunctionOperation
     /// <param name="tag">The owner-scoped tag naming the executable, encoded as UTF-8.</param>
     /// <param name="accountId">The address to use to derive the contract ID.</param>
     /// <param name="arguments">The optional parameters to pass to the constructor of this contract.</param>
-    /// <param name="salt">(Optional) Custom salt 32-byte salt for the token ID. It will be randomly generated if omitted.</param>
+    /// <param name="salt">
+    ///     (Optional) The 32-byte salt that, together with <paramref name="accountId" />, derives the new contract's ID.
+    ///     It is randomly generated if omitted.
+    /// </param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="tag" /> is null.</exception>
     /// <exception cref="ArgumentException">
@@ -238,7 +244,10 @@ public class CreateContractOperation : InvokeHostFunctionOperation
     /// </param>
     /// <param name="accountId">The address to use to derive the contract ID.</param>
     /// <param name="arguments">The optional parameters to pass to the constructor of this contract.</param>
-    /// <param name="salt">(Optional) Custom salt 32-byte salt for the token ID. It will be randomly generated if omitted.</param>
+    /// <param name="salt">
+    ///     (Optional) The 32-byte salt that, together with <paramref name="accountId" />, derives the new contract's ID.
+    ///     It is randomly generated if omitted.
+    /// </param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="tag" /> is null.</exception>
     /// <exception cref="ArgumentException">
