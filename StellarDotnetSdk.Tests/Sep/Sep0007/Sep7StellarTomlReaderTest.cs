@@ -123,6 +123,15 @@ public class Sep7StellarTomlReaderTest
     [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[a b]", "']' closing a table header")]
     [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[a]\r", "after a table header")] // lone CR
     [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[\na]", "expected a key")]
+    // TOML has no lone-CR newline, and a lone CR is a control character in a comment or string.
+    [DataRow("\rURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")]
+    [DataRow("A = 1\n \r \nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")] // in a blank line
+    [DataRow("# a\rb\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")]
+    [DataRow("A = [1,\r2]\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")]
+    [DataRow("A = { a = 1 }\nB = [1, # c\r\n 2,\r]\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")]
+    [DataRow("A = \"\"\"a\rb\"\"\"\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")]
+    [DataRow("A = \"\"\"a\\\n\r b\"\"\"\nURI_REQUEST_SIGNING_KEY = \"" + Key + "\"", "carriage return")]
+    [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\r[a]", "after a value")] // ends a value line
     // A header redefining the signing key as a table.
     [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[URI_REQUEST_SIGNING_KEY]", "used as a table")]
     [DataRow("URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n[[URI_REQUEST_SIGNING_KEY]]", "used as a table")]
@@ -156,6 +165,22 @@ public class Sep7StellarTomlReaderTest
     public void ReadsTheKey_WhenTheRootTableEndsInAWellFormedHeader(string header)
     {
         var toml = "URI_REQUEST_SIGNING_KEY = \"" + Key + "\"\n" + header;
+
+        Assert.AreEqual(Key, Sep7StellarTomlReader.ReadUriRequestSigningKey(toml));
+    }
+
+    [TestMethod]
+    public void ReadsTheKey_WithCrlfLineEndsEverywhere()
+    {
+        var toml = string.Join("\r\n",
+            "\r\n# a comment",
+            "A = [1, # in an array",
+            "  2]",
+            "B = \"\"\"\r\nmulti\r\nline \\\r\n  trimmed\"\"\"",
+            "",
+            "URI_REQUEST_SIGNING_KEY = \"" + Key + "\" # trailing",
+            "[a]",
+            "");
 
         Assert.AreEqual(Key, Sep7StellarTomlReader.ReadUriRequestSigningKey(toml));
     }

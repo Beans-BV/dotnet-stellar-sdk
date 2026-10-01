@@ -243,6 +243,8 @@ internal sealed class Sep7StellarTomlReader
                 case '#':
                     SkipComment();
                     break;
+                case '\r' when AtLoneCarriageReturn:
+                    throw LoneCarriageReturn();
                 default:
                     _position++;
                     break;
@@ -302,6 +304,10 @@ internal sealed class Sep7StellarTomlReader
             if (!multiLine && (c == '\n' || c == '\r'))
             {
                 throw Error("newline in a single-line string", start);
+            }
+            if (AtLoneCarriageReturn)
+            {
+                throw LoneCarriageReturn();
             }
             if (quote == '"' && c == '\\')
             {
@@ -372,6 +378,10 @@ internal sealed class Sep7StellarTomlReader
             }
             while (!AtEnd && (Current == ' ' || Current == '\t' || Current == '\n' || Current == '\r'))
             {
+                if (AtLoneCarriageReturn)
+                {
+                    throw LoneCarriageReturn();
+                }
                 _position++;
             }
             return;
@@ -402,9 +412,13 @@ internal sealed class Sep7StellarTomlReader
         while (!AtEnd)
         {
             var c = Current;
-            if (c == ' ' || c == '\t' || c == '\r' || c == '\n')
+            if (c == ' ' || c == '\t' || c == '\n' || (c == '\r' && !AtLoneCarriageReturn))
             {
                 _position++;
+            }
+            else if (c == '\r')
+            {
+                throw LoneCarriageReturn();
             }
             else if (c == '#')
             {
@@ -433,8 +447,24 @@ internal sealed class Sep7StellarTomlReader
         }
         while (!AtEnd && Current != '\n')
         {
+            if (AtLoneCarriageReturn)
+            {
+                throw LoneCarriageReturn();
+            }
             _position++;
         }
+    }
+
+    /// <summary>
+    ///     Whether the reader is at a carriage return that does not start a CRLF: TOML has no lone-CR newline, and as
+    ///     a control character it is not allowed in a comment or string either.
+    /// </summary>
+    private bool AtLoneCarriageReturn =>
+        !AtEnd && Current == '\r' && !(_position + 1 < _toml.Length && _toml[_position + 1] == '\n');
+
+    private FormatException LoneCarriageReturn()
+    {
+        return Error("a carriage return not followed by a line feed", _position);
     }
 
     private void ExpectLineEnd(string after = "a value")
