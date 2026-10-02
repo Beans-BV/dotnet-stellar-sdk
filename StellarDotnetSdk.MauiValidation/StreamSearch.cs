@@ -14,7 +14,10 @@ internal static class StreamSearch
         CancellationToken ct)
     {
         var buffer = new byte[4096];
-        var text = new StringBuilder();
+        // The end of the text searched so far: its last needle.Length - 1 characters, where a needle that continues
+        // in the next read can start. Searching only this and the new text keeps a long stream from costing the square
+        // of its length.
+        var tail = "";
         var isFirstRead = true;
         int read;
         while ((read = await stream.ReadAsync(buffer, ct)) > 0)
@@ -24,11 +27,12 @@ internal static class StreamSearch
                 isFirstRead = false;
                 onFirstBytes?.Invoke();
             }
-            text.Append(Encoding.UTF8.GetString(buffer, 0, read));
-            if (text.ToString().Contains(needle))
+            var text = tail + Encoding.UTF8.GetString(buffer, 0, read);
+            if (text.Contains(needle))
             {
                 return true;
             }
+            tail = text[Math.Max(0, text.Length - (needle.Length - 1))..];
         }
         return false;
     }

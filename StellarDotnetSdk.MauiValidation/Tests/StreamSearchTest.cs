@@ -61,6 +61,30 @@ public class StreamSearchTest
     }
 
     /// <summary>
+    ///     Verifies that the memory a search allocates grows with the length of the stream, not with its square, as it
+    ///     would if every read copied all text read so far (about 270 MB for this stream).
+    /// </summary>
+    [TestMethod]
+    public async Task ReadUntilAsync_LongStreamWithoutNeedle_AllocatesInProportionToLength()
+    {
+        // Arrange
+        var data = Encoding.UTF8.GetBytes(string.Concat(Enumerable.Repeat("data: {}\n\n", 104_858)));
+        using var stream = new MemoryStream(data);
+        var allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
+
+        // Act
+        // A MemoryStream completes every read at once, so the whole search runs on this thread, where the
+        // allocation counter sees it.
+        var search = StreamSearch.ReadUntilAsync(stream, Needle, null, CancellationToken.None);
+        var allocated = GC.GetAllocatedBytesForCurrentThread() - allocatedBefore;
+
+        // Assert
+        Assert.IsTrue(search.IsCompleted, "the search did not complete on this thread, so the count misses part of it");
+        Assert.IsFalse(await search);
+        Assert.IsTrue(allocated < 16L * data.Length, $"allocated {allocated:N0} bytes for {data.Length:N0} bytes");
+    }
+
+    /// <summary>
     ///     Verifies that reading stops at the read that brings the needle: an SSE stream does not end on its own.
     /// </summary>
     [TestMethod]
