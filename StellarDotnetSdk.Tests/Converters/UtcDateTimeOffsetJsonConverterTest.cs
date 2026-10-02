@@ -64,6 +64,27 @@ public class UtcDateTimeOffsetJsonConverterTest
     }
 
     [TestMethod]
+    [DoNotParallelize]
+    [DataRow("America/New_York", "9999-12-31T23:59:59", 9999, 12, 31, 23, 59, 59,
+        DisplayName = "Last second, local zone west of UTC")]
+    [DataRow("Asia/Tokyo", "0001-01-01T00:00:00", 1, 1, 1, 0, 0, 0,
+        DisplayName = "First second, local zone east of UTC")]
+    [DataRow("Asia/Tokyo", "0001-01-01", 1, 1, 1, 0, 0, 0, DisplayName = "First day, local zone east of UTC")]
+    public void Read_WithoutOffsetAtTheEdgeOfTheRange_IsUtcInAnyLocalZone(string zone, string text, int year,
+        int month, int day, int hour, int minute, int second)
+    {
+        // Read as local time, these values fall outside DateTimeOffset's range in the given zone, while the same
+        // text is in range as UTC. The outcome must not depend on where the SDK runs.
+        RunInLocalZone(zone, () =>
+        {
+            var value = Read($"\"{text}\"");
+
+            Assert.AreEqual(new DateTimeOffset(year, month, day, hour, minute, second, TimeSpan.Zero), value);
+            Assert.AreEqual(TimeSpan.Zero, value.Offset);
+        });
+    }
+
+    [TestMethod]
     [DataRow("\"2021-04-30T07:42:23.Z\"", DisplayName = "Fraction separator without digits")]
     [DataRow("\"2021-04-30T07:42:23.+05:30\"", DisplayName = "Fraction separator before an offset")]
     [DataRow("\"9999-12-31T23:59:59.99999995Z\"", DisplayName = "Fraction that rounds past the maximum")]
@@ -105,9 +126,27 @@ public class UtcDateTimeOffsetJsonConverterTest
     [DataRow("\"2021-04-30T09:42:23+02:00\"")]
     [DataRow("\"2021-04-30T02:42:23-05:00\"")]
     [DataRow("\"2021-04-30T07:42:23.000Z\"")]
+    [DataRow("\"2021-04-30T12:42:23+05\"", DisplayName = "Offset in whole hours")]
     public void Read_WithOffset_ReadsThatInstant(string json)
     {
         Assert.AreEqual(new DateTimeOffset(2021, 4, 30, 7, 42, 23, TimeSpan.Zero), Read(json));
+    }
+
+    [TestMethod]
+    [DataRow("\"2021-04-30\"", 0, 0, DisplayName = "Date only")]
+    [DataRow("\"2021-04-30T07:42\"", 7, 42, DisplayName = "Without seconds")]
+    public void Read_WithAShorterForm_ReadsItAsUtc(string json, int hour, int minute)
+    {
+        Assert.AreEqual(new DateTimeOffset(2021, 4, 30, hour, minute, 0, TimeSpan.Zero), Read(json));
+    }
+
+    [TestMethod]
+    public void Read_WithMoreThanSevenFractionalDigits_RoundsToTheNearestTick()
+    {
+        // Go's RFC3339Nano and Java's Instant write up to nine digits. A tick is 100 ns, so .123456789 s is
+        // 1234567.89 ticks, which rounds to 1234568.
+        Assert.AreEqual(new DateTimeOffset(2021, 4, 30, 7, 42, 23, TimeSpan.Zero).AddTicks(1234568),
+            Read("\"2021-04-30T07:42:23.123456789Z\""));
     }
 
     [TestMethod]
@@ -123,6 +162,14 @@ public class UtcDateTimeOffsetJsonConverterTest
     [DataRow("\"\"")]
     [DataRow("1619768543")]
     [DataRow("null")]
+    // DateTimeOffset.TryParse alone accepts each of the values below.
+    [DataRow("\"2021-04-30Z\"", DisplayName = "Offset without a time")]
+    [DataRow("\"2021-04-30t07:42:23Z\"", DisplayName = "Lower-case time designator")]
+    [DataRow("\"2021-04-30T07:42:23z\"", DisplayName = "Lower-case UTC designator")]
+    [DataRow("\"2021-04-30T07:42:23,5Z\"", DisplayName = "Comma before the fraction")]
+    [DataRow("\"2021-04-30T07:42:23.12345678901234567Z\"", DisplayName = "Seventeen fractional digits")]
+    [DataRow("\" 2021-04-30T07:42:23Z\"", DisplayName = "Leading space")]
+    [DataRow("\"2021-04-30T07:42:23Z\\n\"", DisplayName = "Trailing line feed")]
     public void Read_WithNonIsoValue_Throws(string json)
     {
         Assert.ThrowsException<JsonException>(() => Read(json));
