@@ -120,6 +120,7 @@ RFC-safe methods (`GET`, `HEAD`, `OPTIONS`). Each preset opts in to the addition
 | `Server.SubmitTransaction()` / `SubmitTransactionAsync()` | POST | ✅ | n/a |
 | Every `StellarRpcServer` method — read (`getLatestLedger`, `simulateTransaction`, `getEvents`, …) or write (`sendTransaction`) | POST | n/a | ✅ |
 | SEP-6 `PATCH /transactions/{id}` | PATCH | ❌ | ❌ |
+| SEP-38 `POST /quote` (`QuoteService.PostQuoteAsync`) | POST | ⚠️ yes — don't use (see below) | ⚠️ yes — don't use (see below) |
 
 Retrying `SubmitTransaction()` is safe on Stellar even though it is HTTP POST: every envelope is
 uniquely keyed by transaction hash plus the source account's sequence number, so a resubmit either
@@ -129,9 +130,9 @@ surfaces `tx_bad_seq` and your code should look up the transaction by its hash t
 original result.
 
 > **⚠️ Do not wire `ForHorizon()` or `ForSoroban()` into SEP service clients**
-> (`ClientWebAuth`, `InteractiveService`, `TransferServerService`, `UriScheme`, `StellarToml` with a
-> custom `HttpClient`). Specific SEP POST endpoints are **non-idempotent by spec** and silently retrying
-> them creates real problems:
+> (`ClientWebAuth`, `InteractiveService`, `TransferServerService`, `UriScheme`, `QuoteService`,
+> `StellarToml` with a custom `HttpClient`). Specific SEP POST endpoints are **non-idempotent by spec**
+> and silently retrying them creates real problems:
 >
 > - **SEP-10 `POST /auth`** — the spec says: *"The Server should not provide more than one JWT for
 >   a specific challenge transaction."* The challenge is one-shot. On transient failure, request a
@@ -145,6 +146,9 @@ original result.
 >   the spec says nothing about idempotency; the POST delivers a signed transaction to a URL the
 >   requester chose, and a retry delivers it again. Use `NoRetry()` (the default) for `UriScheme`:
 >   even transport retries replay it.
+> - **SEP-38 `POST /quote`** — each call creates a new firm quote that the anchor holds in reserve
+>   until it expires. Both presets retry `POST` on a 408, 429, 500, 502, 503 or 504 answer, so one
+>   call can reserve two quotes.
 >
 > For the other SEP HttpClients, use `WithConnectionRetries()` (transport retries only) or build a
 > custom `HttpResilienceOptions` whose `RetryHttpMethods` contains only `GET`/`HEAD`/`OPTIONS`. Note that

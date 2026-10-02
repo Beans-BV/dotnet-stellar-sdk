@@ -1,0 +1,17 @@
+{
+  "total_price": "0.20",
+  "price": "0.18",
+  "sell_amount": "100",
+  "buy_amount": "500",
+  "fee": {
+    "total": "55.5556",
+    "asset": "iso4217:BRL",
+    "details": [
+      {
+        "name": "PIX fee",
+        "description": "Fee charged in order to process the outgoing PIX transaction.",
+        "amount": "55.5556"
+      }
+    ]
+  }
+}
