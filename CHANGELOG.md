@@ -101,8 +101,9 @@ All notable changes to this project are documented here. The format is based on
   per RFC 7578, and a request's `ToString()` redacts the JWT, SEP-9 and custom field values, file contents
   and names, verification codes, file references and callback-URL secrets, but prints identifiers (customer
   ID, account, memo, memo type, type, transaction ID, language, file ID, content type) with control and
-  format characters replaced. The SEP-12 converters are public, so a consumer's source-generated
-  `JsonSerializerContext` can use the response types. `KycCallbackSignature` verifies the
+  format characters replaced. The SEP-12 converters are public and attached to the response properties, so a
+  consumer's source-generated `JsonSerializerContext` can use the response types with the same checks, including
+  the rejection of a `null` entry in `fields` or `provided_fields`. `KycCallbackSignature` verifies the
   `Signature`/`X-Stellar-Signature` header on anchor status callbacks (Ed25519 over
   `<timestamp>.<host>.<body>`, with a freshness window, over the body as a string or raw bytes), and
   `GetSignedHost` derives the host string the anchor signs (`host:port` when the callback URL names a port);

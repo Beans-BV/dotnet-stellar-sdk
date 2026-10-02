@@ -951,19 +951,7 @@ public class KycService : IDisposable
 
     private static GetCustomerInfoResponse ParseCustomerInfo(string? body, int status)
     {
-        var response = Parse<GetCustomerInfoResponse>(body, status);
-        try
-        {
-            response.EnsureNoNullEntries();
-        }
-        catch (JsonException ex)
-        {
-            throw new InvalidKycResponseException(
-                $"Invalid SEP-0012 customer response: {UntrustedText.Sanitize(ex.Message)}", status,
-                UntrustedText.Sanitize(ex));
-        }
-
-        return response;
+        return Parse<GetCustomerInfoResponse>(body, status);
     }
 
     private static T Parse<T>(string? body, int status) where T : class

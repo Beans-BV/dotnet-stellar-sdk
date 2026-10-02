@@ -274,3 +274,24 @@ public sealed class CustomerFilesJsonConverter : NonNullElementArrayJsonConverte
     {
     }
 }
+
+/// <summary>Rejects a <c>null</c> entry in the <c>fields</c> object of a customer response.</summary>
+public sealed class CustomerFieldsJsonConverter : NonNullValueDictionaryJsonConverter<GetCustomerInfoField>
+{
+    /// <summary>Initializes a new instance of the <see cref="CustomerFieldsJsonConverter" /> class.</summary>
+    public CustomerFieldsJsonConverter()
+        : base("fields")
+    {
+    }
+}
+
+/// <summary>Rejects a <c>null</c> entry in the <c>provided_fields</c> object of a customer response.</summary>
+public sealed class CustomerProvidedFieldsJsonConverter
+    : NonNullValueDictionaryJsonConverter<GetCustomerInfoProvidedField>
+{
+    /// <summary>Initializes a new instance of the <see cref="CustomerProvidedFieldsJsonConverter" /> class.</summary>
+    public CustomerProvidedFieldsJsonConverter()
+        : base("provided_fields")
+    {
+    }
+}
