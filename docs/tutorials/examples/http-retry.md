@@ -164,9 +164,12 @@ resilienceOptions.RetryHttpMethods.Add(HttpMethod.Post);
 >   is defined.
 > - **SEP-6 `PATCH /transactions/{id}`** — not in the SEP-6 master spec; anchor-vendor extension
 >   that mutates KYC state.
+> - **SEP-7 callback `POST`** (`UriScheme`) — the spec says nothing about idempotency; the POST
+>   delivers a signed transaction to a URL the requester chose, and a retry delivers it again. Use
+>   `NoRetry()` (the default) for `UriScheme`: even transport retries replay it.
 >
 > Do NOT wire `ForHorizon()` or `ForSoroban()` into a `ClientWebAuth` / `InteractiveService` /
-> `TransferServerService` HttpClient. For SEP HttpClients, use `WithConnectionRetries()`
+> `TransferServerService` / `UriScheme` HttpClient. For the other SEP HttpClients, use `WithConnectionRetries()`
 > (transport failures only) or build a custom `HttpResilienceOptions` whose `RetryHttpMethods`
 > contains only the safe defaults.
 >
