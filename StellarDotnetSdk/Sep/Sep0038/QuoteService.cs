@@ -204,10 +204,13 @@ public class QuoteService : IDisposable
     /// </summary>
     /// <param name="domain">The anchor's home domain, for example <c>testanchor.stellar.org</c>.</param>
     /// <param name="resilienceOptions">
-    ///     Optional retry and timeout options for the stellar.toml fetch and, when <paramref name="httpClient" /> is
-    ///     null, for the client the service creates.
+    ///     Optional retry and timeout options for the stellar.toml fetch and the client the service creates. Ignored
+    ///     when <paramref name="httpClient" /> is provided.
     /// </param>
-    /// <param name="bearerToken">Optional bearer token for the stellar.toml fetch only.</param>
+    /// <param name="bearerToken">
+    ///     Optional bearer token for the stellar.toml fetch only. Ignored when <paramref name="httpClient" /> is
+    ///     provided: the stellar.toml is then fetched with the caller's client as it is configured, without the token.
+    /// </param>
     /// <param name="httpClient">Optional HTTP client to use; it remains owned by the caller.</param>
     /// <param name="httpRequestHeaders">
     ///     Optional headers added to the stellar.toml fetch and every request. A content header is sent only with
