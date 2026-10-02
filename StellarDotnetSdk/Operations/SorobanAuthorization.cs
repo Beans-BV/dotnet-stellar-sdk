@@ -337,16 +337,9 @@ public static class SorobanAuthorization
     /// </param>
     /// <param name="network">The network the transaction is submitted to.</param>
     /// <param name="version">
-    ///     Which credential variant to produce. Defaults to <see cref="SorobanCredentialsVersion.Preserve" />,
-    ///     keeping the entry's existing variant: V2 in the default simulation flow; V1 after a
-    ///     <c>useUpgradedAuth: false</c> simulation that Stellar RPC still honours, on a pre-Protocol-27
-    ///     network, or from an RPC server that predates the flag. Why this default does not follow the
-    ///     SDK-wide V2 default is explained on <see cref="SorobanCredentialsVersion" />. Pass
-    ///     <see cref="SorobanCredentialsVersion.V2" /> to upgrade a legacy entry to the Protocol 27
-    ///     address-bound credential (on a Protocol 27+ network this also requires the address-bound
-    ///     signature when an older RPC server returned V1), or
-    ///     <see cref="SorobanCredentialsVersion.V1" /> to force the legacy credential. Ignored for entries
-    ///     carrying delegated credentials, which keep their credential type.
+    ///     <inheritdoc
+    ///         cref="AuthorizeEntry(SorobanAuthorizationEntry, KeyPair, uint, Network, SorobanCredentialsVersion, ScAddress?)"
+    ///         path="/param[@name='version']/node()" />
     /// </param>
     /// <param name="forAddress">
     ///     Optional address of the credential node that receives the signature. When omitted, the
