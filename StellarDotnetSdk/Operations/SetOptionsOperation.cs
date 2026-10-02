@@ -207,7 +207,7 @@ public class SetOptionsOperation : Operation
     /// <summary>
     ///     Add, update, or remove a signer from the account. Signer is deleted if the weight = 0;
     /// </summary>
-    /// <param name="signer">The signer's Ed25519 public key.</param>
+    /// <param name="accountId">The account ID (<c>G...</c>) whose Ed25519 public key is the signer.</param>
     /// <param name="weight">The weight to attach to the signer (0-255).</param>
     /// <returns>SetOptionsOperation object so you can chain methods.</returns>
     public SetOptionsOperation SetSigner(string accountId, int weight)

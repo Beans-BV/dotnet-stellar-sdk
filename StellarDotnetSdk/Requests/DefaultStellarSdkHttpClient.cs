@@ -41,7 +41,8 @@ public class DefaultStellarSdkHttpClient : HttpClient
     ///     circuit breaker, or timeout.
     /// </param>
     /// <param name="innerHandler">
-    ///     Optional inner HTTP message handler. If null, defaults to <see cref="SocketsHttpHandler" />.
+    ///     Optional inner HTTP message handler. If null, defaults to <c>SocketsHttpHandler</c> on .NET 8 and later,
+    ///     and to <see cref="HttpClientHandler" /> on netstandard2.1.
     ///     Use this to inject a custom handler for testing, proxies, or custom certificate handling.
     /// </param>
     public DefaultStellarSdkHttpClient(

@@ -87,7 +87,7 @@ public class SimulateTransactionResponse
     ///         <c>PropertyNameCaseInsensitive</c> or a camelCase naming policy) got a
     ///         <see cref="System.Text.Json.JsonException" /> on a conforming reply. Options that already imply
     ///         <see cref="JsonNumberHandling.AllowReadingFromString" />, such as
-    ///         <see cref="JsonSerializerDefaults.Web" />, were never affected.
+    ///         <see cref="System.Text.Json.JsonSerializerDefaults.Web" />, were never affected.
     ///     </para>
     ///     <para>
     ///         This relaxes the read rather than constraining it: the property now accepts a JSON string

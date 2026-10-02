@@ -14,9 +14,9 @@ namespace StellarDotnetSdk.Operations;
 /// </summary>
 public class PaymentOperation : Operation
 {
-    // <summary>
+    /// <summary>
     ///     Constructs a new <c>PaymentOperation</c>.
-    // </summary>
+    /// </summary>
     /// <param name="destination">The destination keypair (uses only the public key).</param>
     /// <param name="asset">The asset to send.</param>
     /// <param name="amount">The amount to send in lumens.</param>

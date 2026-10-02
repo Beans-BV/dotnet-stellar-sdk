@@ -70,7 +70,7 @@ public class TradesRequestBuilder : RequestBuilderExecutePageable<TradesRequestB
     ///     Builds request to <code>GET /accounts/{account}/trades</code>
     ///     <a href="https://www.stellar.org/developers/horizon/reference/endpoints/trades-for-account.html">Trades for Account</a>
     /// </Summary>
-    /// <param name="account">Account for which to get trades</param>
+    /// <param name="accountId">Account for which to get trades</param>
     public TradesRequestBuilder ForAccount(string accountId)
     {
         if (accountId is null)

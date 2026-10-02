@@ -14,8 +14,9 @@ namespace StellarDotnetSdk.Converters;
 ///     Handles conversion between JSON string representations and LiquidityPoolTypeEnum values.
 /// </summary>
 /// <remarks>
-///     Performance: Uses a <see cref="FrozenDictionary{TKey,TValue}" /> for both string→enum and
-///     enum→string dispatch, yielding faster reads than a switch expression on immutable data.
+///     Performance: Uses a dictionary for both string→enum and enum→string dispatch: a <c>FrozenDictionary</c>
+///     on .NET 8 and later, which reads faster than a switch expression on immutable data, and a
+///     <c>Dictionary</c> on netstandard2.1.
 /// </remarks>
 public class LiquidityPoolTypeEnumJsonConverter : JsonConverter<LiquidityPoolType.LiquidityPoolTypeEnum>
 {

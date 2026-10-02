@@ -19,11 +19,14 @@ namespace StellarDotnetSdk.Sep.Sep0001;
 ///     See <a href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md">SEP-0001</a>
 ///     <para>
 ///         <strong>HttpClient Usage:</strong> For production code, it is strongly recommended to pass a shared
-///         <see cref="HttpClient" /> instance to the static methods (<see cref="FromDomainAsync" /> and
-///         <see cref="CurrencyFromUrlAsync" />). If no HttpClient is provided, a new instance will be created
-///         and disposed for each call, which is inefficient and can lead to socket exhaustion under load.
-///         Create and reuse a single HttpClient instance (or use <see cref="System.Net.Http.IHttpClientFactory" />)
-///         for multiple calls to these methods.
+///         <see cref="HttpClient" /> instance to the static methods
+///         (<see cref="FromDomainAsync(string, HttpClient?, Dictionary{string, string}?, CancellationToken)">FromDomainAsync</see>
+///         and
+///         <see cref="CurrencyFromUrlAsync(string, HttpClient?, Dictionary{string, string}?, CancellationToken)">CurrencyFromUrlAsync</see>,
+///         each with an overload that also takes resilience options). If no HttpClient is provided, a new instance
+///         will be created and disposed for each call, which is inefficient and can lead to socket exhaustion under
+///         load. Create and reuse a single HttpClient instance (or use <c>IHttpClientFactory</c>) for multiple calls
+///         to these methods.
 ///     </para>
 /// </summary>
 public class StellarToml

@@ -9,8 +9,10 @@ namespace StellarDotnetSdk.Requests;
 public class AssetsRequestBuilder : RequestBuilderExecutePageable<AssetsRequestBuilder, AssetResponse>
 {
     /// <summary>
+    ///     Initializes a new <see cref="AssetsRequestBuilder" />.
     /// </summary>
-    /// <param name="serverUri"></param>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public AssetsRequestBuilder(Uri serverUri, HttpClient httpClient)
         : base(serverUri, "assets", httpClient)
     {

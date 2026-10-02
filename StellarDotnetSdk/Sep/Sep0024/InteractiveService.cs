@@ -37,7 +37,7 @@ namespace StellarDotnetSdk.Sep.Sep0024;
 ///         <see cref="HttpClient" /> instance to the constructor or <see cref="FromDomainAsync" />. If no HttpClient
 ///         is provided, a new instance will be created internally. While <see cref="InteractiveService" /> implements
 ///         <see cref="IDisposable" /> to clean up internal clients, reusing a single HttpClient instance
-///         (or using <see cref="System.Net.Http.IHttpClientFactory" />) is more efficient and avoids socket exhaustion
+///         (or using <c>IHttpClientFactory</c>) is more efficient and avoids socket exhaustion
 ///         under load.
 ///     </para>
 ///     <para>
@@ -127,7 +127,9 @@ public class InteractiveService : IDisposable
     /// <param name="httpRequestHeaders">Optional custom HTTP headers to include in requests.</param>
     /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>An instance of InteractiveService configured with the transfer server URL.</returns>
-    /// <exception cref="StellarTomlException">Thrown when the stellar.toml file cannot be loaded or parsed.</exception>
+    /// <exception cref="Sep0001.Exceptions.StellarTomlException">
+    ///     Thrown when the stellar.toml file cannot be loaded or parsed.
+    /// </exception>
     /// <exception cref="ArgumentException">Thrown when TRANSFER_SERVER_SEP0024 is not available for the domain.</exception>
     public static async Task<InteractiveService> FromDomainAsync(
         string domain,

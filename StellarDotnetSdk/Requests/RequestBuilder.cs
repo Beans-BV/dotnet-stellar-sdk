@@ -67,15 +67,9 @@ public interface IRequestBuilder<T> where T : class
     T Order(OrderDirection direction);
 
     /// <summary>
-    ///     Allows to stream SSE events from horizon.
-    ///     Certain endpoints in Horizon can be called in streaming mode using Server-Sent Events.
-    ///     This mode will keep the connection to horizon open and horizon will continue to return
-    ///     http://www.w3.org/TR/eventsource/
-    ///     "https://www.stellar.org/developers/horizon/learn/responses.html
-    ///     responses as ledgers close.
+    ///     Builds the request URI from the server URI, the path segments and the query parameters set so far.
     /// </summary>
-    /// <param name="listener">EventListener implementation with AccountResponse type</param>
-    /// <returns>EventSource object, so you can close() connection when not needed anymore</returns>
+    /// <returns>The request URI.</returns>
     Uri BuildUri();
 }
 
@@ -175,18 +169,8 @@ public class RequestBuilder<T> : IRequestBuilder<T> where T : class
         return this as T;
     }
 
-    /// <summary>
-    ///     Allows to stream SSE events from horizon.
-    ///     Certain endpoints in Horizon can be called in streaming mode using Server-Sent Events.
-    ///     This mode will keep the connection to horizon open and horizon will continue to return
-    ///     http://www.w3.org/TR/eventsource/
-    ///     "https://www.stellar.org/developers/horizon/learn/responses.html
-    ///     responses as ledgers close.
-    /// </summary>
-    /// <param name="listener">
-    ///     EventListener implementation with AccountResponse type
-    /// </param>
-    /// <returns>EventSource object, so you can close() connection when not needed anymore</returns>
+    /// <inheritdoc />
+    /// <exception cref="NotSupportedException">Thrown when no path segments are set.</exception>
     public Uri BuildUri()
     {
         if (_segments.Count <= 0)

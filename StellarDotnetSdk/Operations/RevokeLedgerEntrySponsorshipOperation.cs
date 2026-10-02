@@ -41,6 +41,7 @@ public class RevokeLedgerEntrySponsorshipOperation : Operation
     ///     Creates a new revoke account entry sponsorship operation.
     /// </summary>
     /// <param name="account">Key pair of an account to be revoked.</param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public static RevokeLedgerEntrySponsorshipOperation ForAccount(KeyPair account, IAccountId? sourceAccount = null)
     {
         return new RevokeLedgerEntrySponsorshipOperation(new LedgerKeyAccount(account), sourceAccount);
@@ -52,6 +53,7 @@ public class RevokeLedgerEntrySponsorshipOperation : Operation
     /// <param name="balanceId">
     ///     Hex-encoded ID (0000...) of the claimable balance entry to be revoked.
     /// </param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public static RevokeLedgerEntrySponsorshipOperation ForClaimableBalance(
         string balanceId,
         IAccountId? sourceAccount = null)
@@ -67,6 +69,7 @@ public class RevokeLedgerEntrySponsorshipOperation : Operation
     /// </summary>
     /// <param name="accountId">Id of the account holding the data entry that being sponsored.</param>
     /// <param name="dataName">Name of the data entry.</param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public static RevokeLedgerEntrySponsorshipOperation ForData(
         string accountId,
         string dataName,
@@ -82,6 +85,7 @@ public class RevokeLedgerEntrySponsorshipOperation : Operation
     /// </summary>
     /// <param name="sellerId">Id of the account that owns the offer that being sponsored.</param>
     /// <param name="offerId">Id of the offer.</param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public static RevokeLedgerEntrySponsorshipOperation ForOffer(
         string sellerId,
         long offerId,
@@ -96,7 +100,8 @@ public class RevokeLedgerEntrySponsorshipOperation : Operation
     ///     Creates a new revoke trustline entry sponsorship operation.
     /// </summary>
     /// <param name="accountId">Id of the account that owns the trustline that being sponsored.</param>
-    /// <param name="offerId">Id of the offer.</param>
+    /// <param name="asset">Asset of the trustline.</param>
+    /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public static RevokeLedgerEntrySponsorshipOperation ForTrustline(
         string accountId,
         Asset asset,

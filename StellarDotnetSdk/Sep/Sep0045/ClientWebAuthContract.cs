@@ -54,6 +54,25 @@ public class ClientWebAuthContract : IDisposable
     private readonly string _webAuthDomain;
 
     /// <summary>Creates a new instance with explicit configuration.</summary>
+    /// <param name="authEndpoint">
+    ///     The SEP-45 auth endpoint (stellar.toml <c>WEB_AUTH_FOR_CONTRACTS_ENDPOINT</c>). It must be an absolute
+    ///     <c>https</c> URI; plain <c>http</c> is allowed only for loopback addresses.
+    /// </param>
+    /// <param name="webAuthContractId">
+    ///     The web auth contract ID as a <c>C...</c> strkey (stellar.toml <c>WEB_AUTH_CONTRACT_ID</c>).
+    /// </param>
+    /// <param name="network">The Stellar network the challenge is bound to.</param>
+    /// <param name="serverSigningKey">
+    ///     The server's signing key as a <c>G...</c> account ID (stellar.toml <c>SIGNING_KEY</c>). The server's
+    ///     signature on the challenge is verified against it.
+    /// </param>
+    /// <param name="serverHomeDomain">
+    ///     The server's home domain. A challenge is validated against it when a request names no home domain.
+    /// </param>
+    /// <param name="sorobanRpcUrl">
+    ///     The Stellar RPC URL used to read the latest ledger, from which the client signature expiration is
+    ///     computed.
+    /// </param>
     /// <param name="webAuthDomain">
     ///     The <c>web_auth_domain</c> the server binds challenges to. Servers configure this independently
     ///     of the endpoint URL (the reference server uses the home domain; anchor-platform uses a dedicated
@@ -70,6 +89,10 @@ public class ClientWebAuthContract : IDisposable
     /// <param name="httpRequestHeaders">
     ///     Optional headers sent with requests to the auth server. The SDK does NOT forward these to the
     ///     client domain's stellar.toml fetch, so they are the safe place for auth-server credentials.
+    /// </param>
+    /// <param name="signatureExpirationLedgers">
+    ///     How many ledgers after the latest ledger the client signature expires. Defaults to
+    ///     <see cref="DefaultSignatureExpirationLedgers" /> when null.
     /// </param>
     /// <param name="resilienceOptions">
     ///     Optional retry/timeout options for the <see cref="HttpClient" /> the SDK creates. Ignored when

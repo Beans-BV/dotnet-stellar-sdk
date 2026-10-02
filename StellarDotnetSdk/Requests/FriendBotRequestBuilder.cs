@@ -12,8 +12,10 @@ namespace StellarDotnetSdk.Requests;
 public class FriendBotRequestBuilder : RequestBuilder<FriendBotRequestBuilder>
 {
     /// <summary>
+    ///     Initializes a new <see cref="FriendBotRequestBuilder" />.
     /// </summary>
-    /// <param name="serverUri"></param>
+    /// <param name="serverUri">The base Horizon server URI.</param>
+    /// <param name="httpClient">The HTTP client used for sending requests.</param>
     public FriendBotRequestBuilder(Uri serverUri, HttpClient httpClient)
         : base(serverUri, "friendbot", httpClient)
     {

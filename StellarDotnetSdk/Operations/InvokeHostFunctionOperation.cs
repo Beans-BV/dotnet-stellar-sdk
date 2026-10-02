@@ -46,6 +46,9 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
     /// <summary>
     ///     Constructs a new <c>InvokeContractOperation</c>.
     /// </summary>
+    /// <param name="contractAddress">The address of the contract to invoke.</param>
+    /// <param name="functionName">The name of the contract function to invoke.</param>
+    /// <param name="args">(Optional) The arguments to pass to the contract function. Null means no arguments.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public InvokeContractOperation(
         ScAddress contractAddress,
@@ -69,6 +72,9 @@ public class InvokeContractOperation : InvokeHostFunctionOperation
     /// <summary>
     ///     Constructs a new <c>InvokeContractOperation</c>.
     /// </summary>
+    /// <param name="contractAddress">The ID of the contract to invoke, as a <c>C...</c> strkey.</param>
+    /// <param name="functionName">The name of the contract function to invoke.</param>
+    /// <param name="args">(Optional) The arguments to pass to the contract function. Null means no arguments.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     public InvokeContractOperation(
         string contractAddress,
@@ -186,6 +192,7 @@ public class CreateContractOperation : InvokeHostFunctionOperation
     ///     Creates a new <c>CreateContractOperation</c> to deploy builtin Soroban Asset Contract using the Stellar asset.
     /// </summary>
     /// <param name="asset">The contract will be created using this Stellar asset.</param>
+    /// <param name="arguments">The optional parameters to pass to the constructor of this contract.</param>
     /// <param name="sourceAccount">(Optional) Source account of the operation.</param>
     /// <remarks>
     ///     Note, that the asset doesn't need to exist when this is applied, however the issuer of the asset will be the
@@ -487,6 +494,7 @@ public class CreateContractV2HostFunction : HostFunction
     /// </summary>
     /// <param name="wasmHash">A hex-encoded string of previously uploaded Wasm bytes of a compiled smart contract.</param>
     /// <param name="address">An account address.</param>
+    /// <param name="arguments">The arguments to pass to the contract constructor during deployment.</param>
     /// <param name="salt">(Optional) A salt. Will be randomly generated if not provided.</param>
     public CreateContractV2HostFunction(
         string wasmHash,

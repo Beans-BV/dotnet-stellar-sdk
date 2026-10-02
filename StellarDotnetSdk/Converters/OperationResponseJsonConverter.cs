@@ -20,8 +20,9 @@ namespace StellarDotnetSdk.Converters;
 ///     2 = PathPaymentStrictReceive
 ///     etc.
 ///     Performance: Parses JSON once into JsonDocument, then deserializes from JsonElement
-///     to avoid double-parsing overhead. Dispatches via a <see cref="FrozenDictionary{TKey,TValue}" />
-///     for an O(1), read-optimized lookup over the immutable discriminator set.
+///     to avoid double-parsing overhead. Dispatches via an O(1) dictionary lookup over the immutable
+///     discriminator set: a read-optimized <c>FrozenDictionary</c> on .NET 8 and later, a <c>Dictionary</c> on
+///     netstandard2.1.
 /// </remarks>
 /// <remarks>
 ///     <p>

@@ -255,7 +255,10 @@ public class Server : IDisposable
     ///     Horizon. At the same time, it also provides clear response status codes from stellar-core to help understand the
     ///     status of the submitted transaction.
     /// </summary>
-    /// <param name="transactionEnvelopeBase64"></param>
+    /// <param name="transactionEnvelopeBase64">The base64-encoded transaction envelope XDR to submit.</param>
+    /// <param name="options">
+    ///     Options controlling the memo-required check and whether the envelope holds a fee bump transaction.
+    /// </param>
     /// <returns></returns>
     /// <exception cref="ServiceUnavailableException"></exception>
     /// <exception cref="TooManyRequestsException"></exception>

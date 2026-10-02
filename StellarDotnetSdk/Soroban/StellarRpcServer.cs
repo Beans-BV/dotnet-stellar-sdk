@@ -167,7 +167,7 @@ public class StellarRpcServer : IDisposable
     ///     completed.
     ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransaction
     /// </summary>
-    /// <param name="hash">
+    /// <param name="txHash">
     ///     The hash of the transaction to check. Encoded as a hex string.
     /// </param>
     /// <returns>
@@ -200,7 +200,7 @@ public class StellarRpcServer : IDisposable
     ///     provider.
     ///     See: https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransactions
     /// </summary>
-    /// <param name="txHash"></param>
+    /// <param name="request">The start ledger, or the pagination cursor, and the page size.</param>
     /// <returns></returns>
     /// <exception cref="SorobanRpcException">
     ///     Thrown when the Stellar RPC server answers with a JSON-RPC error instead of a result. Only an
