@@ -119,10 +119,10 @@ public sealed record PriceRequest
             parameters["buy_amount"] = RequestValidation.FormatAmount(BuyAmount!.Value, nameof(BuyAmount));
         }
 
-        PricesRequest.AddOptional(parameters, "sell_delivery_method", SellDeliveryMethod,
+        RequestValidation.AddOptional(parameters, "sell_delivery_method", SellDeliveryMethod,
             nameof(SellDeliveryMethod));
-        PricesRequest.AddOptional(parameters, "buy_delivery_method", BuyDeliveryMethod, nameof(BuyDeliveryMethod));
-        PricesRequest.AddOptional(parameters, "country_code", CountryCode, nameof(CountryCode));
+        RequestValidation.AddOptional(parameters, "buy_delivery_method", BuyDeliveryMethod, nameof(BuyDeliveryMethod));
+        RequestValidation.AddOptional(parameters, "country_code", CountryCode, nameof(CountryCode));
         RequestValidation.RequireValidJwt(Jwt, nameof(Jwt), false);
         parameters["context"] = context;
         return parameters;

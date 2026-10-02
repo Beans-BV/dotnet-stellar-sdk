@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace StellarDotnetSdk.Sep.Sep0038.Requests;
@@ -69,6 +70,19 @@ internal static class RequestValidation
     {
         RequireNullOrNonBlank(value, propertyName);
         return value != null;
+    }
+
+    /// <summary>
+    ///     Adds the query parameter <paramref name="name" /> when the optional <paramref name="value" /> was given.
+    /// </summary>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="value" /> is empty or whitespace.</exception>
+    internal static void AddOptional(Dictionary<string, string> parameters, string name, string? value,
+        string propertyName)
+    {
+        if (IsProvided(value, propertyName))
+        {
+            parameters[name] = value!;
+        }
     }
 
     /// <summary>

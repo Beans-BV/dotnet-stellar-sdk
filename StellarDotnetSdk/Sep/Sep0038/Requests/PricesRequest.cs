@@ -129,20 +129,11 @@ public sealed record PricesRequest
             parameters["buy_amount"] = RequestValidation.FormatAmount(BuyAmount.Value, nameof(BuyAmount));
         }
 
-        AddOptional(parameters, "sell_delivery_method", SellDeliveryMethod, nameof(SellDeliveryMethod));
-        AddOptional(parameters, "buy_delivery_method", BuyDeliveryMethod, nameof(BuyDeliveryMethod));
-        AddOptional(parameters, "country_code", CountryCode, nameof(CountryCode));
+        RequestValidation.AddOptional(parameters, "sell_delivery_method", SellDeliveryMethod,
+            nameof(SellDeliveryMethod));
+        RequestValidation.AddOptional(parameters, "buy_delivery_method", BuyDeliveryMethod, nameof(BuyDeliveryMethod));
+        RequestValidation.AddOptional(parameters, "country_code", CountryCode, nameof(CountryCode));
         RequestValidation.RequireValidJwt(Jwt, nameof(Jwt), false);
         return parameters;
-    }
-
-    /// <exception cref="ArgumentException">Thrown when <paramref name="value" /> is empty or whitespace.</exception>
-    internal static void AddOptional(Dictionary<string, string> parameters, string name, string? value,
-        string propertyName)
-    {
-        if (RequestValidation.IsProvided(value, propertyName))
-        {
-            parameters[name] = value!;
-        }
     }
 }
