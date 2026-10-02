@@ -789,7 +789,9 @@ public class KycService : IDisposable
             try
             {
                 var encoding = response.IsSuccessStatusCode ? StrictUtf8 : Encoding.UTF8;
-                body = await ReadBodyBoundedAsync(response, encoding, timeoutSource.Token).ConfigureAwait(false);
+                body = await BoundedResponseBody
+                    .ReadAsStringAsync(response, MaxResponseBodyBytes, encoding, timeoutSource.Token)
+                    .ConfigureAwait(false);
             }
             catch (IOException ex)
             {
@@ -862,49 +864,6 @@ public class KycService : IDisposable
               $"{known.TotalSeconds.ToString(CultureInfo.InvariantCulture)} seconds elapsing."
             : "The SEP-0012 request was canceled due to a timeout in the HTTP client's message handler.";
         return new TaskCanceledException(message, new TimeoutException(cause.Message, cause));
-    }
-
-    /// <summary>
-    ///     Reads a response body into a string, or returns <c>null</c> when it exceeds
-    ///     <see cref="MaxResponseBodyBytes" />. A declared <c>Content-Length</c> over the limit is refused before
-    ///     anything is read; an undeclared or understated length is caught while streaming. A leading UTF-8 byte order
-    ///     mark is skipped, as <see cref="HttpContent.ReadAsStringAsync()" /> would.
-    /// </summary>
-    /// <exception cref="DecoderFallbackException">
-    ///     Thrown when <paramref name="encoding" /> throws on invalid input and the body is not valid UTF-8.
-    /// </exception>
-    private static async Task<string?> ReadBodyBoundedAsync(HttpResponseMessage response, Encoding encoding,
-        CancellationToken cancellationToken)
-    {
-        // Never null on .NET 5+, but netstandard2.1 also runs on older runtimes where it can be.
-        if (response.Content == null)
-        {
-            return string.Empty;
-        }
-
-        if (response.Content.Headers.ContentLength is > MaxResponseBodyBytes)
-        {
-            return null;
-        }
-
-        using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-        using var buffer = new MemoryStream();
-        var chunk = new byte[16 * 1024];
-        int read;
-        while ((read = await stream.ReadAsync(chunk, 0, chunk.Length, cancellationToken).ConfigureAwait(false)) > 0)
-        {
-            if (buffer.Length + read > MaxResponseBodyBytes)
-            {
-                return null;
-            }
-
-            buffer.Write(chunk, 0, read);
-        }
-
-        var bytes = buffer.GetBuffer();
-        var length = (int)buffer.Length;
-        var offset = length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF ? 3 : 0;
-        return encoding.GetString(bytes, offset, length - offset);
     }
 
     private static KycServiceException CreateErrorException(HttpMethod method, int status, string? body,

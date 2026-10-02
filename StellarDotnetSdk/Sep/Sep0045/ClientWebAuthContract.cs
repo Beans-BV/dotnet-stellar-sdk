@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using StellarDotnetSdk.Accounts;
 using StellarDotnetSdk.Compatibility;
@@ -207,35 +207,17 @@ public class ClientWebAuthContract : IDisposable
     }
 
     /// <summary>
-    ///     Reads an HTTP response body into a string with an upper size bound. SEP-45 challenge and JWT
-    ///     payloads are small; this prevents a hostile or malfunctioning server from exhausting memory by
-    ///     streaming an unbounded body. Throws <see cref="HttpRequestException" /> when the body exceeds
-    ///     <see cref="MaxResponseBodyBytes" />; callers translate it to their SEP-45 response exception.
+    ///     Reads an HTTP response body into a string with an upper size bound, through the reader the SEP-12 client
+    ///     shares. SEP-45 challenge and JWT payloads are small; this prevents a hostile or malfunctioning server from
+    ///     exhausting memory by streaming an unbounded body. Throws <see cref="HttpRequestException" /> when the body
+    ///     exceeds <see cref="MaxResponseBodyBytes" />; callers translate it to their SEP-45 response exception.
     /// </summary>
     private static async Task<string> ReadBodyBoundedAsync(HttpResponseMessage response)
     {
-        if (response.Content.Headers.ContentLength is long contentLength &&
-            contentLength > MaxResponseBodyBytes)
-        {
-            throw new HttpRequestException(
-                $"Response body length {contentLength} exceeds the {MaxResponseBodyBytes}-byte limit.");
-        }
-
-        using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-        using var buffer = new MemoryStream();
-        var chunk = new byte[16 * 1024];
-        int read;
-        while ((read = await stream.ReadAsync(chunk, 0, chunk.Length).ConfigureAwait(false)) > 0)
-        {
-            if (buffer.Length + read > MaxResponseBodyBytes)
-            {
-                throw new HttpRequestException(
-                    $"Response body exceeds the {MaxResponseBodyBytes}-byte limit.");
-            }
-            buffer.Write(chunk, 0, read);
-        }
-
-        return Encoding.UTF8.GetString(buffer.GetBuffer(), 0, (int)buffer.Length);
+        return await BoundedResponseBody
+                   .ReadAsStringAsync(response, MaxResponseBodyBytes, Encoding.UTF8, CancellationToken.None)
+                   .ConfigureAwait(false)
+               ?? throw new HttpRequestException($"Response body exceeds the {MaxResponseBodyBytes}-byte limit.");
     }
 
     /// <summary>

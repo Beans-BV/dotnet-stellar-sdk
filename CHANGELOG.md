@@ -779,3 +779,6 @@ All notable changes to this project are documented here. The format is based on
   classes now call a single internal helper rather than keeping separate copies.
   The `InvalidOperationException` carve-out in `ResultValue` is now expressed as an exclusion from the
   shared set rather than by re-listing the other types.
+- SEP-45 `ClientWebAuthContract` now accepts a challenge or token response that starts with a UTF-8 byte order
+  mark; it was rejected as invalid JSON. It reads response bodies through the size-bounded reader the SEP-12
+  `KycService` uses, so a fix to that reader reaches both clients.
