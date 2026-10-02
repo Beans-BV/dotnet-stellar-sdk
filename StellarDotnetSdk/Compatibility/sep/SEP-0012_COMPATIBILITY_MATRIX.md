@@ -1,6 +1,6 @@
 # SEP-0012 (KYC API) Compatibility Matrix
 
-**Updated:** 2026-09-30
+**Updated:** 2026-10-02
 **SDK:** StellarDotnetSdk
 **SDK Version:** 12.0.0
 **SEP Version:** 1.15.0
@@ -48,7 +48,6 @@ _Note: StellarDotnetSdk implements the **client** (wallet) side of SEP-12, count
 
 - `StellarDotnetSdk/Sep/Sep0012/KycService.cs`
 - `StellarDotnetSdk/Sep/Sep0012/KycCallbackSignature.cs`
-- `StellarDotnetSdk/Sep/Sep0012/KycUntrustedText.cs`
 - `StellarDotnetSdk/Sep/Sep0012/Requests/GetCustomerInfoRequest.cs`
 - `StellarDotnetSdk/Sep/Sep0012/Requests/PutCustomerInfoRequest.cs`
 - `StellarDotnetSdk/Sep/Sep0012/Requests/PutCustomerVerificationRequest.cs`

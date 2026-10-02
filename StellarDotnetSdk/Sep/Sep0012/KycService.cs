@@ -923,13 +923,13 @@ public class KycService : IDisposable
                 // Not a SEP-0012 error object (HTML error page, duplicate keys, non-string "error", ...). The status
                 // code alone still selects the exception type; the parse failure is kept, sanitized, as the inner
                 // exception.
-                parseFailure = KycUntrustedText.Sanitize(ex);
+                parseFailure = UntrustedText.Sanitize(ex);
             }
         }
 
         var errorText = error?.Error;
         var message = $"SEP-0012 {method.Method} request failed with HTTP {status}" +
-                      (errorText != null ? $": {KycUntrustedText.Sanitize(errorText)}" : ".");
+                      (errorText != null ? $": {UntrustedText.Sanitize(errorText)}" : ".");
 
         if (status == 401 || (status == 403 && error?.Type == AuthenticationRequiredType))
         {
@@ -959,8 +959,8 @@ public class KycService : IDisposable
         catch (JsonException ex)
         {
             throw new InvalidKycResponseException(
-                $"Invalid SEP-0012 customer response: {KycUntrustedText.Sanitize(ex.Message)}", status,
-                KycUntrustedText.Sanitize(ex));
+                $"Invalid SEP-0012 customer response: {UntrustedText.Sanitize(ex.Message)}", status,
+                UntrustedText.Sanitize(ex));
         }
 
         return response;
@@ -981,7 +981,7 @@ public class KycService : IDisposable
         catch (JsonException ex)
         {
             // System.Text.Json's message ends with the JSON path, which quotes server-chosen dictionary keys.
-            var sanitized = KycUntrustedText.Sanitize(ex);
+            var sanitized = UntrustedText.Sanitize(ex);
             throw new InvalidKycResponseException($"Invalid SEP-0012 {typeof(T).Name}: {sanitized.Message}",
                 status, sanitized);
         }

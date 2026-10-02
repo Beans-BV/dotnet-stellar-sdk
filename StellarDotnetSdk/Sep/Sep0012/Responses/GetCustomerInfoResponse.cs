@@ -85,7 +85,7 @@ public sealed class GetCustomerInfoResponse
         catch (JsonException ex)
         {
             // System.Text.Json's message ends with the JSON path, which quotes the payload's dictionary keys verbatim.
-            throw KycUntrustedText.Sanitize(ex);
+            throw UntrustedText.Sanitize(ex);
         }
         catch (ArgumentException ex)
         {
