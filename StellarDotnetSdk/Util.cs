@@ -166,6 +166,14 @@ public static class Util
     /// <returns><see langword="true" /> when the bytes are valid UTF-8.</returns>
     internal static bool TryDecodeUtf8(byte[] bytes, out string? value)
     {
+#if NET8_0_OR_GREATER
+        // Rejects the same malformed input as StrictUtf8 without throwing, so a binary tag costs no exception.
+        if (!System.Text.Unicode.Utf8.IsValid(bytes))
+        {
+            value = null;
+            return false;
+        }
+#endif
         try
         {
             value = StrictUtf8.GetString(bytes);

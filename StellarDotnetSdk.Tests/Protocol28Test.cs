@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -486,6 +487,50 @@ public class Protocol28Test
         Assert.IsFalse(new SCExecutableTag(bytes).TryGetUtf8String(out var text));
         Assert.IsNull(text);
     }
+
+#if !TEST_SDK_NETSTANDARD21
+    /// <summary>
+    ///     Binary tags are the case the strict UTF-8 accessors exist for, so on .NET 8 and later they detect invalid
+    ///     UTF-8 without throwing: a first-chance exception per call is slow in a loop and noisy in a debugger. (The
+    ///     netstandard2.1 build has no <c>Utf8.IsValid</c> and still catches the decoder's exception.)
+    /// </summary>
+    [TestMethod]
+    public void TryGetUtf8String_BinaryTag_RaisesNoFirstChanceException()
+    {
+        // Arrange
+        var tag = new SCExecutableTag(BinaryTag);
+        var externalRef = new ContractExecutableExternalRef(new ScContractId(Owner), BinaryTag);
+        var threadId = Environment.CurrentManagedThreadId;
+        var raised = 0;
+
+        void OnFirstChanceException(object? sender, FirstChanceExceptionEventArgs e)
+        {
+            if (Environment.CurrentManagedThreadId == threadId && e.Exception is DecoderFallbackException)
+            {
+                raised++;
+            }
+        }
+
+        bool isTagText;
+        bool isExternalRefTagText;
+        AppDomain.CurrentDomain.FirstChanceException += OnFirstChanceException;
+        try
+        {
+            // Act
+            isTagText = tag.TryGetUtf8String(out _);
+            isExternalRefTagText = externalRef.TryGetTagUtf8String(out _);
+        }
+        finally
+        {
+            AppDomain.CurrentDomain.FirstChanceException -= OnFirstChanceException;
+        }
+
+        // Assert
+        Assert.IsFalse(isTagText);
+        Assert.IsFalse(isExternalRefTagText);
+        Assert.AreEqual(0, raised);
+    }
+#endif
 
     /// <summary>
     ///     An empty tag is valid XDR and valid (empty) UTF-8.
