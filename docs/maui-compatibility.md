@@ -281,7 +281,7 @@ The durable fix is SDK-side: a source-generated `JsonSerializerContext` for the 
 
 ### 3.3 SSE streaming on Android: the default HTTP handler holds events back
 
-With the SDK's default setup, `Stream(...)` on Android hands an event to the listener only when more data arrives on the connection after it: the next event, or Horizon closing the connection. Horizon closes an SSE connection after 10 events or about 55 s, whichever comes first (`event: close`, `data: "byebye"`). On a quiet stream, such as the payments of one account, the event is therefore about 50 s late. Measured on the emulator in every configuration that reaches the stream: the payment appeared 46.7–47.1 s after the submit. On the four physical devices (§3.1) it appeared 46–48 s after the submit.
+With the SDK's default setup, `Stream(...)` on Android hands an event to the listener only when more data arrives on the connection after it: the next event, or Horizon closing the connection. Horizon closes an SSE connection after 10 events or about 55 s, whichever comes first (`event: close`, `data: "byebye"`). On a quiet stream, such as the payments of one account, the event is therefore about 50 s late. Measured on the emulator in every configuration that reaches the stream: the payment appeared 46.7–47.1 s after the submit. On the physical devices (§3.1) it appeared 46–48 s after the submit in the four `TrimMode=full` runs, and 50.7 s after it in the `TrimMode=partial` run.
 
 The check reads the same payments URL five ways in one run. The check prints stopwatch times; the table subtracts its `submit done` time, so these are times after the submit returned, from one run (`TrimMode=partial`):
 
