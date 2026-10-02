@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using StellarDotnetSdk.Converters;
@@ -13,6 +14,9 @@ namespace StellarDotnetSdk.Sep.Sep0012.Responses;
 /// </summary>
 public sealed class GetCustomerInfoResponse
 {
+    // Throws on a lone surrogate instead of writing U+FFFD, which would turn malformed text into a valid payload.
+    private static readonly UTF8Encoding StrictUtf8 = new(false, true);
+
     /// <summary>
     ///     Gets the ID of the customer, if the customer has already been created via <c>PUT /customer</c>.
     /// </summary>
@@ -79,21 +83,40 @@ public sealed class GetCustomerInfoResponse
             throw new ArgumentNullException(nameof(json));
         }
 
+        byte[] utf8Json;
         try
         {
-            return JsonSerializer.Deserialize<GetCustomerInfoResponse>(json, JsonOptions.DefaultOptions)
+            utf8Json = StrictUtf8.GetBytes(json);
+        }
+        catch (EncoderFallbackException ex)
+        {
+            // A lone surrogate has no UTF-8 form; to a caller that is just another malformed payload.
+            throw new JsonException("The customer response is not valid UTF-16 text.", ex);
+        }
+
+        return FromUtf8Json(utf8Json);
+    }
+
+    /// <summary>
+    ///     Parses a customer response from its UTF-8 bytes. <see cref="FromJson" /> and <see cref="KycService" /> both
+    ///     parse through this method, so a rule added here applies to the callback and the HTTP path alike.
+    /// </summary>
+    /// <param name="utf8Json">
+    ///     The JSON body, already known to be valid UTF-8: System.Text.Json does not check the bytes of a value it
+    ///     skips.
+    /// </param>
+    /// <exception cref="JsonException">Thrown as documented on <see cref="FromJson" />.</exception>
+    internal static GetCustomerInfoResponse FromUtf8Json(ReadOnlySpan<byte> utf8Json)
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<GetCustomerInfoResponse>(utf8Json, JsonOptions.DefaultOptions)
                    ?? throw new JsonException("The customer response is the JSON literal null.");
         }
         catch (JsonException ex)
         {
             // System.Text.Json's message ends with the JSON path, which quotes the payload's dictionary keys verbatim.
             throw UntrustedText.Sanitize(ex);
-        }
-        catch (ArgumentException ex)
-        {
-            // System.Text.Json transcodes the string to UTF-8 first and rejects a lone surrogate with an
-            // ArgumentException; to a caller that is just another malformed payload.
-            throw new JsonException("The customer response is not valid UTF-16 text.", ex);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -13,16 +14,9 @@ namespace StellarDotnetSdk.Requests;
 internal static class BoundedResponseBody
 {
     /// <summary>
-    ///     Reads a response body into a string, or returns <c>null</c> when it exceeds <paramref name="maxBytes" />.
-    ///     A declared <c>Content-Length</c> over the limit is refused before anything is read; an undeclared or
-    ///     understated length is caught while streaming. A leading UTF-8 byte order mark is skipped, as
-    ///     <see cref="HttpContent.ReadAsStringAsync()" /> would.
+    ///     Reads a response body into a string, or returns <c>null</c> when it exceeds <paramref name="maxBytes" />,
+    ///     with the limits and byte order mark handling of <see cref="ReadAsBytesAsync" />.
     /// </summary>
-    /// <remarks>
-    ///     The limit bounds memory only when the response was requested with
-    ///     <see cref="HttpCompletionOption.ResponseHeadersRead" />; otherwise <see cref="HttpClient" /> has already
-    ///     buffered the whole body.
-    /// </remarks>
     /// <param name="response">The response whose body is read.</param>
     /// <param name="maxBytes">The largest body accepted, in bytes.</param>
     /// <param name="encoding">The encoding the body is decoded with.</param>
@@ -33,10 +27,31 @@ internal static class BoundedResponseBody
     internal static async Task<string?> ReadAsStringAsync(HttpResponseMessage response, int maxBytes,
         Encoding encoding, CancellationToken cancellationToken)
     {
+        var body = await ReadAsBytesAsync(response, maxBytes, cancellationToken).ConfigureAwait(false);
+        return body is { } bytes ? encoding.GetString(bytes.Array!, bytes.Offset, bytes.Count) : null;
+    }
+
+    /// <summary>
+    ///     Reads a response body, or returns <c>null</c> when it exceeds <paramref name="maxBytes" />. A declared
+    ///     <c>Content-Length</c> over the limit is refused before anything is read; an undeclared or understated
+    ///     length is caught while streaming. A leading UTF-8 byte order mark is left out of the result, as
+    ///     <see cref="HttpContent.ReadAsStringAsync()" /> would skip it.
+    /// </summary>
+    /// <remarks>
+    ///     The limit bounds memory only when the response was requested with
+    ///     <see cref="HttpCompletionOption.ResponseHeadersRead" />; otherwise <see cref="HttpClient" /> has already
+    ///     buffered the whole body.
+    /// </remarks>
+    /// <param name="response">The response whose body is read.</param>
+    /// <param name="maxBytes">The largest body accepted, in bytes.</param>
+    /// <param name="cancellationToken">Cancellation token for the read.</param>
+    internal static async Task<ArraySegment<byte>?> ReadAsBytesAsync(HttpResponseMessage response, int maxBytes,
+        CancellationToken cancellationToken)
+    {
         // Never null on .NET 5+, but netstandard2.1 also runs on older runtimes where it can be.
         if (response.Content == null)
         {
-            return string.Empty;
+            return new ArraySegment<byte>(Array.Empty<byte>());
         }
 
         if (response.Content.Headers.ContentLength > maxBytes)
@@ -61,6 +76,6 @@ internal static class BoundedResponseBody
         var bytes = buffer.GetBuffer();
         var length = (int)buffer.Length;
         var offset = length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF ? 3 : 0;
-        return encoding.GetString(bytes, offset, length - offset);
+        return new ArraySegment<byte>(bytes, offset, length - offset);
     }
 }
