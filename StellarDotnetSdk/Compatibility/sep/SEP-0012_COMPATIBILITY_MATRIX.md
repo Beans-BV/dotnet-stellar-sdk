@@ -66,7 +66,6 @@ _Note: StellarDotnetSdk implements the **client** (wallet) side of SEP-12, count
 - `StellarDotnetSdk/Sep/Sep0012/Responses/ProvidedFieldStatus.cs`
 - `StellarDotnetSdk/Sep/Sep0012/Responses/FieldType.cs`
 - `StellarDotnetSdk/Sep/Sep0012/Responses/Sep12EnumJsonConverters.cs`
-- `StellarDotnetSdk/Sep/Sep0012/Responses/UtcDateTimeOffsetJsonConverter.cs`
 - `StellarDotnetSdk/Sep/Sep0012/Responses/KycErrorResponse.cs`
 - `StellarDotnetSdk/Sep/Sep0012/Exceptions/KycServiceException.cs`
 - `StellarDotnetSdk/Sep/Sep0012/Exceptions/AuthenticationRequiredException.cs`
@@ -273,7 +272,7 @@ _Note: StellarDotnetSdk implements the **client** (wallet) side of SEP-12, count
 |-------|----------|--------|--------------|-------------|
 | `content_type` | ✓ | ✅ | `CustomerFileResponse.ContentType` | `Content-Type` of the uploaded file |
 | `customer_id` |  | ✅ | `CustomerFileResponse.CustomerId` | Customer the file is associated with (`null` if none yet) |
-| `expires_at` |  | ✅ | `CustomerFileResponse.ExpiresAt` | UTC ISO 8601 time at which an unreferenced file is discarded (a value without a zone designator is read as UTC) |
+| `expires_at` |  | ✅ | `CustomerFileResponse.ExpiresAt` | UTC ISO 8601 time at which an unreferenced file is discarded (a value without a zone designator is read as UTC; a value outside the ISO 8601 grammar is rejected) |
 | `file` | ✓ | ✅ | `PostCustomerFileRequest.File` | File content, sent as the `file` part of a multipart body (with `FileName`/`ContentType` options; non-ASCII characters, quotes, backslashes and `%` in a file name are percent-encoded per RFC 7578) |
 | `file_id` | ✓ | ✅ | `CustomerFileResponse.FileId` | Unique identifier of the uploaded file |
 | `files` | ✓ | ✅ | `GetCustomerFilesResponse.Files` | List of file objects returned by GET /customer/files |

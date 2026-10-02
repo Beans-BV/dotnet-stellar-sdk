@@ -2202,6 +2202,47 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         Assert.AreEqual(new DateTime(2030, 1, 1, 0, 0, 0, DateTimeKind.Utc), value.UtcDateTime);
     }
 
+    private static string FilesBody(string expiresAt)
+    {
+        return "{\"files\":[{\"file_id\":\"a\",\"content_type\":\"image/png\",\"size\":1,\"expires_at\":\"" +
+               expiresAt + "\"}]}";
+    }
+
+    [TestMethod]
+    [DataRow("2030-01-01T00:00:00.Z", DisplayName = "fraction separator without digits")]
+    [DataRow("2030-01-01T00:00:00.+02:00", DisplayName = "fraction separator before an offset")]
+    [DataRow("9999-12-31T23:59:59.99999995Z", DisplayName = "fraction that rounds past the maximum")]
+    public async Task GetCustomerFilesAsync_WithMalformedExpiresAt_ThrowsInvalidKycResponseException(string expiresAt)
+    {
+        // System.Text.Json's own reader accepts these; the converter checks the ISO 8601 grammar first.
+        var (service, _) = CreateService(FilesBody(expiresAt));
+
+        await AssertThrowsAsync<InvalidKycResponseException>(() =>
+            service.GetCustomerFilesAsync(new GetCustomerFilesRequest { Jwt = Jwt, FileId = "a" }));
+    }
+
+    [TestMethod]
+    public async Task GetCustomerFilesAsync_RoundsAnExpiresAtFractionToTheNearestTick()
+    {
+        var (service, _) = CreateService(FilesBody("2030-01-01T00:00:00.12345678Z"));
+
+        var response = await service.GetCustomerFilesAsync(new GetCustomerFilesRequest { Jwt = Jwt, FileId = "a" });
+
+        Assert.AreEqual(1234568L, response.Files[0].ExpiresAt!.Value.UtcTicks % TimeSpan.TicksPerSecond);
+    }
+
+    [TestMethod]
+    public void ExpiresAt_WithSourceGeneratedContext_KeepsTheConverter()
+    {
+        // The default reader accepts a fraction separator without digits, so only the property converter rejects it.
+        var context = Sep12SourceGenContext.Default;
+
+        Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize(FilesBody("2030-01-01T00:00:00.Z"), context.GetCustomerFilesResponse));
+        var response = JsonSerializer.Deserialize(FilesBody("2030-01-01T00:00:00"), context.GetCustomerFilesResponse)!;
+        Assert.AreEqual(TimeSpan.Zero, response.Files[0].ExpiresAt!.Value.Offset);
+    }
+
     [TestMethod]
     public async Task GetCustomerInfoAsync_NumericChoices_AreKeptAsTheirJsonText()
     {
@@ -2595,8 +2636,7 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
             Assert.IsTrue(converter.IsPublic, $"{converter.Name} is not public.");
         }
 
-        Assert.AreEqual(typeof(StellarDotnetSdk.Sep.Sep0012.Responses.UtcDateTimeOffsetJsonConverter),
-            typeof(CustomerFileResponse)
+        Assert.AreEqual(typeof(UtcDateTimeOffsetJsonConverter), typeof(CustomerFileResponse)
             .GetProperty(nameof(CustomerFileResponse.ExpiresAt))!
             .GetCustomAttribute<System.Text.Json.Serialization.JsonConverterAttribute>()!.ConverterType);
     }
@@ -3511,6 +3551,7 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
 ///     <see cref="GetCustomerInfoResponse.FromJson" /> or <see cref="KycService" />.
 /// </summary>
 [JsonSerializable(typeof(GetCustomerInfoResponse))]
+[JsonSerializable(typeof(GetCustomerFilesResponse))]
 internal partial class Sep12SourceGenContext : JsonSerializerContext
 {
 }
