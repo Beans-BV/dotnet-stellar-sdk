@@ -2342,6 +2342,40 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     }
 
     [TestMethod]
+    public async Task Requests_WithVerificationOrFileReferenceKeyThatIsOnlyTheSuffix_ThrowBeforeSending()
+    {
+        // Such a key already ends with the suffix, so it would go out unchanged as a part that names no field.
+        var (service, handler) = CreateService(ReadTestData("put-customer.json"));
+
+        var verification = await AssertThrowsAsync<ArgumentException>(() => service.PutCustomerInfoAsync(
+            new PutCustomerInfoRequest
+            {
+                Jwt = Jwt,
+                VerificationFields = new Dictionary<string, string> { ["_verification"] = "123456" },
+            }));
+        var fileReference = await AssertThrowsAsync<ArgumentException>(() => service.PutCustomerInfoAsync(
+            new PutCustomerInfoRequest
+            {
+                Jwt = Jwt,
+                FileReferences = new Dictionary<string, string> { ["_file_id"] = "file_abc" },
+            }));
+#pragma warning disable CS0618
+        var deprecated = await AssertThrowsAsync<ArgumentException>(() => service.PutCustomerVerificationAsync(
+            new PutCustomerVerificationRequest
+            {
+                Jwt = Jwt,
+                Id = CustomerId,
+                VerificationFields = new Dictionary<string, string> { ["_verification"] = "123456" },
+            }));
+#pragma warning restore CS0618
+
+        StringAssert.Contains(verification.Message, "'_verification'");
+        StringAssert.Contains(fileReference.Message, "'_file_id'");
+        StringAssert.Contains(deprecated.Message, "'_verification'");
+        Assert.AreEqual(0, handler.Requests.Count);
+    }
+
+    [TestMethod]
     public async Task PutCustomerInfoAsync_WithNullFileContent_ThrowsBeforeSending()
     {
         var (service, handler) = CreateService(ReadTestData("put-customer.json"));

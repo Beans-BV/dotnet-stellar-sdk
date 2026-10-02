@@ -25,7 +25,8 @@ public sealed record PutCustomerVerificationRequest
     /// <summary>
     ///     Gets the verification values, keyed by the SEP-0009 field being verified (for example
     ///     <c>mobile_number</c>). Each is sent as <c>&lt;field&gt;_verification</c>; a key that already ends in
-    ///     <c>_verification</c> is sent unchanged. At least one entry is required.
+    ///     <c>_verification</c> is sent unchanged, and a key that is only <c>_verification</c> is rejected. At least
+    ///     one entry is required.
     /// </summary>
     public required IReadOnlyDictionary<string, string> VerificationFields { get; init; }
 
