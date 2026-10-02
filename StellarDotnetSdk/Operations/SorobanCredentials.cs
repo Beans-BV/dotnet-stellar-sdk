@@ -225,10 +225,9 @@ public class SorobanAddressCredentials : SorobanAddressCredentialsBase
 ///     preventing signature replay between accounts that share a private key.
 /// </summary>
 /// <remarks>
-///     V1 (<see cref="SorobanAddressCredentials" />) and V2 are both valid on Protocol 27; the
-///     signing helpers preserve the entry's existing variant by default (matching the JS reference
-///     SDK). Pass <see cref="SorobanCredentialsVersion.V2" /> to upgrade a legacy entry. Pre-Protocol-27
-///     networks reject V2 credentials — keep V1 when targeting them.
+///     The signing helpers preserve the entry's existing variant by default; pass
+///     <see cref="SorobanCredentialsVersion.V2" /> to upgrade a legacy <see cref="SorobanAddressCredentials" />
+///     entry. Pre-Protocol-27 networks reject V2 credentials — keep V1 when targeting them.
 /// </remarks>
 public class SorobanAddressCredentialsV2 : SorobanAddressCredentialsBase
 {

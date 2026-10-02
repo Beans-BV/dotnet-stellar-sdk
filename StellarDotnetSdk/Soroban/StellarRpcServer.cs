@@ -483,31 +483,12 @@ public class StellarRpcServer : IDisposable
     ///     </p>
     /// </param>
     /// <param name="useUpgradedAuth">
-    ///     Opts in to CAP-71 v2 authorization entries: when <see langword="true" />, a recording-mode simulation
-    ///     returns <see cref="Operations.SorobanAddressCredentialsV2" /> (<c>SOROBAN_CREDENTIALS_ADDRESS_V2</c>)
-    ///     instead of the legacy <see cref="Operations.SorobanAddressCredentials" />
-    ///     (<c>SOROBAN_CREDENTIALS_ADDRESS</c>). V2 credentials bind the credential address into the signed payload,
-    ///     so a signature made for one account cannot be replayed against another.
-    ///     <p>
-    ///         Leaving this field unset omits it from the request, which is what makes v1 today's default: Stellar RPC
-    ///         returns legacy <c>ADDRESS</c> credentials unless asked otherwise. Signing either variant is handled by
-    ///         <c>SorobanAuthorization.AuthorizeEntry</c>, which picks the matching preimage
-    ///         (<c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION</c> for v1, <c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS</c>
-    ///         for v2) and preserves whichever variant simulation returned.
-    ///     </p>
-    ///     <p>
-    ///         The flag is best-effort: passing <see langword="true" /> is never an error, it simply may not change
-    ///         the result. Stellar RPC applies it only in the <em>recording</em> auth modes, so pairing it with
-    ///         <see cref="AuthMode.ENFORCE" /> does nothing; it is silently ignored on protocol versions whose host
-    ///         cannot emit <c>ADDRESS_V2</c> (anything older than protocol 27); and it has nothing to act on for an
-    ///         entry that carries no address credential in the first place, such as the source-account arm.
-    ///     </p>
-    ///     <p>
-    ///         The flag is also transitional. RPC intends to flip its own default to v2 at protocol 29, at which point
-    ///         this flag becomes a no-op, and to stop returning v1 at protocol 30; do not build anything that relies
-    ///         on omitting the flag to keep receiving v1. See
-    ///         <see href="https://github.com/Beans-BV/dotnet-stellar-sdk/issues/206">issue #206</see>.
-    ///     </p>
+    ///     Which CAP-71 address-credential variant to request from a recording-mode simulation:
+    ///     <see langword="true" /> requests <see cref="Operations.SorobanAddressCredentialsV2" />
+    ///     (<c>SOROBAN_CREDENTIALS_ADDRESS_V2</c>), <see langword="false" /> the legacy
+    ///     <see cref="Operations.SorobanAddressCredentials" /> (<c>SOROBAN_CREDENTIALS_ADDRESS</c>). Leaving it
+    ///     unset (<see langword="null" />) sends <see langword="true" />. See
+    ///     <see href="https://github.com/Beans-BV/dotnet-stellar-sdk/issues/206">issue #206</see>.
     /// </param>
     /// <returns>A <see cref="SimulateTransactionResponse" /> object.</returns>
     /// <exception cref="ArgumentOutOfRangeException">
@@ -571,10 +552,10 @@ public class StellarRpcServer : IDisposable
             request["authMode"] = authMode.Value.ToRequestValue();
         }
 
-        if (useUpgradedAuth != null)
-        {
-            request["useUpgradedAuth"] = useUpgradedAuth.Value;
-        }
+        // CAP-71: an unset flag means upgraded (v2) auth. Resolved here at runtime rather than as the parameter's
+        // default value, because a declared default is compiled into each call site: this way a later change to
+        // the SDK default reaches existing callers without a recompile.
+        request["useUpgradedAuth"] = useUpgradedAuth ?? true;
 
         return request;
     }

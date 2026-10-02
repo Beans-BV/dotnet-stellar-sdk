@@ -34,23 +34,20 @@ All notable changes to this project are documented here. The format is based on
     existing credential variant (matching the JS reference SDK).
   - Signing output is verified byte-for-byte against `@stellar/stellar-sdk@16.0.0-rc.1` for the V2 and
     delegated paths via the known-answer vectors in `StellarDotnetSdk.Tests/TestData/generate-p27-auth-kat.mjs`.
-- `StellarRpcServer.SimulateTransaction` accepts an optional `useUpgradedAuth` flag, opting a simulation in to
-  CAP-71 v2 authorization entries: recording mode then returns `SorobanAddressCredentialsV2`
-  (`SOROBAN_CREDENTIALS_ADDRESS_V2`) instead of the legacy `SorobanAddressCredentials`, whose signature is not
-  bound to the credential address and can therefore be replayed against another account. Signing needs no
-  change at the call site — `SorobanAuthorization.AuthorizeEntry` already preserves whichever variant
-  simulation returned and signs it over the matching preimage
-  ([#187](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/187)); a new Testnet integration test simulates
-  with the flag, signs the recorded v2 entry and submits it, which is the first end-to-end proof that the SDK's
-  address-bound preimage is accepted by a live host.
+- `StellarRpcServer.SimulateTransaction` accepts an optional `useUpgradedAuth` flag selecting which CAP-71
+  address-credential variant a recording-mode simulation returns: `true` asks for `SorobanAddressCredentialsV2`
+  (`SOROBAN_CREDENTIALS_ADDRESS_V2`), `false` for the legacy `SorobanAddressCredentials`, whose signature is not
+  bound to the credential address. Signing needs no change at the call site:
+  `SorobanAuthorization.AuthorizeEntry` already preserves whichever variant simulation returned and signs it
+  over the matching preimage ([#187](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/187)). Testnet
+  integration tests simulate with the default and with the legacy opt-out, sign the recorded entry and submit
+  it, which is the end-to-end proof that the SDK's address-bound preimage is accepted by a live host.
 
-  The flag is opt-in and unset by default, so the SDK's own *behaviour* is unchanged: omit it and Stellar RPC
-  keeps returning v1 credentials. **Breaking:** its *binary* compatibility is not — appending the parameter
-  changes the CLR signature of `SimulateTransaction`, so an application compiled against an earlier release that
-  drops in this assembly without recompiling throws `MissingMethodException` at the call site. Recompiling is
-  enough; no source change is needed. It is also transitional — RPC intends to flip its *server-side* default
-  to v2 at protocol 29, at which point the flag becomes a no-op, and to stop returning v1 at protocol 30, so
-  nothing should rely on omitting it to keep receiving v1
+  Leaving the flag unset means `true`, and `false` is the legacy opt-out; the default, the opt-out's replay
+  trade-off and its transitional status are described under the CAP-71 default flip in **Changed**.
+  **Breaking (binary):** appending the parameter changes the CLR signature of `SimulateTransaction`, so an
+  application compiled against an earlier release that drops in this assembly without recompiling throws
+  `MissingMethodException` at the call site. Recompiling is enough; no source change is needed
   ([#206](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/206)).
 - **Multi-target NuGet packages: `net10.0`, `net8.0`, and `netstandard2.1`**
   ([#195](https://github.com/Beans-BV/dotnet-stellar-sdk/pull/195), implements
@@ -183,6 +180,56 @@ All notable changes to this project are documented here. The format is based on
 
 ### Changed
 
+- **Breaking (behavioral):** CAP-71 `SOROBAN_CREDENTIALS_ADDRESS_V2` is now the default Soroban address
+  credential ([#206](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/206), part of
+  [#207](https://github.com/Beans-BV/dotnet-stellar-sdk/issues/207)). `StellarRpcServer.SimulateTransaction`
+  sends `useUpgradedAuth: true` unless told otherwise, so a recording-mode simulation now returns
+  `SorobanAddressCredentialsV2` entries where it used to return legacy `SorobanAddressCredentials`. This takes
+  up the client-default flip that SDF's CAP-71 transition plan schedules for the JS SDK at protocol 28 and
+  invites other SDKs to adopt, and matches the JS and Java SDKs. It is a policy change for ecosystem
+  alignment, not a correctness fix: legacy credentials remain valid on protocol 28 (CAP-71 does not deprecate
+  them), and both opt-outs below keep them reachable.
+  - The parameter's declared default stays `null`, meaning "the SDK's current default", which the SDK resolves
+    to `true` when it builds the request rather than at the call site. C# compiles a declared default into every
+    call site, so this lets a later change to the default — such as no longer sending the field once Stellar RPC
+    retires it — reach callers that leave the argument unset without a recompile. It also lets a caller pass an
+    optional setting of its own straight through. Code compiled against any earlier release, including
+    16.0.0-beta, has to recompile anyway (see the `useUpgradedAuth` entry under **Added**) and picks up the new
+    default when it does.
+  - Signing needs no change. `SorobanAuthorization.AuthorizeEntry` keeps its
+    `SorobanCredentialsVersion.Preserve` default because it signs an entry whose variant simulation already
+    chose: a v2 simulation yields a v2 signature over the address-bound
+    `ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS` preimage, and a legacy simulation still yields a v1 one.
+    Because `Preserve` signs whatever variant came back, an RPC server that ignores the flag (one older than
+    v27.1.0) still yields a legacy signature; on a network at protocol 27 or later, pass
+    `SorobanCredentialsVersion.V2` to `AuthorizeEntry` to require the address-bound one.
+    `AuthorizeEntryWithDelegates` and `BuildWithDelegatesEntry` take no version and always emit `WITH_DELEGATES`
+    credentials, whose root and delegate signatures all cover the address-bound payload
+    (`BuildWithDelegatesEntry` emits them unsigned, for later signing with `AuthorizeEntry`). This SDK has no
+    helper that builds an address credential from scratch (the JS and Java `authorizeInvocation`), so there is
+    no other default to flip.
+  - Migration: code that inspects credentials by hand must accept `SorobanAddressCredentialsV2` as well as
+    `SorobanAddressCredentials` (or match on their common base, `SorobanAddressCredentialsBase`). The two are
+    sibling types, not base and subclass, so an `is`/`as SorobanAddressCredentials` check silently stops
+    matching v2 entries instead of failing, and only a direct cast throws `InvalidCastException`. A hand-rolled
+    signer that always builds the legacy `ENVELOPE_TYPE_SOROBAN_AUTHORIZATION` preimage now produces signatures
+    the network rejects for v2 entries; build the payload with
+    `SorobanAuthorization.BuildAuthorizationEntryPreimageHash`, which picks the preimage from the entry. V2
+    entries need a network at protocol 27 or later; RPC ignores the flag on older networks, so the default still
+    yields v1 there.
+  - Opt-outs, for co-signers or verifiers that cannot yet produce or check the address-bound signature: pass
+    `useUpgradedAuth: false` to `SimulateTransaction` to keep receiving legacy entries, or pass
+    `SorobanCredentialsVersion.V1` to `AuthorizeEntry` to sign an entry as legacy regardless of what simulation
+    returned. Either way the signature gives up address binding: it can be replayed against another account that
+    shares the same signing key when the invocation does not itself bind the signer's address. Explicit `false`
+    is put on the wire rather than omitted (the JS and Java SDKs likewise send it explicitly), but Stellar RPC
+    treats an absent field as `false`, so the explicit value does not protect the opt-out against a change of the
+    server-side default.
+  - The simulation opt-out is transitional: under SDF's tentative plan, RPC flips its server-side default to v2
+    (planned for protocol 29), at which point `useUpgradedAuth: false` becomes a no-op and stops returning
+    legacy credentials, and later disables the flag altogether (planned for protocol 30). Stellar Testnet was
+    already on protocol 29 with RPC 29.0.0 in September 2026 and still defaulted to v1, so the protocol numbers
+    are not firm.
 - **Breaking:** `SubmitTransactionAsyncResponse.TxStatus` deserialization is now strict. The nested
   `TransactionStatus` enum was bound by the catch-all `JsonStringEnumConverter`, which maps bare
   integers by ordinal and matches case-insensitively — so a malformed Horizon `POST /transactions_async`

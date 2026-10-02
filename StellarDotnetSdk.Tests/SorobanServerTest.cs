@@ -2376,9 +2376,12 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
-    ///     Verifies that the <c>useUpgradedAuth</c> parameter is put on the wire as a JSON boolean, for both
+    ///     Verifies that an explicit <c>useUpgradedAuth</c> is put on the wire as a JSON boolean, for both
     ///     <see langword="true" /> and <see langword="false" />. Stellar RPC types the field as a bool and rejects
-    ///     the quoted forms with a JSON-RPC <c>-32602 invalid parameters</c> error.
+    ///     the quoted forms with a JSON-RPC <c>-32602 invalid parameters</c> error. The <see langword="false" />
+    ///     row is the legacy (v1) opt-out: it is sent as an explicit <c>false</c> rather than omitted, as the JS
+    ///     and Java SDKs do. Stellar RPC reads an absent field as <see langword="false" />, so this pins the wire
+    ///     shape, not a guarantee that the opt-out survives a change of the server's own default.
     /// </summary>
     [TestMethod]
     [DataRow(true)]
@@ -2410,11 +2413,14 @@ public class StellarRpcServerTest
     }
 
     /// <summary>
-    ///     Verifies that no <c>useUpgradedAuth</c> field is sent when the caller does not request one, leaving Stellar
-    ///     RPC to apply its own default (v1 <c>SOROBAN_CREDENTIALS_ADDRESS</c> credentials today).
+    ///     Verifies the CAP-71 default: when the caller does not pass <c>useUpgradedAuth</c>, the request carries
+    ///     <c>"useUpgradedAuth": true</c>, so a recording-mode simulation returns
+    ///     <c>SOROBAN_CREDENTIALS_ADDRESS_V2</c> entries. The field must be present, not merely defaulted
+    ///     server-side: Stellar RPC (v28, and v29 on Testnet as of September 2026) treats an absent field as
+    ///     <see langword="false" /> (legacy v1).
     /// </summary>
     [TestMethod]
-    public async Task SimulateTransaction_WithoutUseUpgradedAuth_OmitsUseUpgradedAuthField()
+    public async Task SimulateTransaction_WithoutUseUpgradedAuth_SendsTrue()
     {
         // Arrange
         const string json =
@@ -2436,7 +2442,27 @@ public class StellarRpcServerTest
         var body = handler.RequestBody;
         Assert.IsNotNull(body);
         using var request = JsonDocument.Parse(body!);
-        Assert.IsFalse(request.RootElement.GetProperty("params").TryGetProperty("useUpgradedAuth", out _));
+        var field = request.RootElement.GetProperty("params").GetProperty("useUpgradedAuth");
+        Assert.AreEqual(JsonValueKind.True, field.ValueKind);
+    }
+
+    /// <summary>
+    ///     Pins the declared default of <c>useUpgradedAuth</c> as <see langword="null" />. A declared
+    ///     <see langword="true" /> would put the same request on the wire today, so
+    ///     <see cref="SimulateTransaction_WithoutUseUpgradedAuth_SendsTrue" /> cannot tell them apart, but the
+    ///     compiler would copy it into every call site that omits the argument, and a later change of the SDK
+    ///     default would no longer reach those callers without a recompile.
+    /// </summary>
+    [TestMethod]
+    public void SimulateTransaction_UseUpgradedAuthDeclaredDefault_IsNull()
+    {
+        var parameter = Array.Find(
+            typeof(StellarRpcServer).GetMethod(nameof(StellarRpcServer.SimulateTransaction))!.GetParameters(),
+            p => p.Name == "useUpgradedAuth");
+
+        Assert.IsNotNull(parameter);
+        Assert.IsTrue(parameter.HasDefaultValue);
+        Assert.IsNull(parameter.DefaultValue);
     }
 
     /// <summary>
