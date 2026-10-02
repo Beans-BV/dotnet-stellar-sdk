@@ -2589,6 +2589,49 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     }
 
     [TestMethod]
+    [DataRow("", DisplayName = "empty JWT")]
+    [DataRow("  ", DisplayName = "whitespace JWT")]
+    [DataRow("a b", DisplayName = "JWT with a space")]
+    [DataRow("aé", DisplayName = "non-ASCII JWT")]
+    public async Task EveryMethod_WithInvalidJwt_ThrowsBeforeSending(string jwt)
+    {
+        // Each public method checks the JWT itself, so every one of them is exercised; the request is otherwise valid.
+        var (service, handler) = CreateService(ReadTestData("customer-accepted.json"));
+        var calls = new (string Name, Func<Task> Call)[]
+        {
+            ("GET /customer", () => service.GetCustomerInfoAsync(new GetCustomerInfoRequest { Jwt = jwt })),
+            ("PUT /customer", () => service.PutCustomerInfoAsync(
+                new PutCustomerInfoRequest { Jwt = jwt, Id = CustomerId })),
+#pragma warning disable CS0618
+            ("PUT /customer/verification", () => service.PutCustomerVerificationAsync(
+                new PutCustomerVerificationRequest
+                {
+                    Jwt = jwt,
+                    Id = CustomerId,
+                    VerificationFields = new Dictionary<string, string> { ["mobile_number"] = "1" },
+                })),
+#pragma warning restore CS0618
+            ("PUT /customer/callback", () => service.PutCustomerCallbackAsync(
+                new PutCustomerCallbackRequest { Jwt = jwt, Url = "https://wallet.example.com/cb" })),
+            ("DELETE /customer", () => service.DeleteCustomerAsync(
+                new DeleteCustomerRequest { Jwt = jwt, Account = Account, Memo = "1" })),
+            ("POST /customer/files", () => service.PostCustomerFileAsync(
+                new PostCustomerFileRequest { Jwt = jwt, File = PhotoFront })),
+            ("GET /customer/files", () => service.GetCustomerFilesAsync(
+                new GetCustomerFilesRequest { Jwt = jwt, FileId = "file_1" })),
+        };
+
+        foreach (var (name, call) in calls)
+        {
+            var ex = await AssertThrowsAsync<ArgumentException>(call);
+            StringAssert.Contains(ex.Message, "JWT", name);
+            Assert.AreEqual("request", ex.ParamName, name);
+        }
+
+        Assert.AreEqual(0, handler.Requests.Count);
+    }
+
+    [TestMethod]
     public void RequestToString_NeutralizesLineBreaksAndBidiControlsInEveryStringProperty()
     {
         // A transaction ID usually comes from an anchor and a memo from an end user; neither may forge or reorder
