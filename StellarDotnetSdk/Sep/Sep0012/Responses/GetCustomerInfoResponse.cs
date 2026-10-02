@@ -31,16 +31,20 @@ public sealed class GetCustomerInfoResponse
     ///     Gets the fields the anchor has not yet received for the customer and requested <c>type</c>, keyed by field
     ///     name. SEP-0012 requires it for <see cref="CustomerStatus.NeedsInfo" /> and allows it with any status. The
     ///     SDK does not enforce that requirement, so the status stays readable when an anchor omits the fields:
-    ///     expect <c>null</c> here even for <see cref="CustomerStatus.NeedsInfo" />.
+    ///     expect <c>null</c> here even for <see cref="CustomerStatus.NeedsInfo" />. A <c>null</c> entry fails the
+    ///     parse on every deserialization path.
     /// </summary>
     [JsonPropertyName("fields")]
+    [JsonConverter(typeof(CustomerFieldsJsonConverter))]
     public IReadOnlyDictionary<string, GetCustomerInfoField>? Fields { get; init; }
 
     /// <summary>
     ///     Gets the fields the anchor has received for the customer, keyed by field name, with their validation
-    ///     status. Present whenever a provided field requires verification.
+    ///     status. Present whenever a provided field requires verification. A <c>null</c> entry fails the parse on
+    ///     every deserialization path.
     /// </summary>
     [JsonPropertyName("provided_fields")]
+    [JsonConverter(typeof(CustomerProvidedFieldsJsonConverter))]
     public IReadOnlyDictionary<string, GetCustomerInfoProvidedField>? ProvidedFields { get; init; }
 
     /// <summary>
@@ -77,10 +81,8 @@ public sealed class GetCustomerInfoResponse
 
         try
         {
-            var response = JsonSerializer.Deserialize<GetCustomerInfoResponse>(json, JsonOptions.DefaultOptions)
-                           ?? throw new JsonException("The customer response is the JSON literal null.");
-            response.EnsureNoNullEntries();
-            return response;
+            return JsonSerializer.Deserialize<GetCustomerInfoResponse>(json, JsonOptions.DefaultOptions)
+                   ?? throw new JsonException("The customer response is the JSON literal null.");
         }
         catch (JsonException ex)
         {
@@ -92,39 +94,6 @@ public sealed class GetCustomerInfoResponse
             // System.Text.Json transcodes the string to UTF-8 first and rejects a lone surrogate with an
             // ArgumentException; to a caller that is just another malformed payload.
             throw new JsonException("The customer response is not valid UTF-16 text.", ex);
-        }
-    }
-
-    /// <summary>
-    ///     Rejects a <c>null</c> value in <see cref="Fields" /> or <see cref="ProvidedFields" />.
-    ///     <c>RespectNullableAnnotations</c> constrains the dictionary reference, never its values, so
-    ///     <c>"fields": {"first_name": null}</c> would otherwise surface to callers as a
-    ///     <see cref="System.NullReferenceException" /> through a non-nullable value type.
-    /// </summary>
-    internal void EnsureNoNullEntries()
-    {
-        if (Fields != null)
-        {
-            foreach (var entry in Fields)
-            {
-                if (entry.Value is null)
-                {
-                    throw new JsonException(
-                        $"The 'fields' entry {UntrustedJsonValue.Describe(entry.Key)} is null.");
-                }
-            }
-        }
-
-        if (ProvidedFields != null)
-        {
-            foreach (var entry in ProvidedFields)
-            {
-                if (entry.Value is null)
-                {
-                    throw new JsonException(
-                        $"The 'provided_fields' entry {UntrustedJsonValue.Describe(entry.Key)} is null.");
-                }
-            }
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -756,6 +757,38 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         var ex = Assert.ThrowsException<JsonException>(() => GetCustomerInfoResponse.FromJson(json));
 
         StringAssert.Contains(ex.Message, "Duplicate property");
+    }
+
+    [TestMethod]
+    [DataRow("{\"status\":\"NEEDS_INFO\",\"fields\":{\"first_name\":null}}", "fields", DisplayName = "null field entry")]
+    [DataRow("{\"status\":\"ACCEPTED\",\"provided_fields\":{\"first_name\":null}}", "provided_fields",
+        DisplayName = "null provided entry")]
+    public void Deserialize_OutsideTheSdk_WithNullFieldEntry_ThrowsJsonException(string json, string property)
+    {
+        // A consumer can bypass FromJson and KycService with its own source-generated context or options. It must
+        // still get an exception rather than a dictionary whose non-nullable value is null.
+        var sourceGenerated = Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize(json, Sep12SourceGenContext.Default.GetCustomerInfoResponse));
+        var plainOptions = Assert.ThrowsException<JsonException>(() =>
+            JsonSerializer.Deserialize<GetCustomerInfoResponse>(json, new JsonSerializerOptions()));
+
+        StringAssert.Contains(sourceGenerated.Message, $"'{property}' entry 'first_name' is null");
+        StringAssert.Contains(plainOptions.Message, $"'{property}' entry 'first_name' is null");
+    }
+
+    [TestMethod]
+    public void Deserialize_WithSourceGeneratedContext_RoundTripsFieldsAndProvidedFields()
+    {
+        var context = Sep12SourceGenContext.Default;
+
+        var response = JsonSerializer.Deserialize(ReadTestData("customer-needs-info.json"),
+            context.GetCustomerInfoResponse)!;
+        var json = JsonSerializer.Serialize(response, context.GetCustomerInfoResponse);
+
+        Assert.AreEqual("phone number of the customer", response.Fields!["mobile_number"].Description);
+        Assert.AreEqual(ProvidedFieldStatus.Rejected, response.ProvidedFields!["last_name"].Status);
+        StringAssert.Contains(json, "\"mobile_number\":{");
+        StringAssert.Contains(json, "\"status\":\"REJECTED\"");
     }
 
     #endregion
@@ -3349,4 +3382,13 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
     }
 
     #endregion
+}
+
+/// <summary>
+///     A consumer-style source-generated context, which reaches the SEP-12 response types without
+///     <see cref="GetCustomerInfoResponse.FromJson" /> or <see cref="KycService" />.
+/// </summary>
+[JsonSerializable(typeof(GetCustomerInfoResponse))]
+internal partial class Sep12SourceGenContext : JsonSerializerContext
+{
 }
