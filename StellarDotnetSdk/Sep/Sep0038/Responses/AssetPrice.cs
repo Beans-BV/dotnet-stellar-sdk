@@ -42,7 +42,8 @@ public sealed record AssetPrice
     public required decimal Price { get; init; }
 
     /// <summary>
-    ///     The number of decimals needed to represent <see cref="Asset" />.
+    ///     The number of decimals needed to represent <see cref="Asset" />. Never negative:
+    ///     <see cref="QuoteService.PricesAsync" /> rejects a response with a negative count.
     /// </summary>
     [JsonPropertyName("decimals")]
     [JsonRequired]

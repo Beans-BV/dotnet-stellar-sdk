@@ -1960,6 +1960,26 @@ public class QuoteServiceTest
     }
 
     [TestMethod]
+    [DataRow(-1, true, DisplayName = "Negative")]
+    [DataRow(0, false, DisplayName = "Zero, as for a currency without minor units")]
+    public async Task PricesAsync_WithADecimalsCount_RejectsOnlyANegativeOne(int decimals, bool rejected)
+    {
+        var (service, _) = CreateService(
+            $"{{\"buy_assets\":[{{\"asset\":\"iso4217:BRL\",\"price\":\"0.18\",\"decimals\":{decimals}}}]}}");
+        var request = new PricesRequest { SellAsset = Usdc, SellAmount = 1m };
+
+        if (rejected)
+        {
+            // A caller rounding with Math.Round(amount, decimals) would otherwise get ArgumentOutOfRangeException.
+            await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() => service.PricesAsync(request));
+        }
+        else
+        {
+            Assert.AreEqual(decimals, (await service.PricesAsync(request)).BuyAssets!.Single().Decimals);
+        }
+    }
+
+    [TestMethod]
     public async Task GetQuoteAsync_WithANonPositivePrice_Throws()
     {
         var (service, _) = CreateService(QuoteJson(q => q["price"] = "0"));

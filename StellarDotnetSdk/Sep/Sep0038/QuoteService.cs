@@ -66,9 +66,10 @@ namespace StellarDotnetSdk.Sep.Sep0038;
 ///     <para>
 ///         A success body is also checked against the request: a firm quote must carry a usable <c>id</c>, the
 ///         requested asset pair, no delivery method other than the one requested, and an expiry no earlier than the
-///         requested <c>expire_after</c>; prices and amounts must be greater than zero. A response that fails these
-///         checks raises <see cref="UnexpectedResponseException" />, whose <see cref="QuoteServerException.ResponseBody" />
-///         still holds what the anchor sent (for <c>POST /quote</c>, the id of the quote it already created).
+///         requested <c>expire_after</c>; prices and amounts must be greater than zero, and a <c>decimals</c> count
+///         must not be negative. A response that fails these checks raises
+///         <see cref="UnexpectedResponseException" />, whose <see cref="QuoteServerException.ResponseBody" /> still
+///         holds what the anchor sent (for <c>POST /quote</c>, the id of the quote it already created).
 ///     </para>
 ///     <para>
 ///         Transport failures surface as <see cref="HttpRequestException" /> (including a connection that drops
@@ -437,6 +438,13 @@ public class QuoteService : IDisposable
                     {
                         return $"The quote server answered GET /prices with a price of {price.Price} for " +
                                $"{UntrustedJsonValue.Describe(price.Asset)}; prices must be greater than zero.";
+                    }
+
+                    if (price.Decimals < 0)
+                    {
+                        return $"The quote server answered GET /prices with {price.Decimals} decimals for " +
+                               $"{UntrustedJsonValue.Describe(price.Asset)}; the number of decimals must not be " +
+                               "negative.";
                     }
                 }
 

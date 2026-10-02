@@ -125,7 +125,7 @@ _Note: fields are enumerated from the SEP-0038 v2.5.0 specification itself, incl
 | Field | Required | Status | SDK Property | Description |
 |-------|----------|--------|--------------|-------------|
 | `asset` | ✓ | ✅ | `AssetPrice.Asset` | Asset in Asset Identification Format |
-| `decimals` | ✓ | ✅ | `AssetPrice.Decimals` | Number of decimals needed to represent the asset |
+| `decimals` | ✓ | ✅ | `AssetPrice.Decimals` | Number of decimals needed to represent the asset; a negative count is rejected |
 | `price` | ✓ | ✅ | `AssetPrice.Price` | Indicative price of one unit of `asset` in terms of the requested asset (exact `decimal`) |
 
 ### Context Values
