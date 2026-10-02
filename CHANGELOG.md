@@ -27,9 +27,9 @@ All notable changes to this project are documented here. The format is based on
   - `SCExecutableTag` (the `SCVal` for `SCV_EXECUTABLE_TAG`, raw bytes in `InnerValue`) and
     `ContractExecutableExternalRef` (a `ContractExecutable`, raw bytes in `Tag`), each with a strict UTF-8
     accessor (`TryGetUtf8String` / `TryGetTagUtf8String`) that fails on invalid UTF-8 instead of decoding it
-    lossily. The constructors copy the tag bytes they are given and `ToXdr()` returns a copy, so neither the
-    caller's array nor the returned XDR object aliases the tag; the `InnerValue` / `Tag` getters expose the
-    instance's own array, which callers must not modify.
+    lossily. The constructors copy the tag bytes they are given, and the `InnerValue` / `Tag` getters and
+    `ToXdr()` return a new copy on each call, so neither the caller's array, a returned array, nor the returned
+    XDR object aliases the tag.
   - `CreateContractOperation.FromExternalRef` deploys a contract from an external executable reference, with
     `string` and `byte[]` tag overloads; binary tags pass through undecoded, and a non-contract owner is rejected
     up front. Every `string` tag overload encodes strict UTF-8 and throws `ArgumentException` for an unpaired

@@ -448,8 +448,8 @@ public class Protocol28Test
     }
 
     /// <summary>
-    ///     The tag bytes are copied in and out, so changing the caller's array, or the XDR object built from a tag,
-    ///     never changes an already-built tag, reference, or operation.
+    ///     The tag bytes are copied in and out, so changing the caller's array, the array a getter returns, or the XDR
+    ///     object built from a tag never changes an already-built tag, reference, or operation.
     /// </summary>
     [TestMethod]
     public void TagBytes_AreCopied_NotAliased()
@@ -465,6 +465,9 @@ public class Protocol28Test
         source[0] = 0x00;
         tag.ToXdr().InnerBytes[1] = 0x00;
         externalRef.ToXdr().ExternalRef.Tag.InnerBytes[1] = 0x00;
+        tag.InnerValue[3] = 0x00;
+        externalRef.Tag[3] = 0x00;
+        ((ContractExecutableExternalRef)operation.HostFunction.Executable).Tag[3] = 0x00;
 
         // Assert
         CollectionAssert.AreEqual(BinaryTag, tag.InnerValue);

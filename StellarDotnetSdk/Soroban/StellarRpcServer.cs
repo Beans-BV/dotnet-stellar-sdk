@@ -525,9 +525,10 @@ public class StellarRpcServer : IDisposable
 
         // The tag is an unbounded byte string and may be binary, so its bytes are reused as-is rather than
         // decoded; a lenient decode would build the key of a different entry.
+        var tag = externalRef.Tag;
         var key = new LedgerKeyContractData(
             owner,
-            new SCExecutableTag(externalRef.Tag),
+            new SCExecutableTag(tag),
             Xdr.ContractDataDurability.Create(Xdr.ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT));
         var response = await GetLedgerEntry(key);
         LedgerEntry[]? entries;
@@ -544,7 +545,7 @@ public class StellarRpcServer : IDisposable
         }
         if (entries == null || entries.Length == 0)
         {
-            throw new ExternalRefNotFoundException(owner.InnerValue, externalRef.Tag, false);
+            throw new ExternalRefNotFoundException(owner.InnerValue, tag, false);
         }
         // Only one key was requested, so anything other than exactly that entry is a non-conforming answer; its
         // value must not be reported as the hash this reference resolves to.
@@ -556,7 +557,7 @@ public class StellarRpcServer : IDisposable
             } entry ||
             !StrKey.DecodeContractId(entryOwner.InnerValue).AsSpan()
                 .SequenceEqual(StrKey.DecodeContractId(owner.InnerValue)) ||
-            !entryTag.InnerValue.AsSpan().SequenceEqual(externalRef.Tag) ||
+            !entryTag.InnerValue.AsSpan().SequenceEqual(tag) ||
             entry.Durability.InnerValue != Xdr.ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT)
         {
             throw new ClientProtocolException(
@@ -576,7 +577,7 @@ public class StellarRpcServer : IDisposable
         // closed like an absent one (a lifted null comparison would read as live).
         if (entry.LiveUntilLedger is not { } liveUntil || liveUntil <= latestLedger)
         {
-            throw new ExternalRefNotFoundException(owner.InnerValue, externalRef.Tag, true);
+            throw new ExternalRefNotFoundException(owner.InnerValue, tag, true);
         }
         if (entry.Value is not SCBytes { InnerValue.Length: 32 } wasmHash)
         {

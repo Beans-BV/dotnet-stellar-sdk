@@ -2131,6 +2131,8 @@ public class ContractExecutableStellarAsset : ContractExecutable
 /// </remarks>
 public class ContractExecutableExternalRef : ContractExecutable
 {
+    private readonly byte[] _tag;
+
     /// <summary>
     ///     Initializes a new <see cref="ContractExecutableExternalRef" /> with the raw tag bytes, which are kept
     ///     verbatim.
@@ -2147,7 +2149,7 @@ public class ContractExecutableExternalRef : ContractExecutable
     public ContractExecutableExternalRef(ScAddress executableOwner, byte[] tag)
     {
         ExecutableOwner = executableOwner ?? throw new ArgumentNullException(nameof(executableOwner));
-        Tag = (byte[])(tag ?? throw new ArgumentNullException(nameof(tag))).Clone();
+        _tag = (byte[])(tag ?? throw new ArgumentNullException(nameof(tag))).Clone();
     }
 
     /// <summary>
@@ -2172,10 +2174,10 @@ public class ContractExecutableExternalRef : ContractExecutable
     public ScAddress ExecutableOwner { get; }
 
     /// <summary>
-    ///     The raw tag bytes, exactly as they are encoded on the wire. The array is this instance's own copy; do not
-    ///     modify it.
+    ///     The raw tag bytes, exactly as they are encoded on the wire. Each read returns a new copy, so changing the
+    ///     array never changes this reference.
     /// </summary>
-    public byte[] Tag { get; }
+    public byte[] Tag => (byte[])_tag.Clone();
 
     /// <summary>
     ///     Decodes <see cref="Tag" /> as strict UTF-8.
@@ -2187,7 +2189,7 @@ public class ContractExecutableExternalRef : ContractExecutable
     /// <returns><see langword="true" /> when the tag is valid UTF-8.</returns>
     public bool TryGetTagUtf8String(out string? value)
     {
-        return Util.TryDecodeUtf8(Tag, out value);
+        return Util.TryDecodeUtf8(_tag, out value);
     }
 
     /// <summary>
@@ -2225,7 +2227,7 @@ public class ContractExecutableExternalRef : ContractExecutable
             ExternalRef = new Xdr.ContractExecutableExternalRef
             {
                 ExecutableOwner = ExecutableOwner.ToXdr(),
-                Tag = new Xdr.SCString { InnerBytes = (byte[])Tag.Clone() },
+                Tag = new Xdr.SCString { InnerBytes = Tag },
             },
         };
     }
@@ -2317,6 +2319,8 @@ public class SCNonceKey : SCVal
 /// </remarks>
 public class SCExecutableTag : SCVal
 {
+    private readonly byte[] _innerValue;
+
     /// <summary>
     ///     Initializes a new <see cref="SCExecutableTag" /> from the raw tag bytes, which are kept verbatim.
     /// </summary>
@@ -2327,7 +2331,7 @@ public class SCExecutableTag : SCVal
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="tag" /> is null.</exception>
     public SCExecutableTag(byte[] tag)
     {
-        InnerValue = (byte[])(tag ?? throw new ArgumentNullException(nameof(tag))).Clone();
+        _innerValue = (byte[])(tag ?? throw new ArgumentNullException(nameof(tag))).Clone();
     }
 
     /// <summary>
@@ -2345,14 +2349,14 @@ public class SCExecutableTag : SCVal
         {
             throw new ArgumentNullException(nameof(tag));
         }
-        InnerValue = Util.EncodeUtf8Strict(tag, nameof(tag));
+        _innerValue = Util.EncodeUtf8Strict(tag, nameof(tag));
     }
 
     /// <summary>
-    ///     The raw tag bytes, exactly as they are encoded on the wire. The array is this instance's own copy; do not
-    ///     modify it.
+    ///     The raw tag bytes, exactly as they are encoded on the wire. Each read returns a new copy, so changing the
+    ///     array never changes this tag.
     /// </summary>
-    public byte[] InnerValue { get; }
+    public byte[] InnerValue => (byte[])_innerValue.Clone();
 
     /// <summary>
     ///     Decodes the tag as strict UTF-8.
@@ -2364,7 +2368,7 @@ public class SCExecutableTag : SCVal
     /// <returns><see langword="true" /> when the tag is valid UTF-8.</returns>
     public bool TryGetUtf8String(out string? value)
     {
-        return Util.TryDecodeUtf8(InnerValue, out value);
+        return Util.TryDecodeUtf8(_innerValue, out value);
     }
 
     /// <summary>
@@ -2373,7 +2377,7 @@ public class SCExecutableTag : SCVal
     /// <returns>An <see cref="Xdr.SCString" /> XDR object holding the raw tag bytes.</returns>
     public new Xdr.SCString ToXdr()
     {
-        return new Xdr.SCString { InnerBytes = (byte[])InnerValue.Clone() };
+        return new Xdr.SCString { InnerBytes = InnerValue };
     }
 
     /// <summary>
