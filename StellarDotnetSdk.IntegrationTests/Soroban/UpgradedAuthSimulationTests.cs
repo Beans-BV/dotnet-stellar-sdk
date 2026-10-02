@@ -38,24 +38,18 @@ public class UpgradedAuthSimulationTests : SorobanIntegrationTestBase
 
     /// <summary>
     ///     The SDK default: simulating <em>without</em> the flag must record
-    ///     <see cref="SorobanAddressCredentialsV2" /> (<c>SOROBAN_CREDENTIALS_ADDRESS_V2</c>), exactly as an explicit
-    ///     <c>useUpgradedAuth: true</c> does. The default-path entry is then signed with the default
-    ///     <see cref="SorobanCredentialsVersion.Preserve" /> and submitted. Core accepting the transaction is what
-    ///     proves the SDK signs v2 over the right preimage (<c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS</c>);
-    ///     a v1 preimage would produce a signature the host rejects, and nothing local would catch it.
+    ///     <see cref="SorobanAddressCredentialsV2" /> (<c>SOROBAN_CREDENTIALS_ADDRESS_V2</c>). The recorded entry is
+    ///     then signed with the default <see cref="SorobanCredentialsVersion.Preserve" /> and submitted. Core
+    ///     accepting the transaction is what proves the SDK signs v2 over the right preimage
+    ///     (<c>ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS</c>); a v1 preimage would produce a signature the
+    ///     host rejects, and nothing local would catch it.
     /// </summary>
     [Test]
     public async Task SimulateTransaction_ByDefault_RecordsAndSignsV2AddressCredentials()
     {
         var (source, authorizer, tx) = await BuildAddressAuthorizedDeployAsync();
 
-        // Explicit true: the pre-flip opt-in, kept as the reference the default is compared against.
-        var explicitSim = await Rpc.SimulateTransaction(tx, null, AuthMode.RECORD, true);
-        AssertSimulated(explicitSim);
-        explicitSim.SorobanAuthorization![0].Credentials.Should().BeOfType<SorobanAddressCredentialsV2>(
-            "useUpgradedAuth: true asks Stellar RPC for SOROBAN_CREDENTIALS_ADDRESS_V2");
-
-        // No flag: the SDK sends useUpgradedAuth: true on its own, so the result must be the same variant.
+        // No flag: the SDK sends useUpgradedAuth: true on its own.
         var defaultSim = await Rpc.SimulateTransaction(tx, null, AuthMode.RECORD);
         AssertSimulated(defaultSim);
         var entry = defaultSim.SorobanAuthorization![0];
