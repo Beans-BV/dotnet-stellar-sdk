@@ -12,8 +12,9 @@ namespace StellarDotnetSdk.Converters;
 /// <typeparam name="TValue">The value type, which the declaring property annotates as non-nullable.</typeparam>
 /// <remarks>
 ///     <para>
-///         The dictionary counterpart of <see cref="NonNullElementArrayJsonConverter{T}" />; its remarks apply here
-///         too. <c>RespectNullableAnnotations</c> constrains the dictionary reference, never its values, so
+///         The dictionary counterpart of <see cref="NonNullElementArrayJsonConverter{T}" />, with the same JSON path
+///         repair and the same registration guard; that type's remarks explain both.
+///         <c>RespectNullableAnnotations</c> constrains the dictionary reference, never its values, so
 ///         <c>{"first_name": null}</c> otherwise produced an entry holding <see langword="null" /> despite a
 ///         non-nullable value type, and the caller hit a <see cref="NullReferenceException" /> on first use.
 ///     </para>
@@ -27,7 +28,12 @@ namespace StellarDotnetSdk.Converters;
 ///         Never add one to <see cref="JsonSerializerOptions.Converters" />: both directions delegate to
 ///         <see cref="JsonSerializer" /> for the same dictionary type, which would then resolve back to this
 ///         converter and recurse until the process dies. Both directions check for that registration and raise an
-///         <see cref="InvalidOperationException" /> instead. Writing delegates unchanged.
+///         <see cref="InvalidOperationException" /> instead.
+///     </para>
+///     <para>
+///         Unlike the array converter, writing does not check the values: the response types have no accessor that
+///         rejects a <c>null</c> value, so a dictionary built in code serializes as written, and reading that JSON
+///         back fails. The guard exists for payloads from a server.
 ///     </para>
 /// </remarks>
 public abstract class NonNullValueDictionaryJsonConverter<TValue> : JsonConverter<IReadOnlyDictionary<string, TValue>?>

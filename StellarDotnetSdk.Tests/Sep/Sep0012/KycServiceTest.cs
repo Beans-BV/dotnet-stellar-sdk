@@ -809,6 +809,42 @@ WEB_AUTH_ENDPOINT=""https://example.com/auth""
         StringAssert.Contains(json, "\"status\":\"REJECTED\"");
     }
 
+    [TestMethod]
+    public void FieldsConverters_WhenRegisteredGlobally_ThrowInvalidOperationException()
+    {
+        // Both directions delegate to JsonSerializer for the same dictionary type, which resolves back to a
+        // globally registered converter. Without the guard, that recursion ends the process with a stack overflow.
+        var fields = new JsonSerializerOptions { Converters = { new CustomerFieldsJsonConverter() } };
+        var provided = new JsonSerializerOptions { Converters = { new CustomerProvidedFieldsJsonConverter() } };
+
+        var fieldsRead = Assert.ThrowsException<InvalidOperationException>(() =>
+            JsonSerializer.Deserialize<IReadOnlyDictionary<string, GetCustomerInfoField>>("{}", fields));
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            JsonSerializer.Serialize<IReadOnlyDictionary<string, GetCustomerInfoField>>(
+                new Dictionary<string, GetCustomerInfoField>(), fields));
+        var providedRead = Assert.ThrowsException<InvalidOperationException>(() =>
+            JsonSerializer.Deserialize<IReadOnlyDictionary<string, GetCustomerInfoProvidedField>>("{}", provided));
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            JsonSerializer.Serialize<IReadOnlyDictionary<string, GetCustomerInfoProvidedField>>(
+                new Dictionary<string, GetCustomerInfoProvidedField>(), provided));
+
+        StringAssert.Contains(fieldsRead.Message, nameof(CustomerFieldsJsonConverter));
+        StringAssert.Contains(providedRead.Message, nameof(CustomerProvidedFieldsJsonConverter));
+    }
+
+    [TestMethod]
+    public void FieldsConverter_WithAnInvalidEntry_ReportsThePathOfTheFieldsObject()
+    {
+        // The delegated read restarts the JSON path at the dictionary, so an unwrapped failure would report the
+        // misleading relative path "$.first_name.description".
+        var ex = Assert.ThrowsException<JsonException>(() => JsonSerializer.Deserialize<GetCustomerInfoResponse>(
+            "{\"status\":\"NEEDS_INFO\",\"fields\":{\"first_name\":{\"type\":\"string\",\"description\":5}}}",
+            new JsonSerializerOptions()));
+
+        Assert.AreEqual("$.fields", ex.Path);
+        StringAssert.Contains(ex.Message, "'fields' object");
+    }
+
     #endregion
 
     #region Error responses
