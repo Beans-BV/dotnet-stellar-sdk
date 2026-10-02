@@ -79,14 +79,16 @@ public sealed record PutCustomerInfoRequest
     ///     Gets verification values (for example a confirmation code) for fields in the
     ///     <c>VERIFICATION_REQUIRED</c> status, keyed by the SEP-0009 field name (for example <c>mobile_number</c>).
     ///     Each is sent as <c>&lt;field&gt;_verification</c>, the SEP-0012 v1.12.0 replacement for the deprecated
-    ///     <c>PUT /customer/verification</c>; a key that already ends in <c>_verification</c> is sent unchanged.
+    ///     <c>PUT /customer/verification</c>; a key that already ends in <c>_verification</c> is sent unchanged, and a
+    ///     key that is only <c>_verification</c> is rejected.
     /// </summary>
     public IReadOnlyDictionary<string, string>? VerificationFields { get; init; }
 
     /// <summary>
     ///     Gets references to files uploaded with <c>POST /customer/files</c>, keyed by the SEP-0009 field name (for
     ///     example <c>photo_id_front</c>) with the returned <c>file_id</c> as value. Each is sent as
-    ///     <c>&lt;field&gt;_file_id</c>; a key that already ends in <c>_file_id</c> is sent unchanged.
+    ///     <c>&lt;field&gt;_file_id</c>; a key that already ends in <c>_file_id</c> is sent unchanged, and a key that is
+    ///     only <c>_file_id</c> is rejected.
     /// </summary>
     public IReadOnlyDictionary<string, string>? FileReferences { get; init; }
 

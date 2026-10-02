@@ -335,8 +335,8 @@ public class KycService : IDisposable
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="request" /> is <c>null</c>.</exception>
     /// <exception cref="ArgumentException">
     ///     Thrown when the JWT is empty or is not printable ASCII, a field value is <c>null</c>, a field name is empty
-    ///     or is not printable ASCII free of quotes and backslashes, a name is used by both a text field and a file,
-    ///     <c>TransactionId</c> is set without <c>Type</c>, a
+    ///     or is not printable ASCII free of quotes and backslashes, a verification or file-reference key is only its
+    ///     suffix, a name is used by both a text field and a file, <c>TransactionId</c> is set without <c>Type</c>, a
     ///     memo is given for a <c>C...</c> account, or <c>MemoType</c> is not <c>text</c>, <c>id</c> or <c>hash</c>.
     /// </exception>
     /// <exception cref="AuthenticationRequiredException">Thrown when the JWT is rejected.</exception>
@@ -1277,9 +1277,16 @@ public class KycService : IDisposable
 
         foreach (var entry in source)
         {
-            // Validate the caller's key before suffixing it: an empty key would otherwise become a part named
-            // just "_verification" or "_file_id" and pass the part-name check.
+            // Validate the caller's key before suffixing it: an empty key, or a key that is only the suffix, would
+            // otherwise become a part named just "_verification" or "_file_id" and pass the part-name check.
             ValidatePartName(entry.Key);
+            if (entry.Key == suffix)
+            {
+                throw new ArgumentException(
+                    $"Invalid form field name {UntrustedJsonValue.Describe(entry.Key)}: it names no field, only the " +
+                    $"'{suffix}' suffix.");
+            }
+
             var key = entry.Key.EndsWith(suffix, StringComparison.Ordinal) ? entry.Key : entry.Key + suffix;
             target[key] = entry.Value;
         }
