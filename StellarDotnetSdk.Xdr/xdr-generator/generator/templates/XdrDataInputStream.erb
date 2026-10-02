@@ -60,7 +60,25 @@ public class XdrDataInputStream
     /// <returns>The string bytes exactly as they appear on the wire.</returns>
     public byte[] ReadStringBytes()
     {
-        return ReadVarOpaque(uint.MaxValue);
+        return ReadStringBytes(uint.MaxValue);
+    }
+
+    /// <summary>
+    ///     Read the raw bytes of an XDR string of at most <paramref name="max" /> bytes from stream, without
+    ///     assuming any text encoding.
+    /// </summary>
+    /// <param name="max">The maximum length, in bytes, that the schema declares for the string.</param>
+    /// <returns>The string bytes exactly as they appear on the wire.</returns>
+    /// <exception cref="InvalidDataException">Thrown when the length prefix exceeds <paramref name="max" />.</exception>
+    public byte[] ReadStringBytes(uint max)
+    {
+        var len = CheckedReadLength(uint.MaxValue);
+        if (len > max)
+        {
+            throw new InvalidDataException("string size " + len + " exceeds max size " + max);
+        }
+
+        return ReadFixOpaque(len);
     }
 
     /// <summary>

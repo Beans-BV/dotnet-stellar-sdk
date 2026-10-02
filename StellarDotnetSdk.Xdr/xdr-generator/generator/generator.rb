@@ -523,7 +523,12 @@ class CsharpGenerator < Xdrgen::Generators::Base
   def encode_innervalue_body(value, member, out)
     case member.declaration
     when AST::Declarations::String
-      out.puts "stream.WriteStringBytes(#{value}.InnerBytes);"
+      max_size = member.declaration.resolved_size
+      if max_size
+        out.puts "stream.WriteStringBytes(#{value}.InnerBytes, #{convert_constant max_size});"
+      else
+        out.puts "stream.WriteStringBytes(#{value}.InnerBytes);"
+      end
     when AST::Declarations::Opaque
       out.puts "var #{member.name.camelize(:lower)}Size = #{value}.InnerValue.Length;"
       if member.declaration.fixed?
@@ -704,7 +709,12 @@ class CsharpGenerator < Xdrgen::Generators::Base
   def decode_innervalue_body(value, member, out, depth_var)
     case member.declaration
     when AST::Declarations::String
-      out.puts "#{value}.InnerBytes = stream.ReadStringBytes();"
+      max_size = member.declaration.resolved_size
+      if max_size
+        out.puts "#{value}.InnerBytes = stream.ReadStringBytes(#{convert_constant max_size});"
+      else
+        out.puts "#{value}.InnerBytes = stream.ReadStringBytes();"
+      end
     when AST::Declarations::Opaque
       if member.declaration.fixed?
         out.puts "var #{member.name.camelize(:lower)}Size = #{convert_constant member.declaration.size};"

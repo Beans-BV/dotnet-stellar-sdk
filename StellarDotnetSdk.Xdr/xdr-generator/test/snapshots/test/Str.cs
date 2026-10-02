@@ -42,7 +42,7 @@ public class Str
 
     public static void Encode(XdrDataOutputStream stream, Str encodedStr)
     {
-        stream.WriteStringBytes(encodedStr.InnerBytes);
+        stream.WriteStringBytes(encodedStr.InnerBytes, 64);
     }
 
     public static Str Decode(XdrDataInputStream stream, int maxDepth)
@@ -51,7 +51,7 @@ public class Str
             throw new InvalidDataException("Maximum decoding depth reached while decoding Str");
         maxDepth -= 1;
         var decodedStr = new Str();
-        decodedStr.InnerBytes = stream.ReadStringBytes();
+        decodedStr.InnerBytes = stream.ReadStringBytes(64);
         return decodedStr;
     }
 

@@ -243,6 +243,60 @@ public class Protocol28Test
             xdrSDK.SCString.Encode(new xdrSDK.XdrDataOutputStream(), new xdrSDK.SCString()));
     }
 
+    /// <summary>
+    ///     A string typedef enforces its declared maximum length in bytes, as every bounded opaque and array does, so an
+    ///     oversized value fails when it is encoded instead of later at the network. <c>SCString</c> declares no bound.
+    /// </summary>
+    [TestMethod]
+    public void XdrStringTypedefs_EncodeOverMaxLength_ThrowsArgumentException()
+    {
+        // Arrange
+        static void Encode<T>(Action<xdrSDK.XdrDataOutputStream, T> encode, T value)
+        {
+            encode(new xdrSDK.XdrDataOutputStream(), value);
+        }
+
+        // Act & Assert
+        Assert.ThrowsException<ArgumentException>(() =>
+            Encode(xdrSDK.SCSymbol.Encode, new xdrSDK.SCSymbol { InnerBytes = new byte[33] }));
+        Assert.ThrowsException<ArgumentException>(() =>
+            Encode(xdrSDK.String32.Encode, new xdrSDK.String32 { InnerBytes = new byte[33] }));
+        Assert.ThrowsException<ArgumentException>(() =>
+            Encode(xdrSDK.String64.Encode, new xdrSDK.String64 { InnerBytes = new byte[65] }));
+        // 17 characters, but 34 bytes: the bound counts bytes.
+        Assert.ThrowsException<ArgumentException>(() =>
+            Encode(xdrSDK.SCSymbol.Encode, new xdrSDK.SCSymbol(new string('é', 17))));
+        Encode(xdrSDK.SCSymbol.Encode, new xdrSDK.SCSymbol { InnerBytes = new byte[32] });
+        Encode(xdrSDK.String32.Encode, new xdrSDK.String32 { InnerBytes = new byte[32] });
+        Encode(xdrSDK.String64.Encode, new xdrSDK.String64 { InnerBytes = new byte[64] });
+        Encode(xdrSDK.SCString.Encode, new xdrSDK.SCString { InnerBytes = new byte[1000] });
+    }
+
+    /// <summary>
+    ///     Decoding rejects a length prefix above the declared maximum with <see cref="System.IO.InvalidDataException" />,
+    ///     as the generated decoders do for every bounded opaque and array. <c>SCString</c> declares no bound.
+    /// </summary>
+    [TestMethod]
+    public void XdrStringTypedefs_DecodeOverMaxLength_ThrowsInvalidDataException()
+    {
+        // Arrange
+        static xdrSDK.XdrDataInputStream Wire(int length)
+        {
+            var stream = new xdrSDK.XdrDataOutputStream();
+            stream.WriteStringBytes(new byte[length]);
+            return new xdrSDK.XdrDataInputStream(stream.ToArray());
+        }
+
+        // Act & Assert
+        Assert.ThrowsException<System.IO.InvalidDataException>(() => xdrSDK.SCSymbol.Decode(Wire(33)));
+        Assert.ThrowsException<System.IO.InvalidDataException>(() => xdrSDK.String32.Decode(Wire(33)));
+        Assert.ThrowsException<System.IO.InvalidDataException>(() => xdrSDK.String64.Decode(Wire(65)));
+        Assert.AreEqual(32, xdrSDK.SCSymbol.Decode(Wire(32)).InnerBytes.Length);
+        Assert.AreEqual(32, xdrSDK.String32.Decode(Wire(32)).InnerBytes.Length);
+        Assert.AreEqual(64, xdrSDK.String64.Decode(Wire(64)).InnerBytes.Length);
+        Assert.AreEqual(1000, xdrSDK.SCString.Decode(Wire(1000)).InnerBytes.Length);
+    }
+
     // ---------------------------------------------------------------------------------------------
     // XDR layer: new arms and stripped feature gates
     // ---------------------------------------------------------------------------------------------

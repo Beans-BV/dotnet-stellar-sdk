@@ -49,7 +49,7 @@ For v28.0 the stripped blocks are the three `CAP_0084_MUXED_CONTRACT` blocks in 
 
 ### String typedefs keep their raw bytes
 
-XDR strings are byte strings with no encoding guarantee. A generated string typedef (e.g. `SCString`, `SCSymbol`, `String32`) stores the wire bytes in `InnerBytes` and encodes and decodes them verbatim; `InnerValue` is a UTF-8 view of those bytes. Use `InnerBytes` whenever the exact bytes matter, for example CAP-85 executable tags, which form part of a ledger key. Strings declared inline in a struct or union (e.g. `string text<28>`) are still generated as plain `string` properties.
+XDR strings are byte strings with no encoding guarantee. A generated string typedef (e.g. `SCString`, `SCSymbol`, `String32`) stores the wire bytes in `InnerBytes` and encodes and decodes them verbatim; `InnerValue` is a UTF-8 view of those bytes. Use `InnerBytes` whenever the exact bytes matter, for example CAP-85 executable tags, which form part of a ledger key. Like a bounded opaque or array, a string typedef enforces its declared maximum length in bytes (`<N>`): encoding a longer value throws `ArgumentException`, and decoding a longer length prefix throws `InvalidDataException`. Strings declared inline in a struct or union (e.g. `string text<28>`) are still generated as plain `string` properties, without the length check.
 
 ## Running tests
 

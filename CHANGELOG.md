@@ -277,8 +277,13 @@ All notable changes to this project are documented here. The format is based on
   typedefs' `InnerValue` is now a view over `InnerBytes`: unchanged for valid UTF-8, but a decoded non-UTF-8
   string now re-encodes to its original bytes instead of to the U+FFFD replacement. Because the text is now
   stored as UTF-8, a string with an unpaired surrogate no longer reads back as set: its wire bytes are unchanged
-  (U+FFFD), but `InnerValue` now returns U+FFFD in its place, and each read decodes a new string. Source and
-  binary compatible.
+  (U+FFFD), but `InnerValue` now returns U+FFFD in its place, and each read decodes a new string. The bounded
+  string typedefs (`SCSymbol` and `String32` at 32 bytes, `String64` at 64) now also enforce their declared
+  maximum length, as every bounded opaque and array already did: encoding a longer value throws
+  `ArgumentException` instead of producing XDR the network rejects, and decoding a longer length prefix throws
+  `InvalidDataException`. The SDK-layer checks count characters (`ManageDataOperation` names, `SetOptions` home
+  domains) or nothing (`Soroban.SCSymbol`), so a multi-byte value that passed them now fails when it is encoded.
+  Source and binary compatible.
 - **Breaking:** `SubmitTransactionAsyncResponse.TxStatus` deserialization is now strict. The nested
   `TransactionStatus` enum was bound by the catch-all `JsonStringEnumConverter`, which maps bare
   integers by ordinal and matches case-insensitively — so a malformed Horizon `POST /transactions_async`

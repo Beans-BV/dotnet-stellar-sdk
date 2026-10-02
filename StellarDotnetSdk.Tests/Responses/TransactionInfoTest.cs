@@ -204,12 +204,12 @@ public class TransactionInfoTest
 
     /// <summary>
     ///     Builds a ledger entry change that decodes cleanly as XDR but that the SDK cannot map to a domain type:
-    ///     a DataEntry whose name exceeds the 64-character limit <c>LedgerEntryData</c>'s constructor enforces.
-    ///     The XDR decoder does not enforce <c>string64</c>'s bound, so only the SDK conversion rejects it.
+    ///     a CONTRACT_DATA entry whose value is an <c>SCV_VEC</c> with an absent body. The XDR union declares that
+    ///     body optional, so the decoder accepts it, but <c>SCVec.FromSCValXdr</c> rejects it with
+    ///     <c>ArgumentException</c>. Stellar RPC and Core never emit this form.
     /// </summary>
     private static LedgerEntryChange UnconvertibleLedgerEntryChange()
     {
-        var accountId = new AccountID(KeyPair.FromAccountId(AccountId).XdrPublicKey);
         return new LedgerEntryChange
         {
             Discriminant = LedgerEntryChangeType.Create(
@@ -220,13 +220,19 @@ public class TransactionInfoTest
                 Ext = new LedgerEntry.LedgerEntryExt { Discriminant = 0 },
                 Data = new LedgerEntry.LedgerEntryData
                 {
-                    Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.DATA),
-                    Data = new DataEntry
+                    Discriminant = LedgerEntryType.Create(LedgerEntryType.LedgerEntryTypeEnum.CONTRACT_DATA),
+                    ContractData = new ContractDataEntry
                     {
-                        AccountID = accountId,
-                        DataName = new String64(new string('a', 70)),
-                        DataValue = new DataValue([1, 2, 3]),
-                        Ext = new DataEntry.DataEntryExt { Discriminant = 0 },
+                        Ext = new ExtensionPoint { Discriminant = 0 },
+                        Contract = new ScContractId(ContractId).ToXdr(),
+                        Key = new XdrSCVal
+                        {
+                            Discriminant = SCValType.Create(SCValType.SCValTypeEnum.SCV_U32),
+                            U32 = new Uint32(1),
+                        },
+                        Durability = ContractDataDurability.Create(
+                            ContractDataDurability.ContractDataDurabilityEnum.PERSISTENT),
+                        Val = new XdrSCVal { Discriminant = SCValType.Create(SCValType.SCValTypeEnum.SCV_VEC) },
                     },
                 },
             },
@@ -947,8 +953,8 @@ public class TransactionInfoTest
 
     /// <summary>
     ///     <c>TransactionMeta</c> documents a structure it cannot map as <c>null</c>. This payload — an
-    ///     over-long <c>DataEntry</c> name — arrives as an <c>ArgumentException</c>, so it pins that clause on the
-    ///     property rather than only on <c>ResultValue</c>.
+    ///     <c>SCV_VEC</c> with an absent body — arrives as an <c>ArgumentException</c>, so it pins that clause on
+    ///     the property rather than only on <c>ResultValue</c>.
     ///     <para>
     ///         It does <em>not</em> constrain <c>XdrDecodeFailure.IsDecodeFailure</c>'s
     ///         <c>InvalidOperationException</c> or <c>IndexOutOfRangeException</c> clauses: dropping either leaves

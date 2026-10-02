@@ -58,8 +58,25 @@ public class XdrDataOutputStream
     /// <param name="bytes">The string bytes.</param>
     public void WriteStringBytes(byte[] bytes)
     {
+        WriteStringBytes(bytes, uint.MaxValue);
+    }
+
+    /// <summary>
+    ///     Write the raw bytes of an XDR string of at most <paramref name="max" /> bytes verbatim, without assuming
+    ///     any text encoding.
+    /// </summary>
+    /// <param name="bytes">The string bytes.</param>
+    /// <param name="max">The maximum length, in bytes, that the schema declares for the string.</param>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="bytes" /> is longer than <paramref name="max" />.</exception>
+    public void WriteStringBytes(byte[] bytes, uint max)
+    {
         Throw.IfNull(bytes, nameof(bytes));
-        WriteVarOpaque((uint)bytes.Length, bytes);
+        if ((uint)bytes.Length > max)
+        {
+            throw new ArgumentException("string size " + bytes.Length + " exceeds max size " + max);
+        }
+
+        WriteVarOpaque(max, bytes);
     }
 
     public void WriteIntArray(int[] a)
