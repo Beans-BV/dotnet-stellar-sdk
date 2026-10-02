@@ -1889,6 +1889,34 @@ public class QuoteServiceTest
     }
 
     [TestMethod]
+    [DataRow("sell_delivery_method", "pix", true, DisplayName = "Sell side, in another case")]
+    [DataRow("buy_delivery_method", "pix", true, DisplayName = "Buy side, in another case")]
+    [DataRow("sell_delivery_method", "cash", false, DisplayName = "Another method")]
+    public async Task PostQuoteAsync_EchoingADeliveryMethod_IgnoresOnlyItsCase(string field, string requested,
+        bool accepted)
+    {
+        // The anchor matched the requested name to the one it lists, and echoes the listed spelling.
+        var body = QuoteJson(q =>
+        {
+            q.Remove("sell_delivery_method");
+            q[field] = "PIX";
+        });
+        var (service, _) = CreateService(body, HttpStatusCode.Created);
+        var request = field == "sell_delivery_method"
+            ? ValidQuoteRequest() with { SellDeliveryMethod = requested }
+            : ValidQuoteRequest() with { BuyDeliveryMethod = requested };
+
+        if (accepted)
+        {
+            await service.PostQuoteAsync(request);
+        }
+        else
+        {
+            await Assert.ThrowsExceptionAsync<UnexpectedResponseException>(() => service.PostQuoteAsync(request));
+        }
+    }
+
+    [TestMethod]
     [DataRow("2021-04-30T07:42:24Z", "2021-04-30T07:42:23Z", true, DisplayName = "Expires a second early")]
     [DataRow("2021-04-30T07:42:23Z", "2021-04-30T07:42:23Z", false, DisplayName = "Expires exactly at expire_after")]
     [DataRow("2021-04-30T07:42:23Z", "2021-04-30T07:42:22.999Z", true, DisplayName = "Expires a millisecond early")]

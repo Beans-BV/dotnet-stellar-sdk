@@ -65,9 +65,9 @@ namespace StellarDotnetSdk.Sep.Sep0038;
 ///     </para>
 ///     <para>
 ///         A success body is also checked against the request: a firm quote must carry a usable <c>id</c>, the
-///         requested asset pair, no delivery method other than the one requested, and an expiry no earlier than the
-///         requested <c>expire_after</c>; prices and amounts must be greater than zero, and a <c>decimals</c> count
-///         must not be negative. A response that fails these checks raises
+///         requested asset pair, no delivery method other than the one requested (compared without regard to case),
+///         and an expiry no earlier than the requested <c>expire_after</c>; prices and amounts must be greater than
+///         zero, and a <c>decimals</c> count must not be negative. A response that fails these checks raises
 ///         <see cref="UnexpectedResponseException" />, whose <see cref="QuoteServerException.ResponseBody" /> still
 ///         holds what the anchor sent (for <c>POST /quote</c>, the id of the quote it already created).
 ///     </para>
@@ -852,11 +852,13 @@ public class QuoteService : IDisposable
                    $"with a quote for {Echo(quote.SellAsset)} -> {Echo(quote.BuyAsset)}.";
         }
 
-        // The specification echoes a delivery method "only if specified in the request".
+        // The specification echoes a delivery method "only if specified in the request". Case is ignored: an anchor
+        // that matched the requested name to the one it lists may echo the listed spelling ("pix" -> "PIX").
         if ((quote.SellDeliveryMethod != null &&
-             !string.Equals(quote.SellDeliveryMethod, request.SellDeliveryMethod, StringComparison.Ordinal)) ||
+             !string.Equals(quote.SellDeliveryMethod, request.SellDeliveryMethod,
+                 StringComparison.OrdinalIgnoreCase)) ||
             (quote.BuyDeliveryMethod != null &&
-             !string.Equals(quote.BuyDeliveryMethod, request.BuyDeliveryMethod, StringComparison.Ordinal)))
+             !string.Equals(quote.BuyDeliveryMethod, request.BuyDeliveryMethod, StringComparison.OrdinalIgnoreCase)))
         {
             return "The quote server answered POST /quote with a delivery method the request did not ask for.";
         }
